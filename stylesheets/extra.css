@@ -1178,6 +1178,527 @@ body {
   box-shadow: 0 12px 30px rgba(231, 84, 128, 0.42);
 }
 
+/* ---------- 6B. 交互与装饰（二次元深化） ---------- */
+
+/* 顶部雷樱进度条 */
+.robotics-progress {
+  position: fixed;
+  z-index: 24;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--robotics-violet), var(--robotics-sakura) 55%, var(--robotics-gold));
+  box-shadow: 0 0 12px rgba(231, 84, 128, 0.55);
+  transform: scaleX(var(--robotics-progress, 0));
+  transform-origin: 0 50%;
+  pointer-events: none;
+}
+
+/* 雷樱滚动条 */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(124, 77, 255, 0.55) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--robotics-violet), var(--robotics-sakura));
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #9d7bff, #f27ba9);
+  background-clip: padding-box;
+}
+
+/* 选区与键盘焦点 */
+::selection {
+  background: rgba(231, 84, 128, 0.32);
+}
+
+[data-md-color-scheme="slate"] ::selection {
+  background: rgba(196, 181, 253, 0.38);
+}
+
+:focus-visible {
+  outline: 2px solid var(--robotics-gold);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* 标签页：樱花下划线滑入 */
+.md-tabs__link {
+  position: relative;
+}
+
+.md-tabs__link::after {
+  position: absolute;
+  right: 0.85em;
+  bottom: 0.12em;
+  left: 0.85em;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--robotics-gold-soft), transparent);
+  content: "";
+  transform: scaleX(0);
+  transition: transform 0.28s ease;
+}
+
+.md-tabs__link:hover::after,
+.md-tabs__link--active::after {
+  transform: scaleX(1);
+}
+
+/* 侧边栏：花瓣指示 */
+.md-nav__link {
+  position: relative;
+}
+
+.md-nav__link::before {
+  position: absolute;
+  top: 50%;
+  left: 0.25em;
+  color: var(--robotics-sakura);
+  content: "✿";
+  font-size: 0.72em;
+  opacity: 0;
+  transform: translate(-0.4em, -50%) rotate(-25deg);
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.md-nav__link:hover::before,
+.md-nav__link--active::before {
+  opacity: 1;
+  transform: translate(0, -50%) rotate(0deg);
+}
+
+.md-nav__link:hover,
+.md-nav__link--active {
+  padding-left: 1.35em;
+}
+
+/* 内容标题：渐变线与符号 */
+.md-typeset h1::after {
+  display: block;
+  width: 8.5rem;
+  height: 3px;
+  margin-top: 0.55rem;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--robotics-title-a), var(--robotics-title-b), var(--robotics-gold), transparent);
+  content: "";
+}
+
+.md-typeset h4::before {
+  margin-right: 0.35em;
+  color: var(--robotics-gold);
+  content: "◆";
+  font-size: 0.62em;
+  vertical-align: 0.18em;
+}
+
+/* 引用：符纸样式 */
+.md-typeset blockquote {
+  position: relative;
+  border: 1px solid rgba(227, 179, 65, 0.5);
+  border-left: 4px solid transparent;
+  border-image: none;
+  border-radius: var(--robotics-radius-sm);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.28), rgba(124, 77, 255, 0.1)),
+    repeating-linear-gradient(45deg, rgba(227, 179, 65, 0.1) 0 6px, transparent 6px 12px);
+  box-shadow: 0 10px 26px rgba(76, 33, 138, 0.12);
+  padding: 1rem 1.2rem;
+}
+
+.md-typeset blockquote::before {
+  position: absolute;
+  top: -0.62em;
+  left: 1em;
+  padding: 0 0.45em;
+  background: var(--md-default-bg-color);
+  color: var(--robotics-gold);
+  content: "❖";
+  font-size: 0.85em;
+}
+
+/* 分隔线：雷樱线 + 星 */
+.md-typeset hr {
+  position: relative;
+  border: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--robotics-title-a), var(--robotics-title-b), transparent);
+}
+
+.md-typeset hr::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  padding: 0 0.55em;
+  background: var(--md-default-bg-color);
+  color: var(--robotics-gold);
+  content: "✦";
+  transform: translate(-50%, -50%);
+}
+
+/* 卡片：流光扫过 */
+.md-typeset .grid.cards > ul > li,
+.md-typeset .grid.cards > ol > li {
+  position: relative;
+  overflow: hidden;
+}
+
+.md-typeset .grid.cards > ul > li::after,
+.md-typeset .grid.cards > ol > li::after {
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 42%;
+  height: 100%;
+  background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.38), transparent);
+  content: "";
+  pointer-events: none;
+  transform: skewX(-18deg);
+  transition: left 0.55s ease;
+}
+
+.md-typeset .grid.cards > ul > li:hover::after,
+.md-typeset .grid.cards > ol > li:hover::after {
+  left: 130%;
+}
+
+/* 表格行悬停 */
+.md-typeset table:not([class]) tr:hover {
+  background: rgba(227, 179, 65, 0.1);
+}
+
+/* 代码复制按钮 */
+.md-clipboard {
+  border: 1px solid rgba(227, 179, 65, 0.4);
+  border-radius: 8px;
+  color: var(--robotics-gold-soft);
+  transition: background 0.22s ease, color 0.22s ease, transform 0.22s ease;
+}
+
+.md-clipboard:hover,
+.md-clipboard:focus {
+  background: rgba(227, 179, 65, 0.3);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.md-clipboard:hover::before {
+  transform: scale(1.12);
+}
+
+/* 提示块符号（雷 / 樱 / 月） */
+.md-typeset .note > .admonition-title::before,
+.md-typeset .info > .admonition-title::before,
+.md-typeset .todo > .admonition-title::before {
+  content: "⚡";
+}
+
+.md-typeset .abstract > .admonition-title::before,
+.md-typeset .summary > .admonition-title::before,
+.md-typeset .tldr > .admonition-title::before {
+  content: "❖";
+}
+
+.md-typeset .tip > .admonition-title::before,
+.md-typeset .hint > .admonition-title::before,
+.md-typeset .important > .admonition-title::before,
+.md-typeset .success > .admonition-title::before,
+.md-typeset .check > .admonition-title::before,
+.md-typeset .done > .admonition-title::before {
+  content: "✿";
+}
+
+.md-typeset .question > .admonition-title::before,
+.md-typeset .help > .admonition-title::before,
+.md-typeset .faq > .admonition-title::before {
+  content: "✦";
+}
+
+.md-typeset .warning > .admonition-title::before,
+.md-typeset .caution > .admonition-title::before,
+.md-typeset .attention > .admonition-title::before {
+  content: "⚠";
+}
+
+.md-typeset .failure > .admonition-title::before,
+.md-typeset .fail > .admonition-title::before,
+.md-typeset .missing > .admonition-title::before,
+.md-typeset .danger > .admonition-title::before,
+.md-typeset .error > .admonition-title::before {
+  content: "✖";
+}
+
+.md-typeset .bug > .admonition-title::before {
+  content: "☠";
+}
+
+.md-typeset .example > .admonition-title::before,
+.md-typeset .quote > .admonition-title::before {
+  content: "✎";
+}
+
+.md-typeset .admonition .admonition-title::before {
+  margin-right: 0.5em;
+  font-size: 0.95em;
+  filter: none;
+}
+
+/* 返回顶部：雷樱圆钮 */
+.md-top {
+  border: 1px solid rgba(227, 179, 65, 0.65);
+  border-radius: 50%;
+  background: linear-gradient(140deg, var(--robotics-violet), var(--robotics-sakura));
+  color: #fff;
+  box-shadow: 0 12px 28px rgba(124, 77, 255, 0.4);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.md-top:hover {
+  box-shadow: 0 16px 36px rgba(231, 84, 128, 0.5);
+  transform: translateY(-4px) rotate(-8deg);
+}
+
+/* 页脚题记 */
+.md-footer-copyright::after {
+  color: var(--robotics-gold-soft);
+  content: "  ｜  以雷光与神樱之名 · 鸣神主题";
+  letter-spacing: 0.12em;
+}
+
+/* 搜索：樱粉胶囊与花瓣命中 */
+.md-search__form {
+  border-color: rgba(255, 255, 255, 0.4);
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.md-search__form:focus-within {
+  border-color: var(--robotics-gold-soft);
+  box-shadow: 0 0 0 3px rgba(227, 179, 65, 0.35);
+}
+
+.md-search-result__item {
+  position: relative;
+  padding-left: 1.9em;
+}
+
+.md-search-result__item::before {
+  position: absolute;
+  top: 1.05em;
+  left: 0.75em;
+  color: var(--robotics-sakura);
+  content: "❀";
+  font-size: 0.8em;
+}
+
+/* 点击樱花迸发 */
+.robotics-burst-petal {
+  position: fixed;
+  z-index: 999;
+  width: 10px;
+  height: 10px;
+  border-radius: 62% 0 62% 62%;
+  background: linear-gradient(135deg, #ffd7e8, #f0629b);
+  box-shadow: 0 0 10px rgba(240, 98, 154, 0.65);
+  pointer-events: none;
+  animation: robotics-burst 0.95s cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+}
+
+@keyframes robotics-burst {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.2) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--robotics-burst-x)), calc(-50% + var(--robotics-burst-y))) scale(1.05) rotate(300deg);
+  }
+}
+
+/* 内容滚动淡入 */
+.robotics-reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.robotics-reveal.is-robotics-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- 6C. 首页场景强化 ---------- */
+
+/* 月光柱 */
+.robotics-parallax__moon-rays {
+  top: 0;
+  right: 4vw;
+  width: clamp(20rem, 34vw, 34rem);
+  height: 78vh;
+  background: conic-gradient(
+    from 196deg at 50% 0%,
+    transparent 0 6deg,
+    rgba(255, 243, 218, 0.16) 12deg,
+    transparent 19deg,
+    rgba(255, 243, 218, 0.1) 26deg,
+    transparent 34deg,
+    rgba(255, 243, 218, 0.18) 41deg,
+    transparent 52deg
+  );
+  filter: blur(7px);
+  mask-image: linear-gradient(180deg, #000, transparent 88%);
+  -webkit-mask-image: linear-gradient(180deg, #000, transparent 88%);
+  transform: translate3d(calc(var(--robotics-star-x) * 0.18), calc(var(--robotics-moon-y) * 0.55), 0);
+}
+
+/* 提灯 */
+.robotics-lantern {
+  position: relative;
+  width: 3.2rem;
+  height: 4.3rem;
+  border-radius: 42% 42% 46% 46% / 30% 30% 62% 62%;
+  background: radial-gradient(circle at 50% 34%, rgba(255, 226, 190, 0.95), rgba(240, 110, 158, 0.82));
+  box-shadow: 0 0 30px rgba(255, 178, 152, 0.7);
+  transform-origin: 50% -140%;
+  animation: robotics-lantern-sway 7.5s ease-in-out infinite;
+}
+
+.robotics-lantern::before {
+  position: absolute;
+  top: -9%;
+  left: 16%;
+  width: 68%;
+  height: 13%;
+  border-radius: 5px;
+  background: linear-gradient(180deg, var(--robotics-gold-soft), #a8792c);
+  content: "";
+}
+
+.robotics-lantern::after {
+  position: absolute;
+  bottom: -30%;
+  left: 50%;
+  width: 2px;
+  height: 30%;
+  background: linear-gradient(180deg, var(--robotics-gold), transparent);
+  content: "";
+}
+
+.robotics-parallax__lantern--one {
+  top: 13vh;
+  left: 17vw;
+}
+
+.robotics-parallax__lantern--one .robotics-lantern {
+  animation-delay: -1.8s;
+}
+
+.robotics-parallax__lantern--two {
+  top: 7vh;
+  left: 47vw;
+  opacity: 0.85;
+}
+
+.robotics-parallax__lantern--two .robotics-lantern {
+  width: 2.5rem;
+  height: 3.4rem;
+  animation-delay: -4.4s;
+}
+
+@keyframes robotics-lantern-sway {
+  0%,
+  100% {
+    transform: rotate(-4deg);
+  }
+  50% {
+    transform: rotate(4.5deg);
+  }
+}
+
+/* 水面波光 */
+.robotics-parallax__water {
+  left: -10vw;
+  width: 120vw;
+  height: 11vh;
+  bottom: 11vh;
+  background-image:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.2) 0 2px, transparent 2px 26px),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.12) 0 1px, transparent 1px 44px);
+  mask-image: linear-gradient(180deg, transparent, #000 42%, transparent);
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 42%, transparent);
+  opacity: 0.55;
+  transform: translate3d(0, var(--robotics-near-y), 0);
+  animation: robotics-shimmer 9s linear infinite;
+}
+
+@keyframes robotics-shimmer {
+  to {
+    background-position: 64px 0, -88px 0;
+  }
+}
+
+/* 法阵：刻度环 */
+.robotics-sigil__ring--scale {
+  inset: 9%;
+  border: 0;
+  border-radius: 50%;
+  background: repeating-conic-gradient(from 0deg, rgba(227, 179, 65, 0.8) 0 1deg, transparent 1deg 15deg);
+  mask-image: radial-gradient(circle, transparent 61%, #000 63% 69%, transparent 71%);
+  -webkit-mask-image: radial-gradient(circle, transparent 61%, #000 63% 69%, transparent 71%);
+  animation: robotics-spin 70s linear infinite reverse;
+}
+
+/* 首页文案：侧边金线与标题装饰 */
+.robotics-parallax__content {
+  position: relative;
+  padding-left: 1.6rem;
+}
+
+.robotics-parallax__content::before {
+  position: absolute;
+  top: 0.4rem;
+  bottom: 0.4rem;
+  left: 0;
+  width: 3px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, var(--robotics-gold), transparent);
+  content: "";
+  opacity: 0.85;
+}
+
+.robotics-parallax__eyebrow::before {
+  margin-right: 0.55em;
+  color: var(--robotics-gold);
+  content: "⚡";
+}
+
+.robotics-parallax__eyebrow::after {
+  margin-left: 0.55em;
+  color: var(--robotics-gold);
+  content: "❀";
+}
+
+/* 鼠标微视差 */
+.robotics-parallax__moon,
+.robotics-parallax__emblem,
+.robotics-parallax__glow-cloud {
+  translate: var(--robotics-mouse-x, 0px) var(--robotics-mouse-y, 0px);
+}
+
 /* ---------- 7. 响应式 ---------- */
 
 @media screen and (max-width: 76.2em) {

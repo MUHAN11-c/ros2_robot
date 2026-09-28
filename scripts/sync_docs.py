@@ -165,37 +165,37 @@ hide:
 
 <div class="grid cards" markdown>
 
--   **数学基础**
+-   **❖ 数学基础**
 
     流形、李群、凸优化、最优控制、状态估计、强化学习理论。
 
     [进入模块]({module_links["math"]})
 
--   **C++基础与进阶**
+-   **⚙ C++基础与进阶**
 
     C++ 进阶、并发、ROS2、CMake、工程化与机器人软件栈。
 
     [进入模块]({module_links["foundation"]})
 
--   **SLAM**
+-   **◈ SLAM**
 
     SLAM 理论、核心库、系统精读、架构与工程化实践。
 
     [进入模块]({module_links["slam"]})
 
--   **移动机器人规控**
+-   **✧ 移动机器人规控**
 
     规划、控制、TAMP、不确定性、多机器人与横切专题。
 
     [进入模块]({module_links["mobile"]})
 
--   **运动控制**
+-   **⚡ 运动控制**
 
     足式、机械臂、复合机器人、仿真与实时控制工程。
 
     [进入模块]({module_links["control"]})
 
--   **具身智能**
+-   **✦ 具身智能**
 
     大模型、世界模型、VLA、动作模仿与强化学习。
 
@@ -203,7 +203,7 @@ hide:
 
 </div>
 
-## 构建统计
+## ✦ 构建统计
 
 - 文档页：{markdown_count}
 - 媒体资源：{asset_count}
@@ -559,7 +559,7 @@ def merge_summary_placeholders(
 
         key = module_key(summary_section.title)
         target_section = sections.get(key)
-        placeholder_group = SummaryNode(title="敬请期待", children=placeholders)
+        placeholder_group = SummaryNode(title="神樱待放", children=placeholders)
 
         if target_section:
             target_section.children.append(placeholder_group)
@@ -632,7 +632,7 @@ def all_leaf_pages_missing(item: SummaryNode) -> bool:
 def catalog_missing_label(title: str) -> str:
     return (
         f'<span class="robotics-catalog-missing">{escape(title)}'
-        ' <span class="robotics-catalog-badge">敬请期待</span></span>'
+        ' <span class="robotics-catalog-badge">神樱待放</span></span>'
     )
 
 
@@ -644,7 +644,7 @@ def render_catalog_items(items: list[SummaryNode], level: int = 0) -> list[str]:
         if item.children:
             summary_title = (
                 catalog_missing_label(item.title)
-                if level > 0 and item.title != "敬请期待" and all_leaf_pages_missing(item)
+                if level > 0 and item.title != "神樱待放" and all_leaf_pages_missing(item)
                 else escape(item.title)
             )
             details_attrs = f'class="{details_class}" markdown'
@@ -675,7 +675,7 @@ def write_catalog(catalog: list[SummaryNode]) -> None:
     lines = [
         "# 目录索引",
         "",
-        "按课程模块折叠展示，展开模块后进入对应章节。",
+        "❖ 按模块折叠展开，拾级而入对应章节。",
         "",
         *render_catalog_items(catalog),
     ]
