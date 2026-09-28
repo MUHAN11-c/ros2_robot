@@ -11,3 +11,13 @@ tmp_*.md
 
 # 工具自动生成产物（claude-mem 上下文桩，非项目内容）
 AGENTS.md
+
+# MkDocs 站点构建产物（scripts/build_site.sh 生成）
+site/
+.generated/
+mkdocs.generated.yml
+.cache-docs/
+.venv/
+
+# 站点脚手架参考副本（临时）
+.wiki_ref/
