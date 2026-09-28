@@ -100,6 +100,37 @@
       }, true);
     };
 
+    const createPetals = () => {
+      const layer = root.querySelector("[data-robotics-petals]");
+
+      if (!layer || layer.childElementCount > 0) {
+        return;
+      }
+
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        return;
+      }
+
+      const count = window.matchMedia("(max-width: 60em)").matches ? 9 : 16;
+
+      for (let index = 0; index < count; index += 1) {
+        const petal = document.createElement("span");
+        const size = 0.55 + Math.random() * 0.75;
+
+        petal.className = "robotics-petal";
+        petal.style.left = `${(Math.random() * 100).toFixed(2)}%`;
+        petal.style.width = `${size.toFixed(2)}rem`;
+        petal.style.height = `${size.toFixed(2)}rem`;
+        petal.style.animationDuration = `${(9 + Math.random() * 10).toFixed(2)}s`;
+        petal.style.animationDelay = `${(-Math.random() * 14).toFixed(2)}s`;
+        petal.style.setProperty(
+          "--robotics-petal-drift",
+          `${(Math.random() * 14 - 4).toFixed(2)}vw`,
+        );
+        layer.appendChild(petal);
+      }
+    };
+
     const requestUpdate = () => {
       if (ticking) {
         return;
@@ -118,6 +149,7 @@
     }, { passive: true });
     window.addEventListener("resize", requestUpdate);
     preservePaletteScroll();
+    createPetals();
     requestUpdate();
   };
 

@@ -29,47 +29,95 @@
     <div class="robotics-parallax__sticky">
       <div class="robotics-parallax__scene" aria-hidden="true">
         <div class="robotics-parallax__sky"></div>
-        <div class="robotics-parallax__nebula robotics-parallax__nebula--one"></div>
-        <div class="robotics-parallax__nebula robotics-parallax__nebula--two"></div>
-        <div class="robotics-parallax__aurora"></div>
-        <div class="robotics-parallax__horizon-glow"></div>
-        <div class="robotics-parallax__sun"></div>
+        <div class="robotics-parallax__glow-cloud robotics-parallax__glow-cloud--one"></div>
+        <div class="robotics-parallax__glow-cloud robotics-parallax__glow-cloud--two"></div>
+        <div class="robotics-parallax__moon"></div>
         <div class="robotics-parallax__stars"></div>
-        <div class="robotics-parallax__meteor robotics-parallax__meteor--one"></div>
-        <div class="robotics-parallax__meteor robotics-parallax__meteor--two"></div>
-        <div class="robotics-parallax__meteor robotics-parallax__meteor--three"></div>
+        <div class="robotics-parallax__bolt robotics-parallax__bolt--one"></div>
+        <div class="robotics-parallax__bolt robotics-parallax__bolt--two"></div>
+
         <div class="robotics-parallax__mountains robotics-parallax__mountains--back"></div>
         <div class="robotics-parallax__mountains robotics-parallax__mountains--front"></div>
-        <div class="robotics-parallax__grid"></div>
+
+        <div class="robotics-parallax__torii">
+          <svg viewBox="0 0 220 170" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="rg-torii" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#8c3566"/>
+                <stop offset="100%" stop-color="#43194e"/>
+              </linearGradient>
+            </defs>
+            <path d="M8 30 Q110 14 212 30 L212 47 Q110 31 8 47 Z" fill="url(#rg-torii)"/>
+            <path d="M32 66 H188 V81 H32 Z" fill="url(#rg-torii)"/>
+            <path d="M101 47 H119 V66 H101 Z" fill="url(#rg-torii)"/>
+            <path d="M44 47 L61 47 L65 170 L39 170 Z" fill="url(#rg-torii)"/>
+            <path d="M159 47 L176 47 L181 170 L155 170 Z" fill="url(#rg-torii)"/>
+          </svg>
+        </div>
+
+        <div class="robotics-parallax__sakura">
+          <svg viewBox="0 0 260 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="rg-canopy" cx="42%" cy="32%" r="72%">
+                <stop offset="0%" stop-color="#ffd7e8"/>
+                <stop offset="58%" stop-color="#f287b7"/>
+                <stop offset="100%" stop-color="#d84f8c"/>
+              </radialGradient>
+              <linearGradient id="rg-trunk" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#5a3377"/>
+                <stop offset="100%" stop-color="#33204f"/>
+              </linearGradient>
+            </defs>
+            <path d="M136 230 C132 194 126 176 114 156" stroke="url(#rg-trunk)" stroke-width="13" stroke-linecap="round"/>
+            <path d="M114 156 C102 142 86 132 66 126" stroke="url(#rg-trunk)" stroke-width="8" stroke-linecap="round"/>
+            <path d="M114 156 C130 140 150 132 172 128" stroke="url(#rg-trunk)" stroke-width="8" stroke-linecap="round"/>
+            <path d="M128 182 C146 172 164 168 184 168" stroke="url(#rg-trunk)" stroke-width="7" stroke-linecap="round"/>
+            <g fill="url(#rg-canopy)">
+              <circle cx="84" cy="102" r="37"/>
+              <circle cx="128" cy="82" r="45"/>
+              <circle cx="174" cy="100" r="37"/>
+              <circle cx="142" cy="128" r="35"/>
+              <circle cx="98" cy="132" r="29"/>
+              <circle cx="188" cy="132" r="27"/>
+              <circle cx="118" cy="52" r="24"/>
+            </g>
+            <g fill="#fff0f6" opacity="0.85">
+              <circle cx="70" cy="88" r="3.2"/>
+              <circle cx="150" cy="60" r="3.6"/>
+              <circle cx="196" cy="116" r="3"/>
+              <circle cx="112" cy="150" r="2.8"/>
+              <circle cx="166" cy="150" r="2.6"/>
+            </g>
+          </svg>
+        </div>
+
         <div class="robotics-parallax__platform"></div>
-        <div class="robotics-parallax__robot">
-          <div class="robotics-orbital">
-            <div class="robotics-orbital__glow"></div>
-            <div class="robotics-orbital__ring robotics-orbital__ring--outer"></div>
-            <div class="robotics-orbital__ring robotics-orbital__ring--inner"></div>
-            <div class="robotics-orbital__core"></div>
-            <div class="robotics-orbital__node robotics-orbital__node--one"></div>
-            <div class="robotics-orbital__node robotics-orbital__node--two"></div>
-            <div class="robotics-orbital__node robotics-orbital__node--three"></div>
-            <div class="robotics-orbital__panel robotics-orbital__panel--one">
+        <div class="robotics-parallax__grid"></div>
+
+        <div class="robotics-parallax__emblem">
+          <div class="robotics-sigil">
+            <div class="robotics-sigil__glow"></div>
+            <div class="robotics-sigil__ring robotics-sigil__ring--outer"></div>
+            <div class="robotics-sigil__ring robotics-sigil__ring--inner"></div>
+            <div class="robotics-sigil__ring robotics-sigil__ring--sakura"></div>
+            <div class="robotics-sigil__core"></div>
+            <div class="robotics-sigil__node robotics-sigil__node--one"></div>
+            <div class="robotics-sigil__node robotics-sigil__node--two"></div>
+            <div class="robotics-sigil__node robotics-sigil__node--three"></div>
+            <div class="robotics-sigil__charm robotics-sigil__charm--one">
               <span></span>
               <span></span>
               <span></span>
             </div>
-            <div class="robotics-orbital__panel robotics-orbital__panel--two">
+            <div class="robotics-sigil__charm robotics-sigil__charm--two">
               <span></span>
               <span></span>
               <span></span>
-            </div>
-            <div class="robotics-orbital__rover">
-              <span class="robotics-orbital__mast"></span>
-              <span class="robotics-orbital__body"></span>
-              <span class="robotics-orbital__arm"></span>
-              <span class="robotics-orbital__wheel robotics-orbital__wheel--one"></span>
-              <span class="robotics-orbital__wheel robotics-orbital__wheel--two"></span>
             </div>
           </div>
         </div>
+
+        <div class="robotics-parallax__petals" data-robotics-petals></div>
       </div>
 
       <div class="md-grid md-typeset">
