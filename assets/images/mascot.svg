@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 260" role="img" aria-label="Sakura Robotics Lab 吉祥物：樱雷工程狐·小樱丸">
+  <!-- 原创吉祥物「小樱丸」：参考樱雷意象——乳白狐 · 樱粉内耳 · 额雷菱纹 · 樱环金铃；机械护目镜 + 扳手为工程特征 -->
+  <defs>
+    <linearGradient id="mz-fur" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFDFB"/>
+      <stop offset="100%" stop-color="#FBF3EC"/>
+    </linearGradient>
+    <linearGradient id="mz-tailtip" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#F4C8D9"/>
+      <stop offset="100%" stop-color="#DE9FBA"/>
+    </linearGradient>
+    <linearGradient id="mz-scarf" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#9370DB"/>
+      <stop offset="100%" stop-color="#7C5FBE"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 尾巴：乳白大尾 + 樱粉梢 -->
+  <path d="M150 184 Q210 198 218 142 Q223 106 198 94" fill="none" stroke="#3A3540" stroke-width="26" stroke-linecap="round"/>
+  <path d="M150 184 Q210 198 218 142 Q223 106 198 94" fill="none" stroke="url(#mz-fur)" stroke-width="19" stroke-linecap="round"/>
+  <path d="M212 112 Q219 99 202 92" fill="none" stroke="url(#mz-tailtip)" stroke-width="19" stroke-linecap="round"/>
+
+  <!-- 身体（坐姿） -->
+  <path d="M92 216 Q92 168 128 168 Q164 168 164 216 Q128 230 92 216 Z" fill="url(#mz-fur)" stroke="#3A3540" stroke-width="3.5" stroke-linejoin="round"/>
+  <ellipse cx="106" cy="222" rx="13" ry="8" fill="#FBF3EC" stroke="#3A3540" stroke-width="3"/>
+  <ellipse cx="150" cy="222" rx="13" ry="8" fill="#FBF3EC" stroke="#3A3540" stroke-width="3"/>
+
+  <!-- 樱雷项圈：紫围巾 + 樱花扣 + 金铃 -->
+  <path d="M96 172 Q128 186 160 172 L160 184 Q128 198 96 184 Z" fill="url(#mz-scarf)" stroke="#3A3540" stroke-width="3" stroke-linejoin="round"/>
+  <g fill="#DE9FBA" stroke="#C77E9F" stroke-width="1">
+    <ellipse cx="121" cy="176" rx="3.4" ry="5"/>
+    <ellipse cx="121" cy="176" rx="3.4" ry="5" transform="rotate(72 121 178)"/>
+    <ellipse cx="121" cy="176" rx="3.4" ry="5" transform="rotate(144 121 178)"/>
+    <ellipse cx="121" cy="176" rx="3.4" ry="5" transform="rotate(216 121 178)"/>
+    <ellipse cx="121" cy="176" rx="3.4" ry="5" transform="rotate(288 121 178)"/>
+  </g>
+  <circle cx="121" cy="178" r="2" fill="#C9A96E"/>
+  <circle cx="136" cy="188" r="6" fill="#C9A96E" stroke="#3A3540" stroke-width="2.5"/>
+  <path d="M133 185 Q136 183 139 185" fill="none" stroke="#8A6F3A" stroke-width="1.6" stroke-linecap="round"/>
+
+  <!-- 左手扳手（工程特征） -->
+  <path d="M84 196 L102 188" stroke="#9AA7C7" stroke-width="5.5" stroke-linecap="round"/>
+  <circle cx="81" cy="198" r="6" fill="none" stroke="#9AA7C7" stroke-width="4"/>
+  <circle cx="103" cy="196" r="10" fill="#FFF9F4" stroke="#3A3540" stroke-width="3"/>
+
+  <!-- 头 -->
+  <circle cx="128" cy="105" r="52" fill="url(#mz-fur)" stroke="#3A3540" stroke-width="3.5"/>
+
+  <!-- 狐耳：紫粉外耳 + 樱粉内耳 -->
+  <path d="M92 74 Q76 34 100 30 Q110 50 118 64 Z" fill="#8166B1" stroke="#3A3540" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M96 62 Q88 42 99 40 Q104 52 109 60 Z" fill="#F4C8D9"/>
+  <path d="M164 74 Q180 34 156 30 Q146 50 138 64 Z" fill="#8166B1" stroke="#3A3540" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M160 62 Q168 42 157 40 Q152 52 147 60 Z" fill="#F4C8D9"/>
+
+  <!-- 机械护目镜（推在额上，工程特征）：紫带 + 金圈青白镜片 -->
+  <rect x="82" y="72" width="92" height="13" rx="6.5" fill="#8166B1" stroke="#3A3540" stroke-width="2.5"/>
+  <circle cx="107" cy="78" r="13" fill="#9ADCF0" stroke="#C9A96E" stroke-width="3.5"/>
+  <circle cx="149" cy="78" r="13" fill="#9ADCF0" stroke="#C9A96E" stroke-width="3.5"/>
+  <circle cx="103" cy="74" r="3.5" fill="#FFFFFF" opacity="0.9"/>
+  <circle cx="145" cy="74" r="3.5" fill="#FFFFFF" opacity="0.9"/>
+
+  <!-- 额头樱雷菱纹（小樱丸的印记） -->
+  <polygon points="128,88 133.5,96 128,104 122.5,96" fill="#9370DB"/>
+  <polygon points="128,91.5 130.8,96 128,100.5 125.2,96" fill="#E8DDF6"/>
+
+  <!-- 表情：眯眼 ^ ^ + 樱粉腮红 + 小鼻嘴 -->
+  <path d="M104 114 Q112 105 120 114" fill="none" stroke="#3A3540" stroke-width="3.8" stroke-linecap="round"/>
+  <path d="M136 114 Q144 105 152 114" fill="none" stroke="#3A3540" stroke-width="3.8" stroke-linecap="round"/>
+  <ellipse cx="96" cy="124" rx="8" ry="4.5" fill="#F2A0BC" opacity="0.75"/>
+  <ellipse cx="160" cy="124" rx="8" ry="4.5" fill="#F2A0BC" opacity="0.75"/>
+  <polygon points="125,122 131,122 128,127" fill="#D98FAF"/>
+  <path d="M123 130 Q128 135 133 130" fill="none" stroke="#3A3540" stroke-width="2.6" stroke-linecap="round"/>
+
+  <!-- 胸前樱雷徽（小） -->
+  <polygon points="136,200 128,213 136,224 144,213" fill="#9370DB" stroke="#3A3540" stroke-width="1.6"/>
+
+  <!-- 漂浮樱瓣 -->
+  <path d="M36 92 q6 -8 12 0 q-6 8 -12 0" fill="#F4C8D9" opacity="0.85"/>
+  <path d="M222 176 q6 -8 12 0 q-6 8 -12 0" fill="#DE9FBA" opacity="0.7"/>
+  <path d="M52 200 q5 -7 10 0 q-5 7 -10 0" fill="#EFAFC5" opacity="0.6"/>
+</svg>

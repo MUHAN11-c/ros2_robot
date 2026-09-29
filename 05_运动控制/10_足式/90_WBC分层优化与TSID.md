@@ -348,6 +348,7 @@ $$\min \sum_k w_k \| A_k \begin{bmatrix} \ddot{q} \\ \lambda_c \\ \tau \end{bmat
 将所有约束和代价函数组装为标准 QP:
 
 $$\min_{x} \frac{1}{2} x^T H x + g^T x$$
+
 $$\text{s.t.} \quad A_{eq} x = b_{eq}, \quad A_{ineq} x \le b_{ineq}$$
 
 其中 $x = [\ddot{q}^T, \lambda_c^T, \tau^T]^T \in \mathbb{R}^{n_v + 3n_c + n_a}$。
@@ -1767,6 +1768,7 @@ ProxNLP WBC 流程:
 **数学形式**:引入二值变量 $z_i \in \{0, 1\}$ 表示第 $i$ 个接触点是否激活:
 
 $$z_i = 0: \quad \lambda_i = 0 \text{ (无接触力)}$$
+
 $$z_i = 1: \quad J_i \ddot{q} = -\dot{J}_i \dot{q} \text{ (接触约束激活)}$$
 
 这将原来的 QP 变成了**混合整数二次规划（MIQP）**。MIQP 的求解时间在最坏情况下是 $O(2^{n_c})$（需要枚举所有接触组合）,对 4 个接触点需要最多 $2^4 = 16$ 次 QP——虽然比单次 QP 慢,但在现代硬件上仍可能实时。

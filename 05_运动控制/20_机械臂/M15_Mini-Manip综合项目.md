@@ -591,9 +591,11 @@ private:
 考虑机器人末端从位姿 $i$ 移动到位姿 $j$。标定板固定在世界中，相机跟随末端移动。
 
 在位姿 $i$：
+
 $$T_{base\_gripper_i} \cdot T_{gripper\_camera} \cdot T_{camera_i\_target} = T_{base\_target}$$
 
 在位姿 $j$：
+
 $$T_{base\_gripper_j} \cdot T_{gripper\_camera} \cdot T_{camera_j\_target} = T_{base\_target}$$
 
 由于标定板不动，两式右边相等。令 $A = (T_{base\_gripper_i})^{-1} \cdot T_{base\_gripper_j}$（两个末端位姿之间的相对变换，从机器人正运动学得到），$B = T_{camera_i\_target} \cdot (T_{camera_j\_target})^{-1}$（两次观测之间的相对变换，从标定板检测得到），$X = T_{gripper\_camera}$（待求），得到：

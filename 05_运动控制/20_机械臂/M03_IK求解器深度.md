@@ -275,6 +275,7 @@ $$
 $$
 \cos\theta_3 = \frac{\|p_{w,\text{proj}}\|^2 - a_2^2 - c_3^2}{2 a_2 c_3}
 $$
+
 $$
 \theta_3 = \pm\arccos(\cos\theta_3)
 $$
@@ -683,6 +684,7 @@ KDL 原版只从一个初始点开始迭代。TRAC-IK 改进：
 $$
 \min_{q} \quad \|FK(q) - T_{\text{target}}\|^2
 $$
+
 $$
 \text{s.t.} \quad q_{\min} \le q \le q_{\max}
 $$
@@ -1059,6 +1061,7 @@ $$
 $$
 u = (p - r) - \omega \cdot [\omega^T (p - r)]
 $$
+
 $$
 v = (q - r) - \omega \cdot [\omega^T (q - r)]
 $$
@@ -1609,7 +1612,9 @@ $$
 低优先级任务**只在高优先级的零空间中**执行——绝不干扰高优先级目标。
 
 > **Pitfall Box**: 多层优先级的零空间计算存在**算法奇异性**——当高优先级任务的零空间维度骤变时（如接近奇异构型），投影矩阵不连续，导致关节速度跳变。工程中常用**加权伪逆**(`Weighted Least-Norm`) 做平滑过渡：
-> $$\dot{q} = J_W^\dagger v + (I - J_W^\dagger J) W^{-1} \nabla\phi$$
+> 
+> $\dot{q} = J_W^\dagger v + (I - J_W^\dagger J) W^{-1} \nabla\phi$
+> 
 > 其中 $W$ 是正定权重矩阵，通过连续调整 $W$ 避免不连续。
 
 ---

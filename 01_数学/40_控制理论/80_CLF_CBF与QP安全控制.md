@@ -125,7 +125,9 @@ CLF-CBF-QP 安全控制
 在 CBF 理论中，安全集 $\mathcal{C}$ 通常由一个标量函数 $h:\mathbb{R}^n\to\mathbb{R}$ 的零超水平集（zero-superlevel set）定义：
 
 $$\mathcal{C}=\{x\in\mathbb{R}^n : h(x)\ge 0\}$$
+
 $$\partial\mathcal{C}=\{x\in\mathbb{R}^n : h(x)= 0\} \quad \text{（边界）}$$
+
 $$\operatorname{Int}(\mathcal{C})=\{x\in\mathbb{R}^n : h(x)> 0\} \quad \text{（内部）}$$
 
 **正则性条件**：要求 $\nabla h(x)\neq 0$ 对所有 $x\in\partial\mathcal{C}$。这保证边界是一个光滑的超曲面（$n-1$ 维流形），没有尖角或奇点。
@@ -135,6 +137,7 @@ $$\operatorname{Int}(\mathcal{C})=\{x\in\mathbb{R}^n : h(x)> 0\} \quad \text{（
 **例子：圆形安全区域**
 
 设机器人位置 $x=(x_1,x_2)$，安全区域是半径为 $R$ 的圆盘 $\{x: \|x\|\le R\}$。定义：
+
 $$h(x) = R^2 - x_1^2 - x_2^2$$
 
 则 $h(x)\ge 0 \iff \|x\|\le R$，$\nabla h = (-2x_1, -2x_2)$。在边界 $\|x\|=R$ 上 $\nabla h \neq 0$（只有原点处为零，但原点不在边界上）。
@@ -142,6 +145,7 @@ $$h(x) = R^2 - x_1^2 - x_2^2$$
 **例子：距障碍物的安全距离**
 
 障碍物在 $x_{\text{obs}}$，安全距离 $d_{\text{safe}}$：
+
 $$h(x) = \|x - x_{\text{obs}}\|^2 - d_{\text{safe}}^2$$
 
 $h(x)\ge 0$ 表示机器人到障碍物距离 $\ge d_{\text{safe}}$。
@@ -155,6 +159,7 @@ $h(x)\ge 0$ 表示机器人到障碍物距离 $\ge d_{\text{safe}}$。
 #### 切锥的定义
 
 **定义（Bouligand 切锥）**：集合 $\mathcal{C}$ 在点 $x\in\mathcal{C}$ 处的切锥定义为：
+
 $$T_{\mathcal{C}}(x) = \left\{v\in\mathbb{R}^n : \liminf_{\tau\downarrow 0} \frac{\mathrm{dist}(x+\tau v, \mathcal{C})}{\tau} = 0 \right\}$$
 
 其中 $\mathrm{dist}(y, \mathcal{C}) = \inf_{z\in\mathcal{C}}\|y-z\|$。
@@ -162,6 +167,7 @@ $$T_{\mathcal{C}}(x) = \left\{v\in\mathbb{R}^n : \liminf_{\tau\downarrow 0} \fra
 **直觉**：切锥包含所有"不会立刻离开集合"的方向。如果 $v\in T_{\mathcal{C}}(x)$，从 $x$ 出发沿 $v$ 方向走一小步，要么还在 $\mathcal{C}$ 里，要么离 $\mathcal{C}$ 的距离比步长衰减得更快（即"擦着边界走"）。
 
 **对于水平集 $\mathcal{C}=\{h\ge 0\}$**：当 $x\in\partial\mathcal{C}$（即 $h(x)=0$）且 $\nabla h(x)\neq 0$ 时：
+
 $$T_{\mathcal{C}}(x) = \{v : \nabla h(x)\cdot v \ge 0\}$$
 
 这是以 $\nabla h(x)$ 为法向量的半空间——恰好是"不让 $h$ 减小"的方向集合。
@@ -169,6 +175,7 @@ $$T_{\mathcal{C}}(x) = \{v : \nabla h(x)\cdot v \ge 0\}$$
 #### Nagumo 定理的完整陈述与证明
 
 **定理（Nagumo 1942，水平集形式）**：设 $\mathcal{C}=\{x:h(x)\ge 0\}$，$h\in C^1$（连续可微），$\nabla h(x)\neq 0$ 对 $x\in\partial\mathcal{C}$。考虑系统 $\dot x = f(x)$，$f$ 局部 Lipschitz。则 $\mathcal{C}$ 对该系统前向不变当且仅当：
+
 $$\dot h(x) = \nabla h(x)\cdot f(x) \ge 0 \quad \forall x\in\partial\mathcal{C}$$
 
 即：在边界上，$h$ 沿轨迹的导数非负（系统不会让 $h$ 减小到负值）。
@@ -178,11 +185,13 @@ $$\dot h(x) = \nabla h(x)\cdot f(x) \ge 0 \quad \forall x\in\partial\mathcal{C}$
 假设条件成立但 $\mathcal{C}$ 不前向不变。则存在 $x_0\in\mathcal{C}$ 使得轨迹 $x(t;x_0)$ 在某 $t_1>0$ 时离开 $\mathcal{C}$，即 $h(x(t_1))<0$。
 
 **Step 1**：若 $x_0\in\operatorname{Int}(\mathcal{C})$（即 $h(x_0)>0$），由连续性，轨迹在离开 $\mathcal{C}$ 之前必须经过边界。定义离开时刻：
+
 $$t^* = \inf\{t>0 : h(x(t))<0\}$$
 
 由 $h$ 的连续性，$h(x(t^*))=0$，且 $h(x(t))\ge 0$ 对 $t\in[0,t^*]$。
 
 **Step 2**：在 $t^*$ 处，$h$ 从非负变为负。由右导数的定义：
+
 $$\dot h(x(t^*)) = \lim_{\epsilon\downarrow 0} \frac{h(x(t^*+\epsilon)) - h(x(t^*))}{\epsilon} = \lim_{\epsilon\downarrow 0} \frac{h(x(t^*+\epsilon))}{\epsilon}$$
 
 由于 $t^*$ 之后存在 $h<0$ 的时刻（否则 $t^*$ 不是 inf），必有 $\dot h(x(t^*))\le 0$。
@@ -200,6 +209,7 @@ $$h(x(t^*+\epsilon)) = h(x(t^*)) + \dot h(x(t^*))\epsilon + O(\epsilon^2) = O(\e
 **证明（必要性）**：
 
 若存在 $x_0\in\partial\mathcal{C}$ 使 $\dot h(x_0) = \nabla h(x_0)\cdot f(x_0)<0$。由 $h(x_0)=0$ 和 $\dot h(x_0)<0$，对充分小的 $\epsilon>0$：
+
 $$h(x(\epsilon;x_0)) = h(x_0) + \dot h(x_0)\epsilon + O(\epsilon^2) = \dot h(x_0)\epsilon + O(\epsilon^2) < 0$$
 
 即轨迹立即离开 $\mathcal{C}$，与前向不变矛盾。$\blacksquare$
@@ -214,6 +224,7 @@ $$h(x(\epsilon;x_0)) = h(x_0) + \dot h(x_0)\epsilon + O(\epsilon^2) = \dot h(x_0
 > **反事实推理**：如果我们只用 Nagumo 条件来设计控制器，会发生什么？控制器只在 $h(x)\approx 0$ 时才"紧张"并施加修正，在 $h(x)>0$ 时完全不管安全——就像一辆车只在即将撞墙时才踩刹车。如果车速太快，刹车力有限（输入约束），就会撞上去。CBF 通过在远离边界处就施加温和约束（"限速区"），解决了这个问题。
 
 **CBF 的推广策略**：允许 $h>0$ 时 $\dot h$ 为负（系统可以向边界靠近），但衰减速率被 $\alpha(h)$ 限制：
+
 $$\dot h(x) \ge -\alpha(h(x))$$
 
 当 $h$ 大（远离边界）时 $\alpha(h)$ 大，允许较快靠近；当 $h$ 小（接近边界）时 $\alpha(h)$ 小，强制减速。比较引理保证在此条件下 $h(t)\ge 0$。
@@ -255,6 +266,7 @@ $$\dot h(x) \ge -\alpha(h(x))$$
 现在我们有控制输入：$\dot x = f(x)+g(x)u$。问题变为：**是否存在一个 $V$，使得对任意 $x\neq 0$，都能找到 $u$ 让 $\dot V<0$？** 如果答案是肯定的，这个 $V$ 就是 CLF——它证明了系统**可以被镇定**（但还没给出具体的控制律）。
 
 **定义（Control Lyapunov Function）**：对控制仿射系统 $\dot x = f(x)+g(x)u$，$C^1$ 函数 $V:\mathbb{R}^n\to\mathbb{R}_{\ge 0}$ 是 CLF，如果它满足专题 3.7 中 Lyapunov 函数的所有基本条件——(i) $V(0)=0$；(ii) $V(x)>0$ 对 $x\neq 0$（正定）；(iii) $V(x)\to\infty$ 当 $\|x\|\to\infty$（径向无界，即存在 $\alpha_1,\alpha_2\in\mathcal{K}_\infty$ 使 $\alpha_1(\|x\|)\le V(x)\le\alpha_2(\|x\|)$）——并且额外满足**可镇定条件**：
+
 $$\inf_{u\in\mathbb{R}^m}\left[L_f V(x) + L_g V(x)\,u\right] < 0 \quad \forall x\neq 0$$
 
 其中 $L_f V = \nabla V\cdot f$ 是 $V$ 沿 $f$ 的 Lie 导数，$L_g V = \nabla V\cdot g$ 是沿 $g$ 的 Lie 导数（$1\times m$ 行向量）。
@@ -304,6 +316,7 @@ $$k(x) = \begin{cases} \displaystyle\frac{-a(x) - \sqrt{a(x)^2 + b(x)^4}}{b(x)} 
 **推导过程**：
 
 **Step 1**：我们要求 $\dot V = a + bu < 0$，即 $bu < -a$。当 $b\neq 0$ 时，最"温和"的满足方式是让 $a+bu$ 恰好等于某个负值。Sontag 的选择是让：
+
 $$a + bu = -\sqrt{a^2 + b^4}$$
 
 为什么选这个特定的形式？因为：
@@ -312,6 +325,7 @@ $$a + bu = -\sqrt{a^2 + b^4}$$
 - $|u|$ 在 $a<0$ 时较小（小控制性质）
 
 **Step 2**：由 $a+bu = -\sqrt{a^2+b^4}$ 解出：
+
 $$u = \frac{-a - \sqrt{a^2+b^4}}{b}$$
 
 **Step 3（验证连续性）**：当 $b\to 0$ 时，分子分母都趋于零。用 L'Hopital 或直接有理化：
@@ -327,6 +341,7 @@ $$k(x) = \begin{cases} \displaystyle\frac{-a(x) - \sqrt{a(x)^2 + \|b(x)\|^4}}{\|
 方向沿 $b^\top$（$L_g V$ 的转置），是使 $\dot V$ 下降最快的方向在仿射约束下的投影。
 
 **验证 $\dot V<0$**：
+
 $$\dot V = a + b\cdot k = a + \frac{-a-\sqrt{a^2+\|b\|^4}}{\|b\|^2}\cdot\|b\|^2 = a + (-a-\sqrt{a^2+\|b\|^4}) = -\sqrt{a^2+\|b\|^4} < 0$$
 
 当 $x\neq 0$（若 $b=0$ 则 $a<0$，取 $u=0$ 即 $\dot V=a<0$）。
@@ -357,6 +372,7 @@ Sontag 公式有几个深刻的数学性质值得理解：
 Sontag 公式虽然优雅，但有局限：（1）不容易加入输入约束 $u\in\mathcal{U}$；（2）不容易与 CBF 结合；（3）衰减率 $\sqrt{a^2+\|b\|^4}$ 不可调。现代方法用 QP 替代 Sontag 公式：
 
 **CLF-QP**：
+
 $$u^* = \arg\min_{u\in\mathcal{U}} \|u\|^2 \quad \text{s.t.} \quad L_f V(x) + L_g V(x)\,u \le -\gamma V(x)$$
 
 这是带输入约束的 CLF 实现。选 $\gamma V$ 作为衰减率给出指数收敛 $V(t)\le V(0)e^{-\gamma t}$。
@@ -364,6 +380,7 @@ $$u^* = \arg\min_{u\in\mathcal{U}} \|u\|^2 \quad \text{s.t.} \quad L_f V(x) + L_
 **CLF-QP 与 Sontag 公式的关系**：当 $\mathcal{U}=\mathbb{R}^m$ 且目标是最小范数 $u$ 时，CLF-QP 的解与 Sontag 公式不完全相同（因为 Sontag 选择了特定的衰减率），但都保证稳定性。CLF-QP 的优势是衰减率 $\gamma$ 可调且可加输入约束。
 
 **CLF-QP 的可行性条件**：约束 $L_fV+L_gVu\le-\gamma V$ 与 $u\in\mathcal{U}$ 相容，当且仅当：
+
 $$\exists u\in\mathcal{U}: L_gV\cdot u\le -L_fV-\gamma V$$
 
 当 $L_gV=0$ 时需要 $L_fV+\gamma V\le 0$（由 small control property 保证在 $L_gV=0\implies L_fV<0$ 的邻域成立，但 $\gamma$ 太大可能使 $-\gamma V$ 项主导而不可行）。
@@ -405,6 +422,7 @@ $$\exists u\in\mathcal{U}: L_gV\cdot u\le -L_fV-\gamma V$$
 **引理（Khalil, Nonlinear Systems, Lemma 3.4 / 4.4）**：
 
 设 $\dot y(t)\ge \phi(t, y(t))$，$y(t_0)=y_0$，其中 $\phi$ 关于 $y$ 局部 Lipschitz、关于 $t$ 连续。设 $z(t)$ 是 ODE $\dot z=\phi(t,z)$，$z(t_0)=y_0$ 的解。则：
+
 $$y(t)\ge z(t) \quad \forall t\ge t_0$$
 
 （在两者解均存在的区间上）。
@@ -477,6 +495,7 @@ $$\sup_{u\in\mathcal{U}}\left[L_f h(x) + L_g h(x)\,u\right] \ge -\alpha(h(x)) \q
 **解读**：对每个状态 $x$，至少存在一个控制 $u$ 使得 $\dot h\ge -\alpha(h)$。这个条件的"sup"取在 $u$ 上——我们不要求**所有** $u$ 满足，只要**存在** $u$ 满足即可。
 
 **可行控制集**：
+
 $$K_{\text{cbf}}(x) = \{u\in\mathcal{U} : L_f h(x) + L_g h(x)\,u \ge -\alpha(h(x))\}$$
 
 这是 $\mathcal{U}$ 中满足 CBF 约束的控制子集。ZCBF 定义等价于 $K_{\text{cbf}}(x)\neq\varnothing$ 对所有 $x\in\mathcal{D}$。
@@ -494,6 +513,7 @@ $$K_{\text{cbf}}(x) = \{u\in\mathcal{U} : L_f h(x) + L_g h(x)\,u \ge -\alpha(h(x
 **Part (a)：前向不变性**
 
 **Step 1 — 建立微分不等式**：设 $u(x)\in K_{\text{cbf}}(x)$ Lipschitz 连续（保证闭环 ODE 解存在唯一）。沿闭环轨迹：
+
 $$\dot h(x(t)) = L_f h(x(t)) + L_g h(x(t))\,u(x(t)) \ge -\alpha(h(x(t)))$$
 
 令 $y(t) = h(x(t))$，则 $\dot y(t) \ge -\alpha(y(t))$。
@@ -505,6 +525,7 @@ $$\dot h(x(t)) = L_f h(x(t)) + L_g h(x(t))\,u(x(t)) \ge -\alpha(h(x(t)))$$
 设 $\dot y\ge -\alpha(y)$，$y(0)=y_0$。令 $z(t)$ 为标量 ODE $\dot z = -\alpha(z)$，$z(0)=y_0$ 的解。若 $\alpha$ 局部 Lipschitz，则 $y(t)\ge z(t)$ 对所有 $t\ge 0$（在解存在的区间上）。
 
 **证明比较引理**：令 $w(t)=y(t)-z(t)$。则 $w(0)=0$ 且
+
 $$\dot w = \dot y - \dot z \ge -\alpha(y) - (-\alpha(z)) = \alpha(z)-\alpha(y)$$
 
 这不能直接得出 $w\ge 0$。正确方法：假设存在首次 $y<z$ 的时刻 $t^*$（即 $w(t^*)=0$，$\dot w(t^*)<0$）。由 $w(t^*)=0$ 得 $y(t^*)=z(t^*)$，所以 $\dot w(t^*)=\dot y(t^*)-\dot z(t^*)\ge -\alpha(y(t^*))+\alpha(z(t^*))=0$，矛盾。$\square$
@@ -522,6 +543,7 @@ $$\dot w = \dot y - \dot z \ge -\alpha(y) - (-\alpha(z)) = \alpha(z)-\alpha(y)$$
 **情形 B**：$z(0)=0$。由唯一性，$z(t)\equiv 0$。
 
 两种情形下 $z(t)\ge 0$ 对所有 $t\ge 0$。由比较不等式：
+
 $$h(x(t)) = y(t) \ge z(t) \ge 0 \quad \forall t\ge 0$$
 
 即 $x(t)\in\mathcal{C}$ 保持。$\blacksquare$
@@ -614,7 +636,9 @@ $$B:\operatorname{Int}(\mathcal{C})\to\mathbb{R}_{\ge 0}, \quad B(x)\to +\infty 
 考虑双积分器 $\ddot q = u$（等价于 $\dot x_1=x_2$，$\dot x_2=u$，其中 $x_1=q$，$x_2=\dot q$）。位置约束 $h(x)=x_1-q_{\min}$。
 
 计算 Lie 导数：
+
 $$L_f h = \nabla h\cdot f = [1,0]\cdot[x_2, 0]^\top = x_2$$
+
 $$L_g h = \nabla h\cdot g = [1,0]\cdot[0, 1]^\top = 0$$
 
 **灾难**：$L_g h\equiv 0$！控制 $u$ 根本不出现在 $\dot h$ 中。CBF 约束变为 $x_2\ge -\alpha(h)$——这是对状态的约束，不是对控制的约束，无法写进 QP！
@@ -624,9 +648,11 @@ $$L_g h = \nabla h\cdot g = [1,0]\cdot[0, 1]^\top = 0$$
 #### 相对度的定义
 
 **定义**：安全约束 $h(x)$ 相对于系统 $\dot x=f(x)+g(x)u$ 的**相对度** $r$ 是满足以下条件的最小正整数：
+
 $$L_g L_f^{r-1} h(x) \neq 0$$
 
 即 $u$ 首次出现在 $h$ 的第 $r$ 阶时间导数中：
+
 $$h^{(r)} = L_f^r h + L_g L_f^{r-1} h\cdot u$$
 
 对相对度 $r>1$ 的约束，$L_g h = L_g L_f h = \cdots = L_g L_f^{r-2}h = 0$，标准 CBF 失效。
@@ -638,17 +664,23 @@ $$h^{(r)} = L_f^r h + L_g L_f^{r-1} h\cdot u$$
 **定义（Xiao-Belta, IEEE TAC 67(7):3655-3662, 2022）**：
 
 $$\psi_0(x) := h(x)$$
+
 $$\psi_1(x) := \dot\psi_0(x) + \alpha_1(\psi_0(x)) = L_f h(x) + \alpha_1(h(x))$$
+
 $$\psi_2(x) := \dot\psi_1(x) + \alpha_2(\psi_1(x))$$
+
 $$\vdots$$
+
 $$\psi_i(x) := \dot\psi_{i-1}(x) + \alpha_i(\psi_{i-1}(x)), \quad i=1,\ldots,r-1$$
 
 其中 $\alpha_i$ 为扩展类 $\mathcal{K}_\infty$ 函数（可任意非线性）。
 
 **HOCBF 约束**：最终只在第 $r$ 层施加约束，此时 $u$ 出现：
+
 $$\dot\psi_{r-1}(x,u) + \alpha_r(\psi_{r-1}(x)) \ge 0$$
 
 展开后：
+
 $$L_f^r h + L_g L_f^{r-1} h\cdot u + O(\alpha_1,\ldots,\alpha_r, h, L_fh,\ldots) \ge 0$$
 
 这是关于 $u$ 的**线性约束**，可以写进 QP！
@@ -735,14 +767,17 @@ def hocbf_double_integrator(x1, x2, u_nom, gamma1=2.0, gamma2=2.0,
 **指数 CBF** 是 Nguyen-Sreenath（ACC 2016）提出的方法，是 HOCBF 当所有 $\alpha_i$ 取线性时的特例。它的优势是可以用极点配置设计参数。
 
 **构造**：对相对度 $r$ 的约束 $h$，定义状态向量：
+
 $$\eta_b(x) = [h, L_fh, L_f^2h, \ldots, L_f^{r-1}h]^\top \in\mathbb{R}^r$$
 
 动力学化为 Brunovsky 标准形（积分器链）：
+
 $$\dot\eta_b = F\eta_b + G\mu$$
 
 其中 $F$ 是 $r\times r$ 移位矩阵（companion matrix 形式），$G=[0,\ldots,0,1]^\top$，$\mu = L_f^rh + L_gL_f^{r-1}h\cdot u$。
 
 **ECBF 约束**：
+
 $$L_f^rh + L_gL_f^{r-1}h\cdot u \ge -K_b\,\eta_b(x)$$
 
 其中 $K_b=[k_1,\ldots,k_r]\in\mathbb{R}^{1\times r}$ 通过**极点配置**选择，使 $F-GK_b$ 的所有特征值在左半复平面（Hurwitz）。
@@ -836,25 +871,33 @@ $$\begin{aligned}
 为深入理解 QP 行为，简化为无输入约束的情形（$\mathcal{U}=\mathbb{R}^m$，$H=I$，$u_{\text{ref}}=0$）。
 
 **拉格朗日量**：
+
 $$\mathcal{L}(u,\delta,\lambda_V,\lambda_h) = \frac{1}{2}\|u\|^2 + p\delta^2 + \lambda_V(L_fV + L_gV\cdot u + \gamma V - \delta) + \lambda_h(-L_fh - L_gh\cdot u - \alpha(h))$$
 
 **KKT 条件**：
 
 1. **关于 $u$ 的驻点条件**：
+
 $$\frac{\partial\mathcal{L}}{\partial u} = u + \lambda_V(L_gV)^\top - \lambda_h(L_gh)^\top = 0$$
+
 $$\Rightarrow u^* = -\lambda_V(L_gV)^\top + \lambda_h(L_gh)^\top$$
 
 2. **关于 $\delta$ 的驻点条件**：
+
 $$\frac{\partial\mathcal{L}}{\partial\delta} = 2p\delta - \lambda_V = 0 \quad \Rightarrow \quad \delta^* = \frac{\lambda_V}{2p}$$
 
 3. **原始可行性**（约束满足）：
+
 $$L_fV + L_gV\cdot u + \gamma V - \delta \le 0$$
+
 $$-L_fh - L_gh\cdot u - \alpha(h) \le 0$$
 
 4. **对偶可行性**：$\lambda_V\ge 0$，$\lambda_h\ge 0$
 
 5. **互补松弛**：
+
 $$\lambda_V(L_fV + L_gV\cdot u + \gamma V - \delta) = 0$$
+
 $$\lambda_h(-L_fh - L_gh\cdot u - \alpha(h)) = 0$$
 
 #### 四种情形分析
@@ -881,12 +924,15 @@ $$u^* = \arg\min_{u\in\mathcal{U}} \|u - u_{\text{nom}}\|^2 \quad \text{s.t.} \q
 当 $\mathcal{U}=\mathbb{R}^m$，设 $a=L_fh(x)+\alpha(h(x))$，$b=L_gh(x)\in\mathbb{R}^{1\times m}$。CBF 约束变为 $bu\ge -a$，即 $a+bu\ge 0$。
 
 **情况 1**：$a+b\,u_{\text{nom}}\ge 0$（名义控制已安全）：
+
 $$u^* = u_{\text{nom}}$$
+
 不修正。
 
 **情况 2**：$a+b\,u_{\text{nom}}<0$（名义控制不安全）：
 
 求 $u_{\text{nom}}$ 在半空间 $\{u:a+bu\ge 0\}$ 上的正交投影。结果：
+
 $$u^* = u_{\text{nom}} + \lambda^* b^\top$$
 
 其中对偶变量 $\lambda^* = \max\left\{0,\;\frac{-(a+b\,u_{\text{nom}})}{b\,b^\top}\right\}$。
@@ -959,6 +1005,7 @@ $$L_fh_i + L_gh_i\cdot u \ge -\alpha_i(h_i), \quad i=1,\ldots,N$$
 #### Composite CBF：smooth-min 合并
 
 **Molnar-Ames 2023** 提出把多个 $h_i$ 合并为单一 smooth-min：
+
 $$h(x) = -\frac{1}{\kappa}\log\sum_i e^{-\kappa h_i(x)}$$
 
 当 $\kappa\to\infty$ 时趋向 $\min_i h_i(x)$。优点：只有一条 CBF 约束（而非 $N$ 条），QP 规模不随障碍物数增加。缺点：$\nabla h$ 的计算涉及所有 $h_i$ 的梯度加权和，可能较保守。
@@ -982,6 +1029,7 @@ $$h(x) = -\frac{1}{\kappa}\log\sum_i e^{-\kappa h_i(x)}$$
 #### 标准 QP 形式
 
 OSQP 求解的标准形式为：
+
 $$\min_x \frac{1}{2}x^\top Px + q^\top x \quad \text{s.t.} \quad l \le Ax \le u$$
 
 **CBF-QP 到 OSQP 的映射**：
@@ -989,9 +1037,11 @@ $$\min_x \frac{1}{2}x^\top Px + q^\top x \quad \text{s.t.} \quad l \le Ax \le u$
 决策变量：$x=[u^\top, \delta]^\top\in\mathbb{R}^{m+1}$（含松弛）
 
 目标矩阵：
+
 $$P = \begin{bmatrix} H & 0 \\ 0 & 2p \end{bmatrix}, \quad q = \begin{bmatrix} -H\,u_{\text{ref}} \\ 0 \end{bmatrix}$$
 
 约束矩阵：
+
 $$A = \begin{bmatrix} L_gV & -1 \\ -L_gh & 0 \\ I_m & 0 \\ 0 & 1 \end{bmatrix}, \quad l = \begin{bmatrix} -\infty \\ -\infty \\ u_{\min} \\ -\infty \end{bmatrix}, \quad u = \begin{bmatrix} -L_fV-\gamma V \\ L_fh+\alpha(h) \\ u_{\max} \\ \infty \end{bmatrix}$$
 
 ```python
@@ -1175,9 +1225,11 @@ class CLF_CBF_QP:
 对离散系统 $x_{k+1} = F(x_k, u_k)$，安全集 $\mathcal{C}=\{x:h(x)\ge 0\}$。
 
 **定义（Discrete-Time CBF）**：$h$ 是 DCBF，如果存在 $\alpha\in(0,1]$ 使得：
+
 $$\sup_{u_k\in\mathcal{U}} h(F(x_k, u_k)) \ge (1-\alpha)\,h(x_k) \quad \forall x_k\in\mathcal{C}$$
 
 等价约束形式（对具体控制 $u_k$）：
+
 $$h(x_{k+1}) - h(x_k) \ge -\alpha\,h(x_k)$$
 
 即 $h(x_{k+1}) \ge (1-\alpha)\,h(x_k)$。
@@ -1188,6 +1240,7 @@ $$h(x_{k+1}) - h(x_k) \ge -\alpha\,h(x_k)$$
 - $\alpha\in(0,1)$：安全裕度几何衰减 $h(x_k)\ge (1-\alpha)^k h(x_0)$——指数收敛到零但不穿零
 
 **与连续 CBF 的关系**：连续 CBF 条件 $\dot h\ge -\gamma h$ 在 Euler 离散化下变为：
+
 $$\frac{h_{k+1}-h_k}{\Delta t}\ge -\gamma h_k \implies h_{k+1}\ge (1-\gamma\Delta t)h_k$$
 
 对应 $\alpha=\gamma\Delta t$。当 $\gamma\Delta t>1$ 时失去意义——这正是连续 CBF 在低频采样下失效的原因。
@@ -1325,6 +1378,7 @@ $$\sup_u[L_fh + L_gh\cdot u] \ge -\alpha(h(x)) + \iota(\|d\|)$$
 **结论**：扰动下 $\mathcal{C}$ 的一个**膨胀集** $\mathcal{C}_d\supseteq\mathcal{C}$ 前向不变，膨胀量随 $d_{\max}$ 增大。直觉：扰动使安全边界"模糊化"——实际安全集比标称的小。
 
 **工程实现**：在 CBF 约束中加 margin：
+
 $$L_fh + L_gh\cdot u \ge -\alpha(h) + d_{\max}\|\nabla h\|$$
 
 右边多出的 $d_{\max}\|\nabla h\|$ 补偿了最坏情况扰动对 $\dot h$ 的影响。
@@ -1346,6 +1400,7 @@ $$L_fh + L_gh\cdot u \ge -\alpha(h) + d_{\max}\|\nabla h\|$$
 **Zeng-Zhang-Sreenath (ACC 2021, arXiv:2007.11718)** 把 DCBF 作为 MPC 每一预测步的硬约束：
 
 $$\min_{u_0,\ldots,u_{N-1}} \sum_{k=0}^{N-1} \ell(x_k,u_k) + V_f(x_N)$$
+
 $$\text{s.t.} \quad x_{k+1}=F(x_k,u_k), \quad h(x_{k+1})\ge(1-\alpha)h(x_k), \quad u_k\in\mathcal{U}$$
 
 **优势**：短预测时域（$N=5\sim 10$）即可实现远距离避障——因为 DCBF 在每步都保证安全裕度不快速衰减，即使没有预测到很远也安全。
@@ -1401,11 +1456,13 @@ $$\mathcal{L}(\theta) = \underbrace{\lambda_1\mathcal{L}_{\text{class}}}_{\text{
 对随机系统（如有传感器噪声的机器人、风场中的无人机），确定性安全不可能——只能保证**概率安全**。
 
 对 Ito 随机微分方程：
+
 $$dx = (f(x) + g(x)u)\,dt + \sigma(x)\,dW_t$$
 
 其中 $W_t$ 是标准 Brownian 运动（Wiener 过程），$\sigma(x)$ 是扩散系数矩阵。
 
 **Ito 公式**对 $B(x)$ 求广义导数（与确定性情况的关键区别）：
+
 $$d B(x_t) = \underbrace{\nabla B\cdot(f+gu)}_{\text{漂移项}} dt + \underbrace{\frac{1}{2}\operatorname{tr}(\sigma^\top\nabla^2 B\,\sigma)}_{\text{扩散项（Ito修正）}} dt + \nabla B\cdot\sigma\,dW_t$$
 
 **扩散项的物理含义**：$\frac{1}{2}\operatorname{tr}(\sigma^\top\nabla^2 B\,\sigma)$ 是噪声对 $B$ 的"平均推动力"。即使漂移方向安全，噪声的二阶效应（通过 $B$ 的曲率 $\nabla^2 B$）可能让系统向不安全方向偏移。这是随机系统比确定性系统更"危险"的数学原因。
@@ -1415,6 +1472,7 @@ $$d B(x_t) = \underbrace{\nabla B\cdot(f+gu)}_{\text{漂移项}} dt + \underbrac
 $$\sup_u\left[\nabla B\cdot(f+gu) + \frac{1}{2}\operatorname{tr}(\sigma^\top\nabla^2 B\,\sigma)\right] \ge -\alpha(B(x))$$
 
 若此条件满足，$B(x_t)$ 是 **supermartingale**（期望不增），由 Doob 最大不等式得概率安全界：
+
 $$\mathbb{P}\left(\inf_{t\ge 0} h(x_t) < 0\right) \le \frac{B(x_0)}{c}$$
 
 **工程含义**：为了保证高概率安全，CBF 约束需要更"保守"——额外减去扩散项的贡献。这等价于在安全边界内部预留一个"噪声裕度带"。
@@ -1428,6 +1486,7 @@ HJ Reachability（Hamilton-Jacobi Reachability Analysis）通过求解偏微分�
 **CBVF（Control Barrier-Value Function, Choi-Lee-Sreenath-Tomlin-Herbert CDC 2021, arXiv:2104.02808）** 统一了两者：
 
 引入折扣参数 $\gamma\ge 0$，CBVF $B_\gamma(x,t)$ 是以下 HJI-VI 的粘性解：
+
 $$0 = \min\left\{l(x)-B_\gamma,\;\partial_t B_\gamma + \max_{u\in\mathcal{U}}\min_{d\in\mathcal{D}}\nabla_x B_\gamma\cdot f(x,u,d) + \gamma B_\gamma\right\}$$
 
 **关键事实**：
@@ -1435,6 +1494,7 @@ $$0 = \min\left\{l(x)-B_\gamma,\;\partial_t B_\gamma + \max_{u\in\mathcal{U}}\mi
 - 当 $\gamma>0$：内嵌 CBF 衰减 $\alpha(r)=\gamma r$，$\{B_\gamma\ge 0\}$ 仍精确等于 viability kernel
 
 **实践意义**：用 HJ 方法（如 `hj_reachability` 库）在离线阶段计算 $B_\gamma$，然后在线用 Robust CBVF-QP：
+
 $$\min_u\|u-u_{\text{nom}}\|^2 \quad\text{s.t.}\quad\min_{d\in\mathcal{D}}\nabla_x B_\gamma\cdot f(x,u,d)\ge -\gamma B_\gamma$$
 
 这解决了手工设计 CBF 的痛点——用 HJ 自动生成有效且紧致的 CBF。缺点是 HJ 只能处理低维系统（当前实用上限约 $n\le 6$）。
@@ -1448,6 +1508,7 @@ $$\min_u\|u-u_{\text{nom}}\|^2 \quad\text{s.t.}\quad\min_{d\in\mathcal{D}}\nabla
 $$f(x) = \hat{f}(x) + \Delta f(x), \quad \Delta f\sim\mathcal{GP}(0, k(x,x'))$$
 
 GP 后验给出 $\Delta f$ 的均值 $\mu(x)$ 和方差 $\sigma^2(x)$。安全约束变为：
+
 $$L_{\hat{f}}h + L_gh\cdot u + \mu_{\Delta f}^\top\nabla h - \beta\sigma_{\Delta f}\|\nabla h\| \ge -\alpha(h)$$
 
 其中 $\beta$ 控制置信度（$\beta=2$ 对应约 95% 概率安全）。方差 $\sigma$ 大的区域约束更紧（更保守）——这是合理的：不确定性大时应更谨慎。
@@ -1488,8 +1549,11 @@ $$h(x) = z - \tau_h v_e = (p_l-p_e) - 1.8\,v_e$$
 #### CBF-QP 构造与求解
 
 选 $\alpha(h)=\gamma h$，CBF 约束展开：
+
 $$L_fh + L_gh\cdot u \ge -\gamma h$$
+
 $$(v_l-v_e) + (-1.8)u \ge -\gamma(z-1.8v_e)$$
+
 $$u \le \frac{(v_l-v_e)+\gamma(z-1.8v_e)}{1.8}$$
 
 **物理解读**：当 $v_l<v_e$（前车比你慢）且 $z-1.8v_e$ 小（车距不富裕），最大允许加速度可以为负——即要求减速。$\gamma$ 控制"多早开始减速"：$\gamma$ 大→更早减速但更保守，$\gamma$ 小→允许更晚减速但更激进。
@@ -1550,6 +1614,7 @@ def acc_cbf_step(z, v_e, v_l, u_nom, gamma=1.0, tau_h=1.8,
 #### 系统模型
 
 四旋翼简化为质心平移动力学（忽略姿态环，假设内环快）：
+
 $$\ddot p = \frac{1}{m}F_{\text{thrust}} - g e_3 + d$$
 
 状态 $x=[p^\top, \dot p^\top]^\top\in\mathbb{R}^6$，控制 $u=F_{\text{thrust}}\in\mathbb{R}^3$。
@@ -1573,6 +1638,7 @@ $$\ddot p = \frac{1}{m}F_{\text{thrust}} - g e_3 + d$$
 $$F_z \ge m\left[g - (\gamma_1+\gamma_2)\dot z - \gamma_1\gamma_2(z-z_{\min})\right]$$
 
 **极点配置**：取 $\gamma_1=\gamma_2=2$（重极点 $s=-2$），约束为：
+
 $$F_z \ge m[g - 4\dot z - 4(z-z_{\min})]$$
 
 当 $z$ 接近 $z_{\min}$ 且 $\dot z<0$（下降中），约束要求 $F_z$ 增大——即增加推力以减缓下降。
@@ -1582,6 +1648,7 @@ $$F_z \ge m[g - 4\dot z - 4(z-z_{\min})]$$
 同时考虑高度、速度、姿态约束：
 
 $$\min_{u\in\mathbb{R}^3}\|u-u_{\text{nom}}\|^2$$
+
 $$\text{s.t.}\quad \text{HOCBF}(h_1)\ge 0,\quad \text{CBF}(h_2)\ge 0,\quad \text{CBF}(h_3)\ge 0,\quad u\in\mathcal{U}$$
 
 ### 7.4 多机器人避障 ⭐⭐⭐
@@ -1589,6 +1656,7 @@ $$\text{s.t.}\quad \text{HOCBF}(h_1)\ge 0,\quad \text{CBF}(h_2)\ge 0,\quad \text
 #### 成对 CBF 构造
 
 **Wang-Ames-Egerstedt (T-RO 2017)** 为 $N$ 个单积分器机器人两两定义：
+
 $$h_{ij}(x) = \|p_i-p_j\|^2 - (2r)^2$$
 
 $2r$ 是两机器人最小允许距离。
@@ -1654,6 +1722,7 @@ $2r$ 是两机器人最小允许距离。
 $$\text{可行性} \iff L_fh(x) + \max_{u\in\mathcal{U}}L_gh(x)\cdot u\ge -\alpha(h(x))$$
 
 对 $\mathcal{U}=\{u:\|u\|\le u_{\max}\}$，$\max_u L_gh\cdot u = \|L_gh\|\cdot u_{\max}$。可行条件变为：
+
 $$L_fh(x) + \|L_gh(x)\|\cdot u_{\max}\ge -\alpha(h(x))$$
 
 若此条件在某状态不满足，说明该状态"不可救"——应从更高层（如路径规划）避免进入此区域。这正是 **控制不变集** 的概念：最大的集合使得内部所有状态都可行。
@@ -1675,6 +1744,7 @@ SMT 验证在 $n>6$ 时计算量爆炸。当前方法：
 ### 8.4 CBF 在时变环境中的挑战 ⭐⭐⭐⭐
 
 当障碍物移动或环境变化时，CBF 函数本身随时间变化：$h(x,t)$。时变 CBF 的条件变为：
+
 $$\frac{\partial h}{\partial t} + L_fh + L_gh\cdot u\ge -\alpha(h)$$
 
 额外项 $\partial h/\partial t$ 表示环境变化对安全裕度的影响。例如障碍物靠近时 $\partial h/\partial t<0$，使约束更紧。
@@ -1986,15 +2056,21 @@ CBF-QP 在机器人控制频谱上处于 **执行器层（1 kHz）与规划层�
 整个 CLF-CBF 理论可以浓缩为三个核心公式：
 
 **公式 1 — CLF 条件**（稳定性）：
+
 $$\inf_{u\in\mathcal{U}}\left[L_fV(x)+L_gV(x)\,u\right] \le -\gamma V(x)$$
+
 "至少有一个控制使 Lyapunov 函数以 $\gamma V$ 的速率下降。"
 
 **公式 2 — CBF 条件**（安全性）：
+
 $$\sup_{u\in\mathcal{U}}\left[L_fh(x)+L_gh(x)\,u\right] \ge -\alpha(h(x))$$
+
 "至少有一个控制使安全裕度的衰减速率不超过 $\alpha(h)$。"
 
 **公式 3 — CLF-CBF-QP**（统一实现）：
+
 $$u^*=\arg\min_{u,\delta}\|u-u_{\text{ref}}\|^2+p\delta^2 \quad\text{s.t. CLF (soft) + CBF (hard)}$$
+
 "在满足安全硬约束的前提下，尽可能跟踪名义控制。"
 
 ### 未完成的战线

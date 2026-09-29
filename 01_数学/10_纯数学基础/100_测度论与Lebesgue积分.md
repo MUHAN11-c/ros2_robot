@@ -380,12 +380,15 @@ Lebesgue 积分的严格构造需要三块拼图，本章依次完成：
 给定任意集族 $\mathcal{E}\subseteq 2^X$（不一定是 $\sigma$-代数），我们想找"包含 $\mathcal{E}$ 的最小 $\sigma$-代数"。
 
 > **定义 2.2（生成 $\sigma$-代数）**：
-> $$\sigma(\mathcal{E}):=\bigcap\{\mathcal{M}:\mathcal{M}\text{ 是 }X\text{ 上的 }\sigma\text{-代数},\ \mathcal{E}\subseteq\mathcal{M}\}.$$
+> 
+> $\sigma(\mathcal{E}):=\bigcap\{\mathcal{M}:\mathcal{M}\text{ 是 }X\text{ 上的 }\sigma\text{-代数},\ \mathcal{E}\subseteq\mathcal{M}\}.$
 
 **为什么这个交集是良定义的 $\sigma$-代数？** 首先 $2^X$ 本身就是一个含 $\mathcal{E}$ 的 $\sigma$-代数，所以参与求交的集族非空。其次，**任意多个 $\sigma$-代数的交仍是 $\sigma$-代数**（逐条验证：每个都含 $X$，故交含 $X$；每个补封闭，故交补封闭；每个可数并封闭，故交可数并封闭）。因此 $\sigma(\mathcal{E})$ 是一个 $\sigma$-代数，且它被任何含 $\mathcal{E}$ 的 $\sigma$-代数包含——这就是"最小"的精确含义。
 
 > **定义 2.3（Borel $\sigma$-代数）**：拓扑空间 $X$ 上，
-> $$\mathcal{B}(X):=\sigma(\tau_X),\quad \tau_X=X\text{ 的全体开集}.$$
+> 
+> $\mathcal{B}(X):=\sigma(\tau_X),\quad \tau_X=X\text{ 的全体开集}.$
+> 
 > $\mathcal{B}(\mathbb{R})$ 是包含一切开区间（等价地一切开集、闭集、半开区间、单点集）的最小 $\sigma$-代数。
 
 $\mathcal{B}(\mathbb{R})$ 包含了分析中能写出来的几乎一切集合：开集、闭集、$G_\delta$（可数个开集的交）、$F_\sigma$（可数个闭集的并）、单点、区间、Cantor 集……以及它们的可数次组合。它是"一切连续函数、一切开/闭集都可测"的最小共同框架——这正是我们想要的"好集合"全体。
@@ -416,7 +419,9 @@ $\mathcal{B}(\mathbb{R})$ 包含了分析中能写出来的几乎一切集合：
 $\sigma$-代数在机器人滤波里有一个极精确的物理含义：**它编码"在某时刻我们掌握了哪些信息"**。
 
 > **定义（信息 $\sigma$-代数 / filtration）**：在时刻 $t$，机器人累积了观测 $z_{1:t}$ 和控制 $u_{1:t}$。定义
-> $$\mathcal{F}_t:=\sigma(z_{1:t},u_{1:t}),$$
+> 
+> $\mathcal{F}_t:=\sigma(z_{1:t},u_{1:t}),$
+> 
 > 即由这些随机变量生成的最小 $\sigma$-代数。它精确地"包含"了 $t$ 时刻可由数据区分的一切事件。
 
 随着时间推进，信息只增不减：$\mathcal{F}_1\subseteq\mathcal{F}_2\subseteq\cdots$，这条上升链称为**过滤**（filtration），是鞅论与随机最优控制的载体。
@@ -478,7 +483,9 @@ Borel 1898 年首次要求测度对可数个不交集可加。1933 年 Kolmogoro
 > **定义 3.1（测度）**：设 $(X,\mathcal{M})$ 是可测空间。函数 $\mu:\mathcal{M}\to[0,\infty]$ 称为 $(X,\mathcal{M})$ 上的一个**测度**，若：
 > 1. $\mu(\varnothing)=0$；
 > 2. **可数可加性**（$\sigma$-可加）：对**两两不交**的可测集列 $\{A_j\}_{j\ge1}\subseteq\mathcal{M}$，
-> $$\mu\Big(\bigcup_{j=1}^\infty A_j\Big)=\sum_{j=1}^\infty\mu(A_j).$$
+> 
+> $\mu\Big(\bigcup_{j=1}^\infty A_j\Big)=\sum_{j=1}^\infty\mu(A_j).$
+> 
 > 此时 $(X,\mathcal{M},\mu)$ 称为**测度空间**。
 
 注意值域是 $[0,\infty]$，允许取 $+\infty$（如 $\mathbb{R}$ 整条直线的 Lebesgue 测度）。几个重要的子类：
@@ -514,15 +521,19 @@ $\sigma$-有限性是后续许多大定理（Fubini §10、Radon–Nikodym §12�
 > **阶段小结**：到这里我们用"不交并 + 非负"两步就从可数可加性挤出了单调性。下面三条（次可加、上下连续）是真正用到"可数"威力的地方。
 
 **(3) 可数次可加性**：把可能重叠的 $\{A_n\}$ "不交化"——令 $B_1=A_1$，$B_n=A_n\setminus\bigcup_{j<n}A_j$。则 $\{B_n\}$ 两两不交，$\bigcup_n B_n=\bigcup_n A_n$，且 $B_n\subseteq A_n$。由可数可加性与单调性：
+
 $$
 \mu\Big(\bigcup_n A_n\Big)=\mu\Big(\bigcup_n B_n\Big)=\sum_n\mu(B_n)\le\sum_n\mu(A_n).
 $$
+
 这个"不交化"技巧（把任意并改写成不交并）在测度论里无处不在，务必掌握。
 
 **(4) 由下连续性**：设 $A_n\uparrow A$。令 $B_1=A_1$，$B_n=A_n\setminus A_{n-1}$（$n\ge2$）。则 $\{B_n\}$ 不交，$A_n=\bigcup_{j\le n}B_j$，$A=\bigcup_j B_j$。由可数可加性：
+
 $$
 \mu(A)=\sum_{j=1}^\infty\mu(B_j)=\lim_{n\to\infty}\sum_{j=1}^n\mu(B_j)=\lim_{n\to\infty}\mu(A_n).
 $$
+
 中间一步用了"无穷级数 = 部分和的极限"，末步用了有限可加性。这条性质是测度论里"连续性"的核心——它让"取极限"和"算测度"可交换。
 
 **(5) 由上连续性**：设 $A_n\downarrow A$ 且 $\mu(A_1)<\infty$。令 $C_n=A_1\setminus A_n$，则 $C_n\uparrow A_1\setminus A$。由 (4)：$\mu(C_n)\uparrow\mu(A_1\setminus A)$，即 $\mu(A_1)-\mu(A_n)\uparrow\mu(A_1)-\mu(A)$。因 $\mu(A_1)<\infty$ 可两边消去，得 $\mu(A_n)\downarrow\mu(A)$。
@@ -536,13 +547,17 @@ $$
 这是测度论里第一个直接服务于机器人算法收敛性的结论。
 
 > **引理 3.3（Borel–Cantelli，第一部分）**：设 $\{A_n\}\subseteq\mathcal{M}$。若 $\sum_{n=1}^\infty\mu(A_n)<\infty$，则
-> $$\mu\Big(\limsup_n A_n\Big)=\mu\Big(\bigcap_{k=1}^\infty\bigcup_{n\ge k}A_n\Big)=0.$$
+> 
+> $\mu\Big(\limsup_n A_n\Big)=\mu\Big(\bigcap_{k=1}^\infty\bigcup_{n\ge k}A_n\Big)=0.$
+> 
 > 这里 $\limsup_n A_n=\{x:x\in A_n\text{ 对无穷多个 }n\}$ 是"$A_n$ 发生无穷多次"的事件。
 
 **证明（骨架展开为完整论证）**：记 $B_k=\bigcup_{n\ge k}A_n$。则 $\limsup_n A_n=\bigcap_k B_k$，且 $B_k\downarrow\bigcap_k B_k$（递减，因为 $k$ 增大时并的范围缩小）。由可数次可加性，
+
 $$
 \mu(B_k)=\mu\Big(\bigcup_{n\ge k}A_n\Big)\le\sum_{n\ge k}\mu(A_n).
 $$
+
 由假设 $\sum_n\mu(A_n)<\infty$，其尾部 $\sum_{n\ge k}\mu(A_n)\to 0$（收敛级数的尾和趋零）。故 $\mu(B_k)\to 0$。又因 $\mu(\limsup A_n)\le\mu(B_k)$ 对每个 $k$ 成立（单调性），令 $k\to\infty$ 得 $\mu(\limsup A_n)=0$。$\quad\blacksquare$
 
 注意这里**没用到**由上连续性（避开了它的有限性条件）——直接用单调性 + 尾和趋零，更干净。
@@ -554,7 +569,9 @@ Borel 测度有一个小瑕疵：零测集的子集可能不可测。这在分�
 > **定义 3.4（完备测度）**：测度空间 $(X,\mathcal{M},\mu)$ 称为**完备的**，若每个零测集的子集都可测：$N\in\mathcal{M},\mu(N)=0,E\subseteq N\Rightarrow E\in\mathcal{M}$（从而 $\mu(E)=0$）。
 
 > **命题 3.5（完备化）**：给定 $(X,\mathcal{M},\mu)$，令
-> $$\bar{\mathcal{M}}=\{A\cup E:A\in\mathcal{M},\ E\subseteq N\text{ 某个 }N\in\mathcal{M}\text{ 满足 }\mu(N)=0\},\quad \bar\mu(A\cup E)=\mu(A).$$
+> 
+> $\bar{\mathcal{M}}=\{A\cup E:A\in\mathcal{M},\ E\subseteq N\text{ 某个 }N\in\mathcal{M}\text{ 满足 }\mu(N)=0\},\quad \bar\mu(A\cup E)=\mu(A).$
+> 
 > 则 $(X,\bar{\mathcal{M}},\bar\mu)$ 是包含 $(X,\mathcal{M},\mu)$ 的最小完备测度空间，$\bar\mu$ 良定义（不依赖 $A\cup E$ 的分解方式）。
 
 **Lebesgue 测度就是 Borel 测度的完备化**——这是 Lebesgue 可测集比 Borel 集多出来的那一部分的来源（§5 详述）。
@@ -632,7 +649,8 @@ Carathéodory 的天才在于：**只用外测度，不用内测度**，用一�
 ### 理论：Carathéodory 可测性条件
 
 > **定义 4.2（Carathéodory 可测）**：集合 $A\subseteq X$ 称为 **$\mu^*$-可测的**，若它能把任意"测试集"$E$ 干净地切成两半：
-> $$\mu^*(E)=\mu^*(E\cap A)+\mu^*(E\cap A^c)\qquad\forall E\subseteq X.$$
+> 
+> $\mu^*(E)=\mu^*(E\cap A)+\mu^*(E\cap A^c)\qquad\forall E\subseteq X.$
 
 由次可加性，"$\le$"方向 $\mu^*(E)\le\mu^*(E\cap A)+\mu^*(E\cap A^c)$ 自动成立。所以可测性的实质内容是反方向的"$\ge$"——$A$ 必须把任何集合的外测度**精确**地分配到 $A$ 内外两部分，不产生"边界损耗"。
 
@@ -649,37 +667,49 @@ Carathéodory 的天才在于：**只用外测度，不用内测度**，用一�
 **第一步：$\mathcal{M}^*$ 含 $\varnothing,X$ 且补封闭。** 取 $A=X$：$\mu^*(E)=\mu^*(E\cap X)+\mu^*(E\cap\varnothing)=\mu^*(E)+0$，成立，故 $X\in\mathcal{M}^*$。定义 4.2 关于 $A$ 与 $A^c$ 完全对称，故 $A\in\mathcal{M}^*\Rightarrow A^c\in\mathcal{M}^*$。$\varnothing=X^c\in\mathcal{M}^*$。
 
 **第二步：$\mathcal{M}^*$ 对有限并封闭（是代数）。** 设 $A,B\in\mathcal{M}^*$，要证 $A\cup B\in\mathcal{M}^*$。对任意测试集 $E$，先用 $A$ 分裂，再用 $B$ 分裂 $A^c$ 部分：
+
 $$
 \mu^*(E)=\mu^*(E\cap A)+\mu^*(E\cap A^c\cap B)+\mu^*(E\cap A^c\cap B^c).
 $$
+
 注意 $E\cap(A\cup B)=(E\cap A)\cup(E\cap A^c\cap B)$，由次可加性其外测度 $\le\mu^*(E\cap A)+\mu^*(E\cap A^c\cap B)$。又 $A^c\cap B^c=(A\cup B)^c$。代入得
+
 $$
 \mu^*(E)\ge\mu^*(E\cap(A\cup B))+\mu^*(E\cap(A\cup B)^c),
 $$
+
 即 $A\cup B$ 满足可测性（反向不等式由次可加性自动成立）。
 
 > **阶段小结**：到这里我们证明了 $\mathcal{M}^*$ 是代数（对有限并、补封闭）。下面两步是把"有限"升级到"可数"——这是 $\sigma$-代数的灵魂，也是证明的技术核心。
 
 **第三步：可数并封闭 + 可数可加性。** 设 $\{A_j\}\subseteq\mathcal{M}^*$ **两两不交**（一般情形可用第二步先不交化）。令 $B_n=\bigcup_{j\le n}A_j$。先用归纳法证明一个关键的"分配公式"：对任意测试集 $E$，
+
 $$
 \mu^*(E\cap B_n)=\sum_{j=1}^n\mu^*(E\cap A_j).\tag{$\ast$}
 $$
+
 归纳基础 $n=1$ 显然。归纳步：用 $A_n$ 的可测性切分测试集 $E\cap B_n$。由于 $A_j$ 不交，$B_n\cap A_n=A_n$、$B_n\cap A_n^c=B_{n-1}$，故
+
 $$
 \mu^*(E\cap B_n)=\mu^*(E\cap B_n\cap A_n)+\mu^*(E\cap B_n\cap A_n^c)=\mu^*(E\cap A_n)+\mu^*(E\cap B_{n-1}),
 $$
+
 对后项用归纳假设即得 ($\ast$)。
 
 现在证 $A:=\bigcup_j A_j\in\mathcal{M}^*$。因 $B_n$ 可测（第二步）且 $B_n\subseteq A\Rightarrow A^c\subseteq B_n^c$，故
+
 $$
 \mu^*(E)=\mu^*(E\cap B_n)+\mu^*(E\cap B_n^c)\ge\sum_{j=1}^n\mu^*(E\cap A_j)+\mu^*(E\cap A^c).
 $$
+
 对 $n\to\infty$（左边与 $n$ 无关）：$\mu^*(E)\ge\sum_{j=1}^\infty\mu^*(E\cap A_j)+\mu^*(E\cap A^c)\ge\mu^*(E\cap A)+\mu^*(E\cap A^c)$，末步用了次可加性 $\sum_j\mu^*(E\cap A_j)\ge\mu^*(\bigcup_j(E\cap A_j))=\mu^*(E\cap A)$。这证明了 $A\in\mathcal{M}^*$。又取 $E=A$ 在上式：$\mu^*(A)\ge\sum_j\mu^*(A_j)\ge\mu^*(A)$，故**等号成立**，即可数可加性 $\mu^*(\bigcup A_j)=\sum_j\mu^*(A_j)$ 得证。
 
 **第四步：完备性。** 设 $\mu^*(N)=0$，$E\subseteq N$（这里 $E$ 是任意子集，未必可测）。要证 $N\in\mathcal{M}^*$。对任意测试集 $T$，由单调性 $\mu^*(T\cap N)\le\mu^*(N)=0$，故
+
 $$
 \mu^*(T\cap N)+\mu^*(T\cap N^c)=0+\mu^*(T\cap N^c)\le\mu^*(T),
 $$
+
 反向不等式由次可加性成立，故 $N\in\mathcal{M}^*$。因此一切外测度为零的集合都可测——这正是完备性。$\quad\blacksquare$
 
 ### 理论：Hahn–Kolmogorov 扩张定理
@@ -689,7 +719,9 @@ Carathéodory 定理还差最后一块：怎么从"区间长度"这种**只在�
 > **定义 4.4（预测度）**：设 $\mathcal{A}$ 是 $X$ 上的一个**代数**（含 $X$、对补和有限并封闭）。函数 $\mu_0:\mathcal{A}\to[0,\infty]$ 称为**预测度**，若 $\mu_0(\varnothing)=0$ 且对**落在 $\mathcal{A}$ 内**的不交可数并 $\bigcup_n A_n\in\mathcal{A}$ 满足 $\mu_0(\bigcup_n A_n)=\sum_n\mu_0(A_n)$。
 
 > **定理 4.5（Hahn–Kolmogorov 扩张定理）**：代数 $\mathcal{A}$ 上的预测度 $\mu_0$，通过
-> $$\mu^*(E)=\inf\Big\{\sum_{j=1}^\infty\mu_0(A_j):A_j\in\mathcal{A},\ E\subseteq\bigcup_j A_j\Big\}$$
+> 
+> $\mu^*(E)=\inf\Big\{\sum_{j=1}^\infty\mu_0(A_j):A_j\in\mathcal{A},\ E\subseteq\bigcup_j A_j\Big\}$
+> 
 > 诱导一个外测度。Carathéodory 定理给出 $\sigma$-代数 $\mathcal{M}^*\supseteq\sigma(\mathcal{A})$ 与测度 $\mu=\mu^*|_{\mathcal{M}^*}$，且 $\mu|_{\mathcal{A}}=\mu_0$（扩张确实延拓了原预测度）。
 > 进一步，**若 $\mu_0$ 是 $\sigma$-有限的，则扩张到 $\sigma(\mathcal{A})$ 上唯一**。
 
@@ -765,9 +797,11 @@ Jordan（1890 年代）用"内外有限覆盖"定义了容度（Jordan content�
 1. **起点**（区间长度）：在半开区间 $(a,b]\subseteq\mathbb{R}$ 上定义 $\ell((a,b])=b-a$。
 2. **代数上的预测度**：有限个不交半开区间的并构成代数 $\mathcal{A}_0$，定义 $m_0(\bigsqcup_i(a_i,b_i])=\sum_i(b_i-a_i)$。可验证 $m_0$ 是预测度（可数可加性需要一点 Heine–Borel 紧性论证）。
 3. **诱导外测度**（Hahn–Kolmogorov，定理 4.5）：
+
 $$
 \lambda^*(E)=\inf\Big\{\sum_j(b_j-a_j):E\subseteq\bigcup_j(a_j,b_j]\Big\}.
 $$
+
 4. **Carathéodory 筛选**（定理 4.3）：得到 Lebesgue 可测集 $\sigma$-代数 $\mathcal{L}\supseteq\mathcal{B}(\mathbb{R})$ 与 **Lebesgue 测度** $\lambda=\lambda^*|_{\mathcal{L}}$。$\sigma$-有限（$\mathbb{R}=\bigcup_n(-n,n]$，每块测度 $2n<\infty$）故扩张唯一。
 
 $n$ 维情形 $\lambda_n$ 完全类似，从矩形体积 $\prod_i(b_i-a_i)$ 出发。
@@ -777,7 +811,9 @@ $n$ 维情形 $\lambda_n$ 完全类似，从矩形体积 $\prod_i(b_i-a_i)$ 出�
 这些性质是后续一切的工具箱。逐条给出并解释含义。
 
 > **性质 5.1（正则性）**：每个 $E\in\mathcal{L}$ 满足
-> $$\lambda(E)=\inf\{\lambda(U):U\supseteq E,\ U\text{ 开}\}=\sup\{\lambda(K):K\subseteq E,\ K\text{ 紧}\}.$$
+> 
+> $\lambda(E)=\inf\{\lambda(U):U\supseteq E,\ U\text{ 开}\}=\sup\{\lambda(K):K\subseteq E,\ K\text{ 紧}\}.$
+> 
 > （外正则 + 内正则）
 
 含义：任何可测集都能被开集从外、紧集从内任意精确地逼近。这是 Lusin 定理（§6）、连续函数稠密性（§13）的几何基础——"可测"在测度意义下离"开/闭/紧"只差 $\varepsilon$。
@@ -793,9 +829,11 @@ $n$ 维情形 $\lambda_n$ 完全类似，从矩形体积 $\prod_i(b_i-a_i)$ 出�
 > **性质 5.4（Vitali 不可测集，需选择公理）**：存在 $V\subseteq[0,1]$ 使 $V\notin\mathcal{L}$。
 
 **构造与矛盾**：在 $[0,1]$ 上定义等价关系 $x\sim y\iff x-y\in\mathbb{Q}$。由选择公理，从每个等价类选一个代表，构成集合 $V$。考虑平移族 $\{V+q:q\in\mathbb{Q}\cap[-1,1]\}$：它们两两不交（不同代表差非有理），且 $[0,1]\subseteq\bigcup_q(V+q)\subseteq[-1,2]$。若 $V$ 可测，由平移不变 $\lambda(V+q)=\lambda(V)=:c$，可数可加给出
+
 $$
 1\le\sum_{q}\lambda(V+q)=\sum_q c\le 3.
 $$
+
 但 $\sum_q c$（可数个相同的 $c$ 相加）只能是 $0$（若 $c=0$）或 $\infty$（若 $c>0$），都与 $[1,3]$ 矛盾。故 $V$ 不可测。$\quad\blacksquare$
 
 > **本质洞察**：Vitali 集是 §2 那句"不能给所有子集量长度"的兑现。它告诉我们：不可测集**真实存在**（在选择公理下），$\sigma$-代数的"圈定好集合"不是吹毛求疵而是必需。它也解释了为什么概率论必须从 $\sigma$-代数 $\mathcal{F}$ 出发——不是所有"事件"都能赋概率，只有 $\mathcal{F}$ 中的才行。机器人采样运动规划里"用均匀分布采样"隐含了"采样空间是可测的"，Vitali 集提醒我们这个前提并非自动。
@@ -877,9 +915,12 @@ $$
 ### 理论：可测函数的定义
 
 > **定义 6.1（可测函数）**：设 $(X,\mathcal{M})$、$(Y,\mathcal{N})$ 是可测空间。映射 $f:X\to Y$ 称为 **$(\mathcal{M},\mathcal{N})$-可测**，若
-> $$f^{-1}(B)\in\mathcal{M}\quad\forall B\in\mathcal{N}.$$
+> 
+> $f^{-1}(B)\in\mathcal{M}\quad\forall B\in\mathcal{N}.$
+> 
 > 当 $Y=\mathbb{R}$（取 Borel $\sigma$-代数 $\mathcal{B}(\mathbb{R})$）时，等价的实用判据是：
-> $$\{f>a\}=f^{-1}((a,\infty))\in\mathcal{M}\quad\forall a\in\mathbb{R}.$$
+> 
+> $\{f>a\}=f^{-1}((a,\infty))\in\mathcal{M}\quad\forall a\in\mathbb{R}.$
 
 **为什么"$\{f>a\}$ 可测"就够了？** 因为形如 $(a,\infty)$ 的射线生成整个 $\mathcal{B}(\mathbb{R})$（§2 练习 2）。原像运算 $f^{-1}$ 与并、交、补可交换（$f^{-1}(\bigcup B_i)=\bigcup f^{-1}(B_i)$ 等），所以只要射线的原像都可测，由 $\sigma$-代数封闭性，一切 Borel 集的原像都可测。这把"验证无穷多个 Borel 集"归约为"验证一族生成元"——又一次 $\pi$-$\lambda$ 式的思想。
 
@@ -895,9 +936,11 @@ $$
 > 5. 连续函数 $\varphi$ 与可测函数 $f$ 的复合 $\varphi\circ f$。
 
 **关键证明（第 3 条，极限运算可测）**：$\sup_n f_n$ 可测的证明是模板——
+
 $$
 \{\sup_n f_n>a\}=\bigcup_n\{f_n>a\}.
 $$
+
 右边是可数个可测集的并，故可测。直觉：上确界超过 $a$，当且仅当**某个** $f_n$ 超过 $a$。类似地 $\{\inf_n f_n\ge a\}=\bigcap_n\{f_n\ge a\}$。由 $\limsup_n f_n=\inf_k\sup_{n\ge k}f_n$，逐次套用得 $\limsup$、$\liminf$ 可测；二者相等处即逐点极限，故第 4 条成立。
 
 > **本质洞察**：第 3、4 条是可测函数**真正超越连续函数**的地方。连续函数的逐点极限**不一定连续**（如 $x^n\to$ 阶跃），但可测函数的逐点极限**一定可测**。换言之，可测函数类对"取极限"封闭——这正是 §1 抱怨 Riemann 可积函数类不封闭的解药。蒙特卡洛估计量 $\hat f_N$、滤波迭代 $\hat x_t$ 都是极限对象，它们的可测性（从而"能谈期望"）由这条封闭性免费保证。
@@ -911,9 +954,11 @@ Lebesgue 积分将分三阶段定义（§7），最底层是"简单函数"（取
 > **定理 6.4（简单函数逼近）**：对任意非负可测 $f:X\to[0,\infty]$，存在简单函数列 $0\le\varphi_1\le\varphi_2\le\cdots$ 使 $\varphi_n\nearrow f$ 逐点收敛。
 
 **构造（显式给出，这是要记住的）**：把值域 $[0,\infty]$ 在 $[0,n)$ 部分按 $2^{-n}$ 等分，超过 $n$ 的截断到 $n$：
+
 $$
 \varphi_n(x)=\begin{cases}\dfrac{k}{2^n}, & \dfrac{k}{2^n}\le f(x)<\dfrac{k+1}{2^n},\ k=0,1,\dots,n2^n-1,\\[2mm] n, & f(x)\ge n.\end{cases}
 $$
+
 每个 $\varphi_n$ 显然是简单函数（$\{k/2^n\le f<(k+1)/2^n\}$ 可测，因 $f$ 可测）。**递增性**：从 $n$ 到 $n+1$ 时值域分割加细一倍（每格再二分），且截断阈值从 $n$ 升到 $n+1$，故 $\varphi_{n+1}\ge\varphi_n$。**收敛性**：在 $f(x)<\infty$ 处，一旦 $n>f(x)$，有 $|f(x)-\varphi_n(x)|<2^{-n}\to0$；在 $f(x)=\infty$ 处 $\varphi_n(x)=n\to\infty=f(x)$。$\quad\blacksquare$
 
 > **本质洞察**：这个"按值域 $2^{-n}$ 分层"的构造，正是 §1 Lebesgue"水平切片"思想的算法化身。它把"对一般 $f$ 积分"归约为"对简单函数积分（= 测度的加权和）+ 取递增极限"。整个 §7 积分构造、§8 单调收敛定理，都是这台脚手架的直接产物。记住这个构造，等于记住了 Lebesgue 积分的施工蓝图。
@@ -995,21 +1040,25 @@ SLAM 的观测似然 $p(z\mid x)$ 典型是**分段光滑**的——在遮挡边
 **阶段一：非负简单函数。**
 
 > **定义 7.1**：设 $\varphi=\sum_{i=1}^n c_i\mathbf{1}_{A_i}$ 是非负简单函数的**标准型**（$c_i\ge0$ 互异，$A_i$ 两两不交且并为 $X$）。定义
-> $$\int_X\varphi\,d\mu:=\sum_{i=1}^n c_i\,\mu(A_i),\qquad\text{约定 }0\cdot\infty:=0.$$
+> 
+> $\int_X\varphi\,d\mu:=\sum_{i=1}^n c_i\,\mu(A_i),\qquad\text{约定 }0\cdot\infty:=0.$
 
 约定 $0\cdot\infty=0$ 很重要：在 $f=0$ 的地方即使测度无穷，贡献也是 $0$（"零高度的无穷宽矩形"面积为零）。可验证此定义与标准型的具体写法无关。
 
 **阶段二：非负可测函数。**
 
 > **定义 7.2**：对非负可测 $f:X\to[0,\infty]$，定义
-> $$\int_X f\,d\mu:=\sup\Big\{\int_X\varphi\,d\mu:\varphi\text{ 简单},\ 0\le\varphi\le f\Big\}.$$
+> 
+> $\int_X f\,d\mu:=\sup\Big\{\int_X\varphi\,d\mu:\varphi\text{ 简单},\ 0\le\varphi\le f\Big\}.$
 
 用"所有从下方逼近 $f$ 的简单函数积分的上确界"。由定理 6.4 知这样的 $\varphi$ 存在且能逼近 $f$，故上确界有意义（可能为 $+\infty$）。
 
 **阶段三：一般可测函数。**
 
 > **定义 7.3**：对可测 $f:X\to[-\infty,\infty]$，分解 $f=f^+-f^-$（$f^+=\max(f,0)$，$f^-=\max(-f,0)$，二者非负可测）。若 $\int f^+$ 与 $\int f^-$ **不同时为 $\infty$**，定义
-> $$\int_X f\,d\mu:=\int_X f^+\,d\mu-\int_X f^-\,d\mu.$$
+> 
+> $\int_X f\,d\mu:=\int_X f^+\,d\mu-\int_X f^-\,d\mu.$
+> 
 > 若 $\int|f|\,d\mu=\int f^++\int f^-<\infty$，称 $f$ **可积**，记 $f\in L^1(\mu)$。
 
 正负部分开积分再相减，避开了 $\infty-\infty$。可积的实质是 $|f|$ 的积分有限。
@@ -1031,14 +1080,17 @@ SLAM 的观测似然 $p(z\mid x)$ 典型是**分段光滑**的——在遮挡边
 下面这个公式把 §1 的"水平切片"思想表达成精确的恒等式，且在概率论里极为有用。
 
 > **定理 7.5（Layer-cake / Cavalieri 公式）**：对非负可测 $f\ge0$，
-> $$\int_X f\,d\mu=\int_0^\infty\mu(\{f>t\})\,dt=\int_0^\infty\mu(\{f\ge t\})\,dt.$$
+> 
+> $\int_X f\,d\mu=\int_0^\infty\mu(\{f>t\})\,dt=\int_0^\infty\mu(\{f\ge t\})\,dt.$
 
 **证明（用 Fubini，§10 会严格化）**：考虑乘积空间 $X\times[0,\infty)$ 上的集合 $\Gamma=\{(x,t):0\le t<f(x)\}$（"$f$ 的下方图"）。对指示函数 $\mathbf{1}_\Gamma$ 用 Tonelli 定理累次积分：先对 $t$ 积分得 $\int_0^\infty\mathbf{1}_{t<f(x)}\,dt=f(x)$，故 $\iint\mathbf{1}_\Gamma=\int_X f\,d\mu$；先对 $x$ 积分得 $\int_X\mathbf{1}_{t<f(x)}\,d\mu=\mu(\{f>t\})$，故 $\iint\mathbf{1}_\Gamma=\int_0^\infty\mu(\{f>t\})\,dt$。两者相等。$\quad\blacksquare$
 
 **直接推论——Markov（Chebyshev）不等式**：对非负可测 $f$ 与 $t>0$，由 $f\ge t\mathbf{1}_{\{f\ge t\}}$ 与单调性，
+
 $$
 \mu(\{f\ge t\})\le\frac1t\int_{\{f\ge t\}}f\,d\mu\le\frac1t\int_X f\,d\mu.
 $$
+
 概率版 $P(|X|\ge t)\le\mathbb{E}|X|/t$ 是粒子滤波、随机逼近一切**集中不等式**的起点。
 
 ### 机器人应用：期望就是 Lebesgue 积分
@@ -1046,7 +1098,9 @@ $$
 把积分接到概率上，最核心的等式是：
 
 > **期望 = Lebesgue 积分**：随机变量 $X:(\Omega,\mathcal{F},\mathbb{P})\to\mathbb{R}$（可测函数，§6）的**期望**就是它关于概率测度 $\mathbb{P}$ 的 Lebesgue 积分：
-> $$\mathbb{E}[X]=\int_\Omega X\,d\mathbb{P}.$$
+> 
+> $\mathbb{E}[X]=\int_\Omega X\,d\mathbb{P}.$
+> 
 > 当 $X$ 有密度 $p_X=dP_X/d\lambda$（§12）时，由变量替换退化为本科熟悉的 $\mathbb{E}[X]=\int_{\mathbb{R}}x\,p_X(x)\,dx$。
 
 > **本质洞察**：本科里"离散用求和 $\sum x_i p_i$、连续用积分 $\int x\,p(x)\,dx$"是两套割裂的公式。测度论用**一个** $\int_\Omega X\,d\mathbb{P}$ 统一了它们——离散时 $\mathbb{P}$ 是计数测度的加权，积分退化为求和；连续时 $\mathbb{P}\ll\lambda$，积分用密度展开；**混合时**（离散数据关联 + 连续位姿，机器人最常见）也无需特殊处理，同一个积分照常工作。这种统一不是形式美化，而是实用必需：SLAM 的混合状态、强化学习的连续-离散混合动作，都靠这个统一的期望定义才能严格处理。
@@ -1106,20 +1160,25 @@ Markov 不等式 $P(|X|\ge t)\le\mathbb{E}|X|/t$ 在机器人里是**安全性�
 ### 理论：单调收敛定理（MCT）
 
 > **定理 8.1（单调收敛定理 / Beppo Levi）**：设 $f_n\ge0$ 可测，$f_n\nearrow f$ a.e.（单调递增逐点收敛）。则
-> $$\int f_n\,d\mu\nearrow\int f\,d\mu.$$
+> 
+> $\int f_n\,d\mu\nearrow\int f\,d\mu.$
 
 **证明（完整，含著名的 $\alpha$-技巧）**：
 
 *上界*：由单调性 $f_n\le f$ 得 $\int f_n\le\int f$，故 $\lim_n\int f_n\le\int f$（极限存在因 $\int f_n$ 递增）。
 
 *下界（关键）*：要证 $\lim_n\int f_n\ge\int f$，即对任意简单函数 $0\le\varphi\le f$ 证 $\lim_n\int f_n\ge\int\varphi$（再对 $\varphi$ 取上确界即得 $\ge\int f$）。固定 $\alpha\in(0,1)$，令
+
 $$
 E_n=\{x:f_n(x)\ge\alpha\varphi(x)\}.
 $$
+
 由 $f_n\nearrow f\ge\varphi>\alpha\varphi$（在 $\varphi>0$ 处），每个 $x$ 终将进入 $E_n$，故 $E_n\uparrow X$。于是
+
 $$
 \int f_n\ge\int_{E_n}f_n\ge\alpha\int_{E_n}\varphi.
 $$
+
 对 $\varphi=\sum_i c_i\mathbf{1}_{A_i}$，$\int_{E_n}\varphi=\sum_i c_i\mu(A_i\cap E_n)$。由测度的**由下连续性**（§3，这里是关键），$\mu(A_i\cap E_n)\uparrow\mu(A_i)$，故 $\int_{E_n}\varphi\to\int\varphi$。取 $n\to\infty$ 得 $\lim_n\int f_n\ge\alpha\int\varphi$。再令 $\alpha\uparrow1$ 得 $\lim_n\int f_n\ge\int\varphi$。$\quad\blacksquare$
 
 > **本质洞察**：MCT 的证明把"积分与极限交换"归约到了"测度与递增集合极限交换"（由下连续性，§3 命题 3.2.4）。这揭示了一条因果链：**可数可加性 ⟹ 测度由下连续 ⟹ MCT ⟹（下面）Fatou ⟹ DCT**。整座收敛定理大厦的地基，是 §3 那一条可数可加性公理。$\alpha$-技巧（先放松到 $\alpha\varphi$ 再令 $\alpha\to1$）是测度论里反复出现的"留出余量"手法，值得专门记住。
@@ -1129,9 +1188,11 @@ $$
 ### 理论：Fatou 引理
 
 > **定理 8.2（Fatou 引理）**：设 $f_n\ge0$ 可测。则
-> $$\int\liminf_n f_n\,d\mu\le\liminf_n\int f_n\,d\mu.$$
+> 
+> $\int\liminf_n f_n\,d\mu\le\liminf_n\int f_n\,d\mu.$
 
 **证明（由 MCT 推出）**：令 $g_k=\inf_{n\ge k}f_n$。则 $g_k\nearrow\liminf_n f_n$（这是 $\liminf$ 的定义），且 $g_k$ 非负可测、$g_k\le f_n$ 对一切 $n\ge k$。由后者 $\int g_k\le\inf_{n\ge k}\int f_n$。对 $g_k\nearrow\liminf f_n$ 用 MCT：
+
 $$
 \int\liminf_n f_n=\lim_k\int g_k\le\lim_k\inf_{n\ge k}\int f_n=\liminf_n\int f_n.\quad\blacksquare
 $$
@@ -1143,7 +1204,8 @@ $$
 ### 理论：控制收敛定理（DCT）——粒子滤波收敛的核心
 
 > **定理 8.3（控制收敛定理 / Lebesgue）**：设 $f_n\to f$ a.e.，且存在**控制函数** $g\in L^1(\mu)$ 使 $|f_n|\le g$ 对一切 $n$。则 $f\in L^1$，且
-> $$\int f_n\,d\mu\to\int f\,d\mu,\qquad\text{更强地}\quad\int|f_n-f|\,d\mu\to0.$$
+> 
+> $\int f_n\,d\mu\to\int f\,d\mu,\qquad\text{更强地}\quad\int|f_n-f|\,d\mu\to0.$
 
 **证明（由 Fatou 两次推出，优雅）**：由 $|f_n|\le g$ 取极限得 $|f|\le g$，故 $f\in L^1$。
 
@@ -1182,15 +1244,19 @@ $$
 $$
 
 **DCT 在哪一步起作用？** 收敛性证明（Crisan–Doucet 2002；Del Moral 2004）的归纳结构里，每一步贝叶斯更新都涉及一个**似然归一化**：
+
 $$
 \pi_t(\varphi)=\frac{\int\varphi(x)\,p(z_t\mid x)\,\hat\pi_{t}(dx)}{\int p(z_t\mid x)\,\hat\pi_t(dx)}.
 $$
+
 要把"经验测度的归一化"$\mu_t^N$ 与"真测度的归一化"$\pi_t$ 的差控制住，需要把极限 $N\to\infty$ 移进积分号。这正是 DCT 的工作：被积函数 $\varphi\cdot p(z_t\mid\cdot)$ 被**有界**的 $\|\varphi\|_\infty\cdot p(z_t\mid\cdot)$ 控制（似然有界 + 检验函数有界），DCT 保证极限与积分交换合法。
 
 **定量收敛率**：在 Feynman–Kac 框架下可证 $L^2$ 收敛率
+
 $$
 \mathbb{E}\big|\mu_t^N(\varphi)-\pi_t(\varphi)\big|^2\le\frac{C_t\,\|\varphi\|_\infty^2}{N},
 $$
+
 即均方误差 $O(1/N)$、标准差 $O(1/\sqrt N)$（与维度无关，这是粒子滤波相对网格法的优势）。这个界的逐步证明里，**每一个似然归一化步骤都调用 DCT** 来交换期望与极限；常数 $C_t$ 随时间 $t$ 增长，反映粒子退化（degeneracy）——这也是重采样必要性的理论根源。
 
 > **本质洞察**：你以前可能把"粒子滤波收敛"当成一句口号或仿真观察。测度论把它变成定理：**经验测度弱收敛到真后验，速率 $O(1/\sqrt N)$，证明的发动机是 DCT**。审稿人问"你的滤波器为什么收敛、收多快"，答案就是这条 DCT 论证 + Feynman–Kac 误差递推。控制函数（有界似然）的存在性是整个论证的前提——这也解释了为什么**重尾似然**（无界）会破坏标准收敛性证明（陷阱 7.3、练习 7.3），需要额外的截断或矩条件。
@@ -1244,7 +1310,8 @@ DCT 还支撑另外两类机器人算法：
 ### 理论：一致性——经典计算无须重做
 
 > **定理 9.1（一致性）**：若 $f:[a,b]\to\mathbb{R}$ Riemann 可积，则 $f$ 也 Lebesgue 可积，且两个积分值**相等**：
-> $$(\mathrm{R})\!\int_a^b f\,dx=(\mathrm{L})\!\int_{[a,b]}f\,d\lambda.$$
+> 
+> $(\mathrm{R})\!\int_a^b f\,dx=(\mathrm{L})\!\int_{[a,b]}f\,d\lambda.$
 
 这条定理是定心丸：你本科学的所有积分技巧（换元、分部、Newton–Leibniz）在 Lebesgue 框架下**照常有效**，数值不变。Lebesgue 不是推翻 Riemann，而是在 Riemann 适用的地方完全兼容、在 Riemann 失效的地方接管。
 
@@ -1272,7 +1339,8 @@ DCT 还支撑另外两类机器人算法：
 Lebesgue 并非全面占优。有一类积分 Riemann（广义）能做而 Lebesgue 不能：
 
 > **反例 9.3（条件收敛）**：$\int_0^\infty\frac{\sin x}{x}\,dx$ 作为广义 Riemann 积分存在，值为 $\pi/2$。但它**不是 Lebesgue 可积**，因为
-> $$\int_0^\infty\Big|\frac{\sin x}{x}\Big|\,dx=\infty.$$
+> 
+> $\int_0^\infty\Big|\frac{\sin x}{x}\Big|\,dx=\infty.$
 
 原因：Lebesgue 可积要求 $|f|$ 可积（绝对可积），而 $\frac{\sin x}{x}$ 是**条件收敛**——正负部分相互抵消才收敛，绝对值积分发散。这类"震荡抵消"型积分超出 Lebesgue 的处理范围，需 Henstock–Kurzweil 积分或在复分析中作反常积分（留数）处理。
 
@@ -1311,7 +1379,9 @@ Lebesgue 并非全面占优。有一类积分 Riemann（广义）能做而 Lebes
 先看一个警告性的反例，它说明"想当然地交换积分顺序"会出错。
 
 > **反例 10.1（累次积分不相等）**：在 $(0,1]^2$ 上取 $f(x,y)=\dfrac{x^2-y^2}{(x^2+y^2)^2}$。则
-> $$\int_0^1\Big(\int_0^1 f\,dy\Big)dx=\frac\pi4,\qquad\int_0^1\Big(\int_0^1 f\,dx\Big)dy=-\frac\pi4.$$
+> 
+> $\int_0^1\Big(\int_0^1 f\,dy\Big)dx=\frac\pi4,\qquad\int_0^1\Big(\int_0^1 f\,dx\Big)dy=-\frac\pi4.$
+> 
 > 两个累次积分一正一负，**不相等**！
 
 毛病在哪？计算可知 $\iint|f|\,dx\,dy=\infty$——$f$ **不绝对可积**。Fubini 定理的前提（绝对可积）失效，所以交换顺序非法。这个反例是悬在所有"想换积分顺序"的人头上的剑：**不检查绝对可积性就交换，结果可能符号都反了。**
@@ -1339,7 +1409,8 @@ Fubini（1907）证明了绝对可积情形的累次积分定理；Tonelli（190
 ### 理论：Tonelli 定理（非负情形）
 
 > **定理 10.4（Tonelli）**：设 $\mu,\nu$ 为 $\sigma$-有限测度，$f:X\times Y\to[0,\infty]$ 为 $\mathcal{A}\otimes\mathcal{B}$-可测。则切片函数 $x\mapsto\int_Y f(x,y)\,d\nu(y)$ 是 $\mathcal{A}$-可测的（$y$ 切片对称），且三个积分相等：
-> $$\int_{X\times Y}f\,d(\mu\times\nu)=\int_X\Big(\int_Y f(x,y)\,d\nu(y)\Big)d\mu(x)=\int_Y\Big(\int_X f(x,y)\,d\mu(x)\Big)d\nu(y).$$
+> 
+> $\int_{X\times Y}f\,d(\mu\times\nu)=\int_X\Big(\int_Y f(x,y)\,d\nu(y)\Big)d\mu(x)=\int_Y\Big(\int_X f(x,y)\,d\mu(x)\Big)d\nu(y).$
 
 **证明（三步，逐级推广）**：
 1. **指示函数** $f=\mathbf{1}_E$：令 $\mathcal{M}=\{E\in\mathcal{A}\otimes\mathcal{B}:$ 两个累次积分都等于 $(\mu\times\nu)(E)\}$。可验证 $\mathcal{M}$ 含一切可测矩形（$\mathbf{1}_{A\times B}$ 的累次积分显然 $=\mu(A)\nu(B)$），且是单调类（用 MCT 处理递增并、有限性处理递减交）。由单调类定理 $\mathcal{M}=\mathcal{A}\otimes\mathcal{B}$，即对一切可测 $E$ 成立。
@@ -1367,15 +1438,19 @@ Fubini（1907）证明了绝对可积情形的累次积分定理；Tonelli（190
 Fubini 是 SLAM 后端一系列核心操作的合法性来源。
 
 **(1) 地图边际化**：完整 SLAM 后验 $p(x_{0:T},m\mid z_{1:T})$ 同时含轨迹 $x_{0:T}$ 与地图 $m$。要得到纯轨迹后验，需把地图积分掉：
+
 $$
 p(x_{0:T}\mid z_{1:T})=\int p(x_{0:T},m\mid z_{1:T})\,dm.
 $$
+
 这是 Fubini——在乘积空间"轨迹 × 地图"上对地图变量做边缘化。合法性要求被积的联合后验绝对可积（归一化的概率密度自动满足）。
 
 **(2) FastSLAM 的 Rao–Blackwell 化**：FastSLAM 的核心分解
+
 $$
 p(x_{0:t},m\mid z_{1:t})=p(x_{0:t}\mid z_{1:t})\cdot p(m\mid x_{0:t},z_{1:t})
 $$
+
 把"轨迹 × 地图"的联合分解为"轨迹边际 × 给定轨迹的地图条件"。给定轨迹后地图各路标条件独立，可解析（EKF）处理，于是只需对低维轨迹用粒子滤波——把高维粒子代价压到低维。这个分解和后续的期望计算（Rao–Blackwell 化降方差）依赖 Fubini 交换"对轨迹积分"与"对地图积分"的顺序。
 
 **(3) 因子图 sum-product**：因子图上的消息传递，每一步"对一个变量求和/积分掉"再传给邻居，本质是 Fubini 的反复应用——把全局边际拆成局部积分的累次执行。
@@ -1437,7 +1512,9 @@ $$
 **证明骨架**：设 $\nu$ 不取 $-\infty$（另一情形对称）。令 $m=\inf\{\nu(E):E\text{ 可测}\}\ge-\infty$，取 $E_n$ 使 $\nu(E_n)\to m$。从每个 $E_n$ 中"剔除其正子集"得到"尽可能负"的集合，用一个极值论证（对 $E_n$ 的某种组合取极限）构造负集 $N$ 使 $\nu(N)=m$，则 $P=N^c$ 必为正集（否则 $P$ 含负子集会使 $\nu$ 取到比 $m$ 更小的值，矛盾）。$\quad\blacksquare$
 
 > **定理 11.4（Jordan 分解）**：符号测度 $\nu$ 唯一分解为两个互奇异的正测度之差：
-> $$\nu=\nu^+-\nu^-,\qquad \nu^+(E)=\nu(E\cap P),\ \nu^-(E)=-\nu(E\cap N),\qquad\nu^+\perp\nu^-.$$
+> 
+> $\nu=\nu^+-\nu^-,\qquad \nu^+(E)=\nu(E\cap P),\ \nu^-(E)=-\nu(E\cap N),\qquad\nu^+\perp\nu^-.$
+> 
 > **全变差测度** $|\nu|:=\nu^++\nu^-$；**全变差范数** $\|\nu\|:=|\nu|(X)$。
 
 $\nu^+$ 是"正部"（把质量集中在正集 $P$ 上），$\nu^-$ 是"负部"。它们互奇异（$\nu^+$ 活在 $P$、$\nu^-$ 活在 $N$，互不重叠）。全变差 $|\nu|$ 把正负质量都算成正的总量。
@@ -1508,7 +1585,9 @@ $\nu^+$ 是"正部"（把质量集中在正集 $P$ 上），$\nu^-$ 是"负部"�
 ### 理论：Radon–Nikodym 定理
 
 > **定理 12.2（Radon–Nikodym）**：设 $\mu,\nu$ 为 $\sigma$-有限测度，$\nu\ll\mu$。则存在非负可测函数 $f:X\to[0,\infty)$，**$\mu$-a.e. 唯一**，使
-> $$\nu(E)=\int_E f\,d\mu\qquad\forall E\in\mathcal{M}.$$
+> 
+> $\nu(E)=\int_E f\,d\mu\qquad\forall E\in\mathcal{M}.$
+> 
 > 记 $f=\dfrac{d\nu}{d\mu}$，称 **Radon–Nikodym 导数**。
 
 这个 $f$ 就是"$\nu$ 相对 $\mu$ 的密度"——它告诉你在每一点 $\nu$ 比 $\mu$ "浓"多少倍。
@@ -1524,6 +1603,7 @@ R–N 有多种证法，von Neumann 用 Hilbert 空间投影的证法最优雅�
 2. **构造辅助测度与有界泛函**：令 $\varphi=\mu+\nu$（有限测度）。在 Hilbert 空间 $L^2(\varphi)$ 上定义线性泛函 $\Lambda g=\int g\,d\nu$。由 Cauchy–Schwarz，$|\Lambda g|=|\int g\,d\nu|\le\big(\int|g|^2\,d\nu\big)^{1/2}\nu(X)^{1/2}\le\nu(X)^{1/2}\|g\|_{L^2(\varphi)}$（因 $\nu\le\varphi$），故 $\Lambda$ **有界**。
 
 3. **Riesz 表示**：由 Hilbert 空间的 Riesz 表示定理（§13），存在 $h\in L^2(\varphi)$ 使 $\Lambda g=\langle g,h\rangle_\varphi=\int gh\,d\varphi$。即对一切 $g\in L^2(\varphi)$：
+
 $$
 \int g\,d\nu=\int gh\,d\varphi=\int gh\,d\mu+\int gh\,d\nu\ \Longrightarrow\ \int g(1-h)\,d\nu=\int gh\,d\mu.
 $$
@@ -1533,9 +1613,11 @@ $$
 5. **奇异部分**（在 $B$ 上）：取 $g=\mathbf{1}_B$，左边 $\int_B(1-h)\,d\nu=0$，右边 $\int_B h\,d\mu=\mu(B)$，故 $\mu(B)=0$。这部分 $\nu_s:=\nu|_B$ 集中在 $\mu$-零测集 $B$ 上，故 $\nu_s\perp\mu$。
 
 6. **绝对连续部分**（在 $A$ 上）：迭代代入 $g=\mathbf{1}_E(1+h+h^2+\cdots+h^n)$（利用 $0\le h<1$ 于 $A$），等比求和取极限（MCT），得
+
 $$
 \nu_{ac}(E)=\int_E\frac{h}{1-h}\mathbf{1}_A\,d\mu,\qquad\text{即}\quad f=\frac{h}{1-h}\mathbf{1}_A.
 $$
+
 由 $\nu\ll\mu$ 知 $\nu_s=0$，故 $\nu=\nu_{ac}$，$f$ 即所求。$\quad\blacksquare$
 
 > **本质洞察**：von Neumann 证法的精髓是——**把"测度的导数"问题转化为"Hilbert 空间里的投影"问题**。R–N 导数的存在性，本质上是 $L^2$ 完备性（Riesz 表示，§13）的推论。这条暗线 [R–N ⟸ Riesz 表示 ⟸ $L^2$ 完备] 在 §13 会反向呼应——那里 $(L^p)^*\cong L^q$ 的证明又**用 R–N**。两个定理互为表里，共同支撑起 Kalman 滤波（$L^2$ 投影）与贝叶斯更新（R–N 导数）这对机器人滤波的孪生支柱。
@@ -1557,27 +1639,35 @@ von Neumann 证法第 5、6 步其实**同时**给出了 R–N 与 Lebesgue 分�
 现在兑现开头的承诺——把四件机器人大事统一成 R–N 导数。
 
 **(1) 贝叶斯更新 = 后验对先验的 R–N 导数。** 给定观测 $z$，后验测度 $P(\cdot\mid z)$ 相对先验 $P$ 的 R–N 导数是
+
 $$
 \frac{dP(\cdot\mid z)}{dP}(x)=\frac{p(z\mid x)}{\int p(z\mid x')\,dP(x')}.
 $$
+
 这就是贝叶斯定理的测度论形式——**不依赖密度是否存在**，对混合状态、流形状态一律成立。分子是似然，分母是归一化常数（证据）。SLAM 后验的递推 $\dfrac{d\pi_t}{d\pi_{t-1}}\propto p(z_t\mid x_t)$ 是 R–N 导数的逐步累乘（用链式法则）。
 
 **(2) 重要性采样权 = 目标对提议的 R–N 导数。** 无法直接从目标分布 $\pi$ 采样时，从提议分布 $q$ 采样并加权，权重就是 R–N 导数的样本值：
+
 $$
 w^{(i)}\propto\frac{d\pi}{dq}(x^{(i)}),\qquad x^{(i)}\sim q.
 $$
+
 自归一化重要性采样 $\hat{\mathbb{E}}_\pi[\varphi]=\dfrac{\sum_i w^{(i)}\varphi(x^{(i)})}{\sum_i w^{(i)}}$ 的无偏性/一致性证明，依赖 R–N 导数的乘法与链式性质。**要求 $\pi\ll q$**——提议分布的支撑必须覆盖目标（否则某些区域权重无定义），这是重要性采样"提议分布要够宽"的理论根据。
 
 **(3) Girsanov 定理 = 测度变换的 R–N 导数（路径积分控制）。** 在受控扩散 $dX_t=u_t\,dt+dW_t$ 中，受控过程的 Wiener 测度 $\mathbb{Q}$ 相对被动过程（$u\equiv0$）的 Wiener 测度 $\mathbb{P}$ 的 R–N 导数是指数鞅：
+
 $$
 \frac{d\mathbb{Q}}{d\mathbb{P}}=\exp\Big(\int_0^T u_s^\top\,dW_s-\tfrac12\int_0^T|u_s|^2\,ds\Big).
 $$
+
 这是**路径积分控制**（$\text{PI}^2$、MPPI）的数学核心——它把"控制的影响"编码成路径空间上的测度变换，从而能用蒙特卡洛在被动动力学下采样、用 R–N 导数加权来评估受控代价。MPPI 在四足、无人机上的成功，底层就是这个 Girsanov R–N 导数（搜索确认：Girsanov 通过 R–N 导数把含漂移的布朗运动变成标准布朗运动，控制问题里把控制吸收进测度变换）。
 
 **(4) KL 散度 = R–N 导数的对数期望（信息几何/信赖域）。** 两个测度的 Kullback–Leibler 散度
+
 $$
 D(P\|Q)=\int\log\frac{dP}{dQ}\,dP=\mathbb{E}_P\Big[\log\frac{dP}{dQ}\Big]
 $$
+
 **只有当 $P\ll Q$ 时才有限**（否则 $\frac{dP}{dQ}$ 在某处无定义，$D=\infty$）。它定义了概率分布流形上的"信息距离"，是 TRPO/PPO 信赖域约束 $D(\pi_{\text{new}}\|\pi_{\text{old}})\le\delta$ 的核心——限制策略更新步长以保证单调改进。Fisher 信息矩阵是 KL 散度的二阶 Taylor 系数，定义了信息几何的黎曼度量（自然梯度）。
 
 > **本质洞察**：贝叶斯更新、重要性采样、Girsanov、KL 散度——四件机器人概率方法的核心操作，数学本体都是**一个测度相对另一个测度的 Radon–Nikodym 导数**。这不是巧合或类比，而是字面的同一。一旦你把它们看成同一个 $\dfrac{d\nu}{d\mu}$，许多看似独立的技巧（贝叶斯递推的权重累乘、重要性采样的链式权重、Girsanov 的指数权重）就统一成 R–N 导数的链式法则与乘法性质。**绝对连续性 $\nu\ll\mu$ 是所有这些操作的共同前提**——它在贝叶斯里是"似然非病态"、在重要性采样里是"提议覆盖目标"、在 KL 里是"两分布支撑兼容"。理解了这一点，你就掌握了机器人概率方法的统一语言。
@@ -1625,7 +1715,9 @@ $$
 ### 理论：$L^p$ 空间的定义
 
 > **定义 13.1**：对 $1\le p<\infty$，
-> $$L^p(X,\mu)=\Big\{f\text{ 可测}:\|f\|_p:=\Big(\int|f|^p\,d\mu\Big)^{1/p}<\infty\Big\}\Big/\sim,$$
+> 
+> $L^p(X,\mu)=\Big\{f\text{ 可测}:\|f\|_p:=\Big(\int|f|^p\,d\mu\Big)^{1/p}<\infty\Big\}\Big/\sim,$
+> 
 > 其中 $\sim$ 是"a.e. 相等"等价关系。$L^\infty=\{f:\|f\|_\infty:=\operatorname{ess\,sup}|f|<\infty\}$（本性上确界）。
 
 **为什么要模掉"a.e. 相等"？** 因为 $\|f\|_p=0$ 只能推出 $f=0$ a.e.（在零测集上可非零），不是 $f\equiv0$。不模掉的话 $\|\cdot\|_p$ 只是半范数（$\|f\|=0\not\Rightarrow f=0$）。模掉后成真范数——这又是 §7"积分无视零测集"的体现。
@@ -1672,13 +1764,17 @@ $$
 这是本节的高潮。把 Kalman 滤波放进 $L^2$ 框架，一切豁然开朗。
 
 令 $L^2(\Omega,\mathcal{F},\mathbb{P})$ 为平方可积随机变量的 Hilbert 空间，内积 $\langle X,Y\rangle=\mathbb{E}[XY]$（协方差结构）。给定观测，定义**观测子空间**
+
 $$
 H_t=\overline{\operatorname{span}}\{1,y_1,\dots,y_t\}\subset L^2,
 $$
+
 即所有观测的（闭）线性组合。则**最小均方误差（MMSE）线性估计**就是正交投影
+
 $$
 \hat x_{t\mid t}=\Pi_{H_t}x_t,
 $$
+
 即在 $H_t$ 中找离 $x_t$ 最近（$L^2$ 范数下）的点。
 
 **投影存在性靠完备性**：正交投影定理要求 $H_t$ 是 Hilbert 空间的闭子空间——这依赖 $L^2$ 完备（Riesz–Fischer）。没有完备性，"最近点"可能不存在，Kalman 失去数学根基。
@@ -1740,7 +1836,9 @@ $$
 ### 理论：蕴含关系图（$\mu$ 有限时）
 
 > **定理 14.2（蕴含关系，$\mu(X)<\infty$）**：
-> $$\text{一致}\Rightarrow L^\infty\Rightarrow L^p\Rightarrow L^1\Rightarrow\text{依测度};\qquad \text{a.e.}\overset{\text{Egorov}}{\Rightarrow}\text{依测度};\qquad L^p\Rightarrow\text{依测度}.$$
+> 
+> $\text{一致}\Rightarrow L^\infty\Rightarrow L^p\Rightarrow L^1\Rightarrow\text{依测度};\qquad \text{a.e.}\overset{\text{Egorov}}{\Rightarrow}\text{依测度};\qquad L^p\Rightarrow\text{依测度}.$
+> 
 > 且 **$L^p$ 收敛或依测度收敛 $\Rightarrow$ 存在子列 a.e. 收敛**（Riesz 子列定理）。
 
 这些蕴含里，"$L^p\Rightarrow$ 依测度"由 Markov 不等式（§7）：$\mu(\{|f_n-f|>\varepsilon\})\le\|f_n-f\|_p^p/\varepsilon^p\to0$。"a.e. $\Rightarrow$ 依测度"（有限测度下）由 Egorov（§6）。
@@ -1775,9 +1873,11 @@ Vitali 比 DCT **更通用**：有 $L^1$ 控制函数 $\Rightarrow$ UI（取 $\i
 把收敛模式接到随机优化上。
 
 **随机梯度下降的两种收敛保证**：SGD 在非凸目标上的经典结果（Robbins–Monro 1951；Tsitsiklis 1994 的异步随机逼近）给出
+
 $$
 \theta_n\xrightarrow{\text{a.s.}}\theta^*,
 $$
+
 即**几乎每一条训练轨迹都收敛**到（某个）驻点。这与"依概率收敛"（多次训练的集合中大部分收敛）有本质差异：
 
 > **本质洞察**：机器人学/具身智能里强调 **a.s. 收敛而非仅依概率收敛**，因为**单次部署即决定系统成败**。依概率收敛说"做 100 次训练，大部分会收敛"——但你部署的是**这一次**，依概率收敛不保证这一次不属于那"少部分"。a.s. 收敛说"几乎每条轨迹都收敛"，是对单次运行的保证。对一个要上真实硬件、跑一次就要 work 的机器人策略，a.s. 收敛是必需的鲁棒性证书，依概率收敛不够。这也解释了为什么强化学习理论里大量精力花在证 a.s. 收敛（用 Borel–Cantelli §3、鞅收敛、ODE 方法），而非满足于依概率。
@@ -1835,7 +1935,9 @@ FTC 失效！缺的是什么？$c$ 连续、有界变差（单调即 BV），但
 要证 Lebesgue 微分定理（"平均值收敛到点值"），需要控制"极大平均"。
 
 > **定义 15.1（Hardy–Littlewood 极大函数）**：对 $f\in L^1_{\mathrm{loc}}(\mathbb{R}^n)$，
-> $$Mf(x)=\sup_{r>0}\frac{1}{|B(x,r)|}\int_{B(x,r)}|f(y)|\,dy.$$
+> 
+> $Mf(x)=\sup_{r>0}\frac{1}{|B(x,r)|}\int_{B(x,r)}|f(y)|\,dy.$
+> 
 > 即所有以 $x$ 为心的球上 $|f|$ 平均值的上确界。
 
 > **引理 15.2（Vitali 覆盖引理，有限版）**：有限球族 $\{B_1,\dots,B_N\}\subset\mathbb{R}^n$ $\Rightarrow$ 存在不交子族 $\{B_{i_j}\}$ 使 $\bigcup_k B_k\subseteq\bigcup_j 3B_{i_j}$（$3B$ 是同心 3 倍半径球）。
@@ -1849,7 +1951,9 @@ FTC 失效！缺的是什么？$c$ 连续、有界变差（单调即 BV），但
 ### 理论：Lebesgue 微分定理
 
 > **定理 15.4（Lebesgue 微分定理）**：$f\in L^1_{\mathrm{loc}}(\mathbb{R}^n)\Rightarrow$ 几乎处处的 $x$ 是 **Lebesgue 点**，即
-> $$\lim_{r\to0}\frac{1}{|B(x,r)|}\int_{B(x,r)}|f(y)-f(x)|\,dy=0.$$
+> 
+> $\lim_{r\to0}\frac{1}{|B(x,r)|}\int_{B(x,r)}|f(y)-f(x)|\,dy=0.$
+> 
 > 特别地 $\lim_{r\to0}\frac{1}{|B(x,r)|}\int_{B(x,r)}f\,dy=f(x)$ a.e.
 
 **证明骨架（稠密 + 极大不等式）**：连续函数在 $L^1$ 中稠密（§13）。对连续 $g\in C_c$，由一致连续性**每个**点都是 Lebesgue 点。对一般 $f$，写 $f=g+(f-g)$，残差 $f-g$ 的"坏集"$\{M(f-g)>\alpha\}\cup\{|f-g|>\alpha\}$ 由弱 (1,1) 不等式与 Markov 控制为 $\le C\|f-g\|_1/\alpha$。令 $\|f-g\|_1\to0$（稠密性）得坏集测度趋零，故 a.e. 点是 Lebesgue 点。$\quad\blacksquare$
@@ -1863,7 +1967,8 @@ FTC 失效！缺的是什么？$c$ 连续、有界变差（单调即 BV），但
 包含关系：AC $\subsetneq$ BV $\subsetneq$ 连续。Cantor 函数是 BV（单调）但非 AC——它正好卡在缝里。
 
 > **定理 15.6（Lebesgue FTC）**：$f:[a,b]\to\mathbb{R}$ AC $\iff$ $f'$ 存在 a.e.、$f'\in L^1$、且
-> $$f(x)-f(a)=\int_a^x f'(t)\,dt\quad\forall x\in[a,b].$$
+> 
+> $f(x)-f(a)=\int_a^x f'(t)\,dt\quad\forall x\in[a,b].$
 
 AC 是 FTC 成立的**精确充要条件**。Cantor 函数非 AC，故 FTC 对它失效——一切自洽。
 
@@ -1930,7 +2035,8 @@ Riesz（1909）证明了 $C[a,b]$ 上正线性泛函由测度表示；Markov 与
 > **定义 16.1（Radon 测度）**：$X$ 为 LCH 空间，$(X,\mathcal{B}(X),\mu)$ 满足 (i) 紧集测度有限；(ii) 外正则（任意 Borel 集）；(iii) 内正则（对开集；$\sigma$-紧下对所有 Borel 集）。
 
 > **定理 16.2（Riesz–Markov–Kakutani 表示定理）**：$X$ 为 LCH，$\Lambda:C_c(X)\to\mathbb{R}$ 为**正线性泛函**（$f\ge0\Rightarrow\Lambda f\ge0$）。则存在**唯一** Radon 测度 $\mu$ 使
-> $$\Lambda f=\int_X f\,d\mu\qquad\forall f\in C_c(X).$$
+> 
+> $\Lambda f=\int_X f\,d\mu\qquad\forall f\in C_c(X).$
 
 这个定理是测度论与拓扑/泛函分析的交汇点：它说"**积分**"（正线性泛函）与"**测度**"是一一对应的——给一个 $\int f\,d\mu$ 这样的运算，就唯一确定一个测度。
 
@@ -1959,9 +2065,11 @@ Riesz（1909）证明了 $C[a,b]$ 上正线性泛函由测度表示；Markov 与
 **(1) 各向同性姿态先验**。"无偏好"的姿态先验取归一化 Haar 测度 $dR$ 于 $\mathrm{SO}(3)$。$\mathrm{SO}(3)$ 的（未归一化）Haar 体积在标准双不变度量（由 $\langle X,Y\rangle=-\frac12\operatorname{tr}(XY)$ 诱导）下为 $\operatorname{Vol}(\mathrm{SO}(3))=8\pi^2$。（注：该数值依赖度量归一化约定——不同的度量缩放会给出不同常数，如某些欧拉角参数化下为 $16\sqrt2\pi^2$；$8\pi^2$ 是机器人文献最常用的标准约定，对应把 $\mathrm{SO}(3)$ 看成半径为 ... 的 $\mathbb{RP}^3$。）归一化后得 $\mathrm{SO}(3)$ 上的均匀分布，这才是"各向同性""无信息姿态先验"的严格定义——它对左乘旋转不变，故不偏好任何姿态。
 
 **(2) 群卷积**。滤波/控制中组合两个姿态不确定性用群卷积
+
 $$
 (p*q)(g)=\int_G p(h)\,q(h^{-1}g)\,d\mu_H(h),
 $$
+
 积分必须用 Haar 测度 $\mu_H$ 才能保证卷积的群不变性（与欧氏卷积平移不变性类比）。这是姿态预测、不确定性传播的基本运算。
 
 **(3) $\mathrm{SE}(3)$ 上的 Gauss 分布**（Chirikjian 2009；Barfoot–Furgale 2014）。位姿不确定性的标准模型是：在李代数 $\mathfrak{se}(3)$ 上取 Gauss $\xi\sim\mathcal{N}(0,\Sigma)$，通过指数映射 $T=\exp(\xi^\wedge)\cdot T_0$ 推到群上。其在群上的密度**相对 Haar 测度**有显式形式（带一个 Jacobian 修正因子）。没有 Haar 测度做参照，这个"$\mathrm{SE}(3)$ 上的 Gauss 密度"无从定义——这是 §5"密度依赖参照测度"的终极体现：在群上参照测度从 Lebesgue 换成了 Haar。

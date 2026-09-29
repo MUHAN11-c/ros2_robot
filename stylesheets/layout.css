@@ -1,0 +1,221 @@
+/* ==========================================================================
+   layout.css · 页面骨架：Header 64px / 内容列 / 侧边栏宽度 / Footer / 进度条
+   ========================================================================== */
+
+/* ---- Header：64px，轻毛玻璃 ---- */
+
+.md-header {
+  height: var(--rt-header-height);
+  background: var(--rt-header-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--rt-border);
+  box-shadow: none;
+}
+
+.md-header__inner {
+  height: var(--rt-header-height);
+  max-width: 1600px;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+.md-header__title {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.md-header__title .md-ellipsis {
+  color: var(--rt-text-primary);
+}
+
+.md-header__option,
+.md-header .md-icon,
+.md-search__button svg {
+  color: var(--rt-text-secondary);
+}
+
+/* 头部搜索框宽度（桌面） */
+.md-header .md-search__form {
+  width: 340px;
+}
+
+.md-header__button:hover,
+.md-header__button:focus-visible {
+  color: var(--rt-primary);
+  opacity: 1;
+}
+
+/* 顶栏快捷入口（app.js 注入）：目录 / 路线 */
+.rt-header-links {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-right: 0.4rem;
+}
+
+.rt-header-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--rt-radius-sm);
+  font-size: 0.72rem;
+  color: var(--rt-text-secondary);
+  transition: color var(--rt-transition), background var(--rt-transition);
+}
+
+.rt-header-link:hover {
+  color: var(--rt-primary);
+  background: var(--rt-primary-soft);
+}
+
+/* ---- 阅读进度条（顶部 2px，樱→雷渐变） ---- */
+
+.rt-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 0;
+  z-index: 120;
+  background: linear-gradient(90deg, var(--rt-secondary), var(--rt-electro));
+  transition: width 80ms linear;
+  pointer-events: none;
+}
+
+/* ---- 主区域：1600px 最大宽 ---- */
+
+.md-grid {
+  max-width: 1600px;
+}
+
+.md-main__inner {
+  margin-top: 1.2rem;
+  gap: 1.4rem;
+}
+
+/* ---- 内容列：约 860px（75-90 字符/行） ---- */
+
+.md-content__inner {
+  margin-inline: auto;
+  padding: 0 1.2rem 2.6rem;
+}
+
+.md-sidebar--primary:not([hidden]) ~ .md-content .md-content__inner,
+.md-content__inner {
+  max-width: var(--rt-content-width);
+  margin-inline: auto;
+}
+
+/* 首页（含知识地图）放宽内容列 */
+.md-content__inner:has(.rt-home-section),
+.md-content:has(.rt-home-section) .md-content__inner {
+  max-width: 1180px;
+}
+
+/* ---- 侧边栏：260px 主导航 / 230px TOC ---- */
+
+.md-sidebar {
+  width: var(--rt-sidebar-width);
+}
+
+.md-sidebar--secondary {
+  width: var(--rt-toc-width);
+}
+
+.md-sidebar__scrollwrap {
+  scrollbar-width: thin;
+}
+
+/* ---- Footer：低调双栏 ---- */
+
+.md-footer {
+  border-top: 1px solid var(--rt-border);
+  background: var(--rt-bg-secondary);
+  color: var(--rt-text-secondary);
+}
+
+.md-footer__inner {
+  max-width: 1600px;
+  margin-inline: auto;
+}
+
+.md-footer-copyright {
+  font-size: 0.68rem;
+  color: var(--rt-text-secondary);
+}
+
+/* 上/下页卡片 */
+.md-footer__link {
+  max-width: 24rem;
+  border: 1px solid transparent;
+  border-radius: var(--rt-radius-md);
+  padding: 0.5rem 0.8rem;
+  transition: border-color var(--rt-transition), background var(--rt-transition);
+}
+
+.md-footer__link:hover {
+  background: var(--rt-primary-soft);
+  border-color: var(--rt-border);
+  opacity: 1;
+}
+
+.md-footer__link .md-ellipsis {
+  color: var(--rt-text-primary);
+  font-weight: 600;
+}
+
+.md-footer__link .md-footer__title {
+  font-size: 0.72rem;
+}
+
+.md-footer__link--next {
+  text-align: right;
+}
+
+/* ---- 面包屑与阅读元信息（app.js 注入） ---- */
+
+.rt-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0 0 0.6rem;
+  font-size: 0.68rem;
+  color: var(--rt-text-secondary);
+}
+
+.rt-breadcrumb a {
+  color: var(--rt-text-secondary);
+}
+
+.rt-breadcrumb a:hover {
+  color: var(--rt-primary);
+}
+
+.rt-breadcrumb .rt-bc-sep {
+  opacity: 0.55;
+}
+
+.rt-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin: 0 0 1.4rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--rt-border);
+  font-size: 0.68rem;
+  color: var(--rt-text-secondary);
+}
+
+.rt-meta .rt-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.rt-meta svg {
+  width: 0.85rem;
+  height: 0.85rem;
+  stroke: var(--rt-text-secondary);
+}

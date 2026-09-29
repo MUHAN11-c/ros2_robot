@@ -25,6 +25,8 @@ INCLUDE_TOP_DIRS = {
     "04_移动机器人规控",
     "05_运动控制",
     "06_具身智能",
+    "07_机器人学导论",
+    "08_可视化实验室",
     "media",
     "media_足式RL",
     "media_足式控制",
@@ -127,87 +129,291 @@ def write_home(markdown_count: int, asset_count: int) -> None:
         return public_page_url(first_existing(*targets))
 
     module_links = {
+        "roadmap": module_link(
+            "00_项目导航/从零开始学习路线总图.md",
+        ),
         "math": module_link(
+            "01_数学/数学方向_学习路径与教材映射.md",
             "01_数学/数学方向_总大纲.md",
-            "01_数学/数学方向总大纲.md",
         ),
         "foundation": module_link(
+            "02_C++基础与进阶/C++方向_学习路径与教材映射.md",
             "02_C++基础与进阶/C++基础与进阶方向_总大纲.md",
-            "02_基础/基础方向_总大纲.md",
-            "02_基础/C++基础方向_总大纲.md",
+        ),
+        "robotics": module_link(
+            "07_机器人学导论/00_机器人学导论_学习地图.md",
         ),
         "slam": module_link(
+            "03_SLAM/SLAM方向_学习路径与教材映射.md",
             "03_SLAM/SLAM方向_总大纲.md",
-            "03_SLAM/slam理论.md",
         ),
         "mobile": module_link(
+            "04_移动机器人规控/移动规控方向_学习路径与教材映射.md",
             "04_移动机器人规控/移动规控方向_总大纲.md",
-            "04_移动机器人规控/移动机器人规控方向_总大纲.md",
-            "04_移动机器人规控/README.md",
         ),
         "control": module_link(
+            "05_运动控制/运动控制方向_学习路径与教材映射.md",
             "05_运动控制/运动控制方向_总大纲.md",
         ),
         "embodied": module_link(
+            "06_具身智能/具身智能方向_学习路径与教材映射.md",
             "06_具身智能/具身智能方向_总大纲.md",
         ),
     }
 
+    code_blocks = count_code_blocks()
+    code_display = f"{code_blocks // 1000}k+" if code_blocks >= 1000 else str(code_blocks)
+
     (DOCS_DIR / "index.md").write_text(
         f"""---
 template: home.html
+title: Robotics Tutorial · 樱雷机器人研习社
 hide:
   - navigation
   - toc
 ---
 
-# 学习模块
+<h1 class="rt-visually-hidden">Robotics Tutorial · 机器人系统化学习教程</h1>
+
+<div class="rt-home-section" markdown>
+
+### 知识主线 Knowledge Map
+
+沿着一条主线从零基础走到具身智能，每个节点都是一组系统化教材：
+
+![知识地图：数学基础 → C++ 工程 → ROS 2 → 感知/SLAM → Planning/Control → 机械臂/足式 → 具身智能](assets/labs/diagrams/home_kmap.svg)
+
+[查看完整学习路线总图（四阶段 · 每章学时与毕业自测）](00_项目导航/从零开始学习路线总图.md){{ .rt-kmap__more }}
+
+</div>
+
+<div class="rt-home-section" markdown>
+
+### 开始学习 Start Here
+
+<div class="rt-quick" markdown>
+
+<div class="rt-quick__card" markdown>
+
+#### 第〇阶 · 零基础筑基
+
+数学 7 章 + C++ 7 章 + Python 工具链 + 机器人学导论，零基础友好。
+
+[进入筑基](01_数学/00_大学基础筑基/00_零基础数学学习地图.md)
+
+</div>
+
+<div class="rt-quick__card" markdown>
+
+#### 可视化实验室
+
+10 个实验室：每个理论配一套可运行代码与实测图表。
+
+[动手实验](08_可视化实验室/README.md)
+
+</div>
+
+<div class="rt-quick__card" markdown>
+
+#### 深水区 · 前沿
+
+足式 27 章、机械臂 51 篇、RL 运控 28 章与论文精读。
+
+[进入前沿](05_运动控制/10_足式/10_序章上篇_全景与四分法.md)
+
+</div>
+
+</div>
+
+</div>
+
+<div class="rt-home-section" markdown>
+
+### 核心模块 Core Topics
 
 <div class="grid cards" markdown>
 
--   **❖ 数学基础**
+-   **数学：从零到前沿**
 
-    流形、李群、凸优化、最优控制、状态估计、强化学习理论。
+    筑基 7 章起步，深处直抵李群、优化与随机分析。
 
     [进入模块]({module_links["math"]})
 
--   **⚙ C++基础与进阶**
+-   **C++ 与编程**
 
-    C++ 进阶、并发、ROS2、CMake、工程化与机器人软件栈。
+    零基础入门 + Python 工具链，通往并发与 ROS2 工程。
 
     [进入模块]({module_links["foundation"]})
 
--   **◈ SLAM**
+-   **机器人学导论**
 
-    SLAM 理论、核心库、系统精读、架构与工程化实践。
+    坐标变换、正运动学、ROS2 初体验。
+
+    [进入模块]({module_links["robotics"]})
+
+-   **SLAM**
+
+    从零理解定位与建图，直通 GTSAM 与系统精读。
 
     [进入模块]({module_links["slam"]})
 
--   **✧ 移动机器人规控**
+-   **移动机器人规控**
 
-    规划、控制、TAMP、不确定性、多机器人与横切专题。
+    时空规划、采样 MPC、博弈、多机与无人机。
 
     [进入模块]({module_links["mobile"]})
 
--   **⚡ 运动控制**
+-   **运动控制**
 
     足式、机械臂、复合机器人、仿真与实时控制工程。
 
     [进入模块]({module_links["control"]})
 
--   **✦ 具身智能**
+-   **具身智能**
 
-    大模型、世界模型、VLA、动作模仿与强化学习。
+    RL 运控 28 章 Isaac Lab 全链路与具身前沿。
 
     [进入模块]({module_links["embodied"]})
 
 </div>
 
-## ✦ 构建统计
+</div>
 
-- 文档页：{markdown_count}
-- 媒体资源：{asset_count}
+<div class="rt-home-section" markdown>
 
+### 学习路径 Learning Paths
+
+<div class="rt-paths" markdown>
+
+<div class="rt-path-card" markdown>
+
+#### ROS2 软件工程师
+
+C++ 零基础入门 → 语言核心 → 并发 → ROS2 工程化。
+
+[路径详情](02_C++基础与进阶/C++方向_学习路径与教材映射.md)
+
+</div>
+
+<div class="rt-path-card" markdown>
+
+#### 导航 / SLAM 工程师
+
+机器人导论 → SLAM 是什么 → 十四讲 → 概率机器人 → 精读。
+
+[路径详情](03_SLAM/SLAM方向_学习路径与教材映射.md)
+
+</div>
+
+<div class="rt-path-card" markdown>
+
+#### 规划控制工程师
+
+自控原理 → MPC → LaValle → 采样式 MPC 与时空规划。
+
+[路径详情](04_移动机器人规控/移动规控方向_学习路径与教材映射.md)
+
+</div>
+
+<div class="rt-path-card" markdown>
+
+#### 运动控制工程师
+
+自控原理 → Craig → Modern Robotics → WBC 与足式全栈。
+
+[路径详情](05_运动控制/运动控制方向_学习路径与教材映射.md)
+
+</div>
+
+<div class="rt-path-card" markdown>
+
+#### 具身智能工程师
+
+Sutton RL → Spinning Up → RL 运控 28 章 Isaac Lab 全链路。
+
+[路径详情](06_具身智能/具身智能方向_学习路径与教材映射.md)
+
+</div>
+
+</div>
+
+</div>
+
+<div class="rt-home-section" markdown>
+
+### 知识库统计 Statistics
+
+<div class="rt-stats" markdown>
+
+<div class="rt-stat" markdown>
+
+<span class="rt-stat__num">{markdown_count}+</span>
+<span class="rt-stat__label">文档页</span>
+
+</div>
+
+<div class="rt-stat" markdown>
+
+<span class="rt-stat__num">{code_display}</span>
+<span class="rt-stat__label">代码示例</span>
+
+</div>
+
+<div class="rt-stat" markdown>
+
+<span class="rt-stat__num">10</span>
+<span class="rt-stat__label">可视化实验</span>
+
+</div>
+
+<div class="rt-stat" markdown>
+
+<span class="rt-stat__num">7</span>
+<span class="rt-stat__label">方向模块</span>
+
+</div>
+
+</div>
+
+</div>
+
+""",
+        encoding="utf-8",
+    )
+
+
+def count_code_blocks() -> int:
+    """统计全部文档页中的代码块数量（``` 围栏数 / 2）。"""
+    total = 0
+    for md in DOCS_DIR.rglob("*.md"):
+        try:
+            total += md.read_text(encoding="utf-8").count("```")
+        except OSError:
+            continue
+    return total // 2
+
+
+def write_404() -> None:
+    """原创 404 页：小樱丸 + 节点未连接。"""
+    (DOCS_DIR / "404.md").write_text(
+        """---
+hide:
+  - navigation
+  - toc
+---
+
+<div class="rt-404" markdown>
+
+![樱雷工程狐·小樱丸](assets/images/mascot.svg)
+
+# 404 · 这个节点没有连接
+
+小樱丸在这片区域没有找到话题——页面可能已移动或从未存在。
+
+[返回首页](/){{ .md-button .md-button--primary }}
+[浏览目录索引](catalog/){{ .md-button }}
+
+</div>
 """,
         encoding="utf-8",
     )
@@ -492,8 +698,10 @@ def is_known_existing(key: str, existing_keys: set[str]) -> bool:
 
 
 def module_key(title: str) -> str:
-    if "项目导航" in title:
+    if "项目导航" in title or "学习路线" in title:
         return "project"
+    if "导论" in title:
+        return "robotics"
     if "数学" in title:
         return "math"
     if "SLAM" in title.upper():
@@ -504,7 +712,7 @@ def module_key(title: str) -> str:
         return "control"
     if "具身智能" in title:
         return "embodied"
-    if "编程" in title or "基础" in title:
+    if "编程" in title or "基础" in title or "C++" in title:
         return "foundation"
     return comparable_title(title)
 
@@ -559,7 +767,7 @@ def merge_summary_placeholders(
 
         key = module_key(summary_section.title)
         target_section = sections.get(key)
-        placeholder_group = SummaryNode(title="神樱待放", children=placeholders)
+        placeholder_group = SummaryNode(title="静待绽放", children=placeholders)
 
         if target_section:
             target_section.children.append(placeholder_group)
@@ -632,7 +840,7 @@ def all_leaf_pages_missing(item: SummaryNode) -> bool:
 def catalog_missing_label(title: str) -> str:
     return (
         f'<span class="robotics-catalog-missing">{escape(title)}'
-        ' <span class="robotics-catalog-badge">神樱待放</span></span>'
+        ' <span class="robotics-catalog-badge">静待绽放</span></span>'
     )
 
 
@@ -644,7 +852,7 @@ def render_catalog_items(items: list[SummaryNode], level: int = 0) -> list[str]:
         if item.children:
             summary_title = (
                 catalog_missing_label(item.title)
-                if level > 0 and item.title != "神樱待放" and all_leaf_pages_missing(item)
+                if level > 0 and item.title != "静待绽放" and all_leaf_pages_missing(item)
                 else escape(item.title)
             )
             details_attrs = f'class="{details_class}" markdown'
@@ -675,6 +883,14 @@ def write_catalog(catalog: list[SummaryNode]) -> None:
     lines = [
         "# 目录索引",
         "",
+        '<div class="robotics-catalog-mascot" markdown>',
+        "",
+        "![樱雷工程狐·小樱丸](assets/images/mascot.svg)",
+        "",
+        "**小樱丸小提示**：按 `Ctrl+K` 全局搜索；第一次来请先看 [从零开始学习路线总图](00_项目导航/从零开始学习路线总图.md)。",
+        "",
+        "</div>",
+        "",
         "❖ 按模块折叠展开，拾级而入对应章节。",
         "",
         *render_catalog_items(catalog),
@@ -696,6 +912,7 @@ def main() -> None:
     markdown_count, asset_count = copy_docs(source)
     copy_site_assets()
     write_home(markdown_count, asset_count)
+    write_404()
     catalog = select_catalog(source)
     nav = build_navigation(catalog)
     write_catalog(catalog)

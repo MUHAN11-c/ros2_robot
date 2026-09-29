@@ -843,9 +843,11 @@ iSAM2 为每个变量维护一个"自上次线性化以来的估计变化量" $\
 $$
 \dot{R}(t) = R(t) \cdot [\tilde{\omega}(t) - b_g - \eta_g]_\times
 $$
+
 $$
 \dot{v}(t) = R(t) \cdot (\tilde{a}(t) - b_a - \eta_a) + g
 $$
+
 $$
 \dot{p}(t) = v(t)
 $$
@@ -857,9 +859,11 @@ $$
 $$
 \Delta R_{ij} = \prod_{k=i}^{j-1} \text{Exp}((\tilde{\omega}_k - b_g^i) \Delta t)
 $$
+
 $$
 \Delta v_{ij} = \sum_{k=i}^{j-1} \Delta R_{ik} \cdot (\tilde{a}_k - b_a^i) \Delta t
 $$
+
 $$
 \Delta p_{ij} = \sum_{k=i}^{j-1} \left[ \Delta v_{ik} \Delta t + \frac{1}{2} \Delta R_{ik} \cdot (\tilde{a}_k - b_a^i) \Delta t^2 \right]
 $$

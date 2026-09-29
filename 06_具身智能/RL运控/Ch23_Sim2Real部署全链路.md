@@ -122,6 +122,7 @@ Fine-tuning 还有一个实践中的重要考虑：**安全约束更严格**。�
 在 RL 框架中，adaptive control 通常通过 latent variable 实现：策略网络接收一个额外的低维"环境编码" $z$，这个编码由一个在线估计器从最近的 observation-action 历史中推断：
 
 $$z_t = \text{Estimator}(o_{t-k:t}, a_{t-k:t-1})$$
+
 $$a_t = \pi(o_t, z_t)$$
 
 训练时，estimator 和 policy 在随机化环境中联合训练——estimator 学会从交互历史中推断当前环境参数（即使不直接观测），policy 学会根据推断结果调整行为。

@@ -56,20 +56,23 @@ SLAM流程
 - 在纹理不清楚或者光线过强过弱的地方，相机几乎无法运作
 SLAM数学表述
 但是只有对各个模块的组成和功能有一定的认知还是不够的，我们无法根据这种直观了解写出可以运行的程序，需要上升到数学层面进行描述和建模
-首先，机器人会携带某种传感器在未知环境中运动，如何用数学语言描述这件事呢，我们知道，相机通常是在某些时刻采集数据的，所以我们也关心这些时刻的位置和地图，也就是一段连续时间的运动变成了离散时刻当中发生的事，在这些时刻，使用 $$\boldsymbol x$$ 表示机器人的位置，使用下标来区分不同时刻的位置，这些时刻的位置就构成了机器人的轨迹
-假设地图是由许多个路标组成，每个时刻，传感器会测量到一部分路标点，得到他们的观测数据，设路标点有N个，用 $$\boldsymbol{y}_1,\boldsymbol{y}_2,\cdots,\boldsymbol{y}_N$$ 表示
+首先，机器人会携带某种传感器在未知环境中运动，如何用数学语言描述这件事呢，我们知道，相机通常是在某些时刻采集数据的，所以我们也关心这些时刻的位置和地图，也就是一段连续时间的运动变成了离散时刻当中发生的事，在这些时刻，使用 $\boldsymbol x$ 表示机器人的位置，使用下标来区分不同时刻的位置，这些时刻的位置就构成了机器人的轨迹
+假设地图是由许多个路标组成，每个时刻，传感器会测量到一部分路标点，得到他们的观测数据，设路标点有N个，用 $\boldsymbol{y}_1,\boldsymbol{y}_2,\cdots,\boldsymbol{y}_N$ 表示
 这样，我们需要考虑以下两件事情，还真是，机器人带着传感器在环境中运动是由如下两件事描述的：
-1. 什么是运动？从 $$k-1$$ 时刻到 $$k$$ 时刻，小萝卜的位置是如何变化的？
-2. 什么是观测？假设小萝卜在 $$k$$ 时刻位于 $$\boldsymbol{x}_k$$ 处观测到了某个路标 $$\boldsymbol{y}_k$$ ，我们如何用数学语言描述呢？
+1. 什么是运动？从 $k-1$ 时刻到 $k$ 时刻，小萝卜的位置是如何变化的？
+2. 什么是观测？假设小萝卜在 $k$ 时刻位于 $\boldsymbol{x}_k$ 处观测到了某个路标 $\boldsymbol{y}_k$ ，我们如何用数学语言描述呢？
 首先，运动模型可以描述运动，资料机器人会携带一个测量自身运动的传感器，这个传感器可以测量有关运动的读数，但不一定直接就是位置之差，还可能是加速度、角速度这些信息。我们可以用一个抽象的数学模型来描述
+
 $$\boldsymbol{x}_k = f(\boldsymbol{x}_{k-1}, \boldsymbol{u}_k, \boldsymbol{w}_k) $$
-$$\boldsymbol{u}_k$$ 是运动传感器的读数，$$ \boldsymbol{w}_k $$ 是运动过程中加入的噪声（因为真实物理世界中的传感器都会带有噪声）
-然后是观测模型，机器人在 $$\boldsymbol{x}_k$$ 位置上看到某个路标点 $$\boldsymbol{y}_j$$，产生了一个观测数据 $$\boldsymbol{z}_{k,j}$$，同样可以用一个抽象的数学模型描述：
+
+$\boldsymbol{u}_k$ 是运动传感器的读数，$ \boldsymbol{w}_k $ 是运动过程中加入的噪声（因为真实物理世界中的传感器都会带有噪声）
+然后是观测模型，机器人在 $\boldsymbol{x}_k$ 位置上看到某个路标点 $\boldsymbol{y}_j$，产生了一个观测数据 $\boldsymbol{z}_{k,j}$，同样可以用一个抽象的数学模型描述：
 $$\boldsymbol{z}_{kj} = h(\boldsymbol{y}_j, \boldsymbol{x}_k, \boldsymbol{v}_{k,j}) \quad $$
-$$\boldsymbol{v}_{k,j}$$ 是观测的噪声
+
+$\boldsymbol{v}_{k,j}$ 是观测的噪声
 实际上，这只是一个简化的方程，描述了一种形式，在真实世界中，根据机器人的真实运动和传感器的种类，存在着若干种参数化形式。而考虑视觉SLAM时，传感器是相机，则观测方程就是“对路标点拍摄后，得到图像中的像素”的过程，若考虑激光SLAM时，传感器是激光雷达，则观测方程就是对路标点（或环境表面）进行扫描后，得到该点在雷达坐标系下的三维坐标（或距离与方位角）
 运动方程
-这里举一个运动方程的例子，假设机器人在平面运动，那么位姿（位置+姿态）由两个位置的坐标和一个转角来描述 $$\boldsymbol x_k = (x, y, \theta)^T$$，同时，运动传感器能够测量到机器人在任意两个时间间隔位置和转角的变化量 $$\boldsymbol u_k = (\Delta x, \Delta y, \Delta \theta)^T$$，于是，此时运动方程就可以写成：
+这里举一个运动方程的例子，假设机器人在平面运动，那么位姿（位置+姿态）由两个位置的坐标和一个转角来描述 $\boldsymbol x_k = (x, y, \theta)^T$，同时，运动传感器能够测量到机器人在任意两个时间间隔位置和转角的变化量 $\boldsymbol u_k = (\Delta x, \Delta y, \Delta \theta)^T$，于是，此时运动方程就可以写成：
 $$\begin{pmatrix}
 x \\
 y \\
@@ -82,21 +85,26 @@ y \\
 \end{pmatrix}_{k-1} +
 \begin{pmatrix}
 \Delta x \\\Delta y \\\Delta \theta\end{pmatrix}_{k} + \boldsymbol w_k$$
+
 学过现代控制理论、理论力学等课程的同学可能会对这种方程有印象，实际上运动方程本质上是通过系统运行的物理规律构建出的方程，而且上面的方程是一种很简单的线性方程，但是并不是所有的输入指令都会如此简单，诸如油门和操纵杆的输入就是速度或者加速度量，并且也有其他的更加复杂的运动方程形式
 观测方程
-关于观测方程，比如机器人携带着一个二维激光传感器（当激光传感器观测一个2D路标点时，可以测到路标点与机器人之间的距离 $$r$$ 和夹角 $$\phi$$，记路标点 $$\boldsymbol y_j = [y_1, y_2]^T_j$$，位姿为 $$\boldsymbol x_k = [x_1, x_2]^T_k$$，观测数据为 $$\boldsymbol z_{k,j} = [r_{k,j}, \phi_{k,j}]^T$$，那么观测方程可以写成
+关于观测方程，比如机器人携带着一个二维激光传感器（当激光传感器观测一个2D路标点时，可以测到路标点与机器人之间的距离 $r$ 和夹角 $\phi$，记路标点 $\boldsymbol y_j = [y_1, y_2]^T_j$，位姿为 $\boldsymbol x_k = [x_1, x_2]^T_k$，观测数据为 $\boldsymbol z_{k,j} = [r_{k,j}, \phi_{k,j}]^T$，那么观测方程可以写成
+
 $$\begin{bmatrix}
 r_{k,j} \\\phi_{k,j}
 \end{bmatrix}_{k} =
 \begin{bmatrix}
 \sqrt{(y_{1,j} - x_{1,k})^2 + (y_{2,j} - x_{2,k})^2}  \\\arctan \left( \frac{y_{2,j} - x_{2,k}}{y_{1,j} - x_{1,k}} \right) 
 \end{bmatrix}_{k} +\boldsymbol v$$
+
 SLAM基本方程
 针对不同的传感器，两个方程有不同的参数化形式，如果出于通用性考虑，那么就可以对其进行抽象，并且总结为两个基本方程
+
 $$\begin{cases} 
 \boldsymbol{x}_{k}=f\left(\boldsymbol{x}_{k-1},\boldsymbol{u}_{k},\boldsymbol{w}_{k}\right), & k=1,\cdots,K \\ 
 \boldsymbol{z}_{k,j}=h\left(\boldsymbol{y}_{j},\boldsymbol{x}_{k},\boldsymbol{v}_{k,j}\right), & (k,j)\in O 
 \end{cases}$$
+
 O 表示观测集合，即哪些时刻观测到了哪些路标
 三维空间刚体运动
 想描述三维空间中的物体运动，就必须先确定坐标系的概念，因为运动都是相对的，我们无法描述一个物体的绝对运动情况，只能描述一个物体的相对运动情况
@@ -108,6 +116,7 @@ O 表示观测集合，即哪些时刻观测到了哪些路标
 - 坐标系：实际上是构成线性空间的一组基，分为左手系和右手系，在机器人领域，一般使用右手系，机器人的运动也都是在右手系里面进行讨论
 [图片]
 对于向量的运算，如内积、外积，这里不再赘述，但是对于外积，这里引入一个特殊的记法，如下
+
 $$\boldsymbol a \times \boldsymbol b = 
 \begin{bmatrix}
 i & j & k \\
@@ -124,37 +133,50 @@ a_1 b_2 - a_2 b_1
 a_3 & 0 & -a_1 \\
 -a_2 & a_1 & 0
 \end{bmatrix} \boldsymbol b \triangleq \boldsymbol a^\wedge \boldsymbol b$$
-也就是将叉乘写成矩阵相乘的方式，并且对应的叉乘矩阵 $$\boldsymbol a^\wedge$$ 实际上是一个反对称矩阵，也就是满足
+
+也就是将叉乘写成矩阵相乘的方式，并且对应的叉乘矩阵 $\boldsymbol a^\wedge$ 实际上是一个反对称矩阵，也就是满足
+
 $$(\boldsymbol a^\wedge)^{-1}=(\boldsymbol a^\wedge)^T$$
+
 并且很容易得知，反对称符号实际上是一种一一映射，如此记法可以简化数学推理
 坐标变换与旋转矩阵
 首先提出一个问题：如果我们在相机或者雷达坐标系下观测到一个对象，那么这个对象在世界坐标系下或者机器人坐标系下的位置是如何表示的呢？这里就需要用数学公式来表述了，也就是坐标变换的问题：如何计算同一个向量在不同坐标系里的坐标？
 实际上，两个坐标系之间的关系，只有旋转和平移两种，或者说，两个坐标系之间的运动就是一个旋转加上一个平移，这种运动称为刚体运动
 刚体运动中的旋转实际上可以通过一个旋转矩阵进行定义，至于旋转矩阵的具体来龙去脉请深入学习机器人学课程，这里我们可以知道，旋转矩阵是由两组基之间的内积组成的，刻画了旋转前后同一个向量的坐标变换关系，也就是只要旋转是一样的，旋转矩阵就是一样的
 旋转矩阵有一些很特殊的性质，比如说其行列式为1且为正交矩阵，反之，行列式为1的正交矩阵也是一个旋转矩阵，所以可以将 n 维旋转矩阵的集合定义如下形式
+
 $$SO(n) = \{\boldsymbol{R} \in \mathbb{R}^{n \times n} \mid \boldsymbol{R} \boldsymbol{R}^T = \boldsymbol{I}, \det(\boldsymbol{R}) = 1\}$$
-其中 $$SO(n)$$ 是特殊正交群
+
+其中 $SO(n)$ 是特殊正交群
 由于旋转矩阵为正交矩阵，所以旋转矩阵的逆阵就是其本身的转置，也就是描述了相反方向的旋转
-如果考虑坐标系之间的旋转与平移，那么可以定义坐标系1和坐标系2，那么向量 $$\boldsymbol a$$ 在两个坐标系下的坐标是 $$\boldsymbol a_1$$ 和 $$\boldsymbol a_2$$，则存在如下的关系
+如果考虑坐标系之间的旋转与平移，那么可以定义坐标系1和坐标系2，那么向量 $\boldsymbol a$ 在两个坐标系下的坐标是 $\boldsymbol a_1$ 和 $\boldsymbol a_2$，则存在如下的关系
+
 $$\boldsymbol{a}_1 = \boldsymbol{R}_{12} \boldsymbol{a}_2 + \boldsymbol{t}$$ 
+
 也存在行列式为-1的旋转矩阵，但是这种矩阵表示的是瑕旋转，即一次旋转加一次反射
 但是上面的变换方程并不是一个线性方程，如果进行了两次或多次变换会难以描述和推导，因此引入了齐次坐标和对应的变换矩阵
+
 $$\begin{bmatrix} \boldsymbol{a}' \\ 1 \end{bmatrix} = 
 \begin{bmatrix} \boldsymbol{R} & \boldsymbol{t} \\ \boldsymbol{0}^T & 1 \end{bmatrix} 
 \begin{bmatrix} \boldsymbol{a} \\ 1 \end{bmatrix} 
 \triangleq \boldsymbol{T} 
 \begin{bmatrix} \boldsymbol{a} \\ 1 \end{bmatrix}$$
-这是一个数学技巧，其中的四维向量称为齐次坐标，记为 $$\tilde{\boldsymbol{a}}$$，并且可以使用一个变换矩阵同时描述旋转和平移，我们将其定义为 $$\boldsymbol T$$，这种矩阵又称为特殊欧式群
+
+这是一个数学技巧，其中的四维向量称为齐次坐标，记为 $\tilde{\boldsymbol{a}}$，并且可以使用一个变换矩阵同时描述旋转和平移，我们将其定义为 $\boldsymbol T$，这种矩阵又称为特殊欧式群
+
 $$SE(3) = \left\{ \boldsymbol{T} = 
 \begin{bmatrix}
 \boldsymbol{R} & \boldsymbol{t} \\\boldsymbol{0}^T & 1
 \end{bmatrix} 
 \in \mathbb{R}^{4 \times 4} \mid \boldsymbol{R} \in SO(3), \boldsymbol{t} \in \mathbb{R}^3 \right\}$$
+
 并且可以定义反向的变换
+
 $$\boldsymbol{T}^{-1} = 
 \begin{bmatrix}
 \boldsymbol{R}^T & -\boldsymbol{R}^T \boldsymbol{t} \\\boldsymbol{0}^T & 1
 \end{bmatrix}$$
+
 旋转矩阵的左乘/右乘与主动被动变换
 实际上前面的旋转是一个“多义词”，比如说谁旋转了、以什么为准旋转，当你跟朋友出去玩，你在原地不动，但是朋友动了，那两个时刻下你在以朋友为准的坐标系下的位置就发生了变换，若你动但是朋友不动，则又是另外的情况，因此需要具体讨论
 首先介绍主动变换 (Active Transformation) 与 被动变换 (Passive Transformation) 的概念
@@ -163,7 +185,7 @@ $$\boldsymbol{T}^{-1} =
 此外，旋转矩阵的左乘和右乘在数学和物理上有不同的意义，也就是旋转矩阵在向量的哪一侧相乘，这种矩阵乘法的顺序直接决定了旋转是相对于谁发生的，也就是你绕朋友旋转和原地旋转是截然不同的结果
 - 左乘：矩阵在左，绕固定的全局坐标系旋转，一般用于地图矫正
 - 右乘：矩阵在右，绕局部或者说自身坐标系旋转，一般用于 IMU 积分，因为 IMU 测量的是自身的角速度
-因此可以进行列表，其中使用 $$\boldsymbol R_{curr}$$ 表示当前姿态，使用 $$\Delta \boldsymbol R$$ 表示旋转增量
+因此可以进行列表，其中使用 $\boldsymbol R_{curr}$ 表示当前姿态，使用 $\Delta \boldsymbol R$ 表示旋转增量
 乘法顺序
 变换方式
 解读/用途
@@ -177,6 +199,7 @@ $$$$
 被动变换
 
 $$\boldsymbol R_{new}=\Delta\boldsymbol R \cdot\boldsymbol R_{curr}$$
+
 右乘
 绕自身系转动
 主动变换
@@ -186,6 +209,7 @@ $$$$
 被动变换
 
 $$$$
+
 但是这种变换矩阵的方法是有缺陷的：
 1. SO(3)的旋转矩阵有九个量，但一次旋转只有三个自由度。因此这种表达方式是冗余的。同理，变换矩阵用十六个量表达了六自由度的变换。那么，是否有更紧凑的表示呢?
 2. 旋转矩阵自身带有约束：它必须是个正交矩阵,且行列式为 1。变换矩阵也是如此。当我们想要估计或优化一个旋转矩阵,变换矩阵时，这些约束会使得求解变得更困难。
@@ -194,21 +218,29 @@ $$$$
 旋转矩阵表示旋转是冗杂的(旋转矩阵有9个量，但一次旋转只有3个自由度并且旋转矩阵自身带有约束)，我们希望有一个紧凑和无约束的形式表示旋转和平移，所以有了新的表示方法——旋转向量，不过要注意一下，旋转向量与旋转矩阵只是表达方式不同，但是表达的内容是相同的
 事实上很容易理解，任意一个旋转都可以使用一个旋转轴和旋转角描述，也就是绕该轴旋转了多少角度，因此可以定义一个旋转向量，其方向与旋转轴一致，长度等于旋转角度，也就是我们可以使用一个三维向量就可以表示旋转
 那么对于同一个旋转，旋转矩阵形式和旋转向量形式之间有什么联系呢？实际上这种联系就是罗德里格斯公式
+
 $$\boldsymbol{R} = \cos \theta \boldsymbol{I} + (1 - \cos \theta) \boldsymbol{n} \boldsymbol{n}^T + \sin \theta \boldsymbol{n}^\wedge$$
-其中的 $$\theta$$ 是旋转角度，$$\boldsymbol n$$ 是旋转轴方向的单位向量
+
+其中的 $\theta$ 是旋转角度，$\boldsymbol n$ 是旋转轴方向的单位向量
 其中转轴是矩阵 R 特征值1对应的特征向量
 实际上的计算推导过程可以看下列视频，大概从22分钟开始讲解
 https://www.bilibili.com/video/BV1Wa411L71b?spm_id_from=333.788.player.switch&vd_source=eea47a16439992e41b232bc5d5684e27
 当然也可以逆向，通过旋转矩阵计算旋转向量，对于转角 ，可以对两侧取迹
+
 $$\begin{aligned}
 \operatorname{tr}(\boldsymbol{R}) &= \cos\theta\operatorname{tr}(\boldsymbol{I}) + (1 - \cos\theta)\operatorname{tr}\left(\boldsymbol{n}\boldsymbol{n}^T\right) + \sin\theta\operatorname{tr}(\boldsymbol{n}^\wedge)\\
 &= 3\cos\theta + (1 - \cos\theta)\\
 &= 1 + 2\cos\theta
 \end{aligned}$$
+
 因此可以获取旋转角的表达式
+
 $$\theta = \arccos\frac{\operatorname{tr}(\boldsymbol{R}) - 1}{2}$$
+
 关于转轴，易知旋转轴上的向量在旋转后不发生改变，说明转轴是矩阵 R 特征值1对应的特征向量
+
 $$\boldsymbol R \boldsymbol n = \boldsymbol n$$
+
 解此方程并且归一化就得到了旋转轴
 欧拉角
 无论是旋转矩阵、旋转向量，虽然它们能描述旋转，但对我们人类是非常不直观的。当我们看到一个旋转矩阵或旋转向量时很难想象出来这个旋转究竟是什么样的。当它们变换时，我们也不知道物体是向哪个方向在转动。
@@ -229,8 +261,11 @@ $$\boldsymbol R \boldsymbol n = \boldsymbol n$$
 这是一种节省空间（紧凑）而且没有奇异性的表达形式，可以用来描述旋转
 2D 情况下，可用单位复数表达旋转，三维情况下，四元数就是复数的扩充
 四元数（Quaternion）有一个实部和三个虚部，形式如下
+
 $$\boldsymbol{q} = q_0 + q_1 i + q_2 j + q_3 k = [q_0, \boldsymbol{v}]^T$$
+
 并且三个虚部满足以下关系
+
 $$\begin{cases}
 \begin{aligned}
 i^2 &= j^2 = k^2 = ijk = -1 \\
@@ -239,11 +274,14 @@ jk &= i, \quad kj = -i \\
 ki &= j, \quad ik = -j
 \end{aligned}
 \end{cases}$$
+
 如何使用四元数描述旋转呢？实际上是通过单位四元数实现的，单位四元数表示三维空间中的任意一个旋转，但是我们可以先了解一下四元数的一些运算，定义两个四元数
+
 $$\begin{aligned}
 \boldsymbol q_a&=[s_a,\boldsymbol v_a]^T=s_a+x_a i+y_a j+z_a k\\
 \boldsymbol q_b&=[s_b,\boldsymbol v_b]^T=s_b+x_b i+y_b j+z_b k\\
 \end{aligned}$$
+
 1. 加减法：四元数的加减法很简单，对应位置的元素直接加减即可
 2. 乘法：乘法是第一个四元数的每一项与第二个四元数的每一项相乘
   1. 可以给出直接形式：$$\begin{aligned}
@@ -252,65 +290,92 @@ $$\begin{aligned}
 & + (q_{a0}q_{b2} - q_{a1}q_{b3} + q_{a2}q_{b0} + q_{a3}q_{b1}) j \\
 & + (q_{a0}q_{b3} + q_{a1}q_{b2} - q_{a2}q_{b1} + q_{a3}q_{b0}) k
 \end{aligned}$$
+
   2. 也可以给出简洁形式：$$\boldsymbol{q}_a \otimes \boldsymbol{q}_b = 
 \begin{bmatrix}
 s_a s_b - \boldsymbol{v}_a \cdot \boldsymbol{v}_b \\
 s_a \boldsymbol{v}_b + s_b \boldsymbol{v}_a + \boldsymbol{v}_a \times \boldsymbol{v}_b
 \end{bmatrix}$$
+
   3. 乘法具有非交换性，满足结合律和分配律
 3. 模长
-  1. 定义模长为：$$\|\boldsymbol{q}\| = \sqrt{s^2 + x^2 + y^2 + z^2}$$
-  2. 对于两个四元数的模长有：$$\|\boldsymbol{q}_a \otimes \boldsymbol{q}_b\| = \|\boldsymbol{q}_a\| \cdot \|\boldsymbol{q}_b\|$$
+  1. 定义模长为：$\|\boldsymbol{q}\| = \sqrt{s^2 + x^2 + y^2 + z^2}$
+
+  2. 对于两个四元数的模长有：$\|\boldsymbol{q}_a \otimes \boldsymbol{q}_b\| = \|\boldsymbol{q}_a\| \cdot \|\boldsymbol{q}_b\|$
+
 4. 共轭：四元数的共轭就是把虚部取成相反数
-  1. 定义：$$\boldsymbol{q}^* = s - x i - y j - z k = [s, -\boldsymbol{v}]^T$$
-  2. 相乘：$$\boldsymbol{q} \otimes \boldsymbol{q}^* = \boldsymbol{q}^* \otimes \boldsymbol{q}=[s_a^2+\boldsymbol v^T\boldsymbol v,0]^T$$
+  1. 定义：$\boldsymbol{q}^* = s - x i - y j - z k = [s, -\boldsymbol{v}]^T$
+
+  2. 相乘：$\boldsymbol{q} \otimes \boldsymbol{q}^* = \boldsymbol{q}^* \otimes \boldsymbol{q}=[s_a^2+\boldsymbol v^T\boldsymbol v,0]^T$
+
 5. 逆
-  1. 定义：$$\boldsymbol{q}^{-1} = \frac{\boldsymbol{q}^*}{\|\boldsymbol{q}\|^2}$$
+  1. 定义：$\boldsymbol{q}^{-1} = \frac{\boldsymbol{q}^*}{\|\boldsymbol{q}\|^2}$
+
   2. 四元数和自己的逆的乘积为实四元数 1
 那么如何使用四元数描述旋转呢？首先我们有一个旋转向量，那么就可以根据这个旋转向量计算出一个四元数，实际上这与之前的罗德里格斯公式有异曲同工之处
+
 $$\boldsymbol{q}=\left[
 \cos \frac \theta 2,\boldsymbol{n}
 \sin \frac \theta 2
 \right]$$
-那么这个四元数如何实现旋转计算呢？首先我们有一个三维空间中的点 $$\boldsymbol p=[x,y,z]^T\in \mathbb R^3$$，然后定义其旋转之后的点为 $$\boldsymbol p^\prime$$，那么我们先使用一个虚四元数描述该点
+
+那么这个四元数如何实现旋转计算呢？首先我们有一个三维空间中的点 $\boldsymbol p=[x,y,z]^T\in \mathbb R^3$，然后定义其旋转之后的点为 $\boldsymbol p^\prime$，那么我们先使用一个虚四元数描述该点
+
 $$\boldsymbol p=[0,x,y,z]^T=[0, \boldsymbol v]^T$$
+
 相对于把四元数中的三个虚部与空间中的三个轴对应，那么旋转之后的点就可以表示为
+
 $$\boldsymbol p^\prime= \boldsymbol q \boldsymbol p \boldsymbol q^{-1}$$
+
 注意一下，上式实际上是一个四元数乘法，使用结果也是四元数，需要最后将虚部取出，然后才可以得到旋转之后的点坐标
 程序设计
 使用动态矩阵的时候，运算会比较慢
 李群和李代数
 背景
 在SLAM中，除了表示之外，还要对它们进行估计和优化，因为SLAM整个过程就是在不断地估计机器人的位姿与地图，该位姿是由旋转矩阵或变换矩阵描述的。为了优化位姿，需要对变换矩阵进行插值、求导、迭代等操作，比如说当我们去估计相机位姿的时候，当估计不准确的时候，要对旋转和平移进行微调。
-设某个时刻机器人的位姿为 $$\boldsymbol{T}_{cw}$$，它观察到了一个世界坐标位于 $$\boldsymbol{P}_w$$ 的点，产生了一个观测数据 $$\boldsymbol{Z}_c$$，根据坐标变换有
+设某个时刻机器人的位姿为 $\boldsymbol{T}_{cw}$，它观察到了一个世界坐标位于 $\boldsymbol{P}_w$ 的点，产生了一个观测数据 $\boldsymbol{Z}_c$，根据坐标变换有
+
 $$ \boldsymbol{Z}_c = \boldsymbol{T}_{cw} \boldsymbol{P}_{w} + \boldsymbol{w}$$
-那我们实际要做的事情是求一个欧氏变换 $$\boldsymbol{T}_{cw}$$，使得 $$\boldsymbol{T}_{cw}$$ 满足上式。
-然而，由于观测噪声 $$\boldsymbol{w}$$ 的存在，$$\boldsymbol{z}$$ 往往不可能精确地满足 $$\boldsymbol{z} = \boldsymbol{T}\boldsymbol{p}$$ 的关系。所以，我们通常会计算理想的观测与实际数据的误差：$$\boldsymbol{e} = \boldsymbol{z} - \boldsymbol{T}\boldsymbol{p}$$
-假设一共有 $$N$$ 个这样的路标点和观测，则就有 $$N$$ 个上式，则对于机器人的位姿估计，相当于寻找一个最优的 $$\boldsymbol{T}$$，使得整体误差最小化：
+
+那我们实际要做的事情是求一个欧氏变换 $\boldsymbol{T}_{cw}$，使得 $\boldsymbol{T}_{cw}$ 满足上式。
+然而，由于观测噪声 $\boldsymbol{w}$ 的存在，$\boldsymbol{z}$ 往往不可能精确地满足 $\boldsymbol{z} = \boldsymbol{T}\boldsymbol{p}$ 的关系。所以，我们通常会计算理想的观测与实际数据的误差：$\boldsymbol{e} = \boldsymbol{z} - \boldsymbol{T}\boldsymbol{p}$
+
+假设一共有 $N$ 个这样的路标点和观测，则就有 $N$ 个上式，则对于机器人的位姿估计，相当于寻找一个最优的 $\boldsymbol{T}$，使得整体误差最小化：
+
 $$\min_{\boldsymbol{T}} J(\boldsymbol{T}) = \sum_{i=1}^{N} \|\boldsymbol{z}_i - \boldsymbol{T}\boldsymbol{p}_i\|_2^2$$
+
 计算最优就需要求导，求导就需要进行加减，但是由于其性质，我们无法完成这个求导操作，自然无法完成优化，所以我们需要用一种新理论去完成这个操作
 代数基础
-之前的章节介绍了旋转矩阵和变换矩阵的定义。当时，我们说三维旋转矩阵构成了特殊正交群 $$SO(3)$$，而变换矩阵构成了特殊欧氏群 $$SE(3)$$。它们写起来像这样：
-$$SO(3) = \{ \boldsymbol{R} \in \mathbb{R}^{3 \times 3} \mid \boldsymbol{R}\boldsymbol{R}^T = \boldsymbol{I}, \det(\boldsymbol{R}) = 1 \}\\
+之前的章节介绍了旋转矩阵和变换矩阵的定义。当时，我们说三维旋转矩阵构成了特殊正交群 $SO(3)$，而变换矩阵构成了特殊欧氏群 $SE(3)$。它们写起来像这样：
 
+$$SO(3) = \{ \boldsymbol{R} \in \mathbb{R}^{3 \times 3} \mid \boldsymbol{R}\boldsymbol{R}^T = \boldsymbol{I}, \det(\boldsymbol{R}) = 1 \}\\
 SE(3) = \left\{ \boldsymbol{T} = 
 \begin{bmatrix}
 \boldsymbol{R} & \boldsymbol{t} \\\boldsymbol{0}^T & 1
 \end{bmatrix}
 \in \mathbb{R}^{4 \times 4} \mid \boldsymbol{R} \in SO(3), \boldsymbol{t} \in \mathbb{R}^3 \right\}$$
-不过，当时我们并未详细解释群的含义。细心的读者应该会注意到，旋转矩阵也好，变换矩阵也好，它们对加法是不封闭的。换句话说，对于任意两个旋转矩阵 $$\boldsymbol{R}_1$$，$$\boldsymbol{R}_2$$，按照矩阵加法的定义，和不再是一个旋转矩阵：
+
+不过，当时我们并未详细解释群的含义。细心的读者应该会注意到，旋转矩阵也好，变换矩阵也好，它们对加法是不封闭的。换句话说，对于任意两个旋转矩阵 $\boldsymbol{R}_1$，$\boldsymbol{R}_2$，按照矩阵加法的定义，和不再是一个旋转矩阵：
+
 $$\boldsymbol{R}_1 + \boldsymbol{R}_2 \notin SO(3), \quad \boldsymbol{T}_1 + \boldsymbol{T}_2 \notin SE(3)$$
-你也可以说两种矩阵并没有良好定义的加法，或者通常矩阵加法对这两个集合不封闭。相对地，它们只有一种较好的运算：乘法。$$SO(3)$$ 和 $$SE(3)$$ 关于乘法是封闭的：
+
+你也可以说两种矩阵并没有良好定义的加法，或者通常矩阵加法对这两个集合不封闭。相对地，它们只有一种较好的运算：乘法。$SO(3)$ 和 $SE(3)$ 关于乘法是封闭的：
+
 $$\boldsymbol{R}_1 \boldsymbol{R}_2 \in SO(3), \quad \boldsymbol{T}_1 \boldsymbol{T}_2 \in SE(3)$$
+
 同时我们也可以对任何一个旋转或变换矩阵（在乘法的意义上）求逆。我们知道，乘法对应着旋转或变换的复合，两个旋转矩阵相乘表示做了两次旋转。对于这种只有一个（良好的）运算的集合，我们称之为群
 那么如何理解这种概念呢？回想一下线性代数中的线性空间或者向量空间的概念，线性空间的定义就是满足若干公理的向量的集合，如加法、数乘、交换律、封闭性等，其定义了一个平整光滑的空间，不能弯曲、闭合和存在边界，就如同一张无限大的纸
 那么如果砍去其中的一些性质，如砍掉数乘，但是仍然满足交换律等，那么就构成了一个阿贝尔群，也就是其中的公理只涉及向量集合内部的元素，不涉及外部的标量；如果继续砍去一些性质要求，就构成了李群，可以理解为李群是弱约束下的线性空间，线性空间是强约束下的李群
-那么为什么要如此定义呢？因为线性空间必须可以数乘，因此必须平直，但是李群并没有那么多要求，只需要满足互操作即可，空间就可以是弯曲和封闭（比如说首尾相连），如旋转群 $$SO(3)$$ 就像一个球体表面。你在球面上走（旋转），没法定义“把这个旋转放大 2.5 倍”而不离开球面（数乘失效），但你可以定义“先转 A 再转 B”（群乘法有效）
-群（Group）是一种集合加上一种运算的代数结构。我们把集合记作 $$A$$，运算记作 $$\cdot$$，那么群可以记作 $$G = (A, \cdot)$$。群要求这个运算满足以下几个条件或者说公理：
-1. 封闭性：$$\forall a_1, a_2 \in A, \quad a_1 \cdot a_2 \in A$$
-2. 结合律：$$\forall a_1, a_2, a_3 \in A, \quad (a_1 \cdot a_2) \cdot a_3 = a_1 \cdot (a_2 \cdot a_3)$$
-3. 幺元（也是单位元）：$$\exists a_0 \in A, \quad \text{s.t.} \quad \forall a \in A, \quad a_0 \cdot a = a \cdot a_0 = a$$
-4. 逆：$$\forall a \in A, \quad \exists a^{-1} \in A, \quad \text{s.t.} \quad a \cdot a^{-1} = a_0$$
+那么为什么要如此定义呢？因为线性空间必须可以数乘，因此必须平直，但是李群并没有那么多要求，只需要满足互操作即可，空间就可以是弯曲和封闭（比如说首尾相连），如旋转群 $SO(3)$ 就像一个球体表面。你在球面上走（旋转），没法定义“把这个旋转放大 2.5 倍”而不离开球面（数乘失效），但你可以定义“先转 A 再转 B”（群乘法有效）
+群（Group）是一种集合加上一种运算的代数结构。我们把集合记作 $A$，运算记作 $\cdot$，那么群可以记作 $G = (A, \cdot)$。群要求这个运算满足以下几个条件或者说公理：
+1. 封闭性：$\forall a_1, a_2 \in A, \quad a_1 \cdot a_2 \in A$
+
+2. 结合律：$\forall a_1, a_2, a_3 \in A, \quad (a_1 \cdot a_2) \cdot a_3 = a_1 \cdot (a_2 \cdot a_3)$
+
+3. 幺元（也是单位元）：$\exists a_0 \in A, \quad \text{s.t.} \quad \forall a \in A, \quad a_0 \cdot a = a \cdot a_0 = a$
+
+4. 逆：$\forall a \in A, \quad \exists a^{-1} \in A, \quad \text{s.t.} \quad a \cdot a^{-1} = a_0$
+
 群结构保证了在群上的运算具有良好的性质
 对于旋转矩阵和变换矩阵群，上面的性质都很容易证明与理解：
 1. 旋转矩阵与旋转矩阵的乘积仍然是旋转矩阵
@@ -320,12 +385,12 @@ $$\boldsymbol{R}_1 \boldsymbol{R}_2 \in SO(3), \quad \boldsymbol{T}_1 \boldsymbo
 上述性质对于变换矩阵同样适用
 李群概念
 几何理解
-李群是具有连续性质的群，或者说这个群是光滑可微的（可以想象成没有尖刺和棱角的封闭几何体的表面），所以既是群也是流形（Manifold），直观上看，一个刚体能够连续地在空间中运动，也就有连续的位姿，相应的旋转矩阵和变换矩阵也是连续的，故 $$SO(3)$$ 和 $$SE(3)$$ 都是李群
-所有李群都是流形，但并非所有流形都是李群。李理论的基本现象是，人们可以以一种自然的方式将李群 $$\mathcal G$$ 与李代数 $$\mathfrak g$$ 联系起来。李代数 $$\mathfrak g$$ 首先是一个向量空间，其次被赋予了一个双线性非结合乘积，称为李方括号 $$[\cdot,\cdot]$$。令人惊讶的是，群 $$\mathcal G$$ 几乎完全由李代数 $$\mathfrak g$$ 和它的李括号决定。因此，处于许多目的，我们可以用李代数 $$\mathfrak g$$ 代替李群 $$\mathcal G$$  。由于李群 $$\mathcal G$$ 是一个复杂的非线性对象，而 $$\mathfrak g$$ 只是一个向量空间，所以使用 $$\mathfrak g$$ 和李括号通常要简单得多，这是李理论力量的来源之一
+李群是具有连续性质的群，或者说这个群是光滑可微的（可以想象成没有尖刺和棱角的封闭几何体的表面），所以既是群也是流形（Manifold），直观上看，一个刚体能够连续地在空间中运动，也就有连续的位姿，相应的旋转矩阵和变换矩阵也是连续的，故 $SO(3)$ 和 $SE(3)$ 都是李群
+所有李群都是流形，但并非所有流形都是李群。李理论的基本现象是，人们可以以一种自然的方式将李群 $\mathcal G$ 与李代数 $\mathfrak g$ 联系起来。李代数 $\mathfrak g$ 首先是一个向量空间，其次被赋予了一个双线性非结合乘积，称为李方括号 $[\cdot,\cdot]$。令人惊讶的是，群 $\mathcal G$ 几乎完全由李代数 $\mathfrak g$ 和它的李括号决定。因此，处于许多目的，我们可以用李代数 $\mathfrak g$ 代替李群 $\mathcal G$  。由于李群 $\mathcal G$ 是一个复杂的非线性对象，而 $\mathfrak g$ 只是一个向量空间，所以使用 $\mathfrak g$ 和李括号通常要简单得多，这是李理论力量的来源之一
 具体来说，流形可以被定义为一个空间（可以想成一个曲面），因为流形是光滑的，所以它在每个点处都有且只有一个“切空间（切线或者切平面）”，切空间是一个局部欧几里得空间或者说线性向量空间，其维度等于流形的自由度，它可以用欧几里得几何的方法来描述，然后我们可以使用切空间的一些性质来近似表示局部曲面的性质（类似于函数可以使用若干阶导数的多项式近似表示，甚至二者之间可以形成一个双射关系)，这种性质可以用来解决位姿求导和状态估计的问题
 1. 概率分布的定义：高斯分布（Gaussian Distribution）定义在向量空间上。我们无法在球面上直接定义标准高斯分布，但可以在切平面上定义，这代表了围绕某一名义状态的不确定性。这一点可用于预积分、里程计等
 2. 微积分的运算：导数和积分本质上是线性的极限操作，它们在弯曲空间难以直接定义，但在切空间中却轻而易举。
-下图展示了李群和李代数之间的关系，李群流形 $$\mathcal{M}$$ 是三维空间中的蓝色球面，李代数 $$T_{\mathcal{X}}\mathcal{M}$$ 是红色平面所表示的切空间，切点位于 $$\mathcal{E}$$，通过指数映射，经过李代数切空间原点的每条直线 $$\boldsymbol vt$$ 产生了一条围绕流形的路径 $$\exp(\boldsymbol vt)$$ ，它沿着各自的测地线（geodesic）进行移动。相反地，群中的每个元素在李代数中都有一个等价的元素。这个关系是如此深刻，以至于（几乎）群中的所有操作，它是弯曲的和非线性的，在李代数中有一个精确的等价性，它是一个线性的向量空间。虽然三维空间中的球体不是一个李群（我们只是用它作为一个可以在纸上绘制的表示），但四维欧式空间中的球体是一个李群，一个单位四元数的群
+下图展示了李群和李代数之间的关系，李群流形 $\mathcal{M}$ 是三维空间中的蓝色球面，李代数 $T_{\mathcal{X}}\mathcal{M}$ 是红色平面所表示的切空间，切点位于 $\mathcal{E}$，通过指数映射，经过李代数切空间原点的每条直线 $\boldsymbol vt$ 产生了一条围绕流形的路径 $\exp(\boldsymbol vt)$ ，它沿着各自的测地线（geodesic）进行移动。相反地，群中的每个元素在李代数中都有一个等价的元素。这个关系是如此深刻，以至于（几乎）群中的所有操作，它是弯曲的和非线性的，在李代数中有一个精确的等价性，它是一个线性的向量空间。虽然三维空间中的球体不是一个李群（我们只是用它作为一个可以在纸上绘制的表示），但四维欧式空间中的球体是一个李群，一个单位四元数的群
 [图片]
 三维球面为二维的流形，因为可由一群二维的平面图形来叠加（广义加法）表示
 [图片]
@@ -338,14 +403,16 @@ $$\boldsymbol{R}_1 \boldsymbol{R}_2 \in SO(3), \quad \boldsymbol{T}_1 \boldsymbo
 我们所能观察到的数据（r）实际上是由一个低维流形映射到高维空间上的，即这些数据所在的空间是“嵌入在高维空间的低维流形。这个 r 是迭代卡尔曼每次迭代出的位姿增量，即李代数，也是欧几里得空间中的平面，只有李代数才满足广义加法。从整体观察：流形即为李群，从局部观察：流形近似为欧式空间。
 直观样例
 单位复数群
-第一个李群的例子是复乘法下的单位复数群，这是最容易可视化的。单位复数的形式为：$$\boldsymbol z=\cos \theta +i\sin\theta$$
-1. Action 动作：向量 $$\boldsymbol x$$ 在平面中旋转角度 $$\theta$$，通过复数乘法，$$\boldsymbol x '=\boldsymbol z \boldsymbol x$$
-2. Group facts 群的事实：单位复数的乘积是一个单位复数，幺元为1，且逆为共轭 $$\boldsymbol z^*$$ 。
-3. Manifold facts 流形的事实：单位范数约束定义了在复平面内的单位圆（它可以看作是1维球 1-sphere，命名为 $$\boldsymbol S^1$$，如下图中的蓝色圆形所示），这是一条在2维空间中自由度为1的曲线，也是一个流形。单位复数在这个圆上随时间演化。群（圆）局部调整线性空间（切线），而不是全局。
+第一个李群的例子是复乘法下的单位复数群，这是最容易可视化的。单位复数的形式为：$\boldsymbol z=\cos \theta +i\sin\theta$
+
+1. Action 动作：向量 $\boldsymbol x$ 在平面中旋转角度 $\theta$，通过复数乘法，$\boldsymbol x '=\boldsymbol z \boldsymbol x$
+
+2. Group facts 群的事实：单位复数的乘积是一个单位复数，幺元为1，且逆为共轭 $\boldsymbol z^*$ 。
+3. Manifold facts 流形的事实：单位范数约束定义了在复平面内的单位圆（它可以看作是1维球 1-sphere，命名为 $\boldsymbol S^1$，如下图中的蓝色圆形所示），这是一条在2维空间中自由度为1的曲线，也是一个流形。单位复数在这个圆上随时间演化。群（圆）局部调整线性空间（切线），而不是全局。
 [图片]
-流形 $$\boldsymbol S^1$$ 是复平面 $$\mathbb C$$ 中的单位圆（蓝色），其中单位复数始终满足 $$\mathbf{z^*z}=1$$。李代数 $$\mathfrak s^1=T_{\mathcal E} S^1 $$ 是虚部 $$i\mathbb R$$（红色）的线条，且任意切空间 $$TS^1$$ 是与（红色）线 $$\mathbb R$$ 同构的（isomorphic）。切向量（深红色片段）缠绕贴合到流形上得到圆弧（蓝色弧线）。两种映射 exp 和 log（黑色箭头）将虚部 $$i\mathbb R$$ 的元素 缠绕wrap 或 掰直unwrap为流形 $$\boldsymbol S^1$$ 中的元素（蓝色弧线）。单位复数之间的增量（increment）通过合成和指数映射在切线空间中表示（为此，我们将定义特殊的运算符 $$\oplus$$ ）
+流形 $\boldsymbol S^1$ 是复平面 $\mathbb C$ 中的单位圆（蓝色），其中单位复数始终满足 $\mathbf{z^*z}=1$。李代数 $\mathfrak s^1=T_{\mathcal E} S^1 $ 是虚部 $i\mathbb R$（红色）的线条，且任意切空间 $TS^1$ 是与（红色）线 $\mathbb R$ 同构的（isomorphic）。切向量（深红色片段）缠绕贴合到流形上得到圆弧（蓝色弧线）。两种映射 exp 和 log（黑色箭头）将虚部 $i\mathbb R$ 的元素 缠绕wrap 或 掰直unwrap为流形 $\boldsymbol S^1$ 中的元素（蓝色弧线）。单位复数之间的增量（increment）通过合成和指数映射在切线空间中表示（为此，我们将定义特殊的运算符 $\oplus$ ）
 单位四元数群
-李群的第二个例子是在四元数乘法组合运算背景下单位四元数群，它也是相当容易可视化理解的。单位四元数的形式为：$$\mathbf q=\cos(\theta/2)+\mathbf u\sin(\theta/2) $$ ，其中 $$\mathbf u=iu_x+ju_y+ku_z$$ 是一个单位旋转轴，$$\theta$$ 是旋转角度。
+李群的第二个例子是在四元数乘法组合运算背景下单位四元数群，它也是相当容易可视化理解的。单位四元数的形式为：$\mathbf q=\cos(\theta/2)+\mathbf u\sin(\theta/2) $ ，其中 $\mathbf u=iu_x+ju_y+ku_z$ 是一个单位旋转轴，$\theta$ 是旋转角度。
 - Action 动作：向量  x=ix+jy+kz\mathbf x=ix+jy+kz  在三维空间中通过两次四元数乘法  x′=qxq∗\mathbf {x'=qxq^*}  绕单位轴  u\mathbf u  旋转 θ\theta 角。
 - Group facts 群的事实：单位四元数的乘积是仍是一个单位四元数，幺元为1，逆位共轭四元数q∗\mathbf q^*。
 - Manifold facts 流形的事实：单位范数约束定义了一个三维球体  S3S^3  ，四维空间中的一个球形三维曲面或者三维流形。单位四元数在这个曲面上随着时间变化。群（球体）局部重构了线性空间（切超平面  R3⊂R4\mathbb R^3\subset\mathbb R^4  ），但不是全局的。
@@ -353,51 +420,81 @@ $$\boldsymbol{R}_1 \boldsymbol{R}_2 \in SO(3), \quad \boldsymbol{T}_1 \boldsymbo
 如下图4所示。  S3S^3  流形是在四元数的四维空间中的一个单位三维球体（unit 3-sphere）（蓝色），其中始终保持着 q∗q=1\mathbf{q^* q}=1  。李代数是纯虚四元数  ix+jy+kz∈Hix+jy+kz\in\mathbb H  所在的空间，同构于超平面  R3\mathbb R^3  （红色网格），任何其它切线空间 TS3TS^3 也与  R3\mathbb R^3  同构。切向量 （深红色线段）贴着优弧（great arc）或者测地线（geodesic）（蓝色虚线）缠绕（wrap）到流形上。中间和右边两图显示了经过这条测地线的侧视图（注意看它如何类似于图3中的流形  S1S^1 ）。带箭头的黑线表示的两种映射运算  exp\exp  和 log\log 将  Hp\mathbb H_p  中的元素映射 到/自  S3S^3  中的元素（深蓝色弧线）。四元数之间的增量通过运算  ⊕,⊖\oplus,\ominus  在切空间中进行表示。
 李代数概念
 李代数是与李群对应的一种结构，位于向量空间，对应李群的正切空间，描述了李群局部的导数，记作 
- $$\mathfrak{so}(3)$$ 和 $$\mathfrak{se}(3)$$
-从旋转矩阵可以引出李代数，我们考虑任意旋转矩阵 $$\boldsymbol{R}$$，满足
+
+ $\mathfrak{so}(3)$ 和 $\mathfrak{se}(3)$
+从旋转矩阵可以引出李代数，我们考虑任意旋转矩阵 $\boldsymbol{R}$，满足
 $$\boldsymbol{R}\boldsymbol{R}^T = \boldsymbol{I}$$
-在连续运动过程中，显然 $$\boldsymbol{R}$$ 是连续时间的函数，我们记为
+
+在连续运动过程中，显然 $\boldsymbol{R}$ 是连续时间的函数，我们记为
+
 $$\boldsymbol{R}(t)\boldsymbol{R}(t)^T = \boldsymbol{I}$$
+
 两侧对时间求导
+
 $$\dot{\boldsymbol{R}}(t)\boldsymbol{R}(t)^T + \boldsymbol{R}(t)\dot{\boldsymbol{R}}(t)^T = 0 \\\dot{\boldsymbol{R}}(t)\boldsymbol{R}(t)^T = -(\dot{\boldsymbol{R}}(t)\boldsymbol{R}(t)^T)^T$$
-如果我们将 $$\dot{\boldsymbol{R}}(t)\boldsymbol{R}(t)^T$$ 看做一个整体，我们就发现其为一个反对称矩阵，三维的反对称矩阵与三维向量是一一对应的，因此可以引入反对称符号来表示
+
+如果我们将 $\dot{\boldsymbol{R}}(t)\boldsymbol{R}(t)^T$ 看做一个整体，我们就发现其为一个反对称矩阵，三维的反对称矩阵与三维向量是一一对应的，因此可以引入反对称符号来表示
+
 $$\dot{\boldsymbol{R}}(t)\boldsymbol{R}(t)^T = \boldsymbol{\phi}(t)^\wedge$$
-两边右乘 $$\boldsymbol{R}(t)$$ 可得
+
+两边右乘 $\boldsymbol{R}(t)$ 可得
+
 $$\dot{\boldsymbol{R}}(t)\boldsymbol{R}(t)^T \boldsymbol{R}(t) = \boldsymbol{\phi}(t)^\wedge \boldsymbol{R}(t)$$
-其中 $$\boldsymbol{R}(t)^T \boldsymbol{R}(t) = \boldsymbol{I}$$，消去后得到
+
+其中 $\boldsymbol{R}(t)^T \boldsymbol{R}(t) = \boldsymbol{I}$，消去后得到
+
 $$\dot{\boldsymbol{R}}(t) = \boldsymbol{\phi}(t)^\wedge \boldsymbol{R}(t)$$
-可以看成求导之后，左侧多出一个 $$\boldsymbol{\phi}(t)^\wedge$$，或者说，每对旋转矩阵求导一次，只需要左乘一个此矩阵（当然此矩阵不是一个常数），这类似乎指数函数的操作，变量的导数等于其本身乘以一个系数
+
+可以看成求导之后，左侧多出一个 $\boldsymbol{\phi}(t)^\wedge$，或者说，每对旋转矩阵求导一次，只需要左乘一个此矩阵（当然此矩阵不是一个常数），这类似乎指数函数的操作，变量的导数等于其本身乘以一个系数
+
 $$y = e^{kx} \rightarrow y' = ke^{kx} \rightarrow y' = ky$$
-从简单情况考虑，当 $$t_0 = 0$$, $$\boldsymbol{R}(0) = \boldsymbol{I}$$ 的时候
+
+从简单情况考虑，当 $t_0 = 0$, $\boldsymbol{R}(0) = \boldsymbol{I}$ 的时候
+
 $$\begin{aligned}
 \boldsymbol{R}(t) &\approx \boldsymbol{R}(t_0) + \dot{\boldsymbol{R}}(t_0)(t - t_0) \\
 &= \boldsymbol{I} + \boldsymbol{\phi}(t_0)^\wedge(t)
 \end{aligned}$$
-在这里，$$\phi^{\wedge}$$ 为 $$R(t)$$ 的李代数，是李群在单位元 $$t_0$$ 处的正切空间
-在 $$t_0$$ 附近，设 $$\phi$$ 保持为常数向量 $$\phi(t_0) = \phi_0$$，则有微分方程
+
+在这里，$\phi^{\wedge}$ 为 $R(t)$ 的李代数，是李群在单位元 $t_0$ 处的正切空间
+在 $t_0$ 附近，设 $\phi$ 保持为常数向量 $\phi(t_0) = \phi_0$，则有微分方程
+
 $$\dot{R}(t) = \phi(t_0)^{\wedge} R(t) = \phi_0^{\wedge} R(t)$$
+
 已知初始情况，解得
+
 $$R(t) = \exp(\phi_0^{\wedge} t)$$
-$$R(t)$$ 与 $$\phi$$ 之间的关系称为指数映射，这里的 $$\phi$$ 称为 $$SO(3)$$ 对应的李代数：$$\mathfrak{so}(3)$$
-但是新的问题来了，$$\mathfrak{so}(3)$$ 的定义和性质是什么呢？这个指数映射应该怎么求呢
+
+$R(t)$ 与 $\phi$ 之间的关系称为指数映射，这里的 $\phi$ 称为 $SO(3)$ 对应的李代数：$\mathfrak{so}(3)$
+但是新的问题来了，$\mathfrak{so}(3)$ 的定义和性质是什么呢？这个指数映射应该怎么求呢
 实际上每个李群都有与之对应的李代数，李代数描述了李群单位元数的正切空间性质。
-李代数由一个集合 $$\mathbb V$$，一个数域 $$\mathbb{F}$$ 和一个二元运算 $$[,]$$ 组成。如果它们满足以下几条性质，称 $$(\mathbb V,\mathbb{F},[,])$$ 为一个李代数，记作 $$\mathfrak{g}$$
-1. 封闭性：$$\forall X,Y \in \mathbb V,[X,Y] \in \mathbb V$$
-2. 双线性：$$\forall X,Y,Z \in \mathbb V,a,b \in \mathbb{F}$$，有$$[aX + bY,Z] = a[X,Z] + b[Y,Z], [Z,aX + bY] = a[Z,X] + b[Z,Y]$$
-3. 自反性：$$\forall X \in \mathbb V,[X,X] = 0$$
-4. 雅可比等价：$$\forall X,Y,Z \in \mathbb V,[X,[Y,Z]] + [Y,[Z,X]] + [Z,[X,Y]] = 0 $$
+李代数由一个集合 $\mathbb V$，一个数域 $\mathbb{F}$ 和一个二元运算 $[,]$ 组成。如果它们满足以下几条性质，称 $(\mathbb V,\mathbb{F},[,])$ 为一个李代数，记作 $\mathfrak{g}$
+
+1. 封闭性：$\forall X,Y \in \mathbb V,[X,Y] \in \mathbb V$
+
+2. 双线性：$\forall X,Y,Z \in \mathbb V,a,b \in \mathbb{F}$，有$[aX + bY,Z] = a[X,Z] + b[Y,Z], [Z,aX + bY] = a[Z,X] + b[Z,Y]$
+
+3. 自反性：$\forall X \in \mathbb V,[X,X] = 0$
+
+4. 雅可比等价：$\forall X,Y,Z \in \mathbb V,[X,[Y,Z]] + [Y,[Z,X]] + [Z,[X,Y]] = 0 $
+
 二元运算被称为李括号，例子：三维空间向量加叉积运算构成李代数，当然，实际上我们不需要去记忆这些性质
-对于李群 $$SO(3)$$，有李代数 $$\mathfrak{so}(3)$$，实际上该李代数就是定义在三维空间上的向量或三维反对称矩阵，只不过向量形式更加自然，且可以用于表达旋转矩阵的导数
+对于李群 $SO(3)$，有李代数 $\mathfrak{so}(3)$，实际上该李代数就是定义在三维空间上的向量或三维反对称矩阵，只不过向量形式更加自然，且可以用于表达旋转矩阵的导数
+
 $$\mathfrak{so}(3) = \{\phi \in \mathbb{R}^3, \Phi = \phi^{\wedge} \in \mathbb{R}^{3 \times 3}\}\\[0.5em]
 \Phi = \phi^{\wedge} = 
 \begin{bmatrix}
 0 & -\phi_3 & \phi_2 \\\phi_3 & 0 & -\phi_1 \\
 -\phi_2 & \phi_1 & 0
 \end{bmatrix} \in \mathbb{R}^{3 \times 3}$$ 
+
 在此定义下，两个向量的李括号为
+
 $$[\phi_1, \phi_2] = (\Phi_1 \Phi_2 - \Phi_2 \Phi_1)^{\vee}$$
+
 从物理角度理解，李代数就是旋转向量，李括号是两个角速度向量的叉积，它度量了两个无穷小旋转在交换顺序时产生的净旋转误差 / 额外角速度 / 耦合效应，而具体的推导会在后面展开。
-对于 $$SE(3)$$，它也有对应的李代数 $$\mathfrak{se}(3)$$。为节省篇幅，这里就不介绍如何引出 $$\mathfrak{se}(3)$$ 了。与 $$\mathfrak{so}(3)$$ 相似，$$\mathfrak{se}(3)$$ 位于 $$\mathbb{R}^6$$ 空间中：
+对于 $SE(3)$，它也有对应的李代数 $\mathfrak{se}(3)$。为节省篇幅，这里就不介绍如何引出 $\mathfrak{se}(3)$ 了。与 $\mathfrak{so}(3)$ 相似，$\mathfrak{se}(3)$ 位于 $\mathbb{R}^6$ 空间中：
+
 $$\mathfrak{se}(3) = \left\{ 
 \boldsymbol\xi = 
 \left[ 
@@ -415,7 +512,8 @@ $$\mathfrak{se}(3) = \left\{
 \in \mathbb{R}^{4 \times 4}
 \right\}$$
 
-我们把每个 $$\mathfrak{se}(3)$$ 元素记作 $$\boldsymbol\xi$$，它是一个六维向量。前三维为平移（但含义与变换矩阵中的平移不同，分析见后），记作 $$\boldsymbol\rho$$；后三维为旋转，记作 $$\boldsymbol\phi$$，实质上是 $$\mathfrak{so}(3)$$ 元素。同时，我们拓展了符号的含义。在 $$\mathfrak{se}(3)$$ 中，同样使用 $$\wedge$$ 符号，将一个六维向量转换成四维矩阵，但这里不再表示反对称：
+我们把每个 $\mathfrak{se}(3)$ 元素记作 $\boldsymbol\xi$，它是一个六维向量。前三维为平移（但含义与变换矩阵中的平移不同，分析见后），记作 $\boldsymbol\rho$；后三维为旋转，记作 $\boldsymbol\phi$，实质上是 $\mathfrak{so}(3)$ 元素。同时，我们拓展了符号的含义。在 $\mathfrak{se}(3)$ 中，同样使用 $\wedge$ 符号，将一个六维向量转换成四维矩阵，但这里不再表示反对称：
+
 $$\boldsymbol\xi^{\wedge} = 
 \left[ 
 \begin{array}{cc}
@@ -424,14 +522,22 @@ $$\boldsymbol\xi^{\wedge} =
 \end{array}
 \right] 
 \in \mathbb{R}^{4 \times 4}$$
-我们仍使用 $$\wedge$$ 和 $$\vee$$ 符号来指代"从向量到矩阵"和"从矩阵到向量"的关系，以保持和 $$\mathfrak{so}(3)$$ 上的一致性。它们依旧是一一对应的。读者可以简单地把 $$\mathfrak{se}(3)$$ 理解成"由一个平移加上一个 $$\mathfrak{so}(3)$$ 元素构成的向量"（尽管这里的 $$\boldsymbol\rho$$ 还不直接是平移）。同样，李代数 $$\mathfrak{se}(3)$$ 亦有类似于 $$\mathfrak{so}(3)$$ 的李括号：
+
+我们仍使用 $\wedge$ 和 $\vee$ 符号来指代"从向量到矩阵"和"从矩阵到向量"的关系，以保持和 $\mathfrak{so}(3)$ 上的一致性。它们依旧是一一对应的。读者可以简单地把 $\mathfrak{se}(3)$ 理解成"由一个平移加上一个 $\mathfrak{so}(3)$ 元素构成的向量"（尽管这里的 $\boldsymbol\rho$ 还不直接是平移）。同样，李代数 $\mathfrak{se}(3)$ 亦有类似于 $\mathfrak{so}(3)$ 的李括号：
+
 $$[\boldsymbol\xi_1, \boldsymbol\xi_2] = (\boldsymbol\xi_1^{\wedge} \boldsymbol\xi_2^{\wedge} - \boldsymbol\xi_2^{\wedge} \boldsymbol\xi_1^{\wedge})^{\vee}$$
+
 指数映射
 指数映射反映了从李代数到李群的对应关系，并且任意矩阵的指数映射可以写成一个泰勒展开，但是只有在收敛的情况下才会有结果，其结果仍是一个矩阵
+
 $$\exp(\boldsymbol A) = \sum_{n=0}^{\infty} \frac{1}{n!} \boldsymbol A^n$$
-同样地，对 $$\mathfrak{so}(3)$$ 中任意元素 $$\phi$$，我们亦可按此方式定义它的指数映射
+
+同样地，对 $\mathfrak{so}(3)$ 中任意元素 $\phi$，我们亦可按此方式定义它的指数映射
+
 $$\exp(\phi^{\wedge}) = \sum_{n=0}^{\infty} \frac{1}{n!} (\phi^{\wedge})^n$$
-但这个定义没法直接计算，因为我们不想计算矩阵的无穷次幂。下面我们推导一种计算指数映射的简便方法。由于 $$\phi$$ 是三维向量，我们可以定义它的模长和它的方向，分别记作 $$\theta$$ 和 $$\boldsymbol a$$，于是有 $$\phi = \theta \boldsymbol a$$。这里 $$\boldsymbol a$$ 是一个长度为1的方向向量，即 $$\|\boldsymbol a\| = 1$$。首先，对于$$\boldsymbol a^{\wedge}$$，有以下两条性质：
+
+但这个定义没法直接计算，因为我们不想计算矩阵的无穷次幂。下面我们推导一种计算指数映射的简便方法。由于 $\phi$ 是三维向量，我们可以定义它的模长和它的方向，分别记作 $\theta$ 和 $\boldsymbol a$，于是有 $\phi = \theta \boldsymbol a$。这里 $\boldsymbol a$ 是一个长度为1的方向向量，即 $\|\boldsymbol a\| = 1$。首先，对于$\boldsymbol a^{\wedge}$，有以下两条性质：
+
 $$\boldsymbol a^{\wedge} \boldsymbol a^{\wedge} = 
 \begin{bmatrix}
 -a_2^2 - a_3^2 & a_1 a_2 & a_1 a_3 \\
@@ -439,34 +545,47 @@ a_1 a_2 & -a_1^2 - a_3^2 & a_2 a_3 \\
 a_1 a_3 & a_2 a_3 & -a_1^2 - a_2^2
 \end{bmatrix} = \boldsymbol a \boldsymbol a^{\top} - \boldsymbol I \\[0.5em]
 \boldsymbol{a}^{\wedge} \boldsymbol{a}^{\wedge} \boldsymbol{a}^{\wedge} = \boldsymbol{a}^{\wedge} (\boldsymbol{a} \boldsymbol{a}^{\top} - \boldsymbol{I}) = -\boldsymbol{a}^{\wedge}$$
-这两个式子提供了处理 $$\boldsymbol{a}^{\wedge}$$ 高阶项的方法。我们可以把指数映射写成：
+
+这两个式子提供了处理 $\boldsymbol{a}^{\wedge}$ 高阶项的方法。我们可以把指数映射写成：
+
 $$\begin{aligned}\exp (\boldsymbol{\phi}^{\wedge}) &= \exp (\theta \boldsymbol{a}^{\wedge}) = \sum_{n=0}^{\infty} \frac{1}{n!} (\theta \boldsymbol{a}^{\wedge})^n \\&= \boldsymbol{I} + \theta \boldsymbol{a}^{\wedge} + \frac{1}{2!} \theta^2 \boldsymbol{a}^{\wedge} \boldsymbol{a}^{\wedge} + \frac{1}{3!} \theta^3 \boldsymbol{a}^{\wedge} \boldsymbol{a}^{\wedge} \boldsymbol{a}^{\wedge} + \frac{1}{4!} \theta^4 (\boldsymbol{a}^{\wedge})^4 + \cdots 
 \\&= \boldsymbol{a} \boldsymbol{a}^{\top} - \boldsymbol{a}^{\wedge} \boldsymbol{a}^{\wedge} + \theta \boldsymbol{a}^{\wedge} + \frac{1}{2!} \theta^2 \boldsymbol{a}^{\wedge} \boldsymbol{a}^{\wedge} - \frac{1}{3!} \theta^3 \boldsymbol{a}^{\wedge} - \frac{1}{4!} \theta^4 (\boldsymbol{a}^{\wedge})^2 + \cdots \\&= \boldsymbol{a} \boldsymbol{a}^{\top} + \underbrace{\left( \theta - \frac{1}{3!} \theta^3 + \frac{1}{5!} \theta^5 - \cdots \right)}_{\sin\theta} \boldsymbol{a}^{\wedge} - \underbrace{\left( 1 - \frac{1}{2!} \theta^2 + \frac{1}{4!} \theta^4 - \cdots \right)}_{\cos\theta}  \boldsymbol{a}^{\wedge} \boldsymbol{a}^{\wedge}  \\&= \boldsymbol{a}^{\wedge} \boldsymbol{a}^{\wedge} + \boldsymbol{I} + \sin \theta \boldsymbol{a}^{\wedge} - \cos \theta \boldsymbol{a}^{\wedge} \boldsymbol{a}^{\wedge} \\&= (1 - \cos \theta) \boldsymbol{a}^{\wedge} \boldsymbol{a}^{\wedge} + \boldsymbol{I} + \sin \theta \boldsymbol{a}^{\wedge} \\&= \cos \theta \boldsymbol{I} + (1 - \cos \theta) \boldsymbol{a} \boldsymbol{a}^{\top} + \sin \theta \boldsymbol{a}^{\wedge}.
 \end{aligned}$$
+
 实际上这是一个似曾相识的结果——罗德里格斯公式
-1.  $$\mathfrak{so}(3)$$ 的物理意义就是旋转向量，即 $$\mathfrak{so}(3)$$ 的李代数空间就是由旋转向量组成的线性空间。
-2. 如果李群(旋转矩阵，$$\boldsymbol R(t)$$，类似一个函数)代表一个球面，那么球上所有点的切线(单位元处李群的切空间李代数，旋转向量)，也会组成一个球面，而且这个球面和原来的球面一样。
+1.  $\mathfrak{so}(3)$ 的物理意义就是旋转向量，即 $\mathfrak{so}(3)$ 的李代数空间就是由旋转向量组成的线性空间。
+2. 如果李群(旋转矩阵，$\boldsymbol R(t)$，类似一个函数)代表一个球面，那么球上所有点的切线(单位元处李群的切空间李代数，旋转向量)，也会组成一个球面，而且这个球面和原来的球面一样。
 我们可以使用下图来可视化的理解李群和李代数的关系
 [图片]
 其中的指数映射就是李代数向量到旋转矩阵的映射，通过罗德里格斯公式完成旋转矩阵计算，对数映射就是从旋转矩阵到李代数的映射，通过逆向求解罗德里格斯公式，也就是通过求迹和解特征方程的方法解出，而不必专门计算泰勒展开，其中定义对数映射如下
+
 $$\boldsymbol{\phi} = \ln\left(\boldsymbol{R}\right)^\vee = \left(\sum_{n=0}^\infty \frac{(-1)^n}{n+1} (\boldsymbol{R}-\boldsymbol{I})^{n+1}\right)^\vee$$
-现在，我们介绍了指数映射的计算方法，那么指数映射性质如何呢？是否对于任意的 $$\boldsymbol{R}$$ 都能找到一个唯一的 $$\boldsymbol{\phi}$$？很遗憾，指数映射只是一个满射，并不是单射。这意味着每个 $$SO(3)$$ 中的元素，都可以找到一个 $$\mathfrak{so}(3)$$ 元素与之对应；但是可能存在多个 $$\mathfrak{so}(3)$$ 中的元素，对应到同一个 $$SO(3)$$。至少对于旋转角 $$\theta$$，我们知道多转 $$360^\circ$$ 和没有转是一样的——它具有周期性。但是，如果我们把旋转角度固定在 $$\pm\pi$$ 之间，那么李群和李代数元素是一一对应的，矩阵的导数可以由旋转向量指定，指导着如何在旋转矩阵中进行微积分运算。
+
+现在，我们介绍了指数映射的计算方法，那么指数映射性质如何呢？是否对于任意的 $\boldsymbol{R}$ 都能找到一个唯一的 $\boldsymbol{\phi}$？很遗憾，指数映射只是一个满射，并不是单射。这意味着每个 $SO(3)$ 中的元素，都可以找到一个 $\mathfrak{so}(3)$ 元素与之对应；但是可能存在多个 $\mathfrak{so}(3)$ 中的元素，对应到同一个 $SO(3)$。至少对于旋转角 $\theta$，我们知道多转 $360^\circ$ 和没有转是一样的——它具有周期性。但是，如果我们把旋转角度固定在 $\pm\pi$ 之间，那么李群和李代数元素是一一对应的，矩阵的导数可以由旋转向量指定，指导着如何在旋转矩阵中进行微积分运算。
 李群与李代数
 需要注意的是，我们经常会构建与位姿有关的函数然后讨论该函数对于位姿的导数，从而调整当前的估计值，但是基于旋转矩阵的方法是无法计算导数的，所以使用李群和李代数的方法进行位姿导数的计算
 使用李代数解决求导问题的思路分为两种
 1. 用李代数表示姿态，然后根据李代数加法来对李代数求导
 2. 对李群左乘或右乘微小扰动，然后对该扰动求导
 李代数上的求导与扰动模型
-使用李代数的一大动机是进行优化，而在优化过程中导数是非常必要的信息。下面来考虑一个问题。虽然我们已经清楚了 $$SO(3)$$ 和 $$SE(3)$$ 上的李群与李代数关系，但是，当在 $$SO(3)$$ 中完成两个矩阵乘法时，李代数中 $$\mathfrak{so}(3)$$ 上发生了什么改变呢？反过来说，当 $$\mathfrak{so}(3)$$ 上做两个李代数的加法时，$$SO(3)$$ 上是否对应着两个矩阵的乘积？如果成立，相当于：
+使用李代数的一大动机是进行优化，而在优化过程中导数是非常必要的信息。下面来考虑一个问题。虽然我们已经清楚了 $SO(3)$ 和 $SE(3)$ 上的李群与李代数关系，但是，当在 $SO(3)$ 中完成两个矩阵乘法时，李代数中 $\mathfrak{so}(3)$ 上发生了什么改变呢？反过来说，当 $\mathfrak{so}(3)$ 上做两个李代数的加法时，$SO(3)$ 上是否对应着两个矩阵的乘积？如果成立，相当于：
+
 $$\exp(\boldsymbol{\phi}_1^{\wedge})\exp(\boldsymbol{\phi}_2^{\wedge})=\exp((\boldsymbol{\phi}_1+\boldsymbol{\phi}_2)^{\wedge})$$
-如果 $$\boldsymbol{\phi}_1,\boldsymbol{\phi}_2$$ 为标量，那显然该式成立；但此处我们计算的是矩阵的指数函数，而非标量的指数。换言之，我们在研究下式是否成立：
+
+如果 $\boldsymbol{\phi}_1,\boldsymbol{\phi}_2$ 为标量，那显然该式成立；但此处我们计算的是矩阵的指数函数，而非标量的指数。换言之，我们在研究下式是否成立：
+
 $$\ln(\exp(\boldsymbol{A})\exp(\boldsymbol{B}))=\boldsymbol{A}+\boldsymbol{B}$$
+
 很遗憾，该式在矩阵时并不成立。两个李代数指数映射乘积的完整形式，由 Baker-Campbell-Hausdorff 公式（BCH 公式）给出。由于其完整形式较复杂，我们只给出其展开式的前几项：
+
 $$\ln(\exp(\boldsymbol{A})\exp(\boldsymbol{B}))=\boldsymbol{A}+\boldsymbol{B}+\frac{1}{2}[\boldsymbol{A},\boldsymbol{B}]+\frac{1}{12}[\boldsymbol{A},[\boldsymbol{A},\boldsymbol{B}]]-\frac{1}{12}[\boldsymbol{B},[\boldsymbol{A},\boldsymbol{B}]]+\cdots$$
-其中 $$[\ ,\ ]$$ 为李括号。BCH 公式告诉我们，当处理两个矩阵指数之积时，它们会产生一些由李括号组成的余项。特别地，考虑 $$SO(3)$$ 上的李代数 $$\ln(\exp(\boldsymbol{\phi}_1^{\wedge})\exp(\boldsymbol{\phi}_2^{\wedge}))^{\vee}$$，当 $$\boldsymbol{\phi}_1$$ 或 $$\boldsymbol{\phi}_2$$ 为小量时，小量二次以上的项都可以被忽略掉。此时，BCH 拥有线性近似表达：
+
+其中 $[\ ,\ ]$ 为李括号。BCH 公式告诉我们，当处理两个矩阵指数之积时，它们会产生一些由李括号组成的余项。特别地，考虑 $SO(3)$ 上的李代数 $\ln(\exp(\boldsymbol{\phi}_1^{\wedge})\exp(\boldsymbol{\phi}_2^{\wedge}))^{\vee}$，当 $\boldsymbol{\phi}_1$ 或 $\boldsymbol{\phi}_2$ 为小量时，小量二次以上的项都可以被忽略掉。此时，BCH 拥有线性近似表达：
+
 $$\ln(\exp(\boldsymbol{\phi}_1^{\wedge})\exp(\boldsymbol{\phi}_2^{\wedge}))^{\vee}\approx\begin{cases} 
 \boldsymbol{J}_l(\boldsymbol{\phi}_2)^{-1}\boldsymbol{\phi}_1+\boldsymbol{\phi}_2 & \text{当 }\boldsymbol{\phi}_1\text{ 为小量}, \\\boldsymbol{J}_r(\boldsymbol{\phi}_1)^{-1}\boldsymbol{\phi}_2+\boldsymbol{\phi}_1 & \text{当 }\boldsymbol{\phi}_2\text{ 为小量}. 
 \end{cases}$$
+
 1. 对李群左乘或者右乘微小扰动，然后对这个扰动求导，即把增量的扰动直接添加在李群上，然后利用李代数表示此扰动。
 2. 把增量直接定义在李群上需要注意：传统上我们通常用加法表示增量，而李群对加法不封闭。所以这里的增量不再用加法表示，而是乘法。
 3. 乘法：增量指的是，在原来的基础上改变一点点。当对旋转矩阵做乘法，乘以的是一个趋近于单位矩阵，也就是差不多没旋转，那这样就是对其“加了一个小量
@@ -505,14 +624,18 @@ Sophus::SO3 SO3_q(q);
 小孔成像模型
 这里我们需要稍微暂停一下，定义几个常用坐标系
 
-- 世界坐标系：代表物体在真实世界的三维坐标 $$(X_w, Y_w, Z_w)$$，实际上是一种全局坐标系
-- 相机坐标系：以相机光学中心 $$O$$ 为原点的坐标系，Z轴与光轴重合 $$(X_c, Y_c, Z_c)$$，正方向朝外
-- 图像坐标系：代表相机拍摄的图像的坐标系，原点为相机光轴与成像平面的交点 $$(x, y)$$
-- 像素坐标系：在图像的平面上，基本单位是像素，原点一般在相片左上角 $$(u, v)$$
+- 世界坐标系：代表物体在真实世界的三维坐标 $(X_w, Y_w, Z_w)$，实际上是一种全局坐标系
+- 相机坐标系：以相机光学中心 $O$ 为原点的坐标系，Z轴与光轴重合 $(X_c, Y_c, Z_c)$，正方向朝外
+- 图像坐标系：代表相机拍摄的图像的坐标系，原点为相机光轴与成像平面的交点 $(x, y)$
+
+- 像素坐标系：在图像的平面上，基本单位是像素，原点一般在相片左上角 $(u, v)$
+
 [图片]
 考虑到小孔成像本身为倒像，而实际我们实际拿到的相片都是正向的，因此通常采用等价形式，将小孔模型的成像平面前移
-我们来用数学的方法描述一遍相机的成像过程，给定一个世界坐标点 $$(X_w, Y_w, Z_w)$$，得到其最终像素平面的坐标 $$(u, v)$$
-首先是世界坐标系到相机坐标系，通过旋转和平移矩阵 $$R, T$$ 将点进行变换
+我们来用数学的方法描述一遍相机的成像过程，给定一个世界坐标点 $(X_w, Y_w, Z_w)$，得到其最终像素平面的坐标 $(u, v)$
+
+首先是世界坐标系到相机坐标系，通过旋转和平移矩阵 $R, T$ 将点进行变换
+
 $$\begin{bmatrix}
 X_c \\
 Y_c \\
@@ -522,7 +645,9 @@ X_w \\
 Y_w \\
 Z_w
 \end{bmatrix} + T \Rightarrow TP_w$$
+
 也可以采用齐次坐标的形式
+
 $$\begin{bmatrix}
 X_c \\
 Y_c \\
@@ -537,14 +662,19 @@ Y_w \\
 Z_w \\
 1
 \end{bmatrix} \Rightarrow TP_w$$
+
 齐次坐标（homogeneous coordinates）是射影几何常用的一种表示形式，简单来说其采用增加一个维度的方式来描述当前点，如常见的2D/3D 点最后维度补1，实际使用时保证该值为1（比如除以该值）。其可以非常方便的描述射影几何的一些特殊情况，如无穷远点（最后一位补0）等，有兴趣可以参考《多视图几何》。这里我们使用该方式以方便后续的矩阵运算，如从相机坐标变换至世界坐标等。
-我们来用数学的方法描述一遍相机的成像过程，给定一个世界坐标点 $$(X_w, Y_w, Z_w)$$，得到其最终像素平面的坐标 $$(u, v)$$
+我们来用数学的方法描述一遍相机的成像过程，给定一个世界坐标点 $(X_w, Y_w, Z_w)$，得到其最终像素平面的坐标 $(u, v)$
+
 之后我们采用投影公式进行投影
+
 $$\begin{cases} 
 x = \frac{f}{Z_c} X_c \\ 
 y = \frac{f}{Z_c} Y_c 
 \end{cases}$$
+
 也可以使用矩阵的形式表示
+
 $$\begin{bmatrix} 
 x \\ 
 y \\ 
@@ -561,13 +691,17 @@ Y_c \\
 Z_c \\ 
 1 
 \end{bmatrix} \Rightarrow K'P_c$$
+
 这里我们损失了距离信息。
 再就是图像坐标系到像素坐标系，图像坐标系和像素坐标系存在一个比例关系，设图像x方向每毫米有α个像素，y方向每毫米有β个像素，也就是放缩和偏移，则有：
+
 $$\begin{cases} 
 u = c_x + x \cdot \alpha \\ 
 v = c_y + y \cdot \beta 
 \end{cases}$$
+
 矩阵形式为
+
 $$\begin{bmatrix} 
 u \\ 
 v \\ 
@@ -583,10 +717,14 @@ x \\
 y \\ 
 1 
 \end{bmatrix} \Rightarrow K''Pxy$$
-其中 $$c_x, c_y$$ 为成像中心在像素坐标中的位置。
+
+其中 $c_x, c_y$ 为成像中心在像素坐标中的位置。
 将上述公式统一，有
+
 $$Puv = K''K'TP_w \Rightarrow sKTP_w$$
+
 其中
+
 $$s = \frac{1}{Z_c}; K = 
 \begin{bmatrix}
 f_x & 0 & c_x \\
@@ -594,15 +732,18 @@ f_x & 0 & c_x \\
 0 & 0 & 1
 \end{bmatrix}\\[0.5em]
 f_x = \alpha f; f_y = \beta f$$
+
 如果相机的成像是
 早期的相机有可能会存在像素本身是平行四边形而非矩形的问题，因此增加一个参数来描述，则有
+
 $$K = 
 \begin{bmatrix}
 f_x & skew & c_x \\
 0 & f_y & c_y \\
 0 & 0 & 1
 \end{bmatrix}$$
-个参数用来建模像素是平行四边形而不是矩形，这个参数同样可以认为是传感器的安置不严格与相机主光轴垂直造成的变形的近似，事实与像素坐标系的X、Y轴之间的夹角的正切值成反比，因此当$$skew = 0$$表示像素为矩形。
+
+个参数用来建模像素是平行四边形而不是矩形，这个参数同样可以认为是传感器的安置不严格与相机主光轴垂直造成的变形的近似，事实与像素坐标系的X、Y轴之间的夹角的正切值成反比，因此当$skew = 0$表示像素为矩形。
 通常我们称K为相机内参矩阵，而包含旋转和平移关系的T为外参矩阵。至此，简单的针孔相机模型就完成了。
 鱼眼相机
 小孔成像模型中，投影的过程可以理解为是一个三角相似变换的过程，也就是可以使用下图的过程描述，物体点沿着穿过光心的射线投影到
@@ -648,38 +789,57 @@ f_x & skew & c_x \\
 较短的焦距可以捕捉更宽广的画面，但可能会引起桶型畸变；而较长的焦距可以捕捉较为狭窄的画面，但可能会引起枕型畸变。
 数学上，我们使用 Brown-Conrady 模型近似描述畸变(以下公式均在图像坐标系下)：
 1. 径向畸变：透镜的厚薄不一，折射率不同，使得直线在投影后变成曲线
+
 $$x_{distorted} = x(1 + k_1 r^2 + k_2 r^4 + k_3 r^6)\\
 y_{distorted} = y(1 + k_1 r^2 + k_2 r^4 + k_3 r^6)\\
 r_d = r(1 + k_1 r^2 + k_2 r^4 + k_3 r^6)$$
+
 2. 切向畸变：机械组装过程中，透镜和成像平面不可能完全平行，从而导致切向畸变。
+
 $$x_{distorted} = x + 2p_1 xy + p_2 (r^2 + 2x^2)\\
 y_{distorted} = y + p_1 (r^2 + 2y^2) + 2p_2 xy$$
+
 最终考虑到所有畸变，有
+
 $$x_{distorted} = x(1 + k_1 r^2 + k_2 r^4 + k_3 r^6) + 2p_1 xy + p_2 (r^2 + 2x^2)\\
 y_{distorted} = y(1 + k_1 r^2 + k_2 r^4 + k_3 r^6) + p_1 (r^2 + 2y^2) + 2p_2 xy$$
+
 则最终的像素坐标可以表示为
+
 $$u=f_x \cdot x_d+c_x\\
 v=f_y \cdot y_d+c_y\\$$
-当然，由于制造工艺的提升，目前相机畸变主要是径向畸变，具体的使用可以灵活选择，比如使用单独的 $$k_1、k_2$$
+
+当然，由于制造工艺的提升，目前相机畸变主要是径向畸变，具体的使用可以灵活选择，比如使用单独的 $k_1、k_2$
+
 当然，上面的去畸变公式也可以使用更低阶的形式或者更高阶的形式，没有十分的严格，参数量越多则近似效果越强，但是也会带来更高的计算量
 鱼眼相机也可以使用类似的方式描述畸变，不过其调整的是
 在工业上，我们也会使用畸变率来描述畸变情况，定义畸变率为
+
 $$d = (r_d - r)/r\\
 d = r_d/r - 1\\
 d + 1 = r_d/r$$
+
 其在一定程度上表征了径向畸变的程度。和上述的径向畸变对比来看，我们可以简单的得到
+
 $$d = k_1r^2 + k_2r^4 + k_3r^6$$
+
 此外，畸变模型不止上面两种，事实上，畸变会存在多种模型，如最新的除法模型（最新的opencv已经采用），精度会更高
+
 $$r_d = r\frac{1 + k_1r^2 + k_2r^4 + k_3r^6}{1 + k_4r^2 + k_5r^4 + k_6r^6}$$
+
 或者另外的除法模型
+
 $$r_d = r\frac{1}{1 + k_1r^2 + k_2r^4 + k_3r^6}$$
+
 考虑相机传感器本身的复杂性，而且每个相机的结构都有一定的差异性（哪怕是同一批相机，在参数上都会有微小的差异），而针孔相机模型仅仅是一种真实相机的成像过程的近似，甚至于我们可以说这是一种非常粗糙的近似，因此相机标定实际上只能说近似真值而无法获得真值，那么想获取更加近似更加完美的结果，就需要使用更加准确的模型，但是更加准确的模型一般都会有更多的参数量，但是要注意的是，如果引入了过于高阶的量，就容易导致过拟合和龙格现象
 最后，标定很难定量评估，除非有更真的 ”真值”，用更精确的测量设备进行精确的角度和位移测量。那么在无法获取绝对真值的情况下如何处理呢？可以通过构建一个三维空间中的直线，然后对拍摄到的图像进行去畸变操作，然后在处理后的图片的直线上进行采样，以此拟合该直线，然后对其统计方差等，以此来判断去畸变的效果，如果足够好就认为其是好内参
 去畸变问题
-去畸变本质上是对畸变模型的一次反向计算，我们需要通过已知的模型和 $$r_d$$ 来计算出 $$r$$ 的关系。当然，这个多项式本身相对来说求解比较复杂，一般会考虑使用优化的方法来计算，opencv 提供了相应的函数
+去畸变本质上是对畸变模型的一次反向计算，我们需要通过已知的模型和 $r_d$ 来计算出 $r$ 的关系。当然，这个多项式本身相对来说求解比较复杂，一般会考虑使用优化的方法来计算，opencv 提供了相应的函数
 如何计算出畸变模型的参数是一个非常实际的问题。要解出 Brown-Conrady 模型中的参数，本质上是一个非线性优化问题。你无法像解二元一次方程组那样直接算出一个确定的解，而是需要通过“逼近”的方式来寻找最优解，这个过程实际上就是重投影误差的最小化计算，就是通过给定一些 3D 点和对应 2D 角点的坐标，使用给定的相机模型，通过最小化两者的重投影误差，来优化相机的参数，因此可以构建一个无约束优化问题
+
 $$F(x) = \frac{1}{2} \sum_{i=1}^{m} (f_i(x))^2 = \frac{1}{2}  \| f(x) \|_2^2$$
-我们希望能够通过最小化 $$ F(x) $$ 的方法，找到某个给定形式的函数 $$ f_i(x) $$ 的系数。
+
+我们希望能够通过最小化 $ F(x) $ 的方法，找到某个给定形式的函数 $ f_i(x) $ 的系数。
 PnP问题
 PnP (Perspective-n-Point) 问题是计算机视觉中的一个问题，目的是在已知一定数量的三维空间点及其在图像上对应的二维点时，估计相机的位姿，即求解世界坐标系到相机坐标系的旋转矩阵R和平移向量。
   
@@ -703,53 +863,79 @@ PnP (Perspective-n-Point) 问题是计算机视觉中的一个问题，目的是
   1. 我们知道标定本身可以理解为一个拟合各个像素位置成像的过程，如果覆盖不完全，就会导致某些区域像素处于无约束状态，从而出现标定错误。我们常见的图片去畸变后边缘扭曲大多是该原因导致的。
 6. 使用标定工具进行标定计算
 张正友标定法的数学流程是什么样呢？根据相机模型并暂时忽略畸变，有
+
 $$s \begin{bmatrix} u \\ v \\ 1 \end{bmatrix} = A [R \quad T] \begin{bmatrix} X_w \\ Y_W \\ Z_W \\ 1 \end{bmatrix} = A [r_1 \quad r_2 \quad r_3 \quad t] \begin{bmatrix} X_w \\ Y_W \\ Z_W \\ 1 \end{bmatrix}$$
-其中 $$s$$ 是尺度因子，且有内参矩阵如下
+
+其中 $s$ 是尺度因子，且有内参矩阵如下
+
 $$A = \begin{bmatrix} \alpha & \gamma & u_0 \\ 0 & \beta & v_0 \\ 0 & 0 & 1 \end{bmatrix}$$
-考虑到我们标定时使用的是平面标定板，我们将 $$XOY$$ 平面设置为标定板平面上，$$z$$ 轴垂直向外，这样对于检测的所有特征点都有
+
+考虑到我们标定时使用的是平面标定板，我们将 $XOY$ 平面设置为标定板平面上，$z$ 轴垂直向外，这样对于检测的所有特征点都有
+
 $$Z_W = 0$$
+
 代入上式，有
+
 $$s \begin{bmatrix} u \\ v \\ 1 \end{bmatrix} = A [R \quad T] \begin{bmatrix} X_w \\ Y_W \\ 0 \\ 1 \end{bmatrix} = A [r_1 \quad r_2 \quad t] \begin{bmatrix} X_w \\ Y_W \\ 1 \end{bmatrix}$$
-这里 $$r_i$$ 代表旋转矩阵的第 $$i$$ 个列向量。令 $$\overrightarrow{M} = [X \quad Y \quad 1]^T, \quad \overrightarrow{m} = [u \quad v \quad 1]^T$$, 上式简写为
+
+这里 $r_i$ 代表旋转矩阵的第 $i$ 个列向量。令 $\overrightarrow{M} = [X \quad Y \quad 1]^T, \quad \overrightarrow{m} = [u \quad v \quad 1]^T$, 上式简写为
+
 $$s\widetilde{m} = H\widetilde{M}$$
-我们称 $$H$$ 为单应矩阵，把矩阵展开，有
+
+我们称 $H$ 为单应矩阵，把矩阵展开，有
+
 $$\begin{cases}
 su &= h_{11}X + h_{12}Y + h_{13} \\
 sv &= h_{21}X + h_{22}Y + h_{23} \\
 s &= h_{31}X + h_{32}Y + h_{33}
 \end{cases}$$
+
 从而有
+
 $$\begin{cases}
 uXh_{31} + uYh_{32} + h_{33}u &= h_{11}X + h_{12}Y + h_{13} \\
 vXh_{31} + vYh_{32} + h_{33}v &= h_{21}X + h_{22}Y + h_{23}
 \end{cases}$$
-可以看到，如果对两个式子都除以 $$ h_{33} $$，并不会对整体的形式产生影响，因此，我们一般令 $$ h_{33} = 1 $$。也就是说，对于单应矩阵，其自由度并不是 9，而是 8
+
+可以看到，如果对两个式子都除以 $ h_{33} $，并不会对整体的形式产生影响，因此，我们一般令 $ h_{33} = 1 $。也就是说，对于单应矩阵，其自由度并不是 9，而是 8
 定义
+
 $$h' = [h_{11} \quad h_{12} \quad h_{13} \quad h_{21} \quad h_{22} \quad h_{23} \quad h_{31} \quad h_{32}]$$
+
 那么上述可以修改为矩阵形式
+
 $$\begin{bmatrix}
 X & Y & 1 & 0 & 0 & 0 &-uX & -uY & -u \\
 0 & 0 & 0 & X & Y & 1 & -vX & -vY & -v 
 \end{bmatrix}
 h' = 0$$
-上式是一个很经典的线性方程，我们将上式写为 $$ Sh' = 0 $$，那么矩阵 $$ S^T S $$ 的最小特征值就对应该方程的最小二乘解。至此就求解出了单应矩阵，我们希望使用单应矩阵对外参矩阵进行拆解
-接下来就是求解外参矩阵，我们上面求得的单应矩阵 $$ H $$ 可能和真实的值存在一个尺度因子，我们增加一个尺度因子 $$\lambda$$，有
+
+上式是一个很经典的线性方程，我们将上式写为 $ Sh' = 0 $，那么矩阵 $ S^T S $ 的最小特征值就对应该方程的最小二乘解。至此就求解出了单应矩阵，我们希望使用单应矩阵对外参矩阵进行拆解
+接下来就是求解外参矩阵，我们上面求得的单应矩阵 $ H $ 可能和真实的值存在一个尺度因子，我们增加一个尺度因子 $\lambda$，有
+
 $$\lambda [h_1 \quad h_2 \quad h_3] = A [r_1 \quad r_2 \quad t]$$
+
 由上节我们提到的旋转矩阵的性质可得两个约束条件
+
 $$r_1^T r_1 = r_2^T r_2 = 1 \\
 r_1^T r_2 = 0$$
+
 调整上式，有
+
 $$\begin{cases}
 \lambda h_1^T A^{-T} A^{-1} h_2 = 0 \\
 \lambda h_1^T A^{-T} A^{-1} h_1 = h_2^T A^{-T} A^{-1} h_2 = 1 
 \end{cases}$$
-我们知道，$$A$$ 的逆矩阵为
+
+我们知道，$A$ 的逆矩阵为
+
 $$A^{-1} =
 \begin{bmatrix}
 \frac{1}{\alpha} & -\frac{\gamma}{\alpha \beta} & \frac{\gamma v_0 - \beta u_0}{\alpha \beta} \\[0.5em]
 0 & \frac{1}{\beta} & -\frac{v_0}{\beta} \\[0.5em]
 0 & 0 & 1 
 \end{bmatrix}$$
+
 IMU模型
 概述
 IMU也就是惯性测量单元，是测量物体三轴姿态角（或角速率）以及加速度的装置
@@ -800,7 +986,7 @@ IMU的误差可以分为确定误差（可以通过标定获取，是一个确�
 然后把测量模型的数值带入离散模型，就可以得到如下的计算模型，然后循环执行计算即可，进而不断更新状态量
 [图片]
 使用方法
-IMU 的用途主要是作为先验估计来优化激光点，在实际中，我们希望是所有点云在同一时刻的采样，但是激光雷达的采样频率相对较慢而且存在运动畸变，而 IMU 的采样频率则非常高，所以可以使用 IMU 来去除畸变，并且把所有的点云统一到同一个时刻进行处理，文中是在 tk 时刻。因此，我们根据 IMU 积分估计的位姿，把 $$t_{k-1}$$ 每个点转到 tk 时刻。即同一时刻与同一位姿，发射与接受激光束。
+IMU 的用途主要是作为先验估计来优化激光点，在实际中，我们希望是所有点云在同一时刻的采样，但是激光雷达的采样频率相对较慢而且存在运动畸变，而 IMU 的采样频率则非常高，所以可以使用 IMU 来去除畸变，并且把所有的点云统一到同一个时刻进行处理，文中是在 tk 时刻。因此，我们根据 IMU 积分估计的位姿，把 $t_{k-1}$ 每个点转到 tk 时刻。即同一时刻与同一位姿，发射与接受激光束。
 [图片]
 1. 从尾部开始遍历找 head 对应的imu数据
 2. head对应的IMU状态之前已经计算出来了，计算当前点到head的时间间隔
@@ -911,14 +1097,20 @@ PL-ICP方法
 VSLAM前端
 2D-2D
 假设在相邻时刻，相机分别观测到两个图像，并且在其中匹配到了对应点，如何求两个图像对应位姿之间的位姿变换
-假设对应点的齐次像素坐标为 $$p_1$$ 和 $$p_2$$，那么在两个时刻的相机坐标系下有下面的公式，其中相机内参矩阵已知
+假设对应点的齐次像素坐标为 $p_1$ 和 $p_2$，那么在两个时刻的相机坐标系下有下面的公式，其中相机内参矩阵已知
+
 $$p_1=KP_{C1}\\p_2=KP_{C2}$$
+
 那么以第一个相机坐标系为基准（或者为世界坐标系的话），那么有
+
 $$P_{C2}=RP_{C1}+t\\K^{-1}p_2=P_{C2}=RP_{C1}+t=RK^{-1}p_{1}+t\\t^\wedge K^{-1}p_2=t^\wedge R K^{-1}p_{1}+t^\wedge t\\其中，向量与自身的叉乘为零$$
-然后左边乘以 $$(K^{-1}p_2)^T$$，其中左侧为 $$t^\wedge K^{-1}p_2$$，也就是 t 与向量的叉乘，方向上垂直于此向量，再进行与向量的点乘结果为0，故有
+
+然后左边乘以 $(K^{-1}p_2)^T$，其中左侧为 $t^\wedge K^{-1}p_2$，也就是 t 与向量的叉乘，方向上垂直于此向量，再进行与向量的点乘结果为0，故有
+
 $$
 (K^{-1}p_2)^Tt^\wedge R K^{-1}p_{1}=p_2^TK^{-T}t^\wedge R K^{-1}p_{1}=0
 $$
+
 VIO
 融合方案介绍
 [图片]
@@ -1004,14 +1196,20 @@ IMU离散模型
 这里使用纯字母表示真值，使用波浪线上标表示误差，使用横线表示最优估计，使用上三角表示估计值
 前向传播
 前向传播有两个内容，第一个就是基于IMU积分计算一个粗略的状态量，这个状态量用于后续的反向传播来补偿运动失真
+
 $$\hat{x}_{i+1}=\hat{x}_i\boxplus (\Delta tf(\hat{x}_i,u_i,0)),\hat{x}_0=\bar{x}_{k-1}$$
+
 其中的时间差表示的是相邻两帧 IMU 的时间差，噪声量为0是因为不知道噪声的实际大小，因此在传播过程中设为0，但是会在后续的误差状态方程中考虑噪声
 这个公式与离散模型公式一致，我们每接收一个 IMU 都会进行一次上述计算，直到计算到最后一个 IMU 帧为止。
 另一个内容是传播误差量，并计算对应的协方差矩阵。这里的问题是我们不知道真值，怎么计算误差呢？实际上，我们计算的误差量，也是一个近似值，因此它才会有对应的协方差矩阵来评判置信度。和传统的卡尔曼滤波器不同的是，传统的卡尔曼滤波器直接估计状态量，它的运动方程和观测方程通常长这样：
+
 $$x_k=f(x_{k-1},u_k)+w_k\\z_k=h(x_k)+v_k$$
-而文中使用的误差状态卡尔曼滤波器(Error state Kalman flter，ESKF)，以误差量作为待估计量，也就是把上式的 x 用 $$\widetilde{x}$$ 代替
+
+而文中使用的误差状态卡尔曼滤波器(Error state Kalman flter，ESKF)，以误差量作为待估计量，也就是把上式的 x 用 $\widetilde{x}$ 代替
 我们现在要估计的是误差量，而不是直接估计状态量。而有了误差量的估计，再直接加上状态量的估计就是我们求得的最优估计，其中误差量
+
 $$\widetilde{x}_{k-1}=x_{k-1}\boxminus \bar{x}_{k-1}$$
+
 这将带来以下好处:
 - 在旋转的处理上，ESKF的状态变量可以采用最小化的参数表达，也就是使用三维变量来表达旋转的增量。而传统KF需要用到四元数或者更高维的表达（如九维旋转矩阵），或采用带有奇异性的表达方式(欧拉角)
 - ESKF 总是在原点附近，离奇异点较远，并且也不会由于离工作点太远而导致线性化近似不够的问题
@@ -1032,13 +1230,16 @@ ESKF整体流程如下：当IMU测量数据到达时，我们把它积分后，�
 注意一下，标称状态并不是测量值的等价概念，其准确定义是基于运动模型和 IMU 测量值（作为控制输入），在不考虑噪声的情况下推演出的“理想”预测值，是需要进一步优化的状态，但是其实际上也是测量得出的——基于上一次优化后的状态然后结合测量值的积分计算得出
 ESKF状态方程
 然后可以认为系统的真实状态是标称状态加上一个误差状态的，因此可以定义真实状态变量、名义状态变量和误差状态变量为：
+
 $$\begin{gathered}
 \boldsymbol x_t=[\boldsymbol{p}_t ,\boldsymbol{R}_t ,\boldsymbol{v}_t ,\boldsymbol{b}_{a,t},\boldsymbol{b}_{g,t},\boldsymbol{g}_t]^T \newline
 \boldsymbol x=[\boldsymbol{p} ,\boldsymbol{R} ,\boldsymbol{v} ,\boldsymbol{b}_a,\boldsymbol{b}_g,\boldsymbol{g}]^T \\
 \delta \boldsymbol x=[\delta\boldsymbol{p} ,\delta\boldsymbol{R} ,\delta\boldsymbol{v} ,\delta\boldsymbol{b}_a,\delta\boldsymbol{b}_g,\delta\boldsymbol{g}]^T
 \end{gathered}$$
-其中 $$p$$为相对于世界坐标系的平移，$$R$$ 为相对于世界坐标系的旋转，$$v$$为相对于世界坐标系的速度，$$b_a$$为当前时刻的加速度计随机游走偏置，$$b_g$$为陀螺仪的随机游走偏置，$$g$$为世界坐标系下的重量向量，每个状态量的自由度为 3 维，其中带下标 $$t$$的表示真值，并且认为各种状态都是时间的函数
-然后根据相关理论，很容易推导出状态变量导数相对于观测量的关系式，其中，在连续时间上我们记录 IMU 读数为 $$\tilde{\boldsymbol{\omega}}$$ 与 $$\tilde{\boldsymbol{a}}$$：
+
+其中 $p$为相对于世界坐标系的平移，$R$ 为相对于世界坐标系的旋转，$v$为相对于世界坐标系的速度，$b_a$为当前时刻的加速度计随机游走偏置，$b_g$为陀螺仪的随机游走偏置，$g$为世界坐标系下的重量向量，每个状态量的自由度为 3 维，其中带下标 $t$的表示真值，并且认为各种状态都是时间的函数
+然后根据相关理论，很容易推导出状态变量导数相对于观测量的关系式，其中，在连续时间上我们记录 IMU 读数为 $\tilde{\boldsymbol{\omega}}$ 与 $\tilde{\boldsymbol{a}}$：
+
 $$\begin{gather}
 \dot{\boldsymbol{p}}_t = \boldsymbol{v}_t\\
 \dot{\boldsymbol{v}}_t = \boldsymbol{R}_t (\tilde{\boldsymbol{a}} - \boldsymbol{b}_{a,t} - \boldsymbol{\eta}_a) + \boldsymbol{g}\\
@@ -1047,15 +1248,17 @@ $$\begin{gather}
 \dot{\boldsymbol{b}}_{a,t} = \boldsymbol{\eta}_{b,a}\\
 \dot{\boldsymbol{g}} = \boldsymbol{0}
 \end{gather}$$
-这里把重力考虑进来的主要理由是方便确定IMU的初始姿态。如果我们不在状态方程里写出重力变量，那么必须事先确定初始时刻的IMU朝向 $$\boldsymbol R(0)$$，才可以执行后续的计算。此时IMU的姿态就是相对于初始的水平面来描述的。而如果把重力写出来，就可以设IMU的初始姿态为单位矩阵，而把重力方向作为IMU当前姿态相比于水平面的一个度量。二种方法都是可行的，不过将重力方向单独表达出来会使得初始姿态表达更加简单，同时还可以增加一些线性性
+
+这里把重力考虑进来的主要理由是方便确定IMU的初始姿态。如果我们不在状态方程里写出重力变量，那么必须事先确定初始时刻的IMU朝向 $\boldsymbol R(0)$，才可以执行后续的计算。此时IMU的姿态就是相对于初始的水平面来描述的。而如果把重力写出来，就可以设IMU的初始姿态为单位矩阵，而把重力方向作为IMU当前姿态相比于水平面的一个度量。二种方法都是可行的，不过将重力方向单独表达出来会使得初始姿态表达更加简单，同时还可以增加一些线性性
 六项公式很容易理解：
 1. 对位置求导获取速度
-2. 世界坐标系下的加速度变换，其中的其中的 $$\boldsymbol{n}_a$$是加速度计高斯白噪声
-3. 旋转向量与旋转矩阵的导数之间的变换关系，其中的 $$\hat{\boldsymbol \omega}$$是陀螺仪的测量值， $$\boldsymbol{n}_\omega$$是陀螺仪高斯白噪声
+2. 世界坐标系下的加速度变换，其中的其中的 $\boldsymbol{n}_a$是加速度计高斯白噪声
+3. 旋转向量与旋转矩阵的导数之间的变换关系，其中的 $\hat{\boldsymbol \omega}$是陀螺仪的测量值， $\boldsymbol{n}_\omega$是陀螺仪高斯白噪声
 4. 陀螺仪偏置求导，认为导数是高斯白噪声
 5. 加速度计偏置求导，认为导数是高斯噪声
 6. 重力认为是常量，导数为零
 如果把观测量和噪声量整理成一个向量，我们也可以把上式整理成矩阵形式。不过这里的矩阵形式将含有很多的零项，相比上式并不会有明显简化，所以我们就先使用这种散开的公式。下面我们来推导误差状态方程。首先定义误差状态变量为：
+
 $$\begin{gather}
 \boldsymbol{p}_t = \boldsymbol{p} + \delta\boldsymbol{p}\\
 \boldsymbol{R}_t = \boldsymbol{R}\,\delta\boldsymbol{R}\\
@@ -1064,15 +1267,19 @@ $$\begin{gather}
 \boldsymbol{b}_{g,t} = \boldsymbol{b}_g + \delta\boldsymbol{b}_g\\
 \boldsymbol{g}_t = \boldsymbol{g} + \delta\boldsymbol{g}
 \end{gather}$$
+
 这里其他的项都是线性的，因此直接叠加，但是旋转矩阵是不满足加法而满足乘法的，因此是相乘，并且误差旋转矩阵是相对于机身坐标系而不是世界坐标系的旋转误差，此外 IMU 一般是固定在机身上，因此是右乘
-不带下标的就是名义状态变量，名义状态变量的运动学方程式与真值相同，只是不必考虑噪声（因为噪声在误差状态方程中考虑了）。其中旋转部分的 $$\delta\boldsymbol{R}$$ 可以用它的李代数 $$\text{Exp}(\delta\boldsymbol{\theta})$$ 来表示，此时旋转公式也需要改成用指数形式来表达。关于误差变量的平移、零偏和重力公式，都很容易得出对应的时间导数表达式，只需在等式两侧分别对时间求导即可
+不带下标的就是名义状态变量，名义状态变量的运动学方程式与真值相同，只是不必考虑噪声（因为噪声在误差状态方程中考虑了）。其中旋转部分的 $\delta\boldsymbol{R}$ 可以用它的李代数 $\text{Exp}(\delta\boldsymbol{\theta})$ 来表示，此时旋转公式也需要改成用指数形式来表达。关于误差变量的平移、零偏和重力公式，都很容易得出对应的时间导数表达式，只需在等式两侧分别对时间求导即可
+
 $$\begin{gather}
 \delta \dot{\boldsymbol{p}}=\delta {\boldsymbol{v}} \\
 \delta \dot{\boldsymbol{b}}_g=\boldsymbol \eta_g \\
 \delta \dot{\boldsymbol{b}}_a =\boldsymbol \eta_a \\
 \delta {\boldsymbol{g}}=0 \\
 \end{gather}$$
-其中因为速度和旋转两个方程与 $$\delta \boldsymbol R$$ 有关，需要单独推导，具体推导过程在下面两小节给出，这里先给出完整的误差变量的运动学状态方程
+
+其中因为速度和旋转两个方程与 $\delta \boldsymbol R$ 有关，需要单独推导，具体推导过程在下面两小节给出，这里先给出完整的误差变量的运动学状态方程
+
 $$\begin{split}
     \delta \dot{\boldsymbol{p}} &= \delta \boldsymbol{v} \\
     \delta \dot{\boldsymbol{v}} &= -\boldsymbol{R}(\tilde{\boldsymbol{a}} - \boldsymbol{b}_a)^\wedge \delta \boldsymbol{\theta} - \boldsymbol{R} \delta \boldsymbol{b}_a - \boldsymbol{\eta}_a + \delta \boldsymbol{g} \\
@@ -1081,8 +1288,10 @@ $$\begin{split}
     \delta \dot{\boldsymbol{b}}_a &= \boldsymbol{\eta}_{ba} \\
     \delta \dot{\boldsymbol{g}} &= \boldsymbol{0}
 \end{split}$$
+
 误差状态的旋转项
 将旋转误差方程两侧分别对时间求导可得：
+
 $$\begin{gather}
 \begin{split}
 \dot{\boldsymbol{R}}_t &= 
@@ -1092,21 +1301,31 @@ $$\begin{gather}
 &= \boldsymbol{R} _t(\tilde{\boldsymbol{\omega}} - \boldsymbol{b}_{g,t} - \boldsymbol{\eta}_g)^\wedge 
 \end{split}
 \end{gather}$$
-又有公式：$$\dot{\text{Exp}(\delta\boldsymbol{\theta})}=\text{Exp}(\delta\boldsymbol{\theta})\delta\dot{\boldsymbol{\theta}}^\wedge$$，可以将其中的对应项进行转换，将第二行化为如下形式，并且标称状态是不考虑噪声的理想值，因此噪声项为 0
+
+又有公式：$\dot{\text{Exp}(\delta\boldsymbol{\theta})}=\text{Exp}(\delta\boldsymbol{\theta})\delta\dot{\boldsymbol{\theta}}^\wedge$，可以将其中的对应项进行转换，将第二行化为如下形式，并且标称状态是不考虑噪声的理想值，因此噪声项为 0
+
 $$\begin{gather}
 \dot{\boldsymbol{R}}\text{Exp}(\delta\boldsymbol{\theta}) + \boldsymbol{R}\dot{\text{Exp}(\delta\boldsymbol{\theta})} = \boldsymbol{R} \left( \tilde{\boldsymbol \omega} - \boldsymbol{b}_g \right)^\wedge \text{Exp}(\delta\boldsymbol{\theta}) + \boldsymbol{R}\text{Exp}(\delta\boldsymbol{\theta})\delta\dot{\boldsymbol{\theta}}^\wedge
 \end{gather}$$
+
 再将第三行的真值消去，有如下形式
+
 $$\begin{gather}
 \boldsymbol{R}_t (\tilde{\boldsymbol{\omega}} - \boldsymbol{b}_{g,t} - \boldsymbol{\eta}_g)^\wedge = \boldsymbol{R}\text{Exp}(\delta\boldsymbol{\theta}) (\tilde{\boldsymbol{\omega}} - \boldsymbol{b}_{g,t} - \boldsymbol{\eta}_g)^\wedge
 \end{gather}$$
-根据公式20可知，公式21、22是相等的，因此可以联立两式，将其中的 $$\dot{\delta \boldsymbol{\theta}}^\wedge$$ 移动到一侧，并且约掉左侧的旋转矩阵，并且整理类似项，可以有如下形式
+
+根据公式20可知，公式21、22是相等的，因此可以联立两式，将其中的 $\dot{\delta \boldsymbol{\theta}}^\wedge$ 移动到一侧，并且约掉左侧的旋转矩阵，并且整理类似项，可以有如下形式
+
 $$\begin{gather}
 \text{Exp}(\delta\boldsymbol{\theta})\dot{\delta \boldsymbol{\theta}}^\wedge = \text{Exp}(\delta\boldsymbol{\theta}) (\tilde{\boldsymbol{\omega}} - \boldsymbol{b}_{g,t} - \boldsymbol{n}_g)^\wedge - \left( \tilde{\boldsymbol{\omega}} - \boldsymbol{b}_{g,t}\right)^\wedge \text{Exp}(\delta\boldsymbol{\theta})
 \end{gather}$$
-注意 $$\text{Exp}(\delta\boldsymbol{\theta})$$ 本身是一个SO(3)矩阵，利用SO(3)上的伴随性质用来交换，且其中根据旋转矩阵的性质有：$$\text{Exp}(\delta\boldsymbol{\theta})^T=\text{Exp}(-\delta\boldsymbol{\theta})$$
-李群的伴随性质为：$$\boldsymbol\phi^\wedge\boldsymbol R=\boldsymbol R(\boldsymbol R^T \boldsymbol \phi)^\wedge$$
-然后李群的伴随性质，可以将上面公式至的最后一项 $$\left( \tilde{\boldsymbol{\omega}} - \boldsymbol{b}_{g,t}\right)^\wedge \text{Exp}(\delta\boldsymbol{\theta})$$项进行交换
+
+注意 $\text{Exp}(\delta\boldsymbol{\theta})$ 本身是一个SO(3)矩阵，利用SO(3)上的伴随性质用来交换，且其中根据旋转矩阵的性质有：$\text{Exp}(\delta\boldsymbol{\theta})^T=\text{Exp}(-\delta\boldsymbol{\theta})$
+
+李群的伴随性质为：$\boldsymbol\phi^\wedge\boldsymbol R=\boldsymbol R(\boldsymbol R^T \boldsymbol \phi)^\wedge$
+
+然后李群的伴随性质，可以将上面公式至的最后一项 $\left( \tilde{\boldsymbol{\omega}} - \boldsymbol{b}_{g,t}\right)^\wedge \text{Exp}(\delta\boldsymbol{\theta})$项进行交换
+
 $$\begin{gather}
 \begin{split}
 \text{Exp}(\delta\boldsymbol{\theta})\delta\dot{\boldsymbol{\theta}}^\wedge
@@ -1115,15 +1334,18 @@ $$\begin{gather}
 &\approx \text{Exp}(\delta\boldsymbol{\theta})[(\tilde{\boldsymbol{\omega}} - \boldsymbol{b}_{g,t} - \boldsymbol{\eta}_g)^\wedge-((\boldsymbol I-\delta\boldsymbol{\theta}^\wedge)(\tilde{\boldsymbol{\omega}} - \boldsymbol{b}_{g} ))^\wedge]\\
 &= \text{Exp}(\delta\boldsymbol{\theta})[\boldsymbol{b}_{g}-\boldsymbol{b}_{g,t}-\boldsymbol{\eta}_g+\delta\boldsymbol{\theta}^\wedge \tilde{\boldsymbol{\omega}}-\delta\boldsymbol{\theta}^\wedge\boldsymbol{b}_{g}]^\wedge\\
 &= \text{Exp}(\delta\boldsymbol{\theta})[(-\tilde{\boldsymbol{\omega}}+\boldsymbol{b}_g)^\wedge \delta\boldsymbol{\theta}-\delta\boldsymbol{b}_g-\boldsymbol{\eta}_g]^\wedge
-
 \end{split}
 \end{gather}$$
-然后约掉左侧的系数 $$\text{Exp}(\delta\boldsymbol{\theta})$$即可得到：
+
+然后约掉左侧的系数 $\text{Exp}(\delta\boldsymbol{\theta})$即可得到：
+
 $$\begin{gather}
 \delta\dot{\boldsymbol{\theta}} \approx \left( -\tilde{\boldsymbol{\omega}} + \boldsymbol{b}_g \right)^\wedge \delta\boldsymbol{\theta} - \delta\boldsymbol{b}_g - \boldsymbol{\eta}_{g}
 \end{gather}$$
+
 误差状态的速度项
 接下来考虑速度方程的误差形式，获取误差状态速度项的表达式，对速度求导即为加速度，因此速度真值的导数等于加速度真值，根据状态方程有：
+
 $$\begin{gather}
 \begin{split}
     \dot{\boldsymbol{v}}_t &= \boldsymbol{R}_t (\tilde{\boldsymbol{a}} - \boldsymbol{b}_{a,t} - \boldsymbol{\eta}_a) + \boldsymbol{g}_t \\
@@ -1132,22 +1354,29 @@ $$\begin{gather}
     &\approx \boldsymbol{R}\tilde{\boldsymbol{a}} - \boldsymbol{R}\boldsymbol{b}_a - \boldsymbol{R}\delta\boldsymbol{b}_a - \boldsymbol{R}\boldsymbol{\eta}_a + \boldsymbol{R}\delta\boldsymbol{\theta}^\wedge \boldsymbol{a} - \boldsymbol{R}\delta\boldsymbol{\theta}^\wedge \boldsymbol{b}_a + \boldsymbol{g} + \delta\boldsymbol{g} \\
     &= \boldsymbol{R}\tilde{\boldsymbol{a}} - \boldsymbol{R}\boldsymbol{b}_a - \boldsymbol{R}\delta\boldsymbol{b}_a - \boldsymbol{R}\boldsymbol{\eta}_a - \boldsymbol{R}\tilde{\boldsymbol{a}}^\wedge \delta\boldsymbol{\theta} + \boldsymbol{R}\boldsymbol{b}_a^\wedge \delta\boldsymbol{\theta} + \boldsymbol{g} + \delta\boldsymbol{g}
 \end{split}
-
 \end{gather}$$
-从第三行推向第四行时，需要忽略 $$\delta\boldsymbol{\theta}^\wedge$$ 与 $$\boldsymbol{\eta}_a$$以及 $$\delta\boldsymbol{b}_a$$ 相乘的二阶小量。从第四行推第五行则用到了叉乘符号交换顺序之后需加负号的性质。另一方面，等式右侧为
+
+从第三行推向第四行时，需要忽略 $\delta\boldsymbol{\theta}^\wedge$ 与 $\boldsymbol{\eta}_a$以及 $\delta\boldsymbol{b}_a$ 相乘的二阶小量。从第四行推第五行则用到了叉乘符号交换顺序之后需加负号的性质。另一方面，等式右侧为
+
 $$\begin{gather}
  \dot{\boldsymbol{v}} + \delta\dot{\boldsymbol{v}} = \boldsymbol{R}(\tilde{\boldsymbol{a}} - \boldsymbol{b}_a) + \boldsymbol{g} + \delta\dot{\boldsymbol{v}}
 \end{gather}$$
+
 因为上面两式是相等的，因此可以得到
+
 $$\begin{gather}
 \delta\dot{\boldsymbol{v}} = -\boldsymbol{R}(\tilde{\boldsymbol{a}} - \boldsymbol{b}_a)^\wedge \delta\boldsymbol{\theta} - \boldsymbol{R} \delta\boldsymbol{b}_a - \boldsymbol{R} \boldsymbol{\eta}_a + \delta\boldsymbol{g} 
 \end{gather}$$
-这样我们就得到了 $$\delta{\boldsymbol{v}}$$ 的运动学模型。需要补充一句，由于上式中 $$\boldsymbol{\eta}_a$$ 是一个零均值白噪声，它乘上任意旋转矩阵之后仍然是一个零均值白噪声，而且由于 $$\boldsymbol{R}^T\boldsymbol{R}=\boldsymbol{I}$$ ，其协方差矩阵也不变（留作习题）。所以，也可以把上式简化为：
+
+这样我们就得到了 $\delta{\boldsymbol{v}}$ 的运动学模型。需要补充一句，由于上式中 $\boldsymbol{\eta}_a$ 是一个零均值白噪声，它乘上任意旋转矩阵之后仍然是一个零均值白噪声，而且由于 $\boldsymbol{R}^T\boldsymbol{R}=\boldsymbol{I}$ ，其协方差矩阵也不变（留作习题）。所以，也可以把上式简化为：
+
 $$\begin{gather}
 \delta\dot{\boldsymbol{v}} = -\boldsymbol{R}(\bar{\boldsymbol{a}} - \boldsymbol{b}_a)^\wedge \delta\boldsymbol{\theta} - \boldsymbol{R} \delta\boldsymbol{b}_a - \boldsymbol{\eta}_a + \delta\boldsymbol{g}
 \end{gather}$$
+
 离散时间ESKF运动学方程
 上面给出的是连续时间下的状态方程，但是计算机只能处理离散数据，而如果进行数值近似的话会导致计算量的暴增，因此需要转换为离散时间下的状态方程，很容易可以得出名义状态变量的离散时间方程：
+
 $$\begin{split}
     \boldsymbol{p}(t + \Delta t) &= \boldsymbol{p}(t) + \boldsymbol{v}\Delta t + \frac{1}{2} (\boldsymbol{R}(\tilde{\boldsymbol{a}} - \boldsymbol{b}_a)) \Delta t^2 + \frac{1}{2} \boldsymbol{g} \Delta t^2 \\
     \boldsymbol{v}(t + \Delta t) &= \boldsymbol{v}(t) + \boldsymbol{R}(\tilde{\boldsymbol{a}} - \boldsymbol{b}_a) \Delta t + \boldsymbol{g} \Delta t \\
@@ -1156,7 +1385,9 @@ $$\begin{split}
     \boldsymbol{b}_a(t + \Delta t) &= \boldsymbol{b}_a(t) \\
     \boldsymbol{g}(t + \Delta t) &= \boldsymbol{g}(t)
 \end{split}$$
+
 该式只需在上面的基础上添加零偏项与重力项即可。而误差状态的离散形式则只需要处理连续形式中的旋转部分。参考角速度的积分公式，可以将误差状态方程写为：
+
 $$\begin{split}
     \delta\boldsymbol{p}(t + \Delta t) &= \delta\boldsymbol{p} + \delta\boldsymbol{v} \Delta t \\
     \delta\boldsymbol{v}(t + \Delta t) &= \delta\boldsymbol{v} + \left( -\boldsymbol{R}(\tilde{\boldsymbol{a}} - \boldsymbol{b}_a)^\wedge \delta\boldsymbol{\theta} - \boldsymbol{R}\delta\boldsymbol{b}_a + \delta\boldsymbol{g} \right) \Delta t + \boldsymbol{\eta}_v \\
@@ -1165,58 +1396,81 @@ $$\begin{split}
     \delta\boldsymbol{b}_a(t + \Delta t) &= \delta\boldsymbol{b}_a + \boldsymbol{\eta}_a \\
     \delta\boldsymbol{g}(t + \Delta t) &= \delta\boldsymbol{g}
 \end{split}$$
+
 注意：
-1. 右侧部分我们省略了括号里的 $$t$$以简化公式；
-2. 关于旋转部分的积分，我们可以将连续形式看成关于 $$\delta \boldsymbol\theta$$ 的微分方程然后求解。求解过程类似于对角速度进行积分。
+1. 右侧部分我们省略了括号里的 $t$以简化公式；
+2. 关于旋转部分的积分，我们可以将连续形式看成关于 $\delta \boldsymbol\theta$ 的微分方程然后求解。求解过程类似于对角速度进行积分。
 3. 噪声项并不参与递推，需要把它们单独归入噪声部分中。连续时间的噪声项可以视为随机过程的能量谱密度，而离散时间下的噪声变量就是我们日常看到的随机变量了。这些噪声随机变量的标准差可以列写如下： 
-  $$\sigma(\boldsymbol{\eta}_v) = \sqrt{\Delta t} \sigma_{a} \quad \sigma(\boldsymbol{\eta}_\theta) = \sqrt{\Delta t} \sigma_{g} \quad \sigma(\boldsymbol{\eta}_g) = \sqrt{\Delta t} \sigma_{bg} \quad \sigma(\boldsymbol{\eta}_a) = \sqrt{\Delta t} \sigma_{ba}$$
-其中前两式的 $$\Delta t$$ 是由积分关系导致的。
+
+  $\sigma(\boldsymbol{\eta}_v) = \sqrt{\Delta t} \sigma_{a} \quad \sigma(\boldsymbol{\eta}_\theta) = \sqrt{\Delta t} \sigma_{g} \quad \sigma(\boldsymbol{\eta}_g) = \sqrt{\Delta t} \sigma_{bg} \quad \sigma(\boldsymbol{\eta}_a) = \sqrt{\Delta t} \sigma_{ba}$
+
+其中前两式的 $\Delta t$ 是由积分关系导致的。
 至此，我们给出了如何在ESKF中进行IMU递推的过程，对应于卡尔曼滤波器中的状态方程。为了让滤波器收敛，我们通常需要外部的观测来对卡尔曼滤波器进行修正，也就是所谓的组合导航。当然，组合导航的方法有很多，从传统的EKF，到本节介绍的ESKF，以及后续章节将要介绍预积分和图优化技术，都可以应用于组合导航中。
 运动过程
-根据上述讨论，我们可以写出ESKF的运动过程。误差状态变量 $$\delta \boldsymbol x$$ 的离散时间运动方程已经在上式给出，我们可以整体地记为
+根据上述讨论，我们可以写出ESKF的运动过程。误差状态变量 $\delta \boldsymbol x$ 的离散时间运动方程已经在上式给出，我们可以整体地记为
+
 $$\delta\boldsymbol{x} = f(\delta\boldsymbol{x}) + \boldsymbol{w}, \quad \boldsymbol{w} \sim \mathcal{N}(\boldsymbol{0}, \boldsymbol{Q})$$
-其中 $$\boldsymbol w$$ 为噪声。按照前面的定义，$$\boldsymbol Q$$ 应该为：
+
+其中 $\boldsymbol w$ 为噪声。按照前面的定义，$\boldsymbol Q$ 应该为：
+
 $$\boldsymbol{Q} = \text{diag}(\boldsymbol{0}_3, \text{Cov}(\boldsymbol{\eta}_v), \text{Cov}(\boldsymbol{\eta}_\theta), \text{Cov}(\boldsymbol{\eta}_g), \text{Cov}(\boldsymbol{\eta}_a), \boldsymbol{0}_3)$$
+
 两侧的零是由于第一个和最后一个方程本身没有噪声导致的。
 为了保持与EKF的符号统一，我们计算运动方程的线性化形式：
+
 $$\delta\boldsymbol{x} = \boldsymbol{F}\delta\boldsymbol{x} + \boldsymbol{w}$$
-其中 $$\boldsymbol F$$ 为线性化后的雅可比矩阵。由于我们列写的运动方程已经是线性化的了，只需把它们的线性系统拿出来即可
+
+其中 $\boldsymbol F$ 为线性化后的雅可比矩阵。由于我们列写的运动方程已经是线性化的了，只需把它们的线性系统拿出来即可
+
 $$\boldsymbol{F} = 
     \begin{bmatrix}
         \boldsymbol{I} & \boldsymbol{I}\Delta t & \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0} \\\boldsymbol{0} & \boldsymbol{I} & -\boldsymbol{R}(\tilde{\boldsymbol{a}} - \boldsymbol{b}_a)^\wedge \Delta t & -\boldsymbol{R}\Delta t & \boldsymbol{0} & \boldsymbol{I}\Delta t \\
 \boldsymbol{0} & \boldsymbol{0} & \text{Exp}(-(\tilde{\boldsymbol{\omega}} - \boldsymbol{b}_g)\Delta t) & \boldsymbol{0} & -\boldsymbol{I}\Delta t & \boldsymbol{0} \\\boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{I} & \boldsymbol{0} & \boldsymbol{0} \\\boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{I} & \boldsymbol{0} \\\boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{0} & \boldsymbol{I}
     \end{bmatrix}$$
+
 在此基础上，我们执行ESKF的预测过程。预测过程包括对名义状态的预测（IMU积分）以及对误差状态的预测：
+
 $$\delta\boldsymbol{x}_{\text{pred}} = \boldsymbol{F}\delta\boldsymbol{x} \\\boldsymbol{P}_{\text{pred}} = \boldsymbol{F}\boldsymbol{P}\boldsymbol{F}^T + \boldsymbol{Q}$$
+
 不过由于ESKF的误差状态在每次更新以后会被重置，因此运动方程的均值部分没有太大意义，而方差部分则可以指导整个误差估计的分布情况
 ESKF的更新过程
-前面介绍的是ESKF的运动过程，现在我们来考虑更新过程。假设一个抽象的传感器能够对状态变量产生观测，其观测方程为抽象的 $$h$$ ，那么可以写为：
+前面介绍的是ESKF的运动过程，现在我们来考虑更新过程。假设一个抽象的传感器能够对状态变量产生观测，其观测方程为抽象的 $h$ ，那么可以写为：
+
 $$\boldsymbol{z} = h(\boldsymbol{x}) + \boldsymbol{v}, \quad \boldsymbol{v} \sim \mathcal{N}(\boldsymbol{0}, \boldsymbol{V})$$
-其中 $$\boldsymbol{z}$$ 为观测数据， $$\boldsymbol{v}$$为观测噪声， $$\boldsymbol{V}$$为该噪声的协方差矩阵。由于状态变量里已经有 $$\boldsymbol{R}$$ 了，这里我们换个符号。
-在传统EKF中，我们可以直观对观测方程线性化，求出观测方程相对于状态变量的雅可比矩阵，进而更新卡尔曼滤波器。而在ESKF中，我们当前拥有名义状态 $$\boldsymbol{x}$$ 的估计以及误差状态 $$\delta\boldsymbol{x}$$ 的估计，且希望更新的是误差状态，因此要计算观测方程相比于误差状态的雅可比矩阵：
+
+其中 $\boldsymbol{z}$ 为观测数据， $\boldsymbol{v}$为观测噪声， $\boldsymbol{V}$为该噪声的协方差矩阵。由于状态变量里已经有 $\boldsymbol{R}$ 了，这里我们换个符号。
+在传统EKF中，我们可以直观对观测方程线性化，求出观测方程相对于状态变量的雅可比矩阵，进而更新卡尔曼滤波器。而在ESKF中，我们当前拥有名义状态 $\boldsymbol{x}$ 的估计以及误差状态 $\delta\boldsymbol{x}$ 的估计，且希望更新的是误差状态，因此要计算观测方程相比于误差状态的雅可比矩阵：
+
 $$\boldsymbol{H} = \frac{\partial h}{\partial \delta \boldsymbol{x}}
 $$
+
 然后再计算卡尔曼增益，进而计算误差状态的更新过程：
+
 $$\boldsymbol{K} = \boldsymbol{P}_{\text{pred}} \boldsymbol{H}^T (\boldsymbol{H} \boldsymbol{P}_{\text{pred}} \boldsymbol{H}^T + \boldsymbol{V})^{-1}
 \\
-
-
 \delta \boldsymbol{x} = \boldsymbol{K}(\boldsymbol{z} - h(\hat{\boldsymbol{x}}))
 \\
 \boldsymbol{P} = (\boldsymbol{I} - \boldsymbol{K} \boldsymbol{H}) \boldsymbol{P}_{\text{pred}}
 \\
+$$
+
+其中 $\boldsymbol{K}$ 为卡尔曼增益，$\boldsymbol{P}_{pred}$ 为预测的协方差矩阵，最后的 $\boldsymbol{P}$为修正后的协方差矩阵。这里的 $\boldsymbol{H}$的计算可以通过链式法则来生成：
+
+$$\boldsymbol{H} = \frac{\partial h}{\partial \boldsymbol{x}} \frac{\partial \boldsymbol{x}}{\partial \delta \boldsymbol{x}}$$
+
+其中第一项只需对观测方程进行线性化，第二项，根据我们之前对状态变量的定义，可以得到：
+
+$$\frac{\partial \boldsymbol{x}}{\partial \delta \boldsymbol{x}} = \text{diag}\left(\boldsymbol{I}_3, \boldsymbol{I}_3, \frac{\partial \log(\boldsymbol{R} \exp(\delta\boldsymbol{\theta}))}{\partial \delta \boldsymbol{\theta}}, \boldsymbol{I}_3, \boldsymbol{I}_3, \boldsymbol{I}_3\right)$$
+
+其他几种都是平凡的，只有旋转部分，因为 $\delta \boldsymbol \theta$ 定义为 $\boldsymbol R$ 的右乘，我们用右乘的BCH即可：
 
 $$
-其中 $$\boldsymbol{K}$$ 为卡尔曼增益，$$\boldsymbol{P}_{pred}$$ 为预测的协方差矩阵，最后的 $$\boldsymbol{P}$$为修正后的协方差矩阵。这里的 $$\boldsymbol{H}$$的计算可以通过链式法则来生成：
-$$\boldsymbol{H} = \frac{\partial h}{\partial \boldsymbol{x}} \frac{\partial \boldsymbol{x}}{\partial \delta \boldsymbol{x}}$$
-其中第一项只需对观测方程进行线性化，第二项，根据我们之前对状态变量的定义，可以得到：
-$$\frac{\partial \boldsymbol{x}}{\partial \delta \boldsymbol{x}} = \text{diag}\left(\boldsymbol{I}_3, \boldsymbol{I}_3, \frac{\partial \log(\boldsymbol{R} \exp(\delta\boldsymbol{\theta}))}{\partial \delta \boldsymbol{\theta}}, \boldsymbol{I}_3, \boldsymbol{I}_3, \boldsymbol{I}_3\right)$$
-其他几种都是平凡的，只有旋转部分，因为 $$\delta \boldsymbol \theta$$ 定义为 $$\boldsymbol R$$ 的右乘，我们用右乘的BCH即可：
-$$
 \frac{\partial \log(\boldsymbol{R} \exp(\delta\boldsymbol{\theta}))}{\partial \delta \boldsymbol{\theta}}\bigg|_{\delta\boldsymbol{\theta}=0} = \boldsymbol{J}_r^{-1}(\log(\boldsymbol{R}))$$
+
 最后，我们可以给每个变量加下标  k，表示在 k 时刻进行状态估计。
 ESKF的误差状态后续处理
 在经过预测和更新过程之后，我们修正了误差状态的估计。接下来，只需把误差状态归入名义状态，然后重置ESKF即可。归入部分可以简单地写为：
+
 $$\begin{split}
 \boldsymbol{p}_{k+1} &= \boldsymbol{p}_k + \delta\boldsymbol{p}_k \\
 \boldsymbol{v}_{k+1} &= \boldsymbol{v}_k + \delta\boldsymbol{v}_k \\
@@ -1225,26 +1479,43 @@ $$\begin{split}
 \boldsymbol{b}_{a,k+1} &= \boldsymbol{b}_{a,k} + \delta\boldsymbol{b}_{a,k} \\
 \boldsymbol{g}_{k+1} &= \boldsymbol{g}_k + \delta\boldsymbol{g}_k
 \end{split}$$
+
 有些文献如FAST-LIO里也会定义为广义的状态变量加法
+
 $$\boldsymbol{x}_{k+1} = \boldsymbol{x}_k \oplus \delta\boldsymbol{x}_k\\
 \boldsymbol{x}_{k+1} = \boldsymbol{x}_k \boxplus \delta\boldsymbol{x}_k$$
+
 这种写法可以简化整体的表达式。不过，如果公式里出现太多的广义加减法，可能让人不好马上辨认它们的具体含义，所以本书还是倾向于将各状态分别写开，或者直接用加法而非广义加法符号。
 ESKF的重置分为均值部分和协方差部分。均值部分可以简单地实现为：
+
 $$\delta \boldsymbol x=0$$
-由于均值被重置了，之前我们描述的是关于 $$\boldsymbol x_k$$ 切空间中的协方差，而现在描述的是 $$\boldsymbol x_{k+1}$$ 中的协方差。这次重置会带来一些微小的差异，主要影响旋转部分。事实上，在重置前，卡尔曼滤波器刻画了 $$\boldsymbol x_{pred}$$ 切空间处的一个高斯分布 $$\mathcal{N}(\delta \boldsymbol x,\boldsymbol P)$$，而重置之后，应该刻画 $$\boldsymbol{x}_{pred} \boxplus \delta\boldsymbol{x}_k$$ 处的一个 $$\mathcal{N}(0,\boldsymbol P_{reset})$$。
-我们设重置前的名义旋转估计为 $$\boldsymbol R_k$$，误差状态为 $$\delta \boldsymbol \theta$$，卡尔曼滤波器的增量计算结果为 $$\delta \boldsymbol \theta_k$$，注意此处 $$\delta \boldsymbol \theta_k$$ 是已知的，而 $$\delta \boldsymbol \theta$$ 是一个随机变量。重置之后的名义旋转部分为 $$\boldsymbol R_k \text{Exp}(\delta\boldsymbol{\theta}_k) = \boldsymbol{R}^+$$，误差状态为 $$\delta\boldsymbol{\theta}^+$$。由于误差状态被重置了，显然此时 $$\delta\boldsymbol{\theta}^+=0$$。但我们关心的并不是它们直接的取值，而是 $$\delta\boldsymbol{\theta}^+$$ 与 $$\delta\boldsymbol{\theta}$$ 的线性化关系。把实际的重置过程写出来：
+
+由于均值被重置了，之前我们描述的是关于 $\boldsymbol x_k$ 切空间中的协方差，而现在描述的是 $\boldsymbol x_{k+1}$ 中的协方差。这次重置会带来一些微小的差异，主要影响旋转部分。事实上，在重置前，卡尔曼滤波器刻画了 $\boldsymbol x_{pred}$ 切空间处的一个高斯分布 $\mathcal{N}(\delta \boldsymbol x,\boldsymbol P)$，而重置之后，应该刻画 $\boldsymbol{x}_{pred} \boxplus \delta\boldsymbol{x}_k$ 处的一个 $\mathcal{N}(0,\boldsymbol P_{reset})$。
+我们设重置前的名义旋转估计为 $\boldsymbol R_k$，误差状态为 $\delta \boldsymbol \theta$，卡尔曼滤波器的增量计算结果为 $\delta \boldsymbol \theta_k$，注意此处 $\delta \boldsymbol \theta_k$ 是已知的，而 $\delta \boldsymbol \theta$ 是一个随机变量。重置之后的名义旋转部分为 $\boldsymbol R_k \text{Exp}(\delta\boldsymbol{\theta}_k) = \boldsymbol{R}^+$，误差状态为 $\delta\boldsymbol{\theta}^+$。由于误差状态被重置了，显然此时 $\delta\boldsymbol{\theta}^+=0$。但我们关心的并不是它们直接的取值，而是 $\delta\boldsymbol{\theta}^+$ 与 $\delta\boldsymbol{\theta}$ 的线性化关系。把实际的重置过程写出来：
+
 $$\boldsymbol{R}^+\text{Exp}(\delta\boldsymbol{\theta}^+) = \boldsymbol{R}_k \text{Exp}(\delta\boldsymbol{\theta}_k) \text{Exp}(\delta\boldsymbol{\theta}^+) = \boldsymbol{R}_k \text{Exp}(\delta\boldsymbol{\theta})$$
+
 不难得到
+
 $$\text{Exp}(\delta\boldsymbol{\theta}^+) = \text{Exp}(-\delta\boldsymbol{\theta}_k) \text{Exp}(\delta\boldsymbol{\theta})$$
-注意这里 $$\delta \boldsymbol \theta$$ 为小量，利用线性化后的BCH公式，可以得到：
+
+注意这里 $\delta \boldsymbol \theta$ 为小量，利用线性化后的BCH公式，可以得到：
+
 $$\delta\boldsymbol{\theta}^+ = -\delta\boldsymbol{\theta}_k + \delta\boldsymbol{\theta} - \frac{1}{2} \delta\boldsymbol{\theta}_k^\wedge \delta\boldsymbol{\theta} + o((\delta\boldsymbol{\theta})^2)$$
+
 于是有
+
 $$\frac{\partial \delta\boldsymbol{\theta}^+}{\partial \delta\boldsymbol{\theta}} \approx \boldsymbol{I} - \frac{1}{2} \delta\boldsymbol{\theta}_k^\wedge$$
-该式表明重置前后的误差状态相差一个旋转方面的小雅可比矩阵，我们记作 $$\boldsymbol{J}_\theta = \boldsymbol{I} - \frac{1}{2} \delta\boldsymbol{\theta}_k^\wedge$$ 。把这个小雅可比阵放到整个状态变量维度下，并保持其他部分为单位矩阵，可以得到一个完整的雅可比阵：
+
+该式表明重置前后的误差状态相差一个旋转方面的小雅可比矩阵，我们记作 $\boldsymbol{J}_\theta = \boldsymbol{I} - \frac{1}{2} \delta\boldsymbol{\theta}_k^\wedge$ 。把这个小雅可比阵放到整个状态变量维度下，并保持其他部分为单位矩阵，可以得到一个完整的雅可比阵：
+
 $$\boldsymbol{J}_k = \text{diag}(\boldsymbol{I}_3, \boldsymbol{I}_3, \boldsymbol{J}_\theta, \boldsymbol{I}_3, \boldsymbol{I}_3, \boldsymbol{I}_3)$$
+
 因此，在把误差状态的均值归零同时，它们的协方差矩阵也应该进行线性变换：
+
 $$\boldsymbol{P}_{\text{reset}} = \boldsymbol{J}_k \boldsymbol{P} \boldsymbol{J}_k^T$$
-不过，由于 $$\delta \boldsymbol \theta_k$$ 并不大，这里的 $$\boldsymbol J_k$$ 仍然十分接近于单位矩阵，所以大部分材料里并不处理这一项，而是直接把前面估计的 $$\boldsymbol P$$ 阵作为下一时刻的起点。但本书仍然要介绍这一点，并且会在后面第9章中继续讨论这个问题。该问题实际意义是做了切空间投影，即把一个切空间中的高斯分布投影到另一个切空间中。在ESKF中，两者没有明显差异，但后文的迭代卡尔曼滤波器还牵扯到多次切空间的变换，我们必须在此加以介绍。
+
+不过，由于 $\delta \boldsymbol \theta_k$ 并不大，这里的 $\boldsymbol J_k$ 仍然十分接近于单位矩阵，所以大部分材料里并不处理这一项，而是直接把前面估计的 $\boldsymbol P$ 阵作为下一时刻的起点。但本书仍然要介绍这一点，并且会在后面第9章中继续讨论这个问题。该问题实际意义是做了切空间投影，即把一个切空间中的高斯分布投影到另一个切空间中。在ESKF中，两者没有明显差异，但后文的迭代卡尔曼滤波器还牵扯到多次切空间的变换，我们必须在此加以介绍。
 非线性优化
 在SLAM中，经常性会碰到各种优化问题，比如说给一个目标函数，求出使其最小化的解，并且这个目标函数往往是非线性的
 当然，目前很多库，比如说Ceres、g2o还有gtsam等库都可以实现非线性优化具体求解操作，我们只需要把待求解函数输入即可
@@ -1285,13 +1556,16 @@ $$\boldsymbol{P}_{\text{reset}} = \boldsymbol{J}_k \boldsymbol{P} \boldsymbol{J}
 先考虑特殊情况，也就是没有运动测量的传感器，只有观测数据
 [图片]
 数学定义
-对于一个函数 $$ f : F \subseteq R^n $$
-- 连续：$$f$$ 在每一点都连续
-- 连续可微：在每一点 $$ x \in F $$ 处，每一个偏导数 $$ \frac{\partial f(x)}{\partial x_i} $$ 存在且连续
-- 二次连续可微：在每一点 $$ x \in F $$ 处，每一个偏导数 $$ \frac{\partial^2 f(x)}{\partial x_i \partial y_j} $$ 存在且连续
+对于一个函数 $ f : F \subseteq R^n $
+
+- 连续：$f$ 在每一点都连续
+- 连续可微：在每一点 $ x \in F $ 处，每一个偏导数 $ \frac{\partial f(x)}{\partial x_i} $ 存在且连续
+- 二次连续可微：在每一点 $ x \in F $ 处，每一个偏导数 $ \frac{\partial^2 f(x)}{\partial x_i \partial y_j} $ 存在且连续
 如果函数为一阶连续可微的，则
-- 梯度(grad)：$$ \nabla f(x) = \left( \frac{\partial f(x)}{\partial x_1}, \frac{\partial f(x)}{\partial x_2}, \cdots, \frac{\partial f(x)}{\partial x_n} \right)^T $$
+- 梯度(grad)：$ \nabla f(x) = \left( \frac{\partial f(x)}{\partial x_1}, \frac{\partial f(x)}{\partial x_2}, \cdots, \frac{\partial f(x)}{\partial x_n} \right)^T $
+
 - 海森阵(Hessian)，其总为对称阵：
+
 $$\nabla^2 f(x) =
 \begin{pmatrix}
 \frac{\partial^2 f(x)}{\partial x_1^2} & \frac{\partial f^2(x)}{\partial x_1 \partial x_2} & \cdots & \frac{\partial^2 f(x)}{\partial x_1 \partial x_n} \\[0.5em]
@@ -1300,12 +1574,16 @@ $$\nabla^2 f(x) =
 \frac{\partial^2 f(x)}{\partial x_n \partial x_1} & \frac{\partial f^2(x)}{\partial x_n \partial x_2} & \cdots & \frac{\partial^2 f(x)}{\partial x_n \partial x_n}
 \end{pmatrix}_{n \times n}
 = \left( \frac{\partial^2 f(x)}{\partial x_i \partial x_j} \right)_{n \times n}$$
+
 > **注**：标量函数的 Hessian 矩阵始终是 $n \times n$ 的方阵。
 
-二次函数 $$f(x) = \frac{1}{2}x^TAx + b^Tx + c$$ ，其中 $$ A \in R^{n \times n} $$（对称矩阵），$$ b \in R^n $$，$$ c \in R$$（标量），则有
+二次函数 $f(x) = \frac{1}{2}x^TAx + b^Tx + c$ ，其中 $ A \in R^{n \times n} $（对称矩阵），$ b \in R^n $，$ c \in R$（标量），则有
+
 $$\nabla f(x) = Ax + b\\[0.5em]
 \nabla^2 f(x) = A\\$$
-- 若 $$ F $$ 为多变量矩阵，则其一阶导雅可比阵(Jacobi)为
+
+- 若 $ F $ 为多变量矩阵，则其一阶导雅可比阵(Jacobi)为
+
 $$F'(x) =
 \begin{pmatrix}
 \frac{\partial F_1(x)}{\partial x_1} & \frac{\partial F_1(x)}{\partial x_2} & \cdots & \frac{\partial F_1(x)}{\partial x_n} \\[0.5em]
@@ -1314,7 +1592,9 @@ $$F'(x) =
 \frac{\partial F_n(x)}{\partial x_1} & \frac{\partial F_n(x)}{\partial x_2} & \cdots & \frac{\partial F_n(x)}{\partial x_n}
 \end{pmatrix}_{m \times n}
 = \left( \frac{\partial F_i(x)}{\partial x_j} \right)_{m \times n}$$
-如多变量函数 $$ F(x) = Ax $$ 则其 Jacobi 为 $$ F'(x) = A $$
+
+如多变量函数 $ F(x) = Ax $ 则其 Jacobi 为 $ F'(x) = A $
+
 先验、后验、似然
 后验（知果求因）
 假设，隔壁小哥要去15公里外的一个公园，他可以选择步行走路，骑自行车或者开车，然后通过其中一种方式花了一段时间到达公园。这件事中采用哪种交通方式是因，花了多长时间是果。
@@ -3763,9 +4043,11 @@ $$
 $$
 d_{AB}^2 = s_1^2 + s_2^2 - 2 s_1 s_2 \cos \alpha
 $$
+
 $$
 d_{BC}^2 = s_2^2 + s_3^2 - 2 s_2 s_3 \cos \beta
 $$
+
 $$
 d_{AC}^2 = s_1^2 + s_3^2 - 2 s_1 s_3 \cos \gamma
 $$
@@ -3838,6 +4120,7 @@ $$
 $$
 \sum_{j=1}^{4} \alpha_{ij} f_u x_j^c + \alpha_{ij}(c_u - u_i) z_j^c = 0
 $$
+
 $$
 \sum_{j=1}^{4} \alpha_{ij} f_v y_j^c + \alpha_{ij}(c_v - v_i) z_j^c = 0
 $$
@@ -3894,6 +4177,7 @@ $$
 $$
 u_i (\mathbf{p}_3^T \tilde{P}_i) - \mathbf{p}_1^T \tilde{P}_i = 0
 $$
+
 $$
 v_i (\mathbf{p}_3^T \tilde{P}_i) - \mathbf{p}_2^T \tilde{P}_i = 0
 $$
@@ -4076,6 +4360,7 @@ $$
 $$
 E = \sum_i \| (q_i - \bar{q}) - R(p_i - \bar{p}) - (t + R\bar{p} - \bar{q}) \|^2
 $$
+
 $$
 = \sum_i \| \bar{q}_i - R\bar{p}_i \|^2 + n \| t - (\bar{q} - R\bar{p}) \|^2
 $$

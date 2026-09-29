@@ -1,24 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <defs>
-    <radialGradient id="rg-bg" cx="34%" cy="26%" r="88%">
-      <stop offset="0%" stop-color="#8b5cf6"/>
-      <stop offset="55%" stop-color="#5b2fbf"/>
-      <stop offset="100%" stop-color="#241245"/>
-    </radialGradient>
-    <linearGradient id="rg-bolt" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#fff6b0"/>
-      <stop offset="100%" stop-color="#e3b341"/>
-    </linearGradient>
-    <linearGradient id="rg-petal" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#ffd7e8"/>
-      <stop offset="100%" stop-color="#f0629b"/>
-    </linearGradient>
-  </defs>
-  <circle cx="32" cy="32" r="30" fill="url(#rg-bg)"/>
-  <circle cx="32" cy="32" r="28.5" fill="none" stroke="#e3b341" stroke-width="2" opacity="0.9"/>
-  <path d="M37 11 L21 37 h9 l-3 16 16 -26 h-9 z" fill="url(#rg-bolt)"/>
-  <g fill="url(#rg-petal)">
-    <path d="M48 12 c5 5 5 12 0 16 c-5 -4 -5 -11 0 -16 z" transform="rotate(28 48 20)"/>
-    <path d="M15 39 c5 5 5 12 0 16 c-5 -4 -5 -11 0 -16 z" transform="rotate(-152 15 47)"/>
+  <!-- Sakura Robotics Lab favicon：深紫圆角底 + 樱包雷标 -->
+  <rect width="64" height="64" rx="14" fill="#292530"/>
+  <path d="M32 7 A25 25 0 1 0 53.5 21.5" fill="none" stroke="#B39ADE" stroke-width="4.6" stroke-linecap="round"/>
+  <g fill="#DE9FBA">
+    <ellipse cx="32" cy="14" rx="5" ry="7.4"/>
+    <ellipse cx="32" cy="14" rx="5" ry="7.4" transform="rotate(72 32 31)"/>
+    <ellipse cx="32" cy="14" rx="5" ry="7.4" transform="rotate(144 32 31)"/>
+    <ellipse cx="32" cy="14" rx="5" ry="7.4" transform="rotate(216 32 31)"/>
+    <ellipse cx="32" cy="14" rx="5" ry="7.4" transform="rotate(288 32 31)"/>
   </g>
+  <circle cx="32" cy="31" r="8.4" fill="#24202B" stroke="#C9A96E" stroke-width="1.8"/>
+  <polygon points="32,23.6 37.2,31 32,38.4 26.8,31" fill="#A88BD8"/>
 </svg>

@@ -208,6 +208,7 @@ Lyapunov 的博士论文 "The General Problem of the Stability of Motion"（1892
 考虑自治系统 $\dot x = f(x)$，其中 $f:\mathcal{D} \to \mathbb{R}^n$ 在原点局部 Lipschitz 且 $f(0) = 0$（原点是平衡点）。
 
 **定义 7.3.1（Lyapunov 稳定，S）**：原点称为 Lyapunov 意义下稳定的，若对每个 $\varepsilon > 0$，存在 $\delta(\varepsilon) > 0$ 使得
+
 $$\|x(0)\| < \delta \quad \Rightarrow \quad \|x(t)\| < \varepsilon, \quad \forall t \ge 0.$$
 
 **物理含义**：初始状态足够接近原点时，轨迹永远不会离开任意给定的 $\varepsilon$ 邻域。轨迹被"困住"了，但不一定回到原点——可以一直绕圈。
@@ -221,6 +222,7 @@ $$\|x(0)\| < \delta \quad \Rightarrow \quad \|x(t)\| < \varepsilon, \quad \foral
 反事实：如果收敛但不 Lyapunov 稳定会怎样？考虑系统轨迹先"暴冲"到很远再回来——这在工程中是灾难性的（机器人先摔倒再站起来不算"稳定控制"）。
 
 **定义 7.3.3（指数稳定，ES）**：原点称为指数稳定的，若存在常数 $k > 0$, $\lambda > 0$, $\delta > 0$ 使得
+
 $$\|x(0)\| < \delta \quad \Rightarrow \quad \|x(t)\| \le k\|x(0)\| e^{-\lambda t}, \quad \forall t \ge 0.$$
 
 **定义 7.3.4（全局渐近稳定，GAS）**：原点称为全局渐近稳定的，若：
@@ -280,6 +282,7 @@ Lyapunov 直接法的核心思想可以用一句话概括：**如果你能找到
 若进一步满足 $V(x) \to \infty$ 当 $\|x\| \to \infty$（radially unbounded），则称 $V$ 为全局 Lyapunov 函数候选。
 
 **定义 7.4.2（Lyapunov 导数）**：$V$ 沿系统 $\dot x = f(x)$ 的轨迹导数为
+
 $$\dot V(x) = \nabla V(x) \cdot f(x) = \sum_{i=1}^n \frac{\partial V}{\partial x_i} f_i(x).$$
 
 注意 $\dot V$ 是状态 $x$ 的函数，**不需要知道轨迹** $x(t)$——这正是直接法的力量所在。
@@ -307,7 +310,9 @@ $$\dot V(x) = \nabla V(x) \cdot f(x) = \sum_{i=1}^n \frac{\partial V}{\partial x
 取 $c > 0$ 足够小，使得 sublevel set $\Omega_c = \{x \in \mathcal{D}: V(x) \le c\}$ 是紧集且包含在 $\mathcal{D}$ 内。这样的 $c$ 存在是因为：$V$ 连续、$V(0) = 0$、$V(x) > 0$ 对 $x \ne 0$，所以当 $c$ 足够小时，$\Omega_c$ 是原点的一个小紧邻域。
 
 由条件 (b) $\dot V(x) \le 0$，沿系统轨迹 $V(x(t))$ 是单调不增的。因此，若 $x(0) \in \Omega_c$，则
+
 $$V(x(t)) \le V(x(0)) \le c \quad \Rightarrow \quad x(t) \in \Omega_c, \quad \forall t \ge 0.$$
+
 即 $\Omega_c$ 是**正不变集**——轨迹进入后永远不会离开。
 
 **为什么这一步必要？** 正不变性是稳定性的几何本质。没有它，轨迹可能先离开再回来，违反 Lyapunov 稳定的"永远在 $\varepsilon$ 内"要求。
@@ -317,13 +322,17 @@ $$V(x(t)) \le V(x(0)) \le c \quad \Rightarrow \quad x(t) \in \Omega_c, \quad \fo
 给定任意 $\varepsilon > 0$（小到 $B_\varepsilon = \{x: \|x\| < \varepsilon\} \subset \mathcal{D}$）。
 
 在球面 $S_\varepsilon = \{x: \|x\| = \varepsilon\}$ 上，$V$ 是正值连续函数。由连续函数在紧集上取得最小值（Weierstrass 定理）：
+
 $$m = \min_{\|x\| = \varepsilon} V(x) > 0.$$
+
 $m > 0$ 是因为 $V$ 正定（球面上 $x \ne 0$，故 $V > 0$）。
 
 **Step 3：利用 $V(0) = 0$ 和连续性选取 $\delta$。**
 
 由 $V(0) = 0$ 和 $V$ 的连续性，存在 $\delta > 0$ 使得
+
 $$\|x\| < \delta \quad \Rightarrow \quad V(x) < m.$$
+
 取这样的 $\delta$（并确保 $\delta \le \varepsilon$）。
 
 **Step 4：完成稳定性证明。**
@@ -347,6 +356,7 @@ $$\|x\| < \delta \quad \Rightarrow \quad V(x) < m.$$
 沿轨迹，只要 $x(t) \ne 0$，就有 $\frac{d}{dt}V(x(t)) = \dot V(x(t)) < 0$。因此 $V(x(t))$ 严格递减。
 
 又 $V(x(t)) \ge 0$（正定性），单调递减有下界的序列必有极限：
+
 $$\lim_{t \to \infty} V(x(t)) = c_0 \ge 0.$$
 
 **Step 6：反证 $c_0 = 0$。**
@@ -368,7 +378,9 @@ $$\lim_{t \to \infty} V(x(t)) = c_0 \ge 0.$$
 **Step 7：由 $V$ 正定性推出 $x(t) \to 0$。**
 
 $V(x(t)) \to 0$ 结合 $V(x) \ge \alpha_1(\|x\|)$（$\alpha_1 \in \mathcal{K}$，正定性的比较函数刻画）给出
+
 $$\alpha_1(\|x(t)\|) \le V(x(t)) \to 0 \quad \Rightarrow \quad \|x(t)\| \to 0.$$
+
 $\blacksquare$
 
 ### 证明中每一步的必要性——反例表
@@ -395,7 +407,9 @@ Radially unbounded 等价于存在 $\alpha_1 \in \mathcal{K}_\infty$ 使 $V(x) \
 ⚠️ **编程陷阱：计算 $\dot V$ 时忘记链式法则**
 
 $\dot V$ 不是对 $t$ 直接求导。正确计算是：
+
 $$\dot V = \nabla V \cdot f = \frac{\partial V}{\partial x_1} f_1 + \frac{\partial V}{\partial x_2} f_2 + \cdots$$
+
 这是沿向量场 $f$ 的 Lie 导数。新手常犯的错误是把 $V = x_1^2 + x_2^2$ 直接"对 $t$ 求导"得到 $2x_1 + 2x_2$（这是对 $x$ 求梯度，不是 $\dot V$）。
 
 ⚠️ **概念误区：$\dot V = 0$ 意味着系统不动**
@@ -421,7 +435,9 @@ $\dot V(x) = 0$ 不意味着 $\dot x = 0$！它只意味着轨迹在 $V$ 的等�
 在实际机器人系统中，构造满足 $\dot V < 0$（严格负定）的 Lyapunov 函数**极其困难**。最典型的情形：
 
 **机械系统的总能量** $V = T + U$（动能 + 势能）沿轨迹的变化率是
+
 $$\dot V = -\text{耗散功率} \le 0.$$
+
 耗散功率来自摩擦、阻尼等，但它们**只在运动时**耗散能量。当 $\dot q = 0$（系统静止）时，耗散为零——所以 $\dot V = 0$ 不仅在原点成立，在整个 $\{q: \dot q = 0\}$ 集合上都成立！
 
 这意味着 $\dot V$ 只是**半负定**（$\dot V \le 0$），不是严格负定（$\dot V < 0$）。按照直接法，我们只能得到 Lyapunov 稳定——无法判断系统是否最终收敛到平衡点。
@@ -431,8 +447,11 @@ $$\dot V = -\text{耗散功率} \le 0.$$
 ### LaSalle 不变集原理的陈述（Khalil 3ed Thm 4.4）
 
 **定理 7.5.1（LaSalle 不变性原理）**：设 $\Omega \subset \mathcal{D}$ 是**紧正不变集**。$V:\Omega \to \mathbb{R}$ 连续可微且 $\dot V(x) \le 0$ 对 $x \in \Omega$。定义
+
 $$E = \{x \in \Omega: \dot V(x) = 0\},$$
+
 令 $M$ 为 $E$ 中的**最大不变集**。则由 $\Omega$ 内出发的每条轨迹随 $t \to \infty$ 趋向 $M$：
+
 $$x(0) \in \Omega \quad \Rightarrow \quad x(t) \to M \quad (t \to \infty).$$
 
 **推论**：若 $M = \{0\}$（$E$ 中唯一的不变集只有原点），则原点是渐近稳定的。若进一步 $V$ radially unbounded 且 $\Omega = \mathbb{R}^n$，则 GAS。
@@ -442,25 +461,33 @@ $$x(0) \in \Omega \quad \Rightarrow \quad x(t) \to M \quad (t \to \infty).$$
 **Step 1：$V(x(t))$ 单调不增有极限。**
 
 $\dot V \le 0$ 意味着 $V(x(t))$ 是 $t$ 的单调不增函数。又 $V$ 在紧集 $\Omega$ 上有下界（连续函数在紧集上有最小值），所以
+
 $$c_0 = \lim_{t \to \infty} V(x(t))$$
+
 存在。
 
 **Step 2：$\omega$-极限集非空、紧、不变、在 $\Omega$ 内。**
 
 轨迹 $\{x(t): t \ge 0\}$ 在紧集 $\Omega$ 内，由 Bolzano-Weierstrass 定理，$\omega$-极限集
+
 $$\omega(x_0) = \{y: \exists t_n \to \infty, x(t_n) \to y\}$$
+
 非空且紧。$\omega$-极限集的标准性质保证它是不变集（从 $\omega(x_0)$ 中任一点出发的轨迹永远在 $\omega(x_0)$ 内）。
 
 **Step 3：$V$ 在 $\omega$-极限集上为常数。**
 
 对 $y \in \omega(x_0)$，取 $t_n \to \infty$ 使 $x(t_n) \to y$。由 $V$ 连续性：
+
 $$V(y) = \lim_{n \to \infty} V(x(t_n)) = c_0.$$
+
 因此 $V$ 在整个 $\omega(x_0)$ 上恒等于 $c_0$。
 
 **Step 4：$\omega(x_0) \subset E$。**
 
 由于 $\omega(x_0)$ 是不变集且 $V$ 在其上为常数 $c_0$，沿 $\omega(x_0)$ 中的轨迹 $V$ 保持不变，即
+
 $$\dot V(y) = 0, \quad \forall y \in \omega(x_0).$$
+
 因此 $\omega(x_0) \subset E$。
 
 **Step 5：$\omega(x_0) \subset M$。**
@@ -537,20 +564,29 @@ LaSalle 原理需要**紧正不变集** $\Omega$。如果不能构造全局的�
 ### 指数稳定的 Lyapunov 表征（Khalil 3ed Thm 4.10）
 
 **定理 7.6.1**：原点指数稳定当且仅当存在 $V:\mathcal{D} \to \mathbb{R}$ 及常数 $c_1, c_2, c_3 > 0$ 使得
+
 $$c_1\|x\|^2 \le V(x) \le c_2\|x\|^2 \qquad (\text{二次型上下夹})$$
+
 $$\dot V(x) \le -c_3\|x\|^2. \qquad (\text{二次衰减})$$
 
 **推导收敛速率**：由上下夹 $V \le c_2\|x\|^2$ 和 $\dot V \le -c_3\|x\|^2 \le -(c_3/c_2)V$，得
+
 $$V(x(t)) \le V(x(0)) e^{-(c_3/c_2)t}.$$
+
 再用下界 $c_1\|x\|^2 \le V$：
+
 $$\|x(t)\| \le \sqrt{\frac{c_2}{c_1}} \|x(0)\| e^{-(c_3/2c_2)t}.$$
+
 即 $k = \sqrt{c_2/c_1}$, $\lambda = c_3/(2c_2)$。
 
 ### Lyapunov 方程与线性系统
 
 对线性系统 $\dot x = Ax$，取 $V = x^\top P x$（$P = P^\top \succ 0$），则
+
 $$\dot V = x^\top (A^\top P + PA) x.$$
+
 要使 $\dot V = -x^\top Q x$（$Q \succ 0$），需要
+
 $$A^\top P + PA = -Q. \qquad (\text{Lyapunov 方程})$$
 
 **定理 7.6.2（Lyapunov 方程定理）**：$A$ 是 Hurwitz 矩阵（所有特征值严格负实部）**当且仅当**对任意 $Q = Q^\top \succ 0$，Lyapunov 方程 $A^\top P + PA = -Q$ 存在唯一解 $P = P^\top \succ 0$。
@@ -558,7 +594,9 @@ $$A^\top P + PA = -Q. \qquad (\text{Lyapunov 方程})$$
 **证明方向 $\Leftarrow$**：若存在 $P \succ 0$ 满足方程，则 $V = x^\top Px$ 是 Lyapunov 函数且 $\dot V = -x^\top Qx < 0$，故 $A$ Hurwitz。
 
 **证明方向 $\Rightarrow$**：若 $A$ Hurwitz，可显式构造解
+
 $$P = \int_0^\infty e^{A^\top t} Q e^{At} dt.$$
+
 该积分收敛（因 $A$ Hurwitz 意味着 $e^{At}$ 指数衰减），容易验证它满足方程且正定。
 
 **与 LQR 的联系**：回顾专题 3.5（§3.5.4b）：Riccati 方程 $A^\top P + PA - PBR^{-1}B^\top P + Q = 0$ 是 Lyapunov 方程的非线性推广——多出的 $-PBR^{-1}B^\top P$ 项正是控制优化的"贡献"。当 $B = 0$（无控制输入）时 Riccati 退化为 Lyapunov 方程，这揭示了两者之间的层级关系（详见专题 3.5 表格：Sylvester → Lyapunov → Riccati）。反过来，LQR 的值函数 $V^* = x^\top P^\star x$（$P^\star$ 为 CARE 解）本身就是闭环系统 $\dot x = (A - BK^\star)x$ 的 Lyapunov 函数——Riccati 方程改写为 Lyapunov 形式后恰好给出 $\dot V^* = -x^\top(Q + K^{\star\top}RK^\star)x < 0$。这一联系在后续 CLF-QP（专题 3.8 §2.2）和 MPC 终端代价（Mayne-Rawlings 2000）中反复出现。
@@ -633,13 +671,19 @@ Lyapunov 直接法的逻辑极其优美——但它有一个根本性的实践�
 - 耗散机制存在（摩擦、阻尼）
 
 **标准模式**：对 $n$ 自由度机械系统 $M(q)\ddot q + C(q, \dot q)\dot q + g(q) = \tau_d$（$\tau_d$ 为耗散力矩），取
+
 $$V = \frac{1}{2}\dot q^\top M(q) \dot q + U(q),$$
+
 其中 $U(q)$ 是势能且在平衡点 $q^*$ 取最小值。
 
 若 $\tau_d = -D\dot q$（线性阻尼），则
+
 $$\dot V = \dot q^\top M \ddot q + \frac{1}{2}\dot q^\top \dot M \dot q + \dot q^\top \nabla U$$
+
 $$= \dot q^\top (-C\dot q - g + \tau_d) + \frac{1}{2}\dot q^\top \dot M \dot q + \dot q^\top g$$
+
 $$= \dot q^\top (\frac{1}{2}\dot M - C)\dot q + \dot q^\top \tau_d = -\dot q^\top D \dot q \le 0.$$
+
 这里用了关键性质 $\dot M - 2C$ 是反对称矩阵（来自拉格朗日力学的结构）。
 
 **局限**：能量法只给 $\dot V \le 0$ 半负定，需要 LaSalle 辅助判断渐近稳定。
@@ -659,7 +703,9 @@ $$= \dot q^\top (\frac{1}{2}\dot M - C)\dot q + \dot q^\top \tau_d = -\dot q^\to
 ### 方法三：Krasovskii 法 ⭐⭐
 
 **定理（Krasovskii）**：若 $f$ 连续可微且 Jacobian $J(x) = \partial f / \partial x$ 满足
+
 $$J(x) + J(x)^\top \preceq -\alpha I, \quad \alpha > 0, \quad \forall x \in \mathcal{D},$$
+
 则 $V = f(x)^\top f(x) = \|f(x)\|^2$ 是 Lyapunov 函数，原点全局渐近稳定。
 
 **直觉**：Krasovskii 法检查的是"向量场本身的长度是否递减"。如果 $J + J^\top$ 一致负定，那么系统的"速度" $\|f(x)\|$ 沿轨迹递减到零——即系统减速到平衡。
@@ -750,7 +796,9 @@ $$J(x) + J(x)^\top \preceq -\alpha I, \quad \alpha > 0, \quad \forall x \in \mat
 **原始出处**：J.L. Massera, "Contributions to stability theory", *Annals of Mathematics* 64(1):182-206, 1956。
 
 **证明思路**（仅概述）：利用 $\mathcal{KL}$ 衰减估计 $\|x(t)\| \le \beta(\|x_0\|, t)$ 构造
+
 $$V(x) = \int_0^\infty g(\|\phi(t; x)\|) dt,$$
+
 其中 $\phi(t; x)$ 是从 $x$ 出发的轨迹，$g$ 是适当选取的核函数（使积分收敛且 $V$ 光滑）。
 
 ### Kurzweil 逆定理（1956）
@@ -816,6 +864,7 @@ Teel-Praly 2000 和 Clarke-Ledyaev-Stern 1998 给出了非光滑系统（Filippo
 ### ISS 的形式化定义
 
 **定义 7.10.1（ISS，Sontag 1989）**：系统 $\dot x = f(x, u)$ 称为 ISS，若存在 $\beta \in \mathcal{KL}$, $\gamma \in \mathcal{K}$ 使得对所有可测有界输入 $u$ 和所有初值 $x_0$：
+
 $$\|x(t)\| \le \beta(\|x_0\|, t) + \gamma\left(\sup_{0 \le \tau \le t} \|u(\tau)\|\right).$$
 
 **物理含义**：
@@ -834,10 +883,13 @@ $$\|x(t)\| \le \beta(\|x_0\|, t) + \gamma\left(\sup_{0 \le \tau \le t} \|u(\tau)
 ### ISS-Lyapunov 函数
 
 **定义 7.10.3**：$V:\mathbb{R}^n \to \mathbb{R}$ 称为 ISS-Lyapunov 函数，若存在 $\alpha_1, \alpha_2 \in \mathcal{K}_\infty$, $\alpha_3 \in \mathcal{K}$, $\chi \in \mathcal{K}$ 使得：
+
 $$\alpha_1(\|x\|) \le V(x) \le \alpha_2(\|x\|) \qquad (\text{上下夹})$$
+
 $$\|x\| \ge \chi(\|u\|) \quad \Rightarrow \quad \dot V \le -\alpha_3(\|x\|) \qquad (\text{implication form})$$
 
 等价的**耗散型**表述：
+
 $$\dot V(x, u) \le -\alpha(\|x\|) + \sigma(\|u\|), \quad \alpha \in \mathcal{K}, \sigma \in \mathcal{K}.$$
 
 **直觉**：ISS-Lyapunov 函数说"只要状态足够大（$\|x\| \ge \chi(\|u\|)$），能量就在下降"。这意味着系统最终被拉入一个由扰动大小决定的球 $\|x\| \le \chi(\|u\|_\infty)$ 内。
@@ -852,11 +904,13 @@ $$\dot V(x, u) \le -\alpha(\|x\|) + \sigma(\|u\|), \quad \alpha \in \mathcal{K},
 **详细例子**：系统 $\dot x = -x^3 + xu$。
 
 取 $V = \frac{1}{2}x^2$。则
+
 $$\dot V = x(-x^3 + xu) = -x^4 + x^2 u.$$
 
 用 Young 不等式处理交叉项：$x^2 u \le x^2 |u| \le \frac{1}{2}x^4 + \frac{1}{2}u^2$。
 
 因此：
+
 $$\dot V \le -x^4 + \frac{1}{2}x^4 + \frac{1}{2}u^2 = -\frac{1}{2}x^4 + \frac{1}{2}u^2.$$
 
 这正是耗散型 ISS 条件，$\alpha(r) = \frac{1}{2}r^4$, $\sigma(r) = \frac{1}{2}r^2$。
@@ -866,9 +920,13 @@ ISS 增益：$\chi(r) = r^{1/2}$（由 $\alpha(\chi(r)) = \sigma(r)$ 解出）�
 ### ISS 小增益定理 ⭐⭐⭐
 
 **定理 7.10.4（Jiang-Teel-Praly 1994）**：考虑两个子系统的反馈互联：
+
 $$\Sigma_1: \dot x_1 = f_1(x_1, x_2), \qquad \Sigma_2: \dot x_2 = f_2(x_1, x_2),$$
+
 若 $\Sigma_1$ 以 $x_2$ 为输入是 ISS（增益 $\gamma_1$），$\Sigma_2$ 以 $x_1$ 为输入是 ISS（增益 $\gamma_2$），且**小增益条件**
+
 $$\gamma_1 \circ \gamma_2(r) < r, \quad \forall r > 0$$
+
 成立，则整体系统 $(\Sigma_1, \Sigma_2)$ 是 ISS。
 
 **物理直觉**：每个子系统的输出被另一个"放大"后反馈。如果合成增益 $\gamma_1 \circ \gamma_2$ 小于恒等函数（衰减），则扰动在循环中越来越小——系统整体稳定。这与经典线性小增益 $\|G_1\|_\infty \|G_2\|_\infty < 1$ 的精神完全一致（详见专题 3.6 §3.6.9 的 $H_\infty$ 小增益定理），但推广到非线性。线性版本中增益退化为 $L_\infty$ 增益 $\gamma_i(r)=\|G_i\|_\infty\cdot r$（附录 B.3 推导），条件变为 $\|G_1\|_\infty\|G_2\|_\infty<1$——这正是鲁棒控制中判断互联稳定性的核心工具。
@@ -884,6 +942,7 @@ $$\gamma_1 \circ \gamma_2(r) < r, \quad \forall r > 0$$
 ### iISS（积分 ISS）
 
 **定义**（Sontag 1998）：系统称为 iISS 若
+
 $$\|x(t)\| \le \beta(\|x_0\|, t) + \int_0^t \gamma(\|u(\tau)\|) d\tau.$$
 
 iISS 比 ISS 弱：ISS 要求有界输入 $\Rightarrow$ 有界状态，iISS 只要求积分有限的输入 $\Rightarrow$ 有界状态。对 bilinear 系统等场景更适用。
@@ -913,6 +972,7 @@ iISS 比 ISS 弱：ISS 要求有界输入 $\Rightarrow$ 有界状态，iISS 只�
 现代机器人控制几乎都是**层级结构**：高层规划器输出参考轨迹，底层控制器跟踪该轨迹。这种层级结构在数学上对应**级联系统**：
 
 $$\dot x_1 = f_1(x_1) \qquad (\text{上层，不受下层影响})$$
+
 $$\dot x_2 = f_2(x_1, x_2) \qquad (\text{下层，受上层驱动})$$
 
 核心问题：如果上层 $\dot x_1 = f_1(x_1)$ 单独是 GAS 的，下层 $\dot x_2 = f_2(0, x_2)$（在上层为零输入时）也是 GAS 的，整体系统是否 GAS？
@@ -958,7 +1018,9 @@ $$\dot x_2 = f_2(x_1, x_2) \qquad (\text{下层，受上层驱动})$$
 ### 反步法的核心思想
 
 考虑一个"可以从后往前逐步镇定"的系统结构：
+
 $$\dot x_1 = f_1(x_1) + g_1(x_1) x_2$$
+
 $$\dot x_2 = f_2(x_1, x_2) + g_2(x_1, x_2) u$$
 
 **关键观察**：如果 $x_2$ 是"虚拟控制"，能选择 $x_2 = \phi(x_1)$ 使第一个方程稳定，那么真正的控制 $u$ 只需让 $x_2$ 跟踪 $\phi(x_1)$。
@@ -968,6 +1030,7 @@ $$\dot x_2 = f_2(x_1, x_2) + g_2(x_1, x_2) u$$
 **Step 1：设计虚拟控制。**
 
 对第一个方程 $\dot x_1 = f_1(x_1) + g_1(x_1) x_2$，假设 $x_2$ 可以自由选择。找 $V_1(x_1)$ 和 $\phi(x_1)$（$\phi(0) = 0$）使得
+
 $$\dot V_1 = \nabla V_1 \cdot [f_1 + g_1 \phi] \le -W_1(x_1) < 0.$$
 
 **Step 2：定义误差变量。**
@@ -981,6 +1044,7 @@ $$V_2(x_1, z_2) = V_1(x_1) + \frac{1}{2} z_2^2.$$
 **Step 4：计算 $\dot V_2$ 并设计 $u$。**
 
 $$\dot V_2 = \dot V_1 + z_2 \dot z_2 = \dot V_1 + z_2(\dot x_2 - \dot\phi)$$
+
 $$= \dot V_1 + z_2(f_2 + g_2 u - \frac{\partial\phi}{\partial x_1}\dot x_1).$$
 
 选择 $u$ 使 $\dot V_2 \le -W_1(x_1) - W_2(z_2) < 0$。
@@ -996,8 +1060,11 @@ $$= \dot V_1 + z_2(f_2 + g_2 u - \frac{\partial\phi}{\partial x_1}\dot x_1).$$
 **Step 3**：$V_2 = x_1^2/2 + z_2^2/2$。
 
 **Step 4**：
+
 $$\dot V_2 = x_1 \dot x_1 + z_2 \dot z_2 = x_1 x_2 + z_2(u + c_1 x_2)$$
+
 $$= x_1(z_2 - c_1 x_1) + z_2(u + c_1(z_2 - c_1 x_1))$$
+
 $$= -c_1 x_1^2 + x_1 z_2 + z_2 u + c_1 z_2^2 - c_1^2 x_1 z_2.$$
 
 选 $u = -(1 - c_1^2)x_1 - (c_1 + c_2)z_2$（$c_2 > 0$）消去交叉项并使 $\dot V_2 = -c_1 x_1^2 - c_2 z_2^2 < 0$。
@@ -1020,6 +1087,7 @@ $$= -c_1 x_1^2 + x_1 z_2 + z_2 u + c_1 z_2^2 - c_1^2 x_1 z_2.$$
 ### 系统描述
 
 Van der Pol 振子：
+
 $$\dot x_1 = x_2, \qquad \dot x_2 = -x_1 + \mu(1 - x_1^2)x_2, \quad \mu > 0.$$
 
 当 $\mu > 0$ 时，该系统有一个不稳定的平衡点（原点）和一个稳定的极限环。这是非线性振荡的经典范例。
@@ -1027,6 +1095,7 @@ $$\dot x_1 = x_2, \qquad \dot x_2 = -x_1 + \mu(1 - x_1^2)x_2, \quad \mu > 0.$$
 ### 原点不稳定性的 Lyapunov 分析
 
 取 $V = \frac{1}{2}(x_1^2 + x_2^2)$。计算：
+
 $$\dot V = x_1 x_2 + x_2(-x_1 + \mu(1-x_1^2)x_2) = \mu(1-x_1^2)x_2^2.$$
 
 在 $|x_1| < 1$ 的带状区域内（且 $x_2 \ne 0$），$\dot V > 0$——能量在增加。
@@ -1054,33 +1123,43 @@ $$\dot V = x_1 x_2 + x_2(-x_1 + \mu(1-x_1^2)x_2) = \mu(1-x_1^2)x_2^2.$$
 ### 系统描述
 
 $n$ 自由度机器人动力学：
+
 $$M(q)\ddot q + C(q, \dot q)\dot q + g(q) = \tau,$$
+
 其中 $M(q) \succ 0$ 为惯量矩阵，$C$ 为 Coriolis 矩阵，$g$ 为重力项，$\tau$ 为控制力矩。
 
 **PD + 重力补偿控制律**：
+
 $$\tau = g(q) - K_P(q - q_d) - K_D \dot q,$$
+
 其中 $K_P, K_D \succ 0$ 为正定增益矩阵，$q_d$ 为期望关节角度。
 
 ### 稳定性证明
 
 令 $e = q - q_d$，则闭环动力学为：
+
 $$M(q)\ddot e + C(q, \dot q)\dot e + K_D \dot e + K_P e = 0.$$
 
 **选取 Lyapunov 函数**（总能量形式）：
+
 $$V = \frac{1}{2}\dot e^\top M(q) \dot e + \frac{1}{2}e^\top K_P e.$$
 
 注意 $V > 0$ 对 $(e, \dot e) \ne 0$（因为 $M \succ 0$, $K_P \succ 0$）。
 
 **计算 $\dot V$**：
+
 $$\dot V = \dot e^\top M \ddot e + \frac{1}{2}\dot e^\top \dot M \dot e + e^\top K_P \dot e.$$
 
 代入 $M\ddot e = -C\dot e - K_D \dot e - K_P e$：
+
 $$\dot V = \dot e^\top(-C\dot e - K_D\dot e - K_P e) + \frac{1}{2}\dot e^\top \dot M \dot e + e^\top K_P \dot e$$
+
 $$= \dot e^\top(\frac{1}{2}\dot M - C)\dot e - \dot e^\top K_D \dot e.$$
 
 **关键性质**：$\dot M - 2C$ 是反对称矩阵（源自拉格朗日力学）。因此 $\dot e^\top(\frac{1}{2}\dot M - C)\dot e = 0$。
 
 最终：
+
 $$\dot V = -\dot e^\top K_D \dot e \le 0. \qquad (\text{半负定！})$$
 
 $\dot V$ 只是半负定——在 $\dot e = 0$ 时为零。
@@ -1090,6 +1169,7 @@ $\dot V$ 只是半负定——在 $\dot e = 0$ 时为零。
 $E = \{(e, \dot e): \dot V = 0\} = \{(e, \dot e): \dot e = 0\}$。
 
 在 $E$ 中寻找不变集：若 $\dot e(t) \equiv 0$，则 $\ddot e = 0$，代入动力学方程：
+
 $$0 + 0 + K_P e = 0 \quad \Rightarrow \quad e = 0.$$
 
 因此 $E$ 中最大不变集 $M = \{(0, 0)\}$。
@@ -1099,6 +1179,7 @@ $$0 + 0 + K_P e = 0 \quad \Rightarrow \quad e = 0.$$
 ### 为什么需要重力补偿
 
 如果不加重力补偿（$\tau = -K_P e - K_D \dot e$），闭环方程变为：
+
 $$M\ddot e + C\dot e + K_D\dot e + K_P e = g(q_d) - g(q).$$
 
 右端不为零（除非 $q = q_d$），平衡点不再是 $(0, 0)$ 而是一个非零稳态误差。这就是为什么重力补偿在关节控制中是标配。
@@ -1128,8 +1209,11 @@ $$M\ddot e + C\dot e + K_D\dot e + K_P e = g(q_d) - g(q).$$
 **最大估计**：选最大的 $c$ 使 $\Omega_c$ 仍包含在 $\dot V < 0$ 区域内。
 
 **SOS 优化**：对多项式系统，这可以表述为
+
 $$\max_{\rho, V} \quad \rho$$
+
 $$\text{s.t.} \quad V - \epsilon\|x\|^2 \text{ is SOS}$$
+
 $$\quad -\dot V - \lambda(\rho - V) \text{ is SOS} \quad (\lambda \text{ SOS multiplier})$$
 
 这里 S-procedure 把"在 $V \le \rho$ 内 $\dot V < 0$" 编码为 SOS 约束。
@@ -1137,6 +1221,7 @@ $$\quad -\dot V - \lambda(\rho - V) \text{ is SOS} \quad (\lambda \text{ SOS mul
 ### Zubov 方程
 
 **Zubov 方程（Zubov 1964）**精确刻画 ROA 边界：寻找 $V:\mathcal{R} \to [0, 1)$ 和正定 $\phi$ 使得
+
 $$\nabla V(x) \cdot f(x) = -\phi(x)(1-V(x))\sqrt{1 + \|f(x)\|^2}.$$
 
 则 $\mathcal{R} = \{V < 1\}$，$\partial\mathcal{R} = \{V = 1\}$。这是一阶非线性 PDE，通常需数值求解。与 HJB 的联系：Zubov 方程可视为零控制的 HJB 粘性解形式。
@@ -1272,6 +1357,7 @@ Lyapunov 函数告诉你"轨迹趋向零"，但没有告诉你"多快"。比较�
 ### 一致稳定性定义
 
 **定义 7.17.1（一致渐近稳定，UAS）**：$\dot x = f(x, t)$ 的原点一致渐近稳定，若存在 $\beta \in \mathcal{KL}$ 使得对所有初始时刻 $t_0 \ge 0$：
+
 $$\|x(t)\| \le \beta(\|x(t_0)\|, t - t_0), \quad \forall t \ge t_0.$$
 
 关键词"一致"意味着 $\beta$ **不依赖于初始时刻 $t_0$**——无论何时启动，衰减行为都一样。
@@ -1279,7 +1365,9 @@ $$\|x(t)\| \le \beta(\|x(t_0)\|, t - t_0), \quad \forall t \ge t_0.$$
 ### 非自治 Lyapunov 定理（Khalil Thm 4.9）
 
 **定理 7.17.2**：若存在 $V(x, t)$ 满足：
+
 $$\alpha_1(\|x\|) \le V(x, t) \le \alpha_2(\|x\|), \quad \alpha_1, \alpha_2 \in \mathcal{K}_\infty \quad (\text{一致上下夹})$$
+
 $$\dot V(x, t) = \frac{\partial V}{\partial t} + \nabla_x V \cdot f(x, t) \le -W(x), \quad W \text{ 正定}$$
 
 则原点一致渐近稳定。
@@ -1321,6 +1409,7 @@ Barbalat 引理的结论是 $\dot V \to 0$（沿时间），不是"轨迹趋向�
 ### 动机：腿足机器人的本质是切换系统
 
 四足机器人行走时，支撑相不断切换：左前+右后 → 右前+左后 → ... 每个支撑组合对应不同的动力学模型。数学上，这是**切换系统**：
+
 $$\dot x = f_{\sigma(t)}(x), \quad \sigma: [0, \infty) \to \{1, 2, \ldots, N\}.$$
 
 一个令人不安的事实：**即使每个子系统单独稳定，快速切换也可能导致整体不稳定！**
@@ -1336,7 +1425,9 @@ $$\dot x = f_{\sigma(t)}(x), \quad \sigma: [0, \infty) \to \{1, 2, \ldots, N\}.$
 **定理 7.18.1**：若存在 $V$ 使得 $\dot V_i = \nabla V \cdot f_i(x) < 0$ 对**所有** $i = 1, \ldots, N$ 和 $x \ne 0$ 成立，则系统在**任意切换信号**下全局渐近稳定。
 
 对线性系统 $\dot x = A_\sigma x$，共同二次 Lyapunov $V = x^\top Px$ 存在当且仅当 LMI
+
 $$A_i^\top P + PA_i \prec 0, \quad \forall i, \quad P \succ 0$$
+
 可行。这是 SDP 问题，可用 MOSEK/SCS 高效求解。
 
 **局限**：共同 $V$ 条件很强，很多实际系统不满足。
@@ -1346,7 +1437,9 @@ $$A_i^\top P + PA_i \prec 0, \quad \forall i, \quad P \succ 0$$
 **Branicky 1998** 引入每个子系统配各自 $V_i$ 的方案：每次重新切入子系统 $i$ 时，要求 $V_i(x(t_k)) \le V_i(x(t_{k-1}))$——即每次"回来"时能量不高于上次离开时。
 
 **Dwell-time 条件**（Hespanha-Morse 1999）：若切换间隔 $\ge \tau_D$，其中
+
 $$\tau_D > \frac{\ln \mu}{\lambda_0},$$
+
 $\mu$ 是 $V_j/V_i$ 的跳变比上界，$\lambda_0$ 是各子系统最小衰减率，则指数稳定。
 
 **Average dwell-time**：放宽为平均切换间隔 $\ge \tau_D$，允许偶尔快速切换。
@@ -1380,14 +1473,19 @@ $\mu$ 是 $V_j/V_i$ 的跳变比上界，$\lambda_0$ 是各子系统最小衰减
 ### 动机：噪声无处不在
 
 真实机器人的传感器有噪声、执行器有扰动、环境有随机性。用确定性 ODE 建模时忽略了这些随机因素。随机微分方程（SDE）
+
 $$dX = b(X)dt + \sigma(X)dW$$
+
 是更忠实的描述，其中 $W$ 是 Wiener 过程（布朗运动）。
 
 ### Ito 公式——随机 Lyapunov 的基础
 
 对 $C^2$ 函数 $V$，Ito 公式给出：
+
 $$dV(X_t) = \mathcal{L}V(X_t) dt + \nabla V \cdot \sigma(X_t) dW_t,$$
+
 其中**无穷小生成元**为
+
 $$\mathcal{L}V(x) = \sum_i b_i(x)\frac{\partial V}{\partial x_i} + \frac{1}{2}\sum_{i,j}[\sigma\sigma^\top]_{ij}(x)\frac{\partial^2 V}{\partial x_i \partial x_j}.$$
 
 **关键区别**：与确定性的 $\dot V = \nabla V \cdot f$ 相比，多了**二阶项** $\frac{1}{2}\text{tr}(\sigma\sigma^\top \nabla^2 V)$。这是 Ito 微积分的本质——布朗运动的二次变差 $(dW)^2 = dt$ 产生额外的漂移效应。
@@ -1428,7 +1526,9 @@ $$\mathcal{L}V(x) = \sum_i b_i(x)\frac{\partial V}{\partial x_i} + \frac{1}{2}\s
 ### 核心定义
 
 系统 $\dot x = f(x, t)$ 称为**收缩的**（contracting），若存在黎曼度量 $M(x, t) = \Theta^\top \Theta \succ 0$ 使得广义 Jacobian
+
 $$F = (\dot\Theta + \Theta J)\Theta^{-1}, \quad J = \frac{\partial f}{\partial x}$$
+
 满足 $F + F^\top \preceq -2\lambda I$（$\lambda > 0$）。
 
 **结论**：所有轨迹之间的测地距离以指数速率 $e^{-\lambda t}$ 收缩到零——**不需要知道平衡点在哪里**！
@@ -1618,22 +1718,27 @@ $$F = (\dot\Theta + \Theta J)\Theta^{-1}, \quad J = \frac{\partial f}{\partial x
 ### A.1 二自由度机械臂 PD 控制
 
 考虑平面 2-DOF 机械臂，关节角度 $q = (q_1, q_2)^\top$。动力学：
+
 $$M(q)\ddot q + C(q, \dot q)\dot q + g(q) = \tau.$$
 
 其中（设连杆质量 $m_1, m_2$，长度 $l_1, l_2$，质心到关节距离 $l_{c1}, l_{c2}$）：
 
 $$M(q) = \begin{pmatrix} \alpha + 2\beta\cos q_2 & \delta + \beta\cos q_2 \\ \delta + \beta\cos q_2 & \delta \end{pmatrix},$$
+
 $$\alpha = m_1 l_{c1}^2 + m_2(l_1^2 + l_{c2}^2) + I_1 + I_2, \quad \beta = m_2 l_1 l_{c2}, \quad \delta = m_2 l_{c2}^2 + I_2.$$
 
 PD + 重力补偿控制：$\tau = g(q) - K_P(q - q_d) - K_D\dot q$。
 
 **验证 $\dot M - 2C$ 反对称性**：标准 Christoffel 参数化下
+
 $$C(q, \dot q) = \begin{pmatrix} -\beta\sin q_2 \dot q_2 & -\beta\sin q_2(\dot q_1 + \dot q_2) \\ \beta\sin q_2 \dot q_1 & 0 \end{pmatrix}.$$
 
 直接计算 $\dot M$：
+
 $$\dot M = \begin{pmatrix} -2\beta\sin q_2 \dot q_2 & -\beta\sin q_2 \dot q_2 \\ -\beta\sin q_2 \dot q_2 & 0 \end{pmatrix}.$$
 
 验证 $N = \dot M - 2C$：
+
 $$N = \begin{pmatrix} 0 & \beta\sin q_2(2\dot q_1 + \dot q_2) \\ -\beta\sin q_2(2\dot q_1 + \dot q_2) & 0 \end{pmatrix}.$$
 
 确实是反对称矩阵（$N^\top = -N$），因此 $\dot q^\top N \dot q = 0$ 对任意 $\dot q$ 成立——这保证了 $\dot V = -\dot q^\top K_D \dot q$ 的推导成立。
@@ -1653,9 +1758,11 @@ $E = \{\dot\theta = 0\}$。在 $E$ 中若 $\dot\theta \equiv 0$，则 $\ddot\the
 ### A.3 电路 RLC 系统
 
 并联 RLC 电路，$V_C$ 为电容电压，$I_L$ 为电感电流：
+
 $$C\dot V_C = -V_C/R - I_L + I_s, \qquad L\dot I_L = V_C.$$
 
 令 $I_s = 0$（无外部电流源），取储能函数：
+
 $$V = \frac{1}{2}CV_C^2 + \frac{1}{2}LI_L^2 \qquad (\text{电场 + 磁场能量})$$
 
 $$\dot V = CV_C\dot V_C + LI_L\dot I_L = V_C(-V_C/R - I_L) + I_L V_C = -V_C^2/R \le 0.$$
@@ -1677,7 +1784,9 @@ $E = \{V_C = 0\}$。若 $V_C \equiv 0$，则 $L\dot I_L = V_C = 0$，即 $I_L = 
 **Step 1：构造全局 ISS-Lyapunov 函数。**
 
 给定两个子系统的 ISS-Lyapunov 函数 $V_1, V_2$，构造互联系统的 Lyapunov 函数
+
 $$V(x_1, x_2) = \max\{\sigma_1(V_1(x_1)), \sigma_2(V_2(x_2))\},$$
+
 其中 $\sigma_1, \sigma_2 \in \mathcal{K}_\infty$ 待确定。
 
 **Step 2：利用小增益条件选取 $\sigma_1, \sigma_2$。**
@@ -1693,7 +1802,9 @@ $\gamma_1 \circ \gamma_2(r) < r$ 意味着在 $(r_1, r_2)$ 平面上，曲线 $r
 ### B.3 线性系统的特殊情况
 
 对线性系统 $G_1, G_2$ 互联，ISS 增益退化为 $L_\infty$ 增益：$\gamma_i(r) = \|G_i\|_\infty \cdot r$。小增益条件变为
+
 $$\gamma_1 \circ \gamma_2(r) = \|G_1\|_\infty \|G_2\|_\infty \cdot r < r \quad \Leftrightarrow \quad \|G_1\|_\infty \|G_2\|_\infty < 1.$$
+
 这正是经典 $H_\infty$ 小增益定理。
 
 ---
@@ -1703,6 +1814,7 @@ $$\gamma_1 \circ \gamma_2(r) = \|G_1\|_\infty \|G_2\|_\infty \cdot r < r \quad \
 ### C.1 class-$\mathcal{K}$ 函数的上下界关系
 
 **引理（Khalil Lemma 4.3）**：若 $V:\mathbb{R}^n \to \mathbb{R}$ 连续正定且 radially unbounded，则存在 $\alpha_1, \alpha_2 \in \mathcal{K}_\infty$ 使得
+
 $$\alpha_1(\|x\|) \le V(x) \le \alpha_2(\|x\|), \quad \forall x \in \mathbb{R}^n.$$
 
 **证明**：定义 $\alpha_1(r) = \min_{\|x\| = r} V(x)$, $\alpha_2(r) = \max_{\|x\| = r} V(x)$。正定性保证 $\alpha_1(r) > 0$ 对 $r > 0$；连续性保证 $\alpha_1, \alpha_2$ 连续；radially unbounded 保证 $\alpha_1(r) \to \infty$。$\alpha_1$ 严格递增可通过适当的下界替换保证。
@@ -1714,6 +1826,7 @@ $$\alpha_1(\|x\|) \le V(x) \le \alpha_2(\|x\|), \quad \forall x \in \mathbb{R}^n
 **带参数形式**：$ab \le \frac{\epsilon a^2}{2} + \frac{b^2}{2\epsilon}$，$\epsilon > 0$ 任意。
 
 **在 ISS 分析中的典型用法**：
+
 $$\nabla V \cdot g(x) u \le |\nabla V \cdot g(x)| \cdot |u| \le \frac{\epsilon}{2}|\nabla V \cdot g(x)|^2 + \frac{1}{2\epsilon}|u|^2.$$
 
 选 $\epsilon$ 使得 $\frac{\epsilon}{2}|\nabla V \cdot g|^2$ 能被 $-\alpha(\|x\|)$ 项吸收，剩余的 $\frac{1}{2\epsilon}|u|^2$ 作为 $\sigma(\|u\|)$。
@@ -1853,7 +1966,9 @@ $$u^*(x) = \begin{cases} -\dfrac{a + \sqrt{a^2 + (b b^\top)^2}}{b b^\top} b^\top
 ### E.3 CLF-QP 控制器
 
 把 CLF 条件写为 QP 约束：
+
 $$\min_{u} \frac{1}{2}\|u\|^2 \quad \text{s.t.} \quad L_f V + L_g V \cdot u \le -\gamma(V(x)),$$
+
 其中 $\gamma \in \mathcal{K}$ 控制收敛速率。
 
 **优势**：
@@ -1877,6 +1992,7 @@ MPC 闭环稳定性的标准方法（Mayne-Rawlings 2000）是取终端代价 $V
 ### F.1 综合题：观测器-控制器分离的 ISS 分析
 
 考虑系统 $\dot x = f(x) + g(x)u$，状态反馈 $u = k(\hat x)$ 基于观测器估计 $\hat x$：
+
 $$\dot{\hat x} = f(\hat x) + g(\hat x)k(\hat x) + L(y - h(\hat x)).$$
 
 1. 定义估计误差 $e = x - \hat x$，写出误差动力学。
@@ -1886,7 +2002,9 @@ $$\dot{\hat x} = f(\hat x) + g(\hat x)k(\hat x) + L(y - h(\hat x)).$$
 ### F.2 综合题：从能量整形到 Lyapunov 证明
 
 考虑欠驱动机械系统（如 cart-pole）：
+
 $$M(q)\ddot q + C(q, \dot q)\dot q + g(q) = B\tau,$$
+
 其中 $B$ 不满秩（欠驱动）。
 
 1. 为什么能量法不能直接给出 GAS？（提示：不可控自由度无法通过阻尼耗散）

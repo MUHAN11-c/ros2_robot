@@ -233,8 +233,11 @@ MINCO 的意义建立在微分平坦之上。理解"为什么规划一条光滑�
 在世界坐标系 $\{W\}$ 中，四旋翼的刚体动力学为：
 
 $$\dot{p} = v \tag{位置动力学}$$
+
 $$m\dot{v} = mge_3 - fRe_3 + f_{\text{drag}} \tag{平移动力学}$$
+
 $$\dot{R} = R[\omega]_\times \tag{姿态运动学}$$
+
 $$J\dot{\omega} = -\omega \times J\omega + \tau \tag{旋转动力学}$$
 
 其中：$p \in \mathbb{R}^3$ 为质心位置，$v \in \mathbb{R}^3$ 为质心速度，$R \in SO(3)$ 为机体到世界的旋转矩阵，$\omega \in \mathbb{R}^3$ 为机体角速度，$m$ 为质量，$J$ 为惯性矩阵，$f$ 为总推力（标量），$\tau \in \mathbb{R}^3$ 为体力矩，$e_3 = [0, 0, 1]^T$，$f_{\text{drag}}$ 为空气阻力（简单模型中忽略）。
@@ -336,7 +339,8 @@ $$z^{(s)}(t) = v(t)$$
 
 > **定义（MINCO，Minimum Control）**：给定边界条件 $D_0, D_M$（各 $s$ 个导数值）、中间条件 $\{\bar{q}_i\}$（各 $d_i$ 个导数值）和段时间 $T$，MINCO 轨迹是使**控制量积分最小**的分段多项式：
 >
-> $$\min \int_{t_0}^{t_M} \|z^{(s)}(t)\|_W^2 \, dt$$
+> 
+> $\min \int_{t_0}^{t_M} \|z^{(s)}(t)\|_W^2 \, dt$
 >
 > 其中 $W$ 是正定权重矩阵，满足上述所有边界条件和中间条件。
 
@@ -1562,6 +1566,7 @@ $$p_i(\tau) = c_{i,0} + c_{i,1}\tau + c_{i,2}\tau^2 + c_{i,3}\tau^3, \quad \tau 
 **第 1 段**：段首由边界条件确定。
 
 $$p_1(0) = c_{1,0} = p_0$$
+
 $$\dot{p}_1(0) = c_{1,1} = v_0$$
 
 段末位置是路点 $q_1$：
@@ -1600,21 +1605,29 @@ $$\begin{bmatrix} A_1 & B_1 & & \\ C_2 & A_2 & B_2 & \\ & C_3 & A_3 & \end{bmatr
 **前向消去**：从第 1 行开始，消去下三角元素。
 
 $$\tilde{A}_1 = A_1$$
+
 $$L_2 = C_2 \cdot \tilde{A}_1^{-1}$$
+
 $$\tilde{A}_2 = A_2 - L_2 \cdot B_1$$
+
 $$L_3 = C_3 \cdot \tilde{A}_2^{-1}$$
+
 $$\tilde{A}_3 = A_3 - L_3 \cdot B_2$$
 
 同时更新右端项：
 
 $$\tilde{d}_1 = d_1$$
+
 $$\tilde{d}_2 = d_2 - L_2 \cdot \tilde{d}_1$$
+
 $$\tilde{d}_3 = d_3 - L_3 \cdot \tilde{d}_2$$
 
 **回代**：从最后一行开始。
 
 $$c_3 = \tilde{A}_3^{-1} \cdot \tilde{d}_3$$
+
 $$c_2 = \tilde{A}_2^{-1} \cdot (\tilde{d}_2 - B_2 \cdot c_3)$$
+
 $$c_1 = \tilde{A}_1^{-1} \cdot (\tilde{d}_1 - B_1 \cdot c_2)$$
 
 每一步涉及 $4 \times 4$ 矩阵的求逆和矩阵乘法——$O(1)$ 的操作（因为块大小 $2s$ 是常数）。总共 $M=3$ 步前向消去 + $M=3$ 步回代 = $O(M)$。

@@ -706,7 +706,9 @@ Apollo EM Planner（Fan 等 2018）最初用 **spline-QP**：把 $l(s)$ 表示�
 相邻 station 间设 $l'''\equiv \text{jerk}_i$，由匀 jerk 运动学（对 $s$ 的泰勒展开）得：
 
 $$l''_{i+1} = l''_i + \text{jerk}_i\,\Delta s$$
+
 $$l'_{i+1} = l'_i + l''_i\,\Delta s + \tfrac12\,\text{jerk}_i\,\Delta s^2$$
+
 $$l_{i+1} = l_i + l'_i\,\Delta s + \tfrac12 l''_i\,\Delta s^2 + \tfrac16\,\text{jerk}_i\,\Delta s^3$$
 
 由第一式解出 $\text{jerk}_i = (l''_{i+1}-l''_i)/\Delta s$，代回后两式，即得**只含状态、不含 jerk** 的两条等式约束，把相邻三元组 $[l_i,l'_i,l''_i]$ 与 $[l_{i+1},l'_{i+1},l''_{i+1}]$ 线性地锁在一起。
@@ -1191,7 +1193,9 @@ std::vector<SpeedPoint> DpStSearch(const std::vector<STBoundary>& obs,
 设段内 $\dddot s\equiv j_i$：
 
 $$a_{i+1} = a_i + j_i\,\Delta t$$
+
 $$v_{i+1} = v_i + a_i\,\Delta t + \tfrac12 j_i\,\Delta t^2$$
+
 $$s_{i+1} = s_i + v_i\,\Delta t + \tfrac12 a_i\,\Delta t^2 + \tfrac16 j_i\,\Delta t^3$$
 
 由第一式 $j_i=(a_{i+1}-a_i)/\Delta t$ 代回，得只含状态的两条等式约束。

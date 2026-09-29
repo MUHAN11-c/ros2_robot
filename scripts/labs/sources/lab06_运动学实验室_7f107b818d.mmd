@@ -1,0 +1,7 @@
+
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#FFFFFF","primaryBorderColor":"#8166B1","primaryTextColor":"#292530","lineColor":"#8166B1","fontSize":"14px"}}}%%
+flowchart LR
+    A[/"输入：关节角 θ₁ θ₂"/] --> B["正运动学 FK<br>x = l₁cosθ₁ + l₂cos(θ₁+θ₂)"]
+    B --> C{"θ 扫遍所有取值"}
+    C --> D[/"输出：末端点云 =<br>工作空间（甜甜圈）"/]
+    D --> E(["逆运动学的舞台就绪<br>——目标点必须落在甜甜圈里"])

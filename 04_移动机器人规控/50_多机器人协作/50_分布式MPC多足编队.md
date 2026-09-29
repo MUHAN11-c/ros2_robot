@@ -193,12 +193,15 @@
 $$
 \min_{\mathbf{U}_1,\dots,\mathbf{U}_N}\ \sum_{i=1}^N J_i(\mathbf{X}_i,\mathbf{U}_i) + J_{\text{form}}(\mathbf{X}_1,\dots,\mathbf{X}_N)
 $$
+
 $$
 \text{s.t.}\quad \mathbf{x}_i(t{+}1)=f_i(\mathbf{x}_i(t),\mathbf{u}_i(t)),\ \forall i,t \quad(\text{各自动力学})
 $$
+
 $$
 \quad\ \ \ \text{formation\_constraints}(\mathbf{X}_1,\dots,\mathbf{X}_N)=0 \quad(\text{编队耦合})
 $$
+
 $$
 \quad\ \ \ \text{friction\_cone}(\mathbf{u}_i)\le0,\ \forall i \quad(\text{接触约束})
 $$
@@ -251,6 +254,7 @@ $$
 $$
 \min_{\mathbf{U}_i}\ J_i(\mathbf{X}_i,\mathbf{U}_i) + \sum_{j\in\mathcal{N}_i} J_{ij}(\mathbf{X}_i, \hat{\mathbf{X}}_j)
 $$
+
 $$
 \text{s.t.}\quad \mathbf{x}_i(t{+}1)=f_i(\mathbf{x}_i(t),\mathbf{u}_i(t)),\quad \text{friction\_cone}(\mathbf{u}_i)\le0
 $$
@@ -707,21 +711,27 @@ $$
 **第三步：ADMM 三步交替。** ADMM 轮流优化 $\{\mathbf{X}_i\}$、$\mathbf{z}$、$\{\mathbf{y}_i\}$。用缩放对偶变量 $\mathbf{u}_i=\mathbf{y}_i/\rho$（缩放形式更简洁）：
 
 **(X-更新) 每个 agent 并行解本地 MPC（带二次惩罚）：**
+
 $$
 \boxed{\ \mathbf{X}_i^{k+1}=\arg\min_{\mathbf{X}_i\in\mathcal{C}_i}\ J_i(\mathbf{X}_i)+\tfrac{\rho}{2}\big\|\mathbf{w}_i(\mathbf{X}_i)-\mathbf{z}_i^k+\mathbf{u}_i^k\big\|^2\ }
 $$
+
 这就是**单体 MPC 加一个把接口变量拉向共识值 $\mathbf{z}_i^k-\mathbf{u}_i^k$ 的二次惩罚**。规模是单体大小，可并行，且因为增广项是二次的，本地问题仍是 QP（凸 SRB MPC 情形）。
 
 **(Z-更新) 共识平均：**
+
 $$
 \boxed{\ \mathbf{z}^{k+1}=\frac{1}{|\mathcal{I}_z|}\sum_{i\in\mathcal{I}_z}\big(\mathbf{w}_i(\mathbf{X}_i^{k+1})+\mathbf{u}_i^k\big)\ }
 $$
+
 全局共识变量更新为相关 agent 的接口副本（加对偶偏移）的**平均**——$\mathcal{I}_z$ 是与该 $\mathbf{z}$ 分量相关的 agent 集合。**这一步就是第 2 章的共识平均**！分布式实现时不需要中央节点，用共识迭代算这个平均（§4.7）。
 
 **(Y-更新) 对偶上升：**
+
 $$
 \boxed{\ \mathbf{u}_i^{k+1}=\mathbf{u}_i^k+\mathbf{w}_i(\mathbf{X}_i^{k+1})-\mathbf{z}_i^{k+1}\ }
 $$
+
 对偶变量累积"本地副本与共识值的偏差"——和 §4.3 的价格更新同理，但这里因增广项的存在，收敛是线性的。
 
 > **阶段小结**：到这里我们得到了完整的 consensus-ADMM 分布式 MPC：X-更新（本地 MPC + 二次惩罚，并行）、Z-更新（共识平均，邻居协调）、Y-更新（对偶上升，逼迫一致）。把这三步和第 2 章 §2.3 的标准 ADMM 对照，你会发现**结构完全一样**，只是 $x\to\mathbf{X}_i$（轨迹）、$z\to\mathbf{z}$（共识接口）、惩罚项作用在接口变量 $\mathbf{w}_i$ 上。这就是"算法骨架不变、规模和物理含义变了"的含义。
@@ -882,9 +892,11 @@ ADMM 的收敛速度对 $\rho$ 敏感。给出三条要点：
 当 $\|r^k\|$ 和 $\|s^k\|$ 都小于阈值时停止。$\rho$ 的作用直观：$\rho$ 大 → 重罚一致性违反 → $r^k$ 降得快但 $s^k$ 可能大；$\rho$ 小 → 反之。
 
 **(3) 残差平衡（residual balancing）自适应 $\rho$。** Boyd 综述给的经典自适应规则——让两个残差量级相当：
+
 $$
 \rho^{k+1}=\begin{cases}\tau^{\text{incr}}\rho^k & \text{if } \|r^k\|>\nu\|s^k\|\ (\text{原始残差太大，加大 }\rho)\\ \rho^k/\tau^{\text{decr}} & \text{if } \|s^k\|>\nu\|r^k\|\ (\text{对偶残差太大，减小 }\rho)\\ \rho^k & \text{otherwise}\end{cases}
 $$
+
 典型 $\nu=10,\ \tau=2$。直觉：哪个残差大就调 $\rho$ 去压它，使两者同步下降。更先进的 AADMM 用对偶曲率估计自适应，收敛更快。
 
 **(4) 非凸的警告。** 多足 MPC 的接触约束（摩擦锥金字塔是凸的，但单边接触 + 踏步时序切换、姿态 $SO(3)$ 是非凸的）使整个问题**非凸**。对非凸问题，**ADMM 没有收敛保证**——可能震荡或卡在局部点。工程上靠：(a) 用凸化的 SRB MPC（固定接触序列后摩擦锥金字塔使本地 QP 凸）；(b) warm-start 提供好初值；(c) 固定迭代轮数"够用就停"。这是 §4.7 和科研前沿（CBF-ADMM 等）仍在攻关的开放问题。
@@ -976,6 +988,7 @@ $$
 $$
 m_i\ddot{\mathbf{p}}_i = \sum_{j=1}^{4}\mathbf{f}_{ij} + \boldsymbol{\lambda}_i + m_i\mathbf{g}
 $$
+
 $$
 \tfrac{d}{dt}(I_i\boldsymbol{\omega}_i) = \sum_{j=1}^{4}\mathbf{r}_{ij}\times\mathbf{f}_{ij} + (\mathbf{p}_i^{\text{att}}-\mathbf{p}_i)\times\boldsymbol{\lambda}_i
 $$
@@ -1216,9 +1229,11 @@ WBC 的思想源于 Khatib 的操作空间控制（operational space control，1
 $$
 \min_{\boldsymbol{\tau}_i,\,\mathbf{f}_i,\,\ddot{\mathbf{q}}_i}\ \big\|A_i\ddot{\mathbf{q}}_i - \ddot{\mathbf{q}}_i^{\text{des}}\big\|^2 + w_f\big\|\mathbf{f}_i-\mathbf{f}_i^{\text{MPC}}\big\|^2 + w_\tau\|\boldsymbol{\tau}_i\|^2
 $$
+
 $$
 \text{s.t.}\quad M_i\ddot{\mathbf{q}}_i+\mathbf{h}_i = S_i^\top\boldsymbol{\tau}_i + J_{c,i}^\top\mathbf{f}_i + J_{\text{att},i}^\top\boldsymbol{\lambda}_i^{\text{MPC}}\quad(\text{全身动力学})
 $$
+
 $$
 \quad\quad\ \ \text{friction\_cone}(\mathbf{f}_i),\quad \text{joint\_limits}(\boldsymbol{\tau}_i),\quad \text{contact constraints}
 $$

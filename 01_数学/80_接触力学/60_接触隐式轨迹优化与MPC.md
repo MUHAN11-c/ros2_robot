@@ -487,7 +487,9 @@ Scholtes 后续（2001, *SIAM J. Optim.* 11(4):918–936）又提出了"治疗�
 现在我们严格证明本章最重要的理论结论。这是 R1 理论教学"完整推导链"的核心示范——每一步都写出来，不允许"显然"。
 
 **定理（MPCC 的 MFCQ 失效，T1）**：考虑互补约束的标准 NLP 编码
+
 $$\phi_i\ge 0,\qquad \lambda_i\ge 0,\qquad \phi_i\lambda_i= 0.$$
+
 若在可行点处某个分量满足 $\phi_i=0$ **且** $\lambda_i=0$（称为**双活点 / biactive point**，即该互补对的两侧同时取到边界），则 MFCQ 在该点失效。
 
 **证明。** 为清晰起见，先看单个互补对 $(\phi,\lambda)$（下标 $i$ 省略），把 $\phi,\lambda$ 看成优化变量空间里的两个坐标（或更一般地，看成决策变量 $z$ 的函数 $\phi(z),\lambda(z)$，但先用最简情形 $\phi=z_1,\lambda=z_2$ 建立直觉，再推广）。
@@ -744,7 +746,9 @@ $$\min_{x,u,\lambda}\ J(x,u)+\rho\sum_k\|\phi(x_k)^\top\lambda_k\|_1,\qquad \phi
 ### 练习
 
 **练习 6.4.1（推导题，草稿纸上完成）** 对 Scholtes 松弛后的 NLP
+
 $$\min J(x,u)\quad\text{s.t.}\quad h_k=0,\ \phi_k\ge0,\ \lambda_k\ge0,\ \phi_k\lambda_k\le t,$$
+
 写出其拉格朗日函数 $L$（引入乘子 $\mu_k$ 对 $h_k$、$\nu_k^\phi$ 对 $-\phi_k$、$\nu_k^\lambda$ 对 $-\lambda_k$、$\eta_k$ 对 $\phi_k\lambda_k-t$），并对 $x_k,u_k,\lambda_k$ 求一阶 KKT 条件。注意 $\phi_k=\phi(x_k)$ 对 $x_k$ 的偏导有链式法则。验证：在 $t>0$ 时，这组 KKT 条件的乘子是有界的（与 §6.3 的 $t=0$ 乘子爆炸对比）。
 
 **练习 6.4.2（收敛速率比较，草稿纸上完成）** 比较 Tassa 2012 软接触刚度 $k$ 与 Scholtes 松弛 $t$ 的收敛速率。提示：软接触 $F=k\max(0,-\phi)$ 是 penalty method，逼近误差 $O(1/k)$；Scholtes 松弛在 MPEC-LICQ + 二阶充分条件下 $\|x(t)-x^*\|=O(t)$。论证：两者同阶，但 Scholtes **保持互补结构**（$\phi,\lambda$ 始终是合法的间隙和力），而软接触 $k$ **破坏物理**（接触力变成穿透深度的虚构函数）。这个区别为什么在"优化解要拿到真机执行"时至关重要？

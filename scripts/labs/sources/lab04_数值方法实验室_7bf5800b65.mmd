@@ -1,0 +1,12 @@
+
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#FFFFFF","primaryBorderColor":"#8166B1","primaryTextColor":"#292530","lineColor":"#8166B1","fontSize":"14px"}}}%%
+flowchart TD
+    A(["要解 f x = 0"]) --> B[/"从初值 x₀ 出发"/]
+    B --> C["作切线，滑到 x 轴<br>得到更好的 x₁"]
+    C --> D{"|f x₁| 够小吗？"}
+    D -- "否" --> C
+    D -- "是" --> E(["收敛：得到近似根"])
+    F(["要算定积分"]) --> G[/"切成 n 个梯形求和"/]
+    G --> H{"n 翻倍，误差够小吗？"}
+    H -- "否" --> G
+    H -- "是" --> I(["得到积分近似值"])

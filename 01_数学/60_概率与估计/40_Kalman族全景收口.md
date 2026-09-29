@@ -11,9 +11,11 @@
 #### A4.1.1 问题设定与迭代更新式
 
 考虑标准离散非线性高斯模型
+
 $$
 x_k = f(x_{k-1},u_{k-1}) + w_{k-1},\quad y_k = h(x_k) + v_k,\qquad w\sim\mathcal N(0,Q),\ v\sim\mathcal N(0,R).
 $$
+
 预测步与 EKF 相同，得到先验 $\hat x_{k|k-1}, P_{k|k-1}$。**迭代更新步**（Bell & Cathey, *IEEE TAC* 38(2):294–297, 1993, eq. (5)）以 $\hat x^{(0)} = \hat x_{k|k-1}$ 初始化，迭代执行：
 
 $$
@@ -25,19 +27,25 @@ $$
 #### A4.1.2 Bell-Cathey 定理：IEKF = 对 MAP 做 Gauss-Newton
 
 **定理**（Bell-Cathey 1993；Barfoot 2ed §4.2.6 pp.120–121）。**在加性高斯噪声模型** $y_k = h(x_k) + v_k,\, v\sim\mathcal{N}(0,R)$ **下**，式 (A4.1) 是对负对数后验
+
 $$
 J(x)=\tfrac12\|x-\hat x_{k|k-1}\|_{P_{k|k-1}^{-1}}^2+\tfrac12\|y_k-h(x)\|_{R^{-1}}^2\qquad(A4.2)
 $$
+
 做 **Gauss-Newton** 迭代的 Kalman 等价形式。因此 IEKF 若收敛，其定点是该单步 MAP 目标的一阶驻点；在局部凸或残差足够温和的邻域中通常对应局部极小，但非凸观测模型下不保证全局 $\arg\min$。
 
 **证明思路**。设 $L_P L_P^\top = P_{k|k-1}$, $L_R L_R^\top = R$，堆叠残差 $r(x) = [L_P^{-1}(x-\hat x_{k|k-1});\; L_R^{-1}(y-h(x))]$ 使 $J=\tfrac12\|r\|^2$。在 $\hat x^{(j)}$ 处线性化 $h$ 得
+
 $$
 J_r^{(j)} = \begin{bmatrix}L_P^{-1}\\ -L_R^{-1}H^{(j)}\end{bmatrix},\quad J_r^{(j)\top}J_r^{(j)} = P_{k|k-1}^{-1} + H^{(j)\top}R^{-1}H^{(j)}.
 $$
+
 Gauss-Newton 步 $\Delta^{(j)} = -(J_r^\top J_r)^{-1}J_r^\top r(\hat x^{(j)})$ 代入 Woodbury 恒等式
+
 $$
 (P^{-1}+H^\top R^{-1}H)^{-1}H^\top R^{-1}=K,\quad (P^{-1}+H^\top R^{-1}H)^{-1}P^{-1}=I-KH,
 $$
+
 即化为 (A4.1)。$\square$ **推广**：Bell 1994 (*SIAM J. Opt.* 4(3):626–636) 证明**迭代平滑 = 整条轨迹的 GN**，这是后来"IEKF = 单步因子图 / BA = 全步因子图"的理论基石。
 
 #### A4.1.3 收敛判据、LM-IEKF、Line-search IEKF
@@ -45,9 +53,11 @@ $$
 **收敛判据**两选一：状态增量 $\|\hat x^{(j+1)}-\hat x^{(j)}\|<\varepsilon$（典型 $10^{-3}\sim 10^{-4}$）或代价相对下降 $|J^{(j+1)}-J^{(j)}|<\delta$。实现上常设最大迭代 $J_{\max}\in\{3,4,5\}$（FAST-LIO2 `max_iteration` 默认 3–4）。
 
 **LM-IEKF** (Skoglund-Hendeby-Axehill, *FUSION* 2015 §III)：在近似 Hessian 上加阻尼
+
 $$
 A_\lambda^{(j)} = P^{-1}+H^{(j)\top}R^{-1}H^{(j)}+\lambda I,\qquad(A4.3)
 $$
+
 $\lambda$ 按 Nielsen 策略：接受步时 $\lambda\leftarrow\lambda\cdot\max(1/3, 1-(2\rho-1)^3)$，拒绝步时 $\lambda\leftarrow\lambda\cdot 2^k$。
 
 **Line-search IEKF** (Särkkä & Svensson *BFS* 2ed §7.5; ICASSP 2020)：求出 GN 方向后 $\hat x^{(j+1)}=\hat x^{(j)}+\alpha\Delta$，取 $\alpha\in(0,1]$ 满足 Armijo 条件 $J(\hat x+\alpha\Delta)\le J(\hat x)+c_1\alpha\nabla J^\top\Delta$（$c_1=10^{-4}$，下降方向满足 $\nabla J^\top\Delta<0$），否则 $\alpha\leftarrow\alpha/2$ 回溯。
@@ -78,9 +88,11 @@ IEKF 的迭代正是解决这个问题：每次迭代在新的点重新线性化
 #### A4.1.4 IEKF 与因子图的**单步等价**
 
 把 $x_{0:N}$ 全部放入因子图，联合 MAP 目标
+
 $$
 J_{\text{BA}} = \tfrac12\|x_0\boxminus\hat x_0\|_{P_0^{-1}}^2+\sum_k\tfrac12\|x_k\boxminus f(x_{k-1})\|_{Q^{-1}}^2+\sum_k\tfrac12\|z_k\boxminus h(x_k)\|_{R^{-1}}^2
 $$
+
 做 GN/LM 即为 **Bundle Adjustment / Full Graph SLAM**。IEKF 是对该目标做**顺序 Schur 边缘化**：每一步把 $x_{0:k-1}$ 消去成等价先验 $(\hat x_{k|k-1},P_{k|k-1})$，仅对 $x_k$ 做 GN。故**MSCKF ≡ 特殊部分联合 IEKF**（相机位姿联合保留、特征零空间投影消去）；**FAST-LIO2 ≡ 23 维状态上的单步流形 MAP**；**VINS-Fusion ≡ 较大窗口不边缘化当前帧的 MAP**。
 
 ---
@@ -90,9 +102,11 @@ $$
 #### A4.2.1 算法骨架
 
 ISPKF（Sibley, Sukhatme, Matthies, *RSS* 2006）把 (A4.1) 的解析线性化换为 **statistical linear regression (SLR)**：在 $\hat x^{(j)}, P^{(j)}$ 处生成 $2n+1$ sigma 点 $\{\mathcal X_i\}$，过 $h$ 得 $\mathcal Y_i$，按权重求 $\mu_y^{(j)}, \Sigma_{yy}^{(j)}, \Sigma_{xy}^{(j)}$，然后
+
 $$
 K^{(j)}=\Sigma_{xy}^{(j)}\Sigma_{yy}^{(j)-1},\quad H_{\rm stat}^{(j)}=\Sigma_{xy}^{(j)\top}(P^{(j)})^{-1},
 $$
+
 $$
 \hat x^{(j+1)}=\hat x_{k|k-1}+K^{(j)}\bigl[y_k-\mu_y^{(j)}-H_{\rm stat}^{(j)}(\hat x_{k|k-1}-\hat x^{(j)})\bigr].
 $$
@@ -118,9 +132,11 @@ He-Xu-Zhang (*ICRA/arXiv* 2102.03804, 2021) §III 定义 $\boxplus:\mathcal M\ti
 误差态 $\delta x^{(j)}\triangleq x\boxminus\hat x^{(j)}$。关键是**流形曲率 Jacobian** $J^{(j)}$：把切空间扰动从 $\hat x^{(j)}$ 搬到 $\hat x_{k|k-1}$ 所需的线性化矩阵。对 $SO(3)$，$J^{(j)}=A((\hat x^{(j)}\boxminus\hat x_{k|k-1}))^{-\top}$，其中 $A(u)=I+\frac{1-\cos\|u\|}{\|u\|^2}\lfloor u\rfloor+\frac{\|u\|-\sin\|u\|}{\|u\|^3}\lfloor u\rfloor^2$ 是 $SO(3)$ 的左 Jacobian $J_l(u)$，所以 $J^{(j)}$ 实际使用的是 $J_l(u)^{-\top}$。在 $\mathbb R^n$ 上 $J=I$，退化为 IEKF。
 
 Gauss-Newton 增量（He et al. eq. (27)–(28)）：
+
 $$
 \boxed{\;\delta^{(j+1)}=-\bigl(J^{(j)\top}P^{-1}J^{(j)}+H^{(j)\top}R^{-1}H^{(j)}\bigr)^{-1}\bigl[J^{(j)\top}P^{-1}(\hat x^{(j)}\boxminus\hat x_{k|k-1})+H^{(j)\top}R^{-1}(h(\hat x^{(j)})-z_k)\bigr]\;}\qquad(A4.4)
 $$
+
 $$
 \hat x^{(j+1)}=\hat x^{(j)}\boxplus\delta^{(j+1)},\quad P_{k|k}=(I-KH)J^{-1}P_{k|k-1}J^{-\top}.
 $$
@@ -140,9 +156,11 @@ $$
 #### A4.4.1 线性 RTS（Rauch-Tung-Striebel 1965, *AIAA J.* 3(8):1445）
 
 **两阶段算法**。Forward pass 存 $\hat x_{k|k}, P_{k|k}, \hat x_{k+1|k}, P_{k+1|k}$；Backward pass 从 $k=N-1$ 到 $0$：
+
 $$
 \boxed{\;C_k = P_{k|k}F_k^\top P_{k+1|k}^{-1},\quad \hat x_{k|N}=\hat x_{k|k}+C_k(\hat x_{k+1|N}-\hat x_{k+1|k}),\quad P_{k|N}=P_{k|k}+C_k(P_{k+1|N}-P_{k+1|k})C_k^\top.\;}\qquad(A4.5)
 $$
+
 注意 $P_{k+1|N}-P_{k+1|k}\preceq 0$，故 $P_{k|N}\preceq P_{k|k}$（平滑协方差小于滤波），但浮点可能破正定（见陷阱 15）。
 
 #### A4.4.2 三种等价视角（Barfoot 2ed §3.1–3.2；Särkkä 2ed §12）
@@ -330,9 +348,11 @@ GTSAM `gtsam_unstable/nonlinear/` 提供两种：
 #### A4.5.1 定义（Rao-Rawlings-Lee, *Automatica* 37(10):1619, 2001）
 
 把全信息估计 (FIE) 在窗口 $N$ 上压缩：
+
 $$
 \boxed{\;\min_{x_{T-N},\{w_k\}}\ \underbrace{\Gamma_{T-N}(x_{T-N})}_{\text{arrival cost}}+\sum_{k=T-N}^{T-1}\|w_k\|_{Q^{-1}}^2+\sum_{k=T-N}^{T}\|v_k\|_{R^{-1}}^2\;}\qquad(A4.6)
 $$
+
 其中 **arrival cost** $\Gamma_{T-N}(z)$ 概括窗外所有信息对 $x_{T-N}$ 的先验约束。Rao-Rawlings-Mayne (*IEEE TAC* 48(2):246, 2003) 证明：若 FIE 稳定且 $\Gamma$ 是其 arrival cost 的全局下界，MHE 渐近稳定。
 
 #### A4.5.2 三重退化关系

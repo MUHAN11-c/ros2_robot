@@ -125,6 +125,7 @@ Mobile ALOHA 把双臂搬到底盘上，动作空间从静态双臂扩展为底�
 ### 数学接口
 
 $$a_t=[v_t,\omega_t,q_{L,t}^{ref},q_{R,t}^{ref},g_{L,t},g_{R,t}]$$
+
 动作向量同时包含底盘、双臂和夹爪状态。
 
 ### 工程接口
@@ -174,6 +175,7 @@ UMI 的思路则把采集硬件从目标机器人中部分解耦。
 ### 数学接口
 
 $$\mathcal D_{robot}=f(\text{base},\text{arm},\text{camera},\text{operator})$$
+
 数据分布是硬件和操作者共同产生的。
 
 ### 工程接口
@@ -224,6 +226,7 @@ ALOHA 让主从遥操作成为低成本双臂示教的标准方式。
 ### 数学接口
 
 $$q_f^{ref}=s\,(q_l-q_l^0)+q_f^0$$
+
 其中 $q_l^0$ 和 $q_f^0$ 是 leader/follower 零点，$s$ 是缩放因子。
 
 ### 工程接口
@@ -330,6 +333,7 @@ RLDS、LeRobot Dataset、ALOHA hdf5 和 UMI 数据格式各有实现差异。
 ### 数学接口
 
 $$E_i=\{(o_t,s_t,a_t,\tau_t)\}_{t=0}^{T_i}$$
+
 $\tau_t$ 是时间戳，不是力矩。
 
 ### 工程接口
@@ -398,6 +402,7 @@ $\tau_t$ 是时间戳，不是力矩。
 ### 数学接口
 
 $$o_t = \text{interp}(O, t), \quad a_t = \text{interp}(A, t+\Delta)$$
+
 $\Delta$ 是系统延迟，需要测量而不是猜测。
 
 ### 工程接口
@@ -458,6 +463,7 @@ $$\hat{T}_{base}^{object} = T_{base}^{cam} (T_{cam}^{ee} + \delta T_{cam}^{ee})^
 ### 数学接口
 
 $$T_{base}^{object}=T_{base}^{cam}T_{cam}^{object}$$
+
 $$T_{base}^{ee}=T_{base}^{cam}T_{cam}^{gripper}$$
 
 ### 工程接口
@@ -911,6 +917,7 @@ $$\mathcal L=\mathbb E_{(o,a_{arms},a_{base})\sim D_{mobile}^m}\!\big[L(a_{arms}
 ### 数学接口
 
 $$\mathcal L=\lambda \mathcal L_{mobile}+(1-\lambda)\mathcal L_{static}$$
+
 $\lambda$ 控制移动任务和静态操作数据的梯度贡献（在原论文中由等概率采样隐式实现，对应 $\lambda$ 随两数据集相对大小自然确定）。
 
 **共训练到底带来多少提升**。下表摘自 Mobile ALOHA 论文（50 条演示/任务，煎虾与击掌为 20 条），对比同一策略在"共训练"与"不共训练（仅移动数据）"下的整任务成功率，是理解 co-training 价值的最直接证据：
@@ -989,6 +996,7 @@ UMI-on-Legs 等公开工作可作为任务帧 EE 轨迹迁移到腿足底座的�
 ### 数学接口
 
 $$T_{world}^{ee}=T_{world}^{cam}T_{cam}^{ee}$$
+
 关键是恢复 $T_{world}^{cam}$ 并精确标定 $T_{cam}^{ee}$。
 
 ### 工程接口
@@ -1038,6 +1046,7 @@ UMI 将这个几何关系用于大规模动作标签生成。
 ### 数学接口
 
 $$\Delta T_t=(T_t^{ee})^{-1}T_{t+1}^{ee}$$
+
 $$T_{robot}^{ee,ref}=T_{robot}^{task}T_{task}^{ee,ref}$$
 
 ### 工程接口
@@ -1173,6 +1182,7 @@ episode 完成？
 ### 数学接口
 
 $$D=D_{success}\cup D_{recover}\cup D_{unsafe}$$
+
 三类数据的训练用途不同。
 
 ### 工程接口

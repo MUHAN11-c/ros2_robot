@@ -1,0 +1,118 @@
+/* ==========================================================================
+   code.css · 代码块：深色 #282531 + 语言标签头 + 复制按钮
+   全站最重要的组件之一；双主题统一深色（Stripe Docs 式）
+   ========================================================================== */
+
+.md-typeset .highlight {
+  position: relative;
+  border-radius: var(--rt-radius-md);
+  border: 1px solid var(--rt-code-border);
+  box-shadow: none;
+}
+
+.md-typeset pre {
+  margin: 0;
+  background: var(--rt-code-bg);
+  padding-top: 2.2rem; /* 语言标签头空间 */
+}
+
+.md-typeset pre > code {
+  background: transparent;
+  color: var(--rt-code-fg);
+  font-family: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+  font-size: 0.72rem; /* ≈14.5px */
+  line-height: 1.65;
+}
+
+/* 行内代码回到浅色（不被 pre 规则波及） */
+.md-typeset :not(pre) > code {
+  background: var(--rt-surface-soft);
+  border: 1px solid var(--rt-border);
+  color: var(--rt-primary);
+}
+
+/* ---- 语言标签头：左下角常显 ---- */
+
+.md-typeset .highlight::after {
+  content: attr(data-rt-lang);
+  position: absolute;
+  top: 0.45rem;
+  left: 0.8rem;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #8A8394;
+  pointer-events: none;
+}
+
+/* 常见语言 → 标签（依赖 pymdownx highlight 的 language-* class） */
+.md-typeset .highlight:has(> pre > code.language-cpp)::after { content: "C++"; color: #DE9FBA; }
+.md-typeset .highlight:has(> pre > code.language-python)::after { content: "Python"; color: #8FB8D0; }
+.md-typeset .highlight:has(> pre > code.language-bash)::after,
+.md-typeset .highlight:has(> pre > code.language-sh)::after,
+.md-typeset .highlight:has(> pre > code.language-shell)::after { content: "Shell"; color: #8FC6B2; }
+.md-typeset .highlight:has(> pre > code.language-yaml)::after { content: "YAML"; color: #D9BE8A; }
+.md-typeset .highlight:has(> pre > code.language-cmake)::after { content: "CMake"; color: #C4B1E8; }
+.md-typeset .highlight:has(> pre > code.language-xml)::after { content: "XML"; color: #C4B1E8; }
+.md-typeset .highlight:has(> pre > code.language-json)::after { content: "JSON"; color: #D9BE8A; }
+.md-typeset .highlight:has(> pre > code.language-javascript)::after { content: "JavaScript"; color: #D9BE8A; }
+.md-typeset .highlight:has(> pre > code.language-text)::after { content: "TEXT"; }
+.md-typeset .highlight:has(> pre > code.language-console)::after { content: "Console"; color: #8FC6B2; }
+.md-typeset .highlight:has(> pre > code.language-mathjax)::after { content: "Math"; color: #C4B1E8; }
+
+/* ROS2 专用：文件名标注语法（```yaml title=... 由 Material 支持） */
+.md-typeset .highlight .filename {
+  position: static;
+  border-radius: 0;
+  background: transparent;
+  color: #C9A96E;
+  font-size: 0.66rem;
+  font-weight: 600;
+  padding: 0.5rem 0 0 0.8rem;
+  display: inline-block;
+}
+
+/* 带文件名时语言标签右上移避免重叠 */
+.md-typeset .highlight:has(.filename)::after {
+  left: auto;
+  right: 3.2rem;
+}
+
+/* ---- 复制按钮 ---- */
+
+.md-typeset .highlight + * .md-clipboard,
+.md-clipboard {
+  color: #8A8394;
+  transition: color var(--rt-transition);
+}
+
+.md-clipboard:hover {
+  color: #DE9FBA;
+}
+
+/* ---- 行号列（若启用）与行内高亮 ---- */
+
+.md-typeset .highlighttable {
+  border-radius: var(--rt-radius-md);
+}
+
+.md-typeset .linenodiv pre {
+  background: var(--rt-code-header);
+  color: #6C6574;
+}
+
+.md-typeset mark,
+.md-typeset .highlight mark {
+  background: var(--md-code-hl-color);
+  color: inherit;
+}
+
+/* 代码内注释微调（可选） */
+.md-typeset .highlight .c,
+.md-typeset .highlight .c1,
+.md-typeset .highlight .cm {
+  color: #8A8394;
+  font-style: italic;
+}

@@ -144,9 +144,11 @@ $$
 **强对偶（Slater 条件）**（Boyd §5.9, pp.265-267）：若存在**严格内点** $X \succ 0$ 原可行，或存在 $y$ 使 $C - \sum y_i A_i \succ 0$ 对偶可行，则 $p^\star = d^\star$ 且最优在严格可行侧可达。SE-Sync 这类块对角约束 SDP 通常可以直接构造或验证 Slater 条件；一般几何感知 SDP 仍需逐问题检查，不能仅凭“来自 SLAM”就默认强对偶成立。
 
 **KKT 条件（SDP 版本）**：$(X^\star, y^\star, S^\star)$ 最优 $\iff$
+
 $$
 \langle A_i, X^\star\rangle = b_i,\quad \sum y_i^\star A_i + S^\star = C,\quad X^\star \succeq 0,\quad S^\star \succeq 0,\quad X^\star S^\star = 0.
 $$
+
 最后一条 $X^\star S^\star = 0$ 是**矩阵互补松弛**，蕴含 $\operatorname{rank}(X^\star) + \operatorname{rank}(S^\star) \le n$。
 
 **核心教材**：Boyd-Vandenberghe *Convex Optimization* 2004, §4.6 (pp.167-172), §5.1-5.5 (pp.215-244), §5.9 (pp.265-267), §A.5 (pp.646-651)；Vandenberghe-Boyd "Semidefinite Programming" *SIAM Review* 38(1):49-95, 1996。
@@ -221,6 +223,7 @@ $$
 当 $C, A_i$ 有一个不定（indefinite），QCQP 一般**NP-hard**（例如 MaxCut、Boolean quadratic program）。
 
 **Shor lifting**（Shor 1987；Luo-Ma-So-Ye-Zhang *IEEE SPM* 2010）。观察恒等式：
+
 $$
 x^\top C x = \operatorname{tr}(C x x^\top),\qquad x^\top A_i x = \operatorname{tr}(A_i x x^\top).
 $$
@@ -246,13 +249,17 @@ $$
 | **紧 (tight)** | 若 SDR 最优解 $X^\star$ **rank 1**，则 $X^\star = x^\star (x^\star)^\top$，$x^\star$ 是 QCQP 全局最优；此时 $p^\star_{\text{SDR}} = p^\star_{\text{QCQP}}$ |
 
 **Lagrangian 对偶推导 Shor 松弛**：对 QCQP 写 Lagrangian
+
 $$
 L(x, y) = x^\top(C - \textstyle\sum_i y_i A_i)x + b^\top y.
 $$
+
 对 $x$ 求下确界：$g(y) = b^\top y$ 若 $C - \sum y_i A_i \succeq 0$，否则 $-\infty$。对偶
+
 $$
 \max_y\ b^\top y\ \ \text{s.t.}\ C - \sum y_i A_i \succeq 0
 $$
+
 正是 SDR 的对偶。**Lagrangian 对偶紧 ⟺ SDR 紧 ⟺ SDR 有 rank-1 最优解**——这是 certifiable perception 反复使用的核心结论。
 
 > **概念误区**：初学者常认为"SDP 松弛 = 扔掉约束让问题变容易"。实际上 Shor 松弛只扔掉了 rank-1 约束（$X=xx^\top$），所有原始等式约束 $\operatorname{tr}(A_iX)=b_i$ 都保留。松弛后可行域变大（从 rank-1 子集扩大到整个 PSD 锥截面），因此最优值只能变小或不变——这是"下界"性质的来源。
@@ -260,9 +267,11 @@ $$
 **非齐次 QCQP**：若目标含一次项 $2q^\top x$，lift 到 $y = [x; 1]$，$Y = yy^\top$，加约束 $Y_{n+1,n+1} = 1$，rank-1；扔 rank 得 Shor。
 
 **MaxCut 作为原型**（Goemans-Williamson *JACM* 1995）：
+
 $$
 \max \sum_{(i,j) \in E} \tfrac{w_{ij}}{2}(1 - X_{ij})\ \text{s.t.}\ X_{ii} = 1,\ X \succeq 0.
 $$
+
 随机超平面舍入给出 **0.87856 近似保证**——这是 Shor 松弛的"教科书例子"，SE-Sync 和 TEASER 的 SDP 本质上都是它的"结构化孪生"。
 
 ---
@@ -286,9 +295,11 @@ $$
 7. **若 $\lambda_{\min} < -\epsilon$** 或互补条件失败：松弛不紧或 $\hat x$ 不是局部最优；报告"无法认证"。
 
 **为什么这是充分的？** 若 $S(\hat \lambda) \succeq 0$，则对任意可行 $x$：
+
 $$
 f(x) = x^\top C x = x^\top S(\hat \lambda) x + \sum \hat \lambda_i\, x^\top A_i x \ge \sum \hat \lambda_i b_i = f(\hat x)
 $$
+
 （最后一步用了 $S(\hat \lambda) \hat x = 0$ 推出的 $\hat x^\top S(\hat \lambda) \hat x = 0$）。这就证明 $\hat x$ 全局最优。
 
 **Boyd §5.5.3 (p.243)**：对 differentiable 问题，强对偶下 KKT 是最优的必要充分条件。Slater 成立时 KKT ⟺ primal-dual 最优。
@@ -306,6 +317,7 @@ $$
 **Burer-Monteiro**（Burer-Monteiro *Math. Prog.* 95(2):329-357, 2003）——**SLAM 的杀手锏**。
 
 > **想法**：既然（Barvinok-Pataki 1998）SDP 最优解的秩满足 $\frac{r(r+1)}{2} \le m$，即 $r \le \sqrt{2m}$，那就**直接以秩为 $p$ 的 $Y \in \mathbb{R}^{n \times p}$ 参数化** $X = YY^\top$：
+> 
 > $$
 > (\text{BM}_p)\quad \min_{Y \in \mathbb{R}^{n \times p}}\ \langle C, YY^\top\rangle\ \text{s.t.}\ \langle A_i, YY^\top\rangle = b_i,\ i=1..m.
 > $$
@@ -337,15 +349,19 @@ $$
 **输入**：连通图 $G = (V, E)$，$|V| = n$；对每边 $(i,j) \in E$ 有相对测量 $(\tilde R_{ij}, \tilde t_{ij}) \in SE(d)$ 及精度 $\kappa_{ij}, \tau_{ij}$。
 
 **噪声模型**（paper eq.10）：
+
 $$
 \tilde t_{ij} = \bar t_{ij} + t^\epsilon,\ t^\epsilon \sim \mathcal{N}(0, \tau_{ij}^{-1} I_d);\qquad \tilde R_{ij} = \bar R_{ij} R^\epsilon,\ R^\epsilon \sim \text{Langevin}(I_d, \kappa_{ij})
 $$
+
 **Langevin (isotropic)**：$p(X; M, \kappa) = \frac{1}{c_d(\kappa)} \exp(\kappa \operatorname{tr}(M^\top X))$；对 $d=3$，$c_3(\kappa) = \exp(\kappa)(I_0(2\kappa) - I_1(2\kappa))$，渐近 $\text{SD}[\theta] \approx 1/\sqrt{2\kappa}$。
 
 **Problem 1（MLE）**：
+
 $$
 \min_{\substack{t_i \in \mathbb{R}^d\\ R_i \in SO(d)}}\ \sum_{(i,j) \in \vec{E}} \Big[\kappa_{ij}\|R_j - R_i \tilde R_{ij}\|_F^2 + \tau_{ij}\|t_j - t_i - R_i \tilde t_{ij}\|_2^2\Big].
 $$
+
 非凸（$SO(d)$ 约束）。
 
 **关键认识**：$t_i$ 无约束，可**解析消去**；化约后是一个"纯旋转"的 QCQP。这是 SE-Sync 全部技术的起点。
@@ -359,41 +375,53 @@ $$
 **Problem 2（QP 形式）**：把 $[t; \operatorname{vec}(R)]$ 拼成长向量，目标写成 $[t; \operatorname{vec}(R)]^\top (M \otimes I_d) [t; \operatorname{vec}(R)]$（paper eq.18），$M$ 是 $2\times 2$ 块矩阵，由加权平移 Laplacian $L(W_\tau)$、旋转 connection Laplacian $L(\tilde G^\rho)$、相对平移矩阵 $\tilde V$、对角 $\tilde \Sigma$ 构成。
 
 **Problem 3（仅旋转 MLE，消去 $t$）**：用平移无约束的最优性条件，得 $t^\star = -\operatorname{vec}(R^\star \tilde V^\top L(W_\tau)^\dagger)$（paper eq.21）。这个负号来自 Rosen 论文对 $\tilde V$ 的定义；若改写为 §E.31 的 $\min_t\|Bt-c(R)\|^2$ 记号，等价表达为 $t^\star=(B^\top B)^\dagger B^\top c(R)$。回代得
+
 $$
 \min_{R \in SO(d)^n}\ \operatorname{tr}(\tilde Q\, R^\top R),\qquad \tilde Q = L(\tilde G^\rho) + \tilde \Sigma - \tilde V^\top L(W_\tau)^\dagger \tilde V.
 $$
+
 （paper eq.20）。$\tilde Q$ 是 $dn \times dn$ 对称半正定矩阵——**certifiable pose graph 核心矩阵**。
 
 **Problem 4（simplified MLE）**：用 $\tilde Q_\tau = \tilde T^\top \Omega^{1/2} \Pi \Omega^{1/2} \tilde T$（eq.24），$\Pi = I_m - \Omega^{1/2} A^\top L^{-\top} L^{-1} A \Omega^{1/2}$ 为 $\ker(A(\vec G)\Omega^{1/2})$ 上的正交投影，通过对关联矩阵 $A(\vec G)\Omega^{1/2} = LQ_1$ 做**稀疏 LQ 分解**获得稀疏表示。
 
 **Problem 5（正交松弛）**：$SO(d) \to O(d)$，把行列式约束放松：
+
 $$
 \min_{R \in O(d)^n}\ \operatorname{tr}(\tilde Q\, R^\top R).
 $$
+
 （eq.25）。$O(d)$ 包含反射；rank-$d$ 的 SDR 最优解可能对应 $O(d)$ 而非 $SO(d)$，但通过取多数块符号修复。
 
 **Problem 6（原始 SDP，Lagrangian 对偶）**：用乘子 $\Lambda \in \text{SBD}(d, n)$（对称块对角矩阵）对 $R_i^\top R_i = I_d$ 构造对偶：
+
 $$
 \max_{\Lambda \in \text{SBD}(d,n)}\ \operatorname{tr}(\Lambda)\quad \text{s.t.}\quad \tilde Q - \Lambda \succeq 0.
 $$
+
 （eq.32）。
 
 **Problem 7（中心 SDP 松弛）**：Problem 6 的对偶：
+
 $$
 \boxed{\;\min_{Z \in \mathbb{S}^{dn}_+}\ \operatorname{tr}(\tilde Q Z)\quad \text{s.t.}\quad Z_{ii} = I_d,\ \forall i=1..n.\;}
 $$
+
 （eq.33）。这是 SE-Sync 真正求解的 SDP。相当于 MaxCut SDP（$X_{ii}=1$）的**矩阵值**推广（$Z_{ii} = I_d$）。
 
 **Problem 8（Burer-Monteiro NLP）**：$Z = Y^\top Y$，$Y \in \mathbb{R}^{r \times dn}$，$r \ll dn$：
+
 $$
 \min_{Y}\ \operatorname{tr}(\tilde Q Y^\top Y)\quad \text{s.t.}\quad Y_i^\top Y_i = I_d.
 $$
+
 （eq.35）。
 
 **Problem 9（Riemannian 形式）**：约束 $Y_i \in \text{St}(d, r)$（Stiefel 流形，$d \le r$）：
+
 $$
 \boxed{\;\min_{Y \in \text{St}(d, r)^n}\ \operatorname{tr}(\tilde Q Y^\top Y).\;}
 $$
+
 （eq.38）。这是在 $n$ 个 Stiefel 流形乘积上的 Riemannian 优化，**实际求解的问题**。
 
 ---
@@ -403,23 +431,29 @@ $$
 **定理 1（精确恢复等价性，paper Thm.1）**：若 $Z^\star$ 是 Problem 7 最优解且因子化为 $Z^\star = R^{\star\top} R^\star$ 其中 $R^\star \in O(d)^n$，则 $R^\star$ 是 Problem 5 全局最优。若进一步 $R^\star \in SO(d)^n$，则 $R^\star$ 是 Problem 4 全局最优，$(t^\star, R^\star)$ 是 Problem 1 全局 MLE。**证明**：SDP 对偶给出 $p^\star_6 \le p^\star_7$，松弛关系给出 $p^\star_7 \le p^\star_5 \le p^\star_4$；若强对偶且秩条件成立，就得到从松弛解回到原问题的全局最优证书。
 
 **引理 6（KKT 一阶条件）**：若 $R^\star$ 是 Problem 5 最优，则存在 $\Lambda^\star \in \text{SBD}(d, n)$ 满足
+
 $$
 (\tilde Q - \Lambda^\star) R^{\star\top} = 0,\qquad \Lambda^\star = \text{SymBlockDiag}_d(\tilde Q\, R^{\star\top} R^\star).
 $$
+
 **这给出从 primal 解 $R^\star$ 直接构造对偶证书 $\Lambda^\star$ 的显式公式**。
 
 **定理 7（充分条件）**：令 $S := \tilde Q - \Lambda^\star$ 为**对偶证书矩阵**。若
+
 $$
 S \succeq 0
 $$
+
 则 $Z^\star = R^{\star\top} R^\star$ 是 Problem 7 最优解。若进一步 $\operatorname{rank}(S) = dn - d$，则 $Z^\star$ 是**唯一**最优（用 Alizadeh-Haeberly-Overton *SIOPT* 1997 的 primal-dual 非退化）。**这就是对偶证书验证的全部内容**。
 
 **定理 10（无噪声精确性）**：无噪声下 $\tilde Q = Q$，Problem 7 紧且唯一。用 connection Laplacian 性质：$L(W_\rho) \otimes I_d = S\, L(G_\rho)\, S^{-1}$，$S = \operatorname{Diag}(R_1,...,R_n)$；$\lambda_{d+1}(L(G_\rho)) = \lambda_2(L(W_\rho)) > 0$（$G$ 连通）；$\ker L(G_\rho) = \{R^\top v : v \in \mathbb{R}^d\}$（引理 8）。
 
 **定理 12（误差上界）**：
+
 $$
 d_O(R, R^\star) \le \sqrt{\frac{4dn\,\|\tilde Q - Q\|_2}{\lambda_{d+1}(Q)}}.
 $$
+
 其中 $d_O$ 是 $O(d)^n / O(d)$ 商空间上的 gauge-invariant Procrustes 距离。
 
 **命题 2（带噪声精确恢复）**：存在 $\beta = \beta(Q) > 0$ 使 $\|\tilde Q - Q\|_2 < \beta$ 时 Problem 7 **唯一**最优 $Z^\star = R^{\star\top} R^\star$，$R^\star \in SO(d)^n$ 是 Problem 4 最优。证明通过 $C = \tilde Q - \Lambda^\star$ 特征值连续性 + $O(d)$ 分量 $\sqrt{2}$-分离性给出两个阈值 $\beta_1, \beta_2$，取 $\beta = \min(\beta_1, \beta_2)$。证明模板改编自 Bandeira-Boumal-Singer *Math. Prog.* 2017 angular synchronization tightness。
@@ -527,11 +561,13 @@ return failure
 **Yang-Shi-Carlone** "TEASER: Fast and Certifiable Point Cloud Registration" *IEEE T-RO* 37(2):314-333, 2021 (arXiv:2001.07715)。
 
 **输入**：两组 3D 对应点 $\{(a_i, b_i)\}_{i=1}^N$，$a_i, b_i \in \mathbb{R}^3$，其中**未知比例**的外点。生成模型：
+
 $$
 b_i = s^\circ R^\circ a_i + t^\circ + o_i + \epsilon_i,\qquad o_i = 0 \text{ (内点)}\ \text{or}\ \text{任意 (外点)},\ \epsilon_i \sim \mathcal{N}(0, \beta_i^2 I).
 $$
 
 **估计器（Truncated Least Squares, TLS）**：
+
 $$
 \boxed{\;\min_{s > 0, R \in SO(3), t \in \mathbb{R}^3}\ \sum_{i=1}^N \min\Big(\frac{\|b_i - sRa_i - t\|^2}{\beta_i^2},\ \bar c^2\Big)\;}
 $$
@@ -558,16 +594,20 @@ TEASER 的**核心洞察**：通过**测量不变量**把耦合的 $(s, R, t)$ �
 **第一步：尺度估计 via TRIMs**
 - **TIM** (Translation-Invariant Measurement)：$\bar a_{ij} := a_j - a_i$，$\bar b_{ij} := b_j - b_i$。因 $b_j - b_i = sR(a_j - a_i) + (o_j - o_i) + (\epsilon_j - \epsilon_i)$，$t$ 消失。
 - **TRIM** (Translation-Rotation-Invariant)：$s_{ij} := \|\bar b_{ij}\|/\|\bar a_{ij}\| = s + o_{ij}^s + \epsilon_{ij}^s$，$R$ 也消失——**纯尺度标量 TLS**：
+
 $$
 \hat s = \arg\min_s \sum_{ij} \min((s_{ij} - s)^2/\sigma_{ij}^2,\ \bar c^2).
 $$
+
 **Adaptive voting** 在多项式时间内求全局最优（一维问题，排序 + 扫描所有候选区间）。
 
 **第二步：旋转估计 via TIMs（最难）**
 把 $\bar b_{ij} = \hat s R \bar a_{ij} + o_{ij}^R + \epsilon_{ij}^R$ 代入 TLS：
+
 $$
 \hat R = \arg\min_{R \in SO(3)} \sum_{ij} \min(\|\bar b_{ij} - \hat s R \bar a_{ij}\|^2/\delta_{ij}^2,\ \bar c^2).
 $$
+
 这是**外点鲁棒 Wahba 问题**（outlier-robust Wahba），可表为 **TLS-QCQP** 再 Shor 松弛。具体地，引入二进制变量 $\theta_i \in \{-1, +1\}$ 标记内/外点，把 min 写成 $\min(\alpha, \beta) = \frac{1}{2}((\alpha + \beta) - |\alpha - \beta|)$ 的 QCQP 形式，再用单位四元数 $q$ 表示 $R$（$\|q\|=1$ 二次约束）。**QUASAR**（Yang-Carlone *ICCV* 2019, arXiv:1905.12536）是前身。
 
 **Shor SDP 松弛**：提升 $X = zz^\top$（$z = [q; \theta \otimes q]$），$X \succeq 0$，drop rank。**紧性定理（TEASER Thm.2）**：噪声低于某阈值、外点比例不太高时 SDR 紧。实验上 **>99% 外点**仍紧。
@@ -660,6 +700,7 @@ sol = solver.getSolution()
 **Eriksson-Olsson-Kahl-Chin** "Rotation Averaging with the Chordal Distance: Strong Duality, Tight Relaxation, and Certifiable Algorithms" *IEEE TPAMI* 43(1):256-268, 2021（CVPR 2018 会议版）。
 
 **问题**：给定相对旋转 $\tilde R_{ij}$，最小化 **chordal distance**
+
 $$
 \min_{R_i \in SO(d)} \sum_{(i,j)} \|R_j - R_i\tilde R_{ij}\|_F^2.
 $$
@@ -675,9 +716,11 @@ $$
 **Shi-Yang-Carlone** "Optimal Pose and Shape Estimation for Category-level 3D Object Perception" *RSS* 2021 Best Paper Finalist (arXiv:2104.08383)。
 
 **问题**：给定一组同类别 3D 关键点观测和类别先验（CAD 模型的主动形状空间 $\sum_k \beta_k B_k$），**联合**估计物体姿态 $(R, t)$ 和形状系数 $\beta$：
+
 $$
 \min_{R, t, \beta \ge 0,\,\|\beta\|_1 = 1} \sum_i \Big\|y_i - R\Big(\sum_k \beta_k B_k^{(i)}\Big) - t\Big\|^2.
 $$
+
 在 simplex 约束下 $\|\beta\|_1=1$ 已经是常数；若要表达形状先验，应使用真正有作用的二次先验或类别协方差项，例如 $\lambda\|\beta-\bar\beta\|^2$ 或 $\lambda\beta^\top\Sigma_\beta^{-1}\beta$。
 四次耦合（$R \cdot \beta$）→ TLS + Shor SDP 松弛 → 全局最优。
 

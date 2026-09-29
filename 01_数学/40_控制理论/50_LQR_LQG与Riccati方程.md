@@ -90,8 +90,11 @@ LQR/LQG 与 Riccati 方程
 #### §3.5.1 问题定义与"线性 + 二次 ⇒ 闭式解"之谜
 
 **连续时间 LQR**：给定线性时不变系统
+
 $$\dot x(t)=Ax(t)+Bu(t),\qquad x(0)=x_0,\quad x\in\mathbb R^n,\ u\in\mathbb R^m,$$
+
 最小化二次代价
+
 $$J(u)=\frac12\int_0^T\bigl(x^\top Qx+u^\top Ru\bigr)\,dt+\frac12 x(T)^\top Q_f x(T),\qquad Q\succeq0,\ R\succ0,\ Q_f\succeq0.$$
 
 **为什么闭式解不是巧合**。三个代数事实决定了一切：(i) 线性动力学对状态仿射；(ii) 二次代价关于 $(x,u)$ 为正定二次型；(iii) 叠加原理让值函数必须是 $x$ 的二次型 $V(x,t)=\tfrac12 x^\top P(t)x$。结合 HJB 方程对 $u$ 求最小，就是**求一个二次函数的最小值**——总存在显式解。**任何破坏这三条中一条的改动（非线性动力学、非凸代价、约束）都会毁掉闭式性**。这也解释了为什么 iLQR（§3.5.C）的核心思想是"在轨迹附近线性化 + 二次化，把 LQR 当子程序反复使用"。
@@ -109,27 +112,37 @@ $$J(u)=\frac12\int_0^T\bigl(x^\top Qx+u^\top Ru\bigr)\,dt+\frac12 x(T)^\top Q_f 
 ##### 完整推导过程
 
 HJB 方程（专题 3.4 结果）：
+
 $$-\frac{\partial V}{\partial t}=\min_u\Bigl\{\tfrac12 x^\top Q x+\tfrac12 u^\top R u+(\nabla_x V)^\top(Ax+Bu)\Bigr\},\quad V(x,T)=\tfrac12 x^\top Q_f x.$$
 
 **Step 1：二次型 Ansatz。** 设 $V(x,t)=\tfrac12 x^\top P(t)x$，其中 $P(t)=P(t)^\top\succeq0$。这一假设的合理性来自三重论证：(i) 终端条件 $V(x,T)=\tfrac12 x^\top Q_f x$ 是二次的；(ii) 对线性动力学，若当前值函数是二次的，则往前一步的值函数仍是二次的（归纳）；(iii) 由叠加原理，$V(\alpha x,t)=\alpha^2 V(x,t)$（齐次性）强制 $V$ 为二次型。
 
 **Step 2：计算梯度与代入。** 由 $V=\tfrac12 x^\top Px$，得 $\nabla_x V=Px$，$\partial V/\partial t=\tfrac12 x^\top\dot P x$。大括号内表达式为：
+
 $$L(x,u)=\tfrac12 x^\top Qx+\tfrac12 u^\top Ru+x^\top P(Ax+Bu)=\tfrac12 x^\top Qx+\tfrac12 u^\top Ru+x^\top PAx+x^\top PBu.$$
 
 **Step 3：对 $u$ 求极小（一阶条件）。** 对 $u$ 求导并令其为零：
+
 $$\frac{\partial L}{\partial u}=Ru+B^\top Px=0\quad\Longrightarrow\quad u^\star=-R^{-1}B^\top P(t)x.$$
+
 由于 $R\succ0$，Hessian $\partial^2 L/\partial u^2=R\succ0$，确认这是最小值而非鞍点。
 
 **Step 4：代回 HJB 提取 Riccati。** 将 $u^\star=-R^{-1}B^\top Px$ 代入 HJB：
+
 $$-\tfrac12 x^\top\dot P x=\tfrac12 x^\top Qx+\tfrac12 x^\top PBR^{-1}RR^{-1}B^\top Px+x^\top PAx-x^\top PBR^{-1}B^\top Px.$$
+
 化简（注意 $\tfrac12 u^\star{}^\top Ru^\star=\tfrac12 x^\top PBR^{-1}B^\top Px$，而交叉项为 $-x^\top PBR^{-1}B^\top Px$，合并得 $-\tfrac12 x^\top PBR^{-1}B^\top Px$）：
+
 $$-\tfrac12 x^\top\dot P x=\tfrac12 x^\top\bigl(Q+PA+A^\top P-PBR^{-1}B^\top P\bigr)x.$$
+
 由于这对所有 $x$ 成立（$P$ 对称），提取系数得到 **Riccati 微分方程（RDE）**：
 
 $$\boxed{-\dot P=A^\top P+PA-PBR^{-1}B^\top P+Q,\qquad P(T)=Q_f.}$$
 
 **Step 5：最优反馈控制律。**
+
 $$u^\star(t)=-K(t)x(t),\qquad K(t)=R^{-1}B^\top P(t).$$
+
 这是**全状态线性反馈**——不是开环轨迹，而是随时间变化的增益矩阵乘以当前状态。数值上倒向积分 RDE（从 $t=T$ 积到 $t=0$）得到 $P(t)$，再正向仿真闭环系统即可。
 
 ##### 为什么 RDE 有"负号"
@@ -159,21 +172,29 @@ RDE 中的 $-PBR^{-1}B^\top P$ 项是**控制的"回报"**：当控制代价 $R$
 **系统**：$x_{k+1}=Ax_k+Bu_k$，代价 $J=\tfrac12\sum_{k=0}^{N-1}(x_k^\top Qx_k+u_k^\top Ru_k)+\tfrac12 x_N^\top Q_f x_N$。
 
 **DP 反向递推（Bellman 方程）**：定义 cost-to-go $V_k(x)=\min_{u_k,\ldots,u_{N-1}}J_{[k,N]}$。Bellman 给出：
+
 $$V_k(x)=\min_u\bigl\{\tfrac12 x^\top Qx+\tfrac12 u^\top Ru+V_{k+1}(Ax+Bu)\bigr\},\quad V_N(x)=\tfrac12 x^\top Q_f x.$$
 
 **Step 1：归纳假设 $V_{k+1}(x)=\tfrac12 x^\top P_{k+1}x$。** 终端条件验证：$V_N=\tfrac12 x^\top Q_f x$ 确实是二次型（$P_N=Q_f$）。
 
 **Step 2：展开 Bellman。**
+
 $$V_k(x)=\min_u\bigl\{\tfrac12 x^\top Qx+\tfrac12 u^\top Ru+\tfrac12(Ax+Bu)^\top P_{k+1}(Ax+Bu)\bigr\}.$$
+
 展开二次型：
+
 $$=\min_u\bigl\{\tfrac12 x^\top(Q+A^\top P_{k+1}A)x+x^\top A^\top P_{k+1}Bu+\tfrac12 u^\top(R+B^\top P_{k+1}B)u\bigr\}.$$
 
 **Step 3：对 $u$ 求极小。** 令关于 $u$ 的梯度为零：
+
 $$(R+B^\top P_{k+1}B)u+B^\top P_{k+1}Ax=0\quad\Longrightarrow\quad u_k^\star=-(R+B^\top P_{k+1}B)^{-1}B^\top P_{k+1}Ax_k.$$
+
 注意 $R+B^\top P_{k+1}B\succ0$（因为 $R\succ0$ 且 $P_{k+1}\succeq0$），所以逆总存在。
 
 **Step 4：代回得到 Riccati 差分方程（DRE 离散版）。**
+
 $$\boxed{P_k=Q+A^\top P_{k+1}A-A^\top P_{k+1}B(R+B^\top P_{k+1}B)^{-1}B^\top P_{k+1}A,\quad P_N=Q_f.}$$
+
 最优反馈增益：$K_k=(R+B^\top P_{k+1}B)^{-1}B^\top P_{k+1}A$。
 
 ##### 离散→连续的极限过渡
@@ -183,6 +204,7 @@ $$\boxed{P_k=Q+A^\top P_{k+1}A-A^\top P_{k+1}B(R+B^\top P_{k+1}B)^{-1}B^\top P_{
 $$P_k=Q\Delta t+(I+A_c^\top\Delta t)P_{k+1}(I+A_c\Delta t)-(I+A_c^\top\Delta t)P_{k+1}B_c\Delta t(R+B_c^\top P_{k+1}B_c\Delta t^2)^{-1}B_c^\top\Delta t P_{k+1}(I+A_c\Delta t).$$
 
 展开到 $O(\Delta t)$ 阶并令 $(P_{k+1}-P_k)/\Delta t\to\dot P$，利用 Neumann 级数 $(R+\epsilon M)^{-1}\approx R^{-1}-\epsilon R^{-1}MR^{-1}+\ldots$，严格恢复连续 RDE：
+
 $$-\dot P=A_c^\top P+PA_c-PB_c R^{-1}B_c^\top P+Q.$$
 
 这一极限过渡的意义是**离散与连续最优控制的同构**——它保证用高频离散 LQR 近似连续 LQR 的误差随 $\Delta t\to0$ 消失，也是 MPC 与 LQR 等价性的数学基础。
@@ -200,23 +222,31 @@ $$-\dot P=A_c^\top P+PA_c-PB_c R^{-1}B_c^\top P+Q.$$
 **目标**：把总代价 $J=\tfrac12\sum_{k=0}^{N-1}(x_k^\top Qx_k+u_k^\top Ru_k)+\tfrac12 x_N^\top Q_f x_N$ 改写为"与 $u$ 无关的常数项 + 关于 $u$ 的非负二次型"。
 
 **Step 1：引入待定矩阵 $P_k$**。我们猜测存在一组对称矩阵 $\{P_0,P_1,\ldots,P_N\}$ 使得：
+
 $$J = \tfrac12 x_0^\top P_0 x_0 + \tfrac12\sum_{k=0}^{N-1}(u_k+K_k x_k)^\top M_k(u_k+K_k x_k),$$
+
 其中 $M_k\succ0$（正定），$K_k$ 待确定。如果这一改写成立，第一项是常数（$x_0$ 给定），第二项非负，在 $u_k=-K_k x_k$ 时取零——这就是最优控制。
 
 **Step 2：逐步配方**。从终端开始。最后一步的代价：
+
 $$\tfrac12 x_{N-1}^\top Qx_{N-1}+\tfrac12 u_{N-1}^\top Ru_{N-1}+\tfrac12 x_N^\top Q_f x_N.$$
+
 代入 $x_N=Ax_{N-1}+Bu_{N-1}$：
+
 $$=\tfrac12 x_{N-1}^\top(Q+A^\top Q_f A)x_{N-1}+x_{N-1}^\top A^\top Q_f Bu_{N-1}+\tfrac12 u_{N-1}^\top(R+B^\top Q_f B)u_{N-1}.$$
 
 **Step 3：对 $u_{N-1}$ 配方**。令 $M_{N-1}=R+B^\top Q_f B$ 和 $K_{N-1}=M_{N-1}^{-1}B^\top Q_f A$（注意 $M_{N-1}\succ0$）：
+
 $$=\tfrac12(u_{N-1}+K_{N-1}x_{N-1})^\top M_{N-1}(u_{N-1}+K_{N-1}x_{N-1})+\tfrac12 x_{N-1}^\top\underbrace{(Q+A^\top Q_f A-A^\top Q_f B M_{N-1}^{-1}B^\top Q_f A)}_{=:P_{N-1}}x_{N-1}.$$
 
 配方的关键代数恒等式：$ax^2+bx+c=a(x+b/2a)^2+(c-b^2/4a)$。在矩阵版本中，交叉项 $x^\top Hu$ 被吸收进 $(u+M^{-1}H^\top x)^\top M(u+M^{-1}H^\top x)$ 中，余项给出 $P_{N-1}$。
 
 **Step 4：递推**。把 $\tfrac12 x_{N-1}^\top P_{N-1}x_{N-1}$ 与前一步的代价合并，对 $u_{N-2}$ 重复配方。归纳证明 $P_k$ 满足：
+
 $$P_k=Q+A^\top P_{k+1}A-A^\top P_{k+1}B(R+B^\top P_{k+1}B)^{-1}B^\top P_{k+1}A,\quad P_N=Q_f.$$
 
 这正是**离散 Riccati 差分方程**！最终得到：
+
 $$\boxed{J=\tfrac12 x_0^\top P_0 x_0+\tfrac12\sum_{k=0}^{N-1}\|u_k+K_k x_k\|^2_{R+B^\top P_{k+1}B}.}$$
 
 **Step 5：最优性立刻可见**。第一项不依赖 $u$（固定初值下为常数），第二项是非负二次型，最小值在 $u_k=-K_k x_k$ 时取到，最优代价为 $J^\star=\tfrac12 x_0^\top P_0 x_0$。
@@ -241,7 +271,9 @@ $$\boxed{J=\tfrac12 x_0^\top P_0 x_0+\tfrac12\sum_{k=0}^{N-1}\|u_k+K_k x_k\|^2_{
 ##### 连续时间的完备平方法
 
 对连续时间 LQR，完备平方法给出：
+
 $$J=\tfrac12 x(0)^\top P(0)x(0)+\tfrac12\int_0^T\|u+R^{-1}B^\top P(t)x\|^2_R\,dt.$$
+
 其中 $P(t)$ 满足连续 RDE。推导过程需要 Ito-积分式的"完成平方"技巧（对确定性系统退化为普通积分），具体步骤：
 
 1. 定义 Lyapunov-like 函数 $W(t)=\tfrac12 x(t)^\top P(t)x(t)$
@@ -257,9 +289,11 @@ $$J=\tfrac12 x(0)^\top P(0)x(0)+\tfrac12\int_0^T\|u+R^{-1}B^\top P(t)x\|^2_R\,dt
 令 $T\to\infty$、$Q_f=0$。物理直觉是：如果控制任务没有截止时间，那么"还剩多少时间"不再影响最优策略——控制器变成**时不变的**。数学上，这意味着 RDE 的解 $P(t)$ 在 $t\to-\infty$（记住是倒向积分）应该收敛到一个稳态值 $P_\infty$。
 
 在稳态 $\dot P=0$，RDE 退化为**连续代数 Riccati 方程（CARE）**：
+
 $$\boxed{A^\top P+PA-PBR^{-1}B^\top P+Q=0.}$$
 
 离散版本（**DARE**）：
+
 $$\boxed{P=A^\top PA-A^\top PB(R+B^\top PB)^{-1}B^\top PA+Q.}$$
 
 ##### 存在唯一性定理的完整证明
@@ -271,13 +305,17 @@ $$\boxed{P=A^\top PA-A^\top PB(R+B^\top PB)^{-1}B^\top PA+Q.}$$
 **第一步：存在性——通过 DRE 的单调收敛。** 考虑 $Q_f=0$，从 $t=T$ 倒向积分 RDE 得到 $P_T(t)$（下标 $T$ 表示终端时间）。由 $P_T(T)=0\preceq Q_f'$ 对任何 $Q_f'\succeq0$，比较定理给出 $P_T(0)\preceq P_{T'}(0)$ 当 $T\le T'$。因此 $\{P_T(0)\}_{T>0}$ 是单调不减序列。
 
 **上界论证**：$(A,B)$ 可稳定化意味着存在 $K_0$ 使 $A-BK_0$ Hurwitz。取次优控制 $u=-K_0 x$ 得到有限代价上界：
+
 $$V(x,0)\le\tfrac12 x^\top\underbrace{\int_0^\infty e^{(A-BK_0)^\top t}(Q+K_0^\top RK_0)e^{(A-BK_0)t}dt}_{=:\bar P}x.$$
+
 其中 $\bar P$ 有限（因为 $A-BK_0$ Hurwitz 保证积分收敛）。所以 $P_T(0)\preceq\bar P$ 对所有 $T$。
 
 **单调有界序列收敛**：$P_\infty:=\lim_{T\to\infty}P_T(0)$ 存在且 $0\preceq P_\infty\preceq\bar P$。由 $P_\infty$ 是 RDE 的稳态，它满足 CARE。
 
 **第二步：闭环稳定性——用可检测性。** 设 $A_{cl}=A-BR^{-1}B^\top P_\infty$。把 CARE 改写为 Lyapunov 方程形式：
+
 $$A_{cl}^\top P_\infty+P_\infty A_{cl}=-(Q+P_\infty BR^{-1}B^\top P_\infty)\preceq-Q.$$
+
 设 $V(x)=x^\top P_\infty x$，沿闭环轨迹 $\dot V=-x^\top(Q+K^{\star\top}RK^\star)x\le-x^\top Qx\le0$。
 
 如果 $Q\succ0$，则 $\dot V<0$ 对 $x\ne0$，直接得 $A_{cl}$ Hurwitz。
@@ -285,7 +323,9 @@ $$A_{cl}^\top P_\infty+P_\infty A_{cl}=-(Q+P_\infty BR^{-1}B^\top P_\infty)\prec
 如果 $Q\succeq0$（半正定），需要 LaSalle。$\dot V=0$ 的集合是 $\{x:Q^{1/2}x=0\}\cap\{x:K^\star x=0\}$。可检测性 $(A,Q^{1/2})$ 意味着：$Q^{1/2}x(t)\equiv0$ 对所有 $t$ 强制 $x(t)$ 沿 $A_{cl}$ 的不可观子空间演化，但该子空间的所有模态必须稳定（可检测性定义）。因此 LaSalle 不变集只含原点，$A_{cl}$ Hurwitz。
 
 **第三步：唯一性——用 Lyapunov 方程的唯一性。** 假设存在另一个稳定化解 $P'$（即 $A-BR^{-1}B^\top P'$ 也 Hurwitz）。定义 $\Delta=P_\infty-P'$。将两个 CARE 相减：
+
 $$A_{cl}^\top\Delta+\Delta A_{cl}+\Delta BR^{-1}B^\top\Delta=0.$$
+
 由 Lyapunov 方程理论，$A_{cl}$ Hurwitz 且右端半正定意味着 $\Delta\succeq0$。交换角色（用 $P'$ 对应的 $A_{cl}'$）得 $\Delta\preceq0$。故 $\Delta=0$，即 $P_\infty=P'$。$\blacksquare$
 
 ##### 可稳定化与可检测的物理意义
@@ -304,7 +344,9 @@ CARE 一般有**多个**对称解（最多 $2^n$ 个，对应 Hamiltonian 矩阵
 ##### CARE 与 H2 最优控制的联系
 
 将 LQR 写成传递函数语言：令评价输出 $z=\begin{pmatrix}Q^{1/2}x\\R^{1/2}u\end{pmatrix}$，闭环从扰动 $w$ 到 $z$ 的传递函数 $T_{zw}(s)=\begin{pmatrix}Q^{1/2}\\-R^{1/2}K\end{pmatrix}(sI-A_{cl})^{-1}$，则 LQR 的最优代价恰为 $H_2$ 范数的平方：
+
 $$J^\star=\tfrac12 x_0^\top P^\star x_0=\tfrac12\|T_{zw}\|_2^2\cdot\|x_0\|^2.$$
+
 这一等价性意味着 LQR 就是 $H_2$ 最优控制——在能量意义下最好的线性反馈。从 $H_2$ 到 $H_\infty$（专题 3.6）只需把"能量最优"改为"最坏情况最优"。
 
 #### §3.5.4b ARE 的深层性质：单调性、解的参数化与极值原理 ⭐⭐⭐
@@ -356,6 +398,7 @@ CARE 可能有多达 $2^n$ 个对称解（对应 Hamiltonian 矩阵 $2n$ 个特�
 ##### 动机：实际系统需要跟踪参考轨迹，不是调节到零
 
 标准 LQR 把状态调节到零——但实际机器人需要跟踪时变参考 $r(t)$（如四旋翼跟踪路径、机械臂跟踪关节轨迹）。**线性二次跟踪器（LQT）**把代价改为：
+
 $$J=\tfrac12\int_0^T\bigl((x-r)^\top Q(x-r)+u^\top Ru\bigr)dt+\tfrac12(x(T)-r(T))^\top Q_f(x(T)-r(T)).$$
 
 ##### 完整推导
@@ -365,8 +408,11 @@ $$J=\tfrac12\int_0^T\bigl((x-r)^\top Q(x-r)+u^\top Ru\bigr)dt+\tfrac12(x(T)-r(T)
 **Step 2：值函数变为仿射二次型**。设 $V(e,t)=\tfrac12 e^\top P(t)e+e^\top g(t)+c(t)$。代入 HJB 方程后配方。
 
 **Step 3：最优控制的仿射形式**。
+
 $$u^\star(t)=-R^{-1}B^\top P(t)e-R^{-1}B^\top g(t)=-K(t)(x-r)-R^{-1}B^\top g(t),$$
+
 其中 $P(t)$ 仍满足标准 RDE（与参考无关！），$g(t)$ 满足**线性倒向 ODE**：
+
 $$-\dot g=(A-BR^{-1}B^\top P)^\top g+Pd,\qquad g(T)=Q_f(x_f-r(T))=0\text{ (若终端匹配)}.$$
 
 **工程意义**：跟踪 LQR 分解为两部分——
@@ -378,8 +424,11 @@ $$-\dot g=(A-BR^{-1}B^\top P)^\top g+Pd,\qquad g(T)=Q_f(x_f-r(T))=0\text{ (若�
 ##### 无穷时域跟踪的稳态解
 
 当参考为常值 $r=\mathrm{const}$、时域无穷时，$P=P^\star$（ARE 解），$g$ 满足稳态线性方程：
+
 $$(A-BR^{-1}B^\top P^\star)^\top g_\infty=-P^\star(Ar-\dot r)=-P^\star Ar.$$
+
 由于 $A_{cl}=A-BK^\star$ Hurwitz，转置 $A_{cl}^\top$ 也 Hurwitz，方程有唯一解。最终稳态前馈：
+
 $$u_{ff}=-R^{-1}B^\top g_\infty.$$
 
 #### §3.5.4d 典型例题：倒立摆 LQR 设计全流程 ⭐⭐
@@ -391,15 +440,19 @@ $$u_{ff}=-R^{-1}B^\top g_\infty.$$
 状态向量 $x=[p,\dot p,\theta,\dot\theta]^\top$（小车位置、速度、摆角、角速度），控制 $u$ 为施加在小车上的力。
 
 非线性动力学在竖直平衡点 $(\theta=0,\dot\theta=0)$ 线性化：
+
 $$A=\begin{pmatrix}0&1&0&0\\0&0&-mg/M&0\\0&0&0&1\\0&0&(M+m)g/(Ml)&0\end{pmatrix},\quad B=\begin{pmatrix}0\\1/M\\0\\-1/(Ml)\end{pmatrix}.$$
 
 代入数值：
+
 $$A=\begin{pmatrix}0&1&0&0\\0&0&-0.981&0\\0&0&0&1\\0&0&21.582&0\end{pmatrix},\quad B=\begin{pmatrix}0\\1\\0\\-2\end{pmatrix}.$$
 
 ##### Step 1：验证可控性
 
 可控性矩阵 $\mathcal C=[B,AB,A^2B,A^3B]$：
+
 $$\mathcal C=\begin{pmatrix}0&1&0&-0.981\\1&0&-0.981&0\\0&-2&0&43.164\\-2&0&43.164&0\end{pmatrix}.$$
+
 $\mathrm{rank}(\mathcal C)=4=n$，系统完全可控。
 
 ##### Step 2：选择权重矩阵
@@ -461,7 +514,9 @@ print(f"闭环极点: {np.linalg.eigvals(A - B @ K)}")
 ##### 问题描述
 
 考虑三轴稳定卫星的姿态控制。绕惯性主轴的 Euler 方程在小角度下线性化为：
+
 $$I_x\ddot\phi=\tau_x,\quad I_y\ddot\theta=\tau_y,\quad I_z\ddot\psi=\tau_z,$$
+
 其中 $(\phi,\theta,\psi)$ 为滚转/俯仰/偏航角，$I_x,I_y,I_z$ 为主惯量，$\tau$ 为反作用轮力矩。
 
 状态 $x=[\phi,\dot\phi,\theta,\dot\theta,\psi,\dot\psi]^\top\in\mathbb R^6$，控制 $u=[\tau_x,\tau_y,\tau_z]^\top\in\mathbb R^3$。
@@ -481,8 +536,11 @@ $$A=\begin{pmatrix}0&1&&&\\ &&0&1&&\\ &&&&0&1\\ \end{pmatrix}_{6\times6}\text{ (
 #### §3.5.5 PMP 视角：Hamiltonian 矩阵与 Ansatz $\lambda=Px$
 
 Pontryagin 最大值原理（专题 3.2）给出共态方程：
+
 $$\dot\lambda=-\frac{\partial H}{\partial x}=-A^\top\lambda-Qx,\qquad u^\star=\arg\min_u H=-R^{-1}B^\top\lambda.$$
+
 整理得到 $2n$ 维线性系统：
+
 $$\begin{pmatrix}\dot x\\\dot\lambda\end{pmatrix}=\underbrace{\begin{pmatrix}A & -BR^{-1}B^\top\\ -Q & -A^\top\end{pmatrix}}_{H\ (\text{Hamiltonian matrix})}\begin{pmatrix}x\\\lambda\end{pmatrix}.$$
 
 ##### Hamiltonian 矩阵的辛结构与特征值对称性
@@ -490,7 +548,9 @@ $$\begin{pmatrix}\dot x\\\dot\lambda\end{pmatrix}=\underbrace{\begin{pmatrix}A &
 **辛矩阵定义**：令 $J=\bigl(\begin{smallmatrix}0&I\\-I&0\end{smallmatrix}\bigr)\in\mathbb R^{2n\times 2n}$。矩阵 $H\in\mathbb R^{2n\times 2n}$ 是 **Hamiltonian 的**（属于辛李代数 $\mathfrak{sp}(2n)$），若 $JH+H^\top J=0$，即 $(JH)^\top=JH$（$JH$ 对称）。
 
 **验证**：令 $S=BR^{-1}B^\top\succeq0$。LQR 的 Hamiltonian 矩阵为 $H=\begin{pmatrix}A&-S\\-Q&-A^\top\end{pmatrix}$。计算：
+
 $$JH=\begin{pmatrix}0&I\\-I&0\end{pmatrix}\begin{pmatrix}A&-S\\-Q&-A^\top\end{pmatrix}=\begin{pmatrix}-Q&-A^\top\\-A&S\end{pmatrix},$$
+
 这显然是对称的（$(-Q)^\top=-Q$，$S^\top=S$，右下角 $S$ 对称，非对角块互为转置）。所以 $H$ 确实是 Hamiltonian 的。
 
 **特征值定理**：Hamiltonian 矩阵的特征值关于虚轴对称——若 $\mu$ 是特征值，则 $-\bar\mu$ 也是（对实矩阵则简化为：若 $\mu$ 是特征值，则 $-\mu$ 也是）。
@@ -506,7 +566,9 @@ $$JH=\begin{pmatrix}0&I\\-I&0\end{pmatrix}\begin{pmatrix}A&-S\\-Q&-A^\top\end{pm
 **关键定理（稳定不变子空间表示）**：若 $X_1$ 可逆，则 $P^\star=X_2 X_1^{-1}$ 是 CARE 的唯一稳定化解。
 
 **证明**：不变子空间满足 $H\begin{pmatrix}X_1\\X_2\end{pmatrix}=\begin{pmatrix}X_1\\X_2\end{pmatrix}\Lambda$，$\Lambda$ 的特征值全在左半平面。展开：
+
 $$AX_1-SX_2=X_1\Lambda,\qquad -QX_1-A^\top X_2=X_2\Lambda.$$
+
 令 $P=X_2 X_1^{-1}$。从第一式 $A-SP=X_1\Lambda X_1^{-1}$，即闭环 $A-BK$ 与 $\Lambda$ 相似（$K=R^{-1}B^\top P$），因此 Hurwitz。从两式消 $\Lambda$：将第一式乘 $X_1^{-1}$ 得 $A-SP=X_1\Lambda X_1^{-1}$；第二式乘 $X_1^{-1}$ 得 $-Q-A^\top P=PX_1\Lambda X_1^{-1}=P(A-SP)$。展开后得 $A^\top P+PA-PSP+Q=0$，即 CARE。$\blacksquare$
 
 > **本质洞察**：Riccati 的 Ansatz $\lambda=Px$ 不是天才的"猜测"——它是辛几何的必然：稳定不变子空间是 $2n$ 维相空间中的 $n$ 维 Lagrangian 子空间，而 Lagrangian 子空间恰好可以表示为"图"（graph）$\{(x,Px):x\in\mathbb R^n\}$。Riccati 方程就是 Lagrangian 子空间在 Hamiltonian 流下演化的方程。
@@ -514,7 +576,9 @@ $$AX_1-SX_2=X_1\Lambda,\qquad -QX_1-A^\top X_2=X_2\Lambda.$$
 ##### 矩阵符号函数法（Matrix Sign Function）
 
 **Roberts 1980** 提出了一种优雅的迭代方法：对 Hamiltonian 矩阵 $H$ 定义**矩阵符号函数** $\mathrm{sign}(H)=H(H^2)^{-1/2}$，其特征值为原矩阵特征值的符号（$+1$ 或 $-1$）。迭代格式：
+
 $$H_0=H,\qquad H_{k+1}=\tfrac12(H_k+H_k^{-1}).$$
+
 收敛后 $H_\infty=\mathrm{sign}(H)$，稳定投影为 $\Pi_-=\tfrac12(I-\mathrm{sign}(H))$。从 $\Pi_-$ 提取稳定不变子空间基底即可算出 $P^\star$。
 
 **优势**：只用矩阵求逆，适合并行计算和大规模稀疏系统。**Roberts-Higham 改进**把非对称逆替换为对称逆，提升数值稳定性。这是 §3.5.I 中介绍的数值方法之一，在嵌入式 MPC 的内部 Riccati 递推中（acados/HPIPM）被广泛使用。
@@ -532,10 +596,13 @@ LQR 最令人惊叹的性质之一是：**不需要额外的鲁棒设计，单�
 **定义**：回差函数（return difference）为 $F(s)=I+K(sI-A)^{-1}B$，其中 $K=R^{-1}B^\top P$ 是 LQR 增益。$F(j\omega)$ 在频率 $\omega$ 处衡量"闭环相对于开环的改善"。
 
 **定理（Kalman 1964）**：对 LQR 最优反馈，回差满足
+
 $$F(j\omega)^* R F(j\omega)\succeq R,\quad\forall\omega\in\mathbb R,$$
+
 即 $\|R^{1/2}F(j\omega)R^{-1/2}\|\ge1$。单输入时简化为 $|1+K(j\omega I-A)^{-1}B|\ge1$。
 
 **证明**：CARE 可改写为 $A_{cl}^\top P+PA_{cl}+Q+K^\top RK=0$，其中 $A_{cl}=A-BK$。将 Lyapunov 方程两边乘 $(j\omega I-A_{cl})^{-1}$ 和 $(-j\omega I-A_{cl}^\top)^{-1}$ 后求迹，利用 $F(j\omega)=I+K(j\omega I-A)^{-1}B$ 以及 $K=R^{-1}B^\top P$，经过代数操作（详见 Anderson-Moore Ch.11 或 Zhou-Doyle-Glover §14.4）得：
+
 $$F(j\omega)^*RF(j\omega)=R+B^\top(−j\omega I−A^\top)^{−1}Q(j\omega I−A)^{−1}B\succeq R.$$
 
 **推论（单输入裕度）**：当 $m=1$（单输入），$R$ 为正标量 $r$，回差不等式化为 $|F(j\omega)|^2\ge1$，即 Nyquist 图上 $L(j\omega)=K(j\omega I-A)^{-1}B$ 永远不进入以 $-1$ 为圆心、半径为 1 的**单位圆**。这一几何条件立刻给出：
@@ -559,7 +626,9 @@ $$F(j\omega)^*RF(j\omega)=R+B^\top(−j\omega I−A^\top)^{−1}Q(j\omega I−A)
 #### §3.5.7 LQG 与分离原理
 
 **LQG 问题**：
+
 $$\dot x=Ax+Bu+w,\qquad y=Cx+v,\qquad w\sim\mathcal N(0,\Sigma_w),\ v\sim\mathcal N(0,\Sigma_v),$$
+
 最小化 $\mathbb E\!\int(x^\top Qx+u^\top Ru)\,dt$。未知的是状态 $x$，只能观测 $y$。
 
 **分离原理（separation principle）**：最优控制器等于
@@ -577,8 +646,11 @@ $$\dot x=Ax+Bu+w,\qquad y=Cx+v,\qquad w\sim\mathcal N(0,\Sigma_w),\ v\sim\mathca
 **Step 1：正交分解。** 令估计误差 $\tilde x=x-\hat x$，其中 $\hat x=\mathbb E[x\mid\mathcal Y_t]$（给定观测历史 $\mathcal Y_t=\{y(\tau):\tau\le t\}$ 的条件均值）。由正交投影定理，$\tilde x$ 与 $\hat x$ 不相关：$\mathbb E[\tilde x\hat x^\top]=0$。
 
 **Step 2：代价分解。** 代价中的状态二次型可分解：
+
 $$\mathbb E[x^\top Qx]=\mathbb E[(\hat x+\tilde x)^\top Q(\hat x+\tilde x)]=\mathbb E[\hat x^\top Q\hat x]+\mathbb E[\tilde x^\top Q\tilde x]+2\underbrace{\mathbb E[\hat x^\top Q\tilde x]}_{=0}.$$
+
 因此总代价：
+
 $$J=\mathbb E\int_0^\infty(\hat x^\top Q\hat x+u^\top Ru)dt+\underbrace{\mathbb E\int_0^\infty\tilde x^\top Q\tilde x\,dt}_{\text{仅取决于滤波器，与 }u\text{ 无关}}.$$
 
 **Step 3：估计误差独立于控制。** 对线性高斯系统，Kalman 滤波器的误差协方差 $\Sigma(t)=\mathbb E[\tilde x\tilde x^\top]$ 满足 Riccati 方程 $\dot\Sigma=A\Sigma+\Sigma A^\top-\Sigma C^\top\Sigma_v^{-1}C\Sigma+\Sigma_w$，其中**不含 $u$**（这是线性-高斯假设的关键后果——控制输入不影响估计精度）。因此第二项是常数，最优化只需处理第一项。
@@ -604,7 +676,9 @@ $$J=\mathbb E\int_0^\infty(\hat x^\top Q\hat x+u^\top Ru)dt+\underbrace{\mathbb 
 #### §3.5.8 Kalman–LQR 对偶性
 
 Kalman 滤波器的误差协方差 $\Sigma(t)$ 满足**滤波 Riccati 方程**：
+
 $$\dot\Sigma=A\Sigma+\Sigma A^\top-\Sigma C^\top\Sigma_v^{-1}C\Sigma+\Sigma_w.$$
+
 Kalman 增益 $L=\Sigma C^\top\Sigma_v^{-1}$。与控制 Riccati 对比：
 
 | 控制（LQR）         | 估计（Kalman）        |
@@ -645,7 +719,9 @@ Kalman 增益 $L=\Sigma C^\top\Sigma_v^{-1}$。与控制 Riccati 对比：
 ##### 指数收敛定理
 
 **定理（Anderson-Moore Ch.4）**：在 CARE 良定条件下，RDE 的解从任何初始条件 $P(T)=Q_f\succeq0$ 出发，以指数速率收敛到稳态：
+
 $$\|P(t)-P^\star\|\le C\cdot e^{-2\alpha(T-t)},\quad t\le T,$$
+
 其中 $\alpha=\min_i|\mathrm{Re}(\lambda_i(A_{cl}))|$ 是闭环系统的最慢衰减模态。
 
 **物理解读**：$\alpha$ 越大（闭环越快），$P(t)$ 越快收敛到 $P^\star$。这意味着：快速闭环系统只需要短 horizon 的 MPC 就能达到近似最优；慢系统需要长 horizon。
@@ -704,13 +780,17 @@ MPC 稳定性理论（Mayne-Rawlings-Rao-Scokaert 2000）的核心定理：若�
 把 LQR 写作 $H_2$ 范数最小化：传递函数 $T_{zw}$ 从扰动 $w$ 到评价输出 $z=\bigl(\begin{smallmatrix}Q^{1/2}x\\R^{1/2}u\end{smallmatrix}\bigr)$，最小化 $\|T_{zw}\|_2$ 即 LQR。
 
 **$H_\infty$ 控制**把这变成**零和微分博弈**——控制器 $u$ 最小化代价，自然界的"对手" $w$ 最大化代价：
+
 $$\min_u\max_w\int_0^\infty\bigl(\|z\|^2-\gamma^2\|w\|^2\bigr)dt.$$
 
 **博弈解释**：这是一个两人零和微分博弈。$\gamma$ 是"扰动衰减水平"——设计者承诺：无论对手 $w$ 怎么使坏，评价输出 $z$ 的能量不超过 $\gamma^2$ 倍的扰动能量。$\gamma$ 越小，设计者的承诺越强，控制器越"鲁棒"但越"保守"（控制能量越大）。
 
 **博弈型 Riccati（game-theoretic ARE）**：假设扰动通过 $\dot x=Ax+Bu+Dw$ 进入，博弈的纳什均衡（鞍点策略）为：
+
 $$u^\star=-R^{-1}B^\top Px,\qquad w^\star=\gamma^{-2}D^\top Px.$$
+
 $P$ 满足：
+
 $$A^\top P+PA+P(\gamma^{-2}DD^\top-BR^{-1}B^\top)P+Q=0.$$
 
 **与 LQR 的精确关系**：当 $\gamma\to\infty$，$\gamma^{-2}DD^\top\to0$，博弈 Riccati 退化为标准 CARE——$H_\infty$ 是 LQR 的"最坏情况推广"。当 $\gamma$ 逐渐减小，$\gamma^{-2}$ 项的正贡献使 Riccati 右端越来越大，直到某个临界 $\gamma^\star$ 处 ARE 不再有正定解——这对应**系统无法抵抗这么强的扰动**。
@@ -728,11 +808,13 @@ $$A^\top P+PA+P(\gamma^{-2}DD^\top-BR^{-1}B^\top)P+Q=0.$$
 **Step 1：定义 Isaacs 值函数**。对微分博弈 $\min_u\max_w\int_0^\infty(\|z\|^2-\gamma^2\|w\|^2)dt$，定义值函数 $V(x)=\min_u\max_w J_{[0,\infty]}$。
 
 **Step 2：博弈 HJB（Isaacs 方程）**。假设 $V(x)=\tfrac12 x^\top Px$：
+
 $$0=\min_u\max_w\{\tfrac12 x^\top Qx+\tfrac12 u^\top Ru-\tfrac12\gamma^2 w^\top w+x^\top P(Ax+Bu+Dw)\}.$$
 
 **Step 3：鞍点条件**。对 $u$ 求最小：$u^\star=-R^{-1}B^\top Px$。对 $w$ 求最大：$w^\star=\gamma^{-2}D^\top Px$。
 
 **Step 4：代回 Isaacs 方程**，提取 $P$ 系数得到博弈 ARE：
+
 $$A^\top P+PA+Q-PBR^{-1}B^\top P+\gamma^{-2}PDD^\top P=0.$$
 
 注意：$-PBR^{-1}B^\top P$ 是控制的"好处"（减小代价），$+\gamma^{-2}PDD^\top P$ 是对手的"破坏"（增大代价）。两者竞争决定了 ARE 是否有解——如果对手太强（$\gamma$ 太小），ARE 无正定解，意味着**系统无法保证这一鲁棒水平**。
@@ -784,7 +866,9 @@ Doyle 1978 告诉我们 LQG 没有保证裕度。工程上最常用的修复方�
 #### §3.5.D 随机 LQR：乘性噪声与平均场
 
 **乘性噪声 LQR（Wonham 1968）**：$dx=(Ax+Bu)dt+\sum_i(C_ix+D_iu)\,dW_i$，即噪声强度随状态/控制放大。对应**广义 Riccati**：
+
 $$A^\top P+PA+\sum C_i^\top PC_i-\bigl(PB+\sum C_i^\top PD_i\bigr)\bigl(R+\sum D_i^\top PD_i\bigr)^{-1}(\cdot)^\top+Q=0.$$
+
 现实意义：执行器增益不确定、通道衰减等。
 
 **平均场 LQR（Huang–Malhamé–Caines 2006）**：$N$ 个弱耦合代理，当 $N\to\infty$ 用代表性代理 + McKean-Vlasov 一致性方程得到**去中心化 $\varepsilon$-Nash 均衡**；是 MFG 理论两大源头之一（另一支为 Lasry-Lions）。应用：群体机器人控制、智能交通。
@@ -846,14 +930,20 @@ $$A^\top P+PA+\sum C_i^\top PC_i-\bigl(PB+\sum C_i^\top PD_i\bigr)\bigl(R+\sum D
 **算法（Kleinman 1968）**：
 1. **初始化**：选择 $K_0$ 使 $A_0=A-BK_0$ Hurwitz（可用极点配置或 LQR 粗解）。
 2. **策略评估（Policy Evaluation）**：解 Lyapunov 方程
+
 $$A_k^\top P_k+P_k A_k+Q+K_k^\top RK_k=0$$
+
 得 $P_k$（唯一正定解存在，因为 $A_k$ Hurwitz 且右端正定）。
 3. **策略改进（Policy Improvement）**：更新增益
+
 $$K_{k+1}=R^{-1}B^\top P_k.$$
+
 4. **重复**直到 $\|P_{k+1}-P_k\|<\varepsilon$。
 
 **为什么这是 Newton 法**：CARE 残差 $\mathcal R(P)=A^\top P+PA-PBR^{-1}B^\top P+Q$。对 $\mathcal R$ 在当前 $P_k$ 处做 Newton 线性化：
+
 $$\mathcal R'(P_k)\Delta P=(A-BK_k)^\top\Delta P+\Delta P(A-BK_k)=-\mathcal R(P_k).$$
+
 这恰好是步骤 2 的 Lyapunov 方程（$\Delta P=P_{k+1}-P_k$ 满足 $A_k^\top\Delta P+\Delta P A_k=-\mathcal R(P_k)$）。因此 Kleinman 迭代 = 应用于 Riccati 算子的 Newton 法。
 
 **收敛性定理（Kleinman 1968, Hewer 1971）**：
@@ -878,7 +968,9 @@ $$\mathcal R'(P_k)\Delta P=(A-BK_k)^\top\Delta P+\Delta P(A-BK_k)=-\mathcal R(P_
 ##### 辛矩阵 Doubling Algorithm（SDA）
 
 对大规模稀疏系统（如 MPC 中的多步 Riccati 递推），SDA 利用辛矩阵的"翻倍"性质：每次迭代等效地把时间步长加倍，使收敛步数为 $O(\log(1/\varepsilon))$ 而非 $O(1/\varepsilon)$。具体地，构造辛矩阵对 $(E_k, A_k)$：
+
 $$E_{k+1}=E_k(E_k+A_k)^{-1}E_k,\quad A_{k+1}=A_k(E_k+A_k)^{-1}A_k.$$
+
 $E_k\to0$，$A_k\to0$，而 $G_k=(E_k-A_k)(E_k+A_k)^{-1}\to P^\star$。这是 HPIPM（acados 的内部 QP 求解器）使用的核心算法。
 
 **工具映射**：
@@ -1051,6 +1143,7 @@ Laub（1979）提出了利用 Hamiltonian 矩阵的实 Schur 分解来求解 ARE
 **输入**：系统矩阵 $(A,B,Q,R)$，满足 $(A,B)$ 可稳定化，$(A,Q^{1/2})$ 可检测。
 
 **Step 1：构造 Hamiltonian 矩阵**
+
 $$H=\begin{pmatrix}A & -BR^{-1}B^\top\\-Q & -A^\top\end{pmatrix}\in\mathbb R^{2n\times 2n}.$$
 
 **Step 2：计算实 Schur 分解**
@@ -1060,10 +1153,13 @@ $$H=\begin{pmatrix}A & -BR^{-1}B^\top\\-Q & -A^\top\end{pmatrix}\in\mathbb R^{2n
 
 **Step 3：提取稳定不变子空间**
 将 $U$ 的前 $n$ 列分块为：
+
 $$U(:,1:n)=\begin{pmatrix}U_{11}\\U_{21}\end{pmatrix},\quad U_{11},U_{21}\in\mathbb R^{n\times n}.$$
+
 这 $n$ 列张成 $H$ 的稳定不变子空间 $\mathcal V_-$。
 
 **Step 4：计算 Riccati 解**
+
 $$P^\star=U_{21}U_{11}^{-1}.$$
 
 **Step 5：验证**
@@ -1112,7 +1208,9 @@ def care_schur(A, B, Q, R):
 #### §3.5.Ib 广义 Riccati 与描述子系统 ⭐⭐⭐⭐
 
 对具有代数约束的描述子系统 $E\dot x=Ax+Bu$（$E$ 奇异），标准 CARE 不适用，需要**广义 ARE**：
+
 $$A^\top X E+E^\top X A-E^\top X B R^{-1}B^\top X E+Q=0.$$
+
 求解需要广义 Schur 分解（QZ 算法）而非普通 Schur。SciPy 的 `solve_continuous_are` 接受可选参数 `e=E` 处理此情形。
 
 应用场景：多体系统的 DAE 形式（如 MuJoCo 内部）、电力系统的微分-代数模型。
@@ -1200,7 +1298,9 @@ Newton-Kleinman 迭代（§3.5.I）本质上就是**策略迭代**：
 ##### LQR 与线性矩阵不等式（LMI）
 
 CARE 可以等价地写成 LMI 形式（矩阵 Schur 补）：
+
 $$\begin{pmatrix}A^\top P+PA+Q & PB\\B^\top P & R\end{pmatrix}\succeq0\quad\text{且}\quad P\succeq0.$$
+
 这一 LMI 表示在鲁棒控制中极为有用——可以把参数不确定性作为附加 LMI 约束加入，用 SDP 求解器（如 MOSEK、SeDuMi）统一处理。
 
 > **"不是X而是Y"句式**：LMI 形式不是 CARE 的"简化版本"——它实际上是更一般化的表示，因为 LMI 允许处理**不确定系统**（robust LQR）和**结构约束**（分散控制）这些 CARE 无法处理的问题。CARE 是 LMI 在确定性无约束情形下的**特化**。
@@ -1273,6 +1373,7 @@ $$\begin{pmatrix}A^\top P+PA+Q & PB\\B^\top P & R\end{pmatrix}\succeq0\quad\text
 ##### 定理（连续完备平方恒等式）
 
 设 $P(t)$ 为 RDE 的解（$-\dot P=A^\top P+PA-PBR^{-1}B^\top P+Q$，$P(T)=Q_f$），则对**任意**容许控制 $u(\cdot)$：
+
 $$J[u]=\tfrac12 x(0)^\top P(0)x(0)+\tfrac12\int_0^T\|u(t)+R^{-1}B^\top P(t)x(t)\|^2_R\,dt.$$
 
 ##### 完整证明
@@ -1280,25 +1381,37 @@ $$J[u]=\tfrac12 x(0)^\top P(0)x(0)+\tfrac12\int_0^T\|u(t)+R^{-1}B^\top P(t)x(t)\
 **Step 1**：定义 $W(t)=\tfrac12 x(t)^\top P(t)x(t)$。
 
 **Step 2**：沿**任意**轨迹（不必最优！）计算 $\dot W$：
+
 $$\dot W=\tfrac12 x^\top\dot Px+x^\top P\dot x=\tfrac12 x^\top\dot Px+x^\top P(Ax+Bu).$$
 
 **Step 3**：用 RDE 替换 $\dot P$。由 $\dot P=-(A^\top P+PA-PBR^{-1}B^\top P+Q)$：
+
 $$\tfrac12 x^\top\dot Px=-\tfrac12 x^\top(A^\top P+PA)x+\tfrac12 x^\top PBR^{-1}B^\top Px-\tfrac12 x^\top Qx.$$
 
 **Step 4**：代入 Step 2：
+
 $$\dot W=-\tfrac12 x^\top(A^\top P+PA)x+\tfrac12 x^\top PBR^{-1}B^\top Px-\tfrac12 x^\top Qx+x^\top PAx+x^\top PBu.$$
+
 化简（注意 $x^\top PAx=\tfrac12 x^\top PAx+\tfrac12 x^\top A^\top Px$ 利用对称性与合并）：
+
 $$\dot W=\tfrac12 x^\top PBR^{-1}B^\top Px-\tfrac12 x^\top Qx+x^\top PBu.$$
 
 **Step 5**：与阶段代价合并。阶段代价 $l(x,u)=\tfrac12 x^\top Qx+\tfrac12 u^\top Ru$，所以：
+
 $$l+\dot W=\tfrac12 u^\top Ru+x^\top PBu+\tfrac12 x^\top PBR^{-1}B^\top Px.$$
+
 右端正好是：
+
 $$=\tfrac12(u+R^{-1}B^\top Px)^\top R(u+R^{-1}B^\top Px).$$
+
 这一步用了二次型配方：$\tfrac12 u^\top Ru+u^\top(B^\top Px)+\tfrac12(B^\top Px)^\top R^{-1}(B^\top Px)=\tfrac12\|u+R^{-1}B^\top Px\|_R^2$。
 
 **Step 6**：两端从 $0$ 到 $T$ 积分：
+
 $$\int_0^T l\,dt+W(T)-W(0)=\tfrac12\int_0^T\|u+R^{-1}B^\top Px\|_R^2\,dt.$$
+
 注意 $W(T)=\tfrac12 x(T)^\top Q_f x(T)$（RDE 终端条件），所以左端 $=J[u]-W(0)$。移项得：
+
 $$J[u]=W(0)+\tfrac12\int_0^T\|u+R^{-1}B^\top Px\|_R^2\,dt=\tfrac12 x(0)^\top P(0)x(0)+\tfrac12\int_0^T\|u+R^{-1}B^\top Px\|_R^2\,dt.\quad\blacksquare$$
 
 ##### 最优性的直接推论
@@ -1317,7 +1430,9 @@ $$J[u]=W(0)+\tfrac12\int_0^T\|u+R^{-1}B^\top Px\|_R^2\,dt=\tfrac12 x(0)^\top P(0
 ##### 多输入系统的回差不等式
 
 §3.5.5b 给出了单输入 LQR 的经典裕度。对多输入系统（$m>1$），Safonov-Athans 1977 证明了矩阵版本的回差不等式仍然成立：
+
 $$F(j\omega)^*RF(j\omega)\succeq R,\quad\forall\omega,$$
+
 其中 $F(j\omega)=I_m+K(j\omega I-A)^{-1}B$ 是 $m\times m$ 回差矩阵。
 
 但这**不**直接给出每个通道的标量裕度！多输入 LQR 对**同时**在所有通道施加相同增益/相位扰动时裕度很好，但对**单通道**扰动（只有一个执行器故障）裕度可能很差。
@@ -1352,6 +1467,7 @@ LQR 的裕度保证有三个重要**前提**：
 ##### 系统模型
 
 $$\dot x=Ax+Bu+w,\quad y=Cx+v,$$
+
 其中 $w\sim\mathcal N(0,\Sigma_w)$（过程噪声），$v\sim\mathcal N(0,\Sigma_v)$（观测噪声），$w$ 与 $v$ 不相关。
 
 ##### 最优估计的定义
@@ -1361,15 +1477,19 @@ $$\dot x=Ax+Bu+w,\quad y=Cx+v,$$
 ##### Kalman 滤波器方程推导
 
 **Step 1**：令误差 $\tilde x=x-\hat x$。设估计器为线性形式 $\dot{\hat x}=A\hat x+Bu+L(y-C\hat x)$，误差动力学：
+
 $$\dot{\tilde x}=(A-LC)\tilde x+w-Lv.$$
 
 **Step 2**：误差协方差 $\Sigma=\mathbb E[\tilde x\tilde x^\top]$ 的演化：
+
 $$\dot\Sigma=(A-LC)\Sigma+\Sigma(A-LC)^\top+\Sigma_w+L\Sigma_v L^\top.$$
 
 **Step 3**：选择 $L$ 使 $\mathrm{tr}(\Sigma)$ 最小（最小均方误差准则）。展开上式并对 $L$ 求导：
+
 $$\frac{\partial\,\mathrm{tr}(\dot\Sigma)}{\partial L}=-2\Sigma C^\top+2L\Sigma_v=0\quad\Rightarrow\quad L=\Sigma C^\top\Sigma_v^{-1}.$$
 
 **Step 4**：代回得到**滤波 Riccati 方程**：
+
 $$\dot\Sigma=A\Sigma+\Sigma A^\top-\Sigma C^\top\Sigma_v^{-1}C\Sigma+\Sigma_w.$$
 
 ##### 稳态 Kalman 增益的物理意义
@@ -1436,7 +1556,9 @@ $$L_\infty=\Sigma_\infty C^\top\Sigma_v^{-1}.$$
 ##### $Q$ 和 $R$ 的系统化选择方法
 
 **方法 1：Bryson 规则（经验起点）**
+
 $$Q_{ii}=\frac{1}{x_{i,\max}^2},\qquad R_{jj}=\frac{1}{u_{j,\max}^2},$$
+
 其中 $x_{i,\max}$ 是状态 $i$ 的"最大可接受偏差"，$u_{j,\max}$ 是输入 $j$ 的"最大可用范围"。
 
 **物理解释**：代价 $x_i^2/x_{i,\max}^2$ 在偏差达到最大允许值时恰好为 1。这使得不同状态的代价在"归一化"意义下可比较。
@@ -1472,6 +1594,7 @@ $$Q_{ii}=\frac{1}{x_{i,\max}^2},\qquad R_{jj}=\frac{1}{u_{j,\max}^2},$$
 **输入**：系统矩阵 $(A,B,Q,R)$，满足 $(A,B)$ 可稳定化，$(A,Q^{1/2})$ 可检测。
 
 **Step 1：构造 Hamiltonian 矩阵**
+
 $$H=\begin{pmatrix}A & -BR^{-1}B^\top\\-Q & -A^\top\end{pmatrix}\in\mathbb R^{2n\times 2n}.$$
 
 **Step 2：计算实 Schur 分解**
@@ -1481,6 +1604,7 @@ $$H=\begin{pmatrix}A & -BR^{-1}B^\top\\-Q & -A^\top\end{pmatrix}\in\mathbb R^{2n
 将 $U$ 的前 $n$ 列分块为 $U(:,1:n)=\begin{pmatrix}U_{11}\\U_{21}\end{pmatrix}$。
 
 **Step 4：计算 Riccati 解**
+
 $$P^\star=U_{21}U_{11}^{-1}.$$
 
 **Step 5：后处理**
@@ -1541,17 +1665,23 @@ def care_schur(A, B, Q, R):
 **问题**：$\dot x=Ax+Bu$，$J=\tfrac12\int_0^T(x^\top Qx+u^\top Ru)dt+\tfrac12 x(T)^\top Q_f x(T)$。
 
 **Step 1：写 Hamilton 函数**（PMP 第一步总是写 Hamiltonian）
+
 $$\mathcal H(x,u,\lambda,t)=\tfrac12 x^\top Qx+\tfrac12 u^\top Ru+\lambda^\top(Ax+Bu).$$
+
 其中 $\lambda\in\mathbb R^n$ 是**共态**（协态/伴随变量/Lagrange 乘子的动力学版本）。
 
 **Step 2：最小化条件**（Hamiltonian 最小化）
+
 $$\frac{\partial\mathcal H}{\partial u}=Ru+B^\top\lambda=0\quad\Rightarrow\quad u^\star=-R^{-1}B^\top\lambda.$$
+
 （$R\succ0$ 保证二阶条件满足：$\partial^2\mathcal H/\partial u^2=R\succ0$，确认是最小值。）
 
 **Step 3：共态方程**（PMP 第二条件）
+
 $$\dot\lambda=-\frac{\partial\mathcal H}{\partial x}=-Qx-A^\top\lambda.$$
 
 **Step 4：横截条件**（PMP 对自由终端状态的条件）
+
 $$\lambda(T)=\frac{\partial}{\partial x}\bigl[\tfrac12 x(T)^\top Q_f x(T)\bigr]=Q_f x(T).$$
 
 **Step 5：关键 Ansatz $\lambda(t)=P(t)x(t)$**。这一假设的动机：
@@ -1560,14 +1690,21 @@ $$\lambda(T)=\frac{\partial}{\partial x}\bigl[\tfrac12 x(T)^\top Q_f x(T)\bigr]=
 - 数学上可严格证明：线性系统+二次代价 → 值函数二次 → $\nabla_x V=Px=\lambda$
 
 **Step 6：对 Ansatz 求时间导数**
+
 $$\dot\lambda=\dot P x+P\dot x=\dot P x+P(Ax+Bu)=\dot P x+P(Ax-BR^{-1}B^\top Px).$$
+
 （最后一步代入了 $u^\star=-R^{-1}B^\top\lambda=-R^{-1}B^\top Px$。）
 
 **Step 7：与共态方程比较**。由 Step 3：$\dot\lambda=-Qx-A^\top\lambda=-Qx-A^\top Px$。令 Step 6 = Step 7：
+
 $$\dot P x+PAx-PBR^{-1}B^\top Px=-Qx-A^\top Px.$$
+
 整理（所有项写成 $(\cdots)x$ 的形式，因为对所有 $x$ 成立，系数必须相等）：
+
 $$\dot P=-A^\top P-PA+PBR^{-1}B^\top P-Q.$$
+
 移项得到**标准形式**：
+
 $$\boxed{-\dot P=A^\top P+PA-PBR^{-1}B^\top P+Q,\quad P(T)=Q_f.}$$
 
 这与 HJB 路径（§3.5.2）得到的结果**完全相同**！

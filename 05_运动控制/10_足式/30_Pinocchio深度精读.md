@@ -1141,6 +1141,7 @@ $$I_i^c = I_i + \sum_{j \in \text{children}(i)} {}^i X_j^* \, I_j^c \, {}^j X_i$
 **第二步：用复合惯量填充 $M$ 的元素**
 
 $$F = I_i^c \, S_i \quad(\text{关节 } i \text{ 运动子空间承受的复合力})$$
+
 $$M_{ii} = S_i^T F$$
 
 然后沿关节 $i$ 到根的**支撑路径**（support path）向上回填：对路径上每个祖先 $j$，

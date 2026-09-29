@@ -695,10 +695,12 @@ $$\frac{\partial \phi}{\partial \boldsymbol{x}} = \frac{\partial \hat{\phi}}{\pa
 其中 $\partial \boldsymbol{p}_{\text{foot}} / \partial \boldsymbol{x}$ 是正运动学的雅可比（Pinocchio 提供），$\partial \hat{\phi} / \partial \boldsymbol{p}_{\text{foot}}$ 来自上面的双线性插值梯度。
 
 **CppAD 与距离场接口的角色**：教学上可以把“正运动学 + 插值”整体写成 `AD<double>` 表达式来理解链式法则。但当前 OCS2 `EndEffectorDistanceConstraintCppAd` 的真实实现更克制：CppADCodeGen 主要用于生成末端执行器正运动学及其雅可比；运行时距离场通过 `DistanceTransformInterface::getValue()` 和 `getLinearApproximation()` 提供 SDF 值与空间梯度，最后显式相乘得到
+
 $$
 \frac{\partial \phi}{\partial x}
 = \nabla_p \phi(p)^\top \frac{\partial p}{\partial x}.
 $$
+
 这样地图和 clearance 可以在运行时更新，而不需要每次地图变化都重新生成 `.so`。
 
 ```cpp

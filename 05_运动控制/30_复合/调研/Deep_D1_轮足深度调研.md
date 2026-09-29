@@ -138,6 +138,7 @@ $$A(q)=\begin{bmatrix}\cos\varphi & \sin\varphi & 0 & -r\\ \sin\varphi & -\cos\v
 弗罗贝尼乌斯定理证实了其不可积性（允许场之间的李括号会生成新的方向——即“停车”机动）。允许的速度位于 $\dot q=G(q)u$ 空间中，且满足 $G=\mathrm{null}(A)$。
 
 对于具有雅可比矩阵 $J_c$ 的三维车轮接触点 $p_c(q)$，将其速度在与地形对齐的坐标系 $\{\hat e_\parallel,\hat e_\perp,\hat n\}$ 中分解，并施加
+
 $$\hat e_\perp^\top J_c\dot q=0\ \text{(no-slip lateral)},\quad \hat e_\parallel^\top J_c\dot q-r\dot\theta=0\ \text{(pure rolling)},\quad \hat n^\top J_c\dot q=0\ \text{(stance)}.$$
 
 **OCS2 编码。**车轮约束作为状态输入等式约束 $g_1(x,u,t)=0$ 进入开关系统 OCP。 在 `ocs2_legged_robot` 中，末端执行器类（例如 `EndEffectorLinearConstraint`）通过 Pinocchio 计算 $J_c\dot q$，并将其投影到滚动坐标系上。约束通过增广拉格朗日法或松弛对数障碍法处理，从而使 SLQ/SQP/IPM 求解器能够生成在每个插值点上满足滚动条件的状态-输入轨迹。 *参考文献：* Murray–Li–Sastry 第7章；Lynch–Park §13.3.1；Bloch (2003)；Giftthaler 等 ICRA 2017。
@@ -145,6 +146,7 @@ $$\hat e_\perp^\top J_c\dot q=0\ \text{(no-slip lateral)},\quad \hat e_\parallel
 ### 3.2 基于 Pinocchio 3.x 的闭链运动学 `ConstraintModel`
 
 带Baumgarte稳定化环约束的受限拉格朗日动力学：
+
 $$\begin{bmatrix}M & J_c^\top\\ J_c & 0\end{bmatrix}\begin{bmatrix}\ddot q\\ -\lambda\end{bmatrix}=\begin{bmatrix}\tau-h\\ -\dot J_c\dot q-2\alpha J_c\dot q-\alpha^2 c(q)\end{bmatrix}.$$
 
 Pinocchio 3的`RigidConstraintModel`（类型`CONTACT_3D`、`CONTACT_6D`）声明了位于不同运动学分支上的两个坐标系之间的重合。 `pinocchio::initConstraintDynamics` + `constraintDynamics` 采用近点德拉苏斯求解器，通过 `computeConstraintDynamicsDerivatives` 利用解析导数以 O(n+m) 时间复杂度求解 KKT 方程组，从而实现可微分 MPC。
@@ -161,6 +163,7 @@ Pinocchio 3的`RigidConstraintModel`（类型`CONTACT_3D`、`CONTACT_6D`）声�
 - 滚动轮：$f_n\ge 0,\ |f_\parallel|\le\mu_{\mathrm{roll}} f_n,\ |f_\perp|\le\mu_s f_n,\ \tau_{\mathrm{spin}}\approx 0$（绕轮轴自由旋转）。
 
 OCS2的切换质心（OCP）：
+
 $$\min\sum_i\phi_i(x_{t_{i+1}})+\int_{t_i}^{t_{i+1}}\ell_i\,dt\ \text{s.t.}\ \dot x=f_i,\ g_{1,i}=0,\ h_i\ge 0.$$
 
 Bjelonic 2021 的见解：将所有末端执行器统一视为移动地面接触点，仅在滚动约束的激活方面有所不同——这简化了数据管理。
@@ -170,7 +173,9 @@ Bjelonic 2021 的见解：将所有末端执行器统一视为移动地面接触
 滑移比 $\kappa=(r\omega-v_x)/\max(|v_x|,v_{\mathrm{low}})$；滑移角 $\alpha=\arctan(v_y/|v_x|)$。
 
 Pacejka &#x27;89 &quot;魔术公式&quot;：
+
 $$F_y(\alpha)=D\sin\!\big(C\arctan(B\alpha-E(B\alpha-\arctan B\alpha))\big)+S_V.$$
+
 $D\approx\mu F_z$ 为峰值，$BCD$ 为原点处的转弯刚度。组合滑移椭圆截断：$F_y^{\mathrm{comb}}=F_{y0}\sqrt{1-(F_x/F_{x,\max})^2}$。
 
 实际应用中，轮腿式控制器采用线性小滑移近似 $F_y\approx -C_\alpha\alpha,\ F_x\approx C_\kappa\kappa$ 结合摩擦圆 $\sqrt{F_x^2+F_y^2}\le\mu F_z$ —— 完整的 Pacejka 模型仅在速度 &gt;2 m/s 或湿滑地形下才适用（这一失效模式在 *Science Robotics 2024* 的 Swiss-Mile 论文中已被指出）。 *参考文献：* Pacejka (2012)；Rajamani 第13章。
@@ -184,11 +189,15 @@ $D\approx\mu F_z$ 为峰值，$BCD$ 为原点处的转弯刚度。组合滑移�
 ### 3.6 混合轮足接触下的全身逆动力学
 
 浮动基座动力学：
+
 $$M\ddot q+h=S^\top\tau+\sum_k J_k^\top\lambda_k.$$
+
 堆叠足部与车轮雅可比矩阵 $J_c=[J^f_1;\dots;J^w_1;\dots]$。足部站立：$J^f_i\ddot q+\dot J^f_i\dot q=0$。滚动车轮：$J^w_j\ddot q+\dot J^w_j\dot q=\dot v_j^{\mathrm{ref}}$ 结合 $v_j^{\mathrm{ref}}=r_j\omega_j\hat e_\parallel^j$。
 
 分层（或加权）QP：
+
 $$\min_{\ddot q,\tau,\lambda}\sum_t w_t\|J_t\ddot q+\dot J_t\dot q-\ddot x_t^{\mathrm{des}}\|^2+\mathrm{reg}$$
+
 s.t. $M\ddot q+h=S^\top\tau+J_c^\top\lambda,\ J_c\ddot q+\dot J_c\dot q=a_c^{\mathrm{ref}},\ \lambda\in\mathcal K_{\mathrm{fric}},\ \tau\in[\tau_{\min},\tau_{\max}]$。
 
 Bjelonic 2020 将分层加权规划问题简化为单个加权规划问题（约30个变量，求解时间约0.5毫秒）。通过“移动接触”技巧，车轮与脚部共享同一代码路径。*参考文献：* Sentis–Khatib 2005；Herzog 等 2016；Del Prete 等 IJRR。

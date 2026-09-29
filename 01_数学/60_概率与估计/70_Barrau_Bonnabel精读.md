@@ -88,17 +88,21 @@ Barrau-Bonnabel TAC 2017 精读
 ### §D.2 符号约定与对数坐标（严格按 TAC 2017 §II.2） ⭐⭐
 
 设 $G\subset GL_n(\mathbb{R})$ 为矩阵李群，李代数 $\mathfrak{g}\subset\mathbb{R}^{N\times N}$，$\dim\mathfrak{g}=d$。选定线性同构 $L_{\mathfrak g}:\mathbb{R}^d\to\mathfrak{g}$，**指数映射**定义为
+
 $$
 \exp(\xi) := \mathrm{expm}\bigl(L_{\mathfrak g}(\xi)\bigr)\in G,\qquad \xi\in\mathbb{R}^d.
 $$
+
 在 $\eta\in G$ 充分接近单位元 $e=\mathrm{Id}$ 时，$\eta=\exp(\xi)$ 中的 $\xi$ 称为**对数坐标**。
 
 **伴随表示**：$\mathrm{Ad}_g:\mathbb{R}^d\to\mathbb{R}^d$ 定义为 $g\,L_{\mathfrak g}(\xi)\,g^{-1}=L_{\mathfrak g}(\mathrm{Ad}_g\,\xi)$；其李代数版本 $\mathrm{ad}_x\xi$ 定义为 $[L_{\mathfrak g}(x),L_{\mathfrak g}(\xi)]=L_{\mathfrak g}(\mathrm{ad}_x\xi)$。
 
 **真值与估计**：在 §II.2 抽象阶段，作者**不区分**真值与估计，取 $(\chi_t,\bar\chi_t)$ 为系统 (4) 的两条任意轨迹，定义
+
 $$
 \boxed{\;\eta^L_t := \chi_t^{-1}\bar\chi_t\quad\text{(left-invariant)},\qquad \eta^R_t := \bar\chi_t\chi_t^{-1}\quad\text{(right-invariant)}\;}
 $$
+
 进入 §III IEKF 阶段后，$\chi_t$ 解读为**真值**，$\hat\chi_t$ 为**估计**，复用 $\eta^L=\chi^{-1}\hat\chi$、$\eta^R=\hat\chi\chi^{-1}$（eqs. (18), (25)）。
 
 **重要警告**：Hartley IJRR 2020 部分章节、Bonnabel CDC 2007 旧惯例、以及一些 MEKF 文献把右不变误差写作 $\hat\chi\chi^{-1}$ 而左不变误差写作 $\chi\hat\chi^{-1}$（**估计在左**）——与 TAC 2017 恰好对称换位。交叉阅读时**必须**以 TAC 2017 (18)、(25) 为基准重新换算。"左/右不变"的命名理由：$\eta^L=\chi^{-1}\hat\chi$ 在**左平移** $(\chi,\hat\chi)\mapsto(\Gamma\chi,\Gamma\hat\chi)$ 下不变。
@@ -108,9 +112,11 @@ $$
 ### §D.3 Theorem 1 的精确陈述 ⭐⭐⭐
 
 **Theorem 1（Barrau-Bonnabel TAC 2017, §II.2, p.1800）**　对动力学
+
 $$
 \frac{d}{dt}\chi_t = f_{u_t}(\chi_t)\tag{4}
 $$
+
 下列三条件**等价**：
 
 **(i)** 左不变误差具状态轨迹无关传播：存在 $g^L_{u_t}$ 使得 $\dfrac{d}{dt}\eta^L_t = g^L_{u_t}(\eta^L_t)$。
@@ -118,10 +124,13 @@ $$
 **(ii)** 右不变误差具同样性质：$\dfrac{d}{dt}\eta^R_t = g^R_{u_t}(\eta^R_t)$。
 
 **(iii) (Group-affine 条件)** 对所有 $t>0$，所有 $a,b\in G$，
+
 $$
 \boxed{\;f_{u_t}(ab) = f_{u_t}(a)\,b + a\,f_{u_t}(b) - a\,f_{u_t}(e)\,b\;}\tag{7}
 $$
+
 此时 (eqs. (8)-(9))
+
 $$
 g^L_{u_t}(\eta) = f_{u_t}(\eta) - f_{u_t}(e)\,\eta,\qquad g^R_{u_t}(\eta) = f_{u_t}(\eta) - \eta\,f_{u_t}(e).
 $$
@@ -133,54 +142,69 @@ $$
 ### §D.4 Theorem 1 的完整证明（教学版，逐步展开） ⭐⭐⭐⭐
 
 **预备引理**：对任意可微曲线 $\chi_t\in G$，
+
 $$
 \frac{d}{dt}(\chi_t^{-1}) = -\chi_t^{-1}\dot\chi_t\,\chi_t^{-1}.\tag{$\star$}
 $$
+
 *证*：从 $\chi_t\chi_t^{-1}=I$ 求导，$\dot\chi_t\chi_t^{-1}+\chi_t\frac{d}{dt}\chi_t^{-1}=0$，左乘 $\chi_t^{-1}$ 即得。$\square$
 
 #### (i) ⟹ (iii)：从"轨迹无关"反推 group-affine
 
 **Step 1**　设 $\chi_t,\bar\chi_t$ 为 (4) 的两条轨迹，$\eta_t=\chi_t^{-1}\bar\chi_t$（省略上标 $L$）。由 ($\star$)：
+
 $$
 \frac{d}{dt}\eta_t = -\chi_t^{-1}\dot\chi_t\chi_t^{-1}\bar\chi_t + \chi_t^{-1}\dot{\bar\chi}_t.
 $$
 
 **Step 2**　代入动力学 $\dot\chi_t=f_{u_t}(\chi_t)$, $\dot{\bar\chi}_t=f_{u_t}(\bar\chi_t)$，并把 $\chi_t^{-1}\bar\chi_t=\eta_t$、$\bar\chi_t=\chi_t\eta_t$ 回代：
+
 $$
 \frac{d}{dt}\eta_t = -\chi_t^{-1}f_{u_t}(\chi_t)\,\eta_t + \chi_t^{-1}f_{u_t}(\chi_t\eta_t).\tag{10}
 $$
+
 此为精确等式，尚未使用 (i)。
 
 **Step 3**　假设 (i) 成立，即存在 $g_{u_t}$ 使 $\dot\eta_t=g_{u_t}(\eta_t)$。(10) 对所有 $\chi_t\in G$、所有 $\eta_t\in G$ 成立。取特殊值 $\chi_t=e$：
+
 $$
 g_{u_t}(\eta_t) = -f_{u_t}(e)\,\eta_t + f_{u_t}(\eta_t).\tag{11}
 $$
+
 此即 (8)。
 
 **Step 4**　把 (11) 代回 (10) 左端，并把一般 $\chi_t$ 写作 $a$、$\eta_t$ 写作 $b$：
+
 $$
 -f_{u_t}(e)\,b + f_{u_t}(b) = -a^{-1}f_{u_t}(a)\,b + a^{-1}f_{u_t}(ab).
 $$
+
 左乘 $a$ 并整理：
+
 $$
 \boxed{\;f_{u_t}(ab) = f_{u_t}(a)\,b + a\,f_{u_t}(b) - a\,f_{u_t}(e)\,b.\;}
 $$
+
 即 (7)。$\square$
 
 #### (iii) ⟹ (i)：从 group-affine 推回轨迹无关
 
 由 (iii) 取 $a=\chi_t,b=\eta_t$：$f_{u_t}(\chi_t\eta_t)=f_{u_t}(\chi_t)\eta_t+\chi_t f_{u_t}(\eta_t)-\chi_t f_{u_t}(e)\eta_t$。代入 (10)：
+
 $$
 \frac{d}{dt}\eta_t = -\chi_t^{-1}f_{u_t}(\chi_t)\eta_t + \chi_t^{-1}\bigl[f_{u_t}(\chi_t)\eta_t + \chi_t f_{u_t}(\eta_t) - \chi_t f_{u_t}(e)\eta_t\bigr].
 $$
+
 逐项化简：$-\chi_t^{-1}f_{u_t}(\chi_t)\eta_t$ 与 $+\chi_t^{-1}f_{u_t}(\chi_t)\eta_t$ 互相抵消，剩余 $f_{u_t}(\eta_t)-f_{u_t}(e)\eta_t = g^L_{u_t}(\eta_t)$。$\chi_t$ **完全消除**，(i) 得证。$\square$
 
 #### (ii) ⟺ (iii) 的对称证明
 
 对 $\tilde\eta_t=\bar\chi_t\chi_t^{-1}$：
+
 $$
 \dot{\tilde\eta}_t = f_{u_t}(\bar\chi_t)\chi_t^{-1} - \bar\chi_t\chi_t^{-1}f_{u_t}(\chi_t)\chi_t^{-1}.
 $$
+
 代入 $\bar\chi_t=\tilde\eta_t\chi_t$，取 $\chi_t=e$ 得 (9) $g^R_{u_t}(\tilde\eta)=f_{u_t}(\tilde\eta)-\tilde\eta f_{u_t}(e)$。(iii) ⟹ (ii) 用 (7) 取 $a=\tilde\eta_t,b=\chi_t$ 平行展开即可。$\square$
 
 > **关键引理：$f_u(e)$ 的"常数漂移项"角色**。若 $f_u(e)=0$，group-affine 退化为左-右不变的纯乘法形式；一般情况下 $f_u(e)$ 扮演"常数项"，类比 $\mathbb{R}^n$ 上仿射函数的 $f(0)$。
@@ -196,6 +220,7 @@ $$
 #### 三类典型 group-affine 动力学
 
 **纯左不变** $f_u(\chi)=\chi\omega_u$（$\omega_u\in\mathfrak{g}$）：
+
 $$
 f_u(a)b+af_u(b)-af_u(e)b = a\omega_u b + ab\omega_u - a\omega_u b = ab\omega_u = f_u(ab).\;\checkmark
 $$
@@ -203,6 +228,7 @@ $$
 **纯右不变** $f_u(\chi)=v_u\chi$：同理 $\checkmark$。
 
 **左右组合（Remark 1）** $f_{v,\omega}(\chi)=v_u\chi+\chi\omega_u$：
+
 $$
 \begin{aligned}
 \text{RHS}&=(v_u a+a\omega_u)b+a(v_u b+b\omega_u)-a(v_u+\omega_u)b\\
@@ -215,13 +241,17 @@ $$
 #### 最重要的例子：$SE_2(3)$ 上 IMU 动力学
 
 状态 $\chi=\begin{pmatrix}R&v&p\\0&1&0\\0&0&1\end{pmatrix}\in SE_2(3)$，输入陀螺 $\omega$、加速度计 $a_m$、重力 $g\in\mathbb{R}^3$。动力学
+
 $$
 \dot R=R(\omega)_\times,\quad\dot v=g+R\,a_m,\quad\dot p=v.
 $$
+
 矩阵化（§V eq.(49)）：
+
 $$
 f_{\omega,a_m}(\chi)=\begin{pmatrix}R(\omega)_\times & g+Ra_m & v\\ 0&0&0\\0&0&0\end{pmatrix}.
 $$
+
 此 $f$ 既非左不变也非右不变（重力项 $g$ 出现在 $f(e)\neq 0$ 中），但仍 group-affine。最直接的代数验证：把 $f$ 写成 $f_{\omega,a_m}(\chi) = A\chi + \chi B$，其中 $A$ 携带重力（$f(e)$ 的非零部分），$B$ 携带 body-frame 输入；这是 Remark 1 左右组合形式的特例，(7) 自动成立。
 
 > **教学要点**：$SE_2(3)$ 把 $v,p$ 嵌入为"虚拟平移"，使得 IMU 动力学呈现 $A\chi+\chi B$ 的左右组合 + 常数漂移结构。$f(e)=A\neq 0$ 对应重力——这是"仿射"一词最直观的工程体现。Barrau PhD 2015 Ch.4 与 Hartley IJRR 2020 Appendix B 给出逐块严格验证。
@@ -231,13 +261,17 @@ $$
 ### §D.6 Proposition 2：流的群同态性 ⭐⭐⭐⭐
 
 **Proposition 2（TAC 2017 §III.1.1, p.1804，与任务书的强化版本）**　考虑 group-affine 动力学 (14) 的 LIEKF 传播步 (16)。设 $\xi_t$ 满足线性 ODE
+
 $$
 \frac{d}{dt}\xi_t = A_{u_t}\xi_t,\qquad A_{u_t}\text{ 由 } g^L_{u_t}(\exp\xi)=L_{\mathfrak g}(A_{u_t}\xi)+O(\|\xi\|^2)\text{ 定义,}\tag{20}
 $$
+
 $\eta_t$ 满足非线性误差 ODE (19) $\dot\eta_t=g^L_{u_t}(\eta_t)$。则若在 $t_{n-1}$ 处 $\eta_{t_{n-1}}=\exp(\xi_{t_{n-1}})$，则
+
 $$
 \boxed{\;\eta_t = \exp(\xi_t),\qquad \forall\, t_{n-1}\le t<t_n\;}
 $$
+
 **且即使初始误差任意大亦成立**。
 
 **与 Theorem 2 的关系**：Proposition 2 是 Theorem 2 在 IEKF 传播步的直接应用。任务书表述的"存在仅依赖 $u_t$ 的流映射 $g_t:G\to G$ 使 $\eta_t=g_t(\eta_0)$"是 Theorem 1 + Picard-Lindelöf 的即时推论；Proposition 2 进一步把流 $g_t$ 通过 $\exp$ **线性化**为 (20)。
@@ -249,9 +283,11 @@ $$
 #### Part A：流映射 $g_t$ 的存在（Theorem 1 + Picard-Lindelöf）
 
 由 Theorem 1，group-affine ⟺ $\dot\eta_t=g^L_{u_t}(\eta_t)$ 右端只依赖 $\eta_t$。$g^L_{u_t}$ 局部 Lipschitz（由 $f_u$ 光滑性自动保证）→ Picard-Lindelöf 给出**唯一**流映射
+
 $$
 g_t:G\to G,\qquad g_t(\eta_0):=\eta_t.
 $$
+
 $g_t$ 仅依赖输入 $\{u_s\}_{0\le s\le t}$，**与 $\chi_t,\hat\chi_t$ 无关**。
 
 #### Part B：$g_t$ 是 $G$ 的群同态（Lemma 2）
@@ -259,33 +295,45 @@ $g_t$ 仅依赖输入 $\{u_s\}_{0\le s\le t}$，**与 $\chi_t,\hat\chi_t$ 无关
 **Lemma**　对 $\dot\eta=g^L_u(\eta)$ 的流 $\Phi_t$（即 $g_t$），有 $\Phi_t(\eta_0\eta_0')=\Phi_t(\eta_0)\Phi_t(\eta_0')$。
 
 *证*：$g^L_u$ 满足关键 Leibniz 性质（来自 (8) 与 (7)）：
+
 $$
 g^L_u(ab) = f_u(ab) - f_u(e)ab \stackrel{(7)}{=} f_u(a)b + af_u(b) - af_u(e)b - f_u(e)ab = g^L_u(a)b + ag^L_u(b).\tag{57}
 $$
+
 对 $\Phi_t(\eta_0)\Phi_t(\eta_0')$ 求导：
+
 $$
 \frac{d}{dt}[\Phi_t(\eta_0)\Phi_t(\eta_0')] = g^L_u(\Phi_t(\eta_0))\Phi_t(\eta_0') + \Phi_t(\eta_0)g^L_u(\Phi_t(\eta_0')) \stackrel{(57)}{=} g^L_u(\Phi_t(\eta_0)\Phi_t(\eta_0')).
 $$
+
 两侧在 $t=0$ 处都等于 $\eta_0\eta_0'$，由 ODE 解的唯一性 $\Phi_t(\eta_0\eta_0')=\Phi_t(\eta_0)\Phi_t(\eta_0')$。$\square$
 
 #### Part C：log-linear 精确性
 
 **关键步骤（BCH 平凡化）**：由 Lemma + 归纳，$\Phi_t(\eta_0^p)=\Phi_t(\eta_0)^p$ 对 $p\in\mathbb{Z}$ 成立。对任意 $n\in\mathbb{N}$：
+
 $$
 \Phi_t(\exp(\xi_0)) = \Phi_t\bigl([\exp(\xi_0/n)]^n\bigr) = \Phi_t(\exp(\xi_0/n))^n.
 $$
+
 设 $F_t:=D\Phi_t|_e$，泰勒展开
+
 $$
 \Phi_t(\exp(\xi_0/n)) = \exp\bigl(\tfrac{1}{n}F_t\xi_0 + r_t(\xi_0/n)\bigr),\qquad r_t(\zeta)=O(\|\zeta\|^2).
 $$
+
 **关键 BCH 平凡化**：$n$ 个相同因子 $X_n=\frac{1}{n}F_t\xi_0+r_t(\xi_0/n)$ 的 $\exp$ 乘积，由 BCH 公式 $\log(e^Xe^Y)=X+Y+\frac{1}{2}[X,Y]+\cdots$，**所有交叉项含 $[X_n,X_n]=0$**，故
+
 $$
 [\exp(X_n)]^n = \exp(nX_n) = \exp\bigl(F_t\xi_0 + n\cdot r_t(\xi_0/n)\bigr).
 $$
+
 由 $r_t(\zeta)=O(\|\zeta\|^2)$，$n\cdot r_t(\xi_0/n)=n\cdot O(1/n^2)=O(1/n)\to 0$，故
+
 $$
 \boxed{\;\Phi_t(\exp(\xi_0)) = \exp(F_t\xi_0).\;}
 $$
+
 两边对时间求导 + 在 $\xi_0\to 0$ 一阶比较：$\dot F_t=A_{u_t}F_t$，$F_0=I$。即 $\xi_t=F_t\xi_0$ 满足 (20)。$\square$
 
 **几何直觉**：流 $\Phi_t$ 是 $G$ 上的**群同态**（保群运算），由其在单位元邻域的导数 $A_t$ 完全决定。所有 group-affine 动力学的"非线性"只是表面，骨架是 $\mathfrak g\to\mathfrak g$ 的线性映射 $A_t$——典型的李群"局部到整体"原理。
@@ -295,13 +343,17 @@ $$
 ### §D.8 Theorem 2 精确陈述 ⭐⭐⭐
 
 **Theorem 2（Log-Linear Property of the Error，TAC 2017 §II.3, eq.(13), p.1801-1802）**　设 $\chi_t,\bar\chi_t$ 为 group-affine 动力学 (12) 的任意两条轨迹，$\eta^i_t$（$i\in\{L,R\}$）为不变误差。取 $\xi^i_0\in\mathbb{R}^d$ 使 $\eta^i_0=\exp(\xi^i_0)$。设 $A^i_{u_t}$ 由
+
 $$
 g^i_{u_t}(\exp(\xi)) = L_{\mathfrak g}(A^i_{u_t}\xi) + O(\|\xi\|^2)
 $$
+
 定义。若 $\xi^i_t$ 满足线性 ODE
+
 $$
 \frac{d}{dt}\xi^i_t = A^i_{u_t}\xi^i_t,\tag{13}
 $$
+
 则**对任意 $t\ge 0$ 且对任意可由所选 log/exp 分支表示的初始误差**都有 $\eta^i_t = \exp(\xi^i_t)$。
 
 #### 三层"不可思议"之处
@@ -315,10 +367,13 @@ $$
 $$
 \boxed{\;A^L_u = D\bigl[L_{\mathfrak g}^{-1}\circ g^L_u\circ \exp\bigr]\Big|_{\xi=0}.\;}
 $$
+
 对 $SE_2(3)$ IMU 导航的具体计算（§V）给出
+
 $$
 A_t = \begin{pmatrix} 0_{3\times 3} & 0_{3\times 3} & 0_{3\times 3} \\ (g)_\times & 0_{3\times 3} & 0_{3\times 3} \\ 0_{3\times 3} & I_3 & 0_{3\times 3} \end{pmatrix},\qquad\text{完全独立于 }\hat\chi_t.
 $$
+
 注意 $A_t$ **下三角且严格幂零**——这是 $SE_2(3)$ 在 IMU 导航中数值稳定性极佳的结构性原因。
 
 ---
@@ -334,9 +389,11 @@ $$
 #### Chirikjian Vol.2 的工具
 
 $\exp$ 的微分 $d\exp_\xi:\mathfrak g\to T_{\exp\xi}G$ 的级数公式（Ch.5）：
+
 $$
 d\exp_\xi = \sum_{k\ge 0}\frac{(-\mathrm{ad}_\xi)^k}{(k+1)!} = \frac{\mathrm{Id}-e^{-\mathrm{ad}_\xi}}{\mathrm{ad}_\xi},
 $$
+
 是展开 $\dot\eta = d\exp_\xi(\dot\xi)$ 的工具。对真正幂零的李代数，级数会在有限阶截断，所有计算闭式可得。$\mathfrak{se}(3)$ 与 $\mathfrak{se}_2(3)$ 含有旋转部分，整体并不是幂零李代数，因此不能简单说 BCH 有限阶截断；它们的闭式更多来自 $SO(3)$ 旋转指数、左 Jacobian 及块结构。
 
 #### 为什么 nilpotent 李代数特别适用
@@ -352,9 +409,11 @@ $\mathfrak{se}(3)$ 的平移子空间是阿贝尔的，但旋转对平移的反�
 #### 标准 EKF 的致命缺陷
 
 对一般非线性 $\dot x=f(x,u)$，标准 EKF 误差 $e=x-\hat x$ 满足
+
 $$
 \dot e = f(x,u)-f(\hat x,u) = \underbrace{\partial_x f|_{\hat x,u}}_{A(\hat x,u)} e + O(\|e\|^2).
 $$
+
 **雅可比 $A(\hat x,u)$ 依赖估计**——估计漂移 → $A$ 偏离真值雅可比 $A(x,u)$ → Riccati $\dot P=AP+PA^\top+Q$ 传播失真 → Kalman 增益 $L=PH^\top S^{-1}$ 不匹配真实观测 → 估计更漂离 → **正反馈 → filter divergence**。
 
 这正是 EKF 稳定性证明（Reif-Unbehauen 1999, Krener 2003, Boutayeb-Rafaralahy-Darouach 1997）必须**假设** $\gamma_{\min}I\preceq P_t\preceq\gamma_{\max}I$ 的根源——而此假设本身在实际中**无法先验验证**。
@@ -362,9 +421,11 @@ $$
 #### InEKF 的结构性突破
 
 对 group-affine 系统，$\dot\xi = A_{u_t}\xi$ 中 $A_{u_t}$ **仅依赖输入**。Riccati
+
 $$
 \dot P = A_{u_t}P + P A_{u_t}^\top + \hat Q_t \tag{35/37}
 $$
+
 在传播段**精确**。Hartley IJRR 2020 §3.3 总结此关键性质："the linearized error dynamics ... depend only on the control inputs $u_t$ and known quantities, not on the current state estimate $\hat X_t$"。
 
 #### 对比 FEJ 与 OC-EKF
@@ -384,9 +445,11 @@ EKF-SLAM 中由于雅可比依赖估计，yaw（沿重力方向旋转）虚假�
 ### §D.11 可观性条件与 Deyst-Price 1968 ⭐⭐⭐
 
 **可观性 Gramian** 对线性时变系统 $\dot x=A_t x$, $y_n=Hx_{t_n}$，定义状态转移 $\dot\Phi^t_{t_0}=A_t\Phi^t_{t_0}$, $\Phi^{t_0}_{t_0}=I$，则
+
 $$
 W_O(t_0,t_f) = \sum_{t_n\in[t_0,t_f]}(\Phi^{t_n}_{t_0})^\top H^\top N_n^{-1} H \Phi^{t_n}_{t_0}.
 $$
+
 **均匀可观（uniformly observable）**：存在常数 $\beta_1,\beta_2,M>0$ 使 $\beta_1 I\preceq W_O(t_n-M,t_n)\preceq\beta_2 I$ 对所有 $n$ 成立。
 
 **Theorem 3（TAC 2017 p.1804，即 Deyst-Price 1968）**　对 LTV 离散观测的连续 KF，若 (i) 一步转移可逆性、(ii) 过程噪声正定 $Q_s\succeq\delta_2 I$、(iii) 观测噪声正定 $N_n\succeq\delta_3 I$、(iv) 过程 Gramian 上下有界、(v) 观测 Gramian 上下有界 这五条件成立，则存在 $\gamma_{\min},\gamma_{\max}>0$ 使 $\gamma_{\min}I\preceq P_t^{-1}\preceq\gamma_{\max}I$，且 Lyapunov 函数 $V(P,\xi)=\xi^\top P^{-1}\xi$ 沿 KF 轨迹**指数衰减**。
@@ -400,9 +463,11 @@ $$
 #### 为什么 $\varepsilon$ 独立于 $t_0$ 是不平凡的
 
 Reif-Unbehauen 1999 EKF 稳定性结果给出
+
 $$
 \varepsilon(t_0)\le \frac{\text{const}}{\sup_{t\ge t_0}\|A(\hat x_t,u_t)\|\cdot\gamma_{\max}(t_0,\cdot)},
 $$
+
 $\varepsilon$ **随 $t_0$ 变化**——因真实轨迹上雅可比幅度随时间变化，二阶余项也随之膨胀。
 
 InEKF 中 $A_{u_t}$ 仅依赖输入 $u_t$，只要 $u_t$ 在整条轨迹上**均匀有界**，BCH 展开下高阶余项可被**单一常数**控制——$\varepsilon$ 只需小到这个常数水平，**与 $t_0$ 无关**。这是附录 C 证明 Lemma 4-7 的核心数学内容。
@@ -416,6 +481,7 @@ InEKF 中 $A_{u_t}$ 仅依赖输入 $u_t$，只要 $u_t$ 在整条轨迹上**均
 **离散 group-affine** 的等价刻画：$F_n(ab) = F_n(a)F_n(e)^{-1}F_n(b)$，保证离散误差也满足 log-linear。
 
 **Riccati 离散化**：若测量间隔 $\Delta t=t_{n+1}-t_n$，$\Phi_n=\exp_m(A_{u_t}\Delta t)$（输入分段常数），则
+
 $$
 P^-_{n+1}=\Phi_n P^+_n\Phi_n^\top+\hat Q_n,\quad S_n=HP^-_nH^\top+\hat N_n,\quad L_n=P^-_nH^\top S_n^{-1},\quad P^+_n=(I-L_nH)P^-_n.
 $$
@@ -431,14 +497,17 @@ $$
 #### Step 1：二阶余项的代数刻画
 
 Update 阶段 $\xi^+_n = (I-L_nH)\xi_n + r_n(\xi_n)$，其中 $r_n$ 来自
+
 $$
 \exp[(I-L_nH)\xi - r_n(\xi)] = \exp[\xi]\exp[-L_nH(\exp[\xi]b - b)].
 $$
+
 由 BCH 公式 $\log(e^Xe^Y)=X+Y+\frac{1}{2}[X,Y]+\cdots$，得 $r_n(\xi)=O(\|\xi\|\|L_n\xi\|)$，即**二阶**。
 
 #### Step 2：Duhamel 分解
 
 引入线性部分状态转移 $\Psi^t_{t_0}$（满足 $\dot\Psi^t_{t_0}=A_{u_t}\Psi^t_{t_0}$, $\Psi^{t_n+}_{t_0}=(I-L_nH)\Psi^{t_n}_{t_0}$），按 Duhamel 分解：
+
 $$
 \xi_t = \Psi^t_{t_0}\xi_0 + \sum_{t_n<t}\Psi^t_{t_n}\,r_n(\xi_{t_n}).\tag{58}
 $$
@@ -487,9 +556,11 @@ $$
 #### Jacobian $H$ 独立于估计——一致性最后一块拼图
 
 对左不变观测一阶展开（§III-C, eq.(33)-(34)）：
+
 $$
 (\eta^L)^{-1}d - d = -L_{\mathfrak g}(\xi)\,d + O(\|\xi\|^2)\;\Rightarrow\; H\xi=-(L_{\mathfrak g}(\xi)d^1,\dots,L_{\mathfrak g}(\xi)d^k)^\top.
 $$
+
 **$H$ 是 $\xi$ 的线性算子，矩阵仅依赖已知参考向量 $\{d^i\}$，完全独立于估计与真值**。若噪声协方差也采用固定或不变的表达，配合 (35) 的 Riccati，Kalman 增益 $L_n$ 不需要通过当前估计重新计算观测 Jacobian；若噪声需要通过 $\operatorname{Ad}_{\hat\chi}$ 或当前姿态换坐标，增益仍可能间接依赖估计。这正是 InEKF 相对标准 EKF 在更新步的本质优势与工程边界。
 
 #### 完整分类表
@@ -537,22 +608,27 @@ TAC 2017 限定 $\rho$ 为标准矩阵左乘/右乘 $V=\mathbb{R}^N$。ICRA 2020
 #### 带 bias 的 IMU 动力学
 
 真实角速度 $\omega=\omega_m-b_g-w^g$，比力 $a=a_m-b_a-w^a$。"自然"扩增 $X=(\chi,b)\in SE_2(3)\times\mathbb{R}^6$，bias 加性演化 $\dot b=w^b$。pose 动力学
+
 $$
 \dot\chi = \chi\,\nu(\omega_m-b_g, a_m-b_a) + \text{重力项}.
 $$
+
 关键观察：$\nu$ 相对 $b$ **仿射非线性**（通过 $\omega_m-b_g$ 进入）。
 
 #### Negative Result 的精确陈述
 
 **Barrau PhD 2015 + Hartley 2020 §IV**：在 $G=SE_2(3)\times\mathbb{R}^6$（或其他 pose×bias 直积/半直积）上，**不存在自然的 $f$** 使
+
 $$
 f_u(XX')=f_u(X)X'+Xf_u(X')-Xf_u(e)X'\qquad(*)
 $$
+
 对所有 $X,X'$ 成立。
 
 #### 可教学的代数证明（最小例：$SO(3)\times\mathbb{R}^3$ + gyro bias）
 
 为便于黑板讲解，取最小 non-trivial 情形：$X=(R,b_g)\in SO(3)\times\mathbb{R}^3$，群律 $(R_1,b_1)(R_2,b_2)=(R_1R_2,b_1+b_2)$，$e=(I,0)$。动力学
+
 $$
 f_u(R,b_g)=(R(\omega_m-b_g)_\times,\,0).
 $$
@@ -565,17 +641,23 @@ $$
 - $Xf_u(e)X'=(R_1(\omega_m)_\times R_2,0)$。
 
 **合并 RHS**：用 $(\omega_m)_\times R = R(R^\top\omega_m)_\times$ 化简，
+
 $$
 \text{RHS}_{(1,1)} = R_1(\omega_m-b_1)_\times R_2 + R_1R_2(\omega_m-b_2)_\times - R_1(\omega_m)_\times R_2.
 $$
+
 化简前两项与第三项的差：$R_1(\omega_m-b_1)_\times R_2 - R_1(\omega_m)_\times R_2 = -R_1(b_1)_\times R_2 = -R_1R_2(R_2^\top b_1)_\times$，故
+
 $$
 \text{RHS} = R_1R_2\bigl[(\omega_m-b_2)_\times - (R_2^\top b_1)_\times\bigr].
 $$
+
 而 LHS$=R_1R_2(\omega_m-b_1-b_2)_\times$。等式成立 ⟺
+
 $$
 (b_1)_\times = (R_2^\top b_1)_\times\quad\forall R_2\in SO(3),
 $$
+
 此需 $b_1=0$ 或所有 $R_2$ 保留 $b_1$——**显然不成立**（取任意非单位旋转 + $b_1\neq 0$ 即矛盾）。$\square$
 
 **结论**：$\omega\to\omega-b_g$ 引入"旋转与加性 bias 不可交换的耦合"，使 group-affine 在 $X=e$ 邻域即失败。加速度计 bias 同理。
@@ -588,9 +670,11 @@ Hartley IJRR 2020 §IV 处理：
 - 联合线性化 $\epsilon=(\xi,\tilde b)\in\mathbb{R}^{15}$。
 
 连续误差雅可比（arXiv:1904.09251 eq.(50)）：
+
 $$
 F=\begin{pmatrix}F_{\mathrm{pp}}(u) & F_{\mathrm{pb}}(\hat\chi)\\ 0 & 0\end{pmatrix},
 $$
+
 - **pose-pose 块** $F_{\mathrm{pp}}$：独立于估计；
 - **pose-bias 块** $F_{\mathrm{pb}}$：形如 $\mathrm{diag}(-\hat R,-(\hat v)_\times\hat R,-(\hat p)_\times\hat R)$ ——**依赖 $\hat\chi$**，是 group-affine 被破坏的直接代数体现。
 
@@ -661,9 +745,11 @@ Fornasier et al. "Overcoming Bias" (RAL 2022, arXiv:2209.12038) 与 EqVIO (arXiv
 #### 框架概述
 
 BMR IEEE TAC 53(11):2514-2526, 2008 承接 Olver 的 Cartan moving frame 方法，给出系统满足对称 $\phi_g\cdot x=\phi_g(x)$ 时**保对称的非线性观测器**：
+
 $$
 \dot{\hat x}=f(\hat x,u)+\sum_i K_i(\hat x)E_i(\hat x,u,y),
 $$
+
 $K_i$ 与不变输出误差 $E_i$ 均由 Cartan 标架构造以保整个观测器在群作用下等变。
 
 #### 不变观测器的 Cartan moving frame
@@ -760,9 +846,11 @@ Kalman 滤波对协方差精确传播的依赖来自线性化：$\dot P=AP+PA^\t
 **Q2**　用 $SE_2(3)$ 上 IMU 动力学 $\dot R=R\omega_\times$, $\dot v=g+Ra$, $\dot p=v$ 验证 group-affine 的速度块 (1,2)。展示如何把 $f$ 写成 $A\chi+\chi B$ 形式并验证 (7) 自动成立。
 
 **Q3**　推导 InEKF 在 $SE_2(3)$ 上对 IMU 的 $A$ 矩阵：
+
 $$
 A_t=\begin{pmatrix}0&0&0\\(g)_\times&0&0\\0&I_3&0\end{pmatrix}.
 $$
+
 验证 $A_t$ **下三角**且**严格幂零**（$A_t^3=0$）。这对 BCH 截断有什么意义？
 
 **Q4**　解释为什么 Theorem 2 的 log-linear 是**精确的**而非近似。具体说明 BCH 公式在 $[\exp(X_n)]^n=\exp(nX_n)$ 这一步如何"魔术般"消除所有交叉项。提示：$[X_n,X_n]=0$ + Jacobi 恒等式。

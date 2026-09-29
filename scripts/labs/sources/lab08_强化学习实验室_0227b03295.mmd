@@ -1,0 +1,13 @@
+
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#FFFFFF","primaryBorderColor":"#8166B1","primaryTextColor":"#292530","lineColor":"#8166B1","fontSize":"14px"}}}%%
+flowchart TD
+    A(["初始化 Q 表 = 全 0"]) --> B[/"观察当前状态 s"/]
+    B --> C{"ε-贪婪：探索 or 利用？"}
+    C -- "概率 ε：探索" --> D["随机选动作 a"]
+    C -- "概率 1−ε：利用" --> E["选 Q 最大的动作 a"]
+    D --> F["执行 a → 得奖励 r 与新状态 s']"]
+    E --> F
+    F --> G[/"更新：Q(s,a) ← Q(s,a) + α(r + γ·maxQ(s') − Q(s,a))"/]
+    G --> H{"到终点了？"}
+    H -- "否" --> B
+    H -- "是" --> I(["下一回合；ε 逐渐减小"])

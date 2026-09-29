@@ -1,0 +1,9 @@
+
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#FFFFFF","primaryBorderColor":"#8166B1","primaryTextColor":"#292530","lineColor":"#8166B1","fontSize":"14px"}}}%%
+flowchart TD
+    A(["起点入开放列表"]) --> B[/"取出 f = g + h 最小的节点"/]
+    B --> C{"是终点吗？"}
+    C -- "是" --> Z(["回溯得到最短路径"])
+    C -- "否" --> D[/"把四邻中可行走且更优的<br>节点入列表（记下父节点）"/]
+    D --> B
+    E[/"障碍：永远不入列"/] -.-> D

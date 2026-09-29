@@ -1,0 +1,12 @@
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#FFFFFF","primaryBorderColor":"#8166B1","primaryTextColor":"#292530","lineColor":"#B39ADE","fontSize":"14px"}}}%%
+flowchart LR
+    M["数学基础<br>微积分 · 线代 · 概率"] --> C["C++ 工程<br>现代 C++ · 并发"]
+    C --> R["ROS 2<br>节点 · 话题 · 工程化"]
+    R --> S["感知 / SLAM<br>滤波 · 因子图 · 建图"]
+    S --> P["Planning / Control<br>MPC · WBC · 规划"]
+    P --> A["机械臂 / 足式<br>运动学 · 动力学 · 全栈"]
+    A --> E["具身智能<br>RL 运控 · VLA"]
+    L["Linux / Git<br>开发环境"] -.-> R
+    V["仿真<br>MuJoCo · Isaac Lab"] -.-> A
+    style M fill:#F4C8D9,stroke:#D98FAF
+    style E fill:#FBF6EC,stroke:#C9A96E

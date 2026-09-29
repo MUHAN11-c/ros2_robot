@@ -296,8 +296,11 @@ $$U_t = V(\theta_t) + C\sum_{s=t}^{\infty} \alpha_s^2.$$
 由 $\sum\alpha_s^2 < \infty$（条件 (S1)），尾和 $\sum_{s=t}^\infty \alpha_s^2$ 是有限且递减的。计算：
 
 $$\mathbb{E}[U_{t+1}\mid\mathcal{F}_t] = \mathbb{E}[V(\theta_{t+1})\mid\mathcal{F}_t] + C\sum_{s=t+1}^\infty \alpha_s^2$$
+
 $$\le V(\theta_t)(1-c\alpha_t) + C\alpha_t^2 + C\sum_{s=t+1}^\infty \alpha_s^2$$
+
 $$= V(\theta_t)(1-c\alpha_t) + C\sum_{s=t}^\infty \alpha_s^2$$
+
 $$\le V(\theta_t) + C\sum_{s=t}^\infty \alpha_s^2 = U_t.$$
 
 （最后一步用了 $c\alpha_t V(\theta_t) \ge 0$。）因此 $\{U_t\}$ 是非负 supermartingale！
@@ -631,7 +634,9 @@ $$\dot V = \dot e^\top P e + e^\top P \dot e = -e^\top A^\top P e - e^\top P A e
 - **(A4)** 缩放极限 $h_\infty(\theta) = \lim_{c\to\infty} h(c\theta)/c = -A\theta$ 线性，原点为全局指数稳定平衡点 ✓。
 
 **结论**：
+
 $$\boxed{\;\theta_t \to \theta^* = A^{-1}b \text{ a.s.}\;}$$
+
 这正是 Bellman 投影不动点 $\Pi T^\pi V_{\theta^*} = V_{\theta^*}$ 的坐标。$\blacksquare$
 
 #### 为什么这个证明对机器人 RL 人重要
@@ -1222,6 +1227,7 @@ $$\theta_{t+1} = \theta_t + \alpha_t G_t h(\theta_t, X_t),$$
 Adam（Kingma-Ba 2015）是深度学习中最流行的优化器，从 SA 视角看它做了什么？
 
 $$m_t = \beta_1 m_{t-1} + (1-\beta_1)\nabla\ell(\theta_t, X_t), \quad v_t = \beta_2 v_{t-1} + (1-\beta_2)[\nabla\ell(\theta_t, X_t)]^2,$$
+
 $$\theta_{t+1} = \theta_t - \alpha \frac{\hat m_t}{\sqrt{\hat v_t} + \epsilon}.$$
 
 在 SA 框架下：

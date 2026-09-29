@@ -261,8 +261,11 @@ SRB 控制向量:
 **连续动力学**（线性化）：
 
 $$\dot{\theta} = R_z(\psi)^{-1} \omega$$
+
 $$\dot{p} = v$$
+
 $$I_{world} \dot{\omega} = \sum_{i=1}^{4} r_i \times f_i$$
+
 $$m\dot{v} = \sum_{i=1}^{4} f_i + mg$$
 
 其中 $r_i = p_{foot,i} - p_{CoM}$ 是从质心到第 $i$ 个脚的向量。
@@ -289,12 +292,15 @@ $$x_{k+1} = A x_k + B u_k$$
 $$\min_{u_0, ..., u_{N-1}} \sum_{k=0}^{N-1} \left[ (x_k - x_{ref,k})^T Q (x_k - x_{ref,k}) + u_k^T R u_k \right] + (x_N - x_{ref,N})^T Q_f (x_N - x_{ref,N})$$
 
 $$\text{s.t. } x_{k+1} = A x_k + B u_k, \quad k = 0, ..., N-1$$
+
 $$\text{摩擦锥(金字塔外逼近): } |f_{i,x}| \leq \mu f_{i,z}, \quad |f_{i,y}| \leq \mu f_{i,z}$$
+
 $$\text{法向力: } 0 \leq f_{i,z} \leq f_{max} \text{ (接触腿)}, \quad f_i = 0 \text{ (摆动腿)}$$
 
 消去 $x_k$（代入递推关系），得到只关于 $u$ 的稠密 QP：
 
 $$\min_U \frac{1}{2} U^T H_{MPC} U + g_{MPC}^T U$$
+
 $$\text{s.t. } A_{ineq} U \leq b_{ineq}$$
 
 其中 $U = [u_0; u_1; ...; u_{N-1}] \in \mathbb{R}^{12N}$。
@@ -306,7 +312,9 @@ $$\text{s.t. } A_{ineq} U \leq b_{ineq}$$
 从 $x_{k+1} = A x_k + B u_k$ 和初始状态 $x_0$ 出发，逐步递推：
 
 $$x_1 = A x_0 + B u_0$$
+
 $$x_2 = A x_1 + B u_1 = A^2 x_0 + AB u_0 + B u_1$$
+
 $$x_k = A^k x_0 + \sum_{j=0}^{k-1} A^{k-1-j} B u_j$$
 
 将所有 $x_1, ..., x_N$ 堆叠成向量 $X = [x_1; x_2; ...; x_N] \in \mathbb{R}^{13N}$：
@@ -320,6 +328,7 @@ $$J = (\bar{A}x_0 + \bar{B}U - X_{ref})^T \bar{Q} (\bar{A}x_0 + \bar{B}U - X_{re
 展开并整理为标准 QP 形式 $\frac{1}{2} U^T H U + g^T U + \text{const}$：
 
 $$H_{MPC} = 2(\bar{B}^T \bar{Q} \bar{B} + \bar{R})$$
+
 $$g_{MPC} = 2\bar{B}^T \bar{Q} (\bar{A} x_0 - X_{ref})$$
 
 > **本质洞察**：$H_{MPC}$ 是**对称正定**的（只要 $\bar{R} \succ 0$），这保证了 QP 是凸的，有唯一全局最优解。这就是"凸 MPC"名称的由来——不是所有 MPC 都是凸的，但 SRB 线性化后的 MPC 天然是凸 QP。
@@ -333,6 +342,7 @@ $$|f_{i,x}| \leq \mu f_{i,z}, \quad |f_{i,y}| \leq \mu f_{i,z}$$
 等价于 4 个线性不等式（每个接触点）：
 
 $$f_{i,x} \leq \mu f_{i,z}, \quad -f_{i,x} \leq \mu f_{i,z}$$
+
 $$f_{i,y} \leq \mu f_{i,z}, \quad -f_{i,y} \leq \mu f_{i,z}$$
 
 加上法向力约束 $0 \leq f_{i,z} \leq f_{max}$，每个接触点有 6 个不等式。对 $N$ 步预测、每步 $n_c$ 个接触点，总不等式约束数 = $6 n_c N$。
@@ -524,9 +534,13 @@ KinWBC 给出的 $\ddot{q}_{cmd}$ 可能不满足浮动基座动力学——因�
 $$\min_{\delta_{fb}, f_c} \|\delta_{fb}\|^2 + w_f \|f_c - f_{MPC}\|^2$$
 
 $$\text{s.t. 浮动基座动力学（带松弛）:}$$
+
 $$M_{fb} \dot{v}_{cmd} + h_{fb} = J_{c,fb}^T f_c + \delta_{fb}$$
+
 $$\text{关节动力学:}$$
+
 $$\tau = M_j \dot{v}_{cmd} + h_j - J_{c,j}^T f_c$$
+
 $$\text{摩擦锥 + 力矩限}$$
 
 **浮动基松弛 $\delta_{fb}$ 的物理含义**：

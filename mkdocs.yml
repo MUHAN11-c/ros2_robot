@@ -1,5 +1,5 @@
 site_name: Robotics Tutorial
-site_description: 系统化机器人学教学文档，覆盖数学、C++基础与进阶、SLAM、规划控制、运动控制与具身智能。
+site_description: 樱雷机器人研习社 · 面向机器人开发者的系统化知识库——从数学基础、C++ 和 ROS 2，到 SLAM、运动控制与具身智能。
 site_author: Pengfei Guo
 site_url: https://muhuan11-c.github.io/ros2_robot/
 
@@ -9,6 +9,9 @@ edit_uri: edit/main/
 docs_dir: .generated/docs
 site_dir: site
 
+# 404 页由 sync_docs.py 生成，不进入导航
+not_in_nav: 404.md
+
 theme:
   name: material
   custom_dir: overrides
@@ -16,9 +19,7 @@ theme:
   logo: assets/images/logo.svg
   favicon: assets/images/favicon.svg
   features:
-    - navigation.tabs
     - navigation.sections
-    - navigation.indexes
     - navigation.prune
     - navigation.top
     - navigation.footer
@@ -28,26 +29,24 @@ theme:
     - search.share
     - search.suggest
     - content.code.copy
+    - content.code.select
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: purple
-      accent: pink
+      primary: custom
+      accent: custom
       toggle:
         icon: material/weather-night
         name: 切换到深色模式
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: purple
-      accent: pink
+      primary: custom
+      accent: custom
       toggle:
         icon: material/weather-sunny
         name: 切换到浅色模式
-  font:
-    text: Noto Sans SC
-    code: JetBrains Mono
   icon:
-    logo: material/robot-industrial
+    logo: default
 
 plugins:
   - search:
@@ -95,15 +94,22 @@ markdown_extensions:
   - pymdownx.tilde
 
 extra_css:
-  - stylesheets/extra.css
+  - stylesheets/tokens.css
+  - stylesheets/base.css
+  - stylesheets/layout.css
+  - stylesheets/navigation.css
+  - stylesheets/content.css
+  - stylesheets/code.css
+  - stylesheets/components.css
+  - stylesheets/responsive.css
 
 extra_javascript:
   - javascripts/mathjax.js
-  - javascripts/home-parallax.js
-  - javascripts/theme-effects.js
+  - javascripts/app.js
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 
 extra:
+  copyright: Sakura Robotics Lab · 樱雷机器人研习社
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/MUHAN11-c/ros2_robot

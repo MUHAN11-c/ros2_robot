@@ -190,7 +190,9 @@ OCS2 把这种"模式切换"抽象为框架的**一等公民**:
 给定离散线性系统 $\mathbf{x}_{k+1} = A\mathbf{x}_k + B\mathbf{u}_k$，$\mathbf{z}_k = C\mathbf{x}_k$，从时刻 $k$ 的状态 $\mathbf{x}_k$ 出发，逐步展开未来状态：
 
 $$\mathbf{x}_{k+1} = A\mathbf{x}_k + B\mathbf{u}_k$$
+
 $$\mathbf{x}_{k+2} = A^2\mathbf{x}_k + AB\mathbf{u}_k + B\mathbf{u}_{k+1}$$
+
 $$\mathbf{x}_{k+v} = A^v\mathbf{x}_k + \sum_{j=0}^{v-1} A^{v-1-j}B\mathbf{u}_{k+j}$$
 
 将预测时域（prediction horizon $f$）内的所有输出堆叠为向量，得到矩阵形式：
@@ -585,8 +587,11 @@ SQP:     每次迭代把约束线性化,在 QP 子问题中直接处理
 $$\min_{\mathbf{x}, \mathbf{u}} \sum_{k=0}^{N-1} \ell_k(\mathbf{x}_k, \mathbf{u}_k) + \phi_N(\mathbf{x}_N)$$
 
 subject to:
+
 $$\mathbf{x}_{k+1} = f_k(\mathbf{x}_k, \mathbf{u}_k), \quad k = 0, \ldots, N-1$$
+
 $$\mathbf{g}_k(\mathbf{x}_k, \mathbf{u}_k) = \mathbf{0}$$
+
 $$\mathbf{h}_k(\mathbf{x}_k, \mathbf{u}_k) \geq \mathbf{0}$$
 
 **SQP 思路**: 在当前迭代点 $(\bar{\mathbf{x}}, \bar{\mathbf{u}})$ 做二阶泰勒展开,得到 **QP 子问题**:

@@ -1,0 +1,9 @@
+
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#FFFFFF","primaryBorderColor":"#8166B1","primaryTextColor":"#292530","lineColor":"#8166B1","fontSize":"14px"}}}%%
+flowchart TD
+    A(["选定函数 f"]) --> B[/"在 x₀ 处取割线，缩小 h"/]
+    B --> C{"割线斜率 → 什么值？"}
+    C -- "h → 0" --> D["切线 = 导数 f'(x₀)"]
+    D --> E[/"用多项式逐阶逼近 f：泰勒"/]
+    E --> F[/"沿负梯度迭代：梯度下降"/]
+    F --> G(["观察：小球滚向谷底"])

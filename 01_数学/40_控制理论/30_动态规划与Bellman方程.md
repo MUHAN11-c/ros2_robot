@@ -132,10 +132,13 @@ Richard Bellman（1920–1984）在 RAND Corporation 工作期间，于 1953-195
 ### 严格定义
 
 **有限时域确定性问题 (DOCP)**：给定离散动力学 $x_{k+1}=f_k(x_k,u_k)$，$x_k\in\mathcal{X}_k\subseteq\mathbb{R}^n$，$u_k\in\mathcal{U}_k(x_k)\subseteq\mathbb{R}^m$，阶段代价 $L_k(x_k,u_k)$，末端代价 $\Phi(x_N)$，初始态 $x_0$ 给定。求策略序列 $\pi=\{\mu_0,\ldots,\mu_{N-1}\}$ 使
+
 $$J_\pi(x_0)=\Phi(x_N)+\sum_{k=0}^{N-1}L_k(x_k,\mu_k(x_k))$$
+
 最小，其中 $x_{k+1}=f_k(x_k,\mu_k(x_k))$。
 
 **有限时域随机问题 (SOCP)**：动力学改写为 $x_{k+1}=f_k(x_k,u_k,w_k)$，$w_k$ 独立取值于 $\mathcal{W}_k$ 具有已知分布，目标函数取期望
+
 $$J_\pi(x_0)=\mathbb{E}_{w_0,\ldots,w_{N-1}}\!\left[\Phi(x_N)+\sum_{k=0}^{N-1}L_k(x_k,\mu_k(x_k),w_k)\right].$$
 
 **无限时域 $\gamma$-折扣问题**：$N\to\infty$，代价为 $\sum_{k=0}^\infty\gamma^kL(x_k,u_k,w_k)$，$\gamma\in[0,1)$。假设 $L$ 有界。
@@ -324,6 +327,7 @@ $$\lambda_k^* = \nabla_x L_k(x_k^*,u_k^*) + [\nabla_x f_k(x_k^*,u_k^*)]^\top \la
 设 $u^*(x)$ 为取得极小的控制，则：
 
 $$\nabla_x V_k(x) = \nabla_x L_k(x,u^*) + [\nabla_x f_k(x,u^*)]^\top \nabla_x V_{k+1}(f_k(x,u^*))$$
+
 $$\quad + \underbrace{[\nabla_x u^*(x)]^\top \left\{\nabla_u L_k + [\nabla_u f_k]^\top \nabla V_{k+1}\right\}}_{= 0 \text{ 由一阶最优条件}}$$
 
 包络项为零（因为 $u^*$ 满足 $\nabla_u L_k + [\nabla_u f_k]^\top \nabla V_{k+1} = 0$）。
@@ -422,7 +426,9 @@ $$|(\mathcal{T}V_1)(x) - (\mathcal{T}V_2)(x)| = |\min_u F_1(u) - \min_u F_2(u)| 
 **Step 2**：计算 $|F_1(u) - F_2(u)|$：
 
 $$|F_1(u) - F_2(u)| = |\gamma\,\mathbb{E}_w[V_1(f(x,u,w)) - V_2(f(x,u,w))]|$$
+
 $$\leq \gamma\,\mathbb{E}_w[|V_1(f(x,u,w)) - V_2(f(x,u,w))|]$$
+
 $$\leq \gamma \|V_1 - V_2\|_\infty$$
 
 最后一步用了 $|V_1(y) - V_2(y)| \leq \|V_1 - V_2\|_\infty$ 对所有 $y$。
@@ -515,16 +521,20 @@ Howard 1960 提出的策略迭代（PI）给出了肯定回答：PI 在有限 MD
 1. **策略评估**：精确求解 $V^{\mu_k} = \mathcal{T}^{\mu_k} V^{\mu_k}$
 
    由于 $\mathcal{T}^{\mu_k}$ 是仿射映射，这等价于线性方程组：
-   $$V^{\mu_k} = r^{\mu_k} + \gamma P^{\mu_k} V^{\mu_k}$$
+
+   $V^{\mu_k} = r^{\mu_k} + \gamma P^{\mu_k} V^{\mu_k}$
+
    即 $(I - \gamma P^{\mu_k}) V^{\mu_k} = r^{\mu_k}$
    
    其中 $[P^{\mu_k}]_{ij} = P(j|i, \mu_k(i))$，$[r^{\mu_k}]_i = R(i, \mu_k(i))$。
    
    由于 $\gamma < 1$，矩阵 $(I - \gamma P^{\mu_k})$ 严格对角占优，因此可逆：
-   $$V^{\mu_k} = (I - \gamma P^{\mu_k})^{-1} r^{\mu_k}$$
+
+   $V^{\mu_k} = (I - \gamma P^{\mu_k})^{-1} r^{\mu_k}$
 
 2. **策略改进**：
-   $$\mu_{k+1}(x) \in \arg\min_{u\in\mathcal{A}(x)} \left\{R(x,u) + \gamma \sum_{x'} P(x'|x,u) V^{\mu_k}(x')\right\}$$
+
+   $\mu_{k+1}(x) \in \arg\min_{u\in\mathcal{A}(x)} \left\{R(x,u) + \gamma \sum_{x'} P(x'|x,u) V^{\mu_k}(x')\right\}$
 
 ### 核心定理：PI 有限步终止
 
@@ -537,8 +547,11 @@ Howard 1960 提出的策略迭代（PI）给出了肯定回答：PI 在有限 MD
 *证明*：由改进步定义，$\mathcal{T}^{\mu_{k+1}} V^{\mu_k} \leq \mathcal{T}^{\mu_k} V^{\mu_k} = V^{\mu_k}$。
 
 记 $W_0 = V^{\mu_k}$，$W_{j+1} = \mathcal{T}^{\mu_{k+1}} W_j$。由 $\mathcal{T}^{\mu_{k+1}}$ 单调性：
+
 $$W_1 = \mathcal{T}^{\mu_{k+1}} W_0 \leq W_0$$
+
 $$W_2 = \mathcal{T}^{\mu_{k+1}} W_1 \leq \mathcal{T}^{\mu_{k+1}} W_0 = W_1$$
+
 归纳得 $W_j$ 单调递减且有下界，极限为 $\mathcal{T}^{\mu_{k+1}}$ 的不动点 $V^{\mu_{k+1}}$。
 
 因此 $V^{\mu_{k+1}} \leq V^{\mu_k}$。若 $\mu_{k+1} \neq \mu_k$，则存在 $x_0$ 使 $\mathcal{T}^{\mu_{k+1}} V^{\mu_k}(x_0) < V^{\mu_k}(x_0)$（严格改进）。$\square$
@@ -850,6 +863,7 @@ $$P = Q + A^\top PA - A^\top PB(R + B^\top PB)^{-1}B^\top PA$$
 **两条路径给出同一 Riccati 方程**——精确对偶：
 
 $$P_k = \nabla^2_x V_k \quad \text{（值函数 Hessian）}$$
+
 $$P_k x_k^* + s_k = \nabla_x V_k = \lambda_k \quad \text{（值函数梯度 = 协态）}$$
 
 ### 工程代码（Python）
@@ -1562,6 +1576,7 @@ $$\max_V \sum_x \mu(x)V(x) \quad \text{s.t.} \quad V(x) \leq L(x,u) + \gamma\sum
 LP 对偶：
 
 $$\min_{\lambda \geq 0} \sum_{x,u} \lambda(x,u) L(x,u)$$
+
 $$\text{s.t.} \quad \sum_u \lambda(x',u) = \mu(x') + \gamma\sum_{x,u}P(x'|x,u)\lambda(x,u), \quad \forall x'$$
 
 其中 $\lambda(x,u)$ 是**折扣状态-动作占用测度**：

@@ -1,0 +1,9 @@
+
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#FFFFFF","primaryBorderColor":"#8166B1","primaryTextColor":"#292530","lineColor":"#8166B1","fontSize":"14px"}}}%%
+flowchart LR
+    r(["目标 r"]) --> s(("Σ<br>e=r−y"))
+    s -->|"误差 e"| C["控制器<br>PID / LQR"]
+    C -->|"控制量 u"| P["被控对象<br>（小车/电机）"]
+    P -->|"实际输出 y"| s
+    P --> y2(["位置 y"])
+    style s fill:#F4C8D9,stroke:#D98FAF

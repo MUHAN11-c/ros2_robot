@@ -107,6 +107,7 @@ DDP 同时解决了这三个问题：**线性复杂度 $O(N)$、自然产生反�
 $$
 \min_{u_{0:N-1}}\ J(x_{0:N}, u_{0:N-1}) = \sum_{k=0}^{N-1} \ell(x_k, u_k) + \ell_f(x_N)
 $$
+
 $$
 \text{s.t.}\quad x_{k+1} = f(x_k, u_k),\quad x_0\ \text{given.}
 $$
@@ -791,11 +792,13 @@ $\mu$ 是 trust-region 约束的 Lagrange 乘子；自适应 $\mu$ 调度等价�
 参数：$\mu_{\min} = 10^{-6}$，$\Delta_0 = 2$（调度因子）。
 
 **失败时**（Cholesky 失败或 line search 全部失败）：
+
 $$
 \Delta \leftarrow \max(\Delta_0, \Delta \cdot \Delta_0), \qquad \mu \leftarrow \max(\mu_{\min}, \mu \cdot \Delta)
 $$
 
 **成功时**：
+
 $$
 \Delta \leftarrow \min(1/\Delta_0, \Delta / \Delta_0), \qquad \mu \leftarrow \mu \cdot \Delta \quad (\text{若} < \mu_{\min} \text{则清零})
 $$

@@ -95,6 +95,7 @@ MPC 需要在每个控制周期内求解一个优化问题。对于 SRB-MPC，�
 RL 策略是一个黑盒神经网络。它不显式地知道摩擦锥约束、关节限位、力矩饱和等物理边界。虽然可以通过奖励函数惩罚违反约束的行为，但奖励惩罚只是**软约束**——策略可能在 0.1% 的情况下违反约束，这在仿真中几乎不影响平均奖励，但在真机上一次违反就可能损坏硬件。
 
 $$\text{MPC: } f_z > 0,\ \|f_{xy}\| \leq \mu f_z \quad \text{(硬约束, 永远满足)}$$
+
 $$\text{RL: } r_{friction} = -w \cdot \max(0, \|f_{xy}\| - \mu f_z) \quad \text{(软约束, 可能违反)}$$
 
 **局限 2：精确力控困难**
@@ -362,7 +363,9 @@ $$\underbrace{\begin{bmatrix} \frac{1}{m}\mathbf{I}_3 & \frac{1}{m}\mathbf{I}_3 
 **约束**：
 
 $$\text{摩擦锥:} \quad |f_{x,i}| \leq \mu f_{z,i}, \quad |f_{y,i}| \leq \mu f_{z,i} \quad \text{(线性化)}$$
+
 $$\text{法向力:} \quad 0 \leq f_{z,i} \leq f_{z,max}$$
+
 $$\text{接触模式:} \quad f_{z,i} = 0 \text{ if leg } i \text{ in swing}$$
 
 线性化的摩擦锥约束把圆锥 $\|f_{xy}\| \leq \mu f_z$ 近似为四棱锥，形成线性不等式约束 $\mathbf{C}\boldsymbol{\lambda} \leq \mathbf{d}$。
@@ -405,6 +408,7 @@ $$\mathcal{L}(\boldsymbol{\lambda}, \boldsymbol{\nu}, \boldsymbol{\mu}) = \frac{
 KKT 条件：
 
 $$\nabla_\lambda \mathcal{L} = \mathbf{A}^T\mathbf{Q}(\mathbf{A}\boldsymbol{\lambda}^* - \mathbf{b}) + \mathbf{R}\boldsymbol{\lambda}^* + \mathbf{C}^T\boldsymbol{\mu}^* = 0 \quad \text{(stationarity)}$$
+
 $$\mu_i^* \geq 0, \quad C_i\boldsymbol{\lambda}^* \leq d_i, \quad \mu_i^*(C_i\boldsymbol{\lambda}^* - d_i) = 0 \quad \text{(complementarity)}$$
 
 **对偶变量 $\mu_i^*$ 的物理意义**：它衡量第 $i$ 个约束对最优代价的"紧迫程度"。

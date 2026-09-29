@@ -90,6 +90,7 @@
 $$
 \min_{\{x_k\},\{u_k\}} \; \ell_N(x_N) + \sum_{k=0}^{N-1} \ell_k(x_k, u_k)
 $$
+
 $$
 \text{s.t.}\;\; x_{k+1} = f_k(x_k, u_k),\quad g_k(x_k, u_k) \le 0,\quad h_k(x_k, u_k) = 0,\quad \underline u \le u_k \le \bar u,\quad x_N \in \mathcal X_f.
 $$
@@ -122,6 +123,7 @@ $$
 **证明**：
 
 Step 1. 对带约束子问题写 Lagrangian：
+
 $$
 \mathcal{L}(\delta u, \lambda) = \frac{1}{2}\delta u^\top Q_{uu}\delta u + Q_u^\top\delta u + \lambda^\top g_{\mathcal A}(\bar u + \delta u)
 $$
@@ -914,6 +916,7 @@ ALTRO 的 AL 需要**外层循环**（乘子更新 → 重新跑 iLQR → 再更
 $$
 \min_{x,u}\;\sum_t \ell_t + \ell_N + \frac{1}{2\rho_k}\big(\|u - u^k\|^2 + \|x - x^k\|^2\big)
 $$
+
 $$
 \text{s.t.}\quad \text{dynamics},\quad g_t(x_t, u_t) \le 0,\quad h_t(x_t, u_t) = 0
 $$

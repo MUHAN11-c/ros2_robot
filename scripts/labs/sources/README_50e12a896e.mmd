@@ -1,0 +1,9 @@
+
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#FFFFFF","primaryBorderColor":"#8166B1","primaryTextColor":"#292530","lineColor":"#8166B1","fontSize":"14px"}}}%%
+flowchart LR
+    A(["读理论章节"]) --> B[/"抄跑实验代码"/]
+    B --> C{"图和预期<br>一致吗？"}
+    C -- 是 --> D["改参数再跑"]
+    C -- 否 --> E["回到理论章节<br>查那一节"]
+    D --> F(["写出你自己的版本"])
+    E --> B

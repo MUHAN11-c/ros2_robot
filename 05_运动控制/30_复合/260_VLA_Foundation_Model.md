@@ -395,6 +395,7 @@ BPE（字节对编码）进一步把量化后的频域系数合并为更短的 t
 ### 数学接口
 
 $$C_k=\sum_{n=0}^{H-1}a_n\cos\left[\frac{\pi}{H}\left(n+\frac12\right)k\right]$$
+
 $$tokens=\text{BPE}(\text{Quantize}(C_{0:K}))$$
 
 ### 工程接口
@@ -494,6 +495,7 @@ Diffusion 和 Flow Matching 通过学习完整的分布 $p(a|o)$ 来解决这个
 ### 数学接口
 
 $$\mathcal L_{CFM}=\mathbb E\|v_\theta(A_\tau,\tau,o)-(A_1-A_0)\|^2$$
+
 $$A_{k+1}=A_k+\Delta t\,v_\theta(A_k,t_k,o)$$
 
 ### Diffusion 与 Flow Matching 的推理步数选择指南
@@ -592,6 +594,7 @@ Helix、GR00T 等公开系统可作为强调双系统或多层频率分工的代
 ### 数学接口
 
 $$f_{semantic}<f_{policy}<f_{wbc}<f_{motor}$$
+
 频率不是越统一越好，而是按物理时间尺度分层。
 
 ### 工程接口
@@ -699,6 +702,7 @@ $$
 ### 数学接口
 
 $$\pi(a|o,e_{embodiment})$$
+
 $e_{embodiment}$ 表示机器人形态和动作接口信息。
 
 ### 工程接口
@@ -877,6 +881,7 @@ WBC：分解为关节力矩并保持稳定
 ### 数学接口
 
 $$\dot h(x,u)+\alpha h(x)\ge 0$$
+
 $$u^*=\arg\min_u\|u-u_{vla}\|^2\;s.t.\;\dot h+\alpha h\ge0$$
 
 ### 工程接口

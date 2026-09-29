@@ -422,9 +422,11 @@ Brian D. O. Anderson 是控制论学者(不是机器学习背景),1982 年在 *S
 ### 理论：Anderson 反向时间 SDE 定理
 
 > **定理(Anderson 1982)**。设前向过程 $\mathrm dx_t=f(x_t,t)\,\mathrm dt+g(t)\,\mathrm dW_t$,$t\in[0,T]$，边际密度为 $p_t$(满足适当正则性：$p_t$ 处处正、光滑、衰减足够快)。则存在一个**反向时间**的扩散过程 $\{\bar x_t\}$，它与前向过程有**相同的边际分布**($\bar x_t\sim p_t$ 对所有 $t$)，且满足反向 SDE
+> 
 > $$
 > \boxed{\ \mathrm d\bar x_t=\Big[f(\bar x_t,t)-g(t)^2\,\nabla_x\log p_t(\bar x_t)\Big]\mathrm dt+g(t)\,\mathrm d\bar W_t\ }
 > $$
+> 
 > 其中 $\mathrm dt$ 是**负**的时间增量(从 $T$ 流向 $0$),$\bar W_t$ 是反向时间的布朗运动。函数 $\nabla_x\log p_t(x)$ 称为时刻 $t$ 的 **score(分数函数)**。
 
 这个公式信息量极大，逐项拆解：
@@ -497,7 +499,9 @@ $$
 诱导的 FP 方程恰好也是 (FP-fwd)(在反向时间里)，故边际与前向一致。这就是 **Anderson 反向 SDE**。$\blacksquare$
 
 > **本质洞察(概率流 ODE 与反向 SDE 的统一)**:Step 4a 和 4b 揭示了一个深刻的"族"结构。Song et al. 进一步证明，对任意 $0\le\lambda\le 1$，反向过程
-> $$\mathrm d\bar x_t=\big[f-\tfrac{1+\lambda^2}{2}g^2\nabla\log p_t\big]\mathrm dt+\lambda g\,\mathrm d\bar W_t$$
+> 
+> $\mathrm d\bar x_t=\big[f-\tfrac{1+\lambda^2}{2}g^2\nabla\log p_t\big]\mathrm dt+\lambda g\,\mathrm d\bar W_t$
+> 
 > 都有**相同的边际 $p_t$**!$\lambda=1$ 是 Anderson SDE(全噪声),$\lambda=0$ 是概率流 ODE(无噪声)，中间是连续过渡。**同一个 score 函数，配不同的随机性强度 $\lambda$，给出一整族采样器**——这正是 DDPM(随机)、DDIM(确定)、以及各种"churn"采样器(EDM)能共用同一个训练好的模型的根本原因。训练一次，采样千变万化。这与机器人里"同一个学到的动力学模型，既能跑确定性 MPC 也能跑随机 MPPI"是同构的(§8.4.8 详述)。
 
 ### 概率流 ODE 与反向 SDE 的实践权衡：不是"哪个更好"而是"换什么"
@@ -863,9 +867,11 @@ $$
 含未知 $\nabla\log p$。Hyvärinen 的定理：
 
 > **定理(Hyvärinen 2005)**。在 $p$ 光滑且边界衰减($p(x)s_\theta(x)\to0$ 当 $\|x\|\to\infty$)的条件下，
+> 
 > $$
 > J_\text{ESM}(\theta)=\mathbb E_{x\sim p}\Big[\tfrac12\|s_\theta(x)\|^2+\nabla\cdot s_\theta(x)\Big]+\text{const}
 > $$
+> 
 > 其中 $\nabla\cdot s_\theta=\sum_i\partial_{x_i}[s_\theta]_i=\mathrm{tr}(\nabla s_\theta)$ 是散度(雅可比的迹),const 不依赖 $\theta$。
 
 **证明(完整，用分部积分)**：展开平方：
@@ -901,9 +907,11 @@ $$
 $$
 
 > **定理(Vincent 2011，去噪 SM = 显式 SM)**。
+> 
 > $$
 > \underbrace{\mathbb E_{p_\sigma}\big\|s_\theta(\tilde x)-\nabla\log p_\sigma(\tilde x)\big\|^2}_{J_\text{ESM on }p_\sigma}=\underbrace{\mathbb E_{x\sim p,\,\tilde x\sim q_\sigma(\cdot\mid x)}\big\|s_\theta(\tilde x)-\nabla_{\tilde x}\log q_\sigma(\tilde x\mid x)\big\|^2}_{J_\text{DSM}}+\text{const}
 > $$
+> 
 > 即：用**可计算的条件 score** $\nabla\log q_\sigma(\tilde x\mid x)=-\varepsilon/\sigma$ 作标签做回归，与对未知边际 score $\nabla\log p_\sigma$ 做回归，有相同的最优解。
 
 **证明(完整，独立用分部积分)**：只需证两个目标的交叉项相等(平方项中 $\|s_\theta\|^2$ 项两边相同，$\|\nabla\log\cdot\|^2$ 项都是不含 $\theta$ 的常数)。左边交叉项：
@@ -947,6 +955,7 @@ $$
 我们已多次提到 $\varepsilon$、score、$x_0$ 三种预测目标等价。Tweedie 公式给出精确的换算，是本专题"四重视角统一"的数学基石。
 
 > **定理(Tweedie 公式)**。设 $\tilde x=x+\sigma\varepsilon$,$\varepsilon\sim\mathcal N(0,I)$,$x\sim p$，加噪边际 $p_\sigma$。则后验均值(最优去噪)由边际 score 给出：
+> 
 > $$
 > \boxed{\ \mathbb E[x\mid\tilde x]=\tilde x+\sigma^2\,\nabla_{\tilde x}\log p_\sigma(\tilde x)\ }
 > $$
@@ -1048,9 +1057,11 @@ $$
 ### 理论：Chen et al. 2023 主定理(陈述 + 骨架)
 
 > **定理(Chen et al. 2023，非正式)**。设数据分布有有限二阶矩，score 估计满足 $L^2$ 误差 $\frac{1}{N}\sum_k\mathbb E\|s_\theta(\cdot,t_k)-\nabla\log p_{t_k}\|^2\le\varepsilon_\text{score}^2$，前向用 VP-SDE。则用 $N$ 步指数积分器采样，输出 $\hat p$ 满足
+> 
 > $$
 > \mathrm{TV}(\hat p,\,p_\text{data})\ \lesssim\ \underbrace{\sqrt{\mathrm{KL}(p_\text{data}\|\gamma)}\,e^{-T}}_{\text{E1: 初始化}}+\underbrace{\sqrt{T}\,\varepsilon_\text{score}}_{\text{E2: score}}+\underbrace{\frac{L\sqrt{d}\,T}{\sqrt N}}_{\text{E3: 离散化}}
 > $$
+> 
 > 其中 $\gamma=\mathcal N(0,I)$,$L$ 是 score 的 Lipschitz 常数。综合优化得迭代复杂度 $N=\tilde O(L^2 d/\varepsilon^2)$ 达到 $\mathrm{TV}\le\varepsilon$。
 
 **证明骨架(Girsanov 三步)**:
@@ -1185,9 +1196,11 @@ $$
 Lipman 的等价恒等式回答了这个，它是本专题"必完证"之一：
 
 > **定理(Lipman et al. 2023,CFM = FM 同梯度)**。边际速度场 $u_t(x)$ 是条件速度场关于后验的期望：
+> 
 > $$
 > u_t(x)=\mathbb E_{x_1\sim p(x_1\mid x)}\big[u_t(x\mid x_1)\big]=\int u_t(x\mid x_1)\,\frac{p_t(x\mid x_1)p_\text{data}(x_1)}{p_t(x)}\,\mathrm dx_1
 > $$
+> 
 > 且 $\mathcal L_\text{FM}$ 与 $\mathcal L_\text{CFM}$ 关于 $\theta$ 的梯度相同(两目标差一个不依赖 $\theta$ 的常数)。因此**最小化可算的 $\mathcal L_\text{CFM}$ 等价于最小化不可算的 $\mathcal L_\text{FM}$**。
 
 **证明(完整)**：先证边际速度场表达式。边际密度 $p_t(x)=\int p_t(x\mid x_1)p_\text{data}(x_1)\mathrm dx_1$ 满足连续性方程。边际速度场 $u_t$ 由连续性方程 $\partial_t p_t=-\nabla\cdot(u_t p_t)$ 定义。我们验证上式的 $u_t$ 满足它。对边际密度求时间导，用每个条件路径满足自己的连续性方程 $\partial_t p_t(x\mid x_1)=-\nabla\cdot(u_t(\cdot\mid x_1)p_t(\cdot\mid x_1))$:
@@ -1320,10 +1333,13 @@ $\Pi(\mu,\nu)$ 是所有边际为 $\mu,\nu$ 的耦合(联合分布)。直觉：�
 ### 理论：JKO 定理 —— Fokker-Planck 是 $W_2$ 梯度流(骨架)
 
 > **定理(Jordan-Kinderlehrer-Otto 1998，骨架)**。考虑自由能泛函 $\mathcal F[p]=\underbrace{\int U\,p\,\mathrm dx}_{\text{势能}}+\underbrace{\int p\log p\,\mathrm dx}_{\text{熵(负)}}$。则 Fokker-Planck 方程 $\partial_t p=\nabla\cdot(p\nabla U)+\Delta p$ 是 $\mathcal F$ 在 $W_2$ 度量下的**梯度流**:
+> 
 > $$
 > \partial_t p_t=-\nabla_{W_2}\mathcal F[p_t]
 > $$
+> 
 > 即 $p_t$ 沿着自由能下降最陡的方向(在 Wasserstein 几何意义下)演化。等价地，它是如下隐式时间离散(JKO 格式)的极限：
+> 
 > $$
 > p_{k+1}=\arg\min_p\Big\{\mathcal F[p]+\frac{1}{2\tau}W_2(p,p_k)^2\Big\}
 > $$
@@ -1339,10 +1355,13 @@ $\Pi(\mu,\nu)$ 是所有边际为 $\mu,\nu$ 的耦合(联合分布)。直觉：�
 Girsanov 是 §8.4.5 收敛证明的核心工具，这里补上它本身。
 
 > **定理(Girsanov，骨架)**。设两个 SDE 只差漂移项：$\mathrm dx_t=b_1\,\mathrm dt+g\,\mathrm dW_t$ 与 $\mathrm dx_t=b_2\,\mathrm dt+g\,\mathrm dW_t$(同扩散系数 $g$)，诱导路径测度 $\mathbb P_1,\mathbb P_2$。则它们相互绝对连续，且 Radon-Nikodym 导数(似然比)为
+> 
 > $$
 > \frac{\mathrm d\mathbb P_1}{\mathrm d\mathbb P_2}=\exp\Big(\int_0^T\tfrac{b_1-b_2}{g}\,\mathrm dW_t-\tfrac12\int_0^T\tfrac{\|b_1-b_2\|^2}{g^2}\,\mathrm dt\Big)
 > $$
+> 
 > 因此两测度的 KL 散度为
+> 
 > $$
 > \boxed{\ \mathrm{KL}(\mathbb P_1\|\mathbb P_2)=\tfrac12\,\mathbb E_{\mathbb P_1}\!\int_0^T\frac{\|b_1(x_t,t)-b_2(x_t,t)\|^2}{g(t)^2}\,\mathrm dt\ }
 > $$

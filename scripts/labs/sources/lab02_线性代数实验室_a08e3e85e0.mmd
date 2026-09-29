@@ -1,0 +1,8 @@
+
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#FFFFFF","primaryBorderColor":"#8166B1","primaryTextColor":"#292530","lineColor":"#8166B1","fontSize":"14px"}}}%%
+flowchart TD
+    A(["取单位方格与基向量 e₁ e₂"]) --> B[/"左乘矩阵 M"/]
+    B --> C{"变换后哪些方向<br>没被掰弯？"}
+    C -- "方向不变" --> D["那是不动方向 = 特征向量<br>缩放倍数 = 特征值 λ"]
+    C -- "方向被掰弯" --> E["普通方向：长度与角度都变"]
+    D --> F(["椭圆主轴 = 特征向量方向"])

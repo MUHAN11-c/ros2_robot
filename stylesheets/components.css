@@ -1,0 +1,530 @@
+/* ==========================================================================
+   components.css · 组件：admonition / 表格 / 按钮 / Hero / 首页 / 404 / 徽章
+   ========================================================================== */
+
+/* =============== 1. Admonition：左 3px 强调线，低饱和 =============== */
+
+.md-typeset .admonition,
+.md-typeset details {
+  margin: 1em 0;
+  border: 1px solid var(--rt-border);
+  border-left-width: 3px;
+  border-radius: var(--rt-radius-md);
+  background: var(--rt-surface);
+  box-shadow: none;
+  font-size: 0.74rem;
+}
+
+.md-typeset .admonition > .admonition-title,
+.md-typeset details > summary {
+  background: var(--rt-surface-soft);
+  padding: 0.5rem 0.9rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border: none;
+}
+
+.md-typeset .admonition > .admonition-title::before {
+  background-color: currentColor;
+}
+
+/* 类型配色：左侧线 + 标题色（不铺底色） */
+.md-typeset .admonition.note,
+.md-typeset .admonition.info,
+.md-typeset .admonition.todo { border-left-color: var(--rt-blue); }
+.md-typeset .admonition.note > .admonition-title,
+.md-typeset .admonition.info > .admonition-title { color: var(--rt-blue); }
+
+.md-typeset .admonition.tip,
+.md-typeset .admonition.success,
+.md-typeset .admonition.check,
+.md-typeset .admonition.done { border-left-color: var(--rt-green); }
+.md-typeset .admonition.tip > .admonition-title,
+.md-typeset .admonition.success > .admonition-title { color: var(--rt-green); }
+
+.md-typeset .admonition.warning,
+.md-typeset .admonition.caution,
+.md-typeset .admonition.attention { border-left-color: var(--rt-warning); }
+.md-typeset .admonition.warning > .admonition-title { color: var(--rt-warning); }
+
+.md-typeset .admonition.danger,
+.md-typeset .admonition.error,
+.md-typeset .admonition.failure,
+.md-typeset .admonition.bug { border-left-color: var(--rt-red); }
+.md-typeset .admonition.danger > .admonition-title,
+.md-typeset .admonition.error > .admonition-title { color: var(--rt-red); }
+
+.md-typeset .admonition.important,
+.md-typeset .admonition.abstract,
+.md-typeset .admonition.quote { border-left-color: var(--rt-primary); }
+.md-typeset .admonition.important > .admonition-title,
+.md-typeset .admonition.abstract > .admonition-title { color: var(--rt-primary); }
+
+.md-typeset .admonition.example,
+.md-typeset .admonition.question,
+.md-typeset .admonition.help { border-left-color: var(--rt-secondary); }
+.md-typeset .admonition.example > .admonition-title,
+.md-typeset .admonition.question > .admonition-title { color: var(--rt-secondary); }
+
+/* ---- 机器人专属类型 ---- */
+
+.md-typeset .admonition.ros2 { border-left-color: var(--rt-electro); }
+.md-typeset .admonition.ros2 > .admonition-title { color: var(--rt-electro); }
+.md-typeset .admonition.ros2 > .admonition-title::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='5' cy='12' r='2.4'/%3E%3Ccircle cx='19' cy='5' r='2.4'/%3E%3Ccircle cx='19' cy='19' r='2.4'/%3E%3Cpath d='M7.2 11 L16.8 5.8 M7.2 13 L16.8 18.2'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='5' cy='12' r='2.4'/%3E%3Ccircle cx='19' cy='5' r='2.4'/%3E%3Ccircle cx='19' cy='19' r='2.4'/%3E%3Cpath d='M7.2 11 L16.8 5.8 M7.2 13 L16.8 18.2'/%3E%3C/svg%3E");
+}
+
+.md-typeset .admonition.formula { border-left-color: var(--rt-gold); }
+.md-typeset .admonition.formula > .admonition-title { color: var(--rt-gold); }
+.md-typeset .admonition.formula > .admonition-title::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 4 h12 M6 4 c6 0 4 8 -1 8 c6 0 8 8 1 8 M6 20 h12'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 4 h12 M6 4 c6 0 4 8 -1 8 c6 0 8 8 1 8 M6 20 h12'/%3E%3C/svg%3E");
+}
+
+.md-typeset .admonition.engineering { border-left-color: var(--rt-blue); }
+.md-typeset .admonition.engineering > .admonition-title { color: var(--rt-blue); }
+.md-typeset .admonition.engineering > .admonition-title::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M14.5 6.5 a4.5 4.5 0 0 0 -6 6 L3 18 l3 3 l5.5 -5.5 a4.5 4.5 0 0 0 6 -6 L14 13 l-3 -3 z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M14.5 6.5 a4.5 4.5 0 0 0 -6 6 L3 18 l3 3 l5.5 -5.5 a4.5 4.5 0 0 0 6 -6 L14 13 l-3 -3 z'/%3E%3C/svg%3E");
+}
+
+.md-typeset .admonition.debug { border-left-color: var(--rt-teal); }
+.md-typeset .admonition.debug > .admonition-title { color: var(--rt-teal); }
+.md-typeset .admonition.debug > .admonition-title::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='8' y='8' width='8' height='10' rx='4'/%3E%3Cpath d='M9 8 a3 3 0 0 1 6 0 M4 13 h4 M16 13 h4 M5 19 l3.2 -2.4 M19 19 l-3.2 -2.4 M5 7 l3.2 2.4 M19 7 l-3.2 2.4'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='8' y='8' width='8' height='10' rx='4'/%3E%3Cpath d='M9 8 a3 3 0 0 1 6 0 M4 13 h4 M16 13 h4 M5 19 l3.2 -2.4 M19 19 l-3.2 -2.4 M5 7 l3.2 2.4 M19 7 l-3.2 2.4'/%3E%3C/svg%3E");
+}
+
+.md-typeset .admonition.performance { border-left-color: var(--rt-secondary); }
+.md-typeset .admonition.performance > .admonition-title { color: var(--rt-secondary); }
+.md-typeset .admonition.performance > .admonition-title::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 16 a8 8 0 1 1 16 0'/%3E%3Cpath d='M12 16 L16 9'/%3E%3Ccircle cx='12' cy='16' r='1.4'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 16 a8 8 0 1 1 16 0'/%3E%3Cpath d='M12 16 L16 9'/%3E%3Ccircle cx='12' cy='16' r='1.4'/%3E%3C/svg%3E");
+}
+
+.md-typeset .admonition.hardware { border-left-color: var(--rt-primary); }
+.md-typeset .admonition.hardware > .admonition-title { color: var(--rt-primary); }
+.md-typeset .admonition.hardware > .admonition-title::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='7' y='7' width='10' height='10' rx='1.5'/%3E%3Cpath d='M10 2 v3 M14 2 v3 M10 19 v3 M14 19 v3 M2 10 h3 M2 14 h3 M19 10 h3 M19 14 h3'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='7' y='7' width='10' height='10' rx='1.5'/%3E%3Cpath d='M10 2 v3 M14 2 v3 M10 19 v3 M14 19 v3 M2 10 h3 M2 14 h3 M19 10 h3 M19 14 h3'/%3E%3C/svg%3E");
+}
+
+/* =============== 2. 表格 =============== */
+
+.md-typeset table {
+  border: 1px solid var(--rt-border);
+  border-radius: var(--rt-radius-md);
+  background: var(--rt-surface);
+  font-size: 0.72rem;
+  box-shadow: none;
+}
+
+.md-typeset table th {
+  background: var(--rt-surface-soft);
+  color: var(--rt-text-primary);
+  font-weight: 700;
+  border-bottom: 1px solid var(--rt-border);
+  white-space: nowrap;
+}
+
+.md-typeset table td {
+  border-bottom: 1px solid var(--rt-border);
+  vertical-align: middle;
+}
+
+.md-typeset table tr:hover td {
+  background: var(--rt-primary-soft);
+}
+
+.md-typeset table tr:nth-child(2n) td {
+  background: transparent; /* 用 hover 替代斑马纹，更干净 */
+}
+
+/* =============== 3. 按钮 =============== */
+
+.md-typeset .md-button {
+  border-radius: var(--rt-radius-md);
+  border: 1px solid var(--rt-border);
+  background: var(--rt-surface);
+  color: var(--rt-text-primary);
+  font-size: 0.72rem;
+  font-weight: 600;
+  box-shadow: none;
+  transition: background var(--rt-transition), border-color var(--rt-transition),
+    color var(--rt-transition);
+}
+
+.md-typeset .md-button:hover {
+  border-color: var(--rt-primary);
+  color: var(--rt-primary);
+  background: var(--rt-primary-soft);
+}
+
+.md-typeset .md-button--primary {
+  background: var(--rt-primary);
+  border-color: var(--rt-primary);
+  color: #FFFFFF;
+}
+
+[data-md-color-scheme="slate"] .md-typeset .md-button--primary {
+  color: #17151C;
+}
+
+.md-typeset .md-button--primary:hover {
+  background: var(--rt-electro);
+  border-color: var(--rt-electro);
+  color: #FFFFFF;
+}
+
+/* =============== 4. 首页 Hero =============== */
+
+.rt-hero {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3.2rem 1.5rem 2.6rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 2rem;
+  align-items: center;
+}
+
+.rt-hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 1rem;
+  padding: 0.25rem 0.8rem;
+  border: 1px solid var(--rt-border);
+  border-radius: 999px;
+  background: var(--rt-surface);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--rt-primary);
+}
+
+.rt-hero__eyebrow::before {
+  content: "";
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--rt-secondary), var(--rt-electro));
+}
+
+.rt-hero__title {
+  margin: 0 0 0.4rem;
+  font-size: 2.6rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--rt-text-primary);
+}
+
+.rt-hero__title-sub {
+  margin: 0 0 1.1rem;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--rt-primary);
+}
+
+.rt-hero__subtitle {
+  margin: 0 0 0.5rem;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--rt-text-primary);
+}
+
+.rt-hero__desc {
+  margin: 0 0 1.6rem;
+  font-size: 0.78rem;
+  line-height: 1.8;
+  color: var(--rt-text-secondary);
+  max-width: 34em;
+}
+
+.rt-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.rt-hero__mascot {
+  justify-self: center;
+}
+
+.rt-hero__mascot img {
+  width: 260px;
+  height: auto;
+  filter: drop-shadow(0 8px 20px rgba(129, 102, 177, 0.18));
+  animation: rt-float 6s ease-in-out infinite;
+}
+
+@keyframes rt-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rt-hero__mascot img {
+    animation: none;
+  }
+}
+
+/* =============== 5. 首页知识地图 / 统计 / 模块卡 =============== */
+
+.rt-home-section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.6rem 1.5rem;
+}
+
+.rt-home-section > h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0 0 1rem;
+  padding: 0;
+  border: none;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.rt-home-section > h2::before {
+  content: "";
+  width: 3px;
+  height: 1.05em;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--rt-secondary), var(--rt-electro));
+}
+
+.rt-home-section > p.rt-section-desc {
+  margin: -0.4rem 0 1.1rem;
+  font-size: 0.76rem;
+  color: var(--rt-text-secondary);
+}
+
+.rt-kmap {
+  padding: 1rem;
+  border: 1px solid var(--rt-border);
+  border-radius: var(--rt-radius-lg);
+  background: var(--rt-surface);
+}
+
+.rt-kmap img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--rt-radius-md);
+}
+
+.rt-kmap__more {
+  display: block;
+  margin-top: 0.6rem;
+  font-size: 0.72rem;
+  text-align: right;
+}
+
+/* 开始学习：三个入口 */
+.rt-quick {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.rt-quick__card {
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--rt-border);
+  border-radius: var(--rt-radius-md);
+  background: var(--rt-surface);
+  transition: border-color var(--rt-transition), transform var(--rt-transition);
+}
+
+.rt-quick__card:hover {
+  border-color: var(--rt-primary-light);
+  transform: translateY(-2px);
+}
+
+.rt-quick__card h3 {
+  margin: 0 0 0.3rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--rt-text-primary);
+}
+
+.rt-quick__card p {
+  margin: 0 0 0.5rem;
+  font-size: 0.72rem;
+  color: var(--rt-text-secondary);
+}
+
+.rt-quick__card a {
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+/* 学习路径（岗位卡） */
+.rt-paths {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.9rem;
+}
+
+.rt-path-card {
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--rt-border);
+  border-top: 3px solid var(--rt-primary-light);
+  border-radius: var(--rt-radius-md);
+  background: var(--rt-surface);
+  transition: border-top-color var(--rt-transition), transform var(--rt-transition);
+}
+
+.rt-path-card:hover {
+  border-top-color: var(--rt-secondary);
+  transform: translateY(-2px);
+}
+
+.rt-path-card h3 {
+  margin: 0 0 0.3rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.rt-path-card p {
+  margin: 0 0 0.45rem;
+  font-size: 0.68rem;
+  line-height: 1.6;
+  color: var(--rt-text-secondary);
+}
+
+.rt-path-card a {
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+/* 知识库统计 */
+.rt-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.rt-stat {
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--rt-border);
+  border-radius: var(--rt-radius-md);
+  background: var(--rt-surface-soft);
+  text-align: center;
+}
+
+.rt-stat__num {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--rt-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.rt-stat__label {
+  font-size: 0.68rem;
+  color: var(--rt-text-secondary);
+}
+
+/* =============== 6. 目录页吉祥物便签（兼容类名保留） =============== */
+
+.robotics-catalog-mascot {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0.6rem 0 1.2rem;
+  padding: 0.8rem 1rem;
+  border: 1px dashed var(--rt-border);
+  border-radius: var(--rt-radius-md);
+  background: var(--rt-surface-soft);
+}
+
+.robotics-catalog-mascot img {
+  width: 68px;
+  height: auto;
+  flex: 0 0 68px;
+}
+
+.robotics-catalog-mascot p {
+  margin: 0.2em 0;
+  font-size: 0.74rem;
+}
+
+/* 目录页「静待绽放」占位徽章（兼容 sync_docs 输出） */
+.robotics-catalog-badge {
+  display: inline-block;
+  padding: 0.08rem 0.6rem;
+  border: 1px solid var(--rt-border);
+  border-radius: 999px;
+  background: var(--rt-surface-soft);
+  color: var(--rt-text-secondary);
+  font-size: 0.62rem;
+  font-weight: 600;
+}
+
+.robotics-catalog-missing {
+  opacity: 0.72;
+}
+
+/* =============== 7. 404 页 =============== */
+
+.rt-404 {
+  max-width: 560px;
+  margin: 3rem auto;
+  text-align: center;
+}
+
+.rt-404 img {
+  width: 180px;
+  height: auto;
+  margin-bottom: 0.5rem;
+}
+
+.rt-404 h1 {
+  font-size: 2.4rem;
+}
+
+.rt-404 p {
+  color: var(--rt-text-secondary);
+}
+
+.rt-404 .rt-hero__actions {
+  justify-content: center;
+  margin-top: 1.4rem;
+}
+
+/* =============== 8. 回到顶部：固定右下，不遮正文 =============== */
+
+.md-top {
+  top: auto !important;
+  bottom: 1.4rem !important;
+  left: auto !important;
+  right: 1.4rem !important;
+  margin: 0 !important;
+  border-radius: 999px;
+  border: 1px solid var(--rt-border);
+  background: var(--rt-surface);
+  color: var(--rt-primary);
+  box-shadow: var(--rt-shadow-md);
+}
+
+.md-top:hover {
+  background: var(--rt-primary-soft);
+}
+
+/* =============== 9. 隐藏 generator 文案（版权行已在 extra.copyright） =============== */
+
+.md-footer .md-generator {
+  display: none;
+}
+
+/* 内容页中的吉祥物出场尺寸约束（首页 Hero / 404 由专属 class 控制） */
+.md-typeset img[src*="assets/images/mascot"] {
+  width: 200px;
+  margin-inline: auto;
+  display: block;
+}

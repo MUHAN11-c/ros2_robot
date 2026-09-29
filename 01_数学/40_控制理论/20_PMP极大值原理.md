@@ -101,10 +101,13 @@ Boltyanskii 在1958年用**针状变分**（needle variation）给出了非线�
 ### 严格定义
 
 给定状态 $x:[t_0,t_f]\to\mathbb{R}^n$、控制 $u:[t_0,t_f]\to U\subset\mathbb{R}^m$（$U$ 为 Lebesgue 可测紧集），动力学
+
 $$\dot x(t)=f(x(t),u(t),t),\qquad x(t_0)=x_0,$$
+
 端点流形约束 $\psi(x(t_f),t_f)=0\in\mathbb{R}^p$，控制几乎处处满足 $u(t)\in U$。代价函数可写为三种经典等价形式：
 
 **Bolza 形式**（最一般）：
+
 $$J[u]=\phi(x(t_f),t_f)+\int_{t_0}^{t_f} L(x(t),u(t),t)\,dt.$$
 
 **Mayer 形式**：仅末端代价 $J=\phi(x(t_f),t_f)$；通过引入额外状态 $x_{n+1}$ 满足 $\dot x_{n+1}=L$，$x_{n+1}(t_0)=0$，可把 Lagrange 项吸入末端：$J=\phi(x(t_f))+x_{n+1}(t_f)$。
@@ -122,9 +125,11 @@ $$J[u]=\phi(x(t_f),t_f)+\int_{t_0}^{t_f} L(x(t),u(t),t)\,dt.$$
 设原问题为 $\min \int_{t_0}^{t_f} L(x,u,t)\,dt$，$\dot x = f(x,u,t)$。
 
 引入扩维状态 $\tilde x = (x, x_{n+1}) \in \mathbb{R}^{n+1}$，新状态满足：
+
 $$\dot x_{n+1}(t) = L(x(t), u(t), t), \quad x_{n+1}(t_0) = 0.$$
 
 则原来的 Lagrange 代价变为：
+
 $$J = \int_{t_0}^{t_f} L\,dt = x_{n+1}(t_f) - x_{n+1}(t_0) = x_{n+1}(t_f).$$
 
 这是纯 Mayer 形式，末端代价 $\tilde\phi(\tilde x(t_f)) = x_{n+1}(t_f)$。
@@ -132,6 +137,7 @@ $$J = \int_{t_0}^{t_f} L\,dt = x_{n+1}(t_f) - x_{n+1}(t_0) = x_{n+1}(t_f).$$
 **Mayer → Bolza**：显然 Mayer 是 Bolza 的特例（取 $L \equiv 0$）。
 
 **Bolza → Mayer**：对一般 Bolza 代价 $J = \phi(x(t_f)) + \int L\,dt$，同样引入 $x_{n+1}$，则
+
 $$J = \phi(x(t_f)) + x_{n+1}(t_f) = \tilde\phi(\tilde x(t_f)).$$
 
 关键验证：扩维后的动力学 $\dot{\tilde x} = \tilde f(\tilde x, u, t)$ 仍然满足 PMP 所需的光滑性假设（因为 $L$ 本身就假设了光滑性），且控制集 $U$ 不变。
@@ -191,6 +197,7 @@ $$J = \phi(x(t_f)) + x_{n+1}(t_f) = \tilde\phi(\tilde x(t_f)).$$
 ### 严格定义
 
 引入**共态**（co-state / adjoint）$\lambda(t)\in\mathbb{R}^n$（理解为余切空间 $T^*_x\mathbb{R}^n$ 中的余向量）与一个**异常乘子** $\lambda_0 \ge 0$。定义**控制 Hamiltonian**：
+
 $$H(x,u,\lambda,\lambda_0,t) := \lambda^\top f(x,u,t) - \lambda_0 L(x,u,t).$$
 
 这个定义的每一项都有明确意义：
@@ -224,6 +231,7 @@ $$H(x,u,\lambda,\lambda_0,t) := \lambda^\top f(x,u,t) - \lambda_0 L(x,u,t).$$
 ### 核心定理：共态方程
 
 **定理 3.2.2**（伴随/共态方程）：若 $(x^*,u^*)$ 是最优轨迹且 $f,L$ 关于 $x$ 连续可微，则存在绝对连续的共态 $\lambda:[t_0,t_f]\to\mathbb{R}^n$ 满足
+
 $$\boxed{\dot\lambda(t)=-\frac{\partial H}{\partial x}\bigl(x^*(t),u^*(t),\lambda(t),\lambda_0,t\bigr)=-\Bigl(\frac{\partial f}{\partial x}\Bigr)^{\!\top}\!\lambda+\lambda_0\Bigl(\frac{\partial L}{\partial x}\Bigr)^{\!\top}.}$$
 
 出处：Pontryagin-Boltyanskii-Gamkrelidze-Mishchenko 1962《The Mathematical Theory of Optimal Processes》Ch. II。
@@ -233,21 +241,27 @@ $$\boxed{\dot\lambda(t)=-\frac{\partial H}{\partial x}\bigl(x^*(t),u^*(t),\lambd
 **Step 1（针状扰动与轨迹偏差）**：
 
 对 $u^*$ 在某个 Lebesgue 点 $\tau$ 作针状扰动 $u_\varepsilon$（只在 $[\tau-\varepsilon, \tau]$ 上替换为 $v \in U$），产生的轨迹扰动 $\delta x(t) = x_\varepsilon(t) - x^*(t)$ 在 $t > \tau$ 上满足一阶变分方程：
+
 $$\dot{\delta x}(t) = A(t) \delta x(t), \quad A(t) = \frac{\partial f}{\partial x}\bigl(x^*(t), u^*(t), t\bigr),$$
+
 初始条件 $\delta x(\tau) = \varepsilon [f(x^*(\tau), v, \tau) - f(x^*(\tau), u^*(\tau), \tau)] + o(\varepsilon)$。
 
 **Step 2（代价函数一阶增量）**：
 
 代价的一阶变化为：
+
 $$\delta J = \lambda_0 \frac{\partial \phi}{\partial x}\bigg|_{x^*(t_f)} \delta x(t_f) + \lambda_0 \int_{t_0}^{t_f} \frac{\partial L}{\partial x}\bigg|_{(x^*, u^*)} \delta x(t)\,dt + o(\varepsilon).$$
 
 **Step 3（对偶化——引入共态消去体积分）**：
 
 定义 $\lambda(t)$ 使得 $\langle \lambda(t), \delta x(t) \rangle$ 的时间导数正好抵消积分中的 $(\partial L/\partial x)\delta x$ 项。计算：
+
 $$\frac{d}{dt}\langle \lambda, \delta x \rangle = \dot\lambda^\top \delta x + \lambda^\top \dot{\delta x} = \dot\lambda^\top \delta x + \lambda^\top A \delta x.$$
 
 要求这等于 $-\lambda_0 (\partial L/\partial x) \delta x$，即：
+
 $$\dot\lambda^\top + \lambda^\top A = -\lambda_0 \frac{\partial L}{\partial x},$$
+
 $$\dot\lambda = -A^\top \lambda + \lambda_0 \left(\frac{\partial L}{\partial x}\right)^\top.$$
 
 这正是共态方程。
@@ -303,21 +317,29 @@ $$\dot\lambda = -A^\top \lambda + \lambda_0 \left(\frac{\partial L}{\partial x}\
 设 $(x^*(\cdot), u^*(\cdot))$ 是 Bolza 问题的局部最优解，$f, L, \phi, \psi$ 关于 $(x,t)$ 连续可微，$U$ 是任意集合（不要求凸）。则存在**非平凡** $(\lambda_0, \lambda(\cdot)) \in \{0,1\} \times AC([t_0,t_f]; \mathbb{R}^n)$ 与末端乘子 $\nu \in \mathbb{R}^p$ 使以下**五件套**成立：
 
 **1. 状态方程**：
+
 $$\dot x^*(t) = \frac{\partial H}{\partial \lambda} = f(x^*(t), u^*(t), t), \quad x^*(t_0) = x_0.$$
 
 **2. 共态方程**：
+
 $$\dot\lambda(t) = -\frac{\partial H}{\partial x}\bigl(x^*(t), u^*(t), \lambda(t), \lambda_0, t\bigr).$$
 
 **3. 极大化条件**（核心）：对几乎处处 $t \in [t_0, t_f]$，
+
 $$\boxed{u^*(t) \in \arg\max_{v \in U} H(x^*(t), v, \lambda(t), \lambda_0, t).}$$
 
 **4. 横截条件**：
+
 $$\lambda(t_f) = \lambda_0 \frac{\partial\phi}{\partial x}\bigl(x^*(t_f), t_f\bigr)^\top + \left(\frac{\partial\psi}{\partial x}\right)^\top \nu.$$
+
 若 $t_f$ 自由，还需：
+
 $$H(t_f) + \lambda_0 \frac{\partial\phi}{\partial t}\bigl(x^*(t_f), t_f\bigr) = 0.$$
 
 **5. Hamiltonian 守恒（自治系统）**：若 $f, L$ 不显式依赖 $t$，则
+
 $$H(x^*(t), u^*(t), \lambda(t)) \equiv \text{const}.$$
+
 对自由末端时间问题，该常数为 $0$。
 
 ### 五件套的逻辑关系
@@ -385,9 +407,11 @@ Hamiltonian $H$ 关于 $u$ 的结构决定了最优控制的形态：
 系统 $\dot{x} = Ax + Bu$，代价 $\min \int_0^T \frac{1}{2}(x^\top Qx + u^\top Ru)\,dt$。
 
 按极大化约定，$H_{\max} = \lambda^\top(Ax + Bu) - \frac{1}{2}\lambda_0(x^\top Q x + u^\top Ru)$，取 $\lambda_0 = 1$：
+
 $$H_{\max} = \lambda^\top(Ax + Bu) - \frac{1}{2}x^\top Qx - \frac{1}{2}u^\top Ru$$
 
 对 $u$ 求极大：$\frac{\partial H_{\max}}{\partial u} = B^\top\lambda - Ru = 0$，故：
+
 $$\boxed{u^* = R^{-1} B^\top \lambda \quad \text{（PMP 极大化约定）}}$$
 
 > **符号约定对照（关键！）**：极小化约定（HJB/LQR 标准教材）中 $p = \nabla_x V$，最优控制为 $u^* = -R^{-1}B^\top p$（负号！）。两种约定的关系是 $\lambda_{\text{max}} = -\lambda_{\text{min}} = -\nabla_x V$，具体而言：
@@ -447,6 +471,7 @@ PMP 不是凭空猜出来的——它有一条清晰的逻辑链。理解这条�
 ### Step 1：针状扰动构造
 
 对任意 Lebesgue 点 $\tau \in (t_0, t_f)$ 与任意 $v \in U$，定义
+
 $$u_\varepsilon(t) = \begin{cases} v, & t \in [\tau-\varepsilon, \tau], \\ u^*(t), & \text{otherwise}. \end{cases}$$
 
 关键特性：
@@ -459,11 +484,13 @@ $$u_\varepsilon(t) = \begin{cases} v, & t \in [\tau-\varepsilon, \tau], \\ u^*(t
 ### Step 2：端点一阶增量
 
 设 $x_\varepsilon$ 是 $u_\varepsilon$ 下的轨迹。在 $t = \tau$ 时刻，轨迹受到一个"冲击"：
+
 $$x_\varepsilon(\tau) - x^*(\tau) = \varepsilon [f(x^*(\tau), v, \tau) - f(x^*(\tau), u^*(\tau), \tau)] + o(\varepsilon).$$
 
 记 $\Delta f := f(x^*(\tau), v, \tau) - f(x^*(\tau), u^*(\tau), \tau)$（"动力学差"）。
 
 这个冲击沿线性化方程传播到末端：设 $\Phi(t, s)$ 是 $\dot y = A(t) y$（$A = \partial f/\partial x$）的基本矩阵，则
+
 $$\delta x(t_f) = x_\varepsilon(t_f) - x^*(t_f) = \varepsilon \, \Phi(t_f, \tau) \, \Delta f + o(\varepsilon).$$
 
 **物理意义**：在 $\tau$ 时刻施加一个"方向为 $\Delta f$"的脉冲，沿着最优轨迹的线性化动力学传播到末端，得到末端偏差 $\Phi(t_f, \tau) \Delta f$。$\Phi$ 起着"状态转移矩阵"的作用——它描述了线性化系统如何把初始偏差传播到后续时刻。
@@ -471,9 +498,11 @@ $$\delta x(t_f) = x_\varepsilon(t_f) - x^*(t_f) = \varepsilon \, \Phi(t_f, \tau)
 ### Step 3：多针扰动与可达凸锥
 
 单针扰动给出一条方向 $\Phi(t_f, \tau) \Delta f$。若在 $k$ 个不相交小区间上同时用不同的 $(v_i, \tau_i, \alpha_i)$（$\alpha_i \ge 0$ 为相对强度），端点增量近似为：
+
 $$\delta x(t_f) \approx \varepsilon \sum_{i=1}^k \alpha_i \, \Phi(t_f, \tau_i) \, \Delta f_i.$$
 
 所有这样的正组合生成一个**凸锥**：
+
 $$K = \operatorname{cone}\{\Phi(t_f, \tau)[f(x^*(\tau), v, \tau) - f(x^*(\tau), u^*(\tau), \tau)] : \tau \in (t_0, t_f),\, v \in U\}.$$
 
 $K$ 是可达集 $R(t_f)$ 在 $x^*(t_f)$ 处的**一阶凸近似**（Boltyanskii 称之为 "approximating cone" 或 "tent"）。
@@ -487,7 +516,9 @@ $K$ 是可达集 $R(t_f)$ 在 $x^*(t_f)$ 处的**一阶凸近似**（Boltyanskii
 用几何语言：$K$（可达方向）和 $K_-$（下降方向）被一个超平面分开——没有一个方向既可达又下降。
 
 由 **Minkowski 分离定理**（有限维凸锥分离）：存在非零向量 $(\lambda_0, \eta) \neq (0, 0)$ 使得
+
 $$\lambda_0 \nabla\phi \cdot d \le 0, \quad \forall d \in K_-,$$
+
 $$\eta^\top d \ge 0, \quad \forall d \in K.$$
 
 更精确地：存在 $(\lambda_0, \lambda(t_f))$ 分离 $K$ 和下降锥。
@@ -497,16 +528,21 @@ $$\eta^\top d \ge 0, \quad \forall d \in K.$$
 ### Step 5：从分离到共态 ODE + Hamiltonian 极大化
 
 把分离向量沿时间**反向传播**：定义
+
 $$\lambda(t) = \Phi(t_f, t)^\top \lambda(t_f),$$
+
 则 $\lambda$ 自动满足伴随 ODE $\dot\lambda = -A^\top \lambda$（因为 $\Phi(t_f, t)^\top$ 满足 $d/dt[\Phi(t_f,t)^\top] = -A^\top \Phi(t_f,t)^\top$）。
 
 分离条件 "$K$ 中每个方向都与 $\lambda(t_f)$ 成非负角"翻译为：对每个 $(\tau, v)$，
+
 $$\lambda(t_f)^\top \Phi(t_f, \tau) [f(x^*, v) - f(x^*, u^*)] \ge 0.$$
 
 利用 $\lambda(\tau) = \Phi(t_f, \tau)^\top \lambda(t_f)$（即 $\lambda(t_f)^\top \Phi(t_f, \tau) = \lambda(\tau)^\top$），得到：
+
 $$\lambda(\tau)^\top f(x^*(\tau), u^*(\tau)) \ge \lambda(\tau)^\top f(x^*(\tau), v), \quad \forall v \in U.$$
 
 加入代价项（来自 $\lambda_0$ 的贡献），最终得到：
+
 $$H(x^*(\tau), u^*(\tau), \lambda(\tau)) \ge H(x^*(\tau), v, \lambda(\tau)), \quad \forall v \in U.$$
 
 这就是 Hamiltonian **极大化条件**。
@@ -572,30 +608,39 @@ PMP 证明的每一步都对应数值方法设计中的一个关键决策：
 ### 核心定理
 
 **定理 3.2.5**（PMP ⇒ EL + 自然边界条件）：当 $f(x,u) = u$、$U = \mathbb{R}^n$、$L$ 关于 $(x, \dot x)$ 光滑时，PMP 退化为经典 Euler-Lagrange 方程
+
 $$\frac{d}{dt}\frac{\partial L}{\partial \dot x} - \frac{\partial L}{\partial x} = 0,$$
+
 并附带自然边界条件 $\partial L/\partial \dot x(t_f) = \partial\phi/\partial x(x(t_f))$。
 
 ### 证明（完整推导，3步）
 
 **Step 1**：代入 $f = u$，Hamiltonian 变为
+
 $$H = \lambda^\top u - L(x, u, t) \quad (\text{取 } \lambda_0 = 1).$$
 
 **Step 2**：$U = \mathbb{R}^n$ 意味着无约束极大化。极大化必要条件（一阶条件，因为无边界）：
+
 $$\frac{\partial H}{\partial u} = \lambda - \frac{\partial L}{\partial u} = 0.$$
 
 由于 $u = \dot x$，得到：
+
 $$\lambda = \frac{\partial L}{\partial \dot x}.$$
 
 这恰是经典力学中**广义动量**的定义！PMP 的共态 $\lambda$ 就是 EL 理论中的广义动量 $p = \partial L/\partial \dot q$。
 
 **Step 3**：共态方程 $\dot\lambda = -\partial H/\partial x$。计算 $\partial H/\partial x$：
+
 $$\frac{\partial H}{\partial x} = -\frac{\partial L}{\partial x}.$$
+
 （因为 $\lambda^\top u$ 中 $u$ 已经被极大化条件确定为 $\dot x$ 的函数，但直接求偏导时 $\lambda^\top u$ 对 $x$ 的偏导为零——这里的偏导是固定 $u$ 和 $\lambda$ 求 $x$ 的偏导。）
 
 所以共态方程给出：
+
 $$\dot\lambda = \frac{\partial L}{\partial x}.$$
 
 将 $\lambda = \partial L/\partial \dot x$ 代入：
+
 $$\frac{d}{dt}\frac{\partial L}{\partial \dot x} = \frac{\partial L}{\partial x}.$$
 
 这正是 **Euler-Lagrange 方程**。
@@ -644,6 +689,7 @@ PMP 和 HJB（Hamilton-Jacobi-Bellman）是最优控制理论的两大支柱，�
 ### 值函数定义
 
 定义值函数（value function / cost-to-go）：
+
 $$V(x,t) = \inf_{u(\cdot)} \left\{ \int_t^{t_f} L(\xi, u, s)\,ds + \phi(\xi(t_f)) : \dot\xi = f(\xi, u, s),\, \xi(t) = x \right\}.$$
 
 直觉：$V(x,t)$ 是"从状态 $x$ 出发、在时刻 $t$ 开始、采用最优控制直到末端的最小总代价"。
@@ -651,14 +697,17 @@ $$V(x,t) = \inf_{u(\cdot)} \left\{ \int_t^{t_f} L(\xi, u, s)\,ds + \phi(\xi(t_f)
 ### HJB 方程
 
 **定理 3.2.6a**（Hamilton-Jacobi-Bellman 方程）：若 $V \in C^1$，则
+
 $$\boxed{\frac{\partial V}{\partial t} + \min_{u \in U}\left\{L(x,u,t) + \nabla_x V(x,t)^\top f(x,u,t)\right\} = 0, \quad V(x,t_f) = \phi(x).}$$
 
 注意这里用的是**极小化约定**（与 PMP 极大化约定对偶）。用极大化约定改写：
+
 $$-\frac{\partial V}{\partial t} = \max_{u \in U}\left\{\lambda^\top f(x,u,t) - L(x,u,t)\right\}\bigg|_{\lambda = \nabla_x V}.$$
 
 ### 核心联系：共态 = 值函数梯度
 
 **定理 3.2.6b**（PMP-HJB 对偶）：沿 PMP 最优轨迹 $x^*(\cdot)$，
+
 $$\boxed{\lambda(t) = \nabla_x V(x^*(t), t), \qquad H^*(x^*, \lambda, u^*, t) = -\frac{\partial V}{\partial t}.}$$
 
 这是最优控制理论中最深刻的结果之一。它说明：
@@ -668,17 +717,21 @@ $$\boxed{\lambda(t) = \nabla_x V(x^*(t), t), \qquad H^*(x^*, \lambda, u^*, t) = 
 ### 证明骨架（3步）
 
 **Step 1**（Bellman 最优性原理）：
+
 $$V(x,t) = \min_u \{L(x,u,t)\,dt + V(x + f(x,u,t)\,dt,\, t+dt)\}.$$
 
 对 $V(x + f\,dt, t+dt)$ Taylor 展开：
+
 $$V + \frac{\partial V}{\partial t}\,dt + \nabla_x V^\top f\,dt + O(dt^2).$$
 
 代入并令 $dt \to 0$，得到 HJB 方程。
 
 **Step 2**（沿最优轨迹）：由链式法则
+
 $$\frac{dV}{dt}\bigg|_{x^*(t)} = \frac{\partial V}{\partial t} + \nabla_x V^\top f(x^*, u^*, t).$$
 
 HJB 在最优 $u^*$ 处取到 $\min$，所以
+
 $$\frac{\partial V}{\partial t} + L + \nabla_x V^\top f = 0 \implies \frac{dV}{dt} = -L.$$
 
 这就是"沿最优轨迹，值函数以运行代价 $L$ 的速率递减"的直观含义。
@@ -720,6 +773,7 @@ $$\frac{\partial V}{\partial t} + L + \nabla_x V^\top f = 0 \implies \frac{dV}{d
 **深入对应：Policy Gradient = PMP 的 Monte-Carlo 近似**
 
 考虑确定性系统 $x_{k+1} = f(x_k, u_k)$ 上的轨迹优化。PMP 的 adjoint method 精确计算代价对控制的梯度：
+
 $$\frac{\partial J}{\partial u_k} = f_u^\top \lambda_{k+1} - L_{u,k}.$$
 
 这与 REINFORCE 算法的梯度估计在确定性极限下完全等价——return-to-go $G_t$ 对应值函数 $V(x_t)$，其关于状态的梯度对应共态 $\lambda_t$。model-based RL 中的"通过动力学模型反向传播"本质上就是 PMP 的共态计算。Dreamer (Hafner 2020) 和 MBPO (Janner 2019) 中的 value gradient 计算，数学上等价于沿学习的动力学模型做 adjoint 反向传播——正是离散 PMP 的共态更新 $\lambda_k = f_x^\top \lambda_{k+1} + L_x^\top$。
@@ -765,14 +819,19 @@ LQR（线性二次调节器）是最优控制中极少数能完全解析求解�
 ### 设定
 
 线性二次（LQ）问题：
+
 $$\min\; J = \frac{1}{2}x(t_f)^\top Q_f x(t_f) + \frac{1}{2}\int_{t_0}^{t_f}(x^\top Q x + u^\top R u)\,dt,$$
+
 $$\dot x = Ax + Bu, \quad Q \succeq 0,\, R \succ 0,\, Q_f \succeq 0.$$
 
 ### 核心定理
 
 **定理 3.2.7**（PMP ⇒ Riccati）：最优控制为线性状态反馈
+
 $$u^*(t) = -R^{-1}B^\top P(t)\, x(t),$$
+
 其中 $P(t)$ 是 $n \times n$ 对称正定矩阵，满足**矩阵 Riccati 微分方程**：
+
 $$\boxed{-\dot P = PA + A^\top P - PBR^{-1}B^\top P + Q, \quad P(t_f) = Q_f.}$$
 
 出处：Kalman 1960；Anderson-Moore 1990《Optimal Control: Linear Quadratic Methods》。
@@ -780,28 +839,34 @@ $$\boxed{-\dot P = PA + A^\top P - PBR^{-1}B^\top P + Q, \quad P(t_f) = Q_f.}$$
 ### 证明（完整推导，5步）
 
 **Step 1（写出 Hamiltonian）**：取 $\lambda_0 = 1$，极大化约定：
+
 $$H = \lambda^\top(Ax + Bu) - \frac{1}{2}(x^\top Qx + u^\top Ru).$$
 
 **Step 2（极大化条件）**：$U = \mathbb{R}^m$（无控制约束），因此
+
 $$\frac{\partial H}{\partial u} = B^\top\lambda - Ru = 0 \implies u^* = R^{-1}B^\top\lambda.$$
 
 验证二阶条件：$\partial^2 H/\partial u^2 = -R \prec 0$（严格凹），确认极大值。
 
 **Step 3（正则方程组）**：代入 $u^*$，状态方程和共态方程合写为 $2n$ 维**Hamiltonian 矩阵系统**：
+
 $$\begin{pmatrix} \dot x \\ \dot\lambda \end{pmatrix} = \underbrace{\begin{pmatrix} A & BR^{-1}B^\top \\ Q & -A^\top \end{pmatrix}}_{\mathcal{H}\text{（Hamilton 矩阵）}} \begin{pmatrix} x \\ \lambda \end{pmatrix}.$$
 
 注意 Hamilton 矩阵 $\mathcal{H}$ 的特征值关于虚轴对称——这是辛结构的体现。
 
 **Step 4（Riccati 替换）**：假设 $\lambda(t) = P(t) x(t)$（线性关系），其中 $P(t)$ 待定。对 $\lambda = Px$ 求导：
+
 $$\dot\lambda = \dot P x + P \dot x.$$
 
 左端由共态方程给出：$\dot\lambda = Qx - A^\top\lambda = Qx - A^\top Px$。
 $P\dot x$ 由状态方程给出：$P\dot x = P(Ax + BR^{-1}B^\top\lambda) = PAx + PBR^{-1}B^\top Px$。
 
 合并：
+
 $$Qx - A^\top Px = \dot P x + PAx + PBR^{-1}B^\top Px.$$
 
 整理（对任意 $x$ 成立 ⇒ 系数相等）：
+
 $$\dot P = -PA - A^\top P + PBR^{-1}B^\top P - Q.$$
 
 这就是 **Riccati 微分方程**。
@@ -809,12 +874,15 @@ $$\dot P = -PA - A^\top P + PBR^{-1}B^\top P - Q.$$
 **Step 5（终端条件）**：横截条件 $\lambda(t_f) = Q_f x(t_f)$（来自 $\partial\phi/\partial x = Q_f x$）给出 $P(t_f) = Q_f$。
 
 最优控制代入 $\lambda = Px$：
+
 $$u^* = R^{-1}B^\top\lambda = R^{-1}B^\top P(t)\,x(t) \equiv -K(t)\,x(t),$$
+
 其中 $K(t) = R^{-1}B^\top P(t)$ 是时变增益矩阵。
 
 ### 稳态 LQR（$t_f \to \infty$）
 
 当 $t_f \to \infty$ 且 $(A, B)$ 可控、$(A, Q^{1/2})$ 可观时，Riccati 方程达到稳态 $\dot P = 0$，得到**代数 Riccati 方程（ARE）**：
+
 $$0 = PA + A^\top P - PBR^{-1}B^\top P + Q.$$
 
 稳态增益 $K = R^{-1}B^\top P$ 使闭环 $A - BK$ 的特征值全在左半平面（渐近稳定）。
@@ -864,12 +932,15 @@ PMP 的力量体现在对具体问题的求解中。本节详细推导五个经�
 $$H = \lambda_1 x_2 + \lambda_2 u - 1 \quad (\text{极大化约定，} \lambda_0 = 1).$$
 
 **Step 2（极大化条件）**：$H$ 关于 $u$ 是线性的（系数为 $\lambda_2$），所以
+
 $$u^* = \operatorname{sign}(\lambda_2(t)).$$
 
 这就是 **bang-bang 控制**：控制只取极值 $+1$ 或 $-1$，由 $\lambda_2$ 的符号决定。
 
 **Step 3（共态方程）**：
+
 $$\dot\lambda_1 = -\frac{\partial H}{\partial x_1} = 0 \implies \lambda_1 = \text{const} = c_1,$$
+
 $$\dot\lambda_2 = -\frac{\partial H}{\partial x_2} = -\lambda_1 = -c_1 \implies \lambda_2(t) = -c_1 t + c_2.$$
 
 $\lambda_2(t)$ 是 $t$ 的**一次多项式**（直线），最多有**一个零点**——即控制最多切换一次。
@@ -886,9 +957,11 @@ $\lambda_2(t)$ 是 $t$ 的**一次多项式**（直线），最多有**一个零
 - $u = -1$ 经过原点的抛物线：$x_1 = -\frac{1}{2}x_2^2$（$x_2 \ge 0$，即从右上方减速到原点）
 
 切换曲线（switching curve）：
+
 $$\gamma: \quad x_1 = -\frac{1}{2}x_2|x_2|.$$
 
 **最优反馈综合**：
+
 $$u^*(x_1, x_2) = -\operatorname{sign}\left(x_1 + \frac{1}{2}x_2|x_2|\right).$$
 
 当 $(x_1, x_2)$ 在切换曲线上方时用 $u = -1$（制动），下方时用 $u = +1$（加速）。从任意初始点出发，轨迹先沿一条抛物线到达切换曲线，然后沿切换曲线到达原点。
@@ -900,6 +973,7 @@ $$u^*(x_1, x_2) = -\operatorname{sign}\left(x_1 + \frac{1}{2}x_2|x_2|\right).$$
 首先确定初始点在切换曲线的哪一侧：$x_1 + \frac{1}{2}x_2|x_2| = 2 + \frac{1}{2}(1)(1) = 2.5 > 0$，所以先用 $u = -1$（制动）。
 
 在 $u = -1$ 下的运动方程：$\dot x_2 = -1$，$\dot x_1 = x_2$。解为：
+
 $$x_2(t) = 1 - t, \quad x_1(t) = 2 + t - \frac{1}{2}t^2.$$
 
 轨迹到达切换曲线的时刻 $t_s$ 满足 $x_1(t_s) = -\frac{1}{2}x_2(t_s)|x_2(t_s)|$。由于切换后沿曲线 $x_1 = \frac{1}{2}x_2^2$（$x_2 \le 0$）到达原点，切换点必须在 $x_2 < 0$ 的半平面。从 $x_2 = 1 - t$，切换时 $t_s > 1$。
@@ -925,7 +999,9 @@ LQR 之所以能解析求解，关键在于两个"线性"条件同时满足：(1
 **系统**：$\dot x = \cos\theta$，$\dot y = \sin\theta$，$\dot\theta = u$，$|u| \le 1$。起点 $(p_0, \theta_0)$ 到终点 $(p_f, \theta_f)$ 的最短弧长路径。
 
 **Dubins 定理**（1957 *Amer. J. Math.* 79(3):497-516）：最短曲率受限路径必是以下 6 种之一：
+
 $$\{LSL,\, LSR,\, RSL,\, RSR,\, LRL,\, RLR\},$$
+
 其中 $L$ = 左转最小半径弧、$R$ = 右转最小半径弧、$S$ = 直线段。
 
 **PMP 推导要点**：
@@ -935,6 +1011,7 @@ $H = \lambda_x \cos\theta + \lambda_y \sin\theta + \lambda_\theta u - 1$。
 极大化 ⇒ $u^* = \operatorname{sign}(\lambda_\theta)$（bang-bang，因为 $H$ 对 $u$ 线性）。
 
 共态方程：$\dot\lambda_x = 0$，$\dot\lambda_y = 0$（$\lambda_x, \lambda_y$ 守恒），
+
 $$\dot\lambda_\theta = -\frac{\partial H}{\partial \theta} = \lambda_x \sin\theta - \lambda_y \cos\theta.$$
 
 由于 $\lambda_x, \lambda_y$ 为常数，$\lambda_\theta$ 的符号变化由 $\theta(t)$ 决定。当 $u^* = \pm 1$ 时 $\theta$ 线性变化，所以 $\lambda_\theta$ 是 $\theta$ 的正弦函数——其零点模式有限，这导致了有限种路径类型。
@@ -964,14 +1041,17 @@ $$\dot\lambda_\theta = -\frac{\partial H}{\partial \theta} = \lambda_x \sin\thet
 ### 实例 4：Goddard 火箭最优推力 ⭐⭐⭐
 
 **系统**（一维垂直，1919 年 Goddard 原问题）：
+
 $$\dot h = v, \quad \dot v = (T - D(h,v))/m - g(h), \quad \dot m = -T/c, \quad 0 \le T \le T_{\max}.$$
 
 目标：最大化 $h(t_f)$（燃料耗尽 $m(t_f) = m_f$ 时）。
 
 **PMP 结构**：$H$ 关于 $T$ 线性，切换函数为
+
 $$\Sigma(t) = \frac{\lambda_v}{m} - \frac{\lambda_m}{c}.$$
 
 最优推力的**三段式结构**：
+
 $$T_{\max} \longrightarrow \text{奇异弧} \longrightarrow 0 \; (\text{coast}).$$
 
 - 第一段：$\Sigma > 0$，$T = T_{\max}$（全推力加速）
@@ -1093,6 +1173,7 @@ $\sigma(t) = \partial H / \partial u$ 称为**切换函数**（switching functio
 ### Fuller 问题：无穷切换的反例
 
 **Fuller 1960-1961** 发现了一个著名的反例：二维系统
+
 $$\dot x_1 = x_2, \quad \dot x_2 = u, \quad |u| \le 1, \quad J = \int_0^\infty x_1^2 \, dt.$$
 
 最优控制有**无穷次切换**（chattering），切换时刻按几何级数 $t_k \sim q^k$ 趋于零（$q \approx 0.44$）。这说明 Feldbaum 定理的"最小时间"条件是本质的——对其他代价类型，切换可以是无穷的。
@@ -1122,7 +1203,9 @@ $$\dot x_1 = x_2, \quad \dot x_2 = u, \quad |u| \le 1, \quad J = \int_0^\infty x
 ### 奇异弧的严格定义
 
 **定义**：如果存在时间区间 $[t_1, t_2] \subset [t_0, t_f]$ 使得切换函数
+
 $$\sigma(t) = \frac{\partial H}{\partial u}(x^*(t), u^*(t), \lambda(t), t) = 0, \quad \forall t \in [t_1, t_2],$$
+
 则 $[t_1, t_2]$ 上的最优弧称为奇异弧，对应的控制称为奇异控制 $u_{\text{sing}}(t)$。
 
 ### 如何确定奇异控制：逐阶微分
@@ -1138,6 +1221,7 @@ $$\sigma = 0, \quad \dot\sigma = 0, \quad \ddot\sigma = 0, \quad \ldots, \quad \
 ### Kelley 条件（广义 Legendre-Clebsch 条件）
 
 **定理 3.2.10**（Kelley 1964）：标量控制奇异弧的 $q$ 阶必要条件为
+
 $$(-1)^q \frac{\partial}{\partial u}\left[\frac{d^{2q}}{dt^{2q}}\frac{\partial H}{\partial u}\right] \ge 0.$$
 
 **直觉**：这是经典 Legendre 条件（$\partial^2 H / \partial u^2 \le 0$ 对极大化）的高阶推广。在奇异弧上 $\partial^2 H / \partial u^2 = 0$（退化），需要看更高阶项来判断极值类型。符号 $(-1)^q$ 与奇/偶阶交替有关。
@@ -1194,9 +1278,11 @@ $$\min J \quad \text{s.t.} \quad \dot x = f(x, u, t), \quad g(x, t) \le 0, \quad
 ### 核心定理
 
 **定理 3.2.11**（状态约束 PMP）：共态 $\lambda$ 可能**跳跃**。引入 Borel 测度乘子 $\mu \in \mathcal{M}([t_0, t_f])$ 满足互补松弛：
+
 $$\text{supp}(\mu) \subset \{t : g(x^*(t), t) = 0\}, \qquad \mu \ge 0.$$
 
 修正的共态方程变为（分布意义）：
+
 $$d\lambda = -\frac{\partial H}{\partial x}\,dt + \frac{\partial g}{\partial x}^\top d\mu.$$
 
 出处：Jacobson-Lele-Speyer 1971；综述 Hartl-Sethi-Vickson 1995 *SIAM Review* 37(2):181-218。
@@ -1267,7 +1353,9 @@ $$x_{k+1} = f_k(x_k, u_k), \quad J = \phi(x_N) + \sum_{k=0}^{N-1} L_k(x_k, u_k).
 ### 核心定理
 
 **定理 3.2.12**（Halkin 1966）：存在共态序列 $\lambda_0, \ldots, \lambda_N$ 使
+
 $$\boxed{\lambda_k = \left(\frac{\partial f_k}{\partial x_k}\right)^\top \lambda_{k+1} + \left(\frac{\partial L_k}{\partial x_k}\right)^\top, \quad \lambda_N = \frac{\partial\phi}{\partial x_N}^\top,}$$
+
 $$u_k^* \in \arg\max_{u \in U_k}\left\{\lambda_{k+1}^\top f_k(x_k, u) - L_k(x_k, u)\right\}.$$
 
 出处：Halkin 1966 *SIAM J. Control* 4(1):90-111。
@@ -1275,7 +1363,9 @@ $$u_k^* \in \arg\max_{u \in U_k}\left\{\lambda_{k+1}^\top f_k(x_k, u) - L_k(x_k,
 ### 与 DDP 的精确对应
 
 DDP 的 backward pass 中的 $Q$-函数展开（Jacobson-Mayne 1970）：
+
 $$Q_x = \ell_x + f_x^\top V'_x, \quad Q_u = \ell_u + f_u^\top V'_x,$$
+
 $$Q_{xx} = \ell_{xx} + f_x^\top V'_{xx} f_x + V'_x \cdot f_{xx}, \quad Q_{uu} = \ell_{uu} + f_u^\top V'_{xx} f_u + V'_x \cdot f_{uu}.$$
 
 其中 $V'_x$ 正是下一时步的共态 $\lambda_{k+1}$！iLQR 丢弃含 $V'_x \cdot f_{xx}$ 的项（Gauss-Newton 近似），只保留 $Q_{xx} \approx \ell_{xx} + f_x^\top V'_{xx} f_x$。
@@ -1613,15 +1703,19 @@ $$Q_{xx} = \ell_{xx} + f_x^\top V'_{xx} f_x + V'_x \cdot f_{xx}, \quad Q_{uu} = 
 ### 等价性的精确陈述
 
 考虑离散化的最优控制问题（直接 transcription）：
+
 $$\min_{x_0,\ldots,x_N,\,u_0,\ldots,u_{N-1}} \phi(x_N) + \sum_{k=0}^{N-1} L_k(x_k, u_k)\,\Delta t$$
+
 $$\text{s.t.} \quad x_{k+1} = f_k(x_k, u_k)\,\Delta t + x_k \quad (\text{Euler}), \quad u_k \in U.$$
 
 这是一个以 $(x_0, \ldots, x_N, u_0, \ldots, u_{N-1})$ 为决策变量的 NLP。引入动力学约束的 Lagrange 乘子 $\mu_k \in \mathbb{R}^n$（$k = 0, \ldots, N-1$），KKT 条件为：
 
 对 $x_k$ 求导（$k = 1, \ldots, N-1$）：
+
 $$\frac{\partial L_k}{\partial x_k}\Delta t + \mu_{k-1} \cdot \frac{\partial f_{k-1}}{\partial x_k}\Delta t + \mu_{k-1} - \mu_k = 0.$$
 
 令 $\lambda_k := \mu_{k-1}/\Delta t$（连续化），得到：
+
 $$\lambda_k = \frac{\partial f_k}{\partial x_k}^\top \lambda_{k+1} + \frac{\partial L_k}{\partial x_k}^\top.$$
 
 这正是离散 PMP 的共态方程！NLP 的乘子 $\mu$ 就是 PMP 的共态 $\lambda$ 的离散版本。
@@ -1658,7 +1752,9 @@ lambda_pmp = -lam_g[dynamics_constraint_indices] / dt
 ### Lie-Poisson 方程
 
 刚体在 $SO(3)$ 上的最优控制：共态在**李代数对偶** $\mathfrak{g}^*$ 上演化，服从 Lie-Poisson 方程：
+
 $$\dot p = \text{ad}^*_\xi\, p + (\text{控制力矩的对偶贡献}),$$
+
 其中 $\xi \in \mathfrak{g}$ 是身体坐标角速度，$\text{ad}^*$ 是余伴随表示。
 
 **物理意义**：对自由刚体（无外力矩），$p = I\omega$（角动量）满足 $\dot p = p \times \omega$——这正是 Euler 刚体方程。它的 Lie-Poisson 结构保证了角动量模长守恒和几何相不变。
@@ -1680,6 +1776,7 @@ Kobilarov-Marsden 2011 *IEEE T-RO* 27(4):641-655 给出了离散 Lagrangian + di
 ### 与前置李群知识的衔接
 
 回顾李群基础：$SO(3)$ 的指数映射 $\exp: \mathfrak{so}(3) \to SO(3)$、伴随表示 $\text{Ad}_g$、$\text{ad}_\xi$ 这些概念在前置李群专题中已经建立。这里 $\text{ad}^*$（对偶伴随）出现在共态 ODE 中，是 $\text{ad}$ 的对偶映射：
+
 $$\langle \text{ad}^*_\xi\, p,\, \eta \rangle = \langle p,\, \text{ad}_\xi\, \eta \rangle = \langle p,\, [\xi, \eta] \rangle.$$
 
 对 $SO(3)$，$\text{ad}^*_\omega\, p = -\omega \times p = p \times \omega$——正是 Euler 方程中的交叉积项。
@@ -1695,6 +1792,7 @@ PMP 控制**单个系统**的最优轨迹。但在 swarm robotics（多机器人
 ### Benamou-Brenier 公式
 
 **定理**（Benamou-Brenier 2000）：Wasserstein-2 距离可以写成最优控制形式：
+
 $$W_2^2(\rho_0, \rho_1) = \inf_{v}\left\{\int_0^1 \int_{\mathbb{R}^n} \|v(x,t)\|^2\,\rho(x,t)\,dx\,dt : \partial_t\rho + \nabla\cdot(\rho v) = 0\right\}.$$
 
 这是连续体极限下的"最小能量控制"：控制是速度场 $v(x,t)$，动力学是连续性方程（质量守恒），代价是动能。
@@ -1728,10 +1826,13 @@ PMP 只给必要条件。一条满足 PMP 的极值轨迹可能是局部极小�
 ### Jacobi 方程
 
 沿极值轨迹的二阶变分方程（Jacobi/accessory 方程）：
+
 $$\ddot{\delta x} = (f_{xx}[u^*] - \dot A)\,\delta x + \ldots$$
 
 更精确地（矩阵形式）：设 $\delta z = (\delta x, \delta\lambda)^\top$ 满足线性化的 Hamilton 系统
+
 $$\dot{\delta z} = \mathcal{H}'(t)\,\delta z,$$
+
 其中 $\mathcal{H}'$ 是 Hamilton 矩阵沿极值轨迹的 Jacobian。共轭点 $t_c$ 是使 $\delta x(t_c) = 0$ 有非平凡解的时刻。
 
 ### 工程含义
@@ -1776,6 +1877,7 @@ LQR 问题满足 Mangasarian 条件（$H$ 关于 $(x, u)$ 联合凹，因为 $-\
 考虑一维平移系统：$\dot x_1 = x_2$，$\dot x_2 = u$，$|u| \le 1$。
 
 **最省燃料**（fuel-optimal）代价：
+
 $$J = \int_0^T |u(t)|\, dt.$$
 
 从 $(x_1(0), x_2(0)) = (x_{10}, x_{20})$ 到 $(x_1(T), x_2(T)) = (0, 0)$，$T$ 给定且足够大。
@@ -1783,6 +1885,7 @@ $$J = \int_0^T |u(t)|\, dt.$$
 ### PMP 推导
 
 代价 $L = |u|$ 对 $u$ 不可微（在 $u = 0$ 处），但由于 $U = [-1, 1]$，可以分析 Hamiltonian：
+
 $$H = \lambda_1 x_2 + \lambda_2 u - |u|.$$
 
 对 $u > 0$：$H = \lambda_1 x_2 + (\lambda_2 - 1)u$，极大化 ⇒ 需要 $\lambda_2 - 1 > 0$ 即 $\lambda_2 > 1$。
@@ -1790,6 +1893,7 @@ $$H = \lambda_1 x_2 + \lambda_2 u - |u|.$$
 对 $u = 0$：$H = \lambda_1 x_2$，这在 $|\lambda_2| < 1$ 时是极大值。
 
 **最优控制的三模式结构**：
+
 $$u^*(t) = \begin{cases} +1, & \lambda_2(t) > 1, \\ 0, & |\lambda_2(t)| \le 1, \\ -1, & \lambda_2(t) < -1. \end{cases}$$
 
 这是 **bang-off-bang** 控制（推力-滑行-反推力），不是纯 bang-bang。滑行段（$u = 0$）对应"什么都不做也是最优的"——因为此时任何非零推力的"燃料成本"超过了"让状态更接近目标"的收益。
@@ -1834,9 +1938,11 @@ $\lambda_2$ 可能：
 ### 加强的 Legendre-Clebsch 条件
 
 对无约束控制（$U = \mathbb{R}^m$），PMP 极大化条件退化为 $\partial H/\partial u = 0$。此时二阶必要条件为：
+
 $$\frac{\partial^2 H}{\partial u^2}\bigg|_{u^*} \le 0 \quad (\text{极大化约定下为半负定}).$$
 
 加强的充分条件：
+
 $$\frac{\partial^2 H}{\partial u^2}\bigg|_{u^*} < 0 \quad (\text{严格负定}).$$
 
 ### Hamilton-Jacobi 验证定理
@@ -1871,7 +1977,9 @@ $$\frac{\partial^2 H}{\partial u^2}\bigg|_{u^*} < 0 \quad (\text{严格负定}).
 状态 $x = (p, \theta, \dot p, \dot\theta)^\top$（小车位置、摆角、小车速度、角速度），控制 $u = F$（推车力），$|F| \le F_{\max}$。
 
 动力学（标准 Euler-Lagrange）：
+
 $$\ddot p = \frac{F + ml\dot\theta^2 \sin\theta - mg\sin\theta\cos\theta}{M + m\sin^2\theta},$$
+
 $$\ddot\theta = \frac{(M+m)g\sin\theta - (F + ml\dot\theta^2\sin\theta)\cos\theta}{l(M + m\sin^2\theta)}.$$
 
 **目标**：从垂直悬挂 $\theta(0) = \pi$ 摆到倒立 $\theta(T) = 0$，最小能量 $\int F^2 \, dt$。
@@ -1879,6 +1987,7 @@ $$\ddot\theta = \frac{(M+m)g\sin\theta - (F + ml\dot\theta^2\sin\theta)\cos\thet
 ### PMP 分析步骤
 
 **Step 1**：由于 $H$ 关于 $F$ 有二次代价项 $-F^2$（凹），若 $|F^*| < F_{\max}$，极大化给出：
+
 $$\frac{\partial H}{\partial F} = 0 \implies F^* = \frac{\lambda_3}{2} \cdot \frac{1}{M + m\sin^2\theta} + \lambda_4 \cdot (\ldots).$$
 
 当 $|F^*|$ 达到 $F_{\max}$ 时切换为饱和控制。

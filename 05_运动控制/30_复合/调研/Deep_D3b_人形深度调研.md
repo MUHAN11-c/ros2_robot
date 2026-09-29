@@ -172,13 +172,19 @@ arXiv 2412.07773，**ICRA 2025**。上体 IK 精准操作 + 下体 RL locomotion
 ### 3.1　LIPM 与 DCM/Capture Point 完整推导
 
 **线性倒立摆模型（LIPM）**：假定 CoM 高度 $z_c$ 恒定，忽略角动量变化 $\\dot k \\approx 0$，得
+
 $$\\ddot x = \\omega_0^2 (x - p_x), \\quad \\omega_0 = \\sqrt{g/z_c}$$
+
 其中 $p_x$ 是 ZMP 的 x 坐标。此为 **cart-table 模型**。Kajita 2003 的 preview LQR 优化代价
+
 $$J = \\sum_k \\big[ Q_e (p_x^{\\text{ref}} - p_x)^2 + R \\dddot x^2 \\big]$$
+
 控制量为 CoM jerk $\\dddot x$，构造增广系统后用离散 Riccati + 未来参考前馈解出。
 
 **发散/收敛分量分解（DCM）**：定义 $\\xi = x + \\dot x/\\omega_0$，则
+
 $$\\dot \\xi = \\omega_0 (\\xi - p_x), \\quad \\dot x = -\\omega_0 (x - \\xi)$$
+
 其中 $\\xi$ 是**发散**模态（不稳定极点 $+\\omega_0$），$x$ 对给定 $\\xi$ 是**收敛**的（极点 $-\\omega_0$）。控制目标简化为：**让 ZMP 跟踪 DCM 参考**以稳定 $\\xi$，$x$ 自动稳定。
 
 **Capture Point 即零速瞬时 DCM**：$\\xi_{\\text{CP}} = x + \\dot x/\\omega_0$ 是"若立即停止扰动，脚应踏下的点"。Pratt 2006 给出 **踝关节策略 / 臀策略 / 迈步策略** 的代数触发条件。
@@ -186,13 +192,19 @@ $$\\dot \\xi = \\omega_0 (\\xi - p_x), \\quad \\dot x = -\\omega_0 (x - \\xi)$$
 ### 3.2　质心动量矩阵与角动量调控
 
 **Centroidal Momentum Matrix (CMM)**（Orin-Goswami 2008，在 Pinocchio 中可由 `ccrba()` 一行算出）：
+
 $$h_G = \\begin{bmatrix} \\dot{p}_G \\\\ k_G \\end{bmatrix} = A_G(q)\\dot q \\in \\mathbb R^6$$
+
 对 30+ DoF 人形，$A_G \\in \\mathbb R^{6\\times n}$。其时间导数：
+
 $$\\dot h_G = \\sum_i \\begin{bmatrix} f_i \\\\ (p_i - p_G) \\times f_i + \\tau_i \\end{bmatrix} - \\begin{bmatrix} 0 \\\\ m g \\times (p_G - p_0) \\end{bmatrix}$$
+
 即"质心处合力旋量 = 接触力旋量叠加"。**角动量 $k_G$ 本身可解释为绕 CoM 的 whole-body 角动量**——Pratt & Koolen 证明 push recovery 中若 $k_G$ 不主动调控则易失稳（"hip-strategy"本质上就是通过大幅摆臂摆腰产生反向 $\\dot k_G$）。
 
 WBC 任务通常设
+
 $$\\text{task}_{\\text{mom}}: \\quad A_G \\ddot q + \\dot A_G \\dot q = \\dot h_G^{\\text{ref}}$$
+
 作为 top-priority 约束或高权重 cost，在 Koolen 2016 / Herzog 2016 的 HLSP 中出现。
 
 ### 3.3　SMPL-X → Humanoid 关节重定向
@@ -200,10 +212,13 @@ $$\\text{task}_{\\text{mom}}: \\quad A_G \\ddot q + \\dot A_G \\dot q = \\dot h_
 AMASS 中的人体用 **SMPL-X**（21 body joints + 15×2 hands + 3 face/eye，共 55 joints）+ 10 shape βs + 6890 顶点网格参数化。重定向到 Unitree G1 29-DoF 的数学步骤：
 
 1. **Shape fitting** — 把 G1 URDF 的 marker（肩、肘、腕、髋、膝、踝关键点）和 SMPL marker 通过 β 参数优化对齐：
+
 $$\\beta^\\star = \\arg\\min_\\beta \\sum_k \\| J_k^{\\text{SMPL}}(\\beta) - J_k^{\\text{G1}} \\|^2$$
+
 （ASAP 的 `grad_fit_g1_shape.py`、H2O 的 `grad_fit_h1_shape.py`）
 
 2. **Motion fitting** — 给定每帧 SMPL 姿态 $\\theta_t$，对 G1 关节 $q_t$ 做 IK：
+
 $$q_t^\\star = \\arg\\min_{q_t} \\sum_k \\| T_k(q_t) - T_k^{\\text{SMPL}}(\\theta_t, \\beta^\\star) \\|^2 + \\lambda \\|\\dot q_t\\|^2$$
 
 3. **物理可行性过滤** — 用 privileged imitator 在仿真中 rollout，删除 tracking error 超阈值的动作（H2O / ExBody2 的关键步骤）。
@@ -211,9 +226,13 @@ $$q_t^\\star = \\arg\\min_{q_t} \\sum_k \\| T_k(q_t) - T_k^{\\text{SMPL}}(\\thet
 ### 3.4　ASAP Delta-Action Residual Model 形式化
 
 关键方程（He et al. 2025）：
+
 $$a_{\\text{sim→real}}(s_t) = \\pi_\\theta(s_t) + \\Delta_\\phi(s_t, a_t, h_t)$$
+
 训练目标：
+
 $$\\min_\\phi \\mathbb E_{(s_t^r, a_t^r, s_{t+1}^r) \\sim \\mathcal D_{\\text{real}}} \\| s_{t+1}^r - f_{\\text{sim}}(s_t^r, a_t^r + \\Delta_\\phi) \\|^2$$
+
 其中 $f_{\\text{sim}}$ 是 IsaacGym 的转移函数。**关键创新**：$\\Delta_\\phi$ 只修改 **action** 而非 **dynamics**，因此 finetune 时 $\\Delta_\\phi$ 冻结注入仿真器后，可直接用原 PPO 框架继续训练；**部署时丢弃 $\\Delta_\\phi$**——因为 finetune 后策略已把补偿学进 $\\pi_\\theta$。这是与传统 **delta dynamics learning**（修改 $f$）相比的计算与过拟合优势。
 
 ### 3.5　双足 Footstep Planning 作为独立子问题
@@ -235,15 +254,21 @@ $$\\min_\\phi \\mathbb E_{(s_t^r, a_t^r, s_{t+1}^r) \\sim \\mathcal D_{\\text{re
 ### 3.7　FALCON 双智能体 RL 数学
 
 共享观测 $o_t$（proprio + command + 上体目标 + 下体目标），策略分解：
+
 $$a_t^{\\text{upper}} = \\pi_\\theta^{\\text{u}}(o_t), \\quad a_t^{\\text{lower}} = \\pi_\\theta^{\\text{l}}(o_t)$$
+
 损失（对称 PPO）：
+
 $$L = \\mathbb E[L_{\\text{PPO}}(\\pi^{\\text{u}}, r^{\\text{u}}) + L_{\\text{PPO}}(\\pi^{\\text{l}}, r^{\\text{l}})]$$
+
 其中 $r^{\\text{u}} = r^{\\text{EE-track}} + r^{\\text{reg}}$（末端位姿追踪）、$r^{\\text{l}} = r^{\\text{gait}} + r^{\\text{balance}} + r^{\\text{vel-track}}$。**力课程**：episode 中外力 $f_t^{\\text{ext}}$ 按课程线性增至 100N，每步用 Pinocchio RNEA 验证 $\\tau = H\\ddot q + C\\dot q + g - J^T f^{\\text{ext}}$ 是否在力矩上限内，不满足则截断 episode。
 
 ### 3.8　角动量在 Push Recovery 的显式利用
 
 给定扰动冲量 $\\Delta p$，CoM 速度跳变 $\\Delta \\dot x = \\Delta p / m$。角动量策略：短时间内用臂腿反向摆动产生 $\\dot k_G^{\\text{rec}}$，其对 CoM 的反作用为 $\\dot h_G = [\\dot p_G; \\dot k_G]$ 中 $\\dot k_G$ 部分可通过接触位置杠杆臂折算为水平力：
+
 $$f_x^{\\text{eff}} = \\dot k_G^y / (z_{\\text{CoP}} - z_{\\text{CoM}})$$
+
 即"臀部反向摆动 → 有效脚底水平力"。这是 hip-strategy 的数学基础，也是 ExBody 上体模仿 + 下体解耦能稳定行走的原因。
 
 ---

@@ -352,6 +352,7 @@
 ### 3.1 SE(2) 底盘运动学与臂耦合
 
 **差速 (unicycle)**：$q_b=(x,y,\theta)$，$u_b=(v,\omega)^\top$，
+
 $$\dot q_b = S(\theta)u_b = \begin{bmatrix}\cos\theta & 0\\ \sin\theta & 0\\ 0 & 1\end{bmatrix}u_b,\quad \dot x\sin\theta-\dot y\cos\theta=0\ \text{(Pfaffian)}$$
 
 **全向 (mecanum)**：$u_b=(v_x^B,v_y^B,\omega)$，无 Pfaffian 约束，完整系统。麦克纳姆轮逆：$\dot\phi_i=\frac1r(v_x^B\mp v_y^B\mp(l_x+l_y)\omega)$。
@@ -363,14 +364,17 @@ $$\dot q_b = S(\theta)u_b = \begin{bmatrix}\cos\theta & 0\\ \sin\theta & 0\\ 0 &
 ### 3.2 臂-底盘联合雅可比
 
 令 $V_{ee}^w\in\mathbb R^6$，$\nu=[u_b;\dot q_a]$。世界系 twist：
+
 $$V_{ee}^w=V_{wb}^w+\mathrm{Ad}_{T_{wb}}V_{be}^b=J_b(q)u_b+J_a(q)\dot q_a=J(q)\nu$$
 
 对差速底盘，令 $p_{be}^w=R_{wb}p_{be}^b$：
+
 $$J_b=\begin{bmatrix}R_{wb}e_x & -[p_{be}^w]_\times e_z\\ \mathbf 0 & e_z\end{bmatrix}\in\mathbb R^{6\times2}$$
 
 全向底盘多一列 $R_{wb}e_y$ 及对应耦合项，$J_b\in\mathbb R^{6\times3}$。
 
 **冗余度** $r=m_b+n_a-6$，7-dof 臂+差速 r=3、+全向 r=4。阻尼伪逆 + 零空间：
+
 $$\nu^\star=J^+\dot x_{ee}^d+(I-J^+J)\nu_0,\quad J^+=J^\top(JJ^\top+\lambda^2I)^{-1}$$
 
 **非完整底盘处理**：直接用降维 $J_b\in\mathbb R^{6\times m_b}$；或选择矩阵 $H\in\mathbb R^{m_b\times 3}$ 投影 $u_b=H[v,\omega]^\top$。策略层面"手先动、基后动"通过零空间正则 $\nu_0=-k_b[\mathbf 1_{m_b},0]$ 实现。
@@ -378,9 +382,11 @@ $$\nu^\star=J^+\dot x_{ee}^d+(I-J^+J)\nu_0,\quad J^+=J^\top(JJ^\top+\lambda^2I)^
 ### 3.3 OCS2 `mobile_manipulator` OCP 构造
 
 **状态/输入**（见 `WheelBasedMobileManipulatorDynamics.cpp`）：
+
 $$x=\begin{bmatrix}x_b\\ y_b\\ \theta_b\\ q_a\end{bmatrix}\in\mathbb R^{3+n_a},\quad u=\begin{bmatrix}v\\ \omega\\ \dot q_a\end{bmatrix}\in\mathbb R^{2+n_a},\quad \dot x=\begin{bmatrix}v\cos\theta_b\\ v\sin\theta_b\\ \omega\\ \dot q_a\end{bmatrix}$$
 
 **代价**：末端误差 $e_{ee}(q)=\log_{SE(3)}(T_{we}^{d-1}T_{we}(q))^\vee$，
+
 $$\ell=\tfrac12 e_{ee}^\top Q_{ee}e_{ee}+\tfrac12 u^\top Ru+\tfrac12(q_a-q_a^{reg})^\top Q_a(q_a-q_a^{reg})$$
 
 典型 $Q_{ee}=\mathrm{diag}(100,100,100,20,20,20)$，$R_v=R_\omega=1$，$R_{\dot q_a}=0.1$。由 `EndEffectorConstraint + QuadraticPenalty` 实现 soft-constrained。
@@ -404,7 +410,9 @@ while rclpy.ok():
 ### 3.4 视觉伺服 + 底盘漂移
 
 **IBVS** 交互矩阵：
+
 $$L(s,Z)=\begin{bmatrix}-f/Z & 0 & u/Z & uv/f & -(f^2+u^2)/f & v\\ 0 & -f/Z & v/Z & (f^2+v^2)/f & -uv/f & -u\end{bmatrix}$$
+
 控制律 $v_c=-\lambda L^+e$。
 
 **PBVS** 误差 $e=[t_c-t_c^d;\ \log(R_c^{d\top}R_c)^\vee]$，$\dot e=L_{PB}v_c$，$L_{PB}=\mathrm{blkdiag}(-I,-J_\omega(\phi))$。
@@ -431,6 +439,7 @@ Optimistic adaptive planning：先假设 stream 返回满足 certified 谓词的
 问题：50 Hz 下 naive per-dim per-step binning 产生 $H\cdot d_a=350$ tokens/chunk，相邻 token 高度相关，cross-entropy 梯度塌陷。
 
 **DCT-II**：
+
 $$C_i[k]=\sum_{n=0}^{H-1}a_i[n]\cos\!\Bigl[\tfrac{\pi}{H}(n+\tfrac12)k\Bigr],\quad C=DA$$
 
 机器人轨迹能量集中在低频 $k\ll H$。**量化**：$\hat C_{ik}=\mathrm{round}(C_{ik}/s)$，$s$ 按训练集 95% 分位取，丢弃 $k>K$（$K\approx5$–10）。**Column-first 展平 + BPE**：贪心合并 bigram 到词表 $|V|\sim1024$。
@@ -454,6 +463,7 @@ RT-2/OpenVLA 的 per-step 方案 50 Hz → 350 tokens/s 自回归 ≈750 ms 无�
 ### 3.7 Flow-matching 动作头（π0）
 
 Conditional Flow Matching：OT path $A_\tau=\tau A_1+(1-\tau)A_0$，$A_0\sim\mathcal N(0,I)$，$A_1\sim p_{data}$。目标 $u_\tau=A_1-A_0$。损失：
+
 $$\mathcal L_{CFM}=\mathbb E_{\tau,o,A_1,A_0}\|v_\theta(A_\tau,\tau,o)-(A_1-A_0)\|^2$$
 
 推理 ODE Euler $N=10$ 步：
@@ -473,7 +483,9 @@ def pi0_sample(o, N=10):
 ### 3.8 抓取候选生成
 
 **力闭合 (Ferrari & Canny 1992)**：接触点 $c_i$ 法向 $n_i$，$k$ 边摩擦锥基 $f_{i,j}$，GWS：
+
 $$\mathcal W=\mathrm{ConvHull}\{(f_{i,j},c_i\times f_{i,j})\}\subset\mathbb R^6$$
+
 力闭合：原点 ∈ int($\mathcal W$)；质量 $Q_{FC}=\min_{w\in\partial\mathcal W}\|w\|$。
 
 **Contact-GraspNet (ICRA 2021)**：把每观测点 $c_i\in P$ 作为 gripper contact，6-DoF grasp 降到 4-DoF ($a_i\in S^2$, $b_i\in S^1$, $w_i\in\mathbb R_+$)，$R_i=[b_i,a_i\times b_i,a_i]$。PointNet++ per-point 输出 $(s_i,a_i,b_i,w_i)$；ACRONYM 17M grasps 训练；未见物体 >90%。
@@ -481,7 +493,9 @@ $$\mathcal W=\mathrm{ConvHull}\{(f_{i,j},c_i\times f_{i,j})\}\subset\mathbb R^6$
 **AnyGrasp (T-RO 2023)**：7-DoF + graspness-aware + CoM 感知 + 时序平滑，900+ MPPH bin picking 93.3%。
 
 **Base placement 耦合**：grasp 候选 $\mathcal G=\{(T_g^w,s_g)\}$，底盘停车：
+
 $$\max_{q_b,g}s_g\cdot\rho(T_g^w,q_b)\ \text{s.t.}\ \mathrm{IK}\ \text{可行},\ q_b\in\mathcal F_{nav}$$
+
 $\rho$ 为 inverse reachability map（IRM，离线枚举臂末端位姿可达性），作为 `sample-base-conf` stream。
 
 ### 3.9 MPC-WBC 分层架构
@@ -492,6 +506,7 @@ $\rho$ 为 inverse reachability map（IRM，离线枚举臂末端位姿可达性
 | WBC（TSID） | 500–1000 Hz | $\tau^\star, \ddot q^\star, f_c^\star$ | OSQP / proxQP |
 
 TSID QP：
+
 $$\min_{\ddot q,\tau,f_c}\sum_i w_i\|J_i\ddot q+\dot J_i\dot q-\ddot x_i^d\|^2\ \text{s.t.}\ M\ddot q+h=S^\top\tau+J_c^\top f_c,\ f_c\in\mathcal K_{fric},\ \tau^-\le\tau\le\tau^+$$
 
 层级：Level1 动力学+接触 > Level2 末端 > Level3 底盘 > Level4 臂 regularization。严格级联 HQP (Kanoun 2011)：$\ddot q_{k+1}^\star\in\arg\min_{\ddot q\in\mathcal N_k}\|A_k\ddot q-b_k\|^2$。实际常用 weighted QP 近似。

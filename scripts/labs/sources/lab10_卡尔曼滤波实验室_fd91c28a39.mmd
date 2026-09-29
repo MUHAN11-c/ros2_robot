@@ -1,0 +1,11 @@
+
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#FFFFFF","primaryBorderColor":"#8166B1","primaryTextColor":"#292530","lineColor":"#B39ADE","fontSize":"14px"}}}%%
+flowchart TD
+    A(["上一时刻：均值 x、协方差 P"]) --> B[/"预测：x = A·x，P = A·P·Aᵀ + Q"/]
+    B --> C[/同时拿到观测 z/]
+    C --> D["更新：K = P·Hᵀ(H·P·Hᵀ+R)⁻¹"]
+    D --> E["x ← x + K(z − H·x)<br>P ← (I − K·H)·P"]
+    E --> F{"下一时刻？"}
+    F -- 循环 --> B
+    style B fill:#F7F4FA,stroke:#8166B1
+    style E fill:#F4C8D9,stroke:#D98FAF

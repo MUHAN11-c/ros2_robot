@@ -864,6 +864,7 @@ $$\dot{X} = AX, \quad A = \begin{bmatrix} 0 & 1 \\ -(K+K_e)/M & -D/M \end{bmatri
 速度先行积分先更新速度，再用新速度更新位移：
 
 $$v_{k+1} = v_k + \frac{\Delta t}{M}(-D v_k - (K+K_e) x_k)$$
+
 $$x_{k+1} = x_k + \Delta t \cdot v_{k+1}$$
 
 这里的速度式仍把阻尼按旧速度显式处理；它对应 §2.4 中“显式加速度 + 速度先行位置更新”的离散思想，而不是阻尼隐式写法。若要采用更稳健的阻尼隐式格式，应使用 $v_{next}=(M v+(F-Kx)\Delta t)/(M+D\Delta t)$，再用 $x_{next}=x+v_{next}\Delta t$。

@@ -132,6 +132,7 @@ $$
 $P(s'|s,a)$ 是在状态 $s$ 执行动作 $a$ 后进入状态 $s'$ 的概率。$\Delta(\mathcal{S})$ 表示 $\mathcal{S}$ 上的概率分布集合。
 
 转移核必须满足：
+
 $$
 P(s'|s,a) \ge 0, \quad \sum_{s' \in \mathcal{S}} P(s'|s,a) = 1, \quad \forall (s,a)
 $$
@@ -143,6 +144,7 @@ $$
 奖励函数将状态-动作对映射到一个实数标量，表示执行该动作获得的即时回报。关键性质：**有界性** $\|r\|_\infty \le R_{\max}$。
 
 有些文献写作 $r(s,a,s')$（依赖下一状态）或 $r(s)$（只依赖状态），三者可通过条件期望互相转化：
+
 $$
 r(s,a) = \sum_{s'} P(s'|s,a) \cdot r(s,a,s') = \mathbb{E}[r(s,a,S') | S=s, A=a]
 $$
@@ -166,6 +168,7 @@ MDP 的"M"——Markov 性质——是整个框架的数学基石。直观地说
 > **Markov 性质**：给定当前状态 $S_t$，未来 $S_{t+1}, S_{t+2}, \ldots$ 与过去 $S_0, S_1, \ldots, S_{t-1}$ 条件独立。
 
 形式化：
+
 $$
 \mathbb{P}(S_{t+1} = s' | S_t = s, A_t = a, S_{t-1}, A_{t-1}, \ldots, S_0, A_0) = \mathbb{P}(S_{t+1} = s' | S_t = s, A_t = a) = P(s'|s,a)
 $$
@@ -184,6 +187,7 @@ $$
 ### 1.5 策略的数学定义 ⭐
 
 **策略（policy）**是智能体的决策规则。一般地，策略是一族条件分布：
+
 $$
 \pi = (\pi_t)_{t \ge 0}, \quad \pi_t: \text{Histories} \to \Delta(\mathcal{A})
 $$
@@ -201,6 +205,7 @@ $$
 ### 1.6 折扣累积回报 ⭐
 
 给定策略 $\pi$ 与初始分布 $\mu_0$，MDP 产生一条随机轨迹：
+
 $$
 \tau = (S_0, A_0, R_0, S_1, A_1, R_1, \ldots)
 $$
@@ -208,11 +213,13 @@ $$
 其中 $S_0 \sim \mu_0$，$A_t \sim \pi(\cdot|S_t)$，$S_{t+1} \sim P(\cdot|S_t,A_t)$，$R_t = r(S_t, A_t)$。
 
 **折扣累积回报（discounted return）**定义为：
+
 $$
 G_0 := \sum_{t=0}^{\infty} \gamma^t R_t
 $$
 
 由 $|R_t| \le R_{\max}$ 和 $\gamma < 1$，有上界：
+
 $$
 |G_0| \le \sum_{t=0}^{\infty} \gamma^t R_{\max} = \frac{R_{\max}}{1 - \gamma}
 $$
@@ -227,6 +234,7 @@ $$
 - 观测核 $O(o|s,a)$：在状态 $s$ 执行动作 $a$ 后观测到 $o$ 的概率
 
 **Belief State（信念状态）**$b_t \in \Delta(\mathcal{S})$ 是智能体对真实状态的后验分布，由贝叶斯滤波更新：
+
 $$
 b_{t+1}(s') \propto O(o_{t+1}|s', a_t) \sum_{s} P(s'|s, a_t) b_t(s)
 $$
@@ -293,6 +301,7 @@ $$
 $Q^\pi(s,a)$ 与 $V^\pi(s)$ 的区别：第一步动作被**固定**为 $a$（不管 $\pi$ 在 $s$ 处怎么选），从第二步起才按 $\pi$ 行动。
 
 **两者之间的关系**：
+
 $$
 V^\pi(s) = \sum_{a \in \mathcal{A}} \pi(a|s) \cdot Q^\pi(s,a)
 $$
@@ -318,11 +327,13 @@ V^\pi(s) &= \mathbb{E}^\pi[G_t | S_t = s] \\
 $$
 
 第一项：即时奖励的期望。对动作和下一状态展开：
+
 $$
 \mathbb{E}^\pi[R_t | S_t = s] = \sum_{a \in \mathcal{A}} \pi(a|s) \cdot r(s,a)
 $$
 
 第二项：未来回报的期望。利用 Markov 性质和全概率公式：
+
 $$
 \begin{aligned}
 \mathbb{E}^\pi[G_{t+1} | S_t = s] &= \sum_{s' \in \mathcal{S}} \mathbb{E}^\pi[G_{t+1} | S_{t+1} = s'] \cdot \mathbb{P}(S_{t+1} = s' | S_t = s) \\
@@ -339,6 +350,7 @@ $$
 $$
 
 类似地，$Q^\pi$ 满足：
+
 $$
 Q^\pi(s,a) = r(s,a) + \gamma \sum_{s'} P(s'|s,a) \sum_{a'} \pi(a'|s') Q^\pi(s',a')
 $$
@@ -348,6 +360,7 @@ $$
 ### 2.5 Bellman 最优方程 ⭐
 
 **最优值函数**定义为所有策略中最好的那个：
+
 $$
 V^*(s) = \sup_\pi V^\pi(s), \quad Q^*(s,a) = \sup_\pi Q^\pi(s,a)
 $$
@@ -374,6 +387,7 @@ $$
 ### 2.6 有限时域版本与经典动态规划 ⭐⭐
 
 当 $H < \infty$ 时，Bellman 方程变为**后向递推**：
+
 $$
 V^*_t(s) = \max_a \left[ r_t(s,a) + \sum_{s'} P_t(s'|s,a) V^*_{t+1}(s') \right], \quad V^*_H = g_{\text{terminal}}
 $$
@@ -425,11 +439,13 @@ Bellman 方程写作 $V = T V$（$V$ 是某个算子 $T$ 的不动点）。为�
 ### 3.3 Bellman 算子的形式定义 ⭐
 
 **Bellman 期望算子** $T^\pi: \mathcal{B}(\mathcal{S}) \to \mathcal{B}(\mathcal{S})$：
+
 $$
 (T^\pi V)(s) := \sum_{a} \pi(a|s) \left[ r(s,a) + \gamma \sum_{s'} P(s'|s,a) V(s') \right]
 $$
 
 **Bellman 最优算子** $T^*: \mathcal{B}(\mathcal{S}) \to \mathcal{B}(\mathcal{S})$：
+
 $$
 (T^* V)(s) := \max_{a} \left[ r(s,a) + \gamma \sum_{s'} P(s'|s,a) V(s') \right]
 $$
@@ -441,9 +457,11 @@ $$
 ### 3.4 $\gamma$-压缩性的完整证明 ⭐⭐
 
 **定理 3.1（核心定理：Bellman 算子的 $\gamma$-压缩性）**：对任意 $V, V' \in \mathcal{B}(\mathcal{S})$：
+
 $$
 \|T^\pi V - T^\pi V'\|_\infty \le \gamma \|V - V'\|_\infty
 $$
+
 $$
 \|T^* V - T^* V'\|_\infty \le \gamma \|V - V'\|_\infty
 $$
@@ -459,7 +477,9 @@ $$
 **Step 2**：利用 **"max 的差 $\le$ 差的 max 绝对值"引理**。
 
 > **引理（Max-Difference Lemma）**：对有界函数 $f, g: X \to \mathbb{R}$：
-> $$|\sup_x f(x) - \sup_x g(x)| \le \sup_x |f(x) - g(x)|$$
+> 
+> $|\sup_x f(x) - \sup_x g(x)| \le \sup_x |f(x) - g(x)|$
+> 
 > **证明**：设 $\sup f = f(x^*)$。则 $\sup f - \sup g = f(x^*) - \sup g \le f(x^*) - g(x^*) \le \sup_x(f(x)-g(x)) \le \sup_x|f(x)-g(x)|$。对称地交换 $f,g$ 可得另一方向。$\square$
 
 应用该引理，令 $f(a) = r(s,a) + \gamma \sum_{s'} P(s'|s,a) V(s')$，$g(a) = r(s,a) + \gamma \sum_{s'} P(s'|s,a) V'(s')$：
@@ -479,11 +499,13 @@ $$
 第一个 $\le$ 是三角不等式（绝对值的和 $\ge$ 和的绝对值），第二个 $\le$ 是用 sup-norm 放大每一项，最后一个 $=$ 是概率归一 $\sum_{s'} P(s'|s,a) = 1$。
 
 **Step 4**：合并 Step 2 和 Step 3：
+
 $$
 |(T^*V)(s) - (T^*V')(s)| \le \gamma \|V - V'\|_\infty, \quad \forall s
 $$
 
 **Step 5**：对 $s$ 取 sup：
+
 $$
 \|T^*V - T^*V'\|_\infty = \max_s |(T^*V)(s) - (T^*V')(s)| \le \gamma \|V - V'\|_\infty
 $$
@@ -548,6 +570,7 @@ $$
 (1) Banach 不动点定理直接给出。
 
 (2) 构造贪婪策略：
+
 $$
 \pi^*(s) \in \arg\max_a \left[ r(s,a) + \gamma \sum_{s'} P(s'|s,a) V^*(s') \right]
 $$
@@ -591,21 +614,25 @@ $$
 Bellman 期望方程是**线性**的——这是因为 $\pi$ 是固定的，$\sum_a \pi(a|s)[\cdot]$ 只是一个加权平均。
 
 定义策略诱导的转移矩阵和奖励向量：
+
 $$
 P^\pi_{ss'} := \sum_a \pi(a|s) P(s'|s,a), \quad r^\pi_s := \sum_a \pi(a|s) r(s,a)
 $$
 
 则 Bellman 期望方程的矩阵形式为：
+
 $$
 V^\pi = r^\pi + \gamma P^\pi V^\pi
 $$
 
 整理得线性系统：
+
 $$
 (I - \gamma P^\pi) V^\pi = r^\pi
 $$
 
 **闭形式解**：
+
 $$
 \boxed{V^\pi = (I - \gamma P^\pi)^{-1} r^\pi}
 $$
@@ -615,6 +642,7 @@ $$
 $P^\pi$ 是随机矩阵（每行和为 1），所以其谱半径 $\rho(P^\pi) \le 1$。由于 $\gamma < 1$，$\gamma P^\pi$ 的谱半径 $\le \gamma < 1$。因此 $I - \gamma P^\pi$ 的所有特征值的模 $\ge 1 - \gamma > 0$，矩阵可逆。
 
 更进一步，$(I - \gamma P^\pi)^{-1}$ 有 Neumann 级数展开：
+
 $$
 (I - \gamma P^\pi)^{-1} = \sum_{k=0}^{\infty} (\gamma P^\pi)^k = I + \gamma P^\pi + \gamma^2 (P^\pi)^2 + \cdots
 $$
@@ -632,6 +660,7 @@ V_{k+1} = T^\pi V_k = r^\pi + \gamma P^\pi V_k, \quad V_0 \text{ 任意初值}
 $$
 
 **收敛性**：由 $T^\pi$ 的 $\gamma$-压缩性：
+
 $$
 \|V_k - V^\pi\|_\infty \le \gamma^k \|V_0 - V^\pi\|_\infty
 $$
@@ -639,6 +668,7 @@ $$
 **收敛速度分析**：
 
 定义误差 $\delta_k := V_k - V^\pi$。由 Bellman 方程 $V^\pi = r^\pi + \gamma P^\pi V^\pi$，代入迭代公式：
+
 $$
 \begin{aligned}
 \delta_{k+1} &= V_{k+1} - V^\pi = (r^\pi + \gamma P^\pi V_k) - (r^\pi + \gamma P^\pi V^\pi) \\
@@ -647,11 +677,13 @@ $$
 $$
 
 递推展开：
+
 $$
 \delta_k = (\gamma P^\pi)^k \delta_0
 $$
 
 由于 $P^\pi$ 是随机矩阵且 $\gamma < 1$，$\|(\gamma P^\pi)^k\|_\infty \le \gamma^k$。因此：
+
 $$
 \|\delta_k\|_\infty \le \gamma^k \|\delta_0\|_\infty
 $$
@@ -667,6 +699,7 @@ $$
 ### 4.4 停机条件 ⭐
 
 实际实现中，当 $\|V_{k+1} - V_k\|_\infty < \theta$（用户设定的阈值）时停止迭代。此时真实误差有界：
+
 $$
 \|V_k - V^\pi\|_\infty \le \frac{\theta}{1 - \gamma}
 $$
@@ -710,7 +743,7 @@ $$
 
 2. **策略改进（Policy Improvement）**：
 
-   $$\pi_{k+1}(s) \in \arg\max_a \left[ r(s,a) + \gamma \sum_{s'} P(s'|s,a) V^{\pi_k}(s') \right]$$
+   $\pi_{k+1}(s) \in \arg\max_a \left[ r(s,a) + \gamma \sum_{s'} P(s'|s,a) V^{\pi_k}(s') \right]$
 
 ```python
 # 策略迭代的 Python 伪代码
@@ -738,6 +771,7 @@ def policy_iteration(S, A, P, r, gamma, tol=1e-8):
 ### 5.3 策略改进定理（Howard 1960）⭐⭐
 
 **定理 5.1（Policy Improvement Theorem）**：设 $\pi'$ 关于 $V^\pi$ 贪婪，即对所有 $s$：
+
 $$
 \pi'(s) \in \arg\max_a \left[ r(s,a) + \gamma \sum_{s'} P(s'|s,a) V^\pi(s') \right]
 $$
@@ -747,6 +781,7 @@ $$
 **完整证明**：
 
 **Step 1**：由贪婪构造，对所有 $s$：
+
 $$
 (T^{\pi'} V^\pi)(s) = (T^* V^\pi)(s) \ge (T^\pi V^\pi)(s) = V^\pi(s)
 $$
@@ -754,6 +789,7 @@ $$
 不等号成立是因为 $\max_a \ge \sum_a \pi(a|s)$ （max $\ge$ 加权平均）。最后的等号是因为 $V^\pi$ 是 $T^\pi$ 的不动点。
 
 因此我们有：
+
 $$
 T^{\pi'} V^\pi \ge V^\pi \quad \text{（逐点）}
 $$
@@ -763,16 +799,19 @@ $$
 证明单调性：$(T^{\pi'} U)(s) - (T^{\pi'} W)(s) = \gamma \sum_{s'} P^{\pi'}(s'|s)[U(s') - W(s')] \ge 0$，因为 $P^{\pi'}(s'|s) \ge 0$ 且 $U(s') - W(s') \ge 0$。
 
 由单调性，对 $T^{\pi'} V^\pi \ge V^\pi$ 两边应用 $T^{\pi'}$：
+
 $$
 (T^{\pi'})^2 V^\pi \ge T^{\pi'} V^\pi \ge V^\pi
 $$
 
 **Step 3**：递推 $k$ 次：
+
 $$
 (T^{\pi'})^k V^\pi \ge V^\pi, \quad \forall k \ge 1
 $$
 
 **Step 4**：取 $k \to \infty$。由于 $T^{\pi'}$ 是 $\gamma$-压缩映射，$(T^{\pi'})^k V^\pi$ 收敛到 $T^{\pi'}$ 的唯一不动点 $V^{\pi'}$。因此：
+
 $$
 V^{\pi'} = \lim_{k \to \infty} (T^{\pi'})^k V^\pi \ge V^\pi
 $$
@@ -831,11 +870,13 @@ $$
 ### 6.2 算法定义 ⭐
 
 **值迭代（Value Iteration, VI）**：
+
 $$
 V_{k+1} := T^* V_k, \quad V_0 \in \mathcal{B}(\mathcal{S}) \text{ 任意初值}
 $$
 
 展开：
+
 $$
 V_{k+1}(s) = \max_a \left[ r(s,a) + \gamma \sum_{s'} P(s'|s,a) V_k(s') \right], \quad \forall s
 $$
@@ -843,11 +884,13 @@ $$
 ### 6.3 几何收敛定理 ⭐
 
 **定理 6.1（VI 的 $\gamma^k$ 几何收敛）**：
+
 $$
 \|V_k - V^*\|_\infty \le \gamma^k \|V_0 - V^*\|_\infty
 $$
 
 **证明**：由 $V^* = T^* V^*$ 与 $T^*$ 的 $\gamma$-压缩性：
+
 $$
 \|V_{k+1} - V^*\|_\infty = \|T^* V_k - T^* V^*\|_\infty \le \gamma \|V_k - V^*\|_\infty
 $$
@@ -865,6 +908,7 @@ $$
 $$
 
 **证明**：由三角不等式和压缩性：
+
 $$
 \begin{aligned}
 \|V_k - V^*\| &\le \|V_k - V_{k+1}\| + \|V_{k+1} - V^*\| \\
@@ -875,6 +919,7 @@ $$
 整理得 $(1-\gamma)\|V_k - V^*\| \le \varepsilon$，即 $\|V_k - V^*\| \le \varepsilon/(1-\gamma)$。$\square$
 
 **贪婪策略的误差界**：设 $\pi_k$ 是 $V_k$ 导出的贪婪策略，则：
+
 $$
 \|V^{\pi_k} - V^*\|_\infty \le \frac{2\gamma\varepsilon}{(1-\gamma)^2}
 $$
@@ -884,6 +929,7 @@ $$
 ### 6.5 VI 与 PI 的关系：修正策略迭代 ⭐⭐
 
 **修正策略迭代（Modified PI, MPI）**：把策略评估中的"精确求解"换成"$m$ 步迭代"：
+
 $$
 V^{\pi_k} \approx (T^{\pi_k})^m V_k
 $$
@@ -1034,11 +1080,13 @@ $$
 $$
 
 展开、对 $u$ 求导令其为零，得到最优控制律：
+
 $$
 u^* = -(R + \gamma B^\top P B)^{-1} \gamma B^\top P A \cdot x := -K x
 $$
 
 将 $u^*$ 回代，得到 $P$ 满足的**离散代数 Riccati 方程（DARE）**：
+
 $$
 P = Q + \gamma A^\top P A - \gamma^2 A^\top P B(R + \gamma B^\top P B)^{-1} B^\top P A
 $$
@@ -1086,6 +1134,7 @@ $$
 ### 9.2 占用测度的定义 ⭐⭐⭐
 
 **定义**：策略 $\pi$ 的**折扣占用测度（discounted occupancy measure）**是：
+
 $$
 d^\pi(s,a) := (1-\gamma) \sum_{t=0}^{\infty} \gamma^t \mathbb{P}^\pi_{\mu_0}(S_t = s, A_t = a)
 $$
@@ -1099,11 +1148,13 @@ $$
 有限折扣 MDP 可以等价地表示为**线性规划**（de Ghellinck 1960; Manne 1960; Puterman 1994 Ch.6.9）。
 
 **原始 LP**（以值函数 $V$ 为决策变量）：
+
 $$
 \min_V \sum_s \mu_0(s) V(s) \quad \text{s.t.} \quad V(s) \ge r(s,a) + \gamma \sum_{s'} P(s'|s,a) V(s'), \quad \forall (s,a)
 $$
 
 **对偶 LP**（以**未归一化**占用测度 $\rho(s,a)$ 为决策变量）：
+
 $$
 \max_{\rho \ge 0} \sum_{s,a} \rho(s,a) r(s,a) \quad \text{s.t.} \quad \sum_a \rho(s',a) = \mu_0(s') + \gamma \sum_{s,a} P(s'|s,a) \rho(s,a), \quad \forall s'
 $$
@@ -1113,6 +1164,7 @@ $$
 **对偶约束的物理意义**：状态 $s'$ 的"流入量"（从初始分布 $\mu_0(s')$ + 从其他状态折扣转移 $\gamma\sum P\rho$）等于"流出量"（在 $s'$ 处对所有动作的占用总和 $\sum_a\rho(s',a)$）。这是一个**流量守恒约束**（Bellman flow constraint）。
 
 **强对偶性**：LP 强对偶成立，原始和对偶的最优目标值相等。对偶 LP 的最优解 $\rho^*$ 给出最优策略：
+
 $$
 \pi^*(a|s) = \frac{\rho^*(s,a)}{\sum_{a'} \rho^*(s, a')}
 $$
@@ -1235,6 +1287,7 @@ def value_iteration_gridworld(gamma=0.9, tol=1e-6):
 因此 $\gamma P^\pi$ 的谱半径 $\le \gamma < 1$，$I - \gamma P^\pi$ 的所有特征值实部 $> 0$，矩阵正定（在适当意义下），求逆是良定义的。
 
 **Neumann 级数的物理解读**：
+
 $$
 (I - \gamma P^\pi)^{-1} = I + \gamma P^\pi + \gamma^2 (P^\pi)^2 + \gamma^3 (P^\pi)^3 + \cdots
 $$
@@ -1249,6 +1302,7 @@ $$
 ### 11.2 概率论视角：鞅与条件期望
 
 从概率论角度看，值函数 $V^\pi$ 与随机过程的条件期望紧密相关。定义过程：
+
 $$
 M_t := \sum_{k=0}^{t-1} \gamma^k R_k + \gamma^t V^\pi(S_t)
 $$
@@ -1256,6 +1310,7 @@ $$
 **断言**：$\{M_t\}_{t \ge 0}$ 是一个**鞅（martingale）**（关于自然滤波）。
 
 验证：
+
 $$
 \begin{aligned}
 \mathbb{E}[M_{t+1} | \mathcal{F}_t] &= \mathbb{E}\left[\sum_{k=0}^{t} \gamma^k R_k + \gamma^{t+1} V^\pi(S_{t+1}) \,\Big|\, \mathcal{F}_t\right] \\
@@ -1272,6 +1327,7 @@ $$
 从控制论角度看，值迭代的收敛可以用 **Lyapunov 函数** 来理解。
 
 定义 Lyapunov 函数 $L_k := \|V_k - V^*\|_\infty$。则：
+
 $$
 L_{k+1} = \|T^*V_k - T^*V^*\|_\infty \le \gamma L_k
 $$
@@ -1287,6 +1343,7 @@ $$
 $\gamma$ 可以理解为"信息衰减系数"。在每一步转移中，关于初始状态的信息以速率 $\gamma$ 衰减——这与通信中信号在噪声信道中的衰减类比。
 
 具体地，考虑从两个不同初始值函数 $V_0, V_0'$ 出发的 VI 序列。经过 $k$ 步迭代后：
+
 $$
 \|V_k - V_k'\|_\infty \le \gamma^k \|V_0 - V_0'\|_\infty
 $$
@@ -1541,11 +1598,13 @@ $$
 ### 15.2 TD 学习：从 Bellman 方程到样本更新
 
 TD(0) 是策略评估的**样本版本**。把 Bellman 期望方程：
+
 $$
 V^\pi(s) = \mathbb{E}[R + \gamma V^\pi(S') | S=s]
 $$
 
 转化为一个基于单样本 $(s, r, s')$ 的增量更新：
+
 $$
 V(s) \leftarrow V(s) + \alpha \underbrace{[r + \gamma V(s') - V(s)]}_{\text{TD 误差 } \delta}
 $$
@@ -1555,11 +1614,13 @@ $$
 ### 15.3 Q-learning：从 VI 到样本版本
 
 Q-learning 是值迭代的**样本版本**。把 Bellman 最优方程的 Q 形式：
+
 $$
 Q^*(s,a) = \mathbb{E}[R + \gamma \max_{a'} Q^*(S', a') | S=s, A=a]
 $$
 
 转化为样本更新：
+
 $$
 Q(s,a) \leftarrow Q(s,a) + \alpha [r + \gamma \max_{a'} Q(s', a') - Q(s,a)]
 $$
@@ -1587,20 +1648,25 @@ PPO 的 trust region 约束 $|\pi_\theta(a|s) / \pi_{\theta_k}(a|s) - 1| \le \ep
 设 $\mathcal{S} = \{s_1, s_2\}$，$\mathcal{A} = \{a_1, a_2\}$，$\gamma = 0.9$。
 
 转移概率：
+
 $$
 P(s_1 | s_1, a_1) = 0.7, \quad P(s_2 | s_1, a_1) = 0.3
 $$
+
 $$
 P(s_1 | s_1, a_2) = 0.4, \quad P(s_2 | s_1, a_2) = 0.6
 $$
+
 $$
 P(s_1 | s_2, a_1) = 0.5, \quad P(s_2 | s_2, a_1) = 0.5
 $$
+
 $$
 P(s_1 | s_2, a_2) = 0.2, \quad P(s_2 | s_2, a_2) = 0.8
 $$
 
 奖励：
+
 $$
 r(s_1, a_1) = 5, \quad r(s_1, a_2) = 10, \quad r(s_2, a_1) = -1, \quad r(s_2, a_2) = 2
 $$
@@ -1610,9 +1676,11 @@ $$
 初始化 $V_0 = [0, 0]^\top$。
 
 **第 1 次迭代**：
+
 $$
 V_1(s_1) = \max\{r(s_1,a_1) + 0.9[0.7 \cdot 0 + 0.3 \cdot 0],\ r(s_1,a_2) + 0.9[0.4 \cdot 0 + 0.6 \cdot 0]\} = \max\{5, 10\} = 10
 $$
+
 $$
 V_1(s_2) = \max\{-1 + 0, \ 2 + 0\} = 2
 $$
@@ -1620,15 +1688,19 @@ $$
 $V_1 = [10, 2]^\top$，贪婪策略 $\pi_1 = [a_2, a_2]$。
 
 **第 2 次迭代**：
+
 $$
 V_2(s_1) = \max\{5 + 0.9[0.7 \cdot 10 + 0.3 \cdot 2],\ 10 + 0.9[0.4 \cdot 10 + 0.6 \cdot 2]\}
 $$
+
 $$
 = \max\{5 + 0.9 \cdot 7.6,\ 10 + 0.9 \cdot 5.2\} = \max\{11.84, 14.68\} = 14.68
 $$
+
 $$
 V_2(s_2) = \max\{-1 + 0.9[0.5 \cdot 10 + 0.5 \cdot 2],\ 2 + 0.9[0.2 \cdot 10 + 0.8 \cdot 2]\}
 $$
+
 $$
 = \max\{-1 + 5.4,\ 2 + 3.24\} = \max\{4.4, 5.24\} = 5.24
 $$
@@ -1644,14 +1716,17 @@ $V_2 = [14.68, 5.24]^\top$，贪婪策略 $\pi_2 = [a_2, a_2]$。
 初始策略 $\pi_0 = [a_1, a_1]$（两个状态都选动作 1）。
 
 **策略评估**：
+
 $$
 P^{\pi_0} = \begin{pmatrix} 0.7 & 0.3 \\ 0.5 & 0.5 \end{pmatrix}, \quad r^{\pi_0} = \begin{pmatrix} 5 \\ -1 \end{pmatrix}
 $$
 
 解 $(I - 0.9 P^{\pi_0}) V = r^{\pi_0}$：
+
 $$
 \begin{pmatrix} 1 - 0.63 & -0.27 \\ -0.45 & 1 - 0.45 \end{pmatrix} V = \begin{pmatrix} 5 \\ -1 \end{pmatrix}
 $$
+
 $$
 \begin{pmatrix} 0.37 & -0.27 \\ -0.45 & 0.55 \end{pmatrix} V = \begin{pmatrix} 5 \\ -1 \end{pmatrix}
 $$
@@ -1689,6 +1764,7 @@ $$
 - 12 维上一步动作（处理通信延迟）
 
 **动作** $a \in \mathbb{R}^{12}$：关节目标位置的偏置。经 PD 控制器映射到力矩：
+
 $$
 \tau = K_p (a - q) + K_d (0 - \dot{q})
 $$
@@ -1809,6 +1885,7 @@ $$
 **命题**：$T^*$ 是单调的——若 $V(s) \le W(s)$ 对所有 $s$，则 $(T^*V)(s) \le (T^*W)(s)$ 对所有 $s$。
 
 **证明**：对任意 $s$，
+
 $$
 (T^*V)(s) = \max_a [r(s,a) + \gamma \sum_{s'} P(s'|s,a) V(s')] \le \max_a [r(s,a) + \gamma \sum_{s'} P(s'|s,a) W(s')]= (T^*W)(s)
 $$
@@ -1830,6 +1907,7 @@ $$
 ### A0.3 从 $V^*$ 到 $Q^*$ 的转换
 
 已知 $V^*$ 后，$Q^*$ 的计算是直接的：
+
 $$
 Q^*(s,a) = r(s,a) + \gamma \sum_{s'} P(s'|s,a) V^*(s')
 $$
@@ -1851,6 +1929,7 @@ $$
 
 **证明**：
 设 $x^* \in \arg\max f(x)$。则：
+
 $$
 \sup f - \sup g = f(x^*) - \sup g \le f(x^*) - g(x^*) \le \sup_x [f(x) - g(x)] \le \sup_x |f(x) - g(x)|
 $$
@@ -1875,6 +1954,7 @@ $$
 由 Neumann 级数定理：当 $\|A\| < 1$ 时，$I - A$ 可逆且 $(I-A)^{-1} = \sum_{k=0}^{\infty} A^k$。
 
 取 $A = \gamma P^\pi$：
+
 $$
 (I - \gamma P^\pi)^{-1} = \sum_{k=0}^{\infty} (\gamma P^\pi)^k = I + \gamma P^\pi + \gamma^2 (P^\pi)^2 + \cdots
 $$
@@ -1921,11 +2001,13 @@ $$
 ## 附录 C：平均奖励 MDP 简介 ⭐⭐⭐⭐
 
 当 $\gamma \to 1$ 时折扣目标退化，常用的替代是**长期平均奖励**：
+
 $$
 g^\pi(s) := \liminf_{T\to\infty} \frac{1}{T} \mathbb{E}^\pi\left[\sum_{t=0}^{T-1} r(S_t, A_t) \,\Big|\, S_0 = s\right]
 $$
 
 在**单链（unichain）条件**下，$g^\pi(s)$ 不依赖 $s$，记作 $g^\pi$。Bellman 方程变为：
+
 $$
 g + h(s) = \max_a \left[ r(s,a) + \sum_{s'} P(s'|s,a) h(s') \right]
 $$
@@ -1939,6 +2021,7 @@ $$
 ## 附录 D：约束 MDP（CMDP）简介 ⭐⭐⭐⭐
 
 带约束 MDP：
+
 $$
 \max_\pi \mathbb{E}^\pi \sum_t \gamma^t r(S_t, A_t) \quad \text{s.t.} \quad \mathbb{E}^\pi \sum_t \gamma^t c_i(S_t, A_t) \le d_i, \quad i = 1,\ldots,m
 $$
@@ -1946,6 +2029,7 @@ $$
 **Altman (1999) 的关键结果**：在有限 CMDP 中，最优策略一般是**随机**（而非确定性）平稳策略。这与无约束 MDP 的"最优策略可取确定性"形成鲜明对比。
 
 核心工具是 Lagrangian 松弛：
+
 $$
 \mathcal{L}(\pi, \lambda) = \mathbb{E}^\pi \sum_t \gamma^t \left[ r(S_t, A_t) - \sum_i \lambda_i c_i(S_t, A_t) \right] + \sum_i \lambda_i d_i, \quad \lambda \ge 0
 $$

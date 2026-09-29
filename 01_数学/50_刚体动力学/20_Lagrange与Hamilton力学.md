@@ -709,14 +709,17 @@ print(f"Bias term: {Cv_plus_g[:3]}")
 **Step 1：质心位置**
 
 $$x_1 = \ell_1 \cos q_1, \quad y_1 = \ell_1 \sin q_1$$
+
 $$x_2 = \ell_1 \cos q_1 + \ell_2 \cos(q_1 + q_2), \quad y_2 = \ell_1 \sin q_1 + \ell_2 \sin(q_1 + q_2)$$
 
 **Step 2：速度（对 t 求导）**
 
 $$\dot{x}_1 = -\ell_1 \sin q_1 \cdot \dot{q}_1$$
+
 $$\dot{y}_1 = \ell_1 \cos q_1 \cdot \dot{q}_1$$
 
 $$\dot{x}_2 = -\ell_1 \sin q_1 \cdot \dot{q}_1 - \ell_2 \sin(q_1+q_2)(\dot{q}_1+\dot{q}_2)$$
+
 $$\dot{y}_2 = \ell_1 \cos q_1 \cdot \dot{q}_1 + \ell_2 \cos(q_1+q_2)(\dot{q}_1+\dot{q}_2)$$
 
 **Step 3：动能**
@@ -732,6 +735,7 @@ $$= \ell_1^2\dot{q}_1^2 + \ell_2^2(\dot{q}_1+\dot{q}_2)^2 + 2\ell_1\ell_2\dot{q}
 （利用 $\sin A \sin B + \cos A \cos B = \cos(A-B)$）
 
 所以：
+
 $$T = \frac{1}{2}(m_1+m_2)\ell_1^2\dot{q}_1^2 + \frac{1}{2}m_2\ell_2^2(\dot{q}_1+\dot{q}_2)^2 + m_2\ell_1\ell_2\cos q_2 \cdot \dot{q}_1(\dot{q}_1+\dot{q}_2)$$
 
 写成 $T = \frac{1}{2}\dot{q}^T M(q)\dot{q}$：
@@ -962,6 +966,7 @@ $$\boxed{\dot{V} = \dot{q}^T\tau}$$
 **思想**：用精确的动力学模型做前馈，把非线性系统变成线性系统。
 
 控制律：
+
 $$\tau = M(q)(\ddot{q}_d + K_d\dot{e} + K_p e) + C(q,\dot{q})\dot{q} + g(q)$$
 
 其中 $e = q_d - q$, $\dot{e} = \dot{q}_d - \dot{q}$。
@@ -1018,9 +1023,11 @@ $$M(q)\ddot{q}_r + C(q,\dot{q})\dot{q}_r + g(q) = Y(q, \dot{q}, \dot{q}_r, \ddot
 - 滑模变量：$s = \dot{q} - \dot{q}_r = \dot{\tilde{q}} + \Lambda\tilde{q}$
 
 控制律：
+
 $$\tau = Y(q, \dot{q}, \dot{q}_r, \ddot{q}_r)\hat{\theta} - K_s s$$
 
 自适应律：
+
 $$\dot{\hat{\theta}} = -\Gamma Y^T s$$
 
 **Lyapunov 证明**：取 $V = \frac{1}{2}s^T M s + \frac{1}{2}\tilde{\theta}^T\Gamma^{-1}\tilde{\theta}$（$\tilde{\theta} = \theta - \hat{\theta}$）。
@@ -1214,12 +1221,17 @@ $$\begin{pmatrix} M_{bb} & M_{bj} \\ M_{jb} & M_{jj} \end{pmatrix}\begin{pmatrix
 Stormer-Verlet（又叫 Leapfrog）算法：
 
 $$p_{n+1/2} = p_n - \frac{h}{2}\frac{\partial H}{\partial q}\bigg|_{q_n}$$
+
 $$q_{n+1} = q_n + h \frac{\partial H}{\partial p}\bigg|_{p_{n+1/2}}$$
+
 $$p_{n+1} = p_{n+1/2} - \frac{h}{2}\frac{\partial H}{\partial q}\bigg|_{q_{n+1}}$$
 
 对于机器人：
+
 $$p_{n+1/2} = p_n + \frac{h}{2}(\tau_n - g(q_n) + \text{Coriolis correction})$$
+
 $$q_{n+1} = q_n + h \cdot M^{-1}(q_n) p_{n+1/2}$$
+
 $$p_{n+1} = p_{n+1/2} + \frac{h}{2}(\tau_{n+1} - g(q_{n+1}) + \text{Coriolis correction})$$
 
 **为什么保辛很重要？** 保辛积分器保持相空间体积，这意味着能量误差是**有界振荡**的而非**单调增长**的。跑 10000 步后，RK4 的能量误差可能增长到 1%，而 Verlet 的能量误差仍在 0.001% 以内振荡。
@@ -2012,6 +2024,7 @@ Dai et al. (2014) 利用此约束设计人形机器人翻滚动作；Wensing et 
 ### 练习 1：Christoffel 符号与 C 矩阵构造（基础）
 
 对 2R 平面机械臂，质量矩阵为：
+
 $$M(q) = \begin{pmatrix} m_1 l_{c1}^2 + m_2(l_1^2 + l_{c2}^2 + 2l_1 l_{c2}\cos q_2) + I_1 + I_2 & m_2(l_{c2}^2 + l_1 l_{c2}\cos q_2) + I_2 \\ m_2(l_{c2}^2 + l_1 l_{c2}\cos q_2) + I_2 & m_2 l_{c2}^2 + I_2 \end{pmatrix}$$
 
 (a) 计算所有 Christoffel 符号 $c_{ijk} = \frac{1}{2}\left(\frac{\partial M_{ij}}{\partial q_k} + \frac{\partial M_{ik}}{\partial q_j} - \frac{\partial M_{jk}}{\partial q_i}\right)$（共 $2^3 = 8$ 个，利用对称性简化）。

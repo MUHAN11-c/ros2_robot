@@ -1,0 +1,193 @@
+/* ==========================================================================
+   content.css · 文章内容：标题锚点 / TOC 配套 / 图片 / 公式 / API 卡 / 引用
+   正文必须比主题更重要——文章页几乎看不到二次元
+   ========================================================================== */
+
+/* ---- 标题锚点 #：hover 显示 ---- */
+
+.md-typeset h2 .md-header__button,
+.md-typeset h3 .md-header__button,
+.md-typeset h4 .md-header__button {
+  color: var(--rt-text-secondary);
+  opacity: 0;
+  transition: opacity var(--rt-transition), color var(--rt-transition);
+}
+
+.md-typeset h2:hover .md-header__button,
+.md-typeset h3:hover .md-header__button,
+.md-typeset h4:hover .md-header__button {
+  opacity: 0.7;
+}
+
+.md-typeset :is(h2, h3, h4) .md-header__button:hover {
+  opacity: 1;
+  color: var(--rt-primary);
+}
+
+/* ---- 引用块：左线 + 弱底 ---- */
+
+.md-typeset blockquote {
+  border-left: 3px solid var(--rt-primary-light);
+  background: var(--rt-surface-soft);
+  border-radius: 0 var(--rt-radius-sm) var(--rt-radius-sm) 0;
+  padding: 0.4em 1em;
+  color: var(--rt-text-secondary);
+}
+
+/* ---- 图片与实验插图：8px 圆角 + 1px 边 + 灰 caption ---- */
+
+.md-typeset img {
+  border-radius: var(--rt-radius-md);
+}
+
+.md-typeset img[src*="assets/labs"] {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.1rem auto;
+  padding: 0.7rem;
+  background: var(--rt-surface);
+  border: 1px solid var(--rt-border);
+  box-shadow: var(--rt-shadow-sm);
+}
+
+[data-md-color-scheme="slate"] .md-typeset img[src*="assets/labs"] {
+  background: #FFFFFF; /* 插图为白底绘制，暗色下衬白卡保持图形对比 */
+}
+
+/* 知识地图为透明底矢量：暗色下使用深色表面（节点白底描边在深底上清晰） */
+[data-md-color-scheme="slate"] .md-typeset img[src*="labs/diagrams/home_kmap"] {
+  background: var(--rt-surface);
+  border-color: var(--rt-border);
+}
+
+.md-typeset figcaption,
+.md-typeset .MD_STATUS_BADGE {
+  color: var(--rt-text-secondary);
+}
+
+/* ---- 数学公式：居中 + 适度留白，无花哨边框 ---- */
+
+.md-typeset .arithmatex {
+  overflow-x: auto;
+  padding: 0.15rem 0;
+}
+
+.md-typeset div.arithmatex,
+.md-typeset div.MathJax {
+  margin: 1em 0;
+}
+
+/* 公式卡（可选 class）：关键公式包装 */
+.md-typeset .rt-formula-card {
+  margin: 1.1rem 0;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--rt-border);
+  border-left: 3px solid var(--rt-gold);
+  border-radius: var(--rt-radius-md);
+  background: var(--rt-surface);
+  overflow-x: auto;
+}
+
+.md-typeset .rt-formula-card .rt-card-title {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--rt-gold);
+}
+
+/* ---- API Reference 卡（可选 class，供 ROS2/Eigen/OpenCV 等） ---- */
+
+.md-typeset .rt-api {
+  margin: 1.1rem 0;
+  border: 1px solid var(--rt-border);
+  border-radius: var(--rt-radius-md);
+  background: var(--rt-surface);
+  overflow: hidden;
+}
+
+.md-typeset .rt-api__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.9rem;
+  background: var(--rt-surface-soft);
+  border-bottom: 1px solid var(--rt-border);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--rt-text-primary);
+}
+
+.md-typeset .rt-api__lib {
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  background: var(--rt-primary-soft);
+  color: var(--rt-primary);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.md-typeset .rt-api__body {
+  padding: 0.8rem 0.9rem;
+  font-size: 0.74rem;
+}
+
+.md-typeset .rt-api__section {
+  margin: 0.7rem 0 0.25rem;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--rt-text-secondary);
+}
+
+/* ---- ROS2 架构专用元素（可选 class） ---- */
+
+.md-typeset .rt-ros-node {
+  display: inline-block;
+  padding: 0.12rem 0.6rem;
+  border: 1px solid var(--rt-electro);
+  border-radius: var(--rt-radius-sm);
+  background: var(--rt-surface);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72em;
+  color: var(--rt-electro);
+}
+
+.md-typeset .rt-ros-topic {
+  display: inline-block;
+  padding: 0.12rem 0.6rem;
+  border: 1px solid var(--rt-secondary);
+  border-radius: 999px;
+  background: var(--rt-surface);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72em;
+  color: var(--rt-secondary);
+}
+
+/* ---- 折叠 details ---- */
+
+.md-typeset details {
+  border: 1px solid var(--rt-border);
+  border-radius: var(--rt-radius-md);
+  background: var(--rt-surface);
+}
+
+.md-typeset details > summary {
+  background: var(--rt-surface-soft);
+  border-radius: var(--rt-radius-md) var(--rt-radius-md) 0 0;
+  padding-inline: 0.8rem;
+}
+
+.md-typeset details[open] > summary {
+  border-bottom: 1px solid var(--rt-border);
+}
+
+/* ---- 上下篇 / 页脚由 layout.css 承担 ---- */
+
+/* 目录索引页与首页公用组件在 components.css */

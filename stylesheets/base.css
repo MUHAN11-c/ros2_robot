@@ -1,0 +1,206 @@
+/* ==========================================================================
+   base.css · 全局基础：字体 / 正文排版 / 标题层级 / 链接 / 滚动条
+   阅读效率优先：长文 30-120 分钟连续阅读舒适
+   ========================================================================== */
+
+body {
+  font-family: "Noto Sans SC", "Source Han Sans SC", system-ui, -apple-system,
+    "Segoe UI", "Microsoft YaHei", sans-serif;
+  background: var(--rt-bg-primary);
+  color: var(--rt-text-primary);
+}
+
+/* ---- 正文排版 ---- */
+
+.md-typeset {
+  font-size: 0.8rem; /* Material 根 20px → 16px 正文 */
+  line-height: 1.75;
+}
+
+.md-typeset p {
+  margin: 0.9em 0;
+}
+
+/* 标题层级：H1 32 / H2 26 / H3 21 / H4 18 */
+.md-typeset h1 {
+  margin: 0 0 1.2rem;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--rt-text-primary);
+}
+
+.md-typeset h2 {
+  margin: 2.2em 0 0.9em;
+  padding-top: 0.4em;
+  font-size: 1.625rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--rt-text-primary);
+  border-top: 1px solid var(--rt-border);
+}
+
+.md-typeset h2:first-of-type {
+  border-top: none;
+}
+
+.md-typeset h3 {
+  margin: 1.6em 0 0.7em;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--rt-text-primary);
+}
+
+.md-typeset h4 {
+  margin: 1.3em 0 0.6em;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--rt-text-primary);
+}
+
+.md-typeset h5,
+.md-typeset h6 {
+  font-weight: 600;
+  color: var(--rt-text-secondary);
+}
+
+/* ---- 链接：克制下划线，hover 电紫 ---- */
+
+.md-typeset a {
+  color: var(--rt-primary);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.md-typeset a:hover,
+.md-typeset a:focus-visible {
+  color: var(--rt-electro);
+}
+
+.md-typeset a:not(.md-button):focus-visible {
+  outline: 2px solid var(--rt-electro);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ---- 分隔线：细线 + 中央樱瓣点 ---- */
+
+.md-typeset hr {
+  margin: 2em 0;
+  border-bottom: 1px solid var(--rt-border);
+}
+
+.md-typeset hr::after {
+  content: "✿";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -54%);
+  font-size: 0.55rem;
+  color: var(--rt-sakura);
+  background: var(--rt-bg-primary);
+  padding: 0 0.5em;
+}
+
+/* ---- 行内代码 ---- */
+
+.md-typeset code {
+  padding: 0.1em 0.4em;
+  border-radius: var(--rt-radius-sm);
+  background: var(--rt-surface-soft);
+  border: 1px solid var(--rt-border);
+  color: var(--rt-primary);
+  font-family: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+  font-size: 0.86em;
+}
+
+/* ---- 选中 / 滚动条 / 键盘焦点 ---- */
+
+::selection {
+  background: rgba(147, 112, 219, 0.25);
+}
+
+[data-md-color-scheme="slate"] ::selection {
+  background: rgba(168, 139, 216, 0.35);
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background: var(--rt-primary-light);
+  opacity: 0.6;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid var(--rt-electro);
+  outline-offset: 2px;
+}
+
+/* ---- 键盘按键样式 ---- */
+
+.md-typeset kbd {
+  border: 1px solid var(--rt-border);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: var(--rt-surface);
+  box-shadow: none;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.75em;
+  color: var(--rt-text-secondary);
+}
+
+/* ---- 无障碍：减少动态 ---- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---- 滚动显现（仅淡入，200ms，由 app.js 加类触发） ---- */
+
+.rt-reveal {
+  opacity: 0;
+  transform: translateY(2px);
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+.rt-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rt-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---- 视觉隐藏（供页面结构 h1 使用） ---- */
+
+.rt-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

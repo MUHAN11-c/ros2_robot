@@ -1425,7 +1425,9 @@ HJB 方程很美，但有维数灾难。有没有办法**不求解 PDE**，而�
 **条件**：控制仿射系统 + 二次控制代价 + 噪声比例条件：
 
 $$dX = [f_0(X) + G(X)u]\,dt + B(X)\,dW$$
+
 $$L(x,u) = q(x) + \frac{1}{2}u^\top R u$$
+
 $$\text{且 } \sigma\sigma^\top = GR^{-1}G^\top \cdot \lambda \quad (\text{噪声与控制代价成比例})$$
 
 **desirability 变换**：$\psi(x,t) = \exp(-V(x,t)/\lambda)$
@@ -1638,6 +1640,7 @@ $$V|_{\text{boundary}} = \Phi|_{\text{boundary}}, \quad \nabla V|_{\text{boundar
 对于不连续的逼近序列，需要用**半松弛极限**（half-relaxed limits）：
 
 $$\bar{V}(x) = \limsup_{\varepsilon \to 0, y \to x} V^\varepsilon(y) \quad \text{（上半连续包络）}$$
+
 $$\underline{V}(x) = \liminf_{\varepsilon \to 0, y \to x} V^\varepsilon(y) \quad \text{（下半连续包络）}$$
 
 Barles-Perthame 1987 证明：$\bar{V}$ 是次解、$\underline{V}$ 是上解。由比较原理 $\bar{V} \le \underline{V}$，但由次解/上解定义直接得 $\underline{V} \le \bar{V}$，所以 $\bar{V} = \underline{V} = V$（唯一黏性解），即 $V^\varepsilon$ 局部一致收敛。

@@ -211,17 +211,23 @@ $$f^*(Y) = -\log\det(-Y) - n \quad (Y \prec 0)$$
 **Infimal 卷积的详细解释** ⭐⭐⭐：
 
 **定义**：两个函数的 infimal 卷积（inf-convolution）为：
+
 $$(f_1 \square f_2)(x) = \inf_{x_1 + x_2 = x} [f_1(x_1) + f_2(x_2)] = \inf_z [f_1(z) + f_2(x-z)]$$
 
 **关键性质**：$(f_1 \square f_2)^* = f_1^* + f_2^*$。
 
 **证明**：
+
 $$(f_1 \square f_2)^*(y) = \sup_x \left[\langle y, x \rangle - \inf_z [f_1(z) + f_2(x-z)]\right]$$
+
 $$= \sup_x \sup_z \left[\langle y, x \rangle - f_1(z) - f_2(x-z)\right]$$
+
 $$= \sup_z \left[\langle y, z \rangle - f_1(z)\right] + \sup_w \left[\langle y, w \rangle - f_2(w)\right] \quad \text{（令 } w = x-z \text{）}$$
+
 $$= f_1^*(y) + f_2^*(y)$$
 
 **为什么 infimal 卷积重要**：Moreau 包络恰好是一个 infimal 卷积！
+
 $$M_f^\lambda(v) = \inf_x \left[f(x) + \frac{1}{2\lambda}\|x-v\|^2\right] = (f \square \frac{1}{2\lambda}\|\cdot\|^2)(v)$$
 
 因此 $(M_f^\lambda)^* = f^* + \frac{\lambda}{2}\|\cdot\|^2$——Moreau 包络的共轭就是原函数的共轭加上一个二次项！这解释了为什么 Moreau 包络总是光滑的——加了二次项使共轭变成强凸的，由强凸-光滑对偶，原函数就变成光滑的。
@@ -231,6 +237,7 @@ $$M_f^\lambda(v) = \inf_x \left[f(x) + \frac{1}{2\lambda}\|x-v\|^2\right] = (f \
 计算共轭函数有几种标准策略：
 
 **方法 1：直接求导**（最常用）。设 $f$ 可微，在 $f^*(y) = \sup_x[\langle y, x \rangle - f(x)]$ 中对 $x$ 求导令为零：
+
 $$y = \nabla f(x^*) \quad \Rightarrow \quad x^* = (\nabla f)^{-1}(y)$$
 
 代回：$f^*(y) = \langle y, (\nabla f)^{-1}(y) \rangle - f((\nabla f)^{-1}(y))$。
@@ -319,6 +326,7 @@ $$y \in \partial f(x) \quad \Longleftrightarrow \quad x \in \partial f^*(y) \qua
 ### Fenchel-Moreau 的深层意义 ⭐⭐
 
 **闭凸函数的仿射表示**：$f^{**} = f$ 意味着闭凸函数可以写成其所有仿射下界的逐点上确界：
+
 $$f(x) = \sup_{y}[\langle y, x \rangle - f^*(y)]$$
 
 **几何解释**：每个 $y$ 对应一条支撑超平面 $\ell_y(x) = \langle y, x \rangle - f^*(y)$。所有这些超平面从下方"包围"函数 $f$，它们的上包络恰好等于 $f$。这是"切线包络"的精确数学表述。
@@ -374,13 +382,17 @@ $$f \text{ 是 } \mu\text{-强凸} \quad \Longleftrightarrow \quad f^* \text{ �
 **Step 2**：设 $x_i = \nabla f^*(y_i)$（$i = 1, 2$）。由共轭-次微分互逆：$y_i \in \partial f(x_i)$。由 $f$ 可微（强凸在 ri(dom f) 上 Gateaux 可微）：$y_i = \nabla f(x_i)$。
 
 **Step 3**：由 $f$ 的 $\mu$-强凸性（强单调性）：
+
 $$\langle \nabla f(x_1) - \nabla f(x_2), x_1 - x_2 \rangle \geq \mu\|x_1 - x_2\|^2$$
+
 $$\langle y_1 - y_2, \nabla f^*(y_1) - \nabla f^*(y_2) \rangle \geq \mu\|\nabla f^*(y_1) - \nabla f^*(y_2)\|^2$$
 
 由 Cauchy-Schwarz：
+
 $$\|y_1 - y_2\| \cdot \|\nabla f^*(y_1) - \nabla f^*(y_2)\| \geq \mu\|\nabla f^*(y_1) - \nabla f^*(y_2)\|^2$$
 
 除以 $\|\nabla f^*(y_1) - \nabla f^*(y_2)\|$（假设非零）：
+
 $$\|\nabla f^*(y_1) - \nabla f^*(y_2)\| \leq \frac{1}{\mu}\|y_1 - y_2\|$$
 
 这正是 $\frac{1}{\mu}$-Lipschitz 梯度。
@@ -411,6 +423,7 @@ $$\|\nabla f^*(y_1) - \nabla f^*(y_2)\| \leq \frac{1}{\mu}\|y_1 - y_2\|$$
 即 $\|y_1 - y_2\| \geq \mu\|x_1-x_2\|$。
 
 由 co-coercivity（$f^*$ 凸且 $\frac{1}{\mu}$-光滑）：
+
 $$\langle x_1-x_2, y_1-y_2\rangle = \langle \nabla f^*(y_1)-\nabla f^*(y_2), y_1-y_2\rangle \geq \mu\|\nabla f^*(y_1)-\nabla f^*(y_2)\|^2 = \mu\|x_1-x_2\|^2$$
 
 这就是 $\nabla f$ 的 $\mu$-强单调性，等价于 $f$ 的 $\mu$-强凸性。
@@ -471,11 +484,13 @@ Rockafellar (1976) 提出了 proximal point algorithm，但直到 2009-2014 年 
 ### Proximal 算子作为梯度步的推广 ⭐⭐
 
 **显式梯度步**（光滑函数）：
+
 $$x_{k+1} = x_k - \eta\nabla f(x_k) = \arg\min_x \left[f(x_k) + \nabla f(x_k)^\top(x - x_k) + \frac{1}{2\eta}\|x - x_k\|^2\right]$$
 
 右边是 $f$ 的一阶 Taylor 展开加二次正则化。
 
 **隐式 proximal 步**（一般凸函数）：
+
 $$x_{k+1} = \text{prox}_{\eta f}(x_k) = \arg\min_x \left[f(x) + \frac{1}{2\eta}\|x - x_k\|^2\right]$$
 
 右边直接用 $f(x)$ 而不是其线性近似。
@@ -511,6 +526,7 @@ $$x_{k+1} = \text{prox}_{\eta f}(x_k) = \arg\min_x \left[f(x) + \frac{1}{2\eta}\
 $$p = \text{prox}_f(v) \quad \Longleftrightarrow \quad v - p \in \partial f(p) \quad \Longleftrightarrow \quad \text{prox}_f = (I + \partial f)^{-1}$$
 
 **证明**：$p = \text{prox}_f(v)$ 意味着 $p$ 最小化 $f(x) + \frac{1}{2}\|x-v\|^2$。由 Fermat 规则：
+
 $$0 \in \partial\left[f(x) + \frac{1}{2}\|x-v\|^2\right]\bigg|_{x=p} = \partial f(p) + (p - v)$$
 
 即 $v - p \in \partial f(p)$，等价于 $v \in p + \partial f(p) = (I + \partial f)(p)$，即 $p = (I + \partial f)^{-1}(v)$。
@@ -569,27 +585,33 @@ Proximal 算子的实用性取决于我们能否高效计算它。幸运的是�
 在计算复杂函数的 prox 之前，先掌握一组代数规则，可以把复杂的 prox 分解为简单 prox 的组合。
 
 **规则 1：可分性**。若 $f(x) = \sum_i f_i(x_i)$（各分量独立），则：
+
 $$(\text{prox}_f(v))_i = \text{prox}_{f_i}(v_i)$$
 
 逐分量独立计算。这就是为什么 $\ell_1$ 的 prox 可以逐分量做软阈值。
 
 **规则 2：仿射变换**。若 $g(x) = f(ax + b)$（$a \neq 0$），则：
+
 $$\text{prox}_g(v) = \frac{1}{a}\left(\text{prox}_{a^2f}\left(av + b\right) - b\right)$$
 
 **规则 3：加仿射项**。$g(x) = f(x) + \langle a, x \rangle + c$，则：
+
 $$\text{prox}_{\lambda g}(v) = \text{prox}_{\lambda f}(v - \lambda a)$$
 
 仿射项只是把输入平移了 $\lambda a$。
 
 **规则 4：加二次项**。$g(x) = f(x) + \frac{\rho}{2}\|x - a\|^2$，则：
+
 $$\text{prox}_{\lambda g}(v) = \text{prox}_{\frac{\lambda}{1+\lambda\rho}f}\left(\frac{v + \lambda\rho a}{1 + \lambda\rho}\right)$$
 
 **规则 5：正交变换**。若 $U$ 是正交矩阵，$g(x) = f(Ux)$，则：
+
 $$\text{prox}_g(v) = U^\top \text{prox}_f(Uv)$$
 
 这解释了为什么核范数的 prox 可以在 SVD 域中做——SVD 的酉变换不影响 prox 的结构。
 
 **规则 6：Moreau 分解**。已知 $\text{prox}_f$ 可以推出 $\text{prox}_{f^*}$：
+
 $$\text{prox}_{f^*}(v) = v - \text{prox}_f(v)$$
 
 ### Proximal 算子的数值计算 ⭐⭐
@@ -618,6 +640,7 @@ def prox_cvxpy(f_cvxpy, v, lam):
 $$\text{prox}_{\lambda\|\cdot\|_1}(v) = \text{sign}(v) \odot \max(|v| - \lambda, 0)$$
 
 **推导**：由于 $\|\cdot\|_1$ 可分（逐分量独立），只需解标量问题：
+
 $$p_i = \arg\min_{x_i} \left[ \lambda|x_i| + \frac{1}{2}(x_i - v_i)^2 \right]$$
 
 由 Fermat 规则：$0 \in \lambda \partial|x_i| + (x_i - v_i)$
@@ -746,6 +769,7 @@ $$M_f^\lambda(v) = \inf_x \left[ f(x) + \frac{1}{2\lambda}\|x - v\|^2 \right] = 
 ### 性质的完整证明
 
 **性质 6 的证明**（$M_f^\lambda \leq f$）：
+
 $$M_f^\lambda(v) = \inf_x \left[f(x) + \frac{1}{2\lambda}\|x-v\|^2\right] \leq f(v) + \frac{1}{2\lambda}\|v-v\|^2 = f(v)$$
 
 取 $x = v$ 即得上界。
@@ -769,6 +793,7 @@ $f^* + \frac{\lambda}{2}\|\cdot\|^2$ 是 $\lambda$-强凸的。由强凸-光滑�
 设 $p = \text{prox}_{\lambda f}(v)$。对 $v$ 做微小扰动 $v + \Delta v$：
 
 $$M_f^\lambda(v + \Delta v) \leq f(p) + \frac{1}{2\lambda}\|p - v - \Delta v\|^2$$
+
 $$= M_f^\lambda(v) - \frac{1}{\lambda}(p - v)^\top \Delta v + \frac{1}{2\lambda}\|\Delta v\|^2$$
 
 即 $M_f^\lambda(v + \Delta v) - M_f^\lambda(v) \leq \frac{1}{\lambda}(v - p)^\top \Delta v + O(\|\Delta v\|^2)$。
@@ -868,6 +893,7 @@ $$v = \text{prox}_{\lambda f}(v) + \lambda \cdot \text{prox}_{f^*/\lambda}(v/\la
 **例：从 $\ell_\infty$ 球投影推出 $\ell_1$ 的 prox**
 
 由 $\|\cdot\|_1^* = \delta_{\|\cdot\|_\infty \leq 1}$，Moreau 分解给出：
+
 $$v = \text{prox}_{\lambda\|\cdot\|_1}(v) + \lambda \cdot \Pi_{\|\cdot\|_\infty \leq 1}(v/\lambda)$$
 
 因此 $\text{prox}_{\lambda\|\cdot\|_1}(v) = v - \lambda \cdot \Pi_{\|\cdot\|_\infty \leq 1}(v/\lambda)$
@@ -877,6 +903,7 @@ $$v = \text{prox}_{\lambda\|\cdot\|_1}(v) + \lambda \cdot \Pi_{\|\cdot\|_\infty 
 **例：从 $\ell_2$ 球投影推出 $\ell_2$ 范数的 prox**
 
 由 $\|\cdot\|_2^* = \delta_{\|\cdot\|_2 \leq 1}$：
+
 $$\text{prox}_{\lambda\|\cdot\|_2}(v) = v - \lambda \cdot \Pi_{\|\cdot\|_2 \leq 1}(v/\lambda) = v - \lambda \cdot \frac{v/\lambda}{\max(1, \|v/\lambda\|)} = v \cdot \left(1 - \frac{\lambda}{\max(\lambda, \|v\|)}\right)$$
 
 即块软阈值公式。
@@ -951,9 +978,11 @@ $$\|T(x) - T(y)\|^2 \leq \langle x - y, T(x) - T(y) \rangle, \quad \forall x, y$
 **定理 2.8.2**：$\text{prox}_f$ 是 firmly nonexpansive 的。
 
 **证明**：设 $p = \text{prox}_f(x)$，$q = \text{prox}_f(y)$。由 resolvent：
+
 $$x - p \in \partial f(p), \quad y - q \in \partial f(q)$$
 
 由次梯度的单调性（$f$ 凸 $\Rightarrow$ $\partial f$ 单调）：
+
 $$\langle (x-p) - (y-q), p - q \rangle \geq 0$$
 
 展开：$\langle x - y, p - q \rangle - \|p - q\|^2 \geq 0$
@@ -978,6 +1007,7 @@ $$\langle (x-p) - (y-q), p - q \rangle \geq 0$$
 4. $I - T$ 也是 firmly nonexpansive
 
 **证明 (1)$\Leftrightarrow$(4)**：设 $S = I - T$。
+
 $$\|Sx - Sy\|^2 = \|(x-y) - (Tx-Ty)\|^2 = \|x-y\|^2 - 2\langle x-y, Tx-Ty\rangle + \|Tx-Ty\|^2$$
 
 由 $T$ firmly nonexpansive：$\|Tx-Ty\|^2 \leq \langle x-y, Tx-Ty\rangle$。
@@ -995,6 +1025,7 @@ $$\|Sx - Sy\|^2 = \|(x-y) - (Tx-Ty)\|^2 = \|x-y\|^2 - 2\langle x-y, Tx-Ty\rangle
 **定理 2.8.3**：若 $\arg\min f \neq \emptyset$，则 PPA 生成的序列 $\{x_k\}$ 弱收敛到 $\arg\min f$ 中的某一点。
 
 **证明核心**：设 $x^* \in \arg\min f$。由 firmly nonexpansive：
+
 $$\|x_{k+1} - x^*\|^2 = \|\text{prox}_{\lambda f}(x_k) - \text{prox}_{\lambda f}(x^*)\|^2 \leq \langle x_k - x^*, x_{k+1} - x^*\rangle$$
 
 展开右边并用 Cauchy-Schwarz：$\|x_{k+1}-x^*\|^2 \leq \|x_k-x^*\| \cdot \|x_{k+1}-x^*\|$
@@ -1131,6 +1162,7 @@ $$f(x) + g(Ax) = f(x) + g(Ax) + \langle y, Ax \rangle - \langle y, Ax \rangle$$
 在 sparse recovery 和 compressed sensing 中，Fenchel 对偶给出了一个强大的理论工具——**对偶证书**。
 
 考虑 LASSO 的最优性条件：$x^*$ 是最优解当且仅当存在对偶变量 $y^*$ 使得：
+
 $$A^\top y^* \in \lambda \partial\|x^*\|_1$$
 
 即 $(A^\top y^*)_i = \lambda\text{sign}(x_i^*)$（$x_i^* \neq 0$ 时）且 $|(A^\top y^*)_i| \leq \lambda$（$x_i^* = 0$ 时）。
@@ -1178,11 +1210,13 @@ Lagrange 对偶是 Fenchel 对偶的特殊情形。把约束 $f_i(x) \leq 0$ 写
 **定义**：设 $\min F(x) = f(x) + g(x)$，$f$ 是 $L$-光滑凸，$g$ 是 proper closed convex。
 
 **Proximal gradient 迭代**：
+
 $$x_{k+1} = \text{prox}_{\eta g}(x_k - \eta \nabla f(x_k))$$
 
 其中 $\eta \leq 1/L$（步长不超过光滑部分的逆 Lipschitz 常数）。
 
 **等价形式**（更容易理解）：
+
 $$x_{k+1} = \arg\min_x \left[ g(x) + \frac{1}{2\eta}\left\|x - (x_k - \eta\nabla f(x_k))\right\|^2 \right]$$
 
 **直觉**：先对 $f$ 做一个梯度步得到中间点 $z_k = x_k - \eta\nabla f(x_k)$，然后对 $g$ 做 prox，把中间点"拉"向使 $g$ 小的方向。
@@ -1196,11 +1230,13 @@ $$x_{k+1} = \arg\min_x \left[ g(x) + \frac{1}{2\eta}\left\|x - (x_k - \eta\nabla
 $$F(x_k) - F(x^*) \leq \frac{L\|x_0 - x^*\|^2}{2k}$$
 
 若 $f$ 还是 $\mu$-强凸，则线性收敛：
+
 $$F(x_k) - F(x^*) \leq (1 - \mu/L)^k (F(x_0) - F(x^*))$$
 
 ### 证明核心步骤 ⭐⭐
 
 **Step 1**：定义 proximal gradient 的"充分下降引理"。设 $p = \text{prox}_{\eta g}(x - \eta\nabla f(x))$。则：
+
 $$F(p) \leq F(x) - \frac{\eta}{2}\left\|\frac{x - p}{\eta}\right\|^2 + \frac{L\eta - 1}{2}\|x - p\|^2/\eta^2 \cdot \eta$$
 
 当 $\eta = 1/L$ 时简化为 $F(p) \leq F(x) - \frac{1}{2L}\|G_L(x)\|^2$，其中 $G_L(x) = L(x - p)$ 是"广义梯度"。
@@ -1212,12 +1248,15 @@ $$F(p) \leq F(x) - \frac{\eta}{2}\left\|\frac{x - p}{\eta}\right\|^2 + \frac{L\e
 ### ISTA 与 FISTA ⭐⭐
 
 **ISTA**（Iterative Shrinkage-Thresholding Algorithm）就是 proximal gradient 在 LASSO 上的特化：
+
 $$x_{k+1} = \text{prox}_{\eta\lambda\|\cdot\|_1}(x_k - \eta A^\top(Ax_k - b)) = S_{\eta\lambda}(x_k - \eta A^\top(Ax_k - b))$$
 
 其中 $S_\tau$ 是软阈值算子。
 
 **FISTA**（Beck-Teboulle 2009）加入 Nesterov 动量：
+
 $$y_{k+1} = x_k + \frac{k-1}{k+2}(x_k - x_{k-1})$$
+
 $$x_{k+1} = \text{prox}_{\eta g}(y_{k+1} - \eta\nabla f(y_{k+1}))$$
 
 收敛率从 $O(1/k)$ 加速到 $O(1/k^2)$——与 Nesterov 加速梯度法一致。
@@ -1253,6 +1292,7 @@ $$x_{k+1} = \text{prox}_{\eta g}(y_{k+1} - \eta\nabla f(y_{k+1}))$$
 ### 问题结构
 
 ADMM 求解以下分裂问题：
+
 $$\min_{x, z} \; f(x) + g(z) \quad \text{s.t. } Ax + Bz = c$$
 
 其中 $f$ 和 $g$ 都是 proper closed convex。
@@ -1262,6 +1302,7 @@ $$\min_{x, z} \; f(x) + g(z) \quad \text{s.t. } Ax + Bz = c$$
 ### Augmented Lagrangian
 
 ADMM 基于增广 Lagrangian：
+
 $$L_\rho(x, z, y) = f(x) + g(z) + y^\top(Ax + Bz - c) + \frac{\rho}{2}\|Ax + Bz - c\|^2$$
 
 其中 $y$ 是对偶变量（Lagrange 乘子），$\rho > 0$ 是惩罚参数。
@@ -1271,19 +1312,25 @@ $$L_\rho(x, z, y) = f(x) + g(z) + y^\top(Ax + Bz - c) + \frac{\rho}{2}\|Ax + Bz 
 ### ADMM 迭代
 
 **Step 1**（$x$-更新）：
+
 $$x_{k+1} = \arg\min_x L_\rho(x, z_k, y_k) = \arg\min_x \left[f(x) + \frac{\rho}{2}\|Ax + Bz_k - c + y_k/\rho\|^2\right]$$
 
 **Step 2**（$z$-更新）：
+
 $$z_{k+1} = \arg\min_z L_\rho(x_{k+1}, z, y_k) = \arg\min_z \left[g(z) + \frac{\rho}{2}\|Ax_{k+1} + Bz - c + y_k/\rho\|^2\right]$$
 
 **Step 3**（$y$-更新 / 对偶上升）：
+
 $$y_{k+1} = y_k + \rho(Ax_{k+1} + Bz_{k+1} - c)$$
 
 ### 缩放形式（更简洁）
 
 定义 $u = y/\rho$（缩放对偶变量），ADMM 变为：
+
 $$x_{k+1} = \text{prox}_{f/\rho}(z_k - u_k) \quad \text{（$A = I, B = -I, c = 0$ 的简化情形）}$$
+
 $$z_{k+1} = \text{prox}_{g/\rho}(x_{k+1} + u_k)$$
+
 $$u_{k+1} = u_k + (x_{k+1} - z_{k+1})$$
 
 **直觉**：$x$ 步优化 $f$（考虑与 $z$ 的一致性），$z$ 步优化 $g$（考虑与 $x$ 的一致性），$u$ 步累积约束违反量。当 $x_k = z_k$ 时达到收敛。
@@ -1319,6 +1366,7 @@ OSQP 求解 QP：$\min \frac{1}{2}x^\top Px + q^\top x$ s.t. $l \leq Ax \leq u$�
 ADMM 的收敛证明的核心步骤依赖 Moreau 分解。考虑 $z$-更新和 $u$-更新的组合：
 
 $$z_{k+1} = \text{prox}_{g/\rho}(x_{k+1} + u_k)$$
+
 $$u_{k+1} = u_k + x_{k+1} - z_{k+1} = (x_{k+1} + u_k) - z_{k+1}$$
 
 由 Moreau 分解：$(x_{k+1} + u_k) = z_{k+1} + u_{k+1}$，即 $z_{k+1} = \text{prox}_{g/\rho}(v)$，$u_{k+1} = \text{prox}_{(g/\rho)^*}(v)$，其中 $v = x_{k+1} + u_k$。
@@ -1352,11 +1400,13 @@ $$u_{k+1} = u_k + x_{k+1} - z_{k+1} = (x_{k+1} + u_k) - z_{k+1}$$
 **多块 ADMM**：原始 ADMM 把问题分成两块（$x$ 和 $z$）。对 $\min \sum_{i=1}^N f_i(x_i)$ s.t. $\sum_i A_i x_i = b$，可以扩展为 $N$ 块。但注意：$N \geq 3$ 时直接推广的多块 ADMM 不一定收敛（Chen et al. 2016 的反例）。需要加 proximal 项或用 Jacobi-ADMM 等变体。
 
 **Linearized ADMM**：当 $x$-更新中的二次子问题不容易精确求解时（如 $A$ 很大），可以线性化 $\frac{\rho}{2}\|Ax - z + u\|^2$ 中的 $A$ 项：
+
 $$x_{k+1} = \text{prox}_{\tau f}(x_k - \tau A^\top(Ax_k - z_k + u_k))$$
 
 这等价于对 $x$ 做 proximal gradient 步，避免了解大型线性系统。
 
 **Consensus ADMM**：对分布式优化 $\min \sum_i f_i(x)$，引入局部副本 $x_i$：
+
 $$\min \sum_i f_i(x_i) \quad \text{s.t. } x_i = z \; (\forall i)$$
 
 ADMM 的 $x_i$-更新可以在各个节点并行执行，$z$-更新是简单的求平均。这是分布式机器学习中 ADMM 应用的基础。
@@ -1395,6 +1445,7 @@ Proximal gradient 和 ADMM 都是**算子分裂**方法的特例。理解统一�
 回顾：凸优化 $\min F(x)$ 等价于求解包含 $0 \in \partial F(x)$。
 
 如果 $F = f + g$（$f$ 光滑，$g$ 非光滑），则 $0 \in \nabla f(x) + \partial g(x)$，即：
+
 $$0 \in (A + B)(x) \quad \text{其中 } A = \nabla f, \; B = \partial g$$
 
 这是一个**单调包含**问题（$A$ 是 Lipschitz 单调的，$B$ 是最大单调的）。
@@ -1410,6 +1461,7 @@ $$0 \in (A + B)(x) \quad \text{其中 } A = \nabla f, \; B = \partial g$$
 当两个算子都是"硬的"（都需要 prox 但没有光滑部分）时，forward-backward 退化为 proximal point。Douglas-Rachford 提供了另一种分裂：
 
 $$y_{k+1} = \text{prox}_g(2\text{prox}_f(x_k) - x_k)$$
+
 $$x_{k+1} = x_k + y_{k+1} - \text{prox}_f(x_k)$$
 
 **与 ADMM 的关系**：ADMM 就是 Douglas-Rachford 应用于对偶问题！具体地，对 $\min f(x) + g(z)$ s.t. $x = z$，ADMM 的对偶形式等价于对对偶函数 $-f^*(-y) - g^*(y)$ 做 Douglas-Rachford 分裂。
@@ -1464,6 +1516,7 @@ GNC 算法（Yang-Carlone 2020）处理 SLAM 中的外点（outlier）：
 在全身控制（WBC）中，接触力必须在摩擦锥内：$\|f_t\| \leq \mu f_n$。这是一个二阶锥约束。
 
 投影到摩擦锥 $\Pi_{\text{SOC}}$ 有闭式解：
+
 $$\Pi_{\text{SOC}}(f_t, f_n) = \begin{cases} (f_t, f_n) & \|f_t\| \leq \mu f_n \\ (0, 0) & \|f_t\| \leq -f_n/\mu \\ \frac{1}{1+\mu^2}\left(f_t(1-\frac{\mu f_n}{\|f_t\|}), f_n + \mu\|f_t\|\right) & \text{otherwise} \end{cases}$$
 
 这个投影操作在每个 ADMM 迭代的 $z$-步中使用，计算量极小（$O(1)$ per contact）。
@@ -1489,6 +1542,7 @@ warm-start 的数学保证来自 proximal 算子的连续性：当问题参数�
 ### Bregman 散度
 
 **定义**：设 $\phi$ 是严格凸可微函数。$\phi$ 生成的 Bregman 散度为：
+
 $$D_\phi(x, y) = \phi(x) - \phi(y) - \langle \nabla\phi(y), x - y \rangle$$
 
 **直觉**：$D_\phi(x, y)$ 是 $\phi(x)$ 与其在 $y$ 处的一阶 Taylor 展开之差——"函数值"减去"线性近似值"。由 $\phi$ 严格凸，这个差总是正的。
@@ -1568,6 +1622,7 @@ $$x_{i,k+1} = \frac{x_{i,k} \exp(-\eta \nabla_i f(x_k))}{\sum_j x_{j,k} \exp(-\e
 $$\frac{1}{2}\|v\|^2 = M_f^\lambda(v) + M_{f^*}^{1/\lambda}\left(\frac{v}{\lambda}\right) \cdot \lambda$$
 
 更精确地写：
+
 $$\frac{1}{2}\|v\|^2 = \left[f(\text{prox}_{\lambda f}(v)) + \frac{1}{2\lambda}\|\text{prox}_{\lambda f}(v) - v\|^2\right] + \lambda\left[f^*\left(\frac{v - \text{prox}_{\lambda f}(v)}{\lambda}\right) + \frac{\lambda}{2}\left\|\frac{v-\text{prox}_{\lambda f}(v)}{\lambda} - \frac{v}{\lambda}\right\|^2\right]$$
 
 这个恒等式把 $\|v\|^2/2$ 分解为两个 Moreau 包络的和——一个在原空间，一个在对偶空间。
@@ -1883,18 +1938,23 @@ def admm_lasso(A, b, lam, rho=1.0, n_iter=100):
 ### 必记的 5 个公式
 
 **1. Fenchel-Young 不等式**：
+
 $$f(x) + f^*(y) \geq \langle x, y \rangle, \quad \text{等号} \Leftrightarrow y \in \partial f(x)$$
 
 **2. Moreau 分解**：
+
 $$v = \text{prox}_f(v) + \text{prox}_{f^*}(v)$$
 
 **3. Proximal resolvent**：
+
 $$p = \text{prox}_f(v) \quad \Leftrightarrow \quad v - p \in \partial f(p)$$
 
 **4. Moreau 包络梯度**：
+
 $$\nabla M_f^\lambda(v) = \frac{1}{\lambda}(v - \text{prox}_{\lambda f}(v))$$
 
 **5. 强凸-光滑对偶**：
+
 $$f \text{ 是 } \mu\text{-强凸} \quad \Leftrightarrow \quad f^* \text{ 是 } \frac{1}{\mu}\text{-光滑}$$
 
 ### 必记的 3 个 prox 闭式

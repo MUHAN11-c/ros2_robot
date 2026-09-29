@@ -1,0 +1,9 @@
+
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#FFFFFF","primaryBorderColor":"#8166B1","primaryTextColor":"#292530","lineColor":"#B39ADE","fontSize":"14px"}}}%%
+flowchart TD
+    A(["取一点 p 与角度 θ"]) --> B[/"构造旋转矩阵 R(θ)"/]
+    B --> C{"比较 p 与 R·p"}
+    C -- "长度不变" --> D["方向转了 θ：正交性的图形证据"]
+    D --> E[/"平移+旋转合成齐次变换 T"/]
+    E --> F["世界系 → 基座 → 末端：变换链逐级右乘"]
+    F --> G(["机体系恒速前进 → 世界系画出圆弧"])

@@ -1,0 +1,9 @@
+
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#FFFFFF","primaryBorderColor":"#8166B1","primaryTextColor":"#292530","lineColor":"#8166B1","fontSize":"14px"}}}%%
+flowchart TD
+    A(["机器人在 1D 走廊，位置未知"]) --> B[/"撒 700 个粒子：假设位置"/]
+    B --> C["机器人走一步<br>粒子们也跟着走一步+抖动"]
+    C --> D["读一次距离传感器 z<br>离观测越近的粒子权重越高"]
+    D --> E{"全部重采样"}
+    E --> F["粒子云收拢到真值附近"]
+    F -- "循环每一步" --> C

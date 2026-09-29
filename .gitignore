@@ -21,3 +21,6 @@ mkdocs.generated.yml
 
 # 站点脚手架参考副本（临时）
 .wiki_ref/
+
+# Mermaid 预渲染工具链（本地 node 依赖，产物已提交 assets/labs/diagrams/）
+scripts/labs/node_modules/

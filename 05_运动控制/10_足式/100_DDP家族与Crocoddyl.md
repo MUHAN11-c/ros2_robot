@@ -93,7 +93,9 @@
 $$\min_{\mathbf{x}_0, \mathbf{u}_0, \mathbf{x}_1, \mathbf{u}_1, \dots, \mathbf{x}_N} \sum_{k=0}^{N-1} l_k(\mathbf{x}_k, \mathbf{u}_k) + l_N(\mathbf{x}_N)$$
 
 $$\text{s.t.} \quad \mathbf{x}_{k+1} = f_k(\mathbf{x}_k, \mathbf{u}_k), \quad k = 0, \dots, N-1$$
+
 $$\quad\quad\quad \mathbf{x}_0 = \mathbf{x}_{\text{init}}$$
+
 $$\quad\quad\quad g_k(\mathbf{x}_k, \mathbf{u}_k) \leq 0 \quad \text{(路径约束)}$$
 
 对于 ANYmal 四足机器人:
@@ -1300,8 +1302,11 @@ ProxDDP 提供第四条路:**增广拉格朗日方法(ALM)嵌入 DDP**。
 **约束 OCP 形式**:
 
 $$\min \sum_{k=0}^{N-1} l_k(\mathbf{x}_k, \mathbf{u}_k) + l_N(\mathbf{x}_N)$$
+
 $$\text{s.t.} \quad \mathbf{x}_{k+1} = f_k(\mathbf{x}_k, \mathbf{u}_k) \quad \text{(动力学)}$$
+
 $$\quad\quad\quad g_k(\mathbf{x}_k, \mathbf{u}_k) = 0 \quad \text{(等式约束)}$$
+
 $$\quad\quad\quad h_k(\mathbf{x}_k, \mathbf{u}_k) \leq 0 \quad \text{(不等式约束)}$$
 
 **增广拉格朗日函数**:

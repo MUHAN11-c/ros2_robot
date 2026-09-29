@@ -1,24 +1,35 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Sakura Robotics Lab · 原创 Logo：樱包雷（灵灯·樱雷意象）+ 机器人关节环 + 电路节点 -->
   <defs>
-    <radialGradient id="rg-bg" cx="34%" cy="26%" r="88%">
-      <stop offset="0%" stop-color="#8b5cf6"/>
-      <stop offset="55%" stop-color="#5b2fbf"/>
-      <stop offset="100%" stop-color="#241245"/>
-    </radialGradient>
-    <linearGradient id="rg-bolt" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#fff6b0"/>
-      <stop offset="100%" stop-color="#e3b341"/>
-    </linearGradient>
-    <linearGradient id="rg-petal" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#ffd7e8"/>
-      <stop offset="100%" stop-color="#f0629b"/>
+    <linearGradient id="lg-petal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F4C8D9"/>
+      <stop offset="100%" stop-color="#D98FAF"/>
     </linearGradient>
   </defs>
-  <circle cx="32" cy="32" r="30" fill="url(#rg-bg)"/>
-  <circle cx="32" cy="32" r="28.5" fill="none" stroke="#e3b341" stroke-width="2" opacity="0.9"/>
-  <path d="M37 11 L21 37 h9 l-3 16 16 -26 h-9 z" fill="url(#rg-bolt)"/>
-  <g fill="url(#rg-petal)">
-    <path d="M48 12 c5 5 5 12 0 16 c-5 -4 -5 -11 0 -16 z" transform="rotate(28 48 20)"/>
-    <path d="M15 39 c5 5 5 12 0 16 c-5 -4 -5 -11 0 -16 z" transform="rotate(-152 15 47)"/>
+
+  <!-- 关节外环：紫环右下开口（可旋转关节） -->
+  <path d="M32 5 A27 27 0 1 0 55.2 20.6" fill="none" stroke="#8166B1" stroke-width="5.5" stroke-linecap="round"/>
+
+  <!-- 五瓣樱花（粉渐变） -->
+  <g fill="url(#lg-petal)" stroke="#C77E9F" stroke-width="1.1">
+    <ellipse cx="32" cy="12.5" rx="5.6" ry="8.2"/>
+    <ellipse cx="32" cy="12.5" rx="5.6" ry="8.2" transform="rotate(72 32 30)"/>
+    <ellipse cx="32" cy="12.5" rx="5.6" ry="8.2" transform="rotate(144 32 30)"/>
+    <ellipse cx="32" cy="12.5" rx="5.6" ry="8.2" transform="rotate(216 32 30)"/>
+    <ellipse cx="32" cy="12.5" rx="5.6" ry="8.2" transform="rotate(288 32 30)"/>
   </g>
+  <!-- 花芯白底金环 -->
+  <circle cx="32" cy="30" r="9.5" fill="#FCFBFE" stroke="#C9A96E" stroke-width="2"/>
+
+  <!-- 中心雷电菱形（樱雷之意） -->
+  <polygon points="32,21.5 38,30 32,38.5 26,30" fill="#9370DB"/>
+  <polygon points="32,25.5 35.2,30 32,34.5 28.8,30" fill="#E8DDF6"/>
+
+  <!-- 电路线：自关节环引出 + 双节点 -->
+  <g stroke="#8166B1" stroke-width="2.4" fill="none" stroke-linecap="round">
+    <path d="M43 43 L52 52 L57 52"/>
+    <path d="M30 51 L30 57"/>
+  </g>
+  <circle cx="57" cy="52" r="2.8" fill="#C9A96E"/>
+  <circle cx="30" cy="57" r="2.8" fill="#D98FAF"/>
 </svg>

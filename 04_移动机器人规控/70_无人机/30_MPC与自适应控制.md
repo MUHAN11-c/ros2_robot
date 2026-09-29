@@ -362,15 +362,19 @@ R = diag(R_thrust,                       ← 推力权重 [1~10]
 $$
 k_1 = f(x_k, u_k)
 $$
+
 $$
 k_2 = f(x_k + \tfrac{\Delta t}{2} k_1, u_k)
 $$
+
 $$
 k_3 = f(x_k + \tfrac{\Delta t}{2} k_2, u_k)
 $$
+
 $$
 k_4 = f(x_k + \Delta t \cdot k_3, u_k)
 $$
+
 $$
 x_{k+1} = x_k + \tfrac{\Delta t}{6}(k_1 + 2k_2 + 2k_3 + k_4)
 $$

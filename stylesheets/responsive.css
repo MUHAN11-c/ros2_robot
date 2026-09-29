@@ -1,0 +1,144 @@
+/* ==========================================================================
+   responsive.css · 响应式：1920 / 1440 / 1024 / 768 / 390
+   ========================================================================== */
+
+/* ---- ≤1920：内容仍居中，侧栏留白增加 ---- */
+@media screen and (min-width: 1600px) {
+  .md-sidebar--primary {
+    margin-left: calc((100vw - 1600px) / 2 - 1rem);
+  }
+}
+
+/* ---- ≤1220（平板横）：收窄 TOC ---- */
+@media screen and (max-width: 76.1875em) {
+  .rt-hero {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding-top: 2.2rem;
+  }
+
+  .rt-hero__desc {
+    margin-inline: auto;
+  }
+
+  .rt-hero__actions {
+    justify-content: center;
+  }
+
+  .rt-hero__mascot {
+    order: -1;
+  }
+
+  .rt-hero__mascot img {
+    width: 200px;
+  }
+
+  .rt-header-links {
+    display: none;
+  }
+}
+
+/* ---- ≤76.1875em：Material 抽屉模式（确定性闭态，打开仍由 Drawer 控件驱动） ---- */
+@media screen and (max-width: 76.1875em) {
+  [data-md-toggle="drawer"]:not(:checked) ~ .md-container .md-sidebar--primary {
+    transform: translateX(-12.1rem);
+    visibility: hidden;
+  }
+
+  .md-sidebar--secondary[hidden] {
+    display: none;
+  }
+}
+
+/* ---- ≤768（平板/手机横） ---- */
+@media screen and (max-width: 48em) {
+  .md-header__inner {
+    padding-inline: 0.7rem;
+  }
+
+  .md-content__inner {
+    padding: 0 1rem 2rem;
+  }
+
+  .rt-hero {
+    padding: 1.8rem 1rem 1.6rem;
+  }
+
+  .rt-hero__title {
+    font-size: 1.9rem;
+  }
+
+  .rt-hero__title-sub {
+    font-size: 1.1rem;
+  }
+
+  .rt-hero__mascot img {
+    width: 160px;
+  }
+
+  .rt-quick,
+  .rt-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .rt-paths {
+    grid-template-columns: 1fr;
+  }
+
+  .rt-home-section {
+    padding: 1.1rem 1rem;
+  }
+
+  /* 表格与公式横向滚动 */
+  .md-typeset .md-typeset__scroll-wrap,
+  .md-typeset table:not([class]) {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .md-typeset .arithmatex {
+    overflow-x: auto;
+  }
+
+  /* 面包屑过长时间行省略 */
+  .rt-breadcrumb {
+    max-height: 2.2em;
+    overflow: hidden;
+  }
+
+  /* 代码块 padding 收紧 */
+  .md-typeset pre {
+    padding-top: 2rem;
+  }
+}
+
+/* ---- ≤390（小手机） ---- */
+@media screen and (max-width: 390px) {
+  .rt-hero__title {
+    font-size: 1.6rem;
+  }
+
+  .rt-hero__mascot img {
+    width: 132px;
+  }
+
+  .md-typeset {
+    font-size: 0.76rem;
+  }
+}
+
+/* ---- 打印：纯内容 ---- */
+@media print {
+  .md-header,
+  .md-sidebar,
+  .md-footer,
+  .rt-progress,
+  .rt-header-links {
+    display: none !important;
+  }
+
+  .md-content__inner {
+    max-width: none;
+  }
+}

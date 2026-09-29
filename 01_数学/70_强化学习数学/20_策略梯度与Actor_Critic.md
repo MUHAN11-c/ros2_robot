@@ -398,7 +398,9 @@ $$
    这意味着好动作的 $A>0$ 一定被坏动作的 $A<0$ 平衡。策略梯度用 $A$ 加权时，好动作概率增加、坏动作概率减少——实现**相对评价**。
 
 2. **与策略改进的关系**：Policy Improvement Theorem 可以用 $A$ 重写为：
-   $$J(\pi') - J(\pi) = \frac{1}{1-\gamma}\mathbb{E}_{s\sim d^{\pi'}, a\sim\pi'}[A^\pi(s,a)]$$
+
+   $J(\pi') - J(\pi) = \frac{1}{1-\gamma}\mathbb{E}_{s\sim d^{\pi'}, a\sim\pi'}[A^\pi(s,a)]$
+
    只要新策略在每个状态下的 advantage 期望非负，就保证改进。
 
 3. **方差优于 $Q$**：用 $A$ 代替 $Q$ 做 PG 权重，减去了 $V(s)$ 这个与 $a$ 无关的部分，降低了梯度估计的方差。
@@ -431,6 +433,7 @@ $$
 $$
 \hat A_t^{(1)} = \delta_t
 $$
+
 $$
 \hat A_t^{(2)} = \delta_t + \gamma\delta_{t+1}
 $$
@@ -442,12 +445,15 @@ $$
 $$
 
 **证明 2-step 情况**：
+
 $$
 \hat A_t^{(2)} = r_t + \gamma r_{t+1} + \gamma^2 V(s_{t+2}) - V(s_t)
 $$
+
 $$
 = [r_t + \gamma V(s_{t+1}) - V(s_t)] + \gamma[r_{t+1} + \gamma V(s_{t+2}) - V(s_{t+1})]
 $$
+
 $$
 = \delta_t + \gamma\delta_{t+1} \quad\checkmark
 $$
@@ -1033,11 +1039,13 @@ $$
 **软更新**：$\theta^- \leftarrow \tau\theta + (1-\tau)\theta^-$，$\tau \approx 0.001-0.005$（与 DQN 的硬更新不同）。
 
 **Actor 更新**（确定性策略梯度）：
+
 $$
 \nabla_\theta J \approx \frac{1}{N}\sum_i \nabla_a Q_\psi(s,a)|_{a=\mu_\theta(s_i)} \cdot \nabla_\theta \mu_\theta(s_i)
 $$
 
 **Critic 更新**（TD 学习）：
+
 $$
 L(\psi) = \frac{1}{N}\sum_i (Q_\psi(s_i,a_i) - y_i)^2, \quad y_i = r_i + \gamma Q_{\psi^-}(s_{i+1}, \mu_{\theta^-}(s_{i+1}))
 $$
@@ -1239,7 +1247,9 @@ $\mathcal{H}_{\text{target}}$ 通常设为 $-\dim(\mathcal{A})$（每个动作�
 
 > ⚠️ **SAC 的 $\tanh$ squashing Jacobian 陷阱**：
 > 由于 $a = \tanh(u)$，对数概率需要修正：
-> $$\log\pi(a|s) = \log\pi_{\text{pre}}(u|s) - \sum_{i=1}^d \log(1-\tanh^2(u_i))$$
+> 
+> $\log\pi(a|s) = \log\pi_{\text{pre}}(u|s) - \sum_{i=1}^d \log(1-\tanh^2(u_i))$
+> 
 > 忘记这个 Jacobian 修正是最常见的 SAC 实现 bug。
 
 ### §11.6 与变分推断的统一视角 ⭐⭐⭐⭐
@@ -1786,6 +1796,7 @@ REINFORCE 估计：$\hat g = (a-\theta) \cdot (-a^2)$，其中 $a\sim\mathcal{N}
 $$
 \mathbb{E}[\hat g] = -\mathbb{E}[\epsilon(\theta+\epsilon)^2] = -\mathbb{E}[\epsilon\theta^2 + 2\epsilon^2\theta + \epsilon^3]
 $$
+
 $$
 = -(\theta^2\cdot 0 + 2\theta\cdot 1 + 0) = -2\theta = \nabla_\theta J \quad\checkmark
 $$

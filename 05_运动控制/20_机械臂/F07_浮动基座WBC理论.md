@@ -412,6 +412,7 @@ $$\sqrt{f_{c,x}^2 + f_{c,y}^2} \leq \mu f_{c,z}, \quad f_{c,z} \geq 0$$
 > 角度 2（优化）：把二阶锥约束替换为线性不等式约束，将 SOCP 降级为 QP，换取了更快的求解速度。此处 4 面金字塔 $|f_x| \leq \mu f_z$、$|f_y| \leq \mu f_z$ 是圆锥 $\sqrt{f_x^2 + f_y^2} \leq \mu f_z$ 的**外逼近**（可行域更大，非保守），允许的最大切向力为 $\mu\sqrt{2} f_z$（对角方向超出圆锥约束）。它不能作为"保证不滑"的保守约束来解释。
 >
 > 若需要**内逼近**（保守，保证线性约束内的力一定落在真实圆锥内），工程上常用 $|f_x| + |f_y| \leq \mu f_z$，写成 4 个线性面：
+> 
 > $$
 > \begin{bmatrix}
 >  1 &  1 & -\mu \\
@@ -420,6 +421,7 @@ $$\sqrt{f_{c,x}^2 + f_{c,y}^2} \leq \mu f_{c,z}, \quad f_{c,z} \geq 0$$
 > -1 & -1 & -\mu
 > \end{bmatrix} f_c \leq 0, \quad f_{min} \leq f_z \leq f_{max}
 > $$
+> 
 > 等价的简化做法是在外逼近公式里使用 $\mu_{eff}=\mu/\sqrt{2}$。工程中常见"外逼近 + 降低 $\mu$"是经验安全裕度，不是数学上的保守近似。
 
 ### Pinocchio 计算流完整示例
@@ -638,6 +640,7 @@ $$\ddot{x}_{ref,i} = \ddot{x}_{ff,i} + K_{p,i}(x_{d,i} - x_i) + K_{d,i}(\dot{x}_
 **加权 QP（Weighted QP / Soft Priority）**：
 
 $$\min_z \sum_{i=1}^{N} w_i \|J_i \dot{v} - b_i\|^2 + \text{regularization}$$
+
 $$\text{s.t. } A_{eq} z = b_{eq}, \quad A_{ineq} z \leq b_{ineq}$$
 
 所有任务通过权重 $w_i$ "软竞争"。$w_i$ 越大，任务 $i$ 越优先。
@@ -835,7 +838,9 @@ $$|f_{i,x}| \leq \mu f_{i,z}, \quad |f_{i,y}| \leq \mu f_{i,z}, \quad f_{i,z} \g
 这是 4 组线性不等式（每组 5 个，共 20 个）。ZMP 约束呢？**自动满足了**。
 
 > **本质洞察**：当所有 4 个顶点的法向力 $f_{i,z} \geq 0$ 时，ZMP 自动落在 4 个顶点的凸包（即足底矩形）内。这是因为 ZMP 是 4 个顶点按法向力加权的重心：
-> $$\text{ZMP}_x = \frac{\sum_i p_{i,x} f_{i,z}}{\sum_i f_{i,z}}, \quad \text{ZMP}_y = \frac{\sum_i p_{i,y} f_{i,z}}{\sum_i f_{i,z}}$$
+> 
+> $\text{ZMP}_x = \frac{\sum_i p_{i,x} f_{i,z}}{\sum_i f_{i,z}}, \quad \text{ZMP}_y = \frac{\sum_i p_{i,y} f_{i,z}}{\sum_i f_{i,z}}$
+> 
 > 凸组合的结果必然在凸包内。所以 $f_{i,z} \geq 0$ **隐式地保证了 ZMP 约束**。
 
 **代价是什么？** 决策变量从 6D 增加到 12D。但线性约束比非线性约束快得多，这个 trade-off 是划算的。
@@ -1277,6 +1282,7 @@ $$\tau = J^T\left(\Lambda\ddot{x}_d + \mu + p + K_d e_x + D_d \dot{e}_x\right), 
 **WBC 加权 QP**（浮动基座、多任务；下面取固定基座单任务情形做对比）：
 
 $$\min_{\dot{v}, \tau, f_c} \|J\dot{v} + \dot{J}v - \ddot{x}_{ref}\|^2 + w_\tau \|\tau\|^2$$
+
 $$\text{s.t. } M\dot{v} + h = S^T\tau + J_c^T f_c$$
 
 其中 $\ddot{x}_{ref} = K_p e_x + K_d \dot{e}_x + \ddot{x}_d$（PD 加速度参考）。
@@ -1298,6 +1304,7 @@ $$L = \|J\ddot{q} + \dot{J}\dot{q} - \ddot{x}_{ref}\|^2 + \lambda^T(M\ddot{q} + 
 对 $\ddot{q}$ 和 $\tau$ 分别求导，令梯度为零：
 
 $$\nabla_{\ddot{q}} L = 2J^T(J\ddot{q} + \dot{J}\dot{q} - \ddot{x}_{ref}) + M^T\lambda = 0$$
+
 $$\nabla_{\tau} L = -\lambda = 0 \implies \lambda = 0$$
 
 代入第一个方程，$J^T(J\ddot{q} + \dot{J}\dot{q} - \ddot{x}_{ref}) = 0$。这意味着 $\ddot{q}$ 使得任务误差在 $J$ 列空间上被消除——即 $\ddot{q} = J^+(\ddot{x}_{ref} - \dot{J}\dot{q})$。

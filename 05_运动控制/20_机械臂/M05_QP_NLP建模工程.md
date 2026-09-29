@@ -222,8 +222,11 @@ $$x_{\text{lb}} \leq x_t \leq x_{\text{ub}} \quad (\text{状态限制，不等�
 **二次规划（QP）**——目标函数是二次的，约束是线性的：
 
 $$\min_x \frac{1}{2} x^T P x + q^T x$$
+
 $$\text{s.t.} \quad Ax = b \quad (\text{等式约束})$$
+
 $$\quad Gx \leq h \quad (\text{不等式约束})$$
+
 $$\quad lb \leq x \leq ub \quad (\text{边界约束})$$
 
 其中 $P \in \mathbb{R}^{n \times n}$ 是对称半正定矩阵（Hessian），$q \in \mathbb{R}^n$ 是线性项，$A \in \mathbb{R}^{m_e \times n}$ 是等式约束矩阵，$G \in \mathbb{R}^{m_i \times n}$ 是不等式约束矩阵。
@@ -231,8 +234,11 @@ $$\quad lb \leq x \leq ub \quad (\text{边界约束})$$
 **非线性规划（NLP）**——目标函数和约束都可以是非线性的：
 
 $$\min_x f(x)$$
+
 $$\text{s.t.} \quad g(x) = 0$$
+
 $$\quad h(x) \leq 0$$
+
 $$\quad lb \leq x \leq ub$$
 
 QP 是 NLP 的特殊情况（线性约束 + 二次目标）。正因如此，QP 有专门的高效算法——利用了二次+线性的结构，比通用 NLP 算法快 1-2 个数量级。
@@ -265,9 +271,13 @@ QP 是 NLP 的特殊情况（线性约束 + 二次目标）。正因如此，QP 
 对于带约束的优化问题，最优解必须满足 **Karush-Kuhn-Tucker（KKT）条件**：
 
 $$\nabla f(x^*) + A^T \lambda^* + G^T \mu^* = 0 \quad (\text{驻点条件})$$
+
 $$Ax^* = b \quad (\text{等式约束原始可行性})$$
+
 $$Gx^* \leq h \quad (\text{不等式约束原始可行性})$$
+
 $$\mu^* \geq 0 \quad (\text{对偶可行性})$$
+
 $$\mu_i^* (Gx^* - h)_i = 0 \quad (\text{互补松弛条件})$$
 
 互补松弛条件是关键：它说的是"每个不等式约束要么取等（$\mu > 0$，约束活跃），要么松弛（$\mu = 0$，约束不活跃）"。这个条件引入了**组合复杂性**——$m$ 个不等式约束有 $2^m$ 种可能的活跃组合，这正是 QP 求解的核心困难。
@@ -1669,7 +1679,9 @@ Eigen::VectorXd solveIKQP(
 $$\min_{\ddot{q}, f} \frac{1}{2}\|J_{task}\ddot{q} + \dot{J}_{task}\dot{q} - a_{des}\|^2 + \frac{w_f}{2}\|f\|^2$$
 
 $$\text{s.t.} \quad J_c\ddot{q} + \dot{J}_c\dot{q} = 0 \quad (\text{无滑移接触})$$
+
 $$\quad \tau_{min} \leq \tau(\ddot q,f) \leq \tau_{max} \quad (\text{力矩限})$$
+
 $$\quad |f_{tangent}| \leq \mu f_{normal} \quad (\text{摩擦锥})$$
 
 其中力矩不是独立优化变量，而是求解后的派生量：

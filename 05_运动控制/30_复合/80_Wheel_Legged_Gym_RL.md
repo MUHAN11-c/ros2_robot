@@ -1032,6 +1032,7 @@ MPC 在上层做轨迹规划（输出目标速度、步态参数），RL 策略�
 $$
 v_{cmd}, \text{gait\_params} = \text{MPC}(x_{state}, x_{goal}) \tag{78.28}
 $$
+
 $$
 a_t = \pi_\theta(o_t, v_{cmd}, \text{gait\_params}) \tag{78.29}
 $$
@@ -1043,6 +1044,7 @@ RL 策略在上层输出"意图"（如期望的运动方向和速度），MPC �
 $$
 \text{intent} = \pi_\theta(o_t) \tag{78.30}
 $$
+
 $$
 a_t = \text{MPC}(\text{intent}, \text{constraints}) \tag{78.31}
 $$

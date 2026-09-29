@@ -1434,6 +1434,7 @@ $$
 $$
 \text{for each step } t: \quad a_t^S = \pi_S(o_t), \quad a_t^T = \pi_T(o_t, e_t)
 $$
+
 $$
 \mathcal{L}_{\text{online}} = \| a_t^S - a_t^T \|^2
 $$

@@ -1,0 +1,142 @@
+/* ==========================================================================
+   Sakura Robotics Lab · Design Tokens
+   樱雷机器人研习社 — 原创 Sakure-Electro 视觉系统
+   原则：专业性 80% · 品牌视觉 20%；低刺激、可长期阅读
+   ========================================================================== */
+
+:root {
+  /* ---- 布局令牌 ---- */
+  --rt-header-height: 64px;
+  --rt-content-width: 860px;
+  --rt-sidebar-width: 16.5rem;
+  --rt-toc-width: 13.5rem;
+  --rt-radius-sm: 6px;
+  --rt-radius-md: 8px;
+  --rt-radius-lg: 12px;
+  --rt-shadow-sm: 0 1px 2px rgba(41, 37, 48, 0.06);
+  --rt-shadow-md: 0 4px 16px rgba(41, 37, 48, 0.1);
+  --rt-transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ---- 品牌色（主题无关的中间值） ---- */
+  --rt-gold: #C9A96E;
+  --rt-gold-soft: #E3D2AC;
+  --rt-sakura: #EFAFC5;
+  --rt-electro: #9370DB;
+
+  /* ---- 代码块：双主题统一深色（Stripe Docs 式） ---- */
+  --rt-code-bg: #282531;
+  --rt-code-header: #211E2A;
+  --rt-code-fg: #E6E1EE;
+  --rt-code-border: #393340;
+
+  /* ---- 语义色（admonition 用，全部低饱和） ---- */
+  --rt-green: #6FA57C;
+  --rt-green-bg: rgba(111, 165, 124, 0.09);
+  --rt-red: #C97B7B;
+  --rt-red-bg: rgba(201, 123, 123, 0.09);
+  --rt-blue: #7B8FA6;
+  --rt-blue-bg: rgba(123, 143, 166, 0.09);
+  --rt-teal: #5FA8A0;
+  --rt-teal-bg: rgba(95, 168, 160, 0.09);
+}
+
+/* ===================== Light Theme · 樱昼 ===================== */
+[data-md-color-scheme="default"] {
+  --rt-bg-primary: #FCFBFE;
+  --rt-bg-secondary: #F7F4FA;
+  --rt-surface: #FFFFFF;
+  --rt-surface-soft: #FAF7FD;
+  --rt-text-primary: #292530;
+  --rt-text-secondary: #6C6574;
+  --rt-border: #E8E1ED;
+
+  --rt-primary: #8166B1;
+  --rt-primary-light: #B39ADE;
+  --rt-primary-soft: rgba(129, 102, 177, 0.08);
+  --rt-secondary: #D98FAF;
+  --rt-secondary-light: #F4C8D9;
+  --rt-secondary-soft: rgba(217, 143, 175, 0.1);
+  --rt-gold-soft: rgba(201, 169, 110, 0.12);
+  --rt-header-bg: rgba(252, 251, 254, 0.88);
+  --rt-warning: #B08D4F;
+  --rt-warning-bg: rgba(201, 169, 110, 0.1);
+
+  /* Material 变量映射 */
+  --md-default-bg-color: #FCFBFE;
+  --md-default-fg-color: #292530;
+  --md-default-fg-color--light: #6C6574;
+  --md-default-fg-color--lighter: #9A93A3;
+  --md-primary-fg-color: #8166B1;
+  --md-primary-fg-color--light: #B39ADE;
+  --md-primary-fg-color--dark: #6B529B;
+  --md-primary-bg-color: #FCFBFE;
+  --md-accent-fg-color: #9370DB;
+  --md-typeset-a-color: #8166B1;
+  --md-code-bg-color: var(--rt-code-bg);
+  --md-code-fg-color: #E6E1EE;
+  --md-code-fg-color--light: #B9B1C0;
+  --md-footer-bg: #F7F4FA;
+  --md-footer-fg-color: #292530;
+  --md-footer-fg-color--light: #6C6574;
+  --md-shadow-z1: 0 1px 2px rgba(41, 37, 48, 0.06);
+  --md-shadow-z2: 0 4px 16px rgba(41, 37, 48, 0.1);
+}
+
+/* ===================== Dark Theme · 雷夜 ===================== */
+[data-md-color-scheme="slate"] {
+  --rt-bg-primary: #17151C;
+  --rt-bg-secondary: #1D1A23;
+  --rt-surface: #24202B;
+  --rt-surface-soft: #2A2531;
+  --rt-text-primary: #EEEAF2;
+  --rt-text-secondary: #B9B1C0;
+  --rt-border: #393340;
+
+  --rt-primary: #A88BD8;
+  --rt-primary-light: #C4B1E8;
+  --rt-primary-soft: rgba(168, 139, 216, 0.1);
+  --rt-secondary: #DE9FBA;
+  --rt-secondary-light: #EFC6D6;
+  --rt-secondary-soft: rgba(222, 159, 186, 0.12);
+  --rt-gold-soft: rgba(201, 169, 110, 0.14);
+  --rt-header-bg: rgba(23, 21, 28, 0.9);
+  --rt-warning: #C9A96E;
+  --rt-warning-bg: rgba(201, 169, 110, 0.12);
+
+  /* Material 变量映射 */
+  --md-default-bg-color: #17151C;
+  --md-default-fg-color: #EEEAF2;
+  --md-default-fg-color--light: #B9B1C0;
+  --md-default-fg-color--lighter: #8A8394;
+  --md-primary-fg-color: #A88BD8;
+  --md-primary-fg-color--light: #C4B1E8;
+  --md-primary-fg-color--dark: #8F74BF;
+  --md-primary-bg-color: #17151C;
+  --md-accent-fg-color: #DE9FBA;
+  --md-typeset-a-color: #A88BD8;
+  --md-code-bg-color: var(--rt-code-bg);
+  --md-code-fg-color: #E6E1EE;
+  --md-code-fg-color--light: #B9B1C0;
+  --md-footer-bg: #1D1A23;
+  --md-footer-fg-color: #EEEAF2;
+  --md-footer-fg-color--light: #B9B1C0;
+  --md-shadow-z1: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --md-shadow-z2: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* ---- 代码高亮：金/紫/粉低饱和系（双主题统一，因代码底恒为深色） ---- */
+:root {
+  --md-code-hl-color: rgba(147, 112, 219, 0.22);
+  --md-code-hl-number-color: #D9BE8A;
+  --md-code-hl-string-color: #8FC6B2;
+  --md-code-hl-keyword-color: #DE9FBA;
+  --md-code-hl-function-color: #B39ADE;
+  --md-code-hl-constant-color: #D9BE8A;
+  --md-code-hl-class-color: #8FB8D0;
+  --md-code-hl-special-color: #D98FAF;
+  --md-code-hl-operator-color: #B9B1C0;
+  --md-code-hl-punctuation-color: #B9B1C0;
+  --md-code-hl-comment-color: #8A8394;
+  --md-code-hl-generic-color: #C4B1E8;
+  --md-code-hl-variable-color: #E6E1EE;
+}

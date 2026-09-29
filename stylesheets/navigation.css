@@ -1,0 +1,189 @@
+/* ==========================================================================
+   navigation.css · 侧边栏层级 / 激活态 / 图标 / 搜索
+   Sidebar 是本站最重要的 UI：一级分组醒目，二三级递减视觉权重
+   ========================================================================== */
+
+/* ---- 一级分组标题（如「数学：从零到前沿」） ---- */
+
+.md-nav__item--nested > .md-nav__link,
+.md-nav__item--nested > label.md-nav__link {
+  margin-top: 0.9em;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--rt-text-primary);
+}
+
+.md-nav__item--nested > .md-nav__link:hover,
+.md-nav__item--nested > label.md-nav__link:hover {
+  color: var(--rt-primary);
+}
+
+/* 分组图标（app.js 注入 .rt-nav-ico） */
+.rt-nav-ico {
+  display: inline-flex;
+  width: 1.05em;
+  height: 1.05em;
+  margin-right: 0.4em;
+  vertical-align: -0.18em;
+}
+
+.rt-nav-ico svg {
+  width: 100%;
+  height: 100%;
+  stroke: var(--rt-primary);
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ---- 二级条目 ---- */
+
+.md-nav__item .md-nav__link {
+  font-size: 0.72rem;
+  color: var(--rt-text-secondary);
+  border-radius: var(--rt-radius-sm);
+  margin-top: 1px;
+  transition: color var(--rt-transition), background var(--rt-transition);
+}
+
+.md-nav__item .md-nav__link:hover {
+  color: var(--rt-primary);
+  background: var(--rt-primary-soft);
+}
+
+/* ---- 三级及更深：降低视觉权重 ---- */
+
+.md-nav__item .md-nav__item .md-nav__link {
+  font-size: 0.69rem;
+  color: var(--rt-text-secondary);
+  opacity: 0.85;
+}
+
+/* ---- Active 条目：3px 主色左侧条 + 浅紫底 + 主色文字 ---- */
+
+.md-nav__link[data-md-state="active"],
+.md-nav__link--active {
+  position: relative;
+  color: var(--rt-primary) !important;
+  font-weight: 600;
+  background: var(--rt-primary-soft);
+  border-radius: var(--rt-radius-sm);
+}
+
+.md-nav__link--active::before,
+.md-nav__link[data-md-state="active"]::before {
+  content: "";
+  position: absolute;
+  left: -0.4rem;
+  top: 15%;
+  bottom: 15%;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--rt-primary);
+}
+
+/* 已读标记（LocalStorage，app.js 注入 .is-visited） */
+.md-nav__link.is-visited .md-ellipsis::after,
+.rt-catalog a.is-visited::after {
+  content: "✓";
+  display: inline-block;
+  margin-left: 0.35em;
+  font-size: 0.85em;
+  color: var(--rt-green);
+}
+
+/* ---- 右侧 TOC：「本页目录」+ Scroll Spy ---- */
+
+.md-sidebar--secondary .md-nav__title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--rt-text-primary);
+}
+
+.md-nav__list .md-nav__link {
+  font-size: 0.68rem;
+  border-left: 2px solid transparent;
+  border-radius: 0 var(--rt-radius-sm) var(--rt-radius-sm) 0;
+  padding-left: 0.7rem;
+}
+
+.md-nav__list .md-nav__link:hover {
+  border-left-color: var(--rt-border);
+}
+
+.md-nav__list .md-nav__link--active,
+.md-nav__list .md-nav__link[data-md-state="active"] {
+  color: var(--rt-primary);
+  border-left-color: var(--rt-primary);
+  background: none;
+}
+
+.md-nav__list .md-nav__link--active::before {
+  display: none;
+}
+
+/* ---- 搜索框：桌面 360px ---- */
+
+.md-search__form {
+  background: var(--rt-surface-soft);
+  border: 1px solid var(--rt-border);
+  border-radius: var(--rt-radius-sm);
+  transition: border-color var(--rt-transition), box-shadow var(--rt-transition);
+}
+
+.md-search__form:hover {
+  border-color: var(--rt-primary-light);
+}
+
+.md-search__form:focus-within {
+  border-color: var(--rt-primary);
+  box-shadow: 0 0 0 3px var(--rt-primary-soft);
+}
+
+.md-search__input {
+  background: transparent;
+  color: var(--rt-text-primary);
+}
+
+.md-search__input::placeholder {
+  color: var(--rt-text-secondary);
+}
+
+.md-search__icon {
+  color: var(--rt-text-secondary);
+}
+
+/* 搜索结果：标题 + 所属 + 摘要分层 */
+.md-search-result__item {
+  border-radius: var(--rt-radius-sm);
+}
+
+.md-search-result__link:hover {
+  background: var(--rt-primary-soft);
+}
+
+.md-search-result__title {
+  font-weight: 600;
+  color: var(--rt-text-primary);
+}
+
+.md-search-result__article > .md-search-result__teaser {
+  color: var(--rt-text-secondary);
+}
+
+.md-search-result__teaser mark {
+  background: var(--rt-secondary-soft);
+  color: var(--rt-secondary);
+  text-decoration: none;
+}
+
+/* 搜索弹层 */
+.md-search {
+  --md-search-result-icon: var(--rt-primary);
+}
+
+.md-search__suggest {
+  color: var(--rt-text-secondary);
+}

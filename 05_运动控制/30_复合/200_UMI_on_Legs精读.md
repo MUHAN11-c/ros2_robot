@@ -249,9 +249,11 @@ $$q(\mathbf{a}_t | \mathbf{a}_{t-1}) = \mathcal{N}(\mathbf{a}_t;\ \sqrt{1 - \bet
 定义 $\alpha_t = 1 - \beta_t$，$\bar{\alpha}_t = \prod_{s=1}^{t} \alpha_s$。
 
 **Step 1**: 写出一步转移：
+
 $$\mathbf{a}_t = \sqrt{\alpha_t}\, \mathbf{a}_{t-1} + \sqrt{1 - \alpha_t}\, \boldsymbol{\epsilon}_{t-1}, \quad \boldsymbol{\epsilon}_{t-1} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})$$
 
 **Step 2**: 递归展开两步：
+
 $$\mathbf{a}_t = \sqrt{\alpha_t}\left(\sqrt{\alpha_{t-1}}\, \mathbf{a}_{t-2} + \sqrt{1-\alpha_{t-1}}\, \boldsymbol{\epsilon}_{t-2}\right) + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}_{t-1}$$
 
 $$= \sqrt{\alpha_t \alpha_{t-1}}\, \mathbf{a}_{t-2} + \underbrace{\sqrt{\alpha_t(1-\alpha_{t-1})}\, \boldsymbol{\epsilon}_{t-2} + \sqrt{1-\alpha_t}\, \boldsymbol{\epsilon}_{t-1}}_{\text{两个独立高斯的和}}$$
