@@ -220,6 +220,9 @@
     mascotImg.setAttribute("tabindex", "0");
     mascotImg.setAttribute("aria-label", "戳一下紫樱，有惊喜");
     mascotImg.addEventListener("click", livingReact);
+    /* 反应气泡本身也可点击换一张（气泡覆盖在贴纸上方时会拦截点击） */
+    var reactBox = document.getElementById("rt-mascot-react");
+    if (reactBox) reactBox.addEventListener("click", livingReact);
     mascotImg.addEventListener("keydown", function (ev) {
       if (ev.key === "Enter" || ev.key === " ") {
         ev.preventDefault();

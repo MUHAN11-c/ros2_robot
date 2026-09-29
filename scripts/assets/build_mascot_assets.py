@@ -193,22 +193,28 @@ def main():
     for size, limit in ((512, 80 * 1024), (128, 20 * 1024), (64, 8 * 1024)):
         a = face.resize((size, size), Image.LANCZOS)
         save_webp(a, OUT / f"avatar-{size}.webp", limit, start_q=92)
-    # 4) 贴纸池（全卡司导出，供点击反应随机调用）
+    # 4) 贴纸池（干净单贴导出，供点击反应随机调用）
     pool = OUT / "pool"
     pool.mkdir(exist_ok=True)
-    n_pool = 0
-    for name, crop in stickers.items():
-        if name.startswith("manual"):
-            continue
+    # 只收干净单贴：近方形（0.62-1.5）、足够大（排除整包合并块/文字条/合并对）
+    clean = [
+        (name, crop) for name, crop in stickers.items()
+        if not name.startswith("manual")
+        and 0.62 <= crop.width / crop.height <= 1.5
+        and min(crop.size) >= 140
+    ]
+    keep = set()
+    for name, crop in clean:
         th = crop.copy()
         th.thumbnail((112, 112), Image.LANCZOS)
         save_webp(th, pool / f"{name}.webp", 10 * 1024)
-        n_pool += 1
-    print(f"  贴纸池 {n_pool} 张 → assets/mascots/pool/")
-    (pool / "manifest.json").write_text(
-        json.dumps(sorted(f"{s}.webp" for s in stickers if not s.startswith("manual"))),
-        encoding="utf-8",
-    )
+        keep.add(f"{name}.webp")
+    # 清理陈旧文件（过滤规则变化后不再入选的）
+    for old_file in pool.glob("*.webp"):
+        if old_file.name not in keep:
+            old_file.unlink()
+    (pool / "manifest.json").write_text(json.dumps(sorted(keep)), encoding="utf-8")
+    print(f"  贴纸池 {len(keep)} 张 → assets/mascots/pool/")
 
     fav = Image.new("RGBA", (64, 64), (25, 22, 30, 255))
     fav.alpha_composite(face.resize((64, 64), Image.LANCZOS))

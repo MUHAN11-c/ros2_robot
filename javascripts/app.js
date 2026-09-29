@@ -48,8 +48,9 @@
       document.addEventListener("keydown", function (event) {
         if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
           event.preventDefault();
-          var el = document.querySelector(".md-search__form") ||
-                   document.querySelector("[data-md-component='search']");
+          var el = document.querySelector("label.md-search__icon") ||
+                   document.querySelector(".md-search__icon") ||
+                   document.querySelector(".md-search__form");
           if (el) el.click();
           var input = document.querySelector(".md-search__input");
           if (input) input.focus();

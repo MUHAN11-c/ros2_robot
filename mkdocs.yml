@@ -46,6 +46,9 @@ theme:
         icon: material/weather-sunny
         name: 切换到浅色模式
 
+hooks:
+  - scripts/override_404_hook.py
+
 plugins:
   - search:
       lang:
