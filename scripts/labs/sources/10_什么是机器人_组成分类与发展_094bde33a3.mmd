@@ -1,0 +1,8 @@
+
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#FFFFFF","primaryBorderColor":"#8166B1","primaryTextColor":"#292530","lineColor":"#8166B1","fontSize":"14px"}}}%%
+flowchart LR
+    S(["① 感知 · 传感器<br/>相机 / 雷达 / IMU / 编码器"]) -- "原始数据" --> E["② 状态估计<br/>我在哪？"]
+    E -- "位姿 / 地图" --> P2["③ 决策规划<br/>该怎么走？"]
+    P2 -- "轨迹" --> C["④ 控制<br/>怎么跟上"]
+    C -- "力矩 / 转速" --> A(["执行器<br/>电机 / 液压 / 舵机"])
+    A -. "⑤ 闭环反馈：机器人真的动了，世界变了，重新感知（物理世界）" .-> S

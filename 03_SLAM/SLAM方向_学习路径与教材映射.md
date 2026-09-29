@@ -1,6 +1,7 @@
 # SLAM 方向学习路径与教材映射
 
 <div class="rt-chapter-header">
+<img class="rt-chapter-header__avatar" src="../assets/mascots/mod-slam.webp" alt="">
 <div class="rt-chapter-header__top">
 <span class="rt-chapter-header__code">MODULE 03 · SLAM</span>
 <span class="rt-chapter-header__tagline">从零理解定位与建图</span>

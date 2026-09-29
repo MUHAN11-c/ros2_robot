@@ -1,0 +1,16 @@
+
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#FFFFFF","primaryBorderColor":"#8166B1","primaryTextColor":"#292530","lineColor":"#8166B1","fontSize":"14px"}}}%%
+flowchart LR
+    subgraph S[" 07 机器人学导论（本目录） "]
+        direction LR
+        A["10 什么是机器人<br/>全景认知"]
+        B["20 空间描述与坐标变换"]
+        C["30 机械臂正运动学"]
+        D["40 ROS2 初体验"]
+    end
+    B --> P1["03 SLAM<br/>坐标变换是它的母语"]
+    B --> P2["04 移动机器人规控<br/>规划要在坐标系里做<br/>机械臂任务还要 30 章运动学"]
+    C --> P2
+    B --> P3["05 运动控制<br/>控制 = 让末端位姿跟踪轨迹<br/>（位姿 = T 矩阵）"]
+    C --> P3
+    D --> P4["06 具身智能<br/>感知-决策-执行跑在 ROS2 上"]

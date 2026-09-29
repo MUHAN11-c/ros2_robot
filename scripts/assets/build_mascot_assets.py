@@ -25,9 +25,22 @@ OUT = ROOT / "assets" / "mascots"
 CONFIG = {
     "hero": "sakura-02_01",
     "tip": "sakura-02_04",
-    "404": "sakura-04_07",
+    "404": "sakura-02_03",
+    "complete": "sakura-02_09",
+    # 模块入口页章节头贴纸（44px 方形 cover 裁剪）
+    "mod-route": "sakura-02_02",   # 00 学习路线总图
+    "mod-math": "sakura-02_07",    # 01 数学
+    "mod-cpp": "sakura-02_08",     # 02 C++
+    "mod-slam": "sakura-02_10",    # 03 SLAM
+    "mod-plan": "sakura-04_04",    # 04 规控
+    "mod-ctrl": "sakura-02_11",    # 05 运控
+    "mod-emb": "sakura-04_07",     # 06 具身
+    "mod-intro": "sakura-02_06",   # 07 导论
+    "mod-lab": "sakura-02_05",     # 08 可视化实验室
 }
 AVATAR_FROM = "sakura-02_01"
+
+MOD_PREFIX = "mod-"  # 模块贴纸导出为 96px 方形 cover 裁剪
 
 SCALE = 4
 ERODE = 2
@@ -138,8 +151,18 @@ def main():
     print("[装配]")
     for name, src_name in CONFIG.items():
         assert src_name in stickers, f"{src_name} 不在提取结果中"
-        save_webp(stickers[src_name], OUT / f"{name}.webp",
-                  200 * 1024 if name != "tip" else 120 * 1024)
+        im = stickers[src_name]
+        if name.startswith(MOD_PREFIX):
+            # 模块贴纸：96px 方形 cover 裁剪（章节头 44px 显示，2x 余量）
+            w, h = im.size
+            side = min(w, h)
+            sq = im.crop(((w - side) // 2, (h - side) // 2,
+                          (w + side) // 2, (h + side) // 2))
+            sq = sq.resize((96, 96), Image.LANCZOS)
+            save_webp(sq, OUT / f"{name}.webp", 30 * 1024)
+        else:
+            save_webp(im, OUT / f"{name}.webp",
+                      200 * 1024 if name != "tip" else 120 * 1024)
     # 3) 头像：hero 贴纸上部中心脸区
     hero = stickers[AVATAR_FROM]
     w, h = hero.size
