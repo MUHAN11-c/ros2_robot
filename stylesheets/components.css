@@ -618,14 +618,26 @@
   align-items: center;
 }
 
-.rt-chapter-header__avatar {
+/* glightbox 会把内容区图片包进 <a>（成为 grid 直接子元素），样式盯 a:first-child */
+.rt-chapter-header > p:first-child {
   grid-row: 1 / 3;
+  margin: 0;
+  display: block;
   width: 44px;
   height: 44px;
   border-radius: 10px;
+  overflow: hidden;
   border: 1px solid var(--rt-border);
-  object-fit: cover;
   background: var(--rt-surface);
+  align-self: center;
+}
+
+.rt-chapter-header > p:first-child img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  margin: 0;
+  display: block;
 }
 
 [data-md-color-scheme="slate"] .rt-chapter-header {
@@ -731,12 +743,39 @@
   align-items: center;
 }
 
-.rt-complete__sticker {
+.rt-complete > p:first-child {
   grid-column: 2;
+  margin: 0;
   grid-row: 1 / 3;
-  width: 72px;
-  height: auto;
+  display: block;
+  width: 76px;
+  align-self: center;
   justify-self: end;
+}
+
+.rt-complete > p:first-child img {
+  width: 100%;
+  height: auto;
+  margin: 0;
+  display: block;
+}
+
+.rt-complete__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rt-complete__title::before {
+  content: "✓";
+  display: inline-grid;
+  place-items: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 50%;
+  background: var(--rt-primary);
+  color: #FFFFFF;
+  font-size: 0.72rem;
 }
 
 [data-md-color-scheme="slate"] .rt-complete {
@@ -752,17 +791,6 @@
   font-size: 0.9rem;
   font-weight: 700;
   color: var(--rt-primary);
-}
-
-.rt-complete__badge {
-  display: inline-grid;
-  place-items: center;
-  width: 1.35rem;
-  height: 1.35rem;
-  border-radius: 50%;
-  background: var(--rt-primary);
-  color: #FFFFFF;
-  font-size: 0.72rem;
 }
 
 .rt-complete__body {
@@ -819,4 +847,73 @@
 
 .rt-stat {
   border-radius: var(--rt-radius-lg);
+}
+
+/* =============== 4b. 活体吉祥物反应气泡（点击 hero 贴纸触发） =============== */
+
+.rt-mascot-react {
+  position: absolute;
+  top: -8%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.7rem 0.95rem;
+  border: 1px solid var(--rt-border);
+  border-radius: 14px;
+  background: var(--rt-surface);
+  box-shadow: 0 12px 32px rgba(129, 102, 177, 0.18);
+  z-index: 3;
+  max-width: 240px;
+}
+
+.rt-mascot-react[hidden] {
+  display: none !important;
+}
+
+.rt-mascot-react img {
+  width: 92px;
+  height: 92px;
+  object-fit: contain;
+  margin: 0;
+  display: block;
+}
+
+.rt-mascot-react p {
+  margin: 0;
+  font-size: 0.74rem;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--rt-text-primary);
+}
+
+.rt-mascot-react.is-pop {
+  animation: rt-mascot-pop 320ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes rt-mascot-pop {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px) scale(0.72);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
+
+/* 视差倾斜平滑（JS 设置 transform，容器加过渡） */
+.rt-hero__figure {
+  transition: transform 240ms ease-out;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rt-mascot-react.is-pop,
+  .rt-hero__figure {
+    animation: none;
+    transition: none;
+  }
 }

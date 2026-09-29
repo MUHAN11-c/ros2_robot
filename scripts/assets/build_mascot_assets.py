@@ -11,6 +11,7 @@
 
 体积门禁：hero/404 ≤200KB，tip ≤120KB，avatar 按档 ≤80/20/8KB。
 """
+import json
 from collections import deque
 from pathlib import Path
 
@@ -26,19 +27,25 @@ CONFIG = {
     "hero": "sakura-02_01",
     "tip": "sakura-02_04",
     "404": "sakura-02_03",
-    "complete": "sakura-02_09",
-    # 模块入口页章节头贴纸（44px 方形 cover 裁剪）
-    "mod-route": "sakura-02_02",   # 00 学习路线总图
-    "mod-math": "sakura-02_07",    # 01 数学
-    "mod-cpp": "sakura-02_08",     # 02 C++
-    "mod-slam": "sakura-02_10",    # 03 SLAM
-    "mod-plan": "sakura-04_04",    # 04 规控
-    "mod-ctrl": "sakura-02_11",    # 05 运控
-    "mod-emb": "sakura-04_07",     # 06 具身
-    "mod-intro": "sakura-02_06",   # 07 导论
-    "mod-lab": "sakura-02_05",     # 08 可视化实验室
+    "complete": "sakura-02_00",
+    # 模块入口页章节头贴纸（44px 方形 cover 裁剪）——四张贴纸包全部在用：
+    # 01 号（白底）经 MANUAL_CROPS 手动标定；02/03/04 号走连通域提取
+    "mod-route": "sakura-02_02",   # 00 学习路线总图（02 号包）
+    "mod-math": "sakura-02_07",    # 01 数学（02 号包）
+    "mod-cpp": "sakura-02_08",     # 02 C++（02 号包）
+    "mod-slam": "sakura-03_03",    # 03 SLAM（03 号包）
+    "mod-plan": "manual-01-11",    # 04 规控（01 号包手动裁剪）
+    "mod-ctrl": "sakura-02_11",    # 05 运控（02 号包）
+    "mod-emb": "sakura-04_07",     # 06 具身（04 号包）
+    "mod-intro": "sakura-02_06",   # 07 导论（02 号包）
+    "mod-lab": "sakura-02_05",     # 08 可视化实验室（02 号包）
 }
 AVATAR_FROM = "sakura-02_01"
+
+# 01 号包为白底无沟槽版式，连通域失效——按下述网格手框（据 12 格对照图标定）
+MANUAL_CROPS = {
+    "manual-01-11": ("sakura-01.png", (390, 410, 710, 730)),
+}
 
 MOD_PREFIX = "mod-"  # 模块贴纸导出为 96px 方形 cover 裁剪
 
@@ -149,6 +156,20 @@ def main():
         print(f"{sheet.stem}: 提取 {len(crops)} 贴")
     # 2) 装配命名素材
     print("[装配]")
+    # 01 号包手动裁剪（非白 bbox 收紧）
+    for mname, (sheet_name, box) in MANUAL_CROPS.items():
+        im = Image.open(SRC / sheet_name).convert("RGBA")
+        crop = im.crop(box)
+        lum = np.array(crop)[:, :, :3].astype(int).mean(axis=2)
+        ys, xs = np.where(lum < 235)
+        if len(ys) > 500:
+            crop = crop.crop((
+                max(0, int(xs.min()) - 6), max(0, int(ys.min()) - 6),
+                min(crop.width, int(xs.max()) + 7), min(crop.height, int(ys.max()) + 7),
+            ))
+        stickers[mname] = crop
+        print(f"manual: {mname} ← {sheet_name}{box} → {crop.size}")
+
     for name, src_name in CONFIG.items():
         assert src_name in stickers, f"{src_name} 不在提取结果中"
         im = stickers[src_name]
@@ -172,6 +193,23 @@ def main():
     for size, limit in ((512, 80 * 1024), (128, 20 * 1024), (64, 8 * 1024)):
         a = face.resize((size, size), Image.LANCZOS)
         save_webp(a, OUT / f"avatar-{size}.webp", limit, start_q=92)
+    # 4) 贴纸池（全卡司导出，供点击反应随机调用）
+    pool = OUT / "pool"
+    pool.mkdir(exist_ok=True)
+    n_pool = 0
+    for name, crop in stickers.items():
+        if name.startswith("manual"):
+            continue
+        th = crop.copy()
+        th.thumbnail((112, 112), Image.LANCZOS)
+        save_webp(th, pool / f"{name}.webp", 10 * 1024)
+        n_pool += 1
+    print(f"  贴纸池 {n_pool} 张 → assets/mascots/pool/")
+    (pool / "manifest.json").write_text(
+        json.dumps(sorted(f"{s}.webp" for s in stickers if not s.startswith("manual"))),
+        encoding="utf-8",
+    )
+
     fav = Image.new("RGBA", (64, 64), (25, 22, 30, 255))
     fav.alpha_composite(face.resize((64, 64), Image.LANCZOS))
     fav.convert("RGB").save(OUT / "favicon.png")

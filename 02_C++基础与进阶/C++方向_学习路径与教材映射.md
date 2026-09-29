@@ -1,7 +1,7 @@
 # C++ 方向学习路径与教材映射
 
-<div class="rt-chapter-header">
-<img class="rt-chapter-header__avatar" src="../assets/mascots/mod-cpp.webp" alt="">
+<div class="rt-chapter-header" markdown>
+![紫樱](../assets/mascots/mod-cpp.webp){.rt-chapter-header__avatar}
 <div class="rt-chapter-header__top">
 <span class="rt-chapter-header__code">MODULE 02 · C++ 与编程</span>
 <span class="rt-chapter-header__tagline">从第一行代码到工程化开发</span>

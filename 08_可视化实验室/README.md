@@ -1,7 +1,7 @@
 # 可视化实验室 · 总览
 
-<div class="rt-chapter-header">
-<img class="rt-chapter-header__avatar" src="../assets/mascots/mod-lab.webp" alt="">
+<div class="rt-chapter-header" markdown>
+![紫樱](../assets/mascots/mod-lab.webp){.rt-chapter-header__avatar}
 <div class="rt-chapter-header__top">
 <span class="rt-chapter-header__code">VIS LAB · 可视化实验室</span>
 <span class="rt-chapter-header__tagline">每条公式都能亲手运行、亲手修改</span>
