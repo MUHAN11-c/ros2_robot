@@ -95,7 +95,7 @@ for (mx, my), P in snaps:
     vals, vecs = np.linalg.eigh(P[:2, :2])
     o = vals.argsort()[::-1]
     ang = np.degrees(np.arctan2(vecs[1, o[0]], vecs[0, o[0]]))
-    plt.add_patch(Ellipse((mx, my), 4*np.sqrt(vals[o[0]]), 4*np.sqrt(vals[o[1]]),
+    plt.gca().add_patch(Ellipse((mx, my), 4*np.sqrt(vals[o[0]]), 4*np.sqrt(vals[o[1]]),
                           angle=ang, fill=False, edgecolor="#C9A96E", lw=1.6))
 plt.plot(*np.array(truths).T, color="#292530", lw=2, label="真实轨迹")
 plt.plot(*np.array(path).T, color="#D98FAF", lw=2.4, label="卡尔曼估计")

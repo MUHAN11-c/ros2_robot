@@ -81,6 +81,17 @@ plt.axis("equal"); plt.axis("off"); plt.title("A* 网格搜索"); plt.show()
 import numpy as np
 import matplotlib.pyplot as plt
 
+# 与实验 1 同规格的随机栅格（换种子避免背答案）
+_rng = np.random.default_rng(5)
+grid = (_rng.random((16, 24)) < 0.28).astype(int)
+grid[0, :3] = 0; grid[-1, -3:] = 0
+
+def _collide(g, p):                        # 栅格碰撞检测：出界或落在格子上
+    y, x = int(p[1]), int(p[0])
+    if not (0 <= y < g.shape[0] and 0 <= x < g.shape[1]):
+        return True
+    return g[y, x] == 1
+
 rng = np.random.default_rng(11)
 start, goal = np.array([1.5, 1.5]), np.array([22.5, 14.5])
 tree = {tuple(start): None}

@@ -196,6 +196,30 @@
     }, 3000);
   }
 
+  /* ============ TOC 阅读进度条（右侧目录顶部，随滚动推进） ============ */
+  var tocBound = false;
+
+  function initTocProgress() {
+    var wrap = document.querySelector(".md-sidebar--secondary .md-sidebar__scrollwrap");
+    if (!wrap || wrap.querySelector(".rt-toc-progress")) return;
+    var bar = document.createElement("div");
+    bar.className = "rt-toc-progress";
+    wrap.appendChild(bar);
+    if (tocBound) return;
+    tocBound = true;
+    window.addEventListener(
+      "scroll",
+      function () {
+        var el = document.querySelector(".rt-toc-progress");
+        if (!el) return;
+        var h = document.documentElement;
+        var max = h.scrollHeight - h.clientHeight;
+        el.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + "%";
+      },
+      { passive: true }
+    );
+  }
+
   /* ============ 启动 ============ */
   function setup() {
     initProgress();
@@ -206,6 +230,7 @@
     paintVisited();
     initNavIcons();
     initReveal();
+    initTocProgress();
   }
 
   if (window.document$) {

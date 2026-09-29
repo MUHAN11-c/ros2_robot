@@ -177,13 +177,39 @@ hide:
 
 <div class="rt-home-section" markdown>
 
-### 知识主线 Knowledge Map
+### 知识库统计 Statistics
 
-沿着一条主线从零基础走到具身智能，每个节点都是一组系统化教材：
+<div class="rt-stats" markdown>
 
-![知识地图：数学基础 → C++ 工程 → ROS 2 → 感知/SLAM → Planning/Control → 机械臂/足式 → 具身智能](assets/labs/diagrams/home_kmap.svg)
+<div class="rt-stat" markdown>
 
-[查看完整学习路线总图（四阶段 · 每章学时与毕业自测）](00_项目导航/从零开始学习路线总图.md){{ .rt-kmap__more }}
+<span class="rt-stat__num">{markdown_count}+</span>
+<span class="rt-stat__label">文档页</span>
+
+</div>
+
+<div class="rt-stat" markdown>
+
+<span class="rt-stat__num">{code_display}</span>
+<span class="rt-stat__label">代码示例</span>
+
+</div>
+
+<div class="rt-stat" markdown>
+
+<span class="rt-stat__num">12</span>
+<span class="rt-stat__label">可视化实验</span>
+
+</div>
+
+<div class="rt-stat" markdown>
+
+<span class="rt-stat__num">7</span>
+<span class="rt-stat__label">方向模块</span>
+
+</div>
+
+</div>
 
 </div>
 
@@ -341,42 +367,15 @@ Sutton RL → Spinning Up → RL 运控 28 章 Isaac Lab 全链路。
 
 <div class="rt-home-section" markdown>
 
-### 知识库统计 Statistics
+### 知识主线 Knowledge Map
 
-<div class="rt-stats" markdown>
+沿着一条主线从零基础走到具身智能，每个节点都是一组系统化教材：
 
-<div class="rt-stat" markdown>
+![知识地图：数学基础 → C++ 工程 → ROS 2 → 感知/SLAM → Planning/Control → 机械臂/足式 → 具身智能](assets/labs/diagrams/home_kmap.svg)
 
-<span class="rt-stat__num">{markdown_count}+</span>
-<span class="rt-stat__label">文档页</span>
-
-</div>
-
-<div class="rt-stat" markdown>
-
-<span class="rt-stat__num">{code_display}</span>
-<span class="rt-stat__label">代码示例</span>
+[查看完整学习路线总图（四阶段 · 每章学时与毕业自测）](00_项目导航/从零开始学习路线总图.md){{ .rt-kmap__more }}
 
 </div>
-
-<div class="rt-stat" markdown>
-
-<span class="rt-stat__num">11</span>
-<span class="rt-stat__label">可视化实验</span>
-
-</div>
-
-<div class="rt-stat" markdown>
-
-<span class="rt-stat__num">7</span>
-<span class="rt-stat__label">方向模块</span>
-
-</div>
-
-</div>
-
-</div>
-
 """,
         encoding="utf-8",
     )

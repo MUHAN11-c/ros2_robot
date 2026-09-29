@@ -25,7 +25,7 @@ p2 = R @ p                                  # 旋转后的点
 
 plt.scatter(*p,  color="#8166B1", s=90, label=f"p  = {tuple(p)}")
 plt.scatter(*p2, color="#D98FAF", s=90, label=f"p' = {tuple(np.round(p2, 3))}")
-plt.plot([0, *p],  [0, p[1]],  color="#8166B1")
+plt.plot([0, p[0]], [0, p[1]], color="#8166B1")
 plt.plot([0, p2[0]], [0, p2[1]], color="#D98FAF")
 r = np.hypot(*p)
 arc = np.linspace(0, th, 60)

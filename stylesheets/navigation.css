@@ -204,3 +204,101 @@
 .md-search__suggest {
   color: var(--rt-text-secondary);
 }
+
+/* ============================================================
+   导航再设计（v2）：TOC 阅读进度 / 侧边栏激活卡片化 / 搜索弹窗品牌化
+   参考 Linear / Starlight / Stripe Docs 的克制模式
+   ============================================================ */
+
+/* ---- 右侧 TOC：顶部阅读进度条（跟随滚动，2px 渐变） ---- */
+.md-sidebar--secondary .md-sidebar__scrollwrap {
+  position: relative;
+}
+
+.md-sidebar--secondary .md-sidebar__scrollwrap::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0.7rem;
+  right: 0.6rem;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--rt-border);
+  opacity: 0.7;
+}
+
+.rt-toc-progress {
+  position: absolute;
+  top: 0;
+  left: 0.7rem;
+  height: 2px;
+  width: 0;
+  max-width: calc(100% - 1.3rem);
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--rt-primary), var(--rt-secondary));
+  transition: width 120ms ease-out;
+  pointer-events: none;
+}
+
+/* TOC 条目：激活项加重 + 圆点指示 */
+.md-nav__list .md-nav__link--active,
+.md-nav__list .md-nav__link[data-md-state="active"] {
+  font-weight: 600;
+  color: var(--rt-primary);
+}
+
+/* ---- 侧边栏激活页卡片化：软底 + 内阴影 + 微缩进 ---- */
+.md-sidebar--primary .md-nav__link--active,
+.md-sidebar--primary .md-nav__link[data-md-state="active"] {
+  box-shadow: inset 0 0 0 1px rgba(129, 102, 177, 0.10);
+  padding-right: 0.4rem;
+}
+
+[data-md-color-scheme="slate"] .md-sidebar--primary .md-nav__link--active,
+[data-md-color-scheme="slate"] .md-sidebar--primary .md-nav__link[data-md-state="active"] {
+  box-shadow: inset 0 0 0 1px rgba(168, 139, 216, 0.14);
+}
+
+/* 二级条目 hover 微位移（悬停设备） */
+@media (hover: hover) {
+  .md-sidebar--primary .md-nav__item .md-nav__link:hover {
+    transform: translateX(2px);
+  }
+}
+
+/* ---- 搜索弹窗品牌化：圆角 + 毛玻璃 + 结果品牌悬停 ---- */
+.md-search__scrollwrap {
+  border-radius: 14px;
+  margin-top: 0.55rem;
+  border: 1px solid var(--rt-border);
+  background: var(--rt-header-bg);
+  backdrop-filter: blur(20px) saturate(1.6);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  box-shadow: 0 24px 60px rgba(41, 37, 48, 0.18);
+}
+
+[data-md-color-scheme="slate"] .md-search__scrollwrap {
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+}
+
+.md-search-result__link {
+  border-radius: 10px;
+  margin-inline: 0.5rem;
+  transition: background-color 150ms ease;
+}
+
+@media (hover: hover) {
+  .md-search-result__link:hover,
+  .md-search-result__link[data-md-state="active"] {
+    background: var(--rt-primary-soft);
+  }
+}
+
+.md-search-result__link > * {
+  margin-top: 0.55rem;
+}
+
+.md-search-result__mark {
+  color: var(--rt-primary);
+  background: var(--rt-primary-soft);
+}
