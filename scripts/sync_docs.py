@@ -407,7 +407,7 @@ hide:
 
 <div class="rt-404" markdown>
 
-<img class="rt-404__mascot" src="assets/mascots/sakura-04.webp" alt="紫樱" width="180">
+<img class="rt-404__mascot" src="assets/mascots/404.webp" alt="紫樱" width="180">
 
 # 404 · 这个节点没有连接
 
@@ -888,7 +888,7 @@ def write_catalog(catalog: list[SummaryNode]) -> None:
         "",
         '<div class="rt-mascot-tip" markdown>',
         "",
-        "![紫樱](assets/mascots/bust.webp)",
+        "![紫樱](assets/mascots/tip.webp)",
         "",
         "**紫樱小提示**：按 `Ctrl+K` 全局搜索；第一次来请先看 [从零开始学习路线总图](00_项目导航/从零开始学习路线总图.md)。",
         "",

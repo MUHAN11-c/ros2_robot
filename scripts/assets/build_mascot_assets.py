@@ -1,61 +1,154 @@
 # -*- coding: utf-8 -*-
-"""樱机实验室 · 吉祥物素材库构建脚本。
+"""樱机实验室 · 吉祥物素材库构建 v2（贴纸包版）。
 
-输入：assets/mascots/src/sakura-01..04.png（1122x1402 原始档）
-输出（assets/mascots/）：
-  - sakura-01..04.webp   全图（长边 ≤1200，质量迭代压至 ≤300KB）
-  - avatar-512/128/64.webp 头像裁剪（AVATAR_SRC 指定源图与裁剪框，视觉校准）
-  - favicon.png / apple-touch-icon.png（由 avatar 派生）
-可重复运行；crop 参数据预览结果手工微调。
+素材源 assets/mascots/src/sakura-01..04.png 为贴纸包（网格布局、约 12 贴/包），
+先连通域提取单个贴纸，再装配命名素材：
+
+  hero.webp      首页 hero 大图（sakura-02_00，原生 ~360px）
+  tip.webp       提示卡贴纸（sakura-03_00）
+  404.webp       404 页贴纸（sakura-04_00）
+  avatar-512/128/64.webp + favicon + apple-touch-icon   头像（hero 贴纸上部脸区裁剪）
+
+体积门禁：hero/404 ≤200KB，tip ≤120KB，avatar 按档 ≤80/20/8KB。
 """
+from collections import deque
 from pathlib import Path
 
+import numpy as np
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[2]
 SRC = ROOT / "assets" / "mascots" / "src"
 OUT = ROOT / "assets" / "mascots"
 
-# 头像源图与裁剪框（原图坐标，方形）：据网格图目测校准，可微调
-AVATAR_SRC = "sakura-01.png"
-AVATAR_BOX = (310, 90, 830, 610)  # 左、上、右、下
+# 装配配置：命名素材 ← 提取贴纸名
+CONFIG = {
+    "hero": "sakura-02_01",
+    "tip": "sakura-02_04",
+    "404": "sakura-04_07",
+}
+AVATAR_FROM = "sakura-02_01"
 
-MAX_EDGE = 1200
-SIZE_LIMIT_FULL = 420 * 1024
-SIZE_LIMIT_AVATAR = {512: 80 * 1024, 128: 20 * 1024, 64: 8 * 1024}
+SCALE = 4
+ERODE = 2
+MIN_AREA = 900
+MIN_SIDE = 60
 
 
-def save_webp(im: Image.Image, path: Path, limit: int, start_q: int = 88) -> None:
-    """质量迭代压缩直至满足体积门禁。"""
+def erode(mask, r):
+    if r <= 0:
+        return mask
+    h, w = mask.shape
+    m = mask.copy()
+    for dy in range(-r, r + 1):
+        for dx in range(-r, r + 1):
+            if dy == 0 and dx == 0:
+                continue
+            shifted = np.zeros_like(mask)
+            ys0, ys1 = max(0, dy), h + min(0, dy)
+            xs0, xs1 = max(0, dx), w + min(0, dx)
+            shifted[ys0:ys1, xs0:xs1] = mask[max(0, -dy):h - max(0, dy) or h,
+                                             max(0, -dx):w - max(0, dx) or w]
+            m &= shifted
+    return m
+
+
+def components(mask):
+    h, w = mask.shape
+    seen = np.zeros_like(mask, dtype=bool)
+    comps = []
+    for y in range(h):
+        for x in range(w):
+            if mask[y, x] and not seen[y, x]:
+                q = deque([(y, x)])
+                seen[y, x] = True
+                x0, y0, x1, y1 = x, y, x, y
+                area = 0
+                while q:
+                    cy, cx = q.popleft()
+                    area += 1
+                    x0, y0, x1, y1 = min(x0, cx), min(y0, cy), max(x1, cx), max(y1, cy)
+                    for dy in (-1, 0, 1):
+                        for dx in (-1, 0, 1):
+                            ny, nx = cy + dy, cx + dx
+                            if 0 <= ny < h and 0 <= nx < w and mask[ny, nx] and not seen[ny, nx]:
+                                seen[ny, nx] = True
+                                q.append((ny, nx))
+                comps.append(((x0, y0, x1 + 1, y1 + 1), area))
+    return comps
+
+
+def extract_stickers(im: Image.Image):
+    """返回按面积降序的贴纸 PIL 图列表。"""
+    arr = np.array(im)
+    alpha = arr[:, :, 3]
+    if (alpha < 250).mean() >= 0.05:
+        content = alpha > 60
+        ref = alpha
+    else:
+        lum = arr[:, :, :3].astype(int).mean(axis=2)
+        content = lum < 240
+        ref = (lum < 240).astype(int) * 255
+    small = content[::SCALE, ::SCALE]
+    solid = erode(small.astype(bool), ERODE)
+    picked = []
+    for bbox, area in components(solid):
+        if area < MIN_AREA:
+            continue
+        x0, y0, x1, y1 = [v * SCALE for v in bbox]
+        sub = ref[y0:y1, x0:x1]
+        ys, xs = np.where(sub > 16)
+        if len(ys) == 0:
+            continue
+        fb = (
+            max(0, x0 + int(xs.min()) - 6),
+            max(0, y0 + int(ys.min()) - 6),
+            min(arr.shape[1], x0 + int(xs.max()) + 7),
+            min(arr.shape[0], y0 + int(ys.max()) + 7),
+        )
+        w, h = fb[2] - fb[0], fb[3] - fb[1]
+        if w < MIN_SIDE or h < MIN_SIDE or w / h > 3.0 or h / w > 3.0:
+            continue
+        picked.append(im.crop(fb))
+    picked.sort(key=lambda c: c.width * c.height, reverse=True)
+    return picked
+
+
+def save_webp(im: Image.Image, path: Path, limit: int, start_q: int = 90) -> None:
     q = start_q
     while True:
         im.save(path, "WEBP", quality=q, method=6)
-        if path.stat().st_size <= limit or q <= 68:
+        if path.stat().st_size <= limit or q <= 62:
             break
         q -= 6
-    kb = path.stat().st_size / 1024
-    print(f"  {path.name:<28} {im.size[0]}x{im.size[1]}  q={q}  {kb:.0f}KB")
+    print(f"  {path.name:<22} {im.width}x{im.height}  q={q}  {path.stat().st_size / 1024:.0f}KB")
 
 
-def build_full() -> None:
-    print("[全图 WebP]")
-    for src in sorted(SRC.glob("sakura-*.png")):
-        im = Image.open(src)
-        if max(im.size) > MAX_EDGE:
-            im.thumbnail((MAX_EDGE, MAX_EDGE), Image.LANCZOS)
-        save_webp(im, OUT / (src.stem + ".webp"), SIZE_LIMIT_FULL)
-
-
-def build_avatar() -> None:
-    print("[头像裁剪]")
-    im = Image.open(SRC / AVATAR_SRC).convert("RGBA")
-    box = AVATAR_BOX
-    assert box[2] - box[0] == box[3] - box[1], "裁剪框必须为正方形"
-    face = im.crop(box)
-    for size in (512, 128, 64):
+def main():
+    OUT.mkdir(parents=True, exist_ok=True)
+    # 1) 提取
+    stickers = {}
+    for sheet in sorted(SRC.glob("sakura-*.png")):
+        im = Image.open(sheet).convert("RGBA")
+        crops = extract_stickers(im)
+        for i, crop in enumerate(crops):
+            stickers[f"{sheet.stem}_{i:02d}"] = crop
+        print(f"{sheet.stem}: 提取 {len(crops)} 贴")
+    # 2) 装配命名素材
+    print("[装配]")
+    for name, src_name in CONFIG.items():
+        assert src_name in stickers, f"{src_name} 不在提取结果中"
+        save_webp(stickers[src_name], OUT / f"{name}.webp",
+                  200 * 1024 if name != "tip" else 120 * 1024)
+    # 3) 头像：hero 贴纸上部中心脸区
+    hero = stickers[AVATAR_FROM]
+    w, h = hero.size
+    side = int(min(w, h * 0.66))
+    cx = w // 2
+    face = hero.crop((cx - side // 2, int(h * 0.05), cx - side // 2 + side, int(h * 0.05) + side))
+    for size, limit in ((512, 80 * 1024), (128, 20 * 1024), (64, 8 * 1024)):
         a = face.resize((size, size), Image.LANCZOS)
-        save_webp(a, OUT / f"avatar-{size}.webp", SIZE_LIMIT_AVATAR[size], start_q=92)
-    # favicon（不透明底，避免深色标签页发灰）
+        save_webp(a, OUT / f"avatar-{size}.webp", limit, start_q=92)
     fav = Image.new("RGBA", (64, 64), (25, 22, 30, 255))
     fav.alpha_composite(face.resize((64, 64), Image.LANCZOS))
     fav.convert("RGB").save(OUT / "favicon.png")
@@ -65,28 +158,5 @@ def build_avatar() -> None:
     print("  favicon.png / apple-touch-icon.png 已派生")
 
 
-def build_candidates() -> None:
-    """四张图各出一版头像候选，用于视觉挑选（不进入正式素材）。"""
-    print("[头像候选（校准用）]")
-    cand = ROOT / ".generated" / "mascot_check"
-    cand.mkdir(parents=True, exist_ok=True)
-    boxes = {
-        "sakura-01": (310, 90, 830, 610),
-        "sakura-02": (310, 130, 830, 650),
-        "sakura-03": (310, 110, 830, 630),
-        "sakura-04": (310, 130, 830, 650),
-    }
-    for name, box in boxes.items():
-        im = Image.open(SRC / f"{name}.png").convert("RGBA")
-        face = im.crop(box).resize((240, 240), Image.LANCZOS)
-        canvas = Image.new("RGBA", (250, 250), (245, 243, 248, 255))
-        canvas.alpha_composite(face, (5, 5))
-        canvas.convert("RGB").save(cand / f"cand_{name}.jpg", quality=90)
-        print(f"  cand_{name}.jpg")
-
-
 if __name__ == "__main__":
-    OUT.mkdir(parents=True, exist_ok=True)
-    build_full()
-    build_avatar()
-    print("完成")
+    main()

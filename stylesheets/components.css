@@ -186,7 +186,7 @@
   margin: 0 auto;
   padding: 3.6rem 1.5rem 2.8rem;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 420px;
+  grid-template-columns: minmax(0, 1fr) 380px;
   gap: 2.4rem;
   align-items: center;
   overflow: hidden;
@@ -316,7 +316,7 @@
   position: relative;
   z-index: 1;
   justify-self: center;
-  width: 400px;
+  width: 340px;
 }
 
 .rt-hero__mascot-img {
@@ -355,7 +355,7 @@
   0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
   8%   { opacity: 0.65; }
   85%  { opacity: 0.5; }
-  100% { transform: translateY(460px) rotate(260deg); opacity: 0; }
+  100% { transform: translateY(400px) rotate(260deg); opacity: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -77,6 +77,10 @@
     display: none;
   }
 
+  .rt-hero__mascot-img {
+    filter: drop-shadow(0 8px 18px rgba(129, 102, 177, 0.14));
+  }
+
   .rt-quick,
   .rt-stats {
     grid-template-columns: 1fr;
