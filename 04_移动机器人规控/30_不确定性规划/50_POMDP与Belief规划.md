@@ -30,7 +30,7 @@
 8. **建立 DreamerV3 的 RSSM = 摊销 belief 的等价认识**，看清"神经世界模型派"与"DESPOT 树搜索派"如何在 Neural-guided 树搜索（BetaZero）处合流；并能读懂 **DESPOT 的 C++ `DSPOMDP` 接口**。
 
 ---
-## 本章知识导航 ⭐
+## 本章知识导航 ★
 
 本章沿一条主线展开：**状态看不清，就维护一个状态的概率分布（belief），把它当作充分统计量，在 belief 空间上做决策**。
 
@@ -85,7 +85,7 @@
 
 ---
 
-## §U4.1 POMDP 形式化与 belief ⭐⭐
+## §U4.1 POMDP 形式化与 belief ★★
 
 ### 动机：状态看不清，怎么办
 
@@ -193,7 +193,7 @@ belief update 不是新东西——它统一了你可能已经熟悉的几个滤
 
 所以对 SLAM 工程师，学 POMDP 的增量很小：**你已经会维护 belief，只需再学"如何在 belief 上做决策"**。§U4.7 会看到，Active SLAM 就是"在你的 SLAM 之上加一个 POMDP 规划器，决定下一步去哪里看"——你的 SLAM 技能直接成为 POMDP 的一个子模块（belief update 模块）。
 
-### ⚠️ 本节常见陷阱
+### ⚠ 本节常见陷阱
 
 > 💡 **概念误区：把 belief 当成一个点估计（均值 / MAP）**
 > - **新手想法**："belief 不就是滤波器估出来的那个状态嘛，取均值用就行。"
@@ -222,7 +222,7 @@ belief update 不是新东西——它统一了你可能已经熟悉的几个滤
 
 ---
 
-## §U4.2 α-vector 与 PWLC 值函数 ⭐⭐⭐
+## §U4.2 α-vector 与 PWLC 值函数 ★★★
 
 ### 动机：belief 空间上的值函数长什么样
 
@@ -305,7 +305,7 @@ QMDP 极快（只需解一个 MDP），但有个系统性短板：**它低估"�
 
 它们的共同结构是"**生成候选 α → 剪掉被支配的 α**"，差别只在如何更聪明地生成 / 剪枝以少枚举。但无论多聪明，新生成的候选数随视界指数增长（$|\Gamma|^{|\Omega|}$ 量级），剪枝只能延缓不能消除——几十个状态、十几步视界就跑不动。这正是 §U4.2 思维陷阱"换算法救不了"的具体印证：精确算法的瓶颈是问题固有的（PSPACE-hard），不是剪枝不够好。这也是为什么实践必须转向点基（§U4.3）与在线（§U4.4）近似。
 
-### ⚠️ 本节常见陷阱
+### ⚠ 本节常见陷阱
 
 > 💡 **概念误区：以为 α-vector 是 belief（也是 $|S|$ 维向量，容易混）**
 > - **新手想法**："α-vector 和 belief 都是 $|S|$ 维向量，是一回事吧？"
@@ -327,7 +327,7 @@ QMDP 极快（只需解一个 MDP），但有个系统性短板：**它低估"�
 
 ---
 
-## §U4.3 点基方法：只在可达 belief 上备份（SARSOP）⭐⭐⭐
+## §U4.3 点基方法：只在可达 belief 上备份（SARSOP）★★★
 
 ### 动机：不必在整个单纯形上求解
 
@@ -400,7 +400,7 @@ $$\alpha_b=\arg\max_{\alpha\in\text{backup}(b)}\ \alpha\cdot b,\qquad \text{back
 
 > **对比性思维：离线"算好一张地图"，在线"现场找路"，两者拼起来最强**。离线点基（SARSOP）算出覆盖可达 belief 的 α-vector——像一张粗略地图（哪里大概多值钱）；在线 DESPOT 在当前 belief 现场精搜——像在地图上找当下最优路。把离线 α-vector 当在线搜索的下界 / 启发，就是"用粗地图加速精搜"。这也是 POMDPs.jl 等生态里"先 QMDP/FIB 算界、再 DESPOT 在线"的常见组合——离线管全局粗解、在线管局部精解，各取所长。
 
-### ⚠️ 本节常见陷阱
+### ⚠ 本节常见陷阱
 
 > 💡 **概念误区：以为点基方法给出的是 $V^*$ 的上界**
 > - **现象 / 后果**：用 α-vector 解 $\max_\alpha\alpha\cdot b$ 当成"价值上限"来做某些剪枝判断，逻辑反了。
@@ -425,7 +425,7 @@ $$\alpha_b=\arg\max_{\alpha\in\text{backup}(b)}\ \alpha\cdot b,\qquad \text{back
 
 ---
 
-## §U4.4 DESPOT：在线 POMDP 规划 ⭐⭐⭐⭐
+## §U4.4 DESPOT：在线 POMDP 规划 ★★★★
 
 ### 动机：当离线行不通
 
@@ -515,7 +515,7 @@ DESPOT 像 HSVI 一样维护每个节点的**上界**和**下界**，用它们�
 
 一句话：**U1 的分支规划与 DESPOT 是同一个 POMDP 的两种近似——一个用领域引导剪枝，一个用场景采样稀疏化**。
 
-### ⚠️ 本节常见陷阱
+### ⚠ 本节常见陷阱
 
 > 💡 **概念误区：以为"场景"是采样的状态序列**
 > - **新手想法**："$K$ 个场景就是 $K$ 条采样出来的状态轨迹吧。"
@@ -542,7 +542,7 @@ DESPOT 像 HSVI 一样维护每个节点的**上界**和**下界**，用它们�
 
 ---
 
-## §U4.5 DESPOT 家族演化 ⭐⭐⭐
+## §U4.5 DESPOT 家族演化 ★★★
 
 ### 动机：从能跑通到上车
 
@@ -616,7 +616,7 @@ DESPOT 不是唯一的在线 POMDP 求解器。把同库 / 同生态里的几个
 
 **家族在更大谱系里的位置**。DESPOT 全家族（NUS）是在线 POMDP 的一支主线，但不是全部。同期还有 AEMS（启发式搜索 belief 树，常被放进 `despot` 库做对比，但它属于另一条"启发式搜索"血缘，非 DESPOT 家族）、POMCPOW（Stanford，连续空间，进阶三）、以及后续的 AdaOPS 等。它们共享"在线、anytime、采样 / 搜索"的大框架，DESPOT 家族的特色是"确定化场景 + output-sensitive + 一条清晰的工程演化链"。把 DESPOT 家族放在这个谱系里看：它不是孤立的算法，而是"在线 POMDP"这棵大树上被打磨得最适合机器人落地的一支。
 
-### ⚠️ 本节常见陷阱
+### ⚠ 本节常见陷阱
 
 > 💡 **概念误区：以为 HyP-DESPOT 改进了 DESPOT 的算法/理论**
 > - **现象 / 后果**：以为 HyP-DESPOT 有更好的近似界或搜索策略。
@@ -636,7 +636,7 @@ DESPOT 不是唯一的在线 POMDP 求解器。把同库 / 同生态里的几个
 
 ---
 
-## §U4.6 Belief-space motion planning：高斯 belief 的连续空间特化 ⭐⭐⭐
+## §U4.6 Belief-space motion planning：高斯 belief 的连续空间特化 ★★★
 
 ### 动机：连续高维状态怎么办
 
@@ -709,7 +709,7 @@ FIRM 的前身 **Belief Roadmap（BRM, Prentice–Roy, IJRR 2009）** 解决的�
 
 > **对比性思维：BRM 和 FIRM 都在让"协方差传播可复用"，一个靠预计算传递函数、一个靠控制器钉死节点**。belief 图规划的痛点是协方差依赖历史、不能直接在图上组合。BRM 的解法："把每条边的协方差传播预计算成传递函数，查询时组合"——边可复用、但节点 belief 仍依赖路径。FIRM 更进一步："在节点用控制器把 belief 钉成固定值"——节点也 belief-invariant、彻底退化成普通图搜索。两者是同一目标（让 belief 图可高效组合搜索）下的递进，FIRM 的代价是要在节点稳定（多花控制步），收益是更彻底的历史无关性。
 
-### ⚠️ 本节常见陷阱
+### ⚠ 本节常见陷阱
 
 > 💡 **概念误区：把 LQG-MP 和"ML 观测假设"当成同一篇工作**
 > - **现象 / 后果**：引用混乱，把"假设未来观测=期望观测"安到 LQG-MP 头上。
@@ -730,7 +730,7 @@ FIRM 的前身 **Belief Roadmap（BRM, Prentice–Roy, IJRR 2009）** 解决的�
 
 ---
 
-## §U4.7 Active SLAM 与主动感知 = POMDP 实例 ⭐⭐⭐
+## §U4.7 Active SLAM 与主动感知 = POMDP 实例 ★★★
 
 ### 动机：从"被动建图"到"主动去看"
 
@@ -803,7 +803,7 @@ FIRM 的前身 **Belief Roadmap（BRM, Prentice–Roy, IJRR 2009）** 解决的�
 
 > **对比性思维：信息增益的"期望未来观测"既是它的威力也是它的负担**。普通奖励 $R(s,a)$ 是即时的、便宜的；信息增益奖励要"预演未来会看到什么、那会让 belief 多确定"——这个前瞻正是它能驱动主动消歧的威力来源，但也让每次评估都要对未来观测求期望（贵）。所以"信息增益奖励"和"实时性"天然矛盾，工程上要么单步贪心（NBV）、要么粗采样近似期望。这是 Active SLAM 区别于普通导航的根本计算负担。
 
-### ⚠️ 本节常见陷阱
+### ⚠ 本节常见陷阱
 
 > 💡 **概念误区：以为信息增益是唯一奖励**
 > - **现象 / 后果**：只用信息增益当奖励，机器人无限探索、永不完成任务（或不回家、不到目标）。
@@ -828,7 +828,7 @@ FIRM 的前身 **Belief Roadmap（BRM, Prentice–Roy, IJRR 2009）** 解决的�
 
 ---
 
-## §U4.8 DreamerV3 = 摊销 belief：神经世界模型与树搜索的合流 ⭐⭐⭐⭐
+## §U4.8 DreamerV3 = 摊销 belief：神经世界模型与树搜索的合流 ★★★★
 
 ### 动机：图像 / 高维连续观测怎么办
 
@@ -904,7 +904,7 @@ Dreamer 是 **model-based**（学世界模型 + 在模型里想象规划）。�
 
 > **本质洞察：神经摊销 POMDP 的可靠性，最终取决于"学到的世界模型有多准"**。DESPOT 用真实模型在线搜索（模型给定、搜索可信）；Dreamer 用**学到的**模型在隐空间想象（模型是学的、可能偏）。所以两派的可靠性瓶颈不同——DESPOT 卡在"搜得够不够"（算力），Dreamer 卡在"模型学得准不准"（数据 + 归纳偏置）。这也是为什么安全关键场景偏爱 DESPOT（用真模型、可验证），而数据丰富 + 高维观测场景偏爱 Dreamer（学模型、端到端）。选型时除了 belief 形状，还要问"我信得过学到的模型吗"。
 
-### ⚠️ 本节常见陷阱
+### ⚠ 本节常见陷阱
 
 > 💡 **概念误区：把 RSSM 的隐状态 $(h_t,z_t)$ 当成"真实状态"**
 > - **现象 / 后果**：以为 Dreamer 在估计物理状态，试图把 $z_t$ 解释成具体物理量。
@@ -1184,7 +1184,7 @@ print("前进+观测后:", np.round(b, 3), "熵=%.3f" % entropy(b))
 
 正文给了主线与各方法思想，这里对几个值得深入的点展开——既加深主线理解，也是研究 / 工程会真正碰到的细节。
 
-### 进阶专题一：belief 空间的几何 ⭐⭐⭐
+### 进阶专题一：belief 空间的几何 ★★★
 
 §U4.1 说 belief 活在 $|S|-1$ 维单纯形 $\Delta^{|S|-1}$ 上，§U4.2 说值函数在其上 PWLC。把这个几何看清，对理解所有 POMDP 方法都有帮助。
 
@@ -1196,7 +1196,7 @@ print("前进+观测后:", np.round(b, 3), "熵=%.3f" % entropy(b))
 
 > **本质洞察：POMDP 的所有近似方法都是"如何不在整个单纯形上较劲"**。精确求解要刻画整个单纯形上的穹顶（指数多 α-vector）；点基方法只刻画可达子流形上的穹顶（点数线性）；DESPOT 只刻画"从 $b_0$ 出发有限步可达"的更小局部；BSP 假设 belief 是高斯、把单纯形换成低维参数空间 $(\mu,\Sigma)$。看懂单纯形几何，你就看懂了所有方法都在回答同一个问题——"belief 空间这么大，我到底要在哪一小块上求解？"
 
-### 进阶专题二：两个 curse 的精确刻画 ⭐⭐⭐
+### 进阶专题二：两个 curse 的精确刻画 ★★★
 
 §U4.2/§U4.4 反复提"维数灾难"和"历史灾难"，这里精确刻画并对照各方法如何破解。
 
@@ -1217,7 +1217,7 @@ print("前进+观测后:", np.round(b, 3), "熵=%.3f" % entropy(b))
 
 > **对比性思维：两个 curse 要分开打、且常用同一招（采样）打两个**。很多人把 POMDP 的难笼统归为"状态空间大"，但**历史灾难（观测序列多）往往比维数灾难更致命**——即使状态不多，长视界 + 多观测也会让 belief 树爆炸。DESPOT 的精妙在于用"采样"一招同时打两个：采样起始状态破维数灾难、采样观测（只留场景经历的）破历史灾难。记住"两个 curse 分开看、采样可同治"，你评估任何 POMDP 方法时就知道该问"它怎么破维数、怎么破历史"。
 
-### 进阶专题三：连续 POMDP 与 POMCPOW 的 Progressive Widening ⭐⭐⭐⭐
+### 进阶专题三：连续 POMDP 与 POMCPOW 的 Progressive Widening ★★★★
 
 正文的方法多针对离散动作 / 观测。但很多机器人问题动作和观测都**连续**（连续控制量、连续传感读数）。连续观测尤其麻烦：每个观测几乎都不同，belief 树的观测分支无限多、每个分支只有一个粒子——树退化、无法估值。
 
@@ -1225,7 +1225,7 @@ print("前进+观测后:", np.round(b, 3), "熵=%.3f" % entropy(b))
 
 > **本质洞察：连续观测的难，难在"每个观测都不同→分支无限→树退化"，PW 用"加宽速度受控"治它**。离散观测时，$|Z|$ 个观测分支各自被多个场景 / 粒子支撑，能估值；连续观测时，每个观测唯一、分支无限、每分支一个粒子，估值方差无穷大。Progressive Widening 的核心思想是"不要急着加宽——访问次数不够就不开新分支"，让有限的样本集中在少数分支上、每个分支有统计意义。这与 DESPOT 用 $K$ 个固定场景限制观测分支是同一目标（控制观测分支数）的不同手段——DESPOT 用固定场景集、POMCPOW 用受控加宽。
 
-### 进阶专题四：近似谱与上下界 ⭐⭐⭐
+### 进阶专题四：近似谱与上下界 ★★★
 
 POMDP 的近似方法形成一个"快—准"谱，且很多方法成对维护值函数的上下界。把这个谱理清，便于选型。
 
@@ -1242,7 +1242,7 @@ POMDP 的近似方法形成一个"快—准"谱，且很多方法成对维护值
 
 > **对比性思维：QMDP 既是"廉价策略"又是"上界"——一身两用**。同一个 $Q_{\text{MDP}}$，当策略用（取 argmax）是个信息盲的廉价控制器；当界用（$\max_a\sum b(s)Q_{\text{MDP}}(s,a)$）是 $V^*$ 的一个上界（因为全可观测假设只会高估价值）。这个"上界"身份在 DESPOT/HSVI 里很有用——它给搜索提供乐观估计、引导探索。理解"同一个近似既能当策略又能当界"，是读懂 POMDP 求解器（上下界引导搜索）的关键。
 
-### 进阶专题五：Tiger 数值走查（belief 演化 + QMDP 值）⭐⭐
+### 进阶专题五：Tiger 数值走查（belief 演化 + QMDP 值）★★
 
 把 Tiger 的关键数值摆出来，对照前面代码，建立量化直觉（数值均已核对）。
 
@@ -1261,7 +1261,7 @@ POMDP 的近似方法形成一个"快—准"谱，且很多方法成对维护值
 
 > **本质洞察：Tiger 的数值揭示"belief 沿对数 odds 线性移动、值函数沿 belief 凸变化"**。belief 更新在对数 odds 域是线性的（每次观测加固定增量），所以在概率域看是向顶点指数逼近。而价值随 belief 凸变化（顶点高、中心低）。POMDP 决策的本质就是这两件事的相互作用：观测把 belief 推向某顶点（更确定→价值更高），但推动需要代价（listen 的 $-1$）和时间（多步）——何时停止推动转而行动，由"再推一步的信息价值"vs"现在行动的期望收益"权衡决定。
 
-### 进阶专题六：POMDP 与强化学习的关系 ⭐⭐⭐
+### 进阶专题六：POMDP 与强化学习的关系 ★★★
 
 U0 §6 埋了"经典规控与 RL 处处相通"的暗线。POMDP 与 RL 的连接点尤其深。
 
@@ -1277,7 +1277,7 @@ U0 §6 埋了"经典规控与 RL 处处相通"的暗线。POMDP 与 RL 的连接
 
 > **对比性思维：POMDP 和 RL 的"未知"在不同地方**。新手常混淆 POMDP 和 RL。区分关键：POMDP 的未知是"**状态**"（模型已知、状态看不清），RL 的未知是"**模型**"（状态看得见、转移 / 奖励不知道）。POMDP 用贝叶斯滤波处理状态未知（要模型），RL 用试错处理模型未知（不要模型）。现实机器人常两者都未知（部分可观测 + 模型不准）——这时要么"学一个模型再做 POMDP 规划"（model-based，如 Dreamer），要么"用带记忆的策略直接学"（model-free RNN policy）。理解这个区分，你就不会把"POMDP"和"RL"当对立选项，而看到它们处理的是不确定性的不同侧面。
 
-### 进阶专题七：Dec-POMDP 与多机器人 ⭐⭐⭐⭐
+### 进阶专题七：Dec-POMDP 与多机器人 ★★★★
 
 单机器人 POMDP 已经很难，多机器人协作在部分可观测下更难——这是 **Dec-POMDP（Decentralized POMDP，去中心化 POMDP）**。
 
@@ -1290,7 +1290,7 @@ U0 §6 埋了"经典规控与 RL 处处相通"的暗线。POMDP 与 RL 的连接
 
 > **本质洞察：Dec-POMDP 的爆炸来自"对他人信念的信念"（高阶信念）**。单 POMDP 你维护"对状态的信念"；Dec-POMDP 你还要维护"对队友观测 / 信念的信念"——而队友也在维护"对你的信念"，形成无穷递归的高阶信念。NEXP 的复杂度正源于此。实用方法都在回避高阶信念：CTDE 训练时用全局信息绕开（执行时各管各）、通信用共享信息压平递归。这也是为什么多机器人 SLAM / 协作至今仍是开放难题——一旦通信受限、不能共享 belief，高阶信念的递归就无法回避。
 
-### 进阶专题八：风险敏感 POMDP（接 U5）⭐⭐⭐⭐
+### 进阶专题八：风险敏感 POMDP（接 U5）★★★★
 
 本章的 POMDP 默认最大化**期望**累积奖励。但和 U1/U3 一样，期望会被罕见灾难平均掉——在安全关键场景，你可能更在乎"最坏情况下 belief 演化有多糟"。这就是**风险敏感 POMDP**，是 U5 的方向。
 
@@ -1304,7 +1304,7 @@ U0 §6 埋了"经典规控与 RL 处处相通"的暗线。POMDP 与 RL 的连接
 
 ---
 
-### 进阶专题九：MOMDP——混合可观测降维 ⭐⭐⭐
+### 进阶专题九：MOMDP——混合可观测降维 ★★★
 
 很多机器人问题里，状态的**一部分可观测、一部分不可观测**——比如机器人自己的位姿可观测（有里程计），但环境里某物体的类别 / 意图不可观测。把整个状态都当 belief 浪费：可观测部分的"belief"是个 delta 分布（就是它本身），维护它纯属冗余。
 
@@ -1312,7 +1312,7 @@ U0 §6 埋了"经典规控与 RL 处处相通"的暗线。POMDP 与 RL 的连接
 
 > **本质洞察：MOMDP 是"只对真正看不清的部分维护 belief"——把维数灾难砍到不可观测子空间**。维数灾难来自 belief 空间维度 = 状态数。但如果一半状态可观测，对它们维护 belief 是浪费（delta 分布）。MOMDP 把 belief 限制在不可观测子空间上——可观测部分当普通 MDP 状态、只对不可观测部分做 POMDP。这是"别为已知的东西付不确定性的代价"的工程智慧，也是把 POMDP 用上真实机器人（位姿常可观测、只有语义 / 意图不可观测）的关键降维手段。自驾里"自车状态可观测、他车意图不可观测"正是 MOMDP 结构（呼应 U1）。
 
-### 进阶专题十：belief-space MPC——把 belief 纳入 MPC 状态 ⭐⭐⭐
+### 进阶专题十：belief-space MPC——把 belief 纳入 MPC 状态 ★★★
 
 U2/U3 的 MPC 在**状态**上滚动优化。当状态不可观测时，一个自然想法：把 **belief 当作 MPC 的状态**，在 belief 上做滚动时域优化——这就是 **belief-space MPC**（与 §U4.6 的 BSP 紧密相关）。
 
@@ -1320,7 +1320,7 @@ U2/U3 的 MPC 在**状态**上滚动优化。当状态不可观测时，一个�
 
 > **对比性思维：belief-space MPC 与 DESPOT 都在 belief 上规划，差在"连续优化 vs 树搜索"**。belief-space MPC 把 belief 当连续状态、用梯度 / SQP 做滚动优化（适合连续高维、高斯 belief，续 U2/U3 的 MPC 机器）；DESPOT 在离散 / 粒子 belief 上做树搜索（适合多模态、离散观测）。两者是 §U4.6 vs §U4.4 在"规划范式"上的体现——连续优化派（BSP / belief-MPC）vs 采样树搜索派（DESPOT）。选哪个仍回到那个老问题：belief 单峰高斯连续 → belief-MPC；多峰离散 → DESPOT。这也让 U4 与 U2/U3 接上了——belief-space MPC 就是"把 U2/U3 的 MPC 从状态空间搬到 belief 空间"。
 
-### 进阶专题十一：belief 的表示方法谱 ⭐⭐⭐
+### 进阶专题十一：belief 的表示方法谱 ★★★
 
 贯穿本章的一条暗线是"belief 怎么表示"——它决定了能用什么算法、能处理什么问题。系统梳理一下：
 
@@ -1336,7 +1336,7 @@ U2/U3 的 MPC 在**状态**上滚动优化。当状态不可观测时，一个�
 
 > **本质洞察：选 POMDP 方法，本质是先选 belief 的表示，算法随之而定**。本章看似有一堆并列方法（SARSOP/DESPOT/BSP/Dreamer），但它们的根本分野在"用什么表示 belief"——精确分布配 α-vector、高斯配 Riccati、粒子配树搜索、神经向量配摊销 RL。一旦 belief 表示定了，能用的算法就基本定了。所以遇到新问题，先问"我的 belief 是什么形状（离散 / 单峰 / 多峰 / 图像）"，再问"哪种表示装得下它"——表示选对，方法自然浮现。这也是为什么 §U4.6 的 BSP 和 §U4.4 的 DESPOT 不是竞争而是面向不同 belief 形状的互补工具。
 
-### 进阶专题十二：信息论度量的统一（熵 / 互信息 / Fisher / D-A-E）⭐⭐⭐
+### 进阶专题十二：信息论度量的统一（熵 / 互信息 / Fisher / D-A-E）★★★
 
 §U4.7 出现了好几种"信息"度量（Shannon 熵、互信息、D/A/E-optimality、Fisher 信息），它们其实是同一件事的不同切面，理清能避免选错。
 
@@ -1349,7 +1349,7 @@ U2/U3 的 MPC 在**状态**上滚动优化。当状态不可观测时，一个�
 
 > **本质洞察：这些"信息"度量在高斯下殊途同归，差别在非高斯与"你在乎哪种不确定"**。Shannon 熵、互信息、$\log\det\Sigma$（D-opt）在高斯 belief 下基本等价（都正比于 $\log\det\Sigma$）——所以别被术语吓到，它们大多在度量同一个"椭球体积"。真正的选择在两处：（1）belief 非高斯时，互信息最一般但难算，实践常退回高斯近似用 $\log\det$；（2）你在乎哪种不确定——总体积（D）、各方向总和（A）、还是最坏方向（E）。Active SLAM 选度量，本质是回答这两个问题，而非纠结术语差异。
 
-### 进阶专题十三：标准 POMDP benchmark 一览 ⭐⭐
+### 进阶专题十三：标准 POMDP benchmark 一览 ★★
 
 DESPOT 的 `examples/cpp_models/` 和文献里反复出现几个标准 benchmark。认识它们各测什么，便于读论文、跑实验、设计自己的问题。
 
@@ -1365,7 +1365,7 @@ DESPOT 的 `examples/cpp_models/` 和文献里反复出现几个标准 benchmark
 
 > **本质洞察：benchmark 的演进映射 POMDP 方法的能力边界**。Tiger（2 状态）SARSOP 秒解、Pocman（$10^{56}$ 状态）只有在线采样方法（DESPOT/POMCP）能碰——一个 benchmark 跑得动跑不动，直接暴露方法的可扩展性。设计自己的 POMDP 时，先想清楚"它更像 Tiger（小、重权衡）还是 Pocman（大、重可扩展）"，就知道该用 SARSOP 还是 DESPOT。这也是为什么本章用 Tiger 讲透原理（小到能手算）、用 DESPOT 讲可扩展（能上 Pocman 量级）。
 
-### 进阶专题十四：POMDP 的复杂度与可解性全景 ⭐⭐⭐⭐
+### 进阶专题十四：POMDP 的复杂度与可解性全景 ★★★★
 
 把散落各处的复杂度结论汇成一张全景图，理解"POMDP 到底有多难、哪些可解"。
 
@@ -1382,7 +1382,7 @@ DESPOT 的 `examples/cpp_models/` 和文献里反复出现几个标准 benchmark
 
 > **本质洞察：POMDP 研究史就是"在不可解的精确解 vs 可用的近似解之间，找各种聪明的放松"**。精确 POMDP 撞 PSPACE / undecidable 这堵墙是铁的事实。所以整个领域的进展不是"攻破这堵墙"，而是"绕过它"——每一种主流方法都是一种放松：可达性放松（点基）、视界放松（在线有限深度）、分布放松（高斯 BSP）、表示放松（神经摊销）、最优性放松（output-sensitive 近最优）。理解这一点，你读任何 POMDP 论文都能一眼看出它"放松了什么、换来了什么"——这是穿透 POMDP 方法丛林的指南针，也呼应 §U4.2"两个 curse"与进阶二"各方法如何绕 curse"的统一视角。
 
-### 进阶专题十五：anytime 性质与实时部署 ⭐⭐⭐
+### 进阶专题十五：anytime 性质与实时部署 ★★★
 
 要把 POMDP 放进机器人的控制回路（每周期固定毫秒预算），**anytime（随时可停）**性质是关键——这是 DESPOT/POMCP/HSVI 能上车而精确求解不能的工程原因。
 
@@ -1396,7 +1396,7 @@ DESPOT 的 `examples/cpp_models/` 和文献里反复出现几个标准 benchmark
 
 > **本质洞察：anytime 是"用可中断的增量改进，把'算到最优'换成'在预算内尽量好'"——这是 POMDP 上实时机器人的通行证**。精确求解是"要么算完要么没用"（不可中断），所以上不了实时回路。DESPOT/POMCP 把求解组织成"一轮一轮增量改进 + 随时可停返回当前最优"——于是它能塞进任意时间预算，预算多就好、少就糙，但总有解可用。这与 MPC 的"有限时域 + 滚动重规划"是同一种实时哲学（U2/U3）：不追求一次算到全局最优，而是"在每个周期的预算内给出当前最优、然后滚动"。理解 anytime，你就懂了为什么"POMDP 难（PSPACE）"和"POMDP 能实时上车"并不矛盾——上车的从来不是精确解，而是 anytime 近似解。
 
-### 进阶专题十六：分离原理为何在一般 POMDP 失效 ⭐⭐⭐⭐
+### 进阶专题十六：分离原理为何在一般 POMDP 失效 ★★★★
 
 一个贯穿估计与控制的深层问题：能不能把"状态估计"和"决策"**分开**做——先估出状态、再当它是真值做控制？答案揭示了 POMDP 的本质。
 
@@ -1851,30 +1851,30 @@ U1 的意图分支是对"离散不可观测意图"的 belief 树近似——EUDM
 
 | 编号 | 知识点 | 核心要点 | 对应节 | 难度 |
 |------|--------|---------|--------|------|
-| K1 | POMDP 七元组 | MDP 加观测空间 $\Omega$ + 观测模型 $O$ | §U4.1 | ⭐⭐ |
-| K2 | belief update | 贝叶斯滤波：预测 + 校正 + 归一化；= EKF / 粒子滤波 | §U4.1 | ⭐⭐ |
-| K3 | belief 是充分统计量 | 给定 belief 历史可遗忘 → POMDP = belief-MDP | §U4.1 | ⭐⭐⭐ |
-| K4 | belief 不是点估计 | 整个分布；均值丢不确定性 + 多峰 | §U4.1 | ⭐⭐ |
-| K5 | PWLC 与 α-vector | $V^*(b)=\max_\alpha\alpha\cdot b$（Sondik 1971）；每 α 是条件计划 | §U4.2 | ⭐⭐⭐ |
-| K6 | 两个 curse | 维数（状态多）+ 历史（观测序列多）；近似方法都在绕 | §U4.2、进阶二 | ⭐⭐⭐ |
-| K7 | QMDP | 假设一步后全可观测；快但系统性低估持续消歧 | §U4.2 | ⭐⭐⭐ |
-| K8 | 点基方法 | 只在可达 belief 上备份；α 数受点数限制；给下界 | §U4.3 | ⭐⭐⭐ |
-| K9 | SARSOP | 只盯最优可达 belief；离线 $\epsilon$-最优事实标准 | §U4.3 | ⭐⭐⭐ |
-| K10 | POMCP | belief 树 MCTS；粒子 belief；极限最优但最坏差 | §U4.4 | ⭐⭐⭐ |
-| K11 | DESPOT 确定化稀疏树 | K 场景固化随机树；采状态破维数、采观测破历史 | §U4.4 | ⭐⭐⭐⭐ |
-| K12 | output-sensitive 界 | regret 依最优策略大小、不依 $|S|$ | §U4.4、理论补遗 | ⭐⭐⭐⭐ |
-| K13 | R-DESPOT 正则化 | $\lambda\|\pi\|$ 防过拟合场景（= ML 奥卡姆剃刀）| §U4.4 | ⭐⭐⭐ |
-| K14 | DESPOT 家族演化 | 硬件（HyP）/ 领域（Context）/ 学习（MAGIC/LeTS）三轴 | §U4.5 | ⭐⭐⭐ |
-| K15 | belief-space planning | 高斯 belief 的连续空间特化；高 DoF 但单峰 | §U4.6 | ⭐⭐⭐ |
-| K16 | LQG-MP vs ML 观测 | 两篇不同 RSS 2010：协方差传播 vs 钉死观测 | §U4.6 | ⭐⭐⭐ |
-| K17 | FIRM 破历史灾难 | stationary 控制器把节点 belief 钉成固定值 | §U4.6 | ⭐⭐⭐ |
-| K18 | Active SLAM = POMDP | 信息增益 = 奖励；SLAM 技能成 belief update 子模块 | §U4.7 | ⭐⭐⭐ |
-| K19 | D/A/E-optimality | 协方差标量化（体积 / 总和 / 最坏方向）| §U4.7 | ⭐⭐⭐ |
-| K20 | RSSM = 摊销 belief | encoder = belief update、latent 规划 = belief 空间规划 | §U4.8 | ⭐⭐⭐⭐ |
-| K21 | 两派合流 BetaZero | 学习提供先验 + 树搜索提供保证 | §U4.8 | ⭐⭐⭐⭐ |
-| K22 | POMDP vs RL | POMDP 未知状态（要模型）、RL 未知模型（不要）| 进阶六 | ⭐⭐⭐ |
-| K23 | Dec-POMDP | 多智能体局部观测；高阶信念；NEXP | 进阶七 | ⭐⭐⭐⭐ |
-| K24 | 风险敏感 POMDP | 期望换 CVaR；与认知不确定正交叠加（接 U5）| 进阶八 | ⭐⭐⭐⭐ |
+| K1 | POMDP 七元组 | MDP 加观测空间 $\Omega$ + 观测模型 $O$ | §U4.1 | ★★ |
+| K2 | belief update | 贝叶斯滤波：预测 + 校正 + 归一化；= EKF / 粒子滤波 | §U4.1 | ★★ |
+| K3 | belief 是充分统计量 | 给定 belief 历史可遗忘 → POMDP = belief-MDP | §U4.1 | ★★★ |
+| K4 | belief 不是点估计 | 整个分布；均值丢不确定性 + 多峰 | §U4.1 | ★★ |
+| K5 | PWLC 与 α-vector | $V^*(b)=\max_\alpha\alpha\cdot b$（Sondik 1971）；每 α 是条件计划 | §U4.2 | ★★★ |
+| K6 | 两个 curse | 维数（状态多）+ 历史（观测序列多）；近似方法都在绕 | §U4.2、进阶二 | ★★★ |
+| K7 | QMDP | 假设一步后全可观测；快但系统性低估持续消歧 | §U4.2 | ★★★ |
+| K8 | 点基方法 | 只在可达 belief 上备份；α 数受点数限制；给下界 | §U4.3 | ★★★ |
+| K9 | SARSOP | 只盯最优可达 belief；离线 $\epsilon$-最优事实标准 | §U4.3 | ★★★ |
+| K10 | POMCP | belief 树 MCTS；粒子 belief；极限最优但最坏差 | §U4.4 | ★★★ |
+| K11 | DESPOT 确定化稀疏树 | K 场景固化随机树；采状态破维数、采观测破历史 | §U4.4 | ★★★★ |
+| K12 | output-sensitive 界 | regret 依最优策略大小、不依 $|S|$ | §U4.4、理论补遗 | ★★★★ |
+| K13 | R-DESPOT 正则化 | $\lambda\|\pi\|$ 防过拟合场景（= ML 奥卡姆剃刀）| §U4.4 | ★★★ |
+| K14 | DESPOT 家族演化 | 硬件（HyP）/ 领域（Context）/ 学习（MAGIC/LeTS）三轴 | §U4.5 | ★★★ |
+| K15 | belief-space planning | 高斯 belief 的连续空间特化；高 DoF 但单峰 | §U4.6 | ★★★ |
+| K16 | LQG-MP vs ML 观测 | 两篇不同 RSS 2010：协方差传播 vs 钉死观测 | §U4.6 | ★★★ |
+| K17 | FIRM 破历史灾难 | stationary 控制器把节点 belief 钉成固定值 | §U4.6 | ★★★ |
+| K18 | Active SLAM = POMDP | 信息增益 = 奖励；SLAM 技能成 belief update 子模块 | §U4.7 | ★★★ |
+| K19 | D/A/E-optimality | 协方差标量化（体积 / 总和 / 最坏方向）| §U4.7 | ★★★ |
+| K20 | RSSM = 摊销 belief | encoder = belief update、latent 规划 = belief 空间规划 | §U4.8 | ★★★★ |
+| K21 | 两派合流 BetaZero | 学习提供先验 + 树搜索提供保证 | §U4.8 | ★★★★ |
+| K22 | POMDP vs RL | POMDP 未知状态（要模型）、RL 未知模型（不要）| 进阶六 | ★★★ |
+| K23 | Dec-POMDP | 多智能体局部观测；高阶信念；NEXP | 进阶七 | ★★★★ |
+| K24 | 风险敏感 POMDP | 期望换 CVaR；与认知不确定正交叠加（接 U5）| 进阶八 | ★★★★ |
 
 ---
 
@@ -1950,38 +1950,38 @@ U1 的意图分支是对"离散不可观测意图"的 belief 树近似——EUDM
 按难度与主题分类，均已核实。
 
 **教材 / 综述（入门 → 核心）**
-- Kochenderfer, Wheeler, Wray, *Algorithms for Decision Making*, MIT Press, 2022（免费在线）——MDP/POMDP 决策算法的现代权威教材，POMDPs.jl 的理论底座。⭐⭐
-- Thrun, Burgard, Fox, *Probabilistic Robotics*, MIT Press, 2005——贝叶斯滤波 / belief 的机器人经典，belief update 的源头。⭐⭐
-- Lauri, Hsu, Pajarinen, "Partially Observable Markov Decision Processes in Robotics: A Survey", IEEE T-RO 39(1):21–40, 2023——机器人 POMDP 的最新综述，全景入口。⭐⭐⭐
-- Placed, Strader, Carrillo, Atanasov, Indelman, Carlone, Castellanos, "A Survey on Active SLAM: State of the Art and New Frontiers", IEEE T-RO 39(3):1686–1705, 2023（arXiv:2207.00254）——Active SLAM 权威综述（§U4.7）。⭐⭐⭐
+- Kochenderfer, Wheeler, Wray, *Algorithms for Decision Making*, MIT Press, 2022（免费在线）——MDP/POMDP 决策算法的现代权威教材，POMDPs.jl 的理论底座。★★
+- Thrun, Burgard, Fox, *Probabilistic Robotics*, MIT Press, 2005——贝叶斯滤波 / belief 的机器人经典，belief update 的源头。★★
+- Lauri, Hsu, Pajarinen, "Partially Observable Markov Decision Processes in Robotics: A Survey", IEEE T-RO 39(1):21–40, 2023——机器人 POMDP 的最新综述，全景入口。★★★
+- Placed, Strader, Carrillo, Atanasov, Indelman, Carlone, Castellanos, "A Survey on Active SLAM: State of the Art and New Frontiers", IEEE T-RO 39(3):1686–1705, 2023（arXiv:2207.00254）——Active SLAM 权威综述（§U4.7）。★★★
 
 **奠基论文（核心）**
-- Sondik, *The Optimal Control of Partially Observable Markov Processes*, PhD thesis, Stanford, 1971——PWLC 定理的源头（§U4.2）。⭐⭐⭐⭐
-- Kaelbling, Littman, Cassandra, "Planning and acting in partially observable stochastic domains", Artificial Intelligence 101:99–134, 1998（DOI 10.1016/S0004-3702(98)00023-X）——POMDP 标准化 + Tiger 问题出处（§U4.1）。⭐⭐⭐
+- Sondik, *The Optimal Control of Partially Observable Markov Processes*, PhD thesis, Stanford, 1971——PWLC 定理的源头（§U4.2）。★★★★
+- Kaelbling, Littman, Cassandra, "Planning and acting in partially observable stochastic domains", Artificial Intelligence 101:99–134, 1998（DOI 10.1016/S0004-3702(98)00023-X）——POMDP 标准化 + Tiger 问题出处（§U4.1）。★★★
 
 **求解器：点基与在线（核心 → 进阶）**
-- Pineau, Gordon, Thrun, "Point-based value iteration: An anytime algorithm for POMDPs", IJCAI 2003——PBVI 开创点基（§U4.3）。⭐⭐⭐
-- Smith, Simmons, "Heuristic search value iteration for POMDPs", UAI 2004（及 HSVI2, UAI 2005）——上下界引导（§U4.3）。⭐⭐⭐
-- Kurniawati, Hsu, Lee, "SARSOP: Efficient point-based POMDP planning by approximating optimally reachable belief spaces", RSS 2008（DOI 10.15607/RSS.2008.IV.009）——离线事实标准（§U4.3）。⭐⭐⭐
-- Silver, Veness, "Monte-Carlo planning in large POMDPs", NeurIPS 2010——POMCP，belief 树 MCTS（§U4.4）。⭐⭐⭐
-- Ye, Somani, Hsu, Lee, "DESPOT: Online POMDP Planning with Regularization", JAIR 58:231–266, 2017（arXiv:1609.03250；会议版 Somani-Ye-Hsu-Lee, NeurIPS 2013）——在线事实标准（§U4.4）。⭐⭐⭐⭐
-- Sunberg, Kochenderfer, "Online algorithms for POMDPs with continuous state, action, and observation spaces", ICAPS 2018——POMCPOW，连续空间（进阶三）。⭐⭐⭐⭐
+- Pineau, Gordon, Thrun, "Point-based value iteration: An anytime algorithm for POMDPs", IJCAI 2003——PBVI 开创点基（§U4.3）。★★★
+- Smith, Simmons, "Heuristic search value iteration for POMDPs", UAI 2004（及 HSVI2, UAI 2005）——上下界引导（§U4.3）。★★★
+- Kurniawati, Hsu, Lee, "SARSOP: Efficient point-based POMDP planning by approximating optimally reachable belief spaces", RSS 2008（DOI 10.15607/RSS.2008.IV.009）——离线事实标准（§U4.3）。★★★
+- Silver, Veness, "Monte-Carlo planning in large POMDPs", NeurIPS 2010——POMCP，belief 树 MCTS（§U4.4）。★★★
+- Ye, Somani, Hsu, Lee, "DESPOT: Online POMDP Planning with Regularization", JAIR 58:231–266, 2017（arXiv:1609.03250；会议版 Somani-Ye-Hsu-Lee, NeurIPS 2013）——在线事实标准（§U4.4）。★★★★
+- Sunberg, Kochenderfer, "Online algorithms for POMDPs with continuous state, action, and observation spaces", ICAPS 2018——POMCPOW，连续空间（进阶三）。★★★★
 
 **GPU / 学习辅助（进阶 → 研究级）**
-- Cai, Luo, Hsu, Lee, "HyP-DESPOT: A hybrid parallel algorithm for online planning under uncertainty", RSS 2018——GPU 并行（§U4.5）。⭐⭐⭐⭐
-- Cai, Hsu, Lee, "Context-POMDP" 系列 / SUMMIT 模拟器, ICRA 2020——自驾意图感知（§U4.5）。⭐⭐⭐⭐
-- Lee, Cai, Hsu, Lee, "MAGIC: Learning Macro-Actions for Online POMDP Planning", RSS 2021——学宏动作（§U4.5）。⭐⭐⭐⭐
-- Cai, Hsu, et al., "LeTS-Drive" / 引导 HyP-DESPOT, RSS 2019 / T-RO 2023——学引导树搜索（§U4.5）。⭐⭐⭐⭐
-- Moss, Corso, Caldwell, Kochenderfer, "BetaZero: Belief-State Planning for Long-Horizon POMDPs using Learned Approximations", RLC 2024（arXiv:2306.00249）——学搜合流（§U4.8）。⭐⭐⭐⭐
-- Hafner, Pasukonis, Ba, Lillicrap, "Mastering Diverse Domains through World Models"（DreamerV3）, 2023（arXiv:2301.04104）——RSSM = 摊销 belief（§U4.8）。⭐⭐⭐⭐
+- Cai, Luo, Hsu, Lee, "HyP-DESPOT: A hybrid parallel algorithm for online planning under uncertainty", RSS 2018——GPU 并行（§U4.5）。★★★★
+- Cai, Hsu, Lee, "Context-POMDP" 系列 / SUMMIT 模拟器, ICRA 2020——自驾意图感知（§U4.5）。★★★★
+- Lee, Cai, Hsu, Lee, "MAGIC: Learning Macro-Actions for Online POMDP Planning", RSS 2021——学宏动作（§U4.5）。★★★★
+- Cai, Hsu, et al., "LeTS-Drive" / 引导 HyP-DESPOT, RSS 2019 / T-RO 2023——学引导树搜索（§U4.5）。★★★★
+- Moss, Corso, Caldwell, Kochenderfer, "BetaZero: Belief-State Planning for Long-Horizon POMDPs using Learned Approximations", RLC 2024（arXiv:2306.00249）——学搜合流（§U4.8）。★★★★
+- Hafner, Pasukonis, Ba, Lillicrap, "Mastering Diverse Domains through World Models"（DreamerV3）, 2023（arXiv:2301.04104）——RSSM = 摊销 belief（§U4.8）。★★★★
 
 **Belief-space motion planning（进阶）**
-- van den Berg, Abbeel, Goldberg, "LQG-MP: Optimized path planning for robots with motion uncertainty and imperfect state information", RSS 2010 / IJRR 30(7):895–913, 2011（§U4.6）。⭐⭐⭐
-- Platt, Tedrake, Kaelbling, Lozano-Pérez, "Belief space planning assuming maximum likelihood observations", RSS 2010——与 LQG-MP 不同的工作（§U4.6）。⭐⭐⭐
-- Prentice, Roy, "The belief roadmap: Efficient planning in belief space by factoring the covariance", IJRR 28(11–12):1448–1465, 2009——BRM（§U4.6）。⭐⭐⭐
-- Bry, Roy, "Rapidly-exploring random belief trees for motion planning under uncertainty", ICRA 2011——RRBT（§U4.6）。⭐⭐⭐
-- Agha-mohammadi, Chakravorty, Amato, "FIRM: Sampling-based feedback motion-planning under motion uncertainty and imperfect measurements", IJRR 33(2):268–304, 2014（§U4.6）。⭐⭐⭐⭐
-- Indelman, Carlone, Dellaert, "Planning in the continuous domain: A generalized belief space approach for autonomous navigation in unknown environments", IJRR 34(7):849–882, 2015——BSP-iSAM（§U4.6/U4.7）。⭐⭐⭐⭐
+- van den Berg, Abbeel, Goldberg, "LQG-MP: Optimized path planning for robots with motion uncertainty and imperfect state information", RSS 2010 / IJRR 30(7):895–913, 2011（§U4.6）。★★★
+- Platt, Tedrake, Kaelbling, Lozano-Pérez, "Belief space planning assuming maximum likelihood observations", RSS 2010——与 LQG-MP 不同的工作（§U4.6）。★★★
+- Prentice, Roy, "The belief roadmap: Efficient planning in belief space by factoring the covariance", IJRR 28(11–12):1448–1465, 2009——BRM（§U4.6）。★★★
+- Bry, Roy, "Rapidly-exploring random belief trees for motion planning under uncertainty", ICRA 2011——RRBT（§U4.6）。★★★
+- Agha-mohammadi, Chakravorty, Amato, "FIRM: Sampling-based feedback motion-planning under motion uncertainty and imperfect measurements", IJRR 33(2):268–304, 2014（§U4.6）。★★★★
+- Indelman, Carlone, Dellaert, "Planning in the continuous domain: A generalized belief space approach for autonomous navigation in unknown environments", IJRR 34(7):849–882, 2015——BSP-iSAM（§U4.6/U4.7）。★★★★
 
 **开源代码**：`AdaCompNUS/despot`、`AdaCompNUS/hyp-despot`、`AdaCompNUS/sarsop`、`JuliaPOMDP/POMDPs.jl`、`h2r/pomdp-py`、`RDLLab/oppt`、`ethz-asl/mav_active_3d_planning`（详见"工具与源码精读清单"）。
 

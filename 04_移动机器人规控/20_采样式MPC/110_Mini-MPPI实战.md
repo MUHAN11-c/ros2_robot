@@ -10,7 +10,7 @@
 
 ---
 
-## 📋 前置自测
+## ◆ 前置自测
 
 > 答不出 **$\geq 2$ 题**，先回对应章节补课，再读本章。本章是综合实战，默认你已掌握前 9 章的核心内容。
 
@@ -41,13 +41,13 @@
 
 | 节 | 知识点 | 难度 | 它解决什么 | 依赖 |
 |----|--------|------|-----------|------|
-| §10.1 | 项目架构、CMake 配置、模板化设计 | ⭐⭐ | 把散落的代码片段组织成可编译的工程 | Ch2 §2.3 模板设计 |
-| §10.2 | 动力学模型封装、`__host__ __device__`、Eigen-CUDA 互操作 | ⭐⭐ | 让同一份动力学代码在 CPU 测试和 GPU kernel 里都能跑 | §10.1、Ch2 §2.2 |
-| §10.3 | CUDA rollout kernel、线程映射、shared memory、register pressure | ⭐⭐⭐ | 把 $K$ 条 rollout 并行到 GPU 上 | §10.2、Ch2 §2.2 |
-| §10.4 | MPPI 主循环、权重计算、warm-start、SGF 平滑 | ⭐⭐ | 把 kernel 和算法逻辑串成完整控制器 | §10.3、Ch2 §2.1 |
-| §10.5 | MuJoCo C API、mjData 线程安全、batch rollout | ⭐⭐ | 用工业级物理引擎替换手写动力学 | §10.4 |
-| §10.6 | K/T 扫参、GPU vs CPU 对比、nsys/ncu profiling | ⭐⭐⭐ | 量化性能、定位瓶颈、指导调优 | §10.3–§10.5 |
-| §10.7 | CUDA 调试、数值发散诊断、可视化调试 | ⭐⭐ | 排查实战中的常见故障 | 全章 |
+| §10.1 | 项目架构、CMake 配置、模板化设计 | ★★ | 把散落的代码片段组织成可编译的工程 | Ch2 §2.3 模板设计 |
+| §10.2 | 动力学模型封装、`__host__ __device__`、Eigen-CUDA 互操作 | ★★ | 让同一份动力学代码在 CPU 测试和 GPU kernel 里都能跑 | §10.1、Ch2 §2.2 |
+| §10.3 | CUDA rollout kernel、线程映射、shared memory、register pressure | ★★★ | 把 $K$ 条 rollout 并行到 GPU 上 | §10.2、Ch2 §2.2 |
+| §10.4 | MPPI 主循环、权重计算、warm-start、SGF 平滑 | ★★ | 把 kernel 和算法逻辑串成完整控制器 | §10.3、Ch2 §2.1 |
+| §10.5 | MuJoCo C API、mjData 线程安全、batch rollout | ★★ | 用工业级物理引擎替换手写动力学 | §10.4 |
+| §10.6 | K/T 扫参、GPU vs CPU 对比、nsys/ncu profiling | ★★★ | 量化性能、定位瓶颈、指导调优 | §10.3–§10.5 |
+| §10.7 | CUDA 调试、数值发散诊断、可视化调试 | ★★ | 排查实战中的常见故障 | 全章 |
 
 > **关于本章的代码**：本章给出的代码是**完整可编译的工程级 C++/CUDA 代码**，与前面章节的教学示意片段不同。每段代码前会解释"为什么这样写"，代码后会给出"如果不这样做会怎样"。你可以直接按照本章的架构搭建自己的 Mini-MPPI 项目。
 
@@ -247,7 +247,7 @@ nvcc -arch=sm_75 --expt-relaxed-constexpr \
 
 ---
 
-## §10.1 项目架构与设计决策 ⭐⭐
+## §10.1 项目架构与设计决策 ★★
 
 ### 动机：为什么需要想清楚目录结构
 
@@ -353,7 +353,7 @@ set_target_properties(mini_mppi PROPERTIES
 
 **如果不这样做会怎样。** 最常见的错误是用旧式的 `find_package(CUDA)` + `cuda_add_executable` 语法——它在 CMake 3.18+ 中已被标记为过时（deprecated），与新版 CMake 的 CUDA 支持冲突，导致编译选项丢失、链接失败。另一个常见错误是忘了 `CUDA_SEPARABLE_COMPILATION ON`——当你在 `.cu` 文件里调用另一个 `.cuh` 文件中定义的 `__device__` 函数时，缺少分离编译会导致链接期找不到符号（`undefined reference to __device_stub__`）。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **编程陷阱：CMake 的 `-arch` 参数与 GPU 不匹配。**
 - **错误描述**：CMakeLists 里写了 `-arch=sm_75`，但实际 GPU 是 RTX 3080（`sm_86`）。
@@ -383,7 +383,7 @@ set_target_properties(mini_mppi PROPERTIES
 
 ---
 
-## §10.2 动力学模型封装 ⭐⭐
+## §10.2 动力学模型封装 ★★
 
 ### 动机：为什么动力学模型是 MPPI 系统的第一个要写的组件
 
@@ -582,7 +582,7 @@ __device__ void good_step() {
 //    避免某些版本的 Eigen 在设备代码中引入不兼容的路径）
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **编程陷阱：在 CUDA device 函数中使用 `Eigen::VectorXf`（动态大小矩阵）。**
 - **错误描述**：动力学的 `step` 函数里声明 `Eigen::VectorXf x(12)` 而非 `Eigen::Matrix<float, 12, 1> x`。
@@ -612,7 +612,7 @@ __device__ void good_step() {
 
 ---
 
-## §10.3 CUDA Rollout Kernel ⭐⭐⭐
+## §10.3 CUDA Rollout Kernel ★★★
 
 ### 动机：把"K 条独立 rollout"真正同时跑起来
 
@@ -943,7 +943,7 @@ nvcc --ptxas-options=-v -c mppi_kernel.cu
 
 **如何量化 warp divergence？** 用 `ncu --metrics smsp__inst_executed_pipe_branch_divergent` 可以测量分歧分支的指令数。如果这个数字接近 0，说明没有分歧；如果它占总指令的 5% 以上，就值得考虑改映射策略或简化分支。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **编程陷阱：rollout kernel 缺少越界保护 `if (k >= K) return;`。**
 - **错误描述**：kernel 的第一行直接开始读状态，没有检查线程 index 是否越界。
@@ -973,7 +973,7 @@ nvcc --ptxas-options=-v -c mppi_kernel.cu
 
 ---
 
-## §10.4 MPPI 主循环与权重计算 ⭐⭐
+## §10.4 MPPI 主循环与权重计算 ★★
 
 ### 动机：把 kernel 和算法逻辑串成完整控制器
 
@@ -1349,7 +1349,7 @@ void adapt_sigma() {
 
 **SGF 的超参选择。** 代码里用的是窗口 5、2 阶多项式——这是一个保守的选择。回顾 Ch2 §2.1 的分析：窗口越宽平滑越狠但越容易抹平真实特征；阶数越高越保形但去噪越弱。$\text{window}=5, \text{poly}=2$ 在 $T=30$ 的时域下约覆盖 17% 的时步，平滑强度适中。如果你的 $T$ 更大（如 T=100），可以适当增大窗口到 7 或 9。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **编程陷阱：在控制循环里重复调用 `cudaMalloc` / `cudaFree`。**
 - **错误描述**：每个控制周期（50 Hz = 每 20 ms 一次）都 `cudaMalloc` 分配噪声数组、用完后 `cudaFree` 释放。
@@ -1379,7 +1379,7 @@ void adapt_sigma() {
 
 ---
 
-## §10.5 MuJoCo 集成 ⭐⭐
+## §10.5 MuJoCo 集成 ★★
 
 ### 动机：为什么要接上物理引擎
 
@@ -1507,7 +1507,7 @@ void mujoco_batch_rollout(
 
 **代码后的解读。** `schedule(dynamic)` 告诉 OpenMP 用动态调度——因为不同 rollout 的计算时间可能不同（有的碰到复杂接触、有的没碰），动态调度让先完成的线程去拿新任务，而非所有线程等最慢的那个（静态调度的缺点）。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **编程陷阱：多线程共享同一个 `mjData`，导致非确定性崩溃。**
 - **错误描述**：为了省内存，K 条 rollout 共享一个 `mjData*`，在 OpenMP 循环里直接用。
@@ -1537,7 +1537,7 @@ void mujoco_batch_rollout(
 
 ---
 
-## §10.6 性能基准测试 ⭐⭐⭐
+## §10.6 性能基准测试 ★★★
 
 ### 动机：为什么必须自己做基准测试
 
@@ -1628,7 +1628,7 @@ ncu --set full -k rollout_kernel ./mini_mppi
 | Memory Throughput | 实际内存吞吐 / 峰值内存带宽 | > 60% | 如果计算密集型 kernel 的内存吞吐高，说明瓶颈在内存，需要减少访存 |
 | Warp Branch Divergence | 分歧分支的 warp 比例 | < 5% | 代价函数的 if 分支导致 warp 内分歧 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **实验陷阱：计时时忘了 `cudaDeviceSynchronize()`，得到虚假的快时间。**
 - **错误描述**：用 `auto start = chrono::high_resolution_clock::now();` 在 kernel 启动后立刻 `auto end = ...`，没有等 kernel 完成。
@@ -1658,7 +1658,7 @@ ncu --set full -k rollout_kernel ./mini_mppi
 
 ---
 
-## §10.7 调试与故障排查 ⭐⭐
+## §10.7 调试与故障排查 ★★
 
 ### 动机：CUDA + 数值计算 = 调试地狱
 
@@ -1802,7 +1802,7 @@ def plot_mppi_debug(data_file):
 | 轨迹投影 | 高权重轨迹聚集在目标方向 | 轨迹四散 → $\Sigma$ 太大；轨迹扎堆在错误方向 → warm-start 指向了过时的解 |
 | 控制序列 | 平滑、有物理意义的形状 | 高频锯齿 → 没做 SGF；首尾剧烈跳变 → warm-start 末位填充有问题 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **调试陷阱：在 GPU kernel 里用 `printf` 调试，输出丢失或乱序。**
 - **错误描述**：在 kernel 里加 `printf("k=%d cost=%f\n", k, total_cost);`，K=4096 时只看到几百行输出（而非 4096 行），且顺序杂乱。

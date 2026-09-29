@@ -111,7 +111,7 @@ S3(特征多项式) -------------------------+
 
 ---
 
-## 1. 多项式环 $F[x]$：算子理论所需基础 ⭐⭐
+## 1. 多项式环 $F[x]$：算子理论所需基础 ★★
 
 ### 动机
 
@@ -127,7 +127,7 @@ S3(特征多项式) -------------------------+
 - 无法理解准素分解中"Bezout 恒等式给出投影算子"——因为你不知道 Bezout 恒等式从何而来
 - 无法理解 $F[x]$-模路径——因为你不知道 $F[x]$ 的代数性质为何如此关键
 
-### 1.1 $F[x]$ 的环结构 ⭐
+### 1.1 $F[x]$ 的环结构 ★
 
 **定义**：设 $F$ 是一个域（Field），$F[x]$ 是系数在 $F$ 中的一元多项式构成的集合，配备标准的多项式加法和乘法。具体地，$F[x]$ 中的元素形如
 
@@ -143,7 +143,7 @@ $$\deg(p \cdot q) = \deg(p) + \deg(q)$$
 
 > **阶段小结**：$F[x]$ 是一个整环，配备次数函数 $\deg$。接下来我们将看到 $\deg$ 的关键作用——它使得 $F[x]$ 中的带余除法成为可能。
 
-### 1.2 Euclidean 带余除法与 PID ⭐⭐
+### 1.2 Euclidean 带余除法与 PID ★★
 
 **定理（带余除法）**：对任意 $f, g \in F[x]$，$g \neq 0$，存在唯一的 $q, r \in F[x]$ 使得
 
@@ -157,7 +157,7 @@ $$f = g \cdot q + r, \quad \deg(r) < \deg(g) \text{ 或 } r = 0$$
 
 > **本质洞察**：$F[x]$ 是 PID 这一事实是本章一切结构定理的代数根基。Jordan 标准形的存在性、唯一性，以及准素分解的显式构造，最终都可以追溯到 $F[x]$ 的 PID 性质。从某种意义上说，有限维线性算子的完全分类之所以可能，正是因为 $F[x]$ 的理想结构足够简单。
 
-### 1.3 最大公因式与 Bezout 恒等式 ⭐⭐
+### 1.3 最大公因式与 Bezout 恒等式 ★★
 
 **定义**：$\gcd(f, g)$ 是 $f$ 和 $g$ 的最大公因式，即 $(f) + (g) = (\gcd(f, g))$ 的唯一首一生成元。
 
@@ -176,7 +176,7 @@ $$s(x) \cdot f(x) + t(x) \cdot g(x) = \gcd(f, g)$$
 
 > **为什么 Bezout 恒等式重要**：在 $\S6$ 准素分解中，我们需要构造向广义特征空间的投影算子。Bezout 恒等式提供了将恒等算子分解为幂等投影之和的显式方法——"$sf + tg = 1$ 在算子层面变成 $s(T)f(T) + t(T)g(T) = I$"。
 
-### 1.4 不可约元与唯一分解 ⭐⭐
+### 1.4 不可约元与唯一分解 ★★
 
 **定义**：$F[x]$ 中的非零非单位元素 $p(x)$ 称为不可约的（Irreducible），如果 $p = fg$ 蕴含 $f$ 或 $g$ 是单位元（即非零常数）。
 
@@ -205,7 +205,7 @@ $$f(x) = c \cdot p_1(x)^{a_1} \cdot p_2(x)^{a_2} \cdots p_k(x)^{a_k}$$
 
 > **反事实推理**：如果 $\mathbb{R}$ 是代数闭的会怎样？那么 $x^2 + 1$ 在 $\mathbb{R}$ 上就有根，设为 $i$，但 $i^2 = -1 < 0$，这与 $\mathbb{R}$ 上非零实数的平方总为正矛盾。所以 $\mathbb{R}$ 不可能是代数闭的——代数闭性是复数域 $\mathbb{C}$ 的特权，代价是失去全序关系。
 
-### 1.5 预告：$V$ 如何成为 $F[x]$-模 ⭐
+### 1.5 预告：$V$ 如何成为 $F[x]$-模 ★
 
 **核心思想**：给定线性算子 $T: V \to V$，我们可以让 $F[x]$ 作用在 $V$ 上：定义 $x \cdot v := T(v)$，进而 $p(x) \cdot v := p(T)(v)$。这使得 $V$ 成为 $F[x]$-模（Module over $F[x]$）。
 
@@ -213,7 +213,7 @@ $$f(x) = c \cdot p_1(x)^{a_1} \cdot p_2(x)^{a_2} \cdots p_k(x)^{a_k}$$
 
 现在只需记住一个关键事实：**$V$ 作为 $F[x]$-模是挠模（Torsion Module）**，即每个 $v \in V$ 都有非零的零化多项式。这是因为 $\{v, Tv, T^2 v, \ldots, T^{n^2} v\}$（$n = \dim V$）在 $n^2 + 1$ 维空间中必然线性相关。
 
-### 1.6 $F[x]$ 与 $\mathrm{End}(V)$ 的关系 ⭐⭐
+### 1.6 $F[x]$ 与 $\mathrm{End}(V)$ 的关系 ★★
 
 给定线性算子 $T: V \to V$，定义**求值同态**（Evaluation Homomorphism）：
 
@@ -261,7 +261,7 @@ $$F[x]/(m_T) \cong \mathrm{Im}(\mathrm{ev}_T) = F[T] \subset \mathrm{End}(V)$$
 
 ---
 
-## 2. $T$-零化多项式与极小多项式 $m_T$ ⭐⭐⭐
+## 2. $T$-零化多项式与极小多项式 $m_T$ ★★★
 
 ### 动机
 
@@ -282,7 +282,7 @@ $$F[x]/(m_T) \cong \mathrm{Im}(\mathrm{ev}_T) = F[T] \subset \mathrm{End}(V)$$
 
 极小多项式的概念可追溯到 19 世纪的 Cayley 和 Hamilton 的工作。Arthur Cayley 在 1858 年首次猜测每个矩阵都满足自己的特征方程，William Rowan Hamilton 在四元数理论中独立发现了类似结果。这个猜想的严格证明（即 Cayley--Hamilton 定理）将在 $\S4$ 给出，而极小多项式是理解这一定理的必要前置。
 
-### 2.1 零化理想 $\mathrm{Ann}(T)$ ⭐⭐⭐
+### 2.1 零化理想 $\mathrm{Ann}(T)$ ★★★
 
 **定义**：设 $T: V \to V$ 是有限维向量空间上的线性算子。$T$ 的**零化理想**（Annihilator Ideal）定义为
 
@@ -295,7 +295,7 @@ $$\mathrm{Ann}(T) := \{p \in F[x] : p(T) = 0\} \subset F[x]$$
 
 注意这里用到了一个关键事实：**对于可交换的多项式 $f, g \in F[x]$，有 $f(T) \circ g(T) = (fg)(T)$**。这是因为 $T$ 与自身交换（$T \circ T = T \circ T$），所以 $T$ 的各次幂之间也互相交换。
 
-### 2.2 存在性论证 ⭐⭐⭐
+### 2.2 存在性论证 ★★★
 
 **定理**：$\mathrm{Ann}(T) \neq \{0\}$，即存在非零多项式零化 $T$。
 
@@ -307,7 +307,7 @@ $$c_0 I + c_1 T + c_2 T^2 + \cdots + c_{n^2} T^{n^2} = 0$$
 
 **上界**：这个论证给出 $\mathrm{Ann}(T)$ 中存在次数 $\leq n^2$ 的非零元素。Cayley--Hamilton 定理（$\S4$）将给出更强的结论：$p_T \in \mathrm{Ann}(T)$，其次数为 $n$。因此极小多项式 $m_T$ 的次数最多为 $n$（而非 $n^2$）。
 
-### 2.3 极小多项式的定义与唯一性 ⭐⭐⭐
+### 2.3 极小多项式的定义与唯一性 ★★★
 
 **定义**：$T$ 的**极小多项式**（Minimal Polynomial）$m_T$ 是 $\mathrm{Ann}(T)$ 中次数最小的首一多项式。
 
@@ -315,7 +315,7 @@ $$c_0 I + c_1 T + c_2 T^2 + \cdots + c_{n^2} T^{n^2} = 0$$
 
 > **本质洞察**：极小多项式 $m_T$ 捕获了算子 $T$ 的"代数本质"——它是最精简的多项式关系。$m_T$ 可以告诉我们 $T$ 的所有本质信息：$T$ 的特征值（$m_T$ 的根）、$T$ 是否可对角化（$m_T$ 是否无重根）、$V$ 如何按 $T$ 的作用分解（$m_T$ 的因式分解）。
 
-### 2.4 整除性刻画 ⭐⭐⭐
+### 2.4 整除性刻画 ★★★
 
 **定理**：$q(T) = 0$ 当且仅当 $m_T \mid q$。
 
@@ -325,7 +325,7 @@ $$c_0 I + c_1 T + c_2 T^2 + \cdots + c_{n^2} T^{n^2} = 0$$
 
 **应用示例**：如何利用整除性判断 $T$ 是否可逆？$T$ 可逆当且仅当 $0$ 不是 $T$ 的特征值，等价于 $m_T(0) \neq 0$，等价于 $m_T$ 的常数项非零。更一般地，若 $m_T(x) = x^r + c_{r-1}x^{r-1} + \cdots + c_0$，则 $T$ 可逆当且仅当 $c_0 \neq 0$。此时 $T^{-1} = -\frac{1}{c_0}(T^{r-1} + c_{r-1}T^{r-2} + \cdots + c_1 I)$——极小多项式直接给出了逆算子的显式表达。
 
-### 2.5 限制到不变子空间 ⭐⭐
+### 2.5 限制到不变子空间 ★★
 
 **命题**：设 $W \subset V$ 是 $T$-不变子空间，则 $m_{T|_W} \mid m_T$。
 
@@ -333,7 +333,7 @@ $$c_0 I + c_1 T + c_2 T^2 + \cdots + c_{n^2} T^{n^2} = 0$$
 
 **类比理解**：这就像一条河（$V$）的流速规律（$m_T$）决定了每条支流（$W$）的规律（$m_{T|_W}$）——支流的规律必须"整除"主流的规律。但要注意**类比的边界**：支流可能有比主流更简单的规律（$m_{T|_W}$ 的次数可以严格小于 $m_T$ 的次数），但不可能有与主流矛盾的规律。
 
-### 2.6 直和分解下的极小多项式 ⭐⭐
+### 2.6 直和分解下的极小多项式 ★★
 
 **命题**：若 $V = V_1 \oplus V_2 \oplus \cdots \oplus V_k$，每个 $V_i$ 都是 $T$-不变子空间，则
 
@@ -373,7 +373,7 @@ $$m_T = \mathrm{lcm}(m_{T|_{V_1}}, m_{T|_{V_2}}, \ldots, m_{T|_{V_k}})$$
 
 ---
 
-## 3. 特征多项式 $p_T(\lambda) = \det(\lambda I - T)$ ⭐⭐⭐
+## 3. 特征多项式 $p_T(\lambda) = \det(\lambda I - T)$ ★★★
 
 ### 动机
 
@@ -389,7 +389,7 @@ $$m_T = \mathrm{lcm}(m_{T|_{V_1}}, m_{T|_{V_2}}, \ldots, m_{T|_{V_k}})$$
 - **P2（对角）**：上三角矩阵的行列式等于对角元素的乘积
 - **P3（多项式形式）**：$\det(\lambda I - A)$ 是 $\lambda$ 的首一 $n$ 次多项式
 
-### 3.1 特征多项式的定义与基独立性 ⭐⭐⭐
+### 3.1 特征多项式的定义与基独立性 ★★★
 
 **定义**：设 $T: V \to V$ 的矩阵表示（在某个基下）为 $A$。$T$ 的**特征多项式**为
 
@@ -401,7 +401,7 @@ $$\det(\lambda I - B) = \det(\lambda I - P^{-1}AP) = \det(P^{-1}(\lambda I - A)P
 
 这里用到了行列式的乘性（P1）。因此 $p_T$ 是 $T$ 的内在不变量，不依赖于基的选择。
 
-### 3.2 $p_T$ 的结构 ⭐⭐
+### 3.2 $p_T$ 的结构 ★★
 
 由性质 P3，$p_T(\lambda)$ 是首一 $n$ 次多项式，具体形式为
 
@@ -412,7 +412,7 @@ $$p_T(\lambda) = \lambda^n - (\mathrm{tr}\,T)\lambda^{n-1} + \cdots + (-1)^n \de
 - **次高项**：系数为 $-\mathrm{tr}(T) = -(a_{11} + a_{22} + \cdots + a_{nn})$
 - **常数项**：$p_T(0) = \det(-A) = (-1)^n \det(A)$
 
-### 3.3 特征值即 $p_T$ 的根 ⭐⭐⭐
+### 3.3 特征值即 $p_T$ 的根 ★★★
 
 **命题**：$\lambda_0$ 是 $T$ 的特征值当且仅当 $p_T(\lambda_0) = 0$。
 
@@ -420,7 +420,7 @@ $$p_T(\lambda) = \lambda^n - (\mathrm{tr}\,T)\lambda^{n-1} + \cdots + (-1)^n \de
 
 **代数重数**：特征值 $\lambda_0$ 的**代数重数**（Algebraic Multiplicity）定义为 $\lambda_0$ 作为 $p_T$ 的根的重数。
 
-### 3.4 伴随矩阵简介 ⭐⭐
+### 3.4 伴随矩阵简介 ★★
 
 **定义**：矩阵 $A$ 的**伴随矩阵**（Adjugate Matrix）$\mathrm{adj}(A)$ 的 $(i, j)$ 元素是 $A$ 的 $(j, i)$ 代数余子式。
 
@@ -463,7 +463,7 @@ $$(\lambda I - A) \cdot \mathrm{adj}(\lambda I - A) = p_A(\lambda) \cdot I$$
 
 ---
 
-## 4. Cayley--Hamilton 定理 ⭐⭐⭐
+## 4. Cayley--Hamilton 定理 ★★★
 
 ### 动机
 
@@ -486,7 +486,7 @@ $$p_T(T) = 0$$
 
 Arthur Cayley（1821--1895）在 1858 年的论文 *A Memoir on the Theory of Matrices* 中为 $2 \times 2$ 和 $3 \times 3$ 矩阵验证了这一结论，并声称"无需给出一般情况的证明"（"I have not thought it necessary to undertake the labour of a formal proof"）。William Rowan Hamilton（1805--1865）在四元数理论中独立发现了类似结果。首个严格证明由 Ferdinand Georg Frobenius 于 1878 年给出。
 
-### 4.1 路径 1：经 Schur 分解（几何证明） ⭐⭐⭐
+### 4.1 路径 1：经 Schur 分解（几何证明） ★★★
 
 **前提**：$F$ 代数闭（例如 $F = \mathbb{C}$）。在 A2c 中我们已证明：复向量空间上的任意线性算子都存在不变旗（Invariant Flag），即存在子空间链
 
@@ -538,7 +538,7 @@ $$p_T(T) = (T - \lambda_1 I)(T - \lambda_2 I) \cdots (T - \lambda_n I) = 0$$
 
 **适用范围**：此证明要求 $F$ 代数闭（以保证上三角化存在）。对一般域，需要路径 2。
 
-### 4.2 路径 2：经伴随矩阵（纯代数证明） ⭐⭐⭐
+### 4.2 路径 2：经伴随矩阵（纯代数证明） ★★★
 
 **此路径适用于任意交换环，不要求域或代数闭。**
 
@@ -595,13 +595,13 @@ $$0 = A^n + c_{n-1} A^{n-1} + \cdots + c_1 A + c_0 I = p_A(A)$$
 
 > **本质洞察**：路径 2 的核心技巧是"望远镜求和"——将关于 $\lambda$ 的多项式恒等式转化为关于 $A$ 的矩阵恒等式。这个技巧的深层原因是：$M_n(F)[\lambda]$ 中的恒等式可以通过"求值映射" $\lambda \mapsto A$ 传递到 $M_n(F)$，前提是系数矩阵与 $A$ 交换。
 
-### 4.3 路径 3：稠密性论证（简述） ⭐
+### 4.3 路径 3：稠密性论证（简述） ★
 
 **思想**：可对角化矩阵在 $M_n(\mathbb{C})$ 中 Zariski 稠密（判别式非零的矩阵构成开稠密集）。映射 $A \mapsto p_A(A)$ 是连续的。对可对角化矩阵 $A = P\mathrm{diag}(\lambda_i)P^{-1}$，$p_A(A) = P\mathrm{diag}(p_A(\lambda_i))P^{-1} = P \cdot 0 \cdot P^{-1} = 0$（平凡）。由连续性和稠密性，对全体矩阵成立。
 
 **价值**：展示了"代数恒等式由稠密子集上成立推得"的通用技巧。但对一般域需要额外的代数论证（Lefschetz 原理或 universal identity）。
 
-### 4.4 路径 4：经 $F[x]$-模结构（预告） ⭐
+### 4.4 路径 4：经 $F[x]$-模结构（预告） ★
 
 **思想**：由 $\S10'$ 的模结构定理，$V \cong \bigoplus F[x]/(f_i)$，其中 $f_1 \mid f_2 \mid \cdots \mid f_k$。特征多项式 $p_T = \prod f_i$，极小多项式 $m_T = f_k$。在每个分量 $F[x]/(f_i)$ 上，$f_i(T) = 0$，因此 $p_T(T) = \prod f_i(T) = 0$。
 
@@ -642,17 +642,17 @@ $$0 = A^n + c_{n-1} A^{n-1} + \cdots + c_1 A + c_0 I = p_A(A)$$
 
 ### 练习 4
 
-## 5. 极小多项式与特征多项式的关系 ⭐⭐⭐
+## 5. 极小多项式与特征多项式的关系 ★★★
 
 ### 动机
 
 我们现在有两个与 $T$ 相关的多项式：极小多项式 $m_T$（最小的零化多项式）和特征多项式 $p_T$（$\det(\lambda I - T)$）。Cayley--Hamilton 告诉我们 $p_T(T) = 0$，即 $p_T \in \mathrm{Ann}(T)$，故 $m_T \mid p_T$。但这两个多项式之间的关系远不止"整除"——它们还有**完全相同的根集合**。
 
-### 5.1 $m_T \mid p_T$（Cayley--Hamilton 的直接推论） ⭐⭐⭐
+### 5.1 $m_T \mid p_T$（Cayley--Hamilton 的直接推论） ★★★
 
 由 Cayley--Hamilton 定理：$p_T(T) = 0$，即 $p_T \in \mathrm{Ann}(T) = (m_T)$，故 $m_T \mid p_T$。
 
-### 5.2 同根定理 ⭐⭐⭐
+### 5.2 同根定理 ★★★
 
 **定理**：$m_T$ 与 $p_T$ 有**完全相同的根集合**（但重数可以不同）。
 
@@ -664,7 +664,7 @@ $$0 = A^n + c_{n-1} A^{n-1} + \cdots + c_1 A + c_0 I = p_A(A)$$
 
 **为什么这个推论重要**：它给出了可对角化的代数刻画——不需要检查所有特征空间的维数，只需看 $m_T$ 是否有重根。
 
-### 5.3 典型例子 ⭐⭐
+### 5.3 典型例子 ★★
 
 | 矩阵 $A$ | $p_A$ | $m_A$ | 可对角化？ |
 |-----------|-------|-------|-----------|
@@ -700,7 +700,7 @@ $$0 = A^n + c_{n-1} A^{n-1} + \cdots + c_1 A + c_0 I = p_A(A)$$
 
 ---
 
-## 6. 准素分解定理 ⭐⭐⭐
+## 6. 准素分解定理 ★★★
 
 ### 动机
 
@@ -716,7 +716,7 @@ $$V = \bigoplus_{i=1}^k \ker p_i(T)^{a_i}$$
 
 且 $m_{T|_{\ker p_i(T)^{a_i}}} = p_i^{a_i}$。
 
-### 6.1 路径 A：Bezout 显式投影 ⭐⭐⭐
+### 6.1 路径 A：Bezout 显式投影 ★★★
 
 **构造**：令 $q_i(x) := m_T(x) / p_i(x)^{a_i}$。由于 $p_1, p_2, \ldots, p_k$ 互不相同且不可约，$\{q_1, q_2, \ldots, q_k\}$ 两两互素。因此由 Bezout 恒等式（$\S1.3$），存在 $h_1, \ldots, h_k \in F[x]$ 使得
 
@@ -735,7 +735,7 @@ $$\sum_{i=1}^k h_i(x) q_i(x) = 1$$
 
 > **阶段小结**：Bezout 恒等式 $\sum h_i q_i = 1$ 在算子层面给出了"分色镜" $\sum E_i = I$。每个 $E_i$ 是向 $\ker p_i(T)^{a_i}$ 的投影算子。
 
-### 6.2 路径 B：中国剩余定理 ⭐⭐
+### 6.2 路径 B：中国剩余定理 ★★
 
 **等价视角**：准素分解也可以从中国剩余定理（Chinese Remainder Theorem, CRT）的角度理解。
 
@@ -745,7 +745,7 @@ $$F[x]/(m_T) \cong \prod_{i=1}^k F[x]/(p_i^{a_i})$$
 
 作为 $F$-代数的同构。$V$ 是 $F[x]/(m_T)$-模（因为 $m_T(T) = 0$），按 CRT 的幂等元自然分解为各分量的直和。
 
-### 6.3 关键推论与例题 ⭐⭐
+### 6.3 关键推论与例题 ★★
 
 **推论 1（可对角化判据）**：$T$ 可对角化 $\Leftrightarrow$ $V = \bigoplus_\lambda \ker(T - \lambda I)$，即每个广义特征空间就是普通特征空间（$a_i = 1$）。
 
@@ -792,13 +792,13 @@ $$F[x]/(m_T) \cong \prod_{i=1}^k F[x]/(p_i^{a_i})$$
 
 ---
 
-## 7. 广义特征空间 $G(\lambda, T)$ ⭐⭐⭐
+## 7. 广义特征空间 $G(\lambda, T)$ ★★★
 
 ### 动机
 
 准素分解（$\S6$）将 $V$ 分解为 $\bigoplus_\lambda G(\lambda, T)$，其中 $G(\lambda, T) = \ker(T - \lambda I)^{a_\lambda}$。现在我们需要深入研究单个广义特征空间的内部结构。
 
-### 7.1 定义与核链 ⭐⭐⭐
+### 7.1 定义与核链 ★★★
 
 **定义**：$T$ 关于特征值 $\lambda$ 的**广义特征空间**（Generalized Eigenspace）为
 
@@ -806,7 +806,7 @@ $$G(\lambda, T) := \ker(T - \lambda I)^n = \{v \in V : (T - \lambda I)^n v = 0\}
 
 其中 $n = \dim V$。等价地，$G(\lambda, T) = \bigcup_{k=1}^{\infty} \ker(T - \lambda I)^k$（核链的稳定极限）。
 
-### 7.2 核链升降引理 ⭐⭐⭐
+### 7.2 核链升降引理 ★★★
 
 **引理**：核链
 
@@ -820,7 +820,7 @@ $d$ 称为 $\lambda$ 的**指标**（Index）。
 
 **证明关键**：若 $\ker(T - \lambda I)^k = \ker(T - \lambda I)^{k+1}$，则对所有 $j \geq k$，$\ker(T - \lambda I)^j = \ker(T - \lambda I)^k$。（通过 $v \in \ker(T - \lambda I)^{k+2}$ 蕴含 $(T - \lambda I)v \in \ker(T - \lambda I)^{k+1} = \ker(T - \lambda I)^k$ 来证明。）
 
-### 7.3 维数与代数重数 ⭐⭐⭐
+### 7.3 维数与代数重数 ★★★
 
 **定理**：$\dim G(\lambda, T)$ 等于 $\lambda$ 的代数重数（$\lambda$ 在 $p_T$ 中的重数）。
 
@@ -838,7 +838,7 @@ $d$ 称为 $\lambda$ 的**指标**（Index）。
 
 代数重数 = 所有 Jordan 块大小之和，几何重数 = Jordan 块的数量，指标 = 最大 Jordan 块的大小。
 
-### 7.4 指标与极小多项式 ⭐⭐⭐
+### 7.4 指标与极小多项式 ★★★
 
 **命题**：指标 $d$ 等于 $(x - \lambda)$ 在极小多项式 $m_T$ 中的幂次，也等于 $\lambda$ 对应的最大 Jordan 块的大小。
 
@@ -846,7 +846,7 @@ $d$ 称为 $\lambda$ 的**指标**（Index）。
 
 **直觉**：指标 $d$ 衡量了"$T - \lambda I$ 有多'接近零'"——需要 $d$ 次迭代才能完全"消灭"广义特征空间中的所有向量。$d = 1$ 意味着 $T - \lambda I$ 在特征空间上直接为零（可对角化情况），$d > 1$ 意味着存在"阶梯"——这正是 Jordan 链。
 
-### 7.5 广义特征空间直和分解 ⭐⭐⭐
+### 7.5 广义特征空间直和分解 ★★★
 
 **定理**：当 $p_T$ 在 $F$ 上完全分裂时（例如 $F = \mathbb{C}$），
 
@@ -881,7 +881,7 @@ $$V = \bigoplus_{\lambda \in \mathrm{spec}(T)} G(\lambda, T)$$
 
 ---
 
-## 8. 幂零算子的完整结构 ⭐⭐⭐
+## 8. 幂零算子的完整结构 ★★★
 
 ### 动机
 
@@ -893,7 +893,7 @@ $$V = \bigoplus_{\lambda \in \mathrm{spec}(T)} G(\lambda, T)$$
 
 没有幂零分类，Jordan 标准形就无法构造——准素分解只给出"粗分"，幂零分类才给出每个广义特征空间内部的"细分"。
 
-### 8.1 幂零算子的基本性质 ⭐⭐⭐
+### 8.1 幂零算子的基本性质 ★★★
 
 **定义**：线性算子 $N: V \to V$ 称为**幂零的**，如果存在正整数 $r$ 使得 $N^r = 0$。最小的这样的 $r$ 称为 $N$ 的**幂零指标**（Nilpotency Index）。
 
@@ -903,7 +903,7 @@ $$V = \bigoplus_{\lambda \in \mathrm{spec}(T)} G(\lambda, T)$$
 - $N$ 不可逆（除非 $N = 0$）
 - $\mathrm{rank}(N^k)$ 严格递减直至 $0$：$n > \mathrm{rank}(N) > \mathrm{rank}(N^2) > \cdots > \mathrm{rank}(N^r) = 0$
 
-### 8.2 Young 图与分区 ⭐⭐⭐
+### 8.2 Young 图与分区 ★★★
 
 幂零算子的 Jordan 结构可以用**分区**（Partition）描述。设 $N$ 的 Jordan 块大小为 $k_1 \geq k_2 \geq \cdots \geq k_m$，$\sum k_i = n = \dim V$。
 
@@ -929,7 +929,7 @@ Young 图：
 
 转置后的共轭分区（Weyr 特征的累积形式）：$(3, 3, 1)$，对应 $\dim \ker N^k$ 序列为 $3, 6, 7$。
 
-### 8.3 关键不变量公式 ⭐⭐⭐
+### 8.3 关键不变量公式 ★★★
 
 **定理**：大小恰为 $k$ 的 Jordan 块的数量为
 
@@ -943,7 +943,7 @@ $$n_k = \sum_{j} \min(j, k) \cdot (\text{大小为 } j \text{ 的块数量})$$
 
 **推论**：Jordan 块结构由核维数序列 $\{n_k := \dim \ker N^k\}$ 唯一决定。这是 Jordan 标准形唯一性的核心。
 
-### 8.4 分类定理（存在性）：核旗升法 ⭐⭐⭐
+### 8.4 分类定理（存在性）：核旗升法 ★★★
 
 **构造（Filippov / Strang）**：这是构造 Jordan 基的显式算法。
 
@@ -963,7 +963,7 @@ $$n_k = \sum_{j} \min(j, k) \cdot (\text{大小为 } j \text{ 的块数量})$$
 
 **为什么这样做有效**：核旗的维数差 $\dim \ker N^k - \dim \ker N^{k-1}$ 精确编码了"有多少条 Jordan 链在第 $k$ 层'结束'"。从最高层（最长的链）开始构造，逐层向下，确保各链之间线性无关。
 
-### 8.5 替代路径：极大循环向量 ⭐⭐
+### 8.5 替代路径：极大循环向量 ★★
 
 另一种构造 Jordan 基的方法：
 
@@ -977,7 +977,7 @@ $$n_k = \sum_{j} \min(j, k) \cdot (\text{大小为 } j \text{ 的块数量})$$
 - **投影构造**：利用 $\S6.1$ 的 Bezout 投影思想（在幂零情况下简化）
 - **维数论证**：利用核维数序列的严格递增性保证存在性
 
-### 8.6 详细计算示例 ⭐⭐
+### 8.6 详细计算示例 ★★
 
 **例**：设 $V = \mathbb{R}^5$，$N$ 在标准基下的矩阵为
 
@@ -1028,13 +1028,13 @@ $$N^3 = 0, \quad \ker N^3 = V, \quad \dim = 5$$
 
 ---
 
-## 9. Jordan 链与循环子空间 ⭐⭐⭐
+## 9. Jordan 链与循环子空间 ★★★
 
 ### 动机
 
 在 $\S8$ 的幂零分类中，Jordan 基的构造自然引出了两个关键概念：**Jordan 链**和**循环子空间**。这些概念不仅是 Jordan 标准形的构建模块，还与控制论中的能控标准型直接相关。
 
-### 9.1 $T$-循环子空间 ⭐⭐⭐
+### 9.1 $T$-循环子空间 ★★★
 
 **定义**：给定向量 $v \in V$ 和线性算子 $T$，$v$ 生成的 $T$-**循环子空间**为
 
@@ -1044,7 +1044,7 @@ $$Z(v, T) := \mathrm{span}\{v, Tv, T^2 v, \ldots\}$$
 
 $v$ 的 $T$-**零化多项式**（T-annihilator of $v$）是满足 $p(T)v = 0$ 的最小首一多项式。它的次数等于 $\dim Z(v, T)$。
 
-### 9.2 Jordan 链 ⭐⭐⭐
+### 9.2 Jordan 链 ★★★
 
 **定义**：关于特征值 $\lambda$ 的 **Jordan 链**是一组向量
 
@@ -1060,7 +1060,7 @@ $$Te_j = \lambda e_j + e_{j+1} \quad (j < k), \quad Te_k = \lambda e_k$$
 
 $$J_k(\lambda) = \begin{pmatrix} \lambda & 1 & & \\ & \lambda & 1 & \\ & & \ddots & 1 \\ & & & \lambda \end{pmatrix}$$
 
-### 9.3 循环子空间与伴随矩阵 ⭐⭐⭐
+### 9.3 循环子空间与伴随矩阵 ★★★
 
 在循环子空间 $Z(v, T)$ 上，$T$ 的矩阵（在基 $\{v, Tv, \ldots, T^{k-1}v\}$ 下）是**伴随矩阵**（Companion Matrix）。若 $v$ 的 $T$-零化多项式为 $f(x) = x^k + c_{k-1}x^{k-1} + \cdots + c_0$，则
 
@@ -1068,7 +1068,7 @@ $$C(f) = \begin{pmatrix} 0 & & & -c_0 \\ 1 & 0 & & -c_1 \\ & \ddots & \ddots & \
 
 当 $f(x) = (x - \lambda)^k$ 时（幂零 + 平移），$C(f)$ 相似于 $J_k(\lambda)$。
 
-### 9.4 循环向量的存在条件 ⭐⭐
+### 9.4 循环向量的存在条件 ★★
 
 **定理**：$V$ 是单个 $T$-循环子空间（即存在 $v$ 使得 $V = Z(v, T)$）当且仅当 $m_T = p_T$。
 
@@ -1101,7 +1101,7 @@ $$C(f) = \begin{pmatrix} 0 & & & -c_0 \\ 1 & 0 & & -c_1 \\ & \ddots & \ddots & \
 
 ---
 
-## 10. Jordan 标准形：存在性（路径 A 直接构造） ⭐⭐⭐
+## 10. Jordan 标准形：存在性（路径 A 直接构造） ★★★
 
 ### 动机
 
@@ -1113,7 +1113,7 @@ $$J = \mathrm{diag}\bigl(J_{k_1}(\lambda_{i_1}), J_{k_2}(\lambda_{i_2}), \ldots,
 
 其中 $J_k(\lambda) = \lambda I_k + N_k$（$N_k$ 是 $k \times k$ 的标准幂零矩阵，超对角线为 $1$）。
 
-### 10.1 证明组装 ⭐⭐⭐
+### 10.1 证明组装 ★★★
 
 路径 A 的证明可以精确分为五步，每一步都利用前面章节的结果。
 
@@ -1141,7 +1141,7 @@ $$V = \bigoplus_{\lambda \in \mathrm{spec}(T)} G(\lambda, T) = \bigoplus_\lambda
 
 > **阶段小结**：路径 A 的证明链为 $\S1$（PID）$\to$ $\S2$（$m_T$）$\to$ $\S4$（CH）$\to$ $\S5$（同根）$\to$ $\S6$（准素分解）$\to$ $\S7$（广义特征空间）$\to$ $\S8$（幂零分类）$\to$ $\S10$（组装）。每一步都不可省略。
 
-### 10.2 代数闭性的角色 ⭐⭐
+### 10.2 代数闭性的角色 ★★
 
 Jordan 标准形并不严格要求 $F$ 代数闭——**只需 $p_T$ 在 $F$ 上完全分裂为一次因子**。例如，实矩阵 $A$ 若所有特征值都是实数，则在 $\mathbb{R}$ 上就有 JNF。
 
@@ -1149,7 +1149,7 @@ Jordan 标准形并不严格要求 $F$ 代数闭——**只需 $p_T$ 在 $F$ 上
 - **扩展到代数闭包**（如 $\mathbb{R} \to \mathbb{C}$）使用复 JNF
 - 或使用 **有理标准形**（$\S12$，对任意域成立）
 
-### 10.3 实 Jordan 形 ⭐⭐
+### 10.3 实 Jordan 形 ★★
 
 对实矩阵有复共轭特征值对 $\lambda = a \pm bi$，实 Jordan 形用 $2 \times 2$ 实块替代复 $1 \times 1$ 块：
 
@@ -1184,7 +1184,7 @@ $$\text{复 } J_k(\lambda) \text{ 和 } J_k(\bar\lambda) \quad \longrightarrow \
 
 ---
 
-## 10'. Jordan 标准形：存在性（路径 B：$F[x]$-模） ⭐⭐⭐
+## 10'. Jordan 标准形：存在性（路径 B：$F[x]$-模） ★★★
 
 ### 动机
 
@@ -1192,7 +1192,7 @@ $$\text{复 } J_k(\lambda) \text{ 和 } J_k(\bar\lambda) \quad \longrightarrow \
 
 **代价**：路径 B 需要 PID 上有限生成模的结构定理，这是一个更深的代数工具。以下给出自包含的处理。
 
-### 10'.1 $V$ 的 $F[x]$-模结构 ⭐⭐⭐
+### 10'.1 $V$ 的 $F[x]$-模结构 ★★★
 
 **构造**：定义 $F[x]$ 在 $V$ 上的作用：$x \cdot v := T(v)$，更一般地 $p(x) \cdot v := p(T)v$。
 
@@ -1203,7 +1203,7 @@ $$\text{复 } J_k(\lambda) \text{ 和 } J_k(\bar\lambda) \quad \longrightarrow \
 - $V$ 是**挠模**（$m_T(T)v = 0$ 对所有 $v$）
 - $V$ 的 $F[x]$-子模恰好是 $T$-不变子空间
 
-### 10'.2 PID 结构定理 ⭐⭐⭐
+### 10'.2 PID 结构定理 ★★★
 
 **定理（不变因子形式）**：设 $R$ 为 PID，$M$ 为有限生成 $R$-模，则
 
@@ -1219,7 +1219,7 @@ $p_i$ 为 $R$ 中素元，$p_i^{a_{ij}}$ 称为**初等因子**。
 
 **两种形式的等价性**：由中国剩余定理，$R/(d_k) \cong \prod R/(p_i^{a_{ik}})$（$d_k = \prod p_i^{a_{ik}}$）。
 
-### 10'.3 应用至 $V$ 的分解 ⭐⭐⭐
+### 10'.3 应用至 $V$ 的分解 ★★★
 
 将 $R = F[x]$，$M = V$（挠 $F[x]$-模，$r = 0$）代入：
 
@@ -1239,7 +1239,7 @@ $$V \cong \bigoplus F[x]/((x - \lambda)^{k_{ij}})$$
 
 > **本质洞察**：$F[x]$-模路径将 Jordan 标准形、有理标准形、Cayley--Hamilton 和 $m_T \mid p_T$ 统一为 PID 结构定理的不同"面目"。这不是四个独立定理，而是同一个定理的四种解读。
 
-### 10'.4 两路径对比 ⭐⭐
+### 10'.4 两路径对比 ★★
 
 | 维度 | 路径 A（直接构造） | 路径 B（$F[x]$-模） |
 |------|------------------|-------------------|
@@ -1267,7 +1267,7 @@ $$V \cong \bigoplus F[x]/((x - \lambda)^{k_{ij}})$$
 
 ---
 
-## 11. Jordan 标准形：唯一性 ⭐⭐⭐
+## 11. Jordan 标准形：唯一性 ★★★
 
 ### 动机
 
@@ -1289,7 +1289,7 @@ $$\#\{\text{大小恰为 } k \text{ 的块}\} = 2\dim\ker(T - \lambda I)^k - \di
 
 **路径 B 下的唯一性**更直接：PID 结构定理中不变因子（或初等因子）的唯一性直接蕴含 JNF 的唯一性。
 
-### 唯一性的完整例题 ⭐⭐
+### 唯一性的完整例题 ★★
 
 **例**：两个 $4 \times 4$ 矩阵 $A, B$ 都有特征多项式 $(x-2)^4$。假设 $\dim \ker(A - 2I) = 1$，$\dim \ker(B - 2I) = 2$。
 
@@ -1319,13 +1319,13 @@ $$\#\{\text{大小恰为 } k \text{ 的块}\} = 2\dim\ker(T - \lambda I)^k - \di
 
 ---
 
-## 12. 有理标准形（Frobenius 标准形） ⭐⭐⭐
+## 12. 有理标准形（Frobenius 标准形） ★★★
 
 ### 动机
 
 Jordan 标准形需要 $p_T$ 在 $F$ 上分裂。当 $F$ 非代数闭且 $p_T$ 有不可约的高次因子时（例如实矩阵有复特征值对），JNF 不可得。但**相似类仍有标准代表元**——这就是有理标准形（Rational Canonical Form, RCF），也称 Frobenius 标准形。
 
-### 12.1 伴随矩阵 $C(f)$ ⭐⭐⭐
+### 12.1 伴随矩阵 $C(f)$ ★★★
 
 **定义**：对首一多项式 $f(x) = x^d + c_{d-1}x^{d-1} + \cdots + c_0$，其**伴随矩阵**为
 
@@ -1333,7 +1333,7 @@ $$C(f) = \begin{pmatrix} 0 & & & -c_0 \\ 1 & 0 & & -c_1 \\ & \ddots & \ddots & \
 
 **关键性质**：$p_{C(f)} = m_{C(f)} = f$——伴随矩阵的特征多项式和极小多项式相同，都等于 $f$。
 
-### 12.2 有理标准形定理 ⭐⭐⭐
+### 12.2 有理标准形定理 ★★★
 
 **定理**：对任意域 $F$ 和 $T: V \to V$，$T$ 相似于唯一的
 
@@ -1341,7 +1341,7 @@ $$\mathrm{diag}(C(f_1), C(f_2), \ldots, C(f_k)), \quad f_1 \mid f_2 \mid \cdots 
 
 其中 $f_k = m_T$，$\prod f_i = p_T$，$f_i$ 为**不变因子**。
 
-### 12.3 不变因子 vs 初等因子 ⭐⭐
+### 12.3 不变因子 vs 初等因子 ★★
 
 | 特征 | 不变因子 | 初等因子 |
 |------|---------|---------|
@@ -1349,7 +1349,7 @@ $$\mathrm{diag}(C(f_1), C(f_2), \ldots, C(f_k)), \quad f_1 \mid f_2 \mid \cdots 
 | 对应标准形 | 有理标准形（任意域） | Jordan 形（需 $F$ 代数闭） |
 | 换算 | $f_i = \prod_j p_j^{a_{ij}}$ | 反向通过 CRT 重组 |
 
-### 12.4 相似性判定 ⭐⭐
+### 12.4 相似性判定 ★★
 
 **定理**：$A, B \in M_n(F)$ 在 $F$ 上相似 $\Leftrightarrow$ 有相同不变因子 $\Leftrightarrow$ $xI - A$ 与 $xI - B$ 有相同 Smith 正规形。
 
@@ -1374,13 +1374,13 @@ $$\mathrm{diag}(C(f_1), C(f_2), \ldots, C(f_k)), \quad f_1 \mid f_2 \mid \cdots 
 
 ---
 
-## 13. 计算 Jordan 形：算法 ⭐⭐
+## 13. 计算 Jordan 形：算法 ★★
 
 ### 动机
 
 理论上 JNF 存在且唯一，但**实际计算**需要具体算法。此外，还有一个重要的数值警告：**JNF 对矩阵扰动高度敏感**（病态问题），在数值计算中通常用 Schur 分解替代。
 
-### 13.1 计算步骤概述 ⭐⭐
+### 13.1 计算步骤概述 ★★
 
 1. **求特征多项式 $p_T$**：Leverrier--Faddeev 算法，$O(n^4)$
 2. **求特征值**：$p_T$ 的根（数值方法：QR 算法；符号方法：因式分解）
@@ -1388,7 +1388,7 @@ $$\mathrm{diag}(C(f_1), C(f_2), \ldots, C(f_k)), \quad f_1 \mid f_2 \mid \cdots 
 4. **确定 Jordan 块大小**：计算核维数序列 $\dim \ker(T - \lambda I)^k$ 直至稳定
 5. **构造 Jordan 基**：核旗升法（$\S8.4$）
 
-### 13.2 Smith 正规形算法 ⭐⭐
+### 13.2 Smith 正规形算法 ★★
 
 **Smith 正规形**是计算不变因子（从而确定 JNF 和 RCF）的系统化方法。
 
@@ -1406,7 +1406,7 @@ $$\lambda I - A = \begin{pmatrix} \lambda - 2 & -1 \\ 0 & \lambda - 2 \end{pmatr
 
 通过列变换加上行变换化为 $\mathrm{diag}(1, (\lambda - 2)^2)$。不变因子为 $(\lambda - 2)^2$，确认 $m_A = p_A = (x-2)^2$，JNF 为 $J_2(2)$。
 
-### 13.3 数值警告 ⭐⭐⭐
+### 13.3 数值警告 ★★★
 
 **JNF 对扰动病态**。经典例子：
 
@@ -1443,7 +1443,7 @@ $$A = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix} \quad (\text{一个 } 2 \time
 
 ---
 
-## 14. 矩阵指数 $\exp(tA)$ via Jordan 形 ⭐⭐⭐
+## 14. 矩阵指数 $\exp(tA)$ via Jordan 形 ★★★
 
 ### 动机
 
@@ -1457,7 +1457,7 @@ $$A = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix} \quad (\text{一个 } 2 \time
 - 无法分析线性系统中重特征值导致的多项式增长模态（$t^k e^{\lambda t}$）
 - 无法理解 Lyapunov 稳定性中 Jordan 块大小的作用
 
-### 14.1 定义与基本性质 ⭐⭐⭐
+### 14.1 定义与基本性质 ★★★
 
 **定义**：
 
@@ -1477,7 +1477,7 @@ $$\exp(tA) := \sum_{k=0}^{\infty} \frac{(tA)^k}{k!} = I + tA + \frac{t^2}{2!}A^2
 
 > **反事实推理**：如果 $\exp(A+B) = \exp(A)\exp(B)$ 对所有 $A, B$ 成立会怎样？那么 $\exp$ 就是从加法群 $(M_n, +)$ 到乘法群 $(GL_n, \cdot)$ 的群同态。但这是错的——Baker--Campbell--Hausdorff 公式告诉我们 $\log(\exp(X)\exp(Y)) = X + Y + \frac{1}{2}[X, Y] + \cdots$，交换子 $[X, Y] = XY - YX$ 的存在使得乘法比加法复杂得多。
 
-### 14.2 Jordan 形上的计算 ⭐⭐⭐
+### 14.2 Jordan 形上的计算 ★★★
 
 **Step 1**：若 $A = PJP^{-1}$（$J$ 为 Jordan 形），则
 
@@ -1499,7 +1499,7 @@ $$\exp(tJ_k(\lambda)) = e^{\lambda t} \begin{pmatrix} 1 & t & \frac{t^2}{2!} & \
 
 **模态解读**：$k \times k$ Jordan 块 $J_k(\lambda)$ 产生模态 $\{e^{\lambda t}, te^{\lambda t}, \ldots, t^{k-1}e^{\lambda t}\}$。
 
-### 14.3 Sylvester--Buchheim 闭式 ⭐⭐⭐
+### 14.3 Sylvester--Buchheim 闭式 ★★★
 
 **定理**：若 $m_A$ 的次数为 $m$，则 $\exp(tA)$ 可以表示为 $A$ 的次数 $< m$ 的矩阵多项式：
 
@@ -1509,7 +1509,7 @@ $$\exp(tA) = \sum_{j=0}^{m-1} \beta_j(t) A^j$$
 
 > **本质洞察**：Cayley--Hamilton 将矩阵指数的无穷级数"塌缩"为有限多项式。这个塌缩之所以可能，是因为 $A^n$ 可以表示为 $\{I, A, \ldots, A^{n-1}\}$ 的线性组合——高次项全部折叠到低次上。Sylvester--Buchheim 公式精确地告诉我们折叠的系数。
 
-### 14.4 机器人学核心应用：Rodrigues 公式 ⭐⭐⭐
+### 14.4 机器人学核心应用：Rodrigues 公式 ★★★
 
 **$\mathfrak{so}(3)$ 上的 Cayley--Hamilton**：对单位旋转轴 $\hat{\omega} \in \mathfrak{so}(3)$（$3 \times 3$ 反对称矩阵，$\|\omega\| = 1$），特征多项式为
 
@@ -1525,7 +1525,7 @@ $$\exp(\hat{\omega}\theta) = I + \sin\theta \cdot \hat{\omega} + (1 - \cos\theta
 
 > **类比理解**：Rodrigues 公式之于 $\mathfrak{so}(3)$，就像 Euler 公式 $e^{i\theta} = \cos\theta + i\sin\theta$ 之于复数——二者都利用"最小多项式的循环性"（$i^2 = -1$ 对应 $\hat{\omega}^3 = -\hat{\omega}$）将指数函数截断为有限三角表达。**类比的边界**：Euler 公式是标量等式，Rodrigues 是矩阵等式；$i^2 = -1$ 是精确的二次关系，$\hat{\omega}^3 = -\hat{\omega}$ 是三次关系。
 
-### 14.5 SE(3) 螺旋指数 ⭐⭐
+### 14.5 SE(3) 螺旋指数 ★★
 
 对 $\mathfrak{se}(3)$ 中的螺旋运动 $[S] = \begin{pmatrix} \hat{\omega} & v \\ 0 & 0 \end{pmatrix}$（$\|\omega\| = 1$），利用 $4 \times 4$ 矩阵的最小多项式可以得到闭式：
 
@@ -1533,7 +1533,7 @@ $$\exp([S]\theta) = \begin{pmatrix} R(\theta, \hat{\omega}) & G(\theta, \hat{\om
 
 其中 $R$ 由 Rodrigues 公式给出，$G = I\theta + (1 - \cos\theta)\hat{\omega} + (\theta - \sin\theta)\hat{\omega}^2$。这是正向运动学中产品指数公式（Product of Exponentials）的基础。
 
-### 14.6 线性 ODE $\dot{x} = Ax$ 的解 ⭐⭐⭐
+### 14.6 线性 ODE $\dot{x} = Ax$ 的解 ★★★
 
 **解**：$x(t) = \exp(tA) x(0)$。
 
@@ -1557,7 +1557,7 @@ $$\exp(tJ) = \begin{pmatrix} e^{-t} & te^{-t} & 0 \\ 0 & e^{-t} & 0 \\ 0 & 0 & e
 
 > **反事实推理**：如果上述系统的 $\lambda = 2$ 被替换为 $\lambda = 0$（即 $A$ 的 JNF 变为 $\mathrm{diag}(J_2(-1), J_1(0))$），系统变为"部分稳定"——前两个分量衰减，第三个保持常数。但如果进一步将 $J_1(0)$ 换成 $J_2(0)$（即 $A$ 有 $\lambda = 0$ 的 $2 \times 2$ Jordan 块），则第三和第四分量包含 $t$ 增长项——系统变为不稳定。这清楚地展示了 **Jordan 块大小**（而非仅特征值）对稳定性的决定性作用。
 
-### 14.7 谱映射定理 ⭐⭐
+### 14.7 谱映射定理 ★★
 
 **定理**：$\mathrm{spec}(\exp(A)) = \exp(\mathrm{spec}(A)) = \{e^{\lambda} : \lambda \in \mathrm{spec}(A)\}$，代数重数保持。
 
@@ -1593,13 +1593,13 @@ $$\exp(tJ) = \begin{pmatrix} e^{-t} & te^{-t} & 0 \\ 0 & e^{-t} & 0 \\ 0 & 0 & e
 
 ---
 
-## 15. 应用：控制论稳定性 ⭐⭐
+## 15. 应用：控制论稳定性 ★★
 
 ### 动机
 
 Jordan 理论在控制论中的应用是最直接的——线性系统 $\dot{x} = Ax$ 的行为完全由 $A$ 的 Jordan 结构决定。本节将 Jordan 块的代数结构与控制系统的稳定性、Lyapunov 方程、极点配置联系起来。
 
-### 15.1 线性系统的稳定性分类 ⭐⭐
+### 15.1 线性系统的稳定性分类 ★★
 
 $\dot{x} = Ax$ 在原点的稳定性：
 
@@ -1614,7 +1614,7 @@ $\dot{x} = Ax$ 在原点的稳定性：
 
 > **理论-工程桥接**：二维双积分器 $A = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix}$（如无控制的轮式小车位置-速度）在 $\lambda = 0$ 有 $2 \times 2$ Jordan 块，解包含 $t$ 项，导致位置无界增长——这正是 Jordan 块对机器人控制的直接后果。
 
-### 15.2 Lyapunov 方程 ⭐⭐
+### 15.2 Lyapunov 方程 ★★
 
 **定理**：$A$ Hurwitz（即渐近稳定，全部 $\mathrm{Re}(\lambda_i) < 0$）当且仅当对任意正定矩阵 $Q \succ 0$，Lyapunov 方程
 
@@ -1640,7 +1640,7 @@ $$= \left[e^{A^T t} Q e^{At}\right]_0^{\infty} = 0 - Q = -Q$$
 
 > **理论-工程桥接**：在机器人控制中，二次 Lyapunov 函数 $V(x) = x^T P x$ 用于：(1) 计算力矩控制的稳定性证明；(2) 被动性控制的能量函数构造；(3) 神经网络策略的终止证书（Certificate of Stability）。Lyapunov 方程的数值稳定求解使用 Bartels--Stewart 算法（基于实 Schur 分解，而非 JNF）。
 
-### 15.3 Ackermann 极点配置公式 ⭐⭐⭐
+### 15.3 Ackermann 极点配置公式 ★★★
 
 **定理**：对能控 SISO 系统 $(A, b)$，欲配置闭环特征多项式 $\Delta_d(s)$，状态反馈增益
 
@@ -1652,7 +1652,7 @@ $$k^T = \begin{bmatrix} 0 & \cdots & 0 & 1 \end{bmatrix} \mathcal{C}^{-1} \Delta
 
 > **这是 Cayley--Hamilton 定理在机器人控制中最直接、最重要的应用。**
 
-### 15.4 有限步能控判据 ⭐⭐
+### 15.4 有限步能控判据 ★★
 
 **为什么能控性矩阵 $\mathcal{C} = [B, AB, \ldots, A^{n-1}B]$ 只需到 $A^{n-1}$？** 答案正是 Cayley--Hamilton：$A^n$ 是 $\{I, A, \ldots, A^{n-1}\}$ 的线性组合，所以 $A^n B$ 不会提供 $\mathcal{C}$ 之外的新信息。
 
@@ -1681,13 +1681,13 @@ $$k^T = \begin{bmatrix} 0 & \cdots & 0 & 1 \end{bmatrix} \mathcal{C}^{-1} \Delta
 
 ---
 
-## 16. 应用：矩阵对数与 Lie 群 ⭐⭐
+## 16. 应用：矩阵对数与 Lie 群 ★★
 
 ### 动机
 
 矩阵指数 $\exp: \mathfrak{g} \to G$ 将 Lie 代数映射到 Lie 群。其逆运算——矩阵对数 $\log: G \to \mathfrak{g}$——在 SLAM（同步定位与地图构建）和 Lie 群优化中至关重要。
 
-### 16.1 矩阵对数的存在性 ⭐⭐
+### 16.1 矩阵对数的存在性 ★★
 
 **Culver 定理**：实矩阵 $M$ 存在实对数当且仅当 $M$ 可逆且负实特征值的 Jordan 块成对出现。
 
@@ -1695,7 +1695,7 @@ $$k^T = \begin{bmatrix} 0 & \cdots & 0 & 1 \end{bmatrix} \mathcal{C}^{-1} \Delta
 
 **$SO(3)$ 中的特殊情况**：旋转角 $\theta = \pi$ 时，特征值为 $\{1, -1, -1\}$，主对数不唯一——对数的不唯一性对应于旋转轴的方向歧义。
 
-### 16.2 SE(3) 对数与 SLAM ⭐⭐⭐
+### 16.2 SE(3) 对数与 SLAM ★★★
 
 位姿图 SLAM 的误差残差定义为
 
@@ -1703,7 +1703,7 @@ $$r_{ij} = \log(\hat{T}_{ij}^{-1} T_i^{-1} T_j)^{\vee} \in \mathbb{R}^6$$
 
 其中 $\log$ 是 $SE(3)$ 上的对数映射，$\vee$ 是从李代数到向量空间的同构。这个残差用于 g2o、GTSAM、Ceres 等非线性优化框架。
 
-### 16.3 BCH 公式与 Lie 代数积分 ⭐
+### 16.3 BCH 公式与 Lie 代数积分 ★
 
 Baker--Campbell--Hausdorff 公式：
 
@@ -1715,7 +1715,7 @@ $$\log(\exp(X)\exp(Y)) = X + Y + \frac{1}{2}[X, Y] + \frac{1}{12}([X, [X, Y]] - 
 
 **在 IMU 预积分中的应用**：IMU 测量的角速度 $\omega(t)$ 需要积分得到旋转。连续积分 $R(t) = \exp(\int_0^t \hat{\omega}(\tau) d\tau)$ 在离散化时变为 $R_k = R_{k-1} \exp(\hat{\omega}_k \Delta t)$。BCH 公式的截断精度决定了预积分的精度——这在 SLAM 和 VIO（Visual-Inertial Odometry）中至关重要。
 
-### 16.4 广义 Rodrigues 公式 ⭐
+### 16.4 广义 Rodrigues 公式 ★
 
 **一般原理**：对极小多项式次数为 $m$ 的任意方阵 $A$，$\exp(tA)$ 可以表示为 $A$ 的 $\leq m-1$ 次多项式，系数由 Hermite 插值在 $\mathrm{spec}(A)$ 上确定。
 
@@ -1745,7 +1745,7 @@ $$\log(\exp(X)\exp(Y)) = X + Y + \frac{1}{2}[X, Y] + \frac{1}{12}([X, [X, Y]] - 
 
 ---
 
-## 17. 综合实例与跨模块连接 ⭐⭐
+## 17. 综合实例与跨模块连接 ★★
 
 ### 17.1 完整计算实例：从矩阵到模态分析
 
@@ -1849,23 +1849,23 @@ $$\exp(tA) = \begin{pmatrix} e^{3t} & te^{3t} & 0 & 0 \\ 0 & e^{3t} & 0 & 0 \\ 0
 
 | 编号 | 知识点 | 核心要点 | 对应节 | 难度 |
 |------|--------|---------|--------|------|
-| 1 | $F[x]$ 环结构 | PID、带余除法、Bezout | $\S1$ | ⭐⭐ |
-| 2 | 极小多项式 | 零化理想的生成元、整除性 | $\S2$ | ⭐⭐⭐ |
-| 3 | 特征多项式 | $\det(\lambda I - T)$、基独立性 | $\S3$ | ⭐⭐⭐ |
-| 4 | Cayley--Hamilton | 四条证明路径 | $\S4$ | ⭐⭐⭐ |
-| 5 | $m_T$ 与 $p_T$ 关系 | 整除、同根、可对角化判据 | $\S5$ | ⭐⭐⭐ |
-| 6 | 准素分解 | Bezout 投影、CRT | $\S6$ | ⭐⭐⭐ |
-| 7 | 广义特征空间 | 核链、指标 | $\S7$ | ⭐⭐⭐ |
-| 8 | 幂零分类 | Young 图、核旗升法 | $\S8$ | ⭐⭐⭐ |
-| 9 | Jordan 链 | 循环子空间、伴随矩阵 | $\S9$ | ⭐⭐⭐ |
-| 10 | JNF（路径 A） | 准素 + 幂零 = JNF | $\S10$ | ⭐⭐⭐ |
-| 10' | JNF（路径 B） | $F[x]$-模、PID 结构定理 | $\S10'$ | ⭐⭐⭐ |
-| 11 | JNF 唯一性 | 核维数公式 | $\S11$ | ⭐⭐⭐ |
-| 12 | 有理标准形 | 不变因子、伴随矩阵 | $\S12$ | ⭐⭐⭐ |
-| 13 | 计算算法 | Krylov、数值警告 | $\S13$ | ⭐⭐ |
-| 14 | 矩阵指数 | Jordan 截断、Rodrigues | $\S14$ | ⭐⭐⭐ |
-| 15 | 控制论稳定性 | Lyapunov、Ackermann | $\S15$ | ⭐⭐ |
-| 16 | 矩阵对数与 Lie 群 | $\log$ 存在性、SLAM | $\S16$ | ⭐⭐ |
+| 1 | $F[x]$ 环结构 | PID、带余除法、Bezout | $\S1$ | ★★ |
+| 2 | 极小多项式 | 零化理想的生成元、整除性 | $\S2$ | ★★★ |
+| 3 | 特征多项式 | $\det(\lambda I - T)$、基独立性 | $\S3$ | ★★★ |
+| 4 | Cayley--Hamilton | 四条证明路径 | $\S4$ | ★★★ |
+| 5 | $m_T$ 与 $p_T$ 关系 | 整除、同根、可对角化判据 | $\S5$ | ★★★ |
+| 6 | 准素分解 | Bezout 投影、CRT | $\S6$ | ★★★ |
+| 7 | 广义特征空间 | 核链、指标 | $\S7$ | ★★★ |
+| 8 | 幂零分类 | Young 图、核旗升法 | $\S8$ | ★★★ |
+| 9 | Jordan 链 | 循环子空间、伴随矩阵 | $\S9$ | ★★★ |
+| 10 | JNF（路径 A） | 准素 + 幂零 = JNF | $\S10$ | ★★★ |
+| 10' | JNF（路径 B） | $F[x]$-模、PID 结构定理 | $\S10'$ | ★★★ |
+| 11 | JNF 唯一性 | 核维数公式 | $\S11$ | ★★★ |
+| 12 | 有理标准形 | 不变因子、伴随矩阵 | $\S12$ | ★★★ |
+| 13 | 计算算法 | Krylov、数值警告 | $\S13$ | ★★ |
+| 14 | 矩阵指数 | Jordan 截断、Rodrigues | $\S14$ | ★★★ |
+| 15 | 控制论稳定性 | Lyapunov、Ackermann | $\S15$ | ★★ |
+| 16 | 矩阵对数与 Lie 群 | $\log$ 存在性、SLAM | $\S16$ | ★★ |
 
 ---
 
@@ -1895,21 +1895,21 @@ $$\exp(tA) = \begin{pmatrix} e^{3t} & te^{3t} & 0 & 0 \\ 0 & e^{3t} & 0 & 0 \\ 0
 
 | 教材 | 难度 | 侧重 |
 |------|------|------|
-| Axler, *Linear Algebra Done Right* (4th ed.) | ⭐⭐ | 无行列式路径，几何直觉强 |
-| Hoffman--Kunze, *Linear Algebra* | ⭐⭐⭐ | 经典传统，证明严谨 |
-| Roman, *Advanced Linear Algebra* | ⭐⭐⭐ | 模论视角，路径 B 首选 |
-| Horn--Johnson, *Matrix Analysis* | ⭐⭐⭐⭐ | 矩阵分析百科全书 |
-| Dummit--Foote, *Abstract Algebra* $\S12$ | ⭐⭐⭐ | PID 结构定理的完整证明 |
-| Lang, *Algebra* Ch. XIV | ⭐⭐⭐⭐ | 最抽象但最统一 |
+| Axler, *Linear Algebra Done Right* (4th ed.) | ★★ | 无行列式路径，几何直觉强 |
+| Hoffman--Kunze, *Linear Algebra* | ★★★ | 经典传统，证明严谨 |
+| Roman, *Advanced Linear Algebra* | ★★★ | 模论视角，路径 B 首选 |
+| Horn--Johnson, *Matrix Analysis* | ★★★★ | 矩阵分析百科全书 |
+| Dummit--Foote, *Abstract Algebra* $\S12$ | ★★★ | PID 结构定理的完整证明 |
+| Lang, *Algebra* Ch. XIV | ★★★★ | 最抽象但最统一 |
 
 ### 机器人学应用参考
 
 | 参考 | 难度 | 内容 |
 |------|------|------|
-| Lynch--Park, *Modern Robotics* $\S3$ | ⭐⭐ | Rodrigues 公式、SE(3) 指数 |
-| Murray--Li--Sastry, *A Mathematical Introduction to Robotic Manipulation* | ⭐⭐⭐ | 李群基础 |
-| Barfoot, *State Estimation for Robotics* Ch. 7 | ⭐⭐⭐ | SE(3) 对数与 SLAM |
-| Higham, *Functions of Matrices* | ⭐⭐⭐⭐ | 矩阵函数的数值计算 |
+| Lynch--Park, *Modern Robotics* $\S3$ | ★★ | Rodrigues 公式、SE(3) 指数 |
+| Murray--Li--Sastry, *A Mathematical Introduction to Robotic Manipulation* | ★★★ | 李群基础 |
+| Barfoot, *State Estimation for Robotics* Ch. 7 | ★★★ | SE(3) 对数与 SLAM |
+| Higham, *Functions of Matrices* | ★★★★ | 矩阵函数的数值计算 |
 
 ### 论文
 

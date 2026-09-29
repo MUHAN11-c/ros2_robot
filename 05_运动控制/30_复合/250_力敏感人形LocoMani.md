@@ -2,7 +2,7 @@
 
 | 元信息 | 值 |
 | --- | --- |
-| 难度 | ⭐⭐⭐⭐（接触力控 + 双策略 RL + 遥操作接口 + 频率解耦） |
+| 难度 | ★★★★（接触力控 + 双策略 RL + 遥操作接口 + 频率解耦） |
 | 预计时间 | 2 周（55-70 小时） |
 | 核心平台 | Unitree G1、Booster T1、Unitree H1、HOMIE 同构外骨骼 |
 | 主线 | 力敏感任务 → 阻抗控制理论 → 双策略训练 → 频率解耦 → 遥操作和技能库 |
@@ -42,7 +42,7 @@
 
 ---
 
-## 95.1 力敏感任务的独特性：外力不再是噪声 ⭐⭐
+## 95.1 力敏感任务的独特性：外力不再是噪声 ★★
 
 ### 从行走到走动操作
 
@@ -95,7 +95,7 @@ $$
 
 ---
 
-## 95.2 阻抗控制理论：从弹簧-阻尼模型到笛卡尔阻抗 ⭐⭐⭐
+## 95.2 阻抗控制理论：从弹簧-阻尼模型到笛卡尔阻抗 ★★★
 
 ### 动机：为什么需要阻抗控制
 
@@ -178,7 +178,7 @@ $$
 
 这个公式需要动力学模型 $M(q)$ 和 $h(q,\dot{q})$，以及外力测量或估计 $f_{ext}$。
 
-> **陷阱警告 ⚠️**
+> **陷阱警告 ⚠**
 >
 > **概念误区**：认为阻抗控制和力控制是同一件事
 >
@@ -238,7 +238,7 @@ $$
 
 ---
 
-## 95.3 无源性与稳定性：被动性证明的完整推导链 ⭐⭐⭐⭐
+## 95.3 无源性与稳定性：被动性证明的完整推导链 ★★★★
 
 ### 为什么需要无源性证明
 
@@ -354,7 +354,7 @@ $$
 
 ---
 
-## 95.4 RL 动作空间与力控接口选择 ⭐⭐⭐
+## 95.4 RL 动作空间与力控接口选择 ★★★
 
 ### 动机：动作空间决定了策略能学会什么
 
@@ -433,7 +433,7 @@ CVAE 把上体动作压缩成 latent $z$，作为下体策略的条件。下体�
 
 ---
 
-## 95.5 FALCON 双策略架构深度分析 ⭐⭐⭐⭐
+## 95.5 FALCON 双策略架构深度分析 ★★★★
 
 ### 为什么拆成上体和下体
 
@@ -489,7 +489,7 @@ $$
 | 外力课程标签 | 需要 | 需要 | 学习力补偿 |
 | 上一步动作 $a_{t-1}$ | 需要 | 需要 | 动作平滑 |
 
-> **陷阱警告 ⚠️**
+> **陷阱警告 ⚠**
 >
 > **概念误区**：认为双策略就是让上下体互相不知道
 >
@@ -612,7 +612,7 @@ FALCON 的训练不是一步到位，而是分阶段推进：
 
 ---
 
-## 95.6 SoFTA 软化接触：力课程学习的数学形式化 ⭐⭐⭐⭐
+## 95.6 SoFTA 软化接触：力课程学习的数学形式化 ★★★★
 
 ### 3D 力课程设计
 
@@ -724,7 +724,7 @@ $$
 
 这种隐式方法的优点是不需要力传感器，缺点是力估计精度低于显式传感器，尤其对静态力（如持续端重物）的估计不如动态力（如推门冲击）准确。
 
-> **陷阱警告 ⚠️**
+> **陷阱警告 ⚠**
 >
 > **编程陷阱**：力课程中只随机化力的大小不随机化力的方向
 >
@@ -756,7 +756,7 @@ $$
 
 ---
 
-## 95.7 触觉传感集成：力/力矩传感器到控制闭环 ⭐⭐⭐
+## 95.7 触觉传感集成：力/力矩传感器到控制闭环 ★★★
 
 ### 力传感器在控制链中的位置
 
@@ -861,7 +861,7 @@ $$
 
 用 Teacher-Student 框架训练：teacher 使用真实外力标签，student 从本体历史估计。
 
-> **陷阱警告 ⚠️**
+> **陷阱警告 ⚠**
 >
 > **编程陷阱**：直接把原始力传感器读数送入策略网络
 >
@@ -875,7 +875,7 @@ $$
 
 ---
 
-## 95.8 SoFTA：时间解耦与异步控制 ⭐⭐⭐
+## 95.8 SoFTA：时间解耦与异步控制 ★★★
 
 ### 为什么上体要更高频
 
@@ -1006,7 +1006,7 @@ def compute_ee_acceleration(positions: np.ndarray, dt: float,
 
 ---
 
-## 95.9 力敏感 Loco-Manipulation 的奖励设计陷阱 ⭐⭐⭐
+## 95.9 力敏感 Loco-Manipulation 的奖励设计陷阱 ★★★
 
 
 ### 力控任务特有的 reward hacking
@@ -1059,7 +1059,7 @@ def compute_ee_acceleration(positions: np.ndarray, dt: float,
 
 ---
 
-## 95.10 双臂协调约束：双臂搬运的运动学约束推导 ⭐⭐⭐
+## 95.10 双臂协调约束：双臂搬运的运动学约束推导 ★★★
 
 ### 为什么双臂任务比单臂难
 
@@ -1150,7 +1150,7 @@ $$
 
 ---
 
-## 95.11 力控调参实战：Kp/Kd 选择、力范围标定、安全限制 ⭐⭐⭐
+## 95.11 力控调参实战：Kp/Kd 选择、力范围标定、安全限制 ★★★
 
 ### 系统化调参方法
 
@@ -1270,7 +1270,7 @@ def compute_critical_damping(K: np.ndarray, m_eff: float,
 
 ---
 
-## 95.12 HOMIE：同构外骨骼遥操作路线 ⭐⭐⭐
+## 95.12 HOMIE：同构外骨骼遥操作路线 ★★★
 
 ### 为什么同构能降低误差
 
@@ -1368,7 +1368,7 @@ HOMIE 提供了高质量的遥操作数据采集能力，FALCON 提供了力自�
 
 ---
 
-## 95.13 SkillBlender 与可组合技能 ⭐⭐
+## 95.13 SkillBlender 与可组合技能 ★★
 
 ### 为什么需要技能库
 
@@ -1473,7 +1473,7 @@ WholeBodyVLA（OpenDriveLab, ICLR 2026）代表了力敏感 loco-manipulation �
 
 ---
 
-## 95.14 BFM-Zero：行为基础模型与无监督控制 ⭐⭐⭐
+## 95.14 BFM-Zero：行为基础模型与无监督控制 ★★★
 
 ### 动机
 
@@ -1561,7 +1561,7 @@ $$
 
 其中 CBF（Control Barrier Function）过滤器在 BFM-Zero 输出的动作违反力安全约束时进行最小修正。这种"学习生成 + 安全过滤"的架构在 96 章基础模型中有更详细的讨论。
 
-> **陷阱警告 ⚠️**
+> **陷阱警告 ⚠**
 >
 > **思维陷阱**：认为 BFM-Zero 可以完全替代手工奖励设计
 >
@@ -1573,7 +1573,7 @@ $$
 
 ---
 
-## 95.15 FALCON 与 SoFTA 合并：空间 + 时间双重解耦 ⭐⭐⭐⭐
+## 95.15 FALCON 与 SoFTA 合并：空间 + 时间双重解耦 ★★★★
 
 ### 组合架构
 
@@ -1686,7 +1686,7 @@ FALCON+SoFTA 解决的是仿真中的训练问题，ASAP 解决的是从仿真�
 
 ---
 
-## 常见故障与排查 ⭐⭐
+## 常见故障与排查 ★★
 
 ### 🔧 故障排查手册
 
@@ -1751,9 +1751,9 @@ def diagnose_dual_policy(upper_actions, lower_actions, rewards_upper,
 
 ---
 
-## 练习 ⭐⭐
+## 练习 ★★
 
-### 练习 95.1 末端外力对全身动力学的影响 ⭐⭐⭐
+### 练习 95.1 末端外力对全身动力学的影响 ★★★
 
 推导 $J_{ee}^T f_{ee}$ 对浮动基动力学的影响。具体要求：
 
@@ -1761,7 +1761,7 @@ def diagnose_dual_policy(upper_actions, lower_actions, rewards_upper,
 2. 计算这个外力对 ZMP 位置的影响
 3. 分析在什么姿态下这个外力最容易导致失稳
 
-### 练习 95.2 阻抗参数设计 ⭐⭐⭐
+### 练习 95.2 阻抗参数设计 ★★★
 
 为以下三个任务设计阻抗参数 $(K, D, f_{ff})$：
 
@@ -1774,7 +1774,7 @@ def diagnose_dual_policy(upper_actions, lower_actions, rewards_upper,
 
 计算每个任务的 $K_{init}$、$D_{critical}$ 和推荐阻尼比 $\zeta$。
 
-### 练习 95.3 FALCON 双策略实现 ⭐⭐⭐⭐
+### 练习 95.3 FALCON 双策略实现 ★★★★
 
 实现一个简化的 FALCON 风格双策略训练配置：
 
@@ -1783,7 +1783,7 @@ def diagnose_dual_policy(upper_actions, lower_actions, rewards_upper,
 3. 设计一个简单的协调损失
 4. 训练并对比单策略 vs 双策略的末端跟踪和行走稳定性
 
-### 练习 95.4 3D 力课程实验 ⭐⭐⭐
+### 练习 95.4 3D 力课程实验 ★★★
 
 实现一个带力矩可行性检查的力课程：
 
@@ -1791,7 +1791,7 @@ def diagnose_dual_policy(upper_actions, lower_actions, rewards_upper,
 2. 加入 RNEA 力矩裕度检查
 3. 观察不同课程速度（$\alpha = 1.0, 1.5, 2.0$）对训练效率的影响
 
-### 练习 95.5 SoFTA 异步控制 ⭐⭐⭐
+### 练习 95.5 SoFTA 异步控制 ★★★
 
 实现上体 100 Hz、下体 50 Hz 的 action hold：
 
@@ -1799,7 +1799,7 @@ def diagnose_dual_policy(upper_actions, lower_actions, rewards_upper,
 2. 加入末端加速度惩罚
 3. 对比同频和异频训练在端杯子任务上的 EE 垂直加速度 RMS
 
-### 练习 95.6 无源性验证 ⭐⭐⭐⭐
+### 练习 95.6 无源性验证 ★★★★
 
 对一个简单的二维阻抗控制器：
 
@@ -1807,7 +1807,7 @@ def diagnose_dual_policy(upper_actions, lower_actions, rewards_upper,
 2. 数值验证无源性条件（画 $V(t)$ 和 $\int_0^t f^T \dot{x} d\tau$ 的对比曲线）
 3. 故意设置负阻尼，观察系统发散
 
-### 练习 95.7 综合项目（跨章）⭐⭐⭐⭐
+### 练习 95.7 综合项目（跨章）★★★★
 
 结合94章的 ASAP 方法和本章的 FALCON 方法，设计一个力敏感人形 loco-manipulation 的完整训练和部署方案。要求包括：(a) 双策略训练配置，(b) 力课程设计，(c) sim-to-real 的 delta-action 微调，(d) 部署安全检查。画出完整的系统框图。
 
@@ -1968,20 +1968,20 @@ def diagnose_dual_policy(upper_actions, lower_actions, rewards_upper,
 
 | 资料 | 难度 | 内容 |
 | --- | --- | --- |
-| Zhang et al., FALCON (arXiv:2505.06776, L4DC 2026) | ⭐⭐⭐⭐ | 力自适应双策略 loco-manipulation |
-| Li et al., SoFTA (arXiv:2505.24198, 2025) | ⭐⭐⭐ | 端杯子不洒——慢快双代理控制 |
-| Bao et al., HOMIE (arXiv:2502.13013, RSS 2025) | ⭐⭐⭐ | 同构外骨骼遥操作系统 |
-| Li et al., BFM-Zero (arXiv:2511.04131, 2025) | ⭐⭐⭐⭐ | 行为基础模型，零样本控制 |
-| Hogan, "Impedance Control" (ASME 1985) | ⭐⭐⭐ | 阻抗控制的开创性论文 |
-| Focchi et al., "Robot Impedance Control and Passivity Analysis" (2016) | ⭐⭐⭐⭐ | 无源性证明的现代处理 |
-| Variable Impedance Control Survey (Frontiers 2020) | ⭐⭐⭐ | 变阻抗控制综述 |
-| LeCAR-Lab/FALCON GitHub 仓库 | ⭐⭐ | FALCON 代码实现 |
-| LeCAR-Lab/SoFTA GitHub 仓库 | ⭐⭐ | SoFTA 代码实现 |
-| InternRobotics/OpenHomie GitHub 仓库 | ⭐⭐ | HOMIE 开源代码 |
-| Liu et al., SkillBlender (CoRL 2024) | ⭐⭐⭐ | 可组合技能的混合策略 |
-| OpenDriveLab, WholeBodyVLA (ICLR 2026) | ⭐⭐⭐⭐ | VLA + 全身控制的统一框架 |
-| Ott, "Cartesian Impedance Control of Redundant Robots" (2008) | ⭐⭐⭐ | 冗余机器人笛卡尔阻抗控制的经典教材 |
-| Siciliano et al., "Robotics: Modelling, Planning and Control" Ch.9 | ⭐⭐⭐ | 力控制与阻抗控制的教科书级讲解 |
+| Zhang et al., FALCON (arXiv:2505.06776, L4DC 2026) | ★★★★ | 力自适应双策略 loco-manipulation |
+| Li et al., SoFTA (arXiv:2505.24198, 2025) | ★★★ | 端杯子不洒——慢快双代理控制 |
+| Bao et al., HOMIE (arXiv:2502.13013, RSS 2025) | ★★★ | 同构外骨骼遥操作系统 |
+| Li et al., BFM-Zero (arXiv:2511.04131, 2025) | ★★★★ | 行为基础模型，零样本控制 |
+| Hogan, "Impedance Control" (ASME 1985) | ★★★ | 阻抗控制的开创性论文 |
+| Focchi et al., "Robot Impedance Control and Passivity Analysis" (2016) | ★★★★ | 无源性证明的现代处理 |
+| Variable Impedance Control Survey (Frontiers 2020) | ★★★ | 变阻抗控制综述 |
+| LeCAR-Lab/FALCON GitHub 仓库 | ★★ | FALCON 代码实现 |
+| LeCAR-Lab/SoFTA GitHub 仓库 | ★★ | SoFTA 代码实现 |
+| InternRobotics/OpenHomie GitHub 仓库 | ★★ | HOMIE 开源代码 |
+| Liu et al., SkillBlender (CoRL 2024) | ★★★ | 可组合技能的混合策略 |
+| OpenDriveLab, WholeBodyVLA (ICLR 2026) | ★★★★ | VLA + 全身控制的统一框架 |
+| Ott, "Cartesian Impedance Control of Redundant Robots" (2008) | ★★★ | 冗余机器人笛卡尔阻抗控制的经典教材 |
+| Siciliano et al., "Robotics: Modelling, Planning and Control" Ch.9 | ★★★ | 力控制与阻抗控制的教科书级讲解 |
 
 ---
 

@@ -1,12 +1,12 @@
 # 李群与 manif 库——SLAM 中的刚体变换编程
 
-> **难度**：⭐⭐～⭐⭐⭐ | **建议用时**：1周 | **前置要求**：通用库·Eigen Eigen深入、线性代数基础（旋转矩阵、齐次坐标）
+> **难度**：★★～★★★ | **建议用时**：1周 | **前置要求**：通用库·Eigen Eigen深入、线性代数基础（旋转矩阵、齐次坐标）
 
 ---
 
 ## 前置自测
 
-> 📋 答不出 >= 2 题 → 先回顾 Eigen 基础章节和线性代数旋转部分
+> ◆ 答不出 >= 2 题 → 先回顾 Eigen 基础章节和线性代数旋转部分
 
 1. 旋转矩阵 $R \in \mathbb{R}^{3\times3}$ 满足什么约束条件？为什么 $R^{-1} = R^T$？这个性质的几何含义是什么？
 2. 齐次变换矩阵 $T \in \mathbb{R}^{4\times4}$ 的结构是什么？给定 $T_1, T_2$ 分别表示"从世界坐标系到相机1"和"从相机1到相机2"的变换，如何计算"从世界坐标系到相机2"的变换？
@@ -65,7 +65,7 @@
 
 ---
 
-## 23.1 李群/李代数工程回顾 ⭐⭐
+## 23.1 李群/李代数工程回顾 ★★
 
 > **本节在全章中的位置**：概览李群、李代数、exp/log 映射的核心概念，建立整章的知识框架。后续各节将逐一深入。
 
@@ -169,9 +169,9 @@ $$T_{k+1} = T_k \cdot \exp([\Delta\xi]_\wedge)$$
 | log | $G \to \mathfrak{g}$ | 从流形到切空间 | 计算两个位姿的"差" |
 | Adjoint | $6\times6$ 矩阵 | 坐标系变换 | 协方差传播、Jacobian 转换 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-**⚠️ 编程陷阱：用欧拉角做 SLAM 优化**
+**⚠ 编程陷阱：用欧拉角做 SLAM 优化**
 
 - **错误做法**：把旋转表示为 yaw/pitch/roll 三个角度，直接作为优化变量
 - **现象**：优化在大多数情况下正常工作，但当 pitch 接近 $\pm 90°$ 时突然发散、NEES 飙高
@@ -194,15 +194,15 @@ $$T_{k+1} = T_k \cdot \exp([\Delta\xi]_\wedge)$$
 
 ### 练习
 
-**练习 23.1.1**（⭐⭐）：手工验证 Rodrigues 公式。取 $\omega = [0, 0, 1]^T$，$\theta = \pi/4$（绕 z 轴转 45 度），用 Rodrigues 公式计算 $R = \exp(\theta [\hat\omega]_\times)$，然后与直接构造的 $R_z(\pi/4)$ 比较。要求写出中间每一步的数值计算过程。
+**练习 23.1.1**（★★）：手工验证 Rodrigues 公式。取 $\omega = [0, 0, 1]^T$，$\theta = \pi/4$（绕 z 轴转 45 度），用 Rodrigues 公式计算 $R = \exp(\theta [\hat\omega]_\times)$，然后与直接构造的 $R_z(\pi/4)$ 比较。要求写出中间每一步的数值计算过程。
 
-**练习 23.1.2**（⭐⭐）：证明 $[\hat\omega]_\times^3 = -[\hat\omega]_\times$（其中 $\|\hat\omega\| = 1$）。提示：先计算 $[\hat\omega]_\times^2$，利用 $[\hat\omega]_\times^2 = \hat\omega \hat\omega^T - I$。
+**练习 23.1.2**（★★）：证明 $[\hat\omega]_\times^3 = -[\hat\omega]_\times$（其中 $\|\hat\omega\| = 1$）。提示：先计算 $[\hat\omega]_\times^2$，利用 $[\hat\omega]_\times^2 = \hat\omega \hat\omega^T - I$。
 
-**练习 23.1.3**（⭐⭐⭐）：用 Eigen 实现一个函数 `Eigen::Matrix3d rodrigues(const Eigen::Vector3d& omega)`，输入是 3 维旋转向量（方向是旋转轴，模长是旋转角度），输出是旋转矩阵。要求正确处理 $\theta \to 0$ 的边界情况（用 Taylor 展开到二阶项）。然后与 `Eigen::AngleAxisd(theta, axis).toRotationMatrix()` 的结果比较，验证误差小于 $10^{-12}$。
+**练习 23.1.3**（★★★）：用 Eigen 实现一个函数 `Eigen::Matrix3d rodrigues(const Eigen::Vector3d& omega)`，输入是 3 维旋转向量（方向是旋转轴，模长是旋转角度），输出是旋转矩阵。要求正确处理 $\theta \to 0$ 的边界情况（用 Taylor 展开到二阶项）。然后与 `Eigen::AngleAxisd(theta, axis).toRotationMatrix()` 的结果比较，验证误差小于 $10^{-12}$。
 
 ---
 
-## 23.2 群作用（Group Actions）⭐⭐
+## 23.2 群作用（Group Actions）★★
 
 ### 这一节解决什么问题
 
@@ -333,9 +333,9 @@ Eigen::Vector3d rhs = T1.act(T2.act(p));
 assert((lhs - rhs).norm() < 1e-10);
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-**⚠️ 编程陷阱：用齐次坐标矩阵乘法代替 `act`，忽略 Jacobian**
+**⚠ 编程陷阱：用齐次坐标矩阵乘法代替 `act`，忽略 Jacobian**
 
 - **错误做法**：`Eigen::Vector4d p_h; p_h << p, 1.0; Eigen::Vector4d result = T.transform() * p_h;`，然后手动提取前 3 维
 - **现象**：变换结果正确，但当你需要 Jacobian 时不得不手工推导和实现，容易在 twist 分量顺序上出错
@@ -355,13 +355,13 @@ assert((lhs - rhs).norm() < 1e-10);
 
 ### 练习
 
-**练习 23.2.1**（⭐⭐）：手工验证 SE(3) 群作用的相容性。取 $T_1 = (R_z(30°), [1,0,0]^T)$，$T_2 = (R_x(45°), [0,1,0]^T)$，$p = [1,1,1]^T$。分别计算 $(T_1 \circ T_2) \cdot p$ 和 $T_1 \cdot (T_2 \cdot p)$，验证结果相同。写出每一步的数值计算过程。
+**练习 23.2.1**（★★）：手工验证 SE(3) 群作用的相容性。取 $T_1 = (R_z(30°), [1,0,0]^T)$，$T_2 = (R_x(45°), [0,1,0]^T)$，$p = [1,1,1]^T$。分别计算 $(T_1 \circ T_2) \cdot p$ 和 $T_1 \cdot (T_2 \cdot p)$，验证结果相同。写出每一步的数值计算过程。
 
-**练习 23.2.2**（⭐⭐⭐）：用 manif 实现一个多坐标系链式变换。设有世界系 W、IMU 系 I、相机系 C、LiDAR 系 L。给定外参 $T_{IC}$、$T_{IL}$，以及 IMU 位姿 $T_{WI}$，将相机坐标系中的点 $p_C$ 和 LiDAR 坐标系中的点 $p_L$ 都变换到世界坐标系。用 `act` 方法获取对 $T_{WI}$ 的 Jacobian，验证数值 Jacobian 与解析 Jacobian 的一致性。
+**练习 23.2.2**（★★★）：用 manif 实现一个多坐标系链式变换。设有世界系 W、IMU 系 I、相机系 C、LiDAR 系 L。给定外参 $T_{IC}$、$T_{IL}$，以及 IMU 位姿 $T_{WI}$，将相机坐标系中的点 $p_C$ 和 LiDAR 坐标系中的点 $p_L$ 都变换到世界坐标系。用 `act` 方法获取对 $T_{WI}$ 的 Jacobian，验证数值 Jacobian 与解析 Jacobian 的一致性。
 
 ---
 
-## 23.3 切空间与李代数深入 ⭐⭐⭐
+## 23.3 切空间与李代数深入 ★★★
 
 ### 这一节解决什么问题
 
@@ -507,7 +507,7 @@ Eigen::Matrix3d omega_hat_check = 0.1 * E0 + 0.2 * E1 + 0.3 * E2;
 assert((omega_hat - omega_hat_check).norm() < 1e-12);
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **💡 概念误区：认为 $\dot{R}$ 本身就是角速度**
 
@@ -515,7 +515,7 @@ assert((omega_hat - omega_hat_check).norm() < 1e-12);
 - **实际上**：$\dot{R}$ 是一个 $3\times3$ 矩阵，属于 $R$ 处的切空间 $T_R SO(3)$，它不是角速度。角速度 $\omega$ 是一个 3D 向量，需要通过 $[\omega]_\times = R^T \dot{R}$（或 $[\omega']_\times = \dot{R} R^T$）来提取。$\dot{R}$ 和 $\omega$ 的关系就像"流形上的速度"和"切空间中的坐标"的关系
 - **为什么重要**：如果你在代码中用有限差分 $\dot{R} \approx (R(t+\Delta t) - R(t))/\Delta t$ 来估计角速度，得到的是一个 $3\times3$ 矩阵，不能直接当 3D 向量用。正确做法是 $(R(t)^T R(t+\Delta t))$ 的 log 再除以 $\Delta t$
 
-**⚠️ 编程陷阱：混淆 body 系角速度和 world 系角速度**
+**⚠ 编程陷阱：混淆 body 系角速度和 world 系角速度**
 
 - **错误做法**：IMU 陀螺仪输出角速度 $\omega$（body 系），直接用 $\dot{R} = [\omega]_\times R$（这是 world 系公式）来积分
 - **现象**：积分出来的旋转轨迹完全错误，转的方向不对
@@ -530,13 +530,13 @@ assert((omega_hat - omega_hat_check).norm() < 1e-12);
 
 ### 练习
 
-**练习 23.3.1**（⭐⭐）：手工推导 SO(3) 切空间。从约束 $R^T R = I$ 出发，对 $t$ 求导，证明 $R^T \dot{R}$ 是反对称矩阵。然后写出 $3\times3$ 反对称矩阵的一般形式，确认它有 3 个自由度。
+**练习 23.3.1**（★★）：手工推导 SO(3) 切空间。从约束 $R^T R = I$ 出发，对 $t$ 求导，证明 $R^T \dot{R}$ 是反对称矩阵。然后写出 $3\times3$ 反对称矩阵的一般形式，确认它有 3 个自由度。
 
-**练习 23.3.2**（⭐⭐⭐）：验证性质 $R[\omega]_\times R^T = [R\omega]_\times$。取 $R = R_z(30°)$，$\omega = [1, 2, 3]^T$，分别计算等式两边并比较。然后在草稿纸上对一般的 $R$ 和 $\omega$ 证明这个性质（提示：利用 $[\omega]_\times v = \omega \times v$ 和旋转对叉积的保持性 $R(\omega \times v) = (R\omega) \times (Rv)$）。
+**练习 23.3.2**（★★★）：验证性质 $R[\omega]_\times R^T = [R\omega]_\times$。取 $R = R_z(30°)$，$\omega = [1, 2, 3]^T$，分别计算等式两边并比较。然后在草稿纸上对一般的 $R$ 和 $\omega$ 证明这个性质（提示：利用 $[\omega]_\times v = \omega \times v$ 和旋转对叉积的保持性 $R(\omega \times v) = (R\omega) \times (Rv)$）。
 
 ---
 
-## 23.4 指数映射完整推导 ⭐⭐⭐
+## 23.4 指数映射完整推导 ★★★
 
 ### 这一节解决什么问题
 
@@ -758,9 +758,9 @@ manif::SE3d exp_inv = manif::SE3d::Exp(tau).inverse();
 assert((exp_neg.inverse() * exp_inv).log().coeffs().norm() < 1e-12);
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-**⚠️ 编程陷阱：$\theta \to 0$ 时直接用 Rodrigues 公式导致除零**
+**⚠ 编程陷阱：$\theta \to 0$ 时直接用 Rodrigues 公式导致除零**
 
 - **错误做法**：实现 Rodrigues 时不检查 $\|\theta\|$ 是否接近零，直接计算 $\sin\theta / \theta$ 和 $(1-\cos\theta)/\theta^2$
 - **现象**：当 $\|\theta\| < 10^{-15}$ 时输出 NaN，当 $\|\theta\| \approx 10^{-8}$ 时精度严重下降
@@ -780,13 +780,13 @@ assert((exp_neg.inverse() * exp_inv).log().coeffs().norm() < 1e-12);
 
 ### 练习
 
-**练习 23.4.1**（⭐⭐）：手推 Rodrigues 公式中 $[u]_\times^3 = -[u]_\times$ 的证明。取 $u = [0, 0, 1]^T$，分别计算 $[u]_\times$、$[u]_\times^2$、$[u]_\times^3$，验证循环性质。然后对一般的单位向量 $u$ 证明（提示：利用 $[u]_\times^2 = uu^T - I$ 和 $[u]_\times u = 0$）。
+**练习 23.4.1**（★★）：手推 Rodrigues 公式中 $[u]_\times^3 = -[u]_\times$ 的证明。取 $u = [0, 0, 1]^T$，分别计算 $[u]_\times$、$[u]_\times^2$、$[u]_\times^3$，验证循环性质。然后对一般的单位向量 $u$ 证明（提示：利用 $[u]_\times^2 = uu^T - I$ 和 $[u]_\times u = 0$）。
 
-**练习 23.4.2**（⭐⭐⭐）：用 manif 数值验证 SE(3) 指数映射中 $V(\theta)$ 的作用。构造一个 twist $\tau = [1.0, 0.5, -0.3, 0.0, 0.0, 0.8]$（注意有显著的旋转分量 $\theta_z = 0.8$ rad $\approx 46°$）。计算 $T = \text{Exp}(\tau)$，提取平移部分 $t$。然后比较 $t$ 与 twist 的平移分量 $\rho = [1.0, 0.5, -0.3]^T$。计算 $\|t - \rho\| / \|\rho\|$，这就是"忽略 $V(\theta)$"导致的相对误差。
+**练习 23.4.2**（★★★）：用 manif 数值验证 SE(3) 指数映射中 $V(\theta)$ 的作用。构造一个 twist $\tau = [1.0, 0.5, -0.3, 0.0, 0.0, 0.8]$（注意有显著的旋转分量 $\theta_z = 0.8$ rad $\approx 46°$）。计算 $T = \text{Exp}(\tau)$，提取平移部分 $t$。然后比较 $t$ 与 twist 的平移分量 $\rho = [1.0, 0.5, -0.3]^T$。计算 $\|t - \rho\| / \|\rho\|$，这就是"忽略 $V(\theta)$"导致的相对误差。
 
 ---
 
-## 23.5 Plus/Minus 算子 ⭐⭐⭐
+## 23.5 Plus/Minus 算子 ★★★
 
 ### 这一节解决什么问题
 
@@ -922,9 +922,9 @@ $$X = \bar{X} \oplus \delta x$$
 
 ESKF 用线性卡尔曼滤波器估计 $\delta x$（因为 $\delta x$ 是欧几里得空间中的向量），然后通过 $\oplus$ 更新名义状态。这正是 $\oplus$ 在 SLAM 中最重要的应用。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-**⚠️ 编程陷阱：把 $\oplus$ 实现为普通向量加法**
+**⚠ 编程陷阱：把 $\oplus$ 实现为普通向量加法**
 
 - **错误做法**：`T_new.translation() = T.translation() + delta.head<3>(); T_new.rotation() = T.rotation() * SO3d::Exp(delta.tail<3>());`
 - **现象**：当旋转增量较大时，平移部分的更新方向错误
@@ -938,13 +938,13 @@ ESKF 用线性卡尔曼滤波器估计 $\delta x$（因为 $\delta x$ 是欧几�
 
 ### 练习
 
-**练习 23.5.1**（⭐⭐）：用 manif 验证 $\oplus$ 和 $\ominus$ 的互逆性。随机生成 10 对 SE(3) 元素 $(T_1, T_2)$，验证 $T_1 \oplus (T_2 \ominus T_1) = T_2$（误差小于 $10^{-10}$）。然后随机生成 10 个 $(T, \delta)$（$\|\delta\| < 0.5$），验证 $(T \oplus \delta) \ominus T = \delta$。
+**练习 23.5.1**（★★）：用 manif 验证 $\oplus$ 和 $\ominus$ 的互逆性。随机生成 10 对 SE(3) 元素 $(T_1, T_2)$，验证 $T_1 \oplus (T_2 \ominus T_1) = T_2$（误差小于 $10^{-10}$）。然后随机生成 10 个 $(T, \delta)$（$\|\delta\| < 0.5$），验证 $(T \oplus \delta) \ominus T = \delta$。
 
-**练习 23.5.2**（⭐⭐⭐）：比较右加和左加的差异。取 $T = (R_z(45°), [1,0,0]^T)$ 和 $\delta = [0, 0, 0, 0, 0, 0.1]^T$（纯旋转扰动 $\Delta\theta_z = 0.1$ rad）。分别计算右加 $T_R = T \cdot \text{Exp}(\delta)$ 和左加 $T_L = \text{Exp}(\delta) \cdot T$。比较 $T_R$ 和 $T_L$ 的旋转和平移部分，分析差异的来源（提示：旋转部分应该相同，但平移部分不同——为什么？）。
+**练习 23.5.2**（★★★）：比较右加和左加的差异。取 $T = (R_z(45°), [1,0,0]^T)$ 和 $\delta = [0, 0, 0, 0, 0, 0.1]^T$（纯旋转扰动 $\Delta\theta_z = 0.1$ rad）。分别计算右加 $T_R = T \cdot \text{Exp}(\delta)$ 和左加 $T_L = \text{Exp}(\delta) \cdot T$。比较 $T_R$ 和 $T_L$ 的旋转和平移部分，分析差异的来源（提示：旋转部分应该相同，但平移部分不同——为什么？）。
 
 ---
 
-## 23.6 伴随矩阵（Adjoint）详解 ⭐⭐⭐
+## 23.6 伴随矩阵（Adjoint）详解 ★★★
 
 ### 这一节解决什么问题
 
@@ -1110,9 +1110,9 @@ Eigen::Matrix<double, 3, 6> J_act_T_left = J_act_T_right * T.adj().inverse();
 Eigen::Matrix<double, 3, 6> J_act_T_left2 = J_act_T_right * T.inverse().adj();
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-**⚠️ 编程陷阱：忘记 SE(3) 伴随矩阵中 $[t]_\times R$ 项**
+**⚠ 编程陷阱：忘记 SE(3) 伴随矩阵中 $[t]_\times R$ 项**
 
 - **错误做法**：手动构造 SE(3) 伴随矩阵时，写 $\text{Ad}_M = \begin{bmatrix} R & 0 \\ 0 & R \end{bmatrix}$（忽略了 $[t]_\times R$ 项）
 - **现象**：对纯旋转变换（$t = 0$）结果正确，但对有平移的变换结果错误。左/右扰动 Jacobian 转换不一致
@@ -1127,13 +1127,13 @@ Eigen::Matrix<double, 3, 6> J_act_T_left2 = J_act_T_right * T.inverse().adj();
 
 ### 练习
 
-**练习 23.6.1**（⭐⭐）：手动构造一个 SE(3) 伴随矩阵。取 $T = (R_z(90°), [1, 0, 0]^T)$，计算 $R$、$[t]_\times$、$[t]_\times R$，然后组装 $6\times6$ 的 $\text{Ad}_T$。用 manif 的 `T.adj()` 验证你的结果。
+**练习 23.6.1**（★★）：手动构造一个 SE(3) 伴随矩阵。取 $T = (R_z(90°), [1, 0, 0]^T)$，计算 $R$、$[t]_\times$、$[t]_\times R$，然后组装 $6\times6$ 的 $\text{Ad}_T$。用 manif 的 `T.adj()` 验证你的结果。
 
-**练习 23.6.2**（⭐⭐⭐）：用伴随矩阵实现左/右扰动 Jacobian 的转换。以 $f(T) = T \cdot T_{\text{ref}}^{-1}$（其中 $T_{\text{ref}}$ 是一个固定的参考位姿）为例：(1) 用 manif 的 `compose` 带 Jacobian 输出计算右扰动 Jacobian $J_R$；(2) 用 $J_L = \text{Ad}_{f(T)} \cdot J_R$ 计算左扰动 Jacobian；(3) 用数值有限差分（左扰动方式）验证 $J_L$ 的正确性。
+**练习 23.6.2**（★★★）：用伴随矩阵实现左/右扰动 Jacobian 的转换。以 $f(T) = T \cdot T_{\text{ref}}^{-1}$（其中 $T_{\text{ref}}$ 是一个固定的参考位姿）为例：(1) 用 manif 的 `compose` 带 Jacobian 输出计算右扰动 Jacobian $J_R$；(2) 用 $J_L = \text{Ad}_{f(T)} \cdot J_R$ 计算左扰动 Jacobian；(3) 用数值有限差分（左扰动方式）验证 $J_L$ 的正确性。
 
 ---
 
-## 23.7 manif 库核心 API ⭐⭐
+## 23.7 manif 库核心 API ★★
 
 ### 动机：手写 exp/log 太容易出错
 
@@ -1332,16 +1332,16 @@ double d_pose = compute_distance(T1, T2);
 
 这种设计的好处是：当你从 SO(3) 切换到 SE(3)，或者将来 manif 添加新的群（如 SE_2(3)），你的算法代码不需要任何修改。对比 Sophus 的设计（每个群独立实现，没有公共基类），如果你想写一个适用于 SO3 和 SE3 的函数，在 Sophus 中必须写两个重载版本或者用 `std::variant`。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-**⚠️ 编程陷阱：SE3d twist 分量顺序混淆**
+**⚠ 编程陷阱：SE3d twist 分量顺序混淆**
 
 - **错误做法**：假设 manif 的 twist 顺序是 $[\omega, \rho]$（旋转在前，平移在后）
 - **现象**：构造的 SE3d 位姿完全错误——旋转和平移互换了
 - **根本原因**：manif 的 twist 约定是 $[\rho, \omega]$（平移在前，旋转在后），这和 Sola 论文的约定一致，但与某些教科书（如 Murray 的 "A Mathematical Introduction to Robotic Manipulation"）的约定相反
 - **正确做法**：始终用 `manif::SE3Tangentd` 类型来构造 twist，通过语义明确的方式赋值；或者直接从旋转四元数+平移向量构造 SE3d，绕过 twist 构造
 
-**⚠️ 编程陷阱：把 `log()` 的返回值当普通 `Eigen::VectorXd` 使用**
+**⚠ 编程陷阱：把 `log()` 的返回值当普通 `Eigen::VectorXd` 使用**
 
 - **错误做法**：`Eigen::VectorXd xi = T.log();`——试图隐式转换
 - **现象**：编译错误，因为 `SE3Tangentd` 不能直接隐式转换为 `Eigen::VectorXd`
@@ -1362,13 +1362,13 @@ double d_pose = compute_distance(T1, T2);
 
 ### 练习
 
-**练习 23.7.1**（⭐⭐）：用 manif 实现 SE3 位姿的线性插值。给定两个位姿 $T_0, T_1$ 和比例参数 $t \in [0, 1]$，用 log/exp 实现球面线性插值（SLERP on SE3）：$T(t) = T_0 \cdot \exp(t \cdot \log(T_0^{-1} T_1))$。取 $T_0$ 为单位元，$T_1$ 为绕 z 轴旋转 $90°$ + 沿 x 轴平移 $1\text{m}$，用 10 个均匀采样的 $t$ 值计算插值结果，输出每个位姿的平移和旋转角度。
+**练习 23.7.1**（★★）：用 manif 实现 SE3 位姿的线性插值。给定两个位姿 $T_0, T_1$ 和比例参数 $t \in [0, 1]$，用 log/exp 实现球面线性插值（SLERP on SE3）：$T(t) = T_0 \cdot \exp(t \cdot \log(T_0^{-1} T_1))$。取 $T_0$ 为单位元，$T_1$ 为绕 z 轴旋转 $90°$ + 沿 x 轴平移 $1\text{m}$，用 10 个均匀采样的 $t$ 值计算插值结果，输出每个位姿的平移和旋转角度。
 
-**练习 23.7.2**（⭐⭐⭐）：数值验证 manif Jacobian 的正确性。以 `SE3d::compose` 为例，计算解析 Jacobian（由 manif 给出）和数值 Jacobian（有限差分），比较误差。有限差分方法：$J_{ij} \approx \frac{\log(f(x \oplus h \cdot e_j))_i - \log(f(x))_i}{h}$，其中 $e_j$ 是第 $j$ 个单位向量，$h = 10^{-7}$。要求最大绝对误差小于 $10^{-5}$。
+**练习 23.7.2**（★★★）：数值验证 manif Jacobian 的正确性。以 `SE3d::compose` 为例，计算解析 Jacobian（由 manif 给出）和数值 Jacobian（有限差分），比较误差。有限差分方法：$J_{ij} \approx \frac{\log(f(x \oplus h \cdot e_j))_i - \log(f(x))_i}{h}$，其中 $e_j$ 是第 $j$ 个单位向量，$h = 10^{-7}$。要求最大绝对误差小于 $10^{-5}$。
 
 ---
 
-## 23.8 左扰动 vs 右扰动 ⭐⭐⭐
+## 23.8 左扰动 vs 右扰动 ★★★
 
 ### 动机：同一个 Jacobian，两种完全不同的结果
 
@@ -1499,9 +1499,9 @@ boost::function<gtsam::Vector(const gtsam::Pose3&)> f =
 gtsam::Matrix J_numerical = gtsam::numericalDerivative11(f, pose);
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-**⚠️ 编程陷阱：在优化框架的自定义因子中直接使用 manif 的 Jacobian 而不验证**
+**⚠ 编程陷阱：在优化框架的自定义因子中直接使用 manif 的 Jacobian 而不验证**
 
 - **错误做法**：在 GTSAM 或其他优化框架的 `evaluateError` 中调用 manif 的群操作得到 Jacobian，不经验证直接填入 `H` 矩阵
 - **现象**：优化不收敛或收敛到错误解
@@ -1520,7 +1520,7 @@ gtsam::Matrix J_numerical = gtsam::numericalDerivative11(f, pose);
 - **实际上**：这是两个完全不同的概念。"左/右 Jacobian"（$J_l, J_r$）来自 BCH 公式，是 $\exp(\phi + \delta) \approx \exp(\phi) \cdot \exp(J_r^{-1} \delta)$ 中的那个 $J_r$。"左/右扰动 Jacobian"是对群操作 $f(T)$ 的求导约定。它们之间有联系（某些群操作的扰动 Jacobian 可以用 $J_l$ 或 $J_r$ 表达），但概念上不是一回事
 - **正确思维**：遇到"Jacobian"时，先问两个问题：(1) 这是哪个操作的 Jacobian？(2) 用的是左扰动还是右扰动？
 
-**⚠️ 编程陷阱：数值验证 Jacobian 时不区分扰动约定**
+**⚠ 编程陷阱：数值验证 Jacobian 时不区分扰动约定**
 
 - **错误做法**：用 $f(T \cdot \exp(\delta))$ 做有限差分，但比较的对象是左扰动 Jacobian
 - **现象**：数值 Jacobian 和解析 Jacobian 不匹配，误以为解析 Jacobian 有 bug
@@ -1529,13 +1529,13 @@ gtsam::Matrix J_numerical = gtsam::numericalDerivative11(f, pose);
 
 ### 练习
 
-**练习 23.8.1**（⭐⭐⭐）：对 SE3d 的 inverse 操作，分别计算右扰动和左扰动下的数值 Jacobian（有限差分），并与理论值比较。理论值：右扰动下 $J_R^{\text{inv}} = -\text{Ad}_T$。提示：右扰动有限差分为 $\log((T\exp(h \cdot e_j))^{-1} \cdot T^{-1 \, -1}) / h$，注意输出变化的测量方向要和理论值一致。要求数值和理论的最大绝对误差小于 $10^{-5}$。
+**练习 23.8.1**（★★★）：对 SE3d 的 inverse 操作，分别计算右扰动和左扰动下的数值 Jacobian（有限差分），并与理论值比较。理论值：右扰动下 $J_R^{\text{inv}} = -\text{Ad}_T$。提示：右扰动有限差分为 $\log((T\exp(h \cdot e_j))^{-1} \cdot T^{-1 \, -1}) / h$，注意输出变化的测量方向要和理论值一致。要求数值和理论的最大绝对误差小于 $10^{-5}$。
 
-**练习 23.8.2**（⭐⭐⭐）：写一个函数，将 manif 给出的 compose 操作的右扰动 Jacobian 转换为左扰动 Jacobian（通过 Adjoint），并用数值差分验证转换后的结果。
+**练习 23.8.2**（★★★）：写一个函数，将 manif 给出的 compose 操作的右扰动 Jacobian 转换为左扰动 Jacobian（通过 Adjoint），并用数值差分验证转换后的结果。
 
 ---
 
-## 23.9 流形上的 Jacobian 详解 ⭐⭐⭐⭐
+## 23.9 流形上的 Jacobian 详解 ★★★★
 
 ### 这一节解决什么问题
 
@@ -1874,9 +1874,9 @@ $$\mathbf{J}_{\mathcal{X}}^{\mathcal{Y} \ominus \mathcal{X}} = -\mathbf{J}_l^{-1
 
 这些公式在 SLAM 优化中频繁出现——每当你定义一个残差为"两个位姿之间的差"时（$r = T_{\text{pred}} \ominus T_{\text{obs}}$），就需要这些 Jacobian。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：忘记 Jacobian 输出参数的初始化**
+> ⚠ **编程陷阱：忘记 Jacobian 输出参数的初始化**
 > 错误做法：声明 `manif::SE3d::Jacobian J;` 后不经过任何计算就使用 `J`。
 > 现象：`J` 中是未初始化的垃圾值，但代码不会报错，优化器可能"看起来收敛"但结果完全错误。
 > 根本原因：C++ 的栈变量不自动初始化。`manif::SE3d::Jacobian` 是 `Eigen::Matrix<double,6,6>` 的别名，不会零初始化。
@@ -1892,7 +1892,7 @@ $$\mathbf{J}_{\mathcal{X}}^{\mathcal{Y} \ominus \mathcal{X}} = -\mathbf{J}_l^{-1
 > 实际上：理论 Jacobian 与数值有限差分 Jacobian 比较是**必做的验证步骤**。很多 bug 来自切空间排列顺序不同（$[\rho; \theta]$ vs $[\theta; \rho]$）、左右扰动混淆、或符号错误。
 > 正确做法：对每个新写的 Jacobian，都用 $10^{-8}$ 量级的有限差分验证，最大绝对误差应 $< 10^{-5}$。
 
-> ⚠️ **编程陷阱：manif 和论文的切空间排列顺序不同**
+> ⚠ **编程陷阱：manif 和论文的切空间排列顺序不同**
 > 错误做法：按论文中 $\xi = [\theta^T, \rho^T]^T$（旋转在前）的顺序写 Jacobian。
 > 现象：Jacobian 的行列被交换，优化器不收敛或收敛到错误解。
 > 根本原因：manif 使用 $[\rho^T, \theta^T]^T$（平移在前），而 Sola 论文和 Barfoot 教材使用 $[\theta^T, \rho^T]^T$（旋转在前）。
@@ -1900,15 +1900,15 @@ $$\mathbf{J}_{\mathcal{X}}^{\mathcal{Y} \ominus \mathcal{X}} = -\mathbf{J}_l^{-1
 
 ### 练习
 
-**练习 23.9.1**（⭐⭐⭐）：对 SE3d 的群作用 $T \cdot p$，用有限差分验证 `T.act(p, J_T, J_p)` 返回的两个 Jacobian。有限差分方法：对 $T$ 的第 $j$ 个切方向施加 $h = 10^{-8}$ 的扰动，$J_{\text{num}}(:,j) = (T \oplus h \cdot e_j \cdot p - T \cdot p) / h$。要求误差 $< 10^{-5}$。
+**练习 23.9.1**（★★★）：对 SE3d 的群作用 $T \cdot p$，用有限差分验证 `T.act(p, J_T, J_p)` 返回的两个 Jacobian。有限差分方法：对 $T$ 的第 $j$ 个切方向施加 $h = 10^{-8}$ 的扰动，$J_{\text{num}}(:,j) = (T \oplus h \cdot e_j \cdot p - T \cdot p) / h$。要求误差 $< 10^{-5}$。
 
-**练习 23.9.2**（⭐⭐⭐⭐）：实现一个完整的"位姿图二元因子" Jacobian：给定 $T_i, T_j$ 和观测 $\Delta T_{ij}$，写出残差 $r = \text{Log}(\Delta T_{ij}^{-1} \circ T_i^{-1} \circ T_j)$ 对 $T_i$ 和 $T_j$ 的 Jacobian。用 manif 的基本模块和链式法则实现，并用数值差分验证。
+**练习 23.9.2**（★★★★）：实现一个完整的"位姿图二元因子" Jacobian：给定 $T_i, T_j$ 和观测 $\Delta T_{ij}$，写出残差 $r = \text{Log}(\Delta T_{ij}^{-1} \circ T_i^{-1} \circ T_j)$ 对 $T_i$ 和 $T_j$ 的 Jacobian。用 manif 的基本模块和链式法则实现，并用数值差分验证。
 
-**练习 23.9.3**（⭐⭐⭐）：解释为什么 $\mathbf{J}_r(0) = \mathbf{I}$（即零切向量处的右 Jacobian 是单位矩阵）。从定义和闭式公式两个角度说明。这个性质的工程含义是什么？（提示：当残差很小时，Jacobian 可以用单位矩阵近似。）
+**练习 23.9.3**（★★★）：解释为什么 $\mathbf{J}_r(0) = \mathbf{I}$（即零切向量处的右 Jacobian 是单位矩阵）。从定义和闭式公式两个角度说明。这个性质的工程含义是什么？（提示：当残差很小时，Jacobian 可以用单位矩阵近似。）
 
 ---
 
-## 23.10 不确定性与协方差传播 ⭐⭐⭐
+## 23.10 不确定性与协方差传播 ★★★
 
 ### 这一节解决什么问题
 
@@ -2041,14 +2041,14 @@ std::cout << "Body 系协方差对角线: " << Sigma_T.diagonal().transpose() <<
 std::cout << "World 系协方差对角线: " << Sigma_global.diagonal().transpose() << std::endl;
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > 💡 **概念误区：认为流形上的"高斯分布"是真正的高斯分布**
 > 新手想法："$\tau \sim \mathcal{N}(0, \Sigma)$ 且 $\mathcal{X} = \bar{\mathcal{X}} \oplus \tau$，所以 $\mathcal{X}$ 服从高斯分布。"
 > 实际上：$\tau$ 在切空间（$\mathbb{R}^m$）中是高斯分布，但通过指数映射到流形后，$\mathcal{X}$ 的分布**不再是高斯的**——它在流形上是"集中在均值附近的近似高斯"。当不确定性很大时（如旋转不确定性超过 30 度），高斯近似失效，需要使用更复杂的分布模型（如 von Mises-Fisher 分布）。
 > 正确做法：在典型 SLAM 场景中，帧间旋转不确定性通常 < 1 度，高斯近似非常好。但在初始化阶段或退化场景中要警惕。
 
-> ⚠️ **编程陷阱：协方差矩阵没有保持对称正定**
+> ⚠ **编程陷阱：协方差矩阵没有保持对称正定**
 > 错误做法：多次传播后直接使用 $\Sigma_{\text{new}} = J \Sigma J^T$，不做对称化处理。
 > 现象：经过多次迭代后，由于浮点误差累积，$\Sigma$ 可能变得不严格对称，导致 Cholesky 分解失败。
 > 根本原因：理论上 $J \Sigma J^T$ 是对称的，但浮点运算的舍入误差会破坏严格对称性。
@@ -2056,13 +2056,13 @@ std::cout << "World 系协方差对角线: " << Sigma_global.diagonal().transpos
 
 ### 练习
 
-**练习 23.10.1**（⭐⭐⭐）：对一个 SE(3) 位姿施加 100 次随机小扰动（每次扰动从 $\mathcal{N}(0, \Sigma_{\delta})$ 采样），模拟 IMU 积分的不确定性累积。分别用蒙特卡洛方法（采样 1000 次轨迹后统计协方差）和解析传播公式计算最终的协方差，比较两者的差异。
+**练习 23.10.1**（★★★）：对一个 SE(3) 位姿施加 100 次随机小扰动（每次扰动从 $\mathcal{N}(0, \Sigma_{\delta})$ 采样），模拟 IMU 积分的不确定性累积。分别用蒙特卡洛方法（采样 1000 次轨迹后统计协方差）和解析传播公式计算最终的协方差，比较两者的差异。
 
-**练习 23.10.2**（⭐⭐⭐）：验证局部/全局协方差转换：构造一个有明显旋转的位姿 $T$（如绕 z 轴转 45 度），设定 body 系中的协方差为对角阵（$\sigma_x^2 = 1, \sigma_y^2 = 4, \sigma_z^2 = 1$），转换到全局坐标系后，验证协方差椭球的主轴方向确实随 $T$ 的旋转而旋转。
+**练习 23.10.2**（★★★）：验证局部/全局协方差转换：构造一个有明显旋转的位姿 $T$（如绕 z 轴转 45 度），设定 body 系中的协方差为对角阵（$\sigma_x^2 = 1, \sigma_y^2 = 4, \sigma_z^2 = 1$），转换到全局坐标系后，验证协方差椭球的主轴方向确实随 $T$ 的旋转而旋转。
 
 ---
 
-## 23.11 离散积分与 IMU 预积分基础 ⭐⭐⭐
+## 23.11 离散积分与 IMU 预积分基础 ★★★
 
 ### 这一节解决什么问题
 
@@ -2210,9 +2210,9 @@ std::cout << "欧拉积分 R^T R - I:\n"
 // 会是 ~1e-3 量级
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：IMU 角速度单位错误**
+> ⚠ **编程陷阱：IMU 角速度单位错误**
 > 错误做法：将角速度从 deg/s 转换为 rad/s 时忘记乘以 $\pi/180$，或在某些 IMU 驱动中已经自动转换但又手动转了一次。
 > 现象：积分出的旋转偏大（多转了约 57 倍）或偏小，轨迹完全错误。
 > 根本原因：`Exp(omega * dt)` 期望 `omega` 的单位是 rad/s。
@@ -2225,13 +2225,13 @@ std::cout << "欧拉积分 R^T R - I:\n"
 
 ### 练习
 
-**练习 23.11.1**（⭐⭐⭐）：实现并比较三种旋转积分方法：(1) 欧拉积分 + SVD 重正交化；(2) 零阶保持流形积分；(3) 中值法流形积分（使用 $\omega_{k+1/2} = (\omega_k + \omega_{k+1})/2$）。对绕非轴方向（如 $\omega = [1, 2, 3]$ rad/s）旋转 10 秒的场景，比较三者与解析解（$R(t) = \text{Exp}(\omega t)$）的旋转误差。
+**练习 23.11.1**（★★★）：实现并比较三种旋转积分方法：(1) 欧拉积分 + SVD 重正交化；(2) 零阶保持流形积分；(3) 中值法流形积分（使用 $\omega_{k+1/2} = (\omega_k + \omega_{k+1})/2$）。对绕非轴方向（如 $\omega = [1, 2, 3]$ rad/s）旋转 10 秒的场景，比较三者与解析解（$R(t) = \text{Exp}(\omega t)$）的旋转误差。
 
-**练习 23.11.2**（⭐⭐⭐）：写一个简单的 IMU 预积分类，累积 $\Delta R_{ij}$ 和 $\Delta v_{ij}$。输入是一系列 $(a_k, \omega_k, \delta t)$，输出是预积分量。验证当偏差为零时，预积分结果与直接积分一致。
+**练习 23.11.2**（★★★）：写一个简单的 IMU 预积分类，累积 $\Delta R_{ij}$ 和 $\Delta v_{ij}$。输入是一系列 $(a_k, \omega_k, \delta t)$，输出是预积分量。验证当偏差为零时，预积分结果与直接积分一致。
 
 ---
 
-## 23.12 SO(3)/SE(3) 公式速查表 ⭐⭐
+## 23.12 SO(3)/SE(3) 公式速查表 ★★
 
 ### 这一节解决什么问题
 
@@ -2364,13 +2364,13 @@ std::cout << "Ad 验证误差: " << (Ad_manual - T.adj()).norm() << std::endl;
 
 ### 练习
 
-**练习 23.12.1**（⭐⭐）：手动验证 SO(3) 的关系 $\mathbf{J}_l(\tau) = \mathbf{J}_r(-\tau)$：取 $\tau = [0.2, -0.3, 0.5]^T$，分别用速查表中的公式计算 $\mathbf{J}_l(\tau)$ 和 $\mathbf{J}_r(-\tau)$，确认两者相等。
+**练习 23.12.1**（★★）：手动验证 SO(3) 的关系 $\mathbf{J}_l(\tau) = \mathbf{J}_r(-\tau)$：取 $\tau = [0.2, -0.3, 0.5]^T$，分别用速查表中的公式计算 $\mathbf{J}_l(\tau)$ 和 $\mathbf{J}_r(-\tau)$，确认两者相等。
 
-**练习 23.12.2**（⭐⭐⭐）：写一个函数，输入一个 SE(3) 元素的 manif 表示，输出论文排列（旋转在前）的 Jacobian。具体来说，对 `T1.compose(T2, J1, J2)` 返回的 $J_1$，转换为 Sola 论文中旋转在前的排列顺序。用数值差分验证转换结果的正确性。
+**练习 23.12.2**（★★★）：写一个函数，输入一个 SE(3) 元素的 manif 表示，输出论文排列（旋转在前）的 Jacobian。具体来说，对 `T1.compose(T2, J1, J2)` 返回的 $J_1$，转换为 Sola 论文中旋转在前的排列顺序。用数值差分验证转换结果的正确性。
 
 ---
 
-## 23.13 manif vs Sophus 对比 ⭐⭐
+## 23.13 manif vs Sophus 对比 ★★
 
 ### 动机：为什么需要了解两个库
 
@@ -2480,7 +2480,7 @@ $$S = \begin{bmatrix} sR & t \\ 0^T & 1 \end{bmatrix}, \quad s > 0, R \in SO(3),
 4. 需要群无关的模板编程 → **manif**（Sophus 做不到）
 5. 需要内置解析 Jacobian → **manif**
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **💡 概念误区：认为 manif 和 Sophus 的 twist 分量顺序不同**
 
@@ -2495,7 +2495,7 @@ Eigen::Matrix<double, 6, 1> sophus_twist = T_sophus.log();
 manif::SE3d T_manif = manif::SE3d::Exp(sophus_twist);  // 直接使用
 ```
 
-**⚠️ 编程陷阱：混淆两个库的构造函数参数顺序**
+**⚠ 编程陷阱：混淆两个库的构造函数参数顺序**
 
 - **错误做法**：`Sophus::SE3d T(translation, quaternion);`——按 manif 的顺序传参
 - **现象**：编译错误（类型不匹配），或者如果类型恰好兼容则得到旋转和平移互换的错误位姿
@@ -2510,13 +2510,13 @@ manif::SE3d T_manif = manif::SE3d::Exp(sophus_twist);  // 直接使用
 
 ### 练习
 
-**练习 23.13.1**（⭐⭐）：写一个对比程序，分别用 manif 和 Sophus 对同一个旋转做 exp 到 log 往返，验证结果一致（注意转换 twist 顺序）。取 3 个测试用例：小角度（$0.01$ rad）、中角度（$1.0$ rad）、接近 $\pi$ 的角度（$3.1$ rad）。
+**练习 23.13.1**（★★）：写一个对比程序，分别用 manif 和 Sophus 对同一个旋转做 exp 到 log 往返，验证结果一致（注意转换 twist 顺序）。取 3 个测试用例：小角度（$0.01$ rad）、中角度（$1.0$ rad）、接近 $\pi$ 的角度（$3.1$ rad）。
 
-**练习 23.13.2**（⭐⭐）：制作一个表格，列出你在 SLAM 开发中最常用的 10 个李群操作（如 compose、inverse、act、log、exp、adjoint 等），写出在 manif 和 Sophus 中的对应 API 调用。这个表格将成为你日后阅读代码的快速参考。
+**练习 23.13.2**（★★）：制作一个表格，列出你在 SLAM 开发中最常用的 10 个李群操作（如 compose、inverse、act、log、exp、adjoint 等），写出在 manif 和 Sophus 中的对应 API 调用。这个表格将成为你日后阅读代码的快速参考。
 
 ---
 
-## 23.14 manif 与 Ceres 集成 ⭐⭐⭐
+## 23.14 manif 与 Ceres 集成 ★★★
 
 ### 动机：SLAM 后端优化需要流形参数化
 
@@ -2655,16 +2655,16 @@ std::cout << summary.FullReport() << std::endl;
 
 如果你需要手写解析 Jacobian（例如在极端性能要求下），可以实现 `CostFunction` 并在 `Evaluate` 方法中手动填入 Jacobian 矩阵。此时，manif 的 Jacobian 方法（如 `compose` 返回的 `J_compose_a`）非常有用。但务必注意：manif 的 Jacobian 是关于**切空间增量**的（6 维），而 Ceres 期望的 Jacobian 是关于**参数块**的（7 维），中间需要通过 Manifold 的 `PlusJacobian` 做一次链式法则变换。使用 AutoDiff + Manifold 时，Ceres 在内部自动完成这个变换，你不需要关心这个细节。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-**⚠️ 编程陷阱：Ceres 参数块大小和残差维度不匹配**
+**⚠ 编程陷阱：Ceres 参数块大小和残差维度不匹配**
 
 - **错误做法**：`AutoDiffCostFunction<Functor, 7, 7, 7>`——残差维度写成 7（和参数块大小一样）
 - **现象**：编译通过，运行时 Ceres 报错或产生错误结果
 - **根本原因**：SE(3) 的残差是 6 维的（切空间维度），不是 7 维的（参数存储维度）。残差维度应该等于流形的内在维度（tangent space dimension），而不是参数的嵌入维度（ambient dimension）
 - **正确做法**：残差维度 = 6，参数块大小 = 7
 
-**⚠️ 编程陷阱：忘记设置 Manifold 导致四元数不归一化**
+**⚠ 编程陷阱：忘记设置 Manifold 导致四元数不归一化**
 
 - **错误做法**：`problem.AddParameterBlock(pose.data(), 7)` 不带 Manifold 参数
 - **现象**：优化前几步正常，之后四元数范数逐渐偏离 1（如变成 1.002, 1.015, ...），旋转矩阵不再正交，最终 exp/log 计算产生 NaN
@@ -2679,13 +2679,13 @@ std::cout << summary.FullReport() << std::endl;
 
 ### 练习
 
-**练习 23.14.1**（⭐⭐⭐）：实现一个简化的 2D 位姿图优化。用 manif 的 `SE2d` 和 Ceres 构建一个包含 5 个位姿和 8 条边（含一条回环边）的位姿图。初始值在真值基础上加入高斯噪声，运行 Ceres 优化后比较优化结果和真值的误差。使用 2D 而不是 3D 是为了降低调试难度——原理完全相同。
+**练习 23.14.1**（★★★）：实现一个简化的 2D 位姿图优化。用 manif 的 `SE2d` 和 Ceres 构建一个包含 5 个位姿和 8 条边（含一条回环边）的位姿图。初始值在真值基础上加入高斯噪声，运行 Ceres 优化后比较优化结果和真值的误差。使用 2D 而不是 3D 是为了降低调试难度——原理完全相同。
 
-**练习 23.14.2**（⭐⭐⭐）：在上一题的基础上，将 `SE2d` 替换为 `SE3d`，构建一个 3D 位姿图优化问题。比较 AutoDiff 和手写解析 Jacobian 两种方式的运行时间（用 `std::chrono` 计时）。提示：手写解析 Jacobian 时使用 manif 的 `compose` Jacobian 输出。
+**练习 23.14.2**（★★★）：在上一题的基础上，将 `SE2d` 替换为 `SE3d`，构建一个 3D 位姿图优化问题。比较 AutoDiff 和手写解析 Jacobian 两种方式的运行时间（用 `std::chrono` 计时）。提示：手写解析 Jacobian 时使用 manif 的 `compose` Jacobian 输出。
 
 ---
 
-## 23.15 Sophus 实战（ORB-SLAM3/FAST-LIVO2 代码解读）⭐⭐⭐
+## 23.15 Sophus 实战（ORB-SLAM3/FAST-LIVO2 代码解读）★★★
 
 ### 动机：读懂 SLAM 经典代码必须理解 Sophus
 
@@ -2889,16 +2889,16 @@ void update(State& state, const Eigen::Matrix<double, 15, 1>& delta_x) {
 | 位姿存储 | `Sophus::SE3f mTcw` | `Sophus::SO3d R` + `Eigen::Vector3d p` |
 | 命名约定 | `Tcw`/`Twc`（目标_源） | `R`/`p`（分开存储） |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-**⚠️ 编程陷阱：ORB-SLAM3 用 float，你的代码用 double，类型不匹配**
+**⚠ 编程陷阱：ORB-SLAM3 用 float，你的代码用 double，类型不匹配**
 
 - **错误做法**：`Sophus::SE3d my_pose = orb_slam_frame->GetPose();`——SE3f 赋给 SE3d
 - **现象**：编译错误，Sophus 不允许 SE3f 和 SE3d 之间的隐式转换
 - **根本原因**：Sophus（和 Eigen）为了防止精度丢失的静默 bug，禁止 float/double 之间的隐式转换
 - **正确做法**：显式 cast：`Sophus::SE3d my_pose = orb_slam_frame->GetPose().cast<double>();`
 
-**⚠️ 编程陷阱：混淆预测步和更新步的乘法方向**
+**⚠ 编程陷阱：混淆预测步和更新步的乘法方向**
 
 - **错误做法**：更新步中写 `state.R = state.R * Sophus::SO3d::exp(delta_theta)`（右乘，但 ESKF 的 Jacobian 是按左乘推导的）
 - **现象**：第一次更新后状态看起来变好了，但之后越更新越差。协方差矩阵不收敛
@@ -2919,15 +2919,15 @@ void update(State& state, const Eigen::Matrix<double, 15, 1>& delta_x) {
 
 ### 练习
 
-**练习 23.15.1**（⭐⭐⭐）：用 Sophus 实现一个简化的 ESKF 旋转更新。给定初始旋转 $R_0 = I$，模拟 100 步 IMU 数据（常数角速度 $\omega = [0.1, 0, 0]$ rad/s，$dt = 0.01$ s），执行预测步（右乘）。然后模拟一次外部观测修正：真实旋转为 $R_{\text{true}}$，计算旋转误差 $\delta\theta = \log(R_{\text{true}} \cdot R_{\text{pred}}^{-1})$，执行更新步（左乘）。验证更新后的旋转更接近真值。
+**练习 23.15.1**（★★★）：用 Sophus 实现一个简化的 ESKF 旋转更新。给定初始旋转 $R_0 = I$，模拟 100 步 IMU 数据（常数角速度 $\omega = [0.1, 0, 0]$ rad/s，$dt = 0.01$ s），执行预测步（右乘）。然后模拟一次外部观测修正：真实旋转为 $R_{\text{true}}$，计算旋转误差 $\delta\theta = \log(R_{\text{true}} \cdot R_{\text{pred}}^{-1})$，执行更新步（左乘）。验证更新后的旋转更接近真值。
 
-**练习 23.15.2**（⭐⭐）：阅读 ORB-SLAM3 源码中 `Tracking` 类的位姿更新部分，识别出所有 `Sophus::SE3f` 的操作，列出使用了哪些 API（构造、组合、inverse、log、作用于点等），并用 manif 等价 API 写出对应代码。注意转换 twist 顺序和构造函数参数顺序。
+**练习 23.15.2**（★★）：阅读 ORB-SLAM3 源码中 `Tracking` 类的位姿更新部分，识别出所有 `Sophus::SE3f` 的操作，列出使用了哪些 API（构造、组合、inverse、log、作用于点等），并用 manif 等价 API 写出对应代码。注意转换 twist 顺序和构造函数参数顺序。
 
-**练习 23.15.3**（⭐⭐⭐）：写一个完整的程序，模拟一个简化的 FAST-LIVO2 ESKF 流程：(1) 初始化状态为原点零速度；(2) 输入 200 帧 IMU 数据做预测；(3) 每 10 帧输入一次"激光雷达观测"（即真值位姿加噪声），做 ESKF 更新。绘制预测轨迹和更新后轨迹的对比，验证更新有效修正了 IMU 积分漂移。
+**练习 23.15.3**（★★★）：写一个完整的程序，模拟一个简化的 FAST-LIVO2 ESKF 流程：(1) 初始化状态为原点零速度；(2) 输入 200 帧 IMU 数据做预测；(3) 每 10 帧输入一次"激光雷达观测"（即真值位姿加噪声），做 ESKF 更新。绘制预测轨迹和更新后轨迹的对比，验证更新有效修正了 IMU 积分漂移。
 
 ---
 
-## 23.16 流形代码验证与工程边界 ⭐⭐⭐
+## 23.16 流形代码验证与工程边界 ★★★
 
 > **这一节解决什么问题**：李群代码最常见的问题不是公式背不下来，而是左/右扰动、切向量排列、四元数布局和数值边界在工程代码中交叉出现。本节给出可执行的验证框架，把"公式正确"转化为"代码在边界情况下仍正确"。
 
@@ -3022,7 +3022,7 @@ SO(3) 的 `Exp`/`Log` 有两个数值敏感区：
 
 ---
 
-## 23.17 扩展李群与前沿应用 ⭐⭐⭐⭐
+## 23.17 扩展李群与前沿应用 ★★★★
 
 ### $SE_2(3)$：扩展位姿群
 
@@ -3040,7 +3040,7 @@ Barrau 和 Bonnabel 在 2017 年提出了基于 $SE_2(3)$ 的"不变扩展卡尔
 
 > **反事实推理**：如果不用 $SE_2(3)$ 而直接用 SE(3) + $\mathbb{R}^3$（把速度当作普通向量）会怎样？ESKF 在大多数场景下也能工作，但在高动态运动（如无人机急速转弯）或长时间自由飞行中，旋转-速度的耦合误差会被放大。$SE_2(3)$ 的不变性保证了误差模型不随状态变化，从而在极端条件下仍有良好的收敛性。
 
-### 群论在等变神经网络中的基础 ⭐⭐⭐⭐
+### 群论在等变神经网络中的基础 ★★★★
 
 李群不仅在传统几何中有用——它们也是"等变神经网络"（Equivariant Neural Networks）的数学基础。这是一个正在改变机器人感知和操作的前沿方向。
 
@@ -3061,9 +3061,9 @@ $$f(g \cdot x) = g \cdot f(x), \quad \forall g \in G$$
 
 这些方法背后的数学工具——群表示论、Haar 测度、Peter-Weyl 定理——都建立在本章讲解的李群/李代数框架之上。理解了 SO(3)/SE(3) 的群结构、伴随表示和群作用，就为阅读等变网络的论文（如 E3NN、EGNN、VN-PointNet）打下了坚实基础。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **概念误区：认为 $SE_2(3)$ 比 SE(3) "更好"因此应该替换所有 SE(3)**
+> ⚠ **概念误区：认为 $SE_2(3)$ 比 SE(3) "更好"因此应该替换所有 SE(3)**
 >
 > **实际上**：$SE_2(3)$ 只在状态包含速度且旋转-速度耦合显著时才有优势。纯位姿估计（如视觉 SLAM 的关键帧位姿）仍然用 SE(3)。选择群结构要匹配物理问题——群"越大"不等于"越好"，它意味着更多的约定需要维护和更复杂的 Jacobian。
 
@@ -3075,9 +3075,9 @@ $$f(g \cdot x) = g \cdot f(x), \quad \forall g \in G$$
 
 ### 练习
 
-**练习 23.17.1** ⭐⭐⭐：写出 $SE_2(3)$ 的 $5 \times 5$ 矩阵表示的群操作（乘法）和逆运算。验证结果满足群公理（封闭性、结合律、单位元、逆元）。
+**练习 23.17.1** ★★★：写出 $SE_2(3)$ 的 $5 \times 5$ 矩阵表示的群操作（乘法）和逆运算。验证结果满足群公理（封闭性、结合律、单位元、逆元）。
 
-**练习 23.17.2** ⭐⭐⭐⭐：阅读 Barrau & Bonnabel 2017 "The Invariant Extended Kalman Filter as a Stable Observer" 的第 2-3 节，总结 InEKF 相比 ESKF 的核心优势。用自己的语言解释"不变误差动力学"是什么意思。
+**练习 23.17.2** ★★★★：阅读 Barrau & Bonnabel 2017 "The Invariant Extended Kalman Filter as a Stable Observer" 的第 2-3 节，总结 InEKF 相比 ESKF 的核心优势。用自己的语言解释"不变误差动力学"是什么意思。
 
 ---
 
@@ -3085,21 +3085,21 @@ $$f(g \cdot x) = g \cdot f(x), \quad \forall g \in G$$
 
 | 节号 | 知识点 | 难度 | 核心要点 | 常见误区 |
 |------|--------|------|---------|---------|
-| 23.1 | 李群/李代数概览 | ⭐⭐ | 旋转/位姿不是向量，不能直接加减 | 用欧拉角做优化会遇到万向锁 |
-| 23.2 | 群作用 | ⭐⭐ | 群对空间的作用满足恒等性和相容性 | 混淆群操作（compose）和群作用（act） |
-| 23.3 | 切空间与李代数 | ⭐⭐⭐ | 角速度矩阵 $R^T\dot{R}$ 属于 $\mathfrak{so}(3)$ | 认为 $\dot{R}$ 本身就是角速度 |
-| 23.4 | Exp/Log 完整推导 | ⭐⭐⭐ | Rodrigues 公式和 SE(3) 指数映射闭式解 | $\theta\to 0$ 时除零；忽略 $V(\theta)$ 的修正 |
-| 23.5 | Plus/Minus 算子 | ⭐⭐⭐ | $\oplus$ 是优化器与流形之间的桥梁 | 把 $\oplus$ 实现为旋转/平移分别更新 |
-| 23.6 | 伴随矩阵 | ⭐⭐⭐ | $J_L = \text{Ad} \cdot J_R$，用于转换扰动约定 | 忘记 SE(3) 伴随中 $[t]_\times R$ 耦合项 |
-| 23.7 | manif 核心 API | ⭐⭐ | compose, inverse, log, exp, act, Jacobian | twist 顺序 $[\rho, \omega]$，log 返回 Tangent 类型不是 VectorXd |
-| 23.8 | 左/右扰动 | ⭐⭐⭐ | manif 和 GTSAM 都使用右扰动 | 混用约定导致 Jacobian 错误，优化不收敛 |
-| 23.9 | 流形 Jacobian | ⭐⭐⭐⭐ | 5 类基础 Jacobian 模块 + 链式法则 | 混淆 BCH 的左/右 Jacobian 和扰动约定的左/右 |
-| 23.10 | 不确定性与协方差 | ⭐⭐⭐ | 在切空间中定义高斯分布和协方差传播 | 用矩阵 16 元素的协方差表示 SE(3) 不确定性 |
-| 23.11 | 离散积分与预积分 | ⭐⭐⭐ | 流形积分保持 SO(3) 约束 | 欧拉积分导致旋转矩阵离开 SO(3) |
-| 23.12 | 公式速查表 | ⭐⭐ | SO(3)/SE(3) 常用公式和 Jacobian 速查 | 不同库的切空间排列顺序不同 |
-| 23.13 | manif vs Sophus | ⭐⭐ | 新项目用 manif，读旧代码需要 Sophus | twist 顺序相同（均为 $[\rho,\omega]$），但构造函数参数顺序不同 |
-| 23.14 | Ceres + manif | ⭐⭐⭐ | Manifold 接口提供正确的流形参数化 | 残差维度 6 vs 参数块大小 7，忘记设 Manifold |
-| 23.15 | Sophus 实战 | ⭐⭐⭐ | ORB-SLAM3 用 SE3f，FAST-LIVO2 用 ESKF | float/double 隐式转换被禁止；混淆预测和更新的乘法方向 |
+| 23.1 | 李群/李代数概览 | ★★ | 旋转/位姿不是向量，不能直接加减 | 用欧拉角做优化会遇到万向锁 |
+| 23.2 | 群作用 | ★★ | 群对空间的作用满足恒等性和相容性 | 混淆群操作（compose）和群作用（act） |
+| 23.3 | 切空间与李代数 | ★★★ | 角速度矩阵 $R^T\dot{R}$ 属于 $\mathfrak{so}(3)$ | 认为 $\dot{R}$ 本身就是角速度 |
+| 23.4 | Exp/Log 完整推导 | ★★★ | Rodrigues 公式和 SE(3) 指数映射闭式解 | $\theta\to 0$ 时除零；忽略 $V(\theta)$ 的修正 |
+| 23.5 | Plus/Minus 算子 | ★★★ | $\oplus$ 是优化器与流形之间的桥梁 | 把 $\oplus$ 实现为旋转/平移分别更新 |
+| 23.6 | 伴随矩阵 | ★★★ | $J_L = \text{Ad} \cdot J_R$，用于转换扰动约定 | 忘记 SE(3) 伴随中 $[t]_\times R$ 耦合项 |
+| 23.7 | manif 核心 API | ★★ | compose, inverse, log, exp, act, Jacobian | twist 顺序 $[\rho, \omega]$，log 返回 Tangent 类型不是 VectorXd |
+| 23.8 | 左/右扰动 | ★★★ | manif 和 GTSAM 都使用右扰动 | 混用约定导致 Jacobian 错误，优化不收敛 |
+| 23.9 | 流形 Jacobian | ★★★★ | 5 类基础 Jacobian 模块 + 链式法则 | 混淆 BCH 的左/右 Jacobian 和扰动约定的左/右 |
+| 23.10 | 不确定性与协方差 | ★★★ | 在切空间中定义高斯分布和协方差传播 | 用矩阵 16 元素的协方差表示 SE(3) 不确定性 |
+| 23.11 | 离散积分与预积分 | ★★★ | 流形积分保持 SO(3) 约束 | 欧拉积分导致旋转矩阵离开 SO(3) |
+| 23.12 | 公式速查表 | ★★ | SO(3)/SE(3) 常用公式和 Jacobian 速查 | 不同库的切空间排列顺序不同 |
+| 23.13 | manif vs Sophus | ★★ | 新项目用 manif，读旧代码需要 Sophus | twist 顺序相同（均为 $[\rho,\omega]$），但构造函数参数顺序不同 |
+| 23.14 | Ceres + manif | ★★★ | Manifold 接口提供正确的流形参数化 | 残差维度 6 vs 参数块大小 7，忘记设 Manifold |
+| 23.15 | Sophus 实战 | ★★★ | ORB-SLAM3 用 SE3f，FAST-LIVO2 用 ESKF | float/double 隐式转换被禁止；混淆预测和更新的乘法方向 |
 
 ---
 
@@ -3135,16 +3135,16 @@ mini_lio/
 
 | 资料 | 难度 | 说明 |
 |------|------|------|
-| Sola et al., "A micro Lie theory for state estimation in robotics" (2021) | ⭐⭐ | manif 配套论文，17 页，李群入门最佳材料。**强烈建议在学习本章之前先读这篇论文** |
-| slambook2 第 4 章 | ⭐⭐ | Sophus 的基本用法，中文教材，适合 Sophus 入门 |
-| manif GitHub: artivis/manif | ⭐⭐ | 官方仓库，examples/ 目录有完整的使用示例 |
-| Sophus GitHub: strasdat/Sophus | ⭐⭐ | 官方仓库，test/ 目录有大量用法参考 |
-| Barfoot, "State Estimation for Robotics" (2017) | ⭐⭐⭐ | 第 7-9 章系统讲解了李群在状态估计中的应用，包括左右 Jacobian 的详细推导 |
-| Chirikjian, "Stochastic Models, Information Theory, and Lie Groups" (2012) | ⭐⭐⭐⭐ | 研究级教材，从概率论角度理解李群上的不确定性传播 |
-| Ceres Solver 文档: Manifold 接口 | ⭐⭐⭐ | 官方文档中关于 Manifold（前身 LocalParameterization）的详细说明 |
-| ORB-SLAM3 论文 + 源码 | ⭐⭐⭐ | 理解 Sophus 在大型 SLAM 系统中的实际应用 |
-| FAST-LIVO2 论文 + 源码 | ⭐⭐⭐ | 理解 Sophus + ESKF 的组合使用 |
-| Eade, "Lie Groups for 2D and 3D Transformations" (2017) | ⭐⭐ | 短小精悍的李群入门 notes，和 Sola 的论文互为补充 |
+| Sola et al., "A micro Lie theory for state estimation in robotics" (2021) | ★★ | manif 配套论文，17 页，李群入门最佳材料。**强烈建议在学习本章之前先读这篇论文** |
+| slambook2 第 4 章 | ★★ | Sophus 的基本用法，中文教材，适合 Sophus 入门 |
+| manif GitHub: artivis/manif | ★★ | 官方仓库，examples/ 目录有完整的使用示例 |
+| Sophus GitHub: strasdat/Sophus | ★★ | 官方仓库，test/ 目录有大量用法参考 |
+| Barfoot, "State Estimation for Robotics" (2017) | ★★★ | 第 7-9 章系统讲解了李群在状态估计中的应用，包括左右 Jacobian 的详细推导 |
+| Chirikjian, "Stochastic Models, Information Theory, and Lie Groups" (2012) | ★★★★ | 研究级教材，从概率论角度理解李群上的不确定性传播 |
+| Ceres Solver 文档: Manifold 接口 | ★★★ | 官方文档中关于 Manifold（前身 LocalParameterization）的详细说明 |
+| ORB-SLAM3 论文 + 源码 | ★★★ | 理解 Sophus 在大型 SLAM 系统中的实际应用 |
+| FAST-LIVO2 论文 + 源码 | ★★★ | 理解 Sophus + ESKF 的组合使用 |
+| Eade, "Lie Groups for 2D and 3D Transformations" (2017) | ★★ | 短小精悍的李群入门 notes，和 Sola 的论文互为补充 |
 
 ---
 

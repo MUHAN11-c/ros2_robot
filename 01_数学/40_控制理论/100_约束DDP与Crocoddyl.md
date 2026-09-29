@@ -1,4 +1,4 @@
-# 专题 3.10：约束 DDP 家族与 Crocoddyl ⭐⭐
+# 专题 3.10：约束 DDP 家族与 Crocoddyl ★★
 
 > 博士前数学路线图 · 第三批 · 专题 3.10
 > 前置：3.9 DDP/iLQR 原理与实现、3.5 LQR 与 Riccati 方程、3.3 Bellman 方程
@@ -8,7 +8,7 @@
 
 ## 前置自测
 
-📋 **前置自测**（答不出 >=2 题 → 先回 3.9/3.5 复习）
+◆ **前置自测**（答不出 >=2 题 → 先回 3.9/3.5 复习）
 
 1. 写出 iLQR backward pass 的 Q 函数六系数（$Q_x, Q_u, Q_{xx}, Q_{ux}, Q_{uu}$），说明每个系数的物理含义。
 2. Tassa 2012 的状态正则化 $V'_{xx} + \mu I$ 为什么优于控制正则化 $Q_{uu} + \mu I$？
@@ -67,7 +67,7 @@
 
 ---
 
-## §3.10.1 约束轨迹优化的标准形式与约束分类 ⭐⭐
+## §3.10.1 约束轨迹优化的标准形式与约束分类 ★★
 
 ### 动机：为什么需要约束
 
@@ -150,7 +150,7 @@ Step 5. 当 $\mathcal A = \varnothing$（无活动约束）时，$G_{\mathcal A}
 - **承 §3.9**：无约束 DDP 的 $Q$ 系数递推和正则化策略在此**原样保留**，只有 $\delta u$ 的极小化被替换
 - **启 §3.11**：终端约束 $x_N \in \mathcal X_f$ 和终端代价 $\ell_N$ 是 MPC 递归可行性与渐近稳定性的前提（Mayne 2000 四条件）
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区：认为"加个 clip 就行"**
 
@@ -167,7 +167,7 @@ Step 5. 当 $\mathcal A = \varnothing$（无活动约束）时，$G_{\mathcal A}
 
 ---
 
-## §3.10.2 Box-DDP：Tassa-Mansard-Todorov ICRA 2014 ⭐⭐
+## §3.10.2 Box-DDP：Tassa-Mansard-Todorov ICRA 2014 ★★
 
 ### 动机与历史
 
@@ -361,9 +361,9 @@ Tassa 2014 §III.A 详细分析了三种"简单"处理方式的缺陷：
 - 必须 warm-start 上一步的活动集 $\mathcal C_{\text{prev}}$，利用 MPC 的时序相似性
 - **仅支持控制箱**——状态约束、摩擦锥约束需交给 §3.10.3-3.10.4 的 AL 或 ProxDDP
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：对 box-DDP 忘把夹紧行 $K_{\mathcal C}$ 置零**
+⚠ **编程陷阱：对 box-DDP 忘把夹紧行 $K_{\mathcal C}$ 置零**
 
 完整 $K$ 做前向反馈会在边界附近 chattering。物理原因：如果电机已经在最大力矩，状态偏差来了，反馈试图加更多力矩——但 clip 会截断，下一步又减小——形成振荡。$K[\mathcal C,:]=0$ 告诉控制器："这个维度已经尽力了，别再管它。"
 
@@ -379,7 +379,7 @@ Tassa 2014 §III.A 详细分析了三种"简单"处理方式的缺陷：
 
 ---
 
-## §3.10.3 增广拉格朗日 iLQR 与 ALTRO ⭐⭐
+## §3.10.3 增广拉格朗日 iLQR 与 ALTRO ★★
 
 ### 动机
 
@@ -584,9 +584,9 @@ function ALTRO(x0, X_init, U_init; constraints)
   return X, U, λ
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：AL 初始 $\mu_0$ 过大**
+⚠ **编程陷阱：AL 初始 $\mu_0$ 过大**
 
 若 $\mu_0 = 10^4$ 而初始轨迹本身近似可行，AL 的罚项会淹没原始代价 $\ell$——iLQR 内层只顾满足约束而忽略目标，产生"可行但代价极差"的解。应从 $\mu_0 = 0.1$ 或 $1$ 开始。
 
@@ -594,7 +594,7 @@ function ALTRO(x0, X_init, U_init; constraints)
 
 AL 外层每步调用一次完整的 iLQR（可能 10-50 次内层迭代）。如果外层跑 5 步、每步内层 20 次迭代，总共 100 次 backward+forward pass——比无约束 iLQR 的 15 次贵约 7 倍。
 
-⚠️ **编程陷阱：不等式 $I_\mu$ 切换导致梯度不连续**
+⚠ **编程陷阱：不等式 $I_\mu$ 切换导致梯度不连续**
 
 在 $\lambda_i = 0, c_i = 0$ 的精确切换点，$\partial\mathcal{L}_A/\partial u$ 有跳变。line search 在此点附近可能假阳性失败。解决：用平滑化切换（如 $\max(0, \lambda + \mu c)$ 的 softplus 近似）或在切换点做保护性步长限制。
 
@@ -606,7 +606,7 @@ AL 外层每步调用一次完整的 iLQR（可能 10-50 次内层迭代）。�
 
 ---
 
-## §3.10.4 FDDP / Box-FDDP：Feasibility-Driven DDP ⭐⭐
+## §3.10.4 FDDP / Box-FDDP：Feasibility-Driven DDP ★★
 
 ### 动机：单射击的致命缺陷
 
@@ -686,9 +686,9 @@ Mastalli 2022 在 humanoid pull-up、front-flip 等场景中验证：Box-FDDP �
 
 这是 **Crocoddyl 的默认求解器** (`SolverBoxFDDP`)。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：FDDP 忘记 $(\star)$ defect 修正**
+⚠ **编程陷阱：FDDP 忘记 $(\star)$ defect 修正**
 
 如果漏掉 $V_x' \leftarrow V_x' + V_{xx}'\bar f$，当 gap > 0 时产生错误 Newton 方向——merit 不降反升，算法表现为"第一步 gap 消除，但代价反而增加"的异常。
 
@@ -696,7 +696,7 @@ Mastalli 2022 在 humanoid pull-up、front-flip 等场景中验证：Box-FDDP �
 
 准确说法：FDDP 是多射击 SQP 的 **condensed Riccati 实现**——数学等价但计算组织不同。多射击 SQP（如 acados）把 $(x,u)$ 全部作为显式变量、动力学作等式约束、用稀疏 KKT solver。FDDP 把 $x$ 通过 Bellman 递推消去，只显式保留 $(u, \bar f)$。
 
-⚠️ **编程陷阱：对流形状态用欧氏差 $x_1 - x_2$ 而非 $\ominus$**
+⚠ **编程陷阱：对流形状态用欧氏差 $x_1 - x_2$ 而非 $\ominus$**
 
 浮动基座包含 $SE(3)$ / 四元数，不能做欧氏减法（破坏单位约束、环绕时产生虚假 defect）。必须用 Pinocchio 的 `state.diff`（切空间差分）和 `state.integrate`（指数映射积分）。
 
@@ -708,7 +708,7 @@ Mastalli 2022 在 humanoid pull-up、front-flip 等场景中验证：Box-FDDP �
 
 ---
 
-## §3.10.5 Crocoddyl 框架详解 ⭐⭐
+## §3.10.5 Crocoddyl 框架详解 ★★
 
 ### 设计理念
 
@@ -877,15 +877,15 @@ print(f"Final gap: {np.max([np.linalg.norm(g) for g in solver.fs]):.2e}")
 └── 无约束 / 只有软罚 → SolverFDDP
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：Baumgarte 参数 $\beta$ 设置不当**
+⚠ **编程陷阱：Baumgarte 参数 $\beta$ 设置不当**
 
 - $\beta > 100$：stiff 方程，Euler 积分需 $\Delta t < 1/\beta$ 才稳定。$\Delta t = 10$ ms 配 $\beta = 200$ 会爆炸
 - $\beta < 5$：接触约束漂移，脚陷入地面或漂浮
 - 推荐：$\Delta t = 10$ ms 时取 $\beta \in [20, 50]$
 
-⚠️ **编程陷阱：`quasiStatic` 初始化返回的控制可能不可行**
+⚠ **编程陷阱：`quasiStatic` 初始化返回的控制可能不可行**
 
 `quasiStatic` 计算的是"保持当前姿态所需的力矩"——如果初始姿态不在关节限位内，返回的力矩可能超出 box 约束。应在 `solve` 前 clip 初始控制。
 
@@ -897,7 +897,7 @@ print(f"Final gap: {np.max([np.linalg.norm(g) for g in solver.fs]):.2e}")
 
 ---
 
-## §3.10.6 ProxDDP / Aligator（Jallet et al. T-RO 2025） ⭐⭐⭐
+## §3.10.6 ProxDDP / Aligator（Jallet et al. T-RO 2025） ★★★
 
 ### 动机
 
@@ -1049,7 +1049,7 @@ Jallet 2025 在 Solo-12 四足机器人上的实验数据：
 2. **约束从软到硬**：把 Crocoddyl 中 `ActivationModelQuadraticBarrier` 的约束改为 Aligator 的 `addConstraint`。权重参数不再需要——硬约束不涉及权重调参。
 3. **Solver 参数**：ProxDDP 的核心参数是近端参数 $\rho$ 和容差 $(\varepsilon_p, \varepsilon_d)$。$\rho$ 的推荐初始值为 $10^{-1}$ 到 $10^{1}$，太小→收敛慢，太大→子问题偏离原问题。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区：认为"ProxDDP 只是换了个 AL 实现"**
 
@@ -1067,7 +1067,7 @@ Jallet 2025 在 Solo-12 四足机器人上验证了 ProxDDP 以 **kHz 级**运�
 
 ---
 
-## §3.10.7 摩擦锥约束与接触力处理 ⭐⭐
+## §3.10.7 摩擦锥约束与接触力处理 ★★
 
 ### Coulomb 摩擦锥
 
@@ -1131,15 +1131,15 @@ $$
 | warm-start | 简单（shift 即可） | 困难（活动集可能全变） |
 | 适用 | 已知步态、重复运动 | 未知接触、复杂地形 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：摩擦系数不保守化**
+⚠ **编程陷阱：摩擦系数不保守化**
 
 规划用 $\mu = 0.8$（干水泥地），实际执行时地面有水（$\mu_\text{real} = 0.4$）——机器人滑倒。
 
 正确做法：$\mu_\text{plan} = 0.6 \times \mu_\text{nominal}$，再经 4-face inner 近似折 $1/\sqrt{2}$。总安全系数约 $0.6/\sqrt{2} \approx 0.42$。
 
-⚠️ **编程陷阱：4-face pyramid 的 `Rsurf` 未对齐足部坐标**
+⚠ **编程陷阱：4-face pyramid 的 `Rsurf` 未对齐足部坐标**
 
 如果接触面不水平（斜坡），摩擦锥的轴应对齐接触面法向而非世界坐标 $z$ 轴。否则实际可用摩擦力被低估，规划失败或产生次优解。需在创建 `FrictionCone` 时传入正确的表面法向旋转。
 
@@ -1151,7 +1151,7 @@ $$
 
 ---
 
-## §3.10.8 终端约束与 MPC 递归可行性 ⭐⭐⭐
+## §3.10.8 终端约束与 MPC 递归可行性 ★★★
 
 ### 动机：为什么需要终端约束
 
@@ -1220,9 +1220,9 @@ terminal_costs.addCost("terminal_lqr",
     1.0)  # 权重 1.0，因为 P 本身已包含正确缩放
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：Terminal cost 缺失（MPC 无 Lyapunov 终端）**
+⚠ **编程陷阱：Terminal cost 缺失（MPC 无 Lyapunov 终端）**
 
 如果终端代价只是简单的 $\|x_N - x_\text{goal}\|^2$（权重不够大），闭环 MPC 可能 drift——因为优化器"不在乎" $x_N$ 之后发生什么。正确做法：按 Mayne 四条件设计终端代价，或至少用 $Q_f \gg Q$ 的大权重近似 LQR $P$。
 
@@ -1238,7 +1238,7 @@ terminal_costs.addCost("terminal_lqr",
 
 ---
 
-## §3.10.9 Benchmark 对比与选型指南 ⭐⭐
+## §3.10.9 Benchmark 对比与选型指南 ★★
 
 ### 求解器对比总表
 
@@ -1328,16 +1328,16 @@ terminal_costs.addCost("terminal_lqr",
 
 | 知识点 | 核心内容 | 难度 | 工程价值 |
 |--------|---------|------|---------|
-| 约束分类 | 约束如何破坏 DDP 解析极小化 → KKT 子问题 | ⭐⭐ | 选型基础 |
-| Box-DDP | Projected Newton 活动集 + $K[\mathcal C]=0$ | ⭐⭐ | 力矩限制处理 |
-| AL-iLQR/ALTRO | 外层乘子 + 内层无约束 + Projected Newton 精炼 | ⭐⭐ | 通用约束处理 |
-| FDDP | defect 修正 $(\star)$ + $\ell_1$ merit + infeasible warm-start | ⭐⭐ | 多射击 warm-start |
-| Box-FDDP | FDDP + Box-QP | ⭐⭐ | Crocoddyl 默认 |
-| ProxDDP | 近端 primal-dual AL 嵌入 Riccati | ⭐⭐⭐ | 下一代硬约束 MPC |
-| Crocoddyl | ActionModel 抽象 + Solver 家族 + Pinocchio | ⭐⭐ | 框架使用能力 |
-| 摩擦锥 | SOC / 多面体近似 / wrench cone | ⭐⭐ | 接触力正确性 |
-| 终端约束 | Mayne 四条件 → 递归可行性 → 渐近稳定 | ⭐⭐⭐ | MPC 理论基础 |
-| 收敛理论 | AL q-linear / Box q-quadratic / ProxDDP $O(1/k)$ | ⭐⭐⭐ | 算法理解深度 |
+| 约束分类 | 约束如何破坏 DDP 解析极小化 → KKT 子问题 | ★★ | 选型基础 |
+| Box-DDP | Projected Newton 活动集 + $K[\mathcal C]=0$ | ★★ | 力矩限制处理 |
+| AL-iLQR/ALTRO | 外层乘子 + 内层无约束 + Projected Newton 精炼 | ★★ | 通用约束处理 |
+| FDDP | defect 修正 $(\star)$ + $\ell_1$ merit + infeasible warm-start | ★★ | 多射击 warm-start |
+| Box-FDDP | FDDP + Box-QP | ★★ | Crocoddyl 默认 |
+| ProxDDP | 近端 primal-dual AL 嵌入 Riccati | ★★★ | 下一代硬约束 MPC |
+| Crocoddyl | ActionModel 抽象 + Solver 家族 + Pinocchio | ★★ | 框架使用能力 |
+| 摩擦锥 | SOC / 多面体近似 / wrench cone | ★★ | 接触力正确性 |
+| 终端约束 | Mayne 四条件 → 递归可行性 → 渐近稳定 | ★★★ | MPC 理论基础 |
+| 收敛理论 | AL q-linear / Box q-quadratic / ProxDDP $O(1/k)$ | ★★★ | 算法理解深度 |
 
 ---
 
@@ -1363,16 +1363,16 @@ terminal_costs.addCost("terminal_lqr",
 
 | 资源 | 难度 | 说明 |
 |------|------|------|
-| Tassa-Mansard-Todorov ICRA 2014 | ⭐⭐ | Box-DDP 原始论文 |
-| Howell-Jackson-Manchester IROS 2019 | ⭐⭐ | ALTRO 论文 |
-| Jackson AL-iLQR Tutorial | ⭐⭐ | 极好的 AL-iLQR 推导笔记 |
-| Mastalli ICRA 2020 (Crocoddyl) | ⭐⭐ | FDDP 论文 + 框架设计 |
-| Mastalli Autonomous Robots 2022 | ⭐⭐⭐ | Box-FDDP 完整理论 |
-| Jallet T-RO 2025 (ProxDDP) | ⭐⭐⭐⭐ | 近端约束 DDP 理论 |
-| Bertsekas 1982 Projected Newton | ⭐⭐⭐⭐ | Box-QP 收敛理论原始文献 |
-| Mayne et al. Automatica 2000 | ⭐⭐⭐ | MPC 稳定性四条件 |
-| CMU 16-745 Lecture 10 | ⭐⭐ | Manchester 非线性轨迹优化视频 |
-| Rawlings-Mayne-Diehl MPC 2e | ⭐⭐⭐ | MPC 教科书（免费 PDF） |
+| Tassa-Mansard-Todorov ICRA 2014 | ★★ | Box-DDP 原始论文 |
+| Howell-Jackson-Manchester IROS 2019 | ★★ | ALTRO 论文 |
+| Jackson AL-iLQR Tutorial | ★★ | 极好的 AL-iLQR 推导笔记 |
+| Mastalli ICRA 2020 (Crocoddyl) | ★★ | FDDP 论文 + 框架设计 |
+| Mastalli Autonomous Robots 2022 | ★★★ | Box-FDDP 完整理论 |
+| Jallet T-RO 2025 (ProxDDP) | ★★★★ | 近端约束 DDP 理论 |
+| Bertsekas 1982 Projected Newton | ★★★★ | Box-QP 收敛理论原始文献 |
+| Mayne et al. Automatica 2000 | ★★★ | MPC 稳定性四条件 |
+| CMU 16-745 Lecture 10 | ★★ | Manchester 非线性轨迹优化视频 |
+| Rawlings-Mayne-Diehl MPC 2e | ★★★ | MPC 教科书（免费 PDF） |
 
 ---
 
@@ -1389,7 +1389,7 @@ terminal_costs.addCost("terminal_lqr",
 
 ---
 
-## §3.10.10 多接触运动规划的 OCP 建模 ⭐⭐⭐
+## §3.10.10 多接触运动规划的 OCP 建模 ★★★
 
 ### 接触调度（Contact Schedule）
 
@@ -1512,9 +1512,9 @@ $$
 
 4. **Feedback gain 的使用**：在两次 MPC 求解之间，用 $u = u_0^\star + K_0(x - x_0^\star)$ 做高频反馈（500-1000 Hz）。这相当于在 MPC 的两拍之间用"冻结的 TVLQR"稳定系统——与 §3.9.10 的 RTI 思想完全一致。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：接触切换 ramp-up 力以"平滑"模态**
+⚠ **编程陷阱：接触切换 ramp-up 力以"平滑"模态**
 
 新手想法：落脚时让接触力从 0 线性增加到正常值（"平滑过渡"）。实际上这引入非物理拉力——因为在 ramp-up 期间法向力为正但很小，可能不满足摩擦锥。正确做法：用 `ImpulseActionModel` 处理瞬时碰撞，之后立即按正常接触力计算。
 
@@ -1530,7 +1530,7 @@ $$
 
 ---
 
-## §3.10.11 OCS2 框架简介（选学）⭐⭐⭐
+## §3.10.11 OCS2 框架简介（选学）★★★
 
 ### 核心定位
 
@@ -1581,7 +1581,7 @@ OCS2 的 SLQ（Sequential Linear Quadratic）在连续时间做 Riccati ODE 积�
 
 ---
 
-## §3.10.12 Contact-Implicit 轨迹优化（选学）��⭐⭐⭐
+## §3.10.12 Contact-Implicit 轨迹优化（选学）��★★★
 
 ### 核心思想
 
@@ -1628,7 +1628,7 @@ $\phi_\text{FB}(a,b) = 0 \iff a \ge 0, b \ge 0, ab = 0$。零水平集是非负�
 - Le Cleac'h-Howell 2024 T-RO：Fast CI-MPC
 - CALIPSO（Howell 2022）：锥 AL + IPM + 可微
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 🧠 **思维陷阱：认为"contact-implicit 一定比 contact-scheduled 好"**
 
@@ -1636,7 +1636,7 @@ Contact-implicit 的优势是"自动发现接触"，但代价是：(a) NLP 规�
 
 ---
 
-## §3.10.13 约束 DDP 的收敛性理论总结 ⭐⭐⭐⭐
+## §3.10.13 约束 DDP 的收敛性理论总结 ★★★★
 
 ### 各方法收敛率汇总
 
@@ -1689,7 +1689,7 @@ arXiv:2403.00748 "Primal-Dual iLQR"（2024）批评 FDDP 缺乏正式的二阶�
 
 ---
 
-## §3.10.14 Warm-Starting 与实时性策�� ⭐⭐⭐
+## §3.10.14 Warm-Starting 与实时性策�� ★★★
 
 ### Shifting Warm-Start 的完整流程
 
@@ -1727,15 +1727,15 @@ arXiv:2403.00748 "Primal-Dual iLQR"（2024）批评 FDDP 缺乏正式的二阶�
 
 单次迭代 2 ms → 500 Hz 理论上限。实际 MPC 跑 1-3 次迭代 → 150-500 Hz 可行。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：MPC warm-start 相位错位**
+⚠ **编程陷阱：MPC warm-start 相位错位**
 
 如果步态相位跨越了 MPC 周期边界（如 trot 的左右切换恰好在 warm-start shift 时发生），旧解的接触模式与新问题不匹配——box-QP 的活动集完全错误，第一步 gap 爆炸。
 
 正确做法：warm-start 时检查 contact schedule 一致性；如果相位变了，用 quasiStatic 重新初始化对应节点。
 
-⚠️ **编程陷阱：多线程 benchmark 不可复现**
+⚠ **编程陷阱：多线程 benchmark 不可复现**
 
 Crocoddyl 内部使用 OpenMP 并行计算导数。线程调度的不确定性导致浮点运算顺序变化→结果微变→MPC 轨迹不完全可复现。调参时设 `OMP_NUM_THREADS=1`。
 
@@ -1747,7 +1747,7 @@ Crocoddyl 内部使用 OpenMP 并行计算导数。线程调度的不确定性�
 
 ---
 
-## §3.10.15 可微约束轨迹优化与学习 ⭐��⭐⭐
+## §3.10.15 可微约束轨迹优化与学习 ★��★★
 
 ### 核心思想
 
@@ -1787,7 +1787,7 @@ Mastalli-Lembono-Fernbach-Mansard (ICRA 2020)：
 
 2024-2025 年后继：**Diffusion Policy 作为 warm-start generator**——用扩散模型生成初始轨迹，比 k-NN 更灵活。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区：把 "unrolling iLQR" 当作可微 MPC**
 
@@ -1948,7 +1948,7 @@ Mastalli-Lembono-Fernbach-Mansard (ICRA 2020)：
 
 ---
 
-## §3.10.16 约束 DDP 的收敛诊断实践 ⭐⭐
+## §3.10.16 约束 DDP 的收敛诊断实践 ★★
 
 ### 如何判断约束 DDP 是否正常收敛
 

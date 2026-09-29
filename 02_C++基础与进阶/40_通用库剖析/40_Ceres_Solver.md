@@ -1,12 +1,12 @@
 # Ceres Solver——非线性优化与自动微分
 
-> **难度**：⭐⭐～⭐⭐⭐⭐ | **建议用时**：2周 | **前置要求**：通用库·Eigen Eigen深入、通用库·李群manif 李群与manif库
+> **难度**：★★～★★★★ | **建议用时**：2周 | **前置要求**：通用库·Eigen Eigen深入、通用库·李群manif 李群与manif库
 
 ---
 
 ## 前置自测
 
-> 📋 答不出 ≥ 2 题 → 先回顾 通用库·Eigen～通用库·李群manif
+> ◆ 答不出 ≥ 2 题 → 先回顾 通用库·Eigen～通用库·李群manif
 
 1. 什么是最小二乘问题？给定 $m$ 个观测方程 $f_i(x) = 0$，如何用最小二乘法求解？
 2. Gauss-Newton 法和梯度下降法有什么区别？为什么 Gauss-Newton 对最小二乘问题更高效？
@@ -32,7 +32,7 @@
 
 ---
 
-## 24.1 非线性最小二乘问题 ⭐⭐
+## 24.1 非线性最小二乘问题 ★★
 
 ### 动机：SLAM 后端在解什么问题？
 
@@ -59,7 +59,7 @@ $$\min_{x} \sum_{i=1}^{m} \|f_i(x)\|^2$$
 
 Ceres 把这些都做了：你只需要定义残差函数 $f_i(x)$，Ceres 自动计算 Jacobian（通过自动微分）、构建法方程、选择最优的稀疏求解器、处理数值问题。
 
-### Gauss-Newton 与 Levenberg-Marquardt ⭐⭐
+### Gauss-Newton 与 Levenberg-Marquardt ★★
 
 标准的非线性最小二乘求解使用迭代法。每次迭代，在当前估计 $x_k$ 处将残差函数线性化：
 
@@ -81,7 +81,7 @@ $$(J^T J + \lambda I) \Delta x = -J^T f$$
 
 **Ceres 默认使用 LM**，它在 SLAM 的各种场景下都有良好的收敛行为。
 
-### Trust Region 与 Line Search：两大策略家族 ⭐⭐⭐
+### Trust Region 与 Line Search：两大策略家族 ★★★
 
 非线性优化有两大策略家族，理解它们的区别对于选择 Ceres 配置至关重要。
 
@@ -103,7 +103,7 @@ LM 可以理解为 Trust Region 的一个变种——阻尼因子 $\lambda$ 隐�
 
 **SLAM 中几乎总是使用 Trust Region。** Line Search 在某些无约束优化问题（如机器学习训练）中有优势，但在 SLAM 的稀疏最小二乘问题中，Trust Region + Schur 补的组合远远更高效。
 
-### Powell's Dogleg：信赖域的几何直觉 ⭐⭐⭐
+### Powell's Dogleg：信赖域的几何直觉 ★★★
 
 除了 LM，Ceres 还支持 Powell's Dogleg 信赖域策略。理解它的几何直觉有助于深入理解 Trust Region 方法。
 
@@ -139,9 +139,9 @@ options.trust_region_strategy_type = ceres::DOGLEG;
 options.dogleg_type = ceres::TRADITIONAL_DOGLEG;  // 或 SUBSPACE_DOGLEG
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **概念误区：认为最小二乘只能处理线性问题**
+> ⚠ **概念误区：认为最小二乘只能处理线性问题**
 >
 > **新手想法**："最小二乘不就是 $Ax = b$ 的超定方程组吗？"
 >
@@ -175,7 +175,7 @@ options.dogleg_type = ceres::TRADITIONAL_DOGLEG;  // 或 SUBSPACE_DOGLEG
 
 ---
 
-## 24.2 Ceres 核心架构 ⭐⭐
+## 24.2 Ceres 核心架构 ★★
 
 ### 动机：一个框架解决所有非线性最小二乘
 
@@ -192,7 +192,7 @@ Ceres 的设计哲学是**声明式**——你描述问题是什么（残差函�
 | `ceres::LossFunction` | 鲁棒核函数（降权外点） | 评分时忽略抄错的答案 |
 | `ceres::Solver` | 求解算法和配置 | 阅卷老师的评分策略 |
 
-### 最简完整示例：曲线拟合 ⭐⭐
+### 最简完整示例：曲线拟合 ★★
 
 ```cpp
 #include <ceres/ceres.h>
@@ -240,9 +240,9 @@ int main() {
 
 关键点：`operator()` 模板化于 `T`——当 `T=double` 时计算值，当 `T=Jet` 时同时计算值和导数（24.3 节详述）。`AutoDiffCostFunction<Functor, 1, 3>` 的模板参数：仿函数类型、残差维度(1)、参数块维度(3)。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：在 AutoDiff 仿函数中使用 `double` 而非 `T`**
+> ⚠ **编程陷阱：在 AutoDiff 仿函数中使用 `double` 而非 `T`**
 >
 > **错误做法**：`residual[0] = y_ - std::exp((double)params[0] * x_);`
 >
@@ -252,7 +252,7 @@ int main() {
 >
 > **正确做法**：仿函数内所有计算都用 `T` 类型。调用数学函数用 `ceres::exp`/`ceres::cos` 而非 `std::exp`/`std::cos`。
 
-> ⚠️ **编程陷阱：忘记 `operator()` 返回 `true`**
+> ⚠ **编程陷阱：忘记 `operator()` 返回 `true`**
 >
 > **错误做法**：不写 `return true;`
 >
@@ -270,7 +270,7 @@ int main() {
 
 ---
 
-## 24.3 AutoDiffCostFunction 与 Jet 类型 ⭐⭐⭐
+## 24.3 AutoDiffCostFunction 与 Jet 类型 ★★★
 
 ### 动机：谁来写 Jacobian？
 
@@ -286,7 +286,7 @@ int main() {
 | 自动微分 (AD) | 精确 | 快（比解析慢 ~2-5x） | 低 | **默认选择** |
 | 数值微分 | 近似 | 最慢 | 最低 | 黑盒函数、验证用 |
 
-### Jet 双数的原理 ⭐⭐⭐
+### Jet 双数的原理 ★★★
 
 Jet 是一种扩展的数类型，每个值包含两部分：实数值 $a$ 和导数向量 $\mathbf{v}$。算术运算通过运算符重载自动传播导数：
 
@@ -311,7 +311,7 @@ f  = Jet(9,[6,0]) + Jet(6,[2,3]) = Jet(15, [8,3])    ← ∂f/∂x=8, ∂f/∂y=
 
 验证：$\partial f/\partial x = 2x + y = 8$，$\partial f/\partial y = x = 3$。
 
-### 24.3.5 Jet 源码剖析 ⭐⭐⭐
+### 24.3.5 Jet 源码剖析 ★★★
 
 理解 Jet 的实现对于调试自动微分问题至关重要。下面我们深入 Ceres 源码中 `include/ceres/jet.h` 的核心结构。
 
@@ -403,7 +403,7 @@ inline Jet<T, N> atan2(const Jet<T, N>& y, const Jet<T, N>& x) {
 }
 ```
 
-> ⚠️ **编程陷阱：在仿函数中用 `if (params[0] > 0)` 做分支**
+> ⚠ **编程陷阱：在仿函数中用 `if (params[0] > 0)` 做分支**
 >
 > **错误做法**：`if (params[0] > 0.5) { ... } else { ... }`
 >
@@ -423,7 +423,7 @@ inline Jet<T, N> atan2(const Jet<T, N>& y, const Jet<T, N>& x) {
 
 这就是为什么 `AutoDiffCostFunction<Functor, 1, 6, 3>` 比动态版本快得多——编译器在编译期就知道 $N=9$，可以做极致优化。
 
-### 24.3.6 DynamicAutoDiffCostFunction ⭐⭐⭐
+### 24.3.6 DynamicAutoDiffCostFunction ★★★
 
 **动机：当参数维度在编译期未知时**
 
@@ -507,7 +507,7 @@ struct MarginalizationResidual {
 
 `DynamicAutoDiffCostFunction` 有一个模板参数 `Stride`（默认 4），控制每次"pass"处理几个参数的导数。Stride 越大，pass 次数越少但每次计算量越大。对于参数维度较小的问题，默认值通常足够；对于高维问题（如大型边缘化因子），可能需要调大 Stride。
 
-> ⚠️ **编程陷阱：能用静态版本时却用了动态版本**
+> ⚠ **编程陷阱：能用静态版本时却用了动态版本**
 >
 > **错误做法**：所有 CostFunction 都用 `DynamicAutoDiffCostFunction`
 >
@@ -515,7 +515,7 @@ struct MarginalizationResidual {
 >
 > **正确做法**：只有参数块数量/维度确实在编译期未知时才用动态版本。标准的重投影因子、IMU 因子等维度固定的残差，一定用静态 `AutoDiffCostFunction`。
 
-### SizedCostFunction：手写解析 Jacobian ⭐⭐⭐
+### SizedCostFunction：手写解析 Jacobian ★★★
 
 当 AutoDiff 性能不够时（VINS-Mono 的 IMU 因子每次优化调用数百次），继承 `SizedCostFunction` 并实现 `Evaluate`。**Jacobian 矩阵是行优先（RowMajor）**——Ceres 的约定，和 Eigen 默认列优先不同。
 
@@ -538,9 +538,9 @@ public:
 };
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：在 AutoDiff 仿函数中调用 `std::` 数学函数**
+> ⚠ **编程陷阱：在 AutoDiff 仿函数中调用 `std::` 数学函数**
 >
 > **错误做法**：`residual[0] = std::cos(params[0]);`
 >
@@ -548,7 +548,7 @@ public:
 >
 > **正确做法**：使用 `ceres::cos`、`ceres::sin`、`ceres::exp`、`ceres::sqrt`——对 `double` 和 `Jet` 都有正确实现。
 
-> ⚠️ **编程陷阱：手写 Jacobian 时忘记行优先**
+> ⚠ **编程陷阱：手写 Jacobian 时忘记行优先**
 >
 > **错误做法**：`Eigen::Map<Eigen::Matrix<double, 6, 7>> J(jacobians[0]);`（默认列优先）
 >
@@ -568,13 +568,13 @@ public:
 
 ---
 
-## 24.4 LossFunction：鲁棒核函数 ⭐⭐
+## 24.4 LossFunction：鲁棒核函数 ★★
 
 ### 动机：外点会毁掉优化
 
 一个残差为 100 的外点贡献 $10000$ 的代价，远大于 99 个正常观测的总贡献 99。优化器会花大量精力"解释"外点，严重扭曲结果。
 
-### 鲁棒核函数原理 ⭐⭐
+### 鲁棒核函数原理 ★★
 
 替换平方代价 $\|f\|^2$ 为增长更慢的函数 $\rho(\|f\|^2)$：
 
@@ -593,7 +593,7 @@ problem.AddResidualBlock(cost_function,
 
 $\delta$ 设为正常残差的 1-2 倍。视觉重投影正常约 1-2 像素，所以 `HuberLoss(1.0)` 合理。
 
-### 24.4.5 鲁棒核函数的数学推导 ⭐⭐⭐
+### 24.4.5 鲁棒核函数的数学推导 ★★★
 
 理解核函数的数学本质需要引入两个关键概念：**影响函数**（influence function）和**权重函数**（weight function）。这些概念来自鲁棒统计学，它们揭示了核函数如何"柔性地"处理外点。
 
@@ -645,15 +645,15 @@ $$\min_x \sum_i w(s_i) \cdot s_i = \min_x \sum_i w(\|f_i\|^2) \cdot \|f_i\|^2$$
 
 Ceres 并不直接实现 IRLS。它将核函数的效果嵌入到法方程的构建中。具体地，Ceres 通过将残差 $f$ 乘以 $\sqrt{\rho'(s)}$ 来修正 Jacobian 和残差，使得修正后的法方程等价于带核函数的优化。这个技巧在 `corrector.cc` 中实现。
 
-> ⚠️ **概念误区：认为 Cauchy 核总是比 Huber 核更好**
+> ⚠ **概念误区：认为 Cauchy 核总是比 Huber 核更好**
 >
 > **新手想法**："Cauchy 降权更狠，所以总是更鲁棒。"
 >
 > **实际上**：Cauchy 的代价函数是有界的（从下方 bounded away from convexity），这意味着优化问题可能有更多局部最小值。Huber 核保持了凸性（对大残差是线性），所以优化景观更"友好"。实际选择取决于外点比例——外点少用 Huber（更稳定的收敛），外点多用 Cauchy（更强的抑制力）。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：$\delta$ 设得太小**
+> ⚠ **编程陷阱：$\delta$ 设得太小**
 >
 > **错误做法**：`HuberLoss(0.01)` 用于像素级残差
 >
@@ -675,13 +675,13 @@ Ceres 并不直接实现 IRLS。它将核函数的效果嵌入到法方程的构
 
 ---
 
-## 24.5 Manifold 接口 ⭐⭐⭐
+## 24.5 Manifold 接口 ★★★
 
 ### 动机：四元数 4 参数只有 3 自由度
 
 四元数约束 $\|q\| = 1$——生活在 3 维超球面上。直接对 4 参数无约束优化，更新后 $q + \Delta q$ 不满足单位约束。
 
-### Ceres Manifold 接口 ⭐⭐⭐
+### Ceres Manifold 接口 ★★★
 
 Ceres 2.1 引入 `Manifold` 接口（Ceres 2.2 移除旧的 `LocalParameterization`）。定义：
 
@@ -704,7 +704,7 @@ problem.SetManifold(
 
 **内置 Manifold**：`EigenQuaternionManifold`（xyzw 顺序）、`QuaternionManifold`（wxyz 顺序）、`SphereManifold<N>`、`ProductManifold`。
 
-### 24.5.5 Manifold 迁移指南：Ceres 1.x → 2.x ⭐⭐
+### 24.5.5 Manifold 迁移指南：Ceres 1.x → 2.x ★★
 
 **背景：为什么要迁移？**
 
@@ -780,7 +780,7 @@ public:
 problem.SetManifold(pose, new SE3Manifold());
 ```
 
-> ⚠️ **编程陷阱：迁移时只改了类名没实现 Minus**
+> ⚠ **编程陷阱：迁移时只改了类名没实现 Minus**
 >
 > **错误做法**：从 `LocalParameterization` 改为 `Manifold`，但 `Minus` 返回全零。
 >
@@ -788,7 +788,7 @@ problem.SetManifold(pose, new SE3Manifold());
 >
 > **正确做法**：`Minus` 必须正确实现为 `Plus` 的逆操作。对于 SE(3)，`Minus(y, x)` 应返回 $\text{Log}(x^{-1} \cdot y)$ 的 6 维李代数向量。
 
-> ⚠️ **编程陷阱：Ceres 2.2 中混用旧 API**
+> ⚠ **编程陷阱：Ceres 2.2 中混用旧 API**
 >
 > **错误做法**：`#include <ceres/local_parameterization.h>`
 >
@@ -796,9 +796,9 @@ problem.SetManifold(pose, new SE3Manifold());
 >
 > **正确做法**：只使用 `#include <ceres/manifold.h>`。如果需要渐进迁移，先升级到 Ceres 2.1（两套 API 共存），验证后再升到 2.2。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：用 `QuaternionManifold` 处理 Eigen 四元数**
+> ⚠ **编程陷阱：用 `QuaternionManifold` 处理 Eigen 四元数**
 >
 > **错误做法**：`problem.SetManifold(q.coeffs().data(), new ceres::QuaternionManifold());`
 >
@@ -824,13 +824,13 @@ problem.SetManifold(pose, new SE3Manifold());
 
 ---
 
-## 24.6 Solver 选项与性能调优 ⭐⭐⭐
+## 24.6 Solver 选项与性能调优 ★★★
 
 ### 动机：不同配置性能差 100 倍
 
 1000 帧 BA 问题，默认配置 60 秒，调优后 0.5 秒。差异来自线性求解器选择和稀疏结构利用。
 
-### 线性求解器选择 ⭐⭐⭐
+### 线性求解器选择 ★★★
 
 | 求解器 | 适用场景 | Ceres 常量 |
 |--------|---------|-----------|
@@ -840,11 +840,11 @@ problem.SetManifold(pose, new SE3Manifold());
 | Sparse Normal Cholesky | 位姿图 | `SPARSE_NORMAL_CHOLESKY` |
 | Iterative Schur | 超大 BA | `ITERATIVE_SCHUR` |
 
-### Schur 补在 BA 中的作用 ⭐⭐⭐
+### Schur 补在 BA 中的作用 ★★★
 
 BA 变量分"相机"（少量）和"3D 点"（大量）。$J^T J$ 有箭头稀疏结构。Schur 补先消元 3D 点（它们之间无直接耦合），得到只关于相机的缩减方程——维度小几个数量级。
 
-### Trust Region 策略与 Dogleg ⭐⭐⭐
+### Trust Region 策略与 Dogleg ★★★
 
 Ceres 支持两种 Trust Region 策略：
 
@@ -860,7 +860,7 @@ options.dogleg_type = ceres::TRADITIONAL_DOGLEG;  // 或 SUBSPACE_DOGLEG
 
 **何时考虑 Dogleg**：当每次解线性方程的开销远大于信赖域调整的开销时（大型密集问题），Dogleg 可能更快。但对于 SLAM 中的稀疏问题，LM 通常表现更好，因为稀疏求解已经很快，LM 的自适应阻尼能更精细地控制步长。
 
-### 收敛判据详解 ⭐⭐
+### 收敛判据详解 ★★
 
 Ceres 使用三个容忍度来判断收敛，理解它们有助于诊断优化问题：
 
@@ -913,7 +913,7 @@ options.linear_solver_type = ceres::ITERATIVE_SCHUR;
 options.preconditioner_type = ceres::SCHUR_JACOBI;
 ```
 
-### 24.6.5 协方差估计 ⭐⭐⭐
+### 24.6.5 协方差估计 ★★★
 
 **动机：优化结果有多可信？**
 
@@ -980,7 +980,7 @@ covariance.GetCovarianceBlockInTangentSpace(pose_i, pose_i, cov_tangent.data());
 
 $$\Sigma_{\text{tangent}} = J_{\text{minus}} \cdot \Sigma_{\text{ambient}} \cdot J_{\text{minus}}^T$$
 
-> ⚠️ **编程陷阱：对大规模问题计算完整协方差**
+> ⚠ **编程陷阱：对大规模问题计算完整协方差**
 >
 > **错误做法**：`covariance_blocks.push_back({all_params, all_params});`
 >
@@ -988,15 +988,15 @@ $$\Sigma_{\text{tangent}} = J_{\text{minus}} \cdot \Sigma_{\text{ambient}} \cdot
 >
 > **正确做法**：只计算需要的协方差块。通常只需要最近几帧位姿的协方差，不需要所有地图点。
 
-> ⚠️ **编程陷阱：在协方差计算中忽略核函数的影响**
+> ⚠ **编程陷阱：在协方差计算中忽略核函数的影响**
 >
 > **现象**：如果优化时使用了 `LossFunction`，Ceres 协方差估计会考虑核函数的影响。但如果核函数将某些残差权重降到接近零，协方差估计可能不准确。
 >
 > **正确做法**：先带核函数优化（处理外点），然后剔除外点，最后不带核函数重新优化并计算协方差。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：BA 问题用 `SPARSE_NORMAL_CHOLESKY`**
+> ⚠ **编程陷阱：BA 问题用 `SPARSE_NORMAL_CHOLESKY`**
 >
 > **现象**：BA 极慢——数分钟而非数秒。
 >
@@ -1016,7 +1016,7 @@ $$\Sigma_{\text{tangent}} = J_{\text{minus}} \cdot \Sigma_{\text{ambient}} \cdot
 
 ---
 
-## 24.7 SLAM 实战 ⭐⭐⭐
+## 24.7 SLAM 实战 ★★★
 
 ### VINS-Mono：Ceres 的深度应用
 
@@ -1042,7 +1042,7 @@ VINS-Mono 选择手写 Jacobian（解析 Jacobian 比 AutoDiff 快 3-5 倍，IMU
 
 ORB-SLAM3 用 g2o 主要是历史原因。**新项目建议用 Ceres**。
 
-### 位姿图优化示例 ⭐⭐⭐
+### 位姿图优化示例 ★★★
 
 ```cpp
 #include <ceres/ceres.h>
@@ -1090,7 +1090,7 @@ for (auto& pose : poses) {
 problem.SetParameterBlockConstant(poses[0].data());
 ```
 
-### 24.7.5 Cartographer 的 Ceres 用法 ⭐⭐⭐
+### 24.7.5 Cartographer 的 Ceres 用法 ★★★
 
 **Google Cartographer 架构概述**
 
@@ -1149,11 +1149,11 @@ Cartographer 在全局优化中使用 `HuberLoss` 处理错误的回环检测。
 | 参数化 | SE2/SE3 角度表示 | 四元数 + 平移 |
 | 边缘化 | 不使用 | 核心机制 |
 
-> ⚠️ **概念误区：认为 Cartographer 只用 Ceres 做扫描匹配**
+> ⚠ **概念误区：认为 Cartographer 只用 Ceres 做扫描匹配**
 >
 > **实际上**：Cartographer 的全局位姿图优化也用 Ceres。整个系统有两级 Ceres 优化——Local（实时扫描匹配）和 Global（后台位姿图优化）。两级用不同的 Solver 配置：Local 用 `DENSE_QR`（变量少），Global 用 `SPARSE_NORMAL_CHOLESKY`（变量多但无 BA 结构）。
 
-### 24.7.6 COLMAP 的 Ceres 用法 ⭐⭐⭐
+### 24.7.6 COLMAP 的 Ceres 用法 ★★★
 
 **COLMAP 简介**
 
@@ -1236,15 +1236,15 @@ BAL（Bundle Adjustment in the Large）数据集（Agarwal et al., ECCV 2010）�
 
 **关键观察**：小问题 `SPARSE_SCHUR` 更快（没有迭代开销），大问题 `ITERATIVE_SCHUR` 显著优于直接法（内存和时间都更优）。
 
-> ⚠️ **编程陷阱：COLMAP 中 `function_tolerance = 0` 的含义**
+> ⚠ **编程陷阱：COLMAP 中 `function_tolerance = 0` 的含义**
 >
 > **新手疑问**："tolerance 设为 0 不是永远不收敛吗？"
 >
 > **实际上**：Ceres 有多个收敛条件，满足任一即停止。`function_tolerance = 0` 意味着不使用函数值变化作为停止条件，而是完全依赖 `gradient_tolerance` 和 `max_num_iterations`。COLMAP 这样做是因为离线场景下，它宁愿多迭代几次以确保梯度足够小，也不愿因为函数值"恰好"变化很小而过早停止。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：位姿图不固定任何位姿**
+> ⚠ **编程陷阱：位姿图不固定任何位姿**
 >
 > **现象**：轨迹形状正确但位置任意偏移（gauge freedom）。
 >
@@ -1252,7 +1252,7 @@ BAL（Bundle Adjustment in the Large）数据集（Agarwal et al., ECCV 2010）�
 >
 > **正确做法**：`problem.SetParameterBlockConstant(poses[0].data());`
 
-> ⚠️ **编程陷阱：位姿参数布局不匹配 Manifold**
+> ⚠ **编程陷阱：位姿参数布局不匹配 Manifold**
 >
 > **错误做法**：参数存为 `[tx,ty,tz,qw,qx,qy,qz]` 但 Manifold 假设 `[qx,qy,qz,qw,tx,ty,tz]`
 >
@@ -1274,7 +1274,7 @@ BAL（Bundle Adjustment in the Large）数据集（Agarwal et al., ECCV 2010）�
 
 ---
 
-## 24.8 残差块、所有权与 Problem 生命周期 ⭐⭐⭐
+## 24.8 残差块、所有权与 Problem 生命周期 ★★★
 
 > **这一节解决什么问题**：Ceres 的 API 看起来像"把 cost function 加进 problem"，但工程上真正容易出错的是所有权和生命周期：谁拥有 `CostFunction`、谁拥有参数数组、什么时候参数地址会失效、异常和线程边界在哪里。
 
@@ -1370,7 +1370,7 @@ Ceres 可以多线程评估残差，因此残差仿函数应当是只读的：�
 
 ---
 
-## 24.9 AutoDiff、Loss 与 Manifold 的联调验证 ⭐⭐⭐
+## 24.9 AutoDiff、Loss 与 Manifold 的联调验证 ★★★
 
 > **这一节解决什么问题**：自动微分、鲁棒核函数和 Manifold 单独看都容易理解，组合起来却很容易出错。本节给出从残差值、Jacobian、核函数尺度到切空间维度的验证流程。
 
@@ -1476,7 +1476,7 @@ void inspectProblem(ceres::Problem& problem) {
 
 ---
 
-## 24.10 求解器选型与工程边界 ⭐⭐⭐
+## 24.10 求解器选型与工程边界 ★★★
 
 > **这一节解决什么问题**：Ceres 的 Solver 选项很多，但 SLAM 选型并不是玄学。核心原则是先识别问题结构，再选择线性求解器、信赖域策略、线程数、迭代预算和终止条件。
 
@@ -1530,7 +1530,7 @@ options.num_threads = 4;  // 根据前端线程和 CPU 核数预留余量
 
 ---
 
-## 24.11 Ceres 与 GTSAM 的对比 ⭐⭐⭐
+## 24.11 Ceres 与 GTSAM 的对比 ★★★
 
 ### 这一节解决什么问题
 
@@ -1566,13 +1566,13 @@ SLAM 后端优化有两个主流框架：Ceres 和 GTSAM。它们的设计哲学
 
 > **本质洞察**：Ceres 和 GTSAM 不是同一个问题的两种解法，而是两种不同抽象层次的工具。Ceres 是"优化器"——给我残差函数和变量，我找最优解。GTSAM 是"推理引擎"——给我因子图，我做贝叶斯推理。在 SLAM 的语境下，推理和优化殊途同归（MAP 推理等价于最小二乘），但 GTSAM 的抽象更贴合 SLAM 的概率建模。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > 🧠 **思维陷阱：认为必须在 Ceres 和 GTSAM 之间二选一**
 >
 > **实际上**：许多系统混合使用。LIO-SAM 的后端用 GTSAM，但标定和某些离线优化用 Ceres。两者可以在同一个项目中共存——只要注意李群约定的一致性（GTSAM 默认右扰动，manif/Ceres 通常也采用右扰动，因此约定上天然兼容）。
 
-### SLAM 后端的实际部署考量 ⭐⭐⭐
+### SLAM 后端的实际部署考量 ★★★
 
 在实际机器人系统中部署 Ceres 后端，还需要考虑工程层面的问题：
 
@@ -1623,9 +1623,9 @@ Ceres 从 1.x 到 2.x 有一些需要注意的 API 变化：
 4. 确认编译器支持 C++17
 5. 运行完整的回归测试，验证优化结果与旧版本一致
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：Ceres 2.2 中使用已移除的 API**
+> ⚠ **编程陷阱：Ceres 2.2 中使用已移除的 API**
 >
 > **错误做法**：代码中仍然使用 `ceres::LocalParameterization`
 >
@@ -1649,28 +1649,28 @@ Ceres 从 1.x 到 2.x 有一些需要注意的 API 变化：
 
 | 知识点 | 核心要义 | 难度 |
 |--------|---------|------|
-| 非线性最小二乘 | SLAM 后端 = $\min \sum \|f_i(x)\|^2$, LM 求解 | ⭐⭐ |
-| Trust Region vs Line Search | Trust Region + Schur 补是 SLAM 标准选择 | ⭐⭐⭐ |
-| Powell's Dogleg | 折线法避免重复解线性方程 | ⭐⭐⭐ |
-| Ceres 架构 | Problem → CostFunction → Solver 声明式工作流 | ⭐⭐ |
-| AutoDiff / Jet | 双数自动传播导数，精确到机器精度 | ⭐⭐⭐ |
-| Jet 源码 | `Jet<T,N>` 的 `a` + `v[N]` 结构，运算符重载实现链式法则 | ⭐⭐⭐ |
-| DynamicAutoDiffCostFunction | 运行时确定参数维度，边缘化因子的选择 | ⭐⭐⭐ |
-| LossFunction | Huber/Cauchy 降权外点，$\delta$ 设为正常残差 1-2 倍 | ⭐⭐ |
-| 影响函数与 IRLS | $\psi(s) = \rho'(s)$ 控制外点贡献，等价加权最小二乘 | ⭐⭐⭐ |
-| Manifold | 处理过参数化，Plus/Minus 定义流形操作 | ⭐⭐⭐ |
-| Manifold 迁移 | Ceres 1.x → 2.x：新增 Minus，API 重命名 | ⭐⭐ |
-| Solver 调优 | BA 用 SPARSE_SCHUR，位姿图用 SPARSE_NORMAL_CHOLESKY | ⭐⭐⭐ |
-| 收敛判据 | function/gradient/parameter tolerance 三重判断 | ⭐⭐ |
-| 协方差估计 | `ceres::Covariance` 提取优化后不确定性 | ⭐⭐⭐ |
-| Cartographer | 双层 Ceres：Local 扫描匹配 + Global 位姿图优化 | ⭐⭐⭐ |
-| COLMAP | 大规模 SfM，ITERATIVE_SCHUR + SCHUR_JACOBI | ⭐⭐⭐ |
-| SLAM 实战 | VINS-Mono 三因子，Ceres vs g2o 选型 | ⭐⭐⭐ |
-| 残差块生命周期 | Cost/Loss/Manifold 默认由 Problem 接管，参数内存由用户保证稳定 | ⭐⭐⭐ |
-| AutoDiff 联调 | 先用 `Problem::Evaluate()` 验证残差、Jacobian、白化和 Manifold 维度 | ⭐⭐⭐ |
-| 求解器工程边界 | 选型取决于结构；求解器不能修复不可观自由度和坏初值 | ⭐⭐⭐ |
-| Ceres vs GTSAM | 通用最小二乘 vs 因子图推理；新项目按场景选型 | ⭐⭐⭐ |
-| SLAM 部署 | 线程模型、内存管理、滑动窗口、Ceres 2.x 迁移 | ⭐⭐⭐ |
+| 非线性最小二乘 | SLAM 后端 = $\min \sum \|f_i(x)\|^2$, LM 求解 | ★★ |
+| Trust Region vs Line Search | Trust Region + Schur 补是 SLAM 标准选择 | ★★★ |
+| Powell's Dogleg | 折线法避免重复解线性方程 | ★★★ |
+| Ceres 架构 | Problem → CostFunction → Solver 声明式工作流 | ★★ |
+| AutoDiff / Jet | 双数自动传播导数，精确到机器精度 | ★★★ |
+| Jet 源码 | `Jet<T,N>` 的 `a` + `v[N]` 结构，运算符重载实现链式法则 | ★★★ |
+| DynamicAutoDiffCostFunction | 运行时确定参数维度，边缘化因子的选择 | ★★★ |
+| LossFunction | Huber/Cauchy 降权外点，$\delta$ 设为正常残差 1-2 倍 | ★★ |
+| 影响函数与 IRLS | $\psi(s) = \rho'(s)$ 控制外点贡献，等价加权最小二乘 | ★★★ |
+| Manifold | 处理过参数化，Plus/Minus 定义流形操作 | ★★★ |
+| Manifold 迁移 | Ceres 1.x → 2.x：新增 Minus，API 重命名 | ★★ |
+| Solver 调优 | BA 用 SPARSE_SCHUR，位姿图用 SPARSE_NORMAL_CHOLESKY | ★★★ |
+| 收敛判据 | function/gradient/parameter tolerance 三重判断 | ★★ |
+| 协方差估计 | `ceres::Covariance` 提取优化后不确定性 | ★★★ |
+| Cartographer | 双层 Ceres：Local 扫描匹配 + Global 位姿图优化 | ★★★ |
+| COLMAP | 大规模 SfM，ITERATIVE_SCHUR + SCHUR_JACOBI | ★★★ |
+| SLAM 实战 | VINS-Mono 三因子，Ceres vs g2o 选型 | ★★★ |
+| 残差块生命周期 | Cost/Loss/Manifold 默认由 Problem 接管，参数内存由用户保证稳定 | ★★★ |
+| AutoDiff 联调 | 先用 `Problem::Evaluate()` 验证残差、Jacobian、白化和 Manifold 维度 | ★★★ |
+| 求解器工程边界 | 选型取决于结构；求解器不能修复不可观自由度和坏初值 | ★★★ |
+| Ceres vs GTSAM | 通用最小二乘 vs 因子图推理；新项目按场景选型 | ★★★ |
+| SLAM 部署 | 线程模型、内存管理、滑动窗口、Ceres 2.x 迁移 | ★★★ |
 
 **关键记忆点**：
 
@@ -1702,23 +1702,23 @@ Ceres 从 1.x 到 2.x 有一些需要注意的 API 变化：
 
 | 资源 | 内容 | 难度 |
 |------|------|------|
-| [Ceres 官方教程](http://ceres-solver.org/tutorial.html) | 从曲线拟合到 BA | ⭐⭐ |
-| [Ceres Modeling 文档](http://ceres-solver.org/nnls_modeling.html) | Problem/CostFunction/Manifold API | ⭐⭐ |
-| [Ceres Solving 文档](http://ceres-solver.org/nnls_solving.html) | Solver 选项详解 | ⭐⭐⭐ |
-| [Ceres Covariance 文档](http://ceres-solver.org/nnls_covariance.html) | 协方差估计 API | ⭐⭐⭐ |
-| [Ceres Automatic Derivatives](http://ceres-solver.org/automatic_derivatives.html) | Jet 和 AutoDiff 详解 | ⭐⭐⭐ |
-| Agarwal et al., "Bundle Adjustment in the Large" (ECCV 2010) | BA 稀疏求解，BAL 数据集 | ⭐⭐⭐ |
-| Hess et al., "Real-Time Loop Closure in 2D LIDAR SLAM" (ICRA 2016) | Cartographer 论文 | ⭐⭐⭐ |
-| Schonberger & Frahm, "Structure-from-Motion Revisited" (CVPR 2016) | COLMAP 论文 | ⭐⭐⭐ |
-| slambook2 第 6 章（高翔） | Ceres 和 g2o 入门对比 | ⭐⭐ |
-| VINS-Mono `factor/` 目录 | 工业级 Ceres 代价函数 | ⭐⭐⭐⭐ |
-| [Ceres Jet 源码](https://github.com/ceres-solver/ceres-solver/blob/master/include/ceres/jet.h) | Jet 双数完整实现 | ⭐⭐⭐ |
-| Nocedal & Wright, *Numerical Optimization* Ch4, C++语言核心/Lambda与STL算法 | Trust Region 和 LM 数学推导 | ⭐⭐⭐⭐ |
-| [COLMAP GitHub](https://github.com/colmap/colmap) | 大规模 SfM 源码 | ⭐⭐⭐ |
-| [Cartographer GitHub](https://github.com/cartographer-project/cartographer) | Google 激光 SLAM 源码 | ⭐⭐⭐ |
-| Dellaert & Kaess, "Factor Graphs for Robot Perception", Foundations and Trends in Robotics, 2017 | GTSAM 理论基础，因子图推理与 Ceres 最小二乘的对比 | ⭐⭐⭐ |
-| [GTSAM GitHub](https://github.com/borglab/gtsam) | 因子图优化库，与 Ceres 互补的 SLAM 后端选择 | ⭐⭐⭐ |
-| Kaess et al., "iSAM2: Incremental Smoothing and Mapping Using the Bayes Tree", IJRR 2012 | 增量式图优化，GTSAM 的核心算法，理解增量 vs 批量的差异 | ⭐⭐⭐⭐ |
+| [Ceres 官方教程](http://ceres-solver.org/tutorial.html) | 从曲线拟合到 BA | ★★ |
+| [Ceres Modeling 文档](http://ceres-solver.org/nnls_modeling.html) | Problem/CostFunction/Manifold API | ★★ |
+| [Ceres Solving 文档](http://ceres-solver.org/nnls_solving.html) | Solver 选项详解 | ★★★ |
+| [Ceres Covariance 文档](http://ceres-solver.org/nnls_covariance.html) | 协方差估计 API | ★★★ |
+| [Ceres Automatic Derivatives](http://ceres-solver.org/automatic_derivatives.html) | Jet 和 AutoDiff 详解 | ★★★ |
+| Agarwal et al., "Bundle Adjustment in the Large" (ECCV 2010) | BA 稀疏求解，BAL 数据集 | ★★★ |
+| Hess et al., "Real-Time Loop Closure in 2D LIDAR SLAM" (ICRA 2016) | Cartographer 论文 | ★★★ |
+| Schonberger & Frahm, "Structure-from-Motion Revisited" (CVPR 2016) | COLMAP 论文 | ★★★ |
+| slambook2 第 6 章（高翔） | Ceres 和 g2o 入门对比 | ★★ |
+| VINS-Mono `factor/` 目录 | 工业级 Ceres 代价函数 | ★★★★ |
+| [Ceres Jet 源码](https://github.com/ceres-solver/ceres-solver/blob/master/include/ceres/jet.h) | Jet 双数完整实现 | ★★★ |
+| Nocedal & Wright, *Numerical Optimization* Ch4, C++语言核心/Lambda与STL算法 | Trust Region 和 LM 数学推导 | ★★★★ |
+| [COLMAP GitHub](https://github.com/colmap/colmap) | 大规模 SfM 源码 | ★★★ |
+| [Cartographer GitHub](https://github.com/cartographer-project/cartographer) | Google 激光 SLAM 源码 | ★★★ |
+| Dellaert & Kaess, "Factor Graphs for Robot Perception", Foundations and Trends in Robotics, 2017 | GTSAM 理论基础，因子图推理与 Ceres 最小二乘的对比 | ★★★ |
+| [GTSAM GitHub](https://github.com/borglab/gtsam) | 因子图优化库，与 Ceres 互补的 SLAM 后端选择 | ★★★ |
+| Kaess et al., "iSAM2: Incremental Smoothing and Mapping Using the Bayes Tree", IJRR 2012 | 增量式图优化，GTSAM 的核心算法，理解增量 vs 批量的差异 | ★★★★ |
 
 ---
 
@@ -1767,7 +1767,7 @@ SLAM 后端优化
 
 ---
 
-## 24.12 Ceres 的多线程求解与性能调优 ⭐⭐⭐
+## 24.12 Ceres 的多线程求解与性能调优 ★★★
 
 ### 并行化的层次
 
@@ -1820,7 +1820,7 @@ SLAM 后端的一个核心需求是增量优化——每帧新增少量约束后
 
 ---
 
-## 24.13 仿函数中的数值稳定性技巧 ⭐⭐⭐
+## 24.13 仿函数中的数值稳定性技巧 ★★★
 
 编写 Ceres 仿函数时，数值稳定性是一个容易被忽视但影响严重的问题。AutoDiff 的 Jet 类型忠实地传播导数，也忠实地传播数值不稳定性。
 
@@ -1888,7 +1888,7 @@ void angleAxisToRotation(const T* angle_axis, T* R) {
 
 ---
 
-## 24.14 Ceres 的内存管理与大规模问题 ⭐⭐⭐
+## 24.14 Ceres 的内存管理与大规模问题 ★★★
 
 ### 工程问题：大规模 BA 的内存占用
 
@@ -1957,7 +1957,7 @@ for (const auto& pose : poses) {
 
 ---
 
-## 24.15 GradientChecker 与调试工作流 ⭐⭐
+## 24.15 GradientChecker 与调试工作流 ★★
 
 ### 调试 Jacobian 的标准方法
 
@@ -2009,7 +2009,7 @@ if (!checker.Probe(param_ptrs, 1e-6, &results)) {
 
 ---
 
-## 24.16 Ceres Solver 版本演进与迁移指南 ⭐⭐
+## 24.16 Ceres Solver 版本演进与迁移指南 ★★
 
 ### 从 Ceres 1.x 到 2.x 的关键变化
 

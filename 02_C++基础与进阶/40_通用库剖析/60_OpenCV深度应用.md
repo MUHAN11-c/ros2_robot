@@ -1,12 +1,12 @@
 # OpenCV 在 SLAM 中的深度应用
 
-> **难度**：⭐⭐～⭐⭐⭐ | **建议用时**：2周 | **前置要求**：通用库·Eigen Eigen深入
+> **难度**：★★～★★★ | **建议用时**：2周 | **前置要求**：通用库·Eigen Eigen深入
 
 ---
 
 ## 前置自测
 
-> 📋 答不出 ≥ 2 题 → 先回 通用库·Eigen 复习 Eigen 基础
+> ◆ 答不出 ≥ 2 题 → 先回 通用库·Eigen 复习 Eigen 基础
 
 1. `Eigen::Matrix3d` 是行优先还是列优先存储？为什么 Eigen 选择这种默认方式？
 2. 什么是 Shi-Tomasi 角点？它与 Harris 角点的评分函数有什么区别？
@@ -52,7 +52,7 @@ OpenCV 在 SLAM 中的深度应用
 
 ---
 
-## 28.1 cv::Mat 核心与 Eigen 互操作 ⭐⭐
+## 28.1 cv::Mat 核心与 Eigen 互操作 ★★
 
 > 本节解决的问题：SLAM 系统中，OpenCV 负责图像处理，Eigen 负责线性代数运算——两者的数据如何高效互通？
 
@@ -188,9 +188,9 @@ for (int i = 0; i < 3; i++)
 结果：读到的矩阵是 M 的转置！
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：忘记 Row-Major vs Col-Major 导致旋转矩阵被转置**
+> ⚠ **编程陷阱：忘记 Row-Major vs Col-Major 导致旋转矩阵被转置**
 >
 > **错误做法**：直接用 `Eigen::Map<Eigen::Matrix3d>` 映射 `cv::Mat`
 >
@@ -202,7 +202,7 @@ for (int i = 0; i < 3; i++)
 >
 > **自检方法**：转换后立即检查 `R * R.transpose()` 是否为单位阵——但注意，正交矩阵转置后仍正交，所以这个检查无法发现转置错误！更好的检查是打印矩阵内容逐元素对比，或者用已知旋转（如绕 Z 轴转 90 度）验证变换结果是否符合预期。
 
-> ⚠️ **编程陷阱：对非连续 cv::Mat 使用 Eigen::Map**
+> ⚠ **编程陷阱：对非连续 cv::Mat 使用 Eigen::Map**
 >
 > **错误做法**：对 ROI 子矩阵直接 `Eigen::Map`
 >
@@ -234,7 +234,7 @@ for (int i = 0; i < 3; i++)
 
 ---
 
-## 28.2 图像预处理 ⭐⭐
+## 28.2 图像预处理 ★★
 
 > 本节解决的问题：原始相机图像受光照变化、噪声、畸变等影响，SLAM 前端如何对图像进行标准化处理以提高特征检测和跟踪的鲁棒性？
 
@@ -360,9 +360,9 @@ cv::buildOpticalFlowPyramid(img, imgpyr, win_size, pyr_levels);
 
 **金字塔的计算开销**：每一层的像素数是上一层的 $\frac{1}{4}$（长宽各减半），因此总计算量是原图的 $\sum_{k=0}^{L} \frac{1}{4^k} = \frac{4}{3}(1 - \frac{1}{4^{L+1}}) \approx \frac{4}{3}$ 倍。金字塔并不显著增加计算量，但能处理大位移——这是一个非常划算的投资。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：BGR/RGB 混淆导致颜色通道错位**
+> ⚠ **编程陷阱：BGR/RGB 混淆导致颜色通道错位**
 >
 > **错误做法**：用 ROS 的 `cv_bridge` 接收图像（ROS 的 `sensor_msgs/Image` 常用 `rgb8` 编码），然后直接用 `cv::COLOR_BGR2GRAY` 转灰度。
 >
@@ -396,7 +396,7 @@ cv::buildOpticalFlowPyramid(img, imgpyr, win_size, pyr_levels);
 
 ---
 
-## 28.3 特征检测 ⭐⭐
+## 28.3 特征检测 ★★
 
 > 本节解决的问题：如何从预处理后的图像中高效、均匀地检测出高质量的角点特征，作为 SLAM 跟踪和匹配的基础？
 
@@ -532,9 +532,9 @@ orb->detectAndCompute(gray, cv::noArray(), kps, desc);
 3. **逐层控制**：ORB-SLAM3 根据金字塔层级分配不同的目标特征数（上层更多，下层更少），`cv::ORB` 的分配策略不够灵活
 4. **硬编码 BRIEF 模式**：ORB-SLAM3 使用特定的 256 个点对模式（`bit_pattern_31_` 数组），经过实验优化以最大化描述子的区分度
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：检测完特征后忘记非极大值抑制（NMS）**
+> ⚠ **编程陷阱：检测完特征后忘记非极大值抑制（NMS）**
 >
 > **错误做法**：`cv::FAST(img, kps, 20, false)`——第四个参数 `nonmaxSuppression=false`
 >
@@ -564,7 +564,7 @@ orb->detectAndCompute(gray, cv::noArray(), kps, desc);
 
 ---
 
-## 28.4 光流跟踪 ⭐⭐
+## 28.4 光流跟踪 ★★
 
 > 本节解决的问题：如何利用连续帧间的灰度一致性，不计算描述子就追踪特征点的运动？
 
@@ -764,9 +764,9 @@ void FeatureTracker::setMask() {
 - 新检测的特征点也必须距离所有已有点 $\geq 30$ 像素
 - 效果：在整张图像上形成近似均匀的特征点网格
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：不检查 status 数组就使用光流跟踪结果**
+> ⚠ **编程陷阱：不检查 status 数组就使用光流跟踪结果**
 >
 > **错误做法**：`calcOpticalFlowPyrLK` 返回后，直接使用 `cur_pts` 的所有点。
 >
@@ -778,7 +778,7 @@ void FeatureTracker::setMask() {
 >
 > **自检方法**：跟踪后打印 `status` 中为 0 的比例。正常情况下（帧间位移小、图像质量好），成功率应在 80-95%。如果低于 50%，说明参数设置有问题或帧间位移太大。
 
-> ⚠️ **编程陷阱：光流跟踪后不检查点是否在图像边界内**
+> ⚠ **编程陷阱：光流跟踪后不检查点是否在图像边界内**
 >
 > **错误做法**：只检查 `status`，不检查 `cur_pts[i]` 的坐标范围。
 >
@@ -815,7 +815,7 @@ void FeatureTracker::setMask() {
 
 ---
 
-## 28.5 多视图几何 ⭐⭐⭐
+## 28.5 多视图几何 ★★★
 
 > 本节解决的问题：给定两帧图像中的匹配特征点对，如何恢复相机的相对运动（旋转和平移），以及如何将 2D 匹配点三角化为 3D 空间点？
 
@@ -1071,9 +1071,9 @@ $$\sigma_Z \propto \frac{Z^2}{b \cdot f}$$
 
 这就是为什么 SLAM 初始化通常需要等到相机有足够平移后才触发——ORB-SLAM3 会检查视差角是否超过阈值（通常 > 1 度）。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：triangulatePoints 输出的齐次坐标忘记归一化**
+> ⚠ **编程陷阱：triangulatePoints 输出的齐次坐标忘记归一化**
 >
 > **错误做法**：直接取 `points4D` 的前三行作为 (X, Y, Z) 坐标。
 >
@@ -1081,7 +1081,7 @@ $$\sigma_Z \propto \frac{Z^2}{b \cdot f}$$
 >
 > **正确做法**：对每一列，除以第四个分量 $W$。同时检查 $|W| < \epsilon$ 的退化情况（点在无穷远处）和 $Z/W < 0$ 的情况（点在相机后方）。
 
-> ⚠️ **编程陷阱：recoverPose 返回的 t 是单位向量，不能直接当真实平移用**
+> ⚠ **编程陷阱：recoverPose 返回的 t 是单位向量，不能直接当真实平移用**
 >
 > **错误做法**：`cv::recoverPose(E, pts1, pts2, K, R, t, mask); trajectory.push_back(t);`
 >
@@ -1110,7 +1110,7 @@ $$\sigma_Z \propto \frac{Z^2}{b \cdot f}$$
 2. **完整初始化流水线**：实现一个简单的单目 VO 初始化流程：(1) `goodFeaturesToTrack` 检测 200 个特征 → (2) `calcOpticalFlowPyrLK` 跟踪到下一帧 → (3) `findEssentialMat` 估计 $E$ → (4) `recoverPose` 分解 $R, t$ → (5) `triangulatePoints` 获得 3D 点云。用两张有明显平移基线的图像测试，用 matplotlib（Python 端）或 PCL（C++ 端）可视化三角化得到的 3D 点云和两个相机位姿。
 
 3. **PnP 精度分析**：生成一组已知的 3D-2D 对应——从已知位姿投影 100 个随机 3D 点得到 2D 像素坐标，然后添加不同水平的高斯噪声（$\sigma$ = 0.5, 1.0, 2.0, 5.0 像素）。用 `solvePnPRansac` 估计位姿，计算旋转误差（角度）和平移误差（欧氏距离）。分别测试 `SOLVEPNP_ITERATIVE`、`SOLVEPNP_EPNP`、`SOLVEPNP_AP3P` 三种方法，绘制"噪声水平 vs 误差"曲线，观察哪种方法对噪声最鲁棒。
-## 28.6 畸变校正 ⭐⭐
+## 28.6 畸变校正 ★★
 
 > **本节解决的问题**：真实相机镜头会引入畸变，使得直线在图像上弯曲、特征点位置偏移。如果不做畸变校正，SLAM 中的多视图几何（本质矩阵、PnP、三角化）全部会因为输入点不准而崩溃。本节系统讲解 SLAM 中三种主流畸变校正方案及其在真实项目中的选型逻辑。
 
@@ -1339,9 +1339,9 @@ cv::remap(imgR, rectifiedR, map1R, map2R, cv::INTER_LINEAR);
 - 可以用 `cv::StereoBM` 或 `cv::StereoSGBM` 直接计算视差图
 - ORB-SLAM3 双目模式中，校正后的图像使得特征匹配只需在同一行搜索，效率提升 10 倍以上
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> **⚠️ 编程陷阱：undistortPoints 的输入格式错误**
+> **⚠ 编程陷阱：undistortPoints 的输入格式错误**
 > - **错误做法**：传入 `Nx2` 的 `cv::Mat`，期望得到正确结果
 > - **现象**：编译通过但输出全是 0 或 NaN
 > - **根本原因**：`undistortPoints` 要求输入是 `Nx1` 的 2 通道 Mat（即 `CV_32FC2`），或者 `1xN` 的 2 通道 Mat。`Nx2` 的单通道 Mat 会被错误解析
@@ -1368,7 +1368,7 @@ cv::remap(imgR, rectifiedR, map1R, map2R, cv::INTER_LINEAR);
 
 ---
 
-## 28.7 DNN 模块与深度学习特征 ⭐⭐⭐
+## 28.7 DNN 模块与深度学习特征 ★★★
 
 > **本节解决的问题**：传统手工特征（ORB、FAST、BRIEF）在光照变化大、纹理弱、重复纹理等场景下表现不佳。深度学习特征（SuperPoint、SuperGlue、LightGlue）在这些场景下显著优于传统方法，但如何在 C++ SLAM 系统中高效部署深度学习模型？OpenCV 的 DNN 模块提供了一个轻量级入口。
 
@@ -1469,9 +1469,9 @@ auto lg_output = lg_session.Run(run_options, lg_input_names, lg_inputs, num_inpu
 3. **混合前端是趋势**：用深度学习做特征提取 + 传统方法做几何验证（如 RANSAC），兼顾精度与可解释性
 4. **端侧部署**：在 Jetson Orin、RK3588 等边缘 AI 芯片上，TensorRT / RKNN 成为 SLAM 深度学习特征的首选推理后端
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> **⚠️ 编程陷阱：cv::dnn::blobFromImage 的归一化参数搞错**
+> **⚠ 编程陷阱：cv::dnn::blobFromImage 的归一化参数搞错**
 > - **错误做法**：不做归一化或归一化范围不对（[0,255] vs [0,1] vs [-1,1]）
 > - **现象**：模型输出全是零或数值异常
 > - **根本原因**：深度学习模型训练时的输入预处理必须在推理时严格复现。SuperPoint 训练时归一化到 [0,1]，如果推理时不除以 255，输入分布完全不同
@@ -1492,7 +1492,7 @@ auto lg_output = lg_session.Run(run_options, lg_input_names, lg_inputs, num_inpu
 
 ---
 
-## 28.8 SLAM 代码精读 ⭐⭐⭐
+## 28.8 SLAM 代码精读 ★★★
 
 > **本节解决的问题**：前面几节讲了 OpenCV 的各个 API，但在真实 SLAM 系统中，这些 API 是怎样被组合使用的？本节精读三个代表性项目的核心文件，展示 OpenCV API 在工程中的完整编排逻辑。
 
@@ -1677,9 +1677,9 @@ auto clahe = cv::createCLAHE(10.0, cv::Size(8, 8));
 - `findEssentialMat` + `recoverPose` 在需要初始化的单目系统（stella_vslam）中关键
 - `solvePnPRansac` 是 OpenCV 标准 PnP 接口（注：stella_vslam 实际使用自研 opengv PnP，ORB-SLAM3 自研 EPnP/MLPnP），但 ORB-SLAM3 **自研了 EPnP/MLPnP 而不调用此函数**
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> **⚠️ 编程陷阱：calcOpticalFlowPyrLK 的 status 向量未正确处理**
+> **⚠ 编程陷阱：calcOpticalFlowPyrLK 的 status 向量未正确处理**
 > - **错误做法**：只检查 `status[i] == 1` 就认为跟踪成功
 > - **现象**：跟踪点漂移到图像外部或聚集到一起
 > - **根本原因**：`status == 1` 只表示 KLT 迭代收敛了，不代表跟踪正确。点可能收敛到错误位置（如运动模糊区域），也可能跑到图像边界外
@@ -1700,7 +1700,7 @@ auto clahe = cv::createCLAHE(10.0, cv::Size(8, 8));
 
 ---
 
-## 28.9 实战 ⭐⭐
+## 28.9 实战 ★★
 
 > **本节解决的问题**：将前面学到的 API 串联成完整的视觉处理流水线。通过四个由浅入深的实战项目，掌握 OpenCV 在 SLAM 前端中的核心编程范式。
 
@@ -2032,9 +2032,9 @@ int main() {
 - 重投影误差 0.5-1.0 像素：**合格**，适合一般 VIO
 - 重投影误差 > 1.0 像素：**需要重新标定**，检查标定板平整度和图像覆盖率
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> **⚠️ 编程陷阱：findEssentialMat 的点顺序搞反**
+> **⚠ 编程陷阱：findEssentialMat 的点顺序搞反**
 > - **错误做法**：`findEssentialMat(prevPts, currPts, K, ...)` 然后用 `recoverPose` 的 R, t 累积位姿
 > - **现象**：轨迹方向反了或旋转不对
 > - **根本原因**：`findEssentialMat` 和 `recoverPose` 的点顺序决定了 R, t 表示的是从哪个帧到哪个帧的运动。搞反后 R 变成了逆旋转
@@ -2055,7 +2055,7 @@ int main() {
 
 ---
 
-## 28.10 视觉前端工程边界与验证清单 ⭐⭐
+## 28.10 视觉前端工程边界与验证清单 ★★
 
 > **这一节解决什么问题**：OpenCV 前端函数很容易调用成功，但 SLAM 需要的是几何上可信的输出。本节把 `cv::Mat` 生命周期、像素坐标/归一化坐标、RANSAC mask、畸变模型和多线程边界统一成上线前检查表。
 
@@ -2164,7 +2164,7 @@ SuperPoint/LightGlue 等深度特征可以提升弱纹理和大视角变化下�
 
 ---
 
-## 28.11 ArUco/AprilTag 标记检测 ⭐⭐
+## 28.11 ArUco/AprilTag 标记检测 ★★
 
 ### 动机：为什么 SLAM 系统需要人工标记？
 
@@ -2220,7 +2220,7 @@ void detectAndEstimatePose(const cv::Mat& image,
 
 **在 SLAM 中的典型用途**：ORB-SLAM3 支持 ArUco 标记作为地图中的固定路标（map markers），提供绝对位姿约束。这在大型室内场景的多房间建图中非常有用——每个房间放一个 ArUco 标记就能提供全局一致性约束。
 
-### OpenCV 与 Isaac ROS 视觉管道的关系 ⭐⭐⭐
+### OpenCV 与 Isaac ROS 视觉管道的关系 ★★★
 
 NVIDIA Isaac ROS 是面向机器人的 GPU 加速视觉计算框架。它和 OpenCV 不是替代关系，而是互补的：
 
@@ -2233,9 +2233,9 @@ NVIDIA Isaac ROS 是面向机器人的 GPU 加速视觉计算框架。它和 Ope
 
 在实时系统中，OpenCV 通常负责 CPU 上的轻量操作和数据格式转换，而计算密集型任务（如大分辨率图像的特征检测）交给 Isaac ROS 的 GPU 管道。两者通过 `cv_bridge`（ROS 1）或 `image_transport`（ROS 2）桥接数据。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：ArUco 标记检测中忘记去畸变**
+> ⚠ **编程陷阱：ArUco 标记检测中忘记去畸变**
 >
 > **错误做法**：直接在原始畸变图像上做 `estimatePoseSingleMarkers`
 >
@@ -2251,7 +2251,7 @@ NVIDIA Isaac ROS 是面向机器人的 GPU 加速视觉计算框架。它和 Ope
 
 ---
 
-## 28.12 DNN 推理部署进阶 ⭐⭐⭐
+## 28.12 DNN 推理部署进阶 ★★★
 
 ### 动机：从"能跑"到"能用"
 
@@ -2296,9 +2296,9 @@ cv::Mat output = net.forward("output_name");
 
 > **本质洞察**：在 SLAM 系统中，DNN 推理通常不是瓶颈——传统特征检测和匹配每帧只需 5-15ms，DNN 特征（SuperPoint）在 GPU 上也是 5-10ms。真正的挑战在于**系统集成**：DNN 前端和传统前端如何共存、GPU 资源如何在 DNN 和其他视觉任务（如立体匹配、光流）之间分配、模型更新如何不中断实时管道。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：OpenCV DNN 的 CUDA 后端需要编译时启用**
+> ⚠ **编程陷阱：OpenCV DNN 的 CUDA 后端需要编译时启用**
 >
 > **错误做法**：用 `apt install libopencv-dev` 安装的 OpenCV，直接设置 `DNN_BACKEND_CUDA`
 >
@@ -2386,12 +2386,12 @@ mini_lio/
 
 | 论文 | 相关性 | 难度 |
 |------|--------|------|
-| Rublee et al., "ORB: An efficient alternative to SIFT or SURF", ICCV 2011 | ORB 描述子原始论文，理解 28.3/28.8 的基础 | ⭐⭐ |
-| Shi & Tomasi, "Good Features to Track", CVPR 1994 | VINS-Mono 特征检测的理论基础 | ⭐⭐ |
-| Lucas & Kanade, "An Iterative Image Registration Technique", 1981 | KLT 光流的奠基论文 | ⭐⭐⭐ |
-| DeTone et al., "SuperPoint: Self-Supervised Interest Point Detection and Description", CVPRW 2018 | 深度学习特征的代表作 | ⭐⭐⭐ |
-| Lindenberger et al., "LightGlue: Local Feature Matching at Light Speed", ICCV 2023 | 最新特征匹配，理解 28.7 的基础 | ⭐⭐⭐ |
-| Kannala & Brandt, "A Generic Camera Model and Calibration Method for Conventional, Wide-Angle, and Fish-Eye Lenses", PAMI 2006 | KB 模型原始论文 | ⭐⭐⭐⭐ |
+| Rublee et al., "ORB: An efficient alternative to SIFT or SURF", ICCV 2011 | ORB 描述子原始论文，理解 28.3/28.8 的基础 | ★★ |
+| Shi & Tomasi, "Good Features to Track", CVPR 1994 | VINS-Mono 特征检测的理论基础 | ★★ |
+| Lucas & Kanade, "An Iterative Image Registration Technique", 1981 | KLT 光流的奠基论文 | ★★★ |
+| DeTone et al., "SuperPoint: Self-Supervised Interest Point Detection and Description", CVPRW 2018 | 深度学习特征的代表作 | ★★★ |
+| Lindenberger et al., "LightGlue: Local Feature Matching at Light Speed", ICCV 2023 | 最新特征匹配，理解 28.7 的基础 | ★★★ |
+| Kannala & Brandt, "A Generic Camera Model and Calibration Method for Conventional, Wide-Angle, and Fish-Eye Lenses", PAMI 2006 | KB 模型原始论文 | ★★★★ |
 
 ### 源码推荐阅读
 

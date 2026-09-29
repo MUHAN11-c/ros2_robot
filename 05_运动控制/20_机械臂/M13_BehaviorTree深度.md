@@ -36,7 +36,7 @@ M13 BehaviorTree.CPP 深度 知识体系
 
 ## 前置自测
 
-📋 **前置自测**（答不出 $\ge$ 2 题 → 先回 `02_C++基础与进阶/10_C++语言核心` / `02_C++基础与进阶/30_软件工程` / `02_C++基础与进阶/50_ROS2工程化` 复习）
+◆ **前置自测**（答不出 $\ge$ 2 题 → 先回 `02_C++基础与进阶/10_C++语言核心` / `02_C++基础与进阶/30_软件工程` / `02_C++基础与进阶/50_ROS2工程化` 复习）
 
 1. 什么是 Composite Pattern？它如何用统一接口处理叶子节点和容器节点？（`02_C++基础与进阶/30_软件工程/10_设计模式与高级惯用法`）
 2. C++ 共享库如何通过 `dlopen`/符号导出在运行时加载？ROS `pluginlib` 在此基础上又增加了什么？（`02_C++基础与进阶/50_ROS2工程化/40_硬件集成与RL部署`）
@@ -114,9 +114,9 @@ BehaviorTree.CPP 深度
 
 ---
 
-## M13.1 行为树 vs 有限状态机 ⭐⭐
+## M13.1 行为树 vs 有限状态机 ★★
 
-### 动机 ⭐⭐
+### 动机 ★★
 
 机器人操作任务不是一条直线——它是一棵充满分支的决策树。考虑一个看似简单的 pick-and-place 任务：
 
@@ -132,7 +132,7 @@ BehaviorTree.CPP 深度
 
 每一步都可能失败，每种失败都需要不同的恢复策略。如何组织这种复杂的控制逻辑？
 
-### 如果用 FSM 会怎样 ⭐⭐
+### 如果用 FSM 会怎样 ★★
 
 最直觉的方案是有限状态机（FSM）：每个步骤是一个状态，步骤之间的转换是边。
 
@@ -157,7 +157,7 @@ BehaviorTree.CPP 深度
 
 > **本质洞察**：FSM 的根本问题不是「不能表达」复杂逻辑——任何图灵完备的系统都能。问题在于**可维护性**：FSM 的转移是全局耦合的（任何状态都可以转移到任何状态），而行为树的控制是局部组合的（每个子树独立封装，通过控制节点组合）。这类似于面向对象编程中「全局变量」vs「封装」的区别。
 
-### 行为树如何解决 ⭐⭐
+### 行为树如何解决 ★★
 
 BT 用**树状结构 + 异步 tick** 替代 FSM 的**图状结构 + 状态转移**：
 
@@ -197,13 +197,13 @@ BT 用**树状结构 + 异步 tick** 替代 FSM 的**图状结构 + 状态转移
 
 **不是 X 而是 Y**：BT 的价值不是「功能比 FSM 更强」——两者在计算能力上等价。BT 的价值是「在复杂任务中更容易维护和扩展」。如果你的任务只有 3-5 个状态且不需要错误恢复，FSM 可能更简单直接。
 
-### 历史背景 ⭐
+### 历史背景 ★
 
 行为树最初由游戏 AI 领域发展而来——2004 年 Halo 2 的 AI 系统使用了与 BT 结构相似的层次化决策架构。2005 年 Damian Isla 在 GDC（游戏开发者大会）上介绍了该系统的设计思路，推动了 BT 概念的普及。此后 BT 被 Unreal Engine 4（2014）等主流游戏引擎采纳为标准 AI 架构。
 
 机器人领域的采用较晚。2014 年 Michele Colledanchise 和 Petter Ögren 将 BT 引入机器人控制，发表了理论分析论文并出版了专著 "Behavior Trees in Robotics and AI"（2018）。2018 年 Davide Faconti 在 Eurecat 启动了 BT.CPP 库的开发（与 IIT 的 Colledanchise 合作），2019 年后逐步成熟并被 ROS2 的 Nav2 导航栈采用为顶层任务编排框架，从此在 ROS 生态中广泛普及。
 
-### 选型决策流程 ⭐⭐
+### 选型决策流程 ★★
 
 ```
 你的任务有多复杂？
@@ -222,7 +222,7 @@ BT 用**树状结构 + 异步 tick** 替代 FSM 的**图状结构 + 状态转移
         注意：BT 的形式化验证工具正在发展中（CONVINCE 项目）
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 🧠 思维陷阱：认为"BT 可以完全替代 FSM"
@@ -264,13 +264,13 @@ BT 用**树状结构 + 异步 tick** 替代 FSM 的**图状结构 + 状态转移
 
 ---
 
-## M13.2 BT.CPP v4 异步 Ticking 执行模型 ⭐⭐
+## M13.2 BT.CPP v4 异步 Ticking 执行模型 ★★
 
-### 动机 ⭐⭐
+### 动机 ★★
 
 理解了 BT vs FSM 的宏观差异后，我们深入 BT.CPP 的执行模型——这是理解所有后续内容的基础。
 
-### 三态语义 ⭐⭐
+### 三态语义 ★★
 
 BT.CPP 中，每个 `TreeNode::tick()` 返回三种状态之一：
 
@@ -284,7 +284,7 @@ BT.CPP 中，每个 `TreeNode::tick()` 返回三种状态之一：
 
 > **跨领域类比**：RUNNING 状态类似于操作系统的进程调度——一个进程可以处于「运行中」但被时间片打断，下次调度时继续执行。BT 的 tick 循环就像操作系统的调度器，每次 tick 轮询所有 RUNNING 节点的进度。区别在于 OS 调度是抢占式的（任何时候可以打断），BT tick 是协作式的（节点在 tick 返回时才让出控制权）。
 
-### Tick 循环 ⭐⭐
+### Tick 循环 ★★
 
 顶层代码以固定频率（通常 10-100 Hz）调用 BT.CPP v4 的公开 tick API，例如 `tree.tickOnce()`。如果希望库内部循环到非 RUNNING 状态，可用 `tree.tickWhileRunning()`；需要严格单次 tick 时可用 `tree.tickExactlyOnce()`。
 
@@ -308,7 +308,7 @@ while (status == BT::NodeStatus::RUNNING) {
 
 每次 tick 时，整棵树自顶向下遍历。控制节点根据子节点的返回值决定下一步的行为。
 
-### 四种节点类型 ⭐⭐
+### 四种节点类型 ★★
 
 BT.CPP 的节点分为四类：
 
@@ -434,7 +434,7 @@ class IsObjectDetected : public BT::ConditionNode {
 
 > **跨领域类比**：Decorator 模式在 BT 中的应用与 `02_C++基础与进阶/30_软件工程/10_设计模式与高级惯用法` 中学过的 Decorator 设计模式完全一致——不修改原始节点，通过包装增强行为。`RetryUntilSuccessful` 就像网络请求的重试中间件，`Timeout` 就像 gRPC 的 deadline。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：在 ConditionNode 中返回 RUNNING
@@ -478,7 +478,7 @@ class IsObjectDetected : public BT::ConditionNode {
 
 ---
 
-## M13.3 Blackboard 与 Port 类型安全数据流 ⭐⭐
+## M13.3 Blackboard 与 Port 类型安全数据流 ★★
 
 ### 动机
 
@@ -664,7 +664,7 @@ SubTree 有独立的 Blackboard，需要通过 port remapping 显式暴露数据
 
 这种隔离防止了不同 SubTree 之间的键名冲突——类似于编程语言中的命名空间或模块作用域。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：Port 名称拼写不一致
@@ -700,7 +700,7 @@ SubTree 有独立的 Blackboard，需要通过 port remapping 显式暴露数据
 
 ---
 
-## M13.4 XML DSL 与工厂注册 ⭐⭐
+## M13.4 XML DSL 与工厂注册 ★★
 
 ### 动机
 
@@ -819,7 +819,7 @@ auto new_tree = factory.createTreeFromFile("updated_tree.xml");
 
 这种「热加载」能力在工业场景中非常有价值——系统集成工程师可以在现场调整行为树，而不需要软件工程师重新编译部署。
 
-### SubTree 复用的四种工业模式 ⭐⭐⭐
+### SubTree 复用的四种工业模式 ★★★
 
 SubTree 是 BT 最重要的代码复用机制。下面总结四种在工业项目中反复出现的 SubTree 复用模式，每种模式都有明确的适用场景和实现要点。
 
@@ -962,7 +962,7 @@ auto tree = factory.createTreeFromFile("main_tree.xml");
 | 条件选择 | 多策略动态切换 | 中高 | 5-10 个 |
 | 跨文件库 | 大型产品系统 | 高 | 10-30 个 |
 
-### Groot2 调试实战流程 ⭐⭐⭐
+### Groot2 调试实战流程 ★★★
 
 Groot2 不仅仅是可视化工具——它是 BT 调试的核心工作流。下面给出从「行为树不工作」到「找到并修复问题」的完整调试流程。
 
@@ -1054,7 +1054,7 @@ BT::MinitraceLogger trace_log(tree, "bt_perf.json");
 
 > **本质洞察**：BT 调试的困难不在于代码 bug，而在于**组合爆炸**——50 个节点的树有数百种可能的执行路径，每条路径取决于运行时条件。Groot2 的日志回放本质上是把不可重复的运行时行为变成了可重复、可检查的静态数据。这和 SLAM 中用 rosbag 回放替代实时跑车是同一个思想——用录制回放将非确定性问题转化为确定性分析。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：XML 中的节点名与 C++ 注册名不一致
@@ -1084,7 +1084,7 @@ BT::MinitraceLogger trace_log(tree, "bt_perf.json");
 
 ---
 
-## M13.5 与 ROS2 Action Server 的集成 ⭐⭐
+## M13.5 与 ROS2 Action Server 的集成 ★★
 
 ### 动机
 
@@ -1211,7 +1211,7 @@ factory.registerNodeType<MoveToTarget>("MoveToTarget", params);
 | 超时处理 | 需要手动计时 | 基类提供 server_timeout 参数 |
 | Server 发现 | 需要手动 wait_for_action_server | 基类自动处理 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：忘记在 onHalted 中取消 Action Goal
@@ -1231,7 +1231,7 @@ factory.registerNodeType<MoveToTarget>("MoveToTarget", params);
           Action 可能需要几秒才完成，但 BT 每 100ms 就检查一次状态。
 ```
 
-### 手动实现 vs RosActionNode 基类：完整代码对比 ⭐⭐⭐
+### 手动实现 vs RosActionNode 基类：完整代码对比 ★★★
 
 为了让读者深刻理解 `RosActionNode` 基类封装了哪些繁琐逻辑，下面给出手动实现同等功能的代码——对比之下基类的价值一目了然。
 
@@ -1368,7 +1368,7 @@ private:
 
 ---
 
-## M13.6 错误恢复策略设计 ⭐⭐
+## M13.6 错误恢复策略设计 ★★
 
 ### 动机
 
@@ -1478,7 +1478,7 @@ private:
 | **执行** | 轨迹跟踪偏差大 / 电机过载 / 通信断开 | 安全停止 + 重连 |
 | **交互** | 抓取滑落 / 物体变形 / 外力干扰 | 退回 + 重新检测 + 换策略 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 🧠 思维陷阱：过度使用 RetryUntilSuccessful
@@ -1510,7 +1510,7 @@ private:
 
 ---
 
-## M13.7 Groot2 可视化与日志回放 ⭐⭐⭐
+## M13.7 Groot2 可视化与日志回放 ★★★
 
 ### 动机
 
@@ -1549,7 +1549,7 @@ BT::Groot2Publisher groot_publisher(tree);
 
 > **跨领域类比**：这种「从一开始就把可观测性内建到框架里」的思想类似于 Kubernetes 的 Prometheus metrics + Grafana dashboard——不是事后才加日志，而是框架本身就提供了结构化的观测能力。在 BT.CPP 中，这意味着你永远不需要手动在每个节点里加 `cout` 调试——Logger 自动记录所有状态转换。
 
-### Groot2 工程实践：从安装到产线部署 ⭐⭐⭐
+### Groot2 工程实践：从安装到产线部署 ★★★
 
 **安装方式**：
 
@@ -1613,7 +1613,7 @@ BT::SqliteLogger sqlite_log(tree, ss.str());
 
 > **反事实推理**：如果产线上不启用 SqliteLogger 会怎样？当机器人在凌晨 3 点出现故障时，值班人员只能描述"机器人停了"，工程师无法复现问题。有了日志文件，第二天用 Groot2 回放就能精确定位到"第 1247 个 tick 时 DetectObject 节点连续 3 次 FAILURE 后 Fallback 耗尽所有恢复策略"——从模糊描述变成精确诊断。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 💡 概念误区：认为 Groot2 只是"画图工具"
@@ -1641,7 +1641,7 @@ BT::SqliteLogger sqlite_log(tree, ss.str());
 
 ---
 
-## M13.8 MTC 集成与工业案例 ⭐⭐⭐
+## M13.8 MTC 集成与工业案例 ★★★
 
 ### 动机
 
@@ -1794,7 +1794,7 @@ BT.CPP (顶层)
 
 码垛场景的独特工程要点：放置精度要求严格（箱子间距 <5mm 才能堆叠稳定），MTC 的 approach 方向必须严格垂直向下以避免挤歪相邻箱子；传送带速度与机器人节拍必须匹配（通常用 `WaitForConveyor` 节点同步），否则箱子堆积或机器人空等。
 
-### 工业错误恢复的五级体系 ⭐⭐⭐
+### 工业错误恢复的五级体系 ★★★
 
 工业场景中的错误恢复不是简单的"重试"——需要按错误严重程度分级处理。以下五级体系来自工业机器人系统集成的最佳实践：
 
@@ -1922,7 +1922,7 @@ class WaitForOperator : public BT::StatefulActionNode {
 
 > **跨领域类比**：五级错误恢复体系类似于操作系统的异常处理层级——用户态异常先在本函数处理（L1-L2），处理不了向上抛到调用者（L3-L4），最终到达内核（L5 人工介入）。区别在于机器人系统的最后一道防线是人类操作员而非内核 panic。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 🧠 思维陷阱：认为 BT 可以替代 MTC
@@ -1943,7 +1943,7 @@ class WaitForOperator : public BT::StatefulActionNode {
 
 ---
 
-## M13.9 前沿展望：BT.CPP 演进、LLM 驱动的 BT 生成与形式化等价性 ⭐⭐⭐⭐
+## M13.9 前沿展望：BT.CPP 演进、LLM 驱动的 BT 生成与形式化等价性 ★★★★
 
 前八节建立了行为树从原理到工程的完整知识链。本节将目光投向行为树生态的下一步演进方向——BT.CPP 4.x 系列的持续演进、LLM 与行为树的融合、以及行为树与状态机的形式化等价关系。
 
@@ -2025,15 +2025,15 @@ BT.CPP 由 Davide Faconti 主导开发，截至 2026 年初最新稳定版为 **
 
 | 知识点 | 核心内容 | 难度 |
 |--------|---------|------|
-| M13.1 BT vs FSM | 本质差异、选型决策、可维护性对比 | ⭐⭐ |
-| M13.2 异步 Ticking | 三态语义、四种节点类型、Reactive 模式 | ⭐⭐ |
-| M13.3 Blackboard + Port | 类型安全数据流、Stamped API、SubTree 隔离 | ⭐⭐ |
-| M13.4 XML DSL 与工厂 | 行为与实现分离、SubTree 复用、热加载 | ⭐⭐ |
-| M13.5 ROS2 Action 集成 | RosActionNode 基类、RUNNING↔Feedback 映射 | ⭐⭐ |
-| M13.6 错误恢复策略 | Retry/Fallback/Recovery SubTree 三种模式 | ⭐⭐ |
-| M13.7 Groot2 可视化 | 编辑/监控/日志回放三种模式 | ⭐⭐⭐ |
-| M13.8 MTC 集成与工业案例 | BT+MTC 层次关系、PCB 装配/CNC 上下料/码垛案例 | ⭐⭐⭐ |
-| M13.9 前沿展望 | BT.CPP 4.x 演进/LLM 驱动 BT 生成/形式化等价性 | ⭐⭐⭐⭐ |
+| M13.1 BT vs FSM | 本质差异、选型决策、可维护性对比 | ★★ |
+| M13.2 异步 Ticking | 三态语义、四种节点类型、Reactive 模式 | ★★ |
+| M13.3 Blackboard + Port | 类型安全数据流、Stamped API、SubTree 隔离 | ★★ |
+| M13.4 XML DSL 与工厂 | 行为与实现分离、SubTree 复用、热加载 | ★★ |
+| M13.5 ROS2 Action 集成 | RosActionNode 基类、RUNNING↔Feedback 映射 | ★★ |
+| M13.6 错误恢复策略 | Retry/Fallback/Recovery SubTree 三种模式 | ★★ |
+| M13.7 Groot2 可视化 | 编辑/监控/日志回放三种模式 | ★★★ |
+| M13.8 MTC 集成与工业案例 | BT+MTC 层次关系、PCB 装配/CNC 上下料/码垛案例 | ★★★ |
+| M13.9 前沿展望 | BT.CPP 4.x 演进/LLM 驱动 BT 生成/形式化等价性 | ★★★★ |
 
 ## 累积项目：本章新增模块
 
@@ -2061,14 +2061,14 @@ mini_manip_ws/
 
 | 资源 | 难度 | 说明 |
 |------|------|------|
-| BT.CPP 官方文档 (`behaviortree.dev`) | ⭐ | 入门教程和 API 参考 |
-| Groot2 GUI | ⭐⭐ | 可视化编辑器和日志回放 |
-| Davide Faconti 讲座 | ⭐⭐ | BT.CPP 作者的设计理念 |
-| Nav2 BT 应用 (`navigation.ros.org/behavior_trees/`) | ⭐⭐ | BT 在导航中的大规模应用 |
-| Colledanchise & Ogren (2018) "Behavior Trees in Robotics and AI" | ⭐⭐⭐ | 理论基础专著 |
-| CONVINCE 项目 | ⭐⭐⭐⭐ | BT 形式化验证研究前沿 |
-| Iovino et al. (2022) "A Survey of BT in Robotics and AI" | ⭐⭐⭐ | 综述论文 |
-| Lykov et al. (2023) "LLM-BRAIn" | ⭐⭐⭐⭐ | LLM 直接生成 BT XML 的前沿工作 |
+| BT.CPP 官方文档 (`behaviortree.dev`) | ★ | 入门教程和 API 参考 |
+| Groot2 GUI | ★★ | 可视化编辑器和日志回放 |
+| Davide Faconti 讲座 | ★★ | BT.CPP 作者的设计理念 |
+| Nav2 BT 应用 (`navigation.ros.org/behavior_trees/`) | ★★ | BT 在导航中的大规模应用 |
+| Colledanchise & Ogren (2018) "Behavior Trees in Robotics and AI" | ★★★ | 理论基础专著 |
+| CONVINCE 项目 | ★★★★ | BT 形式化验证研究前沿 |
+| Iovino et al. (2022) "A Survey of BT in Robotics and AI" | ★★★ | 综述论文 |
+| Lykov et al. (2023) "LLM-BRAIn" | ★★★★ | LLM 直接生成 BT XML 的前沿工作 |
 
 ## 本章与后续章节的关系
 
@@ -2153,7 +2153,7 @@ mini_manip_ws/
 
 ---
 
-## BT.CPP v4 核心 API 速查 ⭐⭐
+## BT.CPP v4 核心 API 速查 ★★
 
 ### 节点注册
 
@@ -2217,7 +2217,7 @@ class MoveToTarget : public RosActionNode<MoveToPose> {
 
 ---
 
-## BT 设计模式与最佳实践 ⭐⭐⭐
+## BT 设计模式与最佳实践 ★★★
 
 ### 模式 1：Guard + Action (安全检查)
 
@@ -2298,7 +2298,7 @@ ReactiveSequence 在每次 tick 都重新检查条件节点——如果急停被
 
 ---
 
-## 跨章综合练习 ⭐⭐⭐
+## 跨章综合练习 ★★★
 
 **题目**：综合 M13（BT）+ M14（MoveIt2 MTC）+ M12（ros2_control），实现完整的"BT 编排 + MTC 规划 + 执行"管线：
 
@@ -2310,7 +2310,7 @@ ReactiveSequence 在每次 tick 都重新检查条件节点——如果急停被
 
 ---
 
-## BT 与 FSM 的工程选型决策树 ⭐⭐
+## BT 与 FSM 的工程选型决策树 ★★
 
 ```
 你的任务有多复杂？
@@ -2332,7 +2332,7 @@ ReactiveSequence 在每次 tick 都重新检查条件节点——如果急停被
         BT 的形式化验证工具尚不成熟
 ```
 
-### BT 实际部署经验——常见错误和教训 ⭐⭐
+### BT 实际部署经验——常见错误和教训 ★★
 
 | 常见错误 | 后果 | 正确做法 |
 |---------|------|---------|

@@ -35,7 +35,7 @@ M14 MoveIt2 + MTC 工业集成 知识体系
 
 ## 前置自测
 
-📋 **前置自测**（答不出 $\ge$ 2 题 → 先回 M07/M12/`02_C++基础与进阶/30_软件工程` 复习）
+◆ **前置自测**（答不出 $\ge$ 2 题 → 先回 M07/M12/`02_C++基础与进阶/30_软件工程` 复习）
 
 1. `pluginlib` 的 ClassLoader 如何通过字符串动态创建 C++ 对象？（`02_C++基础与进阶/30_软件工程/10_设计模式与高级惯用法`）
 2. OMPL 中 RRT-Connect 的双树扩展策略是什么？它为什么比单树 RRT 更快？（M07）
@@ -122,15 +122,15 @@ MoveIt2 + MTC 工业集成
 
 ---
 
-## M14.1 MoveIt2 架构全景 ⭐⭐
+## M14.1 MoveIt2 架构全景 ★★
 
-### 动机 ⭐⭐
+### 动机 ★★
 
 当你需要让一台 7-DOF 机械臂从当前位姿移动到目标位姿，同时避开桌子上的障碍物——这个问题涉及运动学（IK 求解）、碰撞检测（环境感知）、路径搜索（OMPL 规划器）、轨迹平滑（时间参数化）、命令执行（ros2_control）等多个子系统。
 
 MoveIt2 不是一个规划算法——它是一个**规划框架**，通过 pluginlib 插件架构统一了这些子系统。
 
-### 如果不用 MoveIt2 会怎样 ⭐⭐
+### 如果不用 MoveIt2 会怎样 ★★
 
 假设你要自己组装一个运动规划系统：
 1. 用 Pinocchio 做 FK/IK → 需要自己管理 URDF 加载和关节限位
@@ -143,7 +143,7 @@ MoveIt2 不是一个规划算法——它是一个**规划框架**，通过 plug
 
 > **本质洞察**：MoveIt2 的核心价值不是任何一个算法，而是**接口标准化**——它定义了规划器、IK 求解器、碰撞检测器、时间参数化器的标准接口，让所有实现都可以通过 pluginlib 运行时替换。这类似于 JDBC 之于数据库、OpenGL 之于图形渲染——抽象层的价值在于解耦和可替换性。
 
-### 架构分层 ⭐⭐
+### 架构分层 ★★
 
 ```
 用户 API 层:
@@ -179,7 +179,7 @@ kinematics:
     kinematics_solver_timeout: 0.05
 ```
 
-### pluginlib 三层工厂架构 ⭐⭐
+### pluginlib 三层工厂架构 ★★
 
 MoveIt2 里，规划器、IK 求解器、碰撞检测器**全都是 pluginlib 插件**。
 
@@ -213,7 +213,7 @@ planner_instance.reset(
 
 > **跨领域类比**：MoveIt2 的插件架构类似于 Web 浏览器的扩展系统——Chrome 定义了扩展 API 接口，任何开发者都可以发布扩展，用户安装后即可使用，不需要重新编译浏览器。区别在于 MoveIt2 的插件运行在同一进程内（通过 dlopen），而浏览器扩展运行在沙箱中。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 💡 概念误区：认为 MoveIt2 只是"OMPL 的封装"
@@ -258,9 +258,9 @@ planner_instance.reset(
 
 ---
 
-## M14.2 MoveGroupInterface vs MoveItCpp ⭐⭐
+## M14.2 MoveGroupInterface vs MoveItCpp ★★
 
-### 动机 ⭐⭐
+### 动机 ★★
 
 MoveIt2 提供两套用户 API，适合不同场景。理解两者的区别是正确使用 MoveIt2 的第一步。
 
@@ -375,7 +375,7 @@ if (solution) {
 - **90% 的场景**用 MoveGroupInterface——简单、稳定、有 Python 支持
 - **需要 >10 Hz 重规划**时用 MoveItCpp——如 visual servoing、实时避障
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：MoveGroupInterface 规划前未设置 start state
@@ -462,7 +462,7 @@ if plan_result:
 | 适用场景 | 原型开发、研究、80% 的实际部署 | 高频重规划、嵌入式 |
 | 调试 | Python debugger 更方便 | gdb/lldb |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：Python API 中忘记处理 plan() 返回 None
@@ -488,9 +488,9 @@ if plan_result:
 
 ---
 
-## M14.3 PlanningScene 管理 ⭐⭐
+## M14.3 PlanningScene 管理 ★★
 
-### 动机 ⭐⭐
+### 动机 ★★
 
 运动规划不是在真空中进行的——机械臂必须避开桌子、物体、人和自身。PlanningScene 是 MoveIt2 中管理「机器人周围有什么」的核心组件。
 
@@ -602,7 +602,7 @@ ACM 定义了哪些碰撞对不需检查——对性能至关重要：
 
 MoveIt Setup Assistant 自动生成 ACM（通过在多个随机配置下采样碰撞），保存在 SRDF 文件中。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：添加碰撞对象后立即规划
@@ -648,15 +648,15 @@ MoveIt Setup Assistant 自动生成 ACM（通过在多个随机配置下采样�
 
 ---
 
-## M14.4 MoveIt Task Constructor (MTC) 深度 ⭐⭐
+## M14.4 MoveIt Task Constructor (MTC) 深度 ★★
 
-### 动机 ⭐⭐
+### 动机 ★★
 
 单次运动规划（从 A 到 B）用 MoveGroupInterface 就够了。但 pick-and-place 任务是**多阶段**的：打开夹爪 → 移动到预抓取位 → 接近物体 → 关闭夹爪 → 提起物体 → 移动到放置位 → 放下物体 → 后退。
 
 这 8 个阶段不是独立的——后一个阶段的起始状态是前一个阶段的结束状态，中间还有碰撞场景的变化（物体从桌上 attach 到末端）。MTC 专门解决这种**多阶段运动规划的约束传播和多解搜索**。
 
-### 核心概念 ⭐⭐
+### 核心概念 ★★
 
 **Stage（阶段）**是 MTC 的基本单元。每个 Stage 按功能分为三类：
 
@@ -851,7 +851,7 @@ if (result.val != moveit_msgs::msg::MoveItErrorCodes::SUCCESS) {
 }
 ```
 
-### 自定义 MTC Stage 实现 ⭐⭐⭐
+### 自定义 MTC Stage 实现 ★★★
 
 MTC 的 Stage 系统可以通过继承具体语义的基类实现扩展。下面是一个工业场景常用的教学示例——「视觉扫描」Generator Stage：它主动生成一个“已扫描”的输出状态，并在该状态中加入检测到的物体。
 
@@ -1024,7 +1024,7 @@ BT.CPP (执行层)
 └── Action: ReturnHome
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：MTC 中忘记 attach/detach 物体
@@ -1060,7 +1060,7 @@ BT.CPP (执行层)
 
 ---
 
-## M14.5 规划管线配置 ⭐⭐⭐
+## M14.5 规划管线配置 ★★★
 
 ### 动机
 
@@ -1158,7 +1158,7 @@ pilz:
         └── OMPL BIT* / Informed-RRT*
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 🧠 思维陷阱：认为"最新/最快的规划器一定最好"
@@ -1206,7 +1206,7 @@ OMPL 输出的路径只有路径点的关节位置，没有时间信息。时间
 
 Ruckig 相比 TOTG 的关键优势是**jerk 限制**——这意味着加速度的变化是连续的，不会出现突变，对真实硬件更友好（减少机械冲击和振动）。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：时间参数化失败导致轨迹无法执行
@@ -1231,7 +1231,7 @@ Ruckig 相比 TOTG 的关键优势是**jerk 限制**——这意味着加速度�
 
 ---
 
-## M14.6 MoveIt Servo 实时控制 ⭐⭐⭐
+## M14.6 MoveIt Servo 实时控制 ★★★
 
 ### 动机
 
@@ -1289,7 +1289,7 @@ servo:
 2. **Visual Servoing**：视觉反馈计算误差速度，Servo 实时跟踪
 3. **力控协作**：力传感器输入转换为速度命令
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：Servo 在奇异性附近失控
@@ -1308,7 +1308,7 @@ servo:
           不是规划器级别的保证。操作员需要保持视觉监控。
 ```
 
-### Servo 参数调优详解 ⭐⭐⭐
+### Servo 参数调优详解 ★★★
 
 Servo 的性能和安全性高度依赖参数配置。以下是关键参数族的深度解析；字段名仍以目标版本 `servo_parameters.yaml` 为准，不要逐字复制这段示意配置。
 
@@ -1359,7 +1359,7 @@ servo:
     # 并把上面的 scale.linear / scale.rotational 调到保守值。
 ```
 
-**Servo 调参实战：三阶段渐进法** ⭐⭐⭐
+**Servo 调参实战：三阶段渐进法** ★★★
 
 在真实硬件上部署 Servo 时，参数调优必须按以下三个阶段渐进式进行——从最保守的参数开始，逐步放宽，每步都在确认安全的前提下进行：
 
@@ -1514,7 +1514,7 @@ private:
 
 ---
 
-## M14.7 多机器人 PlanningScene 管理 ⭐⭐⭐⭐
+## M14.7 多机器人 PlanningScene 管理 ★★★★
 
 ### 动机
 
@@ -1633,7 +1633,7 @@ void updateCrossArmCollision(
 }
 ```
 
-### 工业产线集成案例：CNC 上下料工作站 ⭐⭐⭐
+### 工业产线集成案例：CNC 上下料工作站 ★★★
 
 ```
 ┌─────────────────────────────────────────────────────┐
@@ -1705,7 +1705,7 @@ void updateCrossArmCollision(
 3. **节拍时间**：整个上下料周期要在 CNC 加工时间内完成（通常 30-60 秒）
 4. **安全联锁**：CNC 门打开时机械臂才能进入，门关闭时机械臂必须退出
 
-### 工业案例深度分析 ⭐⭐⭐
+### 工业案例深度分析 ★★★
 
 前面的 CNC 上下料案例展示了 BT + MTC 在单臂场景中的集成。以下两个案例分别展示双臂协调和力控集成场景，每个案例都包含完整的系统分析。
 
@@ -1815,7 +1815,7 @@ class WeldTask : public BT::StatefulActionNode {
 
 这个案例展示了 MTC（离线规划）和 Servo（在线控制）如何在同一任务中无缝衔接。关键点是控制器切换——Servo 需要的 command interface 与 JTC 不同，必须通过 ros2_control 的 `switch_controller` 服务切换。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：双臂 ACM 错误跳过跨臂碰撞
@@ -1845,7 +1845,7 @@ class WeldTask : public BT::StatefulActionNode {
 
 ---
 
-## M14.8 前沿展望：MoveIt2 2026 路线图、MoveIt Servo 2.0 与 Foundation Model 集成 ⭐⭐⭐⭐
+## M14.8 前沿展望：MoveIt2 2026 路线图、MoveIt Servo 2.0 与 Foundation Model 集成 ★★★★
 
 前七节覆盖了 MoveIt2 和 MTC 从架构到工业部署的核心内容。MoveIt 生态仍在快速迭代，以下梳理近期路线图中与教学和工程选型直接相关的发展方向。
 
@@ -1919,14 +1919,14 @@ MTC Task (MoveIt2)
 
 | 知识点 | 核心内容 | 难度 |
 |--------|---------|------|
-| M14.1 架构全景 | pluginlib 三层工厂、分层解耦 | ⭐⭐ |
-| M14.2 两套 API | MoveGroupInterface vs MoveItCpp vs Python API | ⭐⭐ |
-| M14.3 PlanningScene | 碰撞对象、ACM、attached、diff 同步 | ⭐⭐ |
-| M14.4 MTC 深度 | Stage 体系、Composite Pattern、pick-and-place | ⭐⭐ |
-| M14.5 规划管线 | 链式/并行、规划器选型决策流程、时间参数化 | ⭐⭐⭐ |
-| M14.6 Servo | 实时笛卡尔控制、参数调优、奇异性管理 | ⭐⭐⭐ |
-| M14.7 多机器人 | 三种架构、双臂 ACM、工业案例深度分析 | ⭐⭐⭐⭐ |
-| M14.8 前沿展望 | MoveIt2 路线图、Servo 2.0、Foundation Model | ⭐⭐⭐⭐ |
+| M14.1 架构全景 | pluginlib 三层工厂、分层解耦 | ★★ |
+| M14.2 两套 API | MoveGroupInterface vs MoveItCpp vs Python API | ★★ |
+| M14.3 PlanningScene | 碰撞对象、ACM、attached、diff 同步 | ★★ |
+| M14.4 MTC 深度 | Stage 体系、Composite Pattern、pick-and-place | ★★ |
+| M14.5 规划管线 | 链式/并行、规划器选型决策流程、时间参数化 | ★★★ |
+| M14.6 Servo | 实时笛卡尔控制、参数调优、奇异性管理 | ★★★ |
+| M14.7 多机器人 | 三种架构、双臂 ACM、工业案例深度分析 | ★★★★ |
+| M14.8 前沿展望 | MoveIt2 路线图、Servo 2.0、Foundation Model | ★★★★ |
 
 ### 术语速查表
 
@@ -1973,12 +1973,12 @@ mini_manip_ws/
 
 | 资源 | 难度 | 说明 |
 |------|------|------|
-| MoveIt2 官方文档 (`moveit.picknik.ai`) | ⭐ | 教程和 API |
-| MoveIt2 Tutorials 仓库 | ⭐⭐ | 完整教程代码 |
-| MTC 文档 | ⭐⭐ | MTC 教程 |
-| Tesseract (`tesseract-robotics/tesseract`) | ⭐⭐⭐ | 替代框架对比 |
-| Sucan et al. (2013) "MoveIt!" IEEE RAM | ⭐⭐ | 原始论文 |
-| PickNik MoveIt Pro | ⭐⭐⭐ | 商业版参考 |
+| MoveIt2 官方文档 (`moveit.picknik.ai`) | ★ | 教程和 API |
+| MoveIt2 Tutorials 仓库 | ★★ | 完整教程代码 |
+| MTC 文档 | ★★ | MTC 教程 |
+| Tesseract (`tesseract-robotics/tesseract`) | ★★★ | 替代框架对比 |
+| Sucan et al. (2013) "MoveIt!" IEEE RAM | ★★ | 原始论文 |
+| PickNik MoveIt Pro | ★★★ | 商业版参考 |
 
 ## 🔧 故障排查手册
 
@@ -2067,7 +2067,7 @@ mini_manip_ws/
 
 ---
 
-## MoveIt2 全栈部署检查清单 ⭐⭐
+## MoveIt2 全栈部署检查清单 ★★
 
 从零搭建 MoveIt2 系统的完整步骤和常见陷阱：
 
@@ -2122,7 +2122,7 @@ MoveIt2 的核心价值在于**每个组件都可以通过修改 YAML 配置替�
 | 时间参数化 | TOTG | Ruckig Filter | 需要 jerk 连续轨迹 |
 | 可视化 | RViz | Foxglove | 需要 Web 远程监控 |
 
-### MTC Stage 设计深度——pick-and-place 完整实例 ⭐⭐⭐
+### MTC Stage 设计深度——pick-and-place 完整实例 ★★★
 
 MTC 将复杂操作任务分解为 Stage 序列。以下是一个完整 pick-and-place 的 Stage 结构：
 
@@ -2171,7 +2171,7 @@ MTC pick-and-place Task
 
 ---
 
-## 跨章综合练习 ⭐⭐⭐
+## 跨章综合练习 ★★★
 
 **题目**：综合 M03（IK）+ M07（OMPL）+ M10（时间参数化）+ M13（BT）+ M14（MoveIt2），搭建完整的工业 pick-and-place 系统：
 
@@ -2188,7 +2188,7 @@ MTC pick-and-place Task
 
 ---
 
-## MoveIt2 生态系统全景 ⭐⭐
+## MoveIt2 生态系统全景 ★★
 
 ```
 MoveIt2 生态系统 (2026)
@@ -2232,7 +2232,7 @@ MoveIt2 生态系统 (2026)
 
 ---
 
-## MoveIt2 实际部署经验——常见错误和教训 ⭐⭐
+## MoveIt2 实际部署经验——常见错误和教训 ★★
 
 | 常见错误 | 后果 | 正确做法 |
 |---------|------|---------|
@@ -2243,7 +2243,7 @@ MoveIt2 生态系统 (2026)
 | MTC 的 GenerateGraspPose 采样不足 | 成功率低 | 增加采样数量和角度范围 |
 | Servo 奇异性管理未开启 | 接近奇异构型时末端失控 | 设置奇异性减速阈值（如条件数 > 100 时开始减速） |
 
-### MoveIt2 vs Tesseract 选型 ⭐⭐
+### MoveIt2 vs Tesseract 选型 ★★
 
 Tesseract (SwRI, San Antonio) 是 MoveIt2 的主要替代框架：
 

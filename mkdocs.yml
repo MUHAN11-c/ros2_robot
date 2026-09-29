@@ -45,8 +45,6 @@ theme:
       toggle:
         icon: material/weather-sunny
         name: 切换到浅色模式
-  icon:
-    logo: default
 
 plugins:
   - search:

@@ -73,7 +73,7 @@ Certifiable Perception 与 SDP 松弛
 
 ---
 
-### §E.1 局部方法的根本局限——为何要追求全局最优 ⭐⭐
+### §E.1 局部方法的根本局限——为何要追求全局最优 ★★
 
 5-B 建立的 Gauss-Newton / Levenberg-Marquardt、5-C 建立的 iSAM2、5-D 建立的 InEKF、5-F 建立的 GNC-TLS，全部都是**局部**方法。收敛性分析的终点永远是"收敛到某个局部最优"——**收敛到哪个**取决于初值。对凸问题这无所谓（局部=全局），但 **SLAM/geometric perception 几乎全部非凸**：
 
@@ -91,7 +91,7 @@ Certifiable Perception 与 SDP 松弛
 
 ---
 
-### §E.2 Certifiable Perception 的形式化定义 ⭐⭐
+### §E.2 Certifiable Perception 的形式化定义 ★★
 
 **Yang-Carlone** 在 TPAMI 2023（arXiv:2109.03349）给出精确定义：
 
@@ -117,7 +117,7 @@ Certifiable Perception 与 SDP 松弛
 
 ---
 
-### §E.3 Semidefinite Programming 基础 ⭐⭐⭐
+### §E.3 Semidefinite Programming 基础 ★★★
 
 **标准 SDP**（Boyd-Vandenberghe *Convex Optimization* §4.6, p.168，conic 形式 eq.4.52）：
 
@@ -212,7 +212,7 @@ $$f(\hat{x}) = \langle C, \hat{x}\hat{x}^\top\rangle = \langle S+\sum\lambda_i^\
 
 ---
 
-### §E.4 QCQP -> SDP 的 Shor 松弛 ⭐⭐⭐
+### §E.4 QCQP -> SDP 的 Shor 松弛 ★★★
 
 **二次约束二次规划 (QCQP)**（Boyd eq.4.34, p.152）：
 
@@ -276,7 +276,7 @@ $$
 
 ---
 
-### §E.5 Lagrangian 对偶证书——certifiable perception 的认证器 ⭐⭐⭐
+### §E.5 Lagrangian 对偶证书——certifiable perception 的认证器 ★★★
 
 **对偶证书 (dual certificate)** 是整个框架的"签字笔"。设 QCQP 目标 $x^\top C x$，等式约束 $x^\top A_i x = b_i$。拉格朗日乘子 $\lambda \in \mathbb{R}^m$。**KKT 条件**给出：若 $x^\star$ 是全局最优且强对偶成立，则存在 $\lambda^\star$ 使
 
@@ -308,7 +308,7 @@ $$
 
 ---
 
-### §E.6 SDP 求解器概览 ⭐⭐⭐
+### §E.6 SDP 求解器概览 ★★★
 
 **内点法 (IPM)**：MOSEK、SeDuMi、SDPT3——用 log-det 自洽障碍函数 $\phi(X) = -\log\det X$，Newton 迭代追中心路径。**实用规模**：单块 PSD 矩阵边 $n \lesssim 2\text{-}5 \times 10^3$；约束数 $m \lesssim 10^4$。内存 $O(n^2 + m^2)$，时间每步 $O(n^3 + mn^2 + m^2 n^2)$。对 SLAM 场景（$n$ = 万级位姿）**完全不可行**。
 
@@ -342,7 +342,7 @@ $$
 
 ---
 
-### §E.7 SE-Sync 问题设定——从 PGO 到 certifiable 求解 ⭐⭐⭐
+### §E.7 SE-Sync 问题设定——从 PGO 到 certifiable 求解 ★★★
 
 **Rosen-Carlone-Bandeira-Leonard** "SE-Sync: A Certifiably Correct Algorithm for Synchronization over the Special Euclidean Group" *IJRR* 38(2-3):95-125, 2019 (arXiv:1612.07386)。
 
@@ -368,7 +368,7 @@ $$
 
 ---
 
-### §E.8 SE-Sync 的九步松弛链——从 Problem 1 到 Problem 9 ⭐⭐⭐⭐
+### §E.8 SE-Sync 的九步松弛链——从 Problem 1 到 Problem 9 ★★★★
 
 **Rosen et al. 2019 的九步 reformulation**（这是全文最关键的数学链条）：
 
@@ -426,7 +426,7 @@ $$
 
 ---
 
-### §E.9 SE-Sync 的四大紧性定理 ⭐⭐⭐⭐
+### §E.9 SE-Sync 的四大紧性定理 ★★★★
 
 **定理 1（精确恢复等价性，paper Thm.1）**：若 $Z^\star$ 是 Problem 7 最优解且因子化为 $Z^\star = R^{\star\top} R^\star$ 其中 $R^\star \in O(d)^n$，则 $R^\star$ 是 Problem 5 全局最优。若进一步 $R^\star \in SO(d)^n$，则 $R^\star$ 是 Problem 4 全局最优，$(t^\star, R^\star)$ 是 Problem 1 全局 MLE。**证明**：SDP 对偶给出 $p^\star_6 \le p^\star_7$，松弛关系给出 $p^\star_7 \le p^\star_5 \le p^\star_4$；若强对偶且秩条件成立，就得到从松弛解回到原问题的全局最优证书。
 
@@ -462,7 +462,7 @@ $$
 
 ---
 
-### §E.10 SE-Sync 算法（三阶段 + 对偶证书验证） ⭐⭐⭐
+### §E.10 SE-Sync 算法（三阶段 + 对偶证书验证） ★★★
 
 **Algorithm 1 — Riemannian Staircase**：
 ```text
@@ -495,7 +495,7 @@ return failure
 
 ---
 
-### §E.11 SE-Sync 实测性能 ⭐⭐
+### §E.11 SE-Sync 实测性能 ★★
 
 **Cube 合成实验**（$n=1000$，$\kappa=16.67$（约 $14°$ rotation std），$\tau=75$，回环概率 $p_{LC}=0.1$，50 次 Monte-Carlo）：SE-Sync 在旋转噪声 RMS 误差 **$\le 20°$** 时 **100% 获得证书**——这比典型传感器噪声高一个数量级。
 
@@ -528,7 +528,7 @@ return failure
 
 ---
 
-### §E.12 SE-Sync 代码映射与生态系统 ⭐⭐
+### §E.12 SE-Sync 代码映射与生态系统 ★★
 
 **主库**：`github.com/david-m-rosen/SE-Sync`
 
@@ -556,7 +556,7 @@ return failure
 
 ---
 
-### §E.13 TEASER / TEASER++ 问题设定 ⭐⭐⭐
+### §E.13 TEASER / TEASER++ 问题设定 ★★★
 
 **Yang-Shi-Carlone** "TEASER: Fast and Certifiable Point Cloud Registration" *IEEE T-RO* 37(2):314-333, 2021 (arXiv:2001.07715)。
 
@@ -587,7 +587,7 @@ TLS 的好处：**内点与外点完全解耦**——内点仍是 L2（有严格
 
 ---
 
-### §E.14 TEASER 三步解耦架构 ⭐⭐⭐
+### §E.14 TEASER 三步解耦架构 ★★★
 
 TEASER 的**核心洞察**：通过**测量不变量**把耦合的 $(s, R, t)$ 估计**串行解耦**。
 
@@ -623,7 +623,7 @@ $$
 
 ---
 
-### §E.15 TEASER++ 代码 API ⭐⭐
+### §E.15 TEASER++ 代码 API ★★
 
 **主库**：`github.com/MIT-SPARK/TEASER-plusplus`（MIT license；~2.2k stars Apr 2026）。C++ 核心，Python/MATLAB 绑定。
 
@@ -695,7 +695,7 @@ sol = solver.getSolution()
 
 ---
 
-### §E.16 Rotation Averaging 的 SDP 松弛 ⭐⭐⭐⭐
+### §E.16 Rotation Averaging 的 SDP 松弛 ★★★★
 
 **Eriksson-Olsson-Kahl-Chin** "Rotation Averaging with the Chordal Distance: Strong Duality, Tight Relaxation, and Certifiable Algorithms" *IEEE TPAMI* 43(1):256-268, 2021（CVPR 2018 会议版）。
 
@@ -711,7 +711,7 @@ $$
 
 ---
 
-### §E.17 Category-Level 姿态估计——PACE ⭐⭐⭐⭐
+### §E.17 Category-Level 姿态估计——PACE ★★★★
 
 **Shi-Yang-Carlone** "Optimal Pose and Shape Estimation for Category-level 3D Object Perception" *RSS* 2021 Best Paper Finalist (arXiv:2104.08383)。
 
@@ -728,7 +728,7 @@ $$
 
 ---
 
-### §E.18 Outlier-Robust 估计的统一 SDP 框架 ⭐⭐⭐⭐
+### §E.18 Outlier-Robust 估计的统一 SDP 框架 ★★★★
 
 **Yang-Carlone** "Certifiably Optimal Outlier-Robust Geometric Perception" *IEEE TPAMI* 2023 (arXiv:2109.03349)。
 
@@ -747,7 +747,7 @@ $$
 
 ---
 
-### §E.19 SLAM 中的更多 certifiable 方法 ⭐⭐⭐
+### §E.19 SLAM 中的更多 certifiable 方法 ★★★
 
 | 方法 | 论文 | 贡献 |
 |---|---|---|
@@ -764,7 +764,7 @@ $$
 
 ---
 
-### §E.20 核心方法对比表 ⭐⭐
+### §E.20 核心方法对比表 ★★
 
 | 方法 | 问题类型 | 全局最优 | 需初值 | 鲁棒性 | 复杂度 | 规模 | 代表论文 | 代码 |
 |---|---|---|---|---|---|---|---|---|
@@ -780,7 +780,7 @@ $$
 
 ---
 
-### §E.21 核心文献表（含具体位置） ⭐
+### §E.21 核心文献表（含具体位置） ★
 
 **教材**：
 - **Boyd-Vandenberghe** *Convex Optimization* CUP 2004：§4.4 QCQP (pp.152-160), §4.6 SDP (pp.167-172), §5 Duality (pp.215-273), §5.2.3 Slater (p.226), §5.5 KKT (pp.241-244), §5.9 conic duality (pp.265-267), §A.5 PSD (pp.646-651). PDF: `web.stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf`.
@@ -812,7 +812,7 @@ $$
 
 ---
 
-### §E.22 C++/Python 库映射 ⭐⭐
+### §E.22 C++/Python 库映射 ★★
 
 | 库 | 语言 | 功能 | 规模 |
 |---|---|---|---|
@@ -833,7 +833,7 @@ $$
 
 ---
 
-### §E.23 十条常见陷阱 ⭐⭐
+### §E.23 十条常见陷阱 ★★
 
 **陷阱 1 — SDP 松弛不一定紧**。Shor 给出 $p^\star_{\text{SDR}} \le p^\star_{\text{QCQP}}$，**相等只是经验结果**。旋转噪声 $\sigma_\theta > 0.3$ rad 或外点率 >95% 时 SE-Sync/TEASER 可能不紧；此时证书 $\lambda_{\min} < 0$，`cert = false`。必须做 **rejection**，不能把未认证输出当全局最优报告。
 
@@ -857,7 +857,7 @@ $$
 
 ---
 
-### §E.24 对偶证书的完整手推：从一个 QCQP 到全局最优证明 ⭐⭐⭐⭐
+### §E.24 对偶证书的完整手推：从一个 QCQP 到全局最优证明 ★★★★
 
 对偶证书最容易被误解成"求解器输出的一个诊断数"。
 
@@ -1118,7 +1118,7 @@ $$
 
 ---
 
-### §E.25 SE-Sync 中消去平移的逐步推导：为什么证书只看旋转 ⭐⭐⭐⭐
+### §E.25 SE-Sync 中消去平移的逐步推导：为什么证书只看旋转 ★★★★
 
 SE-Sync 最重要的技巧是先消去平移。
 
@@ -1315,7 +1315,7 @@ $$
 
 ---
 
-### §E.26 证书验证的数值流程：$\lambda_{\min}$、rank 与 primal-dual gap ⭐⭐⭐
+### §E.26 证书验证的数值流程：$\lambda_{\min}$、rank 与 primal-dual gap ★★★
 
 数学上只要 $S\succeq0$。
 
@@ -1475,7 +1475,7 @@ Uncertified feasible 可以作为初值或候选，但不能写成全局最优�
 
 ---
 
-### §E.27 Certifiable 与鲁棒方法的边界：SDP、GNC、RANSAC、PCM 如何组合 ⭐⭐⭐
+### §E.27 Certifiable 与鲁棒方法的边界：SDP、GNC、RANSAC、PCM 如何组合 ★★★
 
 可认证方法解决的是非凸全局性。
 
@@ -1597,7 +1597,7 @@ TEASER/PCM 的价值就在于用一致性结构替代盲随机采样。
 
 ---
 
-### §E.28 工程边界与开放问题：可认证方法什么时候不应强行使用 ⭐⭐⭐
+### §E.28 工程边界与开放问题：可认证方法什么时候不应强行使用 ★★★
 
 Certifiable perception 的地位很高，但工程使用必须谨慎。
 
@@ -1701,7 +1701,7 @@ SE-Sync、STRIDE、TEASER 的认证步骤多为 batch。
 
 ---
 
-### §E.29 学习时间预算（档位 4：博士毕业级） ⭐
+### §E.29 学习时间预算（档位 4：博士毕业级） ★
 
 | 模块 | 内容 | 时间 |
 |---|---|---|
@@ -1718,7 +1718,7 @@ SE-Sync、STRIDE、TEASER 的认证步骤多为 batch。
 
 ---
 
-### §E.30 自测题（≥6 道） ⭐⭐
+### §E.30 自测题（≥6 道） ★★
 
 1. **写出 3D rotation averaging 的 QCQP 形式**并推导其 Shor SDP 松弛（提示：$R = [R_1^\top, ..., R_n^\top]^\top$ 堆叠；约束 $R_i^\top R_i = I_3$；松弛变量 $Z = RR^\top$ 用块对角约束 $Z_{ii} = I_3$）。对比 MaxCut SDP 的 $X_{ii} = 1$。
 
@@ -1754,7 +1754,7 @@ SE-Sync、STRIDE、TEASER 的认证步骤多为 batch。
 
 ---
 
-### §E.31 Certifiable Perception 的完整方法论总结 ⭐⭐⭐
+### §E.31 Certifiable Perception 的完整方法论总结 ★★★
 
 把本章的所有技术组件放在一起，形成一个完整的方法论：
 
@@ -1810,7 +1810,7 @@ $$\min_Z \langle C, Z\rangle \quad \text{s.t.} \quad \langle A_i, Z\rangle = b_i
 
 ---
 
-### §E.32 从 MaxCut 到 SE-Sync：SDP 松弛的历史演进 ⭐⭐⭐⭐
+### §E.32 从 MaxCut 到 SE-Sync：SDP 松弛的历史演进 ★★★★
 
 SE-Sync 的 SDP 松弛不是凭空出现的，它有清晰的学术演进脉络：
 
@@ -1835,7 +1835,7 @@ SE-Sync 的 SDP 松弛不是凭空出现的，它有清晰的学术演进脉络�
 
 ---
 
-### §E.33 对偶证书的数值实践：如何判断"接近零"是否够好 ⭐⭐⭐
+### §E.33 对偶证书的数值实践：如何判断"接近零"是否够好 ★★★
 
 理论上，松弛紧 ⟺ $\lambda_{\min}(S)=0$。实际中由于浮点精度，$\lambda_{\min}(S)$ 永远不会精确为零。工程判断标准如下：
 
@@ -1878,11 +1878,11 @@ bool certified = (min_eigenvalue > -certification_tolerance);
 
 ### 常见陷阱与故障排查
 
-⚠️ **陷阱一：把 SDP 原问题和对偶问题的不等式方向写反。** 对最小化原问题，弱对偶给出“对偶最优值不超过原问题最优值”。
+⚠ **陷阱一：把 SDP 原问题和对偶问题的不等式方向写反。** 对最小化原问题，弱对偶给出“对偶最优值不超过原问题最优值”。
 
-⚠️ **陷阱二：把 rotation averaging 理解成 $\tau\to\infty$。** $\tau$ 是平移精度，趋于无穷会强化平移约束；纯旋转问题是直接去掉平移因子。
+⚠ **陷阱二：把 rotation averaging 理解成 $\tau\to\infty$。** $\tau$ 是平移精度，趋于无穷会强化平移约束；纯旋转问题是直接去掉平移因子。
 
-⚠️ **陷阱三：在 simplex 上再加 $\|\beta\|_1$ 正则。** 若 $\beta\ge0,\|\beta\|_1=1$，这个正则项是常数，不改变优化解。
+⚠ **陷阱三：在 simplex 上再加 $\|\beta\|_1$ 正则。** 若 $\beta\ge0,\|\beta\|_1=1$，这个正则项是常数，不改变优化解。
 
 | 故障排查现象 | 可能原因 | 处理方式 |
 |---|---|---|
@@ -1970,16 +1970,16 @@ class CertifiableVerifier:
 
 | 资源 | 难度 | 内容 | 建议阅读方式 |
 |------|------|------|------------|
-| Rosen et al. "SE-Sync" IJRR 2019 | ⭐⭐⭐⭐ | PGO certifiable 完整算法 | §III-V + 附录定理证明 |
-| Yang & Carlone "Certifiably Optimal..." TPAMI 2023 | ⭐⭐⭐⭐ | 统一框架 + 外点处理 | §II-IV 理论框架 |
-| Yang et al. "TEASER" T-RO 2021 | ⭐⭐⭐ | 鲁棒配准 + TLS + GNC | §III-IV 算法描述 |
-| Carlone "Estimation Contracts" FnT 2023 | ⭐⭐⭐⭐ | 可认证感知综述 | 全文通读了解全景 |
-| Boyd-Vandenberghe *Convex Optimization* 2004 | ⭐⭐⭐ | SDP/对偶/Slater 基础 | §4.6, §5.9 |
-| Boumal et al. "Non-convex BM" JMLR 2020 | ⭐⭐⭐⭐ | BVB 定理正式证明 | Thm 2 + 讨论 |
-| Tian et al. "DC²-PGO" T-RO 2021 | ⭐⭐⭐⭐ | 分布式可认证 PGO | §III-IV 分布式算法 |
-| Briales-Gonzalez "SE(3) dual quaternion SDP" CVPR 2017 | ⭐⭐⭐⭐ | 稀疏 SDP 与 SE-Sync 等价 | 松弛构造 |
-| Cifuentes et al. FOCM 2022 | ⭐⭐⭐⭐ | QCQP 松弛紧性条件 | 理论最强结果 |
-| SE-Sync 源码 `github.com/david-m-rosen/SE-Sync` | ⭐⭐⭐ | C++ 参考实现 | 跑 sphere2500 + 看 `SESync.cpp` |
+| Rosen et al. "SE-Sync" IJRR 2019 | ★★★★ | PGO certifiable 完整算法 | §III-V + 附录定理证明 |
+| Yang & Carlone "Certifiably Optimal..." TPAMI 2023 | ★★★★ | 统一框架 + 外点处理 | §II-IV 理论框架 |
+| Yang et al. "TEASER" T-RO 2021 | ★★★ | 鲁棒配准 + TLS + GNC | §III-IV 算法描述 |
+| Carlone "Estimation Contracts" FnT 2023 | ★★★★ | 可认证感知综述 | 全文通读了解全景 |
+| Boyd-Vandenberghe *Convex Optimization* 2004 | ★★★ | SDP/对偶/Slater 基础 | §4.6, §5.9 |
+| Boumal et al. "Non-convex BM" JMLR 2020 | ★★★★ | BVB 定理正式证明 | Thm 2 + 讨论 |
+| Tian et al. "DC²-PGO" T-RO 2021 | ★★★★ | 分布式可认证 PGO | §III-IV 分布式算法 |
+| Briales-Gonzalez "SE(3) dual quaternion SDP" CVPR 2017 | ★★★★ | 稀疏 SDP 与 SE-Sync 等价 | 松弛构造 |
+| Cifuentes et al. FOCM 2022 | ★★★★ | QCQP 松弛紧性条件 | 理论最强结果 |
+| SE-Sync 源码 `github.com/david-m-rosen/SE-Sync` | ★★★ | C++ 参考实现 | 跑 sphere2500 + 看 `SESync.cpp` |
 
 ---
 
@@ -1997,7 +1997,7 @@ class CertifiableVerifier:
 
 ---
 
-### 跨章综合练习 ⭐⭐⭐
+### 跨章综合练习 ★★★
 
 **题目**：综合 5-B（因子图优化）+ 5-C（iSAM2）+ 5-E（本章 Certifiable）+ 5-F（鲁棒估计）的知识：
 

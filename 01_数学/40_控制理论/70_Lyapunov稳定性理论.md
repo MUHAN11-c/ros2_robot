@@ -2,7 +2,7 @@
 
 ## 前置自测
 
-📋 **前置自测**（答不出 ≥ 2 题 → 先回前置章节复习）
+◆ **前置自测**（答不出 ≥ 2 题 → 先回前置章节复习）
 
 1. 什么是微分方程 $\dot x = f(x)$ 的平衡点？如何判断平衡点的存在性？
 2. 矩阵特征值的实部与线性系统 $\dot x = Ax$ 解的渐近行为有何关系？
@@ -75,7 +75,7 @@ Lyapunov 稳定性理论
 
 ---
 
-## 7.1 为什么 Lyapunov 稳定性是非线性控制的数学根基 ⭐
+## 7.1 为什么 Lyapunov 稳定性是非线性控制的数学根基 ★
 
 ### 动机：一个无法回避的问题
 
@@ -120,7 +120,7 @@ Lyapunov 的博士论文 "The General Problem of the Stability of Motion"（1892
 
 ---
 
-## 7.2 比较函数体系：class-$\mathcal{K}$, $\mathcal{K}_\infty$, $\mathcal{KL}$ ⭐⭐
+## 7.2 比较函数体系：class-$\mathcal{K}$, $\mathcal{K}_\infty$, $\mathcal{KL}$ ★★
 
 ### 动机：为什么需要比较函数
 
@@ -175,11 +175,11 @@ Lyapunov 的博士论文 "The General Problem of the Stability of Motion"（1892
 
 ### 常见陷阱
 
-⚠️ **概念误区：认为 class-$\mathcal{K}$ 必须无界**
+⚠ **概念误区：认为 class-$\mathcal{K}$ 必须无界**
 
 新手常把 $\mathcal{K}$ 和 $\mathcal{K}_\infty$ 混淆。$\alpha(r) = 1 - e^{-r}$ 是 class-$\mathcal{K}$（严格递增、$\alpha(0)=0$、连续）但有上界 1，不属于 $\mathcal{K}_\infty$。只有 $\mathcal{K}_\infty$ 才能保证 Lyapunov 函数的 radially unbounded 性质。
 
-⚠️ **思维陷阱：认为指数稳定一定是"最好的"**
+⚠ **思维陷阱：认为指数稳定一定是"最好的"**
 
 指数稳定给出 $e^{-\lambda t}$ 衰减率，看似最优。但有的系统可以 finite-time stable（有限时间收敛），如 $\dot x = -\text{sign}(x)|x|^{1/2}$，这比指数稳定"更快"。指数稳定只是渐近稳定中一个特别干净的子类，不是最强的。
 
@@ -191,7 +191,7 @@ Lyapunov 的博士论文 "The General Problem of the Stability of Motion"（1892
 
 ---
 
-## 7.3 平衡点与稳定性的三级定义 ⭐
+## 7.3 平衡点与稳定性的三级定义 ★
 
 ### 动机：什么是"稳定"
 
@@ -248,11 +248,11 @@ GAS 的吸引域是整个 $\mathbb{R}^n$，不存在"逃逸"的初值。
 
 ### 常见陷阱
 
-⚠️ **概念误区：认为收敛就等于渐近稳定**
+⚠ **概念误区：认为收敛就等于渐近稳定**
 
 $\lim_{t \to \infty} x(t) = 0$ **不等于**渐近稳定！必须同时满足 Lyapunov 稳定。经典反例：存在系统使得所有轨迹最终趋向原点，但对任意小的 $\varepsilon$，都存在任意小的初值使轨迹先暴冲到 $\varepsilon$ 之外再回来。
 
-⚠️ **思维陷阱：认为 GAS 蕴含 ES**
+⚠ **思维陷阱：认为 GAS 蕴含 ES**
 
 GAS 只要求所有初值的轨迹最终收敛，但收敛速率可以是任意慢的多项式衰减。$\dot x = -x^3$ 是 GAS（容易验证）但不是 ES。
 
@@ -264,7 +264,7 @@ GAS 只要求所有初值的轨迹最终收敛，但收敛速率可以是任意�
 
 ---
 
-## 7.4 Lyapunov 直接法：完整定理与严格证明 ⭐⭐
+## 7.4 Lyapunov 直接法：完整定理与严格证明 ★★
 
 ### 动机：能量下降 $\Rightarrow$ 稳定
 
@@ -287,7 +287,7 @@ $$\dot V(x) = \nabla V(x) \cdot f(x) = \sum_{i=1}^n \frac{\partial V}{\partial x
 
 注意 $\dot V$ 是状态 $x$ 的函数，**不需要知道轨迹** $x(t)$——这正是直接法的力量所在。
 
-### 定理 7.4.1（Lyapunov 稳定性定理，Khalil 3ed Thm 4.1）⭐⭐
+### 定理 7.4.1（Lyapunov 稳定性定理，Khalil 3ed Thm 4.1）★★
 
 **定理陈述**：考虑 $\dot x = f(x)$，$f:\mathcal{D} \to \mathbb{R}^n$ 局部 Lipschitz，$f(0) = 0$。若存在 $C^1$ 函数 $V:\mathcal{D} \to \mathbb{R}$ 满足：
 
@@ -404,7 +404,7 @@ Radially unbounded 等价于存在 $\alpha_1 \in \mathcal{K}_\infty$ 使 $V(x) \
 
 ### 常见陷阱
 
-⚠️ **编程陷阱：计算 $\dot V$ 时忘记链式法则**
+⚠ **编程陷阱：计算 $\dot V$ 时忘记链式法则**
 
 $\dot V$ 不是对 $t$ 直接求导。正确计算是：
 
@@ -412,11 +412,11 @@ $$\dot V = \nabla V \cdot f = \frac{\partial V}{\partial x_1} f_1 + \frac{\parti
 
 这是沿向量场 $f$ 的 Lie 导数。新手常犯的错误是把 $V = x_1^2 + x_2^2$ 直接"对 $t$ 求导"得到 $2x_1 + 2x_2$（这是对 $x$ 求梯度，不是 $\dot V$）。
 
-⚠️ **概念误区：$\dot V = 0$ 意味着系统不动**
+⚠ **概念误区：$\dot V = 0$ 意味着系统不动**
 
 $\dot V(x) = 0$ 不意味着 $\dot x = 0$！它只意味着轨迹在 $V$ 的等值面上移动。系统完全可以在 $V$ 的 level set 上高速运动而 $V$ 不变——就像卫星在等重力势面上绕行。
 
-⚠️ **思维陷阱：$V$ 正定 + $\dot V$ 负定就一定 GAS**
+⚠ **思维陷阱：$V$ 正定 + $\dot V$ 负定就一定 GAS**
 
 不对！$V$ 正定 + $\dot V$ 负定只给**局部**渐近稳定。要 GAS 必须加 radially unbounded。直觉：$V$ 在远处可能"躺平"，无法把远处的轨迹"拉"回来。
 
@@ -428,7 +428,7 @@ $\dot V(x) = 0$ 不意味着 $\dot x = 0$！它只意味着轨迹在 $V$ 的等�
 
 ---
 
-## 7.5 LaSalle 不变集原理：半负定 $\dot V$ 的救命稻草 ⭐⭐
+## 7.5 LaSalle 不变集原理：半负定 $\dot V$ 的救命稻草 ★★
 
 ### 动机：工程中 $\dot V < 0$ 几乎不可能
 
@@ -535,15 +535,15 @@ LaSalle 应用：
 
 ### 常见陷阱
 
-⚠️ **概念误区：$E$ 就是最大不变集 $M$**
+⚠ **概念误区：$E$ 就是最大不变集 $M$**
 
 $E = \{\dot V = 0\}$ 通常比 $M$ 大得多！$M$ 是 $E$ 中系统轨迹能永远停留的那部分。上例中 $E$ 是整条 $x_2 = 0$ 轴，但 $M$ 只有原点（和 $(\pm\pi, 0)$ 等鞍点）。找 $M$ 时必须把 $E$ 中的点代入系统方程检查不变性。
 
-⚠️ **思维陷阱：LaSalle 给出 GAS**
+⚠ **思维陷阱：LaSalle 给出 GAS**
 
 LaSalle 原理需要**紧正不变集** $\Omega$。如果不能构造全局的紧不变集（比如 $V$ 不 radially unbounded），则只能得到局部结论。要 GAS 必须额外验证 $V$ radially unbounded + 全局 $\dot V \le 0$。
 
-⚠️ **编程陷阱：数值仿真中 $\dot V = 0$ 的误判**
+⚠ **编程陷阱：数值仿真中 $\dot V = 0$ 的误判**
 
 在数值仿真中，由于浮点精度，$\dot V$ 可能在 $E$ 附近振荡而非精确为零。不要用 `if dot_V == 0` 判断，应该用容差 `if abs(dot_V) < tol`。
 
@@ -555,7 +555,7 @@ LaSalle 原理需要**紧正不变集** $\Omega$。如果不能构造全局的�
 
 ---
 
-## 7.6 指数稳定与 Lyapunov 方程 ⭐⭐
+## 7.6 指数稳定与 Lyapunov 方程 ★★
 
 ### 动机：为什么需要量化衰减速率
 
@@ -614,11 +614,11 @@ $$P = \int_0^\infty e^{A^\top t} Q e^{At} dt.$$
 
 ### 常见陷阱
 
-⚠️ **编程陷阱：解 Lyapunov 方程时矩阵不对称**
+⚠ **编程陷阱：解 Lyapunov 方程时矩阵不对称**
 
 MATLAB 的 `lyap(A', Q)` 或 Python 的 `scipy.linalg.solve_continuous_lyapunov(A.T, -Q)` 要求输入正确的转置形式。常见错误是把 $A^\top P + PA = -Q$ 写反为 $AP + PA^\top = -Q$（这是**对偶** Lyapunov 方程，对应可控性 Gramian）。
 
-⚠️ **概念误区：线性化稳定意味着非线性系统全局稳定**
+⚠ **概念误区：线性化稳定意味着非线性系统全局稳定**
 
 间接法只给出**局部**结论。非线性系统可能在原点附近指数稳定，但远处有另一个吸引子或无界轨迹。例如 $\dot x = -x + x^3$ 在原点局部稳定（线性化 $A = -1$），但 $|x| > 1$ 时不稳定。
 
@@ -630,7 +630,7 @@ MATLAB 的 `lyap(A', Q)` 或 Python 的 `scipy.linalg.solve_continuous_lyapunov(
 
 ---
 
-## 7.7 Chetaev 不稳定性定理 ⭐⭐
+## 7.7 Chetaev 不稳定性定理 ★★
 
 ### 动机
 
@@ -654,7 +654,7 @@ Lyapunov 方法告诉你"找到 $V$ 使 $\dot V \le 0$ 则稳定"。但如果你
 
 ---
 
-## 7.8 Lyapunov 函数的系统构造方法 ⭐⭐⭐
+## 7.8 Lyapunov 函数的系统构造方法 ★★★
 
 ### 动机：Lyapunov 方法的"阿喀琉斯之踵"
 
@@ -662,7 +662,7 @@ Lyapunov 直接法的逻辑极其优美——但它有一个根本性的实践�
 
 这一节系统介绍五种构造方法，从最直觉的（能量法）到最计算化的（SOS、Neural），形成一个完整的工具箱。
 
-### 方法一：能量法（物理直觉）⭐
+### 方法一：能量法（物理直觉）★
 
 **核心思想**：机械系统的总能量 $V = T + U$（动能 + 势能）天然是 Lyapunov 函数候选。
 
@@ -688,7 +688,7 @@ $$= \dot q^\top (\frac{1}{2}\dot M - C)\dot q + \dot q^\top \tau_d = -\dot q^\to
 
 **局限**：能量法只给 $\dot V \le 0$ 半负定，需要 LaSalle 辅助判断渐近稳定。
 
-### 方法二：二次型 $V = x^\top P x$ + Lyapunov 方程 ⭐
+### 方法二：二次型 $V = x^\top P x$ + Lyapunov 方程 ★
 
 **适用条件**：线性系统或非线性系统在平衡点附近的局部分析。
 
@@ -700,7 +700,7 @@ $$= \dot q^\top (\frac{1}{2}\dot M - C)\dot q + \dot q^\top \tau_d = -\dot q^\to
 
 **对非线性系统的扩展**：$\dot V = x^\top (A^\top P + PA) x + \text{高阶项} = -x^\top Qx + O(\|x\|^3)$。当 $\|x\|$ 足够小时，$-x^\top Qx$ 主导，$\dot V < 0$——这给出局部指数稳定。
 
-### 方法三：Krasovskii 法 ⭐⭐
+### 方法三：Krasovskii 法 ★★
 
 **定理（Krasovskii）**：若 $f$ 连续可微且 Jacobian $J(x) = \partial f / \partial x$ 满足
 
@@ -712,7 +712,7 @@ $$J(x) + J(x)^\top \preceq -\alpha I, \quad \alpha > 0, \quad \forall x \in \mat
 
 **局限**：条件 $J + J^\top \preceq -\alpha I$ 非常强，很多系统不满足（要求雅可比处处负定）。
 
-### 方法四：变量梯度法 ⭐⭐⭐
+### 方法四：变量梯度法 ★★★
 
 **思想**：不从"猜 $V$"出发，而是从"猜 $\nabla V$"出发。
 
@@ -726,7 +726,7 @@ $$J(x) + J(x)^\top \preceq -\alpha I, \quad \alpha > 0, \quad \forall x \in \mat
 3. 计算 $\dot V = \nabla V \cdot f$ 并要求负定
 4. 联合确定参数
 
-### 方法五：SOS 多项式搜索 ⭐⭐⭐
+### 方法五：SOS 多项式搜索 ★★★
 
 **核心思想**：对多项式系统 $\dot x = f(x)$，参数化 $V$ 为多项式，把 Lyapunov 条件转化为半定规划（SDP）。
 
@@ -743,7 +743,7 @@ $$J(x) + J(x)^\top \preceq -\alpha I, \quad \alpha > 0, \quad \forall x \in \mat
 **优势**：完全自动化，可同时优化吸引域大小。
 **局限**：限于多项式系统；随维数和多项式阶数增长计算量快速上升；SOS 是非负性的充分条件（有gap）。
 
-### 方法六：学习驱动（Neural Lyapunov）⭐⭐⭐⭐
+### 方法六：学习驱动（Neural Lyapunov）★★★★
 
 **思想**：用神经网络 $V_\theta(x)$ 参数化 Lyapunov 函数，训练 loss = Lyapunov 条件违反量，再用 SMT/SOS 全域验证。
 
@@ -765,11 +765,11 @@ $$J(x) + J(x)^\top \preceq -\alpha I, \quad \alpha > 0, \quad \forall x \in \mat
 
 ### 常见陷阱
 
-⚠️ **思维陷阱：认为"找不到 V 就是不稳定"**
+⚠ **思维陷阱：认为"找不到 V 就是不稳定"**
 
 逆定理（7.10 节）告诉我们：稳定系统一定存在 Lyapunov 函数。找不到只意味着构造技巧不够或计算能力不足——不能据此判断不稳定。
 
-⚠️ **编程陷阱：SOS 搜索时多项式阶数太低**
+⚠ **编程陷阱：SOS 搜索时多项式阶数太低**
 
 如果 $V$ 的阶数选太低（如只用二次多项式），SOS 可能声称"不可行"（找不到满足条件的 $V$）。这不代表系统不稳定——只是搜索空间太小。应逐步增加阶数。
 
@@ -781,7 +781,7 @@ $$J(x) + J(x)^\top \preceq -\alpha I, \quad \alpha > 0, \quad \forall x \in \mat
 
 ---
 
-## 7.9 逆定理：稳定性与 Lyapunov 函数的完全等价 ⭐⭐⭐
+## 7.9 逆定理：稳定性与 Lyapunov 函数的完全等价 ★★★
 
 ### 动机：Lyapunov 方法是否"完备"
 
@@ -830,11 +830,11 @@ Kurzweil 的结果把 Massera 从局部推广到全局。原文俄文发表于 *
 
 ### 常见陷阱
 
-⚠️ **概念误区：逆定理意味着能构造出 Lyapunov 函数**
+⚠ **概念误区：逆定理意味着能构造出 Lyapunov 函数**
 
 逆定理是**存在性定理**，不是构造性定理。Massera/Kurzweil 的证明虽然给出了 $V$ 的积分形式，但计算该积分需要知道系统的精确流（即解方程）——这又回到了起点。逆定理的价值是哲学性的：保证搜索方向正确。
 
-⚠️ **思维陷阱：认为非光滑系统没有逆定理**
+⚠ **思维陷阱：认为非光滑系统没有逆定理**
 
 Teel-Praly 2000 和 Clarke-Ledyaev-Stern 1998 给出了非光滑系统（Filippov 解意义下）的逆定理推广。只要系统稳定，即使动力学不连续，也存在（Clarke 广义梯度意义下的）Lyapunov 函数。
 
@@ -846,7 +846,7 @@ Teel-Praly 2000 和 Clarke-Ledyaev-Stern 1998 给出了非光滑系统（Filippo
 
 ---
 
-## 7.10 ISS：输入到状态稳定性 ⭐⭐⭐
+## 7.10 ISS：输入到状态稳定性 ★★★
 
 ### 动机：真实系统从不是封闭的
 
@@ -917,7 +917,7 @@ $$\dot V \le -x^4 + \frac{1}{2}x^4 + \frac{1}{2}u^2 = -\frac{1}{2}x^4 + \frac{1}
 
 ISS 增益：$\chi(r) = r^{1/2}$（由 $\alpha(\chi(r)) = \sigma(r)$ 解出）。
 
-### ISS 小增益定理 ⭐⭐⭐
+### ISS 小增益定理 ★★★
 
 **定理 7.10.4（Jiang-Teel-Praly 1994）**：考虑两个子系统的反馈互联：
 
@@ -949,11 +949,11 @@ iISS 比 ISS 弱：ISS 要求有界输入 $\Rightarrow$ 有界状态，iISS 只�
 
 ### 常见陷阱
 
-⚠️ **概念误区：ISS 意味着扰动消失后状态趋向零**
+⚠ **概念误区：ISS 意味着扰动消失后状态趋向零**
 
 不完全正确。ISS 定义中 $\gamma(\sup\|u\|)$ 项保证的是"有界输入 $\Rightarrow$ 最终有界状态"。若输入为零（$u \equiv 0$），则退化为 $\|x(t)\| \le \beta(\|x_0\|, t) \to 0$——确实趋向零。但若 $u$ 只是减小而非消失，状态会趋向 $\gamma(\limsup\|u\|)$ 邻域而非原点。
 
-⚠️ **思维陷阱：小增益条件对所有系统都容易验证**
+⚠ **思维陷阱：小增益条件对所有系统都容易验证**
 
 计算非线性增益 $\gamma_1, \gamma_2$ 通常本身就很困难（需要找 ISS-Lyapunov 函数）。小增益定理的力量在于**一旦知道增益就能直接判断互联稳定性**，省去了为整体系统重新构造 Lyapunov 函数。
 
@@ -965,7 +965,7 @@ iISS 比 ISS 弱：ISS 要求有界输入 $\Rightarrow$ 有界状态，iISS 只�
 
 ---
 
-## 7.11 级联系统稳定性 ⭐⭐⭐
+## 7.11 级联系统稳定性 ★★★
 
 ### 动机
 
@@ -998,7 +998,7 @@ $$\dot x_2 = f_2(x_1, x_2) \qquad (\text{下层，受上层驱动})$$
 
 ### 常见陷阱
 
-⚠️ **概念误区：条件 1+2 就够了，不需要条件 3**
+⚠ **概念误区：条件 1+2 就够了，不需要条件 3**
 
 反例：$\dot x_1 = -x_1$, $\dot x_2 = -x_2 + x_1 x_2^2$。上层 GAS（$x_1 \to 0$ 指数衰减），下层单独 GAS（$\dot x_2 = -x_2$）。但如果 $x_2(0)$ 很大，在 $x_1$ 衰减之前，项 $x_1 x_2^2$ 可能使 $x_2$ 爆炸。需要 ISS 类增长条件来排除这种情况。
 
@@ -1009,7 +1009,7 @@ $$\dot x_2 = f_2(x_1, x_2) \qquad (\text{下层，受上层驱动})$$
 
 ---
 
-## 7.12 Lyapunov 与控制设计：反步法（Backstepping）⭐⭐⭐
+## 7.12 Lyapunov 与控制设计：反步法（Backstepping）★★★
 
 ### 动机
 
@@ -1082,7 +1082,7 @@ $$= -c_1 x_1^2 + x_1 z_2 + z_2 u + c_1 z_2^2 - c_1^2 x_1 z_2.$$
 
 ---
 
-## 7.13 典型例题：Van der Pol 振子 ⭐⭐
+## 7.13 典型例题：Van der Pol 振子 ★★
 
 ### 系统描述
 
@@ -1118,7 +1118,7 @@ $$\dot V = x_1 x_2 + x_2(-x_1 + \mu(1-x_1^2)x_2) = \mu(1-x_1^2)x_2^2.$$
 
 ---
 
-## 7.14 典型例题：机器人关节 PD 控制稳定性证明 ⭐⭐
+## 7.14 典型例题：机器人关节 PD 控制稳定性证明 ★★
 
 ### 系统描述
 
@@ -1196,7 +1196,7 @@ $$M\ddot e + C\dot e + K_D\dot e + K_P e = g(q_d) - g(q).$$
 
 ---
 
-## 7.15 吸引域估计与 Zubov 方程 ⭐⭐⭐
+## 7.15 吸引域估计与 Zubov 方程 ★★★
 
 ### 动机
 
@@ -1233,7 +1233,7 @@ $$\nabla V(x) \cdot f(x) = -\phi(x)(1-V(x))\sqrt{1 + \|f(x)\|^2}.$$
 
 ---
 
-## 7.16 比较定理与估计技术 ⭐⭐
+## 7.16 比较定理与估计技术 ★★
 
 ### 动机
 
@@ -1271,20 +1271,20 @@ Lyapunov 函数告诉你"轨迹趋向零"，但没有告诉你"多快"。比较�
 
 | 知识点 | 核心内容 | 难度 | 关键应用 |
 |--------|---------|------|----------|
-| 比较函数 | $\mathcal{K}$, $\mathcal{K}_\infty$, $\mathcal{KL}$ 三类 | ⭐⭐ | 稳定性统一语言 |
-| 三级稳定性 | S / AS / ES 的 $\varepsilon$-$\delta$ 与比较函数刻画 | ⭐ | 基础判断 |
-| Lyapunov 直接法 | 正定 $V$ + 负定/半定 $\dot V$ | ⭐⭐ | 所有稳定性证明的基石 |
-| LaSalle 原理 | 半负定 $\dot V$ + 最大不变集 | ⭐⭐ | 机械系统、PD 控制 |
-| 指数稳定 | 二次夹 + Lyapunov 方程 | ⭐⭐ | 线性系统、局部分析 |
-| Chetaev 定理 | 不稳定性判据 | ⭐⭐ | 平衡点分类 |
-| 构造方法 | 能量/二次型/Krasovskii/变量梯度/SOS/Neural | ⭐⭐⭐ | 实际系统分析 |
-| 逆定理 | AS $\Rightarrow$ $\exists$ 光滑 $V$ | ⭐⭐⭐ | 哲学完备性 |
-| ISS | 带扰动的鲁棒稳定性 | ⭐⭐⭐ | 互联系统、扰动分析 |
-| 小增益定理 | $\gamma_1 \circ \gamma_2 < \text{id}$ | ⭐⭐⭐ | 分布式系统、级联系统 |
-| 级联系统 | 层级控制结构的稳定性 | ⭐⭐⭐ | MPC + 底层控制 |
-| 反步法 | 递归 Lyapunov 设计 | ⭐⭐⭐ | 非线性控制器设计 |
-| 吸引域估计 | sublevel set + SOS + Zubov | ⭐⭐⭐ | 安全性验证 |
-| 比较定理 | $\dot V \le -\alpha(V)$ 的衰减估计 | ⭐⭐ | 收敛速率量化 |
+| 比较函数 | $\mathcal{K}$, $\mathcal{K}_\infty$, $\mathcal{KL}$ 三类 | ★★ | 稳定性统一语言 |
+| 三级稳定性 | S / AS / ES 的 $\varepsilon$-$\delta$ 与比较函数刻画 | ★ | 基础判断 |
+| Lyapunov 直接法 | 正定 $V$ + 负定/半定 $\dot V$ | ★★ | 所有稳定性证明的基石 |
+| LaSalle 原理 | 半负定 $\dot V$ + 最大不变集 | ★★ | 机械系统、PD 控制 |
+| 指数稳定 | 二次夹 + Lyapunov 方程 | ★★ | 线性系统、局部分析 |
+| Chetaev 定理 | 不稳定性判据 | ★★ | 平衡点分类 |
+| 构造方法 | 能量/二次型/Krasovskii/变量梯度/SOS/Neural | ★★★ | 实际系统分析 |
+| 逆定理 | AS $\Rightarrow$ $\exists$ 光滑 $V$ | ★★★ | 哲学完备性 |
+| ISS | 带扰动的鲁棒稳定性 | ★★★ | 互联系统、扰动分析 |
+| 小增益定理 | $\gamma_1 \circ \gamma_2 < \text{id}$ | ★★★ | 分布式系统、级联系统 |
+| 级联系统 | 层级控制结构的稳定性 | ★★★ | MPC + 底层控制 |
+| 反步法 | 递归 Lyapunov 设计 | ★★★ | 非线性控制器设计 |
+| 吸引域估计 | sublevel set + SOS + Zubov | ★★★ | 安全性验证 |
+| 比较定理 | $\dot V \le -\alpha(V)$ 的衰减估计 | ★★ | 收敛速率量化 |
 
 ---
 
@@ -1304,14 +1304,14 @@ Lyapunov 函数告诉你"轨迹趋向零"，但没有告诉你"多快"。比较�
 
 | 资源 | 作者/来源 | 难度 | 内容 |
 |------|----------|------|------|
-| *Nonlinear Systems* Ch.4 | Khalil, 3ed 2002 | ⭐⭐ | Lyapunov 稳定性经典教材，证明最完整 |
-| *Underactuated Robotics* Ch.9 | Tedrake, MIT | ⭐⭐ | 机器人视角 + Drake 代码 |
-| *Mathematical Control Theory* Ch.5-7 | Sontag, 2ed 1998 | ⭐⭐⭐ | ISS 创始人视角，免费 PDF |
-| *Applied Nonlinear Control* Ch.3-4 | Slotine-Li, 1991 | ⭐ | 工程导向，证明简洁 |
-| *Nonlinear Dynamical Systems* | Haddad-Chellaboina, 2008 | ⭐⭐⭐ | 现代综合，涵盖所有变种 |
-| Tsukamoto-Chung-Slotine 2021 | *Annual Reviews in Control* | ⭐⭐⭐⭐ | Contraction Theory 最新综述 |
-| Dawson-Gao-Fan 2023 | *IEEE Trans. Robotics* | ⭐⭐⭐⭐ | Neural Lyapunov/CBF 综述 |
-| DR_CAN B站视频 | 中文讲解 | ⭐ | 中文入门首选 |
+| *Nonlinear Systems* Ch.4 | Khalil, 3ed 2002 | ★★ | Lyapunov 稳定性经典教材，证明最完整 |
+| *Underactuated Robotics* Ch.9 | Tedrake, MIT | ★★ | 机器人视角 + Drake 代码 |
+| *Mathematical Control Theory* Ch.5-7 | Sontag, 2ed 1998 | ★★★ | ISS 创始人视角，免费 PDF |
+| *Applied Nonlinear Control* Ch.3-4 | Slotine-Li, 1991 | ★ | 工程导向，证明简洁 |
+| *Nonlinear Dynamical Systems* | Haddad-Chellaboina, 2008 | ★★★ | 现代综合，涵盖所有变种 |
+| Tsukamoto-Chung-Slotine 2021 | *Annual Reviews in Control* | ★★★★ | Contraction Theory 最新综述 |
+| Dawson-Gao-Fan 2023 | *IEEE Trans. Robotics* | ★★★★ | Neural Lyapunov/CBF 综述 |
+| DR_CAN B站视频 | 中文讲解 | ★ | 中文入门首选 |
 
 ---
 
@@ -1342,7 +1342,7 @@ Lyapunov 函数告诉你"轨迹趋向零"，但没有告诉你"多快"。比较�
 
 ---
 
-## 7.17 非自治系统与一致稳定性 ⭐⭐⭐
+## 7.17 非自治系统与一致稳定性 ★★★
 
 ### 动机：为什么时变系统需要额外小心
 
@@ -1388,11 +1388,11 @@ LaSalle 不变集原理**仅对自治系统成立**（因为 $\omega$-极限集�
 
 ### 常见陷阱
 
-⚠️ **概念误区：对时变系统直接套自治定理**
+⚠ **概念误区：对时变系统直接套自治定理**
 
 非自治系统的 $V(x, t)$ 必须满足**一致夹**条件。如果 $V = (1 + \sin t) x^2$，虽然正定但上界不一致（$t$ 依赖），定理失效。
 
-⚠️ **思维陷阱：把 Barbalat 引理等同于 LaSalle**
+⚠ **思维陷阱：把 Barbalat 引理等同于 LaSalle**
 
 Barbalat 引理的结论是 $\dot V \to 0$（沿时间），不是"轨迹趋向不变集"。它没有 LaSalle 那么强的结论——但对非自治系统是唯一选择。
 
@@ -1404,7 +1404,7 @@ Barbalat 引理的结论是 $\dot V \to 0$（沿时间），不是"轨迹趋向�
 
 ---
 
-## 7.18 切换系统与多 Lyapunov 函数 ⭐⭐⭐
+## 7.18 切换系统与多 Lyapunov 函数 ★★★
 
 ### 动机：腿足机器人的本质是切换系统
 
@@ -1452,11 +1452,11 @@ $\mu$ 是 $V_j/V_i$ 的跳变比上界，$\lambda_0$ 是各子系统最小衰减
 
 ### 常见陷阱
 
-⚠️ **概念误区：各子系统稳定 $\Rightarrow$ 切换稳定**
+⚠ **概念误区：各子系统稳定 $\Rightarrow$ 切换稳定**
 
 这是最常见的错误！如上所述，两个稳定系统快切换可以发散。必须要么有共同 $V$，要么满足 dwell-time 条件。
 
-⚠️ **思维陷阱：dwell-time 越大越安全**
+⚠ **思维陷阱：dwell-time 越大越安全**
 
 虽然大 dwell-time 保证稳定，但也限制了系统响应速度。机器人步态切换太慢会导致跌倒（来不及抬腿避障）。实际设计需要平衡稳定性与敏捷性。
 
@@ -1468,7 +1468,7 @@ $\mu$ 是 $V_j/V_i$ 的跳变比上界，$\lambda_0$ 是各子系统最小衰减
 
 ---
 
-## 7.19 随机 Lyapunov 与 Ito 公式 ⭐⭐⭐⭐
+## 7.19 随机 Lyapunov 与 Ito 公式 ★★★★
 
 ### 动机：噪声无处不在
 
@@ -1506,7 +1506,7 @@ $$\mathcal{L}V(x) = \sum_i b_i(x)\frac{\partial V}{\partial x_i} + \frac{1}{2}\s
 
 ### 常见陷阱
 
-⚠️ **编程陷阱：随机 Lyapunov 漏掉二阶项**
+⚠ **编程陷阱：随机 Lyapunov 漏掉二阶项**
 
 仅用 $\nabla V \cdot b$ 是把随机系统当确定性处理。Ito 公式中 $\frac{1}{2}\text{tr}(\sigma\sigma^\top \nabla^2 V)$ **必须**算入。这个二阶项可以是正的也可以是负的——有时噪声反而有助于稳定（noise-induced stabilization）。
 
@@ -1517,7 +1517,7 @@ $$\mathcal{L}V(x) = \sum_i b_i(x)\frac{\partial V}{\partial x_i} + \frac{1}{2}\s
 
 ---
 
-## 7.20 Contraction Theory 简介 ⭐⭐⭐⭐
+## 7.20 Contraction Theory 简介 ★★★★
 
 ### 动机：超越平衡点的稳定性
 
@@ -1617,12 +1617,12 @@ $$F = (\dot\Theta + \Theta J)\Theta^{-1}, \quad J = \frac{\partial f}{\partial x
 
 | 教材 | 作者 | 特色 | 难度 | 获取方式 |
 |------|------|------|------|----------|
-| *Nonlinear Systems* 3ed | Khalil, 2002 | 非线性控制"圣经"，证明完整 | ⭐⭐ | 机构图书馆 |
-| *Applied Nonlinear Control* | Slotine-Li, 1991 | 工程导向，适合快速入门 | ⭐ | 图书馆 |
-| *Mathematical Control Theory* 2ed | Sontag, 1998 | ISS 创始人视角，免费 PDF | ⭐⭐⭐ | sontaglab.org 免费 |
-| *Underactuated Robotics* Ch.9 | Tedrake | 机器人 + Drake 代码 | ⭐⭐ | underactuated.mit.edu |
-| *Nonlinear Dynamical Systems* | Haddad-Chellaboina, 2008 | 百科全书式，覆盖所有变种 | ⭐⭐⭐ | Springer |
-| *Switching in Systems and Control* | Liberzon, 2003 | 切换系统专著 | ⭐⭐⭐ | Birkhauser |
+| *Nonlinear Systems* 3ed | Khalil, 2002 | 非线性控制"圣经"，证明完整 | ★★ | 机构图书馆 |
+| *Applied Nonlinear Control* | Slotine-Li, 1991 | 工程导向，适合快速入门 | ★ | 图书馆 |
+| *Mathematical Control Theory* 2ed | Sontag, 1998 | ISS 创始人视角，免费 PDF | ★★★ | sontaglab.org 免费 |
+| *Underactuated Robotics* Ch.9 | Tedrake | 机器人 + Drake 代码 | ★★ | underactuated.mit.edu |
+| *Nonlinear Dynamical Systems* | Haddad-Chellaboina, 2008 | 百科全书式，覆盖所有变种 | ★★★ | Springer |
+| *Switching in Systems and Control* | Liberzon, 2003 | 切换系统专著 | ★★★ | Birkhauser |
 
 ### 视频课程
 
@@ -1713,7 +1713,7 @@ $$F = (\dot\Theta + \Theta J)\Theta^{-1}, \quad J = \frac{\partial f}{\partial x
 
 ---
 
-## 附录 A：LaSalle 不变集原理的详细应用案例 ⭐⭐
+## 附录 A：LaSalle 不变集原理的详细应用案例 ★★
 
 ### A.1 二自由度机械臂 PD 控制
 
@@ -1775,7 +1775,7 @@ $E = \{V_C = 0\}$。若 $V_C \equiv 0$，则 $L\dot I_L = V_C = 0$，即 $I_L = 
 
 ---
 
-## 附录 B：ISS 小增益定理的详细证明思路 ⭐⭐⭐
+## 附录 B：ISS 小增益定理的详细证明思路 ★★★
 
 ### B.1 证明的核心思想
 
@@ -1809,7 +1809,7 @@ $$\gamma_1 \circ \gamma_2(r) = \|G_1\|_\infty \|G_2\|_\infty \cdot r < r \quad \
 
 ---
 
-## 附录 C：比较函数的高级性质与常用不等式 ⭐⭐
+## 附录 C：比较函数的高级性质与常用不等式 ★★
 
 ### C.1 class-$\mathcal{K}$ 函数的上下界关系
 
@@ -1839,7 +1839,7 @@ $$\nabla V \cdot g(x) u \le |\nabla V \cdot g(x)| \cdot |u| \le \frac{\epsilon}{
 
 ---
 
-## 附录 D：Lyapunov 稳定性的 Python 验证代码框架 ⭐⭐
+## 附录 D：Lyapunov 稳定性的 Python 验证代码框架 ★★
 
 ### D.1 符号计算 $\dot V$
 
@@ -1941,7 +1941,7 @@ print(f"||x(t)|| <= {k_overshoot:.2f} * ||x(0)|| * exp(-{lambda_rate:.4f} * t)")
 
 ---
 
-## 附录 E：从 Lyapunov 到 Control Lyapunov Function (CLF) ⭐⭐⭐
+## 附录 E：从 Lyapunov 到 Control Lyapunov Function (CLF) ★★★
 
 ### E.1 CLF 的精确定义
 
@@ -1987,7 +1987,7 @@ MPC 闭环稳定性的标准方法（Mayne-Rawlings 2000）是取终端代价 $V
 
 ---
 
-## 附录 F：补充练习题（跨章综合）⭐⭐
+## 附录 F：补充练习题（跨章综合）★★
 
 ### F.1 综合题：观测器-控制器分离的 ISS 分析
 
@@ -2022,7 +2022,7 @@ $$M(q)\ddot q + C(q, \dot q)\dot q + g(q) = B\tau,$$
 
 ---
 
-## 附录 G：Lyapunov 方法的历史演进与学术生态 ⭐
+## 附录 G：Lyapunov 方法的历史演进与学术生态 ★
 
 ### G.1 从 Lagrange 到 Lyapunov
 

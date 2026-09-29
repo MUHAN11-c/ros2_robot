@@ -10,7 +10,7 @@
 
 ## 前置自测
 
-📋 **答不出 ≥ 3 题 → 先回前置章节复习**
+◆ **答不出 ≥ 3 题 → 先回前置章节复习**
 
 > 本章直接依赖 Ch14 的人形控制经验。如果你还没有在 Ch14 中跑通 G1 的 velocity task 并理解 per-joint action scale 和 variable posture，强烈建议先完成。
 
@@ -35,7 +35,7 @@
 
 Ch14 中的 velocity task 给 G1 一个速度命令 $(v_x, v_y, \omega_z)$，策略自由决定如何走。Motion imitation 给策略一个完整的参考运动——每一帧每个关节的目标位置——策略必须忠实复现。这是一个更强的约束，但也提供了更丰富的学习信号。
 
-## 15.1 在 mjlab 中跑通 G1 Tracking Task ⭐⭐⭐
+## 15.1 在 mjlab 中跑通 G1 Tracking Task ★★★
 
 > **这一节解决什么问题**：用 mjlab 的 BeyondMimic 管线从零完成一个 G1 motion tracking task——从数据准备到训练到评估。
 
@@ -487,17 +487,17 @@ Step 5: 检查动作难度
   → 尝试增大 safe_pose_duration 或降低 tracking_error termination 阈值
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：motion file 的帧率与训练帧率不匹配**。错误做法：直接使用 30 Hz 的 MoCap 文件训练 50 Hz 的 tracking task。现象：策略看到的参考帧每 1.67 个仿真步才更新一次——中间步看到重复的帧，tracking reward 出现阶梯状跳变。正确做法：用 `csv_to_npz.py --input-fps 30 --output-fps 50` 对齐帧率后再训练。
+⚠ **编程陷阱：motion file 的帧率与训练帧率不匹配**。错误做法：直接使用 30 Hz 的 MoCap 文件训练 50 Hz 的 tracking task。现象：策略看到的参考帧每 1.67 个仿真步才更新一次——中间步看到重复的帧，tracking reward 出现阶梯状跳变。正确做法：用 `csv_to_npz.py --input-fps 30 --output-fps 50` 对齐帧率后再训练。
 
 💡 **概念误区：tracking reward 越高动作越像**。tracking reward 使用 exponential kernel，σ 决定了"多接近算好"。σ 太大时 reward 容易饱和（误差 5cm 和误差 1cm 的 reward 差异不大）；σ 太小时 reward 信号稀疏（只有极接近参考时才有明显 reward）。标准配置 σ=0.1m 是经验平衡点。
 
 🧠 **思维陷阱：velocity reward 和 tracking reward 可以同时使用**。理论上可以，但实践中会产生冲突：velocity reward 鼓励策略按命令走，tracking reward 要求策略跟踪参考动作。如果参考动作的速度和 velocity command 不一致，两个 reward 会相互矛盾。标准做法是二选一，或者用 HOVER 的 mask 机制明确分离两种模态。
 
-⚠️ **编程陷阱：body_names 拼写错误静默失败**。错误做法：`body_names=["torso", "left_foot", ...]`（但 MJCF 中的名字实际是 `torso_link`）。现象：函数返回零 tensor，reward 看起来在涨但实际上缺少关键 body 的约束——策略的 torso 完全不跟踪参考。正确做法：训练前用 zero play 打印所有 body_names 对应的 body_id，确认均非空。
+⚠ **编程陷阱：body_names 拼写错误静默失败**。错误做法：`body_names=["torso", "left_foot", ...]`（但 MJCF 中的名字实际是 `torso_link`）。现象：函数返回零 tensor，reward 看起来在涨但实际上缺少关键 body 的约束——策略的 torso 完全不跟踪参考。正确做法：训练前用 zero play 打印所有 body_names 对应的 body_id，确认均非空。
 
-⚠️ **编程陷阱：RSI 初始化到关节超限位置**。使用 uniform RSI 时，如果参考动作某些帧的关节角度超出机器人限位（retarget 不精确），episode 从这些帧开始会把机器人初始化到不可行状态——关节被 clamp 到限位，产生大量 `dof_pos_limits` penalty，策略从"被惩罚的初始状态"开始学习。正确做法：retarget 后用 physics filter（Ch15.5）检查所有帧的关节是否在限位内，超限帧从 RSI 候选集中剔除。
+⚠ **编程陷阱：RSI 初始化到关节超限位置**。使用 uniform RSI 时，如果参考动作某些帧的关节角度超出机器人限位（retarget 不精确），episode 从这些帧开始会把机器人初始化到不可行状态——关节被 clamp 到限位，产生大量 `dof_pos_limits` penalty，策略从"被惩罚的初始状态"开始学习。正确做法：retarget 后用 physics filter（Ch15.5）检查所有帧的关节是否在限位内，超限帧从 RSI 候选集中剔除。
 
 ### Tracking Policy 的 ONNX 导出注意事项
 
@@ -535,7 +535,7 @@ uv run export-onnx Mjlab-Tracking-Flat-Unitree-G1 \
 
 mjlab 的 BeyondMimic 提供了 motion tracking 的 MuJoCo 侧实现。Isaac Lab 侧有一个更全面的工具——ProtoMotions，它不仅支持直接跟踪（Mimic），还支持 AMP、ASE、CALM 等更高级的 motion prior 算法。本节学习如何在 ProtoMotions 中切换这些算法。
 
-## 15.2 在 Isaac Lab 中用 ProtoMotions 跑通 AMP/ASE ⭐⭐⭐
+## 15.2 在 Isaac Lab 中用 ProtoMotions 跑通 AMP/ASE ★★★
 
 > **这一节解决什么问题**：学习 ProtoMotions 的统一框架，理解 AMP/ASE/CALM 的工程差异——算法切换如何只需修改配置文件。
 
@@ -836,15 +836,15 @@ python protomotions/train_agent.py \
 
 **AMP 的特殊现象**：训练中会看到 discriminator loss 和 policy reward 交替波动——这是 GAN 式训练的正常现象。如果 discriminator loss 降到 0（判别器完胜），说明梯度消失，策略无法学习——需要加大 gradient penalty weight。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：ProtoMotions 依赖特定的 simulator 版本**。`+simulator=isaacgym` 需要 IsaacGym Preview 4；`+simulator=isaaclab` 需要特定版本的 Isaac Lab。版本不匹配会导致隐晦的 tensor shape 错误。
+⚠ **编程陷阱：ProtoMotions 依赖特定的 simulator 版本**。`+simulator=isaacgym` 需要 IsaacGym Preview 4；`+simulator=isaaclab` 需要特定版本的 Isaac Lab。版本不匹配会导致隐晦的 tensor shape 错误。
 
 💡 **概念误区：AMP 不需要精确的参考动作**。AMP 的判别器学习动作分布的统计特性，不需要逐帧对齐。但参考数据的质量仍然非常重要——如果参考数据包含大量不自然的动作（retarget 质量差），判别器会学到"不自然也是正常的"。
 
 🧠 **思维陷阱：ASE 的 latent space 自动学到有意义的技能分解**。ASE 的 encoder 学到的 latent 可能不对应人类直觉中的"技能"（如走、跑、跳）。它学到的是数据驱动的分解——可能是"左脚先迈 vs 右脚先迈"这种无语义的划分。
 
-⚠️ **编程陷阱：MuJoCo backend 只支持 num_envs=1**。ProtoMotions 的 MuJoCo 后端是 CPU-only 的，只用于调试和可视化，不用于训练。训练必须使用 GPU 后端（IsaacGym、IsaacLab、Newton、Genesis）。
+⚠ **编程陷阱：MuJoCo backend 只支持 num_envs=1**。ProtoMotions 的 MuJoCo 后端是 CPU-only 的，只用于调试和可视化，不用于训练。训练必须使用 GPU 后端（IsaacGym、IsaacLab、Newton、Genesis）。
 
 ### 练习
 
@@ -893,7 +893,7 @@ class ConditionalAMPDiscriminator(AMPDiscriminator):
 
 单条动作跟踪只需要一个 GPU、几小时训练。但要构建一个**通用的运动技能库**——让机器人会走、跑、跳、踢、转身——需要从数千甚至数十万条动作中训练。这就是大规模 motion tracking 的工程挑战。
 
-## 15.3 大规模训练工程 ⭐⭐
+## 15.3 大规模训练工程 ★★
 
 > **这一节解决什么问题**：学习大规模 motion tracking 训练（AMASS 全集约 4×A100/12h；BONES-SEED ~142K motions 官方用 24×A100）中总结出的工程经验——per-GPU 分片、adaptive sampling、motion quality filtering。
 
@@ -1110,13 +1110,13 @@ def check_motion_quality(motion_data, robot_model):
     return issues
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：per-GPU 分片后 batch statistics 不一致**。如果每个 GPU 的 motion 分布不同，PPO 的 advantage normalization 在不同 GPU 上会产生不同的 mean/std。使用 `torch.distributed.all_reduce` 在 normalize 前同步统计量。
+⚠ **编程陷阱：per-GPU 分片后 batch statistics 不一致**。如果每个 GPU 的 motion 分布不同，PPO 的 advantage normalization 在不同 GPU 上会产生不同的 mean/std。使用 `torch.distributed.all_reduce` 在 normalize 前同步统计量。
 
 💡 **概念误区：更多 motion = 更好的策略**。如果低质量动作占比过大，策略会学到"平均化"行为——每个动作都能跟踪一点但没有一个做得好。quality > quantity。先用 physics filter 清洗数据。
 
-⚠️ **编程陷阱：motion 长度差异导致 batch padding 问题**。不同 motion 长度不同（3 秒 vs 30 秒），如果 episode 长度等于 motion 长度，batch 中的 episode 长度差异很大。PPO 的 advantage 计算需要固定长度的 trajectory。解决方案：(a) 把长 motion 切成固定长度的片段，(b) 使用 variable-length rollout + padding。
+⚠ **编程陷阱：motion 长度差异导致 batch padding 问题**。不同 motion 长度不同（3 秒 vs 30 秒），如果 episode 长度等于 motion 长度，batch 中的 episode 长度差异很大。PPO 的 advantage 计算需要固定长度的 trajectory。解决方案：(a) 把长 motion 切成固定长度的片段，(b) 使用 variable-length rollout + padding。
 
 ### 大规模训练的监控仪表盘
 
@@ -1177,7 +1177,7 @@ def log_per_motion_stats(sampler, writer, global_step):
 
 ---
 
-## 15.4 PHC 的 Progressive Neural Networks ⭐⭐⭐
+## 15.4 PHC 的 Progressive Neural Networks ★★★
 
 > **这一节解决什么问题**：理解为什么单个 MLP 无法扩展到数千个动作，以及 PHC 的 Progressive Multiplicative Control Policy (PMCP) 如何解决灾难性遗忘。
 
@@ -1188,7 +1188,7 @@ def log_per_motion_stats(sampler, writer, global_step):
 | 阶段 | 动作 | 效果 |
 |------|------|------|
 | Step 1 | 训练走路 | ✅ 走路学会 |
-| Step 2 | 训练跑步 | ✅ 跑步学会，⚠️ 走路变差 |
+| Step 2 | 训练跑步 | ✅ 跑步学会，⚠ 走路变差 |
 | Step 3 | 训练旋踢 | ✅ 旋踢学会，❌ 走路和跑步严重退化 |
 
 **跨领域类比**：这就像用同一张白纸写了三份文件——每次写新文件都会部分擦除旧文件。纸的面积（网络容量）有限，新知识和旧知识争夺同一个参数空间。
@@ -1429,9 +1429,9 @@ PHC+ 在 AMASS 数据集上达到了 **100% 的 eval_success_rate**——意味�
 - progressive mining 的 threshold 不宜太高（>0.9）——这会导致太多动作被标为"hard"，训练集不够聚焦
 - 评估时必须用 `eval_success_rate`（所有动作跑 10+ episodes）而不是训练中的 per-episode success_rate
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：PHC 基于 Isaac Gym 而非 Manager-Based**。PHC 的原始代码使用 IsaacGym Preview 4，不兼容 mjlab/Isaac Lab 的 Manager-Based API。MuJoCo 版本在 `ZhengyiLuo/PHC_MJX`。
+⚠ **编程陷阱：PHC 基于 Isaac Gym 而非 Manager-Based**。PHC 的原始代码使用 IsaacGym Preview 4，不兼容 mjlab/Isaac Lab 的 Manager-Based API。MuJoCo 版本在 `ZhengyiLuo/PHC_MJX`。
 
 💡 **概念误区：更多 primitive 一定更好**。每个 primitive 增加了推理时间和训练复杂度。通常 3-5 个 primitive 就能覆盖 AMASS 的全部动作。过多 primitive 意味着每个 primitive 只处理很少的动作——相当于记忆而非泛化。
 
@@ -1495,7 +1495,7 @@ python evaluate_per_motion.py \
 
 ---
 
-## 15.5 精读：KungfuBot 高动态全身控制 ⭐⭐⭐
+## 15.5 精读：KungfuBot 高动态全身控制 ★★★
 
 > **这一节解决什么问题**：通过精读 KungfuBot 的 physics filter + bi-level optimization，理解如何从视频中筛选物理可行动作并自适应跟踪难度。
 
@@ -1726,9 +1726,9 @@ KungfuBot 已在 Unitree G1 上验证了多种高动态动作：功夫套路、�
 | 指标 | MPJPE, ELR | MPBPE, Episode Length Ratio |
 | 真机验证 | ✅ G1 | ✅ G1 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：GVHMR 的估计质量影响全局**。如果视频中的人体估计不准确（遮挡、低分辨率），physics filter 会拒绝大量动作，导致训练数据不足。使用高质量视频源。
+⚠ **编程陷阱：GVHMR 的估计质量影响全局**。如果视频中的人体估计不准确（遮挡、低分辨率），physics filter 会拒绝大量动作，导致训练数据不足。使用高质量视频源。
 
 💡 **概念误区：BLO 是一个复杂的优化算法**。KungfuBot 的 BLO 实际上是一个简单的在线估计——根据当前误差调整 σ。"bi-level"指的是 σ 优化（外层）和策略优化（内层 PPO）的嵌套关系，不涉及复杂的二阶优化。
 
@@ -1754,7 +1754,7 @@ KungfuBot 已在 Unitree G1 上验证了多种高动态动作：功夫套路、�
 
 ---
 
-## 15.6 双框架对比：mjlab Tracking vs ProtoMotions ⭐⭐
+## 15.6 双框架对比：mjlab Tracking vs ProtoMotions ★★
 
 > **这一节解决什么问题**：用同一个参考动作在 mjlab 和 ProtoMotions 中训练，建立跨框架的 motion tracking 理解。
 
@@ -1887,7 +1887,7 @@ def convert_protomotions_to_mjlab(npy_path, npz_path):
     )
 ```
 
-⚠️ **四元数约定是跨框架最常见的 bug 来源**。MuJoCo 使用 (w,x,y,z)，PhysX/IsaacGym 使用 (x,y,z,w)。如果不转换，root 朝向会完全错误——策略看到的参考动作是"扭曲"的。
+⚠ **四元数约定是跨框架最常见的 bug 来源**。MuJoCo 使用 (w,x,y,z)，PhysX/IsaacGym 使用 (x,y,z,w)。如果不转换，root 朝向会完全错误——策略看到的参考动作是"扭曲"的。
 
 ### 什么时候用哪个框架
 
@@ -1900,13 +1900,13 @@ def convert_protomotions_to_mjlab(npy_path, npz_path):
 | Isaac Lab extension 开发 | ProtoMotions | 与 Isaac Lab 深度集成 |
 | 真机部署 (ONNX) | 两者皆可 | 都支持 ONNX + RoboJuDo |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：两个框架的 body_names 对应关系不同**。mjlab 使用 MJCF body 名字（如 `torso_link`），ProtoMotions 可能使用 URDF link 名字（如 `torso`）。跨框架对比时必须确认 body 对应关系。
+⚠ **编程陷阱：两个框架的 body_names 对应关系不同**。mjlab 使用 MJCF body 名字（如 `torso_link`），ProtoMotions 可能使用 URDF link 名字（如 `torso`）。跨框架对比时必须确认 body 对应关系。
 
 💡 **概念误区：一个框架的结果更好就说明它更优**。motion tracking 的效果高度依赖配置（reward 权重、body_names、σ 值）。在没有对齐所有配置之前，不能说某个框架"更好"——只能说在当前配置下表现不同。
 
-⚠️ **编程陷阱：四元数约定不一致**。MuJoCo (w,x,y,z) vs PhysX (x,y,z,w)。不转换 → root 朝向完全错误。这是跨框架 motion tracking 最常见的 bug。
+⚠ **编程陷阱：四元数约定不一致**。MuJoCo (w,x,y,z) vs PhysX (x,y,z,w)。不转换 → root 朝向完全错误。这是跨框架 motion tracking 最常见的 bug。
 
 🧠 **思维陷阱：跨框架对比的目的是找"更好的框架"**。真正的目的是建立你对两个物理引擎差异的理解——哪些行为是物理引擎共有的（物理真实），哪些是特定引擎的 artifact（可能在真机上不成立）。
 
@@ -1922,15 +1922,15 @@ def convert_protomotions_to_mjlab(npy_path, npz_path):
 
 | 知识点 | 核心要点 | 难度 |
 |--------|---------|------|
-| Motion Tracking MDP | command 从 3D twist 变为 ~100D 参考姿态；需要时间对齐 | ⭐⭐ |
-| BeyondMimic 管线 | CSV → NPZ → WandB → uv run train；body_names 选择是关键 | ⭐⭐⭐ |
-| body_position_tracking | base frame 下的关键点跟踪；anchor 处理 root 对齐 | ⭐⭐⭐ |
-| AMP 判别器 | 学习动作分布而非逐帧跟踪；gradient penalty 保证稳定性 | ⭐⭐⭐ |
-| ProtoMotions 算法切换 | AMP → ASE → CALM 只需修改 ~30 行配置 | ⭐⭐ |
-| 大规模训练 | per-GPU 分片 + adaptive sampling + motion quality filter | ⭐⭐ |
-| PHC PMCP | Progressive networks 避免灾难性遗忘；冻结旧 primitive | ⭐⭐⭐ |
-| KungfuBot | Physics filter (CoM/CoP + contact) + BLO 自适应 σ | ⭐⭐⭐ |
-| 双框架对比 | mjlab (BeyondMimic) vs ProtoMotions 的配置和性能差异 | ⭐⭐ |
+| Motion Tracking MDP | command 从 3D twist 变为 ~100D 参考姿态；需要时间对齐 | ★★ |
+| BeyondMimic 管线 | CSV → NPZ → WandB → uv run train；body_names 选择是关键 | ★★★ |
+| body_position_tracking | base frame 下的关键点跟踪；anchor 处理 root 对齐 | ★★★ |
+| AMP 判别器 | 学习动作分布而非逐帧跟踪；gradient penalty 保证稳定性 | ★★★ |
+| ProtoMotions 算法切换 | AMP → ASE → CALM 只需修改 ~30 行配置 | ★★ |
+| 大规模训练 | per-GPU 分片 + adaptive sampling + motion quality filter | ★★ |
+| PHC PMCP | Progressive networks 避免灾难性遗忘；冻结旧 primitive | ★★★ |
+| KungfuBot | Physics filter (CoM/CoP + contact) + BLO 自适应 σ | ★★★ |
+| 双框架对比 | mjlab (BeyondMimic) vs ProtoMotions 的配置和性能差异 | ★★ |
 
 ### 本章与其他章节的关系
 
@@ -2050,24 +2050,24 @@ Ch14 人形 velocity (基础运动)
 
 | 资料 | 难度 | 会议/期刊 | 说明 |
 |------|------|----------|------|
-| Peng et al., "DeepMimic: Example-Guided Deep RL of Physics-Based Character Skills," 2018 | ⭐⭐ | SIGGRAPH 2018 | 物理角色动作模仿的奠基工作 |
-| Peng et al., "AMP: Adversarial Motion Priors," 2021 | ⭐⭐⭐ | SIGGRAPH 2021 | 判别器替代手工 reward |
-| Peng et al., "ASE: Large-Scale Reusable Adversarial Skill Embeddings," 2022 | ⭐⭐⭐ | SIGGRAPH 2022 | AMP + latent skill space |
-| Tessler et al., "CALM: Conditional Adversarial Latent Models," 2023 | ⭐⭐⭐ | SIGGRAPH 2023 | ASE + text conditioning |
-| Tessler et al., "MaskedMimic: Unified Physics-Based Character Control," 2024 | ⭐⭐⭐ | SIGGRAPH Asia 2024 | Masked motion inpainting |
-| Luo et al., "PHC: Perpetual Humanoid Control," 2023 | ⭐⭐⭐ | ICCV 2023 | Progressive networks for large-scale tracking |
-| Xie et al., "KungfuBot: Physics-Based Humanoid Whole-Body Control," 2025 | ⭐⭐⭐ | NeurIPS 2025 | Physics filter + BLO adaptive tracking |
-| Liao et al., "BeyondMimic: Motion Tracking to Versatile Humanoid Control," 2025 | ⭐⭐⭐ | arXiv 2508.08241 | Guided diffusion for versatile control |
+| Peng et al., "DeepMimic: Example-Guided Deep RL of Physics-Based Character Skills," 2018 | ★★ | SIGGRAPH 2018 | 物理角色动作模仿的奠基工作 |
+| Peng et al., "AMP: Adversarial Motion Priors," 2021 | ★★★ | SIGGRAPH 2021 | 判别器替代手工 reward |
+| Peng et al., "ASE: Large-Scale Reusable Adversarial Skill Embeddings," 2022 | ★★★ | SIGGRAPH 2022 | AMP + latent skill space |
+| Tessler et al., "CALM: Conditional Adversarial Latent Models," 2023 | ★★★ | SIGGRAPH 2023 | ASE + text conditioning |
+| Tessler et al., "MaskedMimic: Unified Physics-Based Character Control," 2024 | ★★★ | SIGGRAPH Asia 2024 | Masked motion inpainting |
+| Luo et al., "PHC: Perpetual Humanoid Control," 2023 | ★★★ | ICCV 2023 | Progressive networks for large-scale tracking |
+| Xie et al., "KungfuBot: Physics-Based Humanoid Whole-Body Control," 2025 | ★★★ | NeurIPS 2025 | Physics filter + BLO adaptive tracking |
+| Liao et al., "BeyondMimic: Motion Tracking to Versatile Humanoid Control," 2025 | ★★★ | arXiv 2508.08241 | Guided diffusion for versatile control |
 
 ### 工具和代码
 
 | 资料 | 难度 | 说明 |
 |------|------|------|
-| NVlabs/ProtoMotions | ⭐⭐⭐ | 统一 AMP/ASE/CALM/MaskedMimic，多 simulator |
-| HybridRobotics/whole_body_tracking | ⭐⭐ | BeyondMimic Isaac Lab + mjlab port |
-| mujocolab/g1_spinkick_example | ⭐⭐ | 最小 mjlab tracking 示例 |
-| ZhengyiLuo/PHC | ⭐⭐⭐ | PMCP progressive tracking，IsaacGym |
-| TeleHuman/PBHC | ⭐⭐⭐ | Physics filter + BLO，G1 部署 |
+| NVlabs/ProtoMotions | ★★★ | 统一 AMP/ASE/CALM/MaskedMimic，多 simulator |
+| HybridRobotics/whole_body_tracking | ★★ | BeyondMimic Isaac Lab + mjlab port |
+| mujocolab/g1_spinkick_example | ★★ | 最小 mjlab tracking 示例 |
+| ZhengyiLuo/PHC | ★★★ | PMCP progressive tracking，IsaacGym |
+| TeleHuman/PBHC | ★★★ | Physics filter + BLO，G1 部署 |
 
 ### 阅读路线
 
@@ -2443,7 +2443,7 @@ HIGH_PRECISION_TRACKING_BODIES = [
 
 ### 本章各参考工作的 GitHub 活跃度（star 数为易变数字，以下为截至 2026-06-09 的近似值，请以仓库当前为准）
 
-| 仓库 | ⭐ 数（近似） | 维护状态 | 推荐场景 |
+| 仓库 | ★ 数（近似） | 维护状态 | 推荐场景 |
 |------|------|---------|---------|
 | NVlabs/ProtoMotions | ~1.7k | ✅ 积极维护 | AMP/ASE/CALM 研究和教学 |
 | ZhengyiLuo/PHC | ~1.2k | 🔶 算法稳定 | 大规模 tracking 参考 |

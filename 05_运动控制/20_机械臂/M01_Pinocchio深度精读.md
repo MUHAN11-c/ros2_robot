@@ -14,9 +14,9 @@
 
 ---
 
-## 前置自测 ⭐
+## 前置自测 ★
 
-> 📋 **答不出 >= 2 题 → 先回前置章节复习**
+> ◆ **答不出 >= 2 题 → 先回前置章节复习**
 
 | 编号 | 问题 | 答不出时回顾 |
 |:----:|------|------------|
@@ -73,19 +73,19 @@
 
 | § | 标题 | 难度 | 一句话定位 |
 |---|------|------|----------|
-| §1 | 为什么需要动力学引擎 | ⭐ | MPC 实时约束 + 手写不可行 → 需要引擎 |
-| §2 | Pinocchio 设计哲学 | ⭐⭐ | Model/Data 分离 + 自由函数 + 多线程安全 |
-| §3 | CRTP 访问者模式 | ⭐⭐⭐ | 编译期静态多态消除虚函数开销 |
-| §4 | 标量参数化 | ⭐⭐⭐ | 同一算法支持 double/AD/符号标量 |
-| §5 | URDF 加载与 Model 构建 | ⭐ | buildModel 流程 + nq vs nv |
-| §6 | 正向运动学 FK | ⭐⭐ | 递推 FK + 三种 API 重载 |
-| §7 | 雅可比矩阵 | ⭐⭐⭐ | LOCAL/WORLD/LWA 三种坐标系选择 |
-| §8 | 逆动力学 RNEA | ⭐⭐⭐ | 两遍递推 O(N) 算法 |
-| §9 | 正动力学 ABA | ⭐⭐⭐ | 三遍递推 O(N) 算法 |
-| §10 | 惯量矩阵 CRBA | ⭐⭐⭐ | 复合刚体算法求 $M(q)$ |
-| §11 | 碰撞检测 Coal | ⭐⭐ | hpp-fcl/Coal 与 Pinocchio 集成 |
-| §12 | 解析导数 | ⭐⭐⭐ | computeABADerivatives / computeRNEADerivatives |
-| §13 | 约束动力学 | ⭐⭐⭐⭐ | 接触约束与 Delassus 矩阵 |
+| §1 | 为什么需要动力学引擎 | ★ | MPC 实时约束 + 手写不可行 → 需要引擎 |
+| §2 | Pinocchio 设计哲学 | ★★ | Model/Data 分离 + 自由函数 + 多线程安全 |
+| §3 | CRTP 访问者模式 | ★★★ | 编译期静态多态消除虚函数开销 |
+| §4 | 标量参数化 | ★★★ | 同一算法支持 double/AD/符号标量 |
+| §5 | URDF 加载与 Model 构建 | ★ | buildModel 流程 + nq vs nv |
+| §6 | 正向运动学 FK | ★★ | 递推 FK + 三种 API 重载 |
+| §7 | 雅可比矩阵 | ★★★ | LOCAL/WORLD/LWA 三种坐标系选择 |
+| §8 | 逆动力学 RNEA | ★★★ | 两遍递推 O(N) 算法 |
+| §9 | 正动力学 ABA | ★★★ | 三遍递推 O(N) 算法 |
+| §10 | 惯量矩阵 CRBA | ★★★ | 复合刚体算法求 $M(q)$ |
+| §11 | 碰撞检测 Coal | ★★ | hpp-fcl/Coal 与 Pinocchio 集成 |
+| §12 | 解析导数 | ★★★ | computeABADerivatives / computeRNEADerivatives |
+| §13 | 约束动力学 | ★★★★ | 接触约束与 Delassus 矩阵 |
 
 **推荐阅读路径**：
 
@@ -103,7 +103,7 @@
 
 ---
 
-## 1. 为什么需要动力学引擎 ⭐
+## 1. 为什么需要动力学引擎 ★
 
 ### 1.1 MPC 的 1ms 约束
 
@@ -166,7 +166,7 @@ $$M(q) = \begin{bmatrix} I_1 + m_1 l_{c1}^2 + I_2 + m_2(l_1^2 + l_{c2}^2 + 2l_1 
 | **编译时间** | 中等（头文件模板） | 极长（Bazel） | 中等 | 快 |
 | **7-DOF RNEA** | ~2 $\mu$s | ~10 $\mu$s | ~8 $\mu$s | ~3 $\mu$s |
 
-> ⚠️ **常见陷阱**：性能数字因硬件、编译选项（`-O3 -march=native`）、是否启用 SIMD 而差异很大。上表仅供数量级参考，切勿直接引用于论文。严格对比请使用 `pinocchio-benchmarks` 仓库自行测量。
+> ⚠ **常见陷阱**：性能数字因硬件、编译选项（`-O3 -march=native`）、是否启用 SIMD 而差异很大。上表仅供数量级参考，切勿直接引用于论文。严格对比请使用 `pinocchio-benchmarks` 仓库自行测量。
 
 ### 1.5 Pinocchio 的 INRIA 学派定位
 
@@ -203,13 +203,13 @@ Pinocchio 不是仿真器（不像 MuJoCo / Isaac），而是一个 **纯计算�
 
 ### 练习
 
-1. ⭐ 用 Python 计算 7-DOF 机械臂惯量矩阵的独立元素数，验证 $n(n+1)/2 = 28$。对于 12-DOF 双臂系统呢？
-2. ⭐ 列举你见过的至少 3 个使用 Pinocchio 的开源项目（提示：搜索 GitHub `pinocchio` + `robot`），记录它们分别用于机械臂还是腿足。
-3. ⭐⭐ 解释为什么 Pinocchio 选择"纯计算库"而非"仿真器"的定位。MuJoCo 做仿真时，内部的动力学计算和 Pinocchio 有什么本质区别？
+1. ★ 用 Python 计算 7-DOF 机械臂惯量矩阵的独立元素数，验证 $n(n+1)/2 = 28$。对于 12-DOF 双臂系统呢？
+2. ★ 列举你见过的至少 3 个使用 Pinocchio 的开源项目（提示：搜索 GitHub `pinocchio` + `robot`），记录它们分别用于机械臂还是腿足。
+3. ★★ 解释为什么 Pinocchio 选择"纯计算库"而非"仿真器"的定位。MuJoCo 做仿真时，内部的动力学计算和 Pinocchio 有什么本质区别？
 
 ---
 
-## 2. Pinocchio 设计哲学 ⭐⭐
+## 2. Pinocchio 设计哲学 ★★
 
 ### 2.1 三大设计支柱
 
@@ -269,7 +269,7 @@ for (int i = 0; i < N_horizon; ++i) {
 }
 ```
 
-> ⚠️ **常见陷阱**：`pinocchio::Data` 的构造不是线程安全的——必须在 **单线程** 中完成所有 `Data` 对象的构造，然后再分发给各线程。构造过程中会分配 Eigen 对齐内存，并发构造可能导致 heap corruption。
+> ⚠ **常见陷阱**：`pinocchio::Data` 的构造不是线程安全的——必须在 **单线程** 中完成所有 `Data` 对象的构造，然后再分发给各线程。构造过程中会分配 Eigen 对齐内存，并发构造可能导致 heap corruption。
 
 ### 2.4 算法即自由函数
 
@@ -330,13 +330,13 @@ RBDL (过程式):
 
 ### 练习
 
-1. ⭐ 画出 `Model` 和 `Data` 的依赖关系图。为什么 `Data` 必须从 `Model` 构造？如果 `Model` 修改后 `Data` 不重建会怎样？
-2. ⭐⭐ 在 8 线程 MPC 场景中，写出创建和分发 `Data` 对象的正确代码模板。如果错误地让 8 个线程共享一个 `Data`，最可能出现什么错误？
-3. ⭐⭐ 解释为什么 RBDL 的设计（模型即状态）在多线程场景下是危险的。Drake 的 `Context` 机制如何缓解这个问题？
+1. ★ 画出 `Model` 和 `Data` 的依赖关系图。为什么 `Data` 必须从 `Model` 构造？如果 `Model` 修改后 `Data` 不重建会怎样？
+2. ★★ 在 8 线程 MPC 场景中，写出创建和分发 `Data` 对象的正确代码模板。如果错误地让 8 个线程共享一个 `Data`，最可能出现什么错误？
+3. ★★ 解释为什么 RBDL 的设计（模型即状态）在多线程场景下是危险的。Drake 的 `Context` 机制如何缓解这个问题？
 
 ---
 
-## 3. CRTP 访问者模式精读 ⭐⭐⭐
+## 3. CRTP 访问者模式精读 ★★★
 
 ### 3.1 问题：虚函数在 1 kHz 调用下的开销
 
@@ -513,17 +513,17 @@ for (int i = 1; i < model.njoints; ++i) {
 
 **性能特征**：`boost::apply_visitor` 内部使用 **跳转表**（类似 `switch`），比虚函数的间接指针查找更高效，且对分支预测更友好（关节类型通常在循环中是固定的）。
 
-> ⚠️ **常见陷阱**：不要自己实现关节类型的运行时分派。Pinocchio 的 visitor 模式已经高度优化，自定义分派通常会更慢且更容易出错。如果需要新关节类型，应该继承 `JointModelBase` 并注册到 `JointModelVariant`。
+> ⚠ **常见陷阱**：不要自己实现关节类型的运行时分派。Pinocchio 的 visitor 模式已经高度优化，自定义分派通常会更慢且更容易出错。如果需要新关节类型，应该继承 `JointModelBase` 并注册到 `JointModelVariant`。
 
 ### 练习
 
-1. ⭐⭐ 画出 `JointModelRevoluteTpl<double, 2>` 的 CRTP 继承链，标注每一层提供的功能。
-2. ⭐⭐⭐ 用 `objdump -d` 或 Compiler Explorer (godbolt.org) 查看 `JointModelRevoluteTpl<double, 2>::calc_impl` 的汇编代码，验证 `_axis=2` 是否被常量折叠。
-3. ⭐⭐⭐ 对比 `boost::variant` + visitor 和 `std::visit` + `std::variant` 的性能差异。Pinocchio 3.x 是否已迁移到 `std::variant`？查阅最新源码确认。
+1. ★★ 画出 `JointModelRevoluteTpl<double, 2>` 的 CRTP 继承链，标注每一层提供的功能。
+2. ★★★ 用 `objdump -d` 或 Compiler Explorer (godbolt.org) 查看 `JointModelRevoluteTpl<double, 2>::calc_impl` 的汇编代码，验证 `_axis=2` 是否被常量折叠。
+3. ★★★ 对比 `boost::variant` + visitor 和 `std::visit` + `std::variant` 的性能差异。Pinocchio 3.x 是否已迁移到 `std::variant`？查阅最新源码确认。
 
 ---
 
-## 4. 标量参数化 ⭐⭐⭐
+## 4. 标量参数化 ★★★
 
 ### 4.1 问题：同一算法，多种数值类型
 
@@ -583,9 +583,9 @@ void forwardKinematics(
 
 | 标量类型 | 典型场景 | 性能 | 精度 | 使用难度 |
 |---------|---------|------|------|---------|
-| `double` | 实时控制、仿真 | 最快 (~2 $\mu$s RNEA) | 机器精度 | ⭐ |
-| `CppAD::AD<double>` | 离线梯度计算、NLP | 慢 3~5x | 机器精度（解析） | ⭐⭐ |
-| `casadi::SX` | 符号推导、CodeGen | 非实时 | 符号精确 | ⭐⭐⭐ |
+| `double` | 实时控制、仿真 | 最快 (~2 $\mu$s RNEA) | 机器精度 | ★ |
+| `CppAD::AD<double>` | 离线梯度计算、NLP | 慢 3~5x | 机器精度（解析） | ★★ |
+| `casadi::SX` | 符号推导、CodeGen | 非实时 | 符号精确 | ★★★ |
 
 ### 4.5 CppAD 自动微分示例
 
@@ -679,17 +679,17 @@ fk_fun.generate("fk_codegen.c")
     └─ 生成 C 代码 → 交叉编译 → 实时执行
 ```
 
-> ⚠️ **常见陷阱**：`model.cast<NewScalar>()` 会 **深拷贝** 整个模型。对于大型机器人（如人形，30+ 关节），这个操作代价不可忽略。应在初始化阶段完成一次，而不是每帧调用。
+> ⚠ **常见陷阱**：`model.cast<NewScalar>()` 会 **深拷贝** 整个模型。对于大型机器人（如人形，30+ 关节），这个操作代价不可忽略。应在初始化阶段完成一次，而不是每帧调用。
 
 ### 练习
 
-1. ⭐⭐ 用 `model.cast<CppAD::AD<double>>()` 将 Franka Panda 模型转换为 AD 模型，测量转换耗时。
-2. ⭐⭐⭐ 比较 `computeRNEADerivatives()` (Pinocchio 内置解析微分) 和 CppAD 自动微分得到的 $\partial \tau / \partial q$ 矩阵，验证数值一致性（误差 < $10^{-10}$）。
-3. ⭐⭐⭐ 用 CasADi 生成 Franka Panda 逆动力学的 C 代码，编译后测量单次调用耗时，与 Pinocchio `rnea()` 的 `double` 版本做对比。
+1. ★★ 用 `model.cast<CppAD::AD<double>>()` 将 Franka Panda 模型转换为 AD 模型，测量转换耗时。
+2. ★★★ 比较 `computeRNEADerivatives()` (Pinocchio 内置解析微分) 和 CppAD 自动微分得到的 $\partial \tau / \partial q$ 矩阵，验证数值一致性（误差 < $10^{-10}$）。
+3. ★★★ 用 CasADi 生成 Franka Panda 逆动力学的 C 代码，编译后测量单次调用耗时，与 Pinocchio `rnea()` 的 `double` 版本做对比。
 
 ---
 
-## 5. URDF 加载与 Model 构建 ⭐
+## 5. URDF 加载与 Model 构建 ★
 
 ### 5.1 buildModel() 内部流程
 
@@ -757,7 +757,7 @@ pinocchio::Frame& frame = model.frames[ee_id];
 // frame.placement    → 该帧相对于父关节的 SE(3) 变换
 ```
 
-> ⚠️ **常见陷阱**：URDF 中的 `fixed` 关节不会创建 Pinocchio 关节（`nq=0, nv=0`），但会创建一个 `FIXED_JOINT` 类型的帧。如果你用关节索引去访问末端执行器（通常通过 fixed joint 连接到最后一个活动关节），你会得到错误的位姿。**始终用帧索引 + `updateFramePlacements`**。
+> ⚠ **常见陷阱**：URDF 中的 `fixed` 关节不会创建 Pinocchio 关节（`nq=0, nv=0`），但会创建一个 `FIXED_JOINT` 类型的帧。如果你用关节索引去访问末端执行器（通常通过 fixed joint 连接到最后一个活动关节），你会得到错误的位姿。**始终用帧索引 + `updateFramePlacements`**。
 
 ### 5.3 加载 Franka Panda：完整代码
 
@@ -848,7 +848,7 @@ int main() {
 | `M` | `model.nv x model.nv` | 惯量矩阵 |
 | `J` | `6 x model.nv` | 雅可比矩阵 |
 
-> ⚠️ **常见陷阱**：如果你的机器人有 `FreeFlyer` 根关节（腿足/移动基座），`q` 的前 7 维是 `[x, y, z, qx, qy, qz, qw]`，但 `v` 的前 6 维是 `[vx, vy, vz, wx, wy, wz]`。**不能** 直接用 `v = (q_new - q_old) / dt` 来计算速度——必须用 `pinocchio::difference(model, q_old, q_new) / dt`。
+> ⚠ **常见陷阱**：如果你的机器人有 `FreeFlyer` 根关节（腿足/移动基座），`q` 的前 7 维是 `[x, y, z, qx, qy, qz, qw]`，但 `v` 的前 6 维是 `[vx, vy, vz, wx, wy, wz]`。**不能** 直接用 `v = (q_new - q_old) / dt` 来计算速度——必须用 `pinocchio::difference(model, q_old, q_new) / dt`。
 
 ### 5.5 CMake 构建配置
 
@@ -868,13 +868,13 @@ target_compile_options(load_panda PRIVATE -O3 -march=native)
 
 ### 练习
 
-1. ⭐ 加载 Franka Panda URDF，打印所有帧的名称、类型和父关节索引。找到末端执行器帧 `panda_hand` 的帧索引。
-2. ⭐ 修改代码，加载一个带 `FreeFlyer` 根关节的人形机器人 URDF（如 Talos），验证 `nq = nv + 1`（因为四元数多一维）。
-3. ⭐⭐ 解释为什么 `model.njoints` 比 URDF 中的可动关节数多 1（因为包含 universe joint）。这个设计对递归算法有什么便利？
+1. ★ 加载 Franka Panda URDF，打印所有帧的名称、类型和父关节索引。找到末端执行器帧 `panda_hand` 的帧索引。
+2. ★ 修改代码，加载一个带 `FreeFlyer` 根关节的人形机器人 URDF（如 Talos），验证 `nq = nv + 1`（因为四元数多一维）。
+3. ★★ 解释为什么 `model.njoints` 比 URDF 中的可动关节数多 1（因为包含 universe joint）。这个设计对递归算法有什么便利？
 
 ---
 
-## 6. 正向运动学 FK 深入 ⭐⭐
+## 6. 正向运动学 FK 深入 ★★
 
 ### 6.1 三种 forwardKinematics 重载
 
@@ -949,7 +949,7 @@ std::cout << "末端位置: " << ee_pose.translation().transpose()
 std::cout << "末端旋转:\n" << ee_pose.rotation() << std::endl;
 ```
 
-> ⚠️ **常见陷阱**：忘记调用 `updateFramePlacements` 是最高频的新手错误。`data.oMf` 在 FK 后 **不会** 自动更新——Pinocchio 遵循"不做不必要的计算"原则。如果你只需要关节位姿，调用 `updateFramePlacements` 就是浪费。
+> ⚠ **常见陷阱**：忘记调用 `updateFramePlacements` 是最高频的新手错误。`data.oMf` 在 FK 后 **不会** 自动更新——Pinocchio 遵循"不做不必要的计算"原则。如果你只需要关节位姿，调用 `updateFramePlacements` 就是浪费。
 
 ### 6.4 递推 FK 推导：以 3-DOF RRR 为例
 
@@ -979,13 +979,13 @@ std::cout << "末端旋转:\n" << ee_pose.rotation() << std::endl;
 
 ### 练习
 
-1. ⭐ 设置 Franka Panda 为零位（`q = 0`），调用 FK 并打印每个关节的世界坐标系位姿 `data.oMi[i]`。验证 Joint 1 在基座上方。
-2. ⭐⭐ 比较 `data.oMi[model.njoints-1]` 和 `data.oMf[ee_id]` 的区别。在什么条件下它们相等？
-3. ⭐⭐ 用一阶 FK 获取关节速度 `data.v[i]`，验证它满足 $v_i = v_{p(i)} + S_i \dot{q}_i$（其中 $S_i$ 是运动子空间）。
+1. ★ 设置 Franka Panda 为零位（`q = 0`），调用 FK 并打印每个关节的世界坐标系位姿 `data.oMi[i]`。验证 Joint 1 在基座上方。
+2. ★★ 比较 `data.oMi[model.njoints-1]` 和 `data.oMf[ee_id]` 的区别。在什么条件下它们相等？
+3. ★★ 用一阶 FK 获取关节速度 `data.v[i]`，验证它满足 $v_i = v_{p(i)} + S_i \dot{q}_i$（其中 $S_i$ 是运动子空间）。
 
 ---
 
-## 7. 雅可比矩阵 ⭐⭐⭐
+## 7. 雅可比矩阵 ★★★
 
 ### 7.1 雅可比的物理含义
 
@@ -1077,7 +1077,7 @@ $$J_{\text{WORLD}} = \begin{bmatrix} R & [p]_\times R \\ 0 & R \end{bmatrix} J_L
 | LOCAL $\to$ WORLD | 左乘 ${}^w X_e$ (空间变换) | 旋转 + 移动参考点到世界原点 |
 | LWA $\to$ WORLD | 左乘 $\begin{bmatrix} I & [p]_\times \\ 0 & I \end{bmatrix}$ | 只移动参考点 |
 
-> ⚠️ **常见陷阱**：在速度级 IK 中使用 `WORLD` 坐标系会引入"鬼速度"——即使末端点的线速度为 0，只要存在角速度，`WORLD` 雅可比的线速度行也会包含 $p \times \omega$（等价于 $-\omega \times p$）这一参考点平移项。如果你的任务是跟踪一个在世界系表达、参考点在末端的期望 twist，通常使用 `LOCAL_WORLD_ALIGNED`。如果你的任务是下面这种 SE(3) 对数误差 CLIK，则误差是 body-frame 量，应使用 `LOCAL` Jacobian，并显式乘 `Jlog6`。
+> ⚠ **常见陷阱**：在速度级 IK 中使用 `WORLD` 坐标系会引入"鬼速度"——即使末端点的线速度为 0，只要存在角速度，`WORLD` 雅可比的线速度行也会包含 $p \times \omega$（等价于 $-\omega \times p$）这一参考点平移项。如果你的任务是跟踪一个在世界系表达、参考点在末端的期望 twist，通常使用 `LOCAL_WORLD_ALIGNED`。如果你的任务是下面这种 SE(3) 对数误差 CLIK，则误差是 body-frame 量，应使用 `LOCAL` Jacobian，并显式乘 `Jlog6`。
 
 ### 7.5 雅可比时间导数与奇异性
 
@@ -1170,17 +1170,17 @@ void velocityIK(
 }
 ```
 
-> ⚠️ **常见陷阱**：在步骤 6 中，**必须** 用 `pinocchio::integrate` 而非简单的 `q += dq * dt`。对于包含四元数的配置空间（如 `FreeFlyer`、`Spherical`），简单加法会破坏四元数的单位约束。`integrate` 负责把切空间增量映射回配置流形；它不是 joint limit clamp，也不会自动把结果投影到 `lowerPositionLimit` / `upperPositionLimit` 内。若 IK 需要关节限位，必须在求解器层显式加入限位、饱和或投影策略。
+> ⚠ **常见陷阱**：在步骤 6 中，**必须** 用 `pinocchio::integrate` 而非简单的 `q += dq * dt`。对于包含四元数的配置空间（如 `FreeFlyer`、`Spherical`），简单加法会破坏四元数的单位约束。`integrate` 负责把切空间增量映射回配置流形；它不是 joint limit clamp，也不会自动把结果投影到 `lowerPositionLimit` / `upperPositionLimit` 内。若 IK 需要关节限位，必须在求解器层显式加入限位、饱和或投影策略。
 
 ### 练习
 
-1. ⭐⭐ 对 Franka Panda 在零位处计算三种坐标系的雅可比 $J_L$、$J_{LWA}$、$J_W$，验证它们之间的转换关系。
-2. ⭐⭐⭐ 找到 Franka Panda 的一个奇异位型（提示：当多个关节轴共线时），计算此处的最小奇异值，验证接近 0。
-3. ⭐⭐⭐ 实现完整的速度级 IK，将末端移动到指定位姿。测试当目标位姿不可达时的行为。
+1. ★★ 对 Franka Panda 在零位处计算三种坐标系的雅可比 $J_L$、$J_{LWA}$、$J_W$，验证它们之间的转换关系。
+2. ★★★ 找到 Franka Panda 的一个奇异位型（提示：当多个关节轴共线时），计算此处的最小奇异值，验证接近 0。
+3. ★★★ 实现完整的速度级 IK，将末端移动到指定位姿。测试当目标位姿不可达时的行为。
 
 ---
 
-## 8. 逆动力学 RNEA ⭐⭐⭐
+## 8. 逆动力学 RNEA ★★★
 
 ### 8.1 问题定义
 
@@ -1266,13 +1266,13 @@ Eigen::VectorXd g = data.g;  // 等价于上面的 gravity_comp
 
 ### 练习
 
-1. ⭐⭐ 对 Franka Panda 在零位处计算重力补偿力矩，验证 `rnea(model, data, q, 0, 0)` 与 `computeGeneralizedGravity(model, data, q)` 结果一致。
-2. ⭐⭐⭐ 手动跟踪 3-DOF 平面 RRR 机械臂的 RNEA 两遍递推过程，用具体数值验证。与 Pinocchio 的计算结果比较。
-3. ⭐⭐⭐ 用 `std::chrono::high_resolution_clock` 测量 Franka Panda 的 RNEA 耗时（取 10000 次平均），与上表对比。
+1. ★★ 对 Franka Panda 在零位处计算重力补偿力矩，验证 `rnea(model, data, q, 0, 0)` 与 `computeGeneralizedGravity(model, data, q)` 结果一致。
+2. ★★★ 手动跟踪 3-DOF 平面 RRR 机械臂的 RNEA 两遍递推过程，用具体数值验证。与 Pinocchio 的计算结果比较。
+3. ★★★ 用 `std::chrono::high_resolution_clock` 测量 Franka Panda 的 RNEA 耗时（取 10000 次平均），与上表对比。
 
 ---
 
-## 9. 正动力学 ABA ⭐⭐
+## 9. 正动力学 ABA ★★
 
 ### 9.1 问题定义
 
@@ -1330,13 +1330,13 @@ for (int step = 0; step < num_steps; ++step) {
 
 ### 练习
 
-1. ⭐⭐ 验证 ABA 和 CRBA+Solve 给出相同的 $\ddot{q}$：先用 `aba` 得到 $\ddot{q}_1$，再用 `crba` 得到 $M$，用 LDLT 分解求 $\ddot{q}_2 = M^{-1}(\tau - C\dot{q} - g)$，比较误差。
-2. ⭐⭐ 用 ABA 实现一个简单的 Franka Panda 仿真循环：给定初始 $q_0, v_0 = 0, \tau = 0$（自由落体），仿真 1 秒，观察关节角的变化。
-3. ⭐⭐⭐ 测量 ABA 和 CRBA+Cholesky 在 7-DOF 和 30-DOF 机器人上的耗时差异，绘制对比图。
+1. ★★ 验证 ABA 和 CRBA+Solve 给出相同的 $\ddot{q}$：先用 `aba` 得到 $\ddot{q}_1$，再用 `crba` 得到 $M$，用 LDLT 分解求 $\ddot{q}_2 = M^{-1}(\tau - C\dot{q} - g)$，比较误差。
+2. ★★ 用 ABA 实现一个简单的 Franka Panda 仿真循环：给定初始 $q_0, v_0 = 0, \tau = 0$（自由落体），仿真 1 秒，观察关节角的变化。
+3. ★★★ 测量 ABA 和 CRBA+Cholesky 在 7-DOF 和 30-DOF 机器人上的耗时差异，绘制对比图。
 
 ---
 
-## 10. 惯量矩阵 CRBA ⭐⭐
+## 10. 惯量矩阵 CRBA ★★
 
 ### 10.1 CRBA 算法
 
@@ -1353,7 +1353,7 @@ M.triangularView<Eigen::StrictlyLower>() =
 // 现在 M 是完整的对称矩阵
 ```
 
-> ⚠️ **常见陷阱**：`crba()` 只填充 `data.M` 的 **上三角部分**。如果直接使用 `data.M` 而不补全下三角，很多矩阵运算会得到错误结果。要么手动补全（如上），要么使用 `Eigen::SelfAdjointView`：`data.M.selfadjointView<Eigen::Upper>()`。
+> ⚠ **常见陷阱**：`crba()` 只填充 `data.M` 的 **上三角部分**。如果直接使用 `data.M` 而不补全下三角，很多矩阵运算会得到错误结果。要么手动补全（如上），要么使用 `Eigen::SelfAdjointView`：`data.M.selfadjointView<Eigen::Upper>()`。
 
 ### 10.2 惯量矩阵的性质
 
@@ -1421,13 +1421,13 @@ Eigen::VectorXd ddq2 = data.Minv * (tau - h);
 
 ### 练习
 
-1. ⭐⭐ 计算 Franka Panda 在零位和随机位型下的 $M(q)$，比较特征值范围和条件数。哪个位型的条件数更大？
-2. ⭐⭐ 验证 $M(q)$ 的对称性：计算 $\|M - M^\top\|_F$，确认为 0（注意先补全下三角）。
-3. ⭐⭐⭐ 比较三种求 $\ddot{q}$ 的方法（ABA / CRBA+Cholesky / computeMinverse+乘法），在 7-DOF 和 30-DOF 上分别测时，验证理论复杂度分析。
+1. ★★ 计算 Franka Panda 在零位和随机位型下的 $M(q)$，比较特征值范围和条件数。哪个位型的条件数更大？
+2. ★★ 验证 $M(q)$ 的对称性：计算 $\|M - M^\top\|_F$，确认为 0（注意先补全下三角）。
+3. ★★★ 比较三种求 $\ddot{q}$ 的方法（ABA / CRBA+Cholesky / computeMinverse+乘法），在 7-DOF 和 30-DOF 上分别测时，验证理论复杂度分析。
 
 ---
 
-## 11. 解析导数 ⭐⭐⭐
+## 11. 解析导数 ★★★
 
 ### 11.1 为什么 MPC 需要动力学导数
 
@@ -1548,17 +1548,17 @@ for (int k = N-1; k >= 0; --k) {
 | 数值验证 | 与有限差分对比，精度提升 8~10 个数量级 |
 | 开源实现 | 集成在 Pinocchio 中，所有用户零成本使用 |
 
-> ⚠️ **常见陷阱**：`computeRNEADerivatives` 和 `computeABADerivatives` 内部会修改 `data` 中的多个成员（不仅仅是导数矩阵）。在同一个 `data` 对象上交替调用这两个函数时，不要假设之前的计算结果仍然有效——每次调用都应视为"重置"了 `data` 的相关状态。
+> ⚠ **常见陷阱**：`computeRNEADerivatives` 和 `computeABADerivatives` 内部会修改 `data` 中的多个成员（不仅仅是导数矩阵）。在同一个 `data` 对象上交替调用这两个函数时，不要假设之前的计算结果仍然有效——每次调用都应视为"重置"了 `data` 的相关状态。
 
 ### 练习
 
-1. ⭐⭐⭐ 验证 `computeRNEADerivatives` 的结果：对每个分量用中心差分近似，比较误差。误差应该在 $10^{-8}$ 量级。
-2. ⭐⭐⭐ 测量 `computeRNEADerivatives` 和 $2N$ 次有限差分 RNEA 的耗时比，验证解析导数的速度优势。
-3. ⭐⭐⭐ 利用 `computeABADerivatives` 构建一个完整的 DDP backward pass，对 Franka Panda 跟踪一条直线轨迹。
+1. ★★★ 验证 `computeRNEADerivatives` 的结果：对每个分量用中心差分近似，比较误差。误差应该在 $10^{-8}$ 量级。
+2. ★★★ 测量 `computeRNEADerivatives` 和 $2N$ 次有限差分 RNEA 的耗时比，验证解析导数的速度优势。
+3. ★★★ 利用 `computeABADerivatives` 构建一个完整的 DDP backward pass，对 Franka Panda 跟踪一条直线轨迹。
 
 ---
 
-## 12. 碰撞检测：Pinocchio + Coal ⭐⭐
+## 12. 碰撞检测：Pinocchio + Coal ★★
 
 ### 12.1 Coal（原 hpp-fcl）概述
 
@@ -1702,17 +1702,17 @@ Eigen::VectorXd grad_d = J1.topRows(3).transpose() * n
                        - J2.topRows(3).transpose() * n;
 ```
 
-> ⚠️ **常见陷阱**：Coal 的距离查询在两物体深度穿透时可能返回不准确的结果。在优化中，应设置一个安全余量 `d_safe > 0`，使约束为 $d(q) \geq d_{\text{safe}}$，避免在穿透区域工作。
+> ⚠ **常见陷阱**：Coal 的距离查询在两物体深度穿透时可能返回不准确的结果。在优化中，应设置一个安全余量 `d_safe > 0`，使约束为 $d(q) \geq d_{\text{safe}}$，避免在穿透区域工作。
 
 ### 练习
 
-1. ⭐⭐ 加载 Franka Panda 的碰撞几何，计算零位时所有碰撞对的最短距离，找到最接近碰撞的连杆对。
-2. ⭐⭐ 添加一个球形障碍物到工作空间中，移动机械臂使其接近障碍物，验证距离查询是否正确。
-3. ⭐⭐⭐ 实现一个简单的碰撞避让：在速度级 IK 中添加零空间投影，使末端到达目标位姿的同时保持所有距离 $> 3$ cm。
+1. ★★ 加载 Franka Panda 的碰撞几何，计算零位时所有碰撞对的最短距离，找到最接近碰撞的连杆对。
+2. ★★ 添加一个球形障碍物到工作空间中，移动机械臂使其接近障碍物，验证距离查询是否正确。
+3. ★★★ 实现一个简单的碰撞避让：在速度级 IK 中添加零空间投影，使末端到达目标位姿的同时保持所有距离 $> 3$ cm。
 
 ---
 
-## 13. 约束动力学 v3.x ⭐⭐⭐
+## 13. 约束动力学 v3.x ★★★
 
 ### 13.1 约束动力学的应用场景
 
@@ -1820,17 +1820,17 @@ pinocchio::RigidConstraintModel loop_closure(
 );
 ```
 
-> ⚠️ **常见陷阱**：约束动力学的数值稳定性对正则化参数 `mu` 很敏感。太大会导致约束不精确（穿透），太小会导致 KKT 系统病态。建议从 `mu = 1e-8` 开始，根据约束违反量调整。
+> ⚠ **常见陷阱**：约束动力学的数值稳定性对正则化参数 `mu` 很敏感。太大会导致约束不精确（穿透），太小会导致 KKT 系统病态。建议从 `mu = 1e-8` 开始，根据约束违反量调整。
 
 ### 练习
 
-1. ⭐⭐ 对 Franka Panda 末端施加一个 3D 点接触约束（模拟末端按在桌面上），求解约束加速度和接触力。
-2. ⭐⭐⭐ 构建一个简单的四连杆闭链模型，使用环路闭合约束求解其动力学。验证约束违反量随时间不发散。
-3. ⭐⭐⭐ 比较有约束和无约束的正动力学计算耗时，分析约束数量对性能的影响。
+1. ★★ 对 Franka Panda 末端施加一个 3D 点接触约束（模拟末端按在桌面上），求解约束加速度和接触力。
+2. ★★★ 构建一个简单的四连杆闭链模型，使用环路闭合约束求解其动力学。验证约束违反量随时间不发散。
+3. ★★★ 比较有约束和无约束的正动力学计算耗时，分析约束数量对性能的影响。
 
 ---
 
-## 14. Python Bindings ⭐
+## 14. Python Bindings ★
 
 ### 14.1 eigenpy：零拷贝 NumPy 桥梁
 
@@ -1843,7 +1843,7 @@ Pinocchio 的 Python 绑定基于 eigenpy，实现 Eigen 矩阵与 NumPy 数组�
 | SE(3) 包装 | `pinocchio.SE3` 完整暴露 Python 端 |
 | NumPy 2 兼容 | Pinocchio 3.x 已支持 NumPy 2.x |
 
-> ⚠️ **常见陷阱**：零拷贝意味着 Python 端修改 `data.M` 会 **直接影响** C++ 端的数据。这在大多数时候是高效的，但如果你需要保存某次计算的结果，必须显式拷贝：`M_copy = data.M.copy()`。
+> ⚠ **常见陷阱**：零拷贝意味着 Python 端修改 `data.M` 会 **直接影响** C++ 端的数据。这在大多数时候是高效的，但如果你需要保存某次计算的结果，必须显式拷贝：`M_copy = data.M.copy()`。
 
 ### 14.2 完整 Python FK + Jacobian + IK 示例
 
@@ -1979,9 +1979,9 @@ for q_step in q_trajectory:
 
 ### 练习
 
-1. ⭐ 用 Python 加载 Franka Panda，在 meshcat 中可视化零位和随机位型。
-2. ⭐⭐ 将本章的速度级 IK 用 Python 实现，并在 meshcat 中实时可视化求解过程。
-3. ⭐⭐ 比较 Python 版和 C++ 版 RNEA 的耗时。由于 eigenpy 的零拷贝，Python 版的额外开销来自哪里？
+1. ★ 用 Python 加载 Franka Panda，在 meshcat 中可视化零位和随机位型。
+2. ★★ 将本章的速度级 IK 用 Python 实现，并在 meshcat 中实时可视化求解过程。
+3. ★★ 比较 Python 版和 C++ 版 RNEA 的耗时。由于 eigenpy 的零拷贝，Python 版的额外开销来自哪里？
 
 ---
 
@@ -2121,14 +2121,14 @@ mini-manip/
 
 | 资源 | 难度 | 说明 |
 |------|:---:|------|
-| Carpentier et al. (2019) "The Pinocchio C++ Library" | ⭐⭐ | Pinocchio 架构论文，INRIA 官方 |
-| Featherstone (2008) "Rigid Body Dynamics Algorithms" | ⭐⭐⭐ | RNEA/ABA/CRBA 的算法理论基础 |
-| Pinocchio 3.x 官方文档 + API reference | ⭐⭐ | `gepettoweb.laas.fr/doc/stack-of-tasks/pinocchio/` |
-| Pinocchio GitHub 仓库 `examples/` 目录 | ⭐ | 官方示例代码，覆盖 FK/IK/ID/碰撞 |
-| Carpentier & Mansard (2018) "Analytical Derivatives of Rigid Body Dynamics Algorithms" | ⭐⭐⭐ | RNEA/ABA 解析导数的数学推导 |
-| Coal (hpp-fcl) 碰撞检测文档 | ⭐⭐ | Pinocchio 配套碰撞库 |
-| eigenpy 文档 | ⭐ | Python-C++ 零拷贝绑定机制 |
-| Pinocchio 3.x 迁移指南 | ⭐⭐ | 2.x → 3.x API 变更清单 |
+| Carpentier et al. (2019) "The Pinocchio C++ Library" | ★★ | Pinocchio 架构论文，INRIA 官方 |
+| Featherstone (2008) "Rigid Body Dynamics Algorithms" | ★★★ | RNEA/ABA/CRBA 的算法理论基础 |
+| Pinocchio 3.x 官方文档 + API reference | ★★ | `gepettoweb.laas.fr/doc/stack-of-tasks/pinocchio/` |
+| Pinocchio GitHub 仓库 `examples/` 目录 | ★ | 官方示例代码，覆盖 FK/IK/ID/碰撞 |
+| Carpentier & Mansard (2018) "Analytical Derivatives of Rigid Body Dynamics Algorithms" | ★★★ | RNEA/ABA 解析导数的数学推导 |
+| Coal (hpp-fcl) 碰撞检测文档 | ★★ | Pinocchio 配套碰撞库 |
+| eigenpy 文档 | ★ | Python-C++ 零拷贝绑定机制 |
+| Pinocchio 3.x 迁移指南 | ★★ | 2.x → 3.x API 变更清单 |
 
 ---
 

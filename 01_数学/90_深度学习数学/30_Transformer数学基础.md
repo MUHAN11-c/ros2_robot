@@ -12,7 +12,7 @@
 
 ## 前置自测
 
-> 📋 **答不出 ≥ 2 题 → 先回前置专题复习，再读本章。** 这五道题筛查的是本章推导真正依赖的基础，而不是 Transformer 本身的知识。
+> ◆ **答不出 ≥ 2 题 → 先回前置专题复习，再读本章。** 这五道题筛查的是本章推导真正依赖的基础，而不是 Transformer 本身的知识。
 
 | 编号 | 问题 | 答不出 → 回顾 |
 |:----:|------|--------------|
@@ -130,7 +130,7 @@
 
 ---
 
-## §8.3.0 科研发展脉络：Transformer 理论的四个阶段 ⭐
+## §8.3.0 科研发展脉络：Transformer 理论的四个阶段 ★
 
 在钻进公式之前，先用一张时间地图建立全局观——它能让你在读后面每个定理时知道"这是在回答历史上的哪个问题"。Transformer 的理论研究大致经历了四个阶段，从"架构是什么"到"表达力有多强"到"前向传播里藏着什么"再到"系统与缩放"。
 
@@ -168,7 +168,7 @@
 
 ---
 
-## §8.3.1 自注意力机制：QKV、softmax 与缩放 ⭐⭐ ◉
+## §8.3.1 自注意力机制：QKV、softmax 与缩放 ★★ ◉
 
 ### 动机：序列建模需要"按内容寻址"的信息聚合
 
@@ -457,7 +457,7 @@ print(f"缩放后方差: {(dot / d_k**0.5).var().item():.3f}  (理论值 1.0)")
 
 > **本质洞察**：LayerNorm 在 Transformer 里的一个**隐藏作用**正是"把无界输入域收缩成有界域，从而让本不是全局 Lipschitz 的自注意力在实际工作域上变得 Lipschitz"。这把 §8.3.7 的 LayerNorm（球面投影）和这里的 Lipschitz 分析、以及专题 8.2 的泛化界串成了一条线——归一化不只是"稳定训练"，它在数学上是"保证 Lipschitz 性"的关键，而 Lipschitz 性又是泛化与鲁棒的基础。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > 💡 **概念误区：以为注意力矩阵 $A$ 是对称的。**
 > **新手想法**："$A_{ij}$ 表示 $i$ 和 $j$ 的相关性，相关性应该是对称的，所以 $A_{ij}=A_{ji}$。"
@@ -492,7 +492,7 @@ print(f"缩放后方差: {(dot / d_k**0.5).var().item():.3f}  (理论值 1.0)")
 
 ---
 
-## §8.3.2 自注意力作为核方法与集合函数 ⭐⭐⭐ ◉
+## §8.3.2 自注意力作为核方法与集合函数 ★★★ ◉
 
 ### 动机：为什么要换一个视角看同一个公式
 
@@ -633,7 +633,7 @@ $$
 
 > **理论-工程桥接**：这个差异在机器人多物体操作中直接显现。任务"从一堆零件里抓取不与其他零件碰撞的那个"——这需要建模零件**之间**的空间关系（成对的"会不会碰"），Deep Sets 的独立编码做不到，必须用 Set Transformer 式的注意力让零件相互"看见"。反之，任务"数一数桌上有几个红色物体"只需独立判断每个物体的颜色再求和，Deep Sets 足矣且更省算力。理解这个分类，你才能为具体的集合型机器人任务选对架构，而非无脑上 Transformer。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > 💡 **概念误区：以为"注意力是核回归"只是一个比喻。**
 > **新手想法**："说注意力像核回归，大概是打个比方帮助理解。"
@@ -660,7 +660,7 @@ $$
 
 ---
 
-## §8.3.3 位置编码理论：正弦编码与 RoPE 群论 ⭐⭐⭐ ◉
+## §8.3.3 位置编码理论：正弦编码与 RoPE 群论 ★★★ ◉
 
 ### 动机：注意力的"色盲"必须被治好
 
@@ -824,7 +824,7 @@ $$
 
 RoPE = $SO(2)^{d/2}$ 表示这一认识直接启发机器人应用。在 3D 操作任务中，token 往往带有**空间三维坐标**（如点云的每个点、体素）。一个自然的想法：能否设计 **$SO(3)^{d/3}$ 的"3D RoPE"**，把三维空间位置用三维旋转群编码，让注意力内积只依赖两点的**相对空间位移**？这正是当前点云 Transformer、SE(3)-equivariant 网络（专题 8.6）的活跃方向。理解 RoPE 的群论本质，你才能把它从"1D 序列位置"推广到"3D 空间位置"——这对机器人 3D 感知与操作是直接的工具。本章末练习 T4 会让你尝试这个设计。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > 💡 **概念误区：混淆"位置编码"和"位置嵌入"。**
 > **新手想法**："正弦编码和 BERT 的位置嵌入是一回事，都给位置一个向量。"
@@ -853,7 +853,7 @@ RoPE = $SO(2)^{d/2}$ 表示这一认识直接启发机器人应用。在 3D 操�
 
 ---
 
-## §8.3.4 Transformer 万能逼近定理 ⭐⭐⭐⭐ ◉
+## §8.3.4 Transformer 万能逼近定理 ★★★★ ◉
 
 ### 动机：我们凭什么相信 Transformer 能学会任意序列任务
 
@@ -947,7 +947,7 @@ UAT 告诉机器人从业者一件**安心**的事和一件**警惕**的事。
 
 > **对比性思维（多视角，"逼近-优化-泛化"三角）**：UAT 只占"逼近"这一角。一个机器人策略能不能学好，取决于三者协同：**逼近**（网络类里有没有好解，本节）、**优化**（SGD 能不能找到它，§8.3.5 训练动力学给部分答案）、**泛化**（有限数据下学到的解在测试时好不好，专题 8.2）。把 UAT 当成"Transformer 万能、所以一定能学会任何任务"是典型的过度解读——它只回答了三角的一个顶点。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > 💡 **概念误区：把万能逼近当成"Transformer 能学会任何任务"。**
 > **新手想法**："UAT 证明 Transformer 万能逼近，所以只要数据够多，它能学会任何序列任务。"
@@ -976,7 +976,7 @@ UAT 告诉机器人从业者一件**安心**的事和一件**警惕**的事。
 
 ---
 
-## §8.3.5 Transformer 的计算能力 ⭐⭐⭐
+## §8.3.5 Transformer 的计算能力 ★★★
 
 ### 动机：能"逼近函数"和能"执行算法"是两回事
 
@@ -1057,7 +1057,7 @@ UAT 告诉机器人从业者一件**安心**的事和一件**警惕**的事。
 - **需要精确多步算法的任务**（精确排序大量物体、精确解约束方程、长链逻辑推理）——超出 $\mathrm{TC}^0$，固定深度前向很可能出错。**对策**：要么用 CoT 让模型生成中间步骤（把任务推到 $\mathrm{P}$），要么外接专门的求解器/规划器，Transformer 只负责"翻译问题"。
 - **本质是函数逼近、不需精确算法的任务**（视觉感知、连续控制、模式识别）——在 $\mathrm{TC}^0$ 内绰绰有余，直接前向即可。VLA 的绝大多数动作生成属于此类，这也是 Transformer 在 VLA 上成功的原因之一。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > 💡 **概念误区：以为"Transformer 图灵完备"是无条件成立的。**
 > **新手想法**："论文证明了 Transformer 图灵完备，所以它理论上能算任何东西。"
@@ -1083,7 +1083,7 @@ UAT 告诉机器人从业者一件**安心**的事和一件**警惕**的事。
 
 ---
 
-## §8.3.6 上下文学习的数学机制：ICL = 隐式梯度下降 ⭐⭐⭐⭐ ◉
+## §8.3.6 上下文学习的数学机制：ICL = 隐式梯度下降 ★★★★ ◉
 
 > **本节是全章的理论高潮，也是理解 VLA few-shot 适应的钥匙。** 如果你只精读一节，选这节。
 
@@ -1283,7 +1283,7 @@ print(f"两者之差    : {abs(y_hat_attn - y_hat_gd):.2e}")   # ≈ 0（机器�
 
 **Giannou et al.（Looped Transformer = 可编程计算机）。** 更进一步，常数深度 Transformer 加上**循环**（把输出再喂回输入）可模拟任意指令集，他们具体构造了用 Newton-Schulz 迭代（$A_{t+1}=A_t(2I-MA_t)$）求矩阵逆的程序，在 13 层内精确实现一轮迭代。这再次印证"层 = 迭代"——循环让有限深度获得无限迭代能力。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > 💡 **概念误区：以为上下文学习改变了模型权重。**
 > **新手想法**："模型 few-shot 适应了新任务，说明它的权重被这几个演示更新了。"
@@ -1316,7 +1316,7 @@ print(f"两者之差    : {abs(y_hat_attn - y_hat_gd):.2e}")   # ≈ 0（机器�
 
 ---
 
-## §8.3.7 架构数学：残差连接、LayerNorm 与缩放律 ⭐⭐⭐
+## §8.3.7 架构数学：残差连接、LayerNorm 与缩放律 ★★★
 
 ### 动机：让深层 Transformer 训得动、选得对
 
@@ -1430,7 +1430,7 @@ $$
 
 > **理论-工程桥接（机器人实时推理）**：50 Hz 控制要求每步 ≤ 20 ms。设 VLA 骨干是 3B 参数 Transformer：标准注意力下 $N=512$ token × 32 层约 80 ms（**不达标**）；FlashAttention + KV cache（缓存历史 token 的键值，避免重算）下，prefix 只前向一次、动作 token 增量推理约 15 ms（**达标**）。π₀ 更进一步：VLM prefix 缓存 + 10 步 flow matching（每步只跑 315M 的 action expert）约 1.5 ms/步。**没有 FlashAttention 这类 IO 优化，VLA 根本无法在边缘设备上实时跑**——它把"理论上能算"变成了"实际跑得动"。这是为什么本章把它列为架构数学的一部分：表达力（§8.3.4）保证"能学会"，IO 复杂度保证"跑得动"，二者缺一不可。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > 💡 **概念误区：以为残差连接只是"加个捷径"的工程技巧。**
 > **新手想法**："残差就是把输入加到输出，方便梯度流动，没什么数学内涵。"
@@ -1466,7 +1466,7 @@ $$
 
 ---
 
-## §8.3.8 与 VLA、决策 Transformer 的桥接 ⭐⭐⭐ ◉
+## §8.3.8 与 VLA、决策 Transformer 的桥接 ★★★ ◉
 
 > **本节是全章终点**，把前七节的数学结论翻译成机器人语言。读完它，你应能用本章工具读懂 2024+ 的具身智能论文，并衔接专题 8.5 VLA 框架。
 
@@ -1608,7 +1608,7 @@ $$
 
 > **本质洞察**：VLA 的成功本质上是**把机器人控制问题翻译成 Transformer 擅长的序列建模问题**——感知、语言、动作全部 token 化，统一进注意力。本章前七节的每个结论都在这里兑现：注意力提供跨模态融合（§8.3.1-2）、位置编码处理时序（§8.3.3）、UAT 保证表达力（§8.3.4）、ICL 提供 few-shot（§8.3.6）、Chinchilla 律指导规模选择（§8.3.7）。**"不理解 Transformer 数学就无法理解 2024+ 的具身智能论文"——这句话在本节得到了完整的兑现。** 动作解码范式（自回归/扩散/流匹配）则连接到专题 8.4 Diffusion 与专题 8.5 VLA。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > 💡 **概念误区：以为 Decision Transformer 内部有价值函数或在做规划。**
 > **新手想法**："DT 是 RL 模型，肯定在内部估计价值、做某种动态规划。"
@@ -1874,18 +1874,18 @@ $$
 
 | 编号 | 知识点 | 核心要点 | 对应节 | 难度 |
 |:----:|--------|---------|:------:|:----:|
-| 1 | 自注意力机制 | QKV 投影 + softmax 加权聚合；$\sqrt{d_k}$ 归一方差；行随机；置换等变；多头=低秩($\le d_k$)子空间换异质关系多样性 | §8.3.1 | ⭐⭐ |
-| 2 | 注意力作为核方法 | = 可学习核的 Nadaraya-Watson 回归；温度=带宽；核技巧→线性注意力 | §8.3.2 | ⭐⭐⭐ |
-| 3 | 注意力作为集合函数 | 裸注意力是置换等变；Deep Sets/Set Transformer；点云无需位置编码 | §8.3.2 | ⭐⭐⭐ |
-| 4 | 正弦位置编码 | 多频率 Fourier 基；相邻位置可由旋转关联（混在加法里） | §8.3.3 | ⭐⭐ |
-| 5 | RoPE 群论 | 相对位置约束 ⟹ 唯一旋转解；$SO(2)^{d/2}$ 表示；范数保持；外推退化=高频相位 OOD，NTK/YaRN 修复 | §8.3.3 | ⭐⭐⭐ |
-| 6 | Transformer UAT | 三步证明：量化→contextual mapping（注意力）→FFN 查表；逼近率 $\varepsilon^{-d/s}$，深度换宽度 | §8.3.4 | ⭐⭐⭐⭐ |
-| 7 | 计算能力 | 任意精度图灵完备 vs 有限精度 $\subseteq\mathrm{TC}^0$（电路视角）+ 敏感度无条件下界（Hahn）；CoT 扩展到 $\mathrm{P}$ | §8.3.5 | ⭐⭐⭐ |
-| 8 | 上下文学习 = GD | 单层线性注意力 = 一步 GD（显式构造）；多层 = Neumann 级数收敛到 OLS；最优为预条件 GD；任务多样性相变触发"真 ICL"；归纳头是真实网络里的电路载体 | §8.3.6 | ⭐⭐⭐⭐ |
-| 9 | 残差与 LayerNorm | 残差 = ODE 离散（学扰动）；LayerNorm = 球面投影 + 仿射；RMSNorm 扔掉减均值（控范数才是关键） | §8.3.7 | ⭐⭐⭐ |
-| 10 | 缩放律 | Chinchilla $D/N\approx 20$；机器人数据稀缺宜选小模型；推理最优 $D/N$ 升至千级 | §8.3.7 | ⭐⭐⭐ |
-| 11 | Decision Transformer | RL = 条件序列建模；$\hat R$ 为目标 embedding；不解 Bellman，不会 stitching；仅在 $\hat R\in\mathcal{R}(s)$ 可达时正确 | §8.3.8 | ⭐⭐⭐ |
-| 12 | ACT 与 VLA | chunking 把误差降到 $O(T^2\varepsilon/k)$；与 MPC 滚动时域逐部件同构（$k\!\leftrightarrow\!H_p$）；注意力天然多模态融合 | §8.3.8 | ⭐⭐⭐ |
+| 1 | 自注意力机制 | QKV 投影 + softmax 加权聚合；$\sqrt{d_k}$ 归一方差；行随机；置换等变；多头=低秩($\le d_k$)子空间换异质关系多样性 | §8.3.1 | ★★ |
+| 2 | 注意力作为核方法 | = 可学习核的 Nadaraya-Watson 回归；温度=带宽；核技巧→线性注意力 | §8.3.2 | ★★★ |
+| 3 | 注意力作为集合函数 | 裸注意力是置换等变；Deep Sets/Set Transformer；点云无需位置编码 | §8.3.2 | ★★★ |
+| 4 | 正弦位置编码 | 多频率 Fourier 基；相邻位置可由旋转关联（混在加法里） | §8.3.3 | ★★ |
+| 5 | RoPE 群论 | 相对位置约束 ⟹ 唯一旋转解；$SO(2)^{d/2}$ 表示；范数保持；外推退化=高频相位 OOD，NTK/YaRN 修复 | §8.3.3 | ★★★ |
+| 6 | Transformer UAT | 三步证明：量化→contextual mapping（注意力）→FFN 查表；逼近率 $\varepsilon^{-d/s}$，深度换宽度 | §8.3.4 | ★★★★ |
+| 7 | 计算能力 | 任意精度图灵完备 vs 有限精度 $\subseteq\mathrm{TC}^0$（电路视角）+ 敏感度无条件下界（Hahn）；CoT 扩展到 $\mathrm{P}$ | §8.3.5 | ★★★ |
+| 8 | 上下文学习 = GD | 单层线性注意力 = 一步 GD（显式构造）；多层 = Neumann 级数收敛到 OLS；最优为预条件 GD；任务多样性相变触发"真 ICL"；归纳头是真实网络里的电路载体 | §8.3.6 | ★★★★ |
+| 9 | 残差与 LayerNorm | 残差 = ODE 离散（学扰动）；LayerNorm = 球面投影 + 仿射；RMSNorm 扔掉减均值（控范数才是关键） | §8.3.7 | ★★★ |
+| 10 | 缩放律 | Chinchilla $D/N\approx 20$；机器人数据稀缺宜选小模型；推理最优 $D/N$ 升至千级 | §8.3.7 | ★★★ |
+| 11 | Decision Transformer | RL = 条件序列建模；$\hat R$ 为目标 embedding；不解 Bellman，不会 stitching；仅在 $\hat R\in\mathcal{R}(s)$ 可达时正确 | §8.3.8 | ★★★ |
+| 12 | ACT 与 VLA | chunking 把误差降到 $O(T^2\varepsilon/k)$；与 MPC 滚动时域逐部件同构（$k\!\leftrightarrow\!H_p$）；注意力天然多模态融合 | §8.3.8 | ★★★ |
 
 ---
 
@@ -1910,63 +1910,63 @@ $$
 
 ## 延伸阅读
 
-按难度和主题分类。标注难度：⭐ 入门 / ⭐⭐ 进阶 / ⭐⭐⭐ 研究级。
+按难度和主题分类。标注难度：★ 入门 / ★★ 进阶 / ★★★ 研究级。
 
 **奠基论文（必读）**
 
-- ⭐⭐ Vaswani et al., *Attention Is All You Need* (NeurIPS 2017)——架构定义、多头注意力、正弦位置编码的原始出处。读 §3 即可掌握本章 §8.3.1 的工程版本。
-- ⭐⭐⭐ Bhojanapalli et al., *Low-Rank Bottleneck in Multi-head Attention Models* (ICML 2020)——本章 §8.3.1 多头低秩瓶颈论证（$\mathrm{rank}(S)\le d_k$）的来源。
-- ⭐⭐⭐ Yun, Bhojanapalli, Rawat, Reddi, Kumar, *Are Transformers Universal Approximators of Sequence-to-Sequence Functions?* (ICLR 2020)——本章 §8.3.4 的来源，重点读 contextual mapping 引理。
-- ⭐⭐⭐ Von Oswald et al., *Transformers Learn In-Context by Gradient Descent* (ICML 2023)——本章 §8.3.6 的核心，显式权重构造在论文 §3。
+- ★★ Vaswani et al., *Attention Is All You Need* (NeurIPS 2017)——架构定义、多头注意力、正弦位置编码的原始出处。读 §3 即可掌握本章 §8.3.1 的工程版本。
+- ★★★ Bhojanapalli et al., *Low-Rank Bottleneck in Multi-head Attention Models* (ICML 2020)——本章 §8.3.1 多头低秩瓶颈论证（$\mathrm{rank}(S)\le d_k$）的来源。
+- ★★★ Yun, Bhojanapalli, Rawat, Reddi, Kumar, *Are Transformers Universal Approximators of Sequence-to-Sequence Functions?* (ICLR 2020)——本章 §8.3.4 的来源，重点读 contextual mapping 引理。
+- ★★★ Von Oswald et al., *Transformers Learn In-Context by Gradient Descent* (ICML 2023)——本章 §8.3.6 的核心，显式权重构造在论文 §3。
 
 **位置编码**
 
-- ⭐⭐ Su et al., *RoFormer: Enhanced Transformer with Rotary Position Embedding* (2021)——RoPE 原始论文，群论推导在 §3.2。
-- ⭐⭐ EleutherAI Blog, *Rotary Embeddings: A Relative Revolution*——RoPE 的直观解读，适合先于原论文阅读。
-- ⭐⭐⭐ Chen et al., *Extending Context Window of Large Language Models via Positional Interpolation* (2023)——本章 §8.3.3 理论 C 的位置内插方案。
-- ⭐⭐⭐ Peng et al., *YaRN: Efficient Context Window Extension of Large Language Models* (2023)——本章 §8.3.3 理论 C 的分频段外推增强，长上下文主流方案。
+- ★★ Su et al., *RoFormer: Enhanced Transformer with Rotary Position Embedding* (2021)——RoPE 原始论文，群论推导在 §3.2。
+- ★★ EleutherAI Blog, *Rotary Embeddings: A Relative Revolution*——RoPE 的直观解读，适合先于原论文阅读。
+- ★★★ Chen et al., *Extending Context Window of Large Language Models via Positional Interpolation* (2023)——本章 §8.3.3 理论 C 的位置内插方案。
+- ★★★ Peng et al., *YaRN: Efficient Context Window Extension of Large Language Models* (2023)——本章 §8.3.3 理论 C 的分频段外推增强，长上下文主流方案。
 
 **核方法与集合函数视角**
 
-- ⭐⭐⭐ Tsai et al., *Transformer Dissection: A Unified Understanding of Transformer's Attention via the Lens of Kernel* (EMNLP 2019)——本章 §8.3.2 核回归视角的来源。
-- ⭐⭐ Lee et al., *Set Transformer* (ICML 2019)——集合函数视角，PMA 池化的万能逼近性。
-- ⭐⭐ Zaheer et al., *Deep Sets* (NeurIPS 2017)——置换不变函数的表示定理。
-- ⭐⭐⭐ Katharopoulos et al., *Transformers are RNNs: Fast Autoregressive Transformers with Linear Attention* (ICML 2020)——线性注意力与"Transformer 即 RNN"。
+- ★★★ Tsai et al., *Transformer Dissection: A Unified Understanding of Transformer's Attention via the Lens of Kernel* (EMNLP 2019)——本章 §8.3.2 核回归视角的来源。
+- ★★ Lee et al., *Set Transformer* (ICML 2019)——集合函数视角，PMA 池化的万能逼近性。
+- ★★ Zaheer et al., *Deep Sets* (NeurIPS 2017)——置换不变函数的表示定理。
+- ★★★ Katharopoulos et al., *Transformers are RNNs: Fast Autoregressive Transformers with Linear Attention* (ICML 2020)——线性注意力与"Transformer 即 RNN"。
 
 **计算能力与表达力**
 
-- ⭐⭐⭐ Pérez et al., *Attention is Turing Complete* (JMLR 2021)——图灵完备性构造与精度假设。
-- ⭐⭐⭐ Merrill & Sabharwal, *The Parallelism Tradeoff: Limitations of Log-Precision Transformers* (TACL 2023)——$\mathrm{TC}^0$ 上界。
-- ⭐⭐⭐ Hahn, *Theoretical Limitations of Self-Attention in Neural Sequence Models* (TACL 2020)——本章 §8.3.5 结果五的敏感度下界（无条件论证 PARITY/Dyck 不可达）。
-- ⭐⭐⭐ Chiang & Cholak, *Overcoming a Theoretical Limitation of Self-Attention* (ACL 2022)——加温度可在固定长度逼近 PARITY 但 Lipschitz 爆炸，§8.3.5 结果五的精化。
-- ⭐⭐⭐ Weiss et al., *Thinking Like Transformers* (ICML 2021)——RASP 编程语言，连接表达力与可学习性。
+- ★★★ Pérez et al., *Attention is Turing Complete* (JMLR 2021)——图灵完备性构造与精度假设。
+- ★★★ Merrill & Sabharwal, *The Parallelism Tradeoff: Limitations of Log-Precision Transformers* (TACL 2023)——$\mathrm{TC}^0$ 上界。
+- ★★★ Hahn, *Theoretical Limitations of Self-Attention in Neural Sequence Models* (TACL 2020)——本章 §8.3.5 结果五的敏感度下界（无条件论证 PARITY/Dyck 不可达）。
+- ★★★ Chiang & Cholak, *Overcoming a Theoretical Limitation of Self-Attention* (ACL 2022)——加温度可在固定长度逼近 PARITY 但 Lipschitz 爆炸，§8.3.5 结果五的精化。
+- ★★★ Weiss et al., *Thinking Like Transformers* (ICML 2021)——RASP 编程语言，连接表达力与可学习性。
 
 **上下文学习（深入）**
 
-- ⭐⭐⭐ Bai et al., *Transformers as Statisticians* (NeurIPS 2023)——Transformer 实现 OLS/Ridge/Lasso/GLM 的统一构造。
-- ⭐⭐⭐ Ahn et al. / Mahankali-Hashimoto-Ma (2023)——ICL 最优性 = 预条件梯度下降。
-- ⭐⭐⭐ Raventós et al., *Pretraining Task Diversity and the Emergence of Non-Bayesian In-Context Learning for Regression* (NeurIPS 2023)——本章 §8.3.6 第三个视角的来源，任务多样性相变阈值 $M^\star$。
-- ⭐⭐⭐ Olsson et al., *In-Context Learning and Induction Heads* (Anthropic, 2022)——本章 §8.3.6 第四个视角的来源，ICL 的电路级机制与"涌现拐点"。
-- ⭐⭐ Garg, Tsipras et al., *What Can Transformers Learn In-Context?* (NeurIPS 2022)——ICL 的受控实验范式。
+- ★★★ Bai et al., *Transformers as Statisticians* (NeurIPS 2023)——Transformer 实现 OLS/Ridge/Lasso/GLM 的统一构造。
+- ★★★ Ahn et al. / Mahankali-Hashimoto-Ma (2023)——ICL 最优性 = 预条件梯度下降。
+- ★★★ Raventós et al., *Pretraining Task Diversity and the Emergence of Non-Bayesian In-Context Learning for Regression* (NeurIPS 2023)——本章 §8.3.6 第三个视角的来源，任务多样性相变阈值 $M^\star$。
+- ★★★ Olsson et al., *In-Context Learning and Induction Heads* (Anthropic, 2022)——本章 §8.3.6 第四个视角的来源，ICL 的电路级机制与"涌现拐点"。
+- ★★ Garg, Tsipras et al., *What Can Transformers Learn In-Context?* (NeurIPS 2022)——ICL 的受控实验范式。
 
 **缩放律与系统**
 
-- ⭐⭐ Hoffmann et al., *Training Compute-Optimal Large Language Models* (Chinchilla, NeurIPS 2022)——本章 §8.3.7 最优前沿。
-- ⭐⭐ Kaplan et al., *Scaling Laws for Neural Language Models* (2020)——幂律的原始观察。
-- ⭐⭐⭐ Bahri et al., *Explaining Neural Scaling Laws* (PNAS 2024)——缩放律的流形-谱理论解释。
-- ⭐⭐⭐ Dao et al., *FlashAttention* (NeurIPS 2022)——注意力的 IO 复杂度理论，本章未展开但与 §8.3.1 的 $O(n^2)$ 瓶颈直接相关。
-- ⭐⭐ Zhang & Sennrich, *Root Mean Square Layer Normalization* (NeurIPS 2019)——本章 §8.3.7 RMSNorm 的原始论文，现代大模型/VLA 主流归一化。
+- ★★ Hoffmann et al., *Training Compute-Optimal Large Language Models* (Chinchilla, NeurIPS 2022)——本章 §8.3.7 最优前沿。
+- ★★ Kaplan et al., *Scaling Laws for Neural Language Models* (2020)——幂律的原始观察。
+- ★★★ Bahri et al., *Explaining Neural Scaling Laws* (PNAS 2024)——缩放律的流形-谱理论解释。
+- ★★★ Dao et al., *FlashAttention* (NeurIPS 2022)——注意力的 IO 复杂度理论，本章未展开但与 §8.3.1 的 $O(n^2)$ 瓶颈直接相关。
+- ★★ Zhang & Sennrich, *Root Mean Square Layer Normalization* (NeurIPS 2019)——本章 §8.3.7 RMSNorm 的原始论文，现代大模型/VLA 主流归一化。
 
 **机器人应用**
 
-- ⭐⭐ Chen et al., *Decision Transformer* (NeurIPS 2021)——本章 §8.3.8 的 RL 序列建模范式。
-- ⭐⭐ Zhao et al., *Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware* (ACT, RSS 2023)——本章 §8.3.8 的 action chunking。
-- ⭐⭐⭐ RT-2 / Octo / π₀ 论文——VLA 的代表工作，建议在学完专题 8.5 后回读。
+- ★★ Chen et al., *Decision Transformer* (NeurIPS 2021)——本章 §8.3.8 的 RL 序列建模范式。
+- ★★ Zhao et al., *Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware* (ACT, RSS 2023)——本章 §8.3.8 的 action chunking。
+- ★★★ RT-2 / Octo / π₀ 论文——VLA 的代表工作，建议在学完专题 8.5 后回读。
 
 **教材**
 
-- ⭐⭐ Phuong & Hutter, *Formal Algorithms for Transformers* (2022)——Transformer 的伪代码形式化，全文值得精读。
-- ⭐⭐⭐ Bronstein et al., *Geometric Deep Learning* (2021)——Ch.5-6 从几何视角看序列模型与注意力，连接本章集合函数视角。
+- ★★ Phuong & Hutter, *Formal Algorithms for Transformers* (2022)——Transformer 的伪代码形式化，全文值得精读。
+- ★★★ Bronstein et al., *Geometric Deep Learning* (2021)——Ch.5-6 从几何视角看序列模型与注意力，连接本章集合函数视角。
 
 ---
 

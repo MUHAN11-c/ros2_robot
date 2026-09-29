@@ -124,7 +124,7 @@ $$\dot P=-A^\top P-PA+PBR^{-1}B^\top P-Q\quad(\text{终端给定}).$$
 
 ---
 
-## §1.1　从最优控制到微分博弈：为什么需要博弈视角　⭐⭐
+## §1.1　从最优控制到微分博弈：为什么需要博弈视角　★★
 
 > **这一节解决什么问题**：说清楚单智能体规划在交互场景下到底缺了什么，从而让"博弈"这个看似抽象的工具显得不可回避。
 > 这一节没有公式，但它定下了整条线的世界观——后面三章都在为这里提出的三次认知跨越提供数学工具。
@@ -255,7 +255,7 @@ Isaacs 的关键贡献不只是提出问题，而是给出了刻画双方最优�
 本章先在零和的干净世界里把 HJI 方程、可达性、耦合 Riccati 这些工具打磨好，G2 再带着它们进入一般和的真实交通。
 一个提醒：§1.6 的 LQ 博弈是个例外——它本身就是一般和（每人有自己的 $Q_i,R_i$），放在本章是因为它的耦合 Riccati 是 G2 iLQGames 的直接数学前置，与零和理论无缝衔接。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > **陷阱 1：把博弈当成"加了对手约束的最优控制"**
 > - **错误描述**：新手常想"那我把对手的最优轨迹当约束塞进我的优化不就行了？这和避障没区别"。
@@ -277,7 +277,7 @@ Isaacs 的关键贡献不只是提出问题，而是给出了刻画双方最优�
 
 ---
 
-## §1.2　零和微分博弈与 Isaacs 方程　⭐⭐⭐
+## §1.2　零和微分博弈与 Isaacs 方程　★★★
 
 > **这一节解决什么问题**：把"双方实时对抗"这件事写成一个能求解的数学对象——Isaacs 方程，并回答一个微妙但要命的问题：这个博弈到底有没有一个确定的"值"？
 
@@ -522,7 +522,7 @@ $$\min_{u\in[-1,1]}(-\lambda u)=-|\lambda|\ \Rightarrow\ u^*=\operatorname{sign}
 最优策略 $u^*=v^*=\operatorname{sign}(\lambda)=\operatorname{sign}(x)$ 也直白：当 $x>0$，追捕者取 $u=+1$ 想把 $x$ 拉小、逃跑者取 $v=+1$ 想把 $x$ 推大，两者打平。
 注意值函数 $|x|$ 在 $x=0$ 处不可微——这正是 §1.3 要处理的"棱"，也提醒我们 $\lambda=\operatorname{sign}(x)$ 在原点没有定义、需要粘性解框架来收尾。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > **陷阱 1：默认 $\min_u\max_v=\max_v\min_u$**
 > - **错误描述**：写 Isaacs 方程时随手把 $\min\max$ 写成 $\max\min$，或反过来，以为两者本来就一样。
@@ -544,7 +544,7 @@ $$\min_{u\in[-1,1]}(-\lambda u)=-|\lambda|\ \Rightarrow\ u^*=\operatorname{sign}
 
 ---
 
-## §1.3　HJI 偏微分方程与粘性解：值函数为什么不可微　⭐⭐⭐
+## §1.3　HJI 偏微分方程与粘性解：值函数为什么不可微　★★★
 
 > **这一节解决什么问题**：上一节写出了 HJI 方程，但回避了一个尖锐的事实——它的解通常不是处处可微的经典解。
 > 这一节交代为什么，以及数学上该用什么"弱解"概念把方程救活，并用一个经典反例演示这个弱解如何唯一地挑出物理正确的那一个。
@@ -785,7 +785,7 @@ $$F(x_\varepsilon,\nabla\phi)=\varepsilon\,\Delta u^\varepsilon\le\varepsilon\,\
 两者一夹，$V_1=V_2$——唯一性就出来了。
 次解/超解那两个看似古怪的单边条件，正是为了让这个夹逼论证能跑通而设计的。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > **陷阱 1：默认 HJI 值函数处处可微，直接用 $\nabla V$**
 > - **错误描述**：把值函数当成光滑函数，在推导或写数值格式时随手对 $V$ 求梯度、求二阶导。
@@ -807,7 +807,7 @@ $$F(x_\varepsilon,\nabla\phi)=\varepsilon\,\Delta u^\varepsilon\le\varepsilon\,\
 
 ---
 
-## §1.4　可达性分析：BRS、BRT 与 reach–avoid　⭐⭐⭐
+## §1.4　可达性分析：BRS、BRT 与 reach–avoid　★★★
 
 > **这一节解决什么问题**：把抽象的"安全验证"落成一个能算的对象——可达集 / 可达管 / reach–avoid 集。
 > 这一节也是本章最容易踩坑的地方：后向可达**集**与后向可达**管**只差一个词，方程不同，含义更不同。
@@ -1026,7 +1026,7 @@ $H$ 的 $\max/\min$ 仍按 §1.4 口诀——这里控制争取"存在一条到�
 > 一句话：**RPI 集是 BRT 在线性鲁棒控制里的高效特例。**
 > （不确定性规划 U2 会从 Tube MPC 那一侧再讲一遍这根管。）
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > **陷阱 1：混淆后向可达集（BRS）与后向可达管（BRT）**
 > - **错误描述**：把"在终点到达"的 BRS 方程（无冻结项）用到本该问"窗内曾经到达"的安全分析上；或反过来。许多人甚至以为带 $\min[0,\cdot]$ 的式子算的是 BRS。
@@ -1048,7 +1048,7 @@ $H$ 的 $\max/\min$ 仍按 §1.4 口诀——这里控制争取"存在一条到�
 
 ---
 
-## §1.5　水平集数值方法：WENO 与 TVD-RK　⭐⭐⭐
+## §1.5　水平集数值方法：WENO 与 TVD-RK　★★★
 
 > **这一节解决什么问题**：HJI 方程有了（§1.2）、粘性解唯一了（§1.3）、可达集表述清楚了（§1.4），但这些都还在纸上。
 > 这一节交代怎么在计算机上把 HJI 方程真正算出来——以及为什么"随便挑个差分格式"会算出被 §1.3 否决的假解。
@@ -1244,7 +1244,7 @@ print(f"数值 BRT ≈ [{lo:.2f}, {hi:.2f}]；解析解 = [-{1+T:.0f}, {1+T:.0f}
 真正的拦路虎是最后一行的**维数 $d$**：网格点数 $N^d$ 随维数指数增长，$N=50$、$d=6$ 就是 $50^6\approx 1.5\times10^{10}$ 个点，内存与时间都到了单机极限。
 这就是 helperOC 这类网格法被卡在约 6 维的根本原因，也正是 §1.7 要正面处理的**维度诅咒**——以及 §1.6 那条"退而用局部 LQ 近似"路线（G2）之所以必要的理由。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > **陷阱 1：用不带耗散的格式（如纯中心差分）解 HJI**
 > - **错误描述**：图省事或图"高精度"，用中心差分近似梯度、用普通 RK 推进时间。
@@ -1267,7 +1267,7 @@ print(f"数值 BRT ≈ [{lo:.2f}, {hi:.2f}]；解析解 = [-{1+T:.0f}, {1+T:.0f}
 ---
 
 
-## §1.6　LQ 博弈与耦合 Riccati　⭐⭐⭐　★ 本章最关键
+## §1.6　LQ 博弈与耦合 Riccati　★★★　★ 本章最关键
 
 > **这一节解决什么问题**：HJI 给出全局最优却算不动（§1.5 已点明维度诅咒，§1.7 还会正面展开）。
 > 这一节问：如果动力学是线性的、代价是二次的，博弈能不能像单人 LQR 那样闭式求解？
@@ -1531,7 +1531,7 @@ def verify_nash(A, B1, B2, R1, R2, K1, K2, Q1):
 三个理由：其一，反馈策略有扰动拒绝能力（§1.2 已述），机器人实际部署的就是"看状态实时算控制"的反馈律；其二，iLQGames（G2）的输出天然是反馈增益序列，与 (1.5) 对接；其三，反馈 Nash 在多数交互场景里是更现实的建模——交通中没人真会"开局承诺一条路、之后闭眼开"。
 所以后续一律默认反馈 Nash；遇到"开环"字样要警觉，它是另一套方程、另一族均衡。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > **陷阱 1：把多人 LQ 当成各自独立的 LQR**
 > - **错误描述**：以为"每人线性二次，那就每人各解一个标准 LQR、各取各的增益"。
@@ -1554,7 +1554,7 @@ def verify_nash(A, B1, B2, R1, R2, K1, K2, Q1):
 ---
 
 
-## §1.7　维度诅咒与三条绕行路　⭐⭐⭐
+## §1.7　维度诅咒与三条绕行路　★★★
 
 > **这一节解决什么问题**：§1.5 末尾点了名——网格法被维度诅咒卡在约 6 维，可真实系统（多机、高自由度）远不止 6 维。
 > 这一节讲三条主流绕行路：状态解耦、FaSTrack、神经近似（DeepReach），并按"精确性 vs 可扩展性"把它们排清楚，好在工程里按需选型。
@@ -1657,7 +1657,7 @@ DeepReach（Bansal 与 Tomlin，**ICRA 2021**）则彻底换赛道：**放弃网
 > 安全关键系统要的从来不是"平均很准"，而是"最坏不差过某条线"——这条线能不能画出来，就是"保证"与"近似"的分水岭。
 > 这也解释了为什么 §1.6 的局部 LQ 近似（G2）走了完全不同的路：它不试图近似全局值函数，而是在每个时刻求一个**精确**的局部反馈 Nash，用"局部精确 + 滚动重规划"换掉"全局近似"，从而绕开了认证难题。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > **陷阱 1：以为 DeepReach（神经近似）总是优于网格法**
 > - **错误描述**："神经网络能上高维、又快，那以后都用 DeepReach、不用网格法了。"
@@ -1680,7 +1680,7 @@ DeepReach（Bansal 与 Tomlin，**ICRA 2021**）则彻底换赛道：**放弃网
 ---
 
 
-## §1.8　追逃经典问题：Homicidal Chauffeur 与 Air3D　⭐⭐
+## §1.8　追逃经典问题：Homicidal Chauffeur 与 Air3D　★★
 
 > **这一节解决什么问题**：前七节都在搭理论与方法，这一节用两个标志性的追逃问题把它们落地——给直觉一个锚、给数值实验一个标准靶子，也借此点出 Isaacs 理论里关于值函数"棱"的精细分类。
 
@@ -1810,7 +1810,7 @@ Air3D 表面问的是类型博弈（能不能捕获），但水平集方法把�
 > 不同之处：类型博弈直接算布尔结局、难做连续优化；程度博弈算连续值函数、可用 PDE 数值求解，再用零水平集回到布尔。
 > 一句话：**水平集方法的威力，就在于它用一个连续的程度博弈，迂回解出了原本难算的类型博弈**——这是整个 HJI 可达性领域得以工程化的根基，也把 §1.1 的概念区分、§1.4 的编码技巧、§1.8 的具体问题串成了一条线。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > **陷阱 1：用绝对坐标建模追逃，导致维度翻倍**
 > - **错误描述**：直接用两个智能体各自的绝对状态 $(x_A,y_A,\psi_A,x_B,y_B,\psi_B)$ 去算可达集。
@@ -1910,14 +1910,14 @@ HJI 给全局最优与严格安全证书，却被维度诅咒卡在约 6 维；
 
 | 节 | 知识点 | 难度 | 一句话 |
 |----|--------|------|--------|
-| §1.1 | 三次认知跨越 | ⭐⭐ | 最优→均衡、预测→预测即均衡、代价已知→代价需推断 |
-| §1.2 | Isaacs 方程与条件 | ⭐⭐⭐ | 零和博弈的 HJI；min-max=max-min 才有值 |
-| §1.3 | 粘性解 | ⭐⭐⭐ | 值函数有棱，用黏性极限唯一确定弱解 |
-| §1.4 | BRS / BRT / reach–avoid | ⭐⭐⭐ | 安全验证 = 可达性；角色定 max/min；安全要 BRT |
-| §1.5 | 水平集数值方法 | ⭐⭐⭐ | WENO+TVD-RK+CFL；数值耗散 = 消失黏性 |
-| §1.6 | LQ 博弈与耦合 Riccati | ⭐⭐⭐ ★ | 唯一可闭式解的博弈；G2 iLQGames 的内核 |
-| §1.7 | 维度诅咒与三条绕行路 | ⭐⭐⭐ | 解耦 / FaSTrack / DeepReach 的精确性-可扩展性权衡 |
-| §1.8 | 追逃经典问题 | ⭐⭐ | Homicidal Chauffeur / Air3D；奇异面；相对坐标降维 |
+| §1.1 | 三次认知跨越 | ★★ | 最优→均衡、预测→预测即均衡、代价已知→代价需推断 |
+| §1.2 | Isaacs 方程与条件 | ★★★ | 零和博弈的 HJI；min-max=max-min 才有值 |
+| §1.3 | 粘性解 | ★★★ | 值函数有棱，用黏性极限唯一确定弱解 |
+| §1.4 | BRS / BRT / reach–avoid | ★★★ | 安全验证 = 可达性；角色定 max/min；安全要 BRT |
+| §1.5 | 水平集数值方法 | ★★★ | WENO+TVD-RK+CFL；数值耗散 = 消失黏性 |
+| §1.6 | LQ 博弈与耦合 Riccati | ★★★ ★ | 唯一可闭式解的博弈；G2 iLQGames 的内核 |
+| §1.7 | 维度诅咒与三条绕行路 | ★★★ | 解耦 / FaSTrack / DeepReach 的精确性-可扩展性权衡 |
+| §1.8 | 追逃经典问题 | ★★ | Homicidal Chauffeur / Air3D；奇异面；相对坐标降维 |
 
 ---
 
@@ -1939,23 +1939,23 @@ HJI 给全局最优与严格安全证书，却被维度诅咒卡在约 6 维；
 按难度与角色标注，括号内为定位。
 
 **奠基与系统（核心，建议精读其一）**
-- Isaacs, *Differential Games*, Wiley 1965（⭐⭐⭐⭐ 原典，思想源头，行文古老、选读追逃章节即可）
-- Başar & Olsder, *Dynamic Noncooperative Game Theory*, SIAM Classics 1999（⭐⭐⭐ 核心，Ch1 静/动态博弈框架、Ch6 LQ 耦合 Riccati）
+- Isaacs, *Differential Games*, Wiley 1965（★★★★ 原典，思想源头，行文古老、选读追逃章节即可）
+- Başar & Olsder, *Dynamic Noncooperative Game Theory*, SIAM Classics 1999（★★★ 核心，Ch1 静/动态博弈框架、Ch6 LQ 耦合 Riccati）
 
 **可达性（核心，工程入门首选）**
-- Bansal, Chen, Herbert, Tomlin, "Hamilton-Jacobi Reachability: A Brief Overview and Recent Advances," CDC 2017 / arXiv:1709.07523（⭐⭐⭐ 现代综述，BRS/BRT/角色讲得最清楚，**最佳入门**）
-- Mitchell, Bayen, Tomlin, "A time-dependent Hamilton-Jacobi formulation of reachable sets for continuous dynamic games," IEEE TAC 50:947–957, 2005（⭐⭐⭐⭐ 可达性奠基，含数值方法）
-- Margellos & Lygeros, "Hamilton-Jacobi Formulation for Reach–Avoid Differential Games," IEEE TAC 2011（⭐⭐⭐ reach–avoid 表述）
+- Bansal, Chen, Herbert, Tomlin, "Hamilton-Jacobi Reachability: A Brief Overview and Recent Advances," CDC 2017 / arXiv:1709.07523（★★★ 现代综述，BRS/BRT/角色讲得最清楚，**最佳入门**）
+- Mitchell, Bayen, Tomlin, "A time-dependent Hamilton-Jacobi formulation of reachable sets for continuous dynamic games," IEEE TAC 50:947–957, 2005（★★★★ 可达性奠基，含数值方法）
+- Margellos & Lygeros, "Hamilton-Jacobi Formulation for Reach–Avoid Differential Games," IEEE TAC 2011（★★★ reach–avoid 表述）
 
 **粘性解理论（进阶，想要严格基础）**
-- Crandall & Lions, "Viscosity solutions of Hamilton-Jacobi equations," Trans. AMS, 1983（⭐⭐⭐⭐ 粘性解原典）
-- Evans & Souganidis, "Differential games and representation formulas for solutions of HJI equations," Indiana Univ. Math. J., 1984（⭐⭐⭐⭐ 博弈值 = 唯一粘性解）
+- Crandall & Lions, "Viscosity solutions of Hamilton-Jacobi equations," Trans. AMS, 1983（★★★★ 粘性解原典）
+- Evans & Souganidis, "Differential games and representation formulas for solutions of HJI equations," Indiana Univ. Math. J., 1984（★★★★ 博弈值 = 唯一粘性解）
 
 **绕维度诅咒（进阶，前沿方法）**
-- Bansal & Tomlin, "DeepReach: A Deep Learning Approach to High-Dimensional Reachability," ICRA 2021（⭐⭐⭐⭐ 神经近似突破维度；arXiv:2011.02082）
-- Herbert et al., "FaSTrack: A Modular Framework for Fast and Guaranteed Safe Motion Planning," CDC 2017（⭐⭐⭐ 规划与安全分离）
-- Chen et al., "Decomposition of Reachable Sets and Tubes for a Class of Nonlinear Systems," IEEE TAC 2018（⭐⭐⭐⭐ 状态解耦）
-- Chen, Bansal, Tomlin et al., 序贯轨迹规划（STP）系列：含对抗入侵者下的鲁棒版本（"Robust Sequential Trajectory Planning...", arXiv:1611.08364）与城市无人机路由案例（arXiv:1705.04585）（⭐⭐⭐ STP 的代表性工作）
+- Bansal & Tomlin, "DeepReach: A Deep Learning Approach to High-Dimensional Reachability," ICRA 2021（★★★★ 神经近似突破维度；arXiv:2011.02082）
+- Herbert et al., "FaSTrack: A Modular Framework for Fast and Guaranteed Safe Motion Planning," CDC 2017（★★★ 规划与安全分离）
+- Chen et al., "Decomposition of Reachable Sets and Tubes for a Class of Nonlinear Systems," IEEE TAC 2018（★★★★ 状态解耦）
+- Chen, Bansal, Tomlin et al., 序贯轨迹规划（STP）系列：含对抗入侵者下的鲁棒版本（"Robust Sequential Trajectory Planning...", arXiv:1611.08364）与城市无人机路由案例（arXiv:1705.04585）（★★★ STP 的代表性工作）
 
 **开源工具（动手）**
 - hj_reachability（JAX，现代、最干净，本章 §1.5 示例用它）

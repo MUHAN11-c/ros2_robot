@@ -12,7 +12,7 @@
 
 ## 前置自测
 
-📋 **答不出 ≥ 3 题 → 先回前置章节复习**
+◆ **答不出 ≥ 3 题 → 先回前置章节复习**
 
 | # | 问题 | 检查目的 |
 |---|------|----------|
@@ -42,7 +42,7 @@
 
 ---
 
-## 9.1 算法回顾：Privileged Information 与蒸馏的三种形态 ⭐
+## 9.1 算法回顾：Privileged Information 与蒸馏的三种形态 ★
 
 > **这一节解决什么问题**：用 20% 的篇幅唤醒读者对 privileged learning 核心概念的记忆，建立三种形态的统一视角，为后续工程实现做铺垫。
 
@@ -81,7 +81,7 @@ Privileged learning 在机器人 RL 中有三种主要形态，它们解决的�
 | **特权角色输出** | value（标量） | action 或 latent（向量） | action 或 latent |
 | **部署角色学习方式** | RL（policy gradient） | 监督学习（imitation loss） | RL + imitation loss |
 | **训练阶段数** | 1（同时训练 actor 和 critic） | 2（先 teacher RL，再 student BC） | 1（同时但有两个网络） |
-| **工程复杂度** | ⭐ 低（框架原生支持） | ⭐⭐⭐ 高（多阶段管线） | ⭐⭐⭐⭐ 很高 |
+| **工程复杂度** | ★ 低（框架原生支持） | ★★★ 高（多阶段管线） | ★★★★ 很高 |
 | **经典论文** | Pinto et al., RSS 2018 | Kumar et al. 2021, Lee et al. 2020 | 多种变体 |
 | **框架支持** | mjlab/Isaac Lab 原生 | RSL-RL DistillationRunner | 需自定义 |
 
@@ -99,9 +99,9 @@ RMA 提出的 adaptation module（也叫 estimator 网络）是 privileged learn
 
 Estimator 的训练有两种时机：与 policy 同步训练（online）和 policy 训练完后单独训练（offline）。同步训练的优势是 estimator 能适应 policy 诱导的状态分布，劣势是增加训练复杂度。离线训练更简单——先用 privileged teacher 的 rollout 收集 `(history, privileged_latent)` 对，然后用监督学习训练 estimator。我们将在 9.4 节深入讨论 estimator 的工程细节。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：混淆 asymmetric AC 和 teacher-student。** 新手经常把两者搞混——因为都涉及"一个角色看到更多信息"。关键区分：asymmetric AC 的 critic 输出 value（标量），teacher-student 的 teacher 输出 action（向量）。critic 帮助训练但不产生动作，teacher 直接产生可模仿的动作。
+⚠ **编程陷阱：混淆 asymmetric AC 和 teacher-student。** 新手经常把两者搞混——因为都涉及"一个角色看到更多信息"。关键区分：asymmetric AC 的 critic 输出 value（标量），teacher-student 的 teacher 输出 action（向量）。critic 帮助训练但不产生动作，teacher 直接产生可模仿的动作。
 
 💡 **概念误区：认为"privileged learning 只用于 locomotion"。** 实际上 manipulation 任务（灵巧手操作、抓取）中同样存在大量 privileged 信息——物体精确位姿、接触法线、滑移检测。只是 locomotion 文献中 privileged learning 被更系统地研究和工程化了。
 
@@ -151,15 +151,15 @@ HoST（Learning Humanoid Standing-up Control）在训练人形机器人起身任
 
 在 mjlab/Isaac Lab 中实现 multi-critic 需要自定义 PPO 训练循环（RSL-RL 的标准 `OnPolicyRunner` 只支持单 critic），但核心修改并不复杂：为每个 critic 维护独立的 value network 和 advantage buffer，然后把多个 advantage 加权合并后用于 policy gradient 更新。具体的 multi-critic PPO 实现超出本章范围（属于 Ch07 训练管线的拓展），这里只需理解其与 privileged learning 的关系。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：混淆 asymmetric AC 和 teacher-student。** 新手经常把两者搞混——因为都涉及"一个角色看到更多信息"。关键区分：asymmetric AC 的 critic 输出 value（标量），teacher-student 的 teacher 输出 action（向量）。critic 帮助训练但不产生动作，teacher 直接产生可模仿的动作。
+⚠ **编程陷阱：混淆 asymmetric AC 和 teacher-student。** 新手经常把两者搞混——因为都涉及"一个角色看到更多信息"。关键区分：asymmetric AC 的 critic 输出 value（标量），teacher-student 的 teacher 输出 action（向量）。critic 帮助训练但不产生动作，teacher 直接产生可模仿的动作。
 
 💡 **概念误区：认为"privileged learning 只用于 locomotion"。** 实际上 manipulation 任务（灵巧手操作、抓取）中同样存在大量 privileged 信息——物体精确位姿、接触法线、滑移检测。只是 locomotion 文献中 privileged learning 被更系统地研究和工程化了。
 
 🧠 **思维陷阱：认为"teacher 越强 student 就越好"。** teacher 太强可能是因为过度依赖 privileged 信息做出了 student 根本无法复现的行为。最好的 teacher 是"在 privileged 信息帮助下找到一种 student 也能近似复现的高质量行为模式"——而不是"充分利用一切 privileged 信息达到极致表现"。这就像请一个数学天才教小学生——如果天才用高等数学解题，小学生无法模仿；如果天才用小学方法但解得又快又准，小学生才能学到东西。
 
-⚠️ **编程陷阱：teacher checkpoint 被当作部署 actor。** 这是一个隐蔽但严重的错误。如果你把 teacher 的 checkpoint 直接导出 ONNX 部署，真机上会失败——因为 teacher 的输入中包含 privileged 信号。部署时应该加载 student（如果用了蒸馏）或 actor（如果只用了 asymmetric AC）的权重。自检方法：部署前打印模型输入维度，确认与部署传感器提供的维度一致。
+⚠ **编程陷阱：teacher checkpoint 被当作部署 actor。** 这是一个隐蔽但严重的错误。如果你把 teacher 的 checkpoint 直接导出 ONNX 部署，真机上会失败——因为 teacher 的输入中包含 privileged 信号。部署时应该加载 student（如果用了蒸馏）或 actor（如果只用了 asymmetric AC）的权重。自检方法：部署前打印模型输入维度，确认与部署传感器提供的维度一致。
 
 ### 练习
 
@@ -190,7 +190,7 @@ DR 的范围直接决定了 student 能否从 history 中做 implicit system ide
 
 有了这个全局视角，下一步是把"privileged 信息"这个模糊概念变成一张可操作的分类表——这正是下一节的主题。
 
-## 9.2 Privileged 信息分类表 ⭐⭐
+## 9.2 Privileged 信息分类表 ★★
 
 > **这一节解决什么问题**：建立 privileged 信息的系统分类框架，覆盖 locomotion 和 manipulation 中所有常见信号，为后续的 group 配置提供清晰的工程依据。
 
@@ -261,9 +261,9 @@ DR 的范围直接决定了 student 能否从 history 中做 implicit system ide
 
 | 信息类别 | 变化速率 | 最优处理策略 | 工程复杂度 | 关键参数 |
 |---------|---------|------------|----------|---------|
-| 环境物理参数 | 慢（episode 恒定） | RMA adaptation module | ⭐⭐ | history_length, latent_dim |
-| 动态接触信息 | 快（每步变化） | critic-only 或传感器替代 | ⭐ | 传感器精度匹配 |
-| 全局感知信息 | 中（连续变化） | teacher-student 蒸馏 | ⭐⭐⭐ | 蒸馏阶段数、数据多样性 |
+| 环境物理参数 | 慢（episode 恒定） | RMA adaptation module | ★★ | history_length, latent_dim |
+| 动态接触信息 | 快（每步变化） | critic-only 或传感器替代 | ★ | 传感器精度匹配 |
+| 全局感知信息 | 中（连续变化） | teacher-student 蒸馏 | ★★★ | 蒸馏阶段数、数据多样性 |
 | 未来信息 | N/A | **禁止使用** | — | — |
 
 ### 部署可用性评估：每类信号的替代方案
@@ -302,9 +302,9 @@ DR 的范围直接决定了 student 能否从 history 中做 implicit system ide
 
 这个 204 维的信息差解释了为什么 asymmetric AC 对 locomotion 如此有效：critic 用 249 维的丰富信息估计 value，actor 用 45 维的部署信息生成动作。critic 的准确 value 估计让 PPO 的 policy gradient 更加精准，间接帮助 actor 在有限信息下做出更好的决策。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：把 `foot_contact` 放进 actor_terms。** 仿真中的 `foot_contact` 是通过 `ContactSensor` 直接读取的二值信号。在真机上，这个信号需要力传感器或阻抗估计器——两者的精度、延迟和语义都与仿真不同。如果你在 actor_terms 中使用了 `foot_contact`，即使在真机上有力传感器，阈值设置不当也会导致接触检测的 timing 和仿真不一致，策略表现下降。
+⚠ **编程陷阱：把 `foot_contact` 放进 actor_terms。** 仿真中的 `foot_contact` 是通过 `ContactSensor` 直接读取的二值信号。在真机上，这个信号需要力传感器或阻抗估计器——两者的精度、延迟和语义都与仿真不同。如果你在 actor_terms 中使用了 `foot_contact`，即使在真机上有力传感器，阈值设置不当也会导致接触检测的 timing 和仿真不一致，策略表现下降。
 
 💡 **概念误区：认为"所有 privileged 信息价值相等"。** 不同 privileged 信号对 value 估计的帮助差异很大。接触力直接影响步态切换决策，价值很高；而质量偏移在整个 episode 内恒定，一旦 policy 适应了就不需要再看。如果 critic 的输入维度有限制，应该优先加入变化快、对决策影响大的信号。
 
@@ -320,7 +320,7 @@ DR 的范围直接决定了 student 能否从 history 中做 implicit system ide
 
 有了 privileged 信息的分类框架，下一步就是把这些知识转化为框架配置——在 mjlab 和 Isaac Lab 中如何具体地定义 actor group 和 critic group。这正是下一节的工程重点。
 
-## 9.3 双框架 Privileged Obs 配置 ⭐⭐⭐
+## 9.3 双框架 Privileged Obs 配置 ★★★
 
 > **这一节解决什么问题**：手把手展示如何在 mjlab 和 Isaac Lab 中配置 asymmetric actor-critic 的 observation group，包括 terms 选择、noise 配置、obs_groups routing 和常见错误排查。
 
@@ -616,7 +616,7 @@ class ObservationsCfg:
 
 两个框架的核心逻辑完全一致：把 observation 分成两组，部署组（actor/policy）只包含可部署 terms 且加噪声，训练辅助组（critic）包含 privileged terms 且无噪声。区别主要在 API 形式上。
 
-### RSL-RL 4.0 的 Actor/Critic 解耦配置（⚠️ 重要迁移）
+### RSL-RL 4.0 的 Actor/Critic 解耦配置（⚠ 重要迁移）
 
 如果你在 Ch07 中使用了 RSL-RL ≥ 4.0（arXiv 2509.10771, Schwarke, Mittal, Rudin, Hoeller, Hutter, 2025），那么 actor 和 critic 的网络配置已经**解耦**——这是一个 breaking change，直接影响本章的 asymmetric AC 配置。
 
@@ -651,9 +651,9 @@ rl_cfg = RslRlPpoCfg(
 
 这个解耦对 privileged learning 的意义是：**critic 不仅可以看到更多 observation，还可以用更大的网络来处理这些额外信息。** 典型配置：actor 用 [256, 128, 64] 的小 MLP（因为要部署），critic 用 [512, 256, 128] 的大 MLP（反正不部署，且输入维度更高需要更大容量）。如果是视觉任务，critic 甚至可以用 `RslRlCNNModelCfg`——CNN 处理 privileged 的 depth/height 信息，而 actor 用纯 MLP 处理低维 proprioception。
 
-⚠️ **迁移陷阱：旧版 checkpoint 无法直接加载到新版配置。** 如果你有旧版 RSL-RL 训练的 checkpoint，`state_dict` 的 key 名发生了变化（旧版 `actor_critic.actor.0.weight` → 新版 `actor.model.0.weight`）。迁移方法：写一个 key-mapping 脚本，或者重新训练。
+⚠ **迁移陷阱：旧版 checkpoint 无法直接加载到新版配置。** 如果你有旧版 RSL-RL 训练的 checkpoint，`state_dict` 的 key 名发生了变化（旧版 `actor_critic.actor.0.weight` → 新版 `actor.model.0.weight`）。迁移方法：写一个 key-mapping 脚本，或者重新训练。
 
-⚠️ **迁移陷阱：`obs_normalization` 在新版中是 per-model 的。** 旧版的 `actor_obs_normalization` 和 `critic_obs_normalization` 合并成了每个 model 自己的 `obs_normalization` 参数。actor 和 critic 各自维护独立的 running mean/std buffer——这意味着 critic 的 normalizer 统计量包含 privileged 维度的信息，而 actor 的不包含。**导出 ONNX 部署时，必须使用 actor 的 normalizer，不能用 critic 的。**
+⚠ **迁移陷阱：`obs_normalization` 在新版中是 per-model 的。** 旧版的 `actor_obs_normalization` 和 `critic_obs_normalization` 合并成了每个 model 自己的 `obs_normalization` 参数。actor 和 critic 各自维护独立的 running mean/std buffer——这意味着 critic 的 normalizer 统计量包含 privileged 维度的信息，而 actor 的不包含。**导出 ONNX 部署时，必须使用 actor 的 normalizer，不能用 critic 的。**
 
 ### 维度一致性检查
 
@@ -976,11 +976,11 @@ Play检查: 只加载actor, corruption=False → 通过
 | history 加大后无改善 | history terms 选择是否合理 | — | 只给 proprioception 加 history |
 | critic 和 actor obs 维度相同 | obs_groups routing 是否正确 | — | 检查 key 拼写和路由配置 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：Python 字典展开时 key 拼写错误导致覆盖失败。** `critic_terms = {**actor_terms, "heigth_scan": ...}` 不会覆盖 `height_scan`，而是新增一个 key。critic 维度比预期多一倍 height_scan 的维度。自检方法：`assert len(critic_terms) == len(actor_terms) + N_privileged`。
+⚠ **编程陷阱：Python 字典展开时 key 拼写错误导致覆盖失败。** `critic_terms = {**actor_terms, "heigth_scan": ...}` 不会覆盖 `height_scan`，而是新增一个 key。critic 维度比预期多一倍 height_scan 的维度。自检方法：`assert len(critic_terms) == len(actor_terms) + N_privileged`。
 
-⚠️ **编程陷阱：Isaac Lab 中忘记在 CriticCfg 中设 `enable_corruption = False`。** 如果 critic 也启用了 corruption，它看到的 privileged 信号也会有噪声，导致 value 估计方差增大。自检方法：打印 critic group 的 corruption 状态。
+⚠ **编程陷阱：Isaac Lab 中忘记在 CriticCfg 中设 `enable_corruption = False`。** 如果 critic 也启用了 corruption，它看到的 privileged 信号也会有噪声，导致 value 估计方差增大。自检方法：打印 critic group 的 corruption 状态。
 
 💡 **概念误区：认为"critic 维度越大越好"。** critic 的 privileged 输入不是越多越好——如果 privileged 信号维度太高而对 value 估计帮助不大（如全身 100+ 个关键点的完整位置），反而会增加 critic 的拟合难度和训练时间。应该选择对 value 估计帮助最大的 privileged 信号（通常是接触信息和地形信息）。
 
@@ -996,7 +996,7 @@ Play检查: 只加载actor, corruption=False → 通过
 
 上一节解决了"如何在框架中正确配置 asymmetric actor-critic"的问题。但 asymmetric AC 有一个局限——它只能帮助训练信号更干净，无法让 actor 间接获取 privileged 信息。当 actor 需要从 history 中推断环境参数时，就需要 estimator 网络——这正是下一节的主题。
 
-## 9.4 Estimator 网络训练 ⭐⭐⭐
+## 9.4 Estimator 网络训练 ★★★
 
 > **这一节解决什么问题**：详解 RMA 风格的 adaptation module（estimator 网络）的工程实现——它的输入/输出设计、训练时机、损失函数选择，以及如何在 mjlab 和 Isaac Lab 中接线。
 
@@ -1483,11 +1483,11 @@ class DAggerTrainer:
 
 DAgger 通常比纯 BC 蒸馏多花 2-3 倍训练时间，但在 student-teacher 信息差较大时效果显著更好。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：history 拼接顺序错误。** 如果 history buffer 中最旧的帧排在前面，但 MLP 期望最新的帧在前面（或反之），adaptation module 学到的时间模式是反的。自检方法：在 adaptation module 输入中人为设置一个已知的时间序列，检查输出是否符合预期。
+⚠ **编程陷阱：history 拼接顺序错误。** 如果 history buffer 中最旧的帧排在前面，但 MLP 期望最新的帧在前面（或反之），adaptation module 学到的时间模式是反的。自检方法：在 adaptation module 输入中人为设置一个已知的时间序列，检查输出是否符合预期。
 
-⚠️ **编程陷阱：latent 维度过大导致训练不稳定。** latent 维度从 4 开始实验是一个好的经验法则。如果从 16 或 32 开始，encoder 可能在 latent 空间中产生高方差的表示，adaptation module 难以拟合。先确认 4 维 latent 能工作，再逐步增大。
+⚠ **编程陷阱：latent 维度过大导致训练不稳定。** latent 维度从 4 开始实验是一个好的经验法则。如果从 16 或 32 开始，encoder 可能在 latent 空间中产生高方差的表示，adaptation module 难以拟合。先确认 4 维 latent 能工作，再逐步增大。
 
 💡 **概念误区：认为"adaptation module 的 MSE loss 越低越好"。** MSE loss 衡量的是"history 能多好地预测 latent"，但最终目标是"使用估计 latent 时 policy 的 rollout 表现"。有时 MSE loss 中等但 rollout 表现好（estimator 捕捉了对控制最重要的信息），MSE loss 很低但 rollout 表现差（estimator 过拟合了 training distribution）。始终以 rollout 表现为最终判据。
 
@@ -1503,11 +1503,11 @@ DAgger 通常比纯 BC 蒸馏多花 2-3 倍训练时间，但在 student-teacher
 
 至此，我们已经掌握了 asymmetric AC 的配置和 estimator 网络的训练。但当 actor 的输入模态发生根本变化（比如从低维 state 变成高维图像）时，这些工具就不够用了——你需要一个完整的多阶段 teacher-student 蒸馏管线。下一节通过精读 extreme-parkour 项目，展示工业级的三阶段蒸馏流程。
 
-## 9.5 精读：extreme-parkour 三阶段管线 ⭐⭐⭐⭐
+## 9.5 精读：extreme-parkour 三阶段管线 ★★★★
 
 > **这一节解决什么问题**：通过精读 extreme-parkour 项目（Cheng et al., ICRA'24, `github.com/chengxuxin/extreme-parkour`），展示一个完整的多阶段 teacher-student 蒸馏管线——从 blind teacher 到 depth teacher 到 depth student。这是本章的工程高潮，把前面所有概念串联成一条可执行的管线。
 
-> ⚠️ **重要勘误（请先读）**：extreme-parkour **官方**的训练管线其实是**两阶段（two-phase）**，不是本节为教学而拆出的"三阶段"。对照官方 README 与论文：**Phase 1** 用 RL（PPO）训练 base/oracle policy，特权信息是 **scandots（地形高度采样）+ oracle 航向**，并用 **ROA** 在单阶段内同时学 adaptation module；**Phase 2** 用 **DAgger 监督蒸馏**，把 scandots 换成 depth（CNN-GRU）、把 heading 预测一并学出来，并从 Phase 1 的 actor 初始化。**官方并没有一个独立的"depth teacher RL 阶段"**。本节把它讲成"blind teacher → depth teacher → depth student"三阶段，是一种便于教学、可推广到通用三阶段蒸馏的**重新分解**——其中"Stage 1+Stage 2 都用 RL"对应官方 Phase 1，"Stage 3 监督蒸馏"对应官方 Phase 2。阅读下文时请把"三阶段"理解为教学框架，把上述两阶段理解为该项目的真实结构。
+> ⚠ **重要勘误（请先读）**：extreme-parkour **官方**的训练管线其实是**两阶段（two-phase）**，不是本节为教学而拆出的"三阶段"。对照官方 README 与论文：**Phase 1** 用 RL（PPO）训练 base/oracle policy，特权信息是 **scandots（地形高度采样）+ oracle 航向**，并用 **ROA** 在单阶段内同时学 adaptation module；**Phase 2** 用 **DAgger 监督蒸馏**，把 scandots 换成 depth（CNN-GRU）、把 heading 预测一并学出来，并从 Phase 1 的 actor 初始化。**官方并没有一个独立的"depth teacher RL 阶段"**。本节把它讲成"blind teacher → depth teacher → depth student"三阶段，是一种便于教学、可推广到通用三阶段蒸馏的**重新分解**——其中"Stage 1+Stage 2 都用 RL"对应官方 Phase 1，"Stage 3 监督蒸馏"对应官方 Phase 2。阅读下文时请把"三阶段"理解为教学框架，把上述两阶段理解为该项目的真实结构。
 
 ### 动机：为什么需要三阶段
 
@@ -2011,11 +2011,11 @@ print(f"Loaded {len(compatible_keys)}/{len(stage1_state)} layers from Stage 1")
 
 这个部分加载策略确保 proprioception → MLP 的知识被继承，而 CNN 编码器从随机初始化开始训练。如果错误地使用 `strict=True`，PyTorch 会抛出维度不匹配异常；如果使用 `strict=False` 但不检查哪些 key 被加载了，可能会遗漏关键层而不自知。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：Stage 2 warm start 时网络维度不匹配。** Stage 1 的 actor 输入维度与 Stage 2 不同（Stage 2 多了 depth image 的 CNN latent 维度）。warm start 时需要只加载 proprioception → MLP 部分的权重，CNN 编码器随机初始化。如果直接 `load_state_dict(strict=True)`，会因维度不匹配而报错。
+⚠ **编程陷阱：Stage 2 warm start 时网络维度不匹配。** Stage 1 的 actor 输入维度与 Stage 2 不同（Stage 2 多了 depth image 的 CNN latent 维度）。warm start 时需要只加载 proprioception → MLP 部分的权重，CNN 编码器随机初始化。如果直接 `load_state_dict(strict=True)`，会因维度不匹配而报错。
 
-⚠️ **编程陷阱：Stage 3 蒸馏数据中 student obs 与部署 obs 不一致。** 如果蒸馏数据收集时 student obs 中混入了某些 env 特有的信号（如 reward 中间量），部署时这些信号不存在。student 的 obs 配置必须严格等于部署配置。
+⚠ **编程陷阱：Stage 3 蒸馏数据中 student obs 与部署 obs 不一致。** 如果蒸馏数据收集时 student obs 中混入了某些 env 特有的信号（如 reward 中间量），部署时这些信号不存在。student 的 obs 配置必须严格等于部署配置。
 
 💡 **概念误区：认为"三阶段管线只适用于视觉任务"。** 三阶段的思想（渐进式信息降级）适用于任何存在大跨度信息鸿沟的任务。即使不涉及视觉，如果 actor 和部署之间有多类 privileged 信息需要逐步移除，多阶段管线也是值得考虑的。
 
@@ -2084,9 +2084,9 @@ export_policy_as_onnx(
 
 `export_policy_as_onnx()` 的关键机制是 **normalizer 烘焙**：它通过 `copy.deepcopy` 把 normalizer（running mean/std）作为 ONNX 模型的第一层嵌入，这样部署时不需要额外的 Python 归一化代码——ONNX 模型的 forward 第一步就是 `x = (x - mean) / std`。
 
-⚠️ **部署陷阱：导出 critic 的 normalizer 而非 actor 的。** 如果你错误地使用了 critic 的 normalizer，它包含 privileged 维度的统计量，输入维度不匹配——ONNX 推理时会报 shape error 或产生垃圾输出。
+⚠ **部署陷阱：导出 critic 的 normalizer 而非 actor 的。** 如果你错误地使用了 critic 的 normalizer，它包含 privileged 维度的统计量，输入维度不匹配——ONNX 推理时会报 shape error 或产生垃圾输出。
 
-⚠️ **部署陷阱：LSTM/RNN 模型的 ONNX 导出限制。** RSL-RL 4.0 的 ONNX exporter 目前对 RNN 模型硬编码了 LSTM 格式（已知 issue isaac-sim/IsaacLab #3008）。如果你的 actor 使用 GRU 或 Transformer，需要自定义导出逻辑。
+⚠ **部署陷阱：LSTM/RNN 模型的 ONNX 导出限制。** RSL-RL 4.0 的 ONNX exporter 目前对 RNN 模型硬编码了 LSTM 格式（已知 issue isaac-sim/IsaacLab #3008）。如果你的 actor 使用 GRU 或 Transformer，需要自定义导出逻辑。
 
 部署前验证清单：
 
@@ -2119,13 +2119,13 @@ def validate_onnx(onnx_path, pytorch_actor, test_obs, rtol=1e-4):
     print("✅ ONNX validation passed")
 ```
 
-⚠️ **关键安全提醒（来自 Isaac Lab 官方文档）：** "While real robot IMU sensors provide angular acceleration (which can be integrated to get angular velocity), they cannot directly measure linear velocity." 这是 privileged learning 最根本的工程动机之一——`base_lin_vel` 在仿真中可以直接读取但在真机上不可得。如果你的 actor 在训练时依赖了 `base_lin_vel`，这个信息必须在部署前移除或用估计器替代。
+⚠ **关键安全提醒（来自 Isaac Lab 官方文档）：** "While real robot IMU sensors provide angular acceleration (which can be integrated to get angular velocity), they cannot directly measure linear velocity." 这是 privileged learning 最根本的工程动机之一——`base_lin_vel` 在仿真中可以直接读取但在真机上不可得。如果你的 actor 在训练时依赖了 `base_lin_vel`，这个信息必须在部署前移除或用估计器替代。
 
 ---
 
 至此，我们完成了从算法概念到工程管线的完整旅程。最后一节把本章所有知识点串联成一个决策框架，帮助你在面对新项目时快速选择合适的 privileged learning 方案。
 
-## 9.6 方案选型与工程决策树 ⭐⭐
+## 9.6 方案选型与工程决策树 ★★
 
 > **这一节解决什么问题**：把前面五节的知识整合成一套可操作的选型框架，面对新的机器人 RL 项目时，快速判断应该用非对称 AC、RMA 还是多阶段蒸馏。
 
@@ -2184,10 +2184,10 @@ extreme-parkour 的三阶段管线很强大，但工程复杂度也很高——�
 
 | 方案 | 工程成本 | 训练时间 | sim 表现 | 部署鲁棒性 | 适用场景 |
 |------|---------|---------|---------|----------|---------|
-| 直接 RL | ⭐ | 基准 | 基准 | 低 | 简单任务，信息充足 |
-| 非对称 AC | ⭐⭐ | ~1.2× 基准 | +10-20% | 中 | 大多数 locomotion |
-| RMA | ⭐⭐⭐ | ~2× 基准 | +15-30% | 高 | 环境参数自适应 |
-| 多阶段 TS | ⭐⭐⭐⭐ | ~3-5× 基准 | 最高 | 最高 | 视觉部署、极端地形 |
+| 直接 RL | ★ | 基准 | 基准 | 低 | 简单任务，信息充足 |
+| 非对称 AC | ★★ | ~1.2× 基准 | +10-20% | 中 | 大多数 locomotion |
+| RMA | ★★★ | ~2× 基准 | +15-30% | 高 | 环境参数自适应 |
+| 多阶段 TS | ★★★★ | ~3-5× 基准 | 最高 | 最高 | 视觉部署、极端地形 |
 
 ### 技术演进脉络：从 Pinto 2018 到 VIRAL 2025
 
@@ -2238,9 +2238,9 @@ extreme-parkour 的三阶段管线很强大，但工程复杂度也很高——�
 | 桌面抓取 | 物体位姿、接触法线 | 两阶段蒸馏 | 模态跨越（state → depth/RGB） |
 | 灵巧手操作 | 指尖接触力、物体滑移 | 非对称 AC + 力传感器 | 传感器精度差异 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：在简单任务上使用过于复杂的 privileged learning 方案。** 如果你的任务是平地行走且传感器充足，asymmetric AC 就够了——不需要上三阶段蒸馏。过度复杂的管线增加了调试难度和出错概率。遵循"足够用就好"的原则。
+⚠ **编程陷阱：在简单任务上使用过于复杂的 privileged learning 方案。** 如果你的任务是平地行走且传感器充足，asymmetric AC 就够了——不需要上三阶段蒸馏。过度复杂的管线增加了调试难度和出错概率。遵循"足够用就好"的原则。
 
 💡 **概念误区：认为"privileged learning 只是一种可选的优化技巧"。** 对于需要部署到真机的项目，privileged learning 不是优化——它是正确性保证。没有信息边界设计的策略在部署时几乎必然失败。
 
@@ -2261,23 +2261,23 @@ extreme-parkour 的三阶段管线很强大，但工程复杂度也很高——�
 
 | 知识点 | 核心结论 | 重要程度 |
 |--------|---------|---------|
-| 信息不对称是部署核心矛盾 | 仿真和真机的信息差不是小问题，是决定部署成败的第一道关卡 | ⭐ |
-| privileged 信息四类分类 | 环境参数（慢变）、接触信息（快变）、全局感知、未来信息（禁用） | ⭐⭐ |
-| 三种形态的统一视角 | 非对称 AC → BC 蒸馏 → 并发 TS，信息蒸馏链越长跨越的鸿沟越宽 | ⭐⭐ |
-| multi-critic 架构 | HoST 的安全/探索/精度多 critic 分离，解耦冲突的训练目标 | ⭐⭐ |
-| DR-privileged 协同 | DR 范围决定 student 的 implicit system-ID 能力，两者必须联合调参 | ⭐⭐⭐ |
-| 双框架 obs group 配置 | mjlab: actor/critic dict + obs_groups routing；Isaac Lab: PolicyCfg/CriticCfg | ⭐⭐⭐ |
-| RSL-RL 4.0 解耦配置 | actor/critic 用独立 `RslRlMLPModelCfg`，各自维护 normalizer | ⭐⭐⭐ |
-| observation normalization | running mean/std 的沉默陷阱：buffer 未初始化、checkpoint 恢复遗漏 | ⭐⭐⭐ |
-| RMA adaptation module | 从 proprioception history 估计环境参数 latent，而非直接预测物理量 | ⭐⭐⭐ |
-| 三种在线适应范式 | RMA（显式）vs causal transformer（隐式）vs TTT（在线梯度） | ⭐⭐ |
-| Teacher-Student 不是 Actor-Critic | teacher 产生动作（可模仿），critic 产生 value（辅助训练） | ⭐⭐ |
-| 蒸馏双指标评估 | imitation loss 和 rollout performance 都要通过 | ⭐⭐⭐ |
-| extreme-parkour 三阶段 | blind teacher → depth teacher → depth student，渐进式信息降级 | ⭐⭐⭐⭐ |
-| HOVER mask-conditioned distillation | 一个 student 多种控制模式，比三阶段更灵活 | ⭐⭐⭐ |
-| ONNX normalizer 烘焙 | 部署时必须导出 actor 的 normalizer，不能用 critic 的 | ⭐⭐ |
-| 15 项 debug checklist | 含 normalization 检查，系统化防止信息泄漏和配置错误 | ⭐⭐ |
-| 方案选型决策树 + 演进脉络 | 从 Pinto 2018 到 VIRAL 2025 的完整技术演化链 | ⭐⭐ |
+| 信息不对称是部署核心矛盾 | 仿真和真机的信息差不是小问题，是决定部署成败的第一道关卡 | ★ |
+| privileged 信息四类分类 | 环境参数（慢变）、接触信息（快变）、全局感知、未来信息（禁用） | ★★ |
+| 三种形态的统一视角 | 非对称 AC → BC 蒸馏 → 并发 TS，信息蒸馏链越长跨越的鸿沟越宽 | ★★ |
+| multi-critic 架构 | HoST 的安全/探索/精度多 critic 分离，解耦冲突的训练目标 | ★★ |
+| DR-privileged 协同 | DR 范围决定 student 的 implicit system-ID 能力，两者必须联合调参 | ★★★ |
+| 双框架 obs group 配置 | mjlab: actor/critic dict + obs_groups routing；Isaac Lab: PolicyCfg/CriticCfg | ★★★ |
+| RSL-RL 4.0 解耦配置 | actor/critic 用独立 `RslRlMLPModelCfg`，各自维护 normalizer | ★★★ |
+| observation normalization | running mean/std 的沉默陷阱：buffer 未初始化、checkpoint 恢复遗漏 | ★★★ |
+| RMA adaptation module | 从 proprioception history 估计环境参数 latent，而非直接预测物理量 | ★★★ |
+| 三种在线适应范式 | RMA（显式）vs causal transformer（隐式）vs TTT（在线梯度） | ★★ |
+| Teacher-Student 不是 Actor-Critic | teacher 产生动作（可模仿），critic 产生 value（辅助训练） | ★★ |
+| 蒸馏双指标评估 | imitation loss 和 rollout performance 都要通过 | ★★★ |
+| extreme-parkour 三阶段 | blind teacher → depth teacher → depth student，渐进式信息降级 | ★★★★ |
+| HOVER mask-conditioned distillation | 一个 student 多种控制模式，比三阶段更灵活 | ★★★ |
+| ONNX normalizer 烘焙 | 部署时必须导出 actor 的 normalizer，不能用 critic 的 | ★★ |
+| 15 项 debug checklist | 含 normalization 检查，系统化防止信息泄漏和配置错误 | ★★ |
+| 方案选型决策树 + 演进脉络 | 从 Pinto 2018 到 VIRAL 2025 的完整技术演化链 | ★★ |
 
 ## 累积项目：本章新增模块
 
@@ -2507,17 +2507,17 @@ seed：42
 
 | 资料 | 难度 | 推荐原因 |
 |------|------|---------|
-| Pinto et al., RSS 2018, "Asymmetric Actor Critic for Image-Based Robot Learning" | ⭐⭐ | asymmetric actor-critic 的原始论文，建立了基本框架 |
-| Kumar et al. 2021, "RMA: Rapid Motor Adaptation for Legged Robots" | ⭐⭐⭐ | RMA 的完整方法、adaptation module 设计和真机实验 |
-| Lee et al. 2020, "Learning Quadrupedal Locomotion over Challenging Terrain" | ⭐⭐ | 四足 privileged learning 的经典工作，teacher-student 蒸馏的早期范例 |
-| Cheng et al. 2024, "Extreme Parkour with Legged Robots" (ICRA'24) | ⭐⭐⭐ | 本章精读项目，三阶段蒸馏管线的工业级实现 |
-| RSL-RL 文档：obs_groups 和 DistillationRunner | ⭐⭐ | mjlab 使用的训练框架的蒸馏支持，工程实现的直接参考 |
-| Rudin et al. 2022, "Learning to Walk in Minutes" | ⭐⭐ | 大规模并行训练的工程细节，asymmetric AC 的实践经验 |
-| Miki et al. 2022, "Learning robust perceptive locomotion for quadrupedal robots in the wild" (Science Robotics) | ⭐⭐⭐ | depth + attention encoder + privileged learning；ANYmal 1700m 零跌倒；后续视觉腿足工作的基础 |
-| Radosavovic et al. 2024, "Real-world humanoid locomotion with reinforcement learning" (Science Robotics) | ⭐⭐⭐ | Causal transformer 隐式适应，RMA 的替代范式；理解 9.4 节三种范式对比。另有同组 "Humanoid Locomotion as Next Token Prediction"（arXiv 2402.19469 / NeurIPS 2024）可对照阅读 |
-| He et al. 2025, "HOVER: Versatile Neural Whole-Body Controller for Humanoid Robots" (ICRA'25) | ⭐⭐⭐⭐ | Mask-conditioned distillation；一个 student 支持多种控制模式 |
-| Huang et al. 2025, "HoST: Learning Humanoid Standing-up Control across Diverse Postures" (RSS'25) | ⭐⭐⭐ | Multi-critic 架构；理解 9.1 节 multi-critic 变体 |
-| Schwarke et al. 2025, "RSL-RL: A Learning Library for Robotics Research" (arXiv 2509.10771) | ⭐⭐ | RSL-RL 4.0 的 actor/critic 解耦架构、DistillationRunner、ONNX exporter |
+| Pinto et al., RSS 2018, "Asymmetric Actor Critic for Image-Based Robot Learning" | ★★ | asymmetric actor-critic 的原始论文，建立了基本框架 |
+| Kumar et al. 2021, "RMA: Rapid Motor Adaptation for Legged Robots" | ★★★ | RMA 的完整方法、adaptation module 设计和真机实验 |
+| Lee et al. 2020, "Learning Quadrupedal Locomotion over Challenging Terrain" | ★★ | 四足 privileged learning 的经典工作，teacher-student 蒸馏的早期范例 |
+| Cheng et al. 2024, "Extreme Parkour with Legged Robots" (ICRA'24) | ★★★ | 本章精读项目，三阶段蒸馏管线的工业级实现 |
+| RSL-RL 文档：obs_groups 和 DistillationRunner | ★★ | mjlab 使用的训练框架的蒸馏支持，工程实现的直接参考 |
+| Rudin et al. 2022, "Learning to Walk in Minutes" | ★★ | 大规模并行训练的工程细节，asymmetric AC 的实践经验 |
+| Miki et al. 2022, "Learning robust perceptive locomotion for quadrupedal robots in the wild" (Science Robotics) | ★★★ | depth + attention encoder + privileged learning；ANYmal 1700m 零跌倒；后续视觉腿足工作的基础 |
+| Radosavovic et al. 2024, "Real-world humanoid locomotion with reinforcement learning" (Science Robotics) | ★★★ | Causal transformer 隐式适应，RMA 的替代范式；理解 9.4 节三种范式对比。另有同组 "Humanoid Locomotion as Next Token Prediction"（arXiv 2402.19469 / NeurIPS 2024）可对照阅读 |
+| He et al. 2025, "HOVER: Versatile Neural Whole-Body Controller for Humanoid Robots" (ICRA'25) | ★★★★ | Mask-conditioned distillation；一个 student 支持多种控制模式 |
+| Huang et al. 2025, "HoST: Learning Humanoid Standing-up Control across Diverse Postures" (RSS'25) | ★★★ | Multi-critic 架构；理解 9.1 节 multi-critic 变体 |
+| Schwarke et al. 2025, "RSL-RL: A Learning Library for Robotics Research" (arXiv 2509.10771) | ★★ | RSL-RL 4.0 的 actor/critic 解耦架构、DistillationRunner、ONNX exporter |
 
 **阅读顺序建议**：先读 Pinto 2018（理解 asymmetric AC 的基本原理），再读 Kumar 2021（理解 RMA 的两阶段框架），然后读 Cheng 2024（理解多阶段蒸馏的完整管线）。在此基础上读 HOVER 2025（理解 mask-conditioned distillation 如何统一多种控制模式）。Miki 2022 和 Radosavovic 2024 作为"从盲控制到感知控制"和"显式 vs 隐式适应"的对比阅读材料。RSL-RL 4.0 论文中关于 obs_groups、DistillationRunner 和 ONNX exporter 的工程说明应作为持续参考。
 

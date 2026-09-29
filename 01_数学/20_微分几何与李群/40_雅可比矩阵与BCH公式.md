@@ -14,9 +14,9 @@
 
 ---
 
-### 前置自测 ⭐
+### 前置自测 ★
 
-> 📋 **答不出 >= 2 题 → 先回专题 3 复习**
+> ◆ **答不出 >= 2 题 → 先回专题 3 复习**
 
 | 编号 | 问题 | 答不出→回顾 |
 |:----:|------|------------|
@@ -28,15 +28,15 @@
 
 ---
 
-#### 0. 为什么本专题是整个SLAM数学体系的枢纽 ⭐
+#### 0. 为什么本专题是整个SLAM数学体系的枢纽 ★
 
 所有非线性最小二乘——Bundle Adjustment、Pose-Graph Optimization、VIO预积分——最终都归结为**在李群上对残差求Jacobian**。Jacobian 在李群优化中的角色，可以类比微积分中导数在 Newton 法中的角色：Newton 法用 $f'(x)$ 把非线性方程 $f(x) = 0$ 局部线性化为 $f(x) + f'(x)\delta x = 0$，而李群优化用 Jacobian 把非线性残差 $r(X)$ 在群上局部线性化为 $r + J \delta\xi = 0$。区别在于：Newton 法的导数定义在欧氏空间，$\delta x$ 直接加到 $x$ 上；李群上的 Jacobian 定义在切空间，$\delta\xi$ 必须通过 Exp 映射搬回群上。这个额外步骤正是 $J_l$ 和 $J_r$ 存在的根本原因——它们度量了从切空间到群上的"搬运成本"。专题3给出了exp/log/Adjoint的闭式表达，但实际优化中需要的是这些映射**对扰动参数的导数**，这正是本专题要建立的完整体系。**左Jacobian $\mathbf{J}_l$ 和右Jacobian $\mathbf{J}_r$** 是exp映射对其李代数参数的微分，是整个体系的核心算子；**BCH公式**回答"两个exp相乘等于什么exp"，是误差传播与IMU预积分的数学基础；**Adjoint Jacobian** 则充当左/右扰动模型之间的翻译词典，让你能在不同代码库的convention之间自由切换。完成本专题后，你将能**独立推导SLAM论文中出现的所有Jacobian表达式**。
 
 ---
 
-#### 1. 核心章节清单（档位3必学） ⭐
+#### 1. 核心章节清单（档位3必学） ★
 
-##### §4.1 扰动模型的两大流派：左扰动 vs 右扰动 ⭐⭐
+##### §4.1 扰动模型的两大流派：左扰动 vs 右扰动 ★★
 
 这是整个Jacobian体系的起点。在李群上做优化时，"对姿态求导"意味着在当前估计 $\bar{X}$ 附近施加微小扰动 $\delta\boldsymbol{\xi}$，然后令 $\delta\boldsymbol{\xi}\to 0$ 求极限。扰动放在哪一侧，直接决定了Jacobian的形式。
 
@@ -48,7 +48,7 @@
 
 **关键点**：两种扰动通过Adjoint互转——$\mathrm{Exp}(\delta\boldsymbol{\xi}_\text{left})\cdot\bar{T} = \bar{T}\cdot\mathrm{Exp}(\mathrm{Ad}(\bar{T})^{-1}\cdot\delta\boldsymbol{\xi}_\text{left})$。选定convention后须全程一致，混用是最常见的错误来源。
 
-##### §4.2 左Jacobian $\mathbf{J}_l$ 与右Jacobian $\mathbf{J}_r$ 的推导 ⭐⭐
+##### §4.2 左Jacobian $\mathbf{J}_l$ 与右Jacobian $\mathbf{J}_r$ 的推导 ★★
 
 **核心定义**（以右Jacobian为例）：
 
@@ -68,7 +68,7 @@ $$\mathbf{J}_r(\boldsymbol{\phi}) = \int_0^1 \exp(-t\,\mathrm{ad}(\boldsymbol{\p
 
 学习建议：先理解 $\mathrm{ad}$ 算子在SO(3)上就是叉乘矩阵 $[\boldsymbol{\phi}]_\times$，再手推级数前三项，体会为什么会出现 $\sin\theta/\theta$ 等系数。
 
-##### §4.3 SO(3)上的闭式Jacobian ⭐⭐
+##### §4.3 SO(3)上的闭式Jacobian ★★
 
 由于SO(3)上 $\mathrm{ad}(\boldsymbol{\phi})^3 = -\theta^2\,\mathrm{ad}(\boldsymbol{\phi})$（其中 $\theta=\|\boldsymbol{\phi}\|$），级数可以封闭求和，得到 **$3\times3$ 闭式**：
 
@@ -85,7 +85,7 @@ $$\mathbf{J}_l(\boldsymbol{\phi}) = \frac{\sin\theta}{\theta}\mathbf{I} + \left(
 
 **自测**：手推 $\mathbf{J}_l$ 闭式——这是本专题最核心的一道推导练习（参考Solà论文Appendix B、Barfoot §8.2.3、Eade exp_diff.pdf §5.1）。
 
-##### §4.4 SE(3)上的Jacobian ⭐⭐⭐
+##### §4.4 SE(3)上的Jacobian ★★★
 
 SE(3)的Jacobian是 **$6\times6$ 块矩阵**。以下采用 Sola/Barfoot 约定，切向量排序为 $[\boldsymbol{\rho}, \boldsymbol{\phi}]$（**平移在前**），结构为：
 
@@ -97,7 +97,7 @@ $$\mathbf{J}_l^{\mathrm{SE}(3)} = \begin{bmatrix} \mathbf{J}_l^{\mathrm{SO}(3)} 
 
 此处闭式表达式冗长但结构清晰，建议直接参考Solà论文Appendix D或Barfoot §8.2.4的Q矩阵定义，不必死记。实际工程中优先使用manif库的 `w.ljac()` / `w.rjac()` 来获取 $6\times6$ 数值结果。
 
-##### §4.5 常用表达式的Jacobian速查 ⭐⭐
+##### §4.5 常用表达式的Jacobian速查 ★★
 
 以下是SLAM/VIO中反复出现的基本Jacobian，建议逐一推导一遍后作为速查表保存：
 
@@ -111,13 +111,13 @@ $$\mathbf{J}_l^{\mathrm{SE}(3)} = \begin{bmatrix} \mathbf{J}_l^{\mathrm{SO}(3)} 
 
 推导思路统一：施加扰动 → 展开到一阶 → 提取 $\delta\boldsymbol{\xi}$ 前面的矩阵。高翔《十四讲》第7讲PnP重投影误差给出了完整的工程示例。
 
-##### §4.6 Adjoint Jacobian：扰动模型间的桥梁 ⭐⭐⭐
+##### §4.6 Adjoint Jacobian：扰动模型间的桥梁 ★★★
 
 $\mathrm{Ad}(\mathbf{T})$ 本质上就是**从右扰动到左扰动的Jacobian**。对于SO(3)，$\mathrm{Ad}(\mathbf{R})=\mathbf{R}$（一个巧合性简化）。对于SE(3)，Adjoint是 $6\times6$ 矩阵且含平移-旋转耦合项。以下采用"平移在前" $[\boldsymbol{v}, \boldsymbol{\omega}]$ 排序（Sola/Barfoot 约定）：$\mathrm{Ad}(\mathbf{T}) = \begin{bmatrix}\mathbf{R} & [\mathbf{t}]_\times\mathbf{R}\\\mathbf{0}&\mathbf{R}\end{bmatrix}$。若用"旋转在前" $[\boldsymbol{\omega}, \boldsymbol{v}]$ 排序（GTSAM 约定），耦合项 $[\mathbf{t}]_\times\mathbf{R}$ 的位置从右上变为左下。
 
 当你读到一篇用左扰动写的论文、而代码库用右扰动时，转换公式为：$\mathbf{J}^\text{left} = \mathrm{Ad}(\bar{\mathbf{T}})\cdot\mathbf{J}^\text{right}$。这是跨convention的"翻译词典"。
 
-##### §4.7 BCH公式及其应用 ⭐⭐
+##### §4.7 BCH公式及其应用 ★★
 
 **完整形式**：$\mathrm{Log}(\mathrm{Exp}(\mathbf{X})\cdot\mathrm{Exp}(\mathbf{Y})) = \mathbf{X}+\mathbf{Y}+\tfrac{1}{2}[\mathbf{X},\mathbf{Y}]+\tfrac{1}{12}\big([\mathbf{X},[\mathbf{X},\mathbf{Y}]]-[\mathbf{Y},[\mathbf{X},\mathbf{Y}]]\big)+\cdots$
 
@@ -127,7 +127,7 @@ $$\mathrm{Log}(\mathrm{Exp}(\boldsymbol{\phi})\cdot\mathrm{Exp}(\delta\boldsymbo
 
 **在IMU预积分中的直接应用**（Forster TRO 2017）：预积分的关键在于将旋转增量的噪声 $\delta\boldsymbol{\phi}$ 从exp内部"提取"出来。通过BCH一阶展开，$\mathrm{Exp}(\boldsymbol{\phi}+\delta\boldsymbol{\phi})\approx\mathrm{Exp}(\boldsymbol{\phi})\cdot\mathrm{Exp}(\mathbf{J}_r(\boldsymbol{\phi})\,\delta\boldsymbol{\phi})$，使测量值与噪声解耦，进而实现协方差的线性传播——这正是"预积分"之所以可行的数学核心。
 
-##### §4.8 Convention差异大全 ⭐⭐
+##### §4.8 Convention差异大全 ★★
 
 | 维度 | Sophus | manif | GTSAM | Ceres |
 |:----|:-------|:------|:------|:------|
@@ -141,7 +141,7 @@ $$\mathrm{Log}(\mathrm{Exp}(\boldsymbol{\phi})\cdot\mathrm{Exp}(\delta\boldsymbo
 
 ---
 
-#### 2. 进阶章节（档位4选学） ⭐⭐⭐⭐
+#### 2. 进阶章节（档位4选学） ★★★★
 
 | 主题 | 内容概要 | 推荐资源 |
 |:----|:--------|:--------|
@@ -156,7 +156,7 @@ $$\mathrm{Log}(\mathrm{Exp}(\boldsymbol{\phi})\cdot\mathrm{Exp}(\delta\boldsymbo
 
 ---
 
-#### 3. 核心教材深度对照 ⭐
+#### 3. 核心教材深度对照 ★
 
 | 教材 | 核心章节 | 特色 | 免费获取 |
 |:----|:--------|:----|:--------|
@@ -169,7 +169,7 @@ $$\mathrm{Log}(\mathrm{Exp}(\boldsymbol{\phi})\cdot\mathrm{Exp}(\delta\boldsymbo
 
 ---
 
-#### 4. 最关键的论文 ⭐
+#### 4. 最关键的论文 ★
 
 **必读**（档位3）：
 - **Solà et al. (2018/2021)** — 全部Jacobian的统一框架与闭式汇总
@@ -183,7 +183,7 @@ $$\mathrm{Log}(\mathrm{Exp}(\boldsymbol{\phi})\cdot\mathrm{Exp}(\delta\boldsymbo
 
 ---
 
-#### 5. 与C++库的具体映射 ⭐⭐
+#### 5. 与C++库的具体映射 ★★
 
 | 库 | Jacobian获取方式 | 典型工作流 |
 |:--|:----------------|:----------|
@@ -195,7 +195,7 @@ $$\mathrm{Log}(\mathrm{Exp}(\boldsymbol{\phi})\cdot\mathrm{Exp}(\delta\boldsymbo
 
 ---
 
-#### 6. 在SLAM/VIO/BA中的直接应用 ⭐⭐
+#### 6. 在SLAM/VIO/BA中的直接应用 ★★
 
 - **BA重投影误差Jacobian**：$\partial e_\text{reproj}/\partial\delta\boldsymbol{\xi}$ 是 $2\times 6$ 矩阵，由 $\mathbf{T}\cdot\mathbf{p}$ 对扰动的Jacobian经相机投影链式法则得到（高翔《十四讲》第7讲）
 - **PGO的between factor Jacobian**：$\partial\mathrm{Log}(\mathbf{T}_i^{-1}\mathbf{T}_j\cdot\mathbf{T}_{ij}^{-1})/\partial\delta\boldsymbol{\xi}_i$ 和 $\partial/\partial\delta\boldsymbol{\xi}_j$，是 $6\times6$ 矩阵，依赖Adjoint和 $\mathbf{J}_r^{-1}$
@@ -205,7 +205,7 @@ $$\mathrm{Log}(\mathrm{Exp}(\boldsymbol{\phi})\cdot\mathrm{Exp}(\delta\boldsymbo
 
 ---
 
-#### 7. 关键定理清单 ⭐⭐
+#### 7. 关键定理清单 ★★
 
 | # | 定理/恒等式 | 档位 |
 |:--|:----------|:-----|
@@ -220,7 +220,7 @@ $$\mathrm{Log}(\mathrm{Exp}(\boldsymbol{\phi})\cdot\mathrm{Exp}(\delta\boldsymbo
 
 ---
 
-#### 8. 学习资源汇总 ⭐
+#### 8. 学习资源汇总 ★
 
 ##### 英文免费资源
 
@@ -247,7 +247,7 @@ $$\mathrm{Log}(\mathrm{Exp}(\boldsymbol{\phi})\cdot\mathrm{Exp}(\delta\boldsymbo
 
 ---
 
-#### 9. 自测题目（5题） ⭐⭐
+#### 9. 自测题目（5题） ★★
 
 1. **手推SO(3)上 $\mathbf{J}_l$ 和 $\mathbf{J}_r$ 的闭式**：从 $\mathrm{ad}$ 算子级数出发，利用 $[\boldsymbol{\phi}]_\times^3=-\theta^2[\boldsymbol{\phi}]_\times$ 封闭求和（档位3核心）
 2. **证明 $\mathbf{J}_r(\boldsymbol{\phi})=\mathbf{J}_l(-\boldsymbol{\phi})$**：从积分定义出发做变量替换（档位3）
@@ -257,7 +257,7 @@ $$\mathrm{Log}(\mathrm{Exp}(\boldsymbol{\phi})\cdot\mathrm{Exp}(\delta\boldsymbo
 
 ---
 
-#### 10. 常见陷阱 ⭐⭐
+#### 10. 常见陷阱 ★★
 
 - **左右扰动混用**——最高频错误，尤其是从论文A搬公式到用论文B convention的代码时
 - **分子布局 vs 分母布局混淆**——Solà/manif用分子布局，部分控制教材用分母布局，Jacobian会转置
@@ -269,7 +269,7 @@ $$\mathrm{Log}(\mathrm{Exp}(\boldsymbol{\phi})\cdot\mathrm{Exp}(\delta\boldsymbo
 
 ---
 
-### 12. 从扰动定义到 Jacobian 的完整推导链 ⭐⭐
+### 12. 从扰动定义到 Jacobian 的完整推导链 ★★
 
 前面给出了 Jacobian 与 BCH 的速查框架。
 
@@ -287,7 +287,7 @@ $$\mathrm{Log}(\mathrm{Exp}(\boldsymbol{\phi})\cdot\mathrm{Exp}(\delta\boldsymbo
 把小扰动前面的线性系数读成 Jacobian
 ```
 
-#### 12.1 前置自测 ⭐
+#### 12.1 前置自测 ★
 
 进入推导前，先回答：
 
@@ -301,9 +301,9 @@ $$\mathrm{Log}(\mathrm{Exp}(\boldsymbol{\phi})\cdot\mathrm{Exp}(\delta\boldsymbo
 
 ---
 
-### 13. 为什么两个小旋转不能简单相加 ⭐⭐
+### 13. 为什么两个小旋转不能简单相加 ★★
 
-#### 13.1 欧氏直觉的诱惑 ⭐
+#### 13.1 欧氏直觉的诱惑 ★
 
 在 $\mathbb{R}^n$ 中：
 
@@ -333,7 +333,7 @@ $$
 
 因此指数里的增量合成必然出现额外项。
 
-#### 13.2 用矩阵指数看问题 ⭐⭐
+#### 13.2 用矩阵指数看问题 ★★
 
 矩阵指数展开：
 
@@ -406,7 +406,7 @@ $$
 
 > **本质洞察**：BCH 公式的额外项不是数学装饰，而是非交换性的度量。若 $[A,B]=0$，二阶修正消失；若 $[A,B]\neq0$，简单相加就一定遗漏旋转顺序效应。
 
-#### 13.3 三阶项为什么长得复杂 ⭐⭐⭐
+#### 13.3 三阶项为什么长得复杂 ★★★
 
 完整 BCH 的前三阶为：
 
@@ -453,9 +453,9 @@ B 与 AB-BA 的顺序也重要。
 
 ---
 
-### 14. 左 Jacobian 与右 Jacobian 的来源 ⭐⭐
+### 14. 左 Jacobian 与右 Jacobian 的来源 ★★
 
-#### 14.1 右 Jacobian 的定义 ⭐⭐
+#### 14.1 右 Jacobian 的定义 ★★
 
 考虑指数映射的扰动：
 
@@ -492,7 +492,7 @@ $$
 等价于在当前 Exp(phi) 右侧乘上多大的小扰动？
 ```
 
-#### 14.2 左 Jacobian 的定义 ⭐⭐
+#### 14.2 左 Jacobian 的定义 ★★
 
 左 Jacobian 类似：
 
@@ -513,7 +513,7 @@ $$
 
 左/右 Jacobian 的角色可以类比广义相对论中的平行移动（parallel transport）。在平坦的欧氏空间中，一个向量可以直接从一个点搬到任何其他点而不改变——这就是为什么 $\mathbb{R}^n$ 中 $J_l = J_r = I$。但在弯曲的流形上，把切向量从一个点搬到另一个点时，向量会被曲率"扭转"。$J_l$ 和 $J_r$ 正是度量这种扭转的矩阵：它们把单位元处的小扰动 $\delta$ 搬运到 $\text{Exp}(\phi)$ 附近时告诉你搬运过程中发生了多少形变。在 SO(3) 中这种形变由 $\sin\theta/\theta$ 等系数控制，物理上对应旋转群的曲率。
 
-#### 14.3 用 BCH 推导右 Jacobian 的级数 ⭐⭐⭐
+#### 14.3 用 BCH 推导右 Jacobian 的级数 ★★★
 
 设：
 
@@ -567,7 +567,7 @@ $$
 \epsilon=J_r(\phi)\delta
 $$
 
-#### 14.4 积分表达式 ⭐⭐⭐
+#### 14.4 积分表达式 ★★★
 
 更紧凑的结果是：
 
@@ -614,7 +614,7 @@ $$
 J_r(\phi)=J_l(-\phi)
 $$
 
-#### 14.5 Adjoint 关系 ⭐⭐⭐
+#### 14.5 Adjoint 关系 ★★★
 
 还有一个重要关系：
 
@@ -656,9 +656,9 @@ $$
 
 ---
 
-### 15. SO(3) Jacobian 的闭式与小角度展开 ⭐⭐
+### 15. SO(3) Jacobian 的闭式与小角度展开 ★★
 
-#### 15.1 从级数到闭式 ⭐⭐
+#### 15.1 从级数到闭式 ★★
 
 在 $SO(3)$ 中：
 
@@ -708,7 +708,7 @@ $$
 
 这与前面的关系 $J_r(\phi)=J_l(-\phi)$ 一致。
 
-#### 15.2 用单位轴写法核对 ⭐⭐
+#### 15.2 用单位轴写法核对 ★★
 
 令：
 
@@ -750,7 +750,7 @@ $$
 
 这与常见教材中的轴角形式一致。
 
-#### 15.3 逆 Jacobian ⭐⭐⭐
+#### 15.3 逆 Jacobian ★★★
 
 左 Jacobian 的逆为：
 
@@ -782,7 +782,7 @@ I+\frac{1}{2}[\phi]_\times
 \right)[\phi]_\times^2
 $$
 
-#### 15.4 小角度展开 ⭐⭐
+#### 15.4 小角度展开 ★★
 
 当 $\theta$ 很小时，直接计算会遇到 $0/0$。
 
@@ -814,7 +814,7 @@ J_r(\phi)
 I-\frac{1}{2}[\phi]_\times+\frac{1}{6}[\phi]_\times^2+O(\theta^3)
 $$
 
-⚠️ **陷阱：小角度分支不是性能优化，而是正确性要求**
+⚠ **陷阱：小角度分支不是性能优化，而是正确性要求**
 
 如果 $\theta$ 接近 0 时仍直接计算闭式系数，浮点消减会让 Jacobian 出现 NaN 或精度损失。
 
@@ -822,9 +822,9 @@ $$
 
 ---
 
-### 16. SE(3) Jacobian 的块结构 ⭐⭐⭐
+### 16. SE(3) Jacobian 的块结构 ★★★
 
-#### 16.1 切向量排序必须先声明 ⭐⭐
+#### 16.1 切向量排序必须先声明 ★★
 
 本节采用：
 
@@ -854,7 +854,7 @@ $$
 
 如果不声明排序，SE(3) Jacobian 公式没有唯一含义。
 
-#### 16.2 SE(3) 指数的回顾 ⭐⭐
+#### 16.2 SE(3) 指数的回顾 ★★
 
 对：
 
@@ -909,7 +909,7 @@ $$
 J_r^{SE(3)}(\xi)=J_l^{SE(3)}(-\xi)
 $$
 
-#### 16.3 Q 矩阵的含义 ⭐⭐⭐
+#### 16.3 Q 矩阵的含义 ★★★
 
 $Q_l$ 描述：
 
@@ -924,7 +924,7 @@ $Q_l$ 描述：
 
 因此 6x6 Jacobian 不能简单写成两个 $SO(3)$ Jacobian 的对角拼接。
 
-> ⚠️ **思维陷阱**：把 SE(3) Jacobian 写成 SO(3) Jacobian 的对角扩展
+> ⚠ **思维陷阱**：把 SE(3) Jacobian 写成 SO(3) Jacobian 的对角扩展
 >
 > **错误做法**：$J_l^{SE(3)} = \text{diag}(J_l^{SO(3)}, J_l^{SO(3)})$，认为旋转和平移的 Jacobian 互不影响。
 >
@@ -942,7 +942,7 @@ $Q_l$ 描述：
 2. 使用经过测试的库实现。
 3. 用有限差分单元测试验证自写公式。
 
-#### 16.4 Adjoint 的块结构 ⭐⭐
+#### 16.4 Adjoint 的块结构 ★★
 
 对：
 
@@ -978,7 +978,7 @@ $$
 
 它们只是坐标排序不同。
 
-⚠️ **陷阱：把两个正确公式混在一起会得到错误代码**
+⚠ **陷阱：把两个正确公式混在一起会得到错误代码**
 
 很多 SE(3) bug 不是公式本身错，而是从一本书抄了平移在前的 Adjoint，又在 GTSAM 的旋转在前向量上使用。
 
@@ -986,9 +986,9 @@ $$
 
 ---
 
-### 17. 常用残差 Jacobian 的推导模板 ⭐⭐
+### 17. 常用残差 Jacobian 的推导模板 ★★
 
-#### 17.1 推导模板 ⭐⭐
+#### 17.1 推导模板 ★★
 
 每次推导残差 Jacobian，都按以下模板：
 
@@ -1002,7 +1002,7 @@ Step 5: 把 delta 前的系数读成 J
 
 这比直接背公式可靠。
 
-#### 17.2 点变换残差 ⭐⭐
+#### 17.2 点变换残差 ★★
 
 设：
 
@@ -1062,7 +1062,7 @@ $$
 
 如果使用右扰动，结果会不同。
 
-> ⚠️ **编程陷阱**：左扰动和右扰动的 Jacobian 差一个 Adjoint，但新手常把两者的公式混用
+> ⚠ **编程陷阱**：左扰动和右扰动的 Jacobian 差一个 Adjoint，但新手常把两者的公式混用
 >
 > **错误做法**：从用左扰动的论文（如 Barfoot 书）抄了 $\frac{\partial y}{\partial\delta\xi} = [I, -[y]_\times]$ 的结果，直接用在右扰动代码库（如 manif/GTSAM）中。
 >
@@ -1072,7 +1072,7 @@ $$
 >
 > **正确做法**：每次推导 Jacobian 时从第一步写清楚扰动方向，用数值差分验证每一列。
 
-#### 17.3 between factor 的结构 ⭐⭐⭐
+#### 17.3 between factor 的结构 ★★★
 
 位姿图残差常写：
 
@@ -1113,7 +1113,7 @@ Adjoint: 负责把扰动搬到同一侧；
 J_r^{-1} 或 J_l^{-1}: 负责 Log 的微分。
 ```
 
-#### 17.4 IMU 预积分中的 BCH ⭐⭐⭐
+#### 17.4 IMU 预积分中的 BCH ★★★
 
 IMU 旋转递推中有：
 
@@ -1145,7 +1145,7 @@ $$
 
 ---
 
-### 17A. IMU 预积分完整 Jacobian 推导 ⭐⭐⭐
+### 17A. IMU 预积分完整 Jacobian 推导 ★★★
 
 #### 动机：为什么需要预积分
 
@@ -1379,7 +1379,7 @@ $$
 >
 > **正确做法**：记录预积分时使用的偏差 $\bar{b}$，每次优化后检查 $\|\hat{b} - \bar{b}\|$ 是否超出线性化有效范围。未超出时使用一阶校正，超出时重新积分。
 
-> ⚠️ **编程陷阱 A**：混淆机体坐标系和世界坐标系的加速度
+> ⚠ **编程陷阱 A**：混淆机体坐标系和世界坐标系的加速度
 >
 > **错误做法**：在递推 $\Delta v$ 时，直接把 IMU 原始加速度 $a_m$ 累加到 $\Delta v$ 中，忘记乘以旋转 $\Delta R_k$。
 >
@@ -1389,7 +1389,7 @@ $$
 >
 > **正确做法**：每步都要用当前的旋转预积分 $\Delta R_{ik}$ 去旋转加速度，然后再累加。
 
-> ⚠️ **编程陷阱 B**：在积分前忘记减去重力
+> ⚠ **编程陷阱 B**：在积分前忘记减去重力
 >
 > **错误做法**：预积分公式中的加速度是"比力"（specific force）$a_k - b_a$，但在构建残差时忘记在世界坐标系中减去重力：$\Delta v_{ij} \approx R_i^\top (v_j - v_i - g \Delta t_{ij})$。
 >
@@ -1401,15 +1401,15 @@ $$
 
 #### 练习
 
-1. 从 $\Delta \tilde{R}_{k+1} = \Delta \tilde{R}_k \operatorname{Exp}\big((\omega_k - b_g - n_g^k)\Delta t\big)$ 出发，利用 BCH 一阶近似，推导旋转预积分误差 $\delta\phi$ 的递推方程。明确指出 $J_r(\phi_k)$ 出现在哪一步、为什么出现。 ⭐⭐⭐
+1. 从 $\Delta \tilde{R}_{k+1} = \Delta \tilde{R}_k \operatorname{Exp}\big((\omega_k - b_g - n_g^k)\Delta t\big)$ 出发，利用 BCH 一阶近似，推导旋转预积分误差 $\delta\phi$ 的递推方程。明确指出 $J_r(\phi_k)$ 出现在哪一步、为什么出现。 ★★★
 
-2. 用上述数值算例的参数，假设陀螺仪偏差为 $b_g = [0.001, 0, 0]^\top$ rad/s。计算 10 步后旋转预积分对 $b_g$ 的 Jacobian $\frac{\partial \Delta R_{ij}}{\partial b_g}$ 的近似值（提示：每步的贡献为 $-J_r(\phi_k)\Delta t$，总计约 $-0.1 I$），并解释当 $b_g$ 被更新 $\delta b_g = [0.0005, 0, 0]^\top$ 时，旋转预积分量应如何修正。 ⭐⭐⭐
+2. 用上述数值算例的参数，假设陀螺仪偏差为 $b_g = [0.001, 0, 0]^\top$ rad/s。计算 10 步后旋转预积分对 $b_g$ 的 Jacobian $\frac{\partial \Delta R_{ij}}{\partial b_g}$ 的近似值（提示：每步的贡献为 $-J_r(\phi_k)\Delta t$，总计约 $-0.1 I$），并解释当 $b_g$ 被更新 $\delta b_g = [0.0005, 0, 0]^\top$ 时，旋转预积分量应如何修正。 ★★★
 
 ---
 
-### 18. 数值验证与单元测试 ⭐⭐
+### 18. 数值验证与单元测试 ★★
 
-#### 18.1 有限差分验证模板 ⭐⭐
+#### 18.1 有限差分验证模板 ★★
 
 解析 Jacobian 写完后必须验证。
 
@@ -1443,7 +1443,7 @@ $$
 
 两者不能混用。
 
-#### 18.2 C++ 伪代码 ⭐⭐
+#### 18.2 C++ 伪代码 ★★
 
 ```cpp
 // 使用右扰动检查一个 SE(3) 残差的 Jacobian。
@@ -1476,7 +1476,7 @@ Eigen::MatrixXd NumericalJacobianRight(const SE3& T) {
 
 如果任何一个不一致，有限差分会指出错误，但不会告诉你是哪一层错。
 
-#### 18.3 故障排查表 ⭐⭐
+#### 18.3 故障排查表 ★★
 
 | 现象 | 常见原因 | 检查方式 | 修复方式 |
 |------|----------|----------|----------|
@@ -1489,7 +1489,7 @@ Eigen::MatrixXd NumericalJacobianRight(const SE3& T) {
 
 ---
 
-### 练习：雅可比矩阵与 BCH 公式 ⭐⭐
+### 练习：雅可比矩阵与 BCH 公式 ★★
 
 1. 从矩阵指数二阶展开出发，手推 BCH 的 $\frac{1}{2}[A,B]$ 项。
 2. 从积分定义证明 $J_r(\phi)=J_l(-\phi)$。
@@ -1500,7 +1500,7 @@ Eigen::MatrixXd NumericalJacobianRight(const SE3& T) {
 7. 实现一个有限差分测试，验证你写的 `between_factor_jacobian`。
 8. 阅读一个开源库的 Pose3 Jacobian 接口，记录它使用的扰动方向和切向量排序。
 
-### 跨章综合题 ⭐⭐⭐
+### 跨章综合题 ★★★
 
 给定位姿图残差：
 
@@ -1519,7 +1519,7 @@ $$
 
 ---
 
-### 19. 与后续专题的桥梁 ⭐
+### 19. 与后续专题的桥梁 ★
 
 本专题是"数学工具→工程应用"的关键枢纽，向后辐射到路线图的几乎每一个方向：
 
@@ -1531,9 +1531,9 @@ $$
 
 ---
 
-### 19bis. ad 算子的深入理解 ⭐⭐⭐
+### 19bis. ad 算子的深入理解 ★★★
 
-#### 19bis.1 ad 算子是什么 ⭐⭐⭐
+#### 19bis.1 ad 算子是什么 ★★★
 
 $\operatorname{ad}$ 算子是 Lie bracket 的矩阵表示。
 
@@ -1563,7 +1563,7 @@ $$
 \operatorname{ad}_\xi = \begin{pmatrix} [\phi]_\times & [\rho]_\times \\ 0 & [\phi]_\times \end{pmatrix}
 $$
 
-#### 19bis.2 ad 算子的幂次与循环性 ⭐⭐⭐
+#### 19bis.2 ad 算子的幂次与循环性 ★★★
 
 SO(3) 上的关键性质：
 
@@ -1577,7 +1577,7 @@ $$
 
 SE(3) 上没有如此简洁的循环性，因为 $6\times6$ 的 ad 矩阵结构更复杂。SE(3) 的 Jacobian 闭式需要对旋转和平移部分分别处理，最终得到 $6\times6$ 块矩阵形式。
 
-#### 19bis.3 ad、Ad 和群运算的关系 ⭐⭐⭐
+#### 19bis.3 ad、Ad 和群运算的关系 ★★★
 
 三者的关系形成一个完整的链条：
 
@@ -1609,13 +1609,13 @@ $$
 
 **类比理解**：如果把李群比作地球，李代数比作某点的切平面，那么 $\operatorname{Ad}$ 是"把一张切平面上的箭头用群运算搬到另一张切平面"，$\operatorname{ad}$ 是"同一张切平面内两个箭头的交互作用"。$J_l$ 和 $J_r$ 则度量了"从切平面到地球表面"的搬运过程中距离的变形程度。
 
-⚠️ **概念误区：认为 Ad 和 ad 是同一个东西的大小写差异**
+⚠ **概念误区：认为 Ad 和 ad 是同一个东西的大小写差异**
 
 这是初学者最常犯的混淆。$\operatorname{Ad}_g$ 是群元素 $g$ 对整个李代数的线性变换（在 SE(3) 中是 $6\times6$ 矩阵）；$\operatorname{ad}_X$ 是李代数元素 $X$ 对其他李代数元素的线性变换（也是 $6\times6$ 矩阵）。前者的参数是群元素，后者的参数是李代数元素。两者通过 $\operatorname{Ad}_{\exp X} = \exp(\operatorname{ad}_X)$ 联系，但在数值上完全是不同的矩阵。
 
 为了进一步澄清这个区别，考虑一个具体的 SE(3) 例子。设 $T = (R, t)$ 是一个位姿，$\xi = [\rho, \phi]^\top$ 是一个切向量。$\operatorname{Ad}_T$ 把切向量 $\xi$ 从一个坐标系搬到另一个坐标系——它的矩阵元素包含 $R$ 和 $[t]_\times R$，因此依赖群元素 $T$ 的具体值。而 $\operatorname{ad}_\xi$ 描述切向量 $\xi$ 对其他切向量的"搅动效应"——它的矩阵元素只包含 $[\phi]_\times$ 和 $[\rho]_\times$，不依赖任何群元素。在 SLAM 后端中，$\operatorname{Ad}_T$ 出现在 between factor 的 Jacobian 中（用于把扰动搬到同一侧），$\operatorname{ad}_\xi$ 出现在 $J_l$ 和 $J_r$ 的级数展开中（用于计算指数映射的微分）。混淆两者会导致 Jacobian 矩阵的维度和数值都出错。
 
-#### 19bis.4 Jacobi 恒等式与李代数结构 ⭐⭐⭐⭐
+#### 19bis.4 Jacobi 恒等式与李代数结构 ★★★★
 
 Lie bracket 满足 Jacobi 恒等式：
 
@@ -1637,9 +1637,9 @@ Jacobi 恒等式保证了 BCH 公式的存在性和自洽性。如果没有它�
 
 ---
 
-### 20. BCH 公式的完整展开与高阶项 ⭐⭐⭐
+### 20. BCH 公式的完整展开与高阶项 ★★★
 
-#### 20.1 BCH 公式的前四阶完整展开 ⭐⭐⭐
+#### 20.1 BCH 公式的前四阶完整展开 ★★★
 
 Baker-Campbell-Hausdorff 公式回答了一个核心问题：给定两个李代数元素 $X, Y$，$\log(\exp(X)\exp(Y))$ 等于什么？
 
@@ -1672,7 +1672,7 @@ $$
 
 这就是为什么"小扰动近似可加"——但只在一阶成立。
 
-#### 20.2 BCH 在 IMU 预积分中的应用 ⭐⭐⭐
+#### 20.2 BCH 在 IMU 预积分中的应用 ★★★
 
 Forster et al. (2017) 的 IMU 预积分核心依赖 BCH 公式。
 
@@ -1698,7 +1698,7 @@ $$
 
 > **本质洞察**：BCH 公式的工程价值不在于精确计算 $\log(\exp X \exp Y)$（这可以直接先乘后取 log），而在于提供了关于参数（如 bias）的一阶/二阶展开，使得"参数变化→结果变化"可以用 Jacobian 线性化表达。这正是优化和估计所需要的。
 
-#### 20.3 BCH 的收敛性 ⭐⭐⭐⭐
+#### 20.3 BCH 的收敛性 ★★★★
 
 BCH 级数不一定收敛。在什么条件下收敛？
 
@@ -1726,9 +1726,9 @@ BCH 级数不一定收敛。在什么条件下收敛？
 
 ---
 
-### 21. $J_l^{-1}$ 和 $J_r^{-1}$ 的完整推导 ⭐⭐⭐
+### 21. $J_l^{-1}$ 和 $J_r^{-1}$ 的完整推导 ★★★
 
-#### 21.1 为什么需要逆 Jacobian ⭐⭐⭐
+#### 21.1 为什么需要逆 Jacobian ★★★
 
 在 SLAM 的法方程中，残差的 Jacobian 常包含 $J_r^{-1}$ 或 $J_l^{-1}$。
 
@@ -1742,7 +1742,7 @@ $$
 
 直觉理解：$J_r(\phi)$ 把切空间的增量 $\delta\phi$ "翻译"成群上的乘法效果；$J_r^{-1}(\phi)$ 做反向翻译——从群上观测到的变化推回切空间的增量。后者正是 SLAM 残差求导所需要的。
 
-#### 21.2 SO(3) 上 $J_l^{-1}$ 的闭式 ⭐⭐⭐
+#### 21.2 SO(3) 上 $J_l^{-1}$ 的闭式 ★★★
 
 $$
 J_l^{-1}(\phi) = I - \frac{1}{2}[\phi]_\times + \left(\frac{1}{\theta^2} - \frac{1+\cos\theta}{2\theta\sin\theta}\right)[\phi]_\times^2
@@ -1760,15 +1760,15 @@ $$
 
 当 $\theta \to \pi$：$\cot(\theta/2) \to 0$，系数趋于 $1/\theta^2$——有界，不发散。
 
-⚠️ **数值陷阱：$J_l^{-1}$ 在 $\theta = 2k\pi$（$k \ne 0$）处有奇异**
+⚠ **数值陷阱：$J_l^{-1}$ 在 $\theta = 2k\pi$（$k \ne 0$）处有奇异**
 
 $\sin\theta = 0$ 导致分母为零。在 SLAM 中这对应 $360°$ 旋转——实践中很少出现，但自动化测试应覆盖此边界。
 
 ---
 
-### 21bis. SE(3) Jacobian 的 6x6 块结构详解 ⭐⭐⭐
+### 21bis. SE(3) Jacobian 的 6x6 块结构详解 ★★★
 
-#### 21bis.1 SE(3) 左 Jacobian 的块分解 ⭐⭐⭐
+#### 21bis.1 SE(3) 左 Jacobian 的块分解 ★★★
 
 SE(3) 的左 Jacobian 是 $6\times6$ 矩阵（平移在前排序 $\xi = [\rho, \phi]^\top$）：
 
@@ -1795,7 +1795,7 @@ $$
 
 核心认知：$Q_l$ 的存在反映了 SE(3) 是半直积而非直积的事实。如果旋转和平移完全解耦，这个块会是零矩阵。
 
-#### 21bis.2 右 Jacobian 与左 Jacobian 的关系 ⭐⭐⭐
+#### 21bis.2 右 Jacobian 与左 Jacobian 的关系 ★★★
 
 $$
 \mathbf{J}_r(\xi) = \mathbf{J}_l(-\xi)
@@ -1809,7 +1809,7 @@ $$
 
 在代码中，通常只实现一个（比如 $J_l$），另一个通过取负或乘 Adjoint 得到。
 
-#### 21bis.3 实用计算策略 ⭐⭐
+#### 21bis.3 实用计算策略 ★★
 
 在工程中，SE(3) 的 $6\times6$ Jacobian 计算有三种策略：
 
@@ -1821,7 +1821,7 @@ $$
 
 > **本质洞察**：在 SLAM 后端优化中，Jacobian 在每次迭代都要重新计算（因为线性化点变了）。如果迭代接近收敛（$\|\xi\|$ 已经很小），一阶近似 $J \approx I$ 足够准确。只有在初始残差大或需要二次收敛时，完整闭式才有必要。这就是为什么很多工程实现在前几次迭代用完整 Jacobian，后期自动退化到恒等近似。
 
-#### 21bis.4 SymPy 验证 SE(3) Jacobian 块结构 ⭐⭐
+#### 21bis.4 SymPy 验证 SE(3) Jacobian 块结构 ★★
 
 ```python
 import sympy as sp
@@ -1854,7 +1854,7 @@ ad = se3_ad(rho, phi)
 
 ---
 
-### 22. 本章知识树总结 ⭐
+### 22. 本章知识树总结 ★
 
 ```text
 雅可比矩阵与 BCH 公式
@@ -1891,7 +1891,7 @@ ad = se3_ad(rho, phi)
 
 ---
 
-### 23. 本章小结 ⭐
+### 23. 本章小结 ★
 
 | 核心概念 | 一句话定义 | 工程对应 | 闭式条件 |
 |----------|-----------|----------|----------|
@@ -1904,7 +1904,7 @@ ad = se3_ad(rho, phi)
 
 ---
 
-### 24. 累积项目：本章新增模块 ⭐
+### 24. 累积项目：本章新增模块 ★
 
 **项目方向**：手写几何验证库
 
@@ -1956,23 +1956,23 @@ print("BCH 2阶误差:", np.linalg.norm(exact - bch2))
 
 ---
 
-### 延伸阅读 ⭐
+### 延伸阅读 ★
 
 | 资源 | 难度 | 核心价值 |
 |------|------|----------|
-| Sola "A micro Lie theory" (2018) Appendix B | ⭐⭐ | SO(3)/SE(3) Jacobian 闭式全表 |
-| Barfoot "State Estimation for Robotics" 2nd ed. Ch.8 | ⭐⭐⭐ | SE(3) Jacobian 与误差传播 |
-| Eade "Lie Groups for 2D and 3D Transformations" | ⭐⭐ | 简洁工程导向推导 |
-| Rossmann "Lie Groups: An Introduction Through Linear Groups" | ⭐⭐⭐ | BCH 公式的严格证明 |
-| Hall "Lie Groups, Lie Algebras, and Representations" Ch.5 | ⭐⭐⭐⭐ | BCH 收敛性定理的完整证明 |
-| Dynkin "Calculation of BCH coefficients" (1947) | ⭐⭐⭐⭐ | BCH 系数的组合学公式 |
-| Wikipedia "Baker-Campbell-Hausdorff formula" | ⭐⭐ | 高阶展开项的参考 |
-| Forster et al. "On-Manifold Preintegration" (T-RO 2017) | ⭐⭐⭐ | BCH 在预积分中的核心应用 |
-| manif 库 Jacobian 测试代码 | ⭐⭐ | 有限差分验证的工程范例 |
+| Sola "A micro Lie theory" (2018) Appendix B | ★★ | SO(3)/SE(3) Jacobian 闭式全表 |
+| Barfoot "State Estimation for Robotics" 2nd ed. Ch.8 | ★★★ | SE(3) Jacobian 与误差传播 |
+| Eade "Lie Groups for 2D and 3D Transformations" | ★★ | 简洁工程导向推导 |
+| Rossmann "Lie Groups: An Introduction Through Linear Groups" | ★★★ | BCH 公式的严格证明 |
+| Hall "Lie Groups, Lie Algebras, and Representations" Ch.5 | ★★★★ | BCH 收敛性定理的完整证明 |
+| Dynkin "Calculation of BCH coefficients" (1947) | ★★★★ | BCH 系数的组合学公式 |
+| Wikipedia "Baker-Campbell-Hausdorff formula" | ★★ | 高阶展开项的参考 |
+| Forster et al. "On-Manifold Preintegration" (T-RO 2017) | ★★★ | BCH 在预积分中的核心应用 |
+| manif 库 Jacobian 测试代码 | ★★ | 有限差分验证的工程范例 |
 
 ---
 
-### 🔧 故障排查手册 ⭐
+### 🔧 故障排查手册 ★
 
 | 症状 | 可能原因 | 排查步骤 | 相关节 |
 |------|----------|----------|--------|
@@ -1999,7 +1999,7 @@ print("BCH 2阶误差:", np.linalg.norm(exact - bch2))
 
 ---
 
-#### 总结 ⭐
+#### 总结 ★
 
 本专题将专题3建立的李群 exp/log 框架转化为可微分的计算工具。核心脉络是一条清晰的链条：**扰动模型（§4.1）定义了"对什么求导" → $\mathbf{J}_l$/$\mathbf{J}_r$（§4.2--4.4）给出 exp 映射本身的导数 → 常用 Jacobian（§4.5）将基本导数组合成 SLAM 中的实际残差导数 → BCH 公式（§4.7）处理两个 exp 的乘积 → Adjoint（§4.6）在不同 convention 间翻译 → convention 对照表（§4.8）保证代码实现不出错**。
 

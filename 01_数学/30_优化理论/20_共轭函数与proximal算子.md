@@ -2,7 +2,7 @@
 
 ## 前置自测
 
-> 📋 **前置自测**（答不出 ≥ 2 题 → 先回凸分析基础复习）
+> ◆ **前置自测**（答不出 ≥ 2 题 → 先回凸分析基础复习）
 >
 > 1. 什么是凸函数的次梯度？$0 \in \partial f(x^*)$ 意味着什么？
 > 2. 凸函数在 ri(dom f) 上一定连续吗？闭凸函数需要满足什么条件？
@@ -16,7 +16,7 @@
 
 ---
 
-## 2.1 共轭函数的定义与几何直觉 ⭐⭐
+## 2.1 共轭函数的定义与几何直觉 ★★
 
 ### 动机
 
@@ -72,7 +72,7 @@ $$H(q, p) = p \cdot \dot{q}(p) - L(q, \dot{q}(p))$$
 
 > **本质洞察**：Legendre 变换的物理意义是"变量替换"——从一组自然变量转到另一组更方便的变量。在热力学中，从 $(S, V)$（熵、体积）转到 $(T, P)$（温度、压力）。在凸优化中，从 $x$（原始变量）转到 $y$（对偶变量）。共轭函数就是实现这种转换的数学工具。
 
-### 几何直觉：截距的上确界 ⭐⭐
+### 几何直觉：截距的上确界 ★★
 
 $f^*(y)$ 的几何意义是什么？考虑斜率为 $y$ 的仿射函数 $\ell(x) = \langle y, x \rangle - b$。我们要找最大的 $b$ 使得 $\ell(x) \leq f(x)$ 对所有 $x$ 成立（即 $\ell$ 是 $f$ 的下方支撑线）。
 
@@ -86,7 +86,7 @@ $\ell(x) \leq f(x) \Leftrightarrow b \leq f(x) - \langle y, x \rangle \Leftright
 
 **跨领域类比**：共轭变换之于凸分析，就像 Fourier 变换之于信号处理。Fourier 变换把信号从"时域"（时间点的值）转到"频域"（频率成分的幅度），共轭变换把函数从"原始空间"（点值）转到"对偶空间"（斜率-截距）。两者都是可逆的变换（对"好的"函数），且在各自的对偶空间中，某些运算变得简单。
 
-### Young-Fenchel 不等式 ⭐⭐
+### Young-Fenchel 不等式 ★★
 
 **定理 2.1.2**：对任何函数 $f$ 和任何 $x, y$：
 
@@ -100,7 +100,7 @@ $$f(x) + f^*(y) \geq \langle x, y \rangle$$
 
 **为什么这个不等式重要**：它是所有对偶理论的出发点。弱对偶不等式、Lagrange 对偶下界——都可以从 Fenchel-Young 不等式推出。
 
-### 典型函数的共轭推导 ⭐⭐
+### 典型函数的共轭推导 ★★
 
 **例 1：二次函数** $f(x) = \frac{1}{2}x^\top Q x$（$Q \succ 0$）
 
@@ -208,7 +208,7 @@ $$f^*(Y) = -\log\det(-Y) - n \quad (Y \prec 0)$$
 
 这个性质极其重要：即使原函数 $f$ 是非凸的，其共轭 $f^*$ 仍然是凸的。但此时 $f^{**} \neq f$——$f^{**}$ 只是 $f$ 的闭凸包（最大的不超过 $f$ 的闭凸函数）。
 
-**Infimal 卷积的详细解释** ⭐⭐⭐：
+**Infimal 卷积的详细解释** ★★★：
 
 **定义**：两个函数的 infimal 卷积（inf-convolution）为：
 
@@ -232,7 +232,7 @@ $$M_f^\lambda(v) = \inf_x \left[f(x) + \frac{1}{2\lambda}\|x-v\|^2\right] = (f \
 
 因此 $(M_f^\lambda)^* = f^* + \frac{\lambda}{2}\|\cdot\|^2$——Moreau 包络的共轭就是原函数的共轭加上一个二次项！这解释了为什么 Moreau 包络总是光滑的——加了二次项使共轭变成强凸的，由强凸-光滑对偶，原函数就变成光滑的。
 
-### 共轭计算的系统方法 ⭐⭐
+### 共轭计算的系统方法 ★★
 
 计算共轭函数有几种标准策略：
 
@@ -248,7 +248,7 @@ $$y = \nabla f(x^*) \quad \Rightarrow \quad x^* = (\nabla f)^{-1}(y)$$
 
 **方法 4：对偶范数关系**。范数 $\|\cdot\|$ 的共轭是对偶范数单位球的指示函数。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > 💡 **概念误区：认为"共轭的共轭一定回到原函数"**
 > - $f^{**} = f$ 仅当 $f$ 是 proper + closed + convex 时成立
@@ -269,7 +269,7 @@ $$y = \nabla f(x^*) \quad \Rightarrow \quad x^* = (\nabla f)^{-1}(y)$$
 
 ---
 
-## 2.2 Fenchel-Moreau 定理与双共轭 ⭐⭐
+## 2.2 Fenchel-Moreau 定理与双共轭 ★★
 
 ### 动机
 
@@ -299,7 +299,7 @@ $$f^{**} = f \quad \Longleftrightarrow \quad f \text{ 是闭凸函数（proper +
 
 Fenchel-Moreau 定理说：**闭凸函数的世界在共轭变换下是封闭的**——做两次共轭回到原函数。这使得"在原空间做优化"和"在对偶空间做优化"完全等价。
 
-### 共轭-次微分互逆定理 ⭐⭐
+### 共轭-次微分互逆定理 ★★
 
 **定理 2.2.2**：设 $f$ 是闭凸函数。以下三个条件等价：
 
@@ -323,7 +323,7 @@ $$y \in \partial f(x) \quad \Longleftrightarrow \quad x \in \partial f^*(y) \qua
 
 **机器人应用**：这个互逆关系是 mirror descent（镜像下降）和自然梯度法的数学基础。在信息几何中，指数族分布的自然参数和均值参数之间的转换就是共轭梯度的逆映射。
 
-### Fenchel-Moreau 的深层意义 ⭐⭐
+### Fenchel-Moreau 的深层意义 ★★
 
 **闭凸函数的仿射表示**：$f^{**} = f$ 意味着闭凸函数可以写成其所有仿射下界的逐点上确界：
 
@@ -346,7 +346,7 @@ $$f(x) = \sup_{y}[\langle y, x \rangle - f^*(y)]$$
 | $f(x) = e^x$, $-\log x$ | 是 | 连续凸（在定义域上） |
 | 自定义分段函数 | 需检查 | 验证 epi(f) 是否闭集 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > 💡 **概念误区：$f$ 的共轭一定取有限值**
 > - 对非强制（non-coercive）的 $f$，$f^*$ 可能在某些点取 $+\infty$
@@ -361,7 +361,7 @@ $$f(x) = \sup_{y}[\langle y, x \rangle - f^*(y)]$$
 
 ---
 
-## 2.3 强凸-光滑对偶 ⭐⭐
+## 2.3 强凸-光滑对偶 ★★
 
 ### 动机
 
@@ -408,7 +408,7 @@ $$\|\nabla f^*(y_1) - \nabla f^*(y_2)\| \leq \frac{1}{\mu}\|y_1 - y_2\|$$
 
 **反事实推理**：如果不知道这个对偶关系会怎样？你会以为强凸和光滑是两个"独立"的概念，需要分别证明算法的收敛性。但有了对偶关系，你可以把"在原空间利用强凸性"转化为"在对偶空间利用光滑性"，这正是 mirror descent 和对偶加速方法的核心思想。
 
-### 证明（$\Leftarrow$ 方向）⭐⭐⭐
+### 证明（$\Leftarrow$ 方向）★★★
 
 设 $f^*$ 是 $\frac{1}{\mu}$-光滑。需要证明 $f$ 是 $\mu$-强凸。
 
@@ -454,7 +454,7 @@ $$\langle x_1-x_2, y_1-y_2\rangle = \langle \nabla f^*(y_1)-\nabla f^*(y_2), y_1
 
 ---
 
-## 2.4 Proximal 算子的定义与存在唯一性 ⭐⭐
+## 2.4 Proximal 算子的定义与存在唯一性 ★★
 
 ### 动机
 
@@ -481,7 +481,7 @@ Proximal 算子由法国数学家 Jean-Jacques Moreau (1923-2014) 在 1962 年�
 
 Rockafellar (1976) 提出了 proximal point algorithm，但直到 2009-2014 年 proximal 方法才在信号处理和机器学习社区大规模流行——ISTA/FISTA (Beck-Teboulle 2009)、ADMM (Boyd-Parikh 2011)、proximal 算法综述 (Parikh-Boyd 2014) 是三个里程碑。
 
-### Proximal 算子作为梯度步的推广 ⭐⭐
+### Proximal 算子作为梯度步的推广 ★★
 
 **显式梯度步**（光滑函数）：
 
@@ -497,7 +497,7 @@ $$x_{k+1} = \text{prox}_{\eta f}(x_k) = \arg\min_x \left[f(x) + \frac{1}{2\eta}\
 
 **为什么隐式步更好**：隐式步不需要 $f$ 可微（处理 $\|x\|_1$ 等非光滑函数），且数值上更稳定（二次正则化保证子问题强凸）。代价是需要求解一个优化子问题——但对很多常见 $f$，这个子问题有闭式解（即 prox 的闭式）。
 
-### 带参数的 Proximal 算子 ⭐⭐
+### 带参数的 Proximal 算子 ★★
 
 在很多文献中，proximal 算子的参数位置不统一，需要特别注意：
 
@@ -509,7 +509,7 @@ $$x_{k+1} = \text{prox}_{\eta f}(x_k) = \arg\min_x \left[f(x) + \frac{1}{2\eta}\
 
 **参数 $\lambda$ 的意义**：$\lambda$ 越大，proximal 步越"大胆"——更多地降低 $f$，更少地关心"靠近 $v$"。$\lambda \to 0$ 时 $\text{prox}_{\lambda f}(v) \to v$（不动），$\lambda \to \infty$ 时 $\text{prox}_{\lambda f}(v) \to \arg\min f$（直接跳到最优）。
 
-### 存在唯一性定理 ⭐⭐
+### 存在唯一性定理 ★★
 
 **定理 2.4.2**：若 $f$ 是 proper closed convex，则对每个 $v \in \mathbb{R}^n$，$\text{prox}_f(v)$ 存在且唯一。
 
@@ -519,7 +519,7 @@ $$x_{k+1} = \text{prox}_{\eta f}(x_k) = \arg\min_x \left[f(x) + \frac{1}{2\eta}\
 
 **唯一性**：$g$ 是严格凸的（甚至强凸），最小值点唯一。
 
-### Proximal 算子与次微分的关系 ⭐⭐
+### Proximal 算子与次微分的关系 ★★
 
 **定理 2.4.3**（Proximal resolvent）：
 
@@ -535,19 +535,19 @@ $$0 \in \partial\left[f(x) + \frac{1}{2}\|x-v\|^2\right]\bigg|_{x=p} = \partial 
 
 > **本质洞察**：proximal 算子 = 次微分 resolvent = 隐式梯度步 = 含"吸引势"的投影。这四种解释是同一个数学对象的四张面孔，理解它们的等价性是掌握 proximal 算法族的关键。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > 💡 **概念误区："PPO 的 proximal 就是 Moreau 意义的 prox"**
 > - PPO（Proximal Policy Optimization）的"proximal"来自 KL trust region / clipped surrogate
 > - 与 Moreau-Yosida proximal 算子**没有直接数学关系**，只是术语巧合
 > - Schulman 2017 的命名来源是 TRPO 的 trust-region 思想，不是 Moreau 1965 的 proximity operator
 
-> ⚠️ **编程陷阱：proximal gradient 中 prox 的参数**
+> ⚠ **编程陷阱：proximal gradient 中 prox 的参数**
 > - $\text{prox}_{\lambda f}(v) = \arg\min_x [f(x) + \frac{1}{2\lambda}\|x-v\|^2]$（注意 $\lambda$ 在分母）
 > - 很多论文/代码中 $\lambda$ 的位置不一致（有的写 $\lambda f$，有的写 $\frac{1}{\lambda}$ 在二次项前）
 > - 统一约定：$\text{prox}_{\lambda f}$ 表示对 $\lambda f$ 取 prox，二次项系数为 $\frac{1}{2}$
 
-### Proximal 算子的四种等价描述 ⭐⭐
+### Proximal 算子的四种等价描述 ★★
 
 以下四种描述是同一个数学对象的不同视角，理解它们的等价性是掌握 proximal 理论的关键：
 
@@ -574,13 +574,13 @@ $$0 \in \partial\left[f(x) + \frac{1}{2}\|x-v\|^2\right]\bigg|_{x=p} = \partial 
 
 ---
 
-## 2.5 五个必记 Proximal 算子的闭式解 ⭐⭐
+## 2.5 五个必记 Proximal 算子的闭式解 ★★
 
 ### 动机
 
 Proximal 算子的实用性取决于我们能否高效计算它。幸运的是，很多常见函数的 proximal 有闭式解。掌握这5个核心闭式就足以覆盖绝大多数机器人优化场景。
 
-### Proximal 算子的代数运算规则 ⭐⭐
+### Proximal 算子的代数运算规则 ★★
 
 在计算复杂函数的 prox 之前，先掌握一组代数规则，可以把复杂的 prox 分解为简单 prox 的组合。
 
@@ -614,7 +614,7 @@ $$\text{prox}_g(v) = U^\top \text{prox}_f(Uv)$$
 
 $$\text{prox}_{f^*}(v) = v - \text{prox}_f(v)$$
 
-### Proximal 算子的数值计算 ⭐⭐
+### Proximal 算子的数值计算 ★★
 
 当 prox 没有闭式解时，需要数值求解 $\min_x [f(x) + \frac{1}{2\lambda}\|x-v\|^2]$。
 
@@ -635,7 +635,7 @@ def prox_cvxpy(f_cvxpy, v, lam):
     return x.value
 ```
 
-### 2.5.1 软阈值（$\ell_1$ 范数的 prox）⭐⭐
+### 2.5.1 软阈值（$\ell_1$ 范数的 prox）★★
 
 $$\text{prox}_{\lambda\|\cdot\|_1}(v) = \text{sign}(v) \odot \max(|v| - \lambda, 0)$$
 
@@ -655,7 +655,7 @@ $$p_i = \arg\min_{x_i} \left[ \lambda|x_i| + \frac{1}{2}(x_i - v_i)^2 \right]$$
 
 **这就是"软阈值"**——值的绝对值小于 $\lambda$ 的分量被"杀死"为零（产生稀疏性），大于 $\lambda$ 的分量被"收缩" $\lambda$。
 
-### 2.5.2 块软阈值（$\ell_2$ 范数的 prox）⭐⭐
+### 2.5.2 块软阈值（$\ell_2$ 范数的 prox）★★
 
 $$\text{prox}_{\lambda\|\cdot\|_2}(v) = \left(1 - \frac{\lambda}{\|v\|_2}\right)_+ v = \begin{cases} \left(1 - \frac{\lambda}{\|v\|_2}\right) v & \|v\|_2 > \lambda \\ 0 & \|v\|_2 \leq \lambda \end{cases}$$
 
@@ -669,7 +669,7 @@ $$\text{prox}_{\lambda\|\cdot\|_2}(v) = \left(1 - \frac{\lambda}{\|v\|_2}\right)
 
 **区别于软阈值**：$\ell_2$ 的 prox 是"整组杀死或整组收缩"（group lasso 中用），而 $\ell_1$ 是逐分量独立操作。
 
-### 2.5.3 凸集投影 ⭐
+### 2.5.3 凸集投影 ★
 
 $$\text{prox}_{\delta_C}(v) = \Pi_C(v) = \arg\min_{x \in C} \|x - v\|^2$$
 
@@ -687,7 +687,7 @@ $$\text{prox}_{\lambda \cdot \frac{1}{2}x^\top Q x}(v) = (I + \lambda Q)^{-1} v$
 
 求导令零：$\lambda Q x + x - v = 0$，即 $(I + \lambda Q)x = v$。
 
-### 2.5.5 奇异值阈值（SVT，核范数的 prox）⭐⭐⭐
+### 2.5.5 奇异值阈值（SVT，核范数的 prox）★★★
 
 $$\text{prox}_{\lambda\|\cdot\|_*}(V) = U \cdot \text{diag}((\sigma_i - \lambda)_+) \cdot W^\top$$
 
@@ -718,14 +718,14 @@ $$\text{prox}_{\lambda\|\cdot\|_*}(V) = U \cdot \text{diag}((\sigma_i - \lambda)
 | $\frac{1}{2}\|x\|^2$ | $v/(1+\lambda)$ | $O(n)$ |
 | $\|x\|_\infty$ | $v - \lambda\Pi_{\|\cdot\|_1 \leq 1}(v/\lambda)$ | $O(n\log n)$ |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > 💡 **概念误区：范数 vs 范数平方的 prox 差异很大**
 > - $\text{prox}_{\lambda\|\cdot\|_2}(v) = (1 - \lambda/\|v\|)_+ v$（块软阈值，有死区）
 > - $\text{prox}_{\lambda \cdot \frac{1}{2}\|\cdot\|^2}(v) = v/(1+\lambda)$（简单缩放，无死区）
 > - 混淆两者是 ADMM 实现中最常见的 bug 之一
 
-> ⚠️ **编程陷阱：概率单纯形投影不是"代数闭式"**
+> ⚠ **编程陷阱：概率单纯形投影不是"代数闭式"**
 > - 虽然形式上是 $\max(v - \tau\mathbf{1}, 0)$，但 $\tau$ 需要通过排序算法确定
 > - 实现时用 Held et al. 1974 的 $O(n\log n)$ 算法或 Condat 2016 的 $O(n)$ 算法
 > - 不要试图"解析求解" $\tau$——它是分段线性函数的根
@@ -738,7 +738,7 @@ $$\text{prox}_{\lambda\|\cdot\|_*}(V) = U \cdot \text{diag}((\sigma_i - \lambda)
 
 ---
 
-## 2.6 Moreau 包络与光滑化 ⭐⭐
+## 2.6 Moreau 包络与光滑化 ★★
 
 ### 动机
 
@@ -750,7 +750,7 @@ $$\text{prox}_{\lambda\|\cdot\|_*}(V) = U \cdot \text{diag}((\sigma_i - \lambda)
 
 $$M_f^\lambda(v) = \inf_x \left[ f(x) + \frac{1}{2\lambda}\|x - v\|^2 \right] = f(\text{prox}_{\lambda f}(v)) + \frac{1}{2\lambda}\|\text{prox}_{\lambda f}(v) - v\|^2$$
 
-### 关键性质 ⭐⭐
+### 关键性质 ★★
 
 **定理 2.6.2**：设 $f$ 是 proper closed convex，$\lambda > 0$。
 
@@ -800,7 +800,7 @@ $$= M_f^\lambda(v) - \frac{1}{\lambda}(p - v)^\top \Delta v + \frac{1}{2\lambda}
 
 类似地可以证明下界，得到 $\nabla M_f^\lambda(v) = \frac{1}{\lambda}(v - p)$。
 
-### Moreau 包络的具体计算 ⭐⭐
+### Moreau 包络的具体计算 ★★
 
 **例 1**：$f(x) = |x|$
 
@@ -827,7 +827,7 @@ $$M_f^\lambda(v) = \min_{x \in [-1,1]} \frac{1}{2\lambda}(x-v)^2 = \frac{1}{2\la
 
 这是 box 约束的"软化"——违反约束的程度用二次惩罚衡量。
 
-### Moreau 包络与 Nesterov 光滑化的联系 ⭐⭐⭐
+### Moreau 包络与 Nesterov 光滑化的联系 ★★★
 
 Nesterov (2005) 提出了一种通用的非光滑函数光滑化方法。对 $f(x) = \max_{u \in Q} [\langle Ax, u \rangle - \phi(u)]$（很多非光滑函数都可以写成这种 max 结构），添加强凸正则化：
 
@@ -837,7 +837,7 @@ $f_\mu$ 是 $f$ 的光滑近似，误差 $|f_\mu - f| \leq \frac{\mu}{2}D^2$（$
 
 **与 Moreau 包络的关系**：Nesterov 光滑化可以看作在对偶空间做 Moreau 包络！$-\phi(u) - \frac{\mu}{2}\|u\|^2 = -M_\phi^\mu(u)$... 更精确地说，Nesterov 的 $f_\mu$ 等价于 $f$ 的 Moreau 包络在对偶空间的应用。
 
-### 机器人应用：GNC 与 Moreau 包络 ⭐⭐⭐
+### 机器人应用：GNC 与 Moreau 包络 ★★★
 
 **Graduated Non-Convexity（GNC）** 是 robust SLAM 的核心技术（Yang-Carlone 2020，ICRA Best Paper）。其数学本质是：
 
@@ -847,7 +847,7 @@ $f_\mu$ 是 $f$ 的光滑近似，误差 $|f_\mu - f| \leq \frac{\mu}{2}D^2$（$
 
 > **本质洞察**：Moreau 包络不只是"光滑化工具"——它是连接凸优化和非凸优化的桥梁。通过 continuation method（逐步减小 $\lambda$），可以把非凸问题的求解分解为一系列凸问题。这正是 GNC 的工作原理。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > 💡 **概念误区："Moreau 包络 $M_f^\lambda$ 就是 $f$ 加上二次项"**
 > - $M_f^\lambda(v) = \min_x[f(x) + \frac{1}{2\lambda}\|x-v\|^2]$ 是对 $x$ 取 min 后的结果
@@ -862,7 +862,7 @@ $f_\mu$ 是 $f$ 的光滑近似，误差 $|f_\mu - f| \leq \frac{\mu}{2}D^2$（$
 
 ---
 
-## 2.7 Moreau 分解定理 ⭐⭐
+## 2.7 Moreau 分解定理 ★★
 
 ### 动机
 
@@ -908,7 +908,7 @@ $$\text{prox}_{\lambda\|\cdot\|_2}(v) = v - \lambda \cdot \Pi_{\|\cdot\|_2 \leq 
 
 即块软阈值公式。
 
-### Moreau 分解的多种推导方式 ⭐⭐
+### Moreau 分解的多种推导方式 ★★
 
 **方式 1**（通过 resolvent，已在上面给出）：利用 $v - p \in \partial f(p)$ 和共轭-次微分互逆。
 
@@ -963,7 +963,7 @@ $$\text{prox}_{\lambda\|\cdot\|_\infty^*}(v) = v - \lambda S_{1/\lambda}(v/\lamb
 
 ---
 
-## 2.8 Firmly Nonexpansive 性质与收敛保证 ⭐⭐⭐
+## 2.8 Firmly Nonexpansive 性质与收敛保证 ★★★
 
 ### 动机
 
@@ -997,7 +997,7 @@ $$\langle (x-p) - (y-q), p - q \rangle \geq 0$$
 
 **收敛率**：对一般凸函数，proximal point algorithm 以 $O(1/k)$ 速率收敛；对 $\mu$-强凸函数，以线性速率 $(1/(1+\lambda\mu))^k$ 收敛。
 
-### Nonexpansive 映射的等价刻画 ⭐⭐⭐
+### Nonexpansive 映射的等价刻画 ★★★
 
 以下条件等价：
 
@@ -1018,7 +1018,7 @@ $$\|Sx - Sy\|^2 = \|(x-y) - (Tx-Ty)\|^2 = \|x-y\|^2 - 2\langle x-y, Tx-Ty\rangle
 
 反之类似。因此 $T$ 和 $I-T$ 的 firmly nonexpansive 性质是对称的——这对应了 Moreau 分解中 $\text{prox}_f$ 和 $\text{prox}_{f^*}$ 的对称角色。
 
-### Proximal Point Algorithm（PPA）⭐⭐
+### Proximal Point Algorithm（PPA）★★
 
 **算法**：$x_{k+1} = \text{prox}_{\lambda f}(x_k)$。
 
@@ -1048,7 +1048,7 @@ ADMM 的收敛性证明的核心步骤就是：证明每步迭代可以写成 av
 
 ADMM 的每步迭代可以写成 $x_{k+1} = T_{\text{ADMM}}(x_k)$，其中 $T_{\text{ADMM}}$ 是两个 firmly nonexpansive 映射的复合的 $\frac{1}{2}$-averaged 化——因此 Krasnosel'skii-Mann 适用。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > 💡 **概念误区：firmly nonexpansive $=$ 收缩映射**
 > - 收缩映射要求 $\|Tx-Ty\| \leq c\|x-y\|$（$c < 1$），保证线性收敛
@@ -1070,7 +1070,7 @@ ADMM 的每步迭代可以写成 $x_{k+1} = T_{\text{ADMM}}(x_k)$，其中 $T_{\
 
 ---
 
-## 2.9 共轭函数典型例子大全 ⭐⭐
+## 2.9 共轭函数典型例子大全 ★★
 
 ### 完整共轭-prox 对照表
 
@@ -1101,7 +1101,7 @@ ADMM 的每步迭代可以写成 $x_{k+1} = T_{\text{ADMM}}(x_k)$，其中 $T_{\
 
 ---
 
-## 2.10 Fenchel 对偶问题 ⭐⭐
+## 2.10 Fenchel 对偶问题 ★★
 
 ### 动机
 
@@ -1157,7 +1157,7 @@ $$f(x) + g(Ax) = f(x) + g(Ax) + \langle y, Ax \rangle - \langle y, Ax \rangle$$
 
 **关键观察**：$\ell_1$ 正则化的对偶把非光滑性"转移"到了约束中——原问题的非光滑目标变成了对偶问题的简单约束。这是 Fenchel 对偶的威力。
 
-### 对偶证书（Dual Certificate）⭐⭐⭐
+### 对偶证书（Dual Certificate）★★★
 
 在 sparse recovery 和 compressed sensing 中，Fenchel 对偶给出了一个强大的理论工具——**对偶证书**。
 
@@ -1199,7 +1199,7 @@ Lagrange 对偶是 Fenchel 对偶的特殊情形。把约束 $f_i(x) \leq 0$ 写
 
 ---
 
-## 2.11 Proximal Gradient 算法 ⭐⭐
+## 2.11 Proximal Gradient 算法 ★★
 
 ### 动机
 
@@ -1223,7 +1223,7 @@ $$x_{k+1} = \arg\min_x \left[ g(x) + \frac{1}{2\eta}\left\|x - (x_k - \eta\nabla
 
 **跨领域类比**：proximal gradient 就像"分工合作"——光滑部分由梯度负责（擅长处理光滑），非光滑部分由 prox 负责（擅长处理非光滑）。两者交替执行，各司其职。
 
-### 收敛性定理 ⭐⭐
+### 收敛性定理 ★★
 
 **定理 2.10.1**：设 $f$ 是 $L$-光滑凸，$g$ 是 proper closed convex，$\eta = 1/L$。则 proximal gradient 满足：
 
@@ -1233,7 +1233,7 @@ $$F(x_k) - F(x^*) \leq \frac{L\|x_0 - x^*\|^2}{2k}$$
 
 $$F(x_k) - F(x^*) \leq (1 - \mu/L)^k (F(x_0) - F(x^*))$$
 
-### 证明核心步骤 ⭐⭐
+### 证明核心步骤 ★★
 
 **Step 1**：定义 proximal gradient 的"充分下降引理"。设 $p = \text{prox}_{\eta g}(x - \eta\nabla f(x))$。则：
 
@@ -1245,7 +1245,7 @@ $$F(p) \leq F(x) - \frac{\eta}{2}\left\|\frac{x - p}{\eta}\right\|^2 + \frac{L\e
 
 **Step 3**：强凸情形用 PL 不等式的推广（$\|G_L(x)\|^2 \geq 2\mu(F(x) - F(x^*))$）得到线性收敛。
 
-### ISTA 与 FISTA ⭐⭐
+### ISTA 与 FISTA ★★
 
 **ISTA**（Iterative Shrinkage-Thresholding Algorithm）就是 proximal gradient 在 LASSO 上的特化：
 
@@ -1263,9 +1263,9 @@ $$x_{k+1} = \text{prox}_{\eta g}(y_{k+1} - \eta\nabla f(y_{k+1}))$$
 
 **为什么 FISTA 重要**：在 compressed sensing、稀疏恢复、低秩矩阵补全中，FISTA 是标准算法。SLAM 中的 robust estimation（Yang-Carlone 2020 的 GNC）的内层优化也可以用 FISTA 求解。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：ISTA/FISTA 中步长 $\eta$ 的确定**
+> ⚠ **编程陷阱：ISTA/FISTA 中步长 $\eta$ 的确定**
 > - $\eta \leq 1/L$，其中 $L = \lambda_{\max}(A^\top A)$（最大特征值）
 > - 计算 $\lambda_{\max}$ 可能很贵。实践中用 backtracking line search 更常见
 > - FISTA 的动量系数 $\frac{k-1}{k+2}$ 不能用固定值替代——它的递增性是加速的关键
@@ -1283,7 +1283,7 @@ $$x_{k+1} = \text{prox}_{\eta g}(y_{k+1} - \eta\nabla f(y_{k+1}))$$
 
 ---
 
-## 2.11 ADMM 推导与收敛 ⭐⭐
+## 2.11 ADMM 推导与收敛 ★★
 
 ### 动机
 
@@ -1345,7 +1345,7 @@ $$u_{k+1} = u_k + (x_{k+1} - z_{k+1})$$
 
 **证明思路**：定义 Lyapunov 函数 $V_k = \frac{1}{\rho}\|y_k - y^*\|^2 + \rho\|Bz_k - Bz^*\|^2$，证明 $V_k$ 单调不增且 $\sum_k r_k^2 < \infty$。
 
-### ADMM 在 OSQP 中的应用 ⭐⭐
+### ADMM 在 OSQP 中的应用 ★★
 
 OSQP 求解 QP：$\min \frac{1}{2}x^\top Px + q^\top x$ s.t. $l \leq Ax \leq u$。
 
@@ -1361,7 +1361,7 @@ OSQP 求解 QP：$\min \frac{1}{2}x^\top Px + q^\top x$ s.t. $l \leq Ax \leq u$�
 3. 自适应 $\rho$ 调节加速收敛
 4. Polishing 阶段提高精度（从 ADMM 的 $O(1/k)$ 提升到机器精度）
 
-### Moreau 分解在 ADMM 中的角色 ⭐⭐⭐
+### Moreau 分解在 ADMM 中的角色 ★★★
 
 ADMM 的收敛证明的核心步骤依赖 Moreau 分解。考虑 $z$-更新和 $u$-更新的组合：
 
@@ -1375,7 +1375,7 @@ $$u_{k+1} = u_k + x_{k+1} - z_{k+1} = (x_{k+1} + u_k) - z_{k+1}$$
 
 **反事实推理**：如果没有 Moreau 分解，我们无法保证 $z$ 和 $u$ 的更新是"协调"的——可能 $z$ 步把变量推向一个方向，$u$ 步推向相反方向，算法就不收敛了。Moreau 分解保证了它们的"推力"加起来恰好等于输入 $v$，不会产生额外的"力"，因此 Lyapunov 函数单调不增。
 
-### ADMM 的参数选择 ⭐⭐
+### ADMM 的参数选择 ★★
 
 | 参数 | 选择指导 | 对收敛的影响 |
 |------|---------|-------------|
@@ -1383,9 +1383,9 @@ $$u_{k+1} = u_k + x_{k+1} - z_{k+1} = (x_{k+1} + u_k) - z_{k+1}$$
 | 自适应 $\rho$ | Boyd 2011 的规则：当 $\|r\|/\|s\| > \mu$，$\rho \leftarrow \tau\rho$ | 平衡原对偶残差 |
 | 终止条件 | $\|r_k\| \leq \epsilon_{\text{pri}}$ 且 $\|s_k\| \leq \epsilon_{\text{dual}}$ | 绝对+相对精度 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：ADMM 中 $\rho$ 的影响**
+> ⚠ **编程陷阱：ADMM 中 $\rho$ 的影响**
 > - $\rho$ 太小：$x$-更新的二次项太弱，子问题"太软"，收敛慢
 > - $\rho$ 太大：$x$-更新的二次项主导，$f$ 的信息被淹没，也收敛慢
 > - 最佳 $\rho$ 依赖问题结构——自适应调节是最佳实践
@@ -1395,7 +1395,7 @@ $$u_{k+1} = u_k + x_{k+1} - z_{k+1} = (x_{k+1} + u_k) - z_{k+1}$$
 > - 对本身就容易解的问题（如小规模 QP），active-set（qpOASES）或 IPM 可能更快
 > - ADMM 的 $O(1/k)$ 收敛率是中等精度的——高精度需要 polishing 或换方法
 
-### ADMM 的变体与扩展 ⭐⭐
+### ADMM 的变体与扩展 ★★
 
 **多块 ADMM**：原始 ADMM 把问题分成两块（$x$ 和 $z$）。对 $\min \sum_{i=1}^N f_i(x_i)$ s.t. $\sum_i A_i x_i = b$，可以扩展为 $N$ 块。但注意：$N \geq 3$ 时直接推广的多块 ADMM 不一定收敛（Chen et al. 2016 的反例）。需要加 proximal 项或用 Jacobi-ADMM 等变体。
 
@@ -1434,7 +1434,7 @@ ADMM 的 $x_i$-更新可以在各个节点并行执行，$z$-更新是简单的�
 
 ---
 
-## 2.12 Forward-Backward Splitting 与算子分裂 ⭐⭐⭐
+## 2.12 Forward-Backward Splitting 与算子分裂 ★★★
 
 ### 动机
 
@@ -1456,7 +1456,7 @@ $$0 \in (A + B)(x) \quad \text{其中 } A = \nabla f, \; B = \partial g$$
 
 这正是 proximal gradient！"前向"步是 $I - \gamma A$（显式梯度），"后向"步是 $(I + \gamma B)^{-1}$（隐式 prox）。
 
-### Douglas-Rachford Splitting ⭐⭐⭐
+### Douglas-Rachford Splitting ★★★
 
 当两个算子都是"硬的"（都需要 prox 但没有光滑部分）时，forward-backward 退化为 proximal point。Douglas-Rachford 提供了另一种分裂：
 
@@ -1492,7 +1492,7 @@ $$x_{k+1} = x_k + y_{k+1} - \text{prox}_f(x_k)$$
 
 ---
 
-## 2.13 Proximal 算子在机器人学中的应用 ⭐⭐
+## 2.13 Proximal 算子在机器人学中的应用 ★★
 
 ### MPC 求解器中的 Proximal 算子
 
@@ -1533,7 +1533,7 @@ warm-start 的数学保证来自 proximal 算子的连续性：当问题参数�
 
 ---
 
-## 2.15 Bregman Proximal 与 Mirror Descent ⭐⭐⭐
+## 2.15 Bregman Proximal 与 Mirror Descent ★★★
 
 ### 动机
 
@@ -1585,7 +1585,7 @@ $$x_{i,k+1} = \frac{x_{i,k} \exp(-\eta \nabla_i f(x_k))}{\sum_j x_{j,k} \exp(-\e
 
 ---
 
-## 2.16 Proximal 算子的不动点解释 ⭐⭐
+## 2.16 Proximal 算子的不动点解释 ★★
 
 ### 不动点等价性
 
@@ -1613,7 +1613,7 @@ $$x_{i,k+1} = \frac{x_{i,k} \exp(-\eta \nabla_i f(x_k))}{\sum_j x_{j,k} \exp(-\e
 
 ---
 
-## 2.17 Proximal 算子的高级性质 ⭐⭐⭐
+## 2.17 Proximal 算子的高级性质 ★★★
 
 ### Moreau 恒等式
 
@@ -1651,7 +1651,7 @@ $$\nabla \text{prox}_f(v) = (I + \nabla^2 f(\text{prox}_f(v)))^{-1}$$
 
 **含义**：Moreau 包络值越接近 $\alpha$，$v$ 越接近 $\alpha$-下水平集。这为 proximal 算法提供了距离下水平集的估计。
 
-### 非凸 Proximal 的推广 ⭐⭐⭐⭐
+### 非凸 Proximal 的推广 ★★★★
 
 在非凸优化中，proximal 算子仍然有定义：$\text{prox}_f(v) = \arg\min_x [f(x) + \frac{1}{2}\|x-v\|^2]$。但：
 
@@ -1690,22 +1690,22 @@ $$\nabla \text{prox}_f(v) = (I + \nabla^2 f(\text{prox}_f(v)))^{-1}$$
 
 | 概念 | 核心陈述 | 难度 | 关键应用 |
 |------|---------|------|---------|
-| Legendre-Fenchel 共轭 | $f^*(y) = \sup_x[\langle y,x\rangle - f(x)]$ | ⭐⭐ | 对偶理论基础 |
-| Fenchel-Young 不等式 | $f(x)+f^*(y) \geq \langle x,y\rangle$ | ⭐⭐ | 弱对偶的根源 |
-| Fenchel-Moreau 定理 | $f^{**}=f$ 对闭凸函数 | ⭐⭐ | 对偶可逆性 |
-| 共轭-次微分互逆 | $y \in \partial f(x) \Leftrightarrow x \in \partial f^*(y)$ | ⭐⭐ | Mirror descent |
-| 强凸-光滑对偶 | $\mu$-强凸 $\Leftrightarrow$ $1/\mu$-光滑共轭 | ⭐⭐ | 对偶加速 |
-| Proximal 算子 | $\text{prox}_f(v) = \arg\min[f(x)+\frac{1}{2}\|x-v\|^2]$ | ⭐⭐ | ADMM/splitting 核心 |
-| Moreau 包络 | 光滑化 + 梯度 = $(v-\text{prox})/\lambda$ | ⭐⭐ | GNC/Nesterov smoothing |
-| Moreau 分解 | $v = \text{prox}_f(v) + \text{prox}_{f^*}(v)$ | ⭐⭐ | Prox 互推工具 |
-| Firmly nonexpansive | $\|\text{prox}(x)-\text{prox}(y)\|^2 \leq \langle x-y, \text{prox}(x)-\text{prox}(y)\rangle$ | ⭐⭐⭐ | 算法收敛保证 |
-| Fenchel 对偶 | $p^* = \inf[f(x)+g(Ax)]$, $d^* = \sup[-f^*(-A^\top y)-g^*(y)]$ | ⭐⭐ | LASSO 对偶 |
-| Proximal gradient | $x_{k+1} = \text{prox}_{\eta g}(x_k - \eta\nabla f(x_k))$ | ⭐⭐ | ISTA/FISTA |
-| ADMM | $x$-更新 + $z$-更新 + $u$-更新 | ⭐⭐ | OSQP/SCS |
-| Forward-Backward | 光滑前向步 + 非光滑后向步 | ⭐⭐⭐ | 统一分裂框架 |
-| Douglas-Rachford | 两个 prox 的交替组合 | ⭐⭐⭐ | ADMM 的对偶形式 |
-| Bregman proximal | 用 Bregman 散度替代欧氏距离 | ⭐⭐⭐ | Mirror descent |
-| Prox 不动点 | $x^* = \arg\min f \Leftrightarrow x^* = \text{prox}_{\lambda f}(x^*)$ | ⭐⭐ | 算法设计出发点 |
+| Legendre-Fenchel 共轭 | $f^*(y) = \sup_x[\langle y,x\rangle - f(x)]$ | ★★ | 对偶理论基础 |
+| Fenchel-Young 不等式 | $f(x)+f^*(y) \geq \langle x,y\rangle$ | ★★ | 弱对偶的根源 |
+| Fenchel-Moreau 定理 | $f^{**}=f$ 对闭凸函数 | ★★ | 对偶可逆性 |
+| 共轭-次微分互逆 | $y \in \partial f(x) \Leftrightarrow x \in \partial f^*(y)$ | ★★ | Mirror descent |
+| 强凸-光滑对偶 | $\mu$-强凸 $\Leftrightarrow$ $1/\mu$-光滑共轭 | ★★ | 对偶加速 |
+| Proximal 算子 | $\text{prox}_f(v) = \arg\min[f(x)+\frac{1}{2}\|x-v\|^2]$ | ★★ | ADMM/splitting 核心 |
+| Moreau 包络 | 光滑化 + 梯度 = $(v-\text{prox})/\lambda$ | ★★ | GNC/Nesterov smoothing |
+| Moreau 分解 | $v = \text{prox}_f(v) + \text{prox}_{f^*}(v)$ | ★★ | Prox 互推工具 |
+| Firmly nonexpansive | $\|\text{prox}(x)-\text{prox}(y)\|^2 \leq \langle x-y, \text{prox}(x)-\text{prox}(y)\rangle$ | ★★★ | 算法收敛保证 |
+| Fenchel 对偶 | $p^* = \inf[f(x)+g(Ax)]$, $d^* = \sup[-f^*(-A^\top y)-g^*(y)]$ | ★★ | LASSO 对偶 |
+| Proximal gradient | $x_{k+1} = \text{prox}_{\eta g}(x_k - \eta\nabla f(x_k))$ | ★★ | ISTA/FISTA |
+| ADMM | $x$-更新 + $z$-更新 + $u$-更新 | ★★ | OSQP/SCS |
+| Forward-Backward | 光滑前向步 + 非光滑后向步 | ★★★ | 统一分裂框架 |
+| Douglas-Rachford | 两个 prox 的交替组合 | ★★★ | ADMM 的对偶形式 |
+| Bregman proximal | 用 Bregman 散度替代欧氏距离 | ★★★ | Mirror descent |
+| Prox 不动点 | $x^* = \arg\min f \Leftrightarrow x^* = \text{prox}_{\lambda f}(x^*)$ | ★★ | 算法设计出发点 |
 
 ---
 
@@ -1888,24 +1888,24 @@ def admm_lasso(A, b, lam, rho=1.0, n_iter=100):
 
 | 资源 | 难度 | 说明 |
 |------|------|------|
-| Parikh & Boyd《Proximal Algorithms》(2014) | ⭐⭐⭐ | Proximal 算法百科，含 prox 表 |
-| Beck《First-Order Methods》Ch 4, 6 | ⭐⭐⭐ | 最现代算法导向的自学教材 |
-| Bauschke & Combettes Ch 12-13, 23 | ⭐⭐⭐⭐ | Moreau/prox 最权威理论参考 |
-| Rockafellar《Convex Analysis》§12, §23-26 | ⭐⭐⭐⭐⭐ | 共轭理论圣经 |
-| Combettes & Pesquet "Proximal Splitting" | ⭐⭐⭐ | Splitting 方法族谱 |
-| Boyd-Parikh-Chu "ADMM" (2011) | ⭐⭐⭐ | ADMM 工程圣经，5000+ 引用 |
-| Moreau "Proximité et dualité" (1965) | ⭐⭐⭐⭐⭐ | proximal 算子的原始论文 |
-| Ryu & Boyd "Primer on Monotone Operator Methods" | ⭐⭐⭐ | 算子分裂的现代入门 |
-| Condat "Fast Projection onto the Simplex" (2016) | ⭐⭐ | 单纯形投影的 O(n) 算法 |
-| Yang & Carlone "GNC" (ICRA 2020) | ⭐⭐⭐⭐ | Moreau 包络在鲁棒 SLAM 中的应用 |
-| Nesterov "Smooth Minimization" (2005) | ⭐⭐⭐ | Nesterov 光滑化 = 对偶空间 Moreau |
-| Bubeck "Convex Optimization" (2015) | ⭐⭐⭐ | Mirror descent 的最清晰推导 |
-| Amari "Information Geometry" (2016) | ⭐⭐⭐⭐ | 共轭函数在信息几何中的角色 |
-| Boyd & Vandenberghe Ch 3.3 | ⭐⭐ | 共轭函数的工程入门 |
+| Parikh & Boyd《Proximal Algorithms》(2014) | ★★★ | Proximal 算法百科，含 prox 表 |
+| Beck《First-Order Methods》Ch 4, 6 | ★★★ | 最现代算法导向的自学教材 |
+| Bauschke & Combettes Ch 12-13, 23 | ★★★★ | Moreau/prox 最权威理论参考 |
+| Rockafellar《Convex Analysis》§12, §23-26 | ★★★★★ | 共轭理论圣经 |
+| Combettes & Pesquet "Proximal Splitting" | ★★★ | Splitting 方法族谱 |
+| Boyd-Parikh-Chu "ADMM" (2011) | ★★★ | ADMM 工程圣经，5000+ 引用 |
+| Moreau "Proximité et dualité" (1965) | ★★★★★ | proximal 算子的原始论文 |
+| Ryu & Boyd "Primer on Monotone Operator Methods" | ★★★ | 算子分裂的现代入门 |
+| Condat "Fast Projection onto the Simplex" (2016) | ★★ | 单纯形投影的 O(n) 算法 |
+| Yang & Carlone "GNC" (ICRA 2020) | ★★★★ | Moreau 包络在鲁棒 SLAM 中的应用 |
+| Nesterov "Smooth Minimization" (2005) | ★★★ | Nesterov 光滑化 = 对偶空间 Moreau |
+| Bubeck "Convex Optimization" (2015) | ★★★ | Mirror descent 的最清晰推导 |
+| Amari "Information Geometry" (2016) | ★★★★ | 共轭函数在信息几何中的角色 |
+| Boyd & Vandenberghe Ch 3.3 | ★★ | 共轭函数的工程入门 |
 
 ---
 
-## 共轭函数与 Proximal 算子的历史演进 ⭐
+## 共轭函数与 Proximal 算子的历史演进 ★
 
 | 年代 | 里程碑 | 贡献者 |
 |------|--------|--------|
@@ -1931,7 +1931,7 @@ def admm_lasso(A, b, lam, rho=1.0, n_iter=100):
 
 ---
 
-## 共轭/Proximal 核心公式速查 ⭐⭐
+## 共轭/Proximal 核心公式速查 ★★
 
 以下是本章最重要的公式，按使用频率排序：
 
@@ -2047,7 +2047,7 @@ $(\delta_C)^* = \sigma_C$ （指示 ↔ 支撑）
 
 **Nishihara et al. (2015)** 证明了：对于 $f$ 强凸 + $g$ 也强凸的情况，ADMM 的线性收敛率可以精确刻画为 $\sqrt{1 - 1/(1 + \kappa)}$，其中 $\kappa$ 是条件数相关量。
 
-### 共轭函数的信息论视角 ⭐⭐⭐
+### 共轭函数的信息论视角 ★★★
 
 共轭函数在信息论中有天然的对应关系：
 
@@ -2068,7 +2068,7 @@ log-sum-exp $f(x) = \log\sum e^{x_i}$ 是概率论中 "自由能" 的离散版�
 
 这解释了为什么 softmax 和 log-softmax 在深度学习中如此自然——它们是一对共轭函数的梯度。
 
-### Proximal 算子在深度学习中的应用 ⭐⭐
+### Proximal 算子在深度学习中的应用 ★★
 
 虽然深度学习主要使用（随机）梯度下降，但 proximal 方法在以下场景中发挥重要作用：
 

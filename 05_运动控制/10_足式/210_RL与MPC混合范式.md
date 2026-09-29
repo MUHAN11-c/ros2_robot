@@ -2,7 +2,7 @@
 
 # 第 65 章 RL + MPC 混合范式——MPC-Net / Cafe-MPC VWBC / Residual RL / Differentiable MPC
 
-> **难度**：⭐⭐⭐~⭐⭐⭐⭐ | **建议时间**：1.5 周（25-30 小时） | **前置**：足式/90_WBC分层优化与TSID（WBC/TSID）、足式/100_DDP家族与Crocoddyl（DDP/Crocoddyl）、足式/110_OCS2完整栈与双线程MPC（OCS2）、足式/190_腿足RL训练栈（RL 训练+部署）
+> **难度**：★★★~★★★★ | **建议时间**：1.5 周（25-30 小时） | **前置**：足式/90_WBC分层优化与TSID（WBC/TSID）、足式/100_DDP家族与Crocoddyl（DDP/Crocoddyl）、足式/110_OCS2完整栈与双线程MPC（OCS2）、足式/190_腿足RL训练栈（RL 训练+部署）
 
 > **一句话概要**：纯 MPC 和纯 RL 各有致命短板——MPC 感知理解弱、推理慢，RL 约束满足弱、可解释性差。本章系统讲解四条主流混合路线（蒸馏、值函数嵌入、分层、残差）以及两个前沿方向（可微 MPC、世界模型），从数学推导到工程选型，帮你在 RL+MPC 的连续光谱中找到自己的研究定位。
 
@@ -10,7 +10,7 @@
 
 ## 前置自测
 
-📋 **答不出 >= 2 题 → 先回对应章节复习**
+◆ **答不出 >= 2 题 → 先回对应章节复习**
 
 1. **[足式/100_DDP家族与Crocoddyl]** DDP 的 backward pass 中，$Q$-function 的二阶展开 $\delta Q = Q_x \delta x + Q_u \delta u + \frac{1}{2}[\delta x^T, \delta u^T] \begin{bmatrix} Q_{xx} & Q_{xu} \\ Q_{ux} & Q_{uu} \end{bmatrix} \begin{bmatrix} \delta x \\ \delta u \end{bmatrix}$ 中，$Q_{uu}$ 的物理含义是什么？为什么 $Q_{uu} \succ 0$ 是 DDP 能求解的必要条件？
 
@@ -88,7 +88,7 @@
 
 ---
 
-## 65.1 纯 MPC 与纯 RL：两种控制范式的数学本质 ⭐⭐
+## 65.1 纯 MPC 与纯 RL：两种控制范式的数学本质 ★★
 
 > **本节解决什么问题**：在讨论"混合"之前，必须先从数学层面理解 MPC 和 RL 各自在做什么、擅长什么、不擅长什么。这不是简单的列表对比，而是从最优控制理论的角度统一两者。
 
@@ -100,7 +100,7 @@ $$\min_{\pi} \mathbb{E}\left[\sum_{t=0}^{T} c(s_t, a_t)\right] \quad \text{s.t.}
 
 但两者的**求解策略**截然不同。
 
-### MPC：在线优化 ⭐⭐
+### MPC：在线优化 ★★
 
 MPC 的核心思想是**每个控制周期都从头求解一个有限时域优化问题**：
 
@@ -120,7 +120,7 @@ $$\text{s.t.} \quad x_{k+1} = f(x_k, u_k), \quad g(x_k, u_k) \leq 0, \quad x_0 =
 | **有限时域** | 只看未来 $N$ 步 | 长期最优性不保证 |
 | **确定性** | 通常假设确定性动力学 | 随机扰动需要鲁棒化 |
 
-### RL：离线优化 + 在线推理 ⭐⭐
+### RL：离线优化 + 在线推理 ★★
 
 RL 的核心思想是**离线训练一个策略网络 $\pi_\theta(a|s)$，部署时直接前向推理**：
 
@@ -144,7 +144,7 @@ $$a_t = \pi_{\theta^*}(s_t) \quad \text{（一次前向传播，100 $\mu$s）}$$
 | **无限时域** | 通过 $\gamma$ 折扣考虑全局 | 长期行为更优 |
 | **约束困难** | 奖励设计间接处理约束 | 无法保证硬约束满足 |
 
-### 两者的深层对偶关系 ⭐⭐⭐
+### 两者的深层对偶关系 ★★★
 
 从最优控制理论看，MPC 和 RL 其实在解**同一个 Bellman 方程**的不同近似：
 
@@ -157,7 +157,7 @@ $$V^*(s) = \min_a \left[c(s, a) + \gamma V^*(f(s, a))\right]$$
 
 > **本质洞察**：MPC 和 RL 的关系**不是**"传统方法 vs 现代方法"的对立,**而是**同一个 Bellman 方程在不同计算资源约束下的两种近似策略。MPC 把计算预算花在"此刻此地"(在线求解当前状态附近的局部最优),RL 把计算预算花在"事前准备"(离线遍历整个状态空间训练全局策略)。两者的计算总量可能相当——只是分配在时间轴上的位置不同。
 
-### 纯 MPC 的五大短板 ⭐⭐
+### 纯 MPC 的五大短板 ★★
 
 1. **感知理解弱**：原始高程图（200x200 浮点矩阵）或 RGB 图像难以嵌入代价函数。OCS2 的代价函数需要解析梯度（CppAD 自动微分），但 CNN 特征的梯度对 MPC 求解器不友好——高维非凸
 
@@ -179,7 +179,7 @@ $$V^*(s) = \min_a \left[c(s, a) + \gamma V^*(f(s, a))\right]$$
 | 模型敏感度 | 10% 摩擦系数误差对跟踪误差的影响 | 跟踪误差增加 50-200% |
 | 感知集成 | 从 RGB 图像到代价函数的梯度通路 | 不存在（需要手工特征工程） |
 
-### 纯 RL 的五大短板 ⭐⭐
+### 纯 RL 的五大短板 ★★
 
 1. **约束满足弱**：RL 通过奖励惩罚间接处理约束，不能保证"绝对不碰墙"或"关节扭矩不超限"。即使加大惩罚系数，也只是降低违约概率，不能消除。对于安全关键场景（如在人群中行走），这不可接受
 
@@ -201,7 +201,7 @@ $$V^*(s) = \min_a \left[c(s, a) + \gamma V^*(f(s, a))\right]$$
 | Sim-to-Real 性能衰减 | 仿真 vs 真机的速度跟踪误差比 | 1.5-3 倍（有 DR），5-10 倍（无 DR） |
 | 可解释性 | 能追溯到具体原因的故障比例 | RL: <20%，MPC: >80% |
 
-### 混合范式的动机 ⭐⭐
+### 混合范式的动机 ★★
 
 上述分析揭示了一个关键互补性：
 
@@ -227,7 +227,7 @@ RL 擅长的 ←→ MPC 不擅长的
 
 > **跨领域类比**：RL 与 MPC 的混合，类似于人类决策中"直觉"与"推理"的协作。诺贝尔奖得主 Kahneman 将人类认知分为系统 1（快速直觉，对应 RL 的亚毫秒推理）和系统 2（慢速推理，对应 MPC 的在线优化）。日常行走你不需要"计算"每一步（系统 1/RL 就够了），但走钢丝时你必须"思考"每一步（需要系统 2/MPC 来保证约束满足）。四条混合路线本质上是在设计系统 1 和系统 2 之间不同的协作协议。
 
-### 四条主流混合路线 ⭐⭐
+### 四条主流混合路线 ★★
 
 本章接下来将深入讲解这四条路线，每条都有明确的数学基础和工程实现：
 
@@ -260,25 +260,25 @@ RL 擅长的 ←→ MPC 不擅长的
 
 > **过渡**：理解了"为什么要混合"之后，我们从最早的混合工作——MPC-Net 开始，看看 ETH RSL 如何把 MPC 的知识"蒸馏"到神经网络中。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **概念误区：认为 RL 和 MPC 是对立的两种方法**
+> ⚠ **概念误区：认为 RL 和 MPC 是对立的两种方法**
 > 新手想法："RL 和 MPC 是两个阵营，选一个就行了"
 > 实际上：它们是同一个 Bellman 方程的不同近似，天然互补。MPC 提供局部精确解，RL 提供全局近似解。混合是趋势，不是折衷。
 > 正确思维：把 MPC-RL 看成一个连续光谱，根据具体需求在光谱上选点。
 
-> ⚠️ **思维陷阱：认为"RL 更先进所以应该取代 MPC"**
+> ⚠ **思维陷阱：认为"RL 更先进所以应该取代 MPC"**
 > 新手想法："深度学习这么强，MPC 是传统方法，迟早被淘汰"
 > 实际上：截至 2026 年，ANYbotics、Boston Dynamics、Unitree 的生产代码仍然以 MPC 为主，RL 作为辅助。原因是：(1) 客户不接受黑盒决策（安全认证）；(2) MPC 的 30 年工程经验积累无法短期替代；(3) RL 的可靠性还不够生产级别。
 > 正确思维：做能被工业接受的混合范式——不只是 paper，还要考虑部署可行性。
 
-> ⚠️ **编程陷阱：MPC 和 RL 用不同的状态表示**
+> ⚠ **编程陷阱：MPC 和 RL 用不同的状态表示**
 > 错误做法：MPC 用 $[q, \dot{q}]$（广义坐标），RL 用 $[\text{body\_vel}, \text{joint\_pos}, \text{joint\_vel}]$（归一化观测），直接拼接
 > 现象：混合系统性能远不如任一单独系统
 > 根本原因：两者的状态空间定义不同。MPC 用世界系坐标，RL 用局部归一化观测。必须设计统一的状态表示或显式转换层
 > 正确做法：在 MPC 和 RL 之间设计明确的接口——定义共享状态向量和坐标系变换
 
-### 四条路线的数学统一视角 ⭐⭐⭐
+### 四条路线的数学统一视角 ★★★
 
 在深入各条路线之前，用一个统一的数学框架把四条路线串起来。所有混合路线都可以写成以下形式：
 
@@ -307,7 +307,7 @@ $$a_{\text{final}}(s) = \mathcal{T}\left[\pi_\theta(s), \text{MPC}(s; \phi)\righ
 
 ---
 
-## 65.2 路线 A：MPC-Net——从 MPC 蒸馏策略网络 ⭐⭐⭐
+## 65.2 路线 A：MPC-Net——从 MPC 蒸馏策略网络 ★★★
 
 > **本节解决什么问题**：MPC-Net 是第一个成功把 MPC 的行为"蒸馏"到神经网络中的工作。关键创新不是简单的 behavior cloning，而是利用 MPC 求解器内部的 $Q$-function 信息指导学习。我们将完整推导其 loss 函数。
 
@@ -337,7 +337,7 @@ MSE 认为两者等价（偏差大小相同），但控制代价可能相差 100
 
 这个问题的严重程度取决于系统的稳定性裕度。如果系统本身有强自稳定性（如低速平地 trot），小偏差会被自然修正，BC 效果尚可。如果系统在稳定性边界附近运行（如快速转弯、单腿支撑），小偏差迅速放大，BC 必然失败。这就是 Ross & Bagnell (2010) 指出的 DAgger 动机。
 
-### 历史：MPC-Net 的提出 ⭐⭐⭐
+### 历史：MPC-Net 的提出 ★★★
 
 Carius J., Farshidian F., Hutter M. 于 2020 年在 IEEE Robotics and Automation Letters（RA-L）发表 "MPC-Net: A First Principles Guided Policy Search"。这是 ETH RSL 在 OCS2 框架内部实现的工作，代码开源在 `ocs2_mpcnet/` 目录下。
 
@@ -345,7 +345,7 @@ MPC-Net 在历史上处于 MPC 蒸馏研究的早期阶段。在此之前，Beha
 
 MPC-Net 的核心思想是：**不只学 MPC 的输出动作，还学 MPC 求解器内部的价值信息**。具体来说，利用 DDP backward pass 产生的 $Q$-function 的 Taylor 展开来构造一个更好的 loss。
 
-### MPC-Net 的完整数学推导 ⭐⭐⭐
+### MPC-Net 的完整数学推导 ★★★
 
 **Step 1：回顾 DDP 的 $Q$-function**
 
@@ -418,7 +418,7 @@ LibTorch C++ 推理（部署）
 替代 OCS2 MPC（不再需要在线求解）
 ```
 
-### OCS2 的开源实现 ⭐⭐⭐
+### OCS2 的开源实现 ★★★
 
 OCS2 在 `ocs2_mpcnet/` 目录下提供了完整的 MPC-Net 实现：
 
@@ -476,7 +476,7 @@ class MpcnetInterface {
 };
 ```
 
-### 性能与局限 ⭐⭐
+### 性能与局限 ★★
 
 | 指标 | MPC（OCS2 SQP-RTI） | MPC-Net |
 |------|---------------------|---------|
@@ -517,7 +517,7 @@ ControlMode decideMode(const Action& a_mpcnet, const State& state) {
 
 ANYbotics 的实际做法是让 MPC 在后台以 10 Hz 低频运行（只占 CPU 5%），作为"影子控制器"。当 MPC-Net 的输出被 fallback 机制拒绝时，立即切换到 MPC 的最新输出。切换频率被监控——如果 fallback 触发率超过 10%，说明 MPC-Net 的训练数据覆盖不足，需要重新收集数据并 DAgger 训练。
 
-### MPC-Net 的训练数据收集与架构细节 ⭐⭐⭐
+### MPC-Net 的训练数据收集与架构细节 ★★★
 
 **数据收集策略**：MPC-Net 的训练数据质量直接决定蒸馏效果。OCS2 的 `ocs2_mpcnet` 提供了三种数据收集模式：
 
@@ -562,20 +562,20 @@ class MPCNetDataCollector:
 
 对于腿足 trot 等规律性步态，3 层 MLP 已经足够。只有在需要处理复杂时序决策（如步态切换、recovery 动作）时，才考虑加入 GRU 等记忆结构。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **概念误区：认为 MPC-Net 就是 Behavior Cloning**
+> ⚠ **概念误区：认为 MPC-Net 就是 Behavior Cloning**
 > 新手想法："不就是模仿 MPC 嘛，和 BC 有什么区别？"
 > 实际上：BC 只用 MSE loss，对所有动作维度等权。MPC-Net 用 $Q_{uu}$ 加权 loss，在代价敏感方向施加更大惩罚。这让 MPC-Net 能学到 MPC 的"鲁棒性"（在关键方向保持精确），而不只是"平均行为"。
 > 验证方式：训练同一数据集的 BC 和 MPC-Net，在边界状态对比——MPC-Net 在约束边界附近明显优于 BC。
 
-> ⚠️ **编程陷阱：$Q_{uu}$ 的数值条件**
+> ⚠ **编程陷阱：$Q_{uu}$ 的数值条件**
 > 错误做法：直接用 DDP 输出的 $Q_{uu}$ 矩阵，不做任何预处理
 > 现象：训练 loss 爆炸或 NaN
 > 根本原因：$Q_{uu}$ 的条件数可能很大（$10^4$-$10^6$），导致加权 loss 在某些方向梯度爆炸
 > 正确做法：对 $Q_{uu}$ 做正则化——加小的对角阵 $Q_{uu} + \epsilon I$（$\epsilon = 10^{-6}$），或者对 $Q_{uu}$ 的特征值做截断
 
-> ⚠️ **思维陷阱：认为 MPC-Net 训练后 MPC 就完全不需要了**
+> ⚠ **思维陷阱：认为 MPC-Net 训练后 MPC 就完全不需要了**
 > 新手想法："MPC-Net 推理 100 $\mu$s，太好了，把 MPC 代码删掉吧"
 > 实际上：生产系统必须保留 MPC 作为 fallback。MPC-Net 的分布外行为不可预测，安全关键场景必须有 MPC 兜底。ANYbotics 的做法是 MPC-Net 正常运行 + MPC 在后台低频检查。
 
@@ -593,7 +593,7 @@ class MPCNetDataCollector:
 
 ---
 
-## 65.3 路线 B：Cafe-MPC / VWBC——值函数嵌入 WBC ⭐⭐⭐⭐
+## 65.3 路线 B：Cafe-MPC / VWBC——值函数嵌入 WBC ★★★★
 
 > **本节解决什么问题**：传统 WBC 的权重调节极其痛苦（足式/90_WBC分层优化与TSID）。VWBC 用 MPC backward sweep 产生的 action-value function 替代手动权重，消除调参的同时保留 WBC 的所有硬约束处理能力。
 
@@ -621,7 +621,7 @@ $$\min_{\ddot{q}, \lambda, \tau} \sum_{i=1}^{N_{\text{task}}} w_i \|\mathbf{A}_i
 3. **步态依赖**：trot 和 pace 的权重不同——trot 的对角支撑需要更强的姿态控制
 4. **搜索空间**：6 个权重，每个 3 个数量级（1-1000），搜索空间 $10^{18}$
 
-### VWBC 解决问题的数学本质 ⭐⭐⭐
+### VWBC 解决问题的数学本质 ★★★
 
 在深入 VWBC 的推导之前，先理解它解决的问题的数学本质。传统 WBC 的权重选择本质上是一个**双层优化**问题：
 
@@ -637,7 +637,7 @@ $$\ddot{q}^*(w) = \arg\min_{\ddot{q}} \sum_i w_i \|A_i \ddot{q} - b_i\|^2 \quad 
 
 VWBC 的核心洞察是：**MPC 的 $Q$-function 天然编码了上层优化的解**——$Q_{uu}$ 的特征向量方向告诉你"哪些动作维度更重要"，特征值大小告诉你"重要到什么程度"。用 $Q$-function 替代手动权重，等价于用 MPC 的全局信息自动解决了上层优化问题。
 
-### 反面教材：手工调参的典型困局 ⭐⭐
+### 反面教材：手工调参的典型困局 ★★
 
 一个真实的调参日志（来自四足机器人项目）：
 
@@ -651,7 +651,7 @@ Day 16: 放弃手调，用网格搜索——10^6 种组合，每次仿真 10s
 Day 17: 考虑用 RL 学权重...
 ```
 
-### 历史：Cafe-MPC 和 VWBC 的提出 ⭐⭐⭐⭐
+### 历史：Cafe-MPC 和 VWBC 的提出 ★★★★
 
 He Li 和 Patrick M. Wensing 于 2024 年投稿 IEEE Transactions on Robotics（T-RO），2025 年正式见刊："Cafe-MPC: A Cascaded-Fidelity Model Predictive Control Framework with Tuning-Free Whole-Body Control"（Vol. 41, pp. 837-856, 2025）。
 
@@ -661,7 +661,7 @@ Cafe-MPC 的提出解决了一个长期困扰腿足控制社区的痛点：MPC �
 
 **文献勘误**：Cafe-MPC 的作者是 **He Li 和 Patrick M. Wensing**（University of Notre Dame），不是某些二手资料中误写的 "Chignoli et al."。引用该工作时应以 T-RO 论文和作者主页为准。
 
-### VWBC 的数学形式化 ⭐⭐⭐⭐
+### VWBC 的数学形式化 ★★★★
 
 **核心思想**：用 MPC backward sweep 产生的 action-value function $Q(x, u)$ 替代 WBC 的手动权重。
 
@@ -715,7 +715,7 @@ $$\quad \tau_{\min} \leq \tau \leq \tau_{\max} \quad \text{(扭矩限幅)}$$
 2. **保留所有硬约束**——动力学、摩擦锥、扭矩限幅都原封不动
 3. **长时域信息**——$Q$-function 编码了 MPC 整个 horizon 的 cost-to-go 信息，不只是当前时刻
 
-### Cafe-MPC 的级联架构 ⭐⭐⭐⭐
+### Cafe-MPC 的级联架构 ★★★★
 
 Cafe-MPC 不只有 VWBC，还有一个级联的多保真度 MPC 架构：
 
@@ -748,7 +748,7 @@ Level 0 的凸 QP 约 0.5 ms 求解一次（1 kHz 可行），Level 1 的 NMPC S
 
 > **反事实推理**：如果不用级联架构，只用单一频率的 NMPC 会怎样？假设 NMPC 用全身动力学模型（36 维状态），SQP 单次迭代约 50-100 ms——最多只能在 10-20 Hz 运行。这对于接触切换时的快速响应完全不够（接触切换需要 200+ Hz 的控制更新）。级联架构用简单模型的高频响应"填补"了复杂模型更新之间的空白，实现了"高频鲁棒 + 低频精准"的工程折中。
 
-### 与传统 WBC 的系统对比 ⭐⭐⭐
+### 与传统 WBC 的系统对比 ★★★
 
 | 维度 | 传统 WBC（足式/90_WBC分层优化与TSID） | VWBC（Cafe-MPC） |
 |------|-----------------|-----------------|
@@ -760,19 +760,19 @@ Level 0 的凸 QP 约 0.5 ms 求解一次（1 kHz 可行），Level 1 的 NMPC S
 | 计算开销 | QP 求解 ~0.5 ms | QP 求解 ~0.5 ms + $Q$ 评估 |
 | 适用步态 | 每种步态可能要调不同权重 | 自动适应（$Q$ 随步态变化） |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **概念误区：认为 VWBC 完全消除了所有调参**
+> ⚠ **概念误区：认为 VWBC 完全消除了所有调参**
 > 新手想法："太好了，VWBC 不用调任何参数了"
 > 实际上：VWBC 消除了 WBC 层的权重调参，但 MPC 层的代价函数权重仍然需要设计。$Q$-function 的质量取决于 MPC 的代价函数是否合理。垃圾进则垃圾出。
 > 正确理解：VWBC 把调参问题从"两层各自调"简化为"只调 MPC 一层"。
 
-> ⚠️ **思维陷阱：认为 VWBC 可以直接替换现有 WBC**
+> ⚠ **思维陷阱：认为 VWBC 可以直接替换现有 WBC**
 > 新手想法："把 legged_control 的 WBC 换成 VWBC 就行了"
 > 实际上：VWBC 需要 MPC 提供 $Q_{xx}, Q_{xu}, Q_{uu}$ 矩阵——这要求 MPC 求解器是 DDP 类的（Crocoddyl、OCS2），且必须暴露 backward pass 的中间结果。如果 MPC 用的是 SQP+HPIPM（OCS2 默认），需要修改 OCS2 代码获取 Riccati 矩阵。
 > 正确做法：先确认 MPC 框架能输出 $Q$-function 的 Hessian，再考虑 VWBC 集成。
 
-> ⚠️ **编程陷阱：$Q$ 矩阵的维度不匹配**
+> ⚠ **编程陷阱：$Q$ 矩阵的维度不匹配**
 > 错误做法：MPC 状态维度是 24（质心模型），WBC 状态维度是 36（全身模型），直接把 MPC 的 $Q$ 矩阵送进 WBC
 > 现象：矩阵维度不匹配，编译错误或运行时崩溃
 > 根本原因：MPC 用简化模型，WBC 用全身模型，状态空间定义不同
@@ -792,7 +792,7 @@ Level 0 的凸 QP 约 0.5 ms 求解一次（1 kHz 可行），Level 1 的 NMPC S
 
 ---
 
-## 65.4 路线 C：DTC——RL 输出参考，MPC 跟踪 ⭐⭐⭐
+## 65.4 路线 C：DTC——RL 输出参考，MPC 跟踪 ★★★
 
 > **本节解决什么问题**：DTC（Deep Tracking Control）让 RL 承担高层决策（输出期望运动），MPC 承担低层执行（保证物理可行）。这是 2024 年 ETH RSL 在 Science Robotics 发表的重要工作。
 
@@ -812,7 +812,7 @@ Level 0 的凸 QP 约 0.5 ms 求解一次（1 kHz 可行），Level 1 的 NMPC S
 
 如果反过来，只用 MPC 不用 RL 会怎样？纯 MPC 在碎石坡上面临"先有鸡还是先有蛋"的困境——MPC 需要一个好的代价函数来决定"跳到哪块石头"，但设计这个代价函数本身就需要理解地形语义（"哪块石头是稳定的"），而这正是 MPC 不擅长的感知理解任务。DTC 把感知理解交给 RL（它可以从海量仿真中学到"什么样的石头能踩"），把物理约束满足交给 MPC，各取所长。
 
-### DTC 的架构 ⭐⭐⭐
+### DTC 的架构 ★★★
 
 Jenelten F., He J., Farshidian F., Hutter M. (2024) "DTC: Deep Tracking Control", Science Robotics, Vol. 9, eadh5401.
 
@@ -833,7 +833,7 @@ WBC（~0.5 ms）
 关节扭矩 tau
 ```
 
-### 数学形式化 ⭐⭐⭐
+### 数学形式化 ★★★
 
 **RL 策略**：
 
@@ -850,7 +850,7 @@ $$J_{\text{MPC}} = \sum_{k=0}^{N-1} \left[\underbrace{\|q_k - q_{\text{ref},k}\|
 
 **关键设计**：MPC 的代价函数中，跟踪 RL 参考的权重 $W$ 设得足够大，使得 MPC 尽量跟踪 RL 的输出。但如果跟踪 RL 参考会违反约束（如摩擦锥），MPC 会自动偏离参考——这正是 MPC 提供的安全保证。
 
-### DTC 的 Reward 设计 ⭐⭐⭐
+### DTC 的 Reward 设计 ★★★
 
 DTC 的 RL reward 设计是连接 RL 和 MPC 的关键桥梁。与纯 RL 的 reward 不同，DTC 的 reward 必须引导 RL 输出"MPC 能跟踪的"参考——这对 reward 工程提出了特殊要求：
 
@@ -864,7 +864,7 @@ $$r_t = \underbrace{w_{\text{task}} \cdot r_{\text{task}}}_{\text{任务完成�
 
 $r_{\text{track}}$ 的权重 $w_{\text{track}}$ 特别关键：太大会让 RL 只学输出简单的参考（MPC 容易跟但任务完成度低），太小会让 RL 输出激进的参考（任务完成度高但 MPC 跟不上）。实践中通常用 curriculum：训练前期 $w_{\text{track}}$ 较大（保守），后期逐渐降低（激进）。
 
-### 与 RAMBO 的对比 ⭐⭐⭐
+### 与 RAMBO 的对比 ★★★
 
 RAMBO（Sleiman J.-P. et al., arXiv 2504.06662, 2025）是另一种 RL+MPC 分层架构，定位于 loco-manipulation（运动+操作）。两者的关键区别在于 RL 的输出抽象层级不同：
 
@@ -877,7 +877,7 @@ RAMBO（Sleiman J.-P. et al., arXiv 2504.06662, 2025）是另一种 RL+MPC 分�
 | 信息耦合 | 强（RL 必须知道 MPC 能跟什么） | 弱（RL 只给高层指令） |
 | 发表状态 | Science Robotics 2024 | arXiv 2025 |
 
-### DTC 的训练挑战 ⭐⭐⭐
+### DTC 的训练挑战 ★★★
 
 DTC 的训练比纯 RL 难，因为涉及**嵌套优化**：RL 的 reward 依赖于 MPC 的跟踪性能，而 MPC 的输入来自 RL 的输出。
 
@@ -899,7 +899,7 @@ DTC 的训练比纯 RL 难，因为涉及**嵌套优化**：RL 的 reward 依赖
 
 **解决方案**：DTC 在训练时用简化的跟踪控制器（甚至用 PD 控制器替代 MPC），部署时换成完整 MPC。这引入了训练-部署的 gap，但实践中效果可接受——因为 RL 学到的参考轨迹是物理合理的，MPC 能够跟踪。
 
-### DTC 工程架构详解 ⭐⭐⭐
+### DTC 工程架构详解 ★★★
 
 DTC 的工程部署比纯 RL 或纯 MPC 都复杂，因为两个组件运行在不同的频率和不同的线程上。以下是 ANYmal 上 DTC 部署的典型架构：
 
@@ -953,7 +953,7 @@ DTC 部署架构（ANYmal-D, Jenelten 2024）
 
 DTC 的核心优势不在于简单场景——纯 MPC 在平地上已经足够好——而在于**复杂地形**和**未建模干扰**下的鲁棒性。这与 Residual RL 形成互补：Residual RL 改善"已有控制器的鲁棒性"，DTC 改善"需要感知理解的场景"。
 
-**DTC 的"安全网"机制分析** ⭐⭐⭐：
+**DTC 的"安全网"机制分析** ★★★：
 
 DTC 的核心价值在于 MPC 充当了 RL 策略的"安全网"。即使 RL 输出的参考轨迹包含物理不可行的部分（如要求脚在 0.05 秒内移动 0.3 米），MPC 也会在优化过程中自动将实际轨迹调整为物理可行的最近轨迹——因为 MPC 的约束包含了动力学方程、摩擦锥和扭矩限幅。
 
@@ -968,17 +968,17 @@ DTC 的核心价值在于 MPC 充当了 RL 策略的"安全网"。即使 RL 输�
 
 这个分析说明了 DTC 比纯 RL 更安全的根本原因：即使 RL 策略犯了严重错误，MPC 的约束处理能力提供了一道"最后防线"。但也说明了为什么 DTC 不能保证"最优"——MPC 的跟踪可能偏离 RL 的最优参考，导致性能损失。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **概念误区：认为 DTC 中 RL 不需要了解 MPC**
+> ⚠ **概念误区：认为 DTC 中 RL 不需要了解 MPC**
 > 新手想法："RL 输出参考，MPC 跟踪，两者独立"
 > 实际上：RL 必须学会输出 MPC "能跟踪"的参考——如果 RL 输出一个物理不可行的参考（如在 0.1 秒内把腿抬高 2 米），MPC 会跟踪失败，RL 得不到好的 reward。RL 必须隐式地学会 MPC 的能力边界。
 
-> ⚠️ **思维陷阱：认为分层架构总是最好的**
+> ⚠ **思维陷阱：认为分层架构总是最好的**
 > 新手想法："RL 做高层决策 + MPC 做低层执行，结合两者优势，一定比单独用好"
 > 实际上：分层引入了**层间延迟**——RL 输出参考到 MPC 计算出扭矩需要额外的 pipeline 延迟。对于高度动态的行为（如快速奔跑恢复平衡），延迟可能致命。Miki et al. (Science Robotics 2022) 的纯 RL 方案在某些场景下反而优于分层方案。
 
-> ⚠️ **编程陷阱：训练和部署的跟踪控制器不一致**
+> ⚠ **编程陷阱：训练和部署的跟踪控制器不一致**
 > 错误做法：训练时用 PD 控制器替代 MPC（加速训练），部署时直接换成完整 MPC
 > 现象：部署后机器人行为与训练时完全不同
 > 根本原因：PD 控制器和 MPC 的动作空间和约束处理方式不同，RL 学到的策略对 PD 最优，对 MPC 不一定最优
@@ -998,7 +998,7 @@ DTC 的核心价值在于 MPC 充当了 RL 策略的"安全网"。即使 RL 输�
 
 ---
 
-## 65.5 路线 D：Residual RL——最简单也最实用的混合 ⭐⭐
+## 65.5 路线 D：Residual RL——最简单也最实用的混合 ★★
 
 > **本节解决什么问题**：在已有的 MPC 控制器上叠加一个 RL 残差网络，用最小改动获得学习的好处。这是工程上最实用的混合范式。
 
@@ -1038,7 +1038,7 @@ RL 策略 $\pi_\theta$ 用 PPO 训练，在每个 step：
 3. 执行 $a_{\text{total}} = a_{\text{MPC}} + a_{\text{RL}}$
 4. 观测 reward，收集经验
 
-### 代表工作 ⭐⭐
+### 代表工作 ★★
 
 **奠基论文**：Johannink T., Bahl S., Nair A., Luo J., Kumar A., Loskyll M., Ojea J. A., Solowjow E., Levine S. (2019) "Residual Reinforcement Learning for Robot Control", ICRA 2019.
 
@@ -1056,7 +1056,7 @@ $$\nabla_\theta J = \mathbb{E}\left[A^{\pi_{\text{base}} + \pi_\theta}(s, a_{\te
 
 这个理论性质解释了为什么 Residual RL 的训练效率高于纯 RL（从零学习需要在所有状态上探索），也解释了为什么 $\epsilon_{\max}$ 从小到大的 curriculum 是有效的——初始阶段 RL 学习"哪些状态需要修正"（优势函数的支撑集），后续阶段增大修正能力（在这些状态上做更大的修正）。
 
-### 稳定性分析：为什么限制残差范围至关重要 ⭐⭐⭐
+### 稳定性分析：为什么限制残差范围至关重要 ★★★
 
 **定理（非正式）**：如果基础控制器 $a_{\text{MPC}}$ 使系统在某个不变集 $\mathcal{S}$ 内稳定（Lyapunov 意义），且残差 $\|a_{\text{RL}}\| \leq \epsilon_{\max}$ 足够小，则复合系统 $a_{\text{total}} = a_{\text{MPC}} + a_{\text{RL}}$ 在扰动不变集 $\mathcal{S}_\epsilon \supseteq \mathcal{S}$ 内仍然稳定。
 
@@ -1082,7 +1082,7 @@ $$\dot{V} \leq -\alpha V(s) + L \epsilon_{\max}$$
 
 **结论**：$\epsilon_{\max}$ 越小，扰动不变集越接近原始稳定集。$\epsilon_{\max} = 0$ 退化为纯 MPC。这为 $\epsilon_{\max}$ 的选择提供了理论指导——需要在"RL 的修正空间"和"稳定性裕度"之间权衡。
 
-### 工程实现 ⭐⭐
+### 工程实现 ★★
 
 ```cpp
 // Residual RL 部署伪代码
@@ -1135,7 +1135,7 @@ class ResidualRLEnv(LeggedRobotEnv):
         return self.obs, reward, done, info
 ```
 
-### Residual RL 实现细节与调参指南 ⭐⭐
+### Residual RL 实现细节与调参指南 ★★
 
 **观测空间设计**：Residual RL 的观测应包含 MPC 的输出，因为 RL 需要知道"基础控制器想做什么"才能有效修正：
 
@@ -1188,7 +1188,7 @@ $$r_{\text{residual}} = -\alpha \cdot \|a_{\text{RL}}\|^2$$
 - Residual RL 在 100-150N 区间改善最显著（从 MPC 的约 92%/71% 提升到约 99%/91%）
 - 纯 RL 在大扰动下恢复率最高，但代价是无法保证约束满足（关节力矩可能超限）
 
-### Residual RL 与鲁棒控制的理论联系 ⭐⭐⭐
+### Residual RL 与鲁棒控制的理论联系 ★★★
 
 Residual RL 与经典鲁棒控制理论有深刻的联系。在 $H_\infty$ 鲁棒控制框架中，控制器设计的目标是在"最坏情况扰动"下仍保持性能。将 RL 残差视为一种"智能扰动"：
 
@@ -1210,7 +1210,7 @@ $$a_{\text{total}} = a_{\text{MPC}}(s) + \underbrace{\delta a(s)}_{\text{智能�
 
 实际选择应在 Pareto 前沿上，根据应用场景的安全要求和性能需求定位。
 
-### Residual RL 的优势与局限 ⭐⭐
+### Residual RL 的优势与局限 ★★
 
 **优势**：
 
@@ -1226,19 +1226,19 @@ $$a_{\text{total}} = a_{\text{MPC}}(s) + \underbrace{\delta a(s)}_{\text{智能�
 2. **$\epsilon_{\max}$ 的选择困难**：太小则 RL 无法充分修正，太大则稳定性不保证。需要实验调整
 3. **仍需要 MPC 在线运行**：不像 MPC-Net 可以完全替代 MPC，Residual RL 每个周期都要跑 MPC
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：忘记限幅 RL 输出**
+> ⚠ **编程陷阱：忘记限幅 RL 输出**
 > 错误做法：`a_total = a_mpc + rl_policy(obs)` 不做 clamp
 > 现象：训练初期 RL 输出随机值，可能很大 -> 机器人瞬间崩溃
 > 根本原因：RL 策略初始化时输出接近正态分布（sigma 约 1），不做限幅等于在 MPC 输出上加大噪声
 > 正确做法：**永远**在 RL 输出后做 clamp，且 $\epsilon_{\max}$ 从小到大逐步增加（curriculum）
 
-> ⚠️ **概念误区：认为 Residual RL 只适合小修正**
+> ⚠ **概念误区：认为 Residual RL 只适合小修正**
 > 新手想法："$\epsilon_{\max} = 0.1$ 也太小了吧，RL 啥也学不到"
 > 实际上：0.1 rad 约 5.7 度。对于四足 trot，髋关节的摆动幅度约 15 度，0.1 rad 的修正相当于 40% 的调整——这已经能显著改善抗扰能力。关键不在于绝对值大小，而在于修正是否"在对的方向"。
 
-> ⚠️ **思维陷阱：Residual RL 和 Domain Randomization 的关系**
+> ⚠ **思维陷阱：Residual RL 和 Domain Randomization 的关系**
 > 新手想法："Residual RL 就是 MPC 版的 Domain Randomization"
 > 实际上：DR 是训练技巧（在训练时随机化环境参数），Residual RL 是架构设计（在 MPC 上加 RL 模块）。两者可以结合——训练 Residual RL 时也应该用 DR 来提升泛化性。
 
@@ -1256,7 +1256,7 @@ $$a_{\text{total}} = a_{\text{MPC}}(s) + \underbrace{\delta a(s)}_{\text{智能�
 
 ---
 
-## 65.6 Differentiable MPC——让 MPC 可微，端到端训练 ⭐⭐⭐⭐
+## 65.6 Differentiable MPC——让 MPC 可微，端到端训练 ★★★★
 
 > **本节解决什么问题**：传统 MPC 的代价函数和动力学模型都是手工设计的。Differentiable MPC 允许通过反向传播自动学习这些参数。这是"打通学习和控制"的数学桥梁。
 
@@ -1275,7 +1275,7 @@ $$a_{\text{total}} = a_{\text{MPC}}(s) + \underbrace{\delta a(s)}_{\text{智能�
 
 这些参数通常靠工程师的经验调节——但有没有可能从数据中自动学习？Differentiable MPC 给出了肯定的答案。
 
-### 历史：Differentiable MPC 的提出 ⭐⭐⭐⭐
+### 历史：Differentiable MPC 的提出 ★★★★
 
 Amos B., Jimenez I., Sacks J., Boots B., Kolter J. Z. (2018) "Differentiable MPC for End-to-end Planning and Control", NeurIPS 2018.
 
@@ -1283,7 +1283,7 @@ Amos B., Jimenez I., Sacks J., Boots B., Kolter J. Z. (2018) "Differentiable MPC
 
 可微 MPC 的提出也与可微物理仿真（Differentiable Simulation）的发展密切相关。两者的共同目标是"让基于物理的计算可微分"，区别在于可微仿真让整个物理引擎可微（Brax, Genesis, MuJoCo MJX），可微 MPC 让优化求解器可微。两者可以组合使用：在可微仿真器中运行可微 MPC，实现从感知到控制的完整梯度通路。
 
-### KKT 条件的隐式微分推导 ⭐⭐⭐⭐
+### KKT 条件的隐式微分推导 ★★★★
 
 **Step 1：参数化 MPC 问题**
 
@@ -1322,7 +1322,7 @@ $$\frac{d\mathcal{L}_{\text{task}}}{d\theta} = \frac{\partial \mathcal{L}_{\text
 - 从真实数据中学动力学模型的修正项（系统辨识）
 - 端到端训练感知+控制管线（感知输出直接进 MPC 代价函数，梯度回流到感知网络）
 
-### 在腿足中的应用场景 ⭐⭐⭐
+### 在腿足中的应用场景 ★★★
 
 | 应用 | 描述 | 可学习参数 |
 |------|------|-----------|
@@ -1331,7 +1331,7 @@ $$\frac{d\mathcal{L}_{\text{task}}}{d\theta} = \frac{\partial \mathcal{L}_{\text
 | **学习约束参数** | 从故障数据中学习安全约束 | 摩擦系数、扭矩限幅 |
 | **逆 RL** | 从演示中推断 MPC 的 reward | 代价函数结构 |
 
-### 挑战与当前状态 ⭐⭐⭐⭐
+### 挑战与当前状态 ★★★★
 
 | 挑战 | 描述 | 当前进展 |
 |------|------|---------|
@@ -1407,25 +1407,25 @@ $$\frac{\partial u^*}{\partial \theta} = -H^{-1}$$
 
 这个简单例子揭示了一个重要规律：**可微 MPC 的梯度大小与 Hessian 的逆有关**。当 $H$ 的某些特征值很小（问题病态）时，梯度会爆炸——这是可微 MPC 在实践中遇到的主要数值困难之一。工程上需要对 $H$ 做正则化（加 $\epsilon I$）来保证数值稳定性。
 
-### 开源工具 ⭐⭐⭐
+### 开源工具 ★★★
 
 - **Theseus**（Meta）：可微非线性优化层，支持 PyTorch。主要用于 SLAM/感知，但可扩展到 MPC
 - **mpc.pytorch**（Amos）：原始 Differentiable MPC 的实现，教学价值高但工程不够成熟
 - **CasADi**：支持 AD 的优化框架，可以和 PyTorch 桥接
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **概念误区：认为 Differentiable MPC 可以实时训练**
+> ⚠ **概念误区：认为 Differentiable MPC 可以实时训练**
 > 新手想法："MPC 可微了，那每个控制周期都能在线学习"
 > 实际上：反向传播需要存储整个 MPC 轨迹的计算图，内存和计算开销巨大。Differentiable MPC 的典型用途是**离线训练** MPC 参数，部署时用固定参数的 MPC。在线学习需要额外的近似（如 MAML 风格的元学习）。
 
-> ⚠️ **编程陷阱：KKT 矩阵的奇异性**
+> ⚠ **编程陷阱：KKT 矩阵的奇异性**
 > 错误做法：直接求逆 KKT 系统矩阵
 > 现象：遇到不等式约束激活/不激活切换时，矩阵奇异
 > 根本原因：互补性条件 $\mu \cdot g = 0$ 在约束边界上导致 Jacobian 奇异
 > 正确做法：使用对偶正则化（如 Interior Point 方法中的 barrier 函数）避免奇异
 
-> ⚠️ **思维陷阱：Differentiable MPC 能替代 RL**
+> ⚠ **思维陷阱：Differentiable MPC 能替代 RL**
 > 新手想法："既然 MPC 参数能从数据学，还需要 RL 吗？"
 > 实际上：Differentiable MPC 学的是参数化 MPC 的最优参数，表达能力受限于 MPC 的结构（线性/二次代价、已知约束集）。RL 的 NN 策略表达能力更强。两者互补：Differentiable MPC 适合"知道结构、不知道参数"，RL 适合"连结构都不知道"。
 
@@ -1443,11 +1443,11 @@ $$\frac{\partial u^*}{\partial \theta} = -H^{-1}$$
 
 ---
 
-## 65.7 World Models——另一种混合思路 ⭐⭐⭐⭐
+## 65.7 World Models——另一种混合思路 ★★★★
 
 > **本节解决什么问题**：当物理模型不够准确（如软地面接触、变形体交互）时，能否用数据驱动的"世界模型"替代 MPC 中的动力学模型？
 
-### 核心思想 ⭐⭐⭐
+### 核心思想 ★★★
 
 World Models（Ha & Schmidhuber, 2018）的思想很直接：
 
@@ -1461,7 +1461,7 @@ World Models（Ha & Schmidhuber, 2018）的思想很直接：
 
 > **不是 X 而是 Y**：World Model 的价值**不是**替代物理仿真器，**而是**补充物理仿真器无法精确建模的部分。物理仿真器对刚体动力学、关节约束、质量惯量建模精确，但对接触摩擦、软材料变形、电机非线性建模粗糙。World Model 最适合学习这些"物理模型的残差"——这与 Residual RL 在控制层的思想完全对偶。
 
-### 与可微仿真的对偶关系 ⭐⭐⭐⭐
+### 与可微仿真的对偶关系 ★★★★
 
 理解 World Models 的一个好方式是和可微仿真器做对比：
 
@@ -1489,20 +1489,20 @@ $$\phi^* = \arg\min_\phi \mathbb{E}\left[\|s_{t+1}^{\text{real}} - f_{\text{phys
 | 计算效率 | GPU 并行（高） | NN 推理（中） |
 | 未知物理 | 不支持 | 可从数据学习 |
 
-### DreamerV3 与 TD-MPC2 ⭐⭐⭐⭐
+### DreamerV3 与 TD-MPC2 ★★★★
 
 - **DreamerV3**（Hafner D. et al., 2023, "Mastering Diverse Domains through World Models"）：最先进的 World Model RL 算法，在 150+ 任务上达到或超过人类水平
 - **TD-MPC2**（Hansen et al., 2024）：把 MPC 和 World Model 结合——在学到的潜在空间中做 Model Predictive Path Integral (MPPI) 规划
 
 **腿足应用现状**：World Models 在简单运动任务（如 MuJoCo Walker2d）上工作良好，但在真实四足机器人的复杂接触场景下尚未大规模成功。主要瓶颈是**接触动力学的不连续性**——World Model 用连续 NN 近似离散接触切换很困难。
 
-### 腿足 World Models 的前景 ⭐⭐⭐⭐
+### 腿足 World Models 的前景 ★★★★
 
 - **仿真不准时**：物理仿真器对软地面、湿滑表面的建模精度有限。World Model 从真机数据学习，可能比手工物理模型更准
 - **World Model 可微**：在学到的模型中可以直接做梯度规划，不需要 DDP/SQP 的复杂求解器
 - **混合物理+学习模型**：用物理模型处理已知部分（刚体动力学），用 World Model 处理未知部分（接触、摩擦、变形）——这是最有前途的方向
 
-### DreamerV3 vs TD-MPC2：两种 World Model 范式的深层对比 ⭐⭐⭐⭐
+### DreamerV3 vs TD-MPC2：两种 World Model 范式的深层对比 ★★★★
 
 DreamerV3（Hafner et al., 2023）和 TD-MPC2（Hansen et al., 2024）代表了 World Model 的两条技术路线。理解它们的差异对研究方向选择很重要：
 
@@ -1519,15 +1519,15 @@ DreamerV3（Hafner et al., 2023）和 TD-MPC2（Hansen et al., 2024）代表了 
 
 **对腿足研究的启示**：TD-MPC2 的 MPPI 规划方式与 MPC 有天然亲和性——两者都是在线优化有限时域问题。一个潜在的研究方向是将 TD-MPC2 的学习动力学模型嵌入 OCS2 的 SQP 框架，用学习模型替代 SRBD，同时保留 SQP 的约束处理能力。这比纯 World Model 更有工程可行性，因为约束满足仍由优化器保证。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **概念误区：World Model 可以完全替代物理仿真**
+> ⚠ **概念误区：World Model 可以完全替代物理仿真**
 > 实际上：当前 World Model 的预测精度在长时域（>10 步）后快速退化。对于 MPC 所需的 20-50 步预测，累积误差可能导致规划完全错误。物理仿真器虽然不完美，但对已知物理规律（如能量守恒）的满足是精确的——World Model 不能保证这一点。
 
-> ⚠️ **思维陷阱：认为 World Model 是终极方案**
+> ⚠ **思维陷阱：认为 World Model 是终极方案**
 > 实际上：World Model 在样本效率上优于无模型 RL，但在准确性上劣于手工物理模型。最有前途的方向可能是混合方案——用物理模型处理已知部分，用 World Model 处理未知部分。
 
-### 接触动力学的不连续性挑战 ⭐⭐⭐⭐
+### 接触动力学的不连续性挑战 ★★★★
 
 World Model 在腿足场景中面临的最大挑战是**接触动力学的不连续性**。当脚与地面接触或离开时，系统动力学发生不连续跳变：
 
@@ -1549,7 +1549,7 @@ $$\hat{f}_\phi(s, a) = \sigma(g_\phi(s)) \cdot f_{\text{contact},\phi}(s, a) + (
 
 其中 $g_\phi(s)$ 是一个接触检测网络，$\sigma$ 是 sigmoid 函数。这样在接触切换附近，门控信号平滑过渡，避免了纯粹不连续跳变的学习困难。
 
-### 从 World Model 到"基础运动模型"的远景 ⭐⭐⭐⭐
+### 从 World Model 到"基础运动模型"的远景 ★★★★
 
 TD-MPC2 展示了一个引人注目的趋势：单个大型 World Model（317M 参数）可以跨多个机器人体态和任务泛化。如果这个趋势继续发展，可能产生类似于语言领域大模型的"基础运动模型"（Foundation Locomotion Model）：
 
@@ -1569,13 +1569,13 @@ TD-MPC2 展示了一个引人注目的趋势：单个大型 World Model（317M �
 
 ---
 
-## 65.8 各路线的系统对比与选型决策树 ⭐⭐
+## 65.8 各路线的系统对比与选型决策树 ★★
 
 > **本节解决什么问题**：面对具体工程任务时，如何选择最合适的混合路线？
 
 > **本质洞察**：六条混合路线的本质差异在于**信任边界（trust boundary）的位置**——你信任 MPC 到什么程度、信任 RL 到什么程度。MPC-Net 完全信任 RL（MPC 被替换掉）；VWBC 完全信任 MPC（RL 只提供权重）；DTC 是"有限信任"（RL 提建议,MPC 有否决权）；Residual RL 是"微量信任"（RL 只能做小修正）。选型的核心不是"哪条路线技术更先进",而是"你的应用场景对安全性的要求把信任边界划在哪里"。
 
-### 信任边界的量化分析 ⭐⭐⭐
+### 信任边界的量化分析 ★★★
 
 "信任边界"的概念可以用更严格的数学语言表述。定义"RL 自主度" $\rho \in [0, 1]$ 为 RL 在最终控制输出中的贡献比例：
 
@@ -1592,7 +1592,7 @@ $\rho$ 越大，系统的"学习上限"越高（理论最优性能越好），�
 
 对于安全关键应用（如医疗机器人、公共场所巡检），$\rho < 0.2$ 是合理的选择（Residual RL 或 VWBC）。对于研究探索和受控环境（如实验室内的运动实验），$\rho > 0.5$ 是可接受的（DTC 或 MPC-Net）。
 
-### 完整对比表 ⭐⭐
+### 完整对比表 ★★
 
 | 维度 | MPC-Net | VWBC | DTC | Residual RL | Diff. MPC | World Models |
 |------|---------|------|-----|-------------|-----------|-------------|
@@ -1604,7 +1604,7 @@ $\rho$ 越大，系统的"学习上限"越高（理论最优性能越好），�
 | **改造成本** | 中 | 中 | 高 | **最低** | 高 | 高 |
 | **适用团队** | 有 MPC 经验 | 有 MPC+RL 经验 | 研究团队 | **任何有 MPC 团队** | 研究团队 | 研究团队 |
 
-### 选型决策树 ⭐⭐
+### 选型决策树 ★★
 
 ```
 你的需求是什么？
@@ -1631,7 +1631,7 @@ $\rho$ 越大，系统的"学习上限"越高（理论最优性能越好），�
     └──> 先读所有论文，再定位
 ```
 
-### 各路线的定量 Benchmark 综合对比 ⭐⭐
+### 各路线的定量 Benchmark 综合对比 ★★
 
 以下数据汇总了各路线在典型四足任务上的性能表现。数据来源标注于括号中，未发表的数据以 "~" 标注为估算值。
 
@@ -1667,7 +1667,7 @@ $\rho$ 越大，系统的"学习上限"越高（理论最优性能越好），�
 
 这些数据揭示了一个重要的工程规律：**没有一条路线在所有维度上都是最优的**。MPC-Net 推理最快但失去约束保证；DTC 感知最强但训练和部署最复杂；Residual RL 改造最简单但受限于 MPC 能力。选型必须根据你的具体约束条件（计算资源、安全要求、地形复杂度）做权衡。
 
-### 工程推荐（2026 年） ⭐⭐
+### 工程推荐（2026 年） ★★
 
 | 需求 | 推荐路线 | 理由 | 成熟度 |
 |------|---------|------|--------|
@@ -1681,13 +1681,13 @@ $\rho$ 越大，系统的"学习上限"越高（理论最优性能越好），�
 
 **选型的决策优先级**：安全性 > 可部署性 > 性能 > 训练效率。如果安全性要求高（工业场景），优先选择有约束保证的方案（VWBC、DTC、Residual RL）；如果是研究探索，可以尝试没有约束保证但表达能力更强的方案（MPC-Net、World Models）。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **思维陷阱：追新而不务实**
+> ⚠ **思维陷阱：追新而不务实**
 > 新手想法："Differentiable MPC 最新最酷，直接做这个方向"
 > 实际上：工业界最广泛采用的混合范式是 Residual RL（因为改造成本最低、风险最小）。学术界最活跃的是 DTC 和 VWBC。选择方向应基于你的背景、资源和目标，而不是新旧。
 
-> ⚠️ **概念误区：认为混合一定比纯方法好**
+> ⚠ **概念误区：认为混合一定比纯方法好**
 > 实际上：混合引入了系统复杂度。如果纯 MPC 已经能满足需求（如平地 trot），加 RL 可能引入不必要的风险。混合的价值在于解决纯方法**无法解决的问题**，而不是锦上添花。
 
 ### 练习
@@ -1711,9 +1711,9 @@ $\rho$ 越大，系统的"学习上限"越高（理论最优性能越好），�
 
 ---
 
-## 65.9 2024-2026 混合范式新进展 ⭐⭐⭐⭐
+## 65.9 2024-2026 混合范式新进展 ★★★★
 
-### Hybrid RL-MPC in Isaac Lab ⭐⭐⭐
+### Hybrid RL-MPC in Isaac Lab ★★★
 
 随着 IsaacLab 成为腿足 RL 训练的标准平台,混合范式的实验基础设施也在向 Isaac Lab 统一。2024-2025 年出现了多个在 Isaac Lab 中实现 RL+MPC 混合训练的开源框架:
 
@@ -1739,7 +1739,7 @@ class HybridEnv(ManagerBasedRLEnv):
 
 **关键挑战**:MPC 求解器在 GPU 上的向量化并非平凡——大多数 QP 求解器(qpOASES、OSQP)是 CPU 实现。目前的解决方案包括:(1) 用 PyTorch 自动微分重写简化版 MPC(如线性 MPC);(2) 将 MPC 视为"预计算的查找表",离线生成,在线插值;(3) 使用可微分优化库(如 Theseus、jaxopt)实现 GPU 原生 QP。
 
-### DiffRL + MPC:可微强化学习与模型预测控制的融合 ⭐⭐⭐⭐
+### DiffRL + MPC:可微强化学习与模型预测控制的融合 ★★★★
 
 传统 RL(PPO/SAC)使用**零阶梯度估计**——通过采样和奖励信号间接估计策略梯度,样本效率低。可微仿真(Differentiable Simulation)提供了物理引擎对动作的解析梯度 $\partial s_{t+1} / \partial a_t$,可以直接通过链式法则计算策略梯度,跳过采样:
 
@@ -1751,7 +1751,7 @@ $$\nabla_\theta J = \sum_{t=0}^T \frac{\partial r_t}{\partial s_t} \prod_{k=0}^{
 
 **当前状态**:可微仿真在接触丰富的腿足场景中面临**梯度爆炸和不连续**问题(接触事件导致状态不可微)。2024-2025 年的多项工作尝试用**随机化平滑**(randomized smoothing)或**接触隐式方法**(contact-implicit)来解决这一问题,但距离实用还有距离。2025 年的 Primal-Dual iLQR 工作在 GPU 上实现了学习与控制的联合加速,为可微 MPC 在腿足场景的实用化迈出了一步。
 
-### NMPC 教师-学生蒸馏：多步态策略的统一部署 ⭐⭐⭐
+### NMPC 教师-学生蒸馏：多步态策略的统一部署 ★★★
 
 与 MPC-Net（65.2）的 DDP 蒸馏不同，近期的 NMPC 教师-学生蒸馏工作直接将 NMPC 的输出作为行为克隆的教师信号，训练单一网络处理多种步态任务。
 
@@ -1764,13 +1764,13 @@ Sajja et al.（IEEE Humanoids 2025, "End-to-End Multi-Task Policy Learning from 
 
 **与 MPC-Net 的区别**：MPC-Net 使用 $Q_{uu}$ 加权 loss 来编码动作敏感度信息，而 NMPC 蒸馏使用纯 MSE。NMPC 蒸馏的优势在于简单性和多步态统一，劣势在于缺乏 $Q_{uu}$ 的精细化权重信息——对约束边界附近的行为学习不如 MPC-Net 精准。
 
-### RL-Augmented MPC 用于非标准步态与大型平台 ⭐⭐⭐
+### RL-Augmented MPC 用于非标准步态与大型平台 ★★★
 
 Patrizi et al.（arXiv 2603.10878, 2026）提出了将 SAC（Soft Actor-Critic）与 MPC 结合的架构,在 50-120 kg 级混合运动机器人（如轮腿人形 Centauro）上验证了 zero-shot sim-to-real transfer——不需要 Domain Randomization 也能成功迁移。
 
 这一结果挑战了足式 RL 领域的一个常见假设（DR 对 sim-to-real 是必要的），其成功的关键在于：MPC 的物理模型已经编码了大部分动力学信息，RL 只需要学习模型不准确的部分（残差），因此对仿真-真实差距的敏感度大幅降低。
 
-### 混合物理-学习动力学模型 ⭐⭐⭐⭐
+### 混合物理-学习动力学模型 ★★★★
 
 2026 年最新工作（Patrizi et al., arXiv 2603.14333）将物理先验嵌入学习动力学模型中，用于四足控制。具体做法是将动力学分解为"已知物理"和"学习残差"两部分：
 
@@ -1780,7 +1780,7 @@ $$s_{t+1} = f_{\text{physics}}(s_t, a_t; \theta_{\text{URDF}}) + f_\phi(s_t, a_t
 
 实验结果表明，混合模型在接触丰富的场景中的预测精度比纯物理模型提高约 35-50%，同时比纯 NN 模型在分布外场景中的泛化能力强 2-3 倍。
 
-### 真机部署验证加速 ⭐⭐⭐
+### 真机部署验证加速 ★★★
 
 2025-2026 年，混合 RL-MPC 系统在真机上的部署案例显著增多：
 
@@ -1797,7 +1797,7 @@ $$s_{t+1} = f_{\text{physics}}(s_t, a_t; \theta_{\text{URDF}}) + f_\phi(s_t, a_t
 3. **多层次混合**：在多个时间尺度上使用不同混合策略——高层 RL 路径规划（秒级），中层 MPC 运动规划（百毫秒级），低层 Residual RL + WBC 关节控制（毫秒级）
 4. **大规模 World Model**：TD-MPC2 展示单个 317M 参数模型跨 80 个任务泛化的可能性
 
-### 研究前沿：开放问题与突破方向 ⭐⭐⭐⭐
+### 研究前沿：开放问题与突破方向 ★★★★
 
 以下是 2026 年混合范式领域最重要的开放问题：
 
@@ -1809,7 +1809,7 @@ $$s_{t+1} = f_{\text{physics}}(s_t, a_t; \theta_{\text{URDF}}) + f_\phi(s_t, a_t
 
 **问题 4：多智能体混合控制**。多个足式机器人协同时，每个机器人内部的 RL-MPC 混合如何与机器人间的协调机制交互？
 
-### World Model + MPC:数据驱动的动力学用于在线规划 ⭐⭐⭐⭐
+### World Model + MPC:数据驱动的动力学用于在线规划 ★★★★
 
 World Model(世界模型)学习环境的动力学模型 $\hat{f}_\phi(s_{t+1} | s_t, a_t)$,然后用这个学到的模型做 MPC 在线规划。这条路线的吸引力在于:**既有 RL 的数据驱动优势(不依赖手工模型),又有 MPC 的在线优化优势(可以处理约束)**。
 
@@ -1874,16 +1874,16 @@ Step 4: 逐步恢复混合 → 从小 epsilon_max 开始，观察何时出问题
 
 | 知识点 | 核心内容 | 难度 | 关键公式/概念 |
 |--------|---------|------|-------------|
-| MPC vs RL 本质 | 同一个 Bellman 方程的不同近似 | ⭐⭐ | $V^* = \min_a [c + \gamma V^*(f)]$ |
-| MPC-Net | Q-function 加权蒸馏 | ⭐⭐⭐ | $L = \|a-a^*\|^2 + \alpha \delta a^T Q_{uu} \delta a$ |
-| VWBC | 值函数替代 WBC 权重 | ⭐⭐⭐⭐ | $J = Q(x+\Delta x, u)$ 嵌入 WBC QP |
-| DTC | RL 输出参考，MPC 跟踪 | ⭐⭐⭐ | 分层最优控制 |
-| Residual RL | MPC + RL 残差 | ⭐⭐ | $a = a_{MPC} + \text{clip}(a_{RL})$ |
-| Diff. MPC | KKT 隐式微分 | ⭐⭐⭐⭐ | $du^*/d\theta = -(F_z)^{-1} F_\theta$ |
-| AC-MPC | 可微 MPC 嵌入 Actor-Critic | ⭐⭐⭐⭐ | NN 输出代价参数，MPC 求解动作 |
-| World Models | 数据驱动动力学 | ⭐⭐⭐⭐ | $\hat{f}_\phi(s'|s,a)$ 替代物理模型 |
-| NMPC 蒸馏 | NMPC 教师多步态学生 | ⭐⭐⭐ | 多步态硬参数共享蒸馏 |
-| 选型决策 | 四维评估 | ⭐⭐ | 决策树 |
+| MPC vs RL 本质 | 同一个 Bellman 方程的不同近似 | ★★ | $V^* = \min_a [c + \gamma V^*(f)]$ |
+| MPC-Net | Q-function 加权蒸馏 | ★★★ | $L = \|a-a^*\|^2 + \alpha \delta a^T Q_{uu} \delta a$ |
+| VWBC | 值函数替代 WBC 权重 | ★★★★ | $J = Q(x+\Delta x, u)$ 嵌入 WBC QP |
+| DTC | RL 输出参考，MPC 跟踪 | ★★★ | 分层最优控制 |
+| Residual RL | MPC + RL 残差 | ★★ | $a = a_{MPC} + \text{clip}(a_{RL})$ |
+| Diff. MPC | KKT 隐式微分 | ★★★★ | $du^*/d\theta = -(F_z)^{-1} F_\theta$ |
+| AC-MPC | 可微 MPC 嵌入 Actor-Critic | ★★★★ | NN 输出代价参数，MPC 求解动作 |
+| World Models | 数据驱动动力学 | ★★★★ | $\hat{f}_\phi(s'|s,a)$ 替代物理模型 |
+| NMPC 蒸馏 | NMPC 教师多步态学生 | ★★★ | 多步态硬参数共享蒸馏 |
+| 选型决策 | 四维评估 | ★★ | 决策树 |
 
 ### 符号表
 
@@ -1950,28 +1950,28 @@ Step 4: 逐步恢复混合 → 从小 epsilon_max 开始，观察何时出问题
 
 | 文献 | 类型 | 难度 | 核心贡献 |
 |------|------|------|---------|
-| Carius J., Farshidian F., Hutter M. (2020) "MPC-Net: A First Principles Guided Policy Search" -- RA-L | 论文 | ⭐⭐⭐ | Q-function 加权蒸馏，OCS2 内置 |
-| Johannink T., et al. (2019) "Residual Reinforcement Learning for Robot Control" -- ICRA | 论文 | ⭐⭐ | Residual RL 奠基 |
-| Amos B., et al. (2018) "Differentiable MPC for End-to-end Planning and Control" -- NeurIPS | 论文 | ⭐⭐⭐⭐ | 可微 MPC 奠基 |
+| Carius J., Farshidian F., Hutter M. (2020) "MPC-Net: A First Principles Guided Policy Search" -- RA-L | 论文 | ★★★ | Q-function 加权蒸馏，OCS2 内置 |
+| Johannink T., et al. (2019) "Residual Reinforcement Learning for Robot Control" -- ICRA | 论文 | ★★ | Residual RL 奠基 |
+| Amos B., et al. (2018) "Differentiable MPC for End-to-end Planning and Control" -- NeurIPS | 论文 | ★★★★ | 可微 MPC 奠基 |
 
 ### 进阶
 
 | 文献 | 类型 | 难度 | 核心贡献 |
 |------|------|------|---------|
-| He Li, Wensing P. M. (2024) "Cafe-MPC: Cascaded-Fidelity MPC with Tuning-Free WBC" -- T-RO Vol.41 | 论文 | ⭐⭐⭐⭐ | VWBC，消除 WBC 调参 |
-| Jenelten F., et al. (2024) "DTC: Deep Tracking Control" -- Science Robotics, Vol.9, eadh5401 | 论文 | ⭐⭐⭐ | RL 参考 + MPC 跟踪 |
-| Sleiman J.-P., et al. (2025) "RAMBO: RL-Augmented Model-Based Whole-Body Control" -- arXiv 2504.06662 | 论文 | ⭐⭐⭐ | RL+MPC loco-manipulation |
+| He Li, Wensing P. M. (2024) "Cafe-MPC: Cascaded-Fidelity MPC with Tuning-Free WBC" -- T-RO Vol.41 | 论文 | ★★★★ | VWBC，消除 WBC 调参 |
+| Jenelten F., et al. (2024) "DTC: Deep Tracking Control" -- Science Robotics, Vol.9, eadh5401 | 论文 | ★★★ | RL 参考 + MPC 跟踪 |
+| Sleiman J.-P., et al. (2025) "RAMBO: RL-Augmented Model-Based Whole-Body Control" -- arXiv 2504.06662 | 论文 | ★★★ | RL+MPC loco-manipulation |
 
 ### 前沿
 
 | 文献 | 类型 | 难度 | 核心贡献 |
 |------|------|------|---------|
-| Hafner D., et al. (2023) "Mastering Diverse Domains through World Models" (DreamerV3) | 论文 | ⭐⭐⭐⭐ | 最先进的 World Model RL |
-| Hansen N., et al. (2024) "TD-MPC2: Scalable, Robust World Models for Continuous Control" | 论文 | ⭐⭐⭐⭐ | 可扩展的 World Model + MPC |
-| Theseus (Meta, 2022) | 代码 | ⭐⭐⭐ | PyTorch 可微优化层 |
-| OCS2 MPC-Net (`ocs2_mpcnet/`) | 代码 | ⭐⭐⭐ | 完整蒸馏框架 |
-| Tan J., et al. (2018) "Sim-to-Real: Learning Agile Locomotion For Quadruped Robots", RSS | 论文 | ⭐⭐ | Residual RL 思想在腿足领域的最早实践之一 |
-| Silver T., et al. (2018) "Residual Policy Learning", arXiv 1812.06298 | 论文 | ⭐⭐⭐ | 残差策略学习的理论框架 |
+| Hafner D., et al. (2023) "Mastering Diverse Domains through World Models" (DreamerV3) | 论文 | ★★★★ | 最先进的 World Model RL |
+| Hansen N., et al. (2024) "TD-MPC2: Scalable, Robust World Models for Continuous Control" | 论文 | ★★★★ | 可扩展的 World Model + MPC |
+| Theseus (Meta, 2022) | 代码 | ★★★ | PyTorch 可微优化层 |
+| OCS2 MPC-Net (`ocs2_mpcnet/`) | 代码 | ★★★ | 完整蒸馏框架 |
+| Tan J., et al. (2018) "Sim-to-Real: Learning Agile Locomotion For Quadruped Robots", RSS | 论文 | ★★ | Residual RL 思想在腿足领域的最早实践之一 |
+| Silver T., et al. (2018) "Residual Policy Learning", arXiv 1812.06298 | 论文 | ★★★ | 残差策略学习的理论框架 |
 
 ---
 

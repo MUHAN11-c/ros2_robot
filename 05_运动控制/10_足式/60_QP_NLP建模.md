@@ -3,7 +3,7 @@
 # 第50章 QP/NLP建模——从SLAM无约束优化到规控有约束优化
 
 > **学习周期**：1周（20-25小时）  
-> **难度分布**：⭐基础概念 → ⭐⭐核心算法 → ⭐⭐⭐工程精通  
+> **难度分布**：★基础概念 → ★★核心算法 → ★★★工程精通  
 > **前置依赖**：01_数学/60_概率与估计/50_因子图（Ceres+GTSAM 无约束优化）、02_C++基础与进阶/10_Eigen（Eigen 稀疏矩阵）、足式/30_Pinocchio深度精读（Pinocchio 动力学生态）
 > **适用方向**：✅ 腿足 · ✅ 机械臂 · ✅ 移动机器人 · ✅ 具身智能——所有子方向共享
 
@@ -21,7 +21,7 @@
 | 4 | Pinocchio 的 `rnea()` 计算的是什么量？它在优化中通常作为什么角色？ | 逆动力学 $\tau = M\ddot{q} + C\dot{q} + g$；在优化中作为**等式约束**（动力学可行性） |
 | 5 | "有约束优化"和"无约束优化"在算法层面的根本区别是什么？ | 有约束需要处理 KKT 条件（引入拉格朗日乘子）；无约束只需梯度为零 |
 
-> ⚠️ **常见陷阱**：很多 SLAM 背景的同学认为"加个正则项 penalty 就能处理约束"——这在控制中**几乎不可行**。关节限位、力矩饱和、摩擦锥是**硬约束**（物理不可违反），penalty 方法无法保证可行性。本章将给出正确的处理范式。
+> ⚠ **常见陷阱**：很多 SLAM 背景的同学认为"加个正则项 penalty 就能处理约束"——这在控制中**几乎不可行**。关节限位、力矩饱和、摩擦锥是**硬约束**（物理不可违反），penalty 方法无法保证可行性。本章将给出正确的处理范式。
 
 ## 50.0.1 本章目标
 
@@ -88,9 +88,9 @@ QP/NLP 建模（本章）
 
 ---
 
-## 50.1 范式跨越：从SLAM到规控 ⭐
+## 50.1 范式跨越：从SLAM到规控 ★
 
-### 50.1.1 问题的根本差异 ⭐
+### 50.1.1 问题的根本差异 ★
 
 **核心命题**：SLAM 和控制的优化问题在数学形式上有本质区别——前者是无约束最小二乘，后者是有约束非线性规划。理解这个跨越是从感知工程师转向控制工程师的第一步。
 
@@ -105,7 +105,7 @@ QP/NLP 建模（本章）
 | **失败后果** | 地图漂移 | **硬件损坏、机器人摔倒** |
 | **凸性** | 局部最小二乘（非凸） | QP 全局凸；NLP 通常非凸，只能保证局部最优 |
 
-### 50.1.2 为什么控制需要约束？ ⭐
+### 50.1.2 为什么控制需要约束？ ★
 
 SLAM 的优化变量是"位姿"和"路标点"——它们本质上是自由的（在流形上），没有物理约束。但控制的变量是：
 
@@ -135,7 +135,7 @@ Ceres 的 `SetParameterLowerBound/UpperBound` 只支持**简单盒约束**（变
 
 从"变量自由"到"变量受限"，这一步跨越的不仅是数学形式——它改变了整个求解器的设计哲学。这好比从"在空旷草原上骑马"到"在拥挤城市里开车"：SLAM 的优化变量可以自由漫步（流形上无障碍），规控的变量被关节限位、力矩饱和、摩擦锥层层围堵，必须在狭窄的可行域通道中找到最优路径。接下来我们正式进入有约束优化的数学框架。
 
-### 50.1.3 从无约束到有约束的数学框架 ⭐⭐
+### 50.1.3 从无约束到有约束的数学框架 ★★
 
 **无约束优化**（SLAM paradigm）：
 
@@ -149,7 +149,7 @@ $$\min_{x \in \mathbb{R}^n} f(x) \quad \text{s.t.} \quad g_i(x) = 0, \; i=1,...,
 
 最优性条件：**KKT条件**（Karush-Kuhn-Tucker）——需要引入新的数学工具。
 
-### 50.1.4 KKT条件初步 ⭐⭐
+### 50.1.4 KKT条件初步 ★★
 
 定义 Lagrangian 函数：
 
@@ -182,9 +182,9 @@ h_j(x^*) &\le 0, \quad \forall j & \text{（不等式约束满足）} \\
 | 最优性条件 | $\nabla f = 0$ | KKT 条件（5个方程组） |
 | 对偶变量 | 无 | 接触力、约束反力 |
 
-> ⚠️ **常见陷阱**：很多教材把 KKT 条件写成"必要条件"就结束了。在凸优化（特别是 QP）中，KKT 条件是**充分必要条件**——求解 KKT 系统等价于求解原问题。这是 QP 求解器的理论基础。
+> ⚠ **常见陷阱**：很多教材把 KKT 条件写成"必要条件"就结束了。在凸优化（特别是 QP）中，KKT 条件是**充分必要条件**——求解 KKT 系统等价于求解原问题。这是 QP 求解器的理论基础。
 
-### 50.1.5 三类优化问题的层次 ⭐
+### 50.1.5 三类优化问题的层次 ★
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -204,18 +204,18 @@ h_j(x^*) &\le 0, \quad \forall j & \text{（不等式约束满足）} \\
 └─────────────────────────────────────────────────────────┘
 ```
 
-**练习 50.1** ⭐：写出以下控制问题的优化形式（明确变量、目标、约束），并判断是 QP 还是 NLP：
+**练习 50.1** ★：写出以下控制问题的优化形式（明确变量、目标、约束），并判断是 QP 还是 NLP：
 1. 7-DOF 机械臂静态力矩分配（给定末端力，求关节力矩使能量最小）
 2. 四足 WBC（给定期望质心加速度，求接触力和关节力矩）
 3. 单腿跳跃轨迹优化（给定初末状态，求中间轨迹使能量最小）
 
-**练习 50.2** ⭐：对 $\min x^2+y^2 \text{ s.t. } x+y \ge 1$ 手动推导 KKT 条件并求解。验证 $x^*=y^*=0.5$，$\mu^*=1$。
+**练习 50.2** ★：对 $\min x^2+y^2 \text{ s.t. } x+y \ge 1$ 手动推导 KKT 条件并求解。验证 $x^*=y^*=0.5$，$\mu^*=1$。
 
 ---
 
-## 50.2 QP标准形式与KKT条件 ⭐⭐
+## 50.2 QP标准形式与KKT条件 ★★
 
-### 50.2.1 QP标准形式 ⭐⭐
+### 50.2.1 QP标准形式 ★★
 
 二次规划（Quadratic Programming）是控制中最常见的优化子问题。标准形式：
 
@@ -231,7 +231,7 @@ $$\text{s.t.} \quad A_{\text{eq}} x = b_{\text{eq}}, \quad A_{\text{ineq}} x \le
 
 **凸性保证**：当 $H \succeq 0$（半正定）时，QP 是凸优化问题，局部最优就是全局最优。这是 QP 相比通用 NLP 的巨大优势。
 
-### 50.2.2 不同求解器的约束形式约定 ⭐⭐
+### 50.2.2 不同求解器的约束形式约定 ★★
 
 | 求解器 | 目标函数 | 约束形式 | 矩阵格式 |
 |--------|---------|---------|----------|
@@ -241,9 +241,9 @@ $$\text{s.t.} \quad A_{\text{eq}} x = b_{\text{eq}}, \quad A_{\text{ineq}} x \le
 | **HPIPM** | OCP 结构 | 动力学等式 + 路径不等式 + 盒约束 | Block-sparse (BLASFEO) |
 | **PIQP** | $\min \frac{1}{2}x^TPx + c^Tx$ | $Ax=b$, $Gx\le h$, $x_l\le x\le x_u$ | CSC 或 Dense |
 
-> ⚠️ **常见陷阱**：不同求解器的"标准形式"不同！OSQP 把等式和不等式统一为 $l \le Ax \le u$（等式就是 $l_i = u_i$），而 ProxQP/PIQP 分开写。第一次集成新求解器时，**矩阵维度错误**是最常见的 bug。
+> ⚠ **常见陷阱**：不同求解器的"标准形式"不同！OSQP 把等式和不等式统一为 $l \le Ax \le u$（等式就是 $l_i = u_i$），而 ProxQP/PIQP 分开写。第一次集成新求解器时，**矩阵维度错误**是最常见的 bug。
 
-### 50.2.3 QP的KKT系统完整推导 ⭐⭐⭐
+### 50.2.3 QP的KKT系统完整推导 ★★★
 
 对标准 QP 写 Lagrangian：
 
@@ -265,7 +265,7 @@ $$\begin{bmatrix} H & A_{\text{eq}}^T & A_{\mathcal{A}}^T \\ A_{\text{eq}} & 0 &
 
 这就是 **KKT 线性系统**——所有 QP 求解器的核心都是在求解这个系统（或它的等价变形）。
 
-### 50.2.4 对偶变量的物理意义 ⭐⭐
+### 50.2.4 对偶变量的物理意义 ★★
 
 在机器人控制中，拉格朗日乘子 $\lambda, \mu$ 有明确的物理含义：
 
@@ -280,7 +280,7 @@ $$\begin{bmatrix} H & A_{\text{eq}}^T & A_{\mathcal{A}}^T \\ A_{\text{eq}} & 0 &
 
 > **本质洞察**：KKT 条件中的互补松弛条件 $\mu_j h_j(x^*) = 0$ 揭示了有约束优化的一个深层真相：约束和自由是此消彼长的。每一个激活的约束都"消耗"一个自由度——它把优化问题从 $n$ 维空间投影到一个更低维的超平面上。对偶变量 $\mu_j$ 的大小告诉你这个约束有多"值钱"——放松它一点，目标函数能改善多少。这就是为什么 QP 的对偶解在工程中和主解（primal）同样重要。
 
-### 50.2.5 Active Set 概念 ⭐⭐
+### 50.2.5 Active Set 概念 ★★
 
 **Active Set**（激活集）= 在最优解处"顶在边界上"的约束集合。
 
@@ -309,9 +309,9 @@ $$\begin{bmatrix} H & A_{\text{eq}}^T & A_{\mathcal{A}}^T \\ A_{\text{eq}} & 0 &
 | Interior-point | HPIPM, PIQP | 多项式复杂度、结构利用 | 热启动困难 |
 | First-order | OSQP, ProxQP | 快速近似解、热启动优秀 | 高精度收敛慢 |
 
-**练习 50.3** ⭐⭐：对 $\min \frac{1}{2}(x_1^2 + x_2^2)$ s.t. $x_1 + x_2 \ge 1$, $x_1 \ge 0$, $x_2 \ge 0$，手动求 active set 和 KKT 解。
+**练习 50.3** ★★：对 $\min \frac{1}{2}(x_1^2 + x_2^2)$ s.t. $x_1 + x_2 \ge 1$, $x_1 \ge 0$, $x_2 \ge 0$，手动求 active set 和 KKT 解。
 
-### 50.2.6 凸优化的锥层次：LP → QP → QCQP → SOCP → SDP ⭐⭐
+### 50.2.6 凸优化的锥层次：LP → QP → QCQP → SOCP → SDP ★★
 
 到这里我们已经把 QP 的标准形式、KKT 系统和 active set 讲透了。但有一个问题一直被悬置着：50.1.2 里反复出现的摩擦锥 $\|f_t\| \le \mu f_n$ 是一个**二次约束**，它根本不是 $Ax \le b$ 那样的线性约束——那 QP 凭什么能处理它？答案是：**标准 QP 处理不了**，工程上要么把它线性化成多面体（牺牲精度换 QP），要么升级到更大的问题类 SOCP（保留精度但换求解器）。要讲清这个权衡，必须先把凸优化的"问题类层次"摆出来。
 
@@ -331,7 +331,7 @@ $$\text{LP} \subset \text{QP} \subset \text{QCQP} \subset \text{SOCP} \subset \t
 
 > **本质洞察**：从 QP 到 SOCP 的跨越，本质上和 50.1 讲的"从无约束到有约束"是同一种跨越的延续——每一次问题类升级，都是用"更难的求解"换"更真实的约束"。工程师的核心判断永远是：我愿意为这一点物理精度付出多少计算代价？摩擦锥的处理就是这个判断的经典战场。
 
-### 50.2.7 摩擦锥：QP 线性化 vs SOCP 精确建模 ⭐⭐⭐
+### 50.2.7 摩擦锥：QP 线性化 vs SOCP 精确建模 ★★★
 
 现在把抽象的锥层次落到机器人最核心的约束——摩擦锥上。这是 QP/NLP 建模中"问题类选择"的头号实战案例，也是 足式/80_接触力学与约束优化 的核心铺垫。
 
@@ -378,9 +378,9 @@ $$\begin{aligned}
 | warm-start | 成熟 | 内点法 warm-start 较难 |
 | 工程惯例 | **腿足控制 90% 用这个** | 接触敏感任务、研究前沿 |
 
-> ⚠️ **概念误区**：很多人以为"线性化摩擦锥"是一种近似算法上的妥协，越精确越好，所以应该尽量用 SOCP。这是思维陷阱。在腿足控制里，摩擦系数 $\mu$ 本身就是一个**估计值**（地面材质未知、可能有水有尘），其不确定性（$\pm 0.1$ 甚至更大）远超四棱锥 $0.71$ 折扣引入的误差。在 $\mu$ 都测不准的情况下追求锥的几何精确，是"用游标卡尺量一段用脚步丈量的距离"——精度的瓶颈不在那里。真正的工程做法是：用四棱锥 + 保守的 $\mu$ 估计（如把实测 $\mu$ 再乘 $0.7$ 安全系数），兼顾鲁棒与实时。
+> ⚠ **概念误区**：很多人以为"线性化摩擦锥"是一种近似算法上的妥协，越精确越好，所以应该尽量用 SOCP。这是思维陷阱。在腿足控制里，摩擦系数 $\mu$ 本身就是一个**估计值**（地面材质未知、可能有水有尘），其不确定性（$\pm 0.1$ 甚至更大）远超四棱锥 $0.71$ 折扣引入的误差。在 $\mu$ 都测不准的情况下追求锥的几何精确，是"用游标卡尺量一段用脚步丈量的距离"——精度的瓶颈不在那里。真正的工程做法是：用四棱锥 + 保守的 $\mu$ 估计（如把实测 $\mu$ 再乘 $0.7$ 安全系数），兼顾鲁棒与实时。
 
-### 50.2.8 旋转锥技巧：把 QP 写成 SOCP 的桥梁 ⭐⭐⭐
+### 50.2.8 旋转锥技巧：把 QP 写成 SOCP 的桥梁 ★★★
 
 读到这里你可能会问：既然 SOCP 比 QP 更"大"（QP $\subset$ SOCP），那是不是任何 QP 都能写成 SOCP？答案是肯定的，而且这个转化在工程上很有用——它让你能用一个 SOCP 求解器（如 Clarabel）统一处理"QP 部分 + 摩擦锥部分"，而不必把摩擦锥线性化。理解这个转化，也能加深对"二次目标"和"二阶锥约束"本是一回事的认识。
 
@@ -402,19 +402,19 @@ $$\min_{x,t}\ t + f^Tx \quad \text{s.t.}\quad \frac{1}{2}\|L^Tx\|_2^2 \le t,\qua
 - **理解求解器**：它揭示了为什么 Clarabel 这类"带二次目标的锥求解器"（conic solver with quadratic objectives）能同时高效处理 QP 和 SOCP——在它眼里二者是同一个东西。
 - **理论桥梁**：它让"QP 是 SOCP 的特例"这句话从抽象的包含关系变成可操作的代码改写。
 
-> ⚠️ **思维陷阱**：能转化不代表应该转化。把一个本来 ProxQP 能在 $25\,\mu s$ 解完的 WBC-QP 转成 SOCP 丢给通用锥求解器，往往会慢上数倍——因为 QP 专用求解器把"目标是二次的"这一结构吃得更透。**转化是为了表达力（需要真锥约束时），不是为了速度**。这与 50.5.7 "结构利用是双刃剑"、50.9.4 "不存在万能求解器"是同一条工程智慧的不同侧面：永远让求解器匹配问题的真实结构。
+> ⚠ **思维陷阱**：能转化不代表应该转化。把一个本来 ProxQP 能在 $25\,\mu s$ 解完的 WBC-QP 转成 SOCP 丢给通用锥求解器，往往会慢上数倍——因为 QP 专用求解器把"目标是二次的"这一结构吃得更透。**转化是为了表达力（需要真锥约束时），不是为了速度**。这与 50.5.7 "结构利用是双刃剑"、50.9.4 "不存在万能求解器"是同一条工程智慧的不同侧面：永远让求解器匹配问题的真实结构。
 
-**练习 50.4a** ⭐⭐：对 $\mu=0.5$，分别写出 $k=4$ 和 $k=8$ 棱线性化摩擦锥的不等式矩阵 $C_\mu$。计算在斜 $45°$ 方向（$f_x=f_y$）两种近似允许的最大 $\sqrt{f_x^2+f_y^2}/f_z$，验证 $k=4$ 给出 $0.5/\sqrt2\approx0.354$、$k=8$ 更接近 $0.5$。
+**练习 50.4a** ★★：对 $\mu=0.5$，分别写出 $k=4$ 和 $k=8$ 棱线性化摩擦锥的不等式矩阵 $C_\mu$。计算在斜 $45°$ 方向（$f_x=f_y$）两种近似允许的最大 $\sqrt{f_x^2+f_y^2}/f_z$，验证 $k=4$ 给出 $0.5/\sqrt2\approx0.354$、$k=8$ 更接近 $0.5$。
 
-**练习 50.4b** ⭐⭐⭐：用 CVXPY（Python）把练习 50.3 的 QP 同时实现为 (1) 原生 QP 和 (2) 经旋转锥技巧改写的 SOCP，分别用 OSQP 和 Clarabel 求解，验证两者最优解一致但求解时间不同。
+**练习 50.4b** ★★★：用 CVXPY（Python）把练习 50.3 的 QP 同时实现为 (1) 原生 QP 和 (2) 经旋转锥技巧改写的 SOCP，分别用 OSQP 和 Clarabel 求解，验证两者最优解一致但求解时间不同。
 
 ---
 
-## 50.3 QP求解器全景 ⭐⭐⭐
+## 50.3 QP求解器全景 ★★★
 
 §50.1–50.2 把"有约束优化是什么、QP 的 KKT 结构长什么样、摩擦锥该线性化还是上 SOCP"这些**理论与建模**问题讲清楚了。但建模只是上半场——把模型真正求解出来、而且在 1kHz 控制周期内求解出来，靠的是一整个生态的 QP 求解器。本节从"版图全景"切入：先看清 2025-2026 年有哪些主流求解器、各自押注哪种算法，再用一篇腿足专项综述纠正"唯速度论"的选型误区。这是从"会建模"走向"会落地"的关键一跳。
 
-### 50.3.1 2025-2026 年 QP 求解器版图 ⭐
+### 50.3.1 2025-2026 年 QP 求解器版图 ★
 
 基于 qpsolvers v4.11.0（2026年3月）和 Simple-Robotics/proxqp_benchmark 的实测数据：
 
@@ -428,7 +428,7 @@ $$\min_{x,t}\ t + f^Tx \quad \text{s.t.}\quad \frac{1}{2}\|L^Tx\|_2^2 \le t,\qua
 | **qpSWIFT** | 1.0 | IPM + Mehrotra | ANSI C | GPL-3.0 | 部分 | Ghost Robotics |
 | **Clarabel** | 0.7+ | IPM (锥规划) | Rust/Julia | Apache-2.0 | 部分 | 锥规划、SDP |
 
-### 50.3.2 性能基准（RSS 2022 + 2025更新数据） ⭐⭐
+### 50.3.2 性能基准（RSS 2022 + 2025更新数据） ★★
 
 **典型机器人 QP 场景**（Bambade et al., RSS 2022; Simple-Robotics benchmark 2025）：
 
@@ -445,7 +445,7 @@ $$\min_{x,t}\ t + f^Tx \quad \text{s.t.}\quad \frac{1}{2}\|L^Tx\|_2^2 \le t,\qua
 - HPIPM 在结构化 MPC-QP 上比通用求解器快 **2-10 倍**
 - PIQP 的 header-only 设计使其编译集成最简单
 
-### 50.3.2.1 2025 腿足 QP 求解器系统评测 ⭐⭐
+### 50.3.2.1 2025 腿足 QP 求解器系统评测 ★★
 
 上面的微基准给出了"哪个最快"的第一印象，但单看求解时间会误导选型。Wang 等人 2025 年的系统综述《Real-Time QP Solvers: A Concise Review and Practical Guide Towards Legged Robots》（arXiv:2510.21773）在多种嵌入式平台上对十余个求解器做了横向评测，给出了比"微秒数"更立体的结论。这篇综述值得作为本章的工程选型权威参考，它的几个核心发现如下：
 
@@ -473,7 +473,7 @@ $$\min_{x,t}\ t + f^Tx \quad \text{s.t.}\quad \frac{1}{2}\|L^Tx\|_2^2 \le t,\qua
 
 > **本质洞察**：脱离硬件谈求解器速度是空中楼阁。同一个求解器在 x86 工作站和 ARM Cortex-A 嵌入式板上的相对排名可能完全不同——因为 active-set 的分支预测、内点法的稠密线代、ADMM 的访存模式对不同微架构的敏感度不一样。这就是为什么综述强调"在你的目标硬件上实测"，而不是照搬论文里的微基准。这与 50.5.6 BLASFEO"为小矩阵和特定微架构手写内核"的思路一脉相承：**实时控制的性能是算法、问题规模、硬件三者的联合函数**。
 
-### 50.3.3 五大求解器算法概览 ⭐⭐
+### 50.3.3 五大求解器算法概览 ★★
 
 **OSQP — ADMM 算法**：
 ```
@@ -515,7 +515,7 @@ Interior-point + proximal regularization:
   Header-only C++14，零外部依赖
 ```
 
-### 50.3.4 何时选择哪个？ ⭐⭐
+### 50.3.4 何时选择哪个？ ★★
 
 ```
 你的 QP 问题特征是什么？
@@ -539,15 +539,15 @@ Interior-point + proximal regularization:
     └─ YES → Clarabel 或 ECOS
 ```
 
-> ⚠️ **常见陷阱**：不要被"OSQP 比 ProxQP 慢"就放弃 OSQP。OSQP 的优势是：(1) 社区最大、文档最全；(2) Python/MATLAB/Julia/R 全平台支持；(3) 代码生成器 OSQP-Codegen 适合嵌入式。**选求解器要看生态，不只看微秒级速度**。
+> ⚠ **常见陷阱**：不要被"OSQP 比 ProxQP 慢"就放弃 OSQP。OSQP 的优势是：(1) 社区最大、文档最全；(2) Python/MATLAB/Julia/R 全平台支持；(3) 代码生成器 OSQP-Codegen 适合嵌入式。**选求解器要看生态，不只看微秒级速度**。
 
-**练习 50.4** ⭐⭐：查阅 OSQP 和 ProxQP 的 GitHub README，列出它们各自的 C++ 依赖项（几个库？需要哪些编译工具？）。哪个集成更简单？
+**练习 50.4** ★★：查阅 OSQP 和 ProxQP 的 GitHub README，列出它们各自的 C++ 依赖项（几个库？需要哪些编译工具？）。哪个集成更简单？
 
 ---
 
-## 50.4 OSQP深度精读 ⭐⭐
+## 50.4 OSQP深度精读 ★★
 
-### 50.4.1 ADMM算法推导 ⭐⭐⭐
+### 50.4.1 ADMM算法推导 ★★★
 
 OSQP 求解的标准形式：
 
@@ -577,7 +577,7 @@ $$y^{k+1} = y^k + Ax^{k+1} - z^{k+1}$$
 
 **OSQP 的核心优化**：$(P + \rho A^TA)$ 在问题结构不变时只需**因式分解一次**（LDL分解），后续只做前向/后向替代。这是 OSQP 能在 MPC 循环中保持 warm-start 的关键。
 
-### 50.4.2 关键参数 rho 的影响 ⭐⭐
+### 50.4.2 关键参数 rho 的影响 ★★
 
 | rho 值 | 效果 | 适用场景 |
 |--------|------|---------|
@@ -595,9 +595,9 @@ elif dual_res / primal_res > mu:
 
 默认 $\mu = 10$, $\tau = 2$。
 
-> ⚠️ **常见陷阱**：当 rho 更新时，OSQP 需要**重新做 LDL 分解**（因为 $P + \rho A^TA$ 变了）。如果 rho 频繁更新，性能会下降。设置 `adaptive_rho_interval` 可以控制更新频率。
+> ⚠ **常见陷阱**：当 rho 更新时，OSQP 需要**重新做 LDL 分解**（因为 $P + \rho A^TA$ 变了）。如果 rho 频繁更新，性能会下降。设置 `adaptive_rho_interval` 可以控制更新频率。
 
-### 50.4.3 Warm-Starting 的工程价值 ⭐⭐
+### 50.4.3 Warm-Starting 的工程价值 ★★
 
 在 MPC/WBC 循环中，每个控制周期的 QP 问题**只有微小变化**（初始状态更新、参考轨迹平移）。Warm-start 把上一次的解 $(x^k, z^k, y^k)$ 作为下一次的初始值：
 
@@ -621,7 +621,7 @@ solver.setDualVariable(y_prev);         // warm-start dual
 solver.solveProblem();                  // 通常 3-10 次迭代收敛（vs 冷启动 50-200 次）
 ```
 
-### 50.4.4 完整 WBC 集成示例 ⭐⭐
+### 50.4.4 完整 WBC 集成示例 ★★
 
 一个简化的 Whole-Body Control QP（12自由度四足，站立平衡）：
 
@@ -716,7 +716,7 @@ private:
 };
 ```
 
-### 50.4.5 OSQP 调参指南 ⭐⭐
+### 50.4.5 OSQP 调参指南 ★★
 
 | 参数 | 默认值 | 建议值（WBC） | 说明 |
 |------|--------|-------------|------|
@@ -729,11 +729,11 @@ private:
 | `polish` | false | true（如果有时间） | 精确解打磨 |
 | `scaled_termination` | false | true | 缩放终止条件 |
 
-> ⚠️ **常见陷阱**：OSQP 的 `updateHessianMatrix()` 只能更新**非零元素的值**，不能改变稀疏模式。如果你的 QP 在运行时稀疏模式会变（例如接触脚数变化），必须用 `solver.clearSolver()` + `solver.initSolver()` 重新初始化——这会导致一次冷启动，可能超出实时限制。
+> ⚠ **常见陷阱**：OSQP 的 `updateHessianMatrix()` 只能更新**非零元素的值**，不能改变稀疏模式。如果你的 QP 在运行时稀疏模式会变（例如接触脚数变化），必须用 `solver.clearSolver()` + `solver.initSolver()` 重新初始化——这会导致一次冷启动，可能超出实时限制。
 
-**练习 50.5** ⭐⭐：用 OSQP-Eigen 实现一个 10 维 QP，带 20 条随机线性不等式约束。分别测试 cold-start 和 warm-start（修改一个约束界再求解）的迭代次数差异。预期 warm-start 减少 80%+ 迭代。
+**练习 50.5** ★★：用 OSQP-Eigen 实现一个 10 维 QP，带 20 条随机线性不等式约束。分别测试 cold-start 和 warm-start（修改一个约束界再求解）的迭代次数差异。预期 warm-start 减少 80%+ 迭代。
 
-### 50.4.6 稀疏性与 CSC 格式：OSQP 性能的隐形地基 ⭐⭐⭐
+### 50.4.6 稀疏性与 CSC 格式：OSQP 性能的隐形地基 ★★★
 
 前置自测第 3 题问到 Eigen 的 `SparseMatrix<double>` 默认用什么格式、为什么 QP 求解器关心——现在到了把这个问题讲透的时候。OSQP 和 ProxQP-sparse 的输入矩阵都要求 **CSC（Compressed Sparse Column，列压缩）** 格式，理解它不是吹毛求疵：用错存储格式会让你的 WBC-QP 从微秒级退化到毫秒级，甚至触发 OSQP 内部的隐式格式转换（一次额外的内存拷贝 + 重排）。
 
@@ -772,9 +772,9 @@ Eigen::SparseMatrix<double, Eigen::RowMajor> P_bad(n, n);
 // 未压缩的 SparseMatrix 含有 "未使用的内部空隙"，setHessianMatrix 可能行为异常
 ```
 
-> ⚠️ **编程陷阱**：OSQP 只需要 Hessian $P$ 的**上三角**（因为 $P$ 对称，存全矩阵是浪费且可能触发对称性检查告警）。OSQP-Eigen 在 1.x 中会替你处理，但若直接调 C 接口 `osqp_setup`，必须自己只传上三角的 CSC，否则结果错误。这是从 Python 切到 C++ 嵌入式时最隐蔽的 bug 之一——Python 接口帮你做了对称化，C 接口不会。
+> ⚠ **编程陷阱**：OSQP 只需要 Hessian $P$ 的**上三角**（因为 $P$ 对称，存全矩阵是浪费且可能触发对称性检查告警）。OSQP-Eigen 在 1.x 中会替你处理，但若直接调 C 接口 `osqp_setup`，必须自己只传上三角的 CSC，否则结果错误。这是从 Python 切到 C++ 嵌入式时最隐蔽的 bug 之一——Python 接口帮你做了对称化，C 接口不会。
 
-### 50.4.7 数值鲁棒性：缩放、病态与不可行性证书 ⭐⭐⭐
+### 50.4.7 数值鲁棒性：缩放、病态与不可行性证书 ★★★
 
 QP 求解器在论文里总是"几十微秒收敛"，但工程现场最常见的不是"慢"，而是**不收敛、返回垃圾解、或报告无解**。这三类数值问题的根源往往不是求解器 bug，而是问题本身没"调理"好。本节把 50.0 前置自测里"控制求解失败会硬件损坏"那句警告落到可操作的层面。
 
@@ -785,7 +785,7 @@ OSQP 的解法是内置 **Ruiz 均衡**（modified Ruiz equilibration）：迭�
 - **关掉 scaling 几乎总是错的**——除非你确信问题本身良态（如已无量纲化）。
 - **物理层面的缩放优于求解器层面**：与其依赖 Ruiz 事后补救，不如在建模时就把变量无量纲化（力矩除以 $\tau_{\max}$、力除以 $mg$），从源头压低条件数。这是 50.2.8 末尾"让求解器匹配问题结构"在数值层面的对应——好的建模能让求解器少受罪。
 
-> ⚠️ **思维陷阱**：把"调高 `max_iter`" 当成不收敛的万能药。如果根因是病态，加迭代只是让求解器在烂地形上多走几步，依然到不了终点，反而吃光实时预算。**先诊断条件数（`cond(P)`、`cond(A)`），再决定是缩放、正则化（加大 $\sigma$）、还是重新建模**——而不是无脑加迭代。
+> ⚠ **思维陷阱**：把"调高 `max_iter`" 当成不收敛的万能药。如果根因是病态，加迭代只是让求解器在烂地形上多走几步，依然到不了终点，反而吃光实时预算。**先诊断条件数（`cond(P)`、`cond(A)`），再决定是缩放、正则化（加大 $\sigma$）、还是重新建模**——而不是无脑加迭代。
 
 **问题二：不可行性证书（infeasibility certificate）。** WBC-QP 返回"无解"是控制现场的高频故障——通常意味着约束互相打架（如摩擦锥 + 动力学等式在当前接触配置下无法同时满足）。这里 OSQP 有一个被低估的杀手锏：它是**首个无需齐次自对偶嵌入就能给出原始/对偶不可行性证书的一阶 QP 求解器**（Stellato 2020）。
 
@@ -802,13 +802,13 @@ OSQP 的解法是内置 **Ruiz 均衡**（modified Ruiz equilibration）：迭�
 
 > **本质洞察**：不可行性证书把"求解失败"从一个**黑盒错误码**变成了一个**可诊断的数学对象**。这呼应 50.2.4 讲的对偶变量物理意义——对偶解不仅在有解时告诉你"约束多紧"，在无解时还能通过 Farkas 引理（线性规划对偶的核心定理）反过来指认"是哪几条约束让问题无解"。一个会读证书的工程师，调试 WBC 的速度比只会看"solver failed"的工程师快一个数量级。
 
-**练习 50.6a** ⭐⭐⭐：构造一个**故意无解**的 2 变量 QP（如 $x\ge 1$ 且 $x\le 0$），用 OSQP 求解，打印返回状态和不可行性证书向量，验证证书的非零分量指向这两条冲突约束。
+**练习 50.6a** ★★★：构造一个**故意无解**的 2 变量 QP（如 $x\ge 1$ 且 $x\le 0$），用 OSQP 求解，打印返回状态和不可行性证书向量，验证证书的非零分量指向这两条冲突约束。
 
 ---
 
-## 50.5 ProxQP与HPIPM ⭐⭐⭐
+## 50.5 ProxQP与HPIPM ★★★
 
-### 50.5.1 ProxQP：近端增广 Lagrangian 算法 ⭐⭐⭐
+### 50.5.1 ProxQP：近端增广 Lagrangian 算法 ★★★
 
 **ProxQP**（Simple Robotics / INRIA, 2022-2026）的核心创新：
 
@@ -839,7 +839,7 @@ $$(H + \rho_{\text{eq}} A^TA + \rho_{\text{ineq}} C_{\mathcal{A}}^TC_{\mathcal{A
 
 **为什么 ProxQP 更快？** OSQP 固定 $(P + \rho A^TA)$ 的分解以节省时间，但代价是每步只能做"近似"牛顿方向。ProxQP 选择每步都精确求解（重新分解），但它的近端正则项 $\sigma I$ 保证了数值稳定性，使得总迭代次数大幅减少。在中小规模问题上，"少迭代 * 精确步"比"多迭代 * 近似步"更快。这就像导航中的"走大路 vs 抄近路"：OSQP 每步走得轻松（近似分解）但绕路多（线性收敛），ProxQP 每步走得费力（精确分解）但直奔终点（超线性收敛）——对于 WBC 这种几十维的小规模问题，"抄近路"显然更划算。假如没有近端正则项 $\sigma I$，精确求解策略在病态问题上会因为 KKT 矩阵接近奇异而数值崩溃——正则项的作用相当于给优化景观的最低点加了一层"安全垫"。
 
-### 50.5.2 ProxQP 代码集成 ⭐⭐
+### 50.5.2 ProxQP 代码集成 ★★
 
 ```cpp
 #include <proxsuite/proxqp/dense/dense.hpp>
@@ -888,7 +888,7 @@ qp_sparse.init(H_sparse, g, A_sparse, b, C_sparse, l, u);
 qp_sparse.solve();
 ```
 
-### 50.5.3 ProxQP 在 WBC 中的集成（pinocchio 生态） ⭐⭐
+### 50.5.3 ProxQP 在 WBC 中的集成（pinocchio 生态） ★★
 
 **pinocchio + ProxQP 天然集成**（同属 Simple Robotics / INRIA 生态）：
 
@@ -971,7 +971,7 @@ private:
 };
 ```
 
-### 50.5.4 HPIPM：MPC 结构化 QP 的王者 ⭐⭐⭐
+### 50.5.4 HPIPM：MPC 结构化 QP 的王者 ★★★
 
 **核心洞察**：MPC 的 QP 有极强的结构——KKT 系统是 **block-tridiagonal** 的。
 
@@ -1013,7 +1013,7 @@ $$\begin{aligned}
 - OSQP 处理 360 维稀疏 QP：约 2-5 ms
 - HPIPM 利用结构：约 0.1-0.5 ms — **10-50 倍加速**
 
-### 50.5.5 HPIPM 集成模式 ⭐⭐⭐
+### 50.5.5 HPIPM 集成模式 ★★★
 
 | 集成方式 | 适用场景 | 抽象层次 | 代码量 |
 |---------|---------|---------|-------|
@@ -1075,7 +1075,7 @@ private:
 };
 ```
 
-### 50.5.6 BLASFEO：HPIPM 的高性能后端 ⭐⭐⭐
+### 50.5.6 BLASFEO：HPIPM 的高性能后端 ★★★
 
 HPIPM 的速度秘诀不仅在于算法（Riccati），还在于底层线性代数库 **BLASFEO**：
 
@@ -1089,7 +1089,7 @@ HPIPM 的速度秘诀不仅在于算法（Riccati），还在于底层线性代�
 
 **为什么标准 BLAS 不够快？** MPC 中的矩阵很小（典型 12x12 或 18x18），标准 BLAS 的函数调用开销和参数检查占据了大部分时间。BLASFEO 专门为这种"小矩阵密集运算"优化，在 ARM Cortex-A 和 x86 上都有手写 SIMD 内核。
 
-### 50.5.7 ProxQP vs HPIPM 选型总结 ⭐⭐
+### 50.5.7 ProxQP vs HPIPM 选型总结 ★★
 
 | 场景 | 推荐 | 原因 |
 |------|------|------|
@@ -1100,18 +1100,18 @@ HPIPM 的速度秘诀不仅在于算法（Riccati），还在于底层线性代�
 | 通用 QP + 最大社区支持 | **OSQP** | 文档最全，debugging 容易 |
 | 嵌入式 (无 malloc) | **PIQP** | Header-only, allocation-free |
 
-> ⚠️ **常见陷阱**：HPIPM **只能解 OCP 结构的 QP**。如果你的 QP 不具备时域阶段结构（例如纯 WBC 单步优化），HPIPM 无法利用任何结构，性能反而不如 ProxQP。**结构利用是双刃剑——用错了反而更慢**。
+> ⚠ **常见陷阱**：HPIPM **只能解 OCP 结构的 QP**。如果你的 QP 不具备时域阶段结构（例如纯 WBC 单步优化），HPIPM 无法利用任何结构，性能反而不如 ProxQP。**结构利用是双刃剑——用错了反而更慢**。
 
-**练习 50.6** ⭐⭐⭐：对一个 horizon=20, nx=12, nu=6 的线性 MPC 问题：
+**练习 50.6** ★★★：对一个 horizon=20, nx=12, nu=6 的线性 MPC 问题：
 1. 如果用 OSQP 展开成大 QP，决策变量和约束各多少维？
 2. HPIPM Riccati 递推的 flops 约为 $N \cdot (n_x+n_u)^3 = 20 \times 18^3 \approx$ 多少？
 3. 通用 LDL 分解 360 维稀疏 QP 的 flops 量级？两者比值约多少？
 
 ---
 
-## 50.6 NLP求解器：Ipopt与acados ⭐⭐⭐
+## 50.6 NLP求解器：Ipopt与acados ★★★
 
-### 50.6.1 从 QP 到 NLP：为什么需要 NLP？ ⭐⭐
+### 50.6.1 从 QP 到 NLP：为什么需要 NLP？ ★★
 
 QP 的限制：目标函数必须是二次的，约束必须是线性的。但很多机器人问题的约束**天然非线性**：
 
@@ -1126,7 +1126,7 @@ QP 的限制：目标函数必须是二次的，约束必须是线性的。但�
 
 > **本质洞察**：QP 与 NLP 的关系不是"简单 vs 复杂"，而是"全局 vs 局部"。QP 是凸的，KKT 条件给出全局最优解——这是工程师可以"闭眼信任"的结果。NLP 是非凸的，只能保证局部最优——初始猜测的好坏直接决定解的质量。这就是为什么 MPC 中尽量把问题建模为 QP（通过线性化动力学、线性化摩擦锥）：不是因为 QP 更"精确"（它其实是近似），而是因为 QP 的解是可靠的。
 
-### 50.6.2 Ipopt：通用 NLP 的工业标准 ⭐⭐
+### 50.6.2 Ipopt：通用 NLP 的工业标准 ★★
 
 **Ipopt**（Interior Point OPTimizer）是最广泛使用的开源 NLP 求解器。
 
@@ -1154,9 +1154,9 @@ $$\min_x f(x) \quad \text{s.t.} \quad g(x) = 0, \; h(x) \le 0$$
 | **MA86/97** | HSL 学术免费 | 卓越 | 大规模并行 |
 | **Pardiso** | Intel MKL | 卓越 | 有 MKL 就用 |
 
-> ⚠️ **常见陷阱**：Ipopt 默认用 MUMPS 线性求解器，性能比 MA57 慢 2-5 倍。对于任何严肃的机器人轨迹优化，**必须安装 HSL**（学术用途免费申请）。
+> ⚠ **常见陷阱**：Ipopt 默认用 MUMPS 线性求解器，性能比 MA57 慢 2-5 倍。对于任何严肃的机器人轨迹优化，**必须安装 HSL**（学术用途免费申请）。
 
-### 50.6.3 acados：实时 NLP 求解 ⭐⭐⭐
+### 50.6.3 acados：实时 NLP 求解 ★★★
 
 **acados** 是专为实时 MPC/OCP 设计的框架，核心特性：
 
@@ -1169,7 +1169,7 @@ $$\min_x f(x) \quad \text{s.t.} \quad g(x) = 0, \; h(x) \le 0$$
 | 实时性 | 非实时 | **硬实时** (< 1ms) |
 | 语言 | C/Fortran | C + Python 接口 |
 
-### 50.6.4 SQP-RTI 方案 ⭐⭐⭐
+### 50.6.4 SQP-RTI 方案 ★★★
 
 **SQP**（Sequential Quadratic Programming）：在每次迭代中，将 NLP 线性化为 QP 子问题并求解。
 
@@ -1192,7 +1192,7 @@ SQP-RTI (实时):
 
 **为什么 RTI 能工作？** 在连续运行的 MPC 中，问题变化缓慢。上一周期的解已经接近最优，一步 SQP 就足够追踪最优解的漂移。这被称为**实时逼近**（Real-Time Approximation）。
 
-### 50.6.5 acados 完整示例：倒立摆 MPC ⭐⭐
+### 50.6.5 acados 完整示例：倒立摆 MPC ★★
 
 ```python
 # acados Python 接口 (高层建模 → 自动生成 C 代码)
@@ -1276,7 +1276,7 @@ for step in range(500):
     apply_control(u_opt)
 ```
 
-### 50.6.6 acados 内部结构 ⭐⭐⭐
+### 50.6.6 acados 内部结构 ★★★
 
 ```
 acados 求解流程:
@@ -1312,15 +1312,15 @@ acados 求解流程:
 | Partial condensing | 中等 | HPIPM | **通用推荐** |
 | No condensing | $N \cdot (n_x+n_u)$ (大) | HPIPM | 长 horizon, 结构利用 |
 
-> ⚠️ **常见陷阱**：acados 的 `SQP_RTI` 只做 **1 步 SQP**，不保证收敛到最优！在初始化阶段（问题远离最优时），应该先用 `SQP`（多步）求解一次完整解，然后切换到 RTI 进行在线跟踪。
+> ⚠ **常见陷阱**：acados 的 `SQP_RTI` 只做 **1 步 SQP**，不保证收敛到最优！在初始化阶段（问题远离最优时），应该先用 `SQP`（多步）求解一次完整解，然后切换到 RTI 进行在线跟踪。
 
-**练习 50.7** ⭐⭐⭐：解释为什么 acados 使用 HPIPM 作为 QP 后端，而不是 ProxQP 或 OSQP。从算法结构和性能两个角度回答。
+**练习 50.7** ★★★：解释为什么 acados 使用 HPIPM 作为 QP 后端，而不是 ProxQP 或 OSQP。从算法结构和性能两个角度回答。
 
 ---
 
-## 50.7 CasADi符号框架 ⭐⭐⭐
+## 50.7 CasADi符号框架 ★★★
 
-### 50.7.1 CasADi vs CppAD：两种自动微分哲学 ⭐⭐
+### 50.7.1 CasADi vs CppAD：两种自动微分哲学 ★★
 
 | 维度 | CasADi | CppAD (足式/40_CppAD与代码生成) |
 |------|--------|-------------|
@@ -1350,7 +1350,7 @@ CasADi (symbolic):
   6. F.generate('f.c')   → 导出 C 代码
 ```
 
-### 50.7.2 SX vs MX：何时用哪个？ ⭐⭐
+### 50.7.2 SX vs MX：何时用哪个？ ★★
 
 CasADi 有两种符号类型：
 
@@ -1367,7 +1367,7 @@ CasADi 有两种符号类型：
 - 维度 > 50 或需要调用外部函数（如 Pinocchio）→ **MX**
 - 需要嵌入式部署 → **SX + 代码生成**
 
-### 50.7.3 CasADi 完整 NLP 示例 ⭐⭐
+### 50.7.3 CasADi 完整 NLP 示例 ★★
 
 ```cpp
 #include <casadi/casadi.hpp>
@@ -1479,7 +1479,7 @@ int main() {
 }
 ```
 
-### 50.7.4 CasADi 代码生成 ⭐⭐⭐
+### 50.7.4 CasADi 代码生成 ★★★
 
 CasADi 最强大的功能之一是将符号表达式导出为纯 C 代码：
 
@@ -1505,7 +1505,7 @@ F.generate('my_func.c', {'with_header': True})
 - 所有矩阵运算展开为标量操作（SX 模式）
 - 自动计算稀疏性并跳过零元素
 
-### 50.7.5 CasADi 与各求解器的集成 ⭐⭐
+### 50.7.5 CasADi 与各求解器的集成 ★★
 
 ```
 CasADi 符号模型
@@ -1520,7 +1520,7 @@ CasADi 符号模型
             └── QP subproblem → HPIPM
 ```
 
-### 50.7.6 选型：CasADi vs Ifopt vs 直接调用求解器 ⭐⭐
+### 50.7.6 选型：CasADi vs Ifopt vs 直接调用求解器 ★★
 
 | 维度 | CasADi | Ifopt | 直接 API |
 |------|--------|-------|----------|
@@ -1532,15 +1532,15 @@ CasADi 符号模型
 | 适合团队 | 研究组 | 工程团队 | 嵌入式团队 |
 | 代表项目 | bipedal_locomotion, acados | **TOWR** | OCS2 |
 
-> ⚠️ **常见陷阱**：CasADi 的 MX 类型**不能在 for 循环中展开**（那样会创建巨大的表达式图）。对于 horizon=100 的 MPC，必须用 CasADi 的 `map()` 或 `fold()` 函数来高效构建。否则模型编译时间可能达到分钟级。
+> ⚠ **常见陷阱**：CasADi 的 MX 类型**不能在 for 循环中展开**（那样会创建巨大的表达式图）。对于 horizon=100 的 MPC，必须用 CasADi 的 `map()` 或 `fold()` 函数来高效构建。否则模型编译时间可能达到分钟级。
 
-**练习 50.8** ⭐⭐⭐：用 CasADi Python 接口实现 Rosenbrock 函数 $\min (1-x)^2 + 100(y-x^2)^2$ 的 NLP 求解（调用 Ipopt）。对比代码行数和 Ifopt 版本的差异。
+**练习 50.8** ★★★：用 CasADi Python 接口实现 Rosenbrock 函数 $\min (1-x)^2 + 100(y-x^2)^2$ 的 NLP 求解（调用 Ipopt）。对比代码行数和 Ifopt 版本的差异。
 
 ---
 
-## 50.8 Ifopt建模框架 ⭐⭐
+## 50.8 Ifopt建模框架 ★★
 
-### 50.8.1 Ifopt 的设计哲学 ⭐⭐
+### 50.8.1 Ifopt 的设计哲学 ★★
 
 **Ifopt**（ETH Zurich, Alexander Winkler）为 **TOWR 腿足轨迹优化**而生，核心设计原则：
 
@@ -1549,7 +1549,7 @@ CasADi 符号模型
 3. **面向对象**：用继承分离 "变量/约束/代价"
 4. **后端无关**：同一模型可以对接 Ipopt 或 SNOPT
 
-### 50.8.2 三个核心抽象 ⭐⭐
+### 50.8.2 三个核心抽象 ★★
 
 ```
 ┌─────────────────────────────────────────┐
@@ -1597,7 +1597,7 @@ class CostTerm : public Component {
 };
 ```
 
-### 50.8.3 Ifopt 完整示例：Rosenbrock 问题 ⭐⭐
+### 50.8.3 Ifopt 完整示例：Rosenbrock 问题 ★★
 
 $$\min_{x,y} (1-x)^2 + 100(y-x^2)^2 \quad \text{s.t.} \quad x^2 + y^2 \le 2$$
 
@@ -1692,7 +1692,7 @@ int main() {
 }
 ```
 
-### 50.8.4 TOWR 如何用 Ifopt 建模腿足轨迹优化 ⭐⭐⭐
+### 50.8.4 TOWR 如何用 Ifopt 建模腿足轨迹优化 ★★★
 
 TOWR 的 NLP 变量分组（每个是一个 `VariableSet`）：
 
@@ -1716,7 +1716,7 @@ TOWR 的约束分组（每个是一个 `ConstraintSet`）：
 
 **这种分组设计的价值**：每个约束的 Jacobian 只对"相关的变量组"有非零值。Ifopt 自动组装块状稀疏 Jacobian，传给 Ipopt。
 
-### 50.8.5 何时选 Ifopt vs CasADi vs 直接 API ⭐⭐
+### 50.8.5 何时选 Ifopt vs CasADi vs 直接 API ★★
 
 | 场景 | 推荐 | 原因 |
 |------|------|------|
@@ -1726,15 +1726,15 @@ TOWR 的约束分组（每个是一个 `ConstraintSet`）：
 | 已有 Pinocchio/OCS2 | **直接 API** | 避免额外依赖层 |
 | 教学/理解 NLP 结构 | **Ifopt** | 手写 Jacobian 加深理解 |
 
-> ⚠️ **常见陷阱**：Ifopt 的 `FillJacobianBlock` 要求你**手动计算并填充 Jacobian**。如果 Jacobian 写错了（符号错误、维度错误），Ipopt 不会报错，但会收敛到错误的解或根本不收敛。**一定要用有限差分验证你的解析 Jacobian**（Ipopt 有 `derivative_test` 选项）。
+> ⚠ **常见陷阱**：Ifopt 的 `FillJacobianBlock` 要求你**手动计算并填充 Jacobian**。如果 Jacobian 写错了（符号错误、维度错误），Ipopt 不会报错，但会收敛到错误的解或根本不收敛。**一定要用有限差分验证你的解析 Jacobian**（Ipopt 有 `derivative_test` 选项）。
 
-**练习 50.9** ⭐⭐：用 Ifopt 建模 7-DOF 臂 IK 问题（变量 = 关节角 q，约束 = 末端位置误差 < epsilon + 关节限位，代价 = 关节角变化量最小）。在 `FillJacobianBlock` 中调用 Pinocchio 的 `computeFrameJacobian`。
+**练习 50.9** ★★：用 Ifopt 建模 7-DOF 臂 IK 问题（变量 = 关节角 q，约束 = 末端位置误差 < epsilon + 关节限位，代价 = 关节角变化量最小）。在 `FillJacobianBlock` 中调用 Pinocchio 的 `computeFrameJacobian`。
 
 ---
 
-## 50.9 实战选型指南 ⭐⭐
+## 50.9 实战选型指南 ★★
 
-### 50.9.1 决策树：从问题到求解器 ⭐⭐
+### 50.9.1 决策树：从问题到求解器 ★★
 
 ```
 ┌─────────── 你的优化问题 ───────────┐
@@ -1782,7 +1782,7 @@ TOWR 的约束分组（每个是一个 `ConstraintSet`）：
 └─────────────────────────────────────┘
 ```
 
-### 50.9.2 按机器人类型的推荐 ⭐⭐
+### 50.9.2 按机器人类型的推荐 ★★
 
 | 机器人类型 | 典型问题 | 推荐方案 | 代表项目 |
 |-----------|---------|---------|---------|
@@ -1798,7 +1798,7 @@ TOWR 的约束分组（每个是一个 `ConstraintSet`）：
 | **无人机** | 轨迹优化 | CasADi + Ipopt | Minimum-snap 扩展 |
 | **无人机** | MPC (100Hz) | acados | PX4/Betaflight |
 
-### 50.9.3 性能-开发效率-维护性三角 ⭐⭐
+### 50.9.3 性能-开发效率-维护性三角 ★★
 
 ```
          性能
@@ -1814,7 +1814,7 @@ CasADi:     性能 ⭐⭐    开发效率 ⭐⭐⭐ 维护性 ⭐⭐
 acados:     性能 ⭐⭐⭐  开发效率 ⭐⭐  维护性 ⭐⭐
 ```
 
-### 50.9.4 常见错误选型案例 ⭐⭐
+### 50.9.4 常见错误选型案例 ★★
 
 | 错误 | 表现 | 正确做法 |
 |------|------|---------|
@@ -1825,15 +1825,15 @@ acados:     性能 ⭐⭐⭐  开发效率 ⭐⭐  维护性 ⭐⭐
 | 用 CasADi 部署但不做代码生成 | Python 运行时开销大 | 一定要 `.generate()` |
 | Ifopt 不验证 Jacobian | 收敛到错误解 | 打开 `derivative_test` |
 
-> ⚠️ **常见陷阱**：**不存在万能求解器**。每个求解器都有其最佳使用场景。把"ProxQP 最快"作为万金油使用是错误的——它在 MPC 结构问题上不如 HPIPM，在超大规模稀疏 QP 上不如 OSQP。**理解问题结构，匹配求解器**。
+> ⚠ **常见陷阱**：**不存在万能求解器**。每个求解器都有其最佳使用场景。把"ProxQP 最快"作为万金油使用是错误的——它在 MPC 结构问题上不如 HPIPM，在超大规模稀疏 QP 上不如 OSQP。**理解问题结构，匹配求解器**。
 
-**练习 50.10** ⭐⭐：你正在为一个 12-DOF 双足机器人设计控制系统。需要：(1) 1kHz WBC 计算接触力和关节力矩；(2) 50Hz MPC 规划未来 1 秒轨迹；(3) 离线轨迹优化生成步态库。分别选择什么求解器？给出理由。
+**练习 50.10** ★★：你正在为一个 12-DOF 双足机器人设计控制系统。需要：(1) 1kHz WBC 计算接触力和关节力矩；(2) 50Hz MPC 规划未来 1 秒轨迹；(3) 离线轨迹优化生成步态库。分别选择什么求解器？给出理由。
 
 ---
 
-## 50.10 从 QP/NLP 到下游章节 ⭐
+## 50.10 从 QP/NLP 到下游章节 ★
 
-### 50.10.1 本章知识在后续章节的应用 ⭐
+### 50.10.1 本章知识在后续章节的应用 ★
 
 ```
 足式/60_QP_NLP建模 QP/NLP 建模基础
@@ -1861,7 +1861,7 @@ acados:     性能 ⭐⭐⭐  开发效率 ⭐⭐  维护性 ⭐⭐
     └──→ 全局: 任何需要"优化 + 物理约束"的机器人问题
 ```
 
-### 50.10.2 具体衔接路径 ⭐
+### 50.10.2 具体衔接路径 ★
 
 **足式/80_接触力学与约束优化 摩擦锥**：本章的线性不等式约束 $Cx \le d$ 在 足式/80_接触力学与约束优化 中具象化为：
 
@@ -1871,7 +1871,7 @@ $$\begin{bmatrix} 1 & 0 & -\mu \\ -1 & 0 & -\mu \\ 0 & 1 & -\mu \\ 0 & -1 & -\mu
 
 **足式/110_OCS2完整栈与双线程MPC OCS2**：本章 50.5 的 HPIPM + SQP 在 足式/110_OCS2完整栈与双线程MPC 中作为 OCS2 的完整 MPC 后端使用，包括双线程架构（前端 MPC 求解 + 后端 WBC 执行）。
 
-### 50.10.3 研究前沿方向 ⭐⭐⭐
+### 50.10.3 研究前沿方向 ★★★
 
 | 方向 | 核心思想 | 代表工作 | 与本章关系 |
 |------|---------|---------|-----------|
@@ -1916,7 +1916,7 @@ $$\min \sum_i (s_i^+ + s_i^-) \quad \text{s.t.} \quad r_i(x) = s_i^+ - s_i^-, \;
 
 ---
 
-### 跨章综合练习 ⭐⭐⭐
+### 跨章综合练习 ★★★
 
 **综合题：从 RNEA 动力学到 WBC-QP 的完整组装**
 
@@ -2011,17 +2011,17 @@ $$\min \sum_i (s_i^+ + s_i^-) \quad \text{s.t.} \quad r_i(x) = s_i^+ - s_i^-, \;
 
 | # | 资料 | 难度 | 推荐理由 |
 |---|------|------|---------|
-| 1 | Stellato B., et al. (Math. Prog. Comp. 2020) — "OSQP: An operator splitting solver for quadratic programs" | ⭐⭐ | ADMM-based QP 求解器原理，本章 50.4 的核心参考 |
-| 2 | Bambade A., et al. (RSS 2022) — "PROXQP: Yet another Quadratic Programming Solver for Robotics and beyond" | ⭐⭐⭐ | 机器人 QP 最新 SOTA，理解 proximal augmented Lagrangian 方法 |
-| 3 | Frison G., Diehl M. (IFAC 2020) — "HPIPM: A high-performance quadratic programming framework for MPC" | ⭐⭐⭐ | 结构化 OCP-QP 的 Riccati 递推求解，足式/110_OCS2完整栈与双线程MPC OCS2 的后端 |
-| 4 | Andersson J., et al. (Math. Prog. Comp. 2019) — "CasADi: a software framework for nonlinear optimization and optimal control" | ⭐⭐ | 符号建模 + 代码生成框架，本章 50.7 的核心参考 |
-| 5 | Schwan R., et al. (CDC 2023) — "PIQP: A Proximal Interior-Point Quadratic Programming Solver" | ⭐⭐⭐ | 融合 proximal 与 interior-point 的新型 QP 求解器 |
-| 6 | Verschueren R., et al. (Math. Prog. Comp. 2022) — "acados: a modular open-source framework for fast embedded optimal control" | ⭐⭐⭐⭐ | 实时 NLP MPC 完整框架，SQP-RTI + 代码生成 |
-| 7 | Winkler A. (ETH PhD Thesis, 2018) — "Optimization-Based Motion Planning for Legged Robots" (TOWR) | ⭐⭐ | Ifopt 框架设计 + 腿足轨迹优化经典案例 |
-| 8 | Jallet W., et al. (T-RO 2025) — "ProxDDP: Proximal Constrained Trajectory Optimization" (Aligator) | ⭐⭐⭐⭐ | 研究前沿：ProxQP 思想推广到 DDP，Pinocchio 生态最新进展 |
-| 9 | Wang 等 (arXiv:2510.21773, 2025) — "Real-Time QP Solvers: A Concise Review and Practical Guide Towards Legged Robots" | ⭐⭐⭐ | 腿足 QP 求解器系统综述，本章 50.3.2.1 的权威选型依据（含 SFPW 嵌入式实测） |
-| 10 | Goulart P., Chen Y. (Math. Prog. Comp. 2026; arXiv:2405.12762, 2024) — "Clarabel: An interior-point solver for conic programs with quadratic objectives" | ⭐⭐⭐⭐ | 统一 QP/SOCP/SDP 的锥内点法，本章 50.2.6-50.2.8 锥层次与 QP→SOCP 转化的求解器基础 |
-| 11 | Bishop, et al. (CDC 2024) — "Code Generation for Conic Model-Predictive Control on Microcontrollers" (TinyMPC) | ⭐⭐⭐⭐ | 证明精确摩擦锥 SOCP-MPC 可在微控制器实时求解，刷新"SOCP 太慢"的旧认知（50.2.7） |
+| 1 | Stellato B., et al. (Math. Prog. Comp. 2020) — "OSQP: An operator splitting solver for quadratic programs" | ★★ | ADMM-based QP 求解器原理，本章 50.4 的核心参考 |
+| 2 | Bambade A., et al. (RSS 2022) — "PROXQP: Yet another Quadratic Programming Solver for Robotics and beyond" | ★★★ | 机器人 QP 最新 SOTA，理解 proximal augmented Lagrangian 方法 |
+| 3 | Frison G., Diehl M. (IFAC 2020) — "HPIPM: A high-performance quadratic programming framework for MPC" | ★★★ | 结构化 OCP-QP 的 Riccati 递推求解，足式/110_OCS2完整栈与双线程MPC OCS2 的后端 |
+| 4 | Andersson J., et al. (Math. Prog. Comp. 2019) — "CasADi: a software framework for nonlinear optimization and optimal control" | ★★ | 符号建模 + 代码生成框架，本章 50.7 的核心参考 |
+| 5 | Schwan R., et al. (CDC 2023) — "PIQP: A Proximal Interior-Point Quadratic Programming Solver" | ★★★ | 融合 proximal 与 interior-point 的新型 QP 求解器 |
+| 6 | Verschueren R., et al. (Math. Prog. Comp. 2022) — "acados: a modular open-source framework for fast embedded optimal control" | ★★★★ | 实时 NLP MPC 完整框架，SQP-RTI + 代码生成 |
+| 7 | Winkler A. (ETH PhD Thesis, 2018) — "Optimization-Based Motion Planning for Legged Robots" (TOWR) | ★★ | Ifopt 框架设计 + 腿足轨迹优化经典案例 |
+| 8 | Jallet W., et al. (T-RO 2025) — "ProxDDP: Proximal Constrained Trajectory Optimization" (Aligator) | ★★★★ | 研究前沿：ProxQP 思想推广到 DDP，Pinocchio 生态最新进展 |
+| 9 | Wang 等 (arXiv:2510.21773, 2025) — "Real-Time QP Solvers: A Concise Review and Practical Guide Towards Legged Robots" | ★★★ | 腿足 QP 求解器系统综述，本章 50.3.2.1 的权威选型依据（含 SFPW 嵌入式实测） |
+| 10 | Goulart P., Chen Y. (Math. Prog. Comp. 2026; arXiv:2405.12762, 2024) — "Clarabel: An interior-point solver for conic programs with quadratic objectives" | ★★★★ | 统一 QP/SOCP/SDP 的锥内点法，本章 50.2.6-50.2.8 锥层次与 QP→SOCP 转化的求解器基础 |
+| 11 | Bishop, et al. (CDC 2024) — "Code Generation for Conic Model-Predictive Control on Microcontrollers" (TinyMPC) | ★★★★ | 证明精确摩擦锥 SOCP-MPC 可在微控制器实时求解，刷新"SOCP 太慢"的旧认知（50.2.7） |
 
 ---
 

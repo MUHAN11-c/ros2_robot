@@ -2,7 +2,7 @@
 
 # 第 67 章：Perceptive MPC——让 MPC "长眼睛"的地形感知控制
 
-> **难度**：⭐⭐⭐ | **预计学时**：25-30 小时 | **前置**：足式/110_OCS2完整栈与双线程MPC（OCS2 完整栈）、足式/160_感知驱动落脚规划（感知驱动落脚规划）
+> **难度**：★★★ | **预计学时**：25-30 小时 | **前置**：足式/110_OCS2完整栈与双线程MPC（OCS2 完整栈）、足式/160_感知驱动落脚规划（感知驱动落脚规划）
 >
 > **一句话概要**：Perceptive MPC 把高程图、SDF、地形法向量等感知信息嵌入 OCS2 的代价函数和约束中，使 NMPC 能在线生成避障、适应地形的全自由度运动——这是 ETH RSL 在 ANYmal 上实现鲁棒崎岖地形行走的核心技术，也是经典 MPC 与感知融合的标杆工作（Grandia et al. T-RO 2023）。
 
@@ -10,7 +10,7 @@
 
 ## 前置自测
 
-📋 **答不出 >= 2 题 --> 先回对应章节复习**
+◆ **答不出 >= 2 题 --> 先回对应章节复习**
 
 1. **[足式/110_OCS2完整栈与双线程MPC]** OCS2 的 SQP 求解器如何处理不等式约束？Real-Time Iteration（RTI）只做 1 次 SQP 迭代的前提是什么？
 2. **[足式/110_OCS2完整栈与双线程MPC]** OCS2 的双线程架构中，MPC 线程和 MRT 线程如何通过 Triple Buffer 通信？为什么这样设计？
@@ -56,7 +56,7 @@
 
 ---
 
-## 67.1 从盲 MPC 到感知 MPC ⭐
+## 67.1 从盲 MPC 到感知 MPC ★
 
 > **本节解决什么问题**：建立"为什么需要把感知嵌入 MPC"的动机——不是因为技术上能做，而是因为盲 MPC 在真实崎岖地形上会系统性地失效。
 
@@ -171,9 +171,9 @@ Grandia 2023 的历史地位在于：它是较早系统性展示**实机 100 Hz 
 
 > **跨章桥接（回顾足式/110_OCS2完整栈与双线程MPC）**：上面写的 OCP $\min \sum l(x,u)$ s.t. $\dot{x}=f(x,u),\ h(x,u)\geq 0$ 正是 110 章 OCS2 求解的标准连续时间最优控制问题——状态 $x$ 含躯体位姿/速度与关节状态，输入 $u$ 含接触力/关节指令，$f$ 是 Centroidal 或全身动力学，$h$ 是摩擦锥与关节限位。110 章用 SQP 把它线性化、用 HPIPM 求解，RTI 模式每周期只做 1 次迭代。本章**不重写这套求解机制**，只在已有 OCP 上新增 $M$ 依赖的项 $l(x,u,M)$ 和 $g(x,M)\geq 0$。换句话说：感知 MPC = 110 章的 OCS2 求解器 + 本章的地形项，求解器一行代码都不用改——这正是"地形感知是增量"（67.5）在 OCP 层面的体现。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **概念误区：认为"感知 MPC"只是在 MPC 代价里加一个地形罚项**
+> ⚠ **概念误区：认为"感知 MPC"只是在 MPC 代价里加一个地形罚项**
 > **新手想法**：在代价函数里加 $w \cdot (z_{\text{foot}} - z_{\text{terrain}})^2$ 就是 Perceptive MPC 了。
 > **实际上**：如果只加代价项而不加约束，MPC 的 SQP 可能找到一条"代价低但物理不可行"的轨迹——比如穿过地形的轨迹。感知 MPC 需要同时处理**代价**（引导优选方向）和**约束**（强制可行性）。Grandia 2023 的关键创新之一，是把落脚区域等局部几何约束转化为线性/凸不等式；而 SDF 避障约束整体仍可能非凸，需要依赖 SQP 的局部线性化和 warm start。
 
@@ -196,7 +196,7 @@ Grandia 2023 的历史地位在于：它是较早系统性展示**实机 100 Hz 
 
 ---
 
-## 67.2 感知 MPC 系统架构 ⭐⭐
+## 67.2 感知 MPC 系统架构 ★★
 
 > **本节解决什么问题**：从全局视角理解 Grandia 2023 的完整管线——从传感器原始数据到 MPC 求解，中间经过了哪些步骤，每步的频率和延迟是多少。
 
@@ -355,9 +355,9 @@ Grandia 2023 把感知-规划管线明确分为三个子管线：
   - 三个线程完全无锁，无互斥量等待
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：感知线程和 MPC 线程竞争同一块内存**
+> ⚠ **编程陷阱：感知线程和 MPC 线程竞争同一块内存**
 > **错误做法**：MPC 线程直接引用 Elevation Map 对象，感知线程同时在更新它。
 > **现象**：MPC 在一次 SQP 迭代中间，SDF 数据被感知线程更新了 --> 前后不一致 --> 梯度跳变 --> SQP 不收敛。
 > **根本原因**：感知更新和 MPC 查询不是原子操作。在一次 MPC 求解的 5-10ms 内，感知线程可能完成一次更新。
@@ -381,7 +381,7 @@ Grandia 2023 把感知-规划管线明确分为三个子管线：
 
 ---
 
-## 67.3 地形约束构建 ⭐⭐
+## 67.3 地形约束构建 ★★
 
 > **本节解决什么问题**：从高程图原始栅格数据出发，一步步构建 MPC 能用的地形约束——可踩性分类 --> 平面分割 --> 凸不等式约束。
 
@@ -527,9 +527,9 @@ $$|\boldsymbol{n}_k^T \boldsymbol{p}_{\text{foot},i}(t_c) - d_k| \leq \epsilon_z
 | 鲁棒性 | 对高程图噪声敏感 | 平面拟合天然滤噪 |
 | 局限 | 无 | 只能描述平面区域 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：平面法向量方向不一致**
+> ⚠ **编程陷阱：平面法向量方向不一致**
 > **错误做法**：对不同的可踩区域，法向量可能朝上也可能朝下——取决于特征值分解的符号约定。
 > **现象**：某些平面的落脚约束"反了"——MPC 把脚推向地下而不是地面上。
 > **根本原因**：特征值分解返回的特征向量只确定了方向，不确定朝向（sign ambiguity）。
@@ -550,7 +550,7 @@ $$|\boldsymbol{n}_k^T \boldsymbol{p}_{\text{foot},i}(t_c) - d_k| \leq \epsilon_z
 
 ---
 
-## 67.4 SDF 碰撞避障约束 ⭐⭐⭐
+## 67.4 SDF 碰撞避障约束 ★★★
 
 > **本节解决什么问题**：摆动腿在移动过程中如何避开地形障碍——从 SDF 的计算到 MPC 的不等式约束公式化，包括梯度计算和光滑近似。
 
@@ -738,7 +738,7 @@ $$\frac{\partial^2 g_i}{\partial x^2} = \underbrace{J_{p}^\top \, \nabla_p^2\phi
 
 > 💡 **论文没告诉你的（数值 trick，来源：SQP 通用实践 + OCS2 罚函数实现）**：为什么敢丢掉 $\nabla_p^2\phi$？因为理想 SDF 满足 $\|\nabla\phi\|=1$（单位梯度，eikonal 性质），其等值面曲率在平直障碍附近接近零；只有在凹角/狭缝处曲率才显著。Gauss-Newton 丢掉这一项的代价，是在这些高曲率区域收敛略慢——但换来了**保证正定**的 QP 子问题（$J_p^\top J_p \succeq 0$ 天然半正定），避免了 SQP 因不定 Hessian 而失败。这是"用收敛速度换数值稳定"的经典工程取舍，论文不会讨论，但决定了实机上 MPC 跑不跑得稳。
 
-### ⚠️ 符号约定陷阱：clearance 的正负与约束方向
+### ⚠ 符号约定陷阱：clearance 的正负与约束方向
 
 源码里 `g(i) = weight * (distance - clearances(i))`，OCS2 约定 `StateInputConstraint` 表示 $g \geq 0$ 的不等式。代入得约束 $\phi(p_i) \geq c_i$——即"末端到障碍的有符号距离不小于 clearance"。这个方向看似显然，但有两个隐藏陷阱：
 
@@ -763,9 +763,9 @@ $$c(\phi) = \begin{cases} 0 & \text{if } \phi \geq d_{\min} \\ \frac{1}{2\mu}(d_
 
 这是一个二次惩罚，在 $\phi = d_{\min}$ 处连续且一阶可微（值和梯度都为零）。$\mu$ 是松弛参数。OCS2 通过 Augmented Lagrangian 方法（足式/110_OCS2完整栈与双线程MPC 已详述）来处理这类松弛约束。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：双线性插值在栅格边界的越界访问**
+> ⚠ **编程陷阱：双线性插值在栅格边界的越界访问**
 > **错误做法**：查询坐标 $(x, y)$ 刚好在栅格最后一列时，$i+1$ 越界。
 > **现象**：段错误（segfault）或读到垃圾值 --> SDF 约束的梯度异常 --> SQP 发散。
 > **正确做法**：调用插值函数之前，由距离场或地图接口把查询坐标裁剪到有效范围，或者在栅格外围加一圈 padding（填充最大安全距离）。当前 OCS2 的 `BilinearInterpolation.h` 只负责给定 `referenceCorner` 和四个角点值后的插值与梯度计算，边界选择应由调用方完成。
@@ -790,7 +790,7 @@ $$c(\phi) = \begin{cases} 0 & \text{if } \phi \geq d_{\min} \\ \frac{1}{2\mu}(d_
 
 ---
 
-## 67.5 地形感知代价函数 ⭐⭐
+## 67.5 地形感知代价函数 ★★
 
 > **本节解决什么问题**：约束保证了可行性（"不撞"、"不踩空"），但 MPC 还需要代价函数来引导**优选方向**——在所有可行轨迹中，哪条最好？
 
@@ -877,9 +877,9 @@ $$J = \underbrace{J_{\text{vel}} + J_{\text{ori}} + J_{\text{input}}}_{\text{盲
 
 > 💡 **论文没告诉你的（来源：OCS2 `SoftConstraintPenalty` 实现）**：软约束不是"把约束乘个大权重塞进代价"那么简单。OCS2 的 Augmented Lagrangian 实现会**在迭代中动态调整罚权和对偶变量**——初期罚权小（允许探索），随迭代增大（逼近可行）。这避免了固定大权重导致的两个老问题：权重太小约束形同虚设，权重太大 QP 病态（Hessian 条件数爆炸、SQP 数值失败）。这正是 67.4 末尾"光滑惩罚 + Augmented Lagrangian"那句话的工程内核。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：代价函数中 max(0, x) 的不可微点**
+> ⚠ **编程陷阱：代价函数中 max(0, x) 的不可微点**
 > **错误做法**：直接在代价中用 `std::max(0.0, x)`。
 > **现象**：当 $x$ 从负变正时，CppAD 计算的梯度在 $x=0$ 处不连续 --> SQP 的二次子问题不正定 --> 求解失败。
 > **正确做法**：用光滑近似，如 softplus：$\text{softplus}(x) = \frac{1}{\beta}\log(1 + e^{\beta x})$，其中 $\beta$ 控制光滑程度。或者用 Huber-like 函数在零点附近做二次过渡。OCS2 的 `SoftConstraintPenalty` 类提供了这种光滑近似。
@@ -899,7 +899,7 @@ $$J = \underbrace{J_{\text{vel}} + J_{\text{ori}} + J_{\text{input}}}_{\text{盲
 
 ---
 
-## 67.6 Swing 轨迹地形适应 ⭐⭐
+## 67.6 Swing 轨迹地形适应 ★★
 
 > **本节解决什么问题**：MPC 输出的摆动腿轨迹需要适应地形——在台阶上抬高、在沟渠上跨越、在碎石区域绕行。这里的"适应"不仅是约束层面的（不碰撞），更是轨迹形状层面的（摆动高度、速度、形状应根据地形调整）。
 
@@ -990,9 +990,9 @@ Grandia 2023 通过 MPC 的代价函数间接控制摆动时间——控制输�
 
 > **本质洞察**：感知 MPC 的核心工程难题**不是算法本身,而是"离散感知"与"连续优化"之间的阻抗匹配**。高程图是离散的（4cm 栅格）、异步更新的（20 Hz），而 MPC 是连续的（连续状态/输入空间）、同步执行的（100 Hz）。Grandia 2023 的所有工程创新——双线性插值、SDF 预计算、凸区域分解、双线程架构——都是在解决同一个根本问题：如何让离散的感知数据无缝地流入连续的优化管线,既不引入非光滑性（破坏 SQP 收敛），也不引入过大延迟（破坏实时性）。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：摆动轨迹初始猜测穿过地形**
+> ⚠ **编程陷阱：摆动轨迹初始猜测穿过地形**
 > **错误做法**：初始猜测简单地从起点到终点做线性插值，不考虑中间的地形。
 > **现象**：SQP 第一次迭代时约束违反量极大 --> 线搜索步长几乎为零 --> SQP 不收敛 --> MPC 超时 --> 使用上一帧的旧策略 --> 控制器反应迟钝。
 > **正确做法**：初始猜测必须"基本安全"——至少不穿过地形。上面的算法通过查询路径上的最大地形高度来保证这一点。
@@ -1011,7 +1011,7 @@ Grandia 2023 通过 MPC 的代价函数间接控制摆动时间——控制输�
 
 ---
 
-## 67.7 OCS2 Perceptive 实现对照 ⭐⭐⭐
+## 67.7 OCS2 Perceptive 实现对照 ★★★
 
 > **本节解决什么问题**：把理论落实到代码——对照 OCS2 `ocs2_perceptive` 的真实接口和本章的教学简化模块，理解从距离场到 MPC 约束的代码路径。下面凡是标为“教学简化”的文件名都不是承诺真实仓库中存在同名文件。
 
@@ -1286,9 +1286,9 @@ hpipm_mode = "SPEED"           ; HPIPM 求解模式
 
 > **配置项注解（HPIPM 模式）**：`hpipm_mode` 有 `SPEED_ABS`、`SPEED`、`BALANCE`、`ROBUST` 几档，本质是内点法**精度/迭代次数与速度**的权衡。`SPEED` 用较松的收敛容差换最少迭代，适合 100 Hz 实时 MPC（每周期只有 5-10ms）；`ROBUST` 收敛更稳但更慢，适合离线或对数值稳定要求极高的场景。加入 SDF 约束后 QP 子问题变大，若出现求解不稳，可先尝试 `BALANCE` 再决定是否降频——这比盲目增大 `sqp_iterations` 更对症。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：分清运行时参数和 AD 代码生成内容**
+> ⚠ **编程陷阱：分清运行时参数和 AD 代码生成内容**
 > **错误理解**：修改了 SDF clearance / `min_distance` 后，必须删除 CppADCodeGen 的 `.so` 文件。
 > **实际情况**：在 OCS2 的 `EndEffectorDistanceConstraint(CppAd)` 中，clearance 和距离场通过 `set(clearance, distanceTransform)` 在运行时传入；修改这类配置不需要重新生成运动学 `.so`。
 > **什么时候才需要重生成**：改变 AD 表达式结构、状态维度、末端数量、机器人模型或被录进 tape 的常量时，旧的生成库才会失效。修改地图、clearance、权重等运行时数据，应优先检查配置是否被节点重新加载，而不是盲目删除代码生成缓存。
@@ -1307,7 +1307,7 @@ hpipm_mode = "SPEED"           ; HPIPM 求解模式
 
 ---
 
-## 🔬 研究视角：Grandia 2023 的贡献结构分析 ⭐⭐⭐
+## 🔬 研究视角：Grandia 2023 的贡献结构分析 ★★★
 
 > **本节解决什么问题**：前七节讲清了 Grandia 2023"做了什么、怎么做的"。本节从**研究方法论**的角度退一步问：这篇论文为什么够发 T-RO？它的贡献是如何分层的？读完它，你应该学会的不只是"感知 MPC 怎么写"，而是"如何评估一篇系统类机器人论文的贡献结构"。这是论文解读教学区别于普通技术讲解的核心价值。
 
@@ -1352,7 +1352,7 @@ Grandia 2023 的实验在 gaps（间隙）、slopes（斜坡）、stepping stone
 
 ---
 
-## 67.8 RL vs MPC 感知运动对比 ⭐⭐⭐
+## 67.8 RL vs MPC 感知运动对比 ★★★
 
 > **本节解决什么问题**：系统对比两种感知运动方案——Miki 2022 的 RL 方案（Science Robotics）和 Grandia 2023 的 MPC 方案（T-RO）——帮助理解各自的优势、局限和适用场景。
 
@@ -1445,7 +1445,7 @@ RL 策略通常是**反应式**的——只看当前观测，输出当前动作�
 
 **DTC（Deep Tracking Control, Jenelten 2024, Science Robotics, arXiv:2309.15462）**：**TO/MPC 生成参考轨迹，RL 策略负责跟踪**。注意方向——是优化器（基于模型、planning 准确、可泛化）输出运动参考，RL（离线学习、对模型失配鲁棒）把这条参考在真实动力学下执行下去。论文原话是"prior knowledge of motion can be rolled out from MPC"，RL 策略学的是"如何稳健地跟踪 MPC 给的参考"。
 
-> ⚠️ **常见记反的点（事实核实）**：很多人把 DTC 说成"RL 出参考、MPC 跟踪"——**方向反了**。DTC 的设计动机恰恰是：MPC 擅长**规划**（用模型前瞻、给出最优且满足约束的参考），但在真实机器人上因模型失配而**执行**不稳；RL 擅长**执行**（从数据中学会对抗失配），但缺乏前瞻规划。所以让各自做擅长的：**MPC 规划参考，RL 跟踪执行**。这正好把 Grandia 2023 的局限（确定性感知、执行端对噪声敏感，见 67.7 后 🔬 研究视角）补上了——参考仍由可审计的 MPC 给出，鲁棒性由 RL 兜住。
+> ⚠ **常见记反的点（事实核实）**：很多人把 DTC 说成"RL 出参考、MPC 跟踪"——**方向反了**。DTC 的设计动机恰恰是：MPC 擅长**规划**（用模型前瞻、给出最优且满足约束的参考），但在真实机器人上因模型失配而**执行**不稳；RL 擅长**执行**（从数据中学会对抗失配），但缺乏前瞻规划。所以让各自做擅长的：**MPC 规划参考，RL 跟踪执行**。这正好把 Grandia 2023 的局限（确定性感知、执行端对噪声敏感，见 67.7 后 🔬 研究视角）补上了——参考仍由可审计的 MPC 给出，鲁棒性由 RL 兜住。
 
 | 分工 | 谁来做 | 为什么 |
 |------|--------|--------|
@@ -1471,7 +1471,7 @@ Level 4: 统一（未来方向）
   (Amos & Kolter 2017 "OptNet", Agrawal 2019 "differentiable MPC")
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > 🧠 **思维陷阱：认为"RL 比 MPC 好"或"MPC 比 RL 好"**
 > **新手想法**："看了 ANYmal Parkour (RL) 的视频，MPC 完全不行啊"
@@ -1493,7 +1493,7 @@ Level 4: 统一（未来方向）
 
 ---
 
-## 67.9 部署实践 ⭐⭐
+## 67.9 部署实践 ★★
 
 > **本节解决什么问题**：从实验室到真实世界的部署，需要解决延迟预算、计算资源分配、降级策略等工程问题。
 
@@ -1575,9 +1575,9 @@ MPC 查询高程图的坐标变换
      → 用指数平滑过渡, 避免 MPC 看到的地形突然"跳"
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：MPC 线程没有设置实时优先级**
+> ⚠ **编程陷阱：MPC 线程没有设置实时优先级**
 > **错误做法**：用默认的 `SCHED_OTHER` 调度策略运行 MPC 线程。
 > **现象**：当系统负载高时（如 RViz 渲染、rosbag 录制），MPC 线程被抢占，求解时间从 8ms 突然跳到 30ms --> MPC 频率降到 33 Hz --> 控制器响应迟钝，机器人走路不稳。
 > **正确做法**：用 `pthread_setschedparam` 设置 `SCHED_FIFO` + 高优先级，或者用 `chrt -f 90 ./mpc_node` 启动。同时用 `isolcpus` 把 MPC 绑定到专用 CPU 核心。
@@ -1586,7 +1586,7 @@ MPC 查询高程图的坐标变换
 > **新手想法**："仿真中 $w_h = 100$ 效果完美，实机也用这个"
 > **实际上**：仿真的传感器模型（完美点云、零延迟）与实际传感器（噪声、遮挡、延迟）差异显著。通常需要在实机上重新调参——增大安全裕度、降低代价权重（避免过激反应）、增加地图平滑（降噪）。典型的 sim-to-real 调参工作量是仿真调参的 2-3 倍。
 
-### SDF 梯度计算的实现细节 ⭐⭐⭐
+### SDF 梯度计算的实现细节 ★★★
 
 SDF 碰撞约束是 Perceptive MPC 的核心。SDF 值通过双线性插值从离散栅格获得：
 
@@ -1600,7 +1600,7 @@ $$\frac{\partial d}{\partial y} = \frac{1}{\Delta y}\left[(1-s)(d_{01} - d_{00})
 
 这些梯度先在距离场接口中作为 $\nabla_p d$ 给出，再与末端运动学雅可比相乘传播到 MPC 的决策变量。OCS2 的 `BilinearInterpolation` 提供插值值和局部梯度，`EndEffectorDistanceConstraint(CppAd)` 负责把距离场梯度与末端位置雅可比组合起来。
 
-### 部署延迟优化技巧 ⭐⭐
+### 部署延迟优化技巧 ★★
 
 | 优化手段 | 延迟节省 | 实现难度 | 说明 |
 |---------|---------|---------|------|
@@ -1620,7 +1620,7 @@ $$\frac{\partial d}{\partial y} = \frac{1}{\Delta y}\left[(1-s)(d_{01} - d_{00})
 
 ---
 
-## 67.10 前沿：可微仿真与端到端感知运动 ⭐⭐⭐⭐
+## 67.10 前沿：可微仿真与端到端感知运动 ★★★★
 
 > **本节解决什么问题**：Grandia 2023 的 Perceptive MPC 是"感知数据 -> 手工设计的约束/代价 -> SQP 求解"的经典管线。近年来，两条新路径正在挑战这一范式：(1) 可微仿真使地形交互可以端到端反向传播；(2) 端到端学习直接从感知到动作，跳过显式 MPC。
 
@@ -1700,7 +1700,7 @@ def sdf_constraint(
 
 > **本质洞察**：Perceptive MPC 和端到端 RL 的分歧**不是**"哪个更好"的问题，**而是**"安全保证 vs 极限性能"的根本权衡。对于工业部署（矿井巡检、管道检修），Perceptive MPC 的可审计性和降级能力更重要——你需要向客户解释"为什么机器人做了这个决策"。对于研究探索（parkour、极端地形），端到端 RL 能达到更高的性能上限。2024-2026 的趋势是**融合两者**——用 MPC 提供安全框架和约束满足，用 RL 在 MPC 的约束空间内学习最优行为（DTC 模式），同时用可微仿真打通两者之间的梯度通道。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > 🧠 **思维陷阱：认为"可微仿真可以让 MPC 自动学会处理地形"**
 > **新手想法**："有了可微仿真，MPC 的代价函数权重和约束参数可以自动学出来，不需要手动调了"
@@ -1733,17 +1733,17 @@ def sdf_constraint(
 
 | 知识点 | 核心内容 | 难度 | 关联章节 |
 |--------|---------|------|---------|
-| 盲 MPC 的失效模式 | 落脚不可行、摆动碰撞、高度不匹配 | ⭐ | 足式/110_OCS2完整栈与双线程MPC |
-| 感知 MPC 系统架构 | 三层六模块管线，频率/延迟预算 | ⭐⭐ | 足式/110_OCS2完整栈与双线程MPC, 足式/160_感知驱动落脚规划 |
-| 可踩性分类 | 坡度+粗糙度+台阶检测，阈值判断 | ⭐⭐ | 足式/160_感知驱动落脚规划 |
-| 平面分割 | 连通域标记+协方差拟合，凸不等式约束 | ⭐⭐ | -- |
-| 2D SDF 计算 | EDT 距离变换，膨胀+边距+高斯模糊 | ⭐⭐ | 足式/160_感知驱动落脚规划 |
-| SDF 碰撞约束 | 距离场局部梯度 + 末端运动学雅可比 | ⭐⭐⭐ | 足式/40_CppAD与代码生成 |
-| 地形感知代价 | 高度跟踪、躯体避障、摆动回避 | ⭐⭐ | -- |
-| Swing 地形适应 | 查询路径最大高度，调整抬高 | ⭐⭐ | 足式/140_落脚点规划经典方法 |
-| OCS2 perceptive 源码 | Bilinear/TrilinearInterpolation, DistanceTransformInterface, EndEffectorDistanceConstraint | ⭐⭐⭐ | 足式/110_OCS2完整栈与双线程MPC |
-| RL vs MPC 对比 | Miki 2022 vs Grandia 2023，混合方案 | ⭐⭐⭐ | 足式/210_RL与MPC混合范式 |
-| 部署实践 | 延迟预算、核心绑定、降级策略 | ⭐⭐ | -- |
+| 盲 MPC 的失效模式 | 落脚不可行、摆动碰撞、高度不匹配 | ★ | 足式/110_OCS2完整栈与双线程MPC |
+| 感知 MPC 系统架构 | 三层六模块管线，频率/延迟预算 | ★★ | 足式/110_OCS2完整栈与双线程MPC, 足式/160_感知驱动落脚规划 |
+| 可踩性分类 | 坡度+粗糙度+台阶检测，阈值判断 | ★★ | 足式/160_感知驱动落脚规划 |
+| 平面分割 | 连通域标记+协方差拟合，凸不等式约束 | ★★ | -- |
+| 2D SDF 计算 | EDT 距离变换，膨胀+边距+高斯模糊 | ★★ | 足式/160_感知驱动落脚规划 |
+| SDF 碰撞约束 | 距离场局部梯度 + 末端运动学雅可比 | ★★★ | 足式/40_CppAD与代码生成 |
+| 地形感知代价 | 高度跟踪、躯体避障、摆动回避 | ★★ | -- |
+| Swing 地形适应 | 查询路径最大高度，调整抬高 | ★★ | 足式/140_落脚点规划经典方法 |
+| OCS2 perceptive 源码 | Bilinear/TrilinearInterpolation, DistanceTransformInterface, EndEffectorDistanceConstraint | ★★★ | 足式/110_OCS2完整栈与双线程MPC |
+| RL vs MPC 对比 | Miki 2022 vs Grandia 2023，混合方案 | ★★★ | 足式/210_RL与MPC混合范式 |
+| 部署实践 | 延迟预算、核心绑定、降级策略 | ★★ | -- |
 
 ### 本章在课程中的位置
 
@@ -1888,7 +1888,7 @@ def sdf_constraint(
 
 ### 环境配置
 
-> ⚠️ **前提**：以下命令基于 Ubuntu 20.04 + ROS Noetic（OCS2 的 perceptive 示例对 ROS1/catkin 支持最成熟）。ROS2 移植仍在演进，新分支以本机 checkout 为准。
+> ⚠ **前提**：以下命令基于 Ubuntu 20.04 + ROS Noetic（OCS2 的 perceptive 示例对 ROS1/catkin 支持最成熟）。ROS2 移植仍在演进，新分支以本机 checkout 为准。
 
 ```bash
 # 1. 系统依赖（OCS2 核心依赖，与 110 章一致）
@@ -1977,26 +1977,26 @@ roslaunch ocs2_legged_robot_ros legged_robot_sqp.launch
 
 | 文献 | 类型 | 难度 | 核心贡献 |
 |------|------|------|---------|
-| Grandia R., Jenelten F., Yang S., Farshidian F., Hutter M. (2023) "Perceptive Locomotion Through Nonlinear Model-Predictive Control" -- T-RO, Vol. 39, pp. 3402-3421 | 论文 | ⭐⭐⭐ | 本章核心：完整的感知 NMPC 管线 |
-| Miki T., Lee J., Hwangbo J., et al. (2022) "Learning robust perceptive locomotion for quadrupedal robots in the wild" -- Science Robotics, Vol. 7, eabk2822 | 论文 | ⭐⭐⭐ | RL 感知运动的标杆 |
-| OCS2 官方文档: https://leggedrobotics.github.io/ocs2/ | 文档 | ⭐⭐ | OCS2 框架使用指南 |
+| Grandia R., Jenelten F., Yang S., Farshidian F., Hutter M. (2023) "Perceptive Locomotion Through Nonlinear Model-Predictive Control" -- T-RO, Vol. 39, pp. 3402-3421 | 论文 | ★★★ | 本章核心：完整的感知 NMPC 管线 |
+| Miki T., Lee J., Hwangbo J., et al. (2022) "Learning robust perceptive locomotion for quadrupedal robots in the wild" -- Science Robotics, Vol. 7, eabk2822 | 论文 | ★★★ | RL 感知运动的标杆 |
+| OCS2 官方文档: https://leggedrobotics.github.io/ocs2/ | 文档 | ★★ | OCS2 框架使用指南 |
 
 ### 进阶
 
 | 文献 | 类型 | 难度 | 核心贡献 |
 |------|------|------|---------|
-| Jenelten F., He J., Farshidian F., Hutter M. (2024) "DTC: Deep Tracking Control" -- Science Robotics | 论文 | ⭐⭐⭐ | RL+MPC 混合架构 |
-| Hoeller D., et al. (2024) "ANYmal parkour" -- Science Robotics | 论文 | ⭐⭐⭐ | 纯 RL 极限感知运动 |
-| Corbères A., et al. (2025) "Perceptive Locomotion through Whole-Body MPC and Optimal Region Selection" -- IEEE Access | 论文 | ⭐⭐⭐ | 全身 MPC + 最优区域选择 |
-| Jenelten F., et al. (2022) "TAMOLS: Terrain-Aware Motion Optimization for Legged Systems" -- T-RO | 论文 | ⭐⭐⭐ | 地形感知运动优化，SDF 碰撞回避 |
+| Jenelten F., He J., Farshidian F., Hutter M. (2024) "DTC: Deep Tracking Control" -- Science Robotics | 论文 | ★★★ | RL+MPC 混合架构 |
+| Hoeller D., et al. (2024) "ANYmal parkour" -- Science Robotics | 论文 | ★★★ | 纯 RL 极限感知运动 |
+| Corbères A., et al. (2025) "Perceptive Locomotion through Whole-Body MPC and Optimal Region Selection" -- IEEE Access | 论文 | ★★★ | 全身 MPC + 最优区域选择 |
+| Jenelten F., et al. (2022) "TAMOLS: Terrain-Aware Motion Optimization for Legged Systems" -- T-RO | 论文 | ★★★ | 地形感知运动优化，SDF 碰撞回避 |
 
 ### 前沿
 
 | 文献 | 类型 | 难度 | 核心贡献 |
 |------|------|------|---------|
-| Jacquet M., Harms M., Alexis K. (2025) "Neural NMPC through signed distance field encoding for collision avoidance" -- IJRR | 论文 | ⭐⭐⭐⭐ | 神经网络 SDF 编码 + NMPC |
-| Jenelten F., et al. (2025) "High-speed control and navigation for quadrupedal robots on complex and discrete terrain" -- Science Robotics | 论文 | ⭐⭐⭐ | DTC 路线推向高速 + 离散踏石 |
-| Lee J., et al. (2025) "Attention-based map encoding for learning generalized legged locomotion" -- Science Robotics | 论文 | ⭐⭐⭐ | 注意力地图编码，泛化运动表征 |
-| Agarwal A., et al. (2023) "Legged Locomotion in Challenging Terrains using Egocentric Vision" -- CoRL | 论文 | ⭐⭐⭐ | 第一人称视觉驱动运动 |
-| Yang R., et al. (2023) "Neural volumetric memory for visual locomotion control" -- CVPR | 论文 | ⭐⭐⭐⭐ | 神经体积记忆 |
-| Felzenszwalb P., Huttenlocher D. (2012) "Distance Transforms of Sampled Functions" -- Theory of Computing, Vol. 8, pp. 415-428 | 论文 | ⭐⭐ | EDT 算法的理论基础 |
+| Jacquet M., Harms M., Alexis K. (2025) "Neural NMPC through signed distance field encoding for collision avoidance" -- IJRR | 论文 | ★★★★ | 神经网络 SDF 编码 + NMPC |
+| Jenelten F., et al. (2025) "High-speed control and navigation for quadrupedal robots on complex and discrete terrain" -- Science Robotics | 论文 | ★★★ | DTC 路线推向高速 + 离散踏石 |
+| Lee J., et al. (2025) "Attention-based map encoding for learning generalized legged locomotion" -- Science Robotics | 论文 | ★★★ | 注意力地图编码，泛化运动表征 |
+| Agarwal A., et al. (2023) "Legged Locomotion in Challenging Terrains using Egocentric Vision" -- CoRL | 论文 | ★★★ | 第一人称视觉驱动运动 |
+| Yang R., et al. (2023) "Neural volumetric memory for visual locomotion control" -- CVPR | 论文 | ★★★★ | 神经体积记忆 |
+| Felzenszwalb P., Huttenlocher D. (2012) "Distance Transforms of Sampled Functions" -- Theory of Computing, Vol. 8, pp. 415-428 | 论文 | ★★ | EDT 算法的理论基础 |

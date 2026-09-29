@@ -6,7 +6,7 @@
 
 ---
 
-### §A4.1 迭代 EKF (IEKF) 完整推导与 Gauss-Newton 等价 ⭐⭐
+### §A4.1 迭代 EKF (IEKF) 完整推导与 Gauss-Newton 等价 ★★
 
 #### A4.1.1 问题设定与迭代更新式
 
@@ -62,7 +62,7 @@ $\lambda$ 按 Nielsen 策略：接受步时 $\lambda\leftarrow\lambda\cdot\max(1
 
 **Line-search IEKF** (Särkkä & Svensson *BFS* 2ed §7.5; ICASSP 2020)：求出 GN 方向后 $\hat x^{(j+1)}=\hat x^{(j)}+\alpha\Delta$，取 $\alpha\in(0,1]$ 满足 Armijo 条件 $J(\hat x+\alpha\Delta)\le J(\hat x)+c_1\alpha\nabla J^\top\Delta$（$c_1=10^{-4}$，下降方向满足 $\nabla J^\top\Delta<0$），否则 $\alpha\leftarrow\alpha/2$ 回溯。
 
-#### A4.1.3b IEKF 收敛性质的直觉解释 ⭐⭐
+#### A4.1.3b IEKF 收敛性质的直觉解释 ★★
 
 **为什么 IEKF 能改善 EKF？** 考虑一个强非线性观测 $h(x)=\arctan(x)$。EKF 在先验均值 $\hat x^-=5$ 处线性化，得到 $H=1/(1+25)=0.038$——这是一个非常平坦的斜率。即使观测与预测差异很大，小 $H$ 导致 $K$ 很小，更新几乎不动。但实际后验的众数可能在 $x=1$ 附近——在那里 $H=1/2=0.5$，线性化好得多。
 
@@ -79,7 +79,7 @@ IEKF 的迭代正是解决这个问题：每次迭代在新的点重新线性化
 
 > **本质洞察**：IEKF 的本质不是"多做几次 EKF 更新"，而是"在 MAP 目标函数上做 Gauss-Newton 迭代"。每次迭代改善的是线性化点的质量，而非信息量。如果先验已经很准（$\hat x^-$ 接近 MAP），一次迭代就够了（退化为 EKF）；如果先验很差或观测非线性很强，多次迭代能显著改善。
 
-⚠️ **陷阱：把 IEKF 迭代理解为"多次利用同一观测"**
+⚠ **陷阱：把 IEKF 迭代理解为"多次利用同一观测"**
 
 错误想法："IEKF 对同一个 $y_k$ 做了 $J_{\max}$ 次更新，所以信息被用了 $J_{\max}$ 倍。"
 
@@ -97,7 +97,7 @@ $$
 
 ---
 
-### §A4.2 Iterated Sigma-Point KF (ISPKF) ⭐⭐⭐⭐
+### §A4.2 Iterated Sigma-Point KF (ISPKF) ★★★★
 
 #### A4.2.1 算法骨架
 
@@ -121,7 +121,7 @@ Barfoot 2ed §4.2.11 (p.140) 明确指出：*"upon convergence, the ISPKF provid
 
 ---
 
-### §A4.3 IKFoM 迭代流形 EKF 补充 ⭐⭐
+### §A4.3 IKFoM 迭代流形 EKF 补充 ★★
 
 #### A4.3.1 $\boxplus/\boxminus/\oplus$ 三算子
 
@@ -151,7 +151,7 @@ $$
 
 ---
 
-### §A4.4 Rauch-Tung-Striebel 平滑器家族 ⭐⭐⭐
+### §A4.4 Rauch-Tung-Striebel 平滑器家族 ★★★
 
 #### A4.4.1 线性 RTS（Rauch-Tung-Striebel 1965, *AIAA J.* 3(8):1445）
 
@@ -185,7 +185,7 @@ Särkkä *BFS* 2ed §13 统一为 **Gaussian RTS 家族**：核心是交叉协�
 
 **iterated EKS / IPLS** (Särkkä 2ed §13.7, Ch.10)：对 RTS 整体做 GN 迭代，等价于整条轨迹 MAP 的 Gauss-Newton，是 Bell 1994 定理的自然推广。
 
-#### A4.4.3b RTS 平滑器数值示例：1D 匀速模型，5 步完整推演 ⭐⭐
+#### A4.4.3b RTS 平滑器数值示例：1D 匀速模型，5 步完整推演 ★★
 
 前面给出了 RTS 公式 (A4.5) 和三种等价视角，但公式中 $C_k$、$P_{k|N}$ 到底长什么样？平滑器"利用未来信息"到底怎么体现在数字上？本节用最简单的 1D 匀速模型做 5 步完整手算，让读者直观看到"滤波→平滑"的改善效果。
 
@@ -252,7 +252,7 @@ $$
 
 > **本质洞察**：RTS 平滑器的本质是利用"未来信息"修正过去的估计。在滤波阶段，$k=3$ 处的异常观测 $y_3=2.7$ 没有被修正的手段——滤波器只能接受。但平滑器在 backward pass 中，把 $k=4$ 处 $y_4=4.3$ 的信息向后传递，告诉 $k=3$："别被那个偏低观测骗了，后续观测显示系统仍在匀速前进。" 这与 Batch MAP 视角完全一致：把所有观测同时考虑，相当于同时解一个块三对角线性系统。
 
-> ⚠️ **陷阱：对含延迟观测的系统直接套用 RTS**
+> ⚠ **陷阱：对含延迟观测的系统直接套用 RTS**
 >
 > 错误做法：某些传感器有固定延迟（如视觉管线的 50ms 延迟），工程师直接把延迟观测按接收时间戳对齐，然后跑 RTS。
 >
@@ -321,7 +321,7 @@ for k in range(len(y_obs)):
 
 ##### 练习
 
-**练习 3**（⭐⭐）：把上述 1D 匀速模型扩展为 2D（状态 $(p_x,v_x,p_y,v_y)$，$F$ 为 $4\times 4$ 块对角），观测仍为位置 $H=[I_{2\times 2},0_{2\times 2}]$。生成 10 步轨迹（含转弯），运行 KF + RTS。验证每个时刻 $P_{k|N}\preceq P_{k|k}$（即 $P_{k|k}-P_{k|N}$ 半正定）。绘制滤波 vs 平滑轨迹与真值的对比图。观察在转弯处平滑器的改善是否比直线段更大，并解释原因。
+**练习 3**（★★）：把上述 1D 匀速模型扩展为 2D（状态 $(p_x,v_x,p_y,v_y)$，$F$ 为 $4\times 4$ 块对角），观测仍为位置 $H=[I_{2\times 2},0_{2\times 2}]$。生成 10 步轨迹（含转弯），运行 KF + RTS。验证每个时刻 $P_{k|N}\preceq P_{k|k}$（即 $P_{k|k}-P_{k|N}$ 半正定）。绘制滤波 vs 平滑轨迹与真值的对比图。观察在转弯处平滑器的改善是否比直线段更大，并解释原因。
 
 #### A4.4.4 RTS on Manifolds
 
@@ -343,7 +343,7 @@ GTSAM `gtsam_unstable/nonlinear/` 提供两种：
 
 ---
 
-### §A4.5 Moving Horizon Estimation 简介 ⭐⭐⭐
+### §A4.5 Moving Horizon Estimation 简介 ★★★
 
 #### A4.5.1 定义（Rao-Rawlings-Lee, *Automatica* 37(10):1619, 2001）
 
@@ -373,7 +373,7 @@ $$
 
 Schur 补 $\tilde H_{rr}=A_{rr}-A_{rm}A_{mm}^{-1}A_{mr}$, $\tilde b_r=b_r-A_{rm}A_{mm}^{-1}b_m$，对 $A_{mm}$ 做 `SelfAdjointEigenSolver` 求伪逆（阈值过滤近零特征值），恢复等价先验 $(J,r)$ 注入下一轮。**计算复杂度排序**：$\text{EKF}<\text{IEKF}<\text{RTS/EKS}<\text{FLS}\approx\text{MHE}<\text{Local BA}\ll\text{Full BA}$。
 
-#### A4.5.4 MHE 的 Arrival Cost 维护：从理论到实践 ⭐⭐⭐
+#### A4.5.4 MHE 的 Arrival Cost 维护：从理论到实践 ★★★
 
 **Arrival cost 的物理意义**。$\Gamma_{T-N}(x_{T-N})$ 编码了窗口起点之前所有观测对 $x_{T-N}$ 的约束。如果没有 arrival cost，MHE 就"忘记"了窗外的信息——这在 SLAM 中会导致滑窗之外的相对约束完全丢失，轨迹精度随时间退化。
 
@@ -394,7 +394,7 @@ Schur 补 $\tilde H_{rr}=A_{rr}-A_{rm}A_{mm}^{-1}A_{mr}$, $\tilde b_r=b_r-A_{rm}
 
 这个过程在 iSAM2 中对应 `ISAM2::marginalizeLeaves`。
 
-⚠️ **陷阱：边缘化时不使用 FEJ**
+⚠ **陷阱：边缘化时不使用 FEJ**
 
 错误做法：每次窗口滑动时，用**当前最新估计**重新线性化所有因子再做 Schur 补。
 
@@ -404,7 +404,7 @@ Schur 补 $\tilde H_{rr}=A_{rr}-A_{rm}A_{mm}^{-1}A_{mr}$, $\tilde b_r=b_r-A_{rm}
 
 正确做法：边缘化时保存当前估计作为 `x0`，后续迭代中先验残差始终在 `x0` 处线性化（FEJ 原则）。OpenVINS 的 `StateHelper::marginalize` 严格执行此规则。
 
-#### A4.5.5 从 MHE 到 Full Graph：连续体中的选择 ⭐⭐
+#### A4.5.5 从 MHE 到 Full Graph：连续体中的选择 ★★
 
 滤波、MHE 和 BA 不是三种独立方法，而是同一个"保留多少历史"的连续参数 $N$（窗口大小）的不同取值：
 
@@ -439,11 +439,11 @@ N=∞: 全局 BA（COLMAP, 离线建图）
 
 ---
 
-### §A4.5b 全景补充方法：EnKF、Schmidt-KF、$H_\infty$、连续-离散变体 ⭐⭐⭐
+### §A4.5b 全景补充方法：EnKF、Schmidt-KF、$H_\infty$、连续-离散变体 ★★★
 
 在 A1–A3 集中讨论了 Kalman 族的主线方法后，工程实践中还有三类重要变体经常出现在文献和代码中，但不属于"流形"或"迭代"的主线叙事。本节逐一介绍它们的动机、核心公式和适用场景，然后在 §A4.6 的全景大表中统一收录。
 
-#### A4.5b.1 Ensemble Kalman Filter (EnKF) ⭐⭐⭐
+#### A4.5b.1 Ensemble Kalman Filter (EnKF) ★★★
 
 ##### 动机：当状态维度太高，协方差矩阵存不下
 
@@ -490,7 +490,7 @@ EnKF 的采样本质使其在 $n<100$ 时精度不如 UKF/CKF，但在 $n>1000$ 
 
 > **本质洞察**：EnKF 把"协方差矩阵"从显式存储变成"集合统计量"——这与粒子滤波有相似之处，但 EnKF 保留了高斯假设下的 Kalman 增益结构，不需要粒子滤波的重采样。可以类比为：KF 是精确数学，UKF 是确定性数值积分，EnKF 是蒙特卡洛积分。
 
-⚠️ **陷阱：集合成员数太少导致 rank deficiency**
+⚠ **陷阱：集合成员数太少导致 rank deficiency**
 
 错误做法：对 $n=1000$ 维状态只用 $N_e=10$ 个集合成员。
 
@@ -526,11 +526,11 @@ EnKF 的采样本质使其在 $n<100$ 时精度不如 UKF/CKF，但在 $n>1000$ 
 
 ##### 练习
 
-1.（⭐⭐⭐）实现一个 50 维线性系统的 EnKF（$N_e=20$），与精确 KF 对比 RMSE。观察 rank deficiency 的影响。然后加入 inflation（$\alpha=0.02$），看 RMSE 如何变化。
+1.（★★★）实现一个 50 维线性系统的 EnKF（$N_e=20$），与精确 KF 对比 RMSE。观察 rank deficiency 的影响。然后加入 inflation（$\alpha=0.02$），看 RMSE 如何变化。
 
-2.（⭐⭐⭐⭐）把上述 EnKF 扩展到非线性观测 $y_k=\|x_k[1:3]\|+v_k$（只观测前三维的范数），其余维度通过动力学耦合间接观测。讨论：哪些维度的估计精度接近 KF？哪些严重退化？这对"观测信息如何通过动力学耦合传播"给出了什么直觉？
+2.（★★★★）把上述 EnKF 扩展到非线性观测 $y_k=\|x_k[1:3]\|+v_k$（只观测前三维的范数），其余维度通过动力学耦合间接观测。讨论：哪些维度的估计精度接近 KF？哪些严重退化？这对"观测信息如何通过动力学耦合传播"给出了什么直觉？
 
-#### A4.5b.2 Schmidt-Kalman Filter (Consider Filter) ⭐⭐⭐
+#### A4.5b.2 Schmidt-Kalman Filter (Consider Filter) ★★★
 
 ##### 动机：有些参数不想估计，但不能假装它们不存在
 
@@ -565,7 +565,7 @@ Kalman 增益使用 $\tilde P$ 而非 $P_{xx}$，确保在计算新息协方差 
 
 近年来，Wu-Roumeliotis（U. of Minnesota, "Inverse Schmidt Estimators", mars.cs.umn.edu）提出了逆 Schmidt 估计器，可以在已有 Schmidt 近似上高效恢复部分考虑参数的估计。Ren et al.（*Astrodynamics* 2024）在 Lie 群上扩展了 Schmidt-KF，用于航天器姿态估计中处理考虑参数。
 
-⚠️ **陷阱：对变化中的参数使用 Schmidt-KF**
+⚠ **陷阱：对变化中的参数使用 Schmidt-KF**
 
 错误做法：传感器 bias 实际在漂移，但工程师用 Schmidt-KF "consider" 它而不估计。
 
@@ -575,7 +575,7 @@ Kalman 增益使用 $\tilde P$ 而非 $P_{xx}$，确保在计算新息协方差 
 
 正确做法：对需要在线跟踪的参数使用标准状态增广；只对真正"不变或近不变"的参数使用 Schmidt-KF。
 
-#### A4.5b.3 $H_\infty$ Filter (Minimax Robust Filter) ⭐⭐⭐
+#### A4.5b.3 $H_\infty$ Filter (Minimax Robust Filter) ★★★
 
 ##### 动机：当噪声统计特性未知
 
@@ -615,7 +615,7 @@ $$K_k=P_{k|k-1}H_k^\top(H_kP_{k|k-1}H_k^\top+R_k-\gamma^{-2}L_k^\top L_k P_{k|k-
 
 Simon（"From Here to Infinity", Cleveland State University tutorial, 2006）提供了一个优秀的入门教程，FilterPy 库也包含 $H_\infty$ 滤波器实现。
 
-⚠️ **陷阱：把 $\gamma$ 设得太小**
+⚠ **陷阱：把 $\gamma$ 设得太小**
 
 错误做法：追求"极限鲁棒性"而把 $\gamma$ 设成接近理论下限。
 
@@ -646,13 +646,13 @@ Simon（"From Here to Infinity", Cleveland State University tutorial, 2006）提
 
 ##### 练习
 
-1.（⭐⭐）实现一个标量 $H_\infty$ 滤波器（$n=1$），对比不同 $\gamma$ 值下的增益 $K$ 与标准 KF 增益的差异。绘制 $K$ vs $\gamma$ 曲线，找到 $\gamma_{\min}$ 的数值。
+1.（★★）实现一个标量 $H_\infty$ 滤波器（$n=1$），对比不同 $\gamma$ 值下的增益 $K$ 与标准 KF 增益的差异。绘制 $K$ vs $\gamma$ 曲线，找到 $\gamma_{\min}$ 的数值。
 
-2.（⭐⭐⭐）对一个 2D 匀速模型，分别用 KF 和 $H_\infty$ 滤波器处理含 outlier 的观测序列（95% 正常高斯，5% 均匀随机大噪声）。比较两者的 RMSE。预期 $H_\infty$ 在有 outlier 时更鲁棒，但在无 outlier 时 RMSE 稍大。
+2.（★★★）对一个 2D 匀速模型，分别用 KF 和 $H_\infty$ 滤波器处理含 outlier 的观测序列（95% 正常高斯，5% 均匀随机大噪声）。比较两者的 RMSE。预期 $H_\infty$ 在有 outlier 时更鲁棒，但在无 outlier 时 RMSE 稍大。
 
-3.（⭐⭐⭐⭐）从理论上证明：当 $\gamma\to\infty$ 时，$H_\infty$ 增益公式退化为标准 KF 增益。提示：展开 $(HPH^\top+R-\gamma^{-2}L^\top LP)^{-1}$ 在 $\gamma^{-2}\to 0$ 时的一阶近似。
+3.（★★★★）从理论上证明：当 $\gamma\to\infty$ 时，$H_\infty$ 增益公式退化为标准 KF 增益。提示：展开 $(HPH^\top+R-\gamma^{-2}L^\top LP)^{-1}$ 在 $\gamma^{-2}\to 0$ 时的一阶近似。
 
-#### A4.5b.4 连续-离散 Kalman 族 (CD-KF/CD-EKF/CD-UKF) ⭐⭐⭐
+#### A4.5b.4 连续-离散 Kalman 族 (CD-KF/CD-EKF/CD-UKF) ★★★
 
 ##### 动机：物理模型是连续的，传感器是离散的
 
@@ -695,7 +695,7 @@ $$\dot P=F_c P+PF_c^\top+L_cQ_cL_c^\top$$
 
 > **本质洞察**：连续-离散方法不是"更高级的 EKF"，而是"在时间轴上更忠实于物理的 EKF"。它解决的核心问题是：当采样间隔大于系统特征时间时，离散化近似会严重失真。
 
-⚠️ **陷阱：在 CD-EKF 中忘记 $Q_c$ 与 $Q_d$ 的单位差异**
+⚠ **陷阱：在 CD-EKF 中忘记 $Q_c$ 与 $Q_d$ 的单位差异**
 
 错误做法：直接把连续谱密度 $Q_c$（单位如 $\text{m}^2/\text{s}^3$）当作离散方差 $Q_d$（单位如 $\text{m}^2/\text{s}^2$）塞入 Riccati ODE。
 
@@ -707,13 +707,13 @@ $$\dot P=F_c P+PF_c^\top+L_cQ_cL_c^\top$$
 
 **练习**：
 
-1.（⭐⭐）对一维阻尼弹簧系统 $\ddot x + 2\zeta\omega_n\dot x + \omega_n^2 x = w(t)$，分别用 Euler 离散化和精确矩阵指数离散化（`scipy.linalg.expm`）计算 $F_d, Q_d$。取 $\Delta t=0.1$ s, $\omega_n=10$ rad/s, $\zeta=0.1$。比较两种方法的 $Q_d$ 差异，解释为什么 Euler 在此参数下严重不准确（提示：$\omega_n\Delta t=1$，一步跨越了振荡周期的约 16%）。
+1.（★★）对一维阻尼弹簧系统 $\ddot x + 2\zeta\omega_n\dot x + \omega_n^2 x = w(t)$，分别用 Euler 离散化和精确矩阵指数离散化（`scipy.linalg.expm`）计算 $F_d, Q_d$。取 $\Delta t=0.1$ s, $\omega_n=10$ rad/s, $\zeta=0.1$。比较两种方法的 $Q_d$ 差异，解释为什么 Euler 在此参数下严重不准确（提示：$\omega_n\Delta t=1$，一步跨越了振荡周期的约 16%）。
 
-2.（⭐⭐⭐）实现一个简单的 CD-EKF：连续动力学为二维匀圆运动 $\dot\theta=\omega, \dot r=0$，观测为离散笛卡尔位置 $(x,y)=(r\cos\theta, r\sin\theta)+v$。用 `scipy.integrate.solve_ivp` 积分 Riccati ODE，在每次 GPS 观测（1 Hz）时做离散 EKF 更新。与"简单 Euler 离散化 EKF"对比 RMSE，取 $\omega=2\pi$ rad/s（一秒一圈）。
+2.（★★★）实现一个简单的 CD-EKF：连续动力学为二维匀圆运动 $\dot\theta=\omega, \dot r=0$，观测为离散笛卡尔位置 $(x,y)=(r\cos\theta, r\sin\theta)+v$。用 `scipy.integrate.solve_ivp` 积分 Riccati ODE，在每次 GPS 观测（1 Hz）时做离散 EKF 更新。与"简单 Euler 离散化 EKF"对比 RMSE，取 $\omega=2\pi$ rad/s（一秒一圈）。
 
 ---
 
-### §A4.6 Kalman 族全景对比大表（34 方法 × 13 列） ⭐⭐
+### §A4.6 Kalman 族全景对比大表（34 方法 × 13 列） ★★
 
 下表按"线性 → 非线性欧氏 → 流形 → 迭代/平滑 → 非高斯"的递进顺序排列。缩写：Add=加性、Mult=乘性、L-Inv/R-Inv=左/右不变；Taylor1/2 为一/二阶泰勒；SP=sigma points；SR=square-root；GA=group-affine；FEJ=First-Estimate Jacobian。
 
@@ -758,7 +758,7 @@ $$\dot P=F_c P+PF_c^\top+L_cQ_cL_c^\top$$
 
 ---
 
-### §A4.7 C++/Python 库完整工程映射 ⭐⭐
+### §A4.7 C++/Python 库完整工程映射 ★★
 
 #### A4.7.1 18 库总表
 
@@ -812,7 +812,7 @@ $$\dot P=F_c P+PF_c^\top+L_cQ_cL_c^\top$$
 
 ---
 
-### §A4.8 学习资源汇总（中英文） ⭐
+### §A4.8 学习资源汇总（中英文） ★
 
 #### A4.8.1 英文免费教材（带真实 PDF 链接）
 
@@ -881,7 +881,7 @@ $$\dot P=F_c P+PF_c^\top+L_cQ_cL_c^\top$$
 
 ---
 
-### §A4.9 学习路径与时间预算 ⭐
+### §A4.9 学习路径与时间预算 ★
 
 #### A4.9.1 两条完整学习路径
 
@@ -932,7 +932,7 @@ $$\dot P=F_c P+PF_c^\top+L_cQ_cL_c^\top$$
 
 ---
 
-### §A4.10 自测题（跨 5-A1 至 5-A4，共 10 题） ⭐
+### §A4.10 自测题（跨 5-A1 至 5-A4，共 10 题） ★
 
 > **档位 3**（必做 1–6）/ **档位 4**（必做 7–10）。建议在不查资料情况下尝试，卡壳后再翻对应章节。
 
@@ -960,7 +960,7 @@ $$\dot P=F_c P+PF_c^\top+L_cQ_cL_c^\top$$
 
 ---
 
-### §A4.11 工程陷阱总汇（20 条，跨 5-A1 至 5-A4） ⭐⭐
+### §A4.11 工程陷阱总汇（20 条，跨 5-A1 至 5-A4） ★★
 
 按 10 类组织，每类 2 条。格式：**症状 → 根源 → 检查 → 修复**。
 
@@ -1016,7 +1016,7 @@ $$\dot P=F_c P+PF_c^\top+L_cQ_cL_c^\top$$
 
 ---
 
-### §A4.12 流形/不变滤波收口：从误差定义到工程选型 ⭐⭐⭐
+### §A4.12 流形/不变滤波收口：从误差定义到工程选型 ★★★
 
 > **这一节解决什么问题**：A3 已经从方法族角度讲过 ESKF/MEKF/InEKF/UKF-M；A4 在全景收口处要回答更实际的问题：面对一个机器人估计任务，如何判断该用普通 EKF、ESKF、iterated EKF、InEKF、IKFoM 还是平滑/因子图？
 
@@ -1684,7 +1684,7 @@ $$K=(H^\top R^{-1}H+P^{-1})^{-1}H^\top R^{-1}$$
 
 ---
 
-### §A4.13 与后续子任务的完整桥梁图 ⭐
+### §A4.13 与后续子任务的完整桥梁图 ★
 
 ```text
                                  5-A (Kalman 族)
@@ -1714,7 +1714,7 @@ $$K=(H^\top R^{-1}H+P^{-1})^{-1}H^\top R^{-1}$$
 
 ---
 
-### §A4.14 总结：5-A 全系列核心原则 ⭐⭐
+### §A4.14 总结：5-A 全系列核心原则 ★★
 
 1. **四条正交坐标轴** 组织整个 Kalman 族：(a) 先验高斯（加性 vs 乘性 vs 不变 vs 等变）；(b) 线性化策略（Taylor1/2, sigma, cubature, Hermite）；(c) 状态空间几何（$\mathbb R^n$, $SO(3)$, $SE(3)$, $SE_K(3)$, 通用流形, 齐性空间）；(d) 迭代/平滑维度（单步, GN/LM 迭代, forward-backward RTS, 联合 MAP）。每选定一个轴的坐标就得到一个具体方法。
 
@@ -1730,7 +1730,7 @@ $$K=(H^\top R^{-1}H+P^{-1})^{-1}H^\top R^{-1}$$
 
 7. **开源库是"可读论文"**。推荐精读顺序：FilterPy（理解教材公式）→ kalmanif（理解流形/一致性）→ invariant-ekf（理解 InEKF 实现）→ IKFoM / FAST-LIO2（理解生产级）→ OpenVINS（理解 FEJ 工业实现）→ VINS-Mono（理解滑窗/MHE）→ GTSAM（进入因子图世界）。**读完这 7 个库，5-A 全系列即毕业**。
 
-### §A4.14b 知识树：5-A 全系列的结构化记忆 ⭐⭐
+### §A4.14b 知识树：5-A 全系列的结构化记忆 ★★
 
 ```text
 5-A Kalman 族（根节点）
@@ -1773,7 +1773,7 @@ $$K=(H^\top R^{-1}H+P^{-1})^{-1}H^\top R^{-1}$$
 | 状态几何 | 欧氏？李群？齐性空间？ | 标准 EKF vs InEKF vs EqF |
 | 时间窗口 | 单步？滑窗？全局？ | 滤波 vs MHE vs BA |
 
-### §A4.14c Kalman 族的历史时间线 ⭐⭐
+### §A4.14c Kalman 族的历史时间线 ★★
 
 | 年份 | 里程碑 | 贡献 | 影响 |
 |------|--------|------|------|
@@ -1800,7 +1800,7 @@ $$K=(H^\top R^{-1}H+P^{-1})^{-1}H^\top R^{-1}$$
 
 > **过渡到 5-B**：下一子专题进入因子图与非线性最小二乘。我们会证明 IEKF 的 Gauss-Newton 等价式如何自然推广为**所有时间步的联合 GN**，并把 GTSAM 的 `NonlinearFactorGraph` 与 Ceres 的 `Problem` 作为两套等价抽象，为 5-C 的 iSAM2 / Bayes 树 / 增量重线性化做铺垫。至此，"先验 × 线性化 × 几何 × 迭代"四轴最后的"迭代"轴会从**时间维度扩展到空间图结构维度**，完成从"序列滤波"到"图推断"的世界观转换。
 
-### §A4.15 Kalman 族方法的数值实验指南 ⭐⭐
+### §A4.15 Kalman 族方法的数值实验指南 ★★
 
 #### A4.15.1 如何设计公平的 Monte Carlo 对比实验
 
@@ -1848,7 +1848,7 @@ $$\left[\frac{\chi^2_{Nn,0.025}}{N},\quad \frac{\chi^2_{Nn,0.975}}{N}\right]$$
 | **EM 算法** | 离线最大似然 | E 步跑 RTS 平滑，M 步更新参数 | Shumway-Stoffer 1982 |
 | **数值差分/AutoDiff** | Jacobian 验证 | 对比解析 vs 数值 Jacobian | Ceres `GradientChecker` |
 
-#### A4.15.3 Kalman 族方法选型流程图的详细解释 ⭐⭐
+#### A4.15.3 Kalman 族方法选型流程图的详细解释 ★★
 
 §A4.12 给出了选型流程图的骨架。这里展开每个决策节点的量化判据：
 
@@ -1904,13 +1904,13 @@ $$\text{NLI} = \frac{\mathrm{tr}(\nabla^2 f\cdot P)}{\|f(\hat x)\|}$$
 | 滑窗 MHE 性能不如纯 BA | 边缘化先验 FEJ 未生效 | 1.打印边缘化残差量级 2.对比有/无先验的 NEES 3.冻结线性化点 | §A4.5 |
 | EnKF 集合快速坍缩 | 集合成员数不足 | 1.检查 $N_e$ vs 状态维度 2.加 inflation 3.加 localization | §A4.5b |
 
-⚠️ **陷阱一：把 MAP 和均值估计混在一起。** IEKF/因子图求的是局部 MAP；UKF/CKF 更接近矩匹配均值，两者在强非线性后验下不一定一致。选择哪个取决于后端架构：如果前端滤波 + 后端图优化，MAP 语义一致性更重要。
+⚠ **陷阱一：把 MAP 和均值估计混在一起。** IEKF/因子图求的是局部 MAP；UKF/CKF 更接近矩匹配均值，两者在强非线性后验下不一定一致。选择哪个取决于后端架构：如果前端滤波 + 后端图优化，MAP 语义一致性更重要。
 
-⚠️ **陷阱二：把 line search 的 Armijo 符号写反。** 下降方向满足 $\nabla J^\top\Delta<0$，Armijo 条件要求 $J(\hat x+\alpha\Delta)\le J(\hat x)+c_1\alpha\nabla J^\top\Delta$（右端低于当前代价，因为 $c_1\alpha\nabla J^\top\Delta<0$）。
+⚠ **陷阱二：把 line search 的 Armijo 符号写反。** 下降方向满足 $\nabla J^\top\Delta<0$，Armijo 条件要求 $J(\hat x+\alpha\Delta)\le J(\hat x)+c_1\alpha\nabla J^\top\Delta$（右端低于当前代价，因为 $c_1\alpha\nabla J^\top\Delta<0$）。
 
-⚠️ **陷阱三：跨库迁移只改四元数顺序。** JPL/Hamilton、左/右扰动、active/passive 旋转和切向量排序必须**同时**检查和转换。任何一个遗漏都会导致 Jacobian 符号错误。
+⚠ **陷阱三：跨库迁移只改四元数顺序。** JPL/Hamilton、左/右扰动、active/passive 旋转和切向量排序必须**同时**检查和转换。任何一个遗漏都会导致 Jacobian 符号错误。
 
-⚠️ **陷阱四：把 IEKF 收敛等同于全局最优。** IEKF 收敛到的是单步 MAP 的局部极小，不是全局最优。对多模态观测（如 bearing-only 在对称配置下），需要多初始化或全局方法。
+⚠ **陷阱四：把 IEKF 收敛等同于全局最优。** IEKF 收敛到的是单步 MAP 的局部极小，不是全局最优。对多模态观测（如 bearing-only 在对称配置下），需要多初始化或全局方法。
 
 > **本质洞察**：Kalman 族不是一串彼此替代的算法清单，而是”分布假设、线性化方式、状态几何、求解时域”四个选择轴的组合。每选定一个轴的坐标，就确定了一个具体方法及其适用边界。
 
@@ -1960,18 +1960,18 @@ $$\text{NLI} = \frac{\mathrm{tr}(\nabla^2 f\cdot P)}{\|f(\hat x)\|}$$
 
 | 类型 | 资源 | 难度 | 重点 |
 |------|------|------|------|
-| 教材 | Barfoot *State Estimation for Robotics* 2ed (2024) §4.2 | ⭐⭐ | IEKF 推导 |
-| 教材 | Särkkä & Svensson *Bayesian Filtering and Smoothing* 2ed (2023) Ch.7-10 | ⭐⭐⭐ | 全面覆盖 |
-| 教材 | Simon *Optimal State Estimation* (2006) Ch.13-14 | ⭐⭐ | 经典参考 |
-| 论文 | Bell-Cathey, *IEEE TAC* 38(2):294-297, 1993 | ⭐⭐⭐ | IEKF = GN |
-| 论文 | Rauch-Tung-Striebel, *AIAA J.* 3(8):1445-1450, 1965 | ⭐⭐ | 原始 RTS |
-| 论文 | Rao-Rawlings, *Automatica* 37(9):1371-1388, 2001 | ⭐⭐⭐ | MHE 理论 |
-| 论文 | Evensen, *J. Geophys. Res.* 99:10143-10162, 1994 | ⭐⭐⭐ | EnKF 原始论文 |
-| 论文 | Schmidt, NASA TN D-1397, 1962 | ⭐⭐⭐⭐ | Consider filter 原始 |
-| 论文 | Xu et al., *IEEE T-RO* 2022 | ⭐⭐ | FAST-LIO2 工程 |
-| 代码 | `artivis/kalmanif` | ⭐⭐ | C++ 多方法对比 |
-| 代码 | `hku-mars/IKFoM` | ⭐⭐⭐ | IKFoM 参考实现 |
-| 代码 | `rpng/open_vins` | ⭐⭐⭐ | FEJ + MSCKF |
+| 教材 | Barfoot *State Estimation for Robotics* 2ed (2024) §4.2 | ★★ | IEKF 推导 |
+| 教材 | Särkkä & Svensson *Bayesian Filtering and Smoothing* 2ed (2023) Ch.7-10 | ★★★ | 全面覆盖 |
+| 教材 | Simon *Optimal State Estimation* (2006) Ch.13-14 | ★★ | 经典参考 |
+| 论文 | Bell-Cathey, *IEEE TAC* 38(2):294-297, 1993 | ★★★ | IEKF = GN |
+| 论文 | Rauch-Tung-Striebel, *AIAA J.* 3(8):1445-1450, 1965 | ★★ | 原始 RTS |
+| 论文 | Rao-Rawlings, *Automatica* 37(9):1371-1388, 2001 | ★★★ | MHE 理论 |
+| 论文 | Evensen, *J. Geophys. Res.* 99:10143-10162, 1994 | ★★★ | EnKF 原始论文 |
+| 论文 | Schmidt, NASA TN D-1397, 1962 | ★★★★ | Consider filter 原始 |
+| 论文 | Xu et al., *IEEE T-RO* 2022 | ★★ | FAST-LIO2 工程 |
+| 代码 | `artivis/kalmanif` | ★★ | C++ 多方法对比 |
+| 代码 | `hku-mars/IKFoM` | ★★★ | IKFoM 参考实现 |
+| 代码 | `rpng/open_vins` | ★★★ | FEJ + MSCKF |
 
 ---
 
@@ -1982,13 +1982,13 @@ $$\text{NLI} = \frac{\mathrm{tr}(\nabla^2 f\cdot P)}{\|f(\hat x)\|}$$
 3. 选 Sophus 与 GTSAM 的一个 `Pose3` 操作，设计数值实验确认其默认扰动方向。
 4.（跨章综合题）把 A1 的线性 KF、A2 的 EKF/UKF、A3 的 ESKF、A4 的 IEKF 全部实现为统一接口 `predict(u)/update(z)`，对同一个 2D 非线性系统跑 100 次 Monte Carlo，绘制 RMSE 和 ANEES 的对比图。讨论：(a) 哪些方法在 RMSE 上差异不大但 ANEES 差异显著？(b) 增加初始误差后哪些方法首先发散？(c) 加入迭代（IEKF）对 ANEES 有何改善？
 
-5.（⭐⭐⭐）实现 VINS-Mono 风格的滑窗边缘化：对一个 5 节点 pose graph（每节点 6DoF），保留最新 3 节点，边缘化最旧 2 节点。写出 Schur 补的显式计算过程，验证边缘化后 Hessian 的稀疏度变化（from sparse to dense on remaining nodes）。
+5.（★★★）实现 VINS-Mono 风格的滑窗边缘化：对一个 5 节点 pose graph（每节点 6DoF），保留最新 3 节点，边缘化最旧 2 节点。写出 Schur 补的显式计算过程，验证边缘化后 Hessian 的稀疏度变化（from sparse to dense on remaining nodes）。
 
-6.（⭐⭐⭐⭐）设计一个 "Kalman 族方法博物馆" Python 脚本：对同一个 3D bearing-range SLAM 问题（5 路标、50 步），实现 EKF / UKF / IEKF / InEKF / RTS / 滑窗 MHE 共 6 种方法，统一输出格式（轨迹、RMSE、ANEES、计算时间）。这是本系列的"毕业作品"——完成后你对 Kalman 族的理解将从"知道名词"升级为"能实现并量化对比"。
+6.（★★★★）设计一个 "Kalman 族方法博物馆" Python 脚本：对同一个 3D bearing-range SLAM 问题（5 路标、50 步），实现 EKF / UKF / IEKF / InEKF / RTS / 滑窗 MHE 共 6 种方法，统一输出格式（轨迹、RMSE、ANEES、计算时间）。这是本系列的"毕业作品"——完成后你对 Kalman 族的理解将从"知道名词"升级为"能实现并量化对比"。
 
 ---
 
-### §A4.16 5-A 全系列的读者自检清单 ⭐
+### §A4.16 5-A 全系列的读者自检清单 ★
 
 学完 5-A1 到 5-A4 的全部内容后，请用以下清单自检。能通过 80% 以上说明达到档位 3 水平；能通过全部说明达到档位 4 水平。
 

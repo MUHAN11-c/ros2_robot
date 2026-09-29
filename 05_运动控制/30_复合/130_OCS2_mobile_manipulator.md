@@ -3,7 +3,7 @@
 > 本章定位：把第 82 章（120_底盘臂联合规划.md）的底盘 + 臂联合运动学放进 OCS2 最优控制框架。
 > 核心对象：`ocs2_robotic_examples/ocs2_mobile_manipulator`。
 > 学习重点：模型选择、状态输入定义、末端代价、自碰撞约束、关节限位、SQP/SLQ 求解配置。
-> 难度：⭐⭐⭐。
+> 难度：★★★。
 > 预计时间：2 周，源码阅读 14 小时，推导 10 小时，实验 12 小时。
 
 ---
@@ -594,7 +594,7 @@ $$
 
 常用 relaxed barrier。
 
-### 83.16.1 Relaxed Barrier 的完整推导 ⭐⭐⭐
+### 83.16.1 Relaxed Barrier 的完整推导 ★★★
 
 **动机**：内点法使用对数障碍函数 $-\mu \log(h)$ 来处理不等式约束 $h \ge 0$。当 $h > 0$ 时，对数障碍在边界附近提供无穷大代价，完美阻止越界。但它有一个致命缺点：当约束已经被违反（$h \le 0$）时，$\log(h)$ 无定义。在 MPC 中，初始猜测、线性化误差或数值扰动都可能让状态暂时越界。此时 $-\mu \log(h)$ 会返回 NaN，整个求解崩溃。
 
@@ -701,7 +701,7 @@ CppAD 需要可微路径。
 
 实际实现中，最近碰撞对集合通常离线配置或在线筛选。
 
-### 83.17.1 OCS2 自碰撞的真实实现：SelfCollision 与 PinocchioGeometryInterface ⭐⭐⭐
+### 83.17.1 OCS2 自碰撞的真实实现：SelfCollision 与 PinocchioGeometryInterface ★★★
 
 上面的公式 $\nabla_q d_{ij}=\hat n^\top(J_{p_i}-J_{p_j})$ 是教学推导。这一节看 `leggedrobotics/ocs2` 仓库 `ocs2_self_collision` 包是怎么把它落到代码的，以及为什么这里藏着移动操作 MPC 最容易踩的几个坑。
 
@@ -810,7 +810,7 @@ PreComputation 负责在一个状态输入点上统一计算：
 
 ---
 
-## 83.19A OCP 的真实组装结构：成本、约束、软约束三层 ⭐⭐⭐
+## 83.19A OCP 的真实组装结构：成本、约束、软约束三层 ★★★
 
 前面几节分别讲了末端代价、输入代价、关节限位和自碰撞约束的**数学形式**。但如果你打开真实仓库的 `MobileManipulatorInterface.cpp`，会发现这些项不是平铺直叙地"加到一个代价里"，而是被分门别类放进 `OptimalControlProblem` 的几个不同容器中。理解这套容器结构，是从"会读公式"过渡到"会读 OCS2 源码"的关键一步。本节完全基于 `leggedrobotics/ocs2` 仓库 `ocs2_mobile_manipulator` 包的真实接口讲解。
 
@@ -1008,7 +1008,7 @@ cost
 
 教学重点是理解配置背后的数学意义。
 
-### 83.20.1 task.info 字段与 OCP 容器的对应 ⭐⭐⭐
+### 83.20.1 task.info 字段与 OCP 容器的对应 ★★★
 
 上面的精简配置只是示意。真实 `ridgeback_ur5/task.info` 的结构和 §83.19A 的容器、惩罚是**一一对应**的——读懂这个对应，你就能从配置文件反推出 OCP 是怎么组装的，反之亦然。把关键块拆开看：
 
@@ -1121,7 +1121,7 @@ jointVelocityLimits { mu 1e-2  delta 1e-3
 
 当自碰撞和外部障碍变多，SQP 更稳。
 
-### 83.22.1 SQP-RTI 求解器内部：多重射击与 KKT 系统 ⭐⭐⭐
+### 83.22.1 SQP-RTI 求解器内部：多重射击与 KKT 系统 ★★★
 
 OCS2 的 SQP 求解器使用**多重射击（Multiple Shooting）**离散化连续 OCP。理解它的内部结构对调试收敛问题至关重要。
 
@@ -1190,7 +1190,7 @@ RTI 的代价是单步解可能不最优。但由于 MPC 每周期都重新求�
 > 如果遇到约束激活或参考突变导致需要更多迭代，求解会超时。
 > RTI 把这个风险从"偶发超时"变成"每次固定计算量"，代价是解的质量略低。
 
-### 83.22.2 从零组装一个 Mobile Manipulator MPC：完整工作流 ⭐⭐⭐
+### 83.22.2 从零组装一个 Mobile Manipulator MPC：完整工作流 ★★★
 
 本节给出一个完整的思维过程，展示如何从头构建一个移动操作 MPC。不是贴代码，而是把每一步的决策逻辑写清楚。
 
@@ -1360,7 +1360,7 @@ OCS2 擅长局部连续重规划和控制。
 
 ---
 
-### 83.26.1 适配中的关键验证步骤 ⭐⭐
+### 83.26.1 适配中的关键验证步骤 ★★
 
 在按照 83.26 的清单完成基本配置后，必须通过以下验证才能认为适配成功：
 
@@ -1687,11 +1687,11 @@ class MobileManipulatorOcpBuilder {
 
 | 材料 | 难度 | 阅读重点 |
 | --- | --- | --- |
-| OCS2 mobile_manipulator 示例源码 | ⭐⭐⭐ | `MobileManipulatorInterface`、flowMap、代价项和约束注册方式 |
-| OCS2 optimal control problem 文档 | ⭐⭐⭐ | cost、constraint、pre-computation 与 solver 设置的职责边界 |
-| Pinocchio 文档中的 forward kinematics 与 frame placement | ⭐⭐ | 末端位姿、frame Jacobian 和自动微分所需的运动学接口 |
-| 复合/120_底盘臂联合规划 | ⭐⭐ | 本章状态、输入和联合雅可比的上游来源 |
-| MoveIt2 与 OCS2 组合案例 | ⭐⭐⭐ | 全局几何规划与局部连续最优控制的分工 |
+| OCS2 mobile_manipulator 示例源码 | ★★★ | `MobileManipulatorInterface`、flowMap、代价项和约束注册方式 |
+| OCS2 optimal control problem 文档 | ★★★ | cost、constraint、pre-computation 与 solver 设置的职责边界 |
+| Pinocchio 文档中的 forward kinematics 与 frame placement | ★★ | 末端位姿、frame Jacobian 和自动微分所需的运动学接口 |
+| 复合/120_底盘臂联合规划 | ★★ | 本章状态、输入和联合雅可比的上游来源 |
+| MoveIt2 与 OCS2 组合案例 | ★★★ | 全局几何规划与局部连续最优控制的分工 |
 
 ---
 
@@ -1752,7 +1752,7 @@ class MobileManipulatorOcpBuilder {
 
 ---
 
-## 83.39 OCS2 版本演进与工程注意事项 ⭐⭐⭐
+## 83.39 OCS2 版本演进与工程注意事项 ★★★
 
 ### OCS2 的开源现状
 
@@ -1787,7 +1787,7 @@ Pinocchio 从 2.x 到 3.x 有较大 API 变化。OCS2 对 Pinocchio 的依赖主
 
 ---
 
-## 83.39A 从 mobile_manipulator 到近年 loco-manipulation 工作 ⭐⭐⭐
+## 83.39A 从 mobile_manipulator 到近年 loco-manipulation 工作 ★★★
 
 本章的 `mobile_manipulator` 是 OCS2 里"运动学 OCP"的入门样例。它故意把动力学砍到最简，好让你专注于状态/输入/代价/约束的组织。但 OCS2 这套 `OptimalControlProblem` 容器结构（§83.19A）真正的威力，在腿足 + 机械臂的**全身 loco-manipulation** 上才完全展开。把视野往这个方向延伸，能帮你理解"为什么要学这个简单样例"。
 
@@ -1837,7 +1837,7 @@ Pinocchio 从 2.x 到 3.x 有较大 API 变化。OCS2 对 Pinocchio 的依赖主
 
 ---
 
-## 83.39C API 速查表 ⭐⭐
+## 83.39C API 速查表 ★★
 
 下表为本章涉及的 OCS2 核心类型与方法签名，均以 `leggedrobotics/ocs2` 仓库 `main` 分支为准（精读时以实际版本头文件为准）。分四组：模型信息、动力学、代价/约束、求解器。
 
@@ -1957,7 +1957,7 @@ ddp::Settings    // maxNumIterations、minRelCost、constraintTolerance 等
 
 ---
 
-## 83.39D 研究实践建议 ⭐⭐
+## 83.39D 研究实践建议 ★★
 
 按学习/工程目标分层给出建议：
 

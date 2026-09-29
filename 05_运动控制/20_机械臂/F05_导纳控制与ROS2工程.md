@@ -14,9 +14,9 @@
 
 ---
 
-## 前置自测 ⭐
+## 前置自测 ★
 
-> 📋 **答不出 >= 2 题 → 先回前置章节复习**
+> ◆ **答不出 >= 2 题 → 先回前置章节复习**
 
 | 编号 | 问题 | 答不出时回顾 |
 |:----:|------|------------|
@@ -114,7 +114,7 @@
 | 速查（仅看总结表格） | 1 小时 | 工程实现时查阅 |
 
 
-## 1. 导纳控制原理——力到运动的因果链 ⭐
+## 1. 导纳控制原理——力到运动的因果链 ★
 
 ### 1.1 动机——当你的机器人不接受力矩命令
 
@@ -263,9 +263,9 @@ F/T 传感器测量的是传感器以下（含工具）的所有外力——包�
 
 力传感器测量的 wrench 在传感器坐标系中。导纳律通常在**基坐标系**或**柔顺参考坐标系**中定义。需要通过当前的传感器-基座变换矩阵进行坐标变换。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：忘记工具重力补偿**
+> ⚠ **编程陷阱：忘记工具重力补偿**
 >
 > 错误做法：直接把 F/T 传感器的原始读数送给导纳律
 >
@@ -283,13 +283,13 @@ F/T 传感器测量的是传感器以下（含工具）的所有外力——包�
 
 ### 练习
 
-1. ⭐ **因果链对比**：画出阻抗控制和导纳控制的信号流图（从传感器输入到关节命令输出），标注每个环节的延迟和带宽瓶颈。
-2. ⭐ **重力补偿计算**：一个 ATI Gamma 传感器安装在 UR5e 末端法兰上，工具是 0.3 kg 的真空吸盘，质心在传感器坐标系的 [0, 0, 0.05] m。当机器人末端朝下时，传感器读数应如何补偿？当末端水平时呢？
-3. ⭐⭐ **滤波参数选择**：在 Python 中模拟一个含噪声的力信号（真实信号 5 N + 高斯噪声 $\sigma$=1 N），分别用 $\alpha = 0.005, 0.05, 0.5$ 进行低通滤波。绘制三组滤波后的信号，分析平滑度和延迟的 trade-off。
+1. ★ **因果链对比**：画出阻抗控制和导纳控制的信号流图（从传感器输入到关节命令输出），标注每个环节的延迟和带宽瓶颈。
+2. ★ **重力补偿计算**：一个 ATI Gamma 传感器安装在 UR5e 末端法兰上，工具是 0.3 kg 的真空吸盘，质心在传感器坐标系的 [0, 0, 0.05] m。当机器人末端朝下时，传感器读数应如何补偿？当末端水平时呢？
+3. ★★ **滤波参数选择**：在 Python 中模拟一个含噪声的力信号（真实信号 5 N + 高斯噪声 $\sigma$=1 N），分别用 $\alpha = 0.005, 0.05, 0.5$ 进行低通滤波。绘制三组滤波后的信号，分析平滑度和延迟的 trade-off。
 
 ---
 
-## 2. ros2_controllers admittance_controller 架构精读 ⭐⭐
+## 2. ros2_controllers admittance_controller 架构精读 ★★
 
 ### 2.1 动机——为什么要精读官方实现
 
@@ -548,9 +548,9 @@ admittance:
   stiffness: [500.0, 500.0, 100.0, 100.0, 100.0, 100.0]
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：selected_axes 设置不匹配任务**
+> ⚠ **编程陷阱：selected_axes 设置不匹配任务**
 >
 > 错误做法：对打磨任务设置 `selected_axes: [true, true, true, true, true, true]`（全轴导纳）
 >
@@ -564,7 +564,7 @@ admittance:
 >
 > 实际上：$M_d$ 是**设计参数**，不是物理参数。它决定了"外力作用下末端的响应速度"。真实末端惯量可能是 5-10 kg，但你可以设 $M_d = 1$ kg 让末端对力更敏感，或设 $M_d = 50$ kg 让末端更"迟钝"（更稳定）。选择取决于任务需求
 
-> ⚠️ **编程陷阱：filter_coefficient 设置不当导致抖动或延迟**
+> ⚠ **编程陷阱：filter_coefficient 设置不当导致抖动或延迟**
 >
 > `filter_coefficient = 0.5`（太大）→ 力信号噪声通过 → 位置抖动
 >
@@ -574,13 +574,13 @@ admittance:
 
 ### 练习
 
-1. ⭐ **YAML 编写**：为 UR5e + ATI Gamma F/T 传感器编写 `admittance_controller` 的完整 YAML 配置文件。任务：沿桌面擦拭，法向力 5 N，切向跟踪 CAD 路径。
-2. ⭐⭐ **源码精读**：找到 `admittance_rule_impl.hpp` 中 `calculate_admittance_rule()` 函数。标注：(a) 低通滤波的位置 (b) 重力补偿的位置 (c) 显式笛卡尔加速度计算的位置 (d) 关节空间速度先行积分的位置 (e) IK 调用的位置。
-3. ⭐⭐ **数值积分对比**：在 Python 中实现 1D 导纳方程 $M\ddot{x} + D\dot{x} + Kx = F$ 的三种积分方法（显式/速度先行/隐式 Euler）。让 $F$ 为阶跃输入，绘制三种方法的位移响应。在 $\Delta t = 0.01$ s 和 $\Delta t = 0.002$ s 下比较稳定性。
+1. ★ **YAML 编写**：为 UR5e + ATI Gamma F/T 传感器编写 `admittance_controller` 的完整 YAML 配置文件。任务：沿桌面擦拭，法向力 5 N，切向跟踪 CAD 路径。
+2. ★★ **源码精读**：找到 `admittance_rule_impl.hpp` 中 `calculate_admittance_rule()` 函数。标注：(a) 低通滤波的位置 (b) 重力补偿的位置 (c) 显式笛卡尔加速度计算的位置 (d) 关节空间速度先行积分的位置 (e) IK 调用的位置。
+3. ★★ **数值积分对比**：在 Python 中实现 1D 导纳方程 $M\ddot{x} + D\dot{x} + Kx = F$ 的三种积分方法（显式/速度先行/隐式 Euler）。让 $F$ 为阶跃输入，绘制三种方法的位移响应。在 $\Delta t = 0.01$ s 和 $\Delta t = 0.002$ s 下比较稳定性。
 
 ---
 
-## 3. FZI FDCC——虚拟正向动力学绕开 IK 奇异 ⭐⭐
+## 3. FZI FDCC——虚拟正向动力学绕开 IK 奇异 ★★
 
 ### 3.1 动机——传统导纳的奇异问题
 
@@ -719,9 +719,9 @@ cartesian_compliance_controller:
 
 > **反事实推理**：如果 ros2_controllers 的 admittance_controller 也使用 $J^T$ 而不是 IK，它是否就不需要 FZI FDCC 了？理论上是的——$J^T$ 方法可以集成到 admittance_controller 中。但架构上有一个区别：admittance_controller 的输出是**笛卡尔位姿修正**，通过 IK 转换为关节修正。如果改用 $J^T$，输出就直接是**关节修正**，不再需要 IK——但这改变了控制器的接口语义，需要重新设计级联架构。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：FDCC 的 solver.error_scale 设置过大**
+> ⚠ **编程陷阱：FDCC 的 solver.error_scale 设置过大**
 >
 > 错误做法：设置 `error_scale: 1.0`
 >
@@ -739,13 +739,13 @@ cartesian_compliance_controller:
 
 ### 练习
 
-1. ⭐ **FDCC 安装**：在 UR5e Gazebo 仿真中安装 FZI `cartesian_controllers`。分别运行 `cartesian_motion_controller` 和 `cartesian_compliance_controller`，感受两者的行为差异。
-2. ⭐⭐ **奇异对比实验**：在同一 UR5e 上分别配置 `admittance_controller` 和 FZI `cartesian_compliance_controller`。让末端经过接近奇异的构型（如完全伸展），记录关节速度信号。哪个控制器在奇异附近更平滑？
-3. ⭐⭐ **$J^T$ vs. $J^{-1}$ 分析**：在 Python 中计算 UR5e 在某个接近奇异的构型下的 $J$, $J^+$（伪逆）和 $J^T$。比较 $J^+ F$ 和 $J^T F$ 对同一笛卡尔力 $F$ 的响应。哪个更"温和"？
+1. ★ **FDCC 安装**：在 UR5e Gazebo 仿真中安装 FZI `cartesian_controllers`。分别运行 `cartesian_motion_controller` 和 `cartesian_compliance_controller`，感受两者的行为差异。
+2. ★★ **奇异对比实验**：在同一 UR5e 上分别配置 `admittance_controller` 和 FZI `cartesian_compliance_controller`。让末端经过接近奇异的构型（如完全伸展），记录关节速度信号。哪个控制器在奇异附近更平滑？
+3. ★★ **$J^T$ vs. $J^{-1}$ 分析**：在 Python 中计算 UR5e 在某个接近奇异的构型下的 $J$, $J^+$（伪逆）和 $J^T$。比较 $J^+ F$ 和 $J^T F$ 对同一笛卡尔力 $F$ 的响应。哪个更"温和"？
 
 ---
 
-## 4. 导纳控制的稳定性分析 ⭐⭐⭐
+## 4. 导纳控制的稳定性分析 ★★★
 
 ### 4.1 动机——导纳控制为什么比阻抗控制更容易失稳
 
@@ -847,7 +847,7 @@ D = 100 Ns/m, M = 5 kg, K_e = 10^6 N/m（钢）
 
 这个公式只覆盖导纳离散环节；官方 `admittance_controller` 还包含 IK、关节阻尼和内环伺服，实际稳定边界必须以整条控制链验证。这就是为什么导纳控制器接触钢铁表面时仍然经常需要柔性垫或更高阻尼。
 
-### 4.5 离散化稳定性分析深化——采样时间 vs 环境刚度的量化关系 ⭐⭐⭐
+### 4.5 离散化稳定性分析深化——采样时间 vs 环境刚度的量化关系 ★★★
 
 上述公式给出了与本章伪代码一致的主稳定边界。本节用 z 域形式说明它来自哪里，并把表格、经验频率和柔性垫估算统一到同一个离散格式。
 
@@ -919,7 +919,7 @@ $$\boxed{\Delta t < \frac{\sqrt{D^2+4MK_t}-D}{K_t}}$$
 
 **安装 $10^4$ N/m 的软硅胶垫后，接触钢表面的建议频率从 kHz 量级降到百 Hz 量级。** 这就是为什么 UR 系列协作臂在做力控接触任务时几乎总是配合柔性垫使用。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > 🧠 **思维陷阱：认为导纳控制参数可以任意设置**
 >
@@ -929,7 +929,7 @@ $$\boxed{\Delta t < \frac{\sqrt{D^2+4MK_t}-D}{K_t}}$$
 >
 > 正确做法：先确认内环带宽 $\omega_{inner}$，然后约束 $K_d/M_d < (\omega_{inner}/5)^2$
 
-> ⚠️ **编程陷阱：导纳控制器的采样时间与内环不一致**
+> ⚠ **编程陷阱：导纳控制器的采样时间与内环不一致**
 >
 > 错误做法：导纳律以 100 Hz 运行，内环位置环以 500 Hz 运行，但导纳律的 $\Delta t$ 错误地设为 0.002 s（500 Hz 的周期）而非 0.01 s（100 Hz）
 >
@@ -939,13 +939,13 @@ $$\boxed{\Delta t < \frac{\sqrt{D^2+4MK_t}-D}{K_t}}$$
 
 ### 练习
 
-1. ⭐⭐ **稳定性边界计算**：给定 UR5e（位置环带宽约 25 Hz，控制频率 500 Hz）和导纳参数 $M_d = 5$ kg, $D_d = 100$ Ns/m, $K_d = 200$ N/m。计算：(a) 导纳带宽 $\omega_{adm}$；(b) 带宽比 $\omega_{inner}/\omega_{adm}$；(c) 最大可稳定环境刚度 $K_e^{max}$。该配置能否稳定接触钢铁工件？
-2. ⭐⭐ **参数极限实验**：在 MuJoCo UR5e 仿真中，逐步增大 $K_d$（从 50 到 5000 N/m），保持 $M_d = 5$ kg。让末端接触刚性桌面，记录每组 $K_d$ 下的接触力波形。在什么 $K_d$ 值时出现振荡？这与理论预测的 $K_d^{max}$ 一致吗？
-3. ⭐⭐⭐ **跨章综合题**：一个工厂需要 UR10e + ATI Gamma 在铝工件上打磨（法向力 15 N），控制频率 500 Hz。铝的接触刚度约 $5 \times 10^4$ N/m。(a) 使用 $K_e < D_d/(2\Delta t)$ 计算所需的最小 $D_d$；(b) 用临界阻尼关系 $D = 2\sqrt{MK}$ 确定 $M_d$；(c) 检验导纳带宽是否低于内环带宽/5。完成 YAML 配置。
+1. ★★ **稳定性边界计算**：给定 UR5e（位置环带宽约 25 Hz，控制频率 500 Hz）和导纳参数 $M_d = 5$ kg, $D_d = 100$ Ns/m, $K_d = 200$ N/m。计算：(a) 导纳带宽 $\omega_{adm}$；(b) 带宽比 $\omega_{inner}/\omega_{adm}$；(c) 最大可稳定环境刚度 $K_e^{max}$。该配置能否稳定接触钢铁工件？
+2. ★★ **参数极限实验**：在 MuJoCo UR5e 仿真中，逐步增大 $K_d$（从 50 到 5000 N/m），保持 $M_d = 5$ kg。让末端接触刚性桌面，记录每组 $K_d$ 下的接触力波形。在什么 $K_d$ 值时出现振荡？这与理论预测的 $K_d^{max}$ 一致吗？
+3. ★★★ **跨章综合题**：一个工厂需要 UR10e + ATI Gamma 在铝工件上打磨（法向力 15 N），控制频率 500 Hz。铝的接触刚度约 $5 \times 10^4$ N/m。(a) 使用 $K_e < D_d/(2\Delta t)$ 计算所需的最小 $D_d$；(b) 用临界阻尼关系 $D = 2\sqrt{MK}$ 确定 $M_d$；(c) 检验导纳带宽是否低于内环带宽/5。完成 YAML 配置。
 
 ---
 
-## 5. 碰撞检测与安全停止 ⭐⭐
+## 5. 碰撞检测与安全停止 ★★
 
 ### 5.1 动机——力控机器人的安全底线
 
@@ -1688,9 +1688,9 @@ admittance_controller:
         force: 7.36                 # 0.75 kg 打磨工具重量 [N]
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：碰撞检测阈值设置过低导致误触发**
+> ⚠ **编程陷阱：碰撞检测阈值设置过低导致误触发**
 >
 > 错误做法：设置 `force_threshold = 5.0` N
 >
@@ -1706,13 +1706,13 @@ admittance_controller:
 
 ### 练习
 
-1. ⭐ **碰撞检测实现**：在 MuJoCo UR5e 中实现基于力阈值的碰撞检测。让机器人以 0.1 m/s 接近桌面，检测接触瞬间。记录碰撞检测延迟（从接触到检测触发的时间）。
-2. ⭐⭐ **三种停止策略对比**：在 MuJoCo 中实现 Reflex/Retract/Comply 三种停止策略。让机器人以 0.2 m/s 碰撞弹性物体（$K_e = 500$ N/m），记录三种策略下的最大接触力和碰后行为。
-3. ⭐⭐ **lead-through 调参**：在 UR5e（仿真或真机）上配置 admittance_controller 实现 lead-through。尝试不同的 $M_d$（1, 5, 20 kg）和 $\zeta$（0.5, 1.0, 2.0），评价轻盈度/停止性/稳定性。
+1. ★ **碰撞检测实现**：在 MuJoCo UR5e 中实现基于力阈值的碰撞检测。让机器人以 0.1 m/s 接近桌面，检测接触瞬间。记录碰撞检测延迟（从接触到检测触发的时间）。
+2. ★★ **三种停止策略对比**：在 MuJoCo 中实现 Reflex/Retract/Comply 三种停止策略。让机器人以 0.2 m/s 碰撞弹性物体（$K_e = 500$ N/m），记录三种策略下的最大接触力和碰后行为。
+3. ★★ **lead-through 调参**：在 UR5e（仿真或真机）上配置 admittance_controller 实现 lead-through。尝试不同的 $M_d$（1, 5, 20 kg）和 $\zeta$（0.5, 1.0, 2.0），评价轻盈度/停止性/稳定性。
 
 ---
 
-## 6. 柔顺控制统一视角与工业案例 ⭐⭐
+## 6. 柔顺控制统一视角与工业案例 ★★
 
 ### 6.1 柔顺设计空间
 
@@ -1794,7 +1794,7 @@ admittance_controller:
 安全策略：Comply（碰撞后切换到零力引导）
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > 🧠 **思维陷阱：认为一种柔顺方案能解决所有问题**
 >
@@ -1804,9 +1804,9 @@ admittance_controller:
 
 ### 练习
 
-1. ⭐ **场景选型**：为以下五个工业场景各选择一种柔顺方案，说明理由：(a) 汽车焊接机器人防碰撞 (b) 协作臂 PCB 检测 (c) 未知形状物体抓取 (d) 手术机器人力反馈 (e) 包装线码垛
-2. ⭐⭐ **柔顺椭球可视化**：在 MuJoCo Franka 中设置三组刚度矩阵——各向同性、轴选择性和耦合椭球。从 x/y/z 方向施力，用 matplotlib 画出柔顺椭球。
-3. ⭐⭐⭐ **跨章综合题**：结合 F01-F05 的知识，为一个完整的协作装配场景设计力控系统。场景：UR5e + ATI Gamma，将 M8 螺栓拧入铝板。需要：(1) 接近阶段位置控制；(2) 接触检测；(3) 导纳下的螺旋搜索对准；(4) 恒力矩拧紧。画出状态机和每阶段的 YAML 参数。
+1. ★ **场景选型**：为以下五个工业场景各选择一种柔顺方案，说明理由：(a) 汽车焊接机器人防碰撞 (b) 协作臂 PCB 检测 (c) 未知形状物体抓取 (d) 手术机器人力反馈 (e) 包装线码垛
+2. ★★ **柔顺椭球可视化**：在 MuJoCo Franka 中设置三组刚度矩阵——各向同性、轴选择性和耦合椭球。从 x/y/z 方向施力，用 matplotlib 画出柔顺椭球。
+3. ★★★ **跨章综合题**：结合 F01-F05 的知识，为一个完整的协作装配场景设计力控系统。场景：UR5e + ATI Gamma，将 M8 螺栓拧入铝板。需要：(1) 接近阶段位置控制；(2) 接触检测；(3) 导纳下的螺旋搜索对准；(4) 恒力矩拧紧。画出状态机和每阶段的 YAML 参数。
 
 ---
 
@@ -1877,14 +1877,14 @@ ABB 的力控方案称为 Integrated Force Control（IFC），通过 ABB 的 Rob
 
 | 知识点 | 难度 | 核心结论 | 工程应用 |
 |--------|------|---------|---------|
-| 导纳因果链 | ⭐ | 力→导纳律→IK→位置命令 | 理解控制架构 |
-| ros2_controllers 配置 | ⭐ | YAML 参数的物理含义 | 日常导纳配置 |
-| 导纳离散实现 | ⭐⭐ | 源码为显式笛卡尔加速度 + 关节速度先行积分；接触/阻尼下仍需稳定性分析 | 数值稳定性 |
-| FZI FDCC | ⭐⭐ | $J^T$ 绕开 IK 奇异 | 奇异附近柔顺 |
-| 导纳稳定性 | ⭐⭐⭐ | $K_e < D_d/(2\Delta t)$ | 参数选择约束 |
-| 碰撞检测 | ⭐⭐ | 阈值+连续计数+三种停止策略 | 安全底线 |
-| Lead-through | ⭐ | K=0 + 精确重力补偿 + 临界阻尼 | 协作编程 |
-| 柔顺统一视角 | ⭐⭐ | 被动→主动→自适应→学习 | 系统设计 |
+| 导纳因果链 | ★ | 力→导纳律→IK→位置命令 | 理解控制架构 |
+| ros2_controllers 配置 | ★ | YAML 参数的物理含义 | 日常导纳配置 |
+| 导纳离散实现 | ★★ | 源码为显式笛卡尔加速度 + 关节速度先行积分；接触/阻尼下仍需稳定性分析 | 数值稳定性 |
+| FZI FDCC | ★★ | $J^T$ 绕开 IK 奇异 | 奇异附近柔顺 |
+| 导纳稳定性 | ★★★ | $K_e < D_d/(2\Delta t)$ | 参数选择约束 |
+| 碰撞检测 | ★★ | 阈值+连续计数+三种停止策略 | 安全底线 |
+| Lead-through | ★ | K=0 + 精确重力补偿 + 临界阻尼 | 协作编程 |
+| 柔顺统一视角 | ★★ | 被动→主动→自适应→学习 | 系统设计 |
 
 ### 术语速查表
 
@@ -1901,7 +1901,7 @@ ABB 的力控方案称为 Integrated Force Control（IFC），通过 ABB 的 Rob
 
 ---
 
-## 导纳控制的工业部署清单 ⭐⭐
+## 导纳控制的工业部署清单 ★★
 
 ### UR 机器人力控部署的完整检查清单
 
@@ -1945,9 +1945,9 @@ ABB 的力控方案称为 Integrated Force Control（IFC），通过 ABB 的 Rob
 
 > **本质洞察**：工业力控系统的可靠性 80% 取决于**传感器维护和标定**，而非控制算法本身。一个简单的导纳控制器配合精心维护的传感器，比一个复杂的自适应算法配合不维护的传感器，在工业场景中更可靠。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：ROS2 导纳控制器的时间同步问题**
+> ⚠ **编程陷阱：ROS2 导纳控制器的时间同步问题**
 >
 > 错误做法：F/T 传感器数据和关节状态使用不同的时间戳，导致控制器使用了"过时"的力数据
 >
@@ -1959,9 +1959,9 @@ ABB 的力控方案称为 Integrated Force Control（IFC），通过 ABB 的 Rob
 
 ### 练习
 
-1. ⭐⭐ **部署实践**：在 ROS2 Humble + UR5e 仿真环境中，按照上述清单部署 admittance_controller。记录每个步骤的实际耗时。
-2. ⭐⭐ **零偏分析**：连续运行 F/T 传感器 1 小时（无接触），每分钟记录零偏值。画出零偏随时间的变化曲线。温漂导致的偏差有多大？是否需要在线校正？
-3. ⭐⭐⭐ **跨章综合**：结合 F01（力控导论）中的四大应用场景分析和本章的 ROS2 导纳控制实现，为 UR5e 打磨场景设计完整的软硬件方案。要求包含：传感器选型、控制器参数、安全策略、部署清单。
+1. ★★ **部署实践**：在 ROS2 Humble + UR5e 仿真环境中，按照上述清单部署 admittance_controller。记录每个步骤的实际耗时。
+2. ★★ **零偏分析**：连续运行 F/T 传感器 1 小时（无接触），每分钟记录零偏值。画出零偏随时间的变化曲线。温漂导致的偏差有多大？是否需要在线校正？
+3. ★★★ **跨章综合**：结合 F01（力控导论）中的四大应用场景分析和本章的 ROS2 导纳控制实现，为 UR5e 打磨场景设计完整的软硬件方案。要求包含：传感器选型、控制器参数、安全策略、部署清单。
 
 ---
 
@@ -2012,7 +2012,7 @@ ABB 的力控方案称为 Integrated Force Control（IFC），通过 ABB 的 Rob
 2. 尝试将本章方法与其他章节的方法组合
 3. 复现本章引用的前沿工作
 
-## 导纳控制的典型调参案例集 ⭐⭐
+## 导纳控制的典型调参案例集 ★★
 
 ### 案例 1：UR5e 打磨（恒力 20 N）
 
@@ -2056,7 +2056,7 @@ ABB 的力控方案称为 Integrated Force Control（IFC），通过 ABB 的 Rob
 
 ---
 
-## 导纳控制与阻抗控制的统一数学视角 ⭐⭐⭐
+## 导纳控制与阻抗控制的统一数学视角 ★★★
 
 ### 从传递函数看导纳和阻抗的等价性
 
@@ -2101,17 +2101,17 @@ $$\omega_{admittance} < \omega_{position\_loop} / 3$$
 
 | 材料 | 类型 | 难度 | 核心内容 |
 |------|------|------|---------|
-| ros2_controllers admittance_controller 官方文档 (control.ros.org) | 文档 | ⭐ | 参数说明最全 |
-| Scherzinger et al. 2017, "Forward Dynamics Compliance Controller" (IROS) | 论文 | ⭐⭐ | FZI FDCC 原始论文 |
-| Scherzinger 2019, ROSCon Macau 演讲 | 演讲 | ⭐ | FDCC 的 ROS 实现和工程经验 |
-| Aertbelien et al. 2025, "Simplifying ROS2 Controllers" (arXiv 2601.08514) | 论文 | ⭐⭐ | 模块化参考生成架构 |
-| Ott 2008, "Cartesian Impedance Control of Redundant and Flexible-Joint Robots" | 专著 | ⭐⭐⭐ | 导纳/阻抗控制的稳定性理论 |
-| Haddadin & Croft 2016, "Physical Human-Robot Interaction" (Springer Handbook Ch.69) | 教材 | ⭐⭐ | ISO 15066 权威解读 |
-| FZI cartesian_controllers GitHub 仓库 | 代码 | ⭐⭐ | FDCC 完整实现 |
-| De Luca & Mattone 2003, "Actuator Failure Detection Using Generalized Momenta", ICRA, Taipei | 论文 | ⭐⭐ | 广义动量方法的理论基础 |
-| De Luca & Mattone 2005, "Sensorless Robot Collision Detection", ICRA, Barcelona | 论文 | ⭐⭐ | 无传感器碰撞检测的完整方案（Franka tau_ext_hat 的理论来源） |
-| ISO/TS 15066:2016 "Robots and robotic devices — Collaborative robots" | 标准 | ⭐ | 协作机器人碰撞力限值的权威参考 |
-| Robotiq 博客 "Force Control Packages Comparison" | 博客 | ⭐ | UR/Fanuc/ABB 力控包的工程对比 |
+| ros2_controllers admittance_controller 官方文档 (control.ros.org) | 文档 | ★ | 参数说明最全 |
+| Scherzinger et al. 2017, "Forward Dynamics Compliance Controller" (IROS) | 论文 | ★★ | FZI FDCC 原始论文 |
+| Scherzinger 2019, ROSCon Macau 演讲 | 演讲 | ★ | FDCC 的 ROS 实现和工程经验 |
+| Aertbelien et al. 2025, "Simplifying ROS2 Controllers" (arXiv 2601.08514) | 论文 | ★★ | 模块化参考生成架构 |
+| Ott 2008, "Cartesian Impedance Control of Redundant and Flexible-Joint Robots" | 专著 | ★★★ | 导纳/阻抗控制的稳定性理论 |
+| Haddadin & Croft 2016, "Physical Human-Robot Interaction" (Springer Handbook Ch.69) | 教材 | ★★ | ISO 15066 权威解读 |
+| FZI cartesian_controllers GitHub 仓库 | 代码 | ★★ | FDCC 完整实现 |
+| De Luca & Mattone 2003, "Actuator Failure Detection Using Generalized Momenta", ICRA, Taipei | 论文 | ★★ | 广义动量方法的理论基础 |
+| De Luca & Mattone 2005, "Sensorless Robot Collision Detection", ICRA, Barcelona | 论文 | ★★ | 无传感器碰撞检测的完整方案（Franka tau_ext_hat 的理论来源） |
+| ISO/TS 15066:2016 "Robots and robotic devices — Collaborative robots" | 标准 | ★ | 协作机器人碰撞力限值的权威参考 |
+| Robotiq 博客 "Force Control Packages Comparison" | 博客 | ★ | UR/Fanuc/ABB 力控包的工程对比 |
 
 ---
 
@@ -2131,7 +2131,7 @@ $$\omega_{admittance} < \omega_{position\_loop} / 3$$
 ---
 
 
-## 导纳控制的性能基准测试结果 ⭐⭐
+## 导纳控制的性能基准测试结果 ★★
 
 > **教学要点**：这些基准数据说明了一个重要事实——导纳控制的力控带宽（5-12 Hz）远低于阻抗控制（30-100 Hz）。对于需要 $> 20$ Hz 力控带宽的任务（如快速装配），导纳控制可能不够——需要切换到阻抗控制（Franka/iiwa）或使用 FZI FDCC 的优化方案。
 
@@ -2164,7 +2164,7 @@ $$\omega_{admittance} < \omega_{position\_loop} / 3$$
 
 ---
 
-## 导纳控制在不同 ROS2 发行版中的差异 ⭐
+## 导纳控制在不同 ROS2 发行版中的差异 ★
 
 | 功能 | Humble (2022) | Iron (2023) | Jazzy (2024) |
 |------|:------------:|:-----------:|:----------:|

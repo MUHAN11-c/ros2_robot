@@ -10,7 +10,7 @@
 
 ## 前置自测
 
-📋 **答不出 $\ge$ 3 题 → 先回前置章节复习**
+◆ **答不出 $\ge$ 3 题 → 先回前置章节复习**
 
 | # | 问题 | 检查目的 |
 |---|------|----------|
@@ -35,7 +35,7 @@
 
 ---
 
-## 11.1 从 CAD 到仿真：全链路概览 ⭐
+## 11.1 从 CAD 到仿真：全链路概览 ★
 
 > **这一节解决什么问题**：建立从 SolidWorks CAD 文件到可训练的仿真模型的完整心智模型——每一步做什么、会丢失什么信息、会引入什么错误。
 
@@ -87,7 +87,7 @@ SolidWorks 装配体 (.sldasm)
 | URDF → USD | URDF 特有标签 | PhysX material、articulation | collision 类型默认值 |
 | Mesh 简化 | 几何细节 | 凸包近似 | 孔洞被填充 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 🧠 **思维陷阱：认为"URDF 是通用格式，两个仿真器应该行为一致"。** URDF 只定义了运动学结构（link/joint 树）和基本物理参数（mass/inertia）。它**不定义**接触参数、执行器模型、求解器设置——这些由仿真器各自填充默认值。同一个 URDF 在 MuJoCo 和 PhysX 中的行为可能完全不同，因为默认的接触刚度、阻尼和摩擦模型不同。
 
@@ -100,7 +100,7 @@ SolidWorks 装配体 (.sldasm)
 
 上一节建立了全链路的全局视角。接下来逐段讲解每个转换步骤的工程实现，从 SolidWorks → URDF 开始。
 
-## 11.2 SolidWorks → URDF（sw2urdf 插件） ⭐⭐
+## 11.2 SolidWorks → URDF（sw2urdf 插件） ★★
 
 > **这一节解决什么问题**：从 CAD 装配体导出 URDF 是全链路的第一步，也是错误最容易引入的步骤。讲解 sw2urdf 的安装、装配体要求和常见错误排查。
 
@@ -172,7 +172,7 @@ sw2urdf 使用 SolidWorks 中选择或自动生成的 reference axis 来定义�
 """
 ```
 
-⚠️ **关键：如果 SolidWorks 中为关节选定的 reference axis 没有对准真实旋转方向，导出的 URDF 中 `<axis>` 就会指向错误方向。** 自检方法：在 SolidWorks 中显示参考几何，确认每个关节处选定的轴指向期望的旋转方向（若你按惯例用坐标系 Z 轴作为参考轴，则确认蓝色 Z 箭头指向旋转方向）。
+⚠ **关键：如果 SolidWorks 中为关节选定的 reference axis 没有对准真实旋转方向，导出的 URDF 中 `<axis>` 就会指向错误方向。** 自检方法：在 SolidWorks 中显示参考几何，确认每个关节处选定的轴指向期望的旋转方向（若你按惯例用坐标系 Z 轴作为参考轴，则确认蓝色 Z 箭头指向旋转方向）。
 
 ### sw2urdf 导出的常见错误
 
@@ -290,11 +290,11 @@ def fix_mesh_paths(urdf_path, output_path=None):
     print(f"已修复 mesh 路径: {output}")
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：STL 文件是二进制格式。** sw2urdf 默认导出二进制 STL。MuJoCo 可以加载二进制 STL，但 Isaac Lab 的某些版本的 URDF importer 需要 ASCII STL 或 OBJ。推荐统一转换为 OBJ 格式（用 Blender 或 trimesh 库）。
+⚠ **编程陷阱：STL 文件是二进制格式。** sw2urdf 默认导出二进制 STL。MuJoCo 可以加载二进制 STL，但 Isaac Lab 的某些版本的 URDF importer 需要 ASCII STL 或 OBJ。推荐统一转换为 OBJ 格式（用 Blender 或 trimesh 库）。
 
-⚠️ **编程陷阱：惯性参数在 SolidWorks 中按零件的质心计算，但 URDF 要求在 link 坐标系下表示。** sw2urdf 应该自动处理这个转换，但在某些版本中存在 bug——惯性参数可能没有正确变换。自检方法：在 MuJoCo 中加载后，打开 "Inertia" 可视化选项（红色椭球），检查每个 link 的惯性椭球是否合理。
+⚠ **编程陷阱：惯性参数在 SolidWorks 中按零件的质心计算，但 URDF 要求在 link 坐标系下表示。** sw2urdf 应该自动处理这个转换，但在某些版本中存在 bug——惯性参数可能没有正确变换。自检方法：在 MuJoCo 中加载后，打开 "Inertia" 可视化选项（红色椭球），检查每个 link 的惯性椭球是否合理。
 
 💡 **概念误区：认为 sw2urdf 导出的 URDF 可以直接使用。** sw2urdf 输出的 URDF 通常是"基本正确但需要手动修正"的。常见的手动修正包括：mesh 路径修复、关节限位调整、惯性参数验证、添加碰撞几何（sw2urdf 可能只导出 visual mesh 而遗漏 collision mesh）。
 
@@ -306,7 +306,7 @@ def fix_mesh_paths(urdf_path, output_path=None):
 
 ---
 
-## 11.3 URDF → MJCF（MuJoCo 格式转换） ⭐⭐⭐
+## 11.3 URDF → MJCF（MuJoCo 格式转换） ★★★
 
 > **这一节解决什么问题**：URDF 是 ROS 生态的标准格式，但 MuJoCo 的原生格式是 MJCF。本节讲解从 URDF 到 MJCF 的转换流程，以 MuJoCo Menagerie 的标准工作流为范本。
 
@@ -709,11 +709,11 @@ class MyRobotEntityCfg:
         return spec
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：MuJoCo 加载 URDF 时默认丢弃 visual mesh。** 如果不在 URDF 中添加 `<mujoco><compiler discardvisual="false"/></mujoco>`，MuJoCo 只保留 collision geometry——模型在 viewer 中是一堆简陋的几何体而非精细的 mesh。
+⚠ **编程陷阱：MuJoCo 加载 URDF 时默认丢弃 visual mesh。** 如果不在 URDF 中添加 `<mujoco><compiler discardvisual="false"/></mujoco>`，MuJoCo 只保留 collision geometry——模型在 viewer 中是一堆简陋的几何体而非精细的 mesh。
 
-⚠️ **编程陷阱：MJCF 的 body 树结构与 URDF 不同。** URDF 是扁平的 link/joint 列表（joint 引用 parent/child link），MJCF 是嵌套的 body 树（child body 直接嵌套在 parent body 内）。转换时的坐标系变换容易出错——在 MuJoCo viewer 中打开 "Frame" 可视化选项检查每个 body 的坐标系方向。
+⚠ **编程陷阱：MJCF 的 body 树结构与 URDF 不同。** URDF 是扁平的 link/joint 列表（joint 引用 parent/child link），MJCF 是嵌套的 body 树（child body 直接嵌套在 parent body 内）。转换时的坐标系变换容易出错——在 MuJoCo viewer 中打开 "Frame" 可视化选项检查每个 body 的坐标系方向。
 
 🧠 **思维陷阱：Menagerie 模型可以直接用于 RL 训练。** Menagerie 模型是为 viewer 演示优化的，不一定适合 RL 训练。例如：actuator 的 kp/kd 可能太大（导致策略输出的 action 变化幅度过小）或太小（导致机器人在 DR 下不稳定）。RL 项目通常需要根据 Ch05 的 action space 设计原则重新调整 actuator 参数。
 
@@ -725,7 +725,7 @@ class MyRobotEntityCfg:
 
 ---
 
-## 11.4 URDF → USD（Isaac Lab 格式转换） ⭐⭐⭐
+## 11.4 URDF → USD（Isaac Lab 格式转换） ★★★
 
 > **这一节解决什么问题**：Isaac Lab 使用 NVIDIA 的 USD（Universal Scene Description）格式。本节讲解从 URDF 到 USD 的转换流程和 PhysX 特有的参数配置。
 
@@ -990,11 +990,11 @@ def compare_free_fall(urdf_path):
 
 > **本质洞察：** MuJoCo 和 PhysX 使用不同的接触力模型。MuJoCo 使用"软接触"（complementarity-based），PhysX 使用"刚性接触"（impulse-based）。这意味着即使所有显式参数（质量、摩擦系数）完全相同，两个引擎的接触行为仍然不同。在 RL 训练中，这种差异通常被 Domain Randomization（Ch08）吸收——只要 DR 的范围足够宽，策略对接触模型的差异是鲁棒的。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：Isaac Lab 的 `make_instanceable` 参数会把 mesh 数据分离到独立文件。** 如果只复制了主 USD 文件而没有复制 `Props/instanceable_assets.usd`，Isaac Lab 加载时 mesh 丢失——模型变成无形状的"骨架"。
+⚠ **编程陷阱：Isaac Lab 的 `make_instanceable` 参数会把 mesh 数据分离到独立文件。** 如果只复制了主 USD 文件而没有复制 `Props/instanceable_assets.usd`，Isaac Lab 加载时 mesh 丢失——模型变成无形状的"骨架"。
 
-⚠️ **编程陷阱：PhysX 的 articulation 限制 64 个 link。** 带有灵巧手的人形机器人（body 30 + hand 20 = 50 link）接近这个限制。解决方案：合并 fixed joint 以减少 link 数量（Isaac Lab 的 `merge_fixed_joints=True`）。
+⚠ **编程陷阱：PhysX 的 articulation 限制 64 个 link。** 带有灵巧手的人形机器人（body 30 + hand 20 = 50 link）接近这个限制。解决方案：合并 fixed joint 以减少 link 数量（Isaac Lab 的 `merge_fixed_joints=True`）。
 
 ### 练习
 
@@ -1004,7 +1004,7 @@ def compare_free_fall(urdf_path):
 
 ---
 
-## 11.5 Collision Mesh 简化 ⭐⭐⭐
+## 11.5 Collision Mesh 简化 ★★★
 
 > **这一节解决什么问题**：CAD 导出的 mesh 通常有数万个三角形面——这对物理仿真的碰撞检测来说太复杂了。本节讲解为什么需要简化、如何简化、以及精度-速度的权衡。
 
@@ -1275,11 +1275,11 @@ MuJoCo Warp（mjlab 的 GPU 后端）对 collision mesh 有额外要求：
 
 MuJoCo Menagerie 中**部分**模型提供两个场景文件：`scene.xml`（CPU 仿真，精细 collision）和 `scene_mjx.xml`（GPU 仿真，简化 collision）；并非每个模型都有 `scene_mjx.xml`，是否可用应以具体模型目录为准（例如 `unitree_go2/` 有 `scene_mjx.xml`，而 `unitree_go1/` 当前只有 `go1.xml` 和 `scene.xml`）。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：V-HACD 默认参数生成过多凸包。** 默认 `max_convex_hull=64` 对大多数机器人零件过于精细。从 `max_convex_hull=8` 开始，如果碰撞行为不满意再逐步增加。
+⚠ **编程陷阱：V-HACD 默认参数生成过多凸包。** 默认 `max_convex_hull=64` 对大多数机器人零件过于精细。从 `max_convex_hull=8` 开始，如果碰撞行为不满意再逐步增加。
 
-⚠️ **编程陷阱：Isaac Lab 的 collision approximation 类型影响行为。** `convexHull`（默认）会填充所有凹面——对于手柄、杯子等需要抓取的物体是错误的。需要手动设置为 `convexDecomposition`。
+⚠ **编程陷阱：Isaac Lab 的 collision approximation 类型影响行为。** `convexHull`（默认）会填充所有凹面——对于手柄、杯子等需要抓取的物体是错误的。需要手动设置为 `convexDecomposition`。
 
 💡 **概念误区：认为"collision mesh 越精细仿真越准确"。** 对于 RL 训练，碰撞检测的精度远不如吞吐量重要。一个用 8 个凸包近似的 collision mesh 在物理行为上与原始 mesh 几乎无差异，但仿真速度快 10 倍。
 
@@ -1292,7 +1292,7 @@ MuJoCo Menagerie 中**部分**模型提供两个场景文件：`scene.xml`（CPU
 
 ---
 
-## 11.6 惯性参数估计与验证 ⭐⭐
+## 11.6 惯性参数估计与验证 ★★
 
 > **这一节解决什么问题**：惯性参数（质量、质心位置、惯性张量）是仿真物理行为的基础。本节讲解如何获取、验证和修正这些参数。
 
@@ -1426,7 +1426,7 @@ print(f"位置漂移: {drift:.4f}m")
 </body>
 ```
 
-⚠️ **注意：MuJoCo 的自动计算假设 geom 是均匀密度的。** 如果实际零件的质量分布不均匀（如电机在一端），自动计算的质心和惯量会偏差较大。
+⚠ **注意：MuJoCo 的自动计算假设 geom 是均匀密度的。** 如果实际零件的质量分布不均匀（如电机在一端），自动计算的质心和惯量会偏差较大。
 
 ### Pseudo-Inertia 与 DR 中的物理一致性
 
@@ -1664,15 +1664,15 @@ def full_diagnostics(mjcf_path):
     return report
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：PhysX 会"静默修正"不合法的惯性参数。** 如果你的惯性张量违反三角不等式，MuJoCo 会在加载时报错，但 PhysX 会自动修正并继续——这意味着你在 Isaac Lab 中不会收到任何警告，但仿真行为可能不正确。始终在 MuJoCo 中先加载检查。
+⚠ **编程陷阱：PhysX 会"静默修正"不合法的惯性参数。** 如果你的惯性张量违反三角不等式，MuJoCo 会在加载时报错，但 PhysX 会自动修正并继续——这意味着你在 Isaac Lab 中不会收到任何警告，但仿真行为可能不正确。始终在 MuJoCo 中先加载检查。
 
 💡 **概念误区：认为"惯性参数精确就好"。** 对于 RL 训练，惯性参数的精确度远不如"物理一致性"重要。一个精确但略有偏差的惯量可以被 DR 覆盖，但一个违反三角不等式的惯量会导致数值不稳定，DR 无法修复。
 
 ---
 
-## 11.7 机器人模型库 ⭐
+## 11.7 机器人模型库 ★
 
 > **这一节解决什么问题**：大多数研究项目不需要从 SolidWorks 开始——可以直接使用现成的高质量模型。本节介绍三个主要的模型库。
 
@@ -1919,11 +1919,11 @@ COMPOSITE_CFG = ArticulationCfg(
 # 这比 MjSpec.attach() 复杂得多，通常不推荐
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：Menagerie 模型的 actuator 参数是为 viewer 演示优化的，不一定适合 RL。** 例如 Go1 的 `kp=100` 在 viewer 中看起来"刚好能站住"，但在 RL 训练中 DR 摩擦变小时可能不够。RL 项目通常需要调高 kp 到 200-400。
+⚠ **编程陷阱：Menagerie 模型的 actuator 参数是为 viewer 演示优化的，不一定适合 RL。** 例如 Go1 的 `kp=100` 在 viewer 中看起来"刚好能站住"，但在 RL 训练中 DR 摩擦变小时可能不够。RL 项目通常需要调高 kp 到 200-400。
 
-⚠️ **编程陷阱：复合机器人的碰撞排除不完整。** `MjSpec.attach()` 不会自动排除底盘和手臂之间的碰撞。手臂安装座处的碰撞几何可能与底盘重叠——需要手动添加 `<exclude>` 标签。
+⚠ **编程陷阱：复合机器人的碰撞排除不完整。** `MjSpec.attach()` 不会自动排除底盘和手臂之间的碰撞。手臂安装座处的碰撞几何可能与底盘重叠——需要手动添加 `<exclude>` 标签。
 
 💡 **概念误区：认为"两个框架的内置模型参数一致"。** Menagerie 的 Go1 和 Isaac Lab Assets 的 Go1 是独立维护的——actuator kp、collision 设置、solver 参数可能不同。在做双框架对比实验时，以 URDF 为基准重新转换两端是更安全的做法。
 
@@ -1934,7 +1934,7 @@ COMPOSITE_CFG = ArticulationCfg(
 
 ---
 
-## 11.8 实验：端到端模型验证 ⭐⭐
+## 11.8 实验：端到端模型验证 ★★
 
 > **这一节解决什么问题**：把前面所有步骤串联起来，完成一个机器人模型从 URDF 到双框架训练的完整验证。
 
@@ -2141,9 +2141,9 @@ velocity task 短训练（200 iter）：
   下一步：开始 Ch04 velocity task 训练 / 修正模型
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：验证时忘记设置 home 关键帧。** 如果模型的初始 qpos 全为零，四足机器人的腿会完全伸直——这不是一个有意义的测试姿态。始终从 home 关键帧开始验证。
+⚠ **编程陷阱：验证时忘记设置 home 关键帧。** 如果模型的初始 qpos 全为零，四足机器人的腿会完全伸直——这不是一个有意义的测试姿态。始终从 home 关键帧开始验证。
 
 🧠 **思维陷阱：认为"两个框架的行为完全一致才能开始训练"。** 完全一致是不可能的（不同的接触模型）。目标是"基本行为一致、差异可被 DR 覆盖"。如果自由落体时间差异 <5%、关节响应幅度差异 <20%，通常就足够了。
 
@@ -2155,7 +2155,7 @@ velocity task 短训练（200 iter）：
 
 ---
 
-## 11.9 跨仿真器参数对齐 ⭐⭐
+## 11.9 跨仿真器参数对齐 ★★
 
 > **这一节解决什么问题**：当你需要在 mjlab 和 Isaac Lab 中使用同一个机器人时，如何确保两端的物理参数尽可能一致，减少因仿真器差异导致的策略迁移问题。
 
@@ -2289,9 +2289,9 @@ def check_alignment(mjcf_path, isaac_cfg):
 4. **摩擦系数** 设为相近值，DR 覆盖残差
 5. **接触刚度/阻尼** 不做对齐（模型不同），DR 覆盖
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：MuJoCo 的 kv 和 joint damping 效果叠加。** 在 MJCF 中，`<position kv="4"/>` 和 `<joint damping="0.5"/>` **同时生效**——总阻尼是两者之和。Isaac Lab 的 `ImplicitActuatorCfg(damping=4)` 对应的是 **总阻尼**。如果你在 MJCF 中设了 kv=4 + joint_damping=0.5，Isaac Lab 应设 damping=4.5。
+⚠ **编程陷阱：MuJoCo 的 kv 和 joint damping 效果叠加。** 在 MJCF 中，`<position kv="4"/>` 和 `<joint damping="0.5"/>` **同时生效**——总阻尼是两者之和。Isaac Lab 的 `ImplicitActuatorCfg(damping=4)` 对应的是 **总阻尼**。如果你在 MJCF 中设了 kv=4 + joint_damping=0.5，Isaac Lab 应设 damping=4.5。
 
 ---
 
@@ -2299,27 +2299,27 @@ def check_alignment(mjcf_path, isaac_cfg):
 
 | 知识点 | 核心结论 | 重要程度 |
 |--------|---------|---------|
-| 全链路数据流 | SolidWorks → URDF → MJCF/USD → RL 训练 | ⭐ |
-| sw2urdf 装配体要求 | 每个 link 一个子装配体，Z 轴对齐旋转轴 | ⭐⭐ |
-| Mesh 路径修复 | package:// → 相对路径，STL → OBJ | ⭐⭐ |
-| URDF → MJCF 六步流程 | mesh 转换 → obj2mjcf → MuJoCo 加载 → 手动调优 | ⭐⭐⭐ |
-| MJCF 手动调优六步 | default 块 + actuator + 碰撞过滤 + 关键帧 + MJX 场景 + 验证 | ⭐⭐⭐⭐ |
-| 声明式 vs 命令式 | URDF = 骨架（通用），MJCF = 骨架+肌肉+神经（精确） | ⭐⭐ |
-| Actuator 参数调优 | RL 训练的 kp 需要比 viewer 演示大 2-3 倍 | ⭐⭐⭐ |
-| URDF → USD | Isaac Lab convert_urdf.py + instanceable + PhysX 参数 | ⭐⭐⭐ |
-| UrdfConverterCfg | merge_fixed_joints, make_instanceable, default_drive_type | ⭐⭐⭐ |
-| MuJoCo vs PhysX 行为差异 | 接触模型不同→DR 覆盖差异 | ⭐⭐⭐ |
-| V-HACD vs CoACD | 填充孔洞 vs 保留凹面，操作任务必须用 CoACD | ⭐⭐⭐ |
-| Collision 精度-速度权衡 | RL 训练优先吞吐量→简化 collision→8-16 parts | ⭐⭐ |
-| MJX/Warp collision 要求 | GPU 后端需要 primitive shapes 或极简化 mesh | ⭐⭐ |
-| 惯性张量三角不等式 | $I_x+I_y\ge I_z$（循环），MuJoCo 会拒绝不合法参数 | ⭐⭐⭐ |
-| Pseudo-inertia LMI | 物理一致的 DR 随机化必须等比缩放 mass/inertia | ⭐⭐⭐ |
-| 惯性验证三测试 | 自由落体 + 静止平衡 + 质心可视化 | ⭐⭐ |
-| MuJoCo Menagerie | 50+ 模型，每个有详细的转换文档，是最佳学习材料 | ⭐⭐⭐ |
-| Isaac Lab Asset Zoo | 16+ 内置 USD 模型，直接引用 CFG | ⭐⭐ |
-| awesome-loco-manipulation | 复合机器人 URDF（Go2+Arx, B1+Z1） | ⭐⭐ |
-| MjSpec.attach() 动态组合 | 运行时组合多个机器人/物体，prefix 避免命名冲突 | ⭐⭐⭐ |
-| 跨仿真器参数对齐 | timestep/kp/kd/mass 必须一致，接触差异留给 DR | ⭐⭐⭐ |
+| 全链路数据流 | SolidWorks → URDF → MJCF/USD → RL 训练 | ★ |
+| sw2urdf 装配体要求 | 每个 link 一个子装配体，Z 轴对齐旋转轴 | ★★ |
+| Mesh 路径修复 | package:// → 相对路径，STL → OBJ | ★★ |
+| URDF → MJCF 六步流程 | mesh 转换 → obj2mjcf → MuJoCo 加载 → 手动调优 | ★★★ |
+| MJCF 手动调优六步 | default 块 + actuator + 碰撞过滤 + 关键帧 + MJX 场景 + 验证 | ★★★★ |
+| 声明式 vs 命令式 | URDF = 骨架（通用），MJCF = 骨架+肌肉+神经（精确） | ★★ |
+| Actuator 参数调优 | RL 训练的 kp 需要比 viewer 演示大 2-3 倍 | ★★★ |
+| URDF → USD | Isaac Lab convert_urdf.py + instanceable + PhysX 参数 | ★★★ |
+| UrdfConverterCfg | merge_fixed_joints, make_instanceable, default_drive_type | ★★★ |
+| MuJoCo vs PhysX 行为差异 | 接触模型不同→DR 覆盖差异 | ★★★ |
+| V-HACD vs CoACD | 填充孔洞 vs 保留凹面，操作任务必须用 CoACD | ★★★ |
+| Collision 精度-速度权衡 | RL 训练优先吞吐量→简化 collision→8-16 parts | ★★ |
+| MJX/Warp collision 要求 | GPU 后端需要 primitive shapes 或极简化 mesh | ★★ |
+| 惯性张量三角不等式 | $I_x+I_y\ge I_z$（循环），MuJoCo 会拒绝不合法参数 | ★★★ |
+| Pseudo-inertia LMI | 物理一致的 DR 随机化必须等比缩放 mass/inertia | ★★★ |
+| 惯性验证三测试 | 自由落体 + 静止平衡 + 质心可视化 | ★★ |
+| MuJoCo Menagerie | 50+ 模型，每个有详细的转换文档，是最佳学习材料 | ★★★ |
+| Isaac Lab Asset Zoo | 16+ 内置 USD 模型，直接引用 CFG | ★★ |
+| awesome-loco-manipulation | 复合机器人 URDF（Go2+Arx, B1+Z1） | ★★ |
+| MjSpec.attach() 动态组合 | 运行时组合多个机器人/物体，prefix 避免命名冲突 | ★★★ |
+| 跨仿真器参数对齐 | timestep/kp/kd/mass 必须一致，接触差异留给 DR | ★★★ |
 
 本章建立了从 CAD 到仿真的完整工程链路。这条链路上的每一步都可能引入错误，而错误会在 RL 训练中被放大——一个关节方向反了、一个惯性参数不合法、一个 collision mesh 太精细，都可能导致训练失败或策略不收敛。验证不是可选的——它是训练前的必修步骤。
 
@@ -2474,14 +2474,14 @@ URDF → USD 转换：
 
 | 资料 | 难度 | 推荐原因 |
 |------|------|---------|
-| MuJoCo 建模文档 (mujoco.readthedocs.io/en/stable/modeling.html) | ⭐⭐ | MJCF 格式的权威参考，包含所有元素和属性 |
-| MuJoCo Menagerie (google-deepmind/mujoco_menagerie) | ⭐⭐ | 50+ 模型的转换 README 是最好的实战学习材料 |
-| sw2urdf 官方文档 (wiki.ros.org/sw_urdf_exporter) | ⭐ | SolidWorks 导出 URDF 的参考 |
-| Isaac Lab 资产导入文档 (isaac-sim.github.io/IsaacLab) | ⭐⭐ | URDF/MJCF → USD 的官方工作流和参数说明 |
-| Wei et al. 2022, "CoACD: Collision-Aware Convex Decomposition" (SIGGRAPH) | ⭐⭐⭐ | 理解 CoACD 为什么优于 V-HACD，操作任务必读 |
-| Wensing et al. 2018, "Linear Matrix Inequalities for Physically-Consistent Inertial Parameter Identification" (RA-L) | ⭐⭐⭐ | 惯性参数物理一致性的数学基础，DR 随机化必读 |
-| obj2mjcf 官方文档 (github.com/kevinzakka/obj2mjcf) | ⭐ | mesh 格式转换工具 |
-| awesome-loco-manipulation (github.com/aCodeDog/awesome-loco-manipulation) | ⭐⭐ | 复合机器人 URDF 参考 |
+| MuJoCo 建模文档 (mujoco.readthedocs.io/en/stable/modeling.html) | ★★ | MJCF 格式的权威参考，包含所有元素和属性 |
+| MuJoCo Menagerie (google-deepmind/mujoco_menagerie) | ★★ | 50+ 模型的转换 README 是最好的实战学习材料 |
+| sw2urdf 官方文档 (wiki.ros.org/sw_urdf_exporter) | ★ | SolidWorks 导出 URDF 的参考 |
+| Isaac Lab 资产导入文档 (isaac-sim.github.io/IsaacLab) | ★★ | URDF/MJCF → USD 的官方工作流和参数说明 |
+| Wei et al. 2022, "CoACD: Collision-Aware Convex Decomposition" (SIGGRAPH) | ★★★ | 理解 CoACD 为什么优于 V-HACD，操作任务必读 |
+| Wensing et al. 2018, "Linear Matrix Inequalities for Physically-Consistent Inertial Parameter Identification" (RA-L) | ★★★ | 惯性参数物理一致性的数学基础，DR 随机化必读 |
+| obj2mjcf 官方文档 (github.com/kevinzakka/obj2mjcf) | ★ | mesh 格式转换工具 |
+| awesome-loco-manipulation (github.com/aCodeDog/awesome-loco-manipulation) | ★★ | 复合机器人 URDF 参考 |
 
 **阅读顺序建议**：先读 MuJoCo Menagerie 中你关注的机器人的 README（理解转换流程），再读 MuJoCo 建模文档中 MJCF 的关键元素（default、actuator、contact），然后读 Isaac Lab 资产导入文档（理解 USD 工作流）。CoACD 和 Wensing 论文在需要 collision 简化或惯性 DR 时精读。
 

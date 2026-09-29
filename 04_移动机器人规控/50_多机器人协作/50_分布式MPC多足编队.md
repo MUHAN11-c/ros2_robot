@@ -8,7 +8,7 @@
 
 ## 前置自测
 
-> 📋 **答不出 ≥ 2 题** → 标 ① 的回第 1 章，标 ② 的回第 2 章 §2.3，标 ③ 的回足式控制（单体四足 MPC），标 ④ 的回凸优化基础，再来读本章。本章会**大量复用**这些前置，但不重新教它们——欠了账会在 §4.4（ADMM 分解）和 §4.5（SRB 网络）卡住。
+> ◆ **答不出 ≥ 2 题** → 标 ① 的回第 1 章，标 ② 的回第 2 章 §2.3，标 ③ 的回足式控制（单体四足 MPC），标 ④ 的回凸优化基础，再来读本章。本章会**大量复用**这些前置，但不重新教它们——欠了账会在 §4.4（ADMM 分解）和 §4.5（SRB 网络）卡住。
 
 1. **（接第 2 章 §2.3，①②）** 标准 ADMM 的三步迭代是哪三步？写出求解 $\min_{x,z} f(x)+g(z)\ \text{s.t.}\ Ax+Bz=c$ 的 $x$-更新、$z$-更新、$y$-更新。其中**对偶变量 $y$ 的物理含义**是什么？罚参数 $\rho$ 太大、太小分别会怎样？
    （答不出 → 回第 2 章 §2.3 ADMM 分布式优化）
@@ -72,7 +72,7 @@
 
 - **理论线**（理解数学）：§4.1→§4.3→§4.4→§4.7。重点是对偶分解的推导、ADMM 的增广拉格朗日来源、收敛性分析。这条线把第 2 章的 ADMM 从标量 QP 推广到真实多足联合优化，是本章的数学骨架。
 - **工程线**（会用就行）：§4.1→§4.2→§4.4→§4.5→§4.6。重点是 SRB 网络建模、ADMM 代码骨架、分层控制流。做仿真/真机的同学走这条线。
-- **必读**：§4.1（动机，全章地基）、§4.4（ADMM 分布式 MPC，全章核心算法，需动手实现）、§4.5（SRB 网络，多足编队的建模核心，需跟着推一遍耦合力）。§4.3、§4.4、§4.5、§4.7 是四个 ⭐⭐⭐⭐ 的硬核小节，值得花最多时间。
+- **必读**：§4.1（动机，全章地基）、§4.4（ADMM 分布式 MPC，全章核心算法，需动手实现）、§4.5（SRB 网络，多足编队的建模核心，需跟着推一遍耦合力）。§4.3、§4.4、§4.5、§4.7 是四个 ★★★★ 的硬核小节，值得花最多时间。
 
 ```
 为什么必须分布式？ (§4.1 集中式 MPC 的三重瓶颈)
@@ -180,7 +180,7 @@
 
 ---
 
-## §4.1 从集中式到分布式：为什么联合 MPC 必须拆开 ⭐⭐⭐
+## §4.1 从集中式到分布式：为什么联合 MPC 必须拆开 ★★★
 
 > **这一节解决什么问题**：在写任何分布式算法之前，必须先回答"为什么不能直接用集中式？"。这一节把"集中式 MPC 不可扩展"这个口号，拆成三个可量化、可观测的具体瓶颈（计算、通信、可靠性），并给出分布式 MPC 的基本思想——每个 agent 解本地 MPC、交换预测信息。它是 §4.3-§4.4 所有分解方法的动机地基。
 
@@ -289,7 +289,7 @@ $$
 
 > **系统性分类（R6E）的价值**：拿到一篇多机 MPC 论文，先把它放进这张谱系表的某一格（看它的通信模式和决策主体），你就立刻知道它的最优性/鲁棒性/计算的大致权衡，不必读完全文。这比记住一堆方法名有用——架构谱系是"思考框架"，具体方法是"框架里的实例"。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱 1（概念误区）：以为分布式 MPC 一定比集中式"更好"。**
 - **错误描述**：认为既然分布式解决了计算爆炸，就应该无脑用分布式替代集中式。
@@ -319,7 +319,7 @@ $$
 
 ---
 
-## §4.2 编队约束建模：把"保持队形"写进 MPC ⭐⭐⭐
+## §4.2 编队约束建模：把"保持队形"写进 MPC ★★★
 
 > **这一节解决什么问题**：§4.1 反复说"编队耦合"，但到底"保持队形"在数学上长什么样？这一节把第 2 章的编队三范式（position / displacement / distance-based）从"一个静态控制律"升级为"MPC 预测时域上的代价函数与约束"，说明每种范式如何决定了机器人间的**耦合结构**——而这个耦合结构正是 §4.3-§4.4 要分解的对象。建模错了，后面分解再漂亮也是错的。
 
@@ -450,7 +450,7 @@ $$
 
 这个软硬权衡也是累积项目（§4.8）可以扩展的方向：在双 Go2 编队场景里加一个障碍，观察编队如何"变形绕障再恢复"——这比无障碍的纯编队更接近真实任务，也让你亲眼看到软约束权重 $w_{ij}$ 调大调小对"避障时队形牺牲多少"的影响。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱 1（概念误区）：用绝对位置代价冒充分布式编队。**
 - **错误描述**：编队代价写成 $\sum_i\|\mathbf{p}_i-\mathbf{p}_i^{\text{ref}}\|^2$，以为每项只含一个 agent 就是分布式。
@@ -486,7 +486,7 @@ $$
 
 ---
 
-## §4.3 对偶分解与价格协调：把耦合约束"卖"给市场 ⭐⭐⭐⭐
+## §4.3 对偶分解与价格协调：把耦合约束"卖"给市场 ★★★★
 
 > **这一节解决什么问题**：§4.2 制造了耦合（编队约束/代价把不同 agent 绑在一起），现在要分解它。这一节讲分布式优化最经典的分解工具——**对偶分解（dual decomposition）**：通过拉格朗日松弛把耦合约束移进目标，让问题在 agent 之间可分，再用一个"价格"（对偶变量）协调它们。它是理解 ADMM（§4.4）的必经之路——ADMM 本质是"对偶分解 + 增广项"，不先懂对偶分解的思想和它的弱点，就理解不了 ADMM 为什么那样设计。这是本章的数学核心之一。
 
@@ -626,7 +626,7 @@ $\alpha^k$ 是步长。这个更新的经济学含义完美对应市场：**残�
 
 这个手算例子是 §4.3 练习 1-2 的"参考过程"。把它和 §4.4 练习 1 的 consensus-ADMM 同一问题对照，你会看到 ADMM 用增广项把这个"靠精调步长才稳"的过程变成了"固定 $\rho$ 就稳且更快"——那正是 ADMM 三个补丁的威力。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱 1（概念误区）：松弛本地约束 $\mathbf{X}_i\in\mathcal{C}_i$。**
 - **错误描述**：做拉格朗日松弛时，把所有约束（包括本地动力学、摩擦锥）都松弛掉。
@@ -662,7 +662,7 @@ $\alpha^k$ 是步长。这个更新的经济学含义完美对应市场：**残�
 
 ---
 
-## §4.4 ADMM 分布式 MPC：又快又稳的分解 ⭐⭐⭐⭐
+## §4.4 ADMM 分布式 MPC：又快又稳的分解 ★★★★
 
 > **这一节解决什么问题**：§4.3 给了对偶分解的思想和它的三个弱点（慢、脆、中间不可行）。这一节用 ADMM（交替方向乘子法）逐一修复它们，并把它落成多足分布式 MPC 的可执行算法。这是全章的**算法核心**——你会看到第 2 章 §2.3 学的 ADMM 三步迭代，在这里变成"每个 agent 解一个带二次惩罚的本地 MPC + 邻居预测的共识平均 + 对偶上升"。学完这一节，你应该能写出双四足 ADMM 编队的代码骨架。
 
@@ -905,7 +905,7 @@ $$
 
 > **类比（像 X 不像 Y）**：ADMM 的 X/Z/Y 三步像**一个反复磨合的团队协作**。X-更新像"每个人先按自己理解 + 团队当前共识做一版方案"（本地优化 + 向共识靠拢）；Z-更新像"把大家的方案汇总取个折中作为新共识"（平均）；Y-更新像"记录每个人这次离共识差多远，下次开会时这个'欠账'要补上"（对偶累积）。**像**的地方：通过反复"各做各的 → 汇总 → 记账"逼近一致。**不像**的地方：真实团队靠人的判断，ADMM 每步都是严格的数学最优化，且 Y 步的"记账"（对偶变量）有精确的收敛理论保证它最终拉平——这是人治团队没有的数学保证。还有一个边界：这个类比在**非凸**时失效——团队磨合通常能达成共识，但非凸 ADMM 可能永远磨不拢（震荡）。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱 1（编程陷阱）：Z-更新漏掉对偶项 $\mathbf{u}_i$。**
 - **错误描述**：共识平均写成 $\mathbf{z}=\text{avg}(\mathbf{w}_i)$ 而非 $\text{avg}(\mathbf{w}_i+\mathbf{u}_i)$。
@@ -949,7 +949,7 @@ $$
 
 ---
 
-## §4.5 SRB 网络与多足编队：CoM 协调 + 接触约束 + 耦合力 ⭐⭐⭐⭐
+## §4.5 SRB 网络与多足编队：CoM 协调 + 接触约束 + 耦合力 ★★★★
 
 > **这一节解决什么问题**：前四节的分布式 MPC 框架（编队建模 + ADMM 分解）是通用的——双积分器、轮式车、无人机都能用。这一节把它**落到多足机器人特有的难点**：每台机器人不是一个点，而是一个会踏步、有质心起伏、每条腿要满足摩擦锥和单边接触的复杂系统；当它们共享负载时，还会产生一个凭空多出来的"约束力"。这是多足编队区别于一般多机编队的核心，也是本章标题"多足"二字的落脚点。是建模的硬核，必须跟着推一遍。
 
@@ -1120,7 +1120,7 @@ $$
 
 这个 49N、$\delta$ 的小例子，就是 Kim-Fawcett-Hamed 双 A1 搬 5kg 负载在做的事情的一维投影：MPC 协调每台机器人对负载的力，既要合力托住搬动负载（运动力），又要内力受控不内耗（内力），而这一切通过 ADMM 在 SRB 层协调 $\boldsymbol{\lambda}$ 完成。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱 1（概念误区）：把耦合力 $\boldsymbol{\lambda}$ 当成可独立优化的控制输入。**
 - **错误描述**：在 MPC 里把 $\boldsymbol{\lambda}_i$ 当成和接触力 $\mathbf{f}_{ij}$ 一样的自由决策变量，随便优化。
@@ -1164,7 +1164,7 @@ $$
 
 ---
 
-## §4.6 分层控制：从 MPC 命令到关节力矩 ⭐⭐⭐
+## §4.6 分层控制：从 MPC 命令到关节力矩 ★★★
 
 > **这一节解决什么问题**：§4.5 的分布式 MPC 输出的是 SRB 级命令——质心力/力矩、足端接触力、耦合力。但电机吃的是**关节力矩**，不是质心力。这一节讲分层控制的完整数据流：高层分布式 MPC → 中层步态调度 → 低层分布式 WBC（全身控制），并解释一个关键的工程优势——**为什么 WBC 可以纯本地、无通信**。这是把前几节的"优化"接到"真机执行"的最后一公里。
 
@@ -1296,7 +1296,7 @@ Kim-Fawcett-Hamed 明确把分布式 MPC 建模为带"one-step communication del
 
 中层步态调度因此在协同场景下也带了一点"协同色彩"——它主要仍是本地的（每台机器人自己的支撑/摆动时钟），但相位可能需要和邻居共识同步。这是 §4.6 分层架构里"中层"在多机语境下的细微但重要的扩展。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱 1（概念误区）：以为分布式 WBC 也要通信。**
 - **错误描述**：既然 MPC 是分布式（要通信），就以为 WBC 也得和邻居交换信息。
@@ -1326,7 +1326,7 @@ Kim-Fawcett-Hamed 明确把分布式 MPC 建模为带"one-step communication del
 
 ---
 
-## §4.7 通信拓扑、一致性与稳定性：把第 2 章接到 DMPC ⭐⭐⭐⭐
+## §4.7 通信拓扑、一致性与稳定性：把第 2 章接到 DMPC ★★★★
 
 > **这一节解决什么问题**：前面把分布式 MPC 的算法（§4.4）和多足建模（§4.5-§4.6）讲完了，但留了三个"理论欠账"：(1) §4.4 的 Z-更新（共识平均）如何真正分布式实现？(2) 通信质量（拓扑、时延、丢包）如何影响收敛与稳定？(3) 整个分布式 MPC 闭环稳定吗？这一节把第 2 章的共识理论正式接到 DMPC 上，回答这三个问题，并讲 DMPC 稳定性的两大支柱——递归可行性与终端代价。这是本章理论的收口，把第 1-2 章的图论-共识和本章的 MPC 完全焊接。
 
@@ -1450,7 +1450,7 @@ $$
 
 把兼容性约束 + 约束收紧 + 终端代价三者配齐，分布式 MPC 才有完整的递归可行性 + 稳定性保证（Dunbar 2006、Conte 2016 的理论框架）。但如前所述，多足的非凸性让这套理论无法直接套用——工程上退而求其次用长时域 + warm-start + 凸化。理解兼容性约束的**思想**（即使工程上没严格实现），能帮你判断一个分布式 MPC 在什么情况下会失稳：当某个 agent 的实际轨迹大幅偏离它的广播（如突遇大扰动急转向），而邻居没留够裕度时。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱 1（概念误区）：以为 ADMM 的 Z-更新（求平均）必须有中央节点。**
 - **错误描述**：看到 Z-更新是 $\frac1N\sum_i$，就以为需要一个中心收集求和。
@@ -1488,7 +1488,7 @@ $$
 
 ---
 
-## §4.8 端到端实战：双四足 ADMM 编队的完整管线 ⭐⭐⭐
+## §4.8 端到端实战：双四足 ADMM 编队的完整管线 ★★★
 
 > **这一节解决什么问题**：前七节把每个零件讲透了，但零件不等于整机。这一节把它们组装成一条**可运行的端到端管线**——从场景设定、模型搭建、ADMM 循环、分层执行到结果分析，并给出集中式 vs 分布式的完整对比实验设计。它是累积项目的集成节，也是你把本章知识变成"能跑的代码"的施工图。本节是"轻松段"（呼应规范的节奏控制）——不引入新理论，只把已学的串成流程。
 
@@ -1622,7 +1622,7 @@ def run_closed_loop(agents, edges, n_cycles=50):
 
 > **理论-工程桥接**：注意 `admm_formation` 里 Z-更新写的是 `np.mean`（中央求平均），这在仿真里方便，但真机要换成 §4.7 的分布式共识 `consensus_average(w+u, W, L_cons)`。这个"仿真用中央平均、真机用分布式共识"的替换是从仿真到部署最关键的一步——很多在仿真里 work 的分布式 MPC，正是栽在这一步（以为 `np.mean` 就是分布式，忽略了它隐含中央节点）。骨架里特意保留这个接口，提醒你部署时必须替换。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱 1（编程陷阱）：集中式和分布式用了不同的代价/约束，对比不公平。**
 - **错误描述**：两个实现的 $Q,R$ 权重、约束、踏步序列不一致就比较。
@@ -1714,26 +1714,26 @@ def run_closed_loop(agents, edges, n_cycles=50):
 
 | 编号 | 知识点 | 核心要点 | 对应节 | 难度 |
 |------|--------|---------|--------|------|
-| K1 | 集中式三重瓶颈 | $O(N^3)$ 爆炸 + 单点故障 + 不可模块化 | §4.1 | ⭐⭐ |
-| K2 | 预测交换范式 | 交换预测轨迹，编队耦合退化为本地项；软约束、有一步延迟 | §4.1 | ⭐⭐⭐ |
-| K3 | 编队三范式 | position/displacement/distance：信息越少、自由度越多、越非凸 | §4.2 | ⭐⭐⭐ |
-| K4 | 编队约束的耦合本质 | $J_{\text{form}}$ 显含多 agent 状态 → 耦合 → 需协调 | §4.2 | ⭐⭐ |
-| K5 | 对偶分解 | 松弛耦合约束 → 可分 → 价格迭代（子梯度）；慢、脆、中间不可行 | §4.3 | ⭐⭐⭐⭐ |
-| K6 | 影子价格 = 约束力 | 对偶变量在多足里是物理可测的耦合力 $\lambda$ | §4.3/§4.5 | ⭐⭐⭐ |
-| K7 | consensus-ADMM 三步 | X（本地 MPC+惩罚）/Z（共识平均）/Y（对偶上升） | §4.4 | ⭐⭐⭐⭐ |
-| K8 | $\rho$ 与残差平衡 | $\rho$ 是一致-自主权重；残差平衡自适应；凸 $O(1/k)$ | §4.4 | ⭐⭐⭐ |
-| K9 | 非凸无保证 | 接触约束非凸 → ADMM 无收敛保证 → 工程靠凸化+warm-start | §4.4/§4.7 | ⭐⭐⭐⭐ |
-| K10 | SRB 网络模型 | $N$ SRB + 负载 + 刚性约束 → 耦合力 $\lambda$ | §4.5 | ⭐⭐⭐⭐ |
-| K11 | 约束力求解 | $\lambda=-(JM^{-1}J^\top)^{-1}(JM^{-1}Q+\dot J\dot q)$，约束微分两次 | §4.5 | ⭐⭐⭐⭐ |
-| K12 | 接触约束三件套 | 摩擦锥金字塔 + 单边接触 + 踏步时序；固定序列→凸 QP | §4.5 | ⭐⭐⭐ |
-| K13 | 频段分离 | 编队低频（质心层）+ 平衡高频（WBC 层） | §4.2/§4.5 | ⭐⭐⭐ |
-| K14 | 分层数据流 | MPC（通信）→步态→WBC（本地）；通信预算最小化 | §4.6 | ⭐⭐⭐ |
-| K15 | 分布式 WBC 纯本地 | 协调已由 MPC 的 $\lambda$ 完成，WBC 零通信 | §4.6 | ⭐⭐⭐ |
-| K16 | ADMM 协调步 = 共识 | Z-更新用第 2 章分布式共识实现，无需中心 | §4.7 | ⭐⭐⭐⭐ |
-| K17 | 两层迭代 | 外层 ADMM 优化、内层共识平均；$L_{\text{cons}}$ vs $K$ 权衡 | §4.7 | ⭐⭐⭐ |
-| K18 | 拓扑影响 | $\lambda_2$/直径/时延/丢包影响收敛与稳定；通信图≠物理队形 | §4.7 | ⭐⭐⭐ |
-| K19 | DMPC 稳定性支柱 | 递归可行性（兼容性约束）+ 终端代价；分布式不变集难算 | §4.7 | ⭐⭐⭐⭐ |
-| K20 | 端到端管线 | 建模→集中基线→ADMM→分层执行→对比 | §4.8 | ⭐⭐⭐ |
+| K1 | 集中式三重瓶颈 | $O(N^3)$ 爆炸 + 单点故障 + 不可模块化 | §4.1 | ★★ |
+| K2 | 预测交换范式 | 交换预测轨迹，编队耦合退化为本地项；软约束、有一步延迟 | §4.1 | ★★★ |
+| K3 | 编队三范式 | position/displacement/distance：信息越少、自由度越多、越非凸 | §4.2 | ★★★ |
+| K4 | 编队约束的耦合本质 | $J_{\text{form}}$ 显含多 agent 状态 → 耦合 → 需协调 | §4.2 | ★★ |
+| K5 | 对偶分解 | 松弛耦合约束 → 可分 → 价格迭代（子梯度）；慢、脆、中间不可行 | §4.3 | ★★★★ |
+| K6 | 影子价格 = 约束力 | 对偶变量在多足里是物理可测的耦合力 $\lambda$ | §4.3/§4.5 | ★★★ |
+| K7 | consensus-ADMM 三步 | X（本地 MPC+惩罚）/Z（共识平均）/Y（对偶上升） | §4.4 | ★★★★ |
+| K8 | $\rho$ 与残差平衡 | $\rho$ 是一致-自主权重；残差平衡自适应；凸 $O(1/k)$ | §4.4 | ★★★ |
+| K9 | 非凸无保证 | 接触约束非凸 → ADMM 无收敛保证 → 工程靠凸化+warm-start | §4.4/§4.7 | ★★★★ |
+| K10 | SRB 网络模型 | $N$ SRB + 负载 + 刚性约束 → 耦合力 $\lambda$ | §4.5 | ★★★★ |
+| K11 | 约束力求解 | $\lambda=-(JM^{-1}J^\top)^{-1}(JM^{-1}Q+\dot J\dot q)$，约束微分两次 | §4.5 | ★★★★ |
+| K12 | 接触约束三件套 | 摩擦锥金字塔 + 单边接触 + 踏步时序；固定序列→凸 QP | §4.5 | ★★★ |
+| K13 | 频段分离 | 编队低频（质心层）+ 平衡高频（WBC 层） | §4.2/§4.5 | ★★★ |
+| K14 | 分层数据流 | MPC（通信）→步态→WBC（本地）；通信预算最小化 | §4.6 | ★★★ |
+| K15 | 分布式 WBC 纯本地 | 协调已由 MPC 的 $\lambda$ 完成，WBC 零通信 | §4.6 | ★★★ |
+| K16 | ADMM 协调步 = 共识 | Z-更新用第 2 章分布式共识实现，无需中心 | §4.7 | ★★★★ |
+| K17 | 两层迭代 | 外层 ADMM 优化、内层共识平均；$L_{\text{cons}}$ vs $K$ 权衡 | §4.7 | ★★★ |
+| K18 | 拓扑影响 | $\lambda_2$/直径/时延/丢包影响收敛与稳定；通信图≠物理队形 | §4.7 | ★★★ |
+| K19 | DMPC 稳定性支柱 | 递归可行性（兼容性约束）+ 终端代价；分布式不变集难算 | §4.7 | ★★★★ |
+| K20 | 端到端管线 | 建模→集中基线→ADMM→分层执行→对比 | §4.8 | ★★★ |
 
 ---
 
@@ -1782,37 +1782,37 @@ mini_multibot/formation_dmpc/
 
 ## 延伸阅读
 
-按难度和方向分类。⭐ 数表示阅读难度。
+按难度和方向分类。★ 数表示阅读难度。
 
 **核心论文（必读）**：
 
-- ⭐⭐⭐ Kim, Fawcett, Kamidi, Ames, Hamed, "Layered Control for Cooperative Locomotion of Two Quadrupedal Robots: Centralized and Distributed Approaches", **T-RO 2023**（arXiv:2211.06913）——本章主线，互联 SRB 网络 + 集中/分布 MPC + 分层控制的完整范本。精读 Section III（SRB 网络）、IV（MPC）、V（低层控制）。
-- ⭐⭐⭐⭐ Boyd, Parikh, Chu, Peleato, Eckstein, "Distributed Optimization and Statistical Learning via ADMM", **Found. Trends ML 2011**——ADMM 与 consensus-ADMM 的权威教程，§4.3-§4.4 的理论源头。读 §3（标准 ADMM）、§7（consensus）、§3.4（残差平衡）。
+- ★★★ Kim, Fawcett, Kamidi, Ames, Hamed, "Layered Control for Cooperative Locomotion of Two Quadrupedal Robots: Centralized and Distributed Approaches", **T-RO 2023**（arXiv:2211.06913）——本章主线，互联 SRB 网络 + 集中/分布 MPC + 分层控制的完整范本。精读 Section III（SRB 网络）、IV（MPC）、V（低层控制）。
+- ★★★★ Boyd, Parikh, Chu, Peleato, Eckstein, "Distributed Optimization and Statistical Learning via ADMM", **Found. Trends ML 2011**——ADMM 与 consensus-ADMM 的权威教程，§4.3-§4.4 的理论源头。读 §3（标准 ADMM）、§7（consensus）、§3.4（残差平衡）。
 
 **分布式 MPC 基础**：
 
-- ⭐⭐⭐ Dunbar & Murray, "Distributed Receding Horizon Control for Multi-Vehicle Formation Stabilization", **Automatica 2006**——预测交换范式奠基。
-- ⭐⭐⭐ Keviczky, Borrelli, Balas, "Decentralized Receding Horizon Control for Large Scale Dynamically Decoupled Systems", **Automatica 2008**——DMPC 编队系统化。
-- ⭐⭐⭐⭐ Conte, Jones, Morari, Zeilinger, "Distributed Synthesis and Stability of Cooperative DMPC", **Automatica 2016**——DMPC 稳定性综合（终端代价、递归可行）。
-- ⭐⭐⭐ "A Brief Tutorial on Consensus ADMM for Distributed Optimization with Applications in Robotics", **arXiv:2410.03753**——机器人语境的 consensus-ADMM 教程，适合补 §4.4。
+- ★★★ Dunbar & Murray, "Distributed Receding Horizon Control for Multi-Vehicle Formation Stabilization", **Automatica 2006**——预测交换范式奠基。
+- ★★★ Keviczky, Borrelli, Balas, "Decentralized Receding Horizon Control for Large Scale Dynamically Decoupled Systems", **Automatica 2008**——DMPC 编队系统化。
+- ★★★★ Conte, Jones, Morari, Zeilinger, "Distributed Synthesis and Stability of Cooperative DMPC", **Automatica 2016**——DMPC 稳定性综合（终端代价、递归可行）。
+- ★★★ "A Brief Tutorial on Consensus ADMM for Distributed Optimization with Applications in Robotics", **arXiv:2410.03753**——机器人语境的 consensus-ADMM 教程，适合补 §4.4。
 
 **多足协同前沿**：
 
-- ⭐⭐⭐ De Vincenti & Coros, "Centralized MPC for Collaborative Loco-Manipulation", **RSS 2023**——集中式 SQP + $SO(3)$ 李群积分，对照集中式方案。
-- ⭐⭐⭐ Turrisi 等, "PACC: Passive-Arm Approach for High-Payload Collaborative Carrying", **IROS 2024**——被动臂方案，免刚性耦合建模（§4.5 类比的边界案例）。
-- ⭐⭐⭐⭐ Imran, Hamed 等, "ADMM-Based Distributed MPC with Control Barrier Functions for Safe Multi-Robot Quadrupedal Locomotion", **arXiv 2025/26**——ADMM + CBF 安全的多足分布式 MPC，§4.7 非凸/安全的前沿。
-- ⭐⭐⭐ Fawcett, Amanzadeh, Hamed 等, "Distributed Data-Driven Predictive Control for Multi-Agent Collaborative Legged Locomotion"——数据驱动绕开精确建模。
+- ★★★ De Vincenti & Coros, "Centralized MPC for Collaborative Loco-Manipulation", **RSS 2023**——集中式 SQP + $SO(3)$ 李群积分，对照集中式方案。
+- ★★★ Turrisi 等, "PACC: Passive-Arm Approach for High-Payload Collaborative Carrying", **IROS 2024**——被动臂方案，免刚性耦合建模（§4.5 类比的边界案例）。
+- ★★★★ Imran, Hamed 等, "ADMM-Based Distributed MPC with Control Barrier Functions for Safe Multi-Robot Quadrupedal Locomotion", **arXiv 2025/26**——ADMM + CBF 安全的多足分布式 MPC，§4.7 非凸/安全的前沿。
+- ★★★ Fawcett, Amanzadeh, Hamed 等, "Distributed Data-Driven Predictive Control for Multi-Agent Collaborative Legged Locomotion"——数据驱动绕开精确建模。
 
 **单体 SRB MPC 背景（若不熟先补）**：
 
-- ⭐⭐ Di Carlo, Wensing, Katz, Bledt, Kim, "Dynamic Locomotion in the MIT Cheetah 3 via Convex MPC", **IROS 2018**——SRB 凸 MPC 标准模板。
-- ⭐⭐⭐ "Convex MPC of Single Rigid Body Model on SO(3)"——SRB 在 $SO(3)$ 上的凸 MPC。
+- ★★ Di Carlo, Wensing, Katz, Bledt, Kim, "Dynamic Locomotion in the MIT Cheetah 3 via Convex MPC", **IROS 2018**——SRB 凸 MPC 标准模板。
+- ★★★ "Convex MPC of Single Rigid Body Model on SO(3)"——SRB 在 $SO(3)$ 上的凸 MPC。
 
 **代码仓库**：
 
-- ⭐⭐⭐ `leggedrobotics/ocs2`——ETH RSL 的多体 MPC 框架，`ocs2_centauro`（四足+臂）可作多足 MPC 扩展基础。
-- ⭐⭐⭐ `osqp/osqp`——本章本地 QP 求解器。
-- ⭐⭐ `stack-of-tasks/pinocchio`——刚体动力学库，WBC 实现用。
+- ★★★ `leggedrobotics/ocs2`——ETH RSL 的多体 MPC 框架，`ocs2_centauro`（四足+臂）可作多足 MPC 扩展基础。
+- ★★★ `osqp/osqp`——本章本地 QP 求解器。
+- ★★ `stack-of-tasks/pinocchio`——刚体动力学库，WBC 实现用。
 
 ---
 

@@ -4,7 +4,7 @@
 
 ## 前置自测
 
-📋 **前置自测**（答不出 $\ge$ 3 题 → 先回对应章节复习，本章是全栈综合）
+◆ **前置自测**（答不出 $\ge$ 3 题 → 先回对应章节复习，本章是全栈综合）
 
 1. URDF 的 `<ros2_control>` 标签如何声明硬件接口？（P01, M12）
 2. MoveIt2 的 PlanningScene 如何管理 attached objects？（M14）
@@ -123,9 +123,9 @@ M15 Mini-Manip 综合项目
 
 ---
 
-## M15.1 系统架构设计 ⭐⭐
+## M15.1 系统架构设计 ★★
 
-### 动机 ⭐⭐
+### 动机 ★★
 
 从 M01 到 M14，我们分别学习了运动学、动力学、碰撞检测、规划、控制、ros2_control、行为树、MoveIt2/MTC 等模块。但在真实系统中，这些模块不是孤立的——它们需要**端到端集成**，数据流必须在各层之间无缝传递。
 
@@ -133,7 +133,7 @@ M15 Mini-Manip 综合项目
 
 > **跨领域类比**：这就像从学习单个乐器（运动学、规划、控制...）到组建乐队演奏完整曲目——每个乐手（模块）都需要听其他乐手（通过接口通信），指挥（BT 编排）协调所有人的节奏。乐队的水平不取决于最好的乐手，而取决于最差的配合。
 
-### 四层架构 ⭐⭐
+### 四层架构 ★★
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -181,7 +181,7 @@ M15 Mini-Manip 综合项目
 └─────────────────────────────────────────────────────────┘
 ```
 
-### 数据流详解 ⭐⭐
+### 数据流详解 ★★
 
 ```
 感知模块 ──物体位姿──► BT 条件节点
@@ -211,7 +211,7 @@ M15 Mini-Manip 综合项目
 
 > **本质洞察**：系统架构的关键不是每个组件多么复杂，而是**组件之间的接口是否清晰**。每一层只知道上下层的接口，不知道对方的内部实现——这就是 M12 中「ros2_control 解耦控制器与硬件」和 M14 中「MoveIt2 pluginlib 解耦规划器与框架」在系统层面的体现。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 🧠 思维陷阱：认为"先把所有模块写完再集成"
@@ -242,9 +242,9 @@ M15 Mini-Manip 综合项目
 
 ---
 
-## M15.2 分阶段开发计划 ⭐⭐
+## M15.2 分阶段开发计划 ★★
 
-### 第一阶段：环境搭建（2 天） ⭐⭐
+### 第一阶段：环境搭建（2 天） ★★
 
 **目标**：Gazebo 中启动 Franka Panda，验证 ros2_control + RViz 基本功能。
 
@@ -303,7 +303,7 @@ ros2 control list_controllers   # JTC + Broadcaster active
 # RViz 中可交互式规划并执行
 ```
 
-### 第二阶段：MTC Pick-and-Place（3 天） ⭐⭐
+### 第二阶段：MTC Pick-and-Place（3 天） ★★
 
 **目标**：用 MTC 实现完整的抓取-放置流程。
 
@@ -333,7 +333,7 @@ CurrentState → OpenGripper → Connect(to pre-grasp)
 | 抓取滑落 | Gazebo 中物体掉落 | 增大摩擦系数或用 attach plugin |
 | 放置偏差 | 物体位置不准 | 检查 attach 时的相对位姿 |
 
-### 第三阶段：BT.CPP 编排（2 天） ⭐⭐
+### 第三阶段：BT.CPP 编排（2 天） ★★
 
 **目标**：用 BT.CPP 包装 MTC 调用，加入错误恢复。
 
@@ -438,7 +438,7 @@ while (tree.tickOnce() == BT::NodeStatus::RUNNING) {
 }
 ```
 
-### 第四阶段：优化与对比（2 天） ⭐⭐⭐
+### 第四阶段：优化与对比（2 天） ★★★
 
 **目标**：量化比较不同组件配置的影响。
 
@@ -469,7 +469,7 @@ while (tree.tickOnce() == BT::NodeStatus::RUNNING) {
 | 成功率 | 100 次中成功次数 | >95% |
 | 错误恢复率 | 注入故障后恢复率 | >80% |
 
-### 第五阶段：sim-to-real 验证（1 天） ⭐⭐⭐
+### 第五阶段：sim-to-real 验证（1 天） ★★★
 
 **目标**：验证同一份代码在不同硬件后端运行。
 
@@ -504,7 +504,7 @@ ros2 launch mini_manip_bringup bringup.launch.py \
 - [ ] MTC Task 代码（规划逻辑不变）
 - [ ] 控制器 YAML（JTC 配置不变）
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：Gazebo 中夹爪抓取物体总是滑落
@@ -533,13 +533,13 @@ ros2 launch mini_manip_bringup bringup.launch.py \
 
 ---
 
-## M15.3 感知集成 ⭐⭐
+## M15.3 感知集成 ★★
 
-### 动机 ⭐⭐
+### 动机 ★★
 
 完整的感知系统（相机标定、物体检测、6D 位姿估计）是独立的大课题。本项目使用简化版感知。
 
-### 三种感知模式 ⭐⭐
+### 三种感知模式 ★★
 
 | 模式 | 复杂度 | 实现方式 |
 |------|--------|---------|
@@ -576,7 +576,7 @@ private:
 };
 ```
 
-### 手眼标定完整推导与代码 ⭐⭐⭐
+### 手眼标定完整推导与代码 ★★★
 
 如果使用真实相机，需要**手眼标定**（Hand-Eye Calibration）确定相机坐标系与机器人基座坐标系的关系。
 
@@ -753,7 +753,7 @@ def validate_calibration(T_gripper_camera,
 
 > **本质洞察**：手眼标定方程 $AX = XB$ 的本质是一个**齐次 Sylvester 方程**。它之所以可解，依赖于一个关键条件：多组 $(A_i, B_i)$ 对应的旋转轴不能全部平行——否则方程欠约束。这就是为什么标定数据采集必须包含多个方向的旋转。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 💡 概念误区：认为手眼标定做一次就永远不变
@@ -781,13 +781,13 @@ def validate_calibration(T_gripper_camera,
 
 ---
 
-## M15.4 抓取规划基础 ⭐⭐⭐
+## M15.4 抓取规划基础 ★★★
 
-### 动机 ⭐⭐⭐
+### 动机 ★★★
 
 知道物体在哪里（感知），接下来要决定**从哪个方向、以什么姿态抓取**。
 
-### 简单立方体的抓取策略 ⭐⭐
+### 简单立方体的抓取策略 ★★
 
 对于 5cm 立方体，从顶部向下抓取：
 
@@ -800,7 +800,7 @@ lift: 沿 Z 轴向上 10-20cm
 
 MTC 的 `GenerateGraspPose` 自动在物体周围采样多个抓取角度（通过 `setAngleDelta`），`ComputeIK` 为每个角度计算 IK 解，选择最优方案。
 
-### 力闭合与形封闭 ⭐⭐⭐
+### 力闭合与形封闭 ★★★
 
 抓取规划的理论基础：
 
@@ -811,7 +811,7 @@ MTC 的 `GenerateGraspPose` 自动在物体周围采样多个抓取角度（通�
 
 > **反事实推理**：如果不考虑力闭合直接抓取会怎样？(1) 搬运时物体旋转滑落——抓取力矩不够；(2) 加速时物体滑出——摩擦力不够。仿真中可能不明显（完美摩擦），真机频繁发生。
 
-### GraspNet / AnyGrasp 集成详解 ⭐⭐⭐
+### GraspNet / AnyGrasp 集成详解 ★★★
 
 对于复杂形状物体（非规则几何体），手工设计抓取策略不可行。GraspNet（Fang et al., CVPR 2020）和 AnyGrasp（Fang et al., T-RO 2023）等方法从点云直接预测 6-DOF 抓取位姿和质量分数。
 
@@ -1015,7 +1015,7 @@ compute_ik->setMaxIKSolutions(8);
 // ... 后续 Stage 不变 ...
 ```
 
-### 完整 Bin-Picking Pipeline ⭐⭐⭐
+### 完整 Bin-Picking Pipeline ★★★
 
 Bin-picking（料箱抓取）是工业机器人最有价值的应用之一。下面给出从感知到执行的完整 pipeline。
 
@@ -1181,7 +1181,7 @@ std::vector<GraspCandidate> filterGrasps(
 }
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：MTC 的 approach 距离设太短
@@ -1233,7 +1233,7 @@ MTC 的 `GenerateGraspPose` 不做力封闭分析——它只在几何上采样�
 
 > **跨领域类比**：仿真中的抓取调试类似于在白板上设计算法——逻辑正确但忽略了实际约束。真机调试类似于工程实现——必须处理噪声、延迟、精度等现实因素。两个阶段都不可缺少：先在仿真中验证逻辑正确性，再在真机上调整物理参数。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：MTC 的 approach 距离设太短
@@ -1273,7 +1273,7 @@ MTC 的 `GenerateGraspPose` 不做力封闭分析——它只在几何上采样�
 
 ---
 
-## M15.5 完整项目结构与配置 ⭐⭐
+## M15.5 完整项目结构与配置 ★★
 
 ### 项目目录结构
 
@@ -1372,7 +1372,7 @@ gripper_controller:
     max_effort: 50.0
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：launch 文件中组件启动顺序不对
@@ -1389,7 +1389,7 @@ gripper_controller:
 
 ---
 
-## M15.6 调试方法论与性能指标 ⭐⭐
+## M15.6 调试方法论与性能指标 ★★
 
 ### 调试层级
 
@@ -1438,7 +1438,7 @@ ros2 action list
 | **资源** | CPU 使用率 | <50% |
 | | RT 循环 jitter | <100us |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 🧠 思维陷阱：只测量成功场景
@@ -1518,7 +1518,7 @@ RCLCPP_INFO(logger, "Plan: %.1fms, Execute: %.1fms, success: %s",
 | **MarkerArray** | 自定义可视化（如抓取位姿候选） | 调试抓取规划 |
 | **MTC Tasks** | MTC 多阶段方案可视化 | 调试 MTC Stage |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 🧠 思维陷阱：只测量成功场景
@@ -1556,7 +1556,7 @@ RCLCPP_INFO(logger, "Plan: %.1fms, Execute: %.1fms, success: %s",
 
 ---
 
-## M15.6B 性能评估指标体系 ⭐⭐⭐
+## M15.6B 性能评估指标体系 ★★★
 
 ### 动机
 
@@ -1756,7 +1756,7 @@ class EvalReport:
 
 ---
 
-## M15.7 交付物与评估标准 ⭐
+## M15.7 交付物与评估标准 ★
 
 ### 交付物
 
@@ -1779,7 +1779,7 @@ class EvalReport:
 
 ---
 
-## M15.8 从仿真到实机的部署流程 ⭐⭐⭐
+## M15.8 从仿真到实机的部署流程 ★★★
 
 ### 动机
 
@@ -1834,7 +1834,7 @@ sim-to-real swap 是本项目的核心设计理念——同一份代码在仿真
 | 夹爪闭合后等待 | 0ms | 200-500ms | 等待夹爪完全闭合 |
 | MTC 规划超时 | 5s | 10s | 真机环境更复杂 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：真机上使用仿真时间
@@ -1897,15 +1897,15 @@ sim-to-real swap 是本项目的核心设计理念——同一份代码在仿真
 
 | 编号 | 知识点 | 核心内容 | 难度 |
 |------|--------|---------|------|
-| 1 | 系统架构 | 四层架构（感知/规划/控制/执行）、数据流设计 | ⭐⭐ |
-| 2 | 分阶段开发 | 五阶段计划、vertical slice first 策略 | ⭐⭐ |
-| 3 | 感知集成 | 三种感知模式（固定/已知/点云）、手眼标定 | ⭐⭐ |
-| 4 | 抓取规划 | 力闭合判据、MTC GenerateGraspPose、候选排序 | ⭐⭐⭐ |
-| 5 | 项目工程 | 目录结构、配置文件、launch 组织 | ⭐⭐ |
-| 6 | 调试方法论 | 层级隔离调试、性能指标体系 | ⭐⭐ |
-| 7 | 交付标准 | GitHub 仓库要求、性能报告格式 | ⭐ |
-| 8 | sim-to-real | 三阶段渐进部署、安全规程 | ⭐⭐⭐ |
-| 9 | 前沿展望 | AnyGrasp 2.0、Foundation Grasp Model | ⭐⭐⭐⭐ |
+| 1 | 系统架构 | 四层架构（感知/规划/控制/执行）、数据流设计 | ★★ |
+| 2 | 分阶段开发 | 五阶段计划、vertical slice first 策略 | ★★ |
+| 3 | 感知集成 | 三种感知模式（固定/已知/点云）、手眼标定 | ★★ |
+| 4 | 抓取规划 | 力闭合判据、MTC GenerateGraspPose、候选排序 | ★★★ |
+| 5 | 项目工程 | 目录结构、配置文件、launch 组织 | ★★ |
+| 6 | 调试方法论 | 层级隔离调试、性能指标体系 | ★★ |
+| 7 | 交付标准 | GitHub 仓库要求、性能报告格式 | ★ |
+| 8 | sim-to-real | 三阶段渐进部署、安全规程 | ★★★ |
+| 9 | 前沿展望 | AnyGrasp 2.0、Foundation Grasp Model | ★★★★ |
 
 ## 本章与后续方向的关系
 
@@ -1920,7 +1920,7 @@ sim-to-real swap 是本项目的核心设计理念——同一份代码在仿真
 
 ---
 
-## 跨章综合练习 ⭐⭐⭐
+## 跨章综合练习 ★★★
 
 **题目**：综合 M03（IK 求解器）+ M07（OMPL）+ M12（ros2_control）+ M13（BT.CPP）+ M14（MTC），完成以下全栈挑战：
 
@@ -1966,16 +1966,16 @@ M15:     端到端集成 + 交付      ← 你在这里
 
 | 资源 | 难度 | 说明 |
 |------|------|------|
-| MoveIt2 pick-and-place 教程 | ⭐ | 官方入门 |
-| franka_ros2 示例仓库 | ⭐⭐ | Franka 完整示例 |
-| Fang et al. (2020) "GraspNet-1Billion" CVPR | ⭐⭐⭐ | 学习型抓取 |
-| Fang et al. (2023) "AnyGrasp" T-RO | ⭐⭐⭐ | 通用抓取 |
-| Tsai & Lenz (1989) Hand-Eye Calibration | ⭐⭐⭐ | 手眼标定经典 |
-| Tedrake (2023) "Robotic Manipulation" MIT | ⭐⭐⭐ | 操作全景 |
-| BenchBot (2021) "Benchmarking Robot Manipulation" | ⭐⭐⭐ | 性能评估 |
-| MoveIt Task Constructor 源码 + 教程 | ⭐⭐ | MTC Stage 设计模式和数据流机制 |
-| Automatic Addison "Pick and Place with MTC" (2025) | ⭐⭐ | 端到端 MTC pick-and-place 教程含深度相机集成 |
-| UR5 ROS2 Pick and Place (JuoTungChen) | ⭐⭐ | UR5 + Robotiq85 的 ROS2 pick-and-place 实现 |
+| MoveIt2 pick-and-place 教程 | ★ | 官方入门 |
+| franka_ros2 示例仓库 | ★★ | Franka 完整示例 |
+| Fang et al. (2020) "GraspNet-1Billion" CVPR | ★★★ | 学习型抓取 |
+| Fang et al. (2023) "AnyGrasp" T-RO | ★★★ | 通用抓取 |
+| Tsai & Lenz (1989) Hand-Eye Calibration | ★★★ | 手眼标定经典 |
+| Tedrake (2023) "Robotic Manipulation" MIT | ★★★ | 操作全景 |
+| BenchBot (2021) "Benchmarking Robot Manipulation" | ★★★ | 性能评估 |
+| MoveIt Task Constructor 源码 + 教程 | ★★ | MTC Stage 设计模式和数据流机制 |
+| Automatic Addison "Pick and Place with MTC" (2025) | ★★ | 端到端 MTC pick-and-place 教程含深度相机集成 |
+| UR5 ROS2 Pick and Place (JuoTungChen) | ★★ | UR5 + Robotiq85 的 ROS2 pick-and-place 实现 |
 
 ### 研究实践建议
 
@@ -2015,7 +2015,7 @@ M15:     端到端集成 + 交付      ← 你在这里
 
 ---
 
-## M15.9 前沿展望：AnyGrasp 2.0、Foundation Grasp Model 与未来方向 ⭐⭐⭐⭐
+## M15.9 前沿展望：AnyGrasp 2.0、Foundation Grasp Model 与未来方向 ★★★★
 
 完成 Mini-Manip 综合项目后，你已经具备了从感知到执行的完整抓取管线搭建能力。以下简要介绍抓取感知领域正在发生的重要进展，帮助你定位下一步的研究或工程方向。
 

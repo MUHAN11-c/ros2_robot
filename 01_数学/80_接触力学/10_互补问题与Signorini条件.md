@@ -10,7 +10,7 @@
 
 ## 前置自测
 
-📋 **前置自测**（答不出 $\ge 2$ 题 → 先回第零批线性代数与第二批凸分析复习）
+◆ **前置自测**（答不出 $\ge 2$ 题 → 先回第零批线性代数与第二批凸分析复习）
 
 1. **矩阵正定性**：什么是正定矩阵？给出三个等价判据。如果一个对称矩阵 $A$ 的所有特征值都大于零，能否保证 $A$ 正定？（指向第零批线性代数）
 2. **凸集与凸锥**：什么是凸锥？给一个凸锥的例子和一个非凸锥的例子。闭凸锥 $K$ 的对偶锥 $K^*$ 怎么定义？（指向第二批凸分析）
@@ -85,7 +85,7 @@
 
 ---
 
-## §1.1 互补条件：接触力学的"原子操作" ⭐
+## §1.1 互补条件：接触力学的"原子操作" ★
 
 ### 动机：为什么需要互补条件
 
@@ -221,7 +221,7 @@ $$
 
 > **反事实推理**：如果不引入法锥形式，我们只能逐分量枚举所有 $2^n$ 种组合来分析互补问题的解集。当接触点数 $n = 20$（一个人形机器人的典型接触数量）时，$2^{20} \approx 10^6$ 种组合——枚举变得不切实际。法锥形式让我们绕过枚举，直接利用凸分析的结构性定理。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区 1：认为互补条件是凸约束**
 
@@ -285,7 +285,7 @@ $$
 
 ---
 
-## §1.2 线性互补问题（LCP）：定义、几何与 QP 等价 ⭐⭐
+## §1.2 线性互补问题（LCP）：定义、几何与 QP 等价 ★★
 
 ### 动机：从标量互补到结构化问题
 
@@ -526,7 +526,7 @@ MLCP 的物理意义：$u$ 对应双侧约束力（如关节反力），$z$ 对�
 
 > **本质洞察**：LCP 是接触力学的"通用语言"。无论底层的物理模型多么复杂——多体动力学、柔性体、电路——只要涉及"非此即彼"的约束切换，最终都会归结为某种形式的 LCP（或其推广 MLCP、NCP、MCP）。不同仿真器（Drake、MuJoCo、Siconos、Bullet）的差异，本质上是它们选择了不同的方式来构造和求解这个 LCP。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区 3：认为 LCP 总是有解**
 
@@ -558,7 +558,7 @@ MLCP 的物理意义：$u$ 对应双侧约束力（如关节反力），$z$ 对�
 
 ---
 
-## §1.3 矩阵类层级与存在唯一性定理 ⭐⭐
+## §1.3 矩阵类层级与存在唯一性定理 ★★
 
 ### 动机：矩阵类为什么重要
 
@@ -727,7 +727,7 @@ $$
 | **无解（Painlevé 不一致）** | 无有效加速度 | 穿透、NaN、仿真崩溃 | §1.7 |
 | **冲量解** | 需要有限时间冲量才能继续 | 速度突变、能量突增 | 专题 3 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区 5：认为"正半定"和"copositive"是同一回事**
 
@@ -757,7 +757,7 @@ $$
 
 ---
 
-## §1.4 Lemke 主元算法 ⭐⭐
+## §1.4 Lemke 主元算法 ★★
 
 ### 动机：如何高效求解 LCP
 
@@ -931,7 +931,7 @@ $$
 
 > **反事实推理**：如果不用 Lemke 也不用 PGS，还有什么选择？可以用**内点法**（Interior Point Method），将互补条件松弛为 $z_i w_i = \mu$（$\mu > 0$ 逐步减小到 0），转化为一系列光滑方程组。内点法有多项式复杂度保证，但每步需要解线性系统，在稀疏结构下可以很高效。Drake 的部分求解器和 PATH 求解器就采用了类似的策略。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区 7：认为 Lemke 算法总能找到解**
 
@@ -956,7 +956,7 @@ $$
 
 ---
 
-## §1.5 Signorini 条件：三级形式与物理意义 ⭐⭐
+## §1.5 Signorini 条件：三级形式与物理意义 ★★
 
 ### 动机：从数学到物理
 
@@ -992,7 +992,7 @@ $$
 \ddot{g}_N = J_N \ddot{q} + \dot{J}_N \dot{q}
 $$
 
-### 位置级 Signorini 条件 ⭐
+### 位置级 Signorini 条件 ★
 
 **位置级 Signorini 条件**（Signorini 1933 / Fichera 1963）是最基本的形式：
 
@@ -1014,7 +1014,7 @@ $$
 > - **力学角度**：它是"理想刚性单侧约束"的完整描述——不穿透、不粘附、不隔空作用。
 > - **能量角度**：互补条件 $g_N \cdot \lambda_N = 0$ 意味着约束力不做功（虚功原理的变体）。当 $g_N > 0$ 时 $\lambda_N = 0$，力不存在所以不做功。当 $g_N = 0$ 时力存在，但约束面不移动（在法向上），所以力的法向分量也不做功。
 
-### 速度级 Signorini 条件 ⭐⭐
+### 速度级 Signorini 条件 ★★
 
 当接触已经建立（$g_N = 0$）时，位置级条件退化为 $0 = 0 \cdot \lambda_N$，不再提供有用信息。我们需要在速度级施加互补条件。
 
@@ -1034,7 +1034,7 @@ $$
 
 这正是 Moreau 时步法的关键洞察：**在速度级离散化**，每个时间步求解速度级互补问题，而非加速度级。
 
-### 加速度级 Signorini 条件 ⭐⭐
+### 加速度级 Signorini 条件 ★★
 
 在持续接触（$g_N = 0, \dot{g}_N = 0$）期间，需要在加速度级施加互补：
 
@@ -1171,7 +1171,7 @@ $$
 
 Fichera（1964）证明了这个 VI 的解存在且唯一（Stampacchia 定理的应用），解决了 Signorini 在 1933 年提出但未能严格证明的问题。这是接触力学从力学直觉走向严格数学的标志性时刻。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区 8：认为三级 Signorini 条件可以互相替代**
 
@@ -1202,7 +1202,7 @@ Fichera（1964）证明了这个 VI 的解存在且唯一（Stampacchia 定理�
 
 ---
 
-## §1.6 NCP 函数与半光滑 Newton 法 ⭐⭐⭐
+## §1.6 NCP 函数与半光滑 Newton 法 ★★★
 
 ### 动机：为什么需要 NCP 函数
 
@@ -1427,7 +1427,7 @@ $$
 
 这个结果的技术细节将在专题 2（摩擦锥理论）中展开。这里的要点是：**Jordan 代数不是卖弄高深的数学，而是处理 3D 摩擦的正确工具**——它让锥投影、FB 函数、半光滑性分析在统一的框架下优雅地进行。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区 10：认为 FB 函数在原点可微**
 
@@ -1457,7 +1457,7 @@ $$
 
 ---
 
-## §1.7 Painlevé 悖论与仿真器的失败模式 ⭐⭐⭐
+## §1.7 Painlevé 悖论与仿真器的失败模式 ★★★
 
 ### 动机：当互补问题崩溃时
 
@@ -1697,7 +1697,7 @@ Le Lidec、Jallet、Montaut、Laptev、Schmid 和 Carpentier 在 "Contact Models
 2. **凸松弛的代价是量化可控的**：SAP 和 MuJoCo 的"隔空作用力"伪影在特定接触几何下才显著
 3. **严格 Coulomb 的代价是计算时间**：Siconos 的精确求解在实时应用中可能太慢
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区 12：认为 Painlevé 悖论是罕见的极端情况**
 
@@ -1784,22 +1784,22 @@ Le Lidec、Jallet、Montaut、Laptev、Schmid 和 Carpentier 在 "Contact Models
 
 | 编号 | 知识点 | 核心要点 | 对应节 | 难度 |
 |------|--------|---------|--------|------|
-| 1 | 标量/向量互补条件 | $0 \le a \perp b \ge 0$ 的定义、几何、法锥等价 | §1.1 | ⭐ |
-| 2 | LCP 标准定义 | $0 \le z \perp (Mz + q) \ge 0$，互补锥 | §1.2 | ⭐⭐ |
-| 3 | LCP-QP 等价 | 凸 QP 的 KKT = PSD-LCP | §1.2 | ⭐⭐ |
-| 4 | MLCP | 混合等式+互补约束，对应双侧+单侧约束 | §1.2 | ⭐⭐ |
-| 5 | 矩阵类层级 | P ⊂ Q, PD ⊂ PSD ⊂ copositive-plus ⊂ copositive | §1.3 | ⭐⭐ |
-| 6 | Lemke 算法 | 人工变量+互补主元+终止条件 | §1.4 | ⭐⭐ |
-| 7 | PGS | 逐分量迭代+投影，工程常用 | §1.4 | ⭐⭐ |
-| 8 | 位置级 Signorini | $0 \le g_N \perp \lambda_N \ge 0$ | §1.5 | ⭐⭐ |
-| 9 | 速度级 Signorini | $0 \le \dot{g}_N \perp \lambda_N \ge 0$（$g_N = 0$ 时） | §1.5 | ⭐⭐ |
-| 10 | 加速度级 Signorini | $0 \le \ddot{g}_N \perp \lambda_N \ge 0$（$g_N = \dot{g}_N = 0$ 时） | §1.5 | ⭐⭐ |
-| 11 | 法锥/VI 等价 | Signorini $\Leftrightarrow$ 法锥包含 $\Leftrightarrow$ VI | §1.5 | ⭐⭐⭐ |
-| 12 | Fischer-Burmeister 函数 | $\varphi_{\text{FB}}(a,b) = \sqrt{a^2+b^2}-a-b$ | §1.6 | ⭐⭐⭐ |
-| 13 | 半光滑 Newton 法 | 用 Clarke 广义 Jacobian 的 Newton 迭代，局部二次收敛 | §1.6 | ⭐⭐⭐ |
-| 14 | Painlevé 悖论 | 刚体+Coulomb 可能使 LCP 无解/多解 | §1.7 | ⭐⭐⭐ |
-| 15 | 测度解 | 速度级离散+冲量化解加速度级不一致 | §1.7 | ⭐⭐⭐ |
-| 16 | 仿真器策略对比 | Siconos/Drake/MuJoCo/Bullet 的模型选择与权衡 | §1.7 | ⭐⭐ |
+| 1 | 标量/向量互补条件 | $0 \le a \perp b \ge 0$ 的定义、几何、法锥等价 | §1.1 | ★ |
+| 2 | LCP 标准定义 | $0 \le z \perp (Mz + q) \ge 0$，互补锥 | §1.2 | ★★ |
+| 3 | LCP-QP 等价 | 凸 QP 的 KKT = PSD-LCP | §1.2 | ★★ |
+| 4 | MLCP | 混合等式+互补约束，对应双侧+单侧约束 | §1.2 | ★★ |
+| 5 | 矩阵类层级 | P ⊂ Q, PD ⊂ PSD ⊂ copositive-plus ⊂ copositive | §1.3 | ★★ |
+| 6 | Lemke 算法 | 人工变量+互补主元+终止条件 | §1.4 | ★★ |
+| 7 | PGS | 逐分量迭代+投影，工程常用 | §1.4 | ★★ |
+| 8 | 位置级 Signorini | $0 \le g_N \perp \lambda_N \ge 0$ | §1.5 | ★★ |
+| 9 | 速度级 Signorini | $0 \le \dot{g}_N \perp \lambda_N \ge 0$（$g_N = 0$ 时） | §1.5 | ★★ |
+| 10 | 加速度级 Signorini | $0 \le \ddot{g}_N \perp \lambda_N \ge 0$（$g_N = \dot{g}_N = 0$ 时） | §1.5 | ★★ |
+| 11 | 法锥/VI 等价 | Signorini $\Leftrightarrow$ 法锥包含 $\Leftrightarrow$ VI | §1.5 | ★★★ |
+| 12 | Fischer-Burmeister 函数 | $\varphi_{\text{FB}}(a,b) = \sqrt{a^2+b^2}-a-b$ | §1.6 | ★★★ |
+| 13 | 半光滑 Newton 法 | 用 Clarke 广义 Jacobian 的 Newton 迭代，局部二次收敛 | §1.6 | ★★★ |
+| 14 | Painlevé 悖论 | 刚体+Coulomb 可能使 LCP 无解/多解 | §1.7 | ★★★ |
+| 15 | 测度解 | 速度级离散+冲量化解加速度级不一致 | §1.7 | ★★★ |
+| 16 | 仿真器策略对比 | Siconos/Drake/MuJoCo/Bullet 的模型选择与权衡 | §1.7 | ★★ |
 
 ---
 
@@ -1824,28 +1824,28 @@ Le Lidec、Jallet、Montaut、Laptev、Schmid 和 Carpentier 在 "Contact Models
 
 | 教材 | 难度 | 推荐阅读章节 | 说明 |
 |------|------|------------|------|
-| Cottle-Pang-Stone《The Linear Complementarity Problem》SIAM 2009 | ⭐⭐⭐ | Ch.1-5 | **LCP 的权威参考**。1994 年 Lanchester Prize。习题丰富。 |
-| Facchinei-Pang《Finite-Dimensional VI & CP》Springer 两卷 2003 | ⭐⭐⭐⭐⭐ | Vol.I Ch.1-3, Vol.II Ch.7-9 | **VI/NCP 百科全书**。FB 函数、半光滑 Newton 的完整理论。 |
-| Brogliato《Nonsmooth Mechanics》3rd, Springer 2016 | ⭐⭐⭐⭐ | Ch.5 非光滑 Lagrangian, Ch.6 多重冲击 | **机器人工程师首选**。1300+ 参考文献。 |
-| Stewart《Dynamics with Inequalities》SIAM 2011 | ⭐⭐⭐⭐ | 刚体摩擦接触、Painlevé、测度解 | Painlevé 悖论的测度解证明首次系统呈现。 |
-| Acary-Brogliato《Numerical Methods for Nonsmooth Dyn. Sys.》Springer 2008 | ⭐⭐⭐⭐ | Part II 时间步进, Part IV Siconos | **算法 + Siconos 手册**。 |
+| Cottle-Pang-Stone《The Linear Complementarity Problem》SIAM 2009 | ★★★ | Ch.1-5 | **LCP 的权威参考**。1994 年 Lanchester Prize。习题丰富。 |
+| Facchinei-Pang《Finite-Dimensional VI & CP》Springer 两卷 2003 | ★★★★★ | Vol.I Ch.1-3, Vol.II Ch.7-9 | **VI/NCP 百科全书**。FB 函数、半光滑 Newton 的完整理论。 |
+| Brogliato《Nonsmooth Mechanics》3rd, Springer 2016 | ★★★★ | Ch.5 非光滑 Lagrangian, Ch.6 多重冲击 | **机器人工程师首选**。1300+ 参考文献。 |
+| Stewart《Dynamics with Inequalities》SIAM 2011 | ★★★★ | 刚体摩擦接触、Painlevé、测度解 | Painlevé 悖论的测度解证明首次系统呈现。 |
+| Acary-Brogliato《Numerical Methods for Nonsmooth Dyn. Sys.》Springer 2008 | ★★★★ | Part II 时间步进, Part IV Siconos | **算法 + Siconos 手册**。 |
 
 ### 关键论文
 
 | 论文 | 年份 | 核心贡献 | 难度 |
 |------|------|---------|------|
-| Painlevé, *CRAS* 121 | 1895 | 刚体摩擦不一致的原始反例 | ⭐⭐⭐ |
-| Lemke, *Manag. Sci.* 11 | 1965 | LCP 的互补主元算法 | ⭐⭐ |
-| Cottle-Dantzig, *LAA* 1 | 1968 | LCP 存在性定理 | ⭐⭐⭐ |
-| Moreau, *JDE* 26 | 1977 | 扫动过程存在性 | ⭐⭐⭐⭐ |
-| Moreau, *CISM* 302 | 1988 | 测度微分包含建模接触 | ⭐⭐⭐⭐ |
-| Stewart-Trinkle, *IJNME* 39 | 1996 | 保证非穿透的时间步 LCP 格式 | ⭐⭐⭐ |
-| Anitescu-Potra, *Nonlinear Dynamics* 14 | 1997 | 凸松弛的开端 | ⭐⭐⭐ |
-| Stewart, *ARMA* 145 | 1998 | 测度解存在性的严格证明 | ⭐⭐⭐⭐ |
-| Genot-Brogliato, *Eur. J. Mech.* | 1999 | Painlevé 悖论的完整相图 | ⭐⭐⭐ |
-| Sun-Sun, *Math. Prog.* 103 | 2005 | SOC 上 FB 函数的全局强半光滑 | ⭐⭐⭐⭐ |
-| Brogliato et al., *SCL* | 2006 | DVI/DCS/Moreau-Jean 的统一 | ⭐⭐⭐⭐ |
-| Le Lidec et al., *IEEE T-RO* | 2024 | 机器人接触模型的权威横向对比 | ⭐⭐⭐ |
+| Painlevé, *CRAS* 121 | 1895 | 刚体摩擦不一致的原始反例 | ★★★ |
+| Lemke, *Manag. Sci.* 11 | 1965 | LCP 的互补主元算法 | ★★ |
+| Cottle-Dantzig, *LAA* 1 | 1968 | LCP 存在性定理 | ★★★ |
+| Moreau, *JDE* 26 | 1977 | 扫动过程存在性 | ★★★★ |
+| Moreau, *CISM* 302 | 1988 | 测度微分包含建模接触 | ★★★★ |
+| Stewart-Trinkle, *IJNME* 39 | 1996 | 保证非穿透的时间步 LCP 格式 | ★★★ |
+| Anitescu-Potra, *Nonlinear Dynamics* 14 | 1997 | 凸松弛的开端 | ★★★ |
+| Stewart, *ARMA* 145 | 1998 | 测度解存在性的严格证明 | ★★★★ |
+| Genot-Brogliato, *Eur. J. Mech.* | 1999 | Painlevé 悖论的完整相图 | ★★★ |
+| Sun-Sun, *Math. Prog.* 103 | 2005 | SOC 上 FB 函数的全局强半光滑 | ★★★★ |
+| Brogliato et al., *SCL* | 2006 | DVI/DCS/Moreau-Jean 的统一 | ★★★★ |
+| Le Lidec et al., *IEEE T-RO* | 2024 | 机器人接触模型的权威横向对比 | ★★★ |
 
 ### 开源代码
 

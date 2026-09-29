@@ -26,7 +26,7 @@
 
 ## Part 1: 平台选型速查
 
-### 1.1 MuJoCo vs Isaac Lab 一页对比表 ⭐
+### 1.1 MuJoCo vs Isaac Lab 一页对比表 ★
 
 **背景**: MuJoCo 由 Emanuel Todorov 创建，2021 年 10 月被 DeepMind 收购，2022 年 5 月以 Apache-2.0 完全开源。Isaac Lab 是 NVIDIA 当前官方推荐的机器人 RL 训练框架，承接 Isaac Gym (legacy)。
 
@@ -52,7 +52,7 @@
 
 > **Note**: MuJoCo Warp 的官方 benchmark (NVIDIA, 2025) 报告在 manipulation 任务上比 MJX 快约 313 倍。具体速度取决于机器人复杂度和接触数量。
 
-### 1.2 选型决策树 ⭐
+### 1.2 选型决策树 ★
 
 ```
 你的项目需求是什么?
@@ -92,7 +92,7 @@
 
 ## Part 2: 环境搭建与安装
 
-### 2.1 IsaacLab 完整安装流程 ⭐
+### 2.1 IsaacLab 完整安装流程 ★
 
 **前提条件:**
 - NVIDIA GPU: RTX 3070+ (推荐 RTX 4090, 24GB VRAM)
@@ -145,7 +145,7 @@ git clone https://github.com/isaac-sim/IsaacLab.git
 cd IsaacLab && ./isaaclab.sh --install
 ```
 
-### 2.2 mjlab 完整安装流程 ⭐
+### 2.2 mjlab 完整安装流程 ★
 
 > mjlab 的架构和代码精读详见 `S3B_mjlab深度实战.md`。本节只覆盖安装和验证。
 
@@ -177,11 +177,11 @@ uv run train Mjlab-Velocity-Flat-Unitree-G1 \
 # 完整训练只需改 num-envs 和 max-iterations
 ```
 
-### 2.2.1 unitree_rl_mjlab 安装与使用 ⭐
+### 2.2.1 unitree_rl_mjlab 安装与使用 ★
 
 > [unitree_rl_mjlab](https://github.com/unitreerobotics/unitree_rl_mjlab) 是 Unitree 官方基于 mjlab 的 RL 训练仓库，支持全线机器人的 velocity tracking 和 motion imitation 训练，并提供完整的真机部署管线（含 sim 部署验证）。
 
-#### 安装 ⭐
+#### 安装 ★
 
 ```bash
 # Step 1: 安装系统依赖 (部署编译需要)
@@ -199,7 +199,7 @@ pip install -e .
 
 **系统要求**: Ubuntu 22.04, NVIDIA GPU, 驱动版本 >= 550。
 
-#### 支持的机器人 ⭐
+#### 支持的机器人 ★
 
 | 机器人 | 类型 | 训练任务 ID | DoF | 备注 |
 |--------|------|-----------|-----|------|
@@ -211,7 +211,7 @@ pip install -e .
 | **H1_2** | 人形 | `Unitree-H1_2-Flat` | - | H1 第二代 |
 | **H2** | 人形 | - | - | 最新人形 |
 
-#### Velocity Tracking 训练 ⭐⭐
+#### Velocity Tracking 训练 ★★
 
 ```bash
 # Go2 四足 (入门推荐, 单 GPU ~30 分钟收敛)
@@ -232,7 +232,7 @@ python scripts/train.py Unitree-G1-Flat --gpu-ids 0 1 --env.scene.num-envs=4096
 
 训练结果保存在: `logs/rsl_rl/<robot>_velocity/<date_time>/model_<iteration>.pt`
 
-#### Motion Imitation 训练 ⭐⭐
+#### Motion Imitation 训练 ★★
 
 ```bash
 # Step 1: 准备参考动作 — CSV → NPZ 转换
@@ -251,7 +251,7 @@ python scripts/train.py Unitree-G1-Tracking-No-State-Estimation \
 
 > 训练过程中自动导出 `policy.onnx` 和 `policy.onnx.data`，可直接用于真机部署。
 
-#### Sim 部署验证 (unitree_mujoco) ⭐⭐
+#### Sim 部署验证 (unitree_mujoco) ★★
 
 在部署到真机前，**强烈建议**先在 [unitree_mujoco](https://github.com/unitreerobotics/unitree_mujoco) 仿真中验证：
 
@@ -270,7 +270,7 @@ cd deploy/robots/g1/build
 ./g1_ctrl --network=lo    # lo = 本地回环, 仿真用
 ```
 
-#### 真机部署 ⭐⭐⭐
+#### 真机部署 ★★★
 
 ```bash
 # Step 1: 开机 → 等待进入 zero-torque 模式
@@ -306,7 +306,7 @@ cmake .. && make
 | ONNX 路径正确 | 检查 `exported/` 目录下文件完整 |
 | 初始悬挂测试 | 先悬挂运行，观察关节行为正常 |
 
-### 2.3 legged_gym (Legacy) 安装 ⭐
+### 2.3 legged_gym (Legacy) 安装 ★
 
 > legged_gym 基于 Isaac Gym (legacy, NVIDIA 不再积极维护)。大量开源代码仍基于此。新项目建议用 Isaac Lab 或 mjlab。
 
@@ -334,7 +334,7 @@ python legged_gym/scripts/train.py --task=anymal_c_flat
 # 预期输出: Isaac Gym 窗口 + 训练日志
 ```
 
-### 2.4 MuJoCo Playground 安装 ⭐
+### 2.4 MuJoCo Playground 安装 ★
 
 ```bash
 # 纯 pip 安装, 无需 NVIDIA 特殊驱动 (需要 CUDA GPU)
@@ -347,7 +347,7 @@ python -m mujoco_playground.train \
 # 预期输出: 训练进度和 reward 曲线
 ```
 
-### 2.5 常见安装问题排查表 ⭐
+### 2.5 常见安装问题排查表 ★
 
 | 症状 | 可能原因 | 解决方案 |
 |------|---------|---------|
@@ -366,9 +366,9 @@ python -m mujoco_playground.train \
 
 ## Part 3: 四足训练实战 (Go2)
 
-### 3.1 从零开始: Go2 velocity tracking 训练 ⭐⭐
+### 3.1 从零开始: Go2 velocity tracking 训练 ★★
 
-#### IsaacLab 版本 ⭐⭐
+#### IsaacLab 版本 ★★
 
 **完整训练命令:**
 
@@ -458,7 +458,7 @@ class Go2FlatEnvCfg(ManagerBasedRLEnvCfg):
     }
 ```
 
-#### mjlab 版本 ⭐⭐
+#### mjlab 版本 ★★
 
 > mjlab 与 IsaacLab 的 Manager API 高度对等。以下只展示命令和差异点。完整环境定义代码参见 `S3B_mjlab深度实战.md` 的 S3-B.2 节。
 
@@ -503,11 +503,11 @@ robot = EntityCfg(
 # 与 IsaacLab 几乎 1:1 对等
 ```
 
-### 3.1.1 mjlab 环境开发完整流程 ⭐⭐
+### 3.1.1 mjlab 环境开发完整流程 ★★
 
 > 本节补充在 mjlab 中从零创建一个自定义训练环境的完整步骤。五层架构的深度解析请参阅 `S3B_mjlab深度实战.md`。
 
-#### 五层架构回顾 ⭐
+#### 五层架构回顾 ★
 
 mjlab 的环境由五层组成，从底向上：
 
@@ -523,7 +523,7 @@ Simulation（MuJoCo Warp GPU）→ Entity（机器人/物体抽象）→ Scene�
 - **Manager**: 定义 MDP 的六个维度 — 观测/动作/奖励/终止/事件/课程
 - **Task Registry**: `register_mjlab_task()` 绑定配置，暴露 CLI 入口
 
-#### 完整示例: 自定义 Go2 环境（从零开始） ⭐⭐
+#### 完整示例: 自定义 Go2 环境（从零开始） ★★
 
 **文件结构:**
 
@@ -668,9 +668,9 @@ uv run play MyCustomTask-Go2 \
 
 > **与 S3B 的关系**: 本节提供了快速上手的配置骨架。五层架构每一层的源码精读、数据流分析、和 IsaacLab 的逐行对比，请参阅 `S3B_mjlab深度实战.md` 的 S3-B.1 至 S3-B.2 节。
 
-### 3.2 奖励函数设计与调参 ⭐⭐
+### 3.2 奖励函数设计与调参 ★★
 
-#### 每个奖励项的含义和典型权重 ⭐⭐
+#### 每个奖励项的含义和典型权重 ★★
 
 四足 locomotion 的奖励函数是**多项加权和**: $r = \sum_i w_i \cdot r_i$
 
@@ -698,7 +698,7 @@ $$\tau_j = k_p (q_\text{default} + \Delta q_j \times \text{scale} - q_j) + k_d (
 
 典型参数: $k_p = 20 \sim 50$, $k_d = 0.5 \sim 1.0$, action scale $= 0.25$ rad.
 
-#### 调参策略 ⭐⭐
+#### 调参策略 ★★
 
 **第一原则: 先跑 baseline, 再逐项调整**
 
@@ -751,11 +751,11 @@ def my_energy_reward(
 #                   params={"asset_cfg": SceneEntityCfg("robot")}),
 ```
 
-### 3.2.1 mjlab 自定义奖励函数编写 ⭐⭐⭐
+### 3.2.1 mjlab 自定义奖励函数编写 ★★★
 
 > mjlab 的奖励函数 API 与 IsaacLab 高度对等，但底层数据访问通过 MuJoCo 的 `mjData` 结构。本节详细说明如何在 mjlab 中编写自定义奖励。
 
-#### RewardTermCfg API ⭐⭐⭐
+#### RewardTermCfg API ★★★
 
 mjlab 的奖励管理器 (`RewardManager`) 接受一组 `RewardTermCfg`，每个 term 定义一个奖励函数及其权重：
 
@@ -781,7 +781,7 @@ def my_reward_function(
     ...
 ```
 
-#### 访问 MuJoCo 数据 ⭐⭐
+#### 访问 MuJoCo 数据 ★★
 
 mjlab 的 Entity 提供了对底层 MuJoCo 数据的零拷贝 PyTorch tensor 访问：
 
@@ -798,7 +798,7 @@ robot.data.root_ang_vel_b     # 基座角速度 body frame (num_envs, 3)
 robot.data.projected_gravity  # 重力在 body frame 投影 (num_envs, 3)
 ```
 
-#### 示例: 自定义足端接触奖励 ⭐⭐⭐
+#### 示例: 自定义足端接触奖励 ★★★
 
 ```python
 import torch
@@ -829,7 +829,7 @@ def foot_contact_reward(
 # ),
 ```
 
-#### 示例: 自定义能量效率惩罚 ⭐⭐⭐
+#### 示例: 自定义能量效率惩罚 ★★★
 
 ```python
 def energy_penalty(
@@ -848,7 +848,7 @@ def energy_penalty(
 # "energy": RewardTermCfg(func=energy_penalty, weight=-1e-4),
 ```
 
-#### 调试奖励: 打印各项奖励值 ⭐⭐
+#### 调试奖励: 打印各项奖励值 ★★
 
 mjlab 的 wandb 集成会自动记录每个 reward term 的值。在 wandb dashboard 的 `rewards/` 面板下可以看到每个 term 的独立曲线。
 
@@ -873,9 +873,9 @@ WANDB_MODE=offline uv run train MyTask \
 | 自定义奖励淹没了追踪奖励 | 权重/量级不平衡 | 先打印 raw value 再调权重 |
 | 奖励函数报 shape 错误 | 返回值维度不对 | 确保返回 `(num_envs,)` 而非 `(num_envs, 1)` |
 
-### 3.3 Domain Randomization 配置 ⭐⭐⭐
+### 3.3 Domain Randomization 配置 ★★★
 
-#### 关键参数表 ⭐⭐
+#### 关键参数表 ★★
 
 | 随机化维度 | 参数 | 典型范围 | 重要性 |
 |-----------|------|---------|-------|
@@ -891,7 +891,7 @@ WANDB_MODE=offline uv run train MyTask \
 | **扰动** | 外力推动 | 每 5-15s, 0-1.0 m/s | 中 |
 | **地形** | 地面坡度 | [-0.1, 0.1] rad | 中 |
 
-#### IsaacLab DR 配置示例 ⭐⭐⭐
+#### IsaacLab DR 配置示例 ★★★
 
 ```python
 events = {
@@ -930,7 +930,7 @@ events = {
 }
 ```
 
-#### mjlab DR 配置 (Rucker 伪惯量参数化) ⭐⭐⭐
+#### mjlab DR 配置 (Rucker 伪惯量参数化) ★★★
 
 mjlab 使用 Rucker & Wensing (RA-L 2022) 的伪惯量参数化, 从数学上保证随机化后的 (质量, 质心, 惯量) 组合物理合法:
 
@@ -964,7 +964,7 @@ events = {
 
 > IsaacLab 的 `randomize_rigid_body_mass` 和 `randomize_rigid_body_inertia` 是分别操作的, 可能产生不一致的参数组合。mjlab 的 Rucker 参数化一步到位。
 
-#### 从零 DR 到全 DR 的渐进策略 ⭐⭐
+#### 从零 DR 到全 DR 的渐进策略 ★★
 
 ```
 Phase 1: 无 DR (调试阶段)
@@ -986,9 +986,9 @@ Phase 4: 强 DR (可选)
   注意: 过强的 DR 会导致策略过于保守
 ```
 
-### 3.4 训练监控与调试 ⭐⭐
+### 3.4 训练监控与调试 ★★
 
-#### TensorBoard 关键曲线解读 ⭐⭐
+#### TensorBoard 关键曲线解读 ★★
 
 ```bash
 # 启动 tensorboard
@@ -1011,7 +1011,7 @@ tensorboard --logdir logs/rsl_rl/
 | `policy/kl` | 在 desired_kl (0.01) 附近波动 | 持续远大于 desired_kl = 不稳定 |
 | `episode/length` | 逐渐增长到接近 max_episode_length | 始终很短 = 策略一直摔倒 |
 
-#### 什么是"训练崩了" vs "正常探索" ⭐⭐
+#### 什么是"训练崩了" vs "正常探索" ★★
 
 ```
 正常探索:
@@ -1030,7 +1030,7 @@ tensorboard --logdir logs/rsl_rl/
   如果只是震荡 → 正常, 等待收敛
 ```
 
-#### 常见训练失败模式和修复方法 ⭐⭐
+#### 常见训练失败模式和修复方法 ★★
 
 | 失败模式 | 表现 | 根因 | 修复 |
 |---------|------|------|------|
@@ -1067,7 +1067,7 @@ class PPOCfg:
 
 ## Part 4: 人形训练实战 (H1/G1)
 
-### 4.1 人形 vs 四足的配置差异 ⭐⭐
+### 4.1 人形 vs 四足的配置差异 ★★
 
 | 维度 | 四足 (Go2) | 人形 (H1) | 人形 (G1) |
 |------|-----------|-----------|-----------|
@@ -1084,9 +1084,9 @@ class PPOCfg:
 2. 动作空间更大 — 搜索空间指数增长
 3. 手臂对平衡有影响 — 需要全身协调而非仅控制腿部
 
-### 4.2 H1 行走训练完整流程 ⭐⭐
+### 4.2 H1 行走训练完整流程 ★★
 
-#### IsaacLab 版本 ⭐⭐
+#### IsaacLab 版本 ★★
 
 ```bash
 # 训练 H1 velocity tracking
@@ -1104,7 +1104,7 @@ class PPOCfg:
     --checkpoint logs/rsl_rl/Isaac-Velocity-Flat-Unitree-H1-v0/*/model_best.pt
 ```
 
-#### mjlab 版本 ⭐⭐
+#### mjlab 版本 ★★
 
 ```bash
 # 训练 H1 velocity tracking
@@ -1149,7 +1149,7 @@ class H1EnvCfg(ManagerBasedRLEnvCfg):
     }
 ```
 
-### 4.3 奖励函数差异: 平衡/步态/能耗 ⭐⭐⭐
+### 4.3 奖励函数差异: 平衡/步态/能耗 ★★★
 
 **人形额外需要的奖励项:**
 
@@ -1199,7 +1199,7 @@ rewards_humanoid_extra = {
 
 这个技巧可以大幅加速人形训练收敛并改善步态质量。
 
-### 4.4 常见问题: 不平衡/步态不自然/关节抖动 ⭐⭐
+### 4.4 常见问题: 不平衡/步态不自然/关节抖动 ★★
 
 | 症状 | 原因分析 | 解决方案 |
 |------|---------|---------|
@@ -1225,9 +1225,9 @@ rewards_humanoid_extra = {
 
 > 本节只讲 HOW to configure, 不讲算法原理。需要理论背景 (AMP GAN loss, ASE latent space, DeepMimic reward math) 请参阅原始论文。
 
-### 5.1 MoCap 数据获取与预处理 ⭐⭐
+### 5.1 MoCap 数据获取与预处理 ★★
 
-#### 数据来源 ⭐
+#### 数据来源 ★
 
 | 数据集 | 规模 | 格式 | 获取方式 | 适用场景 |
 |--------|------|------|---------|---------|
@@ -1237,7 +1237,7 @@ rewards_humanoid_extra = {
 | **LaFAN1** | ~500k 帧 | BVH | 免费 | 高质量过渡动作 |
 | **自采集** | 自定义 | 视频/IMU → SMPL | 需要工具链 | 特定动作需求 |
 
-#### Retargeting 工具链和流程 ⭐⭐
+#### Retargeting 工具链和流程 ★★
 
 将人体 MoCap 运动映射到机器人:
 
@@ -1278,7 +1278,7 @@ python csv_to_npz.py --input motion.csv --output motion.npz --fps 50
 wandb artifact put --type motion-data motion.npz
 ```
 
-### 5.2 AMP 训练配置 ⭐⭐⭐
+### 5.2 AMP 训练配置 ★★★
 
 > AMP (Adversarial Motion Priors, Peng et al. 2021) 用 discriminator 自动学习"什么是自然运动", 无需手工设计 motion tracking 奖励。以下只讲怎么配。
 
@@ -1346,11 +1346,11 @@ print(motion.shape)  # e.g., (500, 105)
 - `NVIDIA-Omniverse/IsaacGymEnvs` — Isaac Gym 版本 (最成熟)
 - Isaac Lab 可通过 Manager API 实现 AMP (需要自行添加 discriminator 训练循环)
 
-### 5.3 Motion Tracking 训练 (BeyondMimic 风格) ⭐⭐⭐
+### 5.3 Motion Tracking 训练 (BeyondMimic 风格) ★★★
 
 > Motion tracking 直接追踪参考运动的每一帧, 比 AMP 更精确但需要精确的 retarget 数据。
 
-#### 参考运动 CSV/NPZ 格式 ⭐⭐
+#### 参考运动 CSV/NPZ 格式 ★★
 
 ```python
 # mjlab motion tracking 的参考运动格式
@@ -1370,7 +1370,7 @@ data["root_linear_vel"]    # shape: (T, 3) — 根节点线速度
 data["end_effector_pos"]   # shape: (T, num_ee, 3) — 末端位置
 ```
 
-#### Motion Tracking 奖励配置 ⭐⭐⭐
+#### Motion Tracking 奖励配置 ★★★
 
 ```python
 # BeyondMimic 风格的 tracking reward 配置
@@ -1403,7 +1403,7 @@ rewards = {
 }
 ```
 
-#### G1 Spinkick 完整训练流程 ⭐⭐
+#### G1 Spinkick 完整训练流程 ★★
 
 ```bash
 # 来自 mujocolab/g1_spinkick_example
@@ -1466,11 +1466,11 @@ curriculum = {
 
 > 为什么不从一开始就加强惩罚? 过早的惩罚限制了策略探索空间——策略先学"怎么做这个动作"(粗糙但有效), 再学"怎么优雅地做"(平滑高效)。
 
-### 5.3.1 g1_spinkick_example 完整解析 ⭐⭐⭐
+### 5.3.1 g1_spinkick_example 完整解析 ★★★
 
 > 来自 `mujocolab/g1_spinkick_example` (~213 stars)。这是目前 mjlab 生态中最完整的 motion imitation → 真机部署示例。
 
-#### Clone 与安装 ⭐
+#### Clone 与安装 ★
 
 ```bash
 git clone https://github.com/mujocolab/g1_spinkick_example.git
@@ -1478,7 +1478,7 @@ cd g1_spinkick_example
 uv sync
 ```
 
-#### 参考动作数据结构 ⭐⭐
+#### 参考动作数据结构 ★★
 
 参考动作来自 Jason Peng 的 [MimicKit](https://github.com/xbpeng/MimicKit)。原始格式为 pkl，包含：
 
@@ -1493,7 +1493,7 @@ uv sync
 }
 ```
 
-#### 数据转换管线 ⭐⭐
+#### 数据转换管线 ★★
 
 ```bash
 # Step 1: pkl → csv (加安全过渡动作 + 循环)
@@ -1519,7 +1519,7 @@ MUJOCO_GL=egl uv run -m mjlab.scripts.csv_to_npz \
 
 **过渡动作的意义**: `pkl_to_csv.py` 使用 cubic ease-in/ease-out 插值在安全站姿和动作之间创建平滑过渡。这对真机部署至关重要——避免策略在起始帧产生突变力矩。
 
-#### 训练配置要点 ⭐⭐
+#### 训练配置要点 ★★
 
 ```bash
 # 训练命令 (单 GPU, 4096 envs, ~1-2 小时)
@@ -1536,7 +1536,7 @@ MUJOCO_GL=egl CUDA_VISIBLE_DEVICES=0 uv run train \
 - ~15000 iterations: 动作趋于稳定和流畅
 - ~20000 iterations: 收敛，总训练时间约 1-2 小时 (单 RTX 4090)
 
-#### 评估与可视化 ⭐⭐
+#### 评估与可视化 ★★
 
 ```bash
 # Viser 可视化评估
@@ -1545,7 +1545,7 @@ uv run play Mjlab-Spinkick-Unitree-G1 \
     --num-envs 8
 ```
 
-#### 适配其他动作 ⭐⭐⭐
+#### 适配其他动作 ★★★
 
 替换参考动作数据即可复用整个管线：
 
@@ -1559,11 +1559,11 @@ uv run play Mjlab-Spinkick-Unitree-G1 \
 
 > 注意：不同动作可能需要调整 BeyondMimic 的奖励权重——高动态动作（如回旋踢）需要更宽松的惩罚，低动态动作（如行走）可以更严格。
 
-#### 真机部署安全提醒 ⭐
+#### 真机部署安全提醒 ★
 
 仓库明确声明："此仓库仅供教学目的。我们不对因尝试复现结果而可能发生的财产损坏或人身伤害承担任何责任。" 真机部署高动态动作是高风险操作。部署前务必完成 sim2sim 验证（见 6.2 节）和挂起测试（见 6.4 节检查清单）。
 
-### 5.4 常见问题: 模仿不像/摔倒/抖动 ⭐⭐
+### 5.4 常见问题: 模仿不像/摔倒/抖动 ★★
 
 | 症状 | 原因分析 | 解决方案 |
 |------|---------|---------|
@@ -1579,7 +1579,7 @@ uv run play Mjlab-Spinkick-Unitree-G1 \
 
 ## Part 6: 部署
 
-### 6.1 ONNX 导出 ⭐⭐
+### 6.1 ONNX 导出 ★★
 
 ```python
 # 从 PyTorch checkpoint 导出 ONNX
@@ -1637,7 +1637,7 @@ runner.export_policy(export_path="policy.onnx")
 runner.export_obs_normalizer(export_path="obs_normalizer.json")
 ```
 
-### 6.2 MuJoCo CPU 评估 (Sim-to-Sim 验证) ⭐⭐
+### 6.2 MuJoCo CPU 评估 (Sim-to-Sim 验证) ★★
 
 在部署到真机前, 先在 MuJoCo CPU (单线程, 高精度) 上验证策略:
 
@@ -1699,7 +1699,7 @@ with mujoco.viewer.launch_passive(m, d) as viewer:
 | 抖动对比 | 对比两边的关节加速度 RMS | 量级一致 |
 | 外力恢复 | 在 CPU 上施加侧向推力 | 能恢复平衡 |
 
-### 6.3 ROS2 部署接口 ⭐⭐⭐
+### 6.3 ROS2 部署接口 ★★★
 
 ```python
 #!/usr/bin/env python3
@@ -1783,7 +1783,7 @@ class RLPolicyNode(Node):
         ], dtype=np.float32)
 ```
 
-### 6.4 Sim2Real 检查清单 ⭐⭐⭐
+### 6.4 Sim2Real 检查清单 ★★★
 
 ```
 □ 动作空间匹配
@@ -1828,7 +1828,7 @@ class RLPolicyNode(Node):
 
 ## Part 7: 进阶工程技巧
 
-### 7.1 多 GPU 训练 ⭐⭐⭐
+### 7.1 多 GPU 训练 ★★★
 
 **IsaacLab 多 GPU:**
 
@@ -1857,7 +1857,7 @@ uv run train Mjlab-Velocity-Flat-Unitree-Go2 \
 - 建议先在单 GPU 上调好超参数, 再用多 GPU 放大训练
 - 如果只是为了更多环境, 增大 num_envs (单 GPU 上) 通常更高效
 
-### 7.2 Curriculum Learning 配置 ⭐⭐⭐
+### 7.2 Curriculum Learning 配置 ★★★
 
 **地形课程 (IsaacLab):**
 
@@ -1905,9 +1905,9 @@ curriculum = {
 - 部分环境始终保持简单地形, 防止遗忘
 - 地形从平地 → 小坡 → 台阶 → 随机地形渐进
 
-### 7.3 自定义机器人接入 (URDF/MJCF → 训练环境) ⭐⭐⭐
+### 7.3 自定义机器人接入 (URDF/MJCF → 训练环境) ★★★
 
-#### 通用步骤 ⭐⭐
+#### 通用步骤 ★★
 
 ```
 Step 1: 获取模型
@@ -1936,7 +1936,7 @@ Step 5: 修改环境配置
 Step 6: 训练 + 验证
 ```
 
-#### mjlab ANYmal C 接入示例 ⭐⭐⭐
+#### mjlab ANYmal C 接入示例 ★★★
 
 > 来自 `mujocolab/anymal_c_velocity` (~57 stars)。详细代码见 `S3B_mjlab深度实战.md` S3-B.4 节。
 
@@ -1961,7 +1961,7 @@ robot = EntityCfg(
 
 **关键教训**: 不同机器人之间, 环境逻辑 (观测/奖励/终止/事件) 大部分共享, 只需修改 EntityCfg 和少量超参数。
 
-### 7.4 IsaacLab 到 mjlab 环境迁移 ⭐⭐
+### 7.4 IsaacLab 到 mjlab 环境迁移 ★★
 
 > 详细对照表见 `S3B_mjlab深度实战.md` S3-B.7 节。以下只列关键差异。
 
@@ -1981,11 +1981,11 @@ robot = EntityCfg(
 2. 最大工作量在模型转换 (USD → MJCF) 和接触参数调整
 3. 建议做 sim2sim 对比: 同一策略分别在两个仿真器中评估
 
-### 7.4.1 mjlab 自定义机器人接入 ⭐⭐⭐
+### 7.4.1 mjlab 自定义机器人接入 ★★★
 
 > 本节补充 mjlab 框架下接入一个非内置机器人的完整流程。从获取模型到验证训练，覆盖常见的坑。
 
-#### Step 1: 获取 MJCF 模型 ⭐⭐
+#### Step 1: 获取 MJCF 模型 ★★
 
 **优先方案: mujoco_menagerie**
 
@@ -2023,7 +2023,7 @@ m = mujoco.MjModel.from_xml_path("my_robot.urdf")
 
 > URDF → MJCF 转换的常见问题：mesh 路径需要修正；惯量参数可能需要手动校准；接触几何体可能需要简化。
 
-#### Step 2: 配置 EntityCfg ⭐⭐
+#### Step 2: 配置 EntityCfg ★★
 
 ```python
 from mjlab.entity import EntityCfg
@@ -2053,7 +2053,7 @@ my_robot = EntityCfg(
 | `stiffness` (kp) | 真机 PD 标定实验 | 给定阶跃输入，调 kp 直到无超调/无振荡 |
 | `damping` (kd) | 真机 PD 标定实验 | 通常 kd = 0.01~0.1 * kp |
 
-#### Step 3: 测试模型（训练前验证） ⭐⭐
+#### Step 3: 测试模型（训练前验证） ★★
 
 ```bash
 # 使用 demo 工具验证模型加载和基本物理行为
@@ -2074,7 +2074,7 @@ uv run play MyCustomTask --agent random  # 应该乱动但不爆炸
 | 碰撞几何 | viewer 中开启碰撞可视化 | 无穿模，足端几何合理 |
 | PD 响应 | 施加阶跃位置命令 | 快速收敛，无振荡 |
 
-### 7.5 性能优化: 提高训练速度的技巧 ⭐⭐⭐
+### 7.5 性能优化: 提高训练速度的技巧 ★★★
 
 | 技巧 | 加速幅度 | 实现难度 | 说明 |
 |------|---------|---------|------|
@@ -2105,11 +2105,11 @@ uv run play MyCustomTask --agent random  # 应该乱动但不爆炸
   3. 检查是否有内存泄漏 (tensorboard 日志占磁盘)
 ```
 
-### 7.6 mjlab 调试与开发技巧 ⭐⭐
+### 7.6 mjlab 调试与开发技巧 ★★
 
 > 本节汇总 mjlab 日常开发中的高频操作和调试方法。
 
-#### 7.6.1 Viser Web Viewer 使用 ⭐⭐
+#### 7.6.1 Viser Web Viewer 使用 ★★
 
 mjlab 使用 [Viser](https://viser.studio/) 作为 web 可视化后端，无需本地显示器即可在浏览器中查看仿真。
 
@@ -2134,7 +2134,7 @@ uvx --from mjlab --refresh demo
 | 速度命令 | GUI 侧边栏摇杆 / 滑块 |
 | telemetry 覆盖 | 侧边栏展开观测/奖励面板 |
 
-#### 7.6.2 wandb 集成 ⭐⭐
+#### 7.6.2 wandb 集成 ★★
 
 mjlab 原生集成 Weights & Biases，训练时自动记录所有指标。
 
@@ -2157,7 +2157,7 @@ WANDB_MODE=offline uv run train Mjlab-Velocity-Flat-Unitree-G1 \
 - **Artifacts**: ONNX 模型、motion NPZ 文件自动存储为 artifacts
 - **Registry**: 参考动作数据通过 `wandb artifact put` 上传到 Registry
 
-#### 7.6.3 Checkpoint 管理 ⭐⭐
+#### 7.6.3 Checkpoint 管理 ★★
 
 ```bash
 # 训练自动保存 checkpoint 到 logs/ 和 wandb artifacts
@@ -2177,7 +2177,7 @@ uv run export Mjlab-Velocity-Flat-Unitree-G1 \
     --wandb-run-path your-org/mjlab/run-id
 ```
 
-#### 7.6.4 `uv run play` 选项与 Sanity Check ⭐⭐
+#### 7.6.4 `uv run play` 选项与 Sanity Check ★★
 
 ```bash
 # 标准评估
@@ -2199,7 +2199,7 @@ uv run play Mjlab-Tracking-Flat-Unitree-G1 \
 
 > `--agent zero` 和 `--agent random` 是调试环境配置的关键工具——在编写自定义环境后，先用这两个 agent 验证基本物理行为是否合理，再开始训练。
 
-#### 7.6.5 性能 Profiling ⭐⭐⭐
+#### 7.6.5 性能 Profiling ★★★
 
 **识别训练瓶颈的方法:**
 
@@ -2215,7 +2215,7 @@ uv run play Mjlab-Tracking-Flat-Unitree-G1 \
 #   → 减小 network 大小 (如 [512,256,128] → [256,128])
 ```
 
-#### 7.6.6 常见开发工作流 ⭐⭐
+#### 7.6.6 常见开发工作流 ★★
 
 ```
 1. 编辑配置 (修改奖励权重/观测/DR 参数)
@@ -2248,7 +2248,7 @@ uv run play Mjlab-Tracking-Flat-Unitree-G1 \
 
 ## 附录: 速查表
 
-### A. 所有命令行速查 ⭐
+### A. 所有命令行速查 ★
 
 ```bash
 # ============================================================
@@ -2329,7 +2329,7 @@ tensorboard --logdir logs/
 python -m mujoco.viewer robot.xml
 ```
 
-### B. 奖励函数参数速查 ⭐
+### B. 奖励函数参数速查 ★
 
 **四足 (Go2) baseline:**
 
@@ -2355,7 +2355,7 @@ python -m mujoco.viewer robot.xml
 | arm_regularization | 自定义 | -0.1 | 手臂不乱甩 |
 | step_frequency | 自定义 | 0.5 | 步频追踪 (可选) |
 
-### C. Domain Randomization 参数速查 ⭐
+### C. Domain Randomization 参数速查 ★
 
 | 参数 | 范围 (标准) | 范围 (保守) | 范围 (激进) |
 |------|-----------|-----------|-----------|
@@ -2370,7 +2370,7 @@ python -m mujoco.viewer robot.xml
 | 外力推动 (m/s) | 0-1.0 | 0-0.5 | 0-1.5 |
 | 推动间隔 (s) | 5-15 | 10-20 | 3-10 |
 
-### D. 训练问题排查速查 ⭐
+### D. 训练问题排查速查 ★
 
 | 症状 | 可能原因 | 第一步 | 解决方案 |
 |------|---------|-------|---------|
@@ -2385,7 +2385,7 @@ python -m mujoco.viewer robot.xml
 | 训练速度异常慢 | GPU 利用率低 | `nvidia-smi` 看 GPU 使用率 | 增大 num_envs; 关闭渲染; 检查数据管线 |
 | 多 seed 收敛差异大 | 超参不鲁棒 | 跑 5 个 seed 看分布 | 调整 lr/entropy_coeff; 增大 batch |
 
-### E. 关键论文与事实速查 ⭐
+### E. 关键论文与事实速查 ★
 
 | 事实 | 正确信息 |
 |------|---------|

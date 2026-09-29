@@ -10,9 +10,9 @@
 
 ---
 
-### 前置自测 ⭐
+### 前置自测 ★
 
-> 📋 **怎么用这份自测**：下面 5 道题考查本专题的硬前置（随机微积分、ODE、测度论、概率）。答不出 **$\ge 2$ 题**，强烈建议先回到 `01_数学/95_随机分析/10_随机微分方程基础.md` 补齐 Itô 积分与 Fokker-Planck，再读本专题——否则反向 SDE 的每一步推导都会卡住。第 5 题不是前置，而是一个"先记下你的直觉、本专题会给你反直觉答案"的引子。
+> ◆ **怎么用这份自测**：下面 5 道题考查本专题的硬前置（随机微积分、ODE、测度论、概率）。答不出 **$\ge 2$ 题**，强烈建议先回到 `01_数学/95_随机分析/10_随机微分方程基础.md` 补齐 Itô 积分与 Fokker-Planck，再读本专题——否则反向 SDE 的每一步推导都会卡住。第 5 题不是前置，而是一个"先记下你的直觉、本专题会给你反直觉答案"的引子。
 
 | 编号 | 问题 | 答不出 → 回顾 |
 |:----:|------|------------|
@@ -191,7 +191,7 @@
 
 ---
 
-## §8.4.1 前向扩散：把数据"溶解"成噪声 ⭐⭐
+## §8.4.1 前向扩散：把数据"溶解"成噪声 ★★
 
 ### 动机：我们究竟想做什么
 
@@ -362,7 +362,7 @@ $$
 
 这个残差正是 §8.4.5 收敛理论里"初始化失配误差"(initialization error)的来源：反向采样从真正的 $\mathcal N(0,I)$ 起步，而理想的反向过程应从 $p_T$ 起步，两者的差距会传播到生成质量。工程上通过把 $\bar\beta(T)$ 取得足够大(让 $e^{-\bar\beta(T)/2}$ 小于 $10^{-3}$)来压制它。**这是理论与工程桥接的典型例子**：一个推导中"约等于"的符号，在实践中对应一个必须调够的超参数。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区：把前向过程当成"需要训练的网络"**
 - 新手想法："前向扩散是不是也要学一个网络把数据变成噪声？"
@@ -395,7 +395,7 @@ $$
 
 ---
 
-## §8.4.2 Anderson 反向时间 SDE：全章枢纽 ⭐⭐⭐
+## §8.4.2 Anderson 反向时间 SDE：全章枢纽 ★★★
 
 ### 动机：前向容易，反向才是生成
 
@@ -582,7 +582,7 @@ $$
 
 Anderson 定理把生成化归为"知道 score $\nabla\log p_t$"。但 $p_t$ 是数据分布加噪后的边际，我们并不知道它的解析式(它涉及对未知 $p_\text{data}$ 的卷积)，自然也不知道它的对数梯度。**这正是 §8.4.3(DDPM)和 §8.4.4(Score Matching)要解决的全部内容：如何用神经网络 $s_\theta(x,t)$ 估计这个未知的 score。** 本节是"为什么估计 score 就够了"的答案，下两节是"如何估计"的答案：本节制造了对 score 估计的需求，下两节正好满足它。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区：以为反向过程需要知道 $p_{0|t}$ 后验**
 - 新手想法："反向就是给定 $x_t$ 推 $x_0$，那不就是要算后验 $p(x_0\mid x_t)$ 吗？"
@@ -615,7 +615,7 @@ Anderson 定理把生成化归为"知道 score $\nabla\log p_t$"。但 $p_t$ 是
 
 ---
 
-## §8.4.3 DDPM：从 ELBO 到 $\varepsilon$-预测 ⭐⭐⭐
+## §8.4.3 DDPM：从 ELBO 到 $\varepsilon$-预测 ★★★
 
 ### 动机：连续 SDE 很美，但怎么训练？
 
@@ -796,7 +796,7 @@ $$
 
 > **本质洞察(DDIM = 概率流 ODE 的离散积分)**:DDIM 的 $\sigma_t=0$ 版本不是一个独立技巧，而是 §8.4.2 那个 $\lambda=0$ 概率流 ODE 的一阶数值积分。这就解释了 DDIM 为什么能少步：**确定性 ODE 轨迹光滑，可以用大步长积分而不发散**(就像解光滑 ODE 可以用大步长 RK4)；而 DDPM 的随机轨迹粗糙，大步长会引入过大误差。这把"DDPM vs DDIM"从两个孤立算法统一成"同一 score、$\lambda=1$ 随机积分 vs $\lambda=0$ 确定积分"。一图胜千言：训练得到 $\varepsilon_\theta$ → 它给出 score → 你自由选择用哪种积分器采样。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区：以为 DDPM 的 1000 步是"加噪需要这么多步"**
 - 新手想法："步数多是为了把数据彻底变成噪声。"
@@ -828,7 +828,7 @@ $$
 
 ---
 
-## §8.4.4 Score Matching 家族与 Tweedie 公式 ⭐⭐⭐⭐
+## §8.4.4 Score Matching 家族与 Tweedie 公式 ★★★★
 
 ### 动机：怎么学一个我们写不出来的梯度
 
@@ -836,7 +836,7 @@ $$
 
 天真的想法：最小化 $\mathbb E_{p}\|s_\theta(x)-\nabla\log p(x)\|^2$。但这个目标里有未知的 $\nabla\log p(x)$——我们没有它的标签，无法直接回归！这就是 score 估计的核心困难。本节讲三种破解它的方法，以及把它们串起来的 Tweedie 公式。
 
-为什么这是博士级(⭐⭐⭐⭐)内容？因为它涉及一个深刻的数学魔术：**通过分部积分，把"含未知 $\nabla\log p$ 的目标"变形成"不含它、只含 $s_\theta$ 自身导数的目标"**——未知量神奇地消失了。理解这个魔术，是理解所有现代生成模型(扩散、score-based、能量模型)训练原理的关键。
+为什么这是博士级(★★★★)内容？因为它涉及一个深刻的数学魔术：**通过分部积分，把"含未知 $\nabla\log p$ 的目标"变形成"不含它、只含 $s_\theta$ 自身导数的目标"**——未知量神奇地消失了。理解这个魔术，是理解所有现代生成模型(扩散、score-based、能量模型)训练原理的关键。
 
 ### 如果绕不开配分函数会怎样
 
@@ -989,7 +989,7 @@ $$
 
 > **本质洞察(同一个量的不同坐标)**:Tweedie 公式证明了 $\varepsilon$、score、$x_0$ 不是三个不同的学习目标，而是**同一个后验信息在三组坐标下的表示**，彼此差一个**确定的、已知的线性变换**(只依赖 $\bar\alpha_t$，不依赖数据)。这意味着：训练时选哪个目标，在"能学到什么"层面完全等价，差异**纯粹在数值条件**(梯度尺度、高低噪声区的退化)。这是本专题最重要的统一性结论——它让你在读任何扩散论文时，看到 $\varepsilon$-pred / x0-pred / v-pred / score 都能瞬间翻译成同一个对象。把它和你已知的对照：这与线性代数里"同一个向量在不同基下有不同坐标，但向量本身不变"是同一种思想——选基(参数化)是为了数值方便，不改变被表示的对象。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区：以为 score matching 需要知道真实 score 做标签**
 - 新手想法："回归 score，总得有 score 的真值标签吧？"
@@ -1022,7 +1022,7 @@ $$
 
 ---
 
-## §8.4.5 收敛理论：训练好 score 后，采样能多准？ ⭐⭐⭐⭐
+## §8.4.5 收敛理论：训练好 score 后，采样能多准？ ★★★★
 
 ### 动机：一个让人不安的循环论证
 
@@ -1030,7 +1030,7 @@ $$
 
 这正是收敛理论(convergence theory)要回答的。它给出形如"$\text{dist}(\hat p,p_\text{data})\le$ 某个随维度 $d$、步数 $N$、score 误差 $\varepsilon_\text{score}$ 增长的界"的定量保证。对机器人尤其重要：如果你要把 Diffusion Policy 用在安全攸关的场合，你需要知道"采样步数减半，分布偏差会增大多少"，而不是凭感觉调参。
 
-为什么是研究级(⭐⭐⭐⭐)？因为它动用随机分析最重的武器——Girsanov 定理(测度变换)。这一节只给证明骨架，完整证明在专业论文里要十几页。但理解骨架足以让你读懂收敛论文、知道各个界的强弱。
+为什么是研究级(★★★★)？因为它动用随机分析最重的武器——Girsanov 定理(测度变换)。这一节只给证明骨架，完整证明在专业论文里要十几页。但理解骨架足以让你读懂收敛论文、知道各个界的强弱。
 
 ### 如果没有收敛保证会怎样
 
@@ -1108,7 +1108,7 @@ Chen et al. 最震撼之处是**不需要对数 Sobolev 不等式(LSI)**。LSI �
 
 > **本质洞察**：多峰分布对很多采样方法(如 Langevin MCMC)是噩梦——粒子会困在一个峰里出不来(混合时间随峰间能垒指数爆炸，这正是 LSI 失效的场景)。扩散为什么免疫？因为它**不是在固定分布上跑 MCMC，而是沿着一个从单峰高斯逐步"分裂"出多峰的路径走**——在高噪声端分布是单峰高斯(易采)，随着去噪逐步分裂出各个峰，粒子在峰还"连通"时就被引导到正确的吸引域。**这是扩散相对传统 MCMC 采样的根本优势，也是 §8.4.8 里"多级退火 MPPI 突破单级高斯天花板"的理论根源。** 类比边界：这像"退火"(annealing)——高温时势垒被抹平易探索，降温时锁定到正确极小值；但不像物理退火的是，扩散的"温度路径"是被前向 SDE 精确设计的，且有 score 主动引导而非被动随机游走。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区：把收敛界的常数当真**
 - 新手想法："定理说 $N=\tilde O(d/\varepsilon^2)$，我代入数字算出需要 $10^9$ 步，扩散没法用啊？"
@@ -1135,7 +1135,7 @@ Chen et al. 最震撼之处是**不需要对数 Sobolev 不等式(LSI)**。LSI �
 
 ---
 
-## §8.4.6 Flow Matching：把反向过程拉成直线 ⭐⭐⭐
+## §8.4.6 Flow Matching：把反向过程拉成直线 ★★★
 
 ### 动机：ODE 视角下，能不能训得更简单、采得更快
 
@@ -1277,7 +1277,7 @@ Rectified Flow(Liu et al. 2023)的洞察：第一次 FM 训出的速度场，其
 
 > **本质洞察**:Rectified Flow 揭示了"路径直度"和"采样步数"是同一枚硬币——**轨迹越直，数值积分误差越小，所需步数越少，极限是单步。** 而拉直的代价是多轮 reflow 训练(训练换推理速度)。机器人语境：$\pi_0$ 用 FM 的直线路径换来 50 Hz 实时性，本质上是把"采样步数预算"这个推理瓶颈，通过 FM 的直线设计转移到了训练阶段。这与工程里"预计算/缓存换运行时速度"是同一权衡。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区：以为条件速度场 $x_1-x_0$ 就是采样时用的速度场**
 - 新手想法："训练目标是 $x_1-x_0$，采样时直接走 $x_1-x_0$ 方向？"
@@ -1304,13 +1304,13 @@ Rectified Flow(Liu et al. 2023)的洞察：第一次 FM 训出的速度场，其
 
 ---
 
-## §8.4.7 测度论骨架：Fokker-Planck、Wasserstein 梯度流与 Girsanov ⭐⭐⭐⭐
+## §8.4.7 测度论骨架：Fokker-Planck、Wasserstein 梯度流与 Girsanov ★★★★
 
 ### 动机：把前面所有视角"装进同一个几何"
 
 前六节我们见了四种视角：SDE(随机轨迹)、ODE(确定轨迹)、score(密度梯度)、velocity(速度场)。它们反复被证明等价，但"为什么必然等价"还缺一个最高层的统一解释。本节给出这个解释：**把概率分布 $p_t$ 看成一个无穷维空间(概率测度空间 $\mathcal P_2$)里的一个点，$p_t$ 随时间的演化就是这个空间里的一条曲线；而扩散/FM 不过是让这条曲线"走得快"或"走直线"的不同方式。** 这个视角叫**最优传输几何**(optimal transport geometry)，它的核心定理是 JKO(Jordan-Kinderlehrer-Otto):**Fokker-Planck 方程是某个能量泛函在 Wasserstein 度量下的梯度流。**
 
-这一节是博士级(⭐⭐⭐⭐)的"理论顶板"，主干学习可跳过(导航已注明)。但它回答了最深的"为什么"，且 Girsanov 定理是 §8.4.5 收敛证明的引擎，值得专门讲清。
+这一节是博士级(★★★★)的"理论顶板"，主干学习可跳过(导航已注明)。但它回答了最深的"为什么"，且 Girsanov 定理是 §8.4.5 收敛证明的引擎，值得专门讲清。
 
 ### 如果只停留在 SDE/PDE 层面会怎样
 
@@ -1386,7 +1386,7 @@ Girsanov 是 §8.4.5 收敛证明的核心工具，这里补上它本身。
 
 **它们靠什么互转**:Tweedie / 线性插值系数(§8.4.4、§8.4.6)在 score、$\varepsilon$、velocity 间换算；连续性方程把 score 与 velocity 联系；Anderson 定理把 SDE 与 ODE 联系；JKO 把这一切嵌入 $W_2$ 几何。**一句话：同一条 $\mathcal P_2$ 曲线，五种坐标。**
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区：把 $W_2$ 梯度流的"梯度"当成普通函数梯度**
 - 新手想法："梯度流不就是 $\dot x=-\nabla f$ 那种吗？"
@@ -1414,7 +1414,7 @@ Girsanov 是 §8.4.5 收敛证明的核心工具，这里补上它本身。
 
 ---
 
-## §8.4.8 机器人落地：从图像扩散到动作生成 ⭐⭐⭐
+## §8.4.8 机器人落地：从图像扩散到动作生成 ★★★
 
 ### 动机：为什么生成模型适合做机器人策略
 
@@ -1634,7 +1634,7 @@ $w=0$ 退化为普通条件生成；$w>0$ 把动作往"更符合观测 $c$"的�
 
 > **本质洞察(动作头选型 = 在统一框架里选坐标和工作点)**：这张表最深的含义是——**所有这些"不同的 VLA 动作头"，在 §8.4.7 的四重视角统一框架里，都只是同一套生成数学的不同坐标(score/velocity)+ 不同路径(圆弧/直线)+ 不同采样器(SDE/ODE)+ 不同引导(CFG/classifier)的组合。** 你不需要把它们当成 N 个要分别学的"方法"，而是一个连续设计空间里的 N 个工作点。一旦你内化了本专题的统一视角，读任何一个新 VLA 的动作头，都能在 30 秒内把它定位到这个空间的某个角落，并立刻知道它的取舍。**这就是"理解一个框架胜过记住十个方法"的字面兑现**，也是本专题把"图像扩散数学"讲透后，留给机器人读者的最高价值——一张能容纳未来新方法的地图，而非一份会过时的方法清单。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区：以为 Diffusion Policy 比回归策略"只是更复杂"**
 - 新手想法："回归网络也能出动作，扩散只是把它复杂化。"
@@ -1786,26 +1786,26 @@ $w=0$ 退化为普通条件生成；$w>0$ 把动作往"更符合观测 $c$"的�
 
 | # | 知识点 | 核心要点 | 对应节 | 难度 |
 |---:|-------|---------|--------|:---:|
-| 1 | 前向扩散 SDE | 数据按线性 SDE 溶解成噪声；VP(方差保持)/VE(方差爆炸)两典范；转移核闭式高斯 | §8.4.1 | ⭐⭐ |
-| 2 | Anderson 反向 SDE | 反向也是 SDE，漂移多 $-g^2\nabla\log p_t$；生成 = 估计 score(全章枢纽) | §8.4.2 | ⭐⭐⭐ |
-| 3 | 概率流 ODE 与 $\lambda$ 族 | 确定性 ODE 与随机 SDE 共享边际；一个 score 给出整族采样器 | §8.4.2 | ⭐⭐⭐ |
-| 4 | DDPM ELBO | 离散隐变量模型，似然下界拆成高斯间 KL 之和 | §8.4.3 | ⭐⭐⭐ |
-| 5 | $\varepsilon$-预测与 $L_\text{simple}$ | 预测噪声而非均值/数据，尺度恒定、高噪声不退化 | §8.4.3 | ⭐⭐⭐ |
-| 6 | DDIM | 非马氏确定采样，= PF-ODE 离散，10–50 步 | §8.4.3 | ⭐⭐⭐ |
-| 7 | 显式/切片 Score Matching | 分部积分消去真值 score，代价是散度(Hessian 迹) | §8.4.4 | ⭐⭐⭐⭐ |
-| 8 | 去噪 Score Matching | 去噪 = score 估计；DDPM 损失的数学心脏 | §8.4.4 | ⭐⭐⭐⭐ |
-| 9 | Tweedie 公式 | 后验均值由 score 给出；四种参数化统一 | §8.4.4 | ⭐⭐⭐⭐ |
-| 10 | 收敛三源误差 | 初始化/score/离散化三旋钮正交；Girsanov 证明骨架 | §8.4.5 | ⭐⭐⭐⭐ |
-| 11 | 维度依赖($d^2$→$d$) | 阶数取决于误差累积用多粗的不等式；扩散不维度诅咒 | §8.4.5 | ⭐⭐⭐⭐ |
-| 12 | Flow Matching / CFM | 直接学速度场，条件路径可算，直线路径少步 | §8.4.6 | ⭐⭐⭐ |
-| 13 | Rectified Flow / SI | reflow 拉直路径逼近单步；插值系数统一 FM 与扩散 | §8.4.6 | ⭐⭐⭐ |
-| 14 | Wasserstein 几何与 JKO | 分布演化 = $\mathcal P_2$ 测地流；前向 = 自由能梯度流(熵增) | §8.4.7 | ⭐⭐⭐⭐ |
-| 15 | Girsanov 定理 | 路径测度 KL = 漂移差二次型积分；收敛证明引擎 | §8.4.7 | ⭐⭐⭐⭐ |
-| 16 | Diffusion Policy | 动作序列扩散，多峰、滚动时域；DDPM 损失原样搬 | §8.4.8 | ⭐⭐⭐ |
-| 17 | $\pi_0$ Flow Matching | VLM 条件 + FM 动作头，直线路径换 50 Hz 实时 | §8.4.8 | ⭐⭐⭐ |
-| 18 | Diffuser / guidance | 规划 = 去噪；classifier guidance = 可行性先验 $\times$ 目标似然 | §8.4.8 | ⭐⭐⭐ |
-| 19 | SE(3) 扩散 | 李代数加噪 + 指数映射；扩散 $\times$ 几何 | §8.4.8 | ⭐⭐⭐ |
-| 20 | MPPI = 单步去噪 | softmax 平均 = Tweedie；退火 = 反向扩散(打通 04 专题) | §8.4.8 | ⭐⭐⭐ |
+| 1 | 前向扩散 SDE | 数据按线性 SDE 溶解成噪声；VP(方差保持)/VE(方差爆炸)两典范；转移核闭式高斯 | §8.4.1 | ★★ |
+| 2 | Anderson 反向 SDE | 反向也是 SDE，漂移多 $-g^2\nabla\log p_t$；生成 = 估计 score(全章枢纽) | §8.4.2 | ★★★ |
+| 3 | 概率流 ODE 与 $\lambda$ 族 | 确定性 ODE 与随机 SDE 共享边际；一个 score 给出整族采样器 | §8.4.2 | ★★★ |
+| 4 | DDPM ELBO | 离散隐变量模型，似然下界拆成高斯间 KL 之和 | §8.4.3 | ★★★ |
+| 5 | $\varepsilon$-预测与 $L_\text{simple}$ | 预测噪声而非均值/数据，尺度恒定、高噪声不退化 | §8.4.3 | ★★★ |
+| 6 | DDIM | 非马氏确定采样，= PF-ODE 离散，10–50 步 | §8.4.3 | ★★★ |
+| 7 | 显式/切片 Score Matching | 分部积分消去真值 score，代价是散度(Hessian 迹) | §8.4.4 | ★★★★ |
+| 8 | 去噪 Score Matching | 去噪 = score 估计；DDPM 损失的数学心脏 | §8.4.4 | ★★★★ |
+| 9 | Tweedie 公式 | 后验均值由 score 给出；四种参数化统一 | §8.4.4 | ★★★★ |
+| 10 | 收敛三源误差 | 初始化/score/离散化三旋钮正交；Girsanov 证明骨架 | §8.4.5 | ★★★★ |
+| 11 | 维度依赖($d^2$→$d$) | 阶数取决于误差累积用多粗的不等式；扩散不维度诅咒 | §8.4.5 | ★★★★ |
+| 12 | Flow Matching / CFM | 直接学速度场，条件路径可算，直线路径少步 | §8.4.6 | ★★★ |
+| 13 | Rectified Flow / SI | reflow 拉直路径逼近单步；插值系数统一 FM 与扩散 | §8.4.6 | ★★★ |
+| 14 | Wasserstein 几何与 JKO | 分布演化 = $\mathcal P_2$ 测地流；前向 = 自由能梯度流(熵增) | §8.4.7 | ★★★★ |
+| 15 | Girsanov 定理 | 路径测度 KL = 漂移差二次型积分；收敛证明引擎 | §8.4.7 | ★★★★ |
+| 16 | Diffusion Policy | 动作序列扩散，多峰、滚动时域；DDPM 损失原样搬 | §8.4.8 | ★★★ |
+| 17 | $\pi_0$ Flow Matching | VLM 条件 + FM 动作头，直线路径换 50 Hz 实时 | §8.4.8 | ★★★ |
+| 18 | Diffuser / guidance | 规划 = 去噪；classifier guidance = 可行性先验 $\times$ 目标似然 | §8.4.8 | ★★★ |
+| 19 | SE(3) 扩散 | 李代数加噪 + 指数映射；扩散 $\times$ 几何 | §8.4.8 | ★★★ |
+| 20 | MPPI = 单步去噪 | softmax 平均 = Tweedie；退火 = 反向扩散(打通 04 专题) | §8.4.8 | ★★★ |
 
 ---
 
@@ -1829,43 +1829,43 @@ $w=0$ 退化为普通条件生成；$w>0$ 把动作往"更符合观测 $c$"的�
 
 ## 延伸阅读
 
-按"原始论文 / 理论深化 / 机器人应用 / 教材综述"四类整理，标注难度(⭐ 入门 ~ ⭐⭐⭐⭐ 研究级)。
+按"原始论文 / 理论深化 / 机器人应用 / 教材综述"四类整理，标注难度(★ 入门 ~ ★★★★ 研究级)。
 
 **原始论文(必读，按本章脉络)**
 
-- ⭐⭐ Ho, Jain, Abbeel. *Denoising Diffusion Probabilistic Models*. NeurIPS 2020. arXiv:2006.11239. — DDPM 原作，§8.4.3 的来源，工程实现的起点。
-- ⭐⭐⭐ Song, Sohl-Dickstein, Kingma, Kumar, Ermon, Poole. *Score-Based Generative Modeling through Stochastic Differential Equations*. ICLR 2021(Outstanding Paper). arXiv:2011.13456. — Score SDE,§8.4.1/8.4.2 的 SDE 统一框架与概率流 ODE。
-- ⭐⭐⭐ Song, Meng, Ermon. *Denoising Diffusion Implicit Models*. ICLR 2021. arXiv:2010.02502. — DDIM,§8.4.3 的少步确定采样。
-- ⭐⭐ Vincent. *A Connection Between Score Matching and Denoising Autoencoders*. Neural Computation 2011. — §8.4.4 去噪 SM 定理的原始证明(DDPM 的数学心脏)。
-- ⭐⭐⭐⭐ Hyvärinen. *Estimation of Non-Normalized Statistical Models by Score Matching*. JMLR 2005. — 显式 score matching 与分部积分技巧的鼻祖。
-- ⭐⭐⭐ Lipman, Chen, Ben-Hamu, Nickel, Le. *Flow Matching for Generative Modeling*. ICLR 2023. arXiv:2210.02747. — §8.4.6 的 CFM 等价恒等式来源。
-- ⭐⭐⭐ Liu, Gong, Liu. *Flow Straight and Fast: Learning to Generate and Transfer Data with Rectified Flow*. ICLR 2023(Oral). arXiv:2209.03003. — Rectified Flow 与 reflow。
-- ⭐⭐⭐⭐ Albergo, Vanden-Eijnden. *Stochastic Interpolants: A Unifying Framework for Flows and Diffusions*. JMLR 2025(arXiv:2303.08797, 2023). — §8.4.6 统一 FM 与扩散的理论。
+- ★★ Ho, Jain, Abbeel. *Denoising Diffusion Probabilistic Models*. NeurIPS 2020. arXiv:2006.11239. — DDPM 原作，§8.4.3 的来源，工程实现的起点。
+- ★★★ Song, Sohl-Dickstein, Kingma, Kumar, Ermon, Poole. *Score-Based Generative Modeling through Stochastic Differential Equations*. ICLR 2021(Outstanding Paper). arXiv:2011.13456. — Score SDE,§8.4.1/8.4.2 的 SDE 统一框架与概率流 ODE。
+- ★★★ Song, Meng, Ermon. *Denoising Diffusion Implicit Models*. ICLR 2021. arXiv:2010.02502. — DDIM,§8.4.3 的少步确定采样。
+- ★★ Vincent. *A Connection Between Score Matching and Denoising Autoencoders*. Neural Computation 2011. — §8.4.4 去噪 SM 定理的原始证明(DDPM 的数学心脏)。
+- ★★★★ Hyvärinen. *Estimation of Non-Normalized Statistical Models by Score Matching*. JMLR 2005. — 显式 score matching 与分部积分技巧的鼻祖。
+- ★★★ Lipman, Chen, Ben-Hamu, Nickel, Le. *Flow Matching for Generative Modeling*. ICLR 2023. arXiv:2210.02747. — §8.4.6 的 CFM 等价恒等式来源。
+- ★★★ Liu, Gong, Liu. *Flow Straight and Fast: Learning to Generate and Transfer Data with Rectified Flow*. ICLR 2023(Oral). arXiv:2209.03003. — Rectified Flow 与 reflow。
+- ★★★★ Albergo, Vanden-Eijnden. *Stochastic Interpolants: A Unifying Framework for Flows and Diffusions*. JMLR 2025(arXiv:2303.08797, 2023). — §8.4.6 统一 FM 与扩散的理论。
 
 **理论深化**
 
-- ⭐⭐ Anderson. *Reverse-Time Diffusion Equation Models*. Stochastic Processes and their Applications, 1982. — §8.4.2 反向 SDE 定理的源头(沉睡 38 年的理论)。
-- ⭐⭐⭐⭐ Chen, Chewi, Li, Li, Salim, Zhang. *Sampling is as Easy as Learning the Score*. ICLR 2023. arXiv:2209.11215. — §8.4.5 最小假设 TV 收敛(无 LSI)。
-- ⭐⭐⭐⭐ Benton, De Bortoli, Doucet, Deligiannidis. *Nearly $d$-Linear Convergence Bounds for Diffusion Models via Stochastic Localization*. ICLR 2024(Spotlight). arXiv:2308.03686. — §8.4.5 近线性维度依赖。
-- ⭐⭐⭐⭐ Jordan, Kinderlehrer, Otto. *The Variational Formulation of the Fokker-Planck Equation*. SIAM J. Math. Anal., 1998. — §8.4.7 JKO 定理(Fokker-Planck = $W_2$ 梯度流)的奠基作。
-- ⭐⭐⭐ Kingma, Salimans, Poole, Ho. *Variational Diffusion Models*. NeurIPS 2021. arXiv:2107.00630. — §8.4.1 信噪比统一调度、§8.4.3 权重不影响最优解。
-- ⭐⭐⭐ Karras, Aittala, Aila, Laine. *Elucidating the Design Space of Diffusion-Based Generative Models (EDM)*. NeurIPS 2022. arXiv:2206.00364. — §8.4.1 VP/VE 统一与预处理，采样器设计实战圣经。
+- ★★ Anderson. *Reverse-Time Diffusion Equation Models*. Stochastic Processes and their Applications, 1982. — §8.4.2 反向 SDE 定理的源头(沉睡 38 年的理论)。
+- ★★★★ Chen, Chewi, Li, Li, Salim, Zhang. *Sampling is as Easy as Learning the Score*. ICLR 2023. arXiv:2209.11215. — §8.4.5 最小假设 TV 收敛(无 LSI)。
+- ★★★★ Benton, De Bortoli, Doucet, Deligiannidis. *Nearly $d$-Linear Convergence Bounds for Diffusion Models via Stochastic Localization*. ICLR 2024(Spotlight). arXiv:2308.03686. — §8.4.5 近线性维度依赖。
+- ★★★★ Jordan, Kinderlehrer, Otto. *The Variational Formulation of the Fokker-Planck Equation*. SIAM J. Math. Anal., 1998. — §8.4.7 JKO 定理(Fokker-Planck = $W_2$ 梯度流)的奠基作。
+- ★★★ Kingma, Salimans, Poole, Ho. *Variational Diffusion Models*. NeurIPS 2021. arXiv:2107.00630. — §8.4.1 信噪比统一调度、§8.4.3 权重不影响最优解。
+- ★★★ Karras, Aittala, Aila, Laine. *Elucidating the Design Space of Diffusion-Based Generative Models (EDM)*. NeurIPS 2022. arXiv:2206.00364. — §8.4.1 VP/VE 统一与预处理，采样器设计实战圣经。
 
 **机器人应用**
 
-- ⭐⭐⭐ Chi, Xu, Feng, Cousineau, Du, Burchfiel, Tedrake, Song. *Diffusion Policy: Visuomotor Policy Learning via Action Diffusion*. RSS 2023 / IJRR 2024. arXiv:2303.04137. — §8.4.8 Diffusion Policy。
-- ⭐⭐⭐ Black 等(Physical Intelligence). *$\pi_0$: A Vision-Language-Action Flow Model for General Robot Control*. 2024. arXiv:2410.24164. — §8.4.8 $\pi_0$,Flow Matching 实时 VLA。
-- ⭐⭐⭐ Janner, Du, Tenenbaum, Levine. *Planning with Diffusion for Flexible Behavior Synthesis*. ICML 2022(Long Talk). arXiv:2205.09991. — §8.4.8 Diffuser，规划即去噪 + classifier guidance。
-- ⭐⭐⭐⭐ Urain, Funk, Peters, Chalvatzaki. *SE(3)-DiffusionFields: Learning Smooth Cost Functions for Joint Grasp and Motion Optimization through Diffusion*. ICRA 2023. arXiv:2209.03855. — §8.4.8 流形扩散与 6-DoF 抓取。
-- ⭐⭐⭐ Pan, Yi, Shi, Qu. *Model-Based Diffusion for Trajectory Optimization*. NeurIPS 2024. arXiv:2407.01573. — §8.4.8 MPPI 桥接，无数据扩散式轨迹优化。
-- ⭐⭐⭐ Ho, Salimans. *Classifier-Free Diffusion Guidance*. NeurIPS 2021 Workshop / arXiv:2207.12598 (2022). — §8.4.8 应用七，现代条件扩散(Diffusion Policy/$\pi_0$)的主流引导方式。
+- ★★★ Chi, Xu, Feng, Cousineau, Du, Burchfiel, Tedrake, Song. *Diffusion Policy: Visuomotor Policy Learning via Action Diffusion*. RSS 2023 / IJRR 2024. arXiv:2303.04137. — §8.4.8 Diffusion Policy。
+- ★★★ Black 等(Physical Intelligence). *$\pi_0$: A Vision-Language-Action Flow Model for General Robot Control*. 2024. arXiv:2410.24164. — §8.4.8 $\pi_0$,Flow Matching 实时 VLA。
+- ★★★ Janner, Du, Tenenbaum, Levine. *Planning with Diffusion for Flexible Behavior Synthesis*. ICML 2022(Long Talk). arXiv:2205.09991. — §8.4.8 Diffuser，规划即去噪 + classifier guidance。
+- ★★★★ Urain, Funk, Peters, Chalvatzaki. *SE(3)-DiffusionFields: Learning Smooth Cost Functions for Joint Grasp and Motion Optimization through Diffusion*. ICRA 2023. arXiv:2209.03855. — §8.4.8 流形扩散与 6-DoF 抓取。
+- ★★★ Pan, Yi, Shi, Qu. *Model-Based Diffusion for Trajectory Optimization*. NeurIPS 2024. arXiv:2407.01573. — §8.4.8 MPPI 桥接，无数据扩散式轨迹优化。
+- ★★★ Ho, Salimans. *Classifier-Free Diffusion Guidance*. NeurIPS 2021 Workshop / arXiv:2207.12598 (2022). — §8.4.8 应用七，现代条件扩散(Diffusion Policy/$\pi_0$)的主流引导方式。
 
 **教材 / 综述 / 优质讲义**
 
-- ⭐⭐ Yang Song. *Generative Modeling by Estimating Gradients of the Data Distribution*(博客). — score-based 生成的最佳入门讲解，配 §8.4.2/8.4.4。
-- ⭐⭐⭐ Lilian Weng. *What are Diffusion Models?*(博客). — DDPM/DDIM/score SDE 的公式推导汇编，适合配 §8.4.3 速查。
-- ⭐⭐⭐⭐ Chen, Lu 等关于扩散收敛理论的综述(arXiv 持续更新)— §8.4.5 的进阶阅读。
-- ⭐⭐⭐ Lipman 等。 *Flow Matching Guide and Code*(2024 讲义/代码). — §8.4.6 的系统化教程，含可运行实现。
+- ★★ Yang Song. *Generative Modeling by Estimating Gradients of the Data Distribution*(博客). — score-based 生成的最佳入门讲解，配 §8.4.2/8.4.4。
+- ★★★ Lilian Weng. *What are Diffusion Models?*(博客). — DDPM/DDIM/score SDE 的公式推导汇编，适合配 §8.4.3 速查。
+- ★★★★ Chen, Lu 等关于扩散收敛理论的综述(arXiv 持续更新)— §8.4.5 的进阶阅读。
+- ★★★ Lipman 等。 *Flow Matching Guide and Code*(2024 讲义/代码). — §8.4.6 的系统化教程，含可运行实现。
 
 ---
 

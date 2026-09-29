@@ -2,7 +2,7 @@
 
 ## 前置自测
 
-📋 **前置自测**（答不出 ≥ 2 题 → 先回专题 3.7 Lyapunov 稳定性复习）
+◆ **前置自测**（答不出 ≥ 2 题 → 先回专题 3.7 Lyapunov 稳定性复习）
 
 1. Lyapunov 函数 $V(x)$ 需要满足什么条件才能保证系统平衡点渐近稳定？写出 $\dot V$ 的条件。
 2. 什么是类 $\mathcal{K}$ 函数和类 $\mathcal{K}_\infty$ 函数？给出定义并举例。
@@ -64,7 +64,7 @@ CLF-CBF-QP 安全控制
 
 ---
 
-## 0 节：为什么 CBF 是"安全"的 Lyapunov ⭐
+## 0 节：为什么 CBF 是"安全"的 Lyapunov ★
 
 ### 动机：稳定性不等于安全性
 
@@ -104,7 +104,7 @@ CLF-CBF-QP 安全控制
 
 ---
 
-## 1. 集合不变性基础 ⭐⭐
+## 1. 集合不变性基础 ★★
 
 ### 1.1 正向不变集定义与判定
 
@@ -150,7 +150,7 @@ $$h(x) = \|x - x_{\text{obs}}\|^2 - d_{\text{safe}}^2$$
 
 $h(x)\ge 0$ 表示机器人到障碍物距离 $\ge d_{\text{safe}}$。
 
-### 1.2 切锥与 Nagumo 定理 ⭐⭐
+### 1.2 切锥与 Nagumo 定理 ★★
 
 #### 动机：边界上的速度方向决定不变性
 
@@ -231,7 +231,7 @@ $$\dot h(x) \ge -\alpha(h(x))$$
 
 > **跨领域类比**：Nagumo 条件像"绝对禁止越线"——只在边界上起作用，线内完全自由。CBF 条件像高速公路的"递减限速区"——离出口 2km 时限速 120，1km 时限速 80，500m 时限速 60。这种渐进式约束让车辆（系统）总能安全停下来，即使制动力有限。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > 💡 **概念误区：混淆 Nagumo 条件与 CBF 条件**
 >
@@ -255,7 +255,7 @@ $$\dot h(x) \ge -\alpha(h(x))$$
 
 ---
 
-## 2. Control Lyapunov Function (CLF) ⭐⭐
+## 2. Control Lyapunov Function (CLF) ★★
 
 ### 2.1 CLF 的定义与 Artstein 定理
 
@@ -295,7 +295,7 @@ $$L_g V(x) = 0 \implies L_f V(x) < 0$$
 
 > **反事实推理**：如果 Artstein 定理不成立——即存在可镇定但找不到 CLF 的系统——那么 CLF-QP 方法的适用范围将大大缩小。我们将不得不为每个系统单独设计控制律，无法使用统一的 QP 框架。Artstein 定理保证了：只要系统可镇定，CLF 方法就一定适用（虽然找 CLF 本身可能很难）。
 
-### 2.2 Sontag 公式：从 CLF 到显式反馈 ⭐⭐
+### 2.2 Sontag 公式：从 CLF 到显式反馈 ★★
 
 #### 动机：CLF 告诉你"能镇定"，但怎么镇定？
 
@@ -385,9 +385,9 @@ $$\exists u\in\mathcal{U}: L_gV\cdot u\le -L_fV-\gamma V$$
 
 当 $L_gV=0$ 时需要 $L_fV+\gamma V\le 0$（由 small control property 保证在 $L_gV=0\implies L_fV<0$ 的邻域成立，但 $\gamma$ 太大可能使 $-\gamma V$ 项主导而不可行）。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：Sontag 公式在 $b\approx 0$ 时的数值问题**
+> ⚠ **编程陷阱：Sontag 公式在 $b\approx 0$ 时的数值问题**
 >
 > **错误做法**：直接用 $u = (-a-\sqrt{a^2+b^4})/b$ 计算，当 $|b|<10^{-8}$ 时分母接近零。
 >
@@ -407,9 +407,9 @@ $$\exists u\in\mathcal{U}: L_gV\cdot u\le -L_fV-\gamma V$$
 
 ---
 
-## 3. Control Barrier Function (CBF) ⭐⭐
+## 3. Control Barrier Function (CBF) ★★
 
-### 3.0 比较引理详解——CBF 的数学引擎 ⭐⭐
+### 3.0 比较引理详解——CBF 的数学引擎 ★★
 
 #### 为什么需要比较引理
 
@@ -456,7 +456,7 @@ CBF 保证：$h(t)\ge h_0 e^{-\gamma t}$（指数下界）
 2. 对应的安全裕度以指数速率衰减但永不到零
 3. 时间常数 $1/\gamma$ 有明确物理意义（"从当前裕度到边界附近需要多久"）
 
-### 3.1 Zeroing CBF 严格定义 ⭐⭐
+### 3.1 Zeroing CBF 严格定义 ★★
 
 #### 动机：如何把"安全"写成数学约束
 
@@ -500,7 +500,7 @@ $$K_{\text{cbf}}(x) = \{u\in\mathcal{U} : L_f h(x) + L_g h(x)\,u \ge -\alpha(h(x
 
 这是 $\mathcal{U}$ 中满足 CBF 约束的控制子集。ZCBF 定义等价于 $K_{\text{cbf}}(x)\neq\varnothing$ 对所有 $x\in\mathcal{D}$。
 
-### 3.2 CBF 前向不变性主定理与完整证明 ⭐⭐
+### 3.2 CBF 前向不变性主定理与完整证明 ★★
 
 **主定理（Ames 2017, Thm 2）**：若 $h$ 为 ZCBF，$\nabla h\neq 0$ 在 $\partial\mathcal{C}$ 上，则任何 Lipschitz 连续控制律 $u(x)\in K_{\text{cbf}}(x)$ 使得：
 
@@ -560,7 +560,7 @@ $z=0$ 仍是平衡点。$z$ 递增趋向 0（但以标准 Lipschitz $\alpha$ 不
 
 > **本质洞察**：CBF 条件 $\dot h\ge -\alpha(h)$ 的几何含义可以这样理解：想象 $h$ 值像一个"安全裕度仪表"，CBF 条件说的是"仪表下降的速度不能超过比较 ODE 给出的衰减速度"。而比较 ODE 从正初值出发永远为正——所以仪表永远为正，系统永远安全。这与 CLF 条件 $\dot V\le -\gamma(V)$ 是精确对偶：CLF 说"Lyapunov 仪表至少以 $\gamma(V)$ 的速度下降"（保证收敛），CBF 说"安全仪表至多以 $\alpha(h)$ 的速度下降"（保证不穿零）。
 
-### 3.3 $\alpha$ 函数的选择与工程影响 ⭐⭐
+### 3.3 $\alpha$ 函数的选择与工程影响 ★★
 
 $\alpha$ 的选择直接影响控制器的行为特性：
 
@@ -605,7 +605,7 @@ $$\alpha(h) = \gamma\tanh(h/\epsilon)$$
 
 将约束"饱和"在 $[-\gamma,\gamma]$，避免当 $h$ 很大时 $\alpha(h)$ 过大导致约束形同虚设。
 
-### 3.4 Reciprocal CBF 对比 ⭐⭐⭐
+### 3.4 Reciprocal CBF 对比 ★★★
 
 **Reciprocal CBF（RCBF）** 是早期的障碍函数形式：
 
@@ -629,7 +629,7 @@ $$B:\operatorname{Int}(\mathcal{C})\to\mathbb{R}_{\ge 0}, \quad B(x)\to +\infty 
 
 > **反事实推理**：如果我们用 RCBF 而不是 ZCBF 会怎样？当系统接近安全边界时，$B=1/h\to\infty$，梯度 $\nabla B = -\nabla h/h^2\to\infty$。QP 的约束系数 $L_gB$ 爆炸，导致：(1) 数值求解不稳定；(2) 解出的 $u$ 可能很大但方向不合理；(3) 执行器饱和后安全性丧失。ZCBF 的梯度 $\nabla h$ 在边界保持有界（正则性条件），QP 始终 well-conditioned。
 
-### 3.5 高相对度 CBF（HOCBF） ⭐⭐⭐
+### 3.5 高相对度 CBF（HOCBF） ★★★
 
 #### 动机：为什么标准 CBF 会失效
 
@@ -760,7 +760,7 @@ def hocbf_double_integrator(x1, x2, u_nom, gamma1=2.0, gamma2=2.0,
 
 **与极点配置的联系**：$\gamma_1=\gamma_2=2$ 对应特征方程 $(s+2)^2=0$，双重极点 $s=-2$。若系统运动在 HOCBF 约束上（约束激活），其行为如同二阶系统被极点 $-2$ 约束。
 
-### 3.6 指数 CBF（ECBF） ⭐⭐⭐
+### 3.6 指数 CBF（ECBF） ★★★
 
 #### 动机：HOCBF 的线性特例
 
@@ -792,9 +792,9 @@ ECBF 约束变为：$u \ge -p^2 h - 2p\dot h$（当 $L_gL_fh>0$ 时除以它）�
 
 **ECBF 与 HOCBF 的关系**：当 HOCBF 中 $\alpha_i(r)=k_i\cdot r$ 全取线性时，两者等价。HOCBF 允许非线性 $\alpha_i$（如 $\sqrt{\cdot}$、$\arctan$），提供更大的设计灵活性。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：未检查相对度就直接用标准 CBF**
+> ⚠ **编程陷阱：未检查相对度就直接用标准 CBF**
 >
 > **错误做法**：对双积分器的位置约束直接写 `Lgh * u >= -alpha * h`。
 >
@@ -822,7 +822,7 @@ ECBF 约束变为：$u \ge -p^2 h - 2p\dot h$（当 $L_gL_fh>0$ 时除以它）�
 
 ---
 
-## 4. CLF-CBF-QP 统一框架 ⭐⭐
+## 4. CLF-CBF-QP 统一框架 ★★
 
 ### 4.1 问题设定与冲突分析
 
@@ -840,7 +840,7 @@ ECBF 约束变为：$u \ge -p^2 h - 2p\dot h$（当 $L_gL_fh>0$ 时除以它）�
 
 > **本质洞察**：在机器人学中，安全和稳定性的优先级是不对称的。不安全可能导致灾难性后果（撞毁设备、伤害人类），而不稳定只是性能下降（收敛变慢或暂时不收敛）。因此 CBF 作为硬约束，CLF 通过松弛变量降级为软约束。这是"安全优先"原则的数学实现。
 
-### 4.2 CLF-CBF-QP 完整构造 ⭐⭐
+### 4.2 CLF-CBF-QP 完整构造 ★★
 
 **CLF-CBF-QP**：
 
@@ -864,7 +864,7 @@ $$\begin{aligned}
 
 **为什么 $p\delta^2$ 而不是 $p|\delta|$？** 二次惩罚使得 QP 的目标仍然是二次的（保持凸 QP 结构），且自动给出 $\delta=0$ 的软趋势。线性惩罚 $p|\delta|$ 会使问题变成二次锥规划（SOCP），求解更复杂。
 
-### 4.3 KKT 条件与闭式解分析 ⭐⭐⭐
+### 4.3 KKT 条件与闭式解分析 ★★★
 
 #### 推导 KKT 条件
 
@@ -911,7 +911,7 @@ $$\lambda_h(-L_fh - L_gh\cdot u - \alpha(h)) = 0$$
 
 **当两者冲突时**：$\delta^*=\lambda_V/(2p)>0$，CLF 约束被软化（允许 $\dot V > -\gamma V$）。$p$ 越大→$\delta$ 越小→CLF 越接近硬约束→但可能导致 QP 不可行（因为硬 CLF + 硬 CBF 可能不相容）。
 
-### 4.4 纯 Safety Filter 变体 ⭐⭐
+### 4.4 纯 Safety Filter 变体 ★★
 
 **这是工程中最常用的形式**：给定名义控制 $u_{\text{nom}}(x)$（来自 RL 策略、MPC、遥操作、PD 控制器），做**最小修正**保证安全：
 
@@ -943,7 +943,7 @@ $$u^* = u_{\text{nom}} + \lambda^* b^\top$$
 
 **Lipschitz 连续性**：当 $bb^\top>0$（即 $L_gh\neq 0$，相对度 1 的自然要求），解关于 $x$ Lipschitz 连续——保证闭环 ODE 解存在唯一（Morris-Powell-Ames 2013）。
 
-### 4.5 可行性分析 ⭐⭐⭐
+### 4.5 可行性分析 ★★★
 
 **什么时候 CLF-CBF-QP 不可行？**
 
@@ -964,9 +964,9 @@ QP 不可行意味着不存在 $u\in\mathcal{U}$ 同时满足所有约束。可�
 
 > **反事实推理**：如果不做可行性分析，直接把不可行的 QP 丢给求解器会怎样？OSQP 会返回 `infeasible` 状态，此时没有合法的控制输出。如果工程中没有处理这个情况（如回退到上一帧的控制或紧急制动），系统将在该帧没有控制输入——可能导致灾难性后果。**工程代码必须处理 QP 不可行的情况！**
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：松弛罚权 $p$ 设置不当**
+> ⚠ **编程陷阱：松弛罚权 $p$ 设置不当**
 >
 > **$p$ 太小（如 $p=1$）**：$\delta$ 可以很大，CLF 约束几乎不起作用，系统只保安全不收敛——机器人停在原地不动。
 >
@@ -988,7 +988,7 @@ QP 不可行意味着不存在 $u\in\mathcal{U}$ 同时满足所有约束。可�
 
 ---
 
-## 5. 多约束与工程实现 ⭐⭐
+## 5. 多约束与工程实现 ★★
 
 ### 5.1 多障碍物多约束 CBF
 
@@ -1012,7 +1012,7 @@ $$h(x) = -\frac{1}{\kappa}\log\sum_i e^{-\kappa h_i(x)}$$
 
 **权重设计**：为各 $\alpha_i$ 选不同强度——让更紧迫的约束（$h_i$ 更小的）优先级更高。
 
-### 5.2 输入约束相容性分析 ⭐⭐⭐
+### 5.2 输入约束相容性分析 ★★★
 
 **核心问题**：当 $\mathcal{U}$ 有界时，是否总存在安全控制？
 
@@ -1024,7 +1024,7 @@ $$h(x) = -\frac{1}{\kappa}\log\sum_i e^{-\kappa h_i(x)}$$
 2. **SOS/LP 验证**：对多项式系统，用 sum-of-squares 优化验证。
 3. **HJ Reachability**：计算最大控制不变集（viability kernel），在此集内 CBF 保证可行。
 
-### 5.3 OSQP 工程实现 ⭐⭐
+### 5.3 OSQP 工程实现 ★★
 
 #### 标准 QP 形式
 
@@ -1194,9 +1194,9 @@ class CLF_CBF_QP:
 2. **代码生成**：OSQP 支持 C 代码生成，嵌入微控制器（STM32 级）
 3. **稀疏利用**：CBF 约束矩阵 $L_gh$ 通常稀疏，利用稀疏结构减少内存和计算
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：OSQP 的约束方向搞反**
+> ⚠ **编程陷阱：OSQP 的约束方向搞反**
 >
 > **错误**：OSQP 格式是 $l\le Ax\le u$，但 CBF 约束是 $L_gh\cdot u\ge -(L_fh+\alpha h)$。如果直接写成 $A=[L_gh]$，$l=[-(L_fh+\alpha h)]$，**方向是对的**。但如果不小心写成 $A=[-L_gh]$，$u=[L_fh+\alpha h]$，约束也等价——但容易在有多个约束时搞混。
 >
@@ -1212,7 +1212,7 @@ class CLF_CBF_QP:
 2. 分析当两个障碍物 CBF 约束正好相反方向时（"被夹在中间"），QP 的可行域是什么形状？何时为空？
 3. 实现 warm-start 机制：保存上一步解作为下一步初始猜测。对比有无 warm-start 的求解时间。
 
-### 5.4 离散时间 CBF（DCBF） ⭐⭐⭐
+### 5.4 离散时间 CBF（DCBF） ★★★
 
 #### 动机：实际机器人是采样控制的
 
@@ -1276,7 +1276,7 @@ def dcbf_constraint(x, A, B, h_func, grad_h, alpha=0.3):
     return Lgh, rhs  # 约束为 Lgh @ u >= rhs
 ```
 
-### 5.5 ROS2 集成架构 ⭐⭐
+### 5.5 ROS2 集成架构 ★★
 
 #### 控制栈中的位置
 
@@ -1363,7 +1363,7 @@ class CBFSafetyFilterNode(Node):
 
 前面五节建立了 CLF-CBF-QP 的完整理论与工程实现框架，但假设了两个理想条件：(1) 系统模型 $f,g$ 精确已知；(2) 安全函数 $h$ 可以手工设计。真实机器人几乎不满足这两个假设——模型有误差、环境有噪声、高维系统的 $h$ 无法手工构造。本节介绍突破这些限制的前沿方法，从鲁棒 CBF 到神经网络学习 CBF，从随机安全到 HJ 可达性的统一。
 
-### 6.1 Robust CBF（ISSf-CBF） ⭐⭐⭐
+### 6.1 Robust CBF（ISSf-CBF） ★★★
 
 #### 动机：模型不确定性如何影响安全
 
@@ -1383,7 +1383,7 @@ $$L_fh + L_gh\cdot u \ge -\alpha(h) + d_{\max}\|\nabla h\|$$
 
 右边多出的 $d_{\max}\|\nabla h\|$ 补偿了最坏情况扰动对 $\dot h$ 的影响。
 
-### 6.2 CBF 与 MPC 的互补统一 ⭐⭐⭐
+### 6.2 CBF 与 MPC 的互补统一 ★★★
 
 #### 两者的优劣对比
 
@@ -1405,7 +1405,7 @@ $$\text{s.t.} \quad x_{k+1}=F(x_k,u_k), \quad h(x_{k+1})\ge(1-\alpha)h(x_k), \qu
 
 **优势**：短预测时域（$N=5\sim 10$）即可实现远距离避障——因为 DCBF 在每步都保证安全裕度不快速衰减，即使没有预测到很远也安全。
 
-### 6.3 CBF 作为 RL Safety Filter ⭐⭐⭐
+### 6.3 CBF 作为 RL Safety Filter ★★★
 
 #### 动机：RL 策略天然不安全
 
@@ -1429,7 +1429,7 @@ $$\nabla_\theta J = \mathbb{E}\left[\nabla_\theta \log\pi_\theta(u_{\text{nom}})
 
 **工程结果**：策略在训练过程中学会"预判"安全约束，逐渐减少 Filter 的激活频率——即策略学会了安全行为，而非依赖后处理。
 
-### 6.4 Neural CBF ⭐⭐⭐⭐
+### 6.4 Neural CBF ★★★★
 
 #### 动机：手工设计 $h$ 对高维系统不可行
 
@@ -1449,7 +1449,7 @@ $$\mathcal{L}(\theta) = \underbrace{\lambda_1\mathcal{L}_{\text{class}}}_{\text{
 
 代码仓库：**https://github.com/MIT-REALM/neural_clbf**
 
-### 6.5 Stochastic CBF ⭐⭐⭐⭐
+### 6.5 Stochastic CBF ★★★★
 
 #### 动机：噪声无处不在
 
@@ -1477,7 +1477,7 @@ $$\mathbb{P}\left(\inf_{t\ge 0} h(x_t) < 0\right) \le \frac{B(x_0)}{c}$$
 
 **工程含义**：为了保证高概率安全，CBF 约束需要更"保守"——额外减去扩散项的贡献。这等价于在安全边界内部预留一个"噪声裕度带"。
 
-### 6.6 CBF 与 HJ Reachability 的关系（CBVF） ⭐⭐⭐⭐
+### 6.6 CBF 与 HJ Reachability 的关系（CBVF） ★★★★
 
 #### 两种安全方法的统一
 
@@ -1499,7 +1499,7 @@ $$\min_u\|u-u_{\text{nom}}\|^2 \quad\text{s.t.}\quad\min_{d\in\mathcal{D}}\nabla
 
 这解决了手工设计 CBF 的痛点——用 HJ 自动生成有效且紧致的 CBF。缺点是 HJ 只能处理低维系统（当前实用上限约 $n\le 6$）。
 
-### 6.7 Data-Driven CBF ⭐⭐⭐⭐
+### 6.7 Data-Driven CBF ★★★★
 
 #### GP-CBF：用高斯过程估计模型不确定性
 
@@ -1521,7 +1521,7 @@ $$L_{\hat{f}}h + L_gh\cdot u + \mu_{\Delta f}^\top\nabla h - \beta\sigma_{\Delta
 
 ---
 
-## 7. 应用实例与完整推导 ⭐⭐
+## 7. 应用实例与完整推导 ★★
 
 ### 7.1 自适应巡航控制（ACC）——完整推导
 
@@ -1582,7 +1582,7 @@ def acc_cbf_step(z, v_e, v_l, u_nom, gamma=1.0, tau_h=1.8,
     return np.clip(u_safe, u_min, u_max), h
 ```
 
-### 7.2 二维单积分器避障——渐隐示例 ⭐⭐
+### 7.2 二维单积分器避障——渐隐示例 ★★
 
 #### Phase 1：完整 worked example
 
@@ -1609,7 +1609,7 @@ def acc_cbf_step(z, v_e, v_l, u_nom, gamma=1.0, tau_h=1.8,
 
 三个障碍物 $p_1=[2,2],R_1=0.8$；$p_2=[4,3],R_2=1.0$；$p_3=[3,5],R_3=0.6$。设计完整的多 CBF QP 使机器人从 $[0,0]$ 到 $[6,6]$。
 
-### 7.3 四旋翼安全着陆（HOCBF 应用） ⭐⭐⭐
+### 7.3 四旋翼安全着陆（HOCBF 应用） ★★★
 
 #### 系统模型
 
@@ -1651,7 +1651,7 @@ $$\min_{u\in\mathbb{R}^3}\|u-u_{\text{nom}}\|^2$$
 
 $$\text{s.t.}\quad \text{HOCBF}(h_1)\ge 0,\quad \text{CBF}(h_2)\ge 0,\quad \text{CBF}(h_3)\ge 0,\quad u\in\mathcal{U}$$
 
-### 7.4 多机器人避障 ⭐⭐⭐
+### 7.4 多机器人避障 ★★★
 
 #### 成对 CBF 构造
 
@@ -1676,9 +1676,9 @@ $2r$ 是两机器人最小允许距离。
 2. 随机扰动：加小的随机偏置打破对称
 3. 高层规划：全局路径规划避免正面相遇
 
-### ⚠️ 常见陷阱（应用实例）
+### ⚠ 常见陷阱（应用实例）
 
-> ⚠️ **编程陷阱：ACC 中忘记前车速度可能为零**
+> ⚠ **编程陷阱：ACC 中忘记前车速度可能为零**
 >
 > 当前车完全停下（$v_l=0$）而自车仍在行驶时，$h$ 可能已经为负。此时 CBF 要求紧急制动，但如果 $u_{\min}$ 不够大（制动力有限），QP 不可行。工程中需要预留制动距离余量。
 
@@ -1694,7 +1694,7 @@ $2r$ 是两机器人最小允许距离。
 
 ---
 
-## 8. CBF 理论局限与开放问题 ⭐⭐⭐
+## 8. CBF 理论局限与开放问题 ★★★
 
 ### 8.1 未期望平衡点（死锁）
 
@@ -1741,7 +1741,7 @@ SMT 验证在 $n>6$ 时计算量爆炸。当前方法：
 
 **开放挑战**：如何在高维空间（$n>10$）提供有意义的安全保证？当前最有前途的方向是**分层验证**：先用 Lipschitz 约束估计全局误差界，再对关键区域（边界附近）用精确方法验证。
 
-### 8.4 CBF 在时变环境中的挑战 ⭐⭐⭐⭐
+### 8.4 CBF 在时变环境中的挑战 ★★★★
 
 当障碍物移动或环境变化时，CBF 函数本身随时间变化：$h(x,t)$。时变 CBF 的条件变为：
 
@@ -1763,18 +1763,18 @@ $$\frac{\partial h}{\partial t} + L_fh + L_gh\cdot u\ge -\alpha(h)$$
 
 | 知识点 | 核心公式/条件 | 难度 | 关键直觉 |
 |---|---|---|---|
-| 正向不变集 | $x(0)\in\mathcal{C}\implies x(t)\in\mathcal{C}$ | ⭐ | 一旦进去就出不来 |
-| Nagumo 定理 | $\dot h\ge 0$ 在 $\partial\mathcal{C}$ | ⭐⭐ | 边界处速度不指向外 |
-| CLF | $\inf_u[L_fV+L_gVu]<0$ | ⭐⭐ | 存在控制使V下降 |
-| Sontag 公式 | $k(x)=\frac{-a-\sqrt{a^2+b^4}}{b}$ | ⭐⭐ | CLF的显式连续反馈 |
-| ZCBF | $\sup_u[L_fh+L_ghu]\ge-\alpha(h)$ | ⭐⭐ | 存在控制使h不快降 |
-| CBF主定理 | 比较引理→$h(t)\ge 0$ | ⭐⭐ | 衰减率不超比较ODE |
-| HOCBF | 递归$\psi_i$，约束在第$r$层 | ⭐⭐⭐ | 层层限速到控制层 |
-| CLF-CBF-QP | 松弛CLF + 硬CBF | ⭐⭐ | 安全优先于稳定 |
-| Safety Filter | $\min\|u-u_\text{nom}\|^2$ s.t. CBF | ⭐⭐ | 最小侵入修正 |
-| MPC-CBF | DCBF作为MPC硬约束 | ⭐⭐⭐ | 短时域也能远避障 |
-| ISSf-CBF | 加margin补偿扰动 | ⭐⭐⭐ | 安全集膨胀应对不确定 |
-| Neural CBF | $h_\theta$ 网络学习 | ⭐⭐⭐⭐ | 高维系统自动生成CBF |
+| 正向不变集 | $x(0)\in\mathcal{C}\implies x(t)\in\mathcal{C}$ | ★ | 一旦进去就出不来 |
+| Nagumo 定理 | $\dot h\ge 0$ 在 $\partial\mathcal{C}$ | ★★ | 边界处速度不指向外 |
+| CLF | $\inf_u[L_fV+L_gVu]<0$ | ★★ | 存在控制使V下降 |
+| Sontag 公式 | $k(x)=\frac{-a-\sqrt{a^2+b^4}}{b}$ | ★★ | CLF的显式连续反馈 |
+| ZCBF | $\sup_u[L_fh+L_ghu]\ge-\alpha(h)$ | ★★ | 存在控制使h不快降 |
+| CBF主定理 | 比较引理→$h(t)\ge 0$ | ★★ | 衰减率不超比较ODE |
+| HOCBF | 递归$\psi_i$，约束在第$r$层 | ★★★ | 层层限速到控制层 |
+| CLF-CBF-QP | 松弛CLF + 硬CBF | ★★ | 安全优先于稳定 |
+| Safety Filter | $\min\|u-u_\text{nom}\|^2$ s.t. CBF | ★★ | 最小侵入修正 |
+| MPC-CBF | DCBF作为MPC硬约束 | ★★★ | 短时域也能远避障 |
+| ISSf-CBF | 加margin补偿扰动 | ★★★ | 安全集膨胀应对不确定 |
+| Neural CBF | $h_\theta$ 网络学习 | ★★★★ | 高维系统自动生成CBF |
 
 ---
 
@@ -1801,11 +1801,11 @@ $$\frac{\partial h}{\partial t} + L_fh + L_gh\cdot u\ge -\alpha(h)$$
 
 | 资源 | 类型 | 难度 | 推荐理由 |
 |---|---|---|---|
-| Ames et al. ECC 2019 (arXiv:1903.11199) | Tutorial | ⭐⭐ | CBF 最佳入门，40页覆盖全貌 |
-| Khalil, *Nonlinear Systems* 3rd ed. Ch.4 | 教材 | ⭐⭐ | Lyapunov/比较引理的严格基础 |
-| Blanchini-Miani, *Set-Theoretic Methods in Control* | 教材 | ⭐⭐⭐ | 正不变性理论权威 |
-| Dawson-Gao-Fan T-RO 2023 (arXiv:2202.11762) | 综述 | ⭐⭐⭐ | Neural certificate 统一视角 |
-| Brunke et al. *Annu. Rev.* 2022 | 综述 | ⭐⭐⭐ | Safe RL 全景 |
+| Ames et al. ECC 2019 (arXiv:1903.11199) | Tutorial | ★★ | CBF 最佳入门，40页覆盖全貌 |
+| Khalil, *Nonlinear Systems* 3rd ed. Ch.4 | 教材 | ★★ | Lyapunov/比较引理的严格基础 |
+| Blanchini-Miani, *Set-Theoretic Methods in Control* | 教材 | ★★★ | 正不变性理论权威 |
+| Dawson-Gao-Fan T-RO 2023 (arXiv:2202.11762) | 综述 | ★★★ | Neural certificate 统一视角 |
+| Brunke et al. *Annu. Rev.* 2022 | 综述 | ★★★ | Safe RL 全景 |
 
 ### 核心论文
 

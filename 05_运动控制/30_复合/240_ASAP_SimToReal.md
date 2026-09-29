@@ -2,7 +2,7 @@
 
 | 元信息 | 值 |
 | --- | --- |
-| 难度 | ⭐⭐⭐⭐（Sim-to-Real 理论 + 残差模型 + 部署闭环） |
+| 难度 | ★★★★（Sim-to-Real 理论 + 残差模型 + 部署闭环） |
 | 预计时间 | 1.5 周（40-50 小时） |
 | 核心平台 | Unitree G1、HumanoidVerse、IsaacGym/IsaacSim/Genesis/MuJoCo |
 | 主线 | 动作数据 → 跟踪策略 → 真机 rollout → delta-action → 微调 → 部署 |
@@ -43,7 +43,7 @@
 
 ---
 
-## 94.1 Sim-to-Real Gap 的系统分类 ⭐⭐
+## 94.1 Sim-to-Real Gap 的系统分类 ★★
 
 ### 动机：为什么仿真训练的策略不能直接用
 
@@ -142,7 +142,7 @@ $$
 
 ---
 
-## 94.2 Sim-to-Real 方法的历史演进 ⭐⭐
+## 94.2 Sim-to-Real 方法的历史演进 ★★
 
 ### 从 DR 1.0 到 ASAP：方法论的四代演进
 
@@ -234,7 +234,7 @@ ASAP 的"一次真机采集，仿真中无限训练"范式，本质上是把真�
 | 外力扰动 | 均匀 | 0-30 N，随机方向 | 随机时刻 |
 | 地面倾斜 | 均匀 | $\pm 5°$ | 每次 reset |
 
-> **陷阱警告 ⚠️**
+> **陷阱警告 ⚠**
 >
 > **思维陷阱**：认为 DR 的参数范围"越大越好"
 >
@@ -246,7 +246,7 @@ ASAP 的"一次真机采集，仿真中无限训练"范式，本质上是把真�
 
 ---
 
-## 94.3 系统辨识与执行器网络 ⭐⭐⭐
+## 94.3 系统辨识与执行器网络 ★★★
 
 ### 系统辨识的基本思想
 
@@ -308,7 +308,7 @@ $$
 \mathcal{L}_{act} = \sum_{t} \left\| \tau_j^{net}(t) - \tau_j^{real}(t) \right\|^2
 $$
 
-> **陷阱警告 ⚠️**
+> **陷阱警告 ⚠**
 >
 > **错误做法**：用仿真中的理想轨迹作为激励信号
 >
@@ -334,7 +334,7 @@ $$
 | 温度变化 | 需要冷/热启动数据 | 差（通常忽略） | 中 |
 | 不同运动模式 | 行走/跑步/跳跃各需数据 | 取决于覆盖度 | 中 |
 
-> **陷阱警告 ⚠️**
+> **陷阱警告 ⚠**
 >
 > **思维陷阱**：认为执行器网络训练好后可以跨机器人使用
 >
@@ -371,7 +371,7 @@ class ActuatorNetwork(nn.Module):
 
 ---
 
-## 94.4 Stage 1 详解：仿真中的运动策略训练 ⭐⭐⭐
+## 94.4 Stage 1 详解：仿真中的运动策略训练 ★★★
 
 ### 阶段一目标
 
@@ -442,7 +442,7 @@ ASAP 使用标准的 PPO（Proximal Policy Optimization）算法，在 IsaacGym 
 | 策略网络 | MLP [512, 256, 128] | 三层全连接 |
 | 值函数网络 | MLP [512, 256, 128] | 与策略分离 |
 
-> **陷阱警告 ⚠️**
+> **陷阱警告 ⚠**
 >
 > **概念误区**：认为阶段一的策略必须在仿真中完美跟踪才能进入阶段二
 >
@@ -520,7 +520,7 @@ ASAP 使用 PPO 作为策略优化算法。以下是推荐的超参数设置和�
 
 ---
 
-## 94.5 延迟补偿：观测延迟建模与补偿方法 ⭐⭐⭐
+## 94.5 延迟补偿：观测延迟建模与补偿方法 ★★★
 
 ### 延迟为什么是 sim-to-real 的关键瓶颈
 
@@ -621,7 +621,7 @@ def simulate_delay(obs: torch.Tensor, delay_steps: int, obs_buffer: list):
 
 **工程推论**：这张表说明不同任务对延迟的要求不同。ASAP 的 Stage 1 训练通常针对中速动作（行走、全身运动），30 ms 的延迟通过历史堆栈即可处理。但如果要迁移跳跃或力控任务到真机，延迟补偿需要更精密的方法。
 
-> **陷阱警告 ⚠️**
+> **陷阱警告 ⚠**
 >
 > **编程陷阱**：在训练中设置的延迟步数与真机不一致
 >
@@ -633,7 +633,7 @@ def simulate_delay(obs: torch.Tensor, delay_steps: int, obs_buffer: list):
 
 ---
 
-## 94.6 Delta-Action Residual Model 数学形式 ⭐⭐⭐⭐
+## 94.6 Delta-Action Residual Model 数学形式 ★★★★
 
 ### 动机：为什么需要在阶段一之后再做一步
 
@@ -813,7 +813,7 @@ ankle_indices = [4, 5, 10, 11]
 
 ---
 
-## 94.7 Stage 2 详解：真机数据微调的方法论 ⭐⭐⭐⭐
+## 94.7 Stage 2 详解：真机数据微调的方法论 ★★★★
 
 ### 数据采集：真机 rollout 的工程实践
 
@@ -890,7 +890,7 @@ def preprocess_real_data(raw_data: dict, dt: float = 0.02,
     return processed
 ```
 
-> **陷阱警告 ⚠️**
+> **陷阱警告 ⚠**
 >
 > **编程陷阱**：忽略延迟导致状态-动作不对应
 >
@@ -961,7 +961,7 @@ $$
 
 部署链路变为：$o_t \to \pi_{\theta'}(o_t) \to a_t \to$ 电机，不需要额外的残差推理，延迟更低。
 
-> **陷阱警告 ⚠️**
+> **陷阱警告 ⚠**
 >
 > "可以丢弃"不是数学定理，而是经验上成立的部署策略。如果残差模型学习的是强接触模式下的瞬时补偿（例如跳跃着地时的踝关节力矩尖峰），策略可能无法完全吸收这种高频、大幅度的补偿。
 >
@@ -1012,7 +1012,7 @@ class RolloutDataset:
 
 ---
 
-## 94.8 对比方法论：RMA vs Residual RL vs ASAP ⭐⭐⭐
+## 94.8 对比方法论：RMA vs Residual RL vs ASAP ★★★
 
 ### 为什么需要系统化的对比框架
 
@@ -1128,7 +1128,7 @@ ASAP 发布后，多个后续工作在类似实验设置上报告了结果：
 
 ---
 
-## 94.9 HumanoidVerse 与跨仿真器实验 ⭐⭐
+## 94.9 HumanoidVerse 与跨仿真器实验 ★★
 
 ### 为什么要跨仿真器
 
@@ -1228,7 +1228,7 @@ HumanoidVerse 是 ASAP 团队开源的跨仿真器人形机器人训练和评测
 
 ---
 
-## 94.10 接触触发失败案例与模式条件化 ⭐⭐⭐
+## 94.10 接触触发失败案例与模式条件化 ★★★
 
 ### 为什么接触让残差难学
 
@@ -1335,7 +1335,7 @@ def annotate_contact_transitions(contact_flags: np.ndarray,
 
 ---
 
-## 94.11 部署流程：从训练完成到真机运行 ⭐⭐⭐
+## 94.11 部署流程：从训练完成到真机运行 ★★★
 
 ### 完整 pipeline 概览
 
@@ -1405,7 +1405,7 @@ G1_SAFETY_LIMITS = {
 
 ---
 
-## 94.12 完整工程 Pipeline：从零到部署 ⭐⭐⭐
+## 94.12 完整工程 Pipeline：从零到部署 ★★★
 
 ### 系统架构总览
 
@@ -1470,7 +1470,7 @@ sim-to-real 项目的一大困难是复现性。以下信息必须版本化：
 | 部署配置 | Git（包括安全限幅参数） | 确保部署可复现 |
 | 仿真器版本 | 记录具体 commit hash | 不同版本可能行为不同 |
 
-> **陷阱警告 ⚠️**
+> **陷阱警告 ⚠**
 >
 > **编程陷阱**：不记录仿真器版本
 >
@@ -1511,7 +1511,7 @@ sim-to-real 项目的一大困难是复现性。以下信息必须版本化：
 
 ---
 
-## 94.13 与 PHC/ExBody/HOVER 的关系 ⭐⭐⭐
+## 94.13 与 PHC/ExBody/HOVER 的关系 ★★★
 
 ### PHC（Perpetual Humanoid Control, Luo et al. ICCV 2023）
 
@@ -1627,7 +1627,7 @@ HOVER 在 Unitree H1 上实现了 20+ 种运动行为的统一控制，包括行
 
 ---
 
-## 94.14 奖励工程的常见陷阱 ⭐⭐⭐
+## 94.14 奖励工程的常见陷阱 ★★★
 
 ### 奖励塑造不当导致的失败模式
 
@@ -1668,7 +1668,7 @@ ASAP 的 Stage 1 训练依赖精心设计的奖励函数。奖励设计不当会
 | 跨仿真器验证 = 真机验证 | sim2sim 只是必要不充分条件 |
 | 接触问题只需加 DR | 接触的结构性差异无法通过参数随机化解决 |
 
-> **陷阱警告 ⚠️**
+> **陷阱警告 ⚠**
 >
 > **编程陷阱**：用 $\exp(-e^2/\sigma^2)$ 但 $\sigma$ 设得太大
 >
@@ -1680,7 +1680,7 @@ ASAP 的 Stage 1 训练依赖精心设计的奖励函数。奖励设计不当会
 
 ---
 
-## 常见故障与排查 ⭐⭐
+## 常见故障与排查 ★★
 
 ### 🔧 故障排查手册
 
@@ -1808,13 +1808,13 @@ def diagnose_delta_action(delta_model, real_data, sim_step):
 
 ---
 
-## 练习 ⭐⭐
+## 练习 ★★
 
-### 练习 94.1 Sim-to-Real Gap 分类（基础） ⭐⭐
+### 练习 94.1 Sim-to-Real Gap 分类（基础） ★★
 
 选择一个你熟悉的机器人平台（四足、人形或机械臂），为它列出至少 12 个具体的 sim-to-real gap 来源，按动力学/感知/执行/延迟四个维度分类。对每个 gap 给出：(a) 定性描述，(b) 估计量级，(c) 建议的处理方法。
 
-### 练习 94.2 执行器网络实现 ⭐⭐⭐
+### 练习 94.2 执行器网络实现 ★★★
 
 在 PyTorch 中实现一个单关节执行器网络。使用正弦扫频信号作为激励，生成带噪声的"真实"力矩数据（在理想 PD 力矩上加非线性饱和和延迟），训练网络并评估预测精度。具体要求：
 
@@ -1822,7 +1822,7 @@ def diagnose_delta_action(delta_model, real_data, sim_step):
 2. 对比网络预测和理想 PD 模型的力矩误差
 3. 分析网络在训练数据分布外的泛化能力
 
-### 练习 94.3 Sim2sim delta-action ⭐⭐⭐⭐
+### 练习 94.3 Sim2sim delta-action ★★★★
 
 把 MuJoCo rollout 当目标域，IsaacGym（或另一个仿真器）当源域，实现完整的 delta-action 训练和微调闭环：
 
@@ -1832,19 +1832,19 @@ def diagnose_delta_action(delta_model, real_data, sim_step):
 4. 在源域+残差中微调策略
 5. 评估微调后在目标域的跟踪误差改善
 
-### 练习 94.4 延迟补偿对比实验 ⭐⭐⭐
+### 练习 94.4 延迟补偿对比实验 ★★★
 
 在同一个行走策略上对比三种延迟处理方法的效果：(a) 无延迟处理，(b) 延迟随机化训练，(c) 观测堆栈。在仿真中引入 20ms、40ms、60ms 的延迟，画出跟踪误差随延迟的变化曲线。
 
-### 练习 94.5 接触模式分析 ⭐⭐⭐⭐
+### 练习 94.5 接触模式分析 ★★★★
 
 按足底接触相位（空中/着地/稳定/离地）统计 delta-action 的预测误差。分析哪种接触模式的残余差距最大，并讨论模式条件化残差是否能改善。
 
-### 练习 94.6 部署链路设计 ⭐⭐
+### 练习 94.6 部署链路设计 ★★
 
 画出从传感器读数到电机指令的完整数据流图，标注每个环节的延迟。设计一个日志系统，能够记录部署时的所有关键信号并支持离线回放。
 
-### 练习 94.7 综合项目（跨章）⭐⭐⭐⭐
+### 练习 94.7 综合项目（跨章）★★★★
 
 结合93章的动作模仿和本章的 ASAP 方法，设计一个完整的人形全身技能学习和部署方案。要求覆盖：数据获取（AMASS/视频）→ 重定向 → Stage 1 训练 → sim2sim 验证 → 真机 rollout → delta-action → 微调 → 部署。写出每个环节的关键决策和可能的失败模式。
 
@@ -1954,20 +1954,20 @@ def diagnose_delta_action(delta_model, real_data, sim_step):
 
 | 资料 | 难度 | 内容 |
 | --- | --- | --- |
-| He et al., ASAP (arXiv:2502.01143, RSS 2025) | ⭐⭐⭐⭐ | 本章核心论文，delta-action 方法 |
-| Hwangbo et al., Science Robotics 2019 | ⭐⭐⭐ | 执行器网络的原始论文 |
-| Kumar et al., RMA (arXiv:2107.04034, RSS 2021) | ⭐⭐⭐ | 在线适应方法，与 ASAP 互补 |
-| Luo et al., PHC (ICCV 2023) | ⭐⭐⭐⭐ | 持续动作跟踪，Stage 1 的强基线 |
-| He et al., HOVER (2024) | ⭐⭐⭐ | 统一人形控制器，多技能策略 |
-| Cheng et al., ExBody2 (2025) | ⭐⭐⭐ | 全身表现力控制 |
-| LeCAR-Lab/ASAP GitHub 仓库 | ⭐⭐ | 代码实现和配置参考 |
-| Shi, "Sim2Real 1.0 to 4.0" 知乎技术分享 | ⭐⭐ | Sim-to-real 技术演进的中文综述 |
-| He, "面向人形机器人的 Visual Sim-to-Real 框架" 知乎 | ⭐⭐⭐ | VIRAL 框架的中文解读 |
-| He, "Learning Humanoid Control from Simulation to Real to Simulation" CMU MSR Thesis, 2025 | ⭐⭐⭐⭐ | ASAP 第一作者的硕士论文，包含完整技术细节 |
-| TRANSIC: Sim-to-Real Policy Transfer (NeurIPS 2024) | ⭐⭐⭐ | 人类修正数据的残差策略学习 |
-| Walk These Ways (Margolis et al. 2023) | ⭐⭐⭐ | 四足 sim-to-real 的完整工程流程参考 |
-| SLoWRL (2026) | ⭐⭐⭐ | 低秩适配的在线 sim-to-real 微调 |
-| VideoMimic (2025) | ⭐⭐⭐⭐ | 从视频直接生成参考动作并迁移到真机 |
+| He et al., ASAP (arXiv:2502.01143, RSS 2025) | ★★★★ | 本章核心论文，delta-action 方法 |
+| Hwangbo et al., Science Robotics 2019 | ★★★ | 执行器网络的原始论文 |
+| Kumar et al., RMA (arXiv:2107.04034, RSS 2021) | ★★★ | 在线适应方法，与 ASAP 互补 |
+| Luo et al., PHC (ICCV 2023) | ★★★★ | 持续动作跟踪，Stage 1 的强基线 |
+| He et al., HOVER (2024) | ★★★ | 统一人形控制器，多技能策略 |
+| Cheng et al., ExBody2 (2025) | ★★★ | 全身表现力控制 |
+| LeCAR-Lab/ASAP GitHub 仓库 | ★★ | 代码实现和配置参考 |
+| Shi, "Sim2Real 1.0 to 4.0" 知乎技术分享 | ★★ | Sim-to-real 技术演进的中文综述 |
+| He, "面向人形机器人的 Visual Sim-to-Real 框架" 知乎 | ★★★ | VIRAL 框架的中文解读 |
+| He, "Learning Humanoid Control from Simulation to Real to Simulation" CMU MSR Thesis, 2025 | ★★★★ | ASAP 第一作者的硕士论文，包含完整技术细节 |
+| TRANSIC: Sim-to-Real Policy Transfer (NeurIPS 2024) | ★★★ | 人类修正数据的残差策略学习 |
+| Walk These Ways (Margolis et al. 2023) | ★★★ | 四足 sim-to-real 的完整工程流程参考 |
+| SLoWRL (2026) | ★★★ | 低秩适配的在线 sim-to-real 微调 |
+| VideoMimic (2025) | ★★★★ | 从视频直接生成参考动作并迁移到真机 |
 
 ---
 

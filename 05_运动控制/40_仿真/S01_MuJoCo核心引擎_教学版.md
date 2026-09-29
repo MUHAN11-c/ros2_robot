@@ -1,6 +1,6 @@
 # S1 MuJoCo 核心引擎与 MJCF 建模
 
-> **难度**：⭐⭐-⭐⭐⭐ | **学时**：2 周（20-28 小时） | **性质**：全方向共享基础
+> **难度**：★★-★★★ | **学时**：2 周（20-28 小时） | **性质**：全方向共享基础
 
 **前置依赖**：
 - v8 Ch22 Eigen 矩阵运算——mjData 中所有矩阵/向量可通过 NumPy view 访问，零拷贝与 Eigen::Map 的语义完全对应
@@ -10,7 +10,7 @@
 
 ---
 
-## S1.0 前置自测 ⭐
+## S1.0 前置自测 ★
 
 在开始本章之前，请确认你能回答以下 5 个问题。如果超过 2 个回答不出来，建议先补前置章节。
 
@@ -20,7 +20,7 @@
 4. **URDF 文件描述了机器人的哪些信息？不能描述哪些？**（提示：运动学树和惯量有，接触参数和执行器模型没有）
 5. **你用过的仿真器（Gazebo/IsaacGym/PyBullet）中，接触碰撞后的行为是什么样的？**（提示：物体弹开、穿透、还是卡住？）
 
-## S1.0.1 本章目标 ⭐
+## S1.0.1 本章目标 ★
 
 学完本章后，你应该能够：
 
@@ -31,7 +31,7 @@
 5. **诊断** 常见的 MuJoCo 使用错误——修改 `d.qpos` 后忘记调用 `mj_forward`、solref 参数设置不合理导致穿透过大、混淆 `ctrl` 与 `qfrc_applied`
 6. **用 Python** 完成基本仿真循环、传感器读取、力平衡验证（正逆动力学一致性检查）
 
-## S1.0.2 本章知识地图 ⭐
+## S1.0.2 本章知识地图 ★
 
 这一章不是 MuJoCo API 速查表，而是建立一个仿真工程师需要长期使用的心智模型：**一个 MJCF 文件如何变成可计算的动力学模型，状态如何在 `mjData` 中流动，接触约束如何变成可求解的优化问题，最后控制器如何把力或目标位置写回仿真器**。
 
@@ -99,11 +99,11 @@ mj_forward / mj_step / mj_inverse
 
 ---
 
-## S1.1 MuJoCo 的物理建模哲学——为什么它与 PhysX/Bullet 根本不同 ⭐⭐
+## S1.1 MuJoCo 的物理建模哲学——为什么它与 PhysX/Bullet 根本不同 ★★
 
 > **这一节解决什么问题**：你可能已经用过 Gazebo（底层 ODE/DART）、PyBullet 或 IsaacGym（底层 PhysX），觉得"仿真器不就是解牛顿方程吗，有什么本质区别？"这一节告诉你：**接触的数学建模**是仿真器之间最深层的分水岭，而这个选择直接决定了你能不能做逆动力学、RL 的 reward landscape 是否光滑、以及 sim-to-real 迁移的难度。
 
-### 动机：如果只用 PhysX/Bullet 会怎样？ ⭐⭐
+### 动机：如果只用 PhysX/Bullet 会怎样？ ★★
 
 假设你正在训练一个四足机器人的 RL 策略。机器人的脚反复踩地、离地。每次脚触地的瞬间，力是如何计算的？
 
@@ -115,7 +115,7 @@ mj_forward / mj_step / mj_inverse
 
 在 **MuJoCo**（软约束/凸优化）中：脚触地时，允许微小穿透（通常 < 1mm），穿透量通过弹性-阻尼和阻抗函数产生**连续过渡的接触响应**。这让很多局部分析、逆动力学和可微分仿真工作更容易展开，但它不是“所有状态处处光滑”的保证。
 
-### 来龙去脉：Todorov 2012 论文的核心动机 ⭐⭐
+### 来龙去脉：Todorov 2012 论文的核心动机 ★★
 
 MuJoCo 的设计哲学源自 Emanuel Todorov、Tom Erez、Yuval Tassa 在 2012 年 IROS 发表的论文 *MuJoCo: A physics engine for model-based control*。这篇论文的重点不是“再写一个更快的刚体引擎”，而是把接触、关节限位、摩擦、等式约束统一放进一个适合模型预测控制和轨迹优化的数学框架中。
 
@@ -126,7 +126,7 @@ MuJoCo 的设计哲学源自 Emanuel Todorov、Tom Erez、Yuval Tassa 在 2012 �
 - **逆动力学可以被定义**：软约束下，给定状态和加速度时，约束力不是任意集合中的一个元素，而是求解器模型定义出的结果。
 - **数值诊断更可解释**：约束残差、迭代次数、接触力分解都能映射回物理含义，而不只是“求解器又抖了一下”。
 
-### 完整对比：MuJoCo vs PhysX vs Bullet vs Drake ⭐⭐
+### 完整对比：MuJoCo vs PhysX vs Bullet vs Drake ★★
 
 | 维度 | MuJoCo | PhysX (IsaacGym) | Bullet (PyBullet) | Drake |
 |------|--------|-------------------|--------------------|----- |
@@ -142,7 +142,7 @@ MuJoCo 的设计哲学源自 Emanuel Todorov、Tom Erez、Yuval Tassa 在 2012 �
 | **RL 生态** | dm_control / Gymnasium / Playground | IsaacLab / legged_gym | Stable Baselines | 主要用于 MPC |
 | **典型用户** | DeepMind / OpenAI / Berkeley | NVIDIA / ETH / 四足公司 | 教学 / 小型项目 | MIT / TRI (丰田) |
 
-### 历史脉络：从闭源到开源再到 GPU ⭐⭐
+### 历史脉络：从闭源到开源再到 GPU ★★
 
 理解 MuJoCo 的历史有助于理解它为什么在 2025-2026 年仍然是机器人 RL 的核心引擎。
 
@@ -155,7 +155,7 @@ MuJoCo 的设计哲学源自 Emanuel Todorov、Tom Erez、Yuval Tassa 在 2012 �
 
 这段历史的关键洞察是：MuJoCo 从一开始就不是为游戏设计的——它是为**控制和优化**设计的。这个设计选择在十余年后被证明具有前瞻性：软接触模型不仅适合 MPC，还适合 RL（因为 reward landscape 更连续）和可微分仿真（因为约束力是参数的可微函数）。
 
-### 对 RL / MPC / Sim-to-Real 的具体影响 ⭐⭐
+### 对 RL / MPC / Sim-to-Real 的具体影响 ★★
 
 **对 RL 训练的影响**：MuJoCo 的软接触让 reward landscape 在接触边界处更连续——当机器人的脚从"刚好不碰地"过渡到"刚好碰地"时，接触力从 0 **连续增长**而非理想化跳变。这通常会降低策略梯度估计中的接触噪声，让奖励曲线更容易解释。但反过来，如果真实机器人在硬地面上走（如混凝土），过软的仿真接触可能导致 sim-to-real gap——脚在仿真中"陷入"地面获得额外稳定性，真实世界没有这个余量。
 
@@ -163,7 +163,7 @@ MuJoCo 的设计哲学源自 Emanuel Todorov、Tom Erez、Yuval Tassa 在 2012 �
 
 **对 Sim-to-Real 的影响**：MuJoCo 的 `solref`/`solimp` 参数提供了精细的接触特性调节能力——你可以把仿真中的地面调成"和真实橡胶地垫一样软"或"和混凝土一样硬"。但这要求你知道真实接触面的物理特性。PhysX 的硬接触模型参数更少，但也意味着更少的 sim-to-real 调参空间。**没有哪个仿真器天然 sim-to-real gap 为零——关键是你能否系统地辨识和补偿 gap。**
 
-### ⚠️ 常见陷阱：MuJoCo 的 penetration 不是 bug 是 feature ⭐⭐
+### ⚠ 常见陷阱：MuJoCo 的 penetration 不是 bug 是 feature ★★
 
 新手经常在 MuJoCo viewer 中看到物体"穿透"地面一点点，然后认为仿真有 bug。实际上这正是 MuJoCo 软接触的设计意图——penetration 深度乘以弹性系数产生接触力，就像真实的弹性接触一样。
 
@@ -177,7 +177,7 @@ MuJoCo 的设计哲学源自 Emanuel Todorov、Tom Erez、Yuval Tassa 在 2012 �
 
 新手在看到 MuJoCo 允许穿透后，常常本能地认为"硬接触更真实"。这个判断忽略了真实世界的复杂性：橡胶足垫、硅胶指尖、人类皮肤、甚至混凝土表面的微观粗糙度，**都有有限刚度和有限形变**。真正无限刚性的接触在自然界中不存在。MuJoCo 的软接触模型在许多有限刚度的真实材料场景中，反而比理想化的硬接触模型更接近物理现实。选择接触模型时，关键不是"软 vs 硬哪个更对"，而是"你关心的接触场景在刚度谱上处于什么位置"。
 
-### 正确/错误：solref/solimp 参数设置 ⭐⭐
+### 正确/错误：solref/solimp 参数设置 ★★
 
 ```xml
 <!-- ❌ 错误：solref 太软，导致机器人"陷入"地面 -->
@@ -222,19 +222,19 @@ $$k_{eff} = \frac{m_{eff}}{\text{timeconst}^2}, \quad b_{eff} = \frac{2 \cdot \t
 
 大多数情况下 solimp 使用默认值即可。只有在需要精细控制接触刚度-穿透关系时（如 sim-to-real 标定）才需要调整。**初学者应该优先调 solref，不要同时调 solimp——两者耦合会让调参空间爆炸。**
 
-### S1.1 练习 ⭐⭐
+### S1.1 练习 ★★
 
-1. **[⭐⭐ 概念题]** 解释为什么 MuJoCo 的软接触能让 `mj_inverse` 在有接触时也 well-defined，而 Bullet 的硬接触不行。提示：从"给定加速度能否唯一确定力"的角度思考。
-2. **[⭐⭐ 实验题]** 在 MuJoCo viewer 中加载一个球体自由落体到平面的场景。分别设置 `solref = [0.001, 1.0]`、`[0.02, 1.0]`、`[0.1, 1.0]`，观察穿透深度和弹跳行为的差异。记录每种设置下的最大穿透量。
-3. **[⭐⭐⭐ 思考题]** 许多实时引擎通过 Gauss-Seidel 类迭代求解接触。增加迭代次数可以让约束违反更小，但为什么仍然不能简单等同于“物理更真实”？提示：从接触模型、时间步长、摩擦近似和停止准则四个角度分析。
+1. **[★★ 概念题]** 解释为什么 MuJoCo 的软接触能让 `mj_inverse` 在有接触时也 well-defined，而 Bullet 的硬接触不行。提示：从"给定加速度能否唯一确定力"的角度思考。
+2. **[★★ 实验题]** 在 MuJoCo viewer 中加载一个球体自由落体到平面的场景。分别设置 `solref = [0.001, 1.0]`、`[0.02, 1.0]`、`[0.1, 1.0]`，观察穿透深度和弹跳行为的差异。记录每种设置下的最大穿透量。
+3. **[★★★ 思考题]** 许多实时引擎通过 Gauss-Seidel 类迭代求解接触。增加迭代次数可以让约束违反更小，但为什么仍然不能简单等同于“物理更真实”？提示：从接触模型、时间步长、摩擦近似和停止准则四个角度分析。
 
 ---
 
-## S1.2 mjModel / mjData 双结构设计——与 Pinocchio 的逐字段映射 ⭐⭐
+## S1.2 mjModel / mjData 双结构设计——与 Pinocchio 的逐字段映射 ★★
 
 > **这一节解决什么问题**：你可能习惯了 Pinocchio 的 `Model`/`Data` 分离，或者 IsaacGym 的 "gym.create\_sim -> gym.set\_dof\_state" 范式。MuJoCo 的 `mjModel`/`mjData` 也是读写分离设计，但字段更丰富（包含接触、执行器、传感器）。理解这两个结构体的每个字段，是使用 MuJoCo API 的基础。
 
-### 动机：为什么要把模型和数据分开？ ⭐⭐
+### 动机：为什么要把模型和数据分开？ ★★
 
 一个天真的仿真器设计是把所有东西放在一个结构体里——质量、惯量、当前位置、当前速度、接触力全部混在一起。这在单线程时没问题，但一旦你需要：
 
@@ -274,7 +274,7 @@ m = mujoco.MjModel.from_xml_path("robot.urdf")
 mujoco.mj_saveLastXML("/tmp/compiled_output.xml", m)
 ```
 
-⚠️ **注意**：MuJoCo 3.2+ 引入了 `MjSpec` API 用于程序化模型编辑（运行时添加/删除刚体和关节），这在域随机化中比重复编译 XML 高效得多。下面是一个最小示例，让你对 MjSpec 的使用方式有个初步印象：
+⚠ **注意**：MuJoCo 3.2+ 引入了 `MjSpec` API 用于程序化模型编辑（运行时添加/删除刚体和关节），这在域随机化中比重复编译 XML 高效得多。下面是一个最小示例，让你对 MjSpec 的使用方式有个初步印象：
 
 ```python
 import mujoco
@@ -291,7 +291,7 @@ data = mujoco.MjData(model)
 
 MjSpec 的详细用法（如运行时动态增减刚体、批量修改接触参数做域随机化）是进阶话题，此处不展开。
 
-### mjModel 关键字段（只读，编译自 MJCF/URDF） ⭐⭐
+### mjModel 关键字段（只读，编译自 MJCF/URDF） ★★
 
 | mjModel 字段 | 含义 | 类型/形状 | Pinocchio Model 对应 | 备注 |
 |-------------|------|----------|---------------------|------|
@@ -309,7 +309,7 @@ MjSpec 的详细用法（如运行时动态增减刚体、批量修改接触参�
 | `opt.solver` | 接触求解器类型 | enum | — | PGS/CG/Newton |
 | `opt.integrator` | 积分器类型 | enum | — | Euler/implicit/RK4 |
 
-### mjData 关键字段（可变，每步更新） ⭐⭐
+### mjData 关键字段（可变，每步更新） ★★
 
 | mjData 字段 | 含义 | 形状 | Pinocchio Data 对应 | 何时有效 |
 |------------|------|------|---------------------|---------|
@@ -334,7 +334,7 @@ MjSpec 的详细用法（如运行时动态增减刚体、批量修改接触参�
 - `sensordata`——传感器抽象是内置的
 - `opt.solver`、`opt.integrator`——求解器和积分器配置在模型层面
 
-### Python 零拷贝：d.qpos 是 view 不是 copy ⭐⭐
+### Python 零拷贝：d.qpos 是 view 不是 copy ★★
 
 MuJoCo 的 Python binding 通过 pybind11 把 mjData 中的 C 数组直接暴露为 NumPy 数组，**不做任何内存拷贝**。这意味着修改 NumPy 数组会直接修改底层 C 结构体的内存。这与 Eigen::Map 的语义完全对应——如果你在 C++ 中用过 `Eigen::Map<VectorXd>(data.qpos, nq)`，Python 的 `d.qpos` 就是同一件事的 Python 封装。
 
@@ -369,7 +369,7 @@ qpos_ref = np.zeros(m.nq)   # 这只是让 Python 变量 qpos_ref 指向新数�
 d.qpos[:] = np.zeros(m.nq)  # 切片赋值 [:] 把数据写入已有数组的内存
 ```
 
-### Named Access API ⭐⭐
+### Named Access API ★★
 
 MuJoCo 3.0+ 提供了按名称访问关节/传感器的 API，不需要手动管理索引：
 
@@ -388,7 +388,7 @@ knee_qpos_adr = m.jnt_qposadr[knee_id]  # 该关节在 qpos 数组中的起始�
 
 Named access 的实现原理是：mjModel 内部维护了一个名称到 ID 的哈希表（编译时构建），`d.joint('left_knee')` 先查表得到 joint ID，再计算该关节对应的 qpos/qvel 数组索引。单次查表开销约 O(1)，在控制循环中使用完全可接受。
 
-### ⚠️ 常见陷阱：修改 d.qpos 后必须调用 mj_forward ⭐⭐
+### ⚠ 常见陷阱：修改 d.qpos 后必须调用 mj_forward ★★
 
 这是 MuJoCo 新手最常犯的错误：
 
@@ -406,7 +406,7 @@ print(d.xpos[3])          # 现在 xpos 反映了新的 qpos
 
 **为什么不自动更新？** 因为 `mj_forward` 的计算开销不可忽略（包括正运动学、碰撞检测、约束求解等）。如果每次写 `d.qpos` 都自动触发 `mj_forward`，在你批量设置多个关节时会重复计算多次。MuJoCo 的设计哲学是：**用户显式控制计算时机**，避免隐式的性能开销。这一点与 Pinocchio 完全一致——Pinocchio 中你也必须显式调用 `pin.forwardKinematics(model, data, q)` 来更新 `data.oMi`。
 
-### 💡 线程安全模式与域随机化 ⭐⭐
+### 💡 线程安全模式与域随机化 ★★
 
 mjModel/mjData 分离的最大工程收益是**多线程安全**。正确的并行仿真模式：
 
@@ -442,17 +442,17 @@ def run_randomized_rollout(seed):
     # ... 仿真循环 ...
 ```
 
-### S1.2 练习 ⭐⭐
+### S1.2 练习 ★★
 
-1. **[⭐⭐ 代码题]** 加载 Menagerie 的 `unitree_go2/scene.xml`。打印 `m.nq`、`m.nv`、`m.nbody`、`m.njnt`、`m.nu`。解释为什么 `nq > nv`（提示：Go2 有一个 free joint，用 7 个广义坐标但只有 6 个广义速度）。
-2. **[⭐⭐ 对比题]** 用 Pinocchio 加载同一个 Go2 的 URDF。对比 `pinocchio_model.nq` 和 `mujoco_m.nq` 是否一致。如果不一致，分析原因（提示：Pinocchio 默认不加 free joint，需要显式指定 `JointModelFreeFlyer`）。
-3. **[⭐⭐ 陷阱验证题]** 写一个脚本：(a) `mj_step` 之后记录 `d.xpos[3].copy()`；(b) 修改 `d.qpos[0] += 0.5` 但不调用 `mj_forward`；(c) 读 `d.xpos[3]` 并与步骤 a 对比——它们应该相同；(d) 调用 `mj_forward` 后再读 `d.xpos[3]`——此时应该不同。用 `np.allclose` 验证你的预期。
-4. **[⭐⭐⭐ 线程安全题]** 用 `ThreadPoolExecutor` 创建 4 个线程，共享同一个 mjModel，每个线程各自创建 mjData 并从相同初始条件跑 100 步（`ctrl = 0`）。验证 4 个线程的最终 `qpos` 是否一致。思考：如果不小心在线程间共享了同一个 mjData 会发生什么？
-## S1.3 三大核心函数——mj_step / mj_forward / mj_inverse ⭐⭐
+1. **[★★ 代码题]** 加载 Menagerie 的 `unitree_go2/scene.xml`。打印 `m.nq`、`m.nv`、`m.nbody`、`m.njnt`、`m.nu`。解释为什么 `nq > nv`（提示：Go2 有一个 free joint，用 7 个广义坐标但只有 6 个广义速度）。
+2. **[★★ 对比题]** 用 Pinocchio 加载同一个 Go2 的 URDF。对比 `pinocchio_model.nq` 和 `mujoco_m.nq` 是否一致。如果不一致，分析原因（提示：Pinocchio 默认不加 free joint，需要显式指定 `JointModelFreeFlyer`）。
+3. **[★★ 陷阱验证题]** 写一个脚本：(a) `mj_step` 之后记录 `d.xpos[3].copy()`；(b) 修改 `d.qpos[0] += 0.5` 但不调用 `mj_forward`；(c) 读 `d.xpos[3]` 并与步骤 a 对比——它们应该相同；(d) 调用 `mj_forward` 后再读 `d.xpos[3]`——此时应该不同。用 `np.allclose` 验证你的预期。
+4. **[★★★ 线程安全题]** 用 `ThreadPoolExecutor` 创建 4 个线程，共享同一个 mjModel，每个线程各自创建 mjData 并从相同初始条件跑 100 步（`ctrl = 0`）。验证 4 个线程的最终 `qpos` 是否一致。思考：如果不小心在线程间共享了同一个 mjData 会发生什么？
+## S1.3 三大核心函数——mj_step / mj_forward / mj_inverse ★★
 
 上一节建立了 mjModel/mjData 的心智模型。现在进入 MuJoCo 最核心的三个函数——它们定义了仿真引擎"怎样推动物理世界向前走"，是后续所有控制算法（MPC、RL policy 部署、阻抗控制）的前提。
 
-#### 完整调用链 ⭐⭐
+#### 完整调用链 ★★
 
 ```bash
 mj_step(m, d)
@@ -502,7 +502,7 @@ mj_step(m, d)
 
 **`mj_inverse`**：给定 `(qpos, qvel, qacc)` 反解所需广义力 `qfrc_inverse`。数学上等价于 RNEA，但独特之处在于：**即使存在接触也能给出唯一解**。
 
-#### mj_inverse 的独特价值——PhysX/Bullet 做不到 ⭐⭐⭐
+#### mj_inverse 的独特价值——PhysX/Bullet 做不到 ★★★
 
 **根本原因**：PhysX/Bullet 的硬接触（LCP/NCP）使接触力成为约束优化的对偶变量——同一状态可能对应多组接触力（集合值映射），无法唯一反解。MuJoCo 的软接触使接触力是 `(qpos, qvel)` 的**光滑、唯一函数**，因此逆动力学有且仅有一个解。
 
@@ -584,7 +584,7 @@ print(f"\n正逆动力学残差 (应接近零): max |residual| = {np.max(np.abs(
 - **力矩估计**：真实机器人通常没有力矩传感器。在仿真中用 `mj_inverse` 生成"真值"力矩数据，训练一个力矩观测器，然后部署到实机
 - **系统辨识**：改变模型参数（质量、摩擦），观察 `mj_inverse` 输出如何变化，做灵敏度分析
 
-#### 积分器选择 ⭐⭐
+#### 积分器选择 ★★
 
 | 积分器 | 稳定性 | 精度 | 速度 | 推荐场景 |
 |--------|--------|------|------|---------|
@@ -595,7 +595,7 @@ print(f"\n正逆动力学残差 (应接近零): max |residual| = {np.max(np.abs(
 
 `implicitfast` 的思想是在保持隐式速度积分稳定性的同时减少部分雅可比计算成本。是否采用它取决于模型刚度、接触频率、控制频率和可接受的能量误差；具体可用积分器、枚举名和默认设置应以官方文档为准。
 
-#### 从欧拉积分到隐式积分：为什么接触系统需要更稳的时间推进 ⭐⭐
+#### 从欧拉积分到隐式积分：为什么接触系统需要更稳的时间推进 ★★
 
 数值积分器解决的是一个非常朴素的问题：已经知道当前状态 $(q_k, v_k)$ 和加速度 $\dot{v}_k$，怎样得到下一步 $(q_{k+1}, v_{k+1})$？最直观的做法是显式欧拉：
 
@@ -651,7 +651,7 @@ $$
 
 > **本质洞察**：接触仿真中的积分器选择，优先目标不是“局部截断误差阶数最高”，而是“在控制器、接触刚度和步长共同作用下不向系统注入虚假能量”。高阶不等于稳，稳也不等于真实；真实来自模型参数、步长和求解器共同匹配。
 
-#### 积分器选择的工程流程 ⭐⭐
+#### 积分器选择的工程流程 ★★
 
 | 观察到的现象 | 先检查 | 再考虑 |
 |--------------|--------|--------|
@@ -661,7 +661,7 @@ $$
 | 高频抖动但平均姿态正常 | 执行器刚度与接触刚度耦合 | 降低 `kp` 或增大阻尼 |
 | 训练速度太慢 | 单步仿真耗时、渲染是否关闭 | 更便宜的积分器或更大批量 |
 
-> **⚠️ 易错陷阱：混淆 `mj_step` 和 `mj_forward`**
+> **⚠ 易错陷阱：混淆 `mj_step` 和 `mj_forward`**
 >
 > `mj_step` 推进时间（更新 qpos/qvel/time），`mj_forward` 不推进时间。初学者常见的两个错误：
 >
@@ -672,11 +672,11 @@ $$
 
 ---
 
-## S1.4 MJCF 建模语言——超越 URDF 的表达力 ⭐⭐
+## S1.4 MJCF 建模语言——超越 URDF 的表达力 ★★
 
 URDF（Unified Robot Description Format）是 ROS 生态的标准机器人描述格式。如果你从 SLAM 或 ROS 背景转来，URDF 是你已有的知识。MJCF（MuJoCo XML Format）则是 MuJoCo 的原生模型格式。两者的区别不是"语法不同"这么简单——它们的**设计哲学根本不同**。
 
-#### MJCF vs URDF 对比 ⭐⭐
+#### MJCF vs URDF 对比 ★★
 
 | 维度 | URDF | MJCF |
 |------|------|------|
@@ -694,7 +694,7 @@ URDF（Unified Robot Description Format）是 ROS 生态的标准机器人描述
 
 结论：**URDF 描述的是"机器人长什么样"，MJCF 描述的是"机器人在物理世界中怎么运动"**。这正是为什么 Menagerie 的 MJCF 模型可以"开箱即用"地做仿真，而 URDF 模型需要大量额外配置。
 
-#### 接触参数 solref / solimp——sim-to-real 的关键旋钮 ⭐⭐⭐
+#### 接触参数 solref / solimp——sim-to-real 的关键旋钮 ★★★
 
 MuJoCo 的软接触模型用两组参数控制接触力的生成方式。理解它们的物理含义是调出真实接触行为的关键。
 
@@ -733,7 +733,7 @@ MuJoCo 的软接触模型用两组参数控制接触力的生成方式。理解�
       friction="0.4 0.001 0.00005" condim="3"/>
 ```
 
-#### 执行器模型——从 URDF 的空白到精确的驱动建模 ⭐⭐
+#### 执行器模型——从 URDF 的空白到精确的驱动建模 ★★
 
 URDF 完全没有执行器的概念——它只描述关节，不描述驱动关节的"电机"。你在 ROS 中用的 `ros2_control` 里手写的 PID 控制器，在 MuJoCo 中可以直接用 MJCF 声明。
 
@@ -764,7 +764,7 @@ MuJoCo 提供四种基本执行器类型：
 </actuator>
 ```
 
-#### defaults 机制——层级参数继承 ⭐⭐
+#### defaults 机制——层级参数继承 ★★
 
 当你有 12 个关节（如四足机器人）需要相同的执行器参数时，逐一书写会冗长且易出错。MJCF 的 `<default>` 机制解决了这个问题：
 
@@ -816,7 +816,7 @@ MuJoCo 提供四种基本执行器类型：
 
 子级 `<default>` 继承父级的参数，并可覆盖任何字段。这让大型模型（人形 29-DOF）的 MJCF 文件保持简洁可维护。
 
-#### 结构片段：最小 7-DOF 机械臂 MJCF 的骨架 ⭐⭐
+#### 结构片段：最小 7-DOF 机械臂 MJCF 的骨架 ★★
 
 ```xml
 <mujoco model="simple_7dof_arm">
@@ -864,7 +864,7 @@ MuJoCo 提供四种基本执行器类型：
 
 注意：这段代码强调 MJCF 的结构组织方式，不是可直接加载的完整模型。完整模型必须补齐 `link2-link6` 与 `j2-j6`，否则执行器引用会失败。这个片段的三个要点是：(1) `<default>` 让同类执行器只需声明 name/joint；(2) `<option>` 明确指定积分器和求解器，避免不同环境中的隐式差异；(3) `<sensor>` 在 URDF 中完全无法表达。
 
-> **⚠️ 易错陷阱：URDF 不能表达闭环链、肌腱和肌肉**
+> **⚠ 易错陷阱：URDF 不能表达闭环链、肌腱和肌肉**
 >
 > URDF 的拓扑结构被限定为**严格的树**（每个 link 只能有一个 parent joint）。以下结构在 URDF 中无法表达：
 >
@@ -876,11 +876,11 @@ MuJoCo 提供四种基本执行器类型：
 
 ---
 
-## S1.5 接触模型数学 ⭐⭐⭐
+## S1.5 接触模型数学 ★★★
 
 理解 MuJoCo 的接触数学不需要读完 Todorov 2012 的全部推导，但以下三个核心概念必须清晰。
 
-#### 软接触：穿透 → 弹性-阻尼力 ⭐⭐⭐
+#### 软接触：穿透 → 弹性-阻尼力 ★★★
 
 当 geom A 和 geom B 发生穿透（penetration depth = d > 0），MuJoCo 不是像硬接触那样"瞬间弹开"，而是产生一个与穿透深度和穿透速度成正比的法向力：
 
@@ -899,7 +899,7 @@ b_eff = 2 * dampratio * m_eff / timeconst
 
 **为什么要允许穿透？** 因为零穿透的硬接触通常需要互补条件（complementarity）来表达“要么分离、要么接触”的逻辑，接触模式切换会使问题非光滑。允许微小穿透（通常希望控制在任务几何精度可接受的范围内）换来了统一的软约束优化模型——这是 MuJoCo 整个架构的基石。
 
-#### 摩擦锥建模：椭圆锥、多面体近似与 Coulomb ⭐⭐⭐
+#### 摩擦锥建模：椭圆锥、多面体近似与 Coulomb ★★★
 
 Coulomb 摩擦定律说：切向摩擦力 f_t 的大小不超过 mu * f_n（法向力乘摩擦系数）。在三维空间中，这定义了一个**圆锥**（friction cone）。
 
@@ -919,7 +919,7 @@ f_t1^2 / mu1^2 + f_t2^2 / mu2^2 <= f_n^2
 
 `cone="pyramidal"` 时，圆锥会被多面体方向近似，求解器看到的是更多线性标量约束。教学上可以把 `elliptic` 理解成更接近连续 Coulomb 锥、把 `pyramidal` 理解成更像传统 LCP/QP 接触方向近似；工程上应以模型中的 `<option cone="...">` 为准，不要只根据 `condim` 推断实际求解维度。
 
-#### condim 的含义 ⭐⭐⭐
+#### condim 的含义 ★★★
 
 MJCF 中的 `condim` 控制接触模型包含哪些物理自由度。它先定义**接触空间维度**；若使用 pyramidal cone，solver 内部的标量约束数还会因为多面体摩擦方向而增加。
 
@@ -934,11 +934,11 @@ MJCF 中的 `condim` 控制接触模型包含哪些物理自由度。它先定�
 
 ---
 
-## S1.6 Python/C API 实战 ⭐⭐
+## S1.6 Python/C API 实战 ★★
 
 理论清楚后，把完整的仿真循环写一遍。以下代码覆盖了 MuJoCo Python API 的核心使用模式。
 
-#### 完整仿真循环 ⭐⭐
+#### 完整仿真循环 ★★
 
 ```python
 import mujoco
@@ -970,7 +970,7 @@ with mujoco.viewer.launch_passive(m, d) as viewer:
 
 被动查看器 `launch_passive` 是自定义控制循环的标准方式：你在 Python 主循环中控制仿真节奏，viewer 只负责渲染。与之对比，`launch` 是阻塞式的——MuJoCo 接管主循环，适合纯粹的模型查看而非控制开发。
 
-#### 传感器读取与执行器控制 ⭐⭐
+#### 传感器读取与执行器控制 ★★
 
 ```python
 # ---- 传感器读取 ----
@@ -996,7 +996,7 @@ d.actuator('hip_FR').ctrl = 0.5   # 设置 hip_FR 到 0.5 rad
 d.ctrl[0] = 0.5
 ```
 
-> **⚠️ 易错陷阱：手动设置 `qpos` 后忘记调用 `mj_forward`**
+> **⚠ 易错陷阱：手动设置 `qpos` 后忘记调用 `mj_forward`**
 >
 > 这是排名第一的 MuJoCo 新手错误。当你手动修改 `d.qpos`（例如重置机器人位姿）后，所有依赖位置的量（`xpos`、`xquat`、碰撞信息、传感器读数）都是**过期数据**。必须调用 `mj_forward(m, d)` 重新计算：
 >
@@ -1013,11 +1013,11 @@ d.ctrl[0] = 0.5
 >
 > 同理，如果你在 RL 的 `reset()` 函数中设置初始状态，**必须在 reset 末尾调用 `mj_forward`**，否则第一步的 observation 就是错的。这个 bug 极其隐蔽——程序不会报错，只是 observation 滞后一步。
 
-> **⚠️ 易错陷阱：混用旧版 Python 绑定**
+> **⚠ 易错陷阱：混用旧版 Python 绑定**
 >
 > 早期教程和开源项目中经常能看到 `import mujoco_py`。新项目应优先查看官方 Python 绑定文档，并以官方文档为准。迁移旧项目时，不要把 `mujoco-py` 的 API 习惯直接套到官方 `mujoco` 包上，尤其是 viewer、模型加载和数组访问部分。
 
-#### C API 最小闭环：加载、控制、步进、释放 ⭐⭐⭐
+#### C API 最小闭环：加载、控制、步进、释放 ★★★
 
 Python API 适合实验和教学，但真实控制栈经常需要 C++。MuJoCo 的底层接口是 C API，C++ 工程通常直接包含 `mujoco/mujoco.h`，再用 RAII 包一层资源管理。理解 C API 有两个好处：
 
@@ -1109,7 +1109,7 @@ C++ 中最常见的错误是把 `mjModel*` 和 `mjData*` 的生命周期混在�
 
 ---
 
-## S1.7 阶段回顾：从模型到仿真循环 ⭐⭐
+## S1.7 阶段回顾：从模型到仿真循环 ★★
 
 本章覆盖了 MuJoCo 核心引擎的六个知识块：
 
@@ -1122,9 +1122,9 @@ C++ 中最常见的错误是把 `mjModel*` 和 `mjData*` 的生命周期混在�
 | S1.5 | 接触模型数学 | 弹性-阻尼软接触、摩擦锥选项、solref/solimp 物理含义 |
 | S1.6 | Python/C API 实战 | 仿真循环、传感器读取、执行器控制、C++ 资源管理 |
 
-### S1.7 练习 ⭐⭐
+### S1.7 练习 ★★
 
-**[练习 1 -- URDF 到 MJCF 转换]** ⭐⭐
+**[练习 1 -- URDF 到 MJCF 转换]** ★★
 
 取 Franka Panda 的 URDF（`franka_description` ROS 包），用以下流程转换为完整的 MJCF：
 1. `m = mujoco.MjModel.from_xml_path("panda.urdf")` 加载 URDF
@@ -1135,7 +1135,7 @@ C++ 中最常见的错误是把 `mjModel*` 和 `mjData*` 的生命周期混在�
 
 目的：体会 URDF 到 MJCF 的信息增量——URDF 导出后缺少的执行器和传感器，需要你根据物理知识手动补全。
 
-**[练习 2 -- 完整仿真循环]** ⭐⭐⭐
+**[练习 2 -- 完整仿真循环]** ★★★
 
 用 Menagerie 的 `unitree_go2/scene.xml`，实现一个完整的仿真循环：
 1. 加载模型并创建 data
@@ -1143,7 +1143,7 @@ C++ 中最常见的错误是把 `mjModel*` 和 `mjData*` 的生命周期混在�
 3. 记录 10 秒内机器人的质心高度变化（`d.subtree_com[0][2]`），用 matplotlib 画出曲线
 4. 观察：机器人从默认位姿落到地面并最终稳定——这条曲线反映了接触动力学
 
-**[练习 3 -- 正逆动力学对比]** ⭐⭐⭐⭐
+**[练习 3 -- 正逆动力学对比]** ★★★★
 
 这是验证你真正理解 MuJoCo 力学体系的练习。在 Go2 站立状态下：
 1. 调用 `mj_forward`，记录 `d.qacc`
@@ -1152,7 +1152,7 @@ C++ 中最常见的错误是把 `mjModel*` 和 `mjData*` 的生命周期混在�
 4. 验证 `qfrc_inverse == qfrc_actuator + qfrc_applied + qfrc_passive`（残差接近数值误差）
 5. 思考：为什么 `qfrc_bias` 和 `qfrc_constraint` 不应该被加到这个残差右侧？提示：它们已经进入了 MuJoCo 计算当前 `qacc` 的动力学平衡。
 
-**[练习 4 -- 接触参数调优]** ⭐⭐⭐⭐
+**[练习 4 -- 接触参数调优]** ★★★★
 
 修改 Go2 的足端 `solref` 参数，做三组对比实验：
 1. 极硬接触：`solref="0.001 1.0"`——观察落地时的弹跳和高频振荡
@@ -1163,11 +1163,11 @@ C++ 中最常见的错误是把 `mjModel*` 和 `mjData*` 的生命周期混在�
 
 ---
 
-## S1.8 从 Gauss 原理到约束求解器 ⭐⭐⭐
+## S1.8 从 Gauss 原理到约束求解器 ★★★
 
 S1.1-S1.7 从工程现象和 API 使用层面建立了”MuJoCo 偏好软约束和凸优化”的认知。现在把这个判断推到数学层面：接触力不是凭经验”调出来”的，而是由 Gauss 最小约束原理、惯量矩阵、约束 Jacobian 和摩擦锥共同决定的。
 
-### Gauss 最小约束原理（Gauss's Principle of Least Constraint, 1829） ⭐⭐⭐
+### Gauss 最小约束原理（Gauss's Principle of Least Constraint, 1829） ★★★
 
 经典力学中，Gauss 原理的表述是：**在所有满足约束的加速度中，系统的真实加速度是使"约束偏差"最小的那个**。数学形式如下：
 
@@ -1181,7 +1181,7 @@ $$
 
 **物理含义的精确解读**：Gauss 原理说的是——"约束做的事情，就是把加速度从无约束轨迹'拉'到最近的允许位置，这里的'最近'用惯量加权的范数来度量"。惯量加权意味着：质量大的自由度更难被约束改变，质量小的自由度更容易被拉偏。这与物理直觉完全一致——你推一堵墙（大惯量），墙几乎不动；你推一个乒乓球（小惯量），球飞走了。
 
-### 从 Gauss 原理到 MuJoCo 的凸优化 ⭐⭐⭐
+### 从 Gauss 原理到 MuJoCo 的凸优化 ★★★
 
 Todorov 2012 的核心洞察是：把 Gauss 原理直接作为仿真器的**求解器思想**，而非仅作为分析力学的理论工具。为了避免把 MuJoCo 的源码实现误写成一个过度简化的二次规划，可以先用下面的概念式理解：
 
@@ -1214,7 +1214,7 @@ $$
 
 它描述“单位约束力会造成多大的约束空间加速度”。再加上 `solref/solimp` 给出的参考加速度、阻抗和正则项，求解器就在这个约束空间里寻找一组合理的约束响应。若 `cone="pyramidal"`，摩擦锥会被线性方向近似；若 `cone="elliptic"`，摩擦锥更接近连续二阶锥。两者都是凸集合，但内部约束数量和数值行为不同。
 
-### 为什么这是凸的——三个条件的逐一验证 ⭐⭐⭐
+### 为什么这是凸的——三个条件的逐一验证 ★★★
 
 1. **目标函数是凸的**：二次项的 Hessian 矩阵 $H = JM^{-1}J^T$ 是半正定的，因为 $M^{-1}$ 正定，对任意向量 $z$，$z^T J M^{-1} J^T z = (J^T z)^T M^{-1} (J^T z) \geq 0$。目标函数是凸二次函数。
 
@@ -1232,7 +1232,7 @@ $$
 
 求解器名称、默认值和可用选项会随 MuJoCo 演进而变化，工程中应以官方文档为准。本章关心的是取舍逻辑：PGS 直观且便宜，CG 在较大系统中更节省，Newton 每次迭代更贵但常能更快降低残差。**注意：从 MuJoCo 3.0 开始，默认求解器已从 PGS 切换为 Newton**（`mjSOL_NEWTON`）。如果你在阅读旧教程或代码时看到"MuJoCo 默认用 PGS"的说法，那是 2.x 时代的信息，3.0+ 已不再适用。
 
-### 与 LCP 方案的本质差异 ⭐⭐⭐
+### 与 LCP 方案的本质差异 ★★★
 
 传统的硬接触仿真器（ODE/Bullet/PhysX）将接触建模为**线性互补问题（LCP）**：
 
@@ -1253,9 +1253,9 @@ MuJoCo 的凸优化方案**不是 LCP 的近似——它是一种不同的物理
 - **多接触超定时**：LCP 可能无法分配一致的接触力；MuJoCo 通过最小化 Gauss 目标函数找到"最优折衷"
 - **摩擦不确定区域**：LCP 在静-动摩擦切换边界有不连续性；MuJoCo 的软约束和可选摩擦锥近似让切换更容易被数值求解器处理
 
-> **⚠️ 易错陷阱**：一些材料会把 MuJoCo 的软接触简单说成”对硬接触的近似”。这个说法容易误导初学者。更准确的理解是：MuJoCo 选择了不同的接触建模路线。Gauss 原理、软约束和阻抗参数共同定义了一个适合控制与优化的物理模型；在有限刚度的真实材料中，这条路线并不一定比理想刚体模型”更不真实”。
+> **⚠ 易错陷阱**：一些材料会把 MuJoCo 的软接触简单说成”对硬接触的近似”。这个说法容易误导初学者。更准确的理解是：MuJoCo 选择了不同的接触建模路线。Gauss 原理、软约束和阻抗参数共同定义了一个适合控制与优化的物理模型；在有限刚度的真实材料中，这条路线并不一定比理想刚体模型”更不真实”。
 
-### Gauss 原理对可微分仿真的意义 ⭐⭐⭐
+### Gauss 原理对可微分仿真的意义 ★★★
 
 Gauss 原理不仅影响了 MuJoCo 的求解器设计，还对**可微分仿真**有深远的影响。当你需要计算仿真轨迹对参数的梯度（如质量对最终位置的灵敏度）时，约束求解器的数学性质决定了梯度是否可以稳定计算。
 
@@ -1269,11 +1269,11 @@ MuJoCo 的凸优化方案在这方面有天然的优势：凸优化的 KKT 条�
 
 ---
 
-## S1.9 MJCF 高级建模：闭链、腱、通用执行器与传感器 ⭐⭐⭐
+## S1.9 MJCF 高级建模：闭链、腱、通用执行器与传感器 ★★★
 
 MJCF 的价值不仅在于能写地面、相机和执行器，还在于能表达 URDF 很难自然表达的结构：闭链机构、腱耦合、带内部状态的执行器和丰富传感器。下面四类机制在腿足、灵巧手和生物力学仿真中非常常见。
 
-### Tendon（腱）——耦合关节驱动 ⭐⭐⭐
+### Tendon（腱）——耦合关节驱动 ★★★
 
 MuJoCo 的 `<tendon>` 元素允许定义跨越多个关节的**腱**，实现关节间的运动学耦合。这对于建模**欠驱动手爪**（如 Robotiq 2F-85，一个电机驱动多个指节）至关重要。
 
@@ -1304,7 +1304,7 @@ $$
 
 另一种腱类型是**空间腱**（`<spatial>`），它通过固定在刚体上的路径点定义一根空间曲线。空间腱适合建模肌肉骨骼系统（肌腱绕过骨骼的路径随关节角度变化）。
 
-### Equality Constraints——闭链运动学 ⭐⭐⭐
+### Equality Constraints——闭链运动学 ★★★
 
 URDF 只能表达开链（树形拓扑）。现实中大量机构是闭链的：四连杆、平行四边形、Stewart 平台、Delta 机器人。MuJoCo 的 `<equality>` 元素支持闭链建模。
 
@@ -1345,9 +1345,9 @@ URDF 只能表达开链（树形拓扑）。现实中大量机构是闭链的：
 </equality>
 ```
 
-> **⚠️ 注意**：`<connect>` 约束的 solref/solimp 参数控制约束的"硬度"。对于运动学闭链，应使用高刚度（solref[0] 很小，solimp 接近 1）。如果默认参数导致可见的约束违反（连接点分离），先调小 solref[0]。
+> **⚠ 注意**：`<connect>` 约束的 solref/solimp 参数控制约束的"硬度"。对于运动学闭链，应使用高刚度（solref[0] 很小，solimp 接近 1）。如果默认参数导致可见的约束违反（连接点分离），先调小 solref[0]。
 
-### Actuator 高级模型——`<general>` 通用执行器 ⭐⭐⭐
+### Actuator 高级模型——`<general>` 通用执行器 ★★★
 
 MuJoCo 的 `<motor>` / `<position>` / `<velocity>` 是预定义的快捷方式。真正灵活的是 `<general>` 元素，它支持任意的执行器动力学：
 
@@ -1382,7 +1382,7 @@ $$
 </actuator>
 ```
 
-### Sensor 全家族——30+ 种传感器 ⭐⭐⭐
+### Sensor 全家族——30+ 种传感器 ★★★
 
 MuJoCo 内置的传感器远比大多数用户意识到的丰富。以下按类别列出常用传感器：
 
@@ -1449,11 +1449,11 @@ knee_q = d.sensor('knee_pos').data[0]   # 标量
 
 ---
 
-## S1.10 接触模型调参实战：从参数含义到稳定抓取 ⭐⭐⭐
+## S1.10 接触模型调参实战：从参数含义到稳定抓取 ★★★
 
 知道 `solref`、`solimp`、`friction`、`condim` 的定义还不够。工程中真正困难的是：看到“物体滑落”“足端抖动”“夹爪弹飞”时，能判断应该改哪个参数，而不是随机试一组数字。
 
-### 调参流程：四步法 ⭐⭐⭐
+### 调参流程：四步法 ★★★
 
 **第一步：从温和参数开始运行**。可以先从 `solref=[0.02, 1]`、`solimp=[0.9, 0.95, 0.001, 0.5, 2]` 这类常见起点开始，再根据任务精度和材料特性调整；具体默认值以官方文档为准。先运行仿真，观察是否有明显的穿透（penetration）或弹跳（bouncing）。
 
@@ -1463,7 +1463,7 @@ knee_q = d.sensor('knee_pos').data[0]   # 标量
 
 **第四步：调 solimp[2]（过渡宽度）**。`solimp[2]`（width 参数）控制约束从不活跃到完全活跃的过渡区间。更小的 width 使约束更"开关式"（接近硬接触），更大的 width 使约束更"渐进式"（更光滑但更软）。
 
-### 典型场景参数推荐表 ⭐⭐⭐
+### 典型场景参数推荐表 ★★★
 
 | 场景 | solref | solimp | friction | condim | 说明 |
 |------|--------|--------|----------|--------|------|
@@ -1473,7 +1473,7 @@ knee_q = d.sensor('knee_pos').data[0]   # 标量
 | 软体抓取 | [0.05, 0.7] | [0.7, 0.85, 0.01] | [1.2, 0.01, 0.001] | 6 | 软接触、高摩擦、全维度 |
 | 金属碰撞 | [0.002, 1.0] | [0.98, 0.99, 0.0002] | [0.3, 0.001, 0.0001] | 3 | 极硬、低能量耗散 |
 
-### condim 选择指南 ⭐⭐⭐
+### condim 选择指南 ★★★
 
 `condim`（contact dimensionality）决定了每个接触点施加力的自由度数目：
 
@@ -1486,9 +1486,9 @@ knee_q = d.sensor('knee_pos').data[0]   # 标量
 
 这里的成本只是直觉排序。实际标量约束数量还取决于 `<option cone="pyramidal">` 还是 `<option cone="elliptic">`：pyramidal 会把摩擦锥展开成多个方向约束，`condim=3/4/6` 的 solver 维度通常高于接触空间维度本身。
 
-> **⚠️ 易错陷阱**：给所有接触设 `condim=6` 是常见的"保险式"做法，但代价是接触求解的计算量明显增加。实际上，对于四足行走等场景，`condim=3` 往往已经足够——扭转和滚动摩擦对足端运动的影响可以忽略。**只在确实需要扭转摩擦（如瓶盖拧紧、圆柱体操作）时才用 `condim>=4`。**
+> **⚠ 易错陷阱**：给所有接触设 `condim=6` 是常见的"保险式"做法，但代价是接触求解的计算量明显增加。实际上，对于四足行走等场景，`condim=3` 往往已经足够——扭转和滚动摩擦对足端运动的影响可以忽略。**只在确实需要扭转摩擦（如瓶盖拧紧、圆柱体操作）时才用 `condim>=4`。**
 
-### 调参实战：从"物体滑落"到稳定抓取 ⭐⭐⭐
+### 调参实战：从"物体滑落"到稳定抓取 ★★★
 
 以下是一个典型的抓取任务调参过程，展示如何从"物体总是从手指间滑落"诊断到正确参数：
 
@@ -1525,7 +1525,7 @@ diagnose_contacts(m, d)
 
 ---
 
-## S1.11 综合练习：把建模、接触和诊断串起来 ⭐⭐
+## S1.11 综合练习：把建模、接触和诊断串起来 ★★
 
 - **[A 型 / 练习 5：四连杆 MJCF 建模]** 实现上文给出的四连杆（4-bar linkage）MJCF 模型。(1) 用 `<connect>` 等式约束闭合运动链；(2) 给 crank 关节添加 `<motor>` 执行器，施加正弦力矩 `ctrl = 5*sin(2*pi*t)`；(3) 在 viewer 中验证闭链约束被正确维持（连接点无可见分离）；(4) 打印 `d.eq_active` 检查约束状态。**量化验证**：将 solref[0] 分别设为 0.005、0.02、0.1，测量连接点的最大分离距离（读取两个 site 的 `d.site_xpos` 差的范数），绘制 solref[0] vs 最大分离距离的曲线
 
@@ -1535,7 +1535,7 @@ diagnose_contacts(m, d)
 
 - **[思考题 / 练习 8]** 如果两个接触点的 Jacobian 行线性相关（即 $J$ 不满秩），$H = JM^{-1}J^T$ 就变成半正定（而非正定），此时接触力是否还唯一？MuJoCo 如何通过阻抗、正则化或求解器设置处理这种退化情况？提示：查阅官方文档中与约束正则化、阻抗和求解器残差相关的参数。追问：正则化是否改变了物理含义？它等价于什么物理模型？
 
-## S1.12 易错陷阱总表 ⭐⭐
+## S1.12 易错陷阱总表 ★★
 
 前面的各小节已经分散提示了很多坑。这里把它们收束成一张表，方便你在模型表现异常时快速定位。
 
@@ -1560,7 +1560,7 @@ diagnose_contacts(m, d)
 
 > **本质洞察**：MuJoCo 的大多数“奇怪现象”不是随机的。它们通常来自三类边界被混淆：状态和派生量的边界、模型和数据的边界、控制输入和物理力的边界。把这三条边界画清楚，排查速度会比盲目调参快很多。
 
-## S1.13 🔧 故障排查手册 ⭐⭐
+## S1.13 🔧 故障排查手册 ★★
 
 | 症状 | 可能原因 | 排查步骤 | 相关小节 |
 |------|----------|----------|----------|
@@ -1585,7 +1585,7 @@ diagnose_contacts(m, d)
 | `solver_niter` 或相近求解器统计量 | 判断约束求解是否收敛，具体字段以官方文档为准 |
 | `sensordata` | 判断观测是否与物理状态同步 |
 
-## S1.14 累积项目：MuJoCo 模型诊断脚手架 ⭐⭐
+## S1.14 累积项目：MuJoCo 模型诊断脚手架 ★★
 
 **累积项目进度**：
 
@@ -1597,7 +1597,7 @@ diagnose_contacts(m, d)
 
 本章的累积项目不是训练一个策略，而是写一个**模型诊断脚手架**。后续 S02/S03 做交互式控制、GPU 并行训练和可微分仿真时，它会成为第一道防线。
 
-### 项目目标 ⭐⭐
+### 项目目标 ★★
 
 用 Python 或 C++ 实现一个命令行工具：
 
@@ -1616,7 +1616,7 @@ mj_diagnose --model unitree_go2/scene.xml --steps 2000 --csv out.csv
 | 传感器摘要 | sensor 名称、维度、均值、最大值 | 判断观测是否可用 |
 | CSV 记录 | 时间、质心高度、接触数、最大穿透 | 用于画图和回归测试 |
 
-### 实现建议 ⭐⭐
+### 实现建议 ★★
 
 1. 先只支持 Python，快速验证字段和数据格式。
 2. 再把核心诊断函数迁移到 C++，用于实时控制工程。
@@ -1624,7 +1624,7 @@ mj_diagnose --model unitree_go2/scene.xml --steps 2000 --csv out.csv
 4. 把 CSV 画成三张图：质心高度、接触数量、最大穿透深度。
 5. 给每个模型保存一份基准曲线，后续改参数时用来判断是否引入异常。
 
-### 验收标准 ⭐⭐
+### 验收标准 ★★
 
 | 标准 | 合格表现 |
 |------|----------|
@@ -1638,11 +1638,11 @@ mj_diagnose --model unitree_go2/scene.xml --steps 2000 --csv out.csv
 
 ---
 
-## S1.15 MuJoCo 3.x 版本演进与 GPU 加速生态 ⭐⭐⭐
+## S1.15 MuJoCo 3.x 版本演进与 GPU 加速生态 ★★★
 
 > **这一节解决什么问题**：本章前面所有内容都基于 MuJoCo 的 CPU 核心引擎。但从 MuJoCo 3.0（2023 年底）开始，MuJoCo 不再只是一个 CPU 引擎——它发展出了 MJX（JAX 后端）、MuJoCo Warp（NVIDIA Warp 后端）和 MuJoCo Playground（端到端 RL 框架）三条 GPU 加速路线。理解这个生态演进，是从"学会 MuJoCo"过渡到"用 MuJoCo 做大规模机器人学习"的关键桥梁。
 
-### 动机：为什么 CPU MuJoCo 不够了？ ⭐⭐
+### 动机：为什么 CPU MuJoCo 不够了？ ★★
 
 本章前面的所有代码——`mj_step`、`mj_forward`、`mj_inverse`——都运行在单个 CPU 线程上。对于控制器验证、模型调试和小规模实验，CPU MuJoCo 的速度完全足够。但当你需要训练一个强化学习策略时，情况根本性地改变了。
 
@@ -1652,7 +1652,7 @@ GPU 并行仿真把这个数字压缩了两到三个数量级。4096 个并行�
 
 > **本质洞察**：GPU 并行仿真的核心价值不是"让每个仿真步更快"（实际上单个仿真步在 GPU 上并不比 CPU 快），而是"让成千上万个仿真步同时发生"。这与 GPU 在深度学习中的角色完全一致——矩阵乘法在 GPU 上快，不是因为单个乘法更快，而是因为成千上万个乘法并行执行。
 
-### MuJoCo 3.0 的关键特性 ⭐⭐⭐
+### MuJoCo 3.0 的关键特性 ★★★
 
 MuJoCo 3.0（2023 年 12 月发布）是 MuJoCo 历史上最重要的版本跃迁。它不仅引入了 GPU 加速路线，还对 CPU 引擎本身做了多项重大改进：
 
@@ -1695,7 +1695,7 @@ MuJoCo 3.0 引入了 `mjThreadPool` 和 `mjTask`，支持引擎管线内部的�
 
 这一点在 S1.8 中已经提到，但值得再次强调：MuJoCo 3.0 把默认约束求解器从 PGS（Projected Gauss-Seidel）切换为 Newton 方法。Newton 求解器利用局部二阶信息，在大多数场景下收敛更快、精度更高。如果你在阅读 2022 年及之前的教程时看到"MuJoCo 默认用 PGS"的说法，请注意这已经过时。
 
-### MuJoCo 3.1-3.3+ 后续演进 ⭐⭐
+### MuJoCo 3.1-3.3+ 后续演进 ★★
 
 MuJoCo 在 3.0 之后持续快速迭代。以下是对后续运控相关的关键更新：
 
@@ -1769,7 +1769,7 @@ total_energy = d.sensor('energy').data[0]
 # 最常见的原因：显式积分器 + 过大的 timestep + 硬接触
 ```
 
-### MuJoCo Warp（MJX-Warp）——NVIDIA GPU 优化路线 ⭐⭐⭐
+### MuJoCo Warp（MJX-Warp）——NVIDIA GPU 优化路线 ★★★
 
 MJX-JAX 的局限之一是在 NVIDIA GPU 上的性能没有充分利用硬件特性——JAX 的通用性意味着它的 GPU kernel 不是针对 NVIDIA 架构深度优化的。MuJoCo Warp（在 MuJoCo 3.3.5 中引入）解决了这个问题。
 
@@ -1790,7 +1790,7 @@ MuJoCo Warp 基于 NVIDIA Warp 框架——一个允许用 Python 语法编写�
 
 MuJoCo Warp 与 PyTorch 的互操作通过 `warp.to_torch()` 实现零拷贝张量转换。这意味着 MuJoCo Warp 的仿真输出可以直接被 PyTorch RL 算法消费，不需要任何数据搬运——与 S1.2 中讲的 NumPy view 思想完全一致，只是从"C 数组 ↔ NumPy"变成了"Warp 数组 ↔ PyTorch 张量"。
 
-### Newton 物理引擎——统一多求解器 ⭐⭐⭐
+### Newton 物理引擎——统一多求解器 ★★★
 
 Newton 由 NVIDIA、Google DeepMind 和 Disney Research 联合发起，2025 年 9 月贡献给 Linux Foundation 作为开源项目（Apache 2.0），Newton 1.0 GA 于 GTC 2026（2026 年 3 月）正式发布。
 
@@ -1810,7 +1810,7 @@ Newton 的 Kamino 求解器值得特别关注——它是第一个在 GPU 上高
 
 > **本质洞察**：Newton 不是"又一个物理引擎"——它是一个**物理求解器的运行时调度器**。同一个场景中，机器人的刚体部分可以用 MuJoCo Warp 求解，线缆传动可以用 VBD 求解，地面颗粒可以用 MPM 求解——Newton 在一个统一的时间步内协调这些求解器。这种多求解器组合的能力在传统物理引擎中是不存在的。
 
-### MuJoCo Playground——端到端 RL 框架 ⭐⭐
+### MuJoCo Playground——端到端 RL 框架 ★★
 
 MuJoCo Playground 是 Google DeepMind 基于 MJX 构建的端到端 RL 训练框架，荣获 RSS 2025 Outstanding Demo Paper Award。它的定位是"pip install 后几分钟内在单 GPU 上训练出可部署策略"。
 
@@ -1824,7 +1824,7 @@ Playground 与本章内容的关系在于：它使用的物理引擎本质上就
 
 但 Playground 使用 JAX 而非 PyTorch，这意味着它与主流 PyTorch RL 生态（RSL-RL、RL Games）不兼容。对于大多数 PyTorch 用户来说，mjlab（基于 MuJoCo Warp + PyTorch）是更自然的选择。Playground 更适合 JAX 生态用户或需要端到端可微分仿真的研究。
 
-### MuJoCo 在具身智能生态中的位置 ⭐⭐
+### MuJoCo 在具身智能生态中的位置 ★★
 
 理解 MuJoCo 不仅是一个物理引擎，更要理解它在整个具身智能（Embodied AI）研究生态中的角色。截至 2025-2026 年，具身智能研究呈现出从任务特定控制管线向基础模型驱动的通用智能体演进的趋势。在这个趋势中，MuJoCo 的定位正在发生微妙的变化。
 
@@ -1838,7 +1838,7 @@ Playground 与本章内容的关系在于：它使用的物理引擎本质上就
 
 **与 Open X-Embodiment 等大规模数据集的关系**：具身智能领域正在出现大规模多机器人数据集（如 Open X-Embodiment 收集了 100 万+ 轨迹来自 22 种机器人，AgiBot World 收集了 100 万+ 轨迹来自 100+ 种机器人）。这些数据集中很多使用 MuJoCo 或 MuJoCo 衍生框架做仿真数据生成。理解 MuJoCo 的物理模型假设，对于正确解读这些数据集中的仿真数据至关重要——不同的 solref 参数会导致相同机器人产生不同的接触行为，进而影响训练出的策略的泛化能力。
 
-### 三条 GPU 路线的对比与选型 ⭐⭐⭐
+### 三条 GPU 路线的对比与选型 ★★★
 
 MuJoCo 的 GPU 加速形成了三条技术路线，每条适合不同的用户：
 
@@ -1863,7 +1863,7 @@ MuJoCo 的 GPU 加速形成了三条技术路线，每条适合不同的用户�
 
 > **本质洞察**：MuJoCo 的三条 GPU 路线反映了一个更深层的设计哲学——**物理算法与计算硬件解耦**。同一套 Gauss 原理 + 凸优化 + 软约束的物理算法，可以在 CPU（标准 C 实现）、JAX（MJX）、NVIDIA Warp（MuJoCo Warp）上运行，未来也可能出现 AMD ROCm 或其他硬件后端。这种解耦的好处是：你学习的物理知识（本章的 S1.1-S1.10）是永久有效的，不会因为计算后端的更迭而失效。硬件在变，但 Gauss 最小约束原理从 1829 年到 2026 年一直是同一个原理。
 
-### 从 CPU 调试到 GPU 训练的完整工作流 ⭐⭐
+### 从 CPU 调试到 GPU 训练的完整工作流 ★★
 
 在实际研究中，CPU MuJoCo 和 GPU MuJoCo 不是二选一的关系——它们服务于工作流的不同阶段。以下是推荐的完整工作流：
 
@@ -1881,9 +1881,9 @@ MuJoCo 的 GPU 加速形成了三条技术路线，每条适合不同的用户�
 
 这个"CPU → GPU → CPU"的工作流模式，解释了为什么本章花大量篇幅讲 CPU MuJoCo 的 API 和调试技巧——它们在工作流的首尾两端都是必需的。
 
-### ⚠️ 常见陷阱 ⭐⭐
+### ⚠ 常见陷阱 ★★
 
-⚠️ **编程陷阱：以为 MJX 和 MuJoCo Warp 的结果完全一致**
+⚠ **编程陷阱：以为 MJX 和 MuJoCo Warp 的结果完全一致**
 
 虽然 MJX 和 MuJoCo Warp 都实现了 MuJoCo 的物理算法，但由于浮点精度差异（GPU 的浮点运算顺序与 CPU 不同）和 solref/solimp 参数在 GPU 上的数值行为微小差异，同一个模型、同一个初始状态在三个后端上跑出的轨迹会**逐步偏离**。对于单步查询（如 `mj_forward`），差异在数值精度范围内；对于长轨迹（数千步），蝴蝶效应会使轨迹显著不同。这不是 bug——这是浮点计算的固有特性。**正确做法**是不要期望跨后端的轨迹精确匹配，而是验证统计指标（如平均 reward、成功率、tracking RMSE）是否一致。
 
@@ -1895,16 +1895,16 @@ GPU 加速不会提高物理精度——它只改变计算速度。MJX 在 GPU �
 
 GPU 版本的 MuJoCo 是为大规模并行训练设计的——它的 API 面向批量操作（数千环境同时 step）。但在模型调试阶段，你需要的不是"跑得快"而是"看得清"：逐步检查 `d.contact`、打印 `qfrc_constraint`、在 viewer 中拖拽关节、验证正逆动力学一致性。这些交互式调试操作在 CPU MuJoCo 上最方便。正确的工作流是：**用 CPU MuJoCo 调试模型和控制器 → 确认无误后搬到 GPU 做大规模训练 → 训练完成后回到 CPU 做 sim-to-real 验证**。
 
-### S1.15 练习 ⭐⭐
+### S1.15 练习 ★★
 
-1. **[⭐⭐ 概念题]** 解释 MJX（JAX 后端）和 MuJoCo Warp（NVIDIA Warp 后端）的核心区别。如果你的项目使用 PyTorch 和 NVIDIA GPU，应该选择哪个？如果你的项目需要端到端可微分仿真呢？
-2. **[⭐⭐ 思考题]** 本章 S1.8 讲的 Gauss 原理和凸优化约束求解在 MJX 和 MuJoCo Warp 中是否仍然适用？GPU 加速改变了物理模型还是只改变了计算平台？
-3. **[⭐⭐⭐ 对比题]** Newton 包含 7 个求解器。对于一个具有平行连杆膝关节的四足机器人（如 ANYmal），使用 MuJoCo Warp 求解器和 Kamino 求解器分别有什么优缺点？提示：回顾 S1.9 中 `<equality><connect>` 的 solref 参数对闭链精度的影响。
-4. **[⭐⭐⭐ 工作流设计题]** 设计一个从"模型调试"到"大规模训练"到"sim-to-real 部署"的完整工作流，标明每个阶段应该使用 CPU MuJoCo、MuJoCo Warp 还是 MJX，并解释选择理由。
+1. **[★★ 概念题]** 解释 MJX（JAX 后端）和 MuJoCo Warp（NVIDIA Warp 后端）的核心区别。如果你的项目使用 PyTorch 和 NVIDIA GPU，应该选择哪个？如果你的项目需要端到端可微分仿真呢？
+2. **[★★ 思考题]** 本章 S1.8 讲的 Gauss 原理和凸优化约束求解在 MJX 和 MuJoCo Warp 中是否仍然适用？GPU 加速改变了物理模型还是只改变了计算平台？
+3. **[★★★ 对比题]** Newton 包含 7 个求解器。对于一个具有平行连杆膝关节的四足机器人（如 ANYmal），使用 MuJoCo Warp 求解器和 Kamino 求解器分别有什么优缺点？提示：回顾 S1.9 中 `<equality><connect>` 的 solref 参数对闭链精度的影响。
+4. **[★★★ 工作流设计题]** 设计一个从"模型调试"到"大规模训练"到"sim-to-real 部署"的完整工作流，标明每个阶段应该使用 CPU MuJoCo、MuJoCo Warp 还是 MJX，并解释选择理由。
 
 ---
 
-## S1.16 本章小结 ⭐
+## S1.16 本章小结 ★
 
 | 知识点 | 你现在应该掌握的核心判断 | 常见误解 |
 |--------|--------------------------|----------|
@@ -1960,21 +1960,21 @@ GPU 版本的 MuJoCo 是为大规模并行训练设计的——它的 API 面向
 | "MjSpec 只是另一种加载模型的方式" | MjSpec 支持运行时动态修改模型结构，是域随机化的工程基础 |
 | "肌肉执行器只用于生物仿真" | Hill-type 肌肉模型对仿生机器人和人形运动控制同样有价值 |
 
-## S1.17 延伸阅读 ⭐
+## S1.17 延伸阅读 ★
 
 | 资料 | 难度 | 阅读重点 |
 |------|------|----------|
-| Todorov, Erez, Tassa, *MuJoCo: A physics engine for model-based control*, IROS 2012 | ⭐⭐⭐⭐ | Gauss 原理、接触优化、模型控制动机 |
-| [MuJoCo 官方文档：Computation](https://mujoco.readthedocs.io/en/stable/computation/) | ⭐⭐⭐⭐ | 正/逆动力学、约束求解、积分器、接触模型 |
-| [MuJoCo 官方文档：XML Reference](https://mujoco.readthedocs.io/en/stable/XMLreference.html) | ⭐⭐⭐ | MJCF 标签、`option`、`default`、`actuator`、`sensor`、`equality` |
-| [MuJoCo 官方文档：API Reference](https://mujoco.readthedocs.io/en/latest/APIreference/APIfunctions.html) | ⭐⭐⭐ | `mj_step`、`mj_forward`、`mj_inverse`、内存管理和枚举 |
-| [MuJoCo Menagerie](https://github.com/google-deepmind/mujoco_menagerie) | ⭐⭐ | 高质量 MJCF 模型写法，尤其是四足、机械臂和夹爪 |
-| [DeepMind Control Suite](https://github.com/google-deepmind/dm_control) | ⭐⭐⭐ | 如何把 MuJoCo 模型包装成连续控制 benchmark |
-| [Pinocchio 文档](https://gepettoweb.laas.fr/doc/stack-of-tasks/pinocchio/master/doxygen-html/) | ⭐⭐ | 对照理解只读模型与可变数据缓冲 |
-| [MuJoCo XLA (MJX) 文档](https://mujoco.readthedocs.io/en/latest/mjx.html) | ⭐⭐⭐ | JAX 后端架构、vmap 批量化、可微分仿真 |
-| [MuJoCo Playground](https://playground.mujoco.org/) | ⭐⭐ | MJX 上的端到端 RL 框架，RSS 2025 Demo Paper |
-| [Newton Physics Engine](https://developer.nvidia.com/newton-physics) | ⭐⭐⭐ | 多求解器统一 API、Kamino 闭环求解器、性能 benchmark |
-| [MuJoCo Warp (GitHub)](https://github.com/google-deepmind/mujoco_warp) | ⭐⭐⭐ | NVIDIA GPU 优化的 MuJoCo 实现，mjlab 的物理后端 |
+| Todorov, Erez, Tassa, *MuJoCo: A physics engine for model-based control*, IROS 2012 | ★★★★ | Gauss 原理、接触优化、模型控制动机 |
+| [MuJoCo 官方文档：Computation](https://mujoco.readthedocs.io/en/stable/computation/) | ★★★★ | 正/逆动力学、约束求解、积分器、接触模型 |
+| [MuJoCo 官方文档：XML Reference](https://mujoco.readthedocs.io/en/stable/XMLreference.html) | ★★★ | MJCF 标签、`option`、`default`、`actuator`、`sensor`、`equality` |
+| [MuJoCo 官方文档：API Reference](https://mujoco.readthedocs.io/en/latest/APIreference/APIfunctions.html) | ★★★ | `mj_step`、`mj_forward`、`mj_inverse`、内存管理和枚举 |
+| [MuJoCo Menagerie](https://github.com/google-deepmind/mujoco_menagerie) | ★★ | 高质量 MJCF 模型写法，尤其是四足、机械臂和夹爪 |
+| [DeepMind Control Suite](https://github.com/google-deepmind/dm_control) | ★★★ | 如何把 MuJoCo 模型包装成连续控制 benchmark |
+| [Pinocchio 文档](https://gepettoweb.laas.fr/doc/stack-of-tasks/pinocchio/master/doxygen-html/) | ★★ | 对照理解只读模型与可变数据缓冲 |
+| [MuJoCo XLA (MJX) 文档](https://mujoco.readthedocs.io/en/latest/mjx.html) | ★★★ | JAX 后端架构、vmap 批量化、可微分仿真 |
+| [MuJoCo Playground](https://playground.mujoco.org/) | ★★ | MJX 上的端到端 RL 框架，RSS 2025 Demo Paper |
+| [Newton Physics Engine](https://developer.nvidia.com/newton-physics) | ★★★ | 多求解器统一 API、Kamino 闭环求解器、性能 benchmark |
+| [MuJoCo Warp (GitHub)](https://github.com/google-deepmind/mujoco_warp) | ★★★ | NVIDIA GPU 优化的 MuJoCo 实现，mjlab 的物理后端 |
 
 阅读顺序建议：
 
@@ -1988,7 +1988,7 @@ GPU 版本的 MuJoCo 是为大规模并行训练设计的——它的 API 面向
 8. MuJoCo Playground 的技术报告（arxiv:2502.08844）是了解 MuJoCo 在端到端 RL 训练中如何被使用的最佳入口。
 9. 对于版本变更的追踪，MuJoCo 的 Changelog（`mujoco.readthedocs.io/en/stable/changelog.html`）是最权威的来源——每个版本都详细列出了新增功能、行为变更和 API 变化。
 
-### 练习：把模型诊断变成日常流程 ⭐
+### 练习：把模型诊断变成日常流程 ★
 
 **A 型**：选择一个包含 free joint 的机器人模型，分别打印 `nq`、`nv`、`nu`、`nbody`、`njnt` 和 `nsensor`，解释为什么 `nq` 与 `nv` 不一定相等。
 

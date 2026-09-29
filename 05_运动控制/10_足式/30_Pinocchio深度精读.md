@@ -2,13 +2,13 @@
 
 # 第47章：Pinocchio 深度精读——CRTP + Model-Data + 模板 Scalar
 
-> **难度**：⭐⭐⭐ | **建议用时**：1.5 周 | **前置要求**：Eigen 深度章节（02_C++基础与进阶/40_通用库剖析，表达式模板/对齐/SIMD）、李群与 manif（01_数学/20_微分几何与李群）、CRTP/设计模式章节（02_C++基础与进阶/10_C++语言核心）
+> **难度**：★★★ | **建议用时**：1.5 周 | **前置要求**：Eigen 深度章节（02_C++基础与进阶/40_通用库剖析，表达式模板/对齐/SIMD）、李群与 manif（01_数学/20_微分几何与李群）、CRTP/设计模式章节（02_C++基础与进阶/10_C++语言核心）
 
 ---
 
 ## 前置自测
 
-> 📋 答不出 >= 2 题 → 先回顾对应前置章节
+> ◆ 答不出 >= 2 题 → 先回顾对应前置章节
 
 1. **CRTP 基础**：写出 CRTP 的基本结构——基类模板 `Base<Derived>` 如何通过 `static_cast<Derived*>(this)` 在编译期派发到派生类？与虚函数相比，CRTP 在 vtable 查找和内联优化上有什么具体差异？（答不出 → 回顾 02_C++基础与进阶/10_C++语言核心 中 CRTP 部分）
 2. **Eigen 模板参数**：`Eigen::Matrix<Scalar, Rows, Cols>` 中的 `Scalar` 模板参数意味着什么？如果将 `Scalar` 从 `double` 替换为 `Ceres::Jet<double, N>`，矩阵的加法和乘法运算是否仍然正确？为什么？（答不出 → 回顾 Eigen 深度章节 + 01_数学/30_优化理论 Ceres 自动微分）
@@ -32,9 +32,9 @@
 
 ---
 
-## 47.1 Pinocchio 在机器人 C++ 生态中的位置 ⭐⭐
+## 47.1 Pinocchio 在机器人 C++ 生态中的位置 ★★
 
-### 动机：从"一个 SE(3)"到"N 个串联 SE(3)" ⭐
+### 动机：从"一个 SE(3)"到"N 个串联 SE(3)" ★
 
 前面的章节里，我们用 Sophus 和 manif 做了大量的 SE(3) 运算——一个旋转、一个位姿、相邻两帧的 delta。这些库解决的是"**孤立的刚体变换**"问题：给定两个坐标系之间的变换关系，如何组合、求逆、计算切向量、传播协方差。
 
@@ -57,7 +57,7 @@ Sophus 和 manif 完全无法处理这个问题——它们不知道"关节"是�
 
 **Pinocchio 就是这个引擎。** Sophus 之于 Pinocchio，就像单个音符之于整首交响曲——Sophus 处理一个孤立的 SE(3) 变换，Pinocchio 则指挥整棵关节树上数十个 SE(3) 变换的协调运算，包括速度传播、力传递和惯量聚合。
 
-### 核心算法：Featherstone 递归族 ⭐⭐
+### 核心算法：Featherstone 递归族 ★★
 
 Pinocchio 实现了 Roy Featherstone《Rigid Body Dynamics Algorithms》（2008）中的经典递归算法。这些算法的共同特征是**利用关节树的拓扑结构，通过一次或两次遍历完成全局动力学量的计算**：
 
@@ -70,7 +70,7 @@ Pinocchio 实现了 Roy Featherstone《Rigid Body Dynamics Algorithms》（2008�
 
 这里 $N$ 是关节数（不是机器人自由度 $n_v$，但对串联链两者通常相同量级）。RNEA 的 $O(N)$ 复杂度意味着即使关节数翻倍，计算时间也只是线性增长——这是递归利用树结构的直接结果，后续 47.6 节会从递推公式层面详细拆解。RNEA 的两遍递归好比**从树叶到树根的力传递**：第一遍（前向）从根到叶传播速度和加速度，就像从树干到树梢逐级传导晃动；第二遍（后向）从叶到根汇聚力和力矩，就像风吹树叶产生的力经过每根树枝逐级累加，最终汇聚到树干——每个关节只需处理自己那一段，所以总计算量与关节数成线性关系。
 
-### 杀手级特性：解析导数 ⭐⭐⭐
+### 杀手级特性：解析导数 ★★★
 
 Pinocchio 真正区别于其他动力学库（如 RBDL、Drake 的 MultibodyPlant）的杀手级特性是：**它提供了上述算法的解析导数（analytical derivatives）**。
 
@@ -92,7 +92,7 @@ Pinocchio 真正区别于其他动力学库（如 RBDL、Drake 的 MultibodyPlan
 
 当 MPC 优化器每次迭代需要调用数百次动力学导数时，3-4 倍的性能差距意味着 MPC 实时性的成败。这就是为什么 Crocoddyl / Aligator 能做到微秒级的 backward pass——底层原因是 Pinocchio 的解析导数。
 
-### 生态图：一个库撑起一个学派 ⭐
+### 生态图：一个库撑起一个学派 ★
 
 Pinocchio 不是一个孤立的库。它是 INRIA（法国国家信息与自动化研究所）Gepetto 团队的动力学内核，整个 INRIA 学派的规控生态都建立在它之上：
 
@@ -128,9 +128,9 @@ Pinocchio 不是一个孤立的库。它是 INRIA（法国国家信息与自动�
 
 ---
 
-## 47.2 CRTP 关节类型系统 ⭐⭐⭐
+## 47.2 CRTP 关节类型系统 ★★★
 
-### 动机：1kHz 控制循环中 vtable 开销不可接受 ⭐⭐
+### 动机：1kHz 控制循环中 vtable 开销不可接受 ★★
 
 在 CRTP 章节（02_C++基础与进阶/10_C++语言核心）中我们讨论过 CRTP 和虚函数的取舍——架构层用虚函数，热路径用 CRTP。现在让我们用具体数字来看 Pinocchio 为什么必须选择 CRTP。
 
@@ -148,7 +148,7 @@ Pinocchio 不是一个孤立的库。它是 INRIA（法国国家信息与自动�
 
 CRTP 消灭了这些开销——`calc()` 的派发在编译期完成，函数体被内联，编译器可以将整个关节运算循环向量化。
 
-### CRTP 层级结构：JointModelBase ⭐⭐⭐
+### CRTP 层级结构：JointModelBase ★★★
 
 Pinocchio 的关节类型系统的 CRTP 基类定义在 `include/pinocchio/multibody/joint/joint-base.hpp` 中（约 300 行）。核心结构如下：
 
@@ -216,7 +216,7 @@ struct JointModelHelicalTpl            // 螺旋关节（旋转+平动耦合）
 
 注意 `nq` 和 `nv` 的区别——这是 Pinocchio（和 MuJoCo）中一个关键概念：`nq` 是配置空间维度（用于存储关节位置），`nv` 是切空间维度（用于存储关节速度和加速度）。对于旋转关节两者都是 1，但对于球关节 `nq=4`（四元数）而 `nv=3`（角速度），对于浮动基座 `nq=7`（位置3 + 四元数4）而 `nv=6`（线速度3 + 角速度3）。这个差异来源于李群的流形结构——配置空间是流形，切空间是线性空间，两者维度不必相等。
 
-### 与 Sophus CRTP 的规模对比 ⭐⭐
+### 与 Sophus CRTP 的规模对比 ★★
 
 在 CRTP 章节中我们分析过 Sophus 的 CRTP：
 
@@ -247,7 +247,7 @@ Pinocchio:  JointModelBase<Derived>  →  JointModelRevoluteTpl
 
 这是**不同物理对象**的 CRTP——十几种关节类型，每种有不同的 `nq`/`nv`、不同的 `calc()` 实现、不同的运动子空间矩阵 $S_i$。它们共享的是算法**接口**（`calc`、`jacobian`、`motion`、`force`），而不是实现。
 
-### calc() 的编译期派发 ⭐⭐⭐
+### calc() 的编译期派发 ★★★
 
 当 RNEA 遍历关节树时，对每个关节调用 `calc()`。由于关节类型在编译期已知（通过 CRTP），编译器可以将 `calc()` 的实际实现内联到 RNEA 的递推循环中。以旋转关节为例：
 
@@ -270,7 +270,7 @@ void JointModelRevoluteTpl<Scalar, Options>::calc_impl(
 
 对比虚函数版本——编译器在 RNEA 的循环中看到的是 `joint_ptr->calc(data, q)`，无法内联，必须在运行时查 vtable → 读函数指针 → 跳转。这三步操作本身只有几纳秒，但它阻止了编译器对循环整体的优化（内联、SIMD、指令重排序）。
 
-### CRTP 的"异构容器"难题与 Variant 解法 ⭐⭐⭐
+### CRTP 的"异构容器"难题与 Variant 解法 ★★★
 
 纯 CRTP 有一个致命限制：不同 `Derived` 类型在编译期是**不同的类型**，无法放进同一个 `std::vector`。但一个机器人的关节链里每个关节的类型可能不同——Go2 的基座是 FreeFlyer，髋膝踝都是 Revolute——我们需要把这些不同类型按顺序存入同一个容器。
 
@@ -315,15 +315,15 @@ variant 的分派机制是**编译器生成的 switch-case**（根据 variant �
 | **CRTP + variant** | **~1.4 $\mu$s** | **100%** | 部分可能 |
 | 纯 CRTP（假设可行） | ~1.3 $\mu$s | 93% | 完全可能 |
 
-> ⚠️ **陷阱：自定义关节类型需要修改 Pinocchio 的 variant 列表**
+> ⚠ **陷阱：自定义关节类型需要修改 Pinocchio 的 variant 列表**
 >
 > 如果你需要添加一种 Pinocchio 不支持的关节类型（例如柔性关节、腱驱动关节），仅仅写一个新的 `JointModelMyCustom : JointModelBase<...>` 是不够的。你还必须将它加入 `JointModelVariant` 的类型列表中，否则它无法被存入 `Model::joints`。这意味着你需要修改 Pinocchio 的头文件（`joint-collection.hpp`），然后重新编译 Pinocchio。这是 variant 方案相比虚函数继承的一个工程代价——虚函数继承允许在不修改框架代码的前提下添加新的派生类型。Pinocchio 团队正在通过 `JointModelComposite` 缓解这个问题——你可以将自定义关节表达为已有基本关节类型的组合，而不必注册新类型。
 
 ---
 
-## 47.3 Model / Data 分离范式 ⭐⭐
+## 47.3 Model / Data 分离范式 ★★
 
-### 动机——反面：如果不分离会怎样 ⭐⭐
+### 动机——反面：如果不分离会怎样 ★★
 
 假设我们不分离 Model 和 Data，而是把拓扑信息和计算缓冲都放在同一个结构体里：
 
@@ -351,7 +351,7 @@ struct RobotState {
 
 **问题 3：构造函数职责不清。** 每次创建新线程，你不知道应该从哪里复制——是深拷贝整个对象？还是只拷贝计算缓冲？常量数据该共享还是复制？
 
-### 理论：Model 持有不变量，Data 持有缓冲 ⭐⭐
+### 理论：Model 持有不变量，Data 持有缓冲 ★★
 
 Pinocchio 的解法非常干净：
 
@@ -399,7 +399,7 @@ Pinocchio 的解法非常干净：
 | | `vcom[0]` | `Vector3d` | 系统质心速度 | `centerOfMass`（传入 v） |
 | | `Jcom` | `Matrix3x` (3 x nv) | 质心雅可比 | `jacobianCenterOfMass` |
 
-> **⚠️ 陷阱：算法之间的依赖关系**
+> **⚠ 陷阱：算法之间的依赖关系**
 >
 > 这些字段之间存在隐式的依赖关系。例如 `computeJointJacobians(model, data, q)` 内部会先调用 `forwardKinematics`，但 **不会** 自动调用 `updateFramePlacements`。如果你接下来用 `getFrameJacobian` 查 frame 的雅可比，必须确保 `updateFramePlacements` 已被调用。Pinocchio 提供了一个便利函数 `computeAllTerms(model, data, q, v)`，一次调用填充 FK + Jacobian + M + nle + CoM 等多个字段，避免遗漏依赖——但它不含 RNEA 导数和 ABA。
 
@@ -450,7 +450,7 @@ pinocchio::crba(const Model& model, Data& data,
 
 > **本质洞察**：Model/Data 分离表面上是"多线程优化"，但其更深层的价值在于**语义清晰性**——它强制工程师区分"机器人是什么"（拓扑、惯量、限位，不随时间变化）和"机器人此刻在做什么"（位姿、速度、力，每个控制周期都在变化）。这种区分消除了一整类 bug：你不可能意外地在算法执行过程中改变关节拓扑或惯量参数，因为 Model 是 const 的。
 
-### 线程安全：N 线程共享 1 个 Model ⭐⭐⭐
+### 线程安全：N 线程共享 1 个 Model ★★★
 
 Model / Data 分离的直接收益是**天然的多线程安全**：
 
@@ -496,7 +496,7 @@ std::thread viz_thread([&model]() {
 
 对照并发编程章节（02_C++基础与进阶/20_并发与系统编程）中分析的 ORB-SLAM3——它有 5 个 mutex 保护 `MapPoint`、`KeyFrame`、关键帧队列等共享可变状态。根本原因是 SLAM 的地图是**动态增长**的（每帧都在添加/删除地图点），而腿足机器人的模型在 URDF 加载后是**静态不变**的。Model / Data 分离并不是万能的——它适用于"**读多写少且常量数据和可变数据可以清晰划分**"的场景。
 
-### 与 MuJoCo mjModel / mjData 的映射 ⭐⭐
+### 与 MuJoCo mjModel / mjData 的映射 ★★
 
 MuJoCo 独立发展出了几乎相同的 Model / Data 分离设计。两者的对应关系：
 
@@ -513,7 +513,7 @@ MuJoCo 独立发展出了几乎相同的 Model / Data 分离设计。两者的�
 
 **关键差异**：MuJoCo 的 `mjModel` 是纯 C 结构体（`struct mjModel`），所有成员都是裸指针 + 长度字段，面向最大性能和 GPU 兼容性。Pinocchio 的 `Model` 是 C++ 模板类（`ModelTpl<Scalar, Options, JointCollection>`），使用 `std::vector<SE3>`、`Eigen::VectorXd` 等 RAII 容器，面向类型安全和自动微分兼容性。两种设计哲学各有取舍——MuJoCo 追求仿真吞吐量（GPU 上百万环境并行），Pinocchio 追求算法可微性（解析导数 + AD 类型替换）。
 
-### 与 Drake MultibodyPlant 和 RBDL 的对比 ⭐⭐
+### 与 Drake MultibodyPlant 和 RBDL 的对比 ★★
 
 Pinocchio 并非唯一的 C++ 刚体动力学库。理解三者的定位差异能帮助你在不同项目中做出正确选型。
 
@@ -539,7 +539,7 @@ Pinocchio 并非唯一的 C++ 刚体动力学库。理解三者的定位差异�
 
 > **反事实推理**：如果 Pinocchio 不提供解析导数会怎样？OCS2 的 SQP-RTI 每次迭代需要完整的动力学 Jacobian。用数值差分，18-DOF 系统需要 37 次 RNEA 调用（中心差分）；用 CppAD，慢 3-5 倍。解析导数将这个代价压缩到 1 次递推，使 MPC 频率从 10-20 Hz 提升到 50-100 Hz——这就是为什么 OCS2 选择 Pinocchio 而非 Drake/RBDL 的决定性理由。
 
-### 代码实战：从 URDF 到 FK ⭐
+### 代码实战：从 URDF 到 FK ★
 
 下面是一个完整的"加载 URDF → 创建 Model + Data → 计算正运动学"流程：
 
@@ -589,25 +589,25 @@ int main()
 }
 ```
 
-> ⚠️ **陷阱：forwardKinematics 未调用前 oMi 是未初始化数据**
+> ⚠ **陷阱：forwardKinematics 未调用前 oMi 是未初始化数据**
 >
 > 刚用 `pinocchio::Data data(model)` 构造 Data 时，`data.oMi` 的内存已经分配，但值是**未初始化的**（或者是默认构造的单位变换，取决于 Pinocchio 版本）。如果你在调用 `forwardKinematics` 之前就读取 `data.oMi[i]`，得到的是**毫无意义的旧数据**。同样，`data.J` 在调用 `computeJointJacobians` 之前是脏数据，`data.M` 在调用 `crba` 之前是脏数据。Pinocchio 的 Data 不会自动标记"哪些缓冲已更新"——**你必须记住算法调用的依赖顺序**。这是 Model / Data 分离设计的一个工程代价：灵活性和性能换来了更高的用户责任。
 >
 > 常见 bug 场景：在 MPC 循环中，上一帧调用过 `forwardKinematics`，这一帧改了 $q$ 但忘记重新调用，然后直接读 `data.oMi`——读到的是**上一帧的位姿结果**，对应的是旧的 $q$ 值。程序不会报错，但控制器会表现出一帧的延迟，在高速运动时可能导致不稳定。
 
-> ⚠️ **陷阱：buildModel 的基座关节类型必须显式指定**
+> ⚠ **陷阱：buildModel 的基座关节类型必须显式指定**
 >
 > 对于固定基座的机械臂，可以直接调用 `pinocchio::urdf::buildModel("robot.urdf", model)`——此时基座被视为固定在世界坐标系上。但对于腿足机器人（浮动基座），你**必须**传入 `pinocchio::JointModelFreeFlyer()` 作为第二个参数。如果遗漏了这个参数，Pinocchio 会把基座当作固定的，`model.nq` 和 `model.nv` 会少 7 和 6，所有后续的动力学计算都会得到错误的结果——因为浮动基座的 6 个自由度被忽略了。URDF 文件本身**不包含**基座关节类型的信息（URDF 规范假设基座固定），所以 Pinocchio 无法自动推断。
 
-### 练习 ⭐⭐
+### 练习 ★★
 
-**练习 47.3.1**（⭐⭐）：加载你的机器人 URDF（如果没有，用 Pinocchio 自带的 `example-robot-data` 中的 `solo12` 或 `talos`），打印 `model.nq`、`model.nv`、`model.njoints`、`model.nframes`。然后遍历 `model.joints`，对每个关节打印其名称和 `nq_impl()` / `nv_impl()` 值。验证所有关节的 `nq` 之和等于 `model.nq`，所有关节的 `nv` 之和等于 `model.nv`。
+**练习 47.3.1**（★★）：加载你的机器人 URDF（如果没有，用 Pinocchio 自带的 `example-robot-data` 中的 `solo12` 或 `talos`），打印 `model.nq`、`model.nv`、`model.njoints`、`model.nframes`。然后遍历 `model.joints`，对每个关节打印其名称和 `nq_impl()` / `nv_impl()` 值。验证所有关节的 `nq` 之和等于 `model.nq`，所有关节的 `nv` 之和等于 `model.nv`。
 
-**练习 47.3.2**（⭐⭐⭐）：用两个线程模拟 MPC + WBC 的并行计算场景。主线程加载 URDF 构造 Model，然后启动两个线程：一个反复调用 `forwardKinematics` + `computeJointJacobians`，另一个反复调用 `rnea` + `crba`。两个线程各自持有独立的 Data，共享同一个 `const Model`。运行 10 秒，验证没有 crash、没有 data race（可用 ThreadSanitizer 编译检测）。然后尝试故意让两个线程共享同一个 Data 对象（不加锁），观察 ThreadSanitizer 报出的数据竞争警告。
+**练习 47.3.2**（★★★）：用两个线程模拟 MPC + WBC 的并行计算场景。主线程加载 URDF 构造 Model，然后启动两个线程：一个反复调用 `forwardKinematics` + `computeJointJacobians`，另一个反复调用 `rnea` + `crba`。两个线程各自持有独立的 Data，共享同一个 `const Model`。运行 10 秒，验证没有 crash、没有 data race（可用 ThreadSanitizer 编译检测）。然后尝试故意让两个线程共享同一个 Data 对象（不加锁），观察 ThreadSanitizer 报出的数据竞争警告。
 
-## 47.3.6 空间代数原语——SE3 / Motion / Force / Inertia ⭐⭐⭐
+## 47.3.6 空间代数原语——SE3 / Motion / Force / Inertia ★★★
 
-### 动机：为什么不能用"普通的向量和矩阵"做动力学？ ⭐⭐
+### 动机：为什么不能用"普通的向量和矩阵"做动力学？ ★★
 
 到目前为止我们讲了 Pinocchio 的架构（CRTP、Model/Data），但还没有触及它**计算时操纵的基本数据类型**。在 47.5 节我们马上会写出 RNEA 的递推公式，里面充斥着 ${}^i X_{\lambda(i)}$、$v_i \times S_i \dot q_i$、$I_i a_i$ 这样的符号。如果你不知道这些符号在 Pinocchio 里对应**哪个 C++/Python 类型、用哪个方法计算**，那些公式就只是黑板上的数学，无法落到代码。这一节补上这个缺口——它是连接 01_数学/20_微分几何与李群（孤立 SE(3)）和 05_运动控制/10_足式/50_空间向量代数与旋量（空间向量理论）与 Pinocchio 工程实现的桥梁。
 
@@ -621,11 +621,11 @@ $$\omega_B = {}^B R_A\, \omega_A, \qquad v_B = {}^B R_A\, v_A + {}^B p_A \times 
 
 > **反事实推理**：如果 Pinocchio 把 6D 速度拆成两个独立的 `Vector3d` 来传播会怎样？RNEA 的正向递归 $v_i = {}^i X_{\lambda(i)} v_{\lambda(i)} + S_i \dot q_i$ 就要拆成"角速度递推 + 线速度递推（含耦合项）"两段代码，且每个关节类型的 $S_i$ 都要分别处理线/角分量。代码量翻倍、出错点翻倍。**把线/角打包成一个 6D 对象、把坐标变换打包成一个 6×6 伴随算子**，才能让递推公式写成一行——这就是空间代数（spatial algebra）存在的根本理由。
 
-### 历史：Featherstone 的空间向量 ⭐
+### 历史：Featherstone 的空间向量 ★
 
 这套"把线量和角量打包成 6 维对象"的代数体系由 Roy Featherstone 在 1980 年代系统化，写进了《Rigid Body Dynamics Algorithms》（2008）。它的核心洞察是：刚体的瞬时运动（twist）天然是 6 维的——李代数 $\mathfrak{se}(3)$ 就是 6 维向量空间；刚体受的力（wrench）也是 6 维的——它是 $\mathfrak{se}(3)$ 的对偶空间 $\mathfrak{se}(3)^*$。一旦接受"6 维是自然维度"，所有动力学量的坐标变换都统一为 6×6 矩阵乘法，所有交叉耦合都统一为 6 维叉乘算子。Pinocchio 把 Featherstone 的数学对象一一映射为 C++ 类型，这是它能用几十行模板代码实现整个动力学的根基。05_运动控制/10_足式/50_空间向量代数与旋量 专门讲这套理论的数学推导，本节只讲它在 Pinocchio 里的**类型与 API 落地**。
 
-### 四个核心类型 ⭐⭐⭐
+### 四个核心类型 ★★★
 
 Pinocchio 的空间代数由四个带 `Scalar` 模板参数的类型构成，它们就是 47.4 节模板层级里"层级 1"的成员：
 
@@ -680,7 +680,7 @@ print(Y.lever)                              # 质心位置
 print(Y.matrix())                           # 展开成 6x6 矩阵
 ```
 
-### 核心运算 1：`act` / `actInv`——坐标系变换 ⭐⭐⭐
+### 核心运算 1：`act` / `actInv`——坐标系变换 ★★★
 
 `SE3` 最重要的能力是把 `Motion`、`Force`、`Inertia` 从一个坐标系搬到另一个坐标系。这正是 RNEA 递推中 ${}^i X_{\lambda(i)} v_{\lambda(i)}$ 这一项干的事——把父关节的速度变换到子关节坐标系。Pinocchio 用 `act`（正向作用）和 `actInv`（逆向作用）封装了 47 章前文反复出现的"伴随变换"：
 
@@ -709,7 +709,7 @@ Y_A = A_M_B.act(Y_B)           # 空间惯量的坐标变换（CRBA 后向递推
 
 > **本质洞察**：`act` 之所以能对 `Motion`、`Force`、`Inertia` 三种对象**同名重载**，是因为它们在数学上都是"被 $SE(3)$ 作用的对象"，只是作用方式不同——速度用伴随 $\mathrm{Ad}$，力用对偶伴随 $\mathrm{Ad}^{-T}$，惯量用合同变换 $\mathrm{Ad}^{-T} Y\, \mathrm{Ad}^{-1}$。Pinocchio 把"群作用"这个抽象概念落实为一个统一的 `act` 接口，让 RNEA/CRBA 的递推代码读起来像数学公式本身。这是"数学结构驱动 API 设计"的又一个范例——与 47.1 节末尾的本质洞察呼应。
 
-### 核心运算 2：`cross`——空间叉乘 ⭐⭐⭐
+### 核心运算 2：`cross`——空间叉乘 ★★★
 
 RNEA 正向递归里的 $v_i \times S_i \dot q_i$、反向递归里的 $v_i \times^* I_i v_i$ 用的是**空间叉乘**。空间向量有两种叉乘：
 
@@ -730,7 +730,7 @@ vxf = v.cross(f)        # Motion × Force  → Force （即 ad_v^*(f)）
 
 这个 `cross` 就是把"空间速度的李括号"封装成一次方法调用。没有它，你得手写 4 个 `Vector3d.cross` 再组装——这正是 47.5 节 RNEA 递推能写得如此紧凑的底层支撑。
 
-### 核心运算 3：`Inertia` 作用于 `Motion`——牛顿-欧拉方程 ⭐⭐
+### 核心运算 3：`Inertia` 作用于 `Motion`——牛顿-欧拉方程 ★★
 
 空间惯量 $I_i$ 乘以空间加速度 $a_i$ 得到空间力——这就是打包成 6 维形式的**牛顿-欧拉方程** $f = I a$（牛顿第二定律 $f = m\dot v$ 和欧拉方程 $\tau = I\dot\omega + \omega\times I\omega$ 的统一）：
 
@@ -742,7 +742,7 @@ f = Y * a               # Inertia × Motion → Force，即空间牛顿-欧拉�
 # 这正是 RNEA 反向递归 f_i = I_i a_i + (惯性力项) 的第一项
 ```
 
-### 小结：空间代数如何"撑起"整个算法层 ⭐⭐
+### 小结：空间代数如何"撑起"整个算法层 ★★
 
 把这一节的四个类型和三类运算放在一起看，就能理解 47.1 节那句"数学结构驱动软件架构"的本质洞察具体落在哪里。RNEA、ABA、CRBA、CCRBA 这些算法的递推公式，逐项都能翻译成空间代数的方法调用：
 
@@ -757,25 +757,25 @@ f = Y * a               # Inertia × Motion → Force，即空间牛顿-欧拉�
 
 > **本质洞察**：Pinocchio 的算法层之所以能用区区几十行模板代码实现，是因为它把"6 维打包 + 群作用 + 李括号"这三件事固化成了 `Motion`/`Force`/`Inertia` 上的 `act`/`actInv`/`cross`/`operator*`。一旦这层代数原语就位，RNEA 的两趟递归几乎就是把 Featherstone 书里的公式**逐行誊抄**成 C++——没有任何手写的 $3\times3$ 块拼接、没有任何线/角分量的显式拆分。这就是"好的抽象消灭样板代码"的教科书案例：数学家发现 6 维是自然维度（数学结构），工程师把 6 维对象做成一等公民类型（软件架构），于是算法实现退化为公式的直译。回头看 47.2 的 CRTP 和 47.3 的 Model/Data，它们解决的是"如何高效组织和派发"；本节的空间代数解决的是"用什么数据类型计算"——前者是骨架，后者是血肉，合起来才是完整的 Pinocchio。
 
-### 与单个 SE(3)（Sophus/manif）的边界 ⭐⭐
+### 与单个 SE(3)（Sophus/manif）的边界 ★★
 
 回到本节开头的桥接：Sophus/manif 和 Pinocchio 的空间代数**像在哪、不像在哪**？
 
 - **像**：两者都实现了 $SE(3)$ 的 `compose`/`inverse`，都有 6 维李代数（manif 的 `SE3Tangent` 类比于 Pinocchio 的 `Motion`），都提供 `log`/`exp`。
 - **不像（边界）**：① manif 的核心是**位姿估计**（协方差传播、雅可比 $J_l/J_r$），它的 `Tangent` 默认 $[\text{平移}; \text{旋转}]$ 布局且强调"在流形上做梯度优化"；Pinocchio 的核心是**动力学**，`Motion`/`Force` 是物理速度/力，强调 `Inertia` 作用和空间叉乘——manif **没有** `Inertia` 和空间叉乘 $\mathrm{ad}$。② Pinocchio 的 6D 布局是 $[\text{线性}; \text{角度}]$，manif 的 `SE3Tangent` 是 $[\rho; \theta]$（平移 $\rho$ 在前、旋转 $\theta$ 在后）——两者顺序看似都是"平移在前"，但 manif 的旋转部分是李代数 $\theta$（用于 `exp`），Pinocchio 的角部分是物理角速度 $\omega$，**不要把 `Motion.vector` 直接喂给 manif 的 `exp`**。③ 不要用 Pinocchio 的 `Motion` 做位姿估计的不确定性传播，也不要用 manif 的 `Tangent` 做 RNEA——它们服务不同问题。
 
-> **⚠️ 概念误区：把 `Motion` 当成"位姿的微小增量 $\log(T)$"**
+> **⚠ 概念误区：把 `Motion` 当成"位姿的微小增量 $\log(T)$"**
 >
 > 错误描述：看到 `Motion` 是 6 维、`SE3` 是位姿，初学者以为 `Motion = log6(SE3)`，把速度和"位姿增量"混为一谈。
 > 现象/后果：在做数值积分时写出 `M_next = pin.exp6(v)`（把速度当增量直接指数映射），得到的位姿在时间尺度上完全错误——量纲都不对（速度是 1/s，增量是无量纲）。
 > 根本原因：`Motion`（$\mathfrak{se}(3)$ 的元素）确实和 $\log(T)$ 同属一个 6 维空间，但物理含义不同——前者是"每秒变化多少"，后者是"一共变化多少"。二者差一个时间因子 $\mathrm{d}t$。
 > 正确做法：积分位姿时用 `M_next = M * pin.exp6(v * dt)`（右乘 body-fixed 增量，且乘上 $\mathrm{d}t$）；Pinocchio 在配置空间层面提供 `pin.integrate(model, q, v*dt)` 自动处理每个关节的流形结构，优先用它而非手写 `exp6`。
 
-### 练习 ⭐⭐
+### 练习 ★★
 
-**练习 47.3.6.1**（⭐⭐）：用 `pin.SE3.Random()` 生成 `A_M_B`，用 `pin.Motion.Random()` 生成 `v_B`。分别用 `A_M_B.act(v_B)` 和手写公式 $\omega_A = R\,\omega_B,\ v_A = R\,v_B + p \times (R\,\omega_B)$ 计算 `v_A`，验证两者一致。这道题让你确信 `act` 内部就是那个"容易写错的耦合公式"——以后放心用 `act` 而不必手写。
+**练习 47.3.6.1**（★★）：用 `pin.SE3.Random()` 生成 `A_M_B`，用 `pin.Motion.Random()` 生成 `v_B`。分别用 `A_M_B.act(v_B)` 和手写公式 $\omega_A = R\,\omega_B,\ v_A = R\,v_B + p \times (R\,\omega_B)$ 计算 `v_A`，验证两者一致。这道题让你确信 `act` 内部就是那个"容易写错的耦合公式"——以后放心用 `act` 而不必手写。
 
-**练习 47.3.6.2**（⭐⭐⭐）：验证空间叉乘与伴随的关系：对随机 `Motion v` 和 `Motion m`，验证 `v.cross(m).vector` 等于 $6\times6$ 矩阵 $\mathrm{ad}_v$ 乘以 `m.vector`，其中 $\mathrm{ad}_v = \begin{bmatrix}\hat\omega & \hat v\\ 0 & \hat\omega\end{bmatrix}$（注意 Pinocchio 的 `[线性;角度]` 布局下这个块结构的具体形式）。提示：用 `pin.skew()` 构造 $3\times3$ 反对称矩阵。
+**练习 47.3.6.2**（★★★）：验证空间叉乘与伴随的关系：对随机 `Motion v` 和 `Motion m`，验证 `v.cross(m).vector` 等于 $6\times6$ 矩阵 $\mathrm{ad}_v$ 乘以 `m.vector`，其中 $\mathrm{ad}_v = \begin{bmatrix}\hat\omega & \hat v\\ 0 & \hat\omega\end{bmatrix}$（注意 Pinocchio 的 `[线性;角度]` 布局下这个块结构的具体形式）。提示：用 `pin.skew()` 构造 $3\times3$ 反对称矩阵。
 
 ## 47.3.5 承上启下：从设计哲学到核心算法实战
 
@@ -783,9 +783,9 @@ f = Y * a               # Inertia × Motion → Force，即空间牛顿-欧拉�
 
 ---
 
-## 47.4 模板化 Scalar 类型——一份代码四种用途 ⭐⭐⭐
+## 47.4 模板化 Scalar 类型——一份代码四种用途 ★★★
 
-### 动机：为什么同一个 RNEA 要"变身"四次？ ⭐⭐
+### 动机：为什么同一个 RNEA 要"变身"四次？ ★★
 
 回顾 47.3：Pinocchio 所有核心类型都带 `Scalar` 模板参数。但上一节只讲了"它是什么"，没有讲**"为什么非得这么做"**。答案藏在下游框架的需求里。
 
@@ -802,7 +802,7 @@ f = Y * a               # Inertia × Motion → Force，即空间牛顿-欧拉�
 
 Pinocchio 的回答是：**RNEA 只写一次，通过 `Scalar` 模板参数实例化出四个版本，由编译器保证它们的逻辑完全一致。**
 
-### `ModelTpl<Scalar>` 的模板实例化机制 ⭐⭐⭐
+### `ModelTpl<Scalar>` 的模板实例化机制 ★★★
 
 所有核心类型的模板层级如下：
 
@@ -832,7 +832,7 @@ void rnea(const ModelTpl<Scalar,Options,JC>& model,
 
 当你写 `pinocchio::rnea(model_double, data_double, q, v, a)` 时，编译器推导 `Scalar = double`，实例化出纯数值版本。当你写 `pinocchio::rnea(model_ad, data_ad, q_ad, v_ad, a_ad)` 时，编译器推导 `Scalar = CppAD::AD<double>`，实例化出自动微分版本。**算法源码完全相同，只是标量运算被"替换"了。**
 
-### 实战：同一调用 double vs AD 类型 ⭐⭐
+### 实战：同一调用 double vs AD 类型 ★★
 
 ```python
 import pinocchio as pin
@@ -872,7 +872,7 @@ dtau_da = data.M          # ∂τ/∂a = M(q)，即广义惯量矩阵
 
 这里有一个关键区分：Pinocchio 同时提供**两种梯度路线**。路线一是 `Scalar = AD` 的自动微分，通用但较慢。路线二是 `computeRNEADerivatives()` 等**手推闭式解析导数**，是 Pinocchio 团队根据 Featherstone 算法的数学结构直接推导出来的，速度比 AD 快 3-5 倍。Crocoddyl 和 Aligator 主要走路线二。
 
-### 为什么下游框架需要不同的 Scalar？ ⭐⭐
+### 为什么下游框架需要不同的 Scalar？ ★★
 
 | 下游框架 | 需要的 Scalar | 原因 |
 |---------|-------------|------|
@@ -883,7 +883,7 @@ dtau_da = data.M          # ∂τ/∂a = M(q)，即广义惯量矩阵
 
 OCS2 的代码生成路线值得单独说明：它用 `CppAD::cg::CG<double>` 实例化 `rnea()`，将整个递归算法"展开"为一个无循环、无分支的纯算术表达式序列，然后编译为高度优化的 C 代码。这个生成的代码**不需要 Pinocchio 头文件**，可以直接在 ARM Cortex-M 等裸机上运行。这是"模板 Scalar"设计最极端也最精彩的应用。
 
-### 与 Ceres Jet 的对比（01_数学/30_优化理论） ⭐⭐
+### 与 Ceres Jet 的对比（01_数学/30_优化理论） ★★
 
 01_数学/30_优化理论 中讲的 Ceres 用 `Jet<double, N>` 做前向自动微分——把每个 `double` 扩展为 "值 + N 维偏导" 的双数。Pinocchio 的 `Scalar = CppAD::AD<double>` 做的是**反向自动微分（tape-based）**——先录制一遍前向计算的"磁带"，然后反向回放求梯度。
 
@@ -898,7 +898,7 @@ OCS2 的代码生成路线值得单独说明：它用 `CppAD::cg::CG<double>` �
 
 腿足机器人的 RNEA 输入是 (q, v, a) 共 3N 维，输出 tau 是 N 维——输入远大于输出，所以**反向 AD 更合适**。这也是 Pinocchio 选择 CppAD 而非 Ceres Jet 的根本原因。但 Pinocchio 的设计并不排斥 Jet——如果你把 `Scalar` 设为 `ceres::Jet<double,N>`，代码一样能编译通过，只是性能特征不同。这种"Scalar 无关"的泛型设计赋予了下游用户完全的选择自由。
 
-> **⚠️ 陷阱：AD 类型的性能代价**
+> **⚠ 陷阱：AD 类型的性能代价**
 >
 > `CppAD::AD<double>` 的每次标量运算都要在"tape"上记录一个操作节点。对于 12-DOF 的 RNEA，`double` 版本耗时约 1.5 μs，AD 版本耗时约 50-150 μs——**慢 30-100 倍**。因此在实时控制循环中**绝不能用 AD 类型做在线计算**。正确做法是：离线用 AD 求一次梯度（或用代码生成导出 C 代码），在线只用 `double` 版本和预计算的解析导数。
 >
@@ -906,9 +906,9 @@ OCS2 的代码生成路线值得单独说明：它用 `CppAD::cg::CG<double>` �
 
 ---
 
-## 47.5 核心算法实战——FK / RNEA / ABA / Jacobian ⭐⭐
+## 47.5 核心算法实战——FK / RNEA / ABA / Jacobian ★★
 
-### 完整流程：加载 URDF → 正运动学 → 打印末端位姿 ⭐
+### 完整流程：加载 URDF → 正运动学 → 打印末端位姿 ★
 
 ```python
 import pinocchio as pin
@@ -940,7 +940,7 @@ print(f"末端旋转:\n{ee_pose.rotation}")
 
 这段代码的关键调用链是 `buildModelFromUrdf()` -> `createData()` -> `forwardKinematics()` -> `updateFramePlacements()`。注意 `forwardKinematics()` 只更新**关节**位姿（存在 `data.oMi` 中，i 代表 joint index），并不更新**frame** 位姿（存在 `data.oMf` 中）。frame 包括 link 上的附加参考点（如传感器安装位置、末端执行器 TCP），需要额外调用 `updateFramePlacements()`。忘记这一步是初学者最常见的错误之一——`data.oMf` 全是上一次调用的过期数据，但程序不会报错，只会得到错误的位姿。
 
-### RNEA：给定 (q, v, a)，计算 tau ⭐⭐
+### RNEA：给定 (q, v, a)，计算 tau ★★
 
 ```python
 # ---------- 3. 逆动力学（RNEA）----------
@@ -965,7 +965,7 @@ tau_coriolis = tau_nle - tau_gravity  # 纯科氏/离心力项
 
 RNEA 是 Pinocchio 中**调用频率最高**的算法。在 Crocoddyl 的一次 DDP 求解中（horizon=100, iterations=50），RNEA 被调用约 5000 次。这就是为什么它必须快到微秒级。
 
-### ABA：给定 (q, v, tau)，计算加速度 ⭐⭐
+### ABA：给定 (q, v, tau)，计算加速度 ★★
 
 ```python
 # ---------- 4. 正动力学（ABA）----------
@@ -983,7 +983,7 @@ print(f"RNEA(q, v, ABA(q, v, tau)) ≈ tau?  误差={error:.2e}")
 
 ABA 比 RNEA 慢约 2 倍（三趟递归 vs 两趟），但仍然是 O(N) 复杂度。在仿真中（给定扭矩求加速度），ABA 是核心；在控制中（给定期望运动求扭矩），RNEA 是核心。两者的互逆关系 `RNEA(q, v, ABA(q, v, tau)) = tau` 是最好的正确性验证手段。
 
-### Jacobian：关节雅可比矩阵 ⭐⭐
+### Jacobian：关节雅可比矩阵 ★★
 
 ```python
 # ---------- 5. 雅可比矩阵 ----------
@@ -1002,7 +1002,7 @@ print(f"J_world shape: {J_world.shape}")    # (6, 7)
 print(f"J_lwa   shape: {J_lwa.shape}")      # (6, 7)
 ```
 
-### Frame vs Joint 雅可比：三种参考坐标系 ⭐⭐⭐
+### Frame vs Joint 雅可比：三种参考坐标系 ★★★
 
 这是初学者最常犯错的地方。Pinocchio 提供三种参考坐标系（`ReferenceFrame` 枚举）：
 
@@ -1065,13 +1065,13 @@ print(f"J_lwa 线速度验证误差: {np.linalg.norm(J_lwa[:3,:] - J_lwa_lin_che
 
 `LOCAL_WORLD_ALIGNED` 是**最推荐的默认选择**。它在末端位置处建立一个与世界坐标系平行的坐标系，使得雅可比矩阵的线速度部分直接对应世界坐标系下的平移速度，角速度部分直接对应世界坐标系下的旋转速度，同时避免了 `WORLD` 模式中因末端远离世界原点而产生的非直觉线速度-角速度耦合项。
 
-> **⚠️ 陷阱：Jacobian 参考坐标系选错导致 IK / WBC 静默失败**
+> **⚠ 陷阱：Jacobian 参考坐标系选错导致 IK / WBC 静默失败**
 >
 > 在逆运动学和全身控制中，任务误差通常在世界坐标系下定义（如"末端移到 [0.5, 0, 0.3]"）。如果你用 `LOCAL` 雅可比来做 `dq = J_pinv @ e_world`，关节增量方向会完全错误——因为误差坐标系和雅可比坐标系不匹配。程序不会报错，但机器人会往奇怪的方向运动，IK 永远不收敛。
 >
 > **规则**：误差在哪个坐标系下定义，就用那个坐标系的雅可比。大多数情况下 `LOCAL_WORLD_ALIGNED` 是最安全的选择。如果你用 SE(3) 对数映射 `pin.log6(T_err)` 计算误差，那个误差是 body-fixed 的，此时应搭配 `LOCAL` 雅可比。
 
-### RNEA 递推公式拆解——理解"为什么 O(N)" ⭐⭐⭐
+### RNEA 递推公式拆解——理解"为什么 O(N)" ★★★
 
 前面多次提到 RNEA 是 O(N) 复杂度，但还没有解释**为什么**。理解递推公式有助于你在调试时"读懂" Pinocchio 内部在做什么，也是理解 足式/40_CppAD与代码生成 CppAD tape 机制的前提。
 
@@ -1103,7 +1103,7 @@ $$\tau_i = S_i^T \, f_i$$
 
 > **跨领域类比**：RNEA 的递推结构与 SLAM 中 Bayes 树的消元过程有深层相似性。SLAM 的因子图消元也是"沿树的正向传播信息、反向聚合信息"，利用稀疏结构将 O(N^3) 降到 O(N)。两者的共同本质是：**树结构允许自底向上/自顶向下的局部计算替代全局矩阵运算**。
 
-### 性能基准 ⭐⭐
+### 性能基准 ★★
 
 以下数据测量于 Intel i7-12700H（单核），Pinocchio 3.1 + Eigen 3.4（AVX2 开启）：
 
@@ -1118,13 +1118,13 @@ $$\tau_i = S_i^T \, f_i$$
 
 即使是 37-DOF 人形，完整的逆动力学 + 梯度计算也只需约 20 μs。在 1kHz 控制循环的 1000 μs 预算中，Pinocchio 的动力学计算仅占 2%，为上层控制器（QP 求解、轨迹优化）留出了充足的计算余量。
 
-> **⚠️ 陷阱：首次调用延迟与预热**
+> **⚠ 陷阱：首次调用延迟与预热**
 >
 > Python 绑定首次调用 `rnea()` 时会触发动态链接和缓存初始化，耗时可达 100-500 μs。做性能测试时，务必先"预热"几百次调用，再用 `timeit` 统计稳态性能。C++ 侧没有这个问题，但 `Data` 的首次构造涉及内存分配，同样应排除在计时之外。
 
 ---
 
-### CRBA 递推拆解——惯量矩阵 $M(q)$ 是怎么算出来的 ⭐⭐⭐
+### CRBA 递推拆解——惯量矩阵 $M(q)$ 是怎么算出来的 ★★★
 
 47.5 前文拆解了 RNEA 的两趟递归，但 `crba`（计算惯量矩阵 $M(q)$）的内部机制还没讲。理解 CRBA 对调试 WBC 至关重要——QP 的 KKT 矩阵里 $M$ 出现在最显眼的位置，一旦 $M$ 算错（最常见是忘了补全下三角，见后文陷阱），整个控制器就崩。
 
@@ -1152,16 +1152,16 @@ $$F \leftarrow {}^{\lambda(j)} X_j^* \, F, \qquad M_{ij} = M_{ji} = S_j^T F$$
 
 > **跨领域类比**：CRBA 的"子树刚化"思想与有限元里的**子结构凝聚（substructuring / Guyan reduction）**异曲同工——把一个复杂子结构的内部自由度凝聚掉，只保留它对边界的等效刚度/质量。CRBA 把子树的所有关节"凝聚"成根关节感受到的一个等效复合惯量 $I_i^c$。相似之处仅在于"局部聚合成等效量"；不同之处是 FEM 凝聚的是刚度矩阵、CRBA 聚合的是空间惯量，且 CRBA 利用了树拓扑使聚合严格 $O(N)$。
 
-> **⚠️ 编程陷阱：`crba` 只填充 $M$ 的上三角**
+> **⚠ 编程陷阱：`crba` 只填充 $M$ 的上三角**
 >
 > 错误描述：调用 `pin.crba(model, data, q)` 后直接把 `data.M` 当完整对称矩阵用（如 `np.linalg.solve(data.M, b)`）。
 > 现象/后果：求解结果错误。`data.M` 的下三角全是 0（或上一次调用的脏数据），它根本不是对称矩阵。诡异的是小自由度下有时"看起来差不多对"，掩盖了 bug。
 > 根本原因：出于性能，CRBA 利用 $M$ 的对称性**只计算并写入上三角**，下三角留空。这是 Pinocchio（和大多数高性能动力学库）的刻意约定，文档有写但极易被忽略。
 > 正确做法：用前补全下三角——`M = data.M; M = M + M.T - np.diag(M.diagonal())`（前文 Worked Example 第 6 步正是这么做的）。或者，如果只需要解 $M x = b$，用 Pinocchio 的 Cholesky 接口 `pin.cholesky.decompose(model, data, q)` + `pin.cholesky.solve(...)`，它内部正确处理对称性，比"补全 + 通用求解"更快。
 
-### 47.5.5 质心动力学与 CCRBA——SRBD MPC 的地基 ⭐⭐⭐
+### 47.5.5 质心动力学与 CCRBA——SRBD MPC 的地基 ★★★
 
-#### 动机：腿足 MPC 为什么盯着"质心动量"？ ⭐⭐
+#### 动机：腿足 MPC 为什么盯着"质心动量"？ ★★
 
 前面所有算法都在关节空间（$q, v, \tau$）里打转。但腿足运动控制有一个独特视角——**质心动量（centroidal momentum）**。原因来自一条物理铁律：机器人受的外力只有重力（已知）和地面接触力。由牛顿-欧拉定律，整个系统的**线动量变化率 = 合外力**、**绕质心的角动量变化率 = 合外力矩**。也就是说，不管机器人内部 18 个关节怎么动，它的质心动量只能被脚底的接触力改变。这把"高维全身运动"和"低维质心行为"解耦开——单刚体动力学 MPC（SRBD MPC，见 05_运动控制/10_足式/70_SRBD_MPC 与凸MPC）正是建立在这个解耦之上。
 
@@ -1169,7 +1169,7 @@ $$F \leftarrow {}^{\lambda(j)} X_j^* \, F, \qquad M_{ij} = M_{ji} = S_j^T F$$
 
 回顾 02_机器人本体/复合动力学（复合/20）讲过的复合刚体思想：把多个刚体聚合成等效刚体。质心动力学把这个思想推到极致——把**整个机器人**聚合成一个绕质心的 6×6 复合惯量。
 
-#### 质心动量矩阵 $A_g$ 与 CCRBA ⭐⭐⭐
+#### 质心动量矩阵 $A_g$ 与 CCRBA ★★★
 
 质心动量 $h_G \in \mathbb{R}^6$（前 3 维线动量、后 3 维绕质心角动量）与关节速度的关系是线性的：
 
@@ -1208,7 +1208,7 @@ print(np.allclose(data.hg.vector, hg_check))   # True
 
 `data.hg` 的**线动量部分恒等于"总质量 × 质心速度"**（这是上面断言为 `True` 的原因）——这是质心动量定义的直接结果，也是一个绝佳的自检：如果你的 `data.hg.linear` 不等于 $m\, v_{\text{com}}$，说明 `ccrba` 的输入 $q, v$ 与 `centerOfMass` 不一致。
 
-#### 质心动量的时间导数与 $\dot A_g$ ⭐⭐⭐
+#### 质心动量的时间导数与 $\dot A_g$ ★★★
 
 MPC 不仅要质心动量，还要它的**变化率**（因为动力学约束是 $\dot h_G = \sum (\text{接触力旋量}) + m g$）。链式法则给出：
 
@@ -1235,18 +1235,18 @@ dhg_check = Ag @ a + dAg @ v
 print(np.allclose(data.dhg.vector, dhg_check))   # True
 ```
 
-> **⚠️ 思维陷阱：把质心角动量误当作"绕世界原点的角动量"**
+> **⚠ 思维陷阱：把质心角动量误当作"绕世界原点的角动量"**
 >
 > 错误描述：以为 `data.hg` 的角动量部分是机器人绕世界坐标系原点的角动量。
 > 现象/后果：在写质心 MPC 的角动量约束时用错了力臂参考点，得到的姿态控制律有一个随质心位置漂移的系统误差，机器人走着走着姿态就偏。
 > 根本原因：centroidal 的字面意思就是"绕质心的"——$h_G$ 的角动量是**绕瞬时质心**计算的，不是绕世界原点。质心在运动，所以这个参考点是时变的。Pinocchio 内部用 `data.oMc`（世界系到质心系、姿态与世界对齐）处理这个时变参考。
 > 正确做法：明确 $h_G$ 是 "centroidal" 量——表达在一个原点位于质心、姿态与世界系对齐的坐标系。接触力旋量要换算到同一个质心参考系再代入 $\dot h_G = \sum \text{wrench}$。SRBD MPC 推导（足式/70）会专门处理这个参考系换算。
 
-#### 与 `computeAllTerms` 的关系 ⭐⭐
+#### 与 `computeAllTerms` 的关系 ★★
 
 注意一个工程细节：`computeAllTerms`（47.3 介绍的"一键计算"）**会顺带填充 `data.Ag` 和 `data.hg`**（它内部调用了 ccrba 的计算路径），但**不计算 `data.dAg`**（时间导数较贵，按需才算）。所以 WBC 里如果只需要质心动量本身，`computeAllTerms` 已经够；如果是质心 MPC 需要线性化矩阵 $\dot A_g$，必须额外调 `dccrba`。这与 47.3 节"`computeAllTerms` 不含 RNEA 导数"的取舍逻辑一致——贵的导数类计算一律按需。
 
-#### 理论-工程桥接：从 `data.hg` 到 SRBD MPC 的状态方程 ⭐⭐⭐
+#### 理论-工程桥接：从 `data.hg` 到 SRBD MPC 的状态方程 ★★★
 
 把上面的 API 接到下游控制器，才能看出它们的分量。05_运动控制/10_足式/70_SRBD_MPC 与凸MPC 的单刚体 MPC 用一个 6 维（或 13 维含姿态）质心状态描述整机：质心位置 $c$、线动量（或质心速度 $\dot c$）、绕质心角动量 $k_G$、基座姿态 $\theta$。它的连续时间状态方程正是把上面公式逐项落地：
 
@@ -1265,17 +1265,17 @@ $$\dot c = \frac{1}{m}\, h_{G,\text{lin}}, \qquad \dot k_G = h_{G,\text{ang}} \t
 
 > **反事实推理**：如果 SRBD MPC 不用 Pinocchio 的 `ccrba` 而是手工维护一个常数惯量 $\bar I_G$（许多早期 MIT Cheetah 风格控制器就这么做）会怎样？在原地踏步、缓慢行走时近似很好，省掉了每步 `ccrba` 的开销；但在大幅摆腿、跳跃、空翻时，腿的角动量贡献不可忽略，常数 $\bar I_G$ 会让 MPC 预测的姿态严重失真。这就是为什么动态动作（如 ANYmal/Go2 的跳跃）倾向用 `data.Ag` 的全质心模型，而准静态步态可以用常数惯量近似——**用哪个量，取决于动作的剧烈程度**，这是一个典型的"模型保真度 vs 计算成本"工程权衡。
 
-#### 练习 ⭐⭐
+#### 练习 ★★
 
-**练习 47.5.5.1**（⭐⭐）：对 Go2 模型，构造一个"自由落体"测试——令 $q$ 为任意构型、$v$ 任意、所有接触力为零、只有重力。用 `computeCentroidalMomentumTimeVariation` 计算 `data.dhg`，验证它的线动量变化率等于 $m_{\text{total}} \cdot g$（$g = [0,0,-9.81]$）、角动量变化率约为 0（无外力矩）。这道题验证"质心动量只被外力改变"的物理铁律。
+**练习 47.5.5.1**（★★）：对 Go2 模型，构造一个"自由落体"测试——令 $q$ 为任意构型、$v$ 任意、所有接触力为零、只有重力。用 `computeCentroidalMomentumTimeVariation` 计算 `data.dhg`，验证它的线动量变化率等于 $m_{\text{total}} \cdot g$（$g = [0,0,-9.81]$）、角动量变化率约为 0（无外力矩）。这道题验证"质心动量只被外力改变"的物理铁律。
 
-**练习 47.5.5.2**（⭐⭐⭐）：验证质心动量矩阵 $A_g$ 与关节空间惯量 $M$ 的关系。已知 $A_g = {}^{c}X_0^* \, P \, M$ 形式的投影关系（$P$ 取前 6 行的浮动基座块）。更简单的数值验证：对浮动基座机器人，$A_g$ 的前 6 列（对应基座 6 个自由度）应当等于整机复合惯量 `data.Ig` 经坐标变换后的结果。用 `ccrba` 同时拿到 `Ag` 和 `data.Ig`，验证 `Ag[:, :6]` 与 `data.Ig.matrix()`（适当变换后）一致。
+**练习 47.5.5.2**（★★★）：验证质心动量矩阵 $A_g$ 与关节空间惯量 $M$ 的关系。已知 $A_g = {}^{c}X_0^* \, P \, M$ 形式的投影关系（$P$ 取前 6 行的浮动基座块）。更简单的数值验证：对浮动基座机器人，$A_g$ 的前 6 列（对应基座 6 个自由度）应当等于整机复合惯量 `data.Ig` 经坐标变换后的结果。用 `ccrba` 同时拿到 `Ag` 和 `data.Ig`，验证 `Ag[:, :6]` 与 `data.Ig.matrix()`（适当变换后）一致。
 
 > **提示**：这道题的深层意义是理解"质心动量矩阵的浮动基座块就是整机复合惯量"——这正是 SRBD 近似的数学根据。做完后回看 47.5.5 开头的"沙漏腰"本质洞察，你会更清楚为什么 6 维质心量能概括整机：因为 $A_g$ 的前 6 列已经把全身惯量压缩进了一个 6×6 的复合惯量 `data.Ig`。
 
 ---
 
-## 47.6 约束动力学（v3.x 新增） ⭐⭐⭐⭐
+## 47.6 约束动力学（v3.x 新增） ★★★★
 
 Pinocchio 2.x 时代只能处理**开链机器人**（树形关节拓扑、无闭环约束）。但真实机器人大量存在闭链结构：
 
@@ -1285,7 +1285,7 @@ Pinocchio 2.x 时代只能处理**开链机器人**（树形关节拓扑、无�
 
 Pinocchio 3.x（2024 年起逐步发布）引入了 `ConstraintModelTpl` 体系来处理这些约束。
 
-### 约束建模接口 ⭐⭐⭐
+### 约束建模接口 ★★★
 
 ```python
 import pinocchio as pin
@@ -1303,7 +1303,7 @@ constraint = pin.RigidConstraintModel(
 constraint_data = constraint.createData()
 ```
 
-### Delassus 算子与约束求解 ⭐⭐⭐⭐
+### Delassus 算子与约束求解 ★★★★
 
 约束动力学的核心方程组是：
 
@@ -1329,7 +1329,7 @@ qp.solve()
 lambda_opt = qp.results.x            # 最优约束力/接触力
 ```
 
-### 与下游控制框架的衔接 ⭐⭐
+### 与下游控制框架的衔接 ★★
 
 约束动力学是 **足式/90_WBC分层优化与TSID（WBC 全身控制）** 和**接触隐式轨迹优化**的基础设施：
 
@@ -1337,7 +1337,7 @@ lambda_opt = qp.results.x            # 最优约束力/接触力
 - **Aligator（ProxDDP）**：在 DDP 框架中用近端算子直接处理约束，不需要罚函数松弛
 - **接触隐式优化**：将接触的建立与断开作为优化问题的一部分，让求解器自动发现最优接触时序——这需要对 Delassus 算子求导，Pinocchio 3.x 的解析导数支持正是为此准备
 
-### ProximalSolver：近端正则化约束求解器 ⭐⭐⭐⭐
+### ProximalSolver：近端正则化约束求解器 ★★★★
 
 Pinocchio 3.x 引入的另一个重要组件是 **ProximalSolver**——一种基于近端算子（proximal operator）的约束动力学求解器。传统 KKT 方法直接求解鞍点问题 $(M, J_c^T; J_c, 0)$，当约束近似冗余（$J_c$ 接近行秩亏）时数值条件极差。ProximalSolver 通过在 Delassus 算子上加正则项 $\mu I$ 来改善条件数：
 
@@ -1384,7 +1384,7 @@ pin.constraintDynamics(
 
 > **本质洞察**：ProximalSolver 的核心思想与 ADMM（交替方向乘子法）同源——都是通过"分裂+正则化"将难以直接求解的约束优化问题转化为一系列易解的子问题。$\mu$ 参数的角色是"弹性系数"：$\mu = 0$ 是刚性约束（精确但可能不可解），$\mu > 0$ 是弹性约束（始终有解但引入微小违反）。这个思想在后续 Aligator 的 ProxDDP 中被进一步发展为轨迹优化中的约束处理方案。
 
-### Worked Example：完整的正逆动力学闭环验证 ⭐⭐
+### Worked Example：完整的正逆动力学闭环验证 ★★
 
 以下代码演示从 URDF 加载到正逆动力学互逆验证的完整流程，可作为项目模板直接使用：
 
@@ -1447,7 +1447,7 @@ for name in foot_names:
 
 这个 worked example 覆盖了控制栈中最常用的 Pinocchio API 调用链。在后续 足式/90_WBC分层优化与TSID WBC 和 足式/110_OCS2完整栈与双线程MPC OCS2 中，你会反复看到 `computeAllTerms` + `getFrameJacobian` 的组合——它们提供 QP 约束矩阵所需的所有信息。
 
-### Worked Example：RNEA 解析导数 vs 数值差分——完整对比流程 ⭐⭐⭐
+### Worked Example：RNEA 解析导数 vs 数值差分——完整对比流程 ★★★
 
 这个 worked example 展示如何获取 RNEA 导数并用数值差分验证其正确性。理解这个流程是使用 足式/40_CppAD与代码生成 CppADCodeGen 和 足式/110_OCS2完整栈与双线程MPC OCS2 MPC 的前提。
 
@@ -1495,13 +1495,13 @@ print(f"数值差分耗时: ~{2*model.nv*t_analytical/5:.0f} us")  # ~20 us
 
 ---
 
-## 47.7 Pinocchio + Coal 碰撞接口 ⭐⭐⭐
+## 47.7 Pinocchio + Coal 碰撞接口 ★★★
 
 Pinocchio 通过 **Coal**（原名 HPP-FCL，2024 年更名为 Coal）提供碰撞检测和最近距离计算。Coal 支持的几何基元包括球体、胶囊、圆柱、凸多面体、BVH 三角网格等。
 
 > **跨领域类比**：Coal 在 Pinocchio 生态中的角色类似于 OpenCV 在视觉 SLAM 生态中的角色——它是一个底层几何计算引擎，本身不关心机器人学，但被上层框架（Pinocchio / Crocoddyl）封装后成为了不可或缺的基础设施。正如 ORB-SLAM 不自己实现特征匹配而是调用 OpenCV，Crocoddyl 不自己实现碰撞检测而是通过 Pinocchio 调用 Coal。
 
-### 为什么碰撞检测对腿足机器人重要 ⭐⭐
+### 为什么碰撞检测对腿足机器人重要 ★★
 
 在腿足 MPC（特别是 足式/230_Perceptive_MPC Perceptive MPC）中，碰撞检测有三个核心用途：
 
@@ -1511,7 +1511,7 @@ Pinocchio 通过 **Coal**（原名 HPP-FCL，2024 年更名为 Coal）提供碰�
 
 Coal 提供了这三种场景都需要的底层计算——给定两个几何体在空间中的位姿，计算它们的最近距离和最近点对。
 
-### 碰撞检测与距离计算 ⭐⭐⭐
+### 碰撞检测与距离计算 ★★★
 
 ```python
 import pinocchio as pin
@@ -1542,7 +1542,7 @@ for k, dr in enumerate(collision_data.distanceResults):
               f"最近点A={dr.nearest_points[0]}, 最近点B={dr.nearest_points[1]}")
 ```
 
-### 碰撞梯度与轨迹优化集成 ⭐⭐⭐
+### 碰撞梯度与轨迹优化集成 ★★★
 
 仅知道"是否碰撞"对轨迹优化不够用——优化器需要**距离对关节角的梯度** $\partial d / \partial q$，才能将碰撞规避表示为可微约束。Coal 从 v3.0 起支持最近距离的解析导数，Pinocchio 将其封装为：
 
@@ -1571,7 +1571,7 @@ $$\frac{\partial d}{\partial q} = \hat{n}^T \left( \frac{\partial p_B}{\partial 
 
 这个梯度的物理含义很直观：**距离的变化率等于两个最近点"相互远离的速度"在法向量方向的投影**。如果关节运动使两个点沿法向量方向相互靠近，$\partial d/\partial q < 0$（距离减小）；反之 $\partial d/\partial q > 0$（距离增大）。轨迹优化器利用这个梯度信息"推"关节远离碰撞——这正是 足式/230_Perceptive_MPC Perceptive MPC 中摆动腿碰撞回避约束的数学基础。
 
-### 碰撞对的配置与性能优化 ⭐⭐
+### 碰撞对的配置与性能优化 ★★
 
 默认情况下，Pinocchio 会检测所有几何体对之间的碰撞——但对于 N 个几何体，这意味着 $O(N^2)$ 次检测，大部分是不必要的（如同一条腿上相邻 link 之间不可能碰撞）。
 
@@ -1589,7 +1589,7 @@ pin.removeCollisionPairs(model, collision_model,
 
 配置合理的碰撞对可以将检测时间从数百 $\mu$s 降到几十 $\mu$s——对于 1 kHz 控制循环中的碰撞约束检查，这个优化是必要的。
 
-> **⚠️ 陷阱：碰撞几何 vs 视觉几何**
+> **⚠ 陷阱：碰撞几何 vs 视觉几何**
 >
 > URDF 中通常定义了两套几何体：`<collision>` 用于碰撞检测（简化几何，如胶囊体），`<visual>` 用于可视化（精细 mesh）。`pin.buildModelsFromUrdf` 会同时加载两者。碰撞检测**必须使用 collision_model**——如果你误用了 visual_model 做碰撞检测，精细 mesh 的 BVH 查询会慢 10-100 倍，而且对 MPC 的碰撞回避约束来说精度完全没有必要。
 
@@ -1614,7 +1614,7 @@ pin.removeCollisionPairs(model, collision_model,
 
 ## 练习
 
-### 练习 47-A：加载 Panda URDF 并验证 RNEA 退化形式 ⭐⭐
+### 练习 47-A：加载 Panda URDF 并验证 RNEA 退化形式 ★★
 
 **任务**：用 Pinocchio Python 绑定加载 Franka Panda 的 URDF（从 `example-robot-data` 获取）。在 5 个随机构型下分别计算：
 
@@ -1625,7 +1625,7 @@ pin.removeCollisionPairs(model, collision_model,
 
 **意义**：理解 RNEA 在 v=0、a=0 时退化为纯重力项计算。这个退化形式在重力补偿控制器中直接使用——它就是"让机器人在任意构型下保持静止所需的关节扭矩"。
 
-### 练习 47-B：FK -> IK 往返验证 ⭐⭐⭐
+### 练习 47-B：FK -> IK 往返验证 ★★★
 
 **任务**：
 
@@ -1649,7 +1649,7 @@ for i in range(200):
 
 **关键点**：必须用 `pin.integrate()` 而非 `q += dq`。配置空间可能包含四元数（自由浮动基座），直接加法会破坏单位范数约束。此外注意 `log6()` 返回的是 body-fixed 误差，所以雅可比要选 `LOCAL`——这正是 47.5 中 Jacobian 参考坐标系规则的直接应用。
 
-### 练习 47-C：RNEA double vs 解析导数性能对比 ⭐⭐⭐
+### 练习 47-C：RNEA double vs 解析导数性能对比 ★★★
 
 **任务**：对 Panda 7-DOF 模型，用 `timeit` 测量 10000 次调用的平均耗时：
 
@@ -1661,7 +1661,7 @@ for i in range(200):
 
 **预期结果**：解析导数约为纯 RNEA 的 4-5 倍耗时；数值差分约为 15-20 倍。解析导数快的原因：它在一次正向/反向递归中"顺便"收集梯度信息，复用了所有中间变量；数值差分必须对每个自变量独立完整地重跑一遍 RNEA，无法复用任何中间结果。
 
-### 练习 47-D：画 CRTP 继承关系图 ⭐⭐
+### 练习 47-D：画 CRTP 继承关系图 ★★
 
 **任务**：阅读以下 Pinocchio 头文件，用 Mermaid 或 PlantUML 画出完整的继承关系图：
 
@@ -1723,7 +1723,7 @@ for i in range(200):
 
 以下按使用场景组织最常用的 API 调用模式。这不是 API 文档的替代品，而是根据腿足控制栈的实际需求总结的"食谱"。
 
-### 场景 A：WBC 控制循环（1 kHz） ⭐⭐
+### 场景 A：WBC 控制循环（1 kHz） ★★
 
 ```python
 # 每个控制周期需要的完整计算
@@ -1738,7 +1738,7 @@ for foot in foot_ids:
     pos = data.oMf[foot].translation
 ```
 
-### 场景 B：MPC 轨迹优化（需要导数） ⭐⭐⭐
+### 场景 B：MPC 轨迹优化（需要导数） ★★★
 
 ```python
 # MPC 需要动力学导数
@@ -1750,7 +1750,7 @@ pin.computeMinverse(model, data, q)
 Minv = data.Minv          # M^{-1}
 ```
 
-### 场景 C：质心动力学（SRBD MPC） ⭐⭐⭐
+### 场景 C：质心动力学（SRBD MPC） ★★★
 
 ```python
 # 单刚体动力学 MPC 需要质心和质心 Jacobian
@@ -1762,7 +1762,7 @@ Jcom = data.Jcom          # 质心 Jacobian (3, nv)
 total_mass = pin.computeTotalMass(model)
 ```
 
-### 场景 D：Model 自省（调试用） ⭐
+### 场景 D：Model 自省（调试用） ★
 
 ```python
 # 遍历所有关节
@@ -1785,7 +1785,7 @@ print(f"v_max:   {model.velocityLimit}")
 print(f"tau_max: {model.effortLimit}")
 ```
 
-### Pinocchio 2.x vs 3.x 迁移要点 ⭐⭐
+### Pinocchio 2.x vs 3.x 迁移要点 ★★
 
 如果你使用的是 Pinocchio 3.x（推荐），以下是相对于 2.x 的主要变化：
 
@@ -1801,9 +1801,9 @@ print(f"tau_max: {model.effortLimit}")
 
 ---
 
-## 47.7.5 Frames 体系深入——Joint 之外的"参考点"系统 ⭐⭐⭐
+## 47.7.5 Frames 体系深入——Joint 之外的"参考点"系统 ★★★
 
-### 动机：为什么 Joint 不够，还需要 Frame？ ⭐⭐
+### 动机：为什么 Joint 不够，还需要 Frame？ ★★
 
 47.5 节用 `getFrameJacobian` 取足端雅可比、用 `model.getFrameId("FL_foot")` 找足端，并在多处陷阱里反复提醒"`forwardKinematics` 只更新 `data.oMi`（关节），要读 `data.oMf`（frame）必须先 `updateFramePlacements`"。但我们一直没有正面回答：**Frame 到底是什么？它和 Joint 是什么关系？** 这个缺口在 WBC 里会致命——任务空间几乎全部定义在 frame 上（足端、手端、IMU、相机），搞不清 frame 体系，连"末端在哪"都取不对。
 
@@ -1811,7 +1811,7 @@ print(f"tau_max: {model.effortLimit}")
 
 > **反事实推理**：如果 Pinocchio 不提供 Frame，只能用 Joint 来表达末端会怎样？你要么被迫在 URDF 里给每个关心的点加一个"假关节"（`nq=0` 的固定关节，污染关节树、虚增 `njoints`），要么每次都手动维护"从某个 Joint 到目标点的固定偏移 SE3"并自己做坐标变换——后者正是初学者的常见做法，但它把本应由库管理的拓扑信息散落到用户代码里，极易出错。Frame 系统就是把"刚体上的命名参考点"提升为一等公民，让 `getFrameJacobian`/`getFrameVelocity` 直接对它工作。
 
-### Frame 的数据结构与五种类型 ⭐⭐⭐
+### Frame 的数据结构与五种类型 ★★★
 
 一个 `Frame` 是"挂在某个 Joint 上、相对该 Joint 有固定偏移的命名参考点"。它的字段（已与官方 API 核实）：
 
@@ -1824,7 +1824,7 @@ print(f"tau_max: {model.effortLimit}")
 | `type` | `FrameType` | frame 类型（见下表） |
 | `inertia` | `Inertia` | 附加在该 frame 上的惯量（如末端负载） |
 
-> **⚠️ 概念误区：`parentFrame` vs `parentJoint`**
+> **⚠ 概念误区：`parentFrame` vs `parentJoint`**
 >
 > 错误描述：以为 frame 的位姿是"沿 `parentFrame` 链一级级算出来的"，于是去操心 frame 树的层级。
 > 现象/后果：在自定义 frame、或调试 `oMf` 时把精力浪费在 `parentFrame` 上，却找不到位姿算错的真正原因。
@@ -1843,7 +1843,7 @@ print(f"tau_max: {model.effortLimit}")
 
 > **本质洞察**：URDF 里的"固定关节"在 Pinocchio 里**消失**了——它不占 `nq`/`nv`，被合并进父 body 的惯量，只留下一个 FIXED_JOINT 类型的 frame 记录它原来的位置。这是 Pinocchio 的一个关键优化：固定关节没有自由度，保留它只会让关节树虚胖、让 RNEA 多遍历无意义的节点。把它降级为 frame，既保留了"这个位置可被引用"的能力，又不付出动力学计算的代价。这解释了一个常见困惑——"我 URDF 里明明有 20 个关节，为什么 `model.njoints` 只有 14？"：因为 6 个是固定关节，被吸收成 frame 了。
 
-### 自定义 Frame：`addFrame` ⭐⭐
+### 自定义 Frame：`addFrame` ★★
 
 实践中你常需要给机器人加一个 URDF 里没有的控制点——比如在足端再往下偏移 2cm 到接触面、或在末端工具尖端定义 TCP：
 
@@ -1877,14 +1877,14 @@ pin.updateFramePlacements(model, data)
 print(f"TCP 位姿:\n{data.oMf[tcp_id]}")
 ```
 
-> **⚠️ 编程陷阱：`addFrame` 之后必须重建 Data**
+> **⚠ 编程陷阱：`addFrame` 之后必须重建 Data**
 >
 > 错误描述：调用 `model.addFrame(...)` 后继续用旧的 `data` 对象。
 > 现象/后果：访问新 frame 的 `data.oMf[new_id]` 越界崩溃，或读到垃圾——因为旧 `data.oMf` 是按旧 `model.nframes` 预分配的，没有新 frame 的槽位。
 > 根本原因：Data 在构造时根据 Model 的维度**一次性预分配**所有缓冲（47.3 的核心设计）。`addFrame` 增加了 `model.nframes`，旧 Data 的 `oMf` 数组长度跟不上。
 > 正确做法：任何修改 Model 结构的操作（`addFrame`、`addJoint`、`appendModel`）之后，必须 `data = model.createData()` 重建。这也是为什么 Model 的结构修改应当**全部在初始化阶段完成**、运行时绝不碰 Model——与 47.3 "Model 加载后只读"的原则一脉相承。
 
-### Frame 的速度与加速度——spatial vs classical ⭐⭐⭐
+### Frame 的速度与加速度——spatial vs classical ★★★
 
 47.5 只讲了 frame 的**位姿**（`oMf`）和**雅可比**（`getFrameJacobian`）。但接触控制、阻抗控制还需要 frame 的**速度和加速度**。Pinocchio 提供（均已与官方 API 核实，返回 `Motion` 对象）：
 
@@ -1917,32 +1917,32 @@ $$a_{\text{classical, linear}} = a_{\text{spatial, linear}} + \omega \times v_{\
 
 角加速度部分两者相同（$\dot\omega$）。
 
-> **⚠️ 思维陷阱：用空间加速度当物理加速度做接触/碰撞约束**
+> **⚠ 思维陷阱：用空间加速度当物理加速度做接触/碰撞约束**
 >
 > 错误描述：在写"足端落地瞬间垂直加速度为零"或"末端跟踪期望笛卡尔加速度"的约束时，直接用 `getFrameAcceleration`（空间加速度）。
 > 现象/后果：当 frame 同时有较大平移速度和角速度时（如快速摆动腿），少了 $\omega\times v$ 项，约束方程有系统偏差——足端落地有冲击、笛卡尔跟踪有稳态误差，且速度越大误差越大，低速测试时还发现不了。
 > 根本原因：空间加速度 $\dot V$ 是旋量的导数，**不等于**刚体上某点的真实二阶位移导数 $\ddot p$。两者差一个 $\omega \times v$ 的向心项。任务空间控制律里的"加速度"几乎总是指经典加速度（$\ddot p$），因为期望轨迹是用笛卡尔位置二阶导描述的。
 > 正确做法：任务空间（笛卡尔）加速度约束一律用 `getFrameClassicalAcceleration`。只有当你在空间向量（旋量）框架内做纯代数推导、且全程保持旋量一致性时，才用 `getFrameAcceleration`。这个区分也是 WBC（足式/90）里任务加速度 $\ddot x = J\ddot q + \dot J \dot q$ 中 $\dot J\dot q$ 项（drift 项）必须用经典约定的根源。
 
-### 为什么 Frame 是 WBC 的"任务接口" ⭐⭐
+### 为什么 Frame 是 WBC 的"任务接口" ★★
 
 把本节接到下游：全身控制（足式/90_WBC分层优化与TSID）的每一个任务——足端跟踪、质心调节、躯干姿态、自碰撞规避——都要先回答"任务量定义在机器人的哪个点上"。答案几乎总是一个 frame。WBC 的任务雅可比就是 `getFrameJacobian`、任务速度就是 `getFrameVelocity`、任务的 drift 项 $\dot J\dot q$ 就藏在 `getFrameClassicalAcceleration` 里。
 
 > **本质洞察**：Joint 是机器人的"驱动接口"（你能直接命令的自由度），Frame 是机器人的"任务接口"（你想控制的物理点）。控制的本质就是在这两个接口之间架桥——用关节空间的输入（$\tau$ 作用在 Joint 上）实现任务空间的目标（位姿/速度定义在 Frame 上），而连接二者的正是 frame 雅可比 $J = \partial(\text{frame 运动})/\partial(\text{关节运动})$。理解了"Joint 驱动、Frame 任务、Jacobian 架桥"这个三角，后续 WBC 的 QP 结构（决策变量是关节量、约束/代价定义在 frame 量上）就一目了然了。
 
-### 练习 ⭐⭐
+### 练习 ★★
 
-**练习 47.7.5.1**（⭐⭐）：遍历 Go2 模型的所有 frame（`for f in model.frames`），统计每种 `FrameType` 的数量。验证 BODY 类型 frame 的数量等于 `model.nbodies`、JOINT 类型 frame 数量与 `model.njoints` 的关系。然后找出所有 OP_FRAME 和 SENSOR 类型的 frame，理解它们分别对应机器人的什么物理部件。
+**练习 47.7.5.1**（★★）：遍历 Go2 模型的所有 frame（`for f in model.frames`），统计每种 `FrameType` 的数量。验证 BODY 类型 frame 的数量等于 `model.nbodies`、JOINT 类型 frame 数量与 `model.njoints` 的关系。然后找出所有 OP_FRAME 和 SENSOR 类型的 frame，理解它们分别对应机器人的什么物理部件。
 
-**练习 47.7.5.2**（⭐⭐⭐）：数值验证 spatial 与 classical 加速度的关系。取一个有较大速度的随机状态 $(q, v, a)$，用 `getFrameVelocity` 取 $\omega, v_{\text{lin}}$，用 `getFrameAcceleration` 取空间加速度，手动加上 $\omega \times v_{\text{lin}}$，验证结果等于 `getFrameClassicalAcceleration` 的线性部分。这道题让你彻底记住"任务空间用 classical"——以后写 WBC 不会再用错。
+**练习 47.7.5.2**（★★★）：数值验证 spatial 与 classical 加速度的关系。取一个有较大速度的随机状态 $(q, v, a)$，用 `getFrameVelocity` 取 $\omega, v_{\text{lin}}$，用 `getFrameAcceleration` 取空间加速度，手动加上 $\omega \times v_{\text{lin}}$，验证结果等于 `getFrameClassicalAcceleration` 的线性部分。这道题让你彻底记住"任务空间用 classical"——以后写 WBC 不会再用错。
 
-**练习 47.7.5.3**（⭐⭐，跨节综合）：综合 47.5 和本节——给 Panda 加一个 TCP frame（`addFrame`），重建 Data，然后同时取 TCP 的 `getFrameJacobian`（`LOCAL_WORLD_ALIGNED`）和 `getFrameVelocity`，验证 `J @ v` 等于 `getFrameVelocity` 返回的 6D twist。这把"雅可比是速度到关节速度的线性映射"这个定义在自定义 frame 上闭环验证一遍。
+**练习 47.7.5.3**（★★，跨节综合）：综合 47.5 和本节——给 Panda 加一个 TCP frame（`addFrame`），重建 Data，然后同时取 TCP 的 `getFrameJacobian`（`LOCAL_WORLD_ALIGNED`）和 `getFrameVelocity`，验证 `J @ v` 等于 `getFrameVelocity` 返回的 6D twist。这把"雅可比是速度到关节速度的线性映射"这个定义在自定义 frame 上闭环验证一遍。
 
 ---
 
-## 47.8 Pinocchio 3.x 新特性与动力学库生态更新（2024-2026） ⭐⭐⭐
+## 47.8 Pinocchio 3.x 新特性与动力学库生态更新（2024-2026） ★★★
 
-### Pinocchio 3.x 新 API 亮点 ⭐⭐
+### Pinocchio 3.x 新 API 亮点 ★★
 
 Pinocchio 3.x 系列（3.0-3.4，截至 2026 年初）在 2.x 的基础上引入了多项面向工程和研究的重要更新：
 
@@ -1962,7 +1962,7 @@ viz.display(q)  # 显示当前位形
 
 **CasADi 后端**：除 CppAD 外，Pinocchio 3.x 新增了对 CasADi 符号框架的原生支持。CasADi 的优势在于它与 IPOPT 等 NLP 求解器有开箱即用的集成，适合非线性轨迹优化问题。实例化方式为 `pinocchio.ModelTpl[casadi.SX]`，tape 录制和求导全部由 CasADi 代理。
 
-### 与 Drake / MuJoCo Python 绑定的对比更新（2025） ⭐⭐⭐
+### 与 Drake / MuJoCo Python 绑定的对比更新（2025） ★★★
 
 2024-2025 年，Drake 和 MuJoCo 的 Python 生态发生了显著变化，与 Pinocchio 的竞争格局值得重新审视：
 
@@ -1982,20 +1982,20 @@ viz.display(q)  # 显示当前位形
 
 ## 延伸阅读
 
-### 必读经典 ⭐
+### 必读经典 ★
 
 | 资料 | 类型 | 难度 | 说明 |
 |------|------|------|------|
-| Featherstone, *Rigid Body Dynamics Algorithms*, Springer 2008 | 教材 | ⭐⭐⭐ | 递归动力学算法的经典教材。RNEA/ABA/CRBA 的完整推导和伪代码均出自本书，是理解 Pinocchio 算法层的必读文献 |
-| Carpentier & Mansard, "Analytical Derivatives of Rigid Body Dynamics Algorithms", RSS 2018 | 论文 | ⭐⭐⭐⭐ | Pinocchio 解析导数的理论基础。推导了 RNEA 导数的闭式递推公式，性能比 AD 快 3-5 倍。理解本文是深入 Crocoddyl/Aligator backward pass 的前提 |
-| Pinocchio 官方 Tutorial（[gepettoweb.laas.fr/doc/stack-of-tasks/pinocchio/master/doxygen-html/](https://gepettoweb.laas.fr/doc/stack-of-tasks/pinocchio/master/doxygen-html/)） | 文档 | ⭐⭐ | 官方 API 文档和入门教程。Python 和 C++ 示例覆盖 FK/RNEA/Jacobian 等核心功能，适合边查边用 |
+| Featherstone, *Rigid Body Dynamics Algorithms*, Springer 2008 | 教材 | ★★★ | 递归动力学算法的经典教材。RNEA/ABA/CRBA 的完整推导和伪代码均出自本书，是理解 Pinocchio 算法层的必读文献 |
+| Carpentier & Mansard, "Analytical Derivatives of Rigid Body Dynamics Algorithms", RSS 2018 | 论文 | ★★★★ | Pinocchio 解析导数的理论基础。推导了 RNEA 导数的闭式递推公式，性能比 AD 快 3-5 倍。理解本文是深入 Crocoddyl/Aligator backward pass 的前提 |
+| Pinocchio 官方 Tutorial（[gepettoweb.laas.fr/doc/stack-of-tasks/pinocchio/master/doxygen-html/](https://gepettoweb.laas.fr/doc/stack-of-tasks/pinocchio/master/doxygen-html/)） | 文档 | ★★ | 官方 API 文档和入门教程。Python 和 C++ 示例覆盖 FK/RNEA/Jacobian 等核心功能，适合边查边用 |
 
-### 进阶与前沿 ⭐⭐⭐
+### 进阶与前沿 ★★★
 
 | 资料 | 类型 | 难度 | 说明 |
 |------|------|------|------|
-| Pinocchio GitHub 仓库（[github.com/stack-of-tasks/pinocchio](https://github.com/stack-of-tasks/pinocchio)） | 源码 | ⭐⭐ | 阅读 `include/pinocchio/algorithm/rnea.hxx` 可直接看到模板化 RNEA 的实现；`joint-base.hpp` 和 `joint-collection.hpp` 是理解 CRTP + variant 的最佳入口 |
-| Carpentier J., et al. (2019) "The Pinocchio C++ library -- A fast and flexible implementation of rigid body dynamics algorithms and their analytical derivatives", SII | 论文 | ⭐⭐⭐ | Pinocchio 的系统级论文，包含完整的性能基准测试和设计决策分析 |
-| Jallet W., Bambade A., Mansard N., Carpentier J. (2024) "PROXDDP: Proximal Constrained Trajectory Optimization", RSS | 论文 | ⭐⭐⭐⭐ | Aligator 求解器的理论基础，与 Pinocchio 3.x 的 ProximalSolver 共享数学框架 |
-| Singh S., Russell R., Wensing P. (2022) "Efficient Analytical Derivatives of Rigid-Body Dynamics using Spatial Vector Algebra", RA-L | 论文 | ⭐⭐⭐⭐ | ABA 导数的解析递推公式，补全了 RNEA 导数之外的理论空白 |
-| Coal (HPP-FCL) GitHub（[github.com/coal-library/coal](https://github.com/coal-library/coal)） | 源码 | ⭐⭐ | Pinocchio 的碰撞检测后端，v3.0 起支持最近距离的解析导数 |
+| Pinocchio GitHub 仓库（[github.com/stack-of-tasks/pinocchio](https://github.com/stack-of-tasks/pinocchio)） | 源码 | ★★ | 阅读 `include/pinocchio/algorithm/rnea.hxx` 可直接看到模板化 RNEA 的实现；`joint-base.hpp` 和 `joint-collection.hpp` 是理解 CRTP + variant 的最佳入口 |
+| Carpentier J., et al. (2019) "The Pinocchio C++ library -- A fast and flexible implementation of rigid body dynamics algorithms and their analytical derivatives", SII | 论文 | ★★★ | Pinocchio 的系统级论文，包含完整的性能基准测试和设计决策分析 |
+| Jallet W., Bambade A., Mansard N., Carpentier J. (2024) "PROXDDP: Proximal Constrained Trajectory Optimization", RSS | 论文 | ★★★★ | Aligator 求解器的理论基础，与 Pinocchio 3.x 的 ProximalSolver 共享数学框架 |
+| Singh S., Russell R., Wensing P. (2022) "Efficient Analytical Derivatives of Rigid-Body Dynamics using Spatial Vector Algebra", RA-L | 论文 | ★★★★ | ABA 导数的解析递推公式，补全了 RNEA 导数之外的理论空白 |
+| Coal (HPP-FCL) GitHub（[github.com/coal-library/coal](https://github.com/coal-library/coal)） | 源码 | ★★ | Pinocchio 的碰撞检测后端，v3.0 起支持最近距离的解析导数 |

@@ -4,7 +4,7 @@
 
 ## 前置自测
 
-> 📋 **前置自测**（答不出 ≥ 2 题 → 先回专题 3.2-3.3 复习）
+> ◆ **前置自测**（答不出 ≥ 2 题 → 先回专题 3.2-3.3 复习）
 
 1. 写出连续时间最优控制问题的 Bolza 形式，并标出 running cost 与 terminal cost。
 2. Bellman 最优性原理的离散版核心公式是什么？（专题 3.3 的核心 DP 方程）
@@ -93,7 +93,7 @@ $$V_k(x) = \min_u \{\ell(x,u) + V_{k+1}(f(x,u))\}$$
 
 ---
 
-## §3.4.1 值函数与动态规划原理的连续版本 ⭐
+## §3.4.1 值函数与动态规划原理的连续版本 ★
 
 ### 动机
 
@@ -185,7 +185,7 @@ DPP 是所有基于值函数的连续控制/RL 算法的地基：
 
 > **反事实推理**：如果没有 DPP——即最优策略的子策略不一定最优——会怎样？那我们就无法把长时域问题分解为短时域子问题，必须在整个 $[0,T]$ 上同时搜索最优控制。对连续系统，这意味着在无限维函数空间中做全局优化，计算上完全不可行。DPP 的存在使得我们可以"从后往前"逐步求解，把无限维问题化为有限维（或至少是可处理的）。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱 1：混淆 DPP 的时间方向**
 
@@ -201,15 +201,15 @@ DPP 是所有基于值函数的连续控制/RL 算法的地基：
 
 ### 练习
 
-1. ⭐ 对一维系统 $\dot{x} = u$，$|u| \le 1$，running cost $L = 1$，terminal cost $\Phi = 0$，终端时间 $T$ 固定。写出 DPP 并直接求解 $V(x,t)$（提示：这是到原点的最小时间问题）。
+1. ★ 对一维系统 $\dot{x} = u$，$|u| \le 1$，running cost $L = 1$，terminal cost $\Phi = 0$，终端时间 $T$ 固定。写出 DPP 并直接求解 $V(x,t)$（提示：这是到原点的最小时间问题）。
 
-2. ⭐⭐ 证明：如果 $f$ 和 $L$ 不显含 $t$，且 $T = \infty$（无限时域折扣问题），则值函数 $V(x)$ 不依赖时间。写出此时 DPP 的简化形式。
+2. ★★ 证明：如果 $f$ 和 $L$ 不显含 $t$，且 $T = \infty$（无限时域折扣问题），则值函数 $V(x)$ 不依赖时间。写出此时 DPP 的简化形式。
 
-3. ⭐⭐ 解释为什么 MPC 的 terminal cost $V_f$ 选取很重要：如果 $V_f \equiv 0$（无终端代价），在什么条件下有限时域 MPC 仍能保证闭环稳定性？
+3. ★★ 解释为什么 MPC 的 terminal cost $V_f$ 选取很重要：如果 $V_f \equiv 0$（无终端代价），在什么条件下有限时域 MPC 仍能保证闭环稳定性？
 
 ---
 
-## §3.4.2 HJB 方程的正式推导 ⭐
+## §3.4.2 HJB 方程的正式推导 ★
 
 ### 动机
 
@@ -294,7 +294,7 @@ $$\mathcal{L}_{\text{critic}} = \frac{1}{2}\left(\beta V_\theta(x) - L(x,u) - \n
 
 最小化这个损失就是在求解 HJB 方程——这是 PINN（Physics-Informed Neural Networks）方法应用于值函数学习的理论基础。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱 1：HJB 的时间方向**
 
@@ -317,15 +317,15 @@ $$\mathcal{L}_{\text{critic}} = \frac{1}{2}\left(\beta V_\theta(x) - L(x,u) - \n
 
 ### 练习
 
-1. ⭐ 对一维系统 $\dot{x} = u$，$L = \frac{1}{2}u^2$，$\Phi(x) = \frac{1}{2}x^2$，直接求解 HJB 方程。提示：猜测 $V(x,t) = \frac{1}{2}P(t)x^2$，代入 HJB 得 $P(t)$ 的 ODE。
+1. ★ 对一维系统 $\dot{x} = u$，$L = \frac{1}{2}u^2$，$\Phi(x) = \frac{1}{2}x^2$，直接求解 HJB 方程。提示：猜测 $V(x,t) = \frac{1}{2}P(t)x^2$，代入 HJB 得 $P(t)$ 的 ODE。
 
-2. ⭐⭐ 推导无限时域折扣 HJB：从 DPP $V(x) = \inf_u\{\int_0^h e^{-\beta s}L\,ds + e^{-\beta h}V(x(h))\}$ 出发，对 $e^{-\beta h} \approx 1-\beta h$ 展开得到 $\beta V = \min_u\{L + \nabla V \cdot f\}$。
+2. ★★ 推导无限时域折扣 HJB：从 DPP $V(x) = \inf_u\{\int_0^h e^{-\beta s}L\,ds + e^{-\beta h}V(x(h))\}$ 出发，对 $e^{-\beta h} \approx 1-\beta h$ 展开得到 $\beta V = \min_u\{L + \nabla V \cdot f\}$。
 
-3. ⭐⭐⭐ 对控制仿射系统 $\dot{x} = f_0(x) + G(x)u$，$L = q(x) + \frac{1}{2}u^\top R u$（$R \succ 0$），显式写出最优控制 $u^* = -R^{-1}G(x)^\top \nabla V$ 并将其代回 HJB，得到关于 $V$ 的闭式 PDE。
+3. ★★★ 对控制仿射系统 $\dot{x} = f_0(x) + G(x)u$，$L = q(x) + \frac{1}{2}u^\top R u$（$R \succ 0$），显式写出最优控制 $u^* = -R^{-1}G(x)^\top \nabla V$ 并将其代回 HJB，得到关于 $V$ 的闭式 PDE。
 
 ---
 
-## §3.4.3 验证定理——HJB 是充分条件 ⭐⭐
+## §3.4.3 验证定理——HJB 是充分条件 ★★
 
 ### 动机
 
@@ -411,7 +411,7 @@ $$W_t + \min_u\{L + \nabla W \cdot f\} \ge 0$$
 - **Control Barrier Function (CBF)**：$\dot{h} + \alpha(h) \ge 0$ 保证安全集正不变
 - **SOS (Sum-of-Squares) 控制**：用多项式 $W$ 满足 HJB 不等式，通过 SDP 验证
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱 1：验证定理需要 $C^1$ 正则性**
 
@@ -426,15 +426,15 @@ $$W_t + \min_u\{L + \nabla W \cdot f\} \ge 0$$
 
 ### 练习
 
-1. ⭐ 对一维 LQR（$\dot{x} = ax + bu$，$L = \frac{1}{2}(qx^2 + ru^2)$），构造 $W(x,t) = \frac{1}{2}P(t)x^2$ 并用验证定理证明其为最优值函数。
+1. ★ 对一维 LQR（$\dot{x} = ax + bu$，$L = \frac{1}{2}(qx^2 + ru^2)$），构造 $W(x,t) = \frac{1}{2}P(t)x^2$ 并用验证定理证明其为最优值函数。
 
-2. ⭐⭐ 证明：如果 $W$ 满足 HJB 不等式 $W_t + \min_u\{L + \nabla W \cdot f\} \ge 0$ 且 $W(x,T) \le \Phi(x)$，则 $W(x,t) \le V^*(x,t)$。
+2. ★★ 证明：如果 $W$ 满足 HJB 不等式 $W_t + \min_u\{L + \nabla W \cdot f\} \ge 0$ 且 $W(x,T) \le \Phi(x)$，则 $W(x,t) \le V^*(x,t)$。
 
-3. ⭐⭐⭐ 思考：验证定理为什么不需要凸性假设？（提示：PMP 的充分条件——Mangasarian 条件——需要 Hamiltonian 关于 $(x,u)$ 联合凸）
+3. ★★★ 思考：验证定理为什么不需要凸性假设？（提示：PMP 的充分条件——Mangasarian 条件——需要 Hamiltonian 关于 $(x,u)$ 联合凸）
 
 ---
 
-## §3.4.4 HJB 与 PMP 的精确关系——特征线与对偶 ⭐⭐
+## §3.4.4 HJB 与 PMP 的精确关系——特征线与对偶 ★★
 
 ### 动机
 
@@ -504,7 +504,7 @@ $$\dot{x} = \frac{\partial \mathcal{H}}{\partial p}(x,p), \quad \dot{p} = -\frac
 2. **iLQR/DDP 的 backward pass**：计算 $V_x, V_{xx}$ 就是在特征线附近做二阶展开——Riccati 方程是 HJB 的二阶近似
 3. **CBF-QP**：$\min_u\{\|u-u_{\text{nom}}\|^2 : \nabla h \cdot f + \alpha(h) \ge 0\}$ 可视为 HJB 极小化条件的单点投影
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱 1：$V \in C^2$ 假设**
 
@@ -519,15 +519,15 @@ $$\dot{x} = \frac{\partial \mathcal{H}}{\partial p}(x,p), \quad \dot{p} = -\frac
 
 ### 练习
 
-1. ⭐ 对 LQR 系统，验证 $\lambda(t) = P(t)x^*(t)$（即 Riccati 矩阵给出共态与状态的线性关系）。
+1. ★ 对 LQR 系统，验证 $\lambda(t) = P(t)x^*(t)$（即 Riccati 矩阵给出共态与状态的线性关系）。
 
-2. ⭐⭐ 对一维问题 $\dot{x} = u$，$|u| \le 1$，$L = 0$，$\Phi(x) = |x|$（最小时间到原点），画出特征线并指出在哪里相交。
+2. ★★ 对一维问题 $\dot{x} = u$，$|u| \le 1$，$L = 0$，$\Phi(x) = |x|$（最小时间到原点），画出特征线并指出在哪里相交。
 
-3. ⭐⭐⭐ 证明：Hamilton 典则方程 $\dot{x} = \mathcal{H}_p$，$\dot{p} = -\mathcal{H}_x$ 保持 Hamiltonian $\mathcal{H}$ 沿轨迹为常数（能量守恒），并解释其对应于 HJB 中 $V_t = -\mathcal{H}$ 的物理含义。
+3. ★★★ 证明：Hamilton 典则方程 $\dot{x} = \mathcal{H}_p$，$\dot{p} = -\mathcal{H}_x$ 保持 Hamiltonian $\mathcal{H}$ 沿轨迹为常数（能量守恒），并解释其对应于 HJB 中 $V_t = -\mathcal{H}$ 的物理含义。
 
 ---
 
-## §3.4.5 经典解为何不存在——HJB 的核心病理 ⭐⭐
+## §3.4.5 经典解为何不存在——HJB 的核心病理 ★★
 
 ### 动机
 
@@ -541,7 +541,7 @@ HJB 方程 $V_t + \mathcal{H}(x, \nabla V) = 0$ 是**一阶完全非线性** PDE
 
 下面通过四个递进的例子来理解这个困难。
 
-### 例 1：Eikonal 方程 $|\nabla V| = 1$ ⭐⭐
+### 例 1：Eikonal 方程 $|\nabla V| = 1$ ★★
 
 **问题**：在有界区域 $\Omega$ 中，求到边界 $\partial\Omega$ 的距离函数：
 
@@ -561,7 +561,7 @@ $$|\nabla V(x)| = 1, \quad x \in \Omega; \qquad V|_{\partial\Omega} = 0$$
 
 **关键观察**：$-V(x) = -\text{dist}(x, \partial\Omega)$ 也几乎处处满足 $|\nabla(-V)| = 1$（a.e.），但它**不是**正确的物理解。我们需要一种弱解概念来**区分** $V$ 和 $-V$——黏性解正是能做到这一点的工具。
 
-### 例 2：双积分器最小时间问题 ⭐⭐
+### 例 2：双积分器最小时间问题 ★★
 
 **问题**：$\ddot{q} = u$，$|u| \le 1$，到原点 $(q, \dot{q}) = (0,0)$ 的最小时间。
 
@@ -579,7 +579,7 @@ $$\Sigma = \{(x_1, x_2) : x_1 + \frac{1}{2}x_2|x_2| = 0\}$$
 
 值函数（最小时间）$T(x_1, x_2)$ 在切换曲线 $\Sigma$ 上**连续但不可微**：来自两侧的特征线以不同角度汇聚到 $\Sigma$，法向导数发生跳跃。
 
-### 例 3：状态约束边界 ⭐⭐⭐
+### 例 3：状态约束边界 ★★★
 
 **问题**：机器人关节角 $q \in [-\pi, \pi]$（状态约束），最优控制问题限制在 $\bar{K} = [-\pi, \pi]$ 内。
 
@@ -587,7 +587,7 @@ $$\Sigma = \{(x_1, x_2) : x_1 + \frac{1}{2}x_2|x_2| = 0\}$$
 
 这需要 **state-constrained viscosity solution**（Soner 1986）：内部用标准黏性解定义，边界上只要求**上解条件**（放宽下解条件）。
 
-### 例 4：非光滑终端代价 ⭐⭐
+### 例 4：非光滑终端代价 ★★
 
 即使动力学和 running cost 都光滑，如果终端代价 $\Phi$ 不光滑，值函数也会继承不光滑性。
 
@@ -624,7 +624,7 @@ $$V_t^\varepsilon + \mathcal{H}(x, \nabla V^\varepsilon) = \varepsilon \Delta V^
 
 但 Crandall-Lions 的天才在于：他们给出了一个**不依赖 $\varepsilon$** 的等价定义——纯粹用测试函数来刻画，不需要真正计算极限。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱 1：认为"不可微"意味着"不连续"**
 
@@ -639,15 +639,15 @@ $$V_t^\varepsilon + \mathcal{H}(x, \nabla V^\varepsilon) = \varepsilon \Delta V^
 
 ### 练习
 
-1. ⭐ 画出一维 Eikonal 方程 $|V'(x)| = 1$，$V(0) = V(1) = 0$ 在 $[0,1]$ 上的所有 Lipschitz 解。说明为什么只有 $V(x) = \min(x, 1-x)$ 是黏性解。
+1. ★ 画出一维 Eikonal 方程 $|V'(x)| = 1$，$V(0) = V(1) = 0$ 在 $[0,1]$ 上的所有 Lipschitz 解。说明为什么只有 $V(x) = \min(x, 1-x)$ 是黏性解。
 
-2. ⭐⭐ 对双积分器最小时间问题，在切换曲线 $\Sigma$ 上取一点，计算 $V$ 的左右方向导数，验证其不相等。
+2. ★★ 对双积分器最小时间问题，在切换曲线 $\Sigma$ 上取一点，计算 $V$ 的左右方向导数，验证其不相等。
 
-3. ⭐⭐⭐ 对 Burgers 方程 $u_t + uu_x = 0$ 和 HJB 方程 $V_t + H(V_x) = 0$（$H$ 凸），解释两者特征线相交时的物理区别：Burgers 形成激波（间断解），HJB 形成"拐角"（连续不可微解）。
+3. ★★★ 对 Burgers 方程 $u_t + uu_x = 0$ 和 HJB 方程 $V_t + H(V_x) = 0$（$H$ 凸），解释两者特征线相交时的物理区别：Burgers 形成激波（间断解），HJB 形成"拐角"（连续不可微解）。
 
 ---
 
-## §3.4.6 黏性解的严格定义与核心理论 ⭐⭐⭐
+## §3.4.6 黏性解的严格定义与核心理论 ★★★
 
 ### 动机
 
@@ -793,7 +793,7 @@ $$V(x) = \sup\{w(x) : w \text{ 是次解}, w \le \bar{v}\}$$
 
 这个定理的重要性在于：它把"求解最优控制问题"完全等价于"求解 HJB 方程的黏性解"——两者给出完全相同的函数。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱 1：混淆 USC/LSC 与连续性**
 
@@ -814,18 +814,18 @@ $$V(x) = \sup\{w(x) : w \text{ 是次解}, w \le \bar{v}\}$$
 
 ### 练习
 
-1. ⭐⭐ 验证 $V(x) = |x|$ 是方程 $|V'| = 1$（$x \in \mathbb{R}$，$V(0) = 0$）的黏性解。计算 $x=0$ 处的 $D^+V$ 和 $D^-V$，检验次解和上解条件。
+1. ★★ 验证 $V(x) = |x|$ 是方程 $|V'| = 1$（$x \in \mathbb{R}$，$V(0) = 0$）的黏性解。计算 $x=0$ 处的 $D^+V$ 和 $D^-V$，检验次解和上解条件。
 
-2. ⭐⭐⭐ 对一维 HJ 方程 $V_t + \frac{1}{2}|V_x|^2 = 0$（$t \ge 0$），终端条件 $V(x,0) = -\cos(x)$。
+2. ★★★ 对一维 HJ 方程 $V_t + \frac{1}{2}|V_x|^2 = 0$（$t \ge 0$），终端条件 $V(x,0) = -\cos(x)$。
    - (a) 用特征线方法求解，找到特征线首次相交的时间 $t_c$
    - (b) 解释为什么 $t > t_c$ 后经典解不存在
    - (c) 用 Hopf-Lax 公式 $V(x,t) = \inf_y\{V_0(y) + \frac{|x-y|^2}{2t}\}$ 构造黏性解
 
-3. ⭐⭐⭐⭐ （研究级）阅读 Crandall-Ishii-Lions 1992 "User's Guide" 的 Theorem 3.2（Ishii 引理），描述在二阶黏性解中"变量翻倍"如何推广——为什么需要矩阵不等式 $\begin{pmatrix} X & 0 \\ 0 & -Y \end{pmatrix} \le A + \varepsilon A^2$？
+3. ★★★★ （研究级）阅读 Crandall-Ishii-Lions 1992 "User's Guide" 的 Theorem 3.2（Ishii 引理），描述在二阶黏性解中"变量翻倍"如何推广——为什么需要矩阵不等式 $\begin{pmatrix} X & 0 \\ 0 & -Y \end{pmatrix} \le A + \varepsilon A^2$？
 
 ---
 
-## §3.4.7 LQR——HJB 的唯一精确可解类 ⭐
+## §3.4.7 LQR——HJB 的唯一精确可解类 ★
 
 ### 动机
 
@@ -959,7 +959,7 @@ print(f"\nP(t=0) vs P_CARE 差异: {np.linalg.norm(P_at_t0 - P):.4f}")
 | 增益 | $K = R^{-1}B^\top P$（控制增益） | $L = \Sigma C^\top V^{-1}$（Kalman 增益） |
 | 对偶变换 | $(A, B, Q, R)$ | $(A^\top, C^\top, W, V)$ |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱 1：Riccati 方程的时间方向**
 
@@ -975,15 +975,15 @@ print(f"\nP(t=0) vs P_CARE 差异: {np.linalg.norm(P_at_t0 - P):.4f}")
 
 ### 练习
 
-1. ⭐ 手算一维 LQR：$\dot{x} = -x + u$，$L = \frac{1}{2}(x^2 + u^2)$，无限时域。求 CARE 的解 $P$、最优增益 $K$、闭环极点。
+1. ★ 手算一维 LQR：$\dot{x} = -x + u$，$L = \frac{1}{2}(x^2 + u^2)$，无限时域。求 CARE 的解 $P$、最优增益 $K$、闭环极点。
 
-2. ⭐⭐ 对有限时域 DRE，证明如果 $P(T) = Q_f \succeq 0$ 且 $Q \succeq 0, R \succ 0$，则 $P(t) \succeq 0$ 对所有 $t \le T$ 成立（提示：矛盾法，利用 $P(t)$ 首次触零时 $\dot{P}$ 的符号）。
+2. ★★ 对有限时域 DRE，证明如果 $P(T) = Q_f \succeq 0$ 且 $Q \succeq 0, R \succ 0$，则 $P(t) \succeq 0$ 对所有 $t \le T$ 成立（提示：矛盾法，利用 $P(t)$ 首次触零时 $\dot{P}$ 的符号）。
 
-3. ⭐⭐ 写代码比较有限时域 DRE 解 $P(t)$ 在 $t \to -\infty$ 时是否收敛到 CARE 的稳态解。
+3. ★★ 写代码比较有限时域 DRE 解 $P(t)$ 在 $t \to -\infty$ 时是否收敛到 CARE 的稳态解。
 
 ---
 
-## §3.4.8 HJB 的数值方法与维数灾难 ⭐⭐
+## §3.4.8 HJB 的数值方法与维数灾难 ★★
 
 ### 动机
 
@@ -1096,7 +1096,7 @@ $$V(x,t) = \min_y\left\{J(y) + tH^*\left(\frac{x-y}{t}\right)\right\}$$
 | DeepReach | PyTorch | 高维但需训练 | 9-10D |
 | FEniCS / deal.II | Python/C++ | FEM，学术 PDE 通用 | 2-3D |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱 1：用 FEM 求解一阶 HJB**
 
@@ -1116,15 +1116,15 @@ $$V(x,t) = \min_y\left\{J(y) + tH^*\left(\frac{x-y}{t}\right)\right\}$$
 
 ### 练习
 
-1. ⭐ 实现一维 Eikonal 方程 $|V'| = 1$，$V(0) = V(1) = 0$ 的 upwind 差分格式。观察网格加密时解收敛到 $\min(x, 1-x)$。
+1. ★ 实现一维 Eikonal 方程 $|V'| = 1$，$V(0) = V(1) = 0$ 的 upwind 差分格式。观察网格加密时解收敛到 $\min(x, 1-x)$。
 
-2. ⭐⭐ 实现二维 Eikonal 方程（正方形域）的 Fast Marching Method。绘制等值线并与解析解比较。
+2. ★★ 实现二维 Eikonal 方程（正方形域）的 Fast Marching Method。绘制等值线并与解析解比较。
 
-3. ⭐⭐⭐ 对一维 HJ 方程 $V_t + \frac{1}{2}V_x^2 = 0$，分别实现 Lax-Friedrichs 和 Godunov 数值 Hamiltonian，比较两者的耗散性（在特征线相交区域观察解的锐利程度）。
+3. ★★★ 对一维 HJ 方程 $V_t + \frac{1}{2}V_x^2 = 0$，分别实现 Lax-Friedrichs 和 Godunov 数值 Hamiltonian，比较两者的耗散性（在特征线相交区域观察解的锐利程度）。
 
 ---
 
-## §3.4.9 Hamilton-Jacobi 理论在经典力学中的深层根源 ⭐⭐⭐
+## §3.4.9 Hamilton-Jacobi 理论在经典力学中的深层根源 ★★★
 
 ### 动机
 
@@ -1194,15 +1194,15 @@ Hamilton 正则方程 $\dot{q} = H_p$，$\dot{p} = -H_q$ 保持相空间体积�
 
 ### 练习
 
-1. ⭐⭐ 对一维谐振子 $H = \frac{1}{2}(p^2 + \omega^2 q^2)$，用分离变量法求 HJ 方程的完全积分 $S(q, E, t) = W(q, E) - Et$。验证 $p = \partial S/\partial q$ 给出正确的动量。
+1. ★★ 对一维谐振子 $H = \frac{1}{2}(p^2 + \omega^2 q^2)$，用分离变量法求 HJ 方程的完全积分 $S(q, E, t) = W(q, E) - Et$。验证 $p = \partial S/\partial q$ 给出正确的动量。
 
-2. ⭐⭐⭐ 对 Kepler 问题 $H = \frac{p_r^2}{2m} + \frac{p_\theta^2}{2mr^2} - \frac{k}{r}$，写出 HJ 方程并用分离变量求解。指出作用量变量 $J_r$ 和 $J_\theta$ 的物理含义。
+2. ★★★ 对 Kepler 问题 $H = \frac{p_r^2}{2m} + \frac{p_\theta^2}{2mr^2} - \frac{k}{r}$，写出 HJ 方程并用分离变量求解。指出作用量变量 $J_r$ 和 $J_\theta$ 的物理含义。
 
-3. ⭐⭐⭐ 思考：为什么可积系统（有 $n$ 个独立守恒量的 $n$ 自由度系统）的 HJ 方程总可以用分离变量法求解？这与最优控制中的什么条件类比？（提示：考虑 LQR 的可解性条件）
+3. ★★★ 思考：为什么可积系统（有 $n$ 个独立守恒量的 $n$ 自由度系统）的 HJ 方程总可以用分离变量法求解？这与最优控制中的什么条件类比？（提示：考虑 LQR 的可解性条件）
 
 ---
 
-## §3.4.10 微分博弈与 Isaacs 方程 ⭐⭐⭐
+## §3.4.10 微分博弈与 Isaacs 方程 ★★★
 
 ### 动机
 
@@ -1266,13 +1266,13 @@ $$A^\top P + PA + P(\gamma^{-2}B_w B_w^\top - B_u R^{-1}B_u^\top)P + Q = 0$$
 
 ### 练习
 
-1. ⭐⭐ 对一维系统 $\dot{x} = u + d$，$|u| \le 1$，$|d| \le 0.5$，$L = x^2$。写出上值函数和下值函数的 Isaacs 方程。验证 Isaacs 条件成立。
+1. ★★ 对一维系统 $\dot{x} = u + d$，$|u| \le 1$，$|d| \le 0.5$，$L = x^2$。写出上值函数和下值函数的 Isaacs 方程。验证 Isaacs 条件成立。
 
-2. ⭐⭐⭐ 推导线性系统 $\dot{x} = Ax + Bu + Gw$ 的 $H_\infty$ Riccati 方程。解释 $\gamma$ 的物理含义和"临界 $\gamma_{\text{opt}}$"的工程意义。
+2. ★★★ 推导线性系统 $\dot{x} = Ax + Bu + Gw$ 的 $H_\infty$ Riccati 方程。解释 $\gamma$ 的物理含义和"临界 $\gamma_{\text{opt}}$"的工程意义。
 
 ---
 
-## §3.4.A 随机 HJB——Itô-Bellman 方程 ⭐⭐⭐
+## §3.4.A 随机 HJB——Itô-Bellman 方程 ★★★
 
 ### 动机
 
@@ -1324,7 +1324,7 @@ $$\mathbb{E}[V(x + \Delta f + \sqrt{\Delta}\sigma\xi)] \approx V + \Delta(\nabla
 
 ---
 
-## §3.4.D HJ Reachability——机器人安全的理论工具 ⭐⭐⭐
+## §3.4.D HJ Reachability——机器人安全的理论工具 ★★★
 
 ### 动机
 
@@ -1408,13 +1408,13 @@ result = hj.solve(solver_settings, dynamics, grid,
 
 ### 练习
 
-1. ⭐⭐ 对二维双积分器（$\dot{x}_1 = x_2$，$\dot{x}_2 = u$，$|u| \le 1$），用 `hj_reachability` 计算到目标集 $\{|x_1| \le 0.1, |x_2| \le 0.1\}$ 的后向可达集。绘制不同时间的 BRT 边界。
+1. ★★ 对二维双积分器（$\dot{x}_1 = x_2$，$\dot{x}_2 = u$，$|u| \le 1$），用 `hj_reachability` 计算到目标集 $\{|x_1| \le 0.1, |x_2| \le 0.1\}$ 的后向可达集。绘制不同时间的 BRT 边界。
 
-2. ⭐⭐⭐ 比较 CBF 方法和 HJ Reachability 方法在相同安全约束下的保守性：用 Dubins 车避开圆形障碍物，比较两种方法允许的最小安全距离。
+2. ★★★ 比较 CBF 方法和 HJ Reachability 方法在相同安全约束下的保守性：用 Dubins 车避开圆形障碍物，比较两种方法允许的最小安全距离。
 
 ---
 
-## §3.4.E 路径积分控制——从 HJB 到 Monte Carlo ⭐⭐⭐
+## §3.4.E 路径积分控制——从 HJB 到 Monte Carlo ★★★
 
 ### 动机
 
@@ -1516,7 +1516,7 @@ def mppi_step(x_current, u_nominal, model, K=1000, lambda_=1.0):
 - $\lambda$ 太大 → 权重均匀（exploration 过多，收敛慢）
 - 实践中 $K = 1000-10000$，在 GPU 上并行，单步 $< 1$ms
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱 1：MPPI 不是简单的随机搜索**
 
@@ -1531,13 +1531,13 @@ def mppi_step(x_current, u_nominal, model, K=1000, lambda_=1.0):
 
 ### 练习
 
-1. ⭐⭐ 实现一个简单的 MPPI 控制器，控制一维双积分器到原点。比较 $K=100$ 和 $K=5000$ 的性能差异。
+1. ★★ 实现一个简单的 MPPI 控制器，控制一维双积分器到原点。比较 $K=100$ 和 $K=5000$ 的性能差异。
 
-2. ⭐⭐⭐ 推导：当 $K \to \infty$ 时，MPPI 的加权平均收敛于路径积分的精确解。提示：大数定律 + importance sampling。
+2. ★★★ 推导：当 $K \to \infty$ 时，MPPI 的加权平均收敛于路径积分的精确解。提示：大数定律 + importance sampling。
 
 ---
 
-## §3.4.F PINN 求解 HJB——神经网络做"场" ⭐⭐⭐
+## §3.4.F PINN 求解 HJB——神经网络做"场" ★★★
 
 ### 动机
 
@@ -1577,7 +1577,7 @@ PINN **不满足** Barles-Souganidis 的单调-一致-稳定三条件——因�
 
 ---
 
-## §3.4.11 最优停止与自由边界问题 ⭐⭐⭐⭐
+## §3.4.11 最优停止与自由边界问题 ★★★★
 
 ### 动机
 
@@ -1623,7 +1623,7 @@ $$V|_{\text{boundary}} = \Phi|_{\text{boundary}}, \quad \nabla V|_{\text{boundar
 
 ---
 
-## §3.4.12 黏性解的稳定性与逼近 ⭐⭐⭐
+## §3.4.12 黏性解的稳定性与逼近 ★★★
 
 ### 动机
 
@@ -1656,13 +1656,13 @@ Barles-Souganidis 1991 的三条件（单调+一致+稳定）正是稳定性定�
 
 ### 练习
 
-1. ⭐⭐⭐ 验证 Lax-Friedrichs 格式满足单调性条件。提示：写出格式并检验对邻居节点值的偏导数符号。
+1. ★★★ 验证 Lax-Friedrichs 格式满足单调性条件。提示：写出格式并检验对邻居节点值的偏导数符号。
 
-2. ⭐⭐⭐ 解释为什么 PINN 方法不满足单调性条件——神经网络的全局逼近性质如何破坏局部单调结构？
+2. ★★★ 解释为什么 PINN 方法不满足单调性条件——神经网络的全局逼近性质如何破坏局部单调结构？
 
 ---
 
-## 典型例题精讲 ⭐⭐
+## 典型例题精讲 ★★
 
 ### 例题 1：一维 LQR 的 HJB 完整求解
 
@@ -1794,20 +1794,20 @@ $$|\nabla V| = 1, \quad V|_{\partial\Omega} = 0$$
 
 | 知识点 | 核心内容 | 难度 | 工程用途 |
 |--------|---------|------|---------|
-| DPP | $V(x,t) = \inf_u\{\int L + V(x(t+h),t+h)\}$ | ⭐ | 所有值函数方法的基础 |
-| HJB 推导 | $V_t + \min_u\{L + \nabla V \cdot f\} = 0$ | ⭐ | 最优控制的场方程 |
-| 验证定理 | $C^1$ 解 → 充分最优性 | ⭐⭐ | Lyapunov/CBF 合成 |
-| HJB-PMP 对偶 | $\lambda = \nabla V$，特征线 = Hamilton 方程 | ⭐⭐ | 理解间接法/iLQR |
-| 经典解不存在 | 特征线交叉、bang-bang、约束 | ⭐⭐ | 理解黏性解的必要性 |
-| 黏性解定义 | 测试函数外包梯度条件 | ⭐⭐⭐ | 弱解框架 |
-| 比较原理 | 次解 ≤ 上解 → 唯一性 | ⭐⭐⭐ | 理论基石 |
-| LQR Riccati | $-\dot{P} = A^\top P + PA - PBR^{-1}B^\top P + Q$ | ⭐ | iLQR/DDP 的基础 |
-| 数值方法 | Lax-Friedrichs, WENO, Semi-Lagrangian | ⭐⭐ | 低维精确求解 |
-| 维数灾难 | $O(N^n)$ → $n \ge 6$ 不可行 | ⭐⭐ | 选择替代方法 |
-| 随机 HJB | 多出 $\frac{1}{2}\text{tr}(\sigma\sigma^\top\nabla^2 V)$ | ⭐⭐⭐ | 随机控制/RL |
-| HJ Reachability | BRT = 零水平集 | ⭐⭐⭐ | 机器人安全 |
-| 路径积分/MPPI | Kappen 变换线性化 HJB | ⭐⭐⭐ | 高速无模型 MPC |
-| DeepReach/PINN | 神经网络逼近值函数 | ⭐⭐⭐ | 高维 HJB |
+| DPP | $V(x,t) = \inf_u\{\int L + V(x(t+h),t+h)\}$ | ★ | 所有值函数方法的基础 |
+| HJB 推导 | $V_t + \min_u\{L + \nabla V \cdot f\} = 0$ | ★ | 最优控制的场方程 |
+| 验证定理 | $C^1$ 解 → 充分最优性 | ★★ | Lyapunov/CBF 合成 |
+| HJB-PMP 对偶 | $\lambda = \nabla V$，特征线 = Hamilton 方程 | ★★ | 理解间接法/iLQR |
+| 经典解不存在 | 特征线交叉、bang-bang、约束 | ★★ | 理解黏性解的必要性 |
+| 黏性解定义 | 测试函数外包梯度条件 | ★★★ | 弱解框架 |
+| 比较原理 | 次解 ≤ 上解 → 唯一性 | ★★★ | 理论基石 |
+| LQR Riccati | $-\dot{P} = A^\top P + PA - PBR^{-1}B^\top P + Q$ | ★ | iLQR/DDP 的基础 |
+| 数值方法 | Lax-Friedrichs, WENO, Semi-Lagrangian | ★★ | 低维精确求解 |
+| 维数灾难 | $O(N^n)$ → $n \ge 6$ 不可行 | ★★ | 选择替代方法 |
+| 随机 HJB | 多出 $\frac{1}{2}\text{tr}(\sigma\sigma^\top\nabla^2 V)$ | ★★★ | 随机控制/RL |
+| HJ Reachability | BRT = 零水平集 | ★★★ | 机器人安全 |
+| 路径积分/MPPI | Kappen 变换线性化 HJB | ★★★ | 高速无模型 MPC |
+| DeepReach/PINN | 神经网络逼近值函数 | ★★★ | 高维 HJB |
 
 ---
 
@@ -1836,12 +1836,12 @@ $$|\nabla V| = 1, \quad V|_{\partial\Omega} = 0$$
 
 | 书目 | 难度 | 适读人群 |
 |------|------|---------|
-| Kirk 2004, *Optimal Control Theory* Ch.3-4 | ⭐ | 工程入门 |
-| Liberzon 2012, *Calculus of Variations and Optimal Control* Ch.5 | ⭐⭐ | 数学本科 |
-| Evans 2010, *PDE* 2e Ch.10 | ⭐⭐⭐ | PDE 背景 |
-| Bardi-Capuzzo-Dolcetta 1997, *Optimal Control and Viscosity Solutions of HJB Equations* | ⭐⭐⭐⭐ | 一阶理论圣经 |
-| Fleming-Soner 2006, *Controlled Markov Processes and Viscosity Solutions* 2e | ⭐⭐⭐⭐ | 二阶理论圣经 |
-| Crandall-Ishii-Lions 1992, "User's Guide to Viscosity Solutions" *Bull. AMS* 27:1-67 | ⭐⭐⭐⭐ | 综述必读 |
+| Kirk 2004, *Optimal Control Theory* Ch.3-4 | ★ | 工程入门 |
+| Liberzon 2012, *Calculus of Variations and Optimal Control* Ch.5 | ★★ | 数学本科 |
+| Evans 2010, *PDE* 2e Ch.10 | ★★★ | PDE 背景 |
+| Bardi-Capuzzo-Dolcetta 1997, *Optimal Control and Viscosity Solutions of HJB Equations* | ★★★★ | 一阶理论圣经 |
+| Fleming-Soner 2006, *Controlled Markov Processes and Viscosity Solutions* 2e | ★★★★ | 二阶理论圣经 |
+| Crandall-Ishii-Lions 1992, "User's Guide to Viscosity Solutions" *Bull. AMS* 27:1-67 | ★★★★ | 综述必读 |
 
 **关键论文（含 DOI/arXiv）**：
 
@@ -1896,7 +1896,7 @@ $$|\nabla V| = 1, \quad V|_{\partial\Omega} = 0$$
 
 ---
 
-## Hamilton-Jacobi 理论在经典力学中的起源 ⭐⭐⭐
+## Hamilton-Jacobi 理论在经典力学中的起源 ★★★
 
 ### 正则变换与生成函数
 
@@ -1929,7 +1929,7 @@ Hamilton 研究的是**无控系统**的运动：给定初条件，轨迹唯一�
 
 ---
 
-## 现代进展与前沿 ⭐⭐⭐⭐
+## 现代进展与前沿 ★★★★
 
 ### DeepReach 及其后续（2021-2025）
 

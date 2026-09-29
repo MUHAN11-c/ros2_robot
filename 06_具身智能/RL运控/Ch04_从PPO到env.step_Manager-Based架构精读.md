@@ -2,7 +2,7 @@
 
 ## 前置自测
 
-📋 **答不出 $\ge$ 2 题 → 先回前置章节复习**
+◆ **答不出 $\ge$ 2 题 → 先回前置章节复习**
 
 1. PPO 的训练循环分为哪两个阶段？每个阶段的核心操作是什么？（RL 基础）
 2. `env.step()` 返回什么？`terminated` 和 `truncated` 的区别是什么？（Ch01 §1.4 env.step 时序）
@@ -42,7 +42,7 @@
 
 ---
 
-## 4.1 算法回顾：PPO 训练循环 ⭐⭐
+## 4.1 算法回顾：PPO 训练循环 ★★
 
 > **这一节解决什么问题**：快速回顾 PPO 的训练循环——不是推导算法，而是理解 `env.step()` 在训练循环中的精确位置。
 
@@ -190,18 +190,18 @@ GAE（Generalized Advantage Estimation）是 PPO 计算 advantage 的标准方�
 
 | 参数 | 典型值 | 含义 | 调参优先级 |
 |------|--------|------|-----------|
-| `learning_rate` | 1e-3 | Adam 优化器学习率 | ⭐⭐⭐ |
-| `num_steps_per_env` | 24 | 每个 env 的 rollout 步数 | ⭐⭐ |
-| `num_mini_batches` | 4 | mini-batch 数量 | ⭐⭐ |
-| `num_epochs` | 5 | 每批数据重复训练的次数 | ⭐⭐ |
-| `clip_range` | 0.2 | PPO clip 参数 $\epsilon$ | ⭐ |
-| `gamma` | 0.99 | 折扣因子 | ⭐ |
-| `lam` | 0.95 | GAE $\lambda$ 参数 | ⭐ |
-| `desired_kl` | 0.01 | KL 散度目标值（自适应 lr） | ⭐⭐ |
-| `entropy_coef` | 0.01 | 熵正则化系数 | ⭐ |
+| `learning_rate` | 1e-3 | Adam 优化器学习率 | ★★★ |
+| `num_steps_per_env` | 24 | 每个 env 的 rollout 步数 | ★★ |
+| `num_mini_batches` | 4 | mini-batch 数量 | ★★ |
+| `num_epochs` | 5 | 每批数据重复训练的次数 | ★★ |
+| `clip_range` | 0.2 | PPO clip 参数 $\epsilon$ | ★ |
+| `gamma` | 0.99 | 折扣因子 | ★ |
+| `lam` | 0.95 | GAE $\lambda$ 参数 | ★ |
+| `desired_kl` | 0.01 | KL 散度目标值（自适应 lr） | ★★ |
+| `entropy_coef` | 0.01 | 熵正则化系数 | ★ |
 | `value_loss_coef` | 1.0 | value loss 权重 | — |
 | `max_grad_norm` | 1.0 | 梯度裁剪阈值 | — |
-| `init_noise_std` | 1.0 | 初始 action 噪声标准差 | ⭐ |
+| `init_noise_std` | 1.0 | 初始 action 噪声标准差 | ★ |
 
 **RSL-RL 的自适应学习率机制**：当 KL 散度超过 `desired_kl` 的 2 倍时，学习率自动除以 1.5；当 KL 低于 `desired_kl` 的一半时，学习率自动乘以 1.5。这个机制让你可以用一个相对大的初始 `learning_rate`（如 1e-3），让 RSL-RL 自动调整——比手动调 lr 高效得多。（不同版本的倍率可能变化，以所用 RSL-RL 版本的 `algorithms/ppo.py` 源码为准。）
 
@@ -293,7 +293,7 @@ RSL-RL OnPolicyRunner
 >
 > 角度 2（频率视角）：env.step() 以 50 Hz（policy frequency）被调用，每次调用内部执行 4 个 200 Hz 的物理步进。PPO 的 update 则以 `1 / num_steps_per_env ≈ 2 Hz` 的频率发生——远低于 env.step() 的频率。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 1. **在 env.step() 内部假设"当前在 rollout 阶段"。** Manager 的代码不应依赖外部的训练阶段——它们应该是无状态的（给定输入产生确定输出）。
 2. **忘记 `terminated` 和 `truncated` 的区别。** `terminated=True` 意味着"任务失败"（如机器人摔倒），`truncated=True` 意味着"超时"（episode 达到最大步数）。PPO 需要这个区分来正确计算 value bootstrap。
@@ -309,7 +309,7 @@ RSL-RL OnPolicyRunner
 
 PPO 循环告诉我们"env.step() 每步被调用一次"。但 env.step() 内部发生了什么？这 18 个步骤的精确时序是本章的核心——理解它就理解了整个 Manager-Based 架构的运行机制。
 
-## 4.2 env.step() 内部时序精读 ⭐⭐⭐
+## 4.2 env.step() 内部时序精读 ★★★
 
 > **这一节解决什么问题**：逐行解析 `ManagerBasedRlEnv.step()` 的 18 步执行序列——这是理解所有 Manager 交互的关键。
 
@@ -499,7 +499,7 @@ Isaac Lab 的 `ManagerBasedRLEnv.step()` 时序与 mjlab 几乎完全一致—�
 
 > **本质洞察**：env.step() 的时序不是随意排列的——每个步骤的位置都有明确的工程理由。如果你要修改时序（如在 reward 之前加 `sim.forward()`），必须理解这个修改对性能和正确性的影响。99% 的情况下，你不需要修改时序——只需要理解它，以便正确地编写 obs/reward/event term。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 1. **在 reward term 中调用 `sim.forward()`。** 这会导致每步多一次 forward 调用，且可能破坏 CUDA Graph。如果你的 reward 需要最新的派生量，考虑在下一步的 reward 中使用（一步延迟通常不影响训练）。
 2. **在 observation term 中写入物理状态。** Observation 应该是只读的——它读取状态但不修改。如果你需要在 obs 计算时修改状态，应该用 event term 来做。
@@ -560,7 +560,7 @@ Isaac Lab 的 `ManagerBasedRLEnv.step()` 时序与 mjlab 几乎完全一致—�
 
 env.step() 的时序定义了"各 Manager 什么时候执行"。但为什么需要 Manager？它解决了什么问题？这就要回到 Manager-Based 架构的设计动机——从 legged_gym 的单体架构说起。
 
-## 4.3 Manager 模式的设计动机 ⭐⭐⭐
+## 4.3 Manager 模式的设计动机 ★★★
 
 > **这一节解决什么问题**：理解 Manager-Based 架构为什么比 legged_gym 的单体架构更好——这不是"更优雅"的审美问题，而是有明确工程收益的设计决策。
 
@@ -871,7 +871,7 @@ uv run train <TASK> --env.scene.num-envs 4 --agent.max-iterations 2
 | rough 保留 `fell_over` | 合理斜坡姿态被判摔倒 | orientation limit 不适合地形 | 检查 termination counts |
 | obs_groups 名不匹配 | RSL-RL 拿不到 obs | "actor" vs "policy" | 检查 wrapper 的 obs_groups |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 1. **认为 Manager 顺序不重要。** 加载顺序决定了依赖关系。如果你自定义了一个 Manager 并在错误的顺序创建它，可能导致依赖缺失。
 2. **在 legged_gym 代码中直接修改 `self.obs_buf` 期望在 reward 中使用。** Manager-Based 架构中 obs 和 reward 由不同的 Manager 计算，不共享中间变量。如果 reward 需要某个值，应该直接从 env 的状态中读取，而非依赖 obs 的中间结果。
@@ -984,7 +984,7 @@ def flat_orientation_reward(env: ManagerBasedRlEnv) -> torch.Tensor:
 
 ---
 
-## 4.4 双框架 Manager API 对比 ⭐⭐⭐
+## 4.4 双框架 Manager API 对比 ★★★
 
 > **这一节解决什么问题**：精读 mjlab 和 Isaac Lab 的 Manager API 差异——让你能在两个框架之间无障碍切换。
 
@@ -1575,7 +1575,7 @@ uv run play <TASK> --agent zero --num-envs 4
 uv run train <TASK> --env.scene.num-envs 64 --agent.max-iterations 2
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 1. **obs 函数返回了错误的 shape。** obs term 必须返回 `[num_envs, obs_dim]`，reward term 必须返回 `[num_envs]`。维度错误会导致 concat 失败或 reward 计算错误。
 2. **在 obs 函数中修改了环境状态。** Obs 函数应该是只读的（pure function）。如果你需要修改状态，用 event term。
@@ -1591,7 +1591,7 @@ uv run train <TASK> --env.scene.num-envs 64 --agent.max-iterations 2
 
 ---
 
-## 4.5 Entity 与 Articulation 系统 ⭐⭐
+## 4.5 Entity 与 Articulation 系统 ★★
 
 > **这一节解决什么问题**：理解 mjlab 的 Entity 系统和 Isaac Lab 的 Articulation 系统——它们是 Manager 的"数据来源"。
 
@@ -1799,7 +1799,7 @@ InteractiveSceneCfg（配置描述）
 
 **两种流程的关键差异**：mjlab 的 `spec.attach()` 允许在 Python 层面组合多个模型（如机器人 + 桌子 + 物体），而 Isaac Lab 依赖 USD 的 layer composition。mjlab 的方式更灵活（可以动态组合），Isaac Lab 的方式更标准化（利用 USD 生态）。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 1. **混淆 `root_link_pos_w` 和 `root_pos_w`。** 功能相同但名字不同。
 2. **在 Isaac Lab 3.0 中忘记 `wp.to_torch()`。** 3.0 的 `.data.*` 默认返回 `wp.array`。
@@ -1815,7 +1815,7 @@ InteractiveSceneCfg（配置描述）
 
 ---
 
-## 4.6 最小实验：验证你的理解 ⭐
+## 4.6 最小实验：验证你的理解 ★
 
 > **这一节解决什么问题**：通过四个递进的实验验证你对 Manager-Based 架构的理解，建立"改一个东西 → 观察效果"的实验习惯。
 
@@ -1916,7 +1916,7 @@ uv run play Mjlab-Velocity-Flat-Unitree-Go2 --agent zero --num-envs 4
 | `tasks/velocity/velocity_env_cfg.py` | `tasks/locomotion/velocity/config/*.py` | 目录结构不同 |
 | `rl/vecenv_wrapper.py` | `isaaclab_rl/rsl_rl/vecenv_wrapper.py` | obs_groups 处理不同 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 1. **实验时 num_envs 太大。** 调试时用 1-4 个环境就够——大量环境会让输出很难读。
 2. **忘记用 `--agent zero` 而不是 `--agent random`。** Zero agent 让所有 action 为零，便于观察"纯物理"行为。
@@ -2059,20 +2059,20 @@ Isaac Lab 除了 Manager-Based workflow，还提供了 **Direct workflow**——
 
 | 编号 | 知识点 | 核心要点 | 对应节 | 难度 |
 |------|--------|---------|--------|------|
-| 1 | PPO 训练循环 | rollout（数据收集）+ update（梯度更新），env.step() 是数据生产者 | 4.1 | ⭐⭐ |
-| 2 | RSL-RL VecEnv Wrapper | terminated/truncated 合并为 dones，time_outs 用于 value bootstrap | 4.1 | ⭐⭐ |
-| 3 | env.step() 18 步时序 | action→decimation→termination→reward→reset→forward→command→event→sense→obs | 4.2 | ⭐⭐⭐ |
-| 4 | reward 在 forward 前计算 | 派生量有一个 substep 滞后，性能 vs 精度权衡 | 4.2 | ⭐⭐⭐ |
-| 5 | obs 在 reset 后计算 | 确保返回新 episode 的初始 obs | 4.2 | ⭐⭐⭐ |
-| 6 | EventManager 四种模式 | startup/reset/step/interval | 4.2 | ⭐⭐ |
-| 7 | 单体 vs Manager-Based | 关注点分离、消融容易、团队协作友好 | 4.3 | ⭐⭐⭐ |
-| 8 | Manager 加载顺序 | Event→Command→Action→Obs→Term→Reward→Curriculum→Metrics→Recorder | 4.3 | ⭐⭐⭐ |
-| 9 | 双框架 API 差异 | actor vs policy、EntityCfg vs ArticulationCfg、tyro vs argparse | 4.4 | ⭐⭐⭐ |
-| 10 | ObservationManager 流程 | func→clip→noise→concat | 4.4 | ⭐⭐ |
-| 11 | RewardManager dt 缩放 | reward 权重是"单位时间密度"，独立于仿真频率 | 4.4 | ⭐⭐ |
-| 12 | 自定义 Term 编写 | 三步：写函数→config 引用→验证 | 4.4 | ⭐⭐ |
-| 13 | Entity vs Articulation | root_link vs root、MuJoCo 术语 vs PhysX 术语 | 4.5 | ⭐⭐ |
-| 14 | 四元数格式差异 | mjlab/Isaac Lab 2.x: wxyz，Isaac Lab 3.0: xyzw | 4.5 | ⭐⭐ |
+| 1 | PPO 训练循环 | rollout（数据收集）+ update（梯度更新），env.step() 是数据生产者 | 4.1 | ★★ |
+| 2 | RSL-RL VecEnv Wrapper | terminated/truncated 合并为 dones，time_outs 用于 value bootstrap | 4.1 | ★★ |
+| 3 | env.step() 18 步时序 | action→decimation→termination→reward→reset→forward→command→event→sense→obs | 4.2 | ★★★ |
+| 4 | reward 在 forward 前计算 | 派生量有一个 substep 滞后，性能 vs 精度权衡 | 4.2 | ★★★ |
+| 5 | obs 在 reset 后计算 | 确保返回新 episode 的初始 obs | 4.2 | ★★★ |
+| 6 | EventManager 四种模式 | startup/reset/step/interval | 4.2 | ★★ |
+| 7 | 单体 vs Manager-Based | 关注点分离、消融容易、团队协作友好 | 4.3 | ★★★ |
+| 8 | Manager 加载顺序 | Event→Command→Action→Obs→Term→Reward→Curriculum→Metrics→Recorder | 4.3 | ★★★ |
+| 9 | 双框架 API 差异 | actor vs policy、EntityCfg vs ArticulationCfg、tyro vs argparse | 4.4 | ★★★ |
+| 10 | ObservationManager 流程 | func→clip→noise→concat | 4.4 | ★★ |
+| 11 | RewardManager dt 缩放 | reward 权重是"单位时间密度"，独立于仿真频率 | 4.4 | ★★ |
+| 12 | 自定义 Term 编写 | 三步：写函数→config 引用→验证 | 4.4 | ★★ |
+| 13 | Entity vs Articulation | root_link vs root、MuJoCo 术语 vs PhysX 术语 | 4.5 | ★★ |
+| 14 | 四元数格式差异 | mjlab/Isaac Lab 2.x: wxyz，Isaac Lab 3.0: xyzw | 4.5 | ★★ |
 
 ---
 
@@ -2091,25 +2091,25 @@ Isaac Lab 除了 Manager-Based workflow，还提供了 **Direct workflow**——
 
 | 资源 | 难度 | 说明 |
 |------|------|------|
-| Isaac Lab 文档：Task Design Workflows | ⭐⭐ | Manager-Based vs Direct 工作流的官方对比 |
-| Isaac Lab 文档：Creating a Manager-Based RL Environment | ⭐⭐ | CartPole 教程，从零构建 Manager-Based 环境 |
-| mjlab 架构文档：`docs/source/architecture_overview.rst` | ⭐⭐ | mjlab 的 Manager 体系设计 |
-| Zakka et al., *mjlab: A Lightweight Framework*, arXiv 2601.22074 §3 | ⭐⭐ | mjlab 的 env.step() 时序和 Manager 设计 |
+| Isaac Lab 文档：Task Design Workflows | ★★ | Manager-Based vs Direct 工作流的官方对比 |
+| Isaac Lab 文档：Creating a Manager-Based RL Environment | ★★ | CartPole 教程，从零构建 Manager-Based 环境 |
+| mjlab 架构文档：`docs/source/architecture_overview.rst` | ★★ | mjlab 的 Manager 体系设计 |
+| Zakka et al., *mjlab: A Lightweight Framework*, arXiv 2601.22074 §3 | ★★ | mjlab 的 env.step() 时序和 Manager 设计 |
 
 ### PPO 工程实现
 
 | 资源 | 难度 | 说明 |
 |------|------|------|
-| Schwarke et al., *RSL-RL: A Learning Library*, arXiv 2509.10771 | ⭐⭐ | RSL-RL 的 PPO 实现和 actor-critic 分离 |
-| SpinningUp PPO 教程 | ⭐ | PPO 算法的通俗讲解 |
-| The 37 Implementation Details of PPO (Huang et al., 2022) | ⭐⭐⭐ | PPO 工程细节的权威参考 |
+| Schwarke et al., *RSL-RL: A Learning Library*, arXiv 2509.10771 | ★★ | RSL-RL 的 PPO 实现和 actor-critic 分离 |
+| SpinningUp PPO 教程 | ★ | PPO 算法的通俗讲解 |
+| The 37 Implementation Details of PPO (Huang et al., 2022) | ★★★ | PPO 工程细节的权威参考 |
 
 ### legged_gym 参考
 
 | 资源 | 难度 | 说明 |
 |------|------|------|
-| Rudin et al., *Learning to Walk in Minutes*, CoRL 2021 | ⭐⭐ | legged_gym 的原始论文 |
-| legged_gym 仓库：`github.com/leggedrobotics/legged_gym` | ⭐⭐ | 单体架构的代码参考，对比理解 Manager-Based |
+| Rudin et al., *Learning to Walk in Minutes*, CoRL 2021 | ★★ | legged_gym 的原始论文 |
+| legged_gym 仓库：`github.com/leggedrobotics/legged_gym` | ★★ | 单体架构的代码参考，对比理解 Manager-Based |
 
 ---
 

@@ -1,12 +1,12 @@
 # PCL 点云库深度剖析
 
-> **难度**：⭐⭐～⭐⭐⭐⭐ | **建议用时**：2周 | **前置要求**：通用库·Eigen Eigen深入
+> **难度**：★★～★★★★ | **建议用时**：2周 | **前置要求**：通用库·Eigen Eigen深入
 
 ---
 
 ## 前置自测
 
-📋 **前置自测**（答不出 ≥ 2 题 → 先回 通用库·Eigen 复习 Eigen、SLAM库·GTSAM 复习 ROS）
+◆ **前置自测**（答不出 ≥ 2 题 → 先回 通用库·Eigen 复习 Eigen、SLAM库·GTSAM 复习 ROS）
 
 1. Eigen 中 `Matrix3d` 和 `MatrixXd` 的区别是什么？为什么 SLAM 中优先使用固定大小矩阵？
 2. 什么是模板特化（template specialization）？`std::vector<Eigen::Vector4f, Eigen::aligned_allocator<Eigen::Vector4f>>` 中的 aligned_allocator 解决什么问题？
@@ -51,7 +51,7 @@ PCL 点云库
 
 ---
 
-## 27.1 PCL 设计哲学与点类型系统 ⭐⭐
+## 27.1 PCL 设计哲学与点类型系统 ★★
 
 ### 这一节解决什么问题
 
@@ -126,7 +126,7 @@ struct PointNormal {        // 坐标 + 法向量 + 曲率
 
 **为什么要这样设计？** 因为 SLAM 中的点云处理是计算密集型的。LiDAR 每秒产生几十万到上百万个点，如果每个点都用 `std::map<std::string, float>` 这样的动态结构存字段，内存开销和缓存命中率都会惨不忍睹。用 POD（Plain Old Data）结构体，点云在内存中是连续排列的，对 SIMD 和缓存非常友好。
 
-> ⚠️ **编程陷阱：PointXYZRGB 的 rgb 字段不是你想的那样**
+> ⚠ **编程陷阱：PointXYZRGB 的 rgb 字段不是你想的那样**
 >
 > **错误做法**：直接赋值 `point.rgb = 255.0f;` 以为设置了白色
 >
@@ -246,7 +246,7 @@ output_msg.header.stamp = ros::Time::now();
 publisher.publish(output_msg);
 ```
 
-> ⚠️ **编程陷阱：fromROSMsg 的字段名必须匹配**
+> ⚠ **编程陷阱：fromROSMsg 的字段名必须匹配**
 >
 > **错误做法**：ROS 消息中字段叫 `"i"`（某些 LiDAR 驱动的输出），但 PCL 点类型中字段叫 `"intensity"`
 >
@@ -280,7 +280,7 @@ publisher.publish(output_msg);
 
 ---
 
-## 27.2 滤波器全家族 ⭐⭐
+## 27.2 滤波器全家族 ★★
 
 ### 这一节解决什么问题
 
@@ -369,7 +369,7 @@ crop_box.setNegative(true);  // true = 去除区域内的点（保留外面的�
 crop_box.filter(*output_cloud);
 ```
 
-> ⚠️ **编程陷阱：CropBox 的 setMin/setMax 要求 Vector4f，最后一位必须是 1.0**
+> ⚠ **编程陷阱：CropBox 的 setMin/setMax 要求 Vector4f，最后一位必须是 1.0**
 >
 > **错误做法**：`setMin(Eigen::Vector4f(-2, -1, -1.5, 0))` —— 最后一位写成 0
 >
@@ -456,7 +456,7 @@ ror.filter(*output_cloud);
 >
 > **自检方法**：去掉一个滤波器，看 SLAM 的精度（APE/RPE）是否有显著下降。如果没有，说明这个滤波器是多余的。工程中应该遵循"最少必要"原则。
 
-> ⚠️ **编程陷阱：VoxelGrid 的 setLeafSize 三个轴必须同时设置**
+> ⚠ **编程陷阱：VoxelGrid 的 setLeafSize 三个轴必须同时设置**
 >
 > **错误做法**：`voxel.setLeafSize(0.4f, 0.0f, 0.4f)` —— 某个轴设为 0
 >
@@ -476,7 +476,7 @@ ror.filter(*output_cloud);
 
 ---
 
-## 27.3 KD-Tree 与近邻搜索 ⭐⭐
+## 27.3 KD-Tree 与近邻搜索 ★★
 
 ### 这一节解决什么问题
 
@@ -521,7 +521,7 @@ kdtree.radiusSearch(query_point, radius, radius_indices, radius_distances);
 // 返回的点数不固定，取决于查询位置的点密度
 ```
 
-> ⚠️ **编程陷阱：KdTreeFLANN 返回的 distances 是平方距离**
+> ⚠ **编程陷阱：KdTreeFLANN 返回的 distances 是平方距离**
 >
 > **错误做法**：`if (distances[0] < 1.0)` 以为在检查 1 米内的最近邻
 >
@@ -631,7 +631,7 @@ nanoflann 是 FLANN 的"精简版"，纯头文件设计，零外部依赖，编�
 >
 > **正确思维**：选择空间索引不是比"搜索精度"，而是比**在你的系统中的综合表现**——包括建图速度、查询速度、内存占用、实现复杂度、可维护性。在实时性要求高的场景（如 100Hz LiDAR），牺牲一点搜索精度换取大幅加速往往是值得的。
 
-> ⚠️ **编程陷阱：在多线程中共享 KdTreeFLANN 对象**
+> ⚠ **编程陷阱：在多线程中共享 KdTreeFLANN 对象**
 >
 > **错误做法**：一个线程调用 `setInputCloud` 重建树，另一个线程同时调用 `nearestKSearch`
 >
@@ -651,7 +651,7 @@ nanoflann 是 FLANN 的"精简版"，纯头文件设计，零外部依赖，编�
 
 ---
 
-## 27.4 点云配准 ⭐⭐⭐
+## 27.4 点云配准 ★★★
 
 ### 这一节解决什么问题
 
@@ -859,7 +859,7 @@ pcl::PointCloud<pcl::PointXYZI>::Ptr aligned(new pcl::PointCloud<pcl::PointXYZI>
 ndt.align(*aligned, init_guess);       // 可以提供初始猜测
 ```
 
-> ⚠️ **编程陷阱：NDT 的 resolution 参数极其敏感**
+> ⚠ **编程陷阱：NDT 的 resolution 参数极其敏感**
 >
 > **错误做法**：不调参，直接用默认 resolution = 1.0m
 >
@@ -1007,7 +1007,7 @@ if (registration->hasConverged()) {
 
 所有算法都继承 `pcl::Registration` 接口，可以作为 PCL 原版 ICP/GICP/NDT 的**即插即用替代品**。在 hdl_graph_slam 中切换到 `FAST_VGICP` 通常能获得 3-5 倍的加速，且配准精度相当甚至更好（因为多线程允许更多迭代）。
 
-> ⚠️ **编程陷阱：ICP 的 align() 参数是输出而不是初始猜测**
+> ⚠ **编程陷阱：ICP 的 align() 参数是输出而不是初始猜测**
 >
 > **错误做法**：`icp.align(*initial_guess_cloud)` 以为传入预对齐的点云就是提供初始猜测
 >
@@ -1046,7 +1046,7 @@ if (registration->hasConverged()) {
 2. **三种算法对比实验**：使用 KITTI 数据集的相邻两帧点云（推荐 sequence 00 的连续帧），分别用 ICP、GICP、NDT 进行配准。记录并对比：(a) 收敛所需迭代次数，(b) 最终 fitness score，(c) 恢复的变换与 ground truth 的误差（旋转误差用角度、平移误差用欧氏距离），(d) 单次运行时间。制作对比表格，分析在哪些帧上三者差异最大，为什么。
 
 3. **配准工厂模式实现**：仿照 hdl_graph_slam 的 `registrations.cpp`，实现一个配准算法工厂函数 `create_registration(const std::string& method)`。支持 ICP、GICP、NDT 三种方法，所有方法返回 `pcl::Registration<PointXYZI, PointXYZI>::Ptr`。编写测试代码，用同一组数据在循环中依次调用三种算法，验证切换算法只需改一个字符串参数。思考：如果要添加第 4 种算法（如 fast_gicp），需要修改调用方代码吗？
-## 27.5 分割与特征 ⭐⭐
+## 27.5 分割与特征 ★★
 
 > **本节解决的问题**：拿到滤波后的点云，如何从中提取有意义的几何结构——地面在哪里？障碍物有几个？两帧点云之间如何建立粗略对应？
 
@@ -1319,21 +1319,21 @@ Patchwork++（IROS 2022，KAIST url-kaist 团队）从根本上重新设计了�
 | 速度（64线） | ~15ms | ~5ms |
 | 鲁棒性 | 中（参数敏感） | 高（4 个鲁棒模块） |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：RANSAC 的 DistanceThreshold 设置不当**
+> ⚠ **编程陷阱：RANSAC 的 DistanceThreshold 设置不当**
 > - 错误做法：一个阈值走天下，室内室外都用 0.02m
 > - 现象：室外场景中地面起伏超过 2cm 的区域全部被漏检，地面分割只在传感器正下方一小块有效
 > - 根本原因：室外路面的平整度远不如室内地板，坑洼、坡道、减速带都会导致点到平面距离 > 2cm
 > - 正确做法：室内 0.01-0.02m，室外 0.05-0.15m；或直接用 Patchwork++ 的自适应阈值
 
-> ⚠️ **概念误区：认为 EuclideanClusterExtraction 是"智能"的物体分割**
+> ⚠ **概念误区：认为 EuclideanClusterExtraction 是"智能"的物体分割**
 > - 新手想法："设好参数就能自动分出行人、车辆、树木"
 > - 实际上：欧氏聚类只看空间距离，完全不理解语义。两个紧挨的行人会合并成一个聚类；一辆车的车顶和车身如果中间有间隙可能被分成两个聚类
 > - 正确理解：欧氏聚类是空间连通性分析，不是语义分割。真正的语义分割需要深度学习方法（如 Cylinder3D、SphereFormer）
 > - 自检方法：如果你的聚类数量随 tolerance 参数变化剧烈，说明场景中物体间距不均匀，欧氏聚类的假设不成立
 
-> ⚠️ **思维陷阱：认为 FPFH 粗配准可以替代 ICP**
+> ⚠ **思维陷阱：认为 FPFH 粗配准可以替代 ICP**
 > - 新手想法："FPFH + SAC-IA 已经能对齐了，为什么还要跑 ICP？"
 > - 实际上：SAC-IA 的对齐精度通常只有 10-30cm，对于建图这远远不够。SAC-IA 的价值在于提供一个足够好的初始值，让 ICP 不会陷入局部最优。两者是互补关系而非替代关系
 > - 正确思维：粗配准解决"大方向对不对"，精配准解决"精度够不够"。在有 IMU 的 SLAM 系统中（如 LIO-SAM），IMU 预积分已经提供了足够好的初始值，所以不需要 FPFH
@@ -1346,7 +1346,7 @@ Patchwork++（IROS 2022，KAIST url-kaist 团队）从根本上重新设计了�
 
 ---
 
-## 27.6 PCL 使用趋势与替代 ⭐⭐
+## 27.6 PCL 使用趋势与替代 ★★
 
 > **本节解决的问题**：PCL 在 SLAM 项目中的角色正在快速演变。理解这个趋势，才能做出正确的技术选型。
 
@@ -1411,14 +1411,14 @@ PCL 诞生于 2011 年，是点云处理的事实标准。但从 2018 年至今�
         └── 否 → cilantro 或 Eigen + nanoflann
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **思维陷阱：认为"新的就是好的，应该完全抛弃 PCL"**
+> ⚠ **思维陷阱：认为"新的就是好的，应该完全抛弃 PCL"**
 > - 新手想法："FAST-LIO2 不用 PCL 的算法，说明 PCL 过时了"
 > - 实际上：FAST-LIO2 不用 PCL 算法是因为它有自研的 ikd-Tree 和手写 ESKF，这需要极强的算法能力。对于大多数工程项目，PCL 的 VoxelGrid + ICP + NormalEstimation 仍然是最实用的选择
 > - 正确思维：理解每个工具的边界——PCL 是"通用瑞士军刀"，专用库是"定制手术刀"。没必要所有项目都用手术刀
 
-> ⚠️ **编程陷阱：混用 PCL 和 Open3D 的数据结构**
+> ⚠ **编程陷阱：混用 PCL 和 Open3D 的数据结构**
 > - 错误做法：在同一个项目中频繁在 `pcl::PointCloud` 和 `open3d::geometry::PointCloud` 之间转换
 > - 现象：每次转换都要拷贝全部点数据（深拷贝），十万级点云拷贝一次约 1-3ms，在实时循环中这是不可接受的
 > - 根本原因：PCL 用连续内存存储结构体数组（AoS），Open3D 用独立的 `std::vector<Eigen::Vector3d>` 存储坐标/颜色/法向量，内存布局不兼容，无法零拷贝共享
@@ -1431,7 +1431,7 @@ PCL 诞生于 2011 年，是点云处理的事实标准。但从 2018 年至今�
 
 ---
 
-## 27.7 SLAM 代码精读 ⭐⭐⭐
+## 27.7 SLAM 代码精读 ★★★
 
 > **本节解决的问题**：理论学了很多，但打开真实 SLAM 源码时仍然一脸懵。本节带你逐行精读三个代表性系统中 PCL 的实际用法。
 
@@ -1643,20 +1643,20 @@ auto T = registration->getFinalTransformation();
 | 高精度需求 | FAST_VGICP | 体素化 GICP 兼顾速度与精度 |
 | 快速原型 | ICP | 最简单，参数最少，调试方便 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：ICP align 后忘记检查 hasConverged()**
+> ⚠ **编程陷阱：ICP align 后忘记检查 hasConverged()**
 > - 错误做法：`icp.align(*result); auto T = icp.getFinalTransformation();` 直接使用变换
 > - 现象：ICP 可能因为迭代次数用完而退出（未收敛），此时 `getFinalTransformation()` 返回的是最后一次迭代的结果，可能完全错误——想象两帧点云根本没有重叠区域，ICP 也会返回一个"变换"
 > - 正确做法：永远先检查 `icp.hasConverged()` 和 `icp.getFitnessScore()`，不满足条件则拒绝该结果
 
-> ⚠️ **思维陷阱：认为 VoxelGrid leaf size 越小配准越准**
+> ⚠ **思维陷阱：认为 VoxelGrid leaf size 越小配准越准**
 > - 新手想法："leaf size 0.01m 肯定比 0.1m 更精确"
 > - 实际上：leaf size 太小 → 点太多 → ICP 每次迭代找最近邻极慢 → 实时性崩溃。而且过密的点云中大量是地面/墙壁的重复信息，对配准精度贡献为零甚至有害（平面点主导导致退化）
 > - LIO-SAM 的经验值：角点 0.2m、面点 0.4m、ICP 回环 0.5m。这些数字是在精度和速度之间反复调参的结果
 > - 自检方法：把 leaf size 从 0.1 到 1.0 按 0.1 步长扫参，画出 fitness score 和耗时的曲线，找到"knee point"
 
-> ⚠️ **编程陷阱：ikd-Tree 的线程安全问题**
+> ⚠ **编程陷阱：ikd-Tree 的线程安全问题**
 > - 错误做法：在一个线程中调用 `Add_Points()`，同时在另一个线程中调用 `Nearest_Search()`
 > - 现象：偶发的段错误（Segfault）或搜索结果不一致。这类 bug 极难复现和调试
 > - 根本原因：ikd-Tree 的增量操作会修改树结构（节点分裂、惰性重平衡），搜索时如果树正在修改，会读到不一致的中间状态
@@ -1670,7 +1670,7 @@ auto T = registration->getFinalTransformation();
 
 ---
 
-## 27.8 实战 ⭐⭐
+## 27.8 实战 ★★
 
 > **本节解决的问题**：把前面学的所有 PCL 知识串成一条完整的 Pipeline，从文件加载到配准到保存，写出可编译运行的完整程序。
 
@@ -1905,14 +1905,14 @@ void lidarCallback(const sensor_msgs::PointCloud2::ConstPtr& msg) {
 }
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：loadPCDFile 返回值未检查**
+> ⚠ **编程陷阱：loadPCDFile 返回值未检查**
 > - 错误做法：`pcl::io::loadPCDFile("data.pcd", *cloud);` 直接继续处理
 > - 现象：如果文件不存在或格式错误，cloud 为空（0 个点），后续所有操作静默失败——滤波输出 0 个点、ICP 返回单位矩阵，程序不崩溃但结果全是零。你会花几个小时 debug 算法，最后发现是文件路径打错了
 > - 正确做法：永远检查返回值 `if (pcl::io::loadPCDFile(...) == -1) { /* 报错并退出 */ }`
 
-> ⚠️ **编程陷阱：PCL 滤波器不复制 header**
+> ⚠ **编程陷阱：PCL 滤波器不复制 header**
 > - 错误做法：滤波后直接发布到 ROS，不设置 header
 > - 现象：RViz 中看不到点云（frame_id 为空），或者 TF 查找失败（timestamp 为 0）
 > - 根本原因：VoxelGrid 等滤波器在某些 PCL 版本中不会完整复制输入云的 `header`（包括 `frame_id` 和 `stamp`）
@@ -1927,7 +1927,7 @@ void lidarCallback(const sensor_msgs::PointCloud2::ConstPtr& msg) {
 
 ---
 
-## 27.9 点云工程边界与验证清单 ⭐⭐
+## 27.9 点云工程边界与验证清单 ★★
 
 > **这一节解决什么问题**：PCL 的 API 很丰富，但 SLAM 中真正影响稳定性的边界通常是 NaN、frame_id、时间戳、点类型、organized/unorganized cloud 和配准初值。本节给出上线前必须验证的点云处理边界。
 
@@ -2018,7 +2018,7 @@ ICP/GICP/NDT 的失败不总是算法参数问题。配准要求当前帧和目�
 
 ---
 
-## 27.10 GPU 加速点云处理与 Open3D 对比 ⭐⭐⭐
+## 27.10 GPU 加速点云处理与 Open3D 对比 ★★★
 
 ### 动机：百万级点云的实时处理瓶颈
 
@@ -2062,7 +2062,7 @@ Open3D（Zhou et al., Intel Labs, 2018）是一个现代点云处理库，定位
 
 > **本质洞察**：PCL 和 Open3D 代表了两种工程哲学。PCL 是"C++ 模板元编程的点云百科全书"——类型安全、编译期优化、但学习曲线陡峭。Open3D 是"Python 世界的点云 NumPy"——灵活、易用、但 C++ 互操作需要额外工作。在机器人系统中，两者常常并存——PCL 负责实时管道，Open3D 负责离线分析和可视化。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > 🧠 **思维陷阱：认为 GPU 加速可以替代算法优化**
 >
@@ -2084,20 +2084,20 @@ Open3D（Zhou et al., Intel Labs, 2018）是一个现代点云处理库，定位
 
 | 知识点 | 核心内容 | 难度 | SLAM 中的典型用法 |
 |--------|---------|------|------------------|
-| 点类型系统 | PointXYZ/XYZI/XYZRGB + 自定义类型宏 | ⭐ | LIO-SAM 3 种自定义类型 |
-| VoxelGrid | 体素降采样，leaf size 控制精度-速度 | ⭐ | LIO-SAM 6 个实例，不同 leaf size |
-| CropBox | 立方体裁剪，去除车体自身点 | ⭐ | 预处理第一步 |
-| StatisticalOutlierRemoval | K 近邻统计去噪 | ⭐⭐ | 离群点去除 |
-| KdTreeFLANN | K 近邻搜索、半径搜索 | ⭐⭐ | 配准、回环检测、法向量估计 |
-| ICP / GICP / NDT | 点云配准三大算法 | ⭐⭐ | 回环验证、scan matching |
-| SACSegmentation | RANSAC 平面分割 | ⭐⭐ | hdl_graph_slam 地面检测 |
-| NormalEstimation | 法向量估计 | ⭐⭐ | 地面检测预过滤、FPFH 前置 |
-| EuclideanClusterExtraction | 欧氏聚类分割 | ⭐⭐ | 障碍物分割 |
-| FPFHEstimation + SAC-IA | 特征描述子 + 粗配准 | ⭐⭐⭐ | 无先验时的初始对齐 |
-| Patchwork++ | 自适应地面分割（零 PCL 依赖） | ⭐⭐⭐ | 现代地面分割替代方案 |
-| ikd-Tree | 增量式 KD-Tree | ⭐⭐⭐ | FAST-LIO2 替代 pcl::KdTree |
-| 配准工厂模式 | 基类指针 + 运行时切换 | ⭐⭐⭐ | hdl_graph_slam 7 种配准热切换 |
-| PCL 使用趋势 | 从全面依赖到极简容器 | ⭐⭐ | 技术选型决策 |
+| 点类型系统 | PointXYZ/XYZI/XYZRGB + 自定义类型宏 | ★ | LIO-SAM 3 种自定义类型 |
+| VoxelGrid | 体素降采样，leaf size 控制精度-速度 | ★ | LIO-SAM 6 个实例，不同 leaf size |
+| CropBox | 立方体裁剪，去除车体自身点 | ★ | 预处理第一步 |
+| StatisticalOutlierRemoval | K 近邻统计去噪 | ★★ | 离群点去除 |
+| KdTreeFLANN | K 近邻搜索、半径搜索 | ★★ | 配准、回环检测、法向量估计 |
+| ICP / GICP / NDT | 点云配准三大算法 | ★★ | 回环验证、scan matching |
+| SACSegmentation | RANSAC 平面分割 | ★★ | hdl_graph_slam 地面检测 |
+| NormalEstimation | 法向量估计 | ★★ | 地面检测预过滤、FPFH 前置 |
+| EuclideanClusterExtraction | 欧氏聚类分割 | ★★ | 障碍物分割 |
+| FPFHEstimation + SAC-IA | 特征描述子 + 粗配准 | ★★★ | 无先验时的初始对齐 |
+| Patchwork++ | 自适应地面分割（零 PCL 依赖） | ★★★ | 现代地面分割替代方案 |
+| ikd-Tree | 增量式 KD-Tree | ★★★ | FAST-LIO2 替代 pcl::KdTree |
+| 配准工厂模式 | 基类指针 + 运行时切换 | ★★★ | hdl_graph_slam 7 种配准热切换 |
+| PCL 使用趋势 | 从全面依赖到极简容器 | ★★ | 技术选型决策 |
 
 **一句话总结**：PCL 是点云处理的"百科全书"，但现代 SLAM 的趋势是只用其数据类型和简单滤波，核心算法用更高效的专用库。理解 PCL 的全部能力和它的边界，才能做出正确的技术选型。
 
@@ -2139,25 +2139,25 @@ mini_lio/
 ## 延伸阅读
 
 **官方文档**：
-- PCL 官方教程（滤波、分割、配准、特征全覆盖）：https://pcl.readthedocs.io/projects/tutorials/en/latest/ ⭐
-- PCL API 参考文档：https://pointclouds.org/documentation/ ⭐⭐
+- PCL 官方教程（滤波、分割、配准、特征全覆盖）：https://pcl.readthedocs.io/projects/tutorials/en/latest/ ★
+- PCL API 参考文档：https://pointclouds.org/documentation/ ★★
 
 **论文**：
-- Rusu & Cousins, "3D is here: Point Cloud Library (PCL)", ICRA 2011 —— PCL 奠基论文，了解设计理念 ⭐⭐
-- Lee et al., "Patchwork++: Fast and Robust Ground Segmentation Solving Partial Under-Segmentation Using 3D Point Cloud", IROS 2022 —— 现代地面分割的标杆 ⭐⭐⭐
-- Cai et al., "ikd-Tree: An Incremental KD Tree for Robotic Applications", arXiv 2021 —— FAST-LIO2 核心数据结构 ⭐⭐⭐
-- Koide et al., "Voxelized GICP for Fast and Accurate 3D Point Cloud Registration", ICRA 2021 —— fast_gicp/small_gicp 的理论基础 ⭐⭐⭐
-- Rusu et al., "Fast Point Feature Histograms (FPFH) for 3D Registration", ICRA 2009 —— FPFH 特征描述子原论文 ⭐⭐⭐
-- Zampogiannis et al., "cilantro: A Lean, Versatile, and Efficient Library for Point Cloud Data Processing", ACM MM 2018 —— PCL 轻量替代方案 ⭐⭐⭐⭐
+- Rusu & Cousins, "3D is here: Point Cloud Library (PCL)", ICRA 2011 —— PCL 奠基论文，了解设计理念 ★★
+- Lee et al., "Patchwork++: Fast and Robust Ground Segmentation Solving Partial Under-Segmentation Using 3D Point Cloud", IROS 2022 —— 现代地面分割的标杆 ★★★
+- Cai et al., "ikd-Tree: An Incremental KD Tree for Robotic Applications", arXiv 2021 —— FAST-LIO2 核心数据结构 ★★★
+- Koide et al., "Voxelized GICP for Fast and Accurate 3D Point Cloud Registration", ICRA 2021 —— fast_gicp/small_gicp 的理论基础 ★★★
+- Rusu et al., "Fast Point Feature Histograms (FPFH) for 3D Registration", ICRA 2009 —— FPFH 特征描述子原论文 ★★★
+- Zampogiannis et al., "cilantro: A Lean, Versatile, and Efficient Library for Point Cloud Data Processing", ACM MM 2018 —— PCL 轻量替代方案 ★★★★
 
 **开源项目**：
-- LIO-SAM：https://github.com/TixiaoShan/LIO-SAM —— PCL 选择性使用的典范 ⭐⭐
-- FAST-LIO2：https://github.com/hku-mars/FAST_LIO —— 极简 PCL 使用 + ikd-Tree ⭐⭐
-- hdl_graph_slam：https://github.com/koide3/hdl_graph_slam —— PCL 全面依赖的经典工程 ⭐⭐
-- small_gicp：https://github.com/koide3/small_gicp —— 高性能配准替代库 ⭐⭐⭐
-- Patchwork++：https://github.com/url-kaist/patchwork-plusplus —— 零 PCL 地面分割 ⭐⭐⭐
-- Open3D：https://github.com/isl-org/Open3D —— 现代点云处理库（Python 优先） ⭐⭐
-- nanoflann：https://github.com/jlblancoc/nanoflann —— header-only KD-Tree 替代 ⭐⭐⭐
+- LIO-SAM：https://github.com/TixiaoShan/LIO-SAM —— PCL 选择性使用的典范 ★★
+- FAST-LIO2：https://github.com/hku-mars/FAST_LIO —— 极简 PCL 使用 + ikd-Tree ★★
+- hdl_graph_slam：https://github.com/koide3/hdl_graph_slam —— PCL 全面依赖的经典工程 ★★
+- small_gicp：https://github.com/koide3/small_gicp —— 高性能配准替代库 ★★★
+- Patchwork++：https://github.com/url-kaist/patchwork-plusplus —— 零 PCL 地面分割 ★★★
+- Open3D：https://github.com/isl-org/Open3D —— 现代点云处理库（Python 优先） ★★
+- nanoflann：https://github.com/jlblancoc/nanoflann —— header-only KD-Tree 替代 ★★★
 
 ---
 

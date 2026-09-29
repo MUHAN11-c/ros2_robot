@@ -1,6 +1,6 @@
 # CUDA 基础概念与 Thrust 库
 
-> **难度**：⭐⭐⭐⭐ | **建议用时**：2 周 | **前置要求**：并行编程框架 并行框架，内存分配策略与pmr 内存分配策略，缓存优化与数据布局 缓存优化与数据布局
+> **难度**：★★★★ | **建议用时**：2 周 | **前置要求**：并行编程框架 并行框架，内存分配策略与pmr 内存分配策略，缓存优化与数据布局 缓存优化与数据布局
 
 ---
 
@@ -75,7 +75,7 @@ GPU 的优势不是单个线程快，而是大量线程同时执行规则计算�
 
 ---
 
-## 37.1 GPU 适合什么：规则的大规模数据并行 ⭐⭐
+## 37.1 GPU 适合什么：规则的大规模数据并行 ★★
 
 > **这一节解决什么问题**：GPU 不是"更多核心的 CPU"——为什么 GPU 需要上万线程？什么样的计算才能真正受益于 GPU？
 
@@ -142,7 +142,7 @@ GPU 和 CPU 的关系，类似于货轮和快递摩托车的关系。快递摩�
 
 如果把一个只有 200 个点的小循环搬到 GPU 会怎样？kernel launch 开销约 5-20 微秒，H2D/D2H 传输至少几十微秒，而 200 个点的变换在 CPU 上可能只需 1-2 微秒。GPU 版本反而慢了 10-50 倍。这不是 GPU 的错，而是问题规模不匹配执行模型。
 
-> ⚠️ **编程陷阱：kernel launch overhead 比计算本身还大**
+> ⚠ **编程陷阱：kernel launch overhead 比计算本身还大**
 > **错误做法**：为几百个元素的小循环启动 GPU kernel。
 > **现象**：GPU 版本比 CPU 版本慢 10 倍以上。
 > **根本原因**：kernel launch 有固定开销（通常 5-20 微秒），与计算量无关。如果计算本身不到 1 微秒，launch overhead 就是主要成本。
@@ -226,7 +226,7 @@ GPU 版本必须和 CPU 参考比较正确性。
 
 ---
 
-## 37.2 CUDA 执行模型：Thread、Block、Grid ⭐⭐
+## 37.2 CUDA 执行模型：Thread、Block、Grid ★★
 
 ### 工程问题：GPU 线程很多，但每个线程很轻
 
@@ -326,7 +326,7 @@ Thrust 把许多标准并行模式封装成类似 STL 的算法。
 
 只有当标准算法组合无法满足需求，或者 profiling 明确显示 Thrust 组合不是瓶颈最优时，再考虑手写 kernel 或更底层的 CUB。
 
-> ⚠️ **编程陷阱：host/device 内存指针混淆**
+> ⚠ **编程陷阱：host/device 内存指针混淆**
 > **错误做法**：把 `thrust::device_vector` 的 `data()` 指针当成 host 指针传给 CPU 函数。
 > **现象**：segfault 或非法内存访问，且只在有 GPU 的机器上崩溃。
 > **根本原因**：`device_vector::data()` 返回的是 device 指针，CPU 代码不能直接解引用。这是 host/device 内存空间隔离的基本规则。
@@ -344,7 +344,7 @@ Thrust 把许多标准并行模式封装成类似 STL 的算法。
 
 ---
 
-## 37.3 GPU 内存模型与数据传输 ⭐⭐
+## 37.3 GPU 内存模型与数据传输 ★★
 
 ### 工程问题：数据在哪里，比计算怎么写更重要
 
@@ -456,7 +456,7 @@ Unified Memory 允许 CPU 和 GPU 使用同一个指针模型。
 2. 性能关键路径仍要测迁移和同步。
 3. 不要把易用性误认为零成本。
 
-> ⚠️ **编程陷阱：每个小步骤都做 H2D/D2H 往返传输**
+> ⚠ **编程陷阱：每个小步骤都做 H2D/D2H 往返传输**
 > **错误做法**：GPU 过滤后下载到 CPU，再上传做变换，再下载做体素化，再上传做归约。
 > **现象**：端到端 GPU 版本比纯 CPU 版本还慢。profiling 显示 80% 时间花在数据传输上。
 > **根本原因**：PCIe 传输带宽有限（通常 10-16 GB/s），每次传输还有固定延迟。N 次往返的开销是 N 倍，而且阻止了 CPU-GPU 重叠执行。
@@ -515,7 +515,7 @@ PCIe 是独立 GPU（桌面/服务器）和 CPU 之间的物理连接。它的�
 
 ---
 
-## 37.4 Thrust 心智模型：GPU 侧 STL ⭐⭐
+## 37.4 Thrust 心智模型：GPU 侧 STL ★★
 
 ### 工程问题：SLAM 工程师不应该从手写 kernel 起步
 
@@ -583,7 +583,7 @@ Thrust functor 如果在 GPU 执行，`operator()` 需要可在 device 调用。
 
 尽量让 functor 是小型、平凡、只含数值字段的对象。
 
-> ⚠️ **编程陷阱：在 device functor 中使用 host-only 函数**
+> ⚠ **编程陷阱：在 device functor 中使用 host-only 函数**
 > **错误做法**：在 `__device__` functor 的 `operator()` 中调用 `std::cout`、`std::string` 或标准库 I/O。
 > **现象**：nvcc 编译报 "calling a __host__ function from a __device__ function is not allowed"。
 > **根本原因**：GPU 线程不能执行 host-only 代码。标准库的大部分函数（I/O、容器、异常）都只能在 host 上运行。
@@ -598,7 +598,7 @@ Thrust functor 如果在 GPU 执行，`operator()` 需要可在 device 调用。
 
 ---
 
-## 37.5 GPU 点云坐标变换 ⭐⭐
+## 37.5 GPU 点云坐标变换 ★★
 
 ### 工程问题：点云变换是最标准的数据并行任务
 
@@ -692,7 +692,7 @@ SoA 中所有 x 连续、所有 y 连续、所有 z 连续。
 
 ---
 
-## 37.6 过滤：`remove_if` 与 compact ⭐⭐
+## 37.6 过滤：`remove_if` 与 compact ★★
 
 ### 工程问题：GPU 过滤不是简单地从 vector 中 erase
 
@@ -756,7 +756,7 @@ labels[i]
 
 数据布局越复杂，过滤越要小心。
 
-> ⚠️ **编程陷阱：GPU 过滤后关联数组索引不一致**
+> ⚠ **编程陷阱：GPU 过滤后关联数组索引不一致**
 > **错误做法**：只对 `points` 做 `remove_if`，没有同步过滤 `timestamps` 和 `labels` 数组。
 > **现象**：过滤后 `points[i]` 对应的 `timestamps[i]` 是错误的——它们不再是同一个点的数据。
 > **根本原因**：`remove_if` 移动了 `points` 中的元素，但没有同步移动关联数组。
@@ -769,7 +769,7 @@ labels[i]
 
 ---
 
-## 37.7 归约：残差和统计量 ⭐⭐
+## 37.7 归约：残差和统计量 ★★
 
 > **这一节解决什么问题**：上一节讲了如何在 GPU 上过滤数据。但 SLAM 的最终目标不是过滤——而是从大量数据中计算出小的汇总结果（cost、Hessian、梯度）。归约（reduce）就是"从大数据变成小结果"的核心操作，它是 GPU SLAM pipeline 中减少 CPU-GPU 传输量的关键环节。
 
@@ -825,7 +825,7 @@ float costGpu(const thrust::device_vector<Point3f>& points,
 
 如果不在 GPU 上做归约，而是把所有残差下载到 CPU 再求和会怎样？假设有 50K 个残差，每个 4 字节，下载 200KB 数据约 0.02ms。但 GPU 归约只需要下载 4 字节（一个 float 结果），省去了 99.998% 的传输量。对于 Hessian 和梯度，GPU 归约从下载 50K 个 6x6 矩阵变成只下载一个 6x6 矩阵——传输量减少 5 万倍。
 
-> ⚠️ **编程陷阱：GPU 归约结果未同步就使用**
+> ⚠ **编程陷阱：GPU 归约结果未同步就使用**
 > **错误做法**：调用 `thrust::reduce` 后立刻在 CPU 上使用返回值，没有确认 GPU 计算是否完成。
 > **现象**：大部分时候结果正确，偶尔结果是上一帧的值或者随机值。
 > **根本原因**：某些 Thrust 操作可能是异步的。如果在默认 stream 上，通常会隐式同步，但依赖这种行为是脆弱的。
@@ -838,7 +838,7 @@ float costGpu(const thrust::device_vector<Point3f>& points,
 
 ---
 
-## 37.8 scan：前缀和与压缩输出位置 ⭐⭐⭐
+## 37.8 scan：前缀和与压缩输出位置 ★★★
 
 ### 工程问题：并行过滤需要知道每个元素写到哪里
 
@@ -879,7 +879,7 @@ Thrust 让这些模式更容易组合。
 
 ---
 
-## 37.9 sort + reduce_by_key：GPU 体素下采样 ⭐⭐
+## 37.9 sort + reduce_by_key：GPU 体素下采样 ★★
 
 > **这一节解决什么问题**：前面学了 transform（逐点计算）、remove_if（过滤）、reduce（全局归约）、scan（前缀和）。体素下采样把这些操作组合在一起，形成一个完整的 GPU 数据处理链路——这正是 38.2 节分析的"体素滤波为什么强适合 GPU"的实现方式。
 
@@ -1016,7 +1016,7 @@ key -> sort -> reduce_by_key -> centroid
 > **实际上**：GPU 排序（如 `thrust::sort`）的优势在大数据量时才体现。对于 1 万以下的元素，CPU 的 `std::sort`（基于缓存友好的 introsort）通常更快，因为 GPU 排序有 kernel launch 开销和数据传输成本。此外，GPU 排序需要临时显存，这也要纳入资源预算。
 > **正确思维**：排序的 CPU/GPU 盈亏平衡点通常在 1-10 万元素之间，具体取决于元素大小和硬件。
 
-> ⚠️ **编程陷阱：`sort_by_key` 后忘记关联数组已被重排**
+> ⚠ **编程陷阱：`sort_by_key` 后忘记关联数组已被重排**
 > **错误做法**：`thrust::sort_by_key(keys, keys_end, points)` 后，仍然使用旧的 points 索引对应关系。
 > **现象**：后续按原始索引访问 `timestamps[i]` 或 `labels[i]` 时，数据对不上。
 > **根本原因**：`sort_by_key` 会同步重排 values（points），但不会重排其他没有作为 values 传入的数组。
@@ -1029,7 +1029,7 @@ key -> sort -> reduce_by_key -> centroid
 
 ---
 
-## 37.10 CMake CUDA 集成 ⭐
+## 37.10 CMake CUDA 集成 ★
 
 ### 工程问题：CUDA 是一种编译语言，不只是链接库
 
@@ -1080,7 +1080,7 @@ CUDA 项目部署要同时考虑：
 
 ---
 
-## 37.11 错误处理与同步点 ⭐⭐
+## 37.11 错误处理与同步点 ★★
 
 ### 工程问题：GPU 调用常常是异步的
 
@@ -1137,7 +1137,7 @@ CPU 计时加同步适合教学和端到端观察。
 
 ---
 
-## 37.12 Streams、异步拷贝与 pinned memory ⭐⭐⭐
+## 37.12 Streams、异步拷贝与 pinned memory ★★★
 
 ### 工程问题：GPU 加速不应让 CPU 原地等待
 
@@ -1246,7 +1246,7 @@ Thrust 支持执行策略和 stream 绑定。
 
 ---
 
-## 37.13 GPU 数据布局：AoS、SoA 与 zip iterator ⭐⭐⭐
+## 37.13 GPU 数据布局：AoS、SoA 与 zip iterator ★★★
 
 ### 工程问题：GPU 线程束喜欢相邻线程访问相邻地址
 
@@ -1349,7 +1349,7 @@ Thrust 的 iterator 组合很强大。
 
 ---
 
-## 37.14 Thrust、CUB 与手写 kernel 的边界 ⭐⭐⭐
+## 37.14 Thrust、CUB 与手写 kernel 的边界 ★★★
 
 ### 工程问题：高层算法不总是最终答案
 
@@ -1407,7 +1407,7 @@ transform -> remove_if -> sort -> reduce_by_key
 
 ---
 
-## 37.15 Warp divergence 与 occupancy 直觉 ⭐⭐
+## 37.15 Warp divergence 与 occupancy 直觉 ★★
 
 > **这一节解决什么问题**：warp divergence 不是背概念——从"if-else 在 GPU 上会发生什么？"这个具体场景推导出为什么分支会让 GPU 效率暴跌。
 
@@ -1524,7 +1524,7 @@ classifyGroundMask(const thrust::device_vector<Point3f>& points,
 
 ---
 
-## 37.16 设备内存生命周期与 GPU 侧 RAII ⭐⭐⭐
+## 37.16 设备内存生命周期与 GPU 侧 RAII ★★★
 
 ### 工程问题：device_vector 也有生命周期和分配成本
 
@@ -1649,7 +1649,7 @@ private:
 
 ---
 
-## 37.17 CUDA events 与端到端 benchmark ⭐⭐
+## 37.17 CUDA events 与端到端 benchmark ★★
 
 ### 工程问题：CPU 计时和 GPU 计时回答不同问题
 
@@ -1883,17 +1883,17 @@ Thrust 让许多标准模式可以像 STL 一样表达：transform、filter、so
 
 ## 延伸阅读
 
-1. **NVIDIA CUDA Programming Guide（CUDA 12.x）** ⭐⭐——权威参考，重点阅读 Thread Hierarchy、Memory Hierarchy、Execution Configuration 和 CUDA Graphs 章节。CUDA 12.x 引入了 CUDA Graphs 的动态并行和 cooperative groups 增强。
-2. **NVIDIA Thrust / CCCL 官方文档** ⭐⭐——Thrust 在 CUDA 12.x 中已迁入 CCCL（CUDA C++ Core Libraries）统一仓库，算法接口基本兼容但编译模型有调整。
-3. **CUB 文档** ⭐⭐⭐——当 Thrust 组合无法满足性能需求时，CUB 提供更底层的并行 primitive（block-level reduce、scan、radix sort），可以精确控制 shared memory 和 warp 行为。
-4. **CMake CUDA language 文档** ⭐——`enable_language(CUDA)`、`CMAKE_CUDA_ARCHITECTURES`、`set_target_properties` 等 CUDA 特定设置。
-5. **NVIDIA Nsight Systems / Nsight Compute** ⭐⭐⭐——GPU profiling 工具，用于分析 kernel 占用率、内存带宽利用率和 warp 调度效率。
-6. **Sam Williams et al., "Roofline: An Insightful Visual Performance Model", CACM 2009** ⭐⭐⭐——Roofline 模型的原始论文，理解算术强度如何决定 GPU 优化方向。
+1. **NVIDIA CUDA Programming Guide（CUDA 12.x）** ★★——权威参考，重点阅读 Thread Hierarchy、Memory Hierarchy、Execution Configuration 和 CUDA Graphs 章节。CUDA 12.x 引入了 CUDA Graphs 的动态并行和 cooperative groups 增强。
+2. **NVIDIA Thrust / CCCL 官方文档** ★★——Thrust 在 CUDA 12.x 中已迁入 CCCL（CUDA C++ Core Libraries）统一仓库，算法接口基本兼容但编译模型有调整。
+3. **CUB 文档** ★★★——当 Thrust 组合无法满足性能需求时，CUB 提供更底层的并行 primitive（block-level reduce、scan、radix sort），可以精确控制 shared memory 和 warp 行为。
+4. **CMake CUDA language 文档** ★——`enable_language(CUDA)`、`CMAKE_CUDA_ARCHITECTURES`、`set_target_properties` 等 CUDA 特定设置。
+5. **NVIDIA Nsight Systems / Nsight Compute** ★★★——GPU profiling 工具，用于分析 kernel 占用率、内存带宽利用率和 warp 调度效率。
+6. **Sam Williams et al., "Roofline: An Insightful Visual Performance Model", CACM 2009** ★★★——Roofline 模型的原始论文，理解算术强度如何决定 GPU 优化方向。
 5. GPU 性能分析工具文档：Nsight Systems、Nsight Compute、CUDA events。
 
 ---
 
-## 37.21 Unified Memory 与零拷贝传输 ⭐⭐⭐
+## 37.21 Unified Memory 与零拷贝传输 ★★★
 
 ### 工程问题：CPU-GPU 数据传输是最常见的性能瓶颈
 
@@ -1953,7 +1953,7 @@ transformKernel<<<blocks, threads>>>(d_points, n);
 
 ---
 
-## 37.22 CUDA 与 C++ 标准并行算法的对比 ⭐⭐
+## 37.22 CUDA 与 C++ 标准并行算法的对比 ★★
 
 C++17 引入了标准并行算法（如 `std::transform` 的 parallel 执行策略），C++20/23 进一步扩展了 `std::execution` 框架。一个自然的问题是：什么时候用 C++ 标准并行，什么时候用 CUDA/Thrust？
 
@@ -2010,7 +2010,7 @@ std::unique_ptr<VoxelDownsampler> makeDownsampler() {
 
 ---
 
-## 37.23 CUDA Graphs 与计算图优化 ⭐⭐⭐
+## 37.23 CUDA Graphs 与计算图优化 ★★★
 
 CUDA 12.x 引入的 CUDA Graphs 机制允许将一系列 kernel 启动和内存操作预先录制为一个"计算图"，然后一次性提交执行。这减少了每次 kernel 启动的 CPU 端开销（launch overhead）。
 

@@ -2,9 +2,9 @@
 
 ---
 
-### 前置自测 ⭐
+### 前置自测 ★
 
-> 📋 **答不出 >= 2 题 → 先回 5-B 复习**
+> ◆ **答不出 >= 2 题 → 先回 5-B 复习**
 
 | 编号 | 问题 | 答不出时回顾 |
 |:----:|------|------------|
@@ -67,7 +67,7 @@ iSAM2 与 Bayes 树
 
 ---
 
-### §C.1 Batch SLAM 的计算瓶颈：为什么必须增量 ⭐⭐
+### §C.1 Batch SLAM 的计算瓶颈：为什么必须增量 ★★
 
 5-B 建立的 MAP 因子图求解是**批量**（batch）的：每收到新一帧，把新因子追加进 $\mathcal F$，对整张图重新做 Gauss-Newton（GN）或 Levenberg-Marquardt（LM）。这条路线的复杂度取决于信息矩阵 $\Lambda = J^\top\Sigma^{-1}J$ 的稀疏 Cholesky：
 
@@ -103,7 +103,7 @@ iSAM2 与 Bayes 树
 
 ---
 
-### §C.2 iSAM1 的贡献与局限 ⭐⭐⭐
+### §C.2 iSAM1 的贡献与局限 ★★★
 
 **Kaess, Ranganathan, Dellaert, "iSAM: Incremental Smoothing and Mapping Using the Square Root Information Filter", IEEE TRO 24(6):1365–1378, 2008** 是第一次把增量平滑落地的工作。
 
@@ -134,7 +134,7 @@ def isam1_update(R, d, w, gamma):
 
 ---
 
-### §C.3 从因子图到 Bayes 网再到 Bayes 树 ⭐⭐
+### §C.3 从因子图到 Bayes 网再到 Bayes 树 ★★
 
 #### 符号设定
 
@@ -187,7 +187,7 @@ $$\boxed{P(\Theta) = \prod_k P(F_k\mid S_k)}$$
 
 ---
 
-### §C.4 Bayes 树的构造算法 ⭐⭐⭐
+### §C.4 Bayes 树的构造算法 ★★★
 
 输入：因子图 $G$ + 消元顺序 $\pi$（由 COLAMD/METIS 决定）。
 
@@ -212,7 +212,7 @@ $$\boxed{P(\Theta) = \prod_k P(F_k\mid S_k)}$$
 
 ---
 
-### §C.5 Bayes 树与稀疏 Cholesky 的等价 ⭐⭐⭐
+### §C.5 Bayes 树与稀疏 Cholesky 的等价 ★★★
 
 这是**全章最重要的数学桥梁**。5-B 讲过 Schur 补 = 消元；本节把消元产物的**结构**与 Cholesky $R$ 的**稀疏模式**对应。
 
@@ -258,7 +258,7 @@ $$\mathrm{struct}(R_{i,:}) = \{i\} \cup \bigcup_{k:\,L_{ki}\neq 0,\,k<i} \mathrm
 
 ---
 
-### §C.6 Bayes 树的关键性质 ⭐⭐
+### §C.6 Bayes 树的关键性质 ★★
 
 | 性质 | 陈述 | 用途 |
 |------|------|------|
@@ -276,7 +276,7 @@ $$\int P(\Theta)\,dF_k \;=\; \underbrace{\int P(F_k\mid S_k)\,dF_k}_{=1}\cdot\pr
 
 ---
 
-### §C.7 图示与直觉：5 变量 pose graph 完整变换 ⭐⭐
+### §C.7 图示与直觉：5 变量 pose graph 完整变换 ★★
 
 **因子图**（3 pose + 2 landmark + 1 prior）：
 
@@ -327,7 +327,7 @@ $$\int P(\Theta)\,dF_k \;=\; \underbrace{\int P(F_k\mid S_k)\,dF_k}_{=1}\cdot\pr
 
 ---
 
-### §C.8 iSAM2 总体流程（Kaess 2012 Alg. 8） ⭐⭐
+### §C.8 iSAM2 总体流程（Kaess 2012 Alg. 8） ★★
 
 ```python
 # 状态：Bayes 树 T、非线性因子集 F、线性化点 Θ、增量 δ
@@ -359,7 +359,7 @@ def iSAM2_step(T, F, Θ, δ, F_new, Θ_new):
 
 ---
 
-### §C.9 Fluid Relinearization ⭐⭐⭐
+### §C.9 Fluid Relinearization ★★★
 
 **动机**：完整重线性化 = batch GN，每步 $O(N^{3/2})$。但实测 80–90% 的变量 $\|\delta x_j\|$ 很小，根本无需重线性化。**Fluid Relinearization** 的中心思想：
 
@@ -386,7 +386,7 @@ def fluid_relinearize(Θ, δ, β):
 
 ---
 
-### §C.10 Wildfire 传播（Partial State Update） ⭐⭐⭐
+### §C.10 Wildfire 传播（Partial State Update） ★★★
 
 **动机**：批量 GN 解完 $R\delta = d$ 后一次更新所有变量；iSAM2 只沿"受影响路径"向下传播。
 
@@ -413,7 +413,7 @@ def partial_solve(T, α):                   # 从根开始
 
 ---
 
-### §C.11 增量边缘化（Incremental Marginalization） ⭐⭐⭐
+### §C.11 增量边缘化（Incremental Marginalization） ★★★
 
 #### 叶团的零开销边缘化
 
@@ -468,7 +468,7 @@ isam.marginalizeLeaves(marginalizableKeys);
 
 ---
 
-### §C.12 与 batch GN/LM 的关系 ⭐⭐
+### §C.12 与 batch GN/LM 的关系 ★★
 
 > **思维陷阱：以为 iSAM2 内置了 LM 阻尼。** 这是使用 GTSAM 最常见的误解之一。iSAM2 默认使用的是纯 Gauss-Newton，没有任何阻尼参数 $\lambda$。这意味着在大回环或坏初值场景下，单次 `update()` 可能因为 GN 步过大而跳出正确 basin。如果你在 iSAM2 回环后发现轨迹"抖了一下然后恢复"或"抖了一下然后发散"，第一件事应该检查是否需要多次空 `update()` 或切换到 `ISAM2DoglegParams`。
 
@@ -516,7 +516,7 @@ $$\delta_{dl} = \begin{cases}
 
 ---
 
-### §C.13 复杂度分析 ⭐⭐⭐
+### §C.13 复杂度分析 ★★★
 
 #### 理论界（Kaess 2012 §IV-C）
 
@@ -554,7 +554,7 @@ $$\delta_{dl} = \begin{cases}
 
 ---
 
-### §C.14 GTSAM ISAM2 API ⭐⭐
+### §C.14 GTSAM ISAM2 API ★★
 
 **头文件**：`gtsam/nonlinear/ISAM2.h`、`ISAM2Params.h`、`ISAM2Result.h`、`ISAM2-impl.h`。
 
@@ -653,7 +653,7 @@ cov      = isam.marginalCovariance(X(0))
 
 ---
 
-### §C.15 ISAM2 内部数据结构 ⭐⭐⭐
+### §C.15 ISAM2 内部数据结构 ★★★
 
 | 成员 | 类型 | 作用 |
 |------|------|------|
@@ -674,7 +674,7 @@ cov      = isam.marginalCovariance(X(0))
 
 ---
 
-### §C.16 LIO-SAM 中的 iSAM2 使用 ⭐⭐
+### §C.16 LIO-SAM 中的 iSAM2 使用 ★★
 
 **文件**：`LIO-SAM/src/mapOptmization.cpp`（~1779 行，commit master）。
 
@@ -720,7 +720,7 @@ LIO-SAM **持全轨迹在 iSAM2**，随地图增大 `calculateEstimate()` 线性
 
 ---
 
-### §C.17 Kimera-VIO vs ORB-SLAM3 的 BA 策略 ⭐⭐⭐
+### §C.17 Kimera-VIO vs ORB-SLAM3 的 BA 策略 ★★★
 
 | 组件 | 求解器 | 策略 |
 |------|-------|------|
@@ -793,7 +793,7 @@ UToronto ASRL 维护的 C++ 库，实现上述 GP 因子，支持 GP 内插任�
 
 ---
 
-### §C.20 Bayes 树 vs 其他增量方法对比 ⭐⭐⭐
+### §C.20 Bayes 树 vs 其他增量方法对比 ★★★
 
 记 $N$=状态数，$M$=测量数，$k$=滑窗长度，$L$=受影响子树大小（典型 $O(\sqrt N)$ 2D / $O(N^{2/3})$ 3D）。
 
@@ -923,7 +923,7 @@ UToronto ASRL 维护的 C++ 库，实现上述 GP 因子，支持 GP 内插任�
 
 ---
 
-### §C.26 从滤波链到 Bayes 树：增量平滑的范式切换 ⭐⭐⭐
+### §C.26 从滤波链到 Bayes 树：增量平滑的范式切换 ★★★
 
 5-B 已经把滤波和平滑放在同一个后验上比较。
 
@@ -1128,7 +1128,7 @@ IMU 前端用 ESKF 传播高频状态。
 
 ---
 
-### §C.27 团内条件密度的线性代数：$P(F\mid S)$ 到局部回代 ⭐⭐⭐⭐
+### §C.27 团内条件密度的线性代数：$P(F\mid S)$ 到局部回代 ★★★★
 
 每个 Bayes 树团存储一个 Gaussian conditional。
 
@@ -1304,7 +1304,7 @@ Wildfire threshold 的直觉就在这里。
 
 ---
 
-### §C.28 Fluid Relinearization 的数学细节：什么时候旧线性化点仍可信 ⭐⭐⭐⭐
+### §C.28 Fluid Relinearization 的数学细节：什么时候旧线性化点仍可信 ★★★★
 
 iSAM2 的核心节省来自一个判断：
 
@@ -1457,7 +1457,7 @@ $$
 
 ---
 
-### §C.29 iSAM2 局部编辑的完整 worked example ⭐⭐⭐⭐
+### §C.29 iSAM2 局部编辑的完整 worked example ★★★★
 
 这一节把 `update()` 过程用一个具体图跑一遍。
 
@@ -1599,7 +1599,7 @@ iSAM2 做法是：
 
 ---
 
-### §C.30 工程边界：什么时候 iSAM2 不是最合适的后端 ⭐⭐⭐
+### §C.30 工程边界：什么时候 iSAM2 不是最合适的后端 ★★★
 
 iSAM2 很强，但它不是所有状态估计问题的默认答案。
 
@@ -1736,7 +1736,7 @@ iSAM2 的主结构是 square-root information。
 
 ---
 
-### §C.32 iSAM2 的局限与开放问题 ⭐⭐⭐
+### §C.32 iSAM2 的局限与开放问题 ★★★
 
 尽管 iSAM2 是当前增量 SLAM 后端的事实标准，它仍有明确的局限。理解这些局限对于正确选型和未来研究都至关重要。
 
@@ -1774,7 +1774,7 @@ iSAM2 假设每个变量的维度在创建后不变。若需要动态改变变�
 
 ---
 
-### §C.33 设计决策总结：何时用 iSAM2、何时不用 ⭐⭐
+### §C.33 设计决策总结：何时用 iSAM2、何时不用 ★★
 
 这是工程选型的核心问��。以下决策流程图基于实际系统的经验总结：
 
@@ -1817,7 +1817,7 @@ iSAM2 假设每个变量的维度在创建后不变。若需要动态改变变�
 
 ---
 
-### §C.34 信息形式与协方差形式的对偶视角 ⭐⭐⭐
+### §C.34 信息形式与协方差形式的对偶视角 ★★★
 
 理解 Bayes 树需要区分两种表示联合高斯分布的方式，以及它们���自擅长的操作。
 
@@ -1860,11 +1860,11 @@ $$p(\Theta)\propto\exp\!\Big(-\frac{1}{2}(\Theta-\mu)^\top\Sigma^{-1}(\Theta-\mu
 
 ### 常见陷阱与故障排查
 
-⚠️ **陷阱一：只保留 conditional 均值关系，丢掉信息尺度。** Gaussian 消元中的 $R_{jj}$ 或 $\|a\|$ 决定条件密度方差，不能从公式里省掉。
+⚠ **陷阱一：只保留 conditional 均值关系，丢掉信息尺度。** Gaussian 消元中的 $R_{jj}$ 或 $\|a\|$ 决定条件密度方差，不能从公式里省掉。
 
-⚠️ **陷阱二：把消元树祖先关系等同于每个 Cholesky 非零元。** 非零元给出直接依赖，祖先关系是传递闭包。
+⚠ **陷阱二：把消元树祖先关系等同于每个 Cholesky 非零元。** 非零元给出直接依赖，祖先关系是传递闭包。
 
-⚠️ **陷阱三：把 wildfire threshold 当成严格数学剪枝。** 它是数值启发式，阈值越大越快但误差越可能累积。
+⚠ **陷阱三：把 wildfire threshold 当成严格数学剪枝。** 它是数值启发式，阈值越大越快但误差越可能累积。
 
 | 故障排查现象 | 可能原因 | 处理方式 |
 |---|---|---|
@@ -1955,17 +1955,17 @@ class ISAM2Backend:
 
 | 资源 | 难度 | 内容 | 建议阅读方式 |
 |------|------|------|------------|
-| Kaess et al. "iSAM2" IJRR 2012 | ⭐⭐⭐ | iSAM2 完整算法 + 复杂度分析 | 精读 §III-IV + Alg. 2-8 |
-| Dellaert & Kaess "Factor Graphs for Robot Perception" FnT 2017 | ⭐⭐ | 统一教材 | §5 增量式部分 |
-| Kaess PhD 论文 (GaTech 2008) | ⭐⭐⭐ | iSAM1 最详细推导 | Ch.4-5 |
-| Davis *Direct Methods for Sparse Linear Systems* SIAM 2006 | ⭐⭐⭐⭐ | 消元树/超节点/稀疏 Cholesky 数学 | Ch.3-4 |
-| Liu "Role of Elimination Trees" SIMAX 1990 | ⭐⭐⭐⭐ | 消元树基本定理 | Thm 2.4 及其证明 |
-| Lipton-Rose-Tarjan 1979 "Generalized Nested Dissection" | ⭐⭐⭐⭐ | 2D $O(N^{3/2})$ 界的数学来源 | Thm 1 |
-| Barfoot *State Estimation for Robotics* 2ed 2024 | ⭐⭐ | 批量 SAM + GP-SLAM 入门 | Ch.9 |
-| Rosen et al. "SE-Sync" IJRR 2019 | ⭐⭐⭐⭐ | 全局最优 PGO + 对偶证书 | §III-V |
-| LIO-SAM 源码 `mapOptmization.cpp` | ⭐⭐ | iSAM2 工程最佳实践 | 行 1333-1375 |
-| Kimera-VIO `VioBackend.cpp` | ⭐⭐⭐ | Fixed-lag + SmartFactor | 边缘化逻辑 |
-| GTSAM Issues #595, #1101, #1976 | ⭐⭐ | SmartFactor + 边缘化陷阱 | 问题复现与修复 |
+| Kaess et al. "iSAM2" IJRR 2012 | ★★★ | iSAM2 完整算法 + 复杂度分析 | 精读 §III-IV + Alg. 2-8 |
+| Dellaert & Kaess "Factor Graphs for Robot Perception" FnT 2017 | ★★ | 统一教材 | §5 增量式部分 |
+| Kaess PhD 论文 (GaTech 2008) | ★★★ | iSAM1 最详细推导 | Ch.4-5 |
+| Davis *Direct Methods for Sparse Linear Systems* SIAM 2006 | ★★★★ | 消元树/超节点/稀疏 Cholesky 数学 | Ch.3-4 |
+| Liu "Role of Elimination Trees" SIMAX 1990 | ★★★★ | 消元树基本定理 | Thm 2.4 及其证明 |
+| Lipton-Rose-Tarjan 1979 "Generalized Nested Dissection" | ★★★★ | 2D $O(N^{3/2})$ 界的数学来源 | Thm 1 |
+| Barfoot *State Estimation for Robotics* 2ed 2024 | ★★ | 批量 SAM + GP-SLAM 入门 | Ch.9 |
+| Rosen et al. "SE-Sync" IJRR 2019 | ★★★★ | 全局最优 PGO + 对偶证书 | §III-V |
+| LIO-SAM 源码 `mapOptmization.cpp` | ★★ | iSAM2 工程最佳实践 | 行 1333-1375 |
+| Kimera-VIO `VioBackend.cpp` | ★★★ | Fixed-lag + SmartFactor | 边缘化逻辑 |
+| GTSAM Issues #595, #1101, #1976 | ★★ | SmartFactor + 边缘化陷阱 | 问题复现与修复 |
 
 ---
 
@@ -1983,7 +1983,7 @@ class ISAM2Backend:
 
 ---
 
-### 跨章综合练习 ⭐⭐⭐
+### 跨章综合练习 ★★★
 
 **题目**：综合 5-A（Kalman 滤波）+ 5-B（因子图优化）+ 5-C（iSAM2）的知识，完成以下分析：
 

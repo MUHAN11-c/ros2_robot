@@ -2,7 +2,7 @@
 
 # 第 68 章 legged_control 完整项目精读——从 OCS2 到真机部署
 
-> **难度**: ⭐⭐⭐ | **预计学时**: 40-50 小时(2 周) | **前置**: 足式/30_Pinocchio深度精读, 足式/90_WBC分层优化与TSID, 足式/170_实时CPP工程
+> **难度**: ★★★ | **预计学时**: 40-50 小时(2 周) | **前置**: 足式/30_Pinocchio深度精读, 足式/90_WBC分层优化与TSID, 足式/170_实时CPP工程
 >
 > **一句话概要**: legged_control 是连接 OCS2 理论与真机部署的桥梁——它用约 15,000 行 C++ 将 NMPC、WBC、状态估计和硬件接口粘合为一个可运行的四足控制栈,是学完前面所有章节后的"毕业集成项目"。
 
@@ -10,7 +10,7 @@
 
 ## 前置自测
 
-📋 **前置自测**（答不出 >= 2 题 -> 先回对应章节复习）
+◆ **前置自测**（答不出 >= 2 题 -> 先回对应章节复习）
 
 1. OCS2 的 `MPC_MRT_Interface` 中,MPC 线程和 MRT 线程通过什么机制通信?Triple Buffer 的三个槽分别扮演什么角色?（足式/110_OCS2完整栈与双线程MPC）
 2. WBC 的 HQP（Hierarchical QP）如何保证高优先级任务不被低优先级任务干扰?零空间投影的数学含义是什么?（足式/90_WBC分层优化与TSID）
@@ -33,7 +33,7 @@
 
 ---
 
-## 68.1 legged_control 的定位——为什么需要这个项目 ⭐
+## 68.1 legged_control 的定位——为什么需要这个项目 ★
 
 ### 68.1.1 动机：OCS2 的"最后一公里"问题
 
@@ -124,7 +124,7 @@
 
 这些都是"脏活累活"，但缺一个整个系统就跑不起来。legged_control 的价值恰恰在于：**把这些脏活做好，让研究者专注于算法创新**。
 
-> ⚠️ **概念误区**：不要认为 legged_control"只是 OCS2 的 ROS 封装"
+> ⚠ **概念误区**：不要认为 legged_control"只是 OCS2 的 ROS 封装"
 >
 > **新手想法**："legged_control 就是把 OCS2 的 legged_robot 示例包了一层 ros_control 接口"
 >
@@ -152,13 +152,13 @@
 >
 > 建立整体理解后，再回到 legged_control 精读本章内容。
 
-**练习 68.1.A** ⭐：列出 legged_control 的所有 ROS 包,为每个包用一句话说明其职责。画出包之间的依赖关系图（谁 `find_package` 了谁）。
+**练习 68.1.A** ★：列出 legged_control 的所有 ROS 包,为每个包用一句话说明其职责。画出包之间的依赖关系图（谁 `find_package` 了谁）。
 
-**练习 68.1.B** ⭐：如果你要为一个全新的六足机器人使用 legged_control，哪些包需要修改？哪些可以原封不动地复用？
+**练习 68.1.B** ★：如果你要为一个全新的六足机器人使用 legged_control，哪些包需要修改？哪些可以原封不动地复用？
 
 ---
 
-## 68.2 系统架构总览 ⭐⭐
+## 68.2 系统架构总览 ★★
 
 ### 68.2.1 全局架构图
 
@@ -294,7 +294,7 @@ legged_control/
 └── qpoases_catkin/             # qpOASES 的 catkin 封装
 ```
 
-> ⚠️ **编程陷阱**：legged_control 使用 `catkin build`（ROS1），不是 `catkin_make`
+> ⚠ **编程陷阱**：legged_control 使用 `catkin build`（ROS1），不是 `catkin_make`
 >
 > **错误做法**：`catkin_make` 编译整个工作空间
 >
@@ -309,13 +309,13 @@ legged_control/
 > # 不是 catkin_make!
 > ```
 
-**练习 68.2.A** ⭐⭐：画出 legged_control 所有 ROS 话题的图（`rqt_graph` 风格）。标注每个话题的消息类型和频率。
+**练习 68.2.A** ★★：画出 legged_control 所有 ROS 话题的图（`rqt_graph` 风格）。标注每个话题的消息类型和频率。
 
-**练习 68.2.B** ⭐⭐：如果把 WBC 的 QP 求解时间从 0.3 ms 增加到 1.2 ms（比如六足机器人），会发生什么？提出两种解决方案。
+**练习 68.2.B** ★★：如果把 WBC 的 QP 求解时间从 0.3 ms 增加到 1.2 ms（比如六足机器人），会发生什么？提出两种解决方案。
 
 ---
 
-## 68.3 LeggedController 主循环精读 ⭐⭐
+## 68.3 LeggedController 主循环精读 ★★
 
 ### 68.3.1 为什么从这里开始
 
@@ -569,7 +569,7 @@ WBC 异步的问题：
 3. 在 stance-swing 切换瞬间，延迟可能导致"以为着地但实际在空中" → 摔倒
 ```
 
-> ⚠️ **编程陷阱**：MPC 线程的异常处理
+> ⚠ **编程陷阱**：MPC 线程的异常处理
 >
 > **错误做法**：MPC 线程抛出异常后直接终止，Controller 线程不知道
 >
@@ -579,13 +579,13 @@ WBC 异步的问题：
 >
 > **正确做法**：legged_control 在 MPC 线程外包了 `try-catch`，异常时设置 `controllerRunning_ = false`，Controller 检测到后安全停机
 
-**练习 68.3.A** ⭐⭐：在 `update()` 中，如果 `mpcMrtInterface_->updatePolicy()` 发现 Triple Buffer 中没有新策略（MPC 还没算完第一次），会发生什么？阅读 OCS2 源码找答案。
+**练习 68.3.A** ★★：在 `update()` 中，如果 `mpcMrtInterface_->updatePolicy()` 发现 Triple Buffer 中没有新策略（MPC 还没算完第一次），会发生什么？阅读 OCS2 源码找答案。
 
-**练习 68.3.B** ⭐⭐：修改 `update()` 方法，增加一个计时统计功能：记录每个 Phase 的耗时，每 1000 次循环打印一次平均值。讨论这个计时本身会带来多少开销。
+**练习 68.3.B** ★★：修改 `update()` 方法，增加一个计时统计功能：记录每个 Phase 的耗时，每 1000 次循环打印一次平均值。讨论这个计时本身会带来多少开销。
 
 ---
 
-## 68.4 MPC 集成——如何包装 OCS2 ⭐⭐
+## 68.4 MPC 集成——如何包装 OCS2 ★★
 
 ### 68.4.1 从 OCS2 示例到 legged_control 的 MPC
 
@@ -706,7 +706,7 @@ void LeggedInterface::setupOptimalControlProblem(
 
 **关键理解**：这个函数定义了 MPC 要解的问题——"在满足动力学、不滑、摩擦锥等约束下，找到使代价最小的质心轨迹和接触力"。这正是 足式/110_OCS2完整栈与双线程MPC 讲的 OCS2 OCP 在四足场景的具体实例化。
 
-> ⚠️ **概念误区**：MPC 的决策变量不包含关节扭矩
+> ⚠ **概念误区**：MPC 的决策变量不包含关节扭矩
 >
 > **新手想法**："MPC 直接算出关节扭矩不是更好吗？"
 >
@@ -714,13 +714,13 @@ void LeggedInterface::setupOptimalControlProblem(
 >
 > 这就是 足式/90_WBC分层优化与TSID 讲的"分层的价值"——MPC 用简化模型快速规划，WBC 用全身模型精确执行。
 
-**练习 68.4.A** ⭐⭐：打开 legged_control 的 `config/a1/task.info` 文件，找到 MPC 的预测时间长度和采样步数。计算每步的时间间隔。讨论增大预测步数的利弊。
+**练习 68.4.A** ★★：打开 legged_control 的 `config/a1/task.info` 文件，找到 MPC 的预测时间长度和采样步数。计算每步的时间间隔。讨论增大预测步数的利弊。
 
-**练习 68.4.B** ⭐⭐：如果要把 MPC 的求解频率从 50 Hz 提高到 100 Hz，需要修改哪些配置？提高频率后 MPC 的求解窗口变短,有什么影响？
+**练习 68.4.B** ★★：如果要把 MPC 的求解频率从 50 Hz 提高到 100 Hz，需要修改哪些配置？提高频率后 MPC 的求解窗口变短,有什么影响？
 
 ---
 
-## 68.5 WBC 集成——HierarchicalWbc 精读 ⭐⭐
+## 68.5 WBC 集成——HierarchicalWbc 精读 ★★
 
 ### 68.5.1 从 足式/90_WBC分层优化与TSID 到 legged_control 的 WBC
 
@@ -902,7 +902,7 @@ $$x_1 = x_0^* + Z_0 \delta x_1 \tag{68.6}$$
 
 这保证了第 1 层的修正 **不影响** 第 0 层已满足的约束——因为 $A_0 x_1 = A_0 x_0^* + A_0 Z_0 \delta x_1 = b_0 + 0 = b_0$。
 
-> ⚠️ **编程陷阱**：HoQp 的零空间计算使用 SVD,时间复杂度 $O(n^3)$
+> ⚠ **编程陷阱**：HoQp 的零空间计算使用 SVD,时间复杂度 $O(n^3)$
 >
 > **现象**：在决策变量较多(如人形机器人 ~100 维)的场景下,WBC 求解时间可能超过 1 ms
 >
@@ -913,13 +913,13 @@ $$x_1 = x_0^* + Z_0 \delta x_1 \tag{68.6}$$
 > 2. 使用 ProxQP 的分层求解模式（不需要显式零空间）
 > 3. 使用加权 QP + 极大权重近似分层（`WeightedWbc` 的做法）
 
-**练习 68.5.A** ⭐⭐：在 HierarchicalWbc 中,把 Level 1 的 `formulateSwingLegTask()` 移到 Level 0（和硬约束放一起）。预测会发生什么,然后在仿真中验证。
+**练习 68.5.A** ★★：在 HierarchicalWbc 中,把 Level 1 的 `formulateSwingLegTask()` 移到 Level 0（和硬约束放一起）。预测会发生什么,然后在仿真中验证。
 
-**练习 68.5.B** ⭐⭐⭐：比较 `HierarchicalWbc` 和 `WeightedWbc` 在 trot 步态下的表现差异。画出基座高度和俯仰角的时间曲线。讨论在什么场景下一个优于另一个。
+**练习 68.5.B** ★★★：比较 `HierarchicalWbc` 和 `WeightedWbc` 在 trot 步态下的表现差异。画出基座高度和俯仰角的时间曲线。讨论在什么场景下一个优于另一个。
 
 ---
 
-## 68.6 步态管理器 ⭐⭐
+## 68.6 步态管理器 ★★
 
 ### 68.6.1 步态在 legged_control 中的角色
 
@@ -1022,7 +1022,7 @@ class GaitReceiver {
 };
 ```
 
-> ⚠️ **编程陷阱**：步态切换不是"立即生效"
+> ⚠ **编程陷阱**：步态切换不是"立即生效"
 >
 > **错误做法**：在 trot 过程中突然切换到 stance，期望机器人立刻停下来
 >
@@ -1034,13 +1034,13 @@ class GaitReceiver {
 
 > 💡 **概念澄清**：legged_control 的步态管理是"固定模式序列"型的,不是"自适应选脚"型的。也就是说,步态的时间表是预定义的（trot 每 0.25s 切换一次），不会根据地形或扰动自动调整。自适应选脚属于研究前沿（如 Raibert 式启发选脚、RL 选脚），需要额外模块。
 
-**练习 68.6.A** ⭐⭐：修改 `gait.info`，创建一个新步态 "gallop"（对角线不同步的跑步），定义其 `cycleDuration`、`switchingTimes` 和 `modeSequence`。在 Gazebo 中测试。
+**练习 68.6.A** ★★：修改 `gait.info`，创建一个新步态 "gallop"（对角线不同步的跑步），定义其 `cycleDuration`、`switchingTimes` 和 `modeSequence`。在 Gazebo 中测试。
 
-**练习 68.6.B** ⭐⭐：分析 trot 步态中如果 `cycleDuration` 从 0.5 秒减小到 0.2 秒会发生什么。从 MPC 预测步数、WBC 追踪带宽、机械限制三个角度讨论。
+**练习 68.6.B** ★★：分析 trot 步态中如果 `cycleDuration` 从 0.5 秒减小到 0.2 秒会发生什么。从 MPC 预测步数、WBC 追踪带宽、机械限制三个角度讨论。
 
 ---
 
-## 68.7 硬件接口——从抽象到真机 ⭐⭐
+## 68.7 硬件接口——从抽象到真机 ★★
 
 ### 68.7.1 ros_control 的 HardwareInterface 回顾
 
@@ -1160,7 +1160,7 @@ class UnitreeHW : public LeggedHW {
 };
 ```
 
-> ⚠️ **编程陷阱**：Unitree SDK 的四元数顺序与 Eigen 不同
+> ⚠ **编程陷阱**：Unitree SDK 的四元数顺序与 Eigen 不同
 >
 > **错误做法**：直接把 `lowState_.imu.quaternion[0-3]` 按顺序赋给 `Eigen::Quaterniond`
 >
@@ -1218,9 +1218,9 @@ Controller 对硬件完全透明——这是 Sim2Real 的关键：
 > 4. **执行器动力学**——仿真电机是理想力源,真机有力矩带宽限制
 > 5. **初始化流程**——真机需要"先锁关节、再慢慢解锁"的安全启动序列
 
-**练习 68.7.A** ⭐⭐：Unitree SDK 的 `safety_->PowerProtect()` 做了什么？阅读 SDK 源码，找到它的限制逻辑。讨论在什么场景下这个安全保护会被触发。
+**练习 68.7.A** ★★：Unitree SDK 的 `safety_->PowerProtect()` 做了什么？阅读 SDK 源码，找到它的限制逻辑。讨论在什么场景下这个安全保护会被触发。
 
-**练习 68.7.B** ⭐⭐：如果要支持一个新的电机品牌（比如 CubeMars），需要实现哪些函数？写出 `CubeMarsHW` 类的框架代码。
+**练习 68.7.B** ★★：如果要支持一个新的电机品牌（比如 CubeMars），需要实现哪些函数？写出 `CubeMarsHW` 类的框架代码。
 
 ### 68.7.5 仿真硬件抽象链——LeggedHWSim 精读
 
@@ -1424,11 +1424,11 @@ PLUGINLIB_EXPORT_CLASS(legged::LeggedHWSim, gazebo_ros_control::RobotHWSim)
 
 **Step 4：运行时加载**——Gazebo 启动时解析 URDF，发现 `robotSimType` 指向 `LeggedHWSim`，通过 pluginlib 动态加载该类，调用 `initSim()`、`readSim()`、`writeSim()` 驱动仿真。
 
-> ⚠️ **工程陷阱**：legged_control 默认配置假设关节名为 `LF_HAA`、`LF_HFE`、`LF_KFE` 等固定格式。如果自定义机器人使用不同的关节命名，需要同时修改配置文件和控制器代码中的名称映射，否则控制器无法正确输出力矩。具体来说，`LeggedHWSim::initSim()` 通过 `ej_interface_.getNames()` 获取所有注册了 `EffortJointInterface` 的关节列表——关节名来自 URDF 的 `<transmission>` 标签，必须与 `task.info` 中的 `jointNames` 完全一致。
+> ⚠ **工程陷阱**：legged_control 默认配置假设关节名为 `LF_HAA`、`LF_HFE`、`LF_KFE` 等固定格式。如果自定义机器人使用不同的关节命名，需要同时修改配置文件和控制器代码中的名称映射，否则控制器无法正确输出力矩。具体来说，`LeggedHWSim::initSim()` 通过 `ej_interface_.getNames()` 获取所有注册了 `EffortJointInterface` 的关节列表——关节名来自 URDF 的 `<transmission>` 标签，必须与 `task.info` 中的 `jointNames` 完全一致。
 
 ---
 
-## 68.8 可视化与调试 ⭐⭐
+## 68.8 可视化与调试 ★★
 
 ### 68.8.1 LeggedRobotVisualizer 的作用
 
@@ -1495,13 +1495,13 @@ rqt_plot /joint_states/effort[0] /joint_states/effort[3]
 
 > 💡 **调试经验**："先排除基础设施问题,再排查算法问题"。90% 的 bug 来自坐标系错误、关节编号映射错误、四元数顺序错误——这些与 MPC/WBC 算法无关,但会导致整个系统看起来"算法不工作"。
 
-**练习 68.8.A** ⭐：在 RViz 中配置 legged_control 的完整可视化界面。保存 `.rviz` 配置文件,包括机器人模型、接触力箭头、MPC 轨迹和 TF 树。
+**练习 68.8.A** ★：在 RViz 中配置 legged_control 的完整可视化界面。保存 `.rviz` 配置文件,包括机器人模型、接触力箭头、MPC 轨迹和 TF 树。
 
-**练习 68.8.B** ⭐⭐：写一个 ROS 节点,订阅 `currentState` 和 `optimizedTrajectory`,计算实际 CoM 与 MPC 参考之间的追踪误差,以 Float64 话题发布。用 `rqt_plot` 画出误差曲线。
+**练习 68.8.B** ★★：写一个 ROS 节点,订阅 `currentState` 和 `optimizedTrajectory`,计算实际 CoM 与 MPC 参考之间的追踪误差,以 Float64 话题发布。用 `rqt_plot` 画出误差曲线。
 
 ---
 
-## 68.9 从 OCS2 example 到 legged_control——关键差异 ⭐⭐⭐
+## 68.9 从 OCS2 example 到 legged_control——关键差异 ★★★
 
 ### 68.9.1 为什么要专门对比
 
@@ -1623,13 +1623,13 @@ legged_control:
 >
 > **实际上**：OCS2 示例的价值在于**算法纯净性**。如果你想理解 MPC 的求解行为（不被 WBC 和状态估计"污染"），OCS2 示例是最好的起点。如果你想改 MPC 算法本身（换求解器、改约束、加新代价），先在 OCS2 示例中验证，再移植到 legged_control,是最高效的工作流。
 
-**练习 68.9.A** ⭐⭐⭐：在 OCS2 的 `ocs2_legged_robot` 示例中关闭 ground truth,改用 legged_control 的 `LinearKalmanFilter`。比较有无状态估计噪声时的 MPC 表现差异。
+**练习 68.9.A** ★★★：在 OCS2 的 `ocs2_legged_robot` 示例中关闭 ground truth,改用 legged_control 的 `LinearKalmanFilter`。比较有无状态估计噪声时的 MPC 表现差异。
 
-**练习 68.9.B** ⭐⭐⭐：列出 legged_control 的 `LeggedInterface::setupOptimalControlProblem()` 与 OCS2 `ocs2_legged_robot` 中对应函数的逐行差异。每个差异解释其工程动机。
+**练习 68.9.B** ★★★：列出 legged_control 的 `LeggedInterface::setupOptimalControlProblem()` 与 OCS2 `ocs2_legged_robot` 中对应函数的逐行差异。每个差异解释其工程动机。
 
 ---
 
-## 68.10 扩展与移植——添加新机器人、新步态、新模块 ⭐⭐⭐
+## 68.10 扩展与移植——添加新机器人、新步态、新模块 ★★★
 
 ### 68.10.1 为什么要学扩展
 
@@ -1733,7 +1733,7 @@ class Go2HW : public LeggedHW {
 | frictionCoeff | 0.5 | 0.5 | 取决于脚底材料,Go2 橡胶脚底摩擦系数相当 |
 | baseHeightTarget | 0.30 | 0.33 | Go2 腿更长,站更高 |
 
-> ⚠️ **编程陷阱**：Go2 SDK 与 OCS2 的依赖冲突
+> ⚠ **编程陷阱**：Go2 SDK 与 OCS2 的依赖冲突
 >
 > **现象**：编译时 CycloneDDS 和 OCS2 的 Boost 版本冲突
 >
@@ -1841,9 +1841,9 @@ if (estimatorType == "kalman") {
 | 通信超时 | 机器人偶尔"卡顿" | UDP/CAN 丢包 | 加超时检测和上一次命令保持 |
 | 重力方向错误 | 机器人无法站立 | URDF 的 world 坐标系 z 轴不朝上 | 检查 URDF 的 world link 定义 |
 
-**练习 68.10.A** ⭐⭐⭐：完成 Go2 的 URDF 适配（可以从 `unitree_ros` 获取 Go2 URDF）。修改 `task.info` 中的关节名和默认姿态。在 RViz 中验证模型加载正确。
+**练习 68.10.A** ★★★：完成 Go2 的 URDF 适配（可以从 `unitree_ros` 获取 Go2 URDF）。修改 `task.info` 中的关节名和默认姿态。在 RViz 中验证模型加载正确。
 
-**练习 68.10.B** ⭐⭐⭐：实现一个 `InEKFEstimate` 类的框架（不需要完整的 InEKF 数学,但要有正确的接口和数据流）。能编译通过,能在 LeggedController 中切换使用。
+**练习 68.10.B** ★★★：实现一个 `InEKFEstimate` 类的框架（不需要完整的 InEKF 数学,但要有正确的接口和数据流）。能编译通过,能在 LeggedController 中切换使用。
 
 ---
 
@@ -1866,16 +1866,16 @@ if (estimatorType == "kalman") {
 
 | 小节 | 核心知识点 | 难度 | 一句话总结 |
 |------|-----------|------|-----------|
-| 68.1 | legged_control 定位 | ⭐ | OCS2 到真机的桥梁,填补 WBC+估计+硬件的空白 |
-| 68.2 | 系统架构 | ⭐⭐ | 双线程(MPC异步+Controller同步),数据流从传感器到执行器 |
-| 68.3 | LeggedController | ⭐⭐ | update() 六阶段:读 → 估计 → MPC查询 → WBC → 安全 → 写 |
-| 68.4 | MPC 集成 | ⭐⭐ | 同进程 Triple Buffer 通信,LeggedInterface 定义 OCP |
-| 68.5 | WBC 集成 | ⭐⭐ | 三层 HQP:物理约束 → 运动追踪 → 力分配 |
-| 68.6 | 步态管理 | ⭐⭐ | ModeSchedule 编码接触序列,GaitSchedule 生成步态 |
-| 68.7 | 硬件接口 | ⭐⭐ | HybridJointInterface 5参数,UnitreeHW 封装 SDK |
-| 68.8 | 可视化调试 | ⭐⭐ | RViz 接触力箭头 + rqt_plot 信号监控 + 系统排障 |
-| 68.9 | OCS2 对比 | ⭐⭐⭐ | legged_control 增加了 WBC+估计+硬件+安全 四大模块 |
-| 68.10 | 扩展移植 | ⭐⭐⭐ | 新机器人(Go2)、新步态(pronk)、新估计器(InEKF) |
+| 68.1 | legged_control 定位 | ★ | OCS2 到真机的桥梁,填补 WBC+估计+硬件的空白 |
+| 68.2 | 系统架构 | ★★ | 双线程(MPC异步+Controller同步),数据流从传感器到执行器 |
+| 68.3 | LeggedController | ★★ | update() 六阶段:读 → 估计 → MPC查询 → WBC → 安全 → 写 |
+| 68.4 | MPC 集成 | ★★ | 同进程 Triple Buffer 通信,LeggedInterface 定义 OCP |
+| 68.5 | WBC 集成 | ★★ | 三层 HQP:物理约束 → 运动追踪 → 力分配 |
+| 68.6 | 步态管理 | ★★ | ModeSchedule 编码接触序列,GaitSchedule 生成步态 |
+| 68.7 | 硬件接口 | ★★ | HybridJointInterface 5参数,UnitreeHW 封装 SDK |
+| 68.8 | 可视化调试 | ★★ | RViz 接触力箭头 + rqt_plot 信号监控 + 系统排障 |
+| 68.9 | OCS2 对比 | ★★★ | legged_control 增加了 WBC+估计+硬件+安全 四大模块 |
+| 68.10 | 扩展移植 | ★★★ | 新机器人(Go2)、新步态(pronk)、新估计器(InEKF) |
 
 ### 68.11.2 累积项目：本章新增模块
 
@@ -1910,27 +1910,27 @@ if (estimatorType == "kalman") {
 
 | 资源 | 类型 | 难度 | 推荐理由 |
 |------|------|------|---------|
-| [legged_control 源码](https://github.com/qiayuanl/legged_control) | 代码 | ⭐⭐ | 本章精读对象，需要逐文件阅读 |
-| [OCS2 官方文档](https://leggedrobotics.github.io/ocs2/) | 文档 | ⭐⭐⭐ | 理解 legged_control 依赖的框架 |
-| [BIT-XLJ/legged_control_explanation](https://github.com/BIT-XLJ/legged_control_explanation) | 注释代码 | ⭐⭐ | 中文注释版,适合初读 |
+| [legged_control 源码](https://github.com/qiayuanl/legged_control) | 代码 | ★★ | 本章精读对象，需要逐文件阅读 |
+| [OCS2 官方文档](https://leggedrobotics.github.io/ocs2/) | 文档 | ★★★ | 理解 legged_control 依赖的框架 |
+| [BIT-XLJ/legged_control_explanation](https://github.com/BIT-XLJ/legged_control_explanation) | 注释代码 | ★★ | 中文注释版,适合初读 |
 
 **论文**：
 
 | 论文 | 年份/会议 | 难度 | 内容 |
 |------|----------|------|------|
-| Farshidian et al., "An efficient optimal planning and control framework for quadrupedal locomotion" | ICRA 2017 | ⭐⭐⭐ | OCS2 的前身论文 |
-| Di Carlo et al., "Dynamic locomotion in the MIT Cheetah 3 through convex model-predictive control" | IROS 2018 | ⭐⭐ | 另一种 MPC 方案(凸 MPC),与 OCS2 对比 |
-| Liao et al., "Walking in Narrow Spaces: Safety-critical Locomotion Control" | IROS 2023 | ⭐⭐⭐ | legged_control 作者的研究,NMPC+DCBF |
-| Grandia et al., "Perceptive Locomotion Through Nonlinear Model-Predictive Control" | T-RO 2023 | ⭐⭐⭐⭐ | OCS2 + 感知 MPC,legged_control 的研究前沿 |
-| Kim et al., "Highly Dynamic Quadruped Locomotion via Whole-Body Impulse Control and Model Predictive Control" | IROS 2019 | ⭐⭐⭐ | MIT Mini Cheetah 的 MPC+WBC,经典对照 |
+| Farshidian et al., "An efficient optimal planning and control framework for quadrupedal locomotion" | ICRA 2017 | ★★★ | OCS2 的前身论文 |
+| Di Carlo et al., "Dynamic locomotion in the MIT Cheetah 3 through convex model-predictive control" | IROS 2018 | ★★ | 另一种 MPC 方案(凸 MPC),与 OCS2 对比 |
+| Liao et al., "Walking in Narrow Spaces: Safety-critical Locomotion Control" | IROS 2023 | ★★★ | legged_control 作者的研究,NMPC+DCBF |
+| Grandia et al., "Perceptive Locomotion Through Nonlinear Model-Predictive Control" | T-RO 2023 | ★★★★ | OCS2 + 感知 MPC,legged_control 的研究前沿 |
+| Kim et al., "Highly Dynamic Quadruped Locomotion via Whole-Body Impulse Control and Model Predictive Control" | IROS 2019 | ★★★ | MIT Mini Cheetah 的 MPC+WBC,经典对照 |
 
 **社区资源**：
 
 | 资源 | 类型 | 难度 | 内容 |
 |------|------|------|------|
-| [Feng1909/legged_control_go2](https://github.com/Feng1909/legged_control_go2) | 代码 | ⭐⭐ | Go2 适配参考 |
-| [MasterYip/hexapod_control](https://github.com/MasterYip/hexapod_control) | 代码 | ⭐⭐⭐ | 六足适配,看如何扩展到非四足 |
-| [legged_perceptive](https://github.com/qiayuanl/legged_perceptive) | 代码 | ⭐⭐⭐⭐ | 作者的感知扩展,足式/230_Perceptive_MPC 的代码参考 |
+| [Feng1909/legged_control_go2](https://github.com/Feng1909/legged_control_go2) | 代码 | ★★ | Go2 适配参考 |
+| [MasterYip/hexapod_control](https://github.com/MasterYip/hexapod_control) | 代码 | ★★★ | 六足适配,看如何扩展到非四足 |
+| [legged_perceptive](https://github.com/qiayuanl/legged_perceptive) | 代码 | ★★★★ | 作者的感知扩展,足式/230_Perceptive_MPC 的代码参考 |
 
 ---
 
@@ -1960,7 +1960,7 @@ if (estimatorType == "kalman") {
 
 ---
 
-## 68.12 前沿展望：OCS2 后继生态与 RL Pipeline 对比 ⭐⭐⭐
+## 68.12 前沿展望：OCS2 后继生态与 RL Pipeline 对比 ★★★
 
 > **本节解决什么问题**：legged_control 依赖的 OCS2 框架已进入维护模式。了解后继项目和替代方案，对于规划你自己的研究平台至关重要。
 
@@ -2014,7 +2014,7 @@ legged_control 代表了"经典 MPC+WBC"路线，IsaacLab + rsl_rl 代表了"端
 
 > **本质洞察**：legged_control 和 IsaacLab 不是"旧 vs 新"的替代关系，而是两种**根本不同的工程哲学**。legged_control 把控制知识编码为数学约束（"我知道物理规律，让优化器在规律允许的范围内找最优"），IsaacLab 把控制知识编码为奖励信号（"我定义什么是好的行为，让 RL 自己学怎么实现"）。前者的极限是人类对物理的理解深度，后者的极限是训练数据的丰富度和 GPU 的算力。2025-2026 的趋势是两者融合——DTC、Hybrid RL+MPC 等方案试图同时获得 MPC 的安全性和 RL 的适应性。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > 🧠 **思维陷阱：认为"RL 是未来，MPC 已经过时"**
 > **新手想法**："看 ANYmal Parkour 和 Extreme Parkour 的结果，RL 已经全面超越 MPC 了"
@@ -2023,6 +2023,6 @@ legged_control 代表了"经典 MPC+WBC"路线，IsaacLab + rsl_rl 代表了"端
 
 ### 练习
 
-**练习 68.12.A** ⭐⭐⭐：对比 legged_control 的 `HierarchicalWbc::update()` 和 IsaacLab 中 rsl_rl 策略网络的 `act()` 函数：两者的输入维度、输出维度、计算耗时分别是多少？讨论在什么条件下 WBC 的显式物理约束满足优于 RL 的隐式约束学习。
+**练习 68.12.A** ★★★：对比 legged_control 的 `HierarchicalWbc::update()` 和 IsaacLab 中 rsl_rl 策略网络的 `act()` 函数：两者的输入维度、输出维度、计算耗时分别是多少？讨论在什么条件下 WBC 的显式物理约束满足优于 RL 的隐式约束学习。
 
-**练习 68.12.B** ⭐⭐⭐⭐ [跨章综合]：设计一个从 legged_control 迁移到 ALIGATOR/simple_mpc 的方案。列出需要替换的模块（MPC 求解器、问题定义接口、MPC-MRT 通信），需要保留的模块（WBC、状态估计、硬件接口），以及迁移过程中的验证检查点。综合本章对 legged_control 架构的理解和足式/110_OCS2完整栈与双线程MPC 对 OCS2 的分析，评估迁移的工程量（人周）。
+**练习 68.12.B** ★★★★ [跨章综合]：设计一个从 legged_control 迁移到 ALIGATOR/simple_mpc 的方案。列出需要替换的模块（MPC 求解器、问题定义接口、MPC-MRT 通信），需要保留的模块（WBC、状态估计、硬件接口），以及迁移过程中的验证检查点。综合本章对 legged_control 架构的理解和足式/110_OCS2完整栈与双线程MPC 对 OCS2 的分析，评估迁移的工程量（人周）。

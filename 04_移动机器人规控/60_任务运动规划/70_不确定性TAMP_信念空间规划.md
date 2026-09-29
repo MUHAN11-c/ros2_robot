@@ -1,6 +1,6 @@
 # TAMP_T6 不确定性下的 TAMP 与信念空间规划 (Task and Motion Planning under Uncertainty: Belief-Space Planning)
 
-> **难度**: ⭐⭐⭐ ~ ⭐⭐⭐⭐ (本章是 TAMP 线的进阶专题，把前五章"世界完全可知"的假设撤掉，整体偏研究级)
+> **难度**: ★★★ ~ ★★★★ (本章是 TAMP 线的进阶专题，把前五章"世界完全可知"的假设撤掉，整体偏研究级)
 > **前置知识**: TAMP_T1（PDDL/FF、符号-几何鸿沟、Mini-TAMP 累积项目）、TAMP_T2（删除松弛启发式）、TAMP_T3（PDDLStream 的 Stream 采样器）；概率基础（条件概率、贝叶斯更新、期望）；强烈建议先读 U 线 `30_不确定性规划/50_POMDP与Belief规划`（运动/决策层的 POMDP 机器）
 > **核心参考**: Kaelbling & Lozano-Pérez (2013, IJRR), "Integrated Task and Motion Planning in Belief Space"; Garrett, Paxton, Lozano-Pérez, Kaelbling & Fox (2020, ICRA), "Online Replanning in Belief Space for Partially Observable Task and Motion Problems"; Hoffmann & Brafman (2006, AIJ) Conformant-FF / (2005, ICAPS) Contingent-FF; Yoon, Fern & Givan (2007, ICAPS) FF-Replan; Younes & Littman (2004) PPDDL; Sanner (2010) RDDL
 > **与既有章节的关系**: 本章是总论 T0 §4.4"不确定性贯穿三个根问题"那一行的系统展开。它站在 T1-T3 的"确定性 TAMP"之上，把符号层的世界从"完全可知"放宽到"只有概率估计"。它**不重复** U 线 `30_不确定性规划/` 的运动层机器（POMDP 求解器、机会约束），而是讲**任务层**如何表示、规划、执行不确定性，并在 §10 把任务层信念规划与运动层 belief-space 接起来。
@@ -85,7 +85,7 @@
                             └─ 宏动作/技能压缩长时域
 ```
 
-**怎么读这张图**：左列建立"为什么确定性 TAMP 不够"（§2）；中列是本章硬核——信念空间这个核心对象（§3）长出 conformant（§4）、contingent（§5）两类无概率/有概率的范式，以及绕开它的工程捷径（§6）、表达它的语言（§7）、求解它的机器（§8 POMDP）；右列落地——一个完整的感知不确定 pick-place（§9）和与运动层的接口（§10）。⭐⭐⭐ 的 §3（信念空间）、§5（contingent）、§6（determinization）是必掌握主干；⭐⭐⭐⭐ 的 §8（POMDP 近似）与 §10（接口与前沿）是进阶。
+**怎么读这张图**：左列建立"为什么确定性 TAMP 不够"（§2）；中列是本章硬核——信念空间这个核心对象（§3）长出 conformant（§4）、contingent（§5）两类无概率/有概率的范式，以及绕开它的工程捷径（§6）、表达它的语言（§7）、求解它的机器（§8 POMDP）；右列落地——一个完整的感知不确定 pick-place（§9）和与运动层的接口（§10）。★★★ 的 §3（信念空间）、§5（contingent）、§6（determinization）是必掌握主干；★★★★ 的 §8（POMDP 近似）与 §10（接口与前沿）是进阶。
 
 **主干与分支**：第一遍务必拿下 §2.4（任务层 vs 运动层分工判据）、§3（信念与信念空间，全章的核心对象）、§5（contingent planning，最贴近真实机器人的范式）、§6（FF-Replan，最实用的工程捷径）、§9（完整案例）。§4（conformant）、§7（语言细节）、§8（POMDP 近似理论）、§10.4（前沿）可第二遍深入。
 
@@ -121,7 +121,7 @@
 
 ---
 
-## 2. 任务层的不确定性从哪来 ⭐⭐
+## 2. 任务层的不确定性从哪来 ★★
 
 ### 2.1 动机：一个在真机上崩掉的"完美计划"
 
@@ -194,7 +194,7 @@
 
 > **本质洞察**：把不确定性分到正确的层，是不确定 TAMP 工程化的第一原则，违反它的代价是**指数级的**。若你硬要用一个大 POMDP 同时建模"杯子在哪个房间（离散，3 种）"和"抓取偏差（连续，无穷）"，连续维度会让 belief 空间无法离散求解；反过来，若你想用符号 contingent 规划去处理"±2cm 抓取误差"，你得把厘米级位姿离散成成千上万个命题，符号搜索瞬间爆炸。**正确的做法永远是分层**：离散的不确定性留给符号任务层（少数命题、少数分支，可符号搜索），连续的不确定性留给几何运动层（高斯/粒子滤波，可数值传播），两层通过"成功概率""可达性"这类汇总量握手。这条"按不确定性的离散/连续性质分层"的原则，是理解整个不确定 TAMP 体系（本章 + U 线）的总纲——本章讲上半层，U 线讲下半层。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱一（概念误区）：把"动作会失败"等同于"需要信念规划"。**
 - 错误描述：一看到"抓取可能滑脱"就上 contingent/POMDP 重武器。
@@ -216,13 +216,13 @@
 
 ### 练习
 
-1. **（⭐⭐，辨析）** 下列任务各属于状态/效果/感知不确定的哪一类（可多选），并判断它该用 conformant、contingent、还是 determinization+replan：(a) 仓库里某货架补货，但不知道货架当前是满是空，无传感器；(b) 拧螺丝可能拧滑（10% 概率），拧滑了再拧一次即可；(c) 抽屉里可能有钥匙也可能没有，可以拉开看。
-2. **（⭐⭐，分层）** 一个移动操作任务同时包含："目标物体在三个房间之一（离散）"和"机械臂基座定位有 ±5cm 漂移（连续）"。请按 §2.4 把这两类不确定性分到任务层/运动层，并说明两层通过什么汇总量握手（提示：可达性、成功概率）。
-3. **（⭐⭐⭐，反例构造）** 构造一个具体任务，使得"用最可能世界做确定性规划 + 失败重试"陷入 §2.3 崩溃三的无限死循环。要求写出动作、初始信念、为什么重试不更新信念。再说明：要打破死循环，缺的是哪一步（提示：§3 信念更新）。
+1. **（★★，辨析）** 下列任务各属于状态/效果/感知不确定的哪一类（可多选），并判断它该用 conformant、contingent、还是 determinization+replan：(a) 仓库里某货架补货，但不知道货架当前是满是空，无传感器；(b) 拧螺丝可能拧滑（10% 概率），拧滑了再拧一次即可；(c) 抽屉里可能有钥匙也可能没有，可以拉开看。
+2. **（★★，分层）** 一个移动操作任务同时包含："目标物体在三个房间之一（离散）"和"机械臂基座定位有 ±5cm 漂移（连续）"。请按 §2.4 把这两类不确定性分到任务层/运动层，并说明两层通过什么汇总量握手（提示：可达性、成功概率）。
+3. **（★★★，反例构造）** 构造一个具体任务，使得"用最可能世界做确定性规划 + 失败重试"陷入 §2.3 崩溃三的无限死循环。要求写出动作、初始信念、为什么重试不更新信念。再说明：要打破死循环，缺的是哪一步（提示：§3 信念更新）。
 
 ---
 
-## 3. 信念空间规划：把"状态"换成"信念" ⭐⭐⭐
+## 3. 信念空间规划：把"状态"换成"信念" ★★★
 
 这是本章的核心对象。前两节论证了"确定性 TAMP 不够"，本节给出替代品：**不在世界状态上规划，而在世界状态的概率分布——信念——上规划**。一旦你接受了这个视角转换，conformant（§4）、contingent（§5）、POMDP（§8）都只是它的不同特例。
 
@@ -386,7 +386,7 @@ def correct_wrong(belief, obs, likelihood):
 
 > **本质洞察**：U4 把 POMDP 当作一个**通用的序贯决策数学问题**来求解（不管状态是什么，只要给我转移/观测/奖励，我用 α-vector 或 belief 树搜）。本章把不确定性当作**符号任务规划问题的一个属性**来处理——它在乎"动作有结构化的前提和效果""目标是逻辑公式""可以和几何采样耦合"。同一个 belief-MDP，U4 用"无结构的通用求解器"硬解（适合状态少、结构弱的问题如 Tiger、交互驾驶），本章用"利用符号结构的专用规划器"巧解（适合命题多、动作结构强的长时域操作）。**这不是重复，而是同一思想在两个抽象层、面向两类问题的两种落地**——这也正是总论 T0 把 T6 与 U4 都列出、并标注"T6 接 U 线"的原因。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱一（概念误区）：把信念当成"加权平均的状态"，在平均状态上规划。**
 - 错误描述：把信念 $b$ 坍缩成一个"期望世界"（如各物体位姿取均值）再做确定性规划。
@@ -408,13 +408,13 @@ def correct_wrong(belief, obs, likelihood):
 
 ### 练习
 
-1. **（⭐⭐，手算）** 初始信念 $b(\text{杯在桌}) = 0.7$、$b(\text{杯在水槽}) = 0.3$。机器人执行 `look(table)`，传感器似然为 $P(\text{见杯}\mid\text{杯在桌})=0.9$、$P(\text{见杯}\mid\text{杯在水槽})=0.1$。若观测到"见杯"，用 §3.2 的校正公式手算更新后的信念。再问：若观测到"没见杯"，更新后信念是多少？
-2. **（⭐⭐⭐，实现）** 用 §3.2 的 `predict`/`correct` 框架，实现"门可能上锁"任务的一次信念演化：初始 $b(\text{锁})=b(\text{没锁})=0.5$；动作 `try_open` 的转移为"没锁→开（成功），锁→仍锁（失败）"；执行后通过观测"门是否开了"做校正。写出 `try_open` 失败（门没开）后的信念，并解释它如何打破 §2.3 崩溃三的死循环。
-3. **（⭐⭐⭐，概念）** 解释为什么"纯物理动作长链 + 不观测"会让信念单调发散（熵不减）。结合 §3.2 的预测/校正，说明 conformant planning（§4，禁用观测）为什么是信念规划里"最难"的特例——它只有增熵的预测、没有减熵的校正。
+1. **（★★，手算）** 初始信念 $b(\text{杯在桌}) = 0.7$、$b(\text{杯在水槽}) = 0.3$。机器人执行 `look(table)`，传感器似然为 $P(\text{见杯}\mid\text{杯在桌})=0.9$、$P(\text{见杯}\mid\text{杯在水槽})=0.1$。若观测到"见杯"，用 §3.2 的校正公式手算更新后的信念。再问：若观测到"没见杯"，更新后信念是多少？
+2. **（★★★，实现）** 用 §3.2 的 `predict`/`correct` 框架，实现"门可能上锁"任务的一次信念演化：初始 $b(\text{锁})=b(\text{没锁})=0.5$；动作 `try_open` 的转移为"没锁→开（成功），锁→仍锁（失败）"；执行后通过观测"门是否开了"做校正。写出 `try_open` 失败（门没开）后的信念，并解释它如何打破 §2.3 崩溃三的死循环。
+3. **（★★★，概念）** 解释为什么"纯物理动作长链 + 不观测"会让信念单调发散（熵不减）。结合 §3.2 的预测/校正，说明 conformant planning（§4，禁用观测）为什么是信念规划里"最难"的特例——它只有增熵的预测、没有减熵的校正。
 
 ---
 
-## 4. Conformant Planning：无感知下也要稳的序列 ⭐⭐⭐
+## 4. Conformant Planning：无感知下也要稳的序列 ★★★
 
 信念空间规划的第一个、也是最"硬"的特例：**机器人对初始世界有不确定，但执行过程中完全没有传感能力**（或选择不用）。它要找的是一个**固定的动作序列**，使得**不管初始世界是哪一种**，执行完都能达成目标。这叫 conformant planning（保形/一致性规划）。
 
@@ -539,7 +539,7 @@ conformant 强在"不依赖任何运行时传感、开环可靠"，但它有一�
 
 > **本质洞察**：conformant 与 contingent 的分界，恰好是 §3.2 那对更新的分界——**conformant 只有预测更新（动作增熵），contingent 加了校正更新（观测减熵）**。conformant 无解的根源，是它的信念只会扩散不会收缩，于是当"必须先收缩信念（搞清世界是哪种）才能正确行动"时，它无能为力。这给了一条清晰的方法选择链：**先问"不观察行不行"——行（有对所有世界都成功的固定序列）就用 conformant（更简单、开环可靠）；不行（必须先获取信息）就升级到 contingent。** 这条链也呼应 §2.3 崩溃二："看不见信息收集价值"的问题，conformant 同样束手无策——它和确定性规划共享"无观测"这个根本局限，只是 conformant 至少诚实地承认了状态不确定。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱一（概念误区）：把 conformant 的"对所有世界成功"误解为"对最可能世界成功"。**
 - 错误描述：以为 conformant 是"挑个最可能的初始世界规划"。
@@ -561,13 +561,13 @@ conformant 强在"不依赖任何运行时传感、开环可靠"，但它有一�
 
 ### 练习
 
-1. **（⭐⭐，建模）** 把 §4.1 的"翻零件"任务形式化：3 个零件朝向未知（朝上/朝下），动作 `flip_up(i)` 把零件 $i$ 翻到朝上（幂等，不管原朝向）。写出 $B_0$（含几个世界）、目标公式、以及一个 conformant 解，并论证它对所有 8 个初始世界都成功。
-2. **（⭐⭐⭐，判定）** 给定任务："开关可能在开或关，灯泡可能好或坏（共 4 种世界），目标是让灯亮。"动作只有 `toggle_switch`（翻转开关），无传感。这个任务有 conformant 解吗？若无，最少需要哪一类传感动作才能用 contingent 解？说明理由。
-3. **（⭐⭐⭐，实现+调试）** 运行 §4.3 的 `conformant_bfs` 解练习 1 的翻零件任务。然后把目标判定的 `all` 改成 `any`，观察它给出什么"计划"，并解释为什么那个计划在真机上会失败——这正是陷阱一的代码版。
+1. **（★★，建模）** 把 §4.1 的"翻零件"任务形式化：3 个零件朝向未知（朝上/朝下），动作 `flip_up(i)` 把零件 $i$ 翻到朝上（幂等，不管原朝向）。写出 $B_0$（含几个世界）、目标公式、以及一个 conformant 解，并论证它对所有 8 个初始世界都成功。
+2. **（★★★，判定）** 给定任务："开关可能在开或关，灯泡可能好或坏（共 4 种世界），目标是让灯亮。"动作只有 `toggle_switch`（翻转开关），无传感。这个任务有 conformant 解吗？若无，最少需要哪一类传感动作才能用 contingent 解？说明理由。
+3. **（★★★，实现+调试）** 运行 §4.3 的 `conformant_bfs` 解练习 1 的翻零件任务。然后把目标判定的 `all` 改成 `any`，观察它给出什么"计划"，并解释为什么那个计划在真机上会失败——这正是陷阱一的代码版。
 
 ---
 
-## 5. Contingent Planning：带感知分支的策略树 ⭐⭐⭐
+## 5. Contingent Planning：带感知分支的策略树 ★★★
 
 这是本章最贴近真实机器人的范式。conformant 禁用观测、解是一条线；**contingent planning 允许观测，解是一棵按观测结果分支的策略树**。"先去看一眼柜子，看到钥匙就拿、没看到就去别处找"——这种"边走边看、看了再定"的智能，正是 contingent planning 的产物。
 
@@ -728,7 +728,7 @@ contingent 策略树容易和两个相邻概念混淆，这里厘清。
 
 > **本质洞察**：contingent 策略树是一个"枢纽概念"——它向下接执行（T5 行为树承载它）、向旁接运动层不确定（U1/U4 是它在连续层的孪生）、向上接 POMDP（它是 POMDP 最优策略沿可达观测展开的树，§8）。把这四者（contingent / 行为树 / U 线分支 / POMDP）放在一起看，你会发现它们共享一个深层结构：**在"我能选动作、但不能选观测/扰动"的世界里，把决策组织成一棵对所有不可控分支都有应对的树。** 这个结构是机器人不确定性决策的通用语言。本章在符号层讲它，T5 讲它的执行，U 线讲它的连续版——理解了通用结构，跨章的知识就串成了一张网。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱一（概念误区）：把 contingent plan 当成"一条带 if 的序列"，只准备最可能分支。**
 - 错误描述：以为"先看一眼，如果看到 X 就……"只需写最可能的那一支。
@@ -750,13 +750,13 @@ contingent 策略树容易和两个相邻概念混淆，这里厘清。
 
 ### 练习
 
-1. **（⭐⭐，画树）** 任务："钥匙在抽屉或柜子里（各 50%），目标是拿到钥匙到门口。"可用动作：`look(drawer)`、`look(cupboard)`、`pick(key)`（需先看到钥匙所在）、`goto(door)`。画出一棵完整的 contingent 策略树，标出每个 observe 节点的分支和叶子。
-2. **（⭐⭐⭐，实现）** 用 §5.3 的 `plan_contingent` 框架实现练习 1 的任务（定义信念、物理动作、传感动作及其 `possible_observations`/`correct`），跑出策略树，再用 `execute` 在"钥匙真实在柜子"和"真实在抽屉"两种世界各执行一遍，验证两种世界都成功。
-3. **（⭐⭐⭐，对比）** 同一个"钥匙在抽屉或柜子"任务，分别用 conformant（§4）和 contingent（§5）求解。说明 conformant 为什么无解、contingent 为什么有解，并指出二者的解在形态上（线 vs 树）和执行上（开环 vs 边看边走）的根本差异。
+1. **（★★，画树）** 任务："钥匙在抽屉或柜子里（各 50%），目标是拿到钥匙到门口。"可用动作：`look(drawer)`、`look(cupboard)`、`pick(key)`（需先看到钥匙所在）、`goto(door)`。画出一棵完整的 contingent 策略树，标出每个 observe 节点的分支和叶子。
+2. **（★★★，实现）** 用 §5.3 的 `plan_contingent` 框架实现练习 1 的任务（定义信念、物理动作、传感动作及其 `possible_observations`/`correct`），跑出策略树，再用 `execute` 在"钥匙真实在柜子"和"真实在抽屉"两种世界各执行一遍，验证两种世界都成功。
+3. **（★★★，对比）** 同一个"钥匙在抽屉或柜子"任务，分别用 conformant（§4）和 contingent（§5）求解。说明 conformant 为什么无解、contingent 为什么有解，并指出二者的解在形态上（线 vs 树）和执行上（开环 vs 边看边走）的根本差异。
 
 ---
 
-## 6. Determinization 与 FF-Replan：用"假装确定"绕开概率 ⭐⭐⭐
+## 6. Determinization 与 FF-Replan：用"假装确定"绕开概率 ★★★
 
 前面三节（信念、conformant、contingent）都是"正面硬刚"不确定性——把它建模进信念、在信念空间上规划。本节讲一条截然不同的**工程捷径**：**假装世界是确定的，用快得多的确定性规划器求解，错了再重规划。** 这条捷径以 **FF-Replan** 为代表，它简单到近乎"作弊"，却在概率规划竞赛上击败了精心设计的概率规划器——理解它为什么有效、又在哪里必然失败，是不确定性 TAMP 工程直觉的关键一课。
 
@@ -924,7 +924,7 @@ FF-Replan 在独木桥上的执行轨迹(N=5 的一次典型失败):
 
 > **对比性思维（反事实）**：如果把这座桥的掉落改成**可恢复**的（掉下去能爬回原格，只是多花几步），FF-Replan 立刻**变得完全够用**——每次掉落就重规划"爬回来再走"，期望多走几步但终能过桥，且它仍然飞快。**同一个任务，仅仅把"不可逆"改成"可逆"，FF-Replan 就从"必然失败"变成"高效够用"。** 这个反事实精准锁定了死穴一的真正触发条件——**不是"有小概率坏事"，而是"小概率坏事不可逆"**。所以判断要不要弃用 FF-Replan，关键一问不是"动作会不会失败"，而是"失败了能不能爬回来"：能爬回来，重试就行；爬不回来（掉下桥、打碎杯子、锁死门），才必须上信念/风险规划提前规避。把这一刀切准，你就不会在良性问题上过度设计、也不会在不可逆问题上埋雷。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱一（思维陷阱）：在"概率即灾难"问题上用 FF-Replan，被不可逆失败反复打击。**
 - 错误描述：对含不可逆 dead-end 的任务也用确定化+重规划。
@@ -946,13 +946,13 @@ FF-Replan 在独木桥上的执行轨迹(N=5 的一次典型失败):
 
 ### 练习
 
-1. **（⭐⭐，确定化）** 给定概率动作 `unlock`：前提 `HasKey`，效果 0.8→`Unlocked`、0.2→`KeyStuck`（钥匙卡住，需 `extract-key` 恢复）。写出它的 most-likely 和 all-outcomes 两种确定化结果。讨论：哪种确定化能让规划器"预先准备好钥匙卡住的应对"？
-2. **（⭐⭐⭐，判据应用）** 对下列任务判断该用 FF-Replan 还是信念规划，并说明理由：(a) 扫地机器人偶尔卡在地毯边（卡住可后退脱困）；(b) 拆弹机器人剪线，剪错线（小概率）即引爆（不可逆）；(c) 快递机器人要先扫码才知道包裹该送哪层。
-3. **（⭐⭐⭐⭐，实现+复现盲区）** 用 §6.2 的 `ff_replan` 实现一个"门可能锁了"任务（`open` 成功率取决于隐藏的 `Locked` 状态）。观察它陷入"假装没锁→开→失败→重规划→再假装没锁"的死循环（§6.4 死穴二），并解释要打破它必须引入什么（提示：把"门是否锁了"建成信念 + `try` 动作更新信念，转 §5 contingent）。
+1. **（★★，确定化）** 给定概率动作 `unlock`：前提 `HasKey`，效果 0.8→`Unlocked`、0.2→`KeyStuck`（钥匙卡住，需 `extract-key` 恢复）。写出它的 most-likely 和 all-outcomes 两种确定化结果。讨论：哪种确定化能让规划器"预先准备好钥匙卡住的应对"？
+2. **（★★★，判据应用）** 对下列任务判断该用 FF-Replan 还是信念规划，并说明理由：(a) 扫地机器人偶尔卡在地毯边（卡住可后退脱困）；(b) 拆弹机器人剪线，剪错线（小概率）即引爆（不可逆）；(c) 快递机器人要先扫码才知道包裹该送哪层。
+3. **（★★★★，实现+复现盲区）** 用 §6.2 的 `ff_replan` 实现一个"门可能锁了"任务（`open` 成功率取决于隐藏的 `Locked` 状态）。观察它陷入"假装没锁→开→失败→重规划→再假装没锁"的死循环（§6.4 死穴二），并解释要打破它必须引入什么（提示：把"门是否锁了"建成信念 + `try` 动作更新信念，转 §5 contingent）。
 
 ---
 
-## 7. 概率 PDDL：PPDDL 与 RDDL ⭐⭐⭐
+## 7. 概率 PDDL：PPDDL 与 RDDL ★★★
 
 前面讲的 conformant/contingent/FF-Replan 都需要一个**输入**：带概率的动作模型。这一节讲怎么**写**它——两种标准的概率规划语言：**PPDDL**（PDDL 的概率扩展，效果导向）和 **RDDL**（基于动态贝叶斯网络，状态转移导向）。它们是国际概率规划竞赛（IPPC）的标准输入语言，理解它们能让你读懂文献里的 benchmark、也能为自己的不确定任务建模。
 
@@ -1143,7 +1143,7 @@ RDDL 的关键能力：
 
 对机器人 TAMP 的实践建议：单纯描述"抓取/放置有成功率"这类离散、动作中心的不确定，PPDDL 简单够用；要描述"传感器观测（部分可观测）""连续位姿不确定""多物体状态并发演化"，RDDL 更合适。但要注意——**真实机器人 TAMP 往往不直接用这两种语言求解**，而是把它们当**建模/benchmark 接口**：用 PPDDL/RDDL 描述问题，再交给专门的求解器（或本章 §8 的 POMDP 近似、§9 的 belief-space TAMP）。语言负责"说清问题"，求解负责"解决问题"，两者分离。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱一（编程陷阱）：PPDDL 的 `probabilistic` 概率和超过 1 或忽略"无效果"余量。**
 - 错误描述：效果列表概率之和 > 1，或 < 1 时不处理"什么都不发生"的余量。
@@ -1165,15 +1165,15 @@ RDDL 的关键能力：
 
 ### 练习
 
-1. **（⭐⭐，建模）** 用 PPDDL 写一个 `place` 动作：前提 `holding ?o`，效果 0.85→放稳（`on ?o ?surface`、`hand-empty`）、0.15→放倒（`toppled ?o`、`hand-empty`）。确保概率语义正确。
-2. **（⭐⭐⭐，互译）** 把练习 1 的 PPDDL `place` 动作改写成 RDDL 风格的 CPF（为 `on'`、`toppled'`、`hand-empty'` 各写一个条件概率函数）。对比两种写法，说明在"只有这一个动作"时哪种更简洁、在"100 个物体并发放置"时哪种更简洁。
-3. **（⭐⭐⭐，选型）** 下列建模需求各该用 PPDDL 还是 RDDL：(a) 仓库 50 个货位的库存每步随机消耗（并发、结构化）；(b) 单机械臂抓放，抓取有成功率（离散、动作稀疏）；(c) 移动机器人带噪声相机找物体（部分可观测）。逐一说明理由。
+1. **（★★，建模）** 用 PPDDL 写一个 `place` 动作：前提 `holding ?o`，效果 0.85→放稳（`on ?o ?surface`、`hand-empty`）、0.15→放倒（`toppled ?o`、`hand-empty`）。确保概率语义正确。
+2. **（★★★，互译）** 把练习 1 的 PPDDL `place` 动作改写成 RDDL 风格的 CPF（为 `on'`、`toppled'`、`hand-empty'` 各写一个条件概率函数）。对比两种写法，说明在"只有这一个动作"时哪种更简洁、在"100 个物体并发放置"时哪种更简洁。
+3. **（★★★，选型）** 下列建模需求各该用 PPDDL 还是 RDDL：(a) 仓库 50 个货位的库存每步随机消耗（并发、结构化）；(b) 单机械臂抓放，抓取有成功率（离散、动作稀疏）；(c) 移动机器人带噪声相机找物体（部分可观测）。逐一说明理由。
 
 ---
 
-## 8. POMDP 在 TAMP 里的用法与近似 ⭐⭐⭐⭐
+## 8. POMDP 在 TAMP 里的用法与近似 ★★★★
 
-§6 的 determinization 绕开了概率，§7 的 PPDDL/RDDL 把概率"说清楚了"但没说"怎么解"。本节回到最一般、最强的武器：**把不确定 TAMP 当作一个 POMDP 来正经求解**。这是 §3.3"信念空间 MDP"理想的兑现，也是它代价的兑现——纯 POMDP 在长时域操作上**不可扩展**。本节的主线因此是：POMDP 给了什么、为什么直接用它会爆炸、TAMP 用三类近似与符号结构如何驯服它。这是本章理论上最深的一节（⭐⭐⭐⭐），但只要抓住"信念空间太大、想办法别遍历它"这条线，就不难跟上。
+§6 的 determinization 绕开了概率，§7 的 PPDDL/RDDL 把概率"说清楚了"但没说"怎么解"。本节回到最一般、最强的武器：**把不确定 TAMP 当作一个 POMDP 来正经求解**。这是 §3.3"信念空间 MDP"理想的兑现，也是它代价的兑现——纯 POMDP 在长时域操作上**不可扩展**。本节的主线因此是：POMDP 给了什么、为什么直接用它会爆炸、TAMP 用三类近似与符号结构如何驯服它。这是本章理论上最深的一节（★★★★），但只要抓住"信念空间太大、想办法别遍历它"这条线，就不难跟上。
 
 ### 8.1 动机：为什么任务层最终绕不开 POMDP
 
@@ -1380,7 +1380,7 @@ $$
 
 > **本质洞察**：QMDP 和 belief 树在 Tiger 第一步**碰巧**都选了 `listen`，但原因截然不同、后果也截然不同——QMDP 选它是因为**高估**了"一次 listen 就揭示真相"（错误的理由，导致后续不稳定、信念稍偏就贸然开门），belief 树选它是因为**正确算出**"多听几次把信念推到足够确定再开门"的期望最优（正确的理由，导致稳健的"听够再开"策略）。这个对照点破了 §8.3 的要害：**QMDP 的错不一定表现为"第一步选错动作"，而常表现为"用错误的理由选对/选错、且无法正确权衡‘还要不要再收集一次信息’"。** 当传感器噪声更大（如准确度降到 0.6，需要听很多次才够确定）时，QMDP 的"一步揭示"假设错得更离谱，与最优策略的差距急剧拉大——这就是 §8 练习 2 让你调传感器精度去观察的现象。**信息的价值是要在多步信念演化里累积评估的，这正是 belief 树有、QMDP 没有的能力。**
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱一（概念误区）：以为 QMDP/最大似然只是"精度差一点"的 POMDP 近似。**
 - 错误描述：把 QMDP 当成"略不精确但方向对"的 POMDP。
@@ -1402,15 +1402,15 @@ $$
 
 ### 练习
 
-1. **（⭐⭐⭐，手算+辨析）** Tiger 问题（两扇门，老虎在其一，可 `listen` 收缩信念或 `open` 一扇门）。说明为什么 QMDP 在初始均匀信念 $b=(0.5,0.5)$ 下不会选 `listen`（用 §8.3 公式论证 `listen` 的 QMDP 价值），而完整 POMDP/belief 树会先 `listen` 几次再开门。这与 §2.3 崩溃二是什么关系？
-2. **（⭐⭐⭐⭐，实现）** 用 §8.7 的 `belief_tree_value` 实现一个最小 Tiger，验证：depth=1 时退化得像 QMDP（看不出 listen 价值），depth$\ge 2$ 时 listen 因"收缩信念→后续开对门概率大增"而胜出。改变 listen 的传感器精度，观察 listen 被选的阈值如何移动（联系 VoI）。
-3. **（⭐⭐⭐⭐，设计）** 给一个 20 步的移动操作任务（找物体 + 抓 + 放，物体在 3 个房间之一），说明你会如何用 §8.5 的三类近似组合把它变得可解：哪些原子动作打包成技能？符号层提议哪些候选？信息收集（看房间）在哪一层、用什么近似定价？画出整体架构（提示：对照 §8.6 TAMPURA 与 §9 SS-Replan）。
+1. **（★★★，手算+辨析）** Tiger 问题（两扇门，老虎在其一，可 `listen` 收缩信念或 `open` 一扇门）。说明为什么 QMDP 在初始均匀信念 $b=(0.5,0.5)$ 下不会选 `listen`（用 §8.3 公式论证 `listen` 的 QMDP 价值），而完整 POMDP/belief 树会先 `listen` 几次再开门。这与 §2.3 崩溃二是什么关系？
+2. **（★★★★，实现）** 用 §8.7 的 `belief_tree_value` 实现一个最小 Tiger，验证：depth=1 时退化得像 QMDP（看不出 listen 价值），depth$\ge 2$ 时 listen 因"收缩信念→后续开对门概率大增"而胜出。改变 listen 的传感器精度，观察 listen 被选的阈值如何移动（联系 VoI）。
+3. **（★★★★，设计）** 给一个 20 步的移动操作任务（找物体 + 抓 + 放，物体在 3 个房间之一），说明你会如何用 §8.5 的三类近似组合把它变得可解：哪些原子动作打包成技能？符号层提议哪些候选？信息收集（看房间）在哪一层、用什么近似定价？画出整体架构（提示：对照 §8.6 TAMPURA 与 §9 SS-Replan）。
 
 ---
 
-## 9. 感知不确定下的 pick-place：信念空间 TAMP 全流程 ⭐⭐⭐
+## 9. 感知不确定下的 pick-place：信念空间 TAMP 全流程 ★★★
 
-前八节给了零件：信念（§3）、范式（§4-§6）、语言（§7）、求解机器（§8）。本节把它们组装成一个**完整、可落地**的系统——回到 §2.1 那个在真机上崩掉的 pick-place，这次把它正确地做出来。这是本章的实战主干（⭐⭐⭐），也是 T1 Mini-TAMP 累积项目的"不确定性"模块。我们以 **SS-Replan**（Garrett, Paxton, Lozano-Pérez, Kaelbling & Fox, "Online Replanning in Belief Space for Partially Observable Task and Motion Problems", ICRA 2020, arXiv:1911.04577）为工程范本，因为它正好把"PDDLStream 的 Stream（T3）+ 信念 + 重规划"缝成一个跑在真机上的系统。
+前八节给了零件：信念（§3）、范式（§4-§6）、语言（§7）、求解机器（§8）。本节把它们组装成一个**完整、可落地**的系统——回到 §2.1 那个在真机上崩掉的 pick-place，这次把它正确地做出来。这是本章的实战主干（★★★），也是 T1 Mini-TAMP 累积项目的"不确定性"模块。我们以 **SS-Replan**（Garrett, Paxton, Lozano-Pérez, Kaelbling & Fox, "Online Replanning in Belief Space for Partially Observable Task and Motion Problems", ICRA 2020, arXiv:1911.04577）为工程范本，因为它正好把"PDDLStream 的 Stream（T3）+ 信念 + 重规划"缝成一个跑在真机上的系统。
 
 ### 9.1 问题设定：把 §2.1 的四个不确定性正面接住
 
@@ -1600,7 +1600,7 @@ class BeliefTAMP:
 # 关键:信念版 = 确定性版【内核】+ 信念外壳,可插拔、可回退到确定性版(无不确定时)。
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱一（思维陷阱）：把"先看后抓"写死成固定脚本，而非让规划器决定。**
 - 错误描述：在代码里硬编码"总是先 `look` 再 `pick`"。
@@ -1622,15 +1622,15 @@ class BeliefTAMP:
 
 ### 练习
 
-1. **（⭐⭐⭐，设计）** 为"杯子可能在桌上(0.7)或水槽(0.3)、相机有遮挡、抓取可能滑脱"的任务，写出 §9.5 主循环会生成的前几步动作序列（含 `look`），并标注每步后信念如何变化（用 §3.2 预测/校正）。指出哪一步是规划器自发插入的信息收集、为什么它在这里有价值。
-2. **（⭐⭐⭐⭐，实现/扩展）** 在 §9.6 的 `BeliefTAMP` 骨架上实现 `_predict_obs`（§9.3 的 `predict-observation` Stream）：给定信念和一个 `look`，产出各观测结果概率及更新后信念。接到 §3.2 的 `correct` 上，验证它能正确展开"见/不见"两个分支。
-3. **（⭐⭐⭐⭐，跨章综合）** 综合 T1（符号规划）、T3（Stream）、本章（信念 + 重规划）：手工组装一个最小感知不确定 pick-place 端到端流程——T1 的符号域 + T3 的 grasp/ik Stream + 本章的 `look` 动作和信念 Stream + §9.5 循环。说明数据如何在三章的组件间流动（符号搜索↔Stream↔信念更新↔运动层概率）。
+1. **（★★★，设计）** 为"杯子可能在桌上(0.7)或水槽(0.3)、相机有遮挡、抓取可能滑脱"的任务，写出 §9.5 主循环会生成的前几步动作序列（含 `look`），并标注每步后信念如何变化（用 §3.2 预测/校正）。指出哪一步是规划器自发插入的信息收集、为什么它在这里有价值。
+2. **（★★★★，实现/扩展）** 在 §9.6 的 `BeliefTAMP` 骨架上实现 `_predict_obs`（§9.3 的 `predict-observation` Stream）：给定信念和一个 `look`，产出各观测结果概率及更新后信念。接到 §3.2 的 `correct` 上，验证它能正确展开"见/不见"两个分支。
+3. **（★★★★，跨章综合）** 综合 T1（符号规划）、T3（Stream）、本章（信念 + 重规划）：手工组装一个最小感知不确定 pick-place 端到端流程——T1 的符号域 + T3 的 grasp/ik Stream + 本章的 `look` 动作和信念 Stream + §9.5 循环。说明数据如何在三章的组件间流动（符号搜索↔Stream↔信念更新↔运动层概率）。
 
 ---
 
-## 10. 与运动层 belief-space 的接口，横向对比与局限 ⭐⭐⭐⭐
+## 10. 与运动层 belief-space 的接口，横向对比与局限 ★★★★
 
-全章最后一节收口三件事：(1) 把贯穿全章的"任务层信念 ↔ 运动层 belief"接口**正式讲透**（§9.4 只给了一个例子，这里给通法）；(2) 把本章五类范式与 U 线横向**对比成一张大图**，建立选型直觉；(3) 诚实地交代**局限与前沿**。这是 ⭐⭐⭐⭐ 的收尾节，难度在"把全章 + U 线放在一张图上俯瞰"，但只要抓住 §2.4 的分层主线，就能把所有碎片归位。
+全章最后一节收口三件事：(1) 把贯穿全章的"任务层信念 ↔ 运动层 belief"接口**正式讲透**（§9.4 只给了一个例子，这里给通法）；(2) 把本章五类范式与 U 线横向**对比成一张大图**，建立选型直觉；(3) 诚实地交代**局限与前沿**。这是 ★★★★ 的收尾节，难度在"把全章 + U 线放在一张图上俯瞰"，但只要抓住 §2.4 的分层主线，就能把所有碎片归位。
 
 ### 10.1 接口通法：两层各管什么、怎么握手
 
@@ -1738,7 +1738,7 @@ contingent(§5)──有观测,按观测分支的【树】:
 
 > **本质洞察**：本章方法的所有局限，最终都指向同一个根本张力——**不确定性的精确表示/求解是指数的，而真实任务又长又不确定**。过去二十年的进展（Conformant-FF 的 CNF、SS-Replan 的重规划、TAMPURA 的抽象信念、Seeing-is-Believing 的 VLM）本质都是同一招的变奏：**找一个"足够好的结构"来代替"精确但指数的信念表示/求解"**——逻辑公式、最大似然、抽象划分、语言模型先验，都是这个"结构"的不同形态。这条线还远未走完：怎样的结构既紧凑又不丢关键不确定性、既能学习又能保证安全，是这个领域的开放前沿。理解了"用结构对抗指数"这条贯穿全章的暗线，你就不只是学了几个方法，而是握住了整个不确定 TAMP 领域的演进逻辑——也就能判断下一篇新论文是在这条线的哪个位置、解决了哪一段。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱一（概念误区）：把任务层信念和运动层 belief 合并成一个大 belief 求解。**
 - 错误描述：试图用统一的 hybrid POMDP 同时精确求解离散命题信念和连续位姿信念。
@@ -1760,9 +1760,9 @@ contingent(§5)──有观测,按观测分支的【树】:
 
 ### 练习
 
-1. **（⭐⭐⭐，接口设计）** 为"机器人去货架取一个可能缺货的零件"设计任务层↔运动层接口：列出任务层提出哪些意图、运动层回传哪些汇总量、用什么粒度（布尔/概率/分布）。说明若这是风险敏感任务（取错代价极高），汇总量粒度该如何调整（提示：§10.2 接 CVaR）。
-2. **（⭐⭐⭐⭐，选型综合）** 给四个任务：(a) 盲拧一批朝向未知的螺丝；(b) 钥匙在抽屉或柜子、可拉开看；(c) 积木码放、偶尔滑落可重码；(d) 核环境里取样、看一眼代价极高且有不可逆污染风险。用 §10.2 的选型表为每个选范式（§4-§9）并说明理由，指出哪些还需要 U 线配合、配合什么。
-3. **（⭐⭐⭐⭐，前沿思辨）** 选 §10.3 的一个局限，结合一篇近五年论文（如 TAMPURA 2024、Seeing-is-Believing 2025），论述它"用什么结构代替精确指数信念"、解决了哪一段、又留下了什么新问题。这道题没有标准答案，目的是练"把新论文放进全章演进逻辑"的能力。
+1. **（★★★，接口设计）** 为"机器人去货架取一个可能缺货的零件"设计任务层↔运动层接口：列出任务层提出哪些意图、运动层回传哪些汇总量、用什么粒度（布尔/概率/分布）。说明若这是风险敏感任务（取错代价极高），汇总量粒度该如何调整（提示：§10.2 接 CVaR）。
+2. **（★★★★，选型综合）** 给四个任务：(a) 盲拧一批朝向未知的螺丝；(b) 钥匙在抽屉或柜子、可拉开看；(c) 积木码放、偶尔滑落可重码；(d) 核环境里取样、看一眼代价极高且有不可逆污染风险。用 §10.2 的选型表为每个选范式（§4-§9）并说明理由，指出哪些还需要 U 线配合、配合什么。
+3. **（★★★★，前沿思辨）** 选 §10.3 的一个局限，结合一篇近五年论文（如 TAMPURA 2024、Seeing-is-Believing 2025），论述它"用什么结构代替精确指数信念"、解决了哪一段、又留下了什么新问题。这道题没有标准答案，目的是练"把新论文放进全章演进逻辑"的能力。
 
 ---
 
@@ -1817,54 +1817,54 @@ contingent(§5)──有观测,按观测分支的【树】:
 
 | # | 知识点 | 核心要点 | 对应节 | 难度 |
 |---|--------|---------|--------|------|
-| 1 | 任务层不确定性来源 | 状态/效果/感知三类，对应"世界是什么/动作把它变成什么/看到的是否真" | §2.2 | ⭐⭐ |
-| 2 | 任务层 vs 运动层分工 | 离散命题真假归任务层，连续量噪声归运动层；用错层指数爆炸 | §2.4 | ⭐⭐ |
-| 3 | 信念与信念更新 | 状态→分布；动作增熵（预测）、观测减熵（校正） | §3.1-§3.2 | ⭐⭐⭐ |
-| 4 | 信念空间 MDP | belief 是充分统计量，把部分可观测扳回完全可观测；代价是维度灾难 | §3.3 | ⭐⭐⭐ |
-| 5 | conformant planning | 对所有可能初始世界同时成立；Conformant-FF 用 CNF + SAT 蕴含避免枚举 | §4 | ⭐⭐⭐ |
-| 6 | contingent planning | AND/OR 策略树，每个观测点覆盖所有观测；Contingent-FF | §5 | ⭐⭐⭐ |
-| 7 | determinization + FF-Replan | 假装确定、错了重算；良性够用，不可逆/需感知必败 | §6 | ⭐⭐⭐ |
-| 8 | 概率语言 PPDDL/RDDL | 效果列表 vs DBN/CPF；MDP vs MDP+POMDP | §7 | ⭐⭐⭐ |
-| 9 | POMDP 在 TAMP + 近似 | 唯一能给信息定价；三重爆炸；QMDP/belief 树/技能三类近似 | §8 | ⭐⭐⭐⭐ |
-| 10 | 感知不确定 pick-place | `look` 作一等动作、Stream 扩到信念、SS-Replan 循环、接 Mini-TAMP | §9 | ⭐⭐⭐ |
-| 11 | 任务层↔运动层接口 | 分层 + 标量握手（成功概率/可达/风险/信息增益） | §10.1 | ⭐⭐⭐⭐ |
-| 12 | 横向对比与选型 | 五范式 + U 线一张选型表；同一 belief 思想两个抽象层 | §10.2 | ⭐⭐⭐⭐ |
+| 1 | 任务层不确定性来源 | 状态/效果/感知三类，对应"世界是什么/动作把它变成什么/看到的是否真" | §2.2 | ★★ |
+| 2 | 任务层 vs 运动层分工 | 离散命题真假归任务层，连续量噪声归运动层；用错层指数爆炸 | §2.4 | ★★ |
+| 3 | 信念与信念更新 | 状态→分布；动作增熵（预测）、观测减熵（校正） | §3.1-§3.2 | ★★★ |
+| 4 | 信念空间 MDP | belief 是充分统计量，把部分可观测扳回完全可观测；代价是维度灾难 | §3.3 | ★★★ |
+| 5 | conformant planning | 对所有可能初始世界同时成立；Conformant-FF 用 CNF + SAT 蕴含避免枚举 | §4 | ★★★ |
+| 6 | contingent planning | AND/OR 策略树，每个观测点覆盖所有观测；Contingent-FF | §5 | ★★★ |
+| 7 | determinization + FF-Replan | 假装确定、错了重算；良性够用，不可逆/需感知必败 | §6 | ★★★ |
+| 8 | 概率语言 PPDDL/RDDL | 效果列表 vs DBN/CPF；MDP vs MDP+POMDP | §7 | ★★★ |
+| 9 | POMDP 在 TAMP + 近似 | 唯一能给信息定价；三重爆炸；QMDP/belief 树/技能三类近似 | §8 | ★★★★ |
+| 10 | 感知不确定 pick-place | `look` 作一等动作、Stream 扩到信念、SS-Replan 循环、接 Mini-TAMP | §9 | ★★★ |
+| 11 | 任务层↔运动层接口 | 分层 + 标量握手（成功概率/可达/风险/信息增益） | §10.1 | ★★★★ |
+| 12 | 横向对比与选型 | 五范式 + U 线一张选型表；同一 belief 思想两个抽象层 | §10.2 | ★★★★ |
 
 ---
 
 ## 延伸阅读
 
-按主题分类，标注难度（⭐ 入门 / ⭐⭐ 核心 / ⭐⭐⭐ 进阶 / ⭐⭐⭐⭐ 研究级）。年份与发表处已核实。
+按主题分类，标注难度（★ 入门 / ★★ 核心 / ★★★ 进阶 / ★★★★ 研究级）。年份与发表处已核实。
 
 **信念空间 TAMP 奠基（先读）**
-- Kaelbling & Lozano-Pérez, "Integrated Task and Motion Planning in Belief Space", *International Journal of Robotics Research (IJRR)*, 2013. ⭐⭐⭐⭐ —— 本章母文，把 TAMP 正式搬进信念空间，HPN 分层 + 回归。
-- Garrett, Paxton, Lozano-Pérez, Kaelbling & Fox, "Online Replanning in Belief Space for Partially Observable Task and Motion Problems", *ICRA*, 2020（arXiv:1911.04577，代码 SS-Replan）。⭐⭐⭐ —— §9 工程范本：hybrid belief + 确定性 cost-sensitive 规划 + 重规划。
+- Kaelbling & Lozano-Pérez, "Integrated Task and Motion Planning in Belief Space", *International Journal of Robotics Research (IJRR)*, 2013. ★★★★ —— 本章母文，把 TAMP 正式搬进信念空间，HPN 分层 + 回归。
+- Garrett, Paxton, Lozano-Pérez, Kaelbling & Fox, "Online Replanning in Belief Space for Partially Observable Task and Motion Problems", *ICRA*, 2020（arXiv:1911.04577，代码 SS-Replan）。★★★ —— §9 工程范本：hybrid belief + 确定性 cost-sensitive 规划 + 重规划。
 
 **conformant / contingent 规划（§4-§5）**
-- Hoffmann & Brafman, "Conformant planning via heuristic forward search: A new approach", *Artificial Intelligence*, vol. 170, 2006, pp. 507–541（Conformant-FF）。⭐⭐⭐ —— CNF 隐式信念 + SAT 蕴含。
-- Hoffmann & Brafman, "Contingent Planning via Heuristic Forward Search with Implicit Belief States", *ICAPS*, 2005（Contingent-FF）。⭐⭐⭐ —— 把 FF 启发式扩到部分可观测。
-- Bryce & Kambhampati, "A Tutorial on Planning Graph-Based Reachability Heuristics", *AI Magazine*, 2007. ⭐⭐⭐ —— conformant/contingent 启发式综述。
+- Hoffmann & Brafman, "Conformant planning via heuristic forward search: A new approach", *Artificial Intelligence*, vol. 170, 2006, pp. 507–541（Conformant-FF）。★★★ —— CNF 隐式信念 + SAT 蕴含。
+- Hoffmann & Brafman, "Contingent Planning via Heuristic Forward Search with Implicit Belief States", *ICAPS*, 2005（Contingent-FF）。★★★ —— 把 FF 启发式扩到部分可观测。
+- Bryce & Kambhampati, "A Tutorial on Planning Graph-Based Reachability Heuristics", *AI Magazine*, 2007. ★★★ —— conformant/contingent 启发式综述。
 
 **determinization 与重规划（§6）**
-- Yoon, Fern & Givan, "FF-Replan: A Baseline for Probabilistic Planning", *ICAPS*, 2007. ⭐⭐ —— 经典 all-outcomes 确定化基线。
-- Little & Thiébaux, "Probabilistic Planning vs. Replanning", *ICAPS Workshop on IPC*, 2007. ⭐⭐⭐ —— 何时确定化必败（"probabilistically interesting"）。
+- Yoon, Fern & Givan, "FF-Replan: A Baseline for Probabilistic Planning", *ICAPS*, 2007. ★★ —— 经典 all-outcomes 确定化基线。
+- Little & Thiébaux, "Probabilistic Planning vs. Replanning", *ICAPS Workshop on IPC*, 2007. ★★★ —— 何时确定化必败（"probabilistically interesting"）。
 
 **概率规划语言（§7）**
-- Younes & Littman, "PPDDL1.0: An Extension to PDDL for Expressing Planning Domains with Probabilistic Effects", 技术报告 CMU-CS-04-167, 2004. ⭐⭐ —— PPDDL 定义。
-- Sanner, "Relational Dynamic Influence Diagram Language (RDDL): Language Description", 2010（IPPC-2011 官方语言）。⭐⭐⭐ —— RDDL 与 DBN 视角。
+- Younes & Littman, "PPDDL1.0: An Extension to PDDL for Expressing Planning Domains with Probabilistic Effects", 技术报告 CMU-CS-04-167, 2004. ★★ —— PPDDL 定义。
+- Sanner, "Relational Dynamic Influence Diagram Language (RDDL): Language Description", 2010（IPPC-2011 官方语言）。★★★ —— RDDL 与 DBN 视角。
 
 **POMDP 求解与近似（§8，多数已在 U 线 U4 展开）**
-- Kaelbling, Littman & Cassandra, "Planning and Acting in Partially Observable Stochastic Domains", *Artificial Intelligence*, vol. 101, 1998. ⭐⭐⭐⭐ —— POMDP 奠基。
-- Kurniawati, Hsu & Lee, "SARSOP: Efficient Point-Based POMDP Planning by Approximating Optimally Reachable Belief Spaces", *RSS*, 2008. ⭐⭐⭐⭐ —— 点基离线求解（U4 详讲）。
-- Silver & Veness, "Monte-Carlo Planning in Large POMDPs"（POMCP）, *NeurIPS*, 2010；Ye, Somani, Hsu & Lee, "DESPOT: Online POMDP Planning with Regularization", *JAIR*, 2017. ⭐⭐⭐⭐ —— 在线 belief 树（U4 详讲）。
+- Kaelbling, Littman & Cassandra, "Planning and Acting in Partially Observable Stochastic Domains", *Artificial Intelligence*, vol. 101, 1998. ★★★★ —— POMDP 奠基。
+- Kurniawati, Hsu & Lee, "SARSOP: Efficient Point-Based POMDP Planning by Approximating Optimally Reachable Belief Spaces", *RSS*, 2008. ★★★★ —— 点基离线求解（U4 详讲）。
+- Silver & Veness, "Monte-Carlo Planning in Large POMDPs"（POMCP）, *NeurIPS*, 2010；Ye, Somani, Hsu & Lee, "DESPOT: Online POMDP Planning with Regularization", *JAIR*, 2017. ★★★★ —— 在线 belief 树（U4 详讲）。
 
 **近五年前沿（研究级，§8-§10）**
-- Curtis, Matheos, Gothoskar, Mansinghka, Tenenbaum, Lozano-Pérez & Kaelbling, "Partially Observable Task and Motion Planning with Uncertainty and Risk Awareness"（TAMPURA）, *RSS*, 2024（arXiv:2403.10454）。⭐⭐⭐⭐ —— 抽象信念 + 风险/死局规避 + 双层不确定性推理，本章现代范本。
-- Zhao, McClinton, Curtis, Kumar, Silver, Kaelbling & Wong, "Seeing is Believing: Belief-Space Planning with Foundation Models as Uncertainty Estimators", 2025（arXiv:2504.03245）。⭐⭐⭐⭐ —— 用 VLM 估计符号命题不确定性 + 参数化技能 + belief-space 规划，绕开手工标定似然。
+- Curtis, Matheos, Gothoskar, Mansinghka, Tenenbaum, Lozano-Pérez & Kaelbling, "Partially Observable Task and Motion Planning with Uncertainty and Risk Awareness"（TAMPURA）, *RSS*, 2024（arXiv:2403.10454）。★★★★ —— 抽象信念 + 风险/死局规避 + 双层不确定性推理，本章现代范本。
+- Zhao, McClinton, Curtis, Kumar, Silver, Kaelbling & Wong, "Seeing is Believing: Belief-Space Planning with Foundation Models as Uncertainty Estimators", 2025（arXiv:2504.03245）。★★★★ —— 用 VLM 估计符号命题不确定性 + 参数化技能 + belief-space 规划，绕开手工标定似然。
 
 **教科书 / 综述**
-- Garrett, Chitnis, Holladay, Kim, Silver, Kaelbling & Lozano-Pérez, "Integrated Task and Motion Planning", *Annual Review of Control, Robotics, and Autonomous Systems*, 2021. ⭐⭐⭐ —— TAMP 总览，含不确定性一节，定位本章于全局。
-- Geffner & Bonet, *A Concise Introduction to Models and Methods for Automated Planning*, Morgan & Claypool, 2013. ⭐⭐⭐ —— conformant/contingent/概率规划的统一模型视角。
+- Garrett, Chitnis, Holladay, Kim, Silver, Kaelbling & Lozano-Pérez, "Integrated Task and Motion Planning", *Annual Review of Control, Robotics, and Autonomous Systems*, 2021. ★★★ —— TAMP 总览，含不确定性一节，定位本章于全局。
+- Geffner & Bonet, *A Concise Introduction to Models and Methods for Automated Planning*, Morgan & Claypool, 2013. ★★★ —— conformant/contingent/概率规划的统一模型视角。
 
 ---
 

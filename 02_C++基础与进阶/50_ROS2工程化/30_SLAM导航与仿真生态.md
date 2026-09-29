@@ -1,6 +1,6 @@
 ## ROS SLAM/导航、Gazebo 仿真与可视化生态
 
-> **难度**：⭐～⭐⭐⭐⭐ | **建议用时**：2 周 | **前置要求**：设计哲学与架构演进（ROS2 架构）、构建系统与机器人建模（构建系统与 URDF）、SLAM 基础概念
+> **难度**：★～★★★★ | **建议用时**：2 周 | **前置要求**：设计哲学与架构演进（ROS2 架构）、构建系统与机器人建模（构建系统与 URDF）、SLAM 基础概念
 
 **教学目标**：掌握ROS生态中SLAM/导航/仿真/可视化的完整工具链和项目版图——Nav2导航栈架构、主流SLAM包生态、Gazebo仿真全栈（从Classic到Modern的架构迁移）、以及RViz2/PlotJuggler/Foxglove可视化工具链。
 
@@ -8,7 +8,7 @@
 
 ## 前置自测
 
-📋 **答不出 ≥ 2 题 → 先回前置章节复习**
+◆ **答不出 ≥ 2 题 → 先回前置章节复习**
 
 1. **[构建系统与机器人建模]** `robot_state_publisher` 的作用是什么？它订阅什么、发布什么？
 2. **[设计哲学与架构演进]** REP-105 定义的标准 TF 树结构是什么？`map→odom→base_link` 各由谁发布？
@@ -28,7 +28,7 @@
 
 ---
 
-## 0. 先建立一张导航闭环地图 ⭐
+## 0. 先建立一张导航闭环地图 ★
 
 ROS 生态中的 SLAM、导航、仿真和可视化经常被分开学习：今天装 Nav2，明天跑 slam_toolbox，后天调 Gazebo，再用 RViz 看结果。这样能快速跑通 demo，却容易让知识碎片化。真实机器人导航不是几个包并列运行，而是一条闭环：
 
@@ -61,7 +61,7 @@ map → odom → base_link 坐标链
 
 因此，本章不是包名清单，而是学习一个导航系统如何被拆成可替换的层。理解这个层次后，换 slam_toolbox、FAST-LIO、KISS-ICP、Gazebo、Foxglove 或自定义控制器时，系统结构不会变。
 
-### 0.1 反面案例：只会启动 launch 文件 ⭐
+### 0.1 反面案例：只会启动 launch 文件 ★
 
 如果只会执行：
 
@@ -141,11 +141,11 @@ ROS2 自主导航系统
 
 Nav2 加上一系列现代 SLAM 包构成了今天 ROS 自主机器人导航的骨干。 对一个有因子图和 ICP 背景的 C++/Python 工程师来说，这个生态提供了模块化、基于插件的导航栈（Nav2 取代 move_base）、生产级的 2D SLAM（slam_toolbox），以及几乎覆盖过去五年所有主流雷达惯性和视觉 SLAM 算法的 ROS 封装。所有包共享的关键集成模式遵循 **REP-105**：SLAM 发布 `map→odom`，里程计发布 `odom→base_link`，`robot_state_publisher` 从 URDF 处理静态传感器坐标。理解这棵 TF 树、Nav2 的插件架构，以及每个 SLAM 节点如何映射到标准 ROS 话题，是后续所有工作的实践基础。
 
-## 1.1 Nav2：基于行为树和生命周期节点的现代导航栈 ⭐⭐
+## 1.1 Nav2：基于行为树和生命周期节点的现代导航栈 ★★
 
 **Navigation2 栈**（[github.com/ros-planning/navigation2](https://github.com/ros-planning/navigation2)，文档 [docs.nav2.org](https://docs.nav2.org/)）把 `move_base` 这个单一节点分解为一组独立的、生命周期受管的 action server，由 **BehaviorTree.CPP V4** 的 XML 文件编排。move_base 原本使用一个硬编码的有限状态机循环遍历 PLANNING→CONTROLLING→RECOVERY，Nav2 则让这套逻辑完全可通过行为树 XML 配置。每个 server——`planner_server`、`controller_server`、`behavior_server`、`smoother_server`、`bt_navigator`——都作为一个由 `nav2_lifecycle_manager` 管理的生命周期节点运行，启动时按顺序切换状态、关闭时反向切换，并用 **200ms bond 心跳监控** 处理崩溃恢复。
 
-### 规划器与控制器插件 ⭐⭐
+### 规划器与控制器插件 ★★
 
 Planner server 托管实现 `nav2_core::GlobalPlanner` 接口的全局规划器插件。主要选项有：
 - **NavFn**（Dijkstra/A*，适用于圆形机器人）
@@ -160,7 +160,7 @@ Controller server 托管实现 `nav2_core::Controller` 的局部控制器插件�
 
 Recovery behaviors——Spin、BackUp、Wait、DriveOnHeading——每个都暴露自己的 action server，通过行为树连接起来。
 
-### Nav2 四大 Server 深入 ⭐⭐
+### Nav2 四大 Server 深入 ★★
 
 理解 Nav2 的架构不是"记住有哪些包"，而是理解每个 server 在导航闭环中的角色、输入输出和失败模式。四个核心 server 的职责如下：
 
@@ -228,9 +228,9 @@ controller_server:
 
 行为树的核心优势是**可配置的失败恢复逻辑**。用 move_base 时，PLANNING→CONTROLLING→RECOVERY 循环是硬编码的；用 Nav2 时，你可以编辑 XML 定义任意复杂的恢复策略。例如"规划失败后先后退 0.5 m，再旋转 90 度，再重新规划；如果三次重试后仍失败，呼叫远程操控"。用 **Groot2** 可以可视化编辑和实时监控行为树状态。
 
-### ⚠️ Nav2 架构常见陷阱
+### ⚠ Nav2 架构常见陷阱
 
-> ⚠️ **概念误区：认为 Nav2 只需要一个 launch 文件就能用**
+> ⚠ **概念误区：认为 Nav2 只需要一个 launch 文件就能用**
 >
 > **新手想法**："`ros2 launch nav2_bringup navigation_launch.py` 一键启动，参数用默认就行。"
 >
@@ -240,7 +240,7 @@ controller_server:
 >
 > **正确做法**：把 `nav2_params.yaml` 复制到自己的包中，逐项检查并修改：`robot_radius`、`inflation_radius`、`max_vel_x/y/theta`、`min_vel_x`、`acc_lim_x/y/theta`、costmap 传感器话题和 QoS。
 
-> ⚠️ **工程陷阱：Nav2 节点全 active 但控制器不输出 cmd_vel**
+> ⚠ **工程陷阱：Nav2 节点全 active 但控制器不输出 cmd_vel**
 >
 > **错误做法**：只检查 lifecycle 状态，不检查 costmap 数据。
 >
@@ -250,7 +250,7 @@ controller_server:
 >
 > **正确做法**：用 `ros2 topic hz /scan` 确认传感器数据流动，用 RViz 查看 costmap display 是否有障碍物标记和清除。
 
-### SLAM 算法选型矩阵 ⭐⭐
+### SLAM 算法选型矩阵 ★★
 
 面对十几种 SLAM 算法，选择困难是正常的。但选型不应该靠"论文发表时间"或"GitHub star 数"，而应该靠一个结构化的决策流程。以下矩阵覆盖了 2026 年最常见的选型场景：
 
@@ -283,7 +283,7 @@ controller_server:
 
 > **本质洞察**：SLAM 算法选型不是"越新越好"或"越复杂越好"，而是在传感器、算力、ROS2 支持和功能需求之间找交集。一个团队有 2D 激光和 Raspberry Pi，slam_toolbox 就是最优解——不需要看 FAST-LIVO2 的论文有多漂亮。
 
-### SLAM + 导航联合部署完整工程案例 ⭐⭐
+### SLAM + 导航联合部署完整工程案例 ★★
 
 本案例展示从零开始搭建"slam_toolbox 建图 + Nav2 自主导航"的完整工程链路。目标是让读者理解每个配置文件的作用和它们之间的依赖关系，而不只是"复制 launch 文件就能跑"。
 
@@ -350,7 +350,7 @@ Nav2 的 `nav2_lifecycle_manager` 按配置文件中列出的顺序激活节点�
 
 如果顺序不对（比如 planner 在 map_server 之前激活），planner 可能在 costmap 还没收到地图时就被请求规划，返回空路径。
 
-### Costmap 层设计与自定义插件 ⭐⭐⭐
+### Costmap 层设计与自定义插件 ★★★
 
 Costmap 是 Nav2 中最容易被低估的组件。很多"导航失败"的问题不在规划器或控制器，而在 costmap——障碍物没被检测到（层配置错误）、虚假障碍物不消失（clearing 机制不对）、膨胀区域过大或过小（inflation 参数）。
 
@@ -408,7 +408,7 @@ public:
 
 用 `PLUGINLIB_EXPORT_CLASS(MyCustomLayer, nav2_costmap_2d::Layer)` 注册，在 `plugin_description.xml` 中声明，在 CMakeLists.txt 中导出。详细教程在 [docs.nav2.org/plugin_tutorials/docs/writing_new_costmap2d_plugin.html](https://docs.nav2.org/plugin_tutorials/docs/writing_new_costmap2d_plugin.html)。
 
-### 仿真生态深入对比 ⭐⭐⭐
+### 仿真生态深入对比 ★★★
 
 前面已经介绍了 Gazebo、Isaac Lab 和 MuJoCo 的定位差异。本小节用更精确的维度对比它们，帮助工程师在"训练仿真器"和"验证仿真器"之间做出有依据的选择。
 
@@ -455,7 +455,7 @@ public:
 2. **[架构题]** 画出 Nav2 行为树中"规划失败→清除 costmap→Spin→BackUp→重新规划"的执行流程。标注每个节点的类型（Action/Condition/Control）和失败时的 fallback。
 3. **[实操题]** 为一个 0.3 m 半径的差速机器人配置 costmap：设置 `inflation_radius`（建议 0.55 m）、`cost_scaling_factor`（建议 3.0），并解释这两个参数的物理含义。
 
-### Costmap 系统 ⭐⭐
+### Costmap 系统 ★★
 
 `nav2_costmap_2d` 使用分层插件架构：
 - **StaticLayer** 加载地图
@@ -465,19 +465,19 @@ public:
 
 **Spatio-Temporal Voxel Layer**（[github.com/SteveMacenski/spatio_temporal_voxel_layer](https://github.com/SteveMacenski/spatio_temporal_voxel_layer)）提供基于时间的体素衰减，对 3D 雷达和深度相机比标准体素层高效 2×。
 
-### 从 move_base 到 Nav2 ⭐⭐
+### 从 move_base 到 Nav2 ★★
 
 ROS1 的前身 **move_base**（[github.com/ros-planning/navigation](https://github.com/ros-planning/navigation)，[wiki.ros.org/move_base](http://wiki.ros.org/move_base)）是一个把规划器和 costmap 都塞在一起的单节点。它的插件接口 `nav_core::BaseGlobalPlanner`、`nav_core::BaseLocalPlanner`、`nav_core::RecoveryBehavior` 直接对应 Nav2 的 `nav2_core::GlobalPlanner`、`nav2_core::Controller`、`nav2_core::Behavior`。**teb_local_planner**（Timed Elastic Band，[wiki.ros.org/teb_local_planner](http://wiki.ros.org/teb_local_planner)）仍是流行的 ROS1 局部规划器，Nav2 没有直接对等物，但 MPPI 覆盖了类似用途。迁移需要把 XML launch 文件改成 Python、采用生命周期/行为树范式，用 `Simple Commander` Python API（`BasicNavigator`）代替原始 action client。
 
-### 编写自定义 Nav2 插件的通用套路 ⭐⭐⭐
+### 编写自定义 Nav2 插件的通用套路 ★★★
 
 每个 Nav2 插件——规划器、控制器、costmap 层、behavior、行为树节点——都遵循同一个五步配方。继承 `nav2_core` 基类，实现虚方法（`configure`、`activate`、`deactivate`、`cleanup`，再加上领域特定的方法如 `createPlan` 或 `computeVelocityCommands`），用 `PLUGINLIB_EXPORT_CLASS` 注册，创建插件描述 XML，在 CMakeLists.txt 里通过 `pluginlib_export_plugin_description_file` 导出。官方教程和可运行代码在 [docs.nav2.org/plugin_tutorials](https://docs.nav2.org/plugin_tutorials/index.html)，`navigation2_tutorials` 仓库提供 `nav2_straightline_planner` 和 `nav2_pure_pursuit_controller` 作为最小示例。对有因子图背景的工程师来说，写一个把基于图的优化器包装在 `createPlan()` 接口后面的自定义规划器是直接的。
 
 ---
 
-## 1.2 ROS 集成的 SLAM 包：slam_toolbox、cartographer、rtabmap ⭐⭐
+## 1.2 ROS 集成的 SLAM 包：slam_toolbox、cartographer、rtabmap ★★
 
-### slam_toolbox：ROS 2 原生 2D SLAM 的事实标准 ⭐⭐
+### slam_toolbox：ROS 2 原生 2D SLAM 的事实标准 ★★
 
 **slam_toolbox**（[github.com/SteveMacenski/slam_toolbox](https://github.com/SteveMacenski/slam_toolbox)，约 2.3k stars）是 **Nav2 默认的 SLAM 库**，也是新 ROS2 2D 激光雷达项目的推荐选择。它提供四种模式：
 - **在线同步**（处理每一帧扫描）
@@ -489,17 +489,17 @@ ROS1 的前身 **move_base**（[github.com/ros-planning/navigation](https://gith
 
 关键话题：订阅 `/scan`（LaserScan），从 TF 读 `odom→base_link`；发布 `/map`（OccupancyGrid）、`map→odom` TF、`/slam_toolbox/graph_visualization`。服务包括 `serialize_map`/`deserialize_map` 用于持久化、`merge_maps` 用于合并多个会话。基准测试显示 **30,000 平方英尺环境 5× 实时**，snap 包提供约 10× 加速。
 
-### cartographer_ros：2D/3D 都能做，但维护减弱 ⭐⭐
+### cartographer_ros：2D/3D 都能做，但维护减弱 ★★
 
 **cartographer_ros**（[github.com/cartographer-project/cartographer_ros](https://github.com/cartographer-project/cartographer_ros)）提供 2D 和 3D SLAM，采用两阶段架构：本地 SLAM 通过 CeresScanMatcher 构建连续的 submap，全局 SLAM 在后台线程运行，通过 FastCorrelativeScanMatcher 进行回环检测，然后做位姿图优化。配置用 `.lua` 文件，指定 `tracking_frame`、`published_frame`、`num_laser_scans`、`num_point_clouds` 等。
 
 **Cartographer 已不再由 Google 积极维护**——只合并关键 PR。[github.com/ros2/cartographer_ros](https://github.com/ros2/cartographer_ros) 的 ROS2 fork 接受有限的社区维护。对于新的 3D 激光雷达 SLAM 项目，FAST-LIO2 或 LIO-SAM 通常是更好的选择。
 
-### rtabmap_ros：最多传感器支持 ⭐⭐
+### rtabmap_ros：最多传感器支持 ★★
 
 **rtabmap_ros**（[github.com/introlab/rtabmap_ros](https://github.com/introlab/rtabmap_ros)）是**最多传感器**的 SLAM 包，同时支持 RGB-D 相机、立体相机、3D 激光雷达和 2D 激光雷达。通过视觉词袋（BRIEF/ORB/SuperPoint 描述符）做基于外观的回环检测，配合贝叶斯滤波器；图优化通过 g2o、GTSAM 或 Ceres 完成。它的内存管理系统（工作/短期/长期记忆）约束了大规模环境的计算。它同时发布 2D OccupancyGrid（`/map`）和 3D 点云地图（`/cloud_map`），加上 `map→odom` TF。积极维护中，**`ros2` 分支全面支持 ROS2**，含子包 `rtabmap_slam`、`rtabmap_odom`、`rtabmap_viz`、`rtabmap_examples`，带 TurtleBot3/4 和 Nav2 的现成 launch 文件。
 
-### Cartographer vs slam_toolbox vs RTAB-Map：三者工程权衡 ⭐⭐
+### Cartographer vs slam_toolbox vs RTAB-Map：三者工程权衡 ★★
 
 这三个包是 ROS 生态中集成度最高的 SLAM 系统。它们不是"功能递增"的关系，而是面向不同场景的设计取舍：
 
@@ -522,7 +522,7 @@ ROS1 的前身 **move_base**（[github.com/ros-planning/navigation](https://gith
 
 > **跨领域类比**：这三个 SLAM 包之间的关系类似于数据库中的 SQLite、PostgreSQL 和 MongoDB。slam_toolbox 像 SQLite——简单可靠、适合大多数场景、学习曲线低；Cartographer 像 PostgreSQL——功能强大但配置复杂、维护需要专业知识；RTAB-Map 像 MongoDB——擅长非结构化数据（视觉特征）、灵活但需要更多存储。
 
-### ORB-SLAM3 深入：从学术论文到 ROS2 工程 ⭐⭐⭐
+### ORB-SLAM3 深入：从学术论文到 ROS2 工程 ★★★
 
 ORB-SLAM3 是视觉 SLAM 领域引用最多的系统之一（Campos et al., 2021, IEEE T-RO），支持单目/双目/RGB-D 和可选 IMU。它的核心优势是多地图系统——当跟踪丢失时创建新地图，后续重新识别时合并地图。这对真实部署中的遮挡和快速运动非常重要。
 
@@ -534,7 +534,7 @@ ORB-SLAM3 是视觉 SLAM 领域引用最多的系统之一（Campos et al., 2021
 
 3. **跟踪丢失恢复**：当视觉特征不足时（面向白墙、快速运动），ORB-SLAM3 会进入"丢失"状态并停止发布位姿。ROS2 封装必须处理这个情况——在丢失期间发布最后一次已知位姿或切换到里程计 fallback，而不是停止发布 TF（这会让下游 Nav2 整个失效）。
 
-### 经典 ROS1 包仍有教学价值 ⭐
+### 经典 ROS1 包仍有教学价值 ★
 
 **gmapping**（[github.com/ros-perception/slam_gmapping](https://github.com/ros-perception/slam_gmapping)）和 **hector_slam**（[github.com/tu-darmstadt-ros-pkg/hector_slam](https://github.com/tu-darmstadt-ros-pkg/hector_slam)）仍有助于理解 SLAM 基础。GMapping 使用 Rao-Blackwellized 粒子滤波，每个粒子携带一张完整地图——内存随粒子数 × 地图大小缩放，把它限制在小环境。Hector_slam 在多分辨率网格上用高斯-牛顿扫描匹配，**不需要里程计**，适合无人机和手持设备。两者都没有官方 ROS2 移植；slam_toolbox 就是为替代它们而设计的现代版本。
 
@@ -542,7 +542,7 @@ ORB-SLAM3 是视觉 SLAM 领域引用最多的系统之一（Campos et al., 2021
 
 ---
 
-## 1.3 现代 SLAM 项目及其 ROS 封装 ⭐⭐⭐
+## 1.3 现代 SLAM 项目及其 ROS 封装 ★★★
 
 下表列出主流现代 SLAM 算法及其 ROS 集成情况。每个都发布标准的 `nav_msgs/Odometry` 和 `sensor_msgs/PointCloud2` 话题，遵循 `map→odom→base_link` TF 约定（纯里程计系统则是 `odom→base_link`）。
 
@@ -561,7 +561,7 @@ ORB-SLAM3 是视觉 SLAM 领域引用最多的系统之一（Campos et al., 2021
 | **OpenVINS** | [rpng/open_vins](https://github.com/rpng/open_vins) | ~2.2k | 相机+IMU | ✅ 原生 | 基于 MSCKF 的 VIO |
 | **ORB-SLAM3** | [UZ-SLAMLab/ORB_SLAM3](https://github.com/UZ-SLAMLab/ORB_SLAM3) | ~6.5k | 单目/立体/RGBD(+IMU) | ✅ 社区封装 | 基于特征，多地图 |
 
-### 这些节点的典型 ROS 接口结构 ⭐⭐
+### 这些节点的典型 ROS 接口结构 ★★
 
 **LIO-SAM** 分为四个节点：
 - `imuPreintegration`（IMU 预积分因子）
@@ -581,7 +581,7 @@ KISS-ICP 的设计哲学值得学习：它证明了"最小化假设"可以带来
 
 对 ROS2 上的 **ORB-SLAM3**，最全面的封装是 [suchetanrs/ORB-SLAM3-ROS2-Docker](https://github.com/suchetanrs/ORB-SLAM3-ROS2-Docker)，它发布 TF、用里程计 fallback 处理跟踪丢失、暴露位姿图和地图点查询的服务。更简单的替代品包括 [zang09/ORB_SLAM3_ROS2](https://github.com/zang09/ORB_SLAM3_ROS2) 和 [Mechazo11/ros2_orb_slam3](https://github.com/Mechazo11/ros2_orb_slam3)。VINS-Fusion 的 ROS2 移植包括 [zinuok/VINS-Fusion-ROS2](https://github.com/zinuok/VINS-Fusion-ROS2)。
 
-### SLAM 代码库的架构模式 ⭐⭐
+### SLAM 代码库的架构模式 ★★
 
 对比几个主流 SLAM 系统的代码架构，可以发现两种截然不同的设计模式：
 
@@ -599,7 +599,7 @@ KISS-ICP 的设计哲学值得学习：它证明了"最小化假设"可以带来
 
 ---
 
-## 1.4 TF 树、message_filters 与传感器融合基础设施 ⭐⭐
+## 1.4 TF 树、message_filters 与传感器融合基础设施 ★★
 
 每个 ROS SLAM 系统都依赖于遵循 **REP-105** 的正确 TF 树配置：
 
@@ -609,7 +609,7 @@ map → odom → base_link → lidar_link, camera_link, imu_link
 
 SLAM 节点计算机器人全局位姿（`map→base_link`），从 TF 读当前的 `odom→base_link`，然后发布 `map→odom = map→base_link × inverse(odom→base_link)`。这种间接编码让 SLAM 修正吸收漂移，同时保持里程计连续。所有 SLAM 节点——slam_toolbox、cartographer、LIO-SAM、FAST-LIO——都遵循这个模式。`odom→base_link` 变换来自轮编码器、VIO 系统或 **robot_localization**。
 
-### robot_localization：EKF/UKF 传感器融合 ⭐⭐
+### robot_localization：EKF/UKF 传感器融合 ★★
 
 **robot_localization**（[github.com/cra-ros-pkg/robot_localization](https://github.com/cra-ros-pkg/robot_localization)）提供 `ekf_node` 和 `ukf_node`，把任意数量的 `nav_msgs/Odometry`、`sensor_msgs/Imu`、`geometry_msgs/PoseWithCovarianceStamped` 输入融合成 **15 维状态**（位置、方向、速度、加速度）。配置用每个传感器 15 元素布尔数组指定融合哪些状态变量。
 
@@ -617,7 +617,7 @@ SLAM 节点计算机器人全局位姿（`map→base_link`），从 TF 读当前
 
 Locus Robotics 的替代方案 **fuse**（[github.com/locusrobotics/fuse](https://github.com/locusrobotics/fuse)）用因子图后端代替 EKF，为自定义传感器模型提供更多扩展性。
 
-### message_filters 与其他基础设施 ⭐⭐
+### message_filters 与其他基础设施 ★★
 
 **message_filters**（[github.com/ros2/message_filters](https://github.com/ros2/message_filters)）提供 `ApproximateTimeSynchronizer`，用于同步多传感器回调——对结合图像、激光、IMU 流的 LIVO 系统是必需的。C++ 模式使用 `message_filters::Subscriber` 加 `sync_policies::ApproximateTime`，有可配置的松弛容差（真实硬件通常 **50-100ms**）。
 
@@ -625,7 +625,7 @@ Locus Robotics 的替代方案 **fuse**（[github.com/locusrobotics/fuse](https:
 
 对于 PCL 互操作，`pcl_conversions` 提供 `pcl::fromROSMsg()`/`pcl::toROSMsg()`，但性能关键的 SLAM 代码应该用 `sensor_msgs::PointCloud2Iterator` 避免双重拷贝开销。
 
-### 每个 SLAM 节点遵循的标准消息约定 ⭐⭐
+### 每个 SLAM 节点遵循的标准消息约定 ★★
 
 - `sensor_msgs/PointCloud2`：使用扁平二进制 `data` 缓冲区加 `PointField` 描述符描述 x/y/z/intensity/ring/time 通道
 - `nav_msgs/OccupancyGrid`：使用值 **0=free、100=occupied、-1=unknown** 存在行主序的 `int8[]` 中
@@ -633,33 +633,33 @@ Locus Robotics 的替代方案 **fuse**（[github.com/locusrobotics/fuse](https:
 
 ---
 
-## 1.5 地图表示：2D 栅格、3D octree 与 costmap 图层 ⭐⭐
+## 1.5 地图表示：2D 栅格、3D octree 与 costmap 图层 ★★
 
 **nav2_map_server** 把 OccupancyGrid 地图保存和加载为 YAML 元数据文件加 PGM 灰度图（白色=free，黑色=occupied）。保存：`ros2 run nav2_map_server map_saver_cli -f my_map`。加载通过生命周期管理的 map_server 节点上的 `yaml_filename` 参数，它发布 `/map` 并暴露 `load_map`/`save_map` 服务。
 
-### 3D 地图 ⭐⭐
+### 3D 地图 ★★
 
 对于 3D 环境——无人机、多层建筑、有悬挂物的环境——**OctoMap**（[github.com/OctoMap/octomap](https://github.com/OctoMap/octomap)，约 1.8k stars）提供基于概率 octree 的 3D 占用建图。`octomap_server` 节点订阅 PointCloud2，增量构建 octree，同时发布完整 3D 地图（`octomap_msgs/Octomap`）和 2D 投影（`nav_msgs/OccupancyGrid`）以兼容 Nav2。
 
 **NVIDIA 的 nvblox**（[github.com/NVIDIA-ISAAC-ROS/isaac_ros_nvblox](https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_nvblox)，约 600 stars）提供 GPU 加速的 TSDF 重建，带直接 Nav2 costmap 插件，用于实时 3D 场景理解。
 
-### Costmap 图层系统 ⭐⭐
+### Costmap 图层系统 ★★
 
 Nav2 中的 **costmap_2d 图层系统** 用 `pluginlib` 组合图层。标准栈是 StaticLayer（预建地图）→ ObstacleLayer 或 VoxelLayer（实时传感器）→ InflationLayer（从障碍物按指数衰减，通过 `inflation_radius` 和 `cost_scaling_factor` 配置）。**膨胀层必须列在最后**，因为它膨胀前面所有层的障碍物。自定义层继承 `nav2_costmap_2d::Layer`，实现 `onInitialize()`、`updateBounds()`、`updateCosts()`、`reset()`。运行两个 costmap 实例：`map` 坐标系的全局 costmap（全范围，规划器用）和 `odom` 坐标系的局部 costmap（滚动窗口，控制器用）。
 
 ---
 
-## 1.6 SLAM 工程师必读的 GitHub 项目目录 ⭐
+## 1.6 SLAM 工程师必读的 GitHub 项目目录 ★
 
 生态系统远远超出核心包。以下是按类别组织的最有价值项目，每个都值得研究其代码结构、ROS 集成模式或算法创新。
 
-### 自动驾驶与完整栈 ⭐⭐
+### 自动驾驶与完整栈 ★★
 
 - **Autoware**（[github.com/autowarefoundation/autoware](https://github.com/autowarefoundation/autoware)，约 9k stars，ROS2）——最完整的开源自动驾驶平台，有基于 NDT 的定位、行为规划、完整车辆控制
 - **LeGO-LOAM**（[github.com/RobustFieldAutonomyLab/LeGO-LOAM](https://github.com/RobustFieldAutonomyLab/LeGO-LOAM)，约 2.5k stars，ROS1）——LIO-SAM 的前身，地面优化的雷达 SLAM
 - **hdl_graph_slam**（[github.com/koide3/hdl_graph_slam](https://github.com/koide3/hdl_graph_slam)，约 2k stars，ROS1）——完整的 6-DOF 3D 雷达图 SLAM，带 NDT/GICP 匹配、GPS/IMU/地面约束、多机器人扩展
 
-### 大学实验室实现 ⭐⭐
+### 大学实验室实现 ★★
 
 - **Kimera**（[github.com/MIT-SPARK/Kimera](https://github.com/MIT-SPARK/Kimera)，约 1.7k stars）——MIT SPARK Lab，从相机+IMU 构建度量-语义 3D 网格和动态场景图，ROS2 支持通过 [MIT-SPARK/Kimera-VIO-ROS2](https://github.com/MIT-SPARK/Kimera-VIO-ROS2)
 - **KISS-Matcher**（[github.com/MIT-SPARK/KISS-Matcher](https://github.com/MIT-SPARK/KISS-Matcher)）——快速、鲁棒的点云配准，带 ROS2 SLAM 示例（KISS-Matcher + FAST-LIO2）
@@ -669,7 +669,7 @@ Nav2 中的 **costmap_2d 图层系统** 用 `pluginlib` 组合图层。标准栈
 - **libpointmatcher**（[github.com/ethz-asl/libpointmatcher](https://github.com/ethz-asl/libpointmatcher)，约 1.5k stars）——ETH 的模块化 ICP 库，带 ROS 封装
 - **PIN-SLAM**（[github.com/PRBonn/PIN_SLAM](https://github.com/PRBonn/PIN_SLAM)，约 700 stars）——PRBonn 用神经隐式表示做全局一致的雷达 SLAM
 
-### 带 SLAM/Nav 示例的机器人平台 ⭐
+### 带 SLAM/Nav 示例的机器人平台 ★
 
 - **TurtleBot3**（[github.com/ROBOTIS-GIT/turtlebot3](https://github.com/ROBOTIS-GIT/turtlebot3)，约 1.8k stars，ROS1+ROS2）——事实上的学习平台，带完整 SLAM 和 Nav2 教程
 - **TurtleBot4**（[github.com/turtlebot/turtlebot4](https://github.com/turtlebot/turtlebot4)，ROS2）——在 iRobot Create3 基座上加 RealSense 和 Nav2+SLAM Toolbox+RTAB-Map 集成
@@ -677,7 +677,7 @@ Nav2 中的 **costmap_2d 图层系统** 用 `pluginlib` 组合图层。标准栈
 - **PAL Robotics TIAGo**（[github.com/pal-robotics/tiago_simulation](https://github.com/pal-robotics/tiago_simulation)，ROS2）——移动操作，集成 Nav2+MoveIt2
 - **AgileX LIMO**（[github.com/agilexrobotics/limo_ros2](https://github.com/agilexrobotics/limo_ros2)，ROS2）——支持四种运动模式（差速、阿克曼、履带、麦轮）用于算法对比
 
-### 探索、评估和生产工具 ⭐⭐
+### 探索、评估和生产工具 ★★
 
 - **m-explore-ros2**（[github.com/robo-friends/m-explore-ros2](https://github.com/robo-friends/m-explore-ros2)，约 400 stars）——为 Nav2 提供基于前沿的探索，带多机器人地图合并
 - **evo**（[github.com/MichaelGrupp/evo](https://github.com/MichaelGrupp/evo)，约 3.5k stars）——标准轨迹评估工具（APE、RPE 指标，TUM/KITTI/EuRoC 格式支持）
@@ -690,11 +690,11 @@ Nav2 中的 **costmap_2d 图层系统** 用 `pluginlib` 组合图层。标准栈
 
 ---
 
-## 1.7 SLAM-Nav 集成的通用模式 ⭐⭐
+## 1.7 SLAM-Nav 集成的通用模式 ★★
 
 无论选择哪个 SLAM 包，集成工作流都遵循一致的模式。SLAM 节点订阅传感器数据（通常是 `/scan` 或 PointCloud2 话题），从 TF 缓冲区读取 `odom→base_link` 变换。它内部做扫描匹配、优化和回环检测，然后在 `/tf` 上广播 `map→odom`，在 `/map` 上发布地图。Nav2 的 costmap 通过 StaticLayer 订阅 `/map`，通过 ObstacleLayer 订阅实时传感器话题，得到的 costmap 被规划器/控制器 server 用于路径规划和轨迹跟踪。使用预建地图而非活跃 SLAM 时，AMCL 或定位模式下的 slam_toolbox 提供 `map→odom` 变换。
 
-### 对有 ESKF 和因子图背景的工程师最值得研究的代码库 ⭐⭐⭐
+### 对有 ESKF 和因子图背景的工程师最值得研究的代码库 ★★★
 
 - **FAST-LIO2**——干净的 iEKF 实现，约 3k 行 C++ 的 ikd-Tree
 - **LIO-SAM**——教科书级的因子图 SLAM（GTSAM），展示 IMU 预积分、雷达里程计、GPS、回环作为独立节点的因子
@@ -707,11 +707,11 @@ Nav2 中的 **costmap_2d 图层系统** 用 `pluginlib` 组合图层。标准栈
 
 **核心知识点（Gazebo仿真）**：
 
-### Gazebo 仿真集成 ⭐⭐
+### Gazebo 仿真集成 ★★
 
 **Gazebo 仍是 ROS 集成度最高的机器人仿真器，但这个生态正在经历十年来最大的转变。** Gazebo Classic (v11) 在 2025 年 1 月达到 EOL，继承者——简称 "Gazebo"（以前叫 Ignition）——带来了基于 Entity-Component-System 设计的全新架构、Ogre2 渲染、可插拔物理后端。对于一个做 RL 运动控制和 SLAM 的机器人工程师，这意味着今天需要同时理解两套栈，但新项目只在现代 Gazebo + ROS 2 上构建。关键的是，**Gazebo 在全栈机器人验证（SLAM、导航、多机器人协调）上最强，但在高吞吐量 RL 训练上最弱**——这个鸿沟正越来越多地由 Isaac Lab、MuJoCo 这样的 GPU 并行仿真器填补。新兴的最佳实践是混合管线：在 GPU 加速仿真器中训练，在 Gazebo 中用完整 ROS 2 栈验证，然后部署到真实硬件。
 
-## 2.1 Gazebo Classic 与 gazebo_ros_pkgs：正在被淘汰的架构 ⭐⭐
+## 2.1 Gazebo Classic 与 gazebo_ros_pkgs：正在被淘汰的架构 ★★
 
 `gazebo_ros_pkgs` 元包（[github.com/ros-simulation/gazebo_ros_pkgs](https://github.com/ros-simulation/gazebo_ros_pkgs)）包含四个核心包：
 - **gazebo_ros**（ROS 封装、spawn 服务、通过 `/clock` 的仿真时间）
@@ -727,13 +727,13 @@ Classic 中生成机器人用 `rosrun gazebo_ros spawn_model -urdf -param robot_
 
 ---
 
-## 2.2 现代 Gazebo 与 ROS 2：基于桥接的架构 ⭐⭐
+## 2.2 现代 Gazebo 与 ROS 2：基于桥接的架构 ★★
 
 现代 Gazebo（字母命名的版本：Fortress、Garden、Harmonic、Ionic、Jetty）从根本上改变了 ROS 集成方式。传感器和执行器不再直接向 ROS 话题发布，而是发布到 **Gazebo Transport**（基于 protobuf 的发布/订阅层），然后 `ros_gz_bridge`（[github.com/gazebosim/ros_gz](https://github.com/gazebosim/ros_gz)）在 Gazebo Transport 消息和 ROS 2 消息之间双向转换。
 
 桥接语法简洁：`/cmd_vel@geometry_msgs/msg/Twist@gz.msgs.Twist` 表示双向，`[` 后缀表示只从 GZ 到 ROS，`]` 表示只从 ROS 到 GZ。生产使用建议 YAML 配置文件定义话题映射、QoS 设置、懒订阅、frame ID 覆盖。`ros_gz` 元包还包括 `ros_gz_sim`（launch 工具和用于生成实体的 `create` 可执行文件）和 `ros_gz_sim_demos`（每种主要传感器类型的工作示例）。
 
-### 版本兼容矩阵 ⭐⭐
+### 版本兼容矩阵 ★★
 
 版本兼容矩阵必须搞对：
 
@@ -746,7 +746,7 @@ Classic 中生成机器人用 `rosrun gazebo_ros spawn_model -urdf -param robot_
 
 从 Jazzy 开始，Gazebo 可作为 **vendor 包**直接从 ROS 包仓库获取，不再需要单独的 `packages.osrfoundation.org` 仓库。新项目推荐的最新 LTS 配对是 **Jazzy + Harmonic** 或 **Rolling + Jetty**（支持到 2030 年 9 月）。
 
-### 现代 Gazebo 架构 ⭐⭐
+### 现代 Gazebo 架构 ★★
 
 现代 Gazebo 架构与 Classic 根本不同。它使用 **Entity-Component-System (ECS)** 设计：
 - **实体** 是代表模型/链接/关节的唯一 ID
@@ -759,11 +759,11 @@ Classic 中生成机器人用 `rosrun gazebo_ros spawn_model -urdf -param robot_
 
 ---
 
-## 2.3 SDF vs URDF 与仿真世界构建 ⭐⭐
+## 2.3 SDF vs URDF 与仿真世界构建 ★★
 
 URDF 描述单个机器人的运动树（链接、关节、visual、collision、inertial），是 ROS 工具（`robot_state_publisher`、MoveIt、RViz）所必需的。它不能定义世界、灯光或物理属性，也不支持闭合运动链。SDF 是 Gazebo 的原生格式——URDF 能力的超集，描述一切：机器人、世界、灯光、物理引擎、传感器、插件。**最佳实践是用 URDF/xacro 定义机器人（兼容 ROS），用 SDF 定义世界。** Gazebo 内部在 spawn 时用 `<gazebo>` 扩展标签把 URDF 转换为 SDF。
 
-### SDFormat 演进 ⭐⭐
+### SDFormat 演进 ★★
 
 SDFormat 有了显著演进：
 - **1.7**：引入 frame semantics，带显式 `//frame` 元素和 `@relative_to` 属性
@@ -772,7 +772,7 @@ SDFormat 有了显著演进：
 
 规范维护在 [sdformat.org](http://sdformat.org/spec/)，parser 源码在 [github.com/gazebosim/sdformat](https://github.com/gazebosim/sdformat)。
 
-### 世界文件必需显式系统插件 ⭐⭐
+### 世界文件必需显式系统插件 ★★
 
 现代 Gazebo 中的世界文件需要显式的系统插件——不像 Classic 那样物理和渲染是隐式的：
 
@@ -785,23 +785,23 @@ SDFormat 有了显著演进：
 </plugin>
 ```
 
-### 资源获取与自定义 ⭐
+### 资源获取与自定义 ★
 
 **Gazebo Fuel**（[app.gazebosim.org/fuel](https://app.gazebosim.org/fuel)）托管数百个模型——机器人、车辆、家具、仓库组件、户外物体。模型可以在 SDF 中通过 `<uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Coke</uri>` 直接包含，通过 Resource Spawner GUI 插件浏览，或本地下载后通过 `GZ_SIM_RESOURCE_PATH` 环境变量引用。遗留模型数据库在 [github.com/osrf/gazebo_models](https://github.com/osrf/gazebo_models)。
 
 **COLLADA (.dae)** 或 **OBJ** 格式的自定义网格优于 STL，因为它们支持材质和纹理。始终使用简化的碰撞几何（盒子、球、圆柱等原语），与高多边形视觉网格分开。在 3D 编辑器中把网格中心放在原点，验证 Z-up 方向匹配 Gazebo 约定。
 
-### RL 的环境随机化 ⭐⭐⭐
+### RL 的环境随机化 ★★★
 
 对于 RL 的仿真到现实迁移，**环境随机化**至关重要。在训练 episode 之间随机化障碍位置、物理参数（摩擦、质量、阻尼）、光照条件、传感器噪声水平、纹理。实现方法包括通过 Gazebo transport 服务编程修改世界、在 reset 时随机化实体组件的自定义系统插件、使用 `gz service` CLI 调用的 Python 脚本。
 
 ---
 
-## 2.4 传感器仿真：从物理到 ROS 话题 ⭐⭐
+## 2.4 传感器仿真：从物理到 ROS 话题 ★★
 
 现代 Gazebo 中的传感器仿真遵循两阶段管线。首先，`gz-sim-sensors-system` 世界插件驱动所有基于渲染的传感器（相机、激光），专门的系统插件处理非渲染传感器（`gz-sim-imu-system` 处理 IMU、`gz-sim-navsat-system` 处理 GPS、`gz-sim-contact-system` 处理接触）。传感器发布到 Gazebo Transport 话题。其次，`ros_gz_bridge` 把这些话题转发到 ROS 2。
 
-### 传感器配置要点 ⭐⭐
+### 传感器配置要点 ★★
 
 对于**激光**，现代 Gazebo 要求 `type="gpu_lidar"`——不支持 Classic 的基于 CPU 的 `ray` 类型。`<ray>` 标签变为 `<lidar>`，噪声通过 `<noise><type>gaussian</type><mean>0</mean><stddev>0.01</stddev></noise>` 配置。
 
@@ -811,17 +811,17 @@ SDFormat 有了显著演进：
 
 传感器 `<update_rate>` 以 Hz 定义最大发布频率。如果实时因子掉到 1.0 以下，实际速率可能更低。典型速率：IMU **200-400 Hz**、激光 **5-20 Hz**、相机 **15-30 Hz**。相机传感器最昂贵——1280×720 相机 30 FPS 能让实时因子减半。
 
-### 真实位姿提取 ⭐⭐
+### 真实位姿提取 ★★
 
 **真实位姿提取**在现代 Gazebo 中使用 `PosePublisher` 系统插件（`gz-sim-pose-publisher-system`），发布链接和模型位姿到可以桥接到 ROS 2 的 Gazebo Transport 话题。在 Classic 中，P3D 插件（`libgazebo_ros_p3d.so`）直接发布真实里程计到 ROS 话题，`/gazebo/model_states` 提供所有模型位姿。
 
 ---
 
-## 2.5 机器人驱动：从 cmd_vel 到轮子转动 ⭐⭐
+## 2.5 机器人驱动：从 cmd_vel 到轮子转动 ★★
 
 `ros2_control` 框架（[github.com/ros-controls/ros2_control](https://github.com/ros-controls/ros2_control)）通过干净的 read→update→write 循环把控制器从硬件中抽象出来。`gz_ros2_control` 包（[github.com/ros-controls/gz_ros2_control](https://github.com/ros-controls/gz_ros2_control)）提供一个 Gazebo 系统插件，在 Gazebo 进程内实例化一个 Controller Manager 并实现 `GazeboSimSystem`——一个从仿真物理读关节状态、把速度/位置/力矩命令写回的硬件接口。
 
-### 让差速驱动机器人在 Gazebo 里能开起来 ⭐
+### 让差速驱动机器人在 Gazebo 里能开起来 ★
 
 让差速驱动机器人在 Gazebo 里能开起来需要四个部分：
 1. **URDF 定义轮子为 `continuous` 关节**
@@ -831,7 +831,7 @@ SDFormat 有了显著演进：
 
 关键的抽象是**同样的控制器在仿真和真实硬件上同样运行**——只有硬件插件改变。常见的 xacro 模式用 `<xacro:if value="$(arg sim_mode)">` 在 `gz_ros2_control/GazeboSimSystem`（仿真）和厂商特定的硬件插件（真实机器人）之间切换。
 
-### 关键控制器类型 ⭐⭐
+### 关键控制器类型 ★★
 
 来自 `ros2_controllers`（[github.com/ros-controls/ros2_controllers](https://github.com/ros-controls/ros2_controllers)）：
 
@@ -847,11 +847,11 @@ SDFormat 有了显著演进：
 
 ---
 
-## 2.6 Gazebo 用于 RL 训练：诚实评估与混合策略 ⭐⭐⭐
+## 2.6 Gazebo 用于 RL 训练：诚实评估与混合策略 ★★★
 
 用 Gazebo 做强化学习是可行的但根本受限于 **CPU 绑定的物理**。每个 Gazebo 环境作为独立 OS 进程（`gzserver`）运行，消耗大量 CPU 和内存。没有原生 GPU 并行性——不像 Isaac Lab 或 MuJoCo MJX，Gazebo 不能在单个 GPU 上运行数千个环境。观察和动作通过 ROS 话题流动，带序列化开销，而不是 GPU tensor。与轻量仿真器相比 reset 延迟很高。Gazebo 自己的开发者在 GitHub issue [#2662](https://github.com/gazebosim/gz-sim/issues/2662)（2024 年 11 月）承认"在 Gazebo 里做强化学习真的很难"。
 
-### 历史和活跃的 RL 项目 ⭐⭐
+### 历史和活跃的 RL 项目 ★★
 
 历史上的 `gym-gazebo` 项目（[github.com/erlerobot/gym-gazebo](https://github.com/erlerobot/gym-gazebo)）和后继者 `gym-gazebo2`（[github.com/AcutronicRobotics/gym-gazebo2](https://github.com/AcutronicRobotics/gym-gazebo2)）通过在随机端口上生成独立 `gzserver` 实例演示了可行性，但自 2019 年起都不再维护。
 
@@ -861,13 +861,13 @@ SDFormat 有了显著演进：
 - **sim2real-ur-gym-gazebo**（[github.com/ammar-n-abbas/sim2real-ur-gym-gazebo](https://github.com/ammar-n-abbas/sim2real-ur-gym-gazebo)）——UR 机械臂操作，零样本迁移
 - **robo-gym**（[github.com/jr-robotics/robo-gym](https://github.com/jr-robotics/robo-gym)）——分布式 RL，server-client 架构
 
-### 并行化变通和混合策略 ⭐⭐⭐
+### 并行化变通和混合策略 ★★★
 
 并行化的变通办法包括运行多个 `gzserver` 实例（随 CPU 核心线性扩展，不高效）、无头模式（`gz sim -s -r world.sdf`）、把 `real_time_update_rate` 设为 `0` 实现尽可能快的执行。但这些最多达到 1-10× 实时——比 GPU 并行替代品慢几个数量级。
 
 **新兴最佳实践是混合管线**：在 Isaac Lab 或 MuJoCo 中训练（GPU 加速，数千个并行环境），在 Gazebo 中验证（完整 ROS 2 栈，真实传感器仿真），然后部署到真实硬件。2025 年的一篇里程碑论文（arXiv:2501.02902）演示了这个工作流——在 Isaac Sim 中训练，在 Gazebo 中用 ROS 2 验证，实现了零样本迁移到真实机器人，性能与 Nav2 相当。
 
-### Gazebo 物理引擎选择：DART vs Bullet vs TPE ⭐⭐⭐
+### Gazebo 物理引擎选择：DART vs Bullet vs TPE ★★★
 
 现代 Gazebo 的物理引擎通过 `gz-physics` 可插拔。三种引擎面向不同用途：
 
@@ -891,7 +891,7 @@ SDFormat 有了显著演进：
 </physics>
 ```
 
-### 传感器仿真的保真度与代价 ⭐⭐
+### 传感器仿真的保真度与代价 ★★
 
 仿真传感器和真实传感器之间永远存在差距。理解这些差距的性质，是做 sim-to-real 时设定合理期望的前提。
 
@@ -935,9 +935,9 @@ SDFormat 有了显著演进：
 
 这些噪声参数应该从真实 IMU 的数据手册中获取——ICM-20948 的陀螺仪噪声密度约 0.015 deg/s/sqrt(Hz)，加速度计约 230 µg/sqrt(Hz)。仿真中使用与真实传感器匹配的噪声参数，可以让 SLAM 算法的状态估计行为更接近真实表现。
 
-### ⚠️ 仿真传感器常见陷阱
+### ⚠ 仿真传感器常见陷阱
 
-> ⚠️ **工程陷阱：仿真中不加传感器噪声就调 SLAM 参数**
+> ⚠ **工程陷阱：仿真中不加传感器噪声就调 SLAM 参数**
 >
 > **错误做法**：在理想传感器（零噪声、完美时间戳）下调好 SLAM 参数，直接用到真机上。
 >
@@ -947,7 +947,7 @@ SDFormat 有了显著演进：
 >
 > **正确做法**：在仿真中配置与真实传感器数据手册匹配的噪声参数。先在有噪声的仿真中调参，再在真机上微调。
 
-> ⚠️ **概念误区：认为 Gazebo 实时因子越高越好**
+> ⚠ **概念误区：认为 Gazebo 实时因子越高越好**
 >
 > **新手想法**："实时因子 5.0 意味着仿真比真实快 5 倍，这样训练更快。"
 >
@@ -963,21 +963,21 @@ SDFormat 有了显著演进：
 
 ---
 
-## 2.7 何时用 Gazebo、何时用其他仿真器 ⭐⭐
+## 2.7 何时用 Gazebo、何时用其他仿真器 ★★
 
 仿真器格局已经明显转向 GPU 并行引擎用于 RL，同时 Gazebo 保持在完整栈 ROS 机器人验证上的主导地位。
 
-### GPU 并行仿真器 ⭐⭐⭐
+### GPU 并行仿真器 ★★★
 
 **NVIDIA Isaac Lab**（[github.com/isaac-sim/IsaacLab](https://github.com/isaac-sim/IsaacLab)）在单个 GPU 上运行 **4,096+ 个环境**，达到 82,000-94,000 FPS，端到端 GPU 管线（物理、观察、奖励、策略推理，无需 CPU-GPU 传输）。包括 30+ 可训练环境、基于视觉 RL 的真实 RTX 渲染、内置域随机化。Isaac Lab 与 RL-Games、SKRL、RSL-RL、Stable-Baselines3 集成。`IsaacGymEnvs` 仓库（[github.com/isaac-sim/IsaacGymEnvs](https://github.com/isaac-sim/IsaacGymEnvs)）提供示例任务（ANYmal、ShadowHand、Humanoid）。
 
 **MuJoCo**（[github.com/google-deepmind/mujoco](https://github.com/google-deepmind/mujoco)）是 ML 研究中引用最多的物理引擎。**MuJoCo MJX** 通过基于 JAX 的 GPU/TPU 并行性在 TPU v5 上达到 270 万步/秒。**MuJoCo Warp**（[github.com/google-deepmind/mujoco_warp](https://github.com/google-deepmind/mujoco_warp)）声称在 RTX 4090 上加速 70-313×。**MuJoCo Playground**（[github.com/google-deepmind/mujoco_playground](https://github.com/google-deepmind/mujoco_playground)）获 RSS 2025 杰出 Demo 论文奖——pip 可安装，带 50+ 环境，在 Unitree Go1 和 Franka Panda 上演示了零样本仿真到现实。ROS 2 集成通过 `mujoco_ros2_control` 项目实现，这些项目为 MuJoCo 实现 `ros2_control` 硬件接口。
 
-### 其他仿真器 ⭐⭐
+### 其他仿真器 ★★
 
 **Webots** 带 `webots_ros2`（[github.com/cyberbotics/webots_ros2](https://github.com/cyberbotics/webots_ros2)）提供 GUI 驱动的方式，带官方 ROS 2 教程，但缺乏无头模式（需要 Xvfb）和 GPU 并行性。**CoppeliaSim** 通过 PyRep 驱动 RLBench 但在工业使用上是商业许可。**PyBullet** 提供最低入门门槛（`pip install pybullet`），但仅 CPU，社区势头下降。
 
-### 选择指南 ⭐⭐
+### 选择指南 ★★
 
 | 用例 | 最佳选择 | 原因 |
 |---|---|---|
@@ -990,59 +990,59 @@ SDFormat 有了显著演进：
 
 ---
 
-## 2.8 按类别分类的优秀 GitHub 项目 ⭐
+## 2.8 按类别分类的优秀 GitHub 项目 ★
 
-### 移动机器人与导航 ⭐
+### 移动机器人与导航 ★
 
 **TurtleBot3**（[github.com/ROBOTIS-GIT/turtlebot3_simulations](https://github.com/ROBOTIS-GIT/turtlebot3_simulations)）仍是事实上的学习平台，有 ROS 2 Humble（Gazebo Classic）和 **Jazzy（通过 ros_gz 的 Gazebo Harmonic）**的分支。**TurtleBot4**（[github.com/turtlebot/turtlebot4_simulator](https://github.com/turtlebot/turtlebot4_simulator)）在 ROS 2 Jazzy + Gazebo Harmonic 上提供真实的 iRobot Create 3 仿真，带 RPLIDAR 和 OAK-D 传感器。对于多机器人工作，**tb3_multi_robot**（[github.com/arshadlab/tb3_multi_robot](https://github.com/arshadlab/tb3_multi_robot)）演示了在 Jazzy + Harmonic 上的可扩展多 TurtleBot3 仿真，带 Nav2 命名空间。
 
 **Clearpath** 的 ROS 2 仿真通过社区维护的移植提供（[github.com/Mechazo11/clearpath_simulator_harmonic](https://github.com/Mechazo11/clearpath_simulator_harmonic)），针对 Jazzy + Harmonic，而原始的 `cpr_gazebo` 世界（[github.com/clearpathrobotics/cpr_gazebo](https://github.com/clearpathrobotics/cpr_gazebo)）为 ROS 1 提供高质量的检查、农业、办公室、建筑环境。**Nav2**（[github.com/ros-navigation/navigation2](https://github.com/ros-navigation/navigation2)）在 `nav2_bringup` 中包含 Gazebo 仿真 launch 文件，还有一个 `nav2_loopback_sim` 用于不带 Gazebo 的轻量测试。
 
-### 操作 ⭐
+### 操作 ★
 
 **IFRA Cranfield**（[github.com/IFRA-Cranfield/ros2_RobotSimulation](https://github.com/IFRA-Cranfield/ros2_RobotSimulation)）提供最全面的工业机器人仿真集合（ABB、UR、Panda、KUKA），在 ROS 2 Humble 上带 MoveIt 2。**Universal Robots** 提供官方 Gazebo 仿真（[github.com/UniversalRobots/Universal_Robots_ROS2_Gazebo_Simulation](https://github.com/UniversalRobots/Universal_Robots_ROS2_Gazebo_Simulation)），所有 UR 型号都带 ros2_control。**PAL Robotics TIAGo**（[github.com/pal-robotics/tiago_simulation](https://github.com/pal-robotics/tiago_simulation)）结合移动底盘 + 机械臂 + 躯干操作，在 ROS 2 Humble 上。
 
-### 足式机器人 ⭐⭐
+### 足式机器人 ★★
 
 **CHAMP** 框架（[github.com/chvmp/champ](https://github.com/chvmp/champ)，2,100+ stars）是足式机器人仿真的最好开源起点，带 ANYmal、Spot、Mini Cheetah、SpotMicroAI 的预配置 URDF（[github.com/chvmp/robots](https://github.com/chvmp/robots)）。**Unitree 的官方 ROS 包**（[github.com/unitreerobotics/unitree_ros](https://github.com/unitreerobotics/unitree_ros)）在 Gazebo Classic 中提供 Go1、A1、Aliengo 仿真。对于 ROS 2，社区移植包括 **unitree-go2-ros2**（[github.com/anujjain-dev/unitree-go2-ros2](https://github.com/anujjain-dev/unitree-go2-ros2)）和 **quadruped_ros2_control**（[github.com/legubiao/quadruped_ros2_control](https://github.com/legubiao/quadruped_ros2_control)），带 MPC 和 RL 控制器支持。
 
-### 无人机和自动驾驶 ⭐⭐
+### 无人机和自动驾驶 ★★
 
 **PX4 Autopilot**（[github.com/PX4/PX4-Autopilot](https://github.com/PX4/PX4-Autopilot)）提供行业标准的 SITL 无人机仿真，在 v1.15+ 中从 Gazebo Classic 过渡到 **Gazebo Harmonic**。ROS 2 集成使用 Micro XRCE-DDS 做 uORB↔ROS 2 桥接。**CARLA**（[github.com/carla-simulator/carla](https://github.com/carla-simulator/carla)）是领先的开源驾驶仿真器（基于 Unreal Engine），在 v0.10.0（2024 年 12 月）中添加了**原生 ROS 2 集成**。注意 LGSVL/SVL Simulator 已于 **2022 年被 LG 停用**，不再维护。**Autoware**（[github.com/autowarefoundation/autoware](https://github.com/autowarefoundation/autoware)）主要仿真用 AWSIM（基于 Unity）而不是 Gazebo。
 
-### 多机器人与车队管理 ⭐⭐
+### 多机器人与车队管理 ★★
 
 **Open-RMF**（[github.com/open-rmf/rmf_demos](https://github.com/open-rmf/rmf_demos)）提供行业级多机器人车队管理 demo，在 Gazebo 中用机场、办公室、酒店场景——管理异构机器人，带任务分配、交通管理、门/电梯控制。
 
-### 发现和元资源 ⭐
+### 发现和元资源 ★
 
 **Awesome Gazebo**（[github.com/fkromer/awesome-gazebo](https://github.com/fkromer/awesome-gazebo)）整理 Gazebo 资源。[github.com/gazebosim/ros_gz](https://github.com/gazebosim/ros_gz) 内的 **ros_gz_sim_demos** 包提供每种主要传感器和执行器类型的工作示例。**best-of-robot-simulators** 列表（[github.com/knmcguire/best-of-robot-simulators](https://github.com/knmcguire/best-of-robot-simulators)）每周更新比较排名。
 
 ---
 
-## 2.9 实用秘方：spawn、SLAM、导航、训练 ⭐⭐
+## 2.9 实用秘方：spawn、SLAM、导航、训练 ★★
 
-### 在现代 Gazebo 中生成机器人 ⭐
+### 在现代 Gazebo 中生成机器人 ★
 
 完整链是 xacro → URDF → `robot_state_publisher` → `ros_gz_sim create`。launch 文件在启动时把 xacro 处理成 URDF，喂给 `robot_state_publisher`（发布 `/robot_description` 和 TF），通过 `ros_gz_sim` 的 `gz_sim.launch.py` 启动 Gazebo，通过从 `/robot_description` 话题读取的 `create` 可执行文件 spawn 机器人，启动 `ros_gz_bridge` 做话题转换。每个节点必须设 `use_sim_time: true`。模型路径环境变量是 `GZ_SIM_RESOURCE_PATH`（替换 Classic 的 `GAZEBO_MODEL_PATH`）。
 
-### 在仿真中运行 SLAM ⭐⭐
+### 在仿真中运行 SLAM ★★
 
 用发布 `/scan` 和 `/tf` 的机器人启动 Gazebo，然后用 `use_sim_time: true` 运行 `slam_toolbox` 的 `async_slam_toolbox_node`。所需的 TF 树是 `map → odom → base_link → laser_frame`，其中 slam_toolbox 发布 `map → odom`，里程计源（diff_drive_controller 或 Gazebo 插件）发布 `odom → base_link`，robot_state_publisher 从 URDF 提供 `base_link → laser_frame`。用 `teleop_twist_keyboard` 遥控，然后用 `ros2 run nav2_map_server map_saver_cli -f my_map` 保存地图。
 
 录制仿真数据到 rosbag 时，**始终给 `ros2 bag record` 传 `--use-sim-time`**，这样时间戳用 Gazebo 的 `/clock`。没有这个 flag，消息会得到墙时钟时间戳，使 bag 对 SLAM 不可播放。回放时用 `ros2 bag play --clock 200 my_bag` 以 200 Hz 发布 `/clock`。
 
-### CI/CD 和 RL 的无头执行 ⭐⭐
+### CI/CD 和 RL 的无头执行 ★★
 
 运行 `gz sim -s -r world.sdf` 用于仅服务器模式（无 GUI、无渲染开销）。对于需要 OpenGL 的 CI 管线（相机传感器仍需要），用 `Xvfb :1 -screen 0 1024x768x16 &` 作为虚拟帧缓冲。在世界 SDF 中把 `real_time_update_rate` 设为 `0` 让物理尽可能快地运行——对 RL 训练循环至关重要。本地缓存 Gazebo 模型避免下载延迟，在所有基于仿真的测试上设置超时防止挂起。
 
-### 多机器人仿真 ⭐⭐⭐
+### 多机器人仿真 ★★★
 
 在 ROS 2 中，`tf_prefix` 已弃用。为每个机器人用**命名空间**，通过每个 `robot_state_publisher` 上的 `remappings=[('/tf', 'tf'), ('/tf_static', 'tf_static')]` 把 `/tf` 和 `/tf_static` 重映射到本地命名空间话题。每个机器人的 Gazebo 插件必须在 `<ros><namespace>` 标签里匹配机器人的命名空间。frame 名应该包含机器人标识符防止在全局 TF 树中冲突。
 
 ---
 
-## 2.10 调试：十个必定会遇到的坑 ⭐⭐
+## 2.10 调试：十个必定会遇到的坑 ★★
 
 **物理不稳定**（关节爆炸、机器人穿过地板）几乎总是由缺失或不真实的 `<inertial>` 值、spawn 时重叠的碰撞几何、太大的 `max_step_size` 引起。修复层次：确保每个非固定关节的链接都有真实的质量和惯性，spawn 机器人略高于地面（z=0.05），如果需要把 `max_step_size` 从 0.001 减到 0.0005。把 `contact_max_correcting_vel` 从默认 100.0 减到 1.0-10.0 解决关节限制处的振荡。通过逐个移除链接来隔离问题组件进行调试。
 
@@ -1054,7 +1054,7 @@ SDFormat 有了显著演进：
 
 **Gazebo 进程挂起**通常由占用端口的陈旧进程（`lsof -i :11345`）、共享内存残余（`rm -rf /tmp/gazebo-*`）、首次启动时的模型下载超时（设 `GAZEBO_MODEL_DATABASE_URI=""` 禁用）引起。崩溃后重启前始终 `killall -9 gzserver gzclient` 或 `pkill -9 -f gz`。
 
-### 从业者的决策框架 ⭐⭐
+### 从业者的决策框架 ★★
 
 2026 年的 Gazebo 生态最好理解为**两种不同的工具**：现代 Gazebo（Harmonic/Jetty）用于全栈 ROS 2 机器人验证，GPU 并行仿真器（Isaac Lab、MuJoCo Playground）用于大规模 RL 训练。试图把 Gazebo 作为主要 RL 训练引擎是在与物理抗争——字面上，因为它的 CPU 绑定仿真不能与数千个 GPU 并行环境竞争。实用的前进之路是在 Isaac Lab 或 MuJoCo 中训练策略（获得 1,000× 吞吐量优势），在 Gazebo 中验证（获得与真实机器人相同运行的完整 ROS 2 栈：Nav2、slam_toolbox、MoveIt 2、ros2_control），然后部署时知道仿真到现实的差距已经在两个层次上测试过。
 
@@ -1065,11 +1065,11 @@ SDFormat 有了显著演进：
 
 **核心知识点（可视化工具链）**：
 
-### ROS 可视化工具全家桶 ⭐
+### ROS 可视化工具全家桶 ★
 
 **RViz、PlotJuggler、Foxglove 加一系列支持工具构成了每个严肃 ROS 项目的可视化骨干。** 本指南覆盖架构、实用工作流、代码模式、值得研究的 GitHub 仓库——全部面向做 C++ 和 Python 的 SLAM 和 RL 聚焦工程师。这个生态已经相当成熟：RViz2 是本地主力，PlotJuggler 主导时间序列分析，Foxglove 拥有远程和基于 Web 的可视化（虽然 2024 年转为闭源），MCAP 自 ROS 2 Iron 起成为默认 bag 格式。以下是你日常有效使用这些工具所需的一切。
 
-## 3.1 RViz2 架构：基于 OGRE 的模块化渲染管线 ⭐⭐
+## 3.1 RViz2 架构：基于 OGRE 的模块化渲染管线 ★★
 
 RViz2（[github.com/ros2/rviz](https://github.com/ros2/rviz)，约 450 stars）从 ROS1 RViz（[github.com/ros-visualization/rviz](https://github.com/ros-visualization/rviz)，约 950 stars）的庞大架构重新设计成六个独立包。渲染引擎是通过 `rviz_ogre_vendor` 供应的 **OGRE 1.12.x**。核心拆分：
 - `rviz_rendering` 处理所有 3D 视觉对象（箭头、形状、通过 Assimp 的网格）
@@ -1077,19 +1077,19 @@ RViz2（[github.com/ros2/rviz](https://github.com/ros2/rviz)，约 450 stars）�
 - `rviz_default_plugins` 包含每个发布的 display、tool、view controller
 - `rviz2` 只是可执行入口点
 
-### 相对 ROS1 最重要的架构变化 ⭐⭐
+### 相对 ROS1 最重要的架构变化 ★★
 
 **可插拔变换框架**。ROS1 里 tf2 是硬编码的。ROS2 里 `Transformation` 面板让你可以切换 transformer 插件——`TFFrameTransformer`（默认 tf2）或 `IdentityFrameTransformer`（fallback）。自定义 transformer 可以动态加载，`TransformerGuard` 让 display 声明它需要哪个 transformer。
 
-### 配置系统 ⭐
+### 配置系统 ★
 
 配置存在**基于 YAML 的 `.rviz` 文件**中，捕获全局选项（Fixed Frame、Background Color）、所有 display 配置、view controller 状态、tool 设置、panel 布局。用 `ros2 run rviz2 rviz2 -d /path/to/config.rviz` 启动，或在 Python launch 文件中通过 `arguments=['-d', os.path.join(get_package_share_directory('my_pkg'), 'config', 'my.rviz')]`。默认保存在 `~/.rviz2/default.rviz`。最佳实践是把 `.rviz` 文件安装到你的包 share 目录，用 `--symlink-install` 构建便于快速迭代。
 
-### 核心显示类型与工具 ⭐
+### 核心显示类型与工具 ★
 
 **核心显示类型** 覆盖完整机器人传感器套件：RobotModel、TF、LaserScan、PointCloud2、Image、Camera、DepthCloud、Map、Odometry、Path、Pose、PoseArray、PoseWithCovariance、Marker、MarkerArray、InteractiveMarker、Grid、GridCells、Polygon、Range、Effort、Wrench。Tool 包括 Move Camera、2D Nav Goal、2D Pose Estimate、Publish Point、Measure、Interact。View controller 包括 Orbit、XY Orbit、First Person、Third Person Follower、Top Down Orthographic。
 
-### 点云渲染与性能 ⭐⭐
+### 点云渲染与性能 ★★
 
 PointCloud2 提供六种颜色变换器：
 - **FlatColor**（单色）
@@ -1101,13 +1101,13 @@ PointCloud2 提供六种颜色变换器：
 
 渲染风格包括 Points、Squares、Flat Squares、Spheres、Boxes。一个已知的性能问题（[github.com/ros2/rviz/issues/1077](https://github.com/ros2/rviz/issues/1077)）使 RViz2 在数百万点时明显慢于 ROS1 RViz，尤其是 Spheres/Boxes 风格。对于大点云，用 **Points** 或 **Flat Squares**，把 **Decay Time** 设为 0（只显示最新扫描），取消选中 **Selectable** 避免选择开销，限制 display 更新率。
 
-### RViz 中的 SLAM 和导航可视化 ⭐⭐
+### RViz 中的 SLAM 和导航可视化 ★★
 
 对于 SLAM 输出：订阅 **Map** display 到 `nav_msgs/OccupancyGrid`（比如 slam_toolbox 的 `/map`）；通过 **MarkerArray** 可视化位姿图；通过专门的 marker 话题监控回环（典型的是匹配位姿之间的彩色线）。`slam_toolbox` 包提供 **RViz 面板插件**（`SlamToolboxPlugin`），用于从 GUI 直接保存/序列化地图和触发手动回环。对于导航：为 `/global_costmap/costmap` 和 `/local_costmap/costmap` 添加 **Map** display（颜色方案设为 "costmap"），为全局规划添加 **Path** display，为 `/local_costmap/published_footprint` 上的机器人 footprint 添加 **Polygon** display，使用 2D Nav Goal 和 2D Pose Estimate tool。Nav2 默认 RViz 配置在 [navigation2 仓库](https://github.com/ros-planning/navigation2) 的 `nav2_bringup/rviz/nav2_default_view.rviz`。
 
 ---
 
-## 3.2 自定义 RViz 插件：Display、Panel、Tool 及更多 ⭐⭐⭐
+## 3.2 自定义 RViz 插件：Display、Panel、Tool 及更多 ★★★
 
 现有 display 不处理你的消息类型时、需要机器人特定 GUI panel 时、需要自定义交互 tool 时，写自定义插件。RViz2 提供六个扩展点，每个在 `rviz_common` 中都有基类：
 
@@ -1123,9 +1123,9 @@ PointCloud2 提供六种颜色变换器：
 
 ---
 
-## 3.3 rqt、PlotJuggler 与内省工具链 ⭐⭐
+## 3.3 rqt、PlotJuggler 与内省工具链 ★★
 
-### rqt 的插件生态 ⭐⭐
+### rqt 的插件生态 ★★
 
 rqt（[github.com/ros-visualization/rqt](https://github.com/ros-visualization/rqt)）是基于 Qt 的框架，工具作为可停靠插件在单个窗口运行。插件通过 `plugin.xml` 清单文件声明自己，扩展 `rqt_gui_py::Plugin`（Python）或 `rqt_gui_cpp::Plugin`（C++）。
 
@@ -1142,7 +1142,7 @@ rqt（[github.com/ros-visualization/rqt](https://github.com/ros-visualization/rq
 
 通过 `Perspectives → Create Perspective` 保存自定义布局，导出为 `.perspective` 文件分享：`rqt --perspective-file my_dashboard.perspective`。创建自定义 Python 插件需要扩展 `rqt_gui_py.plugin.Plugin`，实现 `initPlugin()`、`shutdownPlugin()`、`saveSettings()`、`restoreSettings()`，直接编码 Qt widget 或从 Qt Designer 加载 `.ui` 文件。
 
-### rqt 工具族深入 ⭐⭐
+### rqt 工具族深入 ★★
 
 rqt 工具族中有几个对 SLAM 和导航开发特别有价值的插件值得深入介绍：
 
@@ -1170,7 +1170,7 @@ rqt_tf_tree 相比命令行 `view_frames` 的优势是**实时更新**——你�
 
 > **跨领域类比**：rqt 工具族之于 ROS2 开发，就像 Chrome DevTools 之于 Web 开发。DevTools 提供了 Elements（rqt_graph）、Console（rqt_console）、Network（topic info）、Performance（rqt_plot）等面板，让开发者不需要在代码中加调试语句就能观察系统行为。ROS2 的调试效率很大程度上取决于你是否充分利用了这些内置工具。
 
-### SLAM 调试完整工作流 ⭐⭐
+### SLAM 调试完整工作流 ★★
 
 SLAM 系统的调试不同于普通软件——它的输出（地图质量）很难用简单的"对/错"判断，而是一个渐变的质量光谱。双层墙、地图模糊、回环失败、定位跳变——这些症状都是"不够好"而不是"完全坏了"，这让排查更加困难。以下工作流把常见的 SLAM 调试问题组织成系统化的排查路径。
 
@@ -1207,7 +1207,7 @@ SLAM 系统的调试不同于普通软件——它的输出（地图质量）很
 2. **[分析题]** 用 evo 工具（`pip install evo`）比较 slam_toolbox 和 KISS-ICP 在同一段 bag 数据上的 APE（绝对位姿误差）。分析误差来源的差异。
 3. **[设计题]** 为一个仓库 AGV 设计可视化监控面板：RViz 显示什么（地图、路径、costmap、机器人模型）、PlotJuggler 显示什么（里程计误差、控制器输出、传感器频率）、Foxglove 显示什么（远程监控、多机器人总览）。
 
-### PlotJuggler：时间序列的事实标准 ⭐⭐
+### PlotJuggler：时间序列的事实标准 ★★
 
 PlotJuggler（[github.com/facontidavide/PlotJuggler](https://github.com/facontidavide/PlotJuggler)，**约 5,800 stars**，MPL-2.0）是 rqt_plot 应该成为的样子。由 Davide Faconti 创建（也是 BehaviorTree.CPP 的作者），它提供：
 - 无限分割图
@@ -1227,25 +1227,25 @@ PlotJuggler（[github.com/facontidavide/PlotJuggler](https://github.com/facontid
 
 ---
 
-## 3.4 Foxglove：强大的远程可视化，但已闭源 ⭐⭐
+## 3.4 Foxglove：强大的远程可视化，但已闭源 ★★
 
 Foxglove（[foxglove.dev](https://foxglove.dev)）在 **2024 年 3 月**把其 Studio 可视化工具和 Data Platform 统一成单个商业产品，中止开源开发。GitHub 仓库（[github.com/foxglove/studio](https://github.com/foxglove/studio)）现在已归档。最后的开源 fork（v1.87.0，MPL-2.0）在 [github.com/bgromov/foxglove-studio](https://github.com/bgromov/foxglove-studio)。社区贡献占提交不到 1%，使开放核心模式不可持续。
 
-### 仍然 MIT 许可和开源的部分 ⭐⭐
+### 仍然 MIT 许可和开源的部分 ★★
 
 - **MCAP 文件格式**（[github.com/foxglove/mcap](https://github.com/foxglove/mcap)）
 - **foxglove-sdk/bridge**（[github.com/foxglove/foxglove-sdk](https://github.com/foxglove/foxglove-sdk)）
 - **foxglove_msgs/schemas**
 - 扩展脚手架工具（[github.com/foxglove/create-foxglove-extension](https://github.com/foxglove/create-foxglove-extension)）
 
-### Foxglove 相对 RViz 的优势 ⭐⭐
+### Foxglove 相对 RViz 的优势 ★★
 
 - **基于 Web 的跨平台访问**（查看端不需要安装 ROS）
 - **20+ 内置 panel**（3D、Image、Plot、State Transitions、Diagnostics、Map、Teleop、Log、Topic Graph、Transform Tree、Service Call）
 - **拖放 MCAP/bag 回放**
 - **团队可共享布局用于协作**
 
-### 弱点 ⭐⭐
+### 弱点 ★★
 
 - **没有交互式 marker**
 - 本地开发通过 WebSocket 延迟更高
@@ -1254,7 +1254,7 @@ Foxglove（[foxglove.dev](https://foxglove.dev)）在 **2024 年 3 月**把其 S
 
 远程机器人访问、团队共享可视化、跨平台日志审查时用 Foxglove。低延迟本地开发、交互式 marker 操作、完全开源工作流坚持用 RViz。
 
-### foxglove_bridge 和 MCAP ⭐⭐
+### foxglove_bridge 和 MCAP ★★
 
 **foxglove_bridge**（`sudo apt install ros-$ROS_DISTRO-foxglove-bridge`）是高性能的 C++ WebSocket 桥接，大幅优于 rosbridge。用 `ros2 launch foxglove_bridge foxglove_bridge_launch.xml` 启动，在 `ws://ROBOT_IP:8765` 连接。关键参数包括 `max_qos_depth`（默认 25）和 `best_effort_qos_topic_whitelist` 用于传感器话题。互联网访问用 SSH 隧道：`ssh -NfL 8765:localhost:8765 user@robot`。
 
@@ -1262,9 +1262,9 @@ Foxglove（[foxglove.dev](https://foxglove.dev)）在 **2024 年 3 月**把其 S
 
 ---
 
-## 3.5 程序化可视化：Marker、图像与 TF 调试 ⭐⭐
+## 3.5 程序化可视化：Marker、图像与 TF 调试 ★★
 
-### Marker 消息精通 ⭐⭐
+### Marker 消息精通 ★★
 
 `visualization_msgs/Marker` 消息是如何在 RViz 中以编程方式绘制任何东西。**namespace + id** 对唯一标识每个 marker；`action=ADD`（0）创建或更新，`DELETE`（2）移除，`DELETEALL`（3）清除一切。**始终设置 `color.a > 0`**——默认是 0（不可见），是最常见的 marker bug。
 
@@ -1278,7 +1278,7 @@ Foxglove（[foxglove.dev](https://foxglove.dev)）在 **2024 年 3 月**把其 S
 - **MESH_RESOURCE** 用于 CAD 模型
 - **TRIANGLE_LIST** 用于自定义网格
 
-### SLAM 可视化的既定模式 ⭐⭐
+### SLAM 可视化的既定模式 ★★
 
 生产项目的 SLAM 可视化模式已经很成熟：
 - **关键帧位姿**渲染为 `map` 坐标系中的 SPHERE marker（见 [slam_toolbox 的 visualization_utils.hpp](https://github.com/SteveMacenski/slam_toolbox/blob/ros2/include/slam_toolbox/visualization_utils.hpp)）
@@ -1287,17 +1287,17 @@ Foxglove（[foxglove.dev](https://foxglove.dev)）在 **2024 年 3 月**把其 S
 
 重新发布完整 MarkerArray 时，始终先发送 DELETEALL 清除陈旧 marker。
 
-### 交互式 Marker ⭐⭐⭐
+### 交互式 Marker ★★★
 
 **交互式 marker**（[github.com/ros-visualization/interactive_markers](https://github.com/ros-visualization/interactive_markers)）使用服务器/客户端模型，带 6-DOF 控制用于拖放操作。slam_toolbox 用它们让用户拖动位姿图节点进行手动修正。MoveIt2 用它们做起始/目标状态操作。交互模式包括 MOVE_AXIS、MOVE_PLANE、ROTATE_AXIS、MOVE_3D、ROTATE_3D、MOVE_ROTATE_3D。
 
-### 图像管线和相机可视化 ⭐⭐
+### 图像管线和相机可视化 ★★
 
 `image_transport` 系统（[github.com/ros-perception/image_common](https://github.com/ros-perception/image_common)）透明地提供压缩插件——发布到 `/camera/image` 自动创建 `/camera/image/compressed`（JPEG/PNG，约 10× 带宽减少）、`/camera/image/compressedDepth`、`/camera/image/theora` 子话题。插件包在 [github.com/ros-perception/image_transport_plugins](https://github.com/ros-perception/image_transport_plugins)。
 
 对于 SLAM 特征可视化，标准模式是通过 OpenCV 把 ORB 关键点和光流向量画到图像上，然后通过 `cv_bridge`（[github.com/ros-perception/vision_opencv](https://github.com/ros-perception/vision_opencv)）发布。相机标定用 `ros2 run camera_calibration cameracalibrator --size 7x9 --square 0.02` 从 [image_pipeline](https://github.com/ros-perception/image_pipeline) 栈。
 
-### 三条命令解决 TF 调试 ⭐
+### 三条命令解决 TF 调试 ★
 
 tf2 命令行工具不可或缺：
 - **`ros2 run tf2_tools view_frames`**：监听 5 秒并生成 `frames.pdf`，显示完整树，带每帧的广播者、发布率、缓冲区时序
@@ -1308,7 +1308,7 @@ tf2 命令行工具不可或缺：
 
 ---
 
-## 3.6 值得学习的可视化优秀项目 ⭐
+## 3.6 值得学习的可视化优秀项目 ★
 
 以下项目展示了一流的 ROS 可视化，包含值得检查的 `.rviz` 配置：
 
@@ -1334,7 +1334,7 @@ tf2 命令行工具不可或缺：
 
 ---
 
-## 3.7 替代工具：Rerun、Open3D、Groot2 等 ⭐⭐
+## 3.7 替代工具：Rerun、Open3D、Groot2 等 ★★
 
 **Rerun**（[github.com/rerun-io/rerun](https://github.com/rerun-io/rerun)，约 7,800 stars，MIT + Apache-2.0）是最有前途的下一代可视化 SDK。用 Rust 构建，带 C++/Python/Rust SDK，提供带 scrubbing 的时间感知内存数据库，支持 2D/3D/图像/张量/点云，原生运行和通过 WASM 在浏览器中运行，加载 MCAP 文件。ROS 2 桥接存在于 [github.com/rerun-io/cpp-example-ros2-bridge](https://github.com/rerun-io/cpp-example-ros2-bridge)。值得注意的采用者包括 HuggingFace LeRobot、Meta Project Aria、NVIDIA PyCuVSLAM。
 
@@ -1346,9 +1346,9 @@ tf2 命令行工具不可或缺：
 
 ---
 
-## 3.8 每个 SLAM 工程师都该掌握的实用工作流 ⭐⭐
+## 3.8 每个 SLAM 工程师都该掌握的实用工作流 ★★
 
-### 调试 SLAM 失败 ⭐⭐
+### 调试 SLAM 失败 ★★
 
 按这个顺序添加五个 display：
 1. **TF**（启用显示名——验证 `map → odom → base_link → sensor_frame` 链已连接）
@@ -1363,7 +1363,7 @@ tf2 命令行工具不可或缺：
 - TF 断开 → 运行 `view_frames`
 - LIO-SAM 特定：锯齿形运动表示激光雷达/IMU 时间戳不同步；垂直跳动表示错误的 IMU 外参或重力符号
 
-### 带 GPU 的 Docker 中的 RViz ⭐⭐
+### 带 GPU 的 Docker 中的 RViz ★★
 
 ```bash
 xhost +local:docker
@@ -1381,11 +1381,11 @@ docker run -it --rm \
 
 用 `glxinfo | grep "OpenGL renderer"` 验证 GPU 渲染——它应该显示你的 NVIDIA GPU，而不是 "llvmpipe" 或 "Mesa"。在带 Wayland 的 Ubuntu 22.04+ 上，用 "Ubuntu on Xorg" 登录或设 `export QT_QPA_PLATFORM=xcb`。
 
-### 为论文录制可视化 ⭐
+### 为论文录制可视化 ★
 
 为每个图保存专用 `.rviz` 配置，带一致的视角。把 `Global Options → Background Color` 设为白色（255,255,255）获得出版质量截图。用 `ffmpeg -video_size 1920x1080 -framerate 30 -f x11grab -i :0.0+0,0 output.mp4` 录屏或用 SimpleScreenRecorder。jsk_visualization 的 `ScreenshotListenerTool` 启用程序化捕获，它的 `VideoCaptureDisplay` 可以直接把 RViz 输出录到视频文件。
 
-### RL 特定的可视化模式 ⭐⭐⭐
+### RL 特定的可视化模式 ★★★
 
 把奖励信号和训练损失作为 `std_msgs/Float64` 话题发布，然后用 PlotJuggler 做实时监控或 jsk_rviz_plugins 的 Plotter2D 做 RViz 内覆盖。用 [rviz_visual_tools](https://github.com/PickNikRobotics/rviz_visual_tools) 把策略选择的路径点和目标位姿渲染为 marker。对于离线分析，用 `rosbag2_py` 或 `mcap` Python 库从 MCAP bag 提取数据，转换成 pandas DataFrame，用 matplotlib/plotly 绘图获得出版质量图。
 
@@ -1393,15 +1393,15 @@ docker run -it --rm \
 
 ## 3.9 浪费数小时的陷阱：QoS、sim_time 与 Fixed Frame
 
-### QoS 不匹配 ⭐⭐
+### QoS 不匹配 ★★
 
 **QoS 不匹配是 ROS 2 可视化的 #1 沉默失败。** Reliable 订阅者不能连接到 Best Effort 发布者——而大多数激光雷达驱动发布 Best Effort，RViz2 默认 Reliable。用 `ros2 topic info /scan --verbose` 诊断，寻找不匹配的可靠性策略。通过在 RViz 属性中把 display 的 "Reliability Policy" 下拉菜单改为 "Best Effort" 修复。**map_server** 用 Transient Local durability 发布——RViz 的 Map display 必须匹配。在 WiFi 上，Reliable QoS 可能导致 **DDS 背压使机器人停顿**；始终为无线链路上的传感器可视化用 Best Effort，或用 foxglove_bridge 完全绕过 DDS。
 
-### use_sim_time ⭐⭐
+### use_sim_time ★★
 
 **`use_sim_time` 必须按节点设置**（不像 ROS1 的全局参数）。忘记一个节点就会创建一棵 TF 树，其中一些变换时间戳约 17 亿（墙时钟），其他约 100（仿真时间），导致外推错误。在 launch 文件中，用 `SetParameter(name='use_sim_time', value=True)` 全局设置，确保 `ros2 bag play bag_file --clock` 在运行。即使所有东西都正确设置，RViz 的初始位姿 tool 仍用墙时钟给消息打时间戳——作为变通在 Nav2 参数中增加 `transform_tolerance`。
 
-### 其他常见问题 ⭐
+### 其他常见问题 ★
 
 **RViz 中点云不显示** 有个可预测的检查列表：
 - 错误的 Fixed Frame（必须有到点云 `frame_id` 的 TF 链）
@@ -1419,7 +1419,7 @@ docker run -it --rm \
 - 禁用未使用的 display
 - 在 Global Options 中降低全局 Frame Rate
 
-### 可视化生态系统总结 ⭐
+### 可视化生态系统总结 ★
 
 ROS 可视化生态深但可导航，一旦你理解工具边界。**RViz2 仍是不可替代的本地开发工具**——彻底学习它的插件架构和 `.rviz` 配置系统。**PlotJuggler 应该在任何项目的第一天替换 rqt_plot**——它的 Lua 脚本和 bag 集成立即回本。**Foxglove 拥有远程可视化**尽管已闭源；它的开源桥接和 MCAP 格式仍是关键基础设施。对于 SLAM 工作，hdl_graph_slam 和 slam_toolbox 的基于 marker 的位姿图可视化模式是规范的——研究它们的源码。被忽略的效率收益是尽早掌握 QoS 设置和 `use_sim_time`，这消除了一类本应消耗数小时调试的沉默失败。
 
@@ -1430,7 +1430,7 @@ ROS 可视化生态深但可导航，一旦你理解工具边界。**RViz2 仍�
 
 # 附录：ROS 机器人工程师资源索引
 
-## 核心官方文档 ⭐
+## 核心官方文档 ★
 
 ### ROS 2 核心
 
@@ -1464,7 +1464,7 @@ ROS 可视化生态深但可导航，一旦你理解工具边界。**RViz2 仍�
 - [Foxglove 文档](https://docs.foxglove.dev/)
 - [PlotJuggler](https://github.com/facontidavide/PlotJuggler)
 
-## 核心 GitHub 项目（按类别） ⭐
+## 核心 GitHub 项目（按类别） ★
 
 ### SLAM（按激光/视觉/多传感器分类）
 
@@ -1567,13 +1567,13 @@ ROS 可视化生态深但可导航，一旦你理解工具边界。**RViz2 仍�
 - [best-of-robot-simulators](https://github.com/knmcguire/best-of-robot-simulators)
 - [SLAM-Application](https://github.com/engcang/SLAM-application)
 
-## 关键架构决策速查 ⭐⭐
+## 关键架构决策速查 ★★
 
-### 选择 ROS 版本 ⭐⭐
+### 选择 ROS 版本 ★★
 - **新项目**：ROS 2 Jazzy（Ubuntu 24.04，LTS 到 2029 年）或 Rolling
 - **不要新建 ROS 1 项目**：Noetic 已 EOL
 
-### 选择 SLAM 算法 ⭐⭐
+### 选择 SLAM 算法 ★★
 - **2D 室内**：slam_toolbox
 - **3D 激光+IMU（需要回环/GPS）**：LIO-SAM
 - **3D 激光+IMU（需要极快）**：FAST-LIO2
@@ -1581,14 +1581,14 @@ ROS 可视化生态深但可导航，一旦你理解工具边界。**RViz2 仍�
 - **RGB-D 多传感器**：RTAB-Map
 - **视觉**：ORB-SLAM3 + 社区 ROS 2 封装
 
-### 选择仿真器 ⭐⭐
+### 选择仿真器 ★★
 - **RL 训练**：Isaac Lab 或 MuJoCo Playground
 - **全栈 ROS 2 验证**：Gazebo Harmonic
 - **无人机 SITL**：PX4 + Gazebo
 - **自动驾驶**：CARLA
 - **快速原型（无 GPU）**：Webots 或 PyBullet
 
-### 选择可视化工具 ⭐
+### 选择可视化工具 ★
 - **本地开发 3D 可视化**：RViz2
 - **时间序列数据**：PlotJuggler
 - **远程/Web 可视化**：Foxglove
@@ -1600,9 +1600,9 @@ ROS 可视化生态深但可导航，一旦你理解工具边界。**RViz2 仍�
 
 ---
 
-### ⚠️ SLAM 与导航常见陷阱
+### ⚠ SLAM 与导航常见陷阱
 
-> ⚠️ **工程陷阱：SLAM 发布了 `map→odom`，但 Nav2 仍然不动**
+> ⚠ **工程陷阱：SLAM 发布了 `map→odom`，但 Nav2 仍然不动**
 >
 > **错误做法**：只关注 SLAM 节点是否运行，忽略 costmap 层配置和控制器状态。
 >
@@ -1612,7 +1612,7 @@ ROS 可视化生态深但可导航，一旦你理解工具边界。**RViz2 仍�
 >
 > **正确做法**：按层排查——先确认 `map→odom` TF 存在，再确认 costmap 的传感器话题有数据流入，再确认规划器能生成路径，最后确认控制器 active。
 
-> ⚠️ **概念误区：认为 SLAM 越新越好，直接选最新论文的算法**
+> ⚠ **概念误区：认为 SLAM 越新越好，直接选最新论文的算法**
 >
 > **新手想法**："FAST-LIVO2 是最新的，直接用它做所有项目。"
 >
@@ -1620,7 +1620,7 @@ ROS 可视化生态深但可导航，一旦你理解工具边界。**RViz2 仍�
 >
 > **正确思维**：先确定传感器（2D 激光 / 3D 激光 / 相机 / IMU / GPS），再确定平台（Jetson / x86 / RPi），最后在支持 ROS2 且社区活跃的算法中选择。
 
-> ⚠️ **工程陷阱：Gazebo 仿真中 `use_sim_time` 未统一**
+> ⚠ **工程陷阱：Gazebo 仿真中 `use_sim_time` 未统一**
 >
 > **错误做法**：只给 SLAM 节点设置了 `use_sim_time:=true`，但 RViz、TF listener、robot_state_publisher 仍使用墙钟时间。
 >
@@ -1630,7 +1630,7 @@ ROS 可视化生态深但可导航，一旦你理解工具边界。**RViz2 仍�
 >
 > **正确做法**：在 launch 文件中使用 `SetParameter(name='use_sim_time', value=True)` 全局设置，确保所有节点（包括 RViz、bridge、state_publisher）都使用仿真时间。
 
-> ⚠️ **编程陷阱：RViz 中点云或激光不显示**
+> ⚠ **编程陷阱：RViz 中点云或激光不显示**
 >
 > **错误做法**：添加了 LaserScan display 但没有输出，以为是驱动坏了。
 >
@@ -1640,9 +1640,9 @@ ROS 可视化生态深但可导航，一旦你理解工具边界。**RViz2 仍�
 >
 > **正确做法**：1. 用 `ros2 topic info /scan --verbose` 确认发布方 QoS 2. 在 RViz display 属性中将 Reliability Policy 改为 Best Effort 3. 确认 Fixed Frame 设置正确且 TF 链连通。
 
-### ⚠️ Gazebo 常见陷阱
+### ⚠ Gazebo 常见陷阱
 
-> ⚠️ **工程陷阱：Gazebo Classic 插件在现代 Gazebo 中不工作**
+> ⚠ **工程陷阱：Gazebo Classic 插件在现代 Gazebo 中不工作**
 >
 > **错误做法**：把 `libgazebo_ros_diff_drive.so` 直接用在 Gazebo Harmonic 中。
 >
@@ -1776,7 +1776,7 @@ ROS 可视化生态深但可导航，一旦你理解工具边界。**RViz2 仍�
 | bag 录制非空 | `ros2 bag info` 显示所有传感器话题有数据 |
 | bag 回放 SLAM 可建图 | 离线回放时 slam_toolbox 能重建地图 |
 
-### Nav2 参数调优实战指南 ⭐⭐
+### Nav2 参数调优实战指南 ★★
 
 以下参数是 Nav2 部署到新机器人时最常需要修改的。为每个参数给出默认值、调整方向和调整依据：
 
@@ -1812,7 +1812,7 @@ ROS 可视化生态深但可导航，一旦你理解工具边界。**RViz2 仍�
 
 > **反事实推理**：如果不调 `inflation_radius` 就部署，会怎样？假设默认值 0.55 m 而真实机器人半径 0.35 m——膨胀区域比机器人大 0.20 m，足够安全。但如果默认值 0.22 m（TurtleBot3）而真实机器人半径 0.35 m——膨胀区域比机器人小 0.13 m，路径会贴墙走，必然碰撞。更隐蔽的是：如果 `cost_scaling_factor` 太大（如 10.0），代价衰减极快，膨胀区域虽然存在但代价梯度几乎不影响规划器——效果和没有膨胀差不多。
 
-### InflationLayer 代价函数详解 ⭐⭐⭐
+### InflationLayer 代价函数详解 ★★★
 
 InflationLayer 的代价按以下公式从障碍物向外衰减：
 
@@ -1872,7 +1872,7 @@ $$
 4. **用 PlotJuggler 画时间序列**——里程计误差、IMU 数据、TF 延迟的趋势图比瞬时值更有诊断价值。
 5. **区分"偶发"和"必现"**——必现问题通常是配置错误（QoS、参数、坐标系），偶发问题通常是时序或资源问题（CPU 不够、总线拥塞、线程竞争）。
 
-### 完整 SLAM+Nav 联合调试清单 ⭐⭐
+### 完整 SLAM+Nav 联合调试清单 ★★
 
 当一个完整的 SLAM + Nav2 系统"不工作"时，按以下清单逐项排查，每一项只需要一条命令或一个观察，可以在 10 分钟内完成：
 
@@ -1893,9 +1893,9 @@ $$
 
 如果第 12 步 `/cmd_vel` 有非零输出但底盘不动——问题在底盘驱动层（ros2_control 控制器状态、硬件接口、通信总线），不在导航栈。此时应转到 硬件集成与RL部署 的排查流程。
 
-### ⚠️ SLAM+Nav 联合部署陷阱
+### ⚠ SLAM+Nav 联合部署陷阱
 
-> ⚠️ **工程陷阱：slam_toolbox 建图模式下同时运行 Nav2 导航**
+> ⚠ **工程陷阱：slam_toolbox 建图模式下同时运行 Nav2 导航**
 >
 > **错误做法**：用 slam_toolbox 的 `mode: mapping` 边建图边导航到目标。
 >
@@ -1905,7 +1905,7 @@ $$
 >
 > **正确做法**：先在 slam_toolbox 建图模式下完成建图和保存，然后切到定位模式（`mode: localization`）加载已知地图后再运行 Nav2 导航。或使用 slam_toolbox 的终身建图模式，但接受地图更新带来的短暂不稳定。
 
-> ⚠️ **编程陷阱：costmap 的 `robot_radius` 与真实机器人不匹配**
+> ⚠ **编程陷阱：costmap 的 `robot_radius` 与真实机器人不匹配**
 >
 > **错误做法**：使用默认参数（通常是 TurtleBot3 的 0.22 m），但真实机器人半径是 0.35 m。
 >
@@ -1927,24 +1927,24 @@ $$
 
 | 资源 | 难度 | 说明 |
 |------|------|------|
-| [Nav2 官方文档](https://docs.nav2.org/) | ⭐⭐ | 导航栈完整配置与插件教程 |
-| [Nav2 插件教程](https://docs.nav2.org/plugin_tutorials/index.html) | ⭐⭐ | 自定义规划器/控制器/costmap层/行为树节点 |
-| [Nav2 配置指南](https://docs.nav2.org/configuration/index.html) | ⭐⭐ | 每个包的完整参数说明 |
-| [Gazebo 迁移指南](https://gazebosim.org/docs/latest/migrating_gazebo_classic_ros2_packages/) | ⭐⭐ | Classic 到 Modern 的逐项迁移 |
-| [SDFormat 规范](http://sdformat.org/spec/) | ⭐⭐ | SDF 文件格式的权威参考 |
-| Macenski et al., "Marathon 2: A Navigation System" (IROS 2020) | ⭐⭐⭐ | Nav2 架构论文 |
-| Macenski et al., "MPPI Controller" (ROSCon 2023) | ⭐⭐⭐ | MPPI 控制器的设计与基准测试 |
-| arXiv:2501.02902 — Isaac Sim 训练 + Gazebo 验证的混合管线 | ⭐⭐⭐ | 2025 年 RL 部署最佳实践 |
-| Xu et al., "FAST-LIO2: Fast Direct LiDAR-Inertial Odometry" (T-RO 2022) | ⭐⭐⭐ | ikd-Tree 和 iEKF 的数学基础 |
-| Shan et al., "LIO-SAM: Tightly-coupled Lidar Inertial Odometry via Smoothing and Mapping" (IROS 2020) | ⭐⭐⭐ | 因子图 LIO 的参考实现 |
-| Vizzo et al., "KISS-ICP: In Defense of Point-to-Point ICP" (RA-L 2023) | ⭐⭐ | 零调参 ICP 的设计哲学 |
-| Campos et al., "ORB-SLAM3: An Accurate Open-Source Library for Visual, Visual-Inertial, and Multi-Map SLAM" (T-RO 2021) | ⭐⭐⭐⭐ | 多地图视觉 SLAM 系统 |
-| [SLAM-Application](https://github.com/engcang/SLAM-application) | ⭐⭐ | 20+ 激光 SLAM 算法并列基准测试 |
-| [evo 轨迹评估工具](https://github.com/MichaelGrupp/evo) | ⭐⭐ | APE/RPE 指标，SLAM 精度评估标准工具 |
-| [BehaviorTree.CPP 文档](https://www.behaviortree.dev/) | ⭐⭐ | Nav2 行为树框架的基础 |
-| [Groot2](https://github.com/BehaviorTree/Groot2) | ⭐⭐ | 行为树可视化编辑和实时监控 |
-| [Spatio-Temporal Voxel Layer](https://github.com/SteveMacenski/spatio_temporal_voxel_layer) | ⭐⭐⭐ | 基于时间衰减的 3D costmap 层 |
-| [MuJoCo Playground 论文](https://arxiv.org/abs/2504.08777) (RSS 2025) | ⭐⭐⭐ | 零样本 sim-to-real 的 MuJoCo 框架 |
+| [Nav2 官方文档](https://docs.nav2.org/) | ★★ | 导航栈完整配置与插件教程 |
+| [Nav2 插件教程](https://docs.nav2.org/plugin_tutorials/index.html) | ★★ | 自定义规划器/控制器/costmap层/行为树节点 |
+| [Nav2 配置指南](https://docs.nav2.org/configuration/index.html) | ★★ | 每个包的完整参数说明 |
+| [Gazebo 迁移指南](https://gazebosim.org/docs/latest/migrating_gazebo_classic_ros2_packages/) | ★★ | Classic 到 Modern 的逐项迁移 |
+| [SDFormat 规范](http://sdformat.org/spec/) | ★★ | SDF 文件格式的权威参考 |
+| Macenski et al., "Marathon 2: A Navigation System" (IROS 2020) | ★★★ | Nav2 架构论文 |
+| Macenski et al., "MPPI Controller" (ROSCon 2023) | ★★★ | MPPI 控制器的设计与基准测试 |
+| arXiv:2501.02902 — Isaac Sim 训练 + Gazebo 验证的混合管线 | ★★★ | 2025 年 RL 部署最佳实践 |
+| Xu et al., "FAST-LIO2: Fast Direct LiDAR-Inertial Odometry" (T-RO 2022) | ★★★ | ikd-Tree 和 iEKF 的数学基础 |
+| Shan et al., "LIO-SAM: Tightly-coupled Lidar Inertial Odometry via Smoothing and Mapping" (IROS 2020) | ★★★ | 因子图 LIO 的参考实现 |
+| Vizzo et al., "KISS-ICP: In Defense of Point-to-Point ICP" (RA-L 2023) | ★★ | 零调参 ICP 的设计哲学 |
+| Campos et al., "ORB-SLAM3: An Accurate Open-Source Library for Visual, Visual-Inertial, and Multi-Map SLAM" (T-RO 2021) | ★★★★ | 多地图视觉 SLAM 系统 |
+| [SLAM-Application](https://github.com/engcang/SLAM-application) | ★★ | 20+ 激光 SLAM 算法并列基准测试 |
+| [evo 轨迹评估工具](https://github.com/MichaelGrupp/evo) | ★★ | APE/RPE 指标，SLAM 精度评估标准工具 |
+| [BehaviorTree.CPP 文档](https://www.behaviortree.dev/) | ★★ | Nav2 行为树框架的基础 |
+| [Groot2](https://github.com/BehaviorTree/Groot2) | ★★ | 行为树可视化编辑和实时监控 |
+| [Spatio-Temporal Voxel Layer](https://github.com/SteveMacenski/spatio_temporal_voxel_layer) | ★★★ | 基于时间衰减的 3D costmap 层 |
+| [MuJoCo Playground 论文](https://arxiv.org/abs/2504.08777) (RSS 2025) | ★★★ | 零样本 sim-to-real 的 MuJoCo 框架 |
 
 **阅读建议**：
 

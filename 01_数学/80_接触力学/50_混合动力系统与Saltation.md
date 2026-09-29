@@ -12,7 +12,7 @@
 
 ## 前置自测
 
-📋 **前置自测**（答不出 ≥ 2 题 → 先回对应前置章节复习）
+◆ **前置自测**（答不出 ≥ 2 题 → 先回对应前置章节复习）
 
 1. **[实分析]** 常微分方程初值问题 $\dot x = f(x),\ x(0)=x_0$ 的解对初值 $x_0$ 的导数 $\partial x(t)/\partial x_0$ 满足什么矩阵微分方程？（提示：变分方程 / 状态转移矩阵）这个矩阵在 $f$ 光滑时为什么处处存在？
 
@@ -152,7 +152,7 @@
 
 ---
 
-## §5.0 为什么混合动力系统是独立的数学难题 ⭐
+## §5.0 为什么混合动力系统是独立的数学难题 ★
 
 > **这一节解决什么问题**：我们已经有了光滑 ODE 理论（专题 3 的 SE(3) 流）和把接触嵌入连续优化的互补理论（专题 4），为什么还需要"混合"这第三套语言？这一节先不给任何定义，而是从一个最朴素的物理场景出发，让你**感受到**连续 ODE 的天花板，从而理解混合系统不是数学家的洁癖，而是被现实逼出来的。
 
@@ -236,7 +236,7 @@ $$
 
 ---
 
-## §5.1 混合系统的三大形式化框架 ⭐⭐
+## §5.1 混合系统的三大形式化框架 ★★
 
 > **这一节解决什么问题**：§5.0 让我们相信"必须把流动和跳变分开写"。但具体怎么写？历史留下了三套语言（§5.0 的三条源流各结出一个果实）。这一节给出三套语言的精确定义，并解释它们的互译关系，以及——更重要的——**为什么不同任务要选不同语言**。
 
@@ -373,7 +373,7 @@ $$
 
 > **本质洞察**：四套语言（GST、自动机、脉冲效应、Branicky 切换）不是竞争关系，而是**同一数学对象在不同"分辨率"和"视角"下的投影**。GST 是最高分辨率的母框架（能表达滑模、Zeno、瞬时连续跳变）；自动机牺牲一点拓扑严格性换来离散逻辑的清晰；脉冲效应牺牲多模态表达力换来单周期分析的简洁；Branicky 牺牲冲击表达力换来切换稳定性的 Lyapunov 工具。**选哪套语言，取决于你要证什么定理——这是成熟研究者与初学者的分水岭。**
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区：以为"混合系统"就是"分段函数"**
    新手想法："不就是 $f$ 分几段定义吗？$\dot x=f_1(x)$ 或 $f_2(x)$，按条件选，这有什么难的？"
@@ -402,7 +402,7 @@ $$
 
 ---
 
-## §5.2 Guard 条件、Reset 映射与接触事件 ⭐⭐
+## §5.2 Guard 条件、Reset 映射与接触事件 ★★
 
 > **这一节解决什么问题**：§5.1 给出了三套框架，每套都有"切换面"（guard）和"跳变规则"（reset）。但它们到底长什么样？这一节把抽象的 $D,G,\mathcal S,\Delta$ 落到具体的机器人接触上——足端触地、足端离地、膝盖锁死——并推导塑性冲击的速度投影公式。这是 §5.3 推导 $\Xi$ 的"原料准备"：$\Xi$ 的公式里出现的每一个对象（$g,\nabla g,\Delta,D\Delta,F^\pm$）都在这一节备齐。
 
@@ -555,7 +555,7 @@ $$
 
 其中 $\xi$ 是体坐标系下的广义速度（旋量），$\mathrm{Ad}$ 是伴随算子。更隐蔽的陷阱来自**四元数双覆盖**：$\mathrm{Spin}(3)$ 上 $q$ 与 $-q$ 代表同一旋转，但 $D\Delta$ 在两个分支上相差符号；做灵敏度分析时若不固定一致的分支，$\Xi$ 的谱结构会错乱（§5.9 故障排查与 §5.10 桥接会再强调）。这是专题 3 遗留给本专题的一个"接口陷阱"——现在只需记住："含旋转的 reset，$D\Delta$ 要走 adjoint，且小心四元数符号"，完整处理见专题 3 的 $SE(3)$ 灵敏度部分。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区：以为触地 guard 和离地 guard 是对称的（都用脚的位置）**
    新手想法："触地是脚到地面 $p_z=0$，那离地就是脚离开地面 $p_z>0$ 呗，对称的。"
@@ -591,7 +591,7 @@ $$
 
 ---
 
-## §5.3 横截性与穿越时刻灵敏度：Saltation 推导的第一步 ⭐⭐⭐
+## §5.3 横截性与穿越时刻灵敏度：Saltation 推导的第一步 ★★★
 
 > **这一节解决什么问题**：§5.2 备齐了所有原料（$g,\nabla g,\Delta,D\Delta,F^\pm$），并在练习 5.2.3 抛出一个关键命题——扰动穿越时刻 $\delta t$ 的公式。这一节给出该命题的**完整解答级推导**：用隐函数定理严格证明 $\delta t$ 的存在唯一性与一阶公式。这一步是 Saltation 矩阵 $\Xi$ 的"地基中的地基"——$\Xi$ 公式里那个让无数初学者困惑的分母 $\nabla g^\top F^-$，正是从这里来的。理解了 $\delta t$，§5.4 推 $\Xi$ 就只是"把 $\delta t$ 代回去"的机械步骤。
 
@@ -716,7 +716,7 @@ $$
 
 > **理论-工程桥接**：$\delta t$ 公式在工程里直接对应一个可测、可监控的量——**触地时刻的不确定性**。在 Salted Kalman Filter（§5.7）里，状态协方差 $P^-$ 经 $\nabla g^\top$ 投影并除以横截速度，就给出触地时刻的方差 $\mathrm{Var}(\delta t)\approx\dfrac{\nabla g^\top P^-\nabla g}{(\nabla g^\top F^-)^2}$。当机器人接近 grazing（脚几乎平着擦地）时这个方差爆炸——这正是工程上"软着陆/擦地步态难估计"的数学解释。一个实用的健康监控指标就是实时计算 $\nabla g^\top F^-$，当它接近零时发出"灵敏度退化"警告（Kong 2024 Proc. IEEE 建议的做法）。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区：把 $\delta x^-$ 理解成"扰动轨迹的触地点与标称触地点之差"**
    新手想法："$\delta x^-$ 不就是两条轨迹各自触地时状态的差吗？"
@@ -746,7 +746,7 @@ $$
 
 ---
 
-## §5.4 Saltation 矩阵的完整推导：从 $\delta x^-$ 到 $\delta x^+$ ⭐⭐⭐
+## §5.4 Saltation 矩阵的完整推导：从 $\delta x^-$ 到 $\delta x^+$ ★★★
 
 > **这一节解决什么问题**：这是本章的**心脏**。§5.3 给了我们 $\delta t$。现在我们要回答终极问题——**跳变前的状态扰动 $\delta x^-$，经过这场"时间错位 + 冲击"，变成跳变后的多少 $\delta x^+$？** 这个一阶映射 $\delta x^+=\Xi\,\delta x^-$ 的矩阵 $\Xi$ 就是 Saltation 矩阵。我们将给出三步几何推导，逐项解释那个让人困惑的秩-1 修正项，并用三个类比把"为什么 $\Xi\neq D\Delta$"刻进直觉。学完这一节，你就握住了打开 §5.5-5.7 全部应用的钥匙。
 
@@ -919,7 +919,7 @@ $$
 
 > **理论-工程桥接**：B-导数理论给"梯度穿过接触事件"提供了**合法性证明**——这正是专题 6（Model-Based RL）让策略梯度穿过触地、以及可微仿真器（专题 4）正确反传的数学依据。一句话总结这个钩子：**想让自动微分穿过混合事件，合法的对象是 $\Xi$（B-导数），不是朴素 autodiff，更不是 $D\Delta$。** 朴素 autodiff 之所以在 grazing 附近发散，正是因为它无视了 B-导数的分段结构，错误地在两个分段间插值。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区：把 $\Xi$ 的修正项当成"高阶小量"可以忽略**
    新手想法："$D\Delta$ 是主项，那个分数修正项看着复杂，应该是个小修正，工程上忽略问题不大。"
@@ -949,7 +949,7 @@ $$
 
 ---
 
-## §5.5 混合系统的变分方程与周期步态稳定性 ⭐⭐⭐
+## §5.5 混合系统的变分方程与周期步态稳定性 ★★★
 
 > **这一节解决什么问题**：§5.4 给了我们单次跳变的灵敏度 $\Xi$。但一个步态是**周期性重复**的"流动—跳变—流动—跳变…"。我们想回答：一个标称周期步态是稳定的吗？给它一个扰动（绊一下、地面不平），它会收敛回原步态还是发散摔倒？这一节把 $\Xi$ 和光滑段的状态转移矩阵 $\Phi$ 串成**单值矩阵 $M$**，用 Floquet 乘子给出周期步态稳定性的解析判据。这是 §5.6（HZD）和 §5.7（应用）的稳定性理论基础。
 
@@ -1089,7 +1089,7 @@ $$
 
 **工程上为什么 Poincaré 更常用**。算 $M$ 要沿标称轨迹积分整个变分方程（高维 ODE）。算 $DP$ 可以用**打靶法（shooting）**：在截面上对不动点施加 $n-1$ 个微小扰动，各自仿真一圈回到截面，数值差分得到 $DP$ 的各列。后者不需要显式写出变分方程，对复杂机器人模型更易实现。这就是为什么足式步态稳定性分析的论文里，Poincaré 返回映射比单值矩阵出现得更频繁。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区：把单值矩阵写成 $M=\Phi_0\Xi_1\Phi_1\cdots$（顺序写反）**
    新手想法："按时间先后从左往右写：先 $\Phi_0$，再 $\Xi_1$，再 $\Phi_1$……"
@@ -1119,7 +1119,7 @@ $$
 
 ---
 
-## §5.6 横截性失效、Grazing 与 Zeno 现象 ⭐⭐⭐
+## §5.6 横截性失效、Grazing 与 Zeno 现象 ★★★
 
 > **这一节解决什么问题**：前几节的 $\Xi$ 理论建立在两个隐含假设上——横截性（$\nabla g^\top F^-\neq0$）和"一次只跳一个 guard"。本节专门拆这两个假设的边界：(1) 横截性退化（grazing/擦切）时 $\Xi$ 爆炸；(2) 多 guard 同时触发（codim-2）时 $\Xi$ 不唯一；(3) Zeno 现象（有限时间无穷次跳变）让数值积分器失效。理解这些失效边界，是从"会推 $\Xi$"到"知道 $\Xi$ 什么时候不能用"的关键一跃——这正是 §5.0 提到的、区分成熟研究者与初学者的分水岭。
 
@@ -1260,7 +1260,7 @@ $$
 
 > **本质洞察**：Zeno 现象揭示了混合系统"流 + 跳"二分法的极限——在 Zeno 点，"流"和"跳"的界限模糊了，无穷密的跳变在宏观上表现为一种新的"连续接触"模式。这暗示一个深刻的事实：**离散冲击模型（reset）和持续接触模型（约束）不是两个独立的世界，而是同一物理在不同时间尺度下的两个面相**。Zeno 是它们的交汇点。这也呼应了专题 4：硬接触极限下的 Dirac 冲量（离散）与持续约束力（连续）本是一体——专题 4 用测度微分包含统一处理，本专题用"Zeno 后切换到约束模式"工程化处理。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区：把 grazing 处 $\Xi$ 的发散当成数值精度问题**
    新手想法："$\Xi$ 算出来巨大无比，肯定是浮点误差，加高精度或调小步长就好。"
@@ -1290,7 +1290,7 @@ $$
 
 ---
 
-## §5.7 混合零动力学（HZD）：虚拟约束与解析稳定性 ⭐⭐⭐
+## §5.7 混合零动力学（HZD）：虚拟约束与解析稳定性 ★★★
 
 > **这一节解决什么问题**：§5.5 给了周期步态稳定性的一般判据（Floquet 乘子），但要算单值矩阵 $M$ 需要数值积分整个高维变分方程。对欠驱动双足（如 Cassie，驱动数 < 自由度数），有没有办法把稳定性分析降到**一个标量**？答案是 Grizzle 学派的混合零动力学（Hybrid Zero Dynamics, HZD）。这一节讲它的三个核心构件——虚拟约束、零动力学流形、impact invariance——并说明为什么 impact invariance 条件让稳定性可解析判断。这是 §5.5 降维定理（Burden-Revzen-Sastry）在控制设计上的主动版本。
 
@@ -1398,7 +1398,7 @@ $$
 
 > **对比性思维（不是 X 而是 Y）**：HZD **不是** "避开了 Saltation 矩阵"，**而是** "用虚拟约束的结构，把含 $\Xi$ 的高维 $M$ 的稳定性问题，约化成 $\Xi$ 在零动力学流形上诱导的单个标量乘子"。$\Xi$ 没有消失——它进入 $\delta_z$ 的表达式（冲击对相位速度的折扣由 $\Xi$ 限制到 $\mathcal Z$ 上得到）。理解这点能统一本章 §5.5（一般 Floquet）和 §5.7（HZD 标量）两套看似不同的稳定性语言。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区：把虚拟约束当成时间轨迹跟踪**
    新手想法："虚拟约束 $h(q)\to h_d(\theta(q))$ 不就是让关节跟踪一条轨迹吗，和 $h_d(t)$ 有啥区别？"
@@ -1428,7 +1428,7 @@ $$
 
 ---
 
-## §5.8 Saltation 矩阵的三大工程应用 ⭐⭐⭐
+## §5.8 Saltation 矩阵的三大工程应用 ★★★
 
 > **这一节解决什么问题**：前面几节把 $\Xi$ 的数学讲透了。但 $\Xi$ 到底"用在哪一行代码里"？这一节落到三个真实的、近年顶刊/顶会的工程应用——**状态估计（Salted Kalman Filter）、轨迹优化/MPC（Hybrid iLQR）、跟踪控制（Impact-Invariant Control）**。每个应用都对应一个"$\Xi$ 替换了原来的什么"的清晰故事。这是 §5.0 "如果跳过本章会怎样"两个崩溃场景的正面解药，也是本专题与专题 4（可微接触）/ 专题 6（RL）的接口。
 
@@ -1519,7 +1519,7 @@ $$
 
 **与专题 6 的接口**：专题 6 让策略梯度穿过接触事件。$\Xi$（B-导数）是这条梯度合法穿越的唯一正确对象——这就是 §5.0、§5.4 末反复埋的钩子的最终兑现。任何"让梯度穿过触地"的方法（可微仿真训练、CI-MPC 的解析梯度），底层都绕不开 $\Xi$ 或其推广（grazing 处的 B-导数）。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区：在 Kalman 滤波里用 reset Jacobian $D\Delta$ 传播协方差**
    新手想法："状态过 reset 是 $x^+=\Delta(x^-)$，那协方差自然是 $P^+=D\Delta P^-D\Delta^\top$，标准的雅可比传播。"
@@ -1549,7 +1549,7 @@ $$
 
 ---
 
-## §5.9 数值实现与陷阱 ⭐⭐⭐
+## §5.9 数值实现与陷阱 ★★★
 
 > **这一节解决什么问题**：前八节是数学。但当你真的要在仿真器/估计器/优化器里**实现** $\Xi$ 时，会撞上一堆教科书不讲的工程陷阱——事件检测抖动、横截性退化、Zeno 卡死、协方差不对称、接触序列误设。这一节把这些"实现层面的坑"系统化，配一个最小事件驱动积分器的骨架（理论教学中代码仅作验证/演示），并给出本章的故障排查手册（R15）。这是把 $\Xi$ 从"纸上公式"变成"能跑的代码"的最后一公里。
 
@@ -1677,7 +1677,7 @@ def hybrid_simulate_with_saltation(x0, Phi0, modes, t_end):
 | 7 | **优化轨迹物理不可行 / 真机落地就摔，仿真却"正常"** | 接触序列（mode schedule）设错，$\Xi$ 链建立在错误接触拓扑上 | (1) 用接触检测验证真实步态相序；(2) 检查每个声明的 mode 切换是否有横截满足的 guard；(3) 不确定序列改用 CI-MPC | §5.9 陷阱五、§5.0 |
 | 8 | **含旋转浮动基座的 $\Xi$ 谱结构错乱、灵敏度符号跳变** | 四元数双覆盖（$q$ 与 $-q$）未固定一致分支，$D\Delta$ 在两分支差符号 | (1) 检查 reset 前后四元数符号是否连续；(2) reset 后强制 $q$ 与 pre-event 同半球；(3) 用 $SO(3)$ 上的 adjoint 形式（专题 3） | §5.2（李群 reset）、专题 3 |
 
-### ⚠️ 常见陷阱（补充：数值层面的概念误区）
+### ⚠ 常见陷阱（补充：数值层面的概念误区）
 
 💡 **概念误区：用固定步长积分器跑混合系统，"撞到 guard 就在当前步切换"**
    新手想法："固定步长 RK4 简单高效，每步检查一下 $g$ 的符号，变号了就 reset，不用搞复杂的事件检测。"
@@ -1701,7 +1701,7 @@ def hybrid_simulate_with_saltation(x0, Phi0, modes, t_end):
 
 ---
 
-## §5.10 桥接：本专题在路线图中的上下游 ⭐⭐
+## §5.10 桥接：本专题在路线图中的上下游 ★★
 
 > **这一节解决什么问题**：本章的数学已经完整。最后这一节把 $\Xi$ 和混合系统放回整个机器人学的知识网络——它从哪些专题"接收"原料（专题 3 李群、专题 4 可微接触），又向哪些专题"输出"工具（05 足式简化模型、专题 6 RL）。这是 R14 跨章桥接的集中体现，帮你看清本章不是孤岛，而是"接触建模光谱"中承上启下的一环。
 
@@ -1860,17 +1860,17 @@ def hybrid_simulate_with_saltation(x0, Phi0, modes, t_end):
 
 | 编号 | 知识点 | 核心要点 | 对应节 | 难度 |
 |---|---|---|---|---|
-| 5.0 | 混合系统的必要性 | 刚性冲击 = 零时间有限跳变，超出经典 ODE | §5.0 | ⭐ |
-| 5.1 | 三大形式化框架 | GST / 自动机 / 脉冲效应，按任务选 | §5.1 | ⭐⭐ |
-| 5.2 | Guard 与 reset | 何时跳（运动学/动力学）+ 怎么跳（$M$-投影） | §5.2 | ⭐⭐ |
-| 5.3 | 穿越时刻灵敏度 | 隐函数定理推 $\delta t$，横截性是地基 | §5.3 | ⭐⭐⭐ |
-| 5.4 | Saltation 矩阵 | 三步推导 $\Xi=D\Delta+$ 秩-1，B-导数 | §5.4 | ⭐⭐⭐ |
-| 5.5 | 变分方程与稳定性 | 单值矩阵 $M$，Floquet 乘子，降维定理 | §5.5 | ⭐⭐⭐ |
-| 5.6 | 失效边界 | grazing / codim-2 / Zeno | §5.6 | ⭐⭐⭐ |
-| 5.7 | 混合零动力学 | 虚拟约束 + impact invariance → 标量稳定性 | §5.7 | ⭐⭐⭐ |
-| 5.8 | 三大工程应用 | SKF / HiLQR / Impact-Invariant，统一 $\Xi$ | §5.8 | ⭐⭐⭐ |
-| 5.9 | 数值实现与陷阱 | 事件驱动积分 + 8 类故障排查 | §5.9 | ⭐⭐⭐ |
-| 5.10 | 知识网络定位 | 上承李群/可微接触，下启简化模型/RL | §5.10 | ⭐⭐ |
+| 5.0 | 混合系统的必要性 | 刚性冲击 = 零时间有限跳变，超出经典 ODE | §5.0 | ★ |
+| 5.1 | 三大形式化框架 | GST / 自动机 / 脉冲效应，按任务选 | §5.1 | ★★ |
+| 5.2 | Guard 与 reset | 何时跳（运动学/动力学）+ 怎么跳（$M$-投影） | §5.2 | ★★ |
+| 5.3 | 穿越时刻灵敏度 | 隐函数定理推 $\delta t$，横截性是地基 | §5.3 | ★★★ |
+| 5.4 | Saltation 矩阵 | 三步推导 $\Xi=D\Delta+$ 秩-1，B-导数 | §5.4 | ★★★ |
+| 5.5 | 变分方程与稳定性 | 单值矩阵 $M$，Floquet 乘子，降维定理 | §5.5 | ★★★ |
+| 5.6 | 失效边界 | grazing / codim-2 / Zeno | §5.6 | ★★★ |
+| 5.7 | 混合零动力学 | 虚拟约束 + impact invariance → 标量稳定性 | §5.7 | ★★★ |
+| 5.8 | 三大工程应用 | SKF / HiLQR / Impact-Invariant，统一 $\Xi$ | §5.8 | ★★★ |
+| 5.9 | 数值实现与陷阱 | 事件驱动积分 + 8 类故障排查 | §5.9 | ★★★ |
+| 5.10 | 知识网络定位 | 上承李群/可微接触，下启简化模型/RL | §5.10 | ★★ |
 
 ---
 
@@ -1912,40 +1912,40 @@ def hybrid_simulate_with_saltation(x0, Phi0, modes, t_end):
 
 ### 入门与综述（先读这些建立全局）
 
-- **Kong, Payne, Zhu, Johnson, "Saltation Matrices: The Essential Tool for Linearizing Hybrid Dynamical Systems," Proceedings of the IEEE, 2024**（arXiv:2306.06862）⭐⭐⭐。**本章首选入口**。面向机器人学家的 $\Xi$ 权威教程，三步几何推导、刚体系统的 $\Xi$ 结构性质、在估计/控制中的统一应用。本章 §5.3-5.4 的推导组织即沿用此文。
-- **Johnson, Burden, Koditschek, "A Hybrid Systems Model for Simple Manipulation and Self-Manipulation Systems," IJRR 2016** ⭐⭐⭐。混合系统建模的机器人学视角综述。
+- **Kong, Payne, Zhu, Johnson, "Saltation Matrices: The Essential Tool for Linearizing Hybrid Dynamical Systems," Proceedings of the IEEE, 2024**（arXiv:2306.06862）★★★。**本章首选入口**。面向机器人学家的 $\Xi$ 权威教程，三步几何推导、刚体系统的 $\Xi$ 结构性质、在估计/控制中的统一应用。本章 §5.3-5.4 的推导组织即沿用此文。
+- **Johnson, Burden, Koditschek, "A Hybrid Systems Model for Simple Manipulation and Self-Manipulation Systems," IJRR 2016** ★★★。混合系统建模的机器人学视角综述。
 
 ### 核心理论（混合系统的数学根基）
 
-- **Goebel, Sanfelice, Teel, *Hybrid Dynamical Systems: Modeling, Stability, and Robustness*, Princeton University Press, 2012** ⭐⭐⭐⭐。混合系统的"圣经"。混合时间域、well-posedness、Zeno、鲁棒性的完整理论。第 6-7 章是 Zeno 与鲁棒性的标准参考。难度高，作为查阅手册而非通读。
-- **Burden, Sastry, Koditschek, Revzen, "Event-Selected Vector Field Discontinuities Yield Piecewise-Differentiable Flows," SIAM J. Applied Dynamical Systems (SIADS) 2016** ⭐⭐⭐⭐。$\Xi$ = B-导数的严格证明；piecewise-differentiable flow 理论。专题 6 梯度穿越接触的数学根基。
-- **Aizerman, Gantmakher, "On the stability of periodic motions," 1958** ⭐⭐⭐⭐。Saltation 矩阵的历史原始出处（继电器控制系统的扰动传播）。史料价值。
-- **di Bernardo, Budd, Champneys, Kowalczyk, *Piecewise-smooth Dynamical Systems: Theory and Applications*, Springer 2008** ⭐⭐⭐⭐。grazing 分岔、非光滑系统分岔理论的权威专著（§5.6 的深入参考）。
+- **Goebel, Sanfelice, Teel, *Hybrid Dynamical Systems: Modeling, Stability, and Robustness*, Princeton University Press, 2012** ★★★★。混合系统的"圣经"。混合时间域、well-posedness、Zeno、鲁棒性的完整理论。第 6-7 章是 Zeno 与鲁棒性的标准参考。难度高，作为查阅手册而非通读。
+- **Burden, Sastry, Koditschek, Revzen, "Event-Selected Vector Field Discontinuities Yield Piecewise-Differentiable Flows," SIAM J. Applied Dynamical Systems (SIADS) 2016** ★★★★。$\Xi$ = B-导数的严格证明；piecewise-differentiable flow 理论。专题 6 梯度穿越接触的数学根基。
+- **Aizerman, Gantmakher, "On the stability of periodic motions," 1958** ★★★★。Saltation 矩阵的历史原始出处（继电器控制系统的扰动传播）。史料价值。
+- **di Bernardo, Budd, Champneys, Kowalczyk, *Piecewise-smooth Dynamical Systems: Theory and Applications*, Springer 2008** ★★★★。grazing 分岔、非光滑系统分岔理论的权威专著（§5.6 的深入参考）。
 
 ### 足式与 HZD（步态稳定性的专门理论）
 
-- **Westervelt, Grizzle, Chevallereau, Choi, Morris, *Feedback Control of Dynamic Bipedal Robot Locomotion*, CRC Press 2007** ⭐⭐⭐⭐。HZD 的**唯一权威教科书**。虚拟约束、零动力学、impact invariance、标量返回映射的完整理论。§5.7 的源头。
-- **Westervelt, Grizzle, Koditschek, "Hybrid Zero Dynamics of Planar Biped Walkers," IEEE TAC 2003** ⭐⭐⭐⭐。HZD 的奠基论文。impact invariance 条件与标量 LTI 返回映射的原始推导。
-- **Hurmuzlu, Marghitu, "Rigid body collisions of planar kinematic chains with multiple contact points," IJRR 1994** ⭐⭐⭐。多接触点刚体冲击映射的经典推导（§5.2 冲击映射的出处）。
-- **Brogliato, *Nonsmooth Mechanics: Models, Dynamics and Control*, 3rd ed., Springer 2016** ⭐⭐⭐⭐。恢复系数、冲击分类、非光滑力学的系统参考（§5.2 冲击分类的出处）。
-- **McGeer, "Passive Dynamic Walking," IJRR 1990** ⭐⭐⭐。被动动态行走的开创性工作（§5.5 被动行走稳定性的来源）。
+- **Westervelt, Grizzle, Chevallereau, Choi, Morris, *Feedback Control of Dynamic Bipedal Robot Locomotion*, CRC Press 2007** ★★★★。HZD 的**唯一权威教科书**。虚拟约束、零动力学、impact invariance、标量返回映射的完整理论。§5.7 的源头。
+- **Westervelt, Grizzle, Koditschek, "Hybrid Zero Dynamics of Planar Biped Walkers," IEEE TAC 2003** ★★★★。HZD 的奠基论文。impact invariance 条件与标量 LTI 返回映射的原始推导。
+- **Hurmuzlu, Marghitu, "Rigid body collisions of planar kinematic chains with multiple contact points," IJRR 1994** ★★★。多接触点刚体冲击映射的经典推导（§5.2 冲击映射的出处）。
+- **Brogliato, *Nonsmooth Mechanics: Models, Dynamics and Control*, 3rd ed., Springer 2016** ★★★★。恢复系数、冲击分类、非光滑力学的系统参考（§5.2 冲击分类的出处）。
+- **McGeer, "Passive Dynamic Walking," IJRR 1990** ★★★。被动动态行走的开创性工作（§5.5 被动行走稳定性的来源）。
 
 ### 应用（估计、控制、优化）
 
-- **Kong, Mousaei, Bhounsri, ..., Johnson, "The Salted Kalman Filter: Kalman Filtering on Hybrid Dynamical Systems," Automatica 2021**（arXiv:2007.12233）⭐⭐⭐。SKF 原始论文，$P^+=\Xi P^-\Xi^\top$ 的推导与实验。
-- **Payne, Kong, Johnson, "The Uncertainty Aware Salted Kalman Filter: State Estimation for Hybrid Systems with Uncertain Guards," IROS 2022**（arXiv:2202.12729）⭐⭐⭐。guard 不确定时的 uaSKF，估计误差峰值降 24-60%。
-- **Kong, Li, Council, Johnson, "iLQR for Piecewise-Smooth Hybrid Dynamical Systems," CDC 2021**（arXiv:2103.14584）⭐⭐⭐。HiLQR 的值函数 $\Xi$ 反传 + reference extension。
-- **Kong, Li, Johnson, "Hybrid iLQR Model Predictive Control for Contact Implicit Stabilization on Legged Robots," IEEE T-RO 2023**（arXiv:2207.04591）⭐⭐⭐。HiLQR-MPC，Unitree A1 四足验证。
-- **Yang, Posa, "Impact Invariant Control with Applications to Bipedal Locomotion," IROS 2021**（arXiv:2103.06907；扩展版 *Autonomous Robots* 2023/2025）⭐⭐⭐。冲击瞬间把控制目标投影到 impact-invariant 子空间。
-- **Le Cleac'h, Howell, Yang, Lee, Zhang, Bishop, Schwager, Manchester, "Fast Contact-Implicit Model Predictive Control," 2021/2024**（arXiv:2107.05616）⭐⭐⭐⭐。接触隐式 MPC（光谱另一端，§5.8 对比）。
-- **Kim, Kang, Kim, Hong, Park, "Contact-Implicit Model Predictive Control: Controlling Diverse Quadruped Motions Without Pre-Planned Contact Modes or Trajectories," IJRR 2025**（arXiv:2312.08961）⭐⭐⭐⭐。45kg HOUND 四足，无需预设接触序列。
+- **Kong, Mousaei, Bhounsri, ..., Johnson, "The Salted Kalman Filter: Kalman Filtering on Hybrid Dynamical Systems," Automatica 2021**（arXiv:2007.12233）★★★。SKF 原始论文，$P^+=\Xi P^-\Xi^\top$ 的推导与实验。
+- **Payne, Kong, Johnson, "The Uncertainty Aware Salted Kalman Filter: State Estimation for Hybrid Systems with Uncertain Guards," IROS 2022**（arXiv:2202.12729）★★★。guard 不确定时的 uaSKF，估计误差峰值降 24-60%。
+- **Kong, Li, Council, Johnson, "iLQR for Piecewise-Smooth Hybrid Dynamical Systems," CDC 2021**（arXiv:2103.14584）★★★。HiLQR 的值函数 $\Xi$ 反传 + reference extension。
+- **Kong, Li, Johnson, "Hybrid iLQR Model Predictive Control for Contact Implicit Stabilization on Legged Robots," IEEE T-RO 2023**（arXiv:2207.04591）★★★。HiLQR-MPC，Unitree A1 四足验证。
+- **Yang, Posa, "Impact Invariant Control with Applications to Bipedal Locomotion," IROS 2021**（arXiv:2103.06907；扩展版 *Autonomous Robots* 2023/2025）★★★。冲击瞬间把控制目标投影到 impact-invariant 子空间。
+- **Le Cleac'h, Howell, Yang, Lee, Zhang, Bishop, Schwager, Manchester, "Fast Contact-Implicit Model Predictive Control," 2021/2024**（arXiv:2107.05616）★★★★。接触隐式 MPC（光谱另一端，§5.8 对比）。
+- **Kim, Kang, Kim, Hong, Park, "Contact-Implicit Model Predictive Control: Controlling Diverse Quadruped Motions Without Pre-Planned Contact Modes or Trajectories," IJRR 2025**（arXiv:2312.08961）★★★★。45kg HOUND 四足，无需预设接触序列。
 
 ### 历史与交叉（拓宽视野）
 
-- **Lygeros, Johansson, Simić, Zhang, Sastry, "Dynamical Properties of Hybrid Automata," IEEE TAC 2003** ⭐⭐⭐⭐。混合自动机在控制理论中的标准形式（§5.1 自动机框架出处）。
-- **Branicky, "Multiple Lyapunov Functions and Other Analysis Tools for Switched and Hybrid Systems," IEEE TAC 1998** ⭐⭐⭐⭐。多 Lyapunov 函数与切换系统稳定性（§5.1 第四套语言）。
-- **Posa, Kuindersma, Tedrake, "Optimization and Stabilization of Trajectories for Constrained Dynamical Systems," WAFR 2016** ⭐⭐⭐⭐。证明显式 hybrid 与接触隐式优化的局部等价（§5.0/§5.8 的依据）。
-- **Filippov, *Differential Equations with Discontinuous Righthand Sides*, Kluwer 1988** ⭐⭐⭐⭐。微分包含与滑模解的经典理论（§5.0 第二条源流；Saltation 一词的来源）。
+- **Lygeros, Johansson, Simić, Zhang, Sastry, "Dynamical Properties of Hybrid Automata," IEEE TAC 2003** ★★★★。混合自动机在控制理论中的标准形式（§5.1 自动机框架出处）。
+- **Branicky, "Multiple Lyapunov Functions and Other Analysis Tools for Switched and Hybrid Systems," IEEE TAC 1998** ★★★★。多 Lyapunov 函数与切换系统稳定性（§5.1 第四套语言）。
+- **Posa, Kuindersma, Tedrake, "Optimization and Stabilization of Trajectories for Constrained Dynamical Systems," WAFR 2016** ★★★★。证明显式 hybrid 与接触隐式优化的局部等价（§5.0/§5.8 的依据）。
+- **Filippov, *Differential Equations with Discontinuous Righthand Sides*, Kluwer 1988** ★★★★。微分包含与滑模解的经典理论（§5.0 第二条源流；Saltation 一词的来源）。
 
 ---
 

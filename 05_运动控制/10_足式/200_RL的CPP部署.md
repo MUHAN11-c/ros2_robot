@@ -2,7 +2,7 @@
 
 # 第 64 章 RL 的 C++ 部署——TorchScript / LibTorch + ONNX Runtime + 实时推理
 
-> **难度**: ⭐⭐ ~ ⭐⭐⭐ | **预计学时**: 25-35 小时(1.5 周) | **text:code = 6:4**（工程实践为主章节）
+> **难度**: ★★ ~ ★★★ | **预计学时**: 25-35 小时(1.5 周) | **text:code = 6:4**（工程实践为主章节）
 >
 > **一句话概要**: 训好的 RL 策略是 Python 对象——要在 1 kHz 实时循环里以 $< 1$ ms 推理，必须导出为 TorchScript/ONNX，用 LibTorch/ONNX Runtime 在 C++ 中加载，并解决零拷贝数据转换、内存预分配、安全降级等工程问题。
 
@@ -14,7 +14,7 @@
 
 ## 前置自测
 
-📋 **答不出 $\geq$ 2 题 → 先回对应章节复习**
+◆ **答不出 $\geq$ 2 题 → 先回对应章节复习**
 
 1. **[足式/170_实时CPP工程]** 什么是 `SCHED_FIFO`?为什么实时控制线程需要用它而不是默认的 CFS 调度器?
 2. **[足式/170_实时CPP工程]** `mlockall(MCL_CURRENT | MCL_FUTURE)` 的作用是什么?不调用它会导致什么实时性问题?
@@ -38,7 +38,7 @@
 
 ---
 
-## 64.1 RL 模型部署的基本问题 ⭐
+## 64.1 RL 模型部署的基本问题 ★
 
 ### 动机:为什么不直接在 Python 里跑 RL 推理?
 
@@ -76,7 +76,7 @@ Python 方案在研究环境下可行(如 Gazebo 仿真里跑 RL)，但在**真�
 | 依赖冲突 | PyTorch 版本与 ROS 2 的 Python 环境冲突，安装耗时数天 | LibTorch 是独立 C++ 库，与 ROS 2 无冲突 |
 | 嵌入式部署 | Jetson Orin 的 Python 环境配置极其痛苦(交叉编译、conda 不兼容) | 交叉编译 C++ 二进制，干净部署 |
 
-### 两大部署方案概览 ⭐
+### 两大部署方案概览 ★
 
 把 PyTorch `nn.Module` 变成 C++ 可执行的模型，有两条主路:
 
@@ -98,19 +98,19 @@ Python 训练 → torch.onnx.export → policy.onnx → ONNX Runtime C++ 加载�
 
 两种方案的详细对比见 64.4 节末尾。先从方案 A 的第一步——TorchScript 导出开始。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **思维陷阱:认为 Python 部署"够用"**
+> ⚠ **思维陷阱:认为 Python 部署"够用"**
 > **新手想法**: "我在 Gazebo 里用 Python 跑得好好的，真机也可以。"
 > **实际情况**: Gazebo 是软实时(偶尔丢帧只是仿真不准确)，真机是硬实时(丢帧 = 摔倒 = 硬件损坏)。Python 的不确定性延迟在软实时下可以接受，在硬实时下不可接受。
 > **判断标准**: 如果控制频率 $\geq$ 200 Hz 且真机部署，必须 C++。如果只在仿真中验证算法，Python 可以。
 
-> ⚠️ **概念误区:混淆训练和推理的计算量**
+> ⚠ **概念误区:混淆训练和推理的计算量**
 > **新手想法**: "训练要用 GPU 几十小时，推理肯定也很慢。"
 > **实际情况**: 训练慢是因为反向传播 + 4096 并行环境 + 数千次迭代。推理只是一个小 MLP 的**单次前向传播**:48 维输入 → 256 → 256 → 12 维输出，约 50k 次浮点乘加。现代 CPU 的单核算力约 10 GFLOPS，理论上 $50000 / (10 \times 10^9) \approx 5 \mu s$。实际框架开销让延迟到 50-100 $\mu$s，但仍然极快。
 > **关键认知**: RL 策略的推理**极其轻量**，瓶颈不在计算本身，而在框架调用开销。
 
-> ⚠️ **编程陷阱:在 ROS 2 Python 节点中直接调用 PyTorch**
+> ⚠ **编程陷阱:在 ROS 2 Python 节点中直接调用 PyTorch**
 > **错误做法**: 在 `rclpy` 节点的 `timer_callback` 中调 `model.forward(obs)`。
 > **后果**: `timer_callback` 与 ROS 2 的 executor 共享 GIL。如果有其他 Python callback(如 subscriber)，它们可能抢占 GIL，导致推理延迟不可预测。
 > **正确做法**: 用 C++ ros2_control Controller(足式/170_实时CPP工程 讲过),RL 推理在 Controller 的 `update()` 中原生运行，不经过 Python。
@@ -125,7 +125,7 @@ Python 训练 → torch.onnx.export → policy.onnx → ONNX Runtime C++ 加载�
 
 部署的第一步是把 PyTorch 模型导出为可序列化的格式。下一节深入 TorchScript 的内部机制。
 
-## 64.2 TorchScript 导出:从 `.pth` 到 `.pt` ⭐⭐
+## 64.2 TorchScript 导出:从 `.pth` 到 `.pt` ★★
 
 ### 动机:为什么 `.pth` 不能直接用?
 
@@ -135,7 +135,7 @@ Python 训练 → torch.onnx.export → policy.onnx → ONNX Runtime C++ 加载�
 
 TorchScript `.pt` 文件存的是**网络结构 + 权重 + 优化信息**，可以在没有 Python 的环境中独立加载和执行。这曾经是从 Python 到 C++ 的主桥梁。需要注意的是，PyTorch 官方已经将 TorchScript 标记为 deprecated，新项目应优先评估 `torch.export`、ONNX 或 AOTInductor 等路线；本节保留 TorchScript，是因为大量腿足 RL 项目和旧版部署代码仍在使用 LibTorch/TorchScript。
 
-### TorchScript 的内部机制 ⭐⭐
+### TorchScript 的内部机制 ★★
 
 TorchScript 不是简单的"序列化"——它是一个完整的**中间表示(IR)和编译器**。理解其内部机制有助于排查导出问题。
 
@@ -157,7 +157,7 @@ IR 经过的**优化 pass**(在 `torch/csrc/jit/passes/` 中实现):
 
 这些优化让 TorchScript 导出的模型比 Python eager 模式快 20-50%。
 
-### 两种导出方法 ⭐⭐
+### 两种导出方法 ★★
 
 **方法 1:`torch.jit.trace`(推荐用于 RL 策略)**
 
@@ -210,7 +210,7 @@ scripted_actor.save("policy.pt")
 - 有 RNN(GRU/LSTM)或条件分支 → **script**(更完整)
 - 不确定 → 先尝试 trace;如果 trace 后的输出不正确，再用 script
 
-### 完整的导出脚本 ⭐⭐
+### 完整的导出脚本 ★★
 
 ```python
 """export_policy.py — 导出 rsl_rl 训好的策略为 TorchScript"""
@@ -279,19 +279,19 @@ if __name__ == "__main__":
     export_policy(args.ckpt, args.out, args.obs_dim, args.act_dim)
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱:导出时未切换到 eval 模式**
+> ⚠ **编程陷阱:导出时未切换到 eval 模式**
 > **错误做法**: 直接 `torch.jit.trace(model, example)`,model 仍在 train 模式。
 > **后果**: 如果网络有 BatchNorm 或 Dropout,train 模式和 eval 模式行为不同。train 模式下 BatchNorm 使用 mini-batch 统计量(随机的),eval 模式使用全局统计量(固定的)。导出的模型在不同输入上可能给出不一致的输出。
 > **正确做法**: 导出前必须 `model.eval()`。
 
-> ⚠️ **编程陷阱:rsl_rl 的激活函数是 ELU 不是 ReLU**
+> ⚠ **编程陷阱:rsl_rl 的激活函数是 ELU 不是 ReLU**
 > **错误做法**: 导出时用 `nn.ReLU()` 重建网络结构。
 > **后果**: 权重加载不会报错(因为激活函数没有可学习参数，`state_dict` 不含激活函数的 key)，但推理结果完全错误。ELU 对负值输出 $\alpha(e^x - 1)$,ReLU 直接截断为 0——行为差异巨大。
 > **正确做法**: 检查 rsl_rl 训练配置中的 `activation` 参数。默认是 `nn.ELU()`。
 
-> ⚠️ **概念误区:认为 trace 和 script 在所有情况下效果相同**
+> ⚠ **概念误区:认为 trace 和 script 在所有情况下效果相同**
 > **新手想法**: "都能导出 TorchScript，用哪个都一样。"
 > **实际情况**: 对于纯 MLP 两者确实等价。但如果网络有数据依赖的分支(如 `if obs[0] > 0: use_path_A() else: use_path_B()`),trace 只记录一条路径——另一条路径会被丢弃。script 则编译所有分支。
 > **最佳实践**: 先尝试 trace;导出后用多个随机输入验证输出一致性。如果发现不一致，说明有条件分支，需要用 script。
@@ -310,7 +310,7 @@ TorchScript 把模型从 Python 解放出来。下一步是在 C++ 中加载并�
 
 > **本质洞察**：TorchScript / ONNX 等模型导出格式的本质是**将计算图与编程语言解耦**——就像 PDF 将文档排版与创作工具解耦一样。Python 是创作工具（训练方便），C++ 是阅读器（运行高效），而导出格式是两者之间的"通用表示层"。理解了这一点，你就能预判所有导出问题的根源：凡是无法被序列化为纯计算图的 Python 动态特性（控制流、动态 shape、自定义算子），都会在导出时出问题。
 
-## 64.3 LibTorch C++ 加载与推理 ⭐⭐
+## 64.3 LibTorch C++ 加载与推理 ★★
 
 ### 动机:LibTorch 是什么?
 
@@ -318,7 +318,7 @@ LibTorch 是 PyTorch 的 **C++ 运行时**。它提供了与 Python PyTorch 几�
 
 LibTorch 与 PyTorch 版本号同步，可从 PyTorch 官网下载预构建包，按平台区分:CPU / CUDA 11.8 / CUDA 12.x / ARM64(Jetson)等变体。建议使用与训练端 PyTorch 相同的主版本号，以避免算子兼容性问题。
 
-### LibTorch 与 Python PyTorch API 的对照 ⭐⭐
+### LibTorch 与 Python PyTorch API 的对照 ★★
 
 学过 Python PyTorch 的开发者可以快速上手 LibTorch——两者 API 高度对称:
 
@@ -333,7 +333,7 @@ LibTorch 与 PyTorch 版本号同步，可从 PyTorch 官网下载预构建包�
 | tensor→指针 | `t.data_ptr()` | `t.data_ptr<float>()` |
 | 从外部数据创建 | `torch.from_numpy(arr)` | `torch::from_blob(ptr, shape)` |
 
-### 最小化 C++ 推理代码 ⭐⭐
+### 最小化 C++ 推理代码 ★★
 
 下面是一个完整的、可在 ros2_control Controller 中使用的 RL 推理类。每一行都有详细注释解释"为什么这样写":
 
@@ -448,7 +448,7 @@ class RLPolicy {
 };
 ```
 
-### Eigen 与 Tensor 的数据转换:细节与陷阱 ⭐⭐
+### Eigen 与 Tensor 的数据转换:细节与陷阱 ★★
 
 Eigen 和 PyTorch Tensor 的内存布局有关键差异:
 
@@ -488,7 +488,7 @@ std::memcpy(input.data_ptr<float>(), obs_float.data(), 48 * sizeof(float));
 
 **推荐方案**: 对于 RL 策略部署(obs_dim < 200)，方案 B(memcpy 到预分配 tensor)更安全且性能充足。方案 A 的零拷贝优势在 < 200 维时可以忽略。
 
-### 性能数据 ⭐⭐
+### 性能数据 ★★
 
 典型 MLP [48 → 256 → 256 → 256 → 12] 的单次推理延迟:
 
@@ -503,7 +503,7 @@ std::memcpy(input.data_ptr<float>(), obs_float.data(), 48 * sizeof(float));
 
 > **本质洞察**：RL 策略部署的性能瓶颈**不是计算本身，而是框架调用开销**。一个 [48→256→256→12] 的 MLP 前向传播理论上只需 ~5 $\mu$s 的浮点运算，但 LibTorch/ONNX Runtime 的框架开销（tensor 元数据管理、算子调度、内存管理）将实际延迟推高到 50-100 $\mu$s——框架开销是计算本身的 10-20 倍。这解释了为什么"预分配 + 零拷贝 + warmup"这些看似琐碎的工程技巧如此关键——它们消除的不是计算量，而是框架开销。
 
-### 实时循环集成 ⭐⭐
+### 实时循环集成 ★★
 
 ```cpp
 // 在 ros2_control Controller 的 update() 里集成 RL 推理
@@ -543,14 +543,14 @@ RLController::update(const rclcpp::Time& time,
 }
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱:每次推理都创建新的 tensor**
+> ⚠ **编程陷阱:每次推理都创建新的 tensor**
 > **错误做法**: 在 `update()` 中 `auto tensor = torch::zeros({1, 48});` 或 `torch::from_blob(...)`。
 > **问题**: 即使 `from_blob` 不分配 tensor 数据内存，它也会创建 TensorImpl 元数据对象(涉及堆分配+引用计数)。在 1 kHz 循环中，每秒 1000 次堆分配 → 内存碎片化 + 可能触发 GC(如果用了 shared_ptr)。
 > **正确做法**: 构造时预分配 tensor，每次循环只用 `memcpy` 覆盖数据。
 
-> ⚠️ **编程陷阱:`from_blob` 的生命周期陷阱**
+> ⚠ **编程陷阱:`from_blob` 的生命周期陷阱**
 > **错误做法**: `from_blob` 引用了一个函数局部变量的数据:
 > ```cpp
 > torch::Tensor makeTensor() {
@@ -561,7 +561,7 @@ RLController::update(const rclcpp::Time& time,
 > **后果**: 返回的 tensor 指向已销毁的栈内存——未定义行为(可能段错误，也可能读到"看起来正确"的垃圾数据，后者更难调试)。
 > **正确做法**: 确保 `from_blob` 引用的数据在 tensor 使用期间始终有效(如类成员变量)。或者直接用 `memcpy` 拷贝到预分配 tensor。
 
-> ⚠️ **概念误区:在实时循环中用 GPU 推理小 MLP**
+> ⚠ **概念误区:在实时循环中用 GPU 推理小 MLP**
 > **新手想法**: "GPU 更快，推理当然要用 GPU。"
 > **实际情况**: 对于 < 100K 参数的 MLP,GPU 推理的固定开销(核启动 + PCIe 数据往返)~200 $\mu$s，远大于 CPU 推理时间 ~50 $\mu$s。如果整个控制循环在 CPU 上，GPU 推理意味着每步都有 CPU→GPU→CPU 的数据往返，反而更慢。
 > **正确做法**: 小网络用 CPU 推理。大网络(如 CNN 视觉策略)或已有 GPU 数据管道时才用 GPU。
@@ -578,7 +578,7 @@ RLController::update(const rclcpp::Time& time,
 
 LibTorch 与 PyTorch 生态紧密耦合。如果你想脱离 PyTorch、追求更小的部署包或使用 TensorRT 加速，ONNX Runtime 是另一个强力选择。
 
-## 64.4 ONNX + ONNX Runtime 部署 ⭐⭐
+## 64.4 ONNX + ONNX Runtime 部署 ★★
 
 ### 动机:为什么考虑 ONNX?
 
@@ -590,7 +590,7 @@ ONNX(Open Neural Network Exchange)是微软、Meta 等联合推出的**跨框架
 
 ONNX Runtime 保持频繁的发布节奏，请以官方 GitHub Releases 页面确认当前版本及其编译器和 CUDA 版本要求。
 
-### ONNX 格式的内部结构 ⭐⭐
+### ONNX 格式的内部结构 ★★
 
 ONNX 文件是一个 **protobuf** 序列化的计算图。理解其结构有助于排查导出和推理问题:
 
@@ -617,7 +617,7 @@ ONNX Model (protobuf 序列化)
 
 每个 `NodeProto` 对应一个 ONNX 算子(如 `Gemm` = General Matrix Multiply = Linear 层，`Elu` = ELU 激活)。算子的语义由 opset 版本决定。
 
-### ONNX 导出 ⭐⭐
+### ONNX 导出 ★★
 
 ```python
 import torch
@@ -656,7 +656,7 @@ print(f"ONNX vs PyTorch 最大误差: {max_err:.2e}")
 assert max_err < 1e-5
 ```
 
-### C++ ONNX Runtime 推理 ⭐⭐
+### C++ ONNX Runtime 推理 ★★
 
 ```cpp
 #include <onnxruntime_cxx_api.h>
@@ -722,7 +722,7 @@ class ONNXPolicy {
 };
 ```
 
-### ONNX Runtime C++ API 详解 ⭐⭐
+### ONNX Runtime C++ API 详解 ★★
 
 ONNX Runtime 的 C++ API 与 LibTorch 有显著风格差异。理解其核心概念对于正确使用至关重要：
 
@@ -772,7 +772,7 @@ Ort::Value input_tensor = Ort::Value::CreateTensor<float>(
 // 如果 input_data_ 在 Run() 返回前被销毁，行为未定义
 ```
 
-### TorchScript vs ONNX 部署的定量对比 Benchmark ⭐⭐
+### TorchScript vs ONNX 部署的定量对比 Benchmark ★★
 
 以下基准测试在三个平台上对比了两种部署方案，使用的模型是典型的腿足 RL 策略（3 层 MLP [256, 128, 12]，输入 48 维，输出 12 维）：
 
@@ -823,11 +823,11 @@ trt_opts.trt_engine_cache_path = "/tmp/trt_cache/";
 // 首次 Run() 会触发 TensorRT 编译（30-60s），后续直接从缓存加载
 ```
 
-> **⚠️ 陷阱：TensorRT engine 不跨 GPU 架构兼容**
+> **⚠ 陷阱：TensorRT engine 不跨 GPU 架构兼容**
 >
 > 在 Jetson Orin NX（Ampere 架构）上编译的 TensorRT engine 不能在 Jetson Xavier NX（Volta 架构）上运行。每次更换硬件或更新 JetPack 版本，都需要重新编译 engine。正确做法是在部署脚本中检测缓存是否有效，无效则自动重新编译。
 
-### LibTorch vs ONNX Runtime:完整工程权衡 ⭐⭐
+### LibTorch vs ONNX Runtime:完整工程权衡 ★★
 
 | 维度 | LibTorch | ONNX Runtime |
 |------|----------|--------------|
@@ -849,14 +849,14 @@ trt_opts.trt_engine_cache_path = "/tmp/trt_cache/";
 | Jetson GPU 加速 | ONNX + TensorRT | TensorRT 在 NVIDIA GPU 上有极致优化 |
 | 多框架团队 | ONNX Runtime | 不绑定 PyTorch |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱:ONNX opset 版本不够高**
+> ⚠ **编程陷阱:ONNX opset 版本不够高**
 > **错误做法**: 导出时用 `opset_version=9`，但网络用了 opset 9 不支持的算子。
 > **后果**: 导出报错 `Unsupported: ONNX export of operator xxx`。
 > **正确做法**: 使用能覆盖模型所用全部算子的最低 opset 版本，导出后用 `onnx.checker.check_model()` 验证完整性。
 
-> ⚠️ **概念误区:认为 ONNX Runtime 一定比 LibTorch 快**
+> ⚠ **概念误区:认为 ONNX Runtime 一定比 LibTorch 快**
 > **新手想法**: "ONNX Runtime 更轻量，推理肯定更快。"
 > **实际情况**: 对于小 MLP(< 100K 参数)，两者速度差异在 20% 以内，取决于平台和编译优化。ONNX Runtime 的真正优势在 TensorRT/OpenVINO 加速——但这些对小网络的加速也有限。
 > **最佳实践**: 对你的具体模型和目标平台做 benchmark，不凭假设选型。
@@ -871,7 +871,7 @@ trt_opts.trt_engine_cache_path = "/tmp/trt_cache/";
 
 选好了推理引擎，下一步是精读一个完整的开源部署框架——rl_sar，理解工业级部署的全部细节。
 
-## 64.5 rl_sar 源码精读:观测一致性是 sim-to-real 的关键 ⭐⭐
+## 64.5 rl_sar 源码精读:观测一致性是 sim-to-real 的关键 ★★
 
 ### 动机:为什么精读 rl_sar?
 
@@ -881,7 +881,7 @@ rl_sar (`fan-ziqi/rl_sar`) 是目前最活跃的开源腿足 RL C++ 部署框架
 
 rl_sar 的核心价值:**它已经踩过了部署中的所有坑**——观测归一化、关节顺序映射、动作缩放、安全检查。精读它比从零踩坑高效得多。
 
-### 观测构建的核心逻辑 ⭐⭐
+### 观测构建的核心逻辑 ★★
 
 ```cpp
 // rl_sar 的观测构建(核心,简化版)
@@ -913,7 +913,7 @@ torch::Tensor RL::ComputeObservation() {
 }
 ```
 
-### 观测归一化一致性——sim-to-real 最容易出错的地方 ⭐⭐⭐
+### 观测归一化一致性——sim-to-real 最容易出错的地方 ★★★
 
 训练和部署的观测归一化**必须完全一致**。这不是"大致对就行"——任何一个 scale 参数的不一致都会导致策略行为完全错误:
 
@@ -929,7 +929,7 @@ torch::Tensor RL::ComputeObservation() {
 
 > **跨领域类比**：观测归一化一致性的要求，就像编译器的 ABI（Application Binary Interface）兼容性——训练端和部署端必须就"每个字段的含义、顺序、缩放"达成完全一致的协议。如果训练端认为观测向量的第 4-6 位是 `[vx*2.0, vy*2.0, wz*0.25]` 但部署端写成了 `[vx, vy, wz]`，就像 C++ 编译的 struct padding 不一致一样——表面上能运行，但数据在语义上全乱了。与 ABI 不同的是，obs scale 不一致**不会触发任何编译或运行时错误**，它只会让策略行为诡异地"差一点"，这才是最难调试的。
 
-### 关节顺序映射——另一个常见的"隐形杀手" ⭐⭐⭐
+### 关节顺序映射——另一个常见的"隐形杀手" ★★★
 
 不同系统的关节编号顺序可能不同:
 
@@ -941,20 +941,20 @@ torch::Tensor RL::ComputeObservation() {
 
 如果不做关节顺序映射，策略给前左腿的命令会发到前右腿——机器人的行为会像"左右脑对调"一样混乱。rl_sar 通过 `robot_config.yaml` 中的 `joint_reorder` 字段解决这个问题。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱:训练和部署的关节顺序不一致**
+> ⚠ **编程陷阱:训练和部署的关节顺序不一致**
 > **错误做法**: 假设 IsaacGym 和 Unitree SDK 的关节编号顺序一样。
 > **后果**: 策略给前左腿的命令发到了前右腿，机器人动作完全混乱，立刻摔倒。
 > **根本原因**: 不同仿真器和 SDK 的关节编号约定不同，没有统一标准。
 > **正确做法**: 明确记录训练时的关节顺序，在部署代码中维护映射表。
 
-> ⚠️ **编程陷阱:忘记减去 `default_dof_pos`**
+> ⚠ **编程陷阱:忘记减去 `default_dof_pos`**
 > **错误做法**: 把关节绝对位置直接作为观测传入网络。
 > **后果**: 训练时观测是"关节位置相对于默认站立姿态的偏差"(范围约 $\pm 0.5$ rad)，部署时传入绝对位置(范围约 $0 \sim 3$ rad)。数值范围完全不同，网络输出毫无意义。
 > **正确做法**: `obs_joint_pos = (q_measured - q_default) * obs_scale`。
 
-> ⚠️ **思维陷阱:认为 rl_sar 开箱即用**
+> ⚠ **思维陷阱:认为 rl_sar 开箱即用**
 > **新手想法**: "fork rl_sar，换上我的 .pt 文件，改一下机器人名字就完了。"
 > **实际情况**: 每个训练配置的观测项数量、观测顺序、归一化参数、动作缩放、关节顺序都可能不同。rl_sar 的默认配置是为特定训练配置定制的——换了你的训练配置，必须逐项核对。
 > **正确做法**: 精读 rl_sar 的 `ComputeObservation()`，与你的训练配置**逐项对比**。
@@ -969,13 +969,13 @@ torch::Tensor RL::ComputeObservation() {
 
 精读了部署逻辑后，下一节深入实时推理的工程细节——这些看似细小的点决定了部署是否真正可靠。
 
-## 64.6 实时推理的工程细节 ⭐⭐⭐
+## 64.6 实时推理的工程细节 ★★★
 
 ### 动机:推理正确了 $\neq$ 部署成功
 
 即使推理结果与 Python 完全一致，部署仍然可能失败——因为实时系统对**延迟确定性**有极高要求(足式/170_实时CPP工程 完整讲述)。以下是实时推理中必须解决的工程问题。
 
-### 细节 1:内存预分配(零运行时分配) ⭐⭐
+### 细节 1:内存预分配(零运行时分配) ★★
 
 实时循环中的**一切内存都必须在启动时预分配**:
 
@@ -1008,7 +1008,7 @@ class RLController {
 };
 ```
 
-### 细节 2:避免 CPU-GPU 数据往返 ⭐⭐
+### 细节 2:避免 CPU-GPU 数据往返 ★★
 
 如果整个控制循环在 CPU 上(ros2_control 的 `update()` 在 CPU 线程)，就**不要用 GPU 推理小模型**:
 
@@ -1021,7 +1021,7 @@ CPU 控制循环:
 
 对小 MLP,CPU 推理 ~50 $\mu$s < GPU 推理 + 数据往返 ~200 $\mu$s。
 
-### 细节 3:线程亲和(Thread Affinity) ⭐⭐
+### 细节 3:线程亲和(Thread Affinity) ★★
 
 把 RL 推理线程绑定到 `isolcpus` 隔离的 CPU 核心(足式/170_实时CPP工程 详述):
 
@@ -1035,7 +1035,7 @@ pthread_setaffinity_np(pthread_self(), sizeof(cpu_set_t), &cpuset);
 
 隔离核心不被其他进程使用，确保 RL 推理不会因缓存被刷出(cache thrashing)而延迟波动。
 
-### 细节 4:消除首次推理的 JIT 编译延迟 ⭐⭐
+### 细节 4:消除首次推理的 JIT 编译延迟 ★★
 
 LibTorch 第一次前向传播会触发 JIT 编译——将 TorchScript IR 编译为当前平台的优化机器码。延迟可达 **100-500 ms**。
 
@@ -1054,7 +1054,7 @@ void warmupPolicy() {
 
 某些 cuDNN 算子即使 warmup 也需要第一次实际调用来编译。确保在**允许较大延迟的生命周期阶段**(如 `on_activate`)完成所有 warmup。
 
-### 细节 5:延迟监控与统计 ⭐⭐
+### 细节 5:延迟监控与统计 ★★
 
 生产部署中，持续监控推理延迟:
 
@@ -1081,7 +1081,7 @@ struct LatencyStats {
 };
 ```
 
-### 完整延迟预算分析 ⭐⭐⭐
+### 完整延迟预算分析 ★★★
 
 一个 1 kHz 控制循环(1000 $\mu$s 周期)的延迟预算:
 
@@ -1097,7 +1097,7 @@ struct LatencyStats {
 
 余量充足(> 80%)——这是 RL 部署相比 MPC 部署的巨大优势。MPC 求解一次可能需要 10-50 ms(足式/110_OCS2完整栈与双线程MPC)，需要双线程 Triple Buffer 架构;而 RL 推理在单线程内就能轻松完成。
 
-### 延迟监控的生产级实现 ⭐⭐
+### 延迟监控的生产级实现 ★★
 
 在生产系统中，仅知道"平均延迟正常"是不够的——必须持续监控 P99 延迟和最大延迟，及时发现偶发的延迟尖刺。以下是一个轻量级的延迟统计类：
 
@@ -1138,14 +1138,14 @@ class LatencyMonitor {
 
 这个监控类应在 `update()` 函数中包裹推理调用，在开发和部署阶段始终开启。当 P99 延迟超过阈值时自动告警——这比事后分析 rosbag 高效得多。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱:在实时循环中打印日志**
+> ⚠ **编程陷阱:在实时循环中打印日志**
 > **错误做法**: `std::cout << "action: " << action.transpose() << std::endl;`
 > **后果**: `cout` + `endl` 涉及 I/O 系统调用和缓冲区 flush，可能阻塞数十毫秒(足式/170_实时CPP工程 详述)。
 > **正确做法**: 使用限频警告(`RCLCPP_WARN_THROTTLE`)或无锁队列将日志发送到非实时线程。
 
-> ⚠️ **编程陷阱:推理前不关闭 autograd**
+> ⚠ **编程陷阱:推理前不关闭 autograd**
 > **错误做法**: 不使用 `torch::NoGradGuard`。
 > **后果**: LibTorch 会构建计算图(为 backward 准备)，即使你永远不会调 backward()。增加 ~20-30% 推理时间 + 额外内存分配。
 > **正确做法**: 所有推理代码包在 `torch::NoGradGuard` 作用域内。
@@ -1160,7 +1160,7 @@ class LatencyMonitor {
 
 推理正确且延迟达标后，还需要最后一层保护:如果 RL 模型输出了异常值怎么办?
 
-## 64.7 安全降级:RL 部署的最后一道防线 ⭐⭐⭐
+## 64.7 安全降级:RL 部署的最后一道防线 ★★★
 
 ### 动机:RL 策略不是万无一失的
 
@@ -1177,7 +1177,7 @@ RL 策略是神经网络——它没有形式化的安全保证。在训练分�
 
 如果不做安全降级会怎样？2022 年某开源项目的真实案例：RL 策略在仿真中表现优秀，但部署到真机后，IMU 因电磁干扰偶发返回 NaN。NaN 传入网络后输出也是 NaN,PD 控制器收到 NaN 目标位置后将其解释为极大值，导致所有关节瞬间以最大扭矩运动——机器人像弹射一样跳起后摔碎。全过程不到 5 ms，人类来不及按急停键。一个 NaN 检查就能避免的事故，造成了数千元的硬件损失。
 
-### 多层安全检查 ⭐⭐
+### 多层安全检查 ★★
 
 ```cpp
 class SafetyGuard {
@@ -1223,7 +1223,7 @@ class SafetyGuard {
 };
 ```
 
-### 降级策略的层次设计 ⭐⭐⭐
+### 降级策略的层次设计 ★★★
 
 ```
 正常运行
@@ -1258,18 +1258,18 @@ class SafetyGuard {
 └─────────────────────────┘
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱:安全检查后直接 clamp 而不是降级**
+> ⚠ **编程陷阱:安全检查后直接 clamp 而不是降级**
 > **错误做法**: `action = action.cwiseMax(lower).cwiseMin(upper);`
 > **后果**: clamp 后的动作可能不是 RL 策略"想要"的——比如策略想向前走但某个关节被 clamp 了，结果变成不协调的姿态。clamp 不保证结果行为的合理性。
 > **正确做法**: 检测到超限就切换到**已知安全的降级策略**(如站立)，而不是"修正"异常动作。
 
-> ⚠️ **思维陷阱:认为安全降级只是"加个 NaN 检查"**
+> ⚠ **思维陷阱:认为安全降级只是"加个 NaN 检查"**
 > **新手想法**: "加一行 `if (isnan) use_last_action` 就够了。"
 > **实际情况**: NaN 只是最极端的异常。更常见的是"数值在合理范围内但行为不合理"——比如策略持续输出让机器人缓慢倾斜的动作，5 秒后才摔倒。这需要**多层检查**(限位 + 变化率 + 统计分布)和**分级降级**(不是非黑即白)。
 
-> ⚠️ **概念误区:软件安全检查做好了就不需要硬件保护**
+> ⚠ **概念误区:软件安全检查做好了就不需要硬件保护**
 > **新手想法**: "代码里检查了所有异常情况，硬件保护是多余的。"
 > **实际情况**: 如果控制程序本身崩溃(段错误、assert 失败)，所有软件保护都失效。电机驱动器的看门狗(足式/180_腿足硬件栈)是独立于控制软件的最后防线——如果驱动器在 50 ms 内没收到有效命令，自动进入阻尼模式。
 > **正确做法**: 软件保护(本节) + 硬件看门狗(足式/180_腿足硬件栈)，两层独立。
@@ -1282,11 +1282,11 @@ class SafetyGuard {
 
 ---
 
-## 64.8 从训练到部署的完整流水线 ⭐⭐
+## 64.8 从训练到部署的完整流水线 ★★
 
 前面七节覆盖了部署的每个环节。这里把完整流水线串起来，并讨论 Jetson 平台部署和 sim-to-real 调优。
 
-### 部署调试的系统化方法论 ⭐⭐
+### 部署调试的系统化方法论 ★★
 
 在工程实践中，从"仿真中跑得很好"到"真机上跑得很好"通常需要数天到数周的调试。以下是系统化的调试流程：
 
@@ -1324,7 +1324,7 @@ class SafetyGuard {
 
 > **反事实推演**：如果跳过阶段 1-3 直接在真机上全速跑——曾经有一个团队因为关节顺序映射错误（左前腿和右前腿的膝关节对调），策略让机器人在真机上以全速冲向墙壁，造成了约 5000 元的硬件损坏。这个问题在仿真闭环验证阶段（阶段 1）只需 30 秒就能发现——关节映射错误会导致机器人在仿真中立刻摔倒。
 
-### 完整 8 步 Pipeline ⭐⭐
+### 完整 8 步 Pipeline ★★
 
 ```
 ┌──────────────────────────────────────────────┐
@@ -1354,7 +1354,7 @@ class SafetyGuard {
 └──────────────────────────────────────────────┘
 ```
 
-### Jetson 平台部署要点 ⭐⭐
+### Jetson 平台部署要点 ★★
 
 许多腿足机器人使用 NVIDIA Jetson Orin 作为机载计算平台:
 
@@ -1368,7 +1368,7 @@ class SafetyGuard {
 
 在 Jetson 上，ONNX + TensorRT 组合通常最优:TensorRT 会将 ONNX 模型编译为 Jetson GPU 架构的高度优化 engine。
 
-### Jetson 部署的完整工程清单 ⭐⭐
+### Jetson 部署的完整工程清单 ★★
 
 **Jetson 功耗模式选择**：Jetson Orin 支持多种功耗模式，不同模式下 CPU/GPU 频率不同，直接影响推理延迟：
 
@@ -1408,11 +1408,11 @@ bool engineCacheValid(const std::string& cache_path,
 }
 ```
 
-> **⚠️ 陷阱：Jetson 上 GPU 内存与系统内存共享**
+> **⚠ 陷阱：Jetson 上 GPU 内存与系统内存共享**
 >
 > 与台式机（独立显存）不同，Jetson 的 GPU 和 CPU 共享 8-16 GB 内存。如果同时运行 elevation_mapping_cupy（GPU 高程图）+ LibTorch（RL 推理）+ ROS2 节点（系统开销），很容易耗尽内存。正确做法：用 `tegrastats` 实时监控内存，为每个 GPU 用户设置内存上限。
 
-### sim-to-real 调优 ⭐⭐⭐
+### sim-to-real 调优 ★★★
 
 第 8 步是最耗时的环节。即使仿真验证完美，真机还需要反复调试:
 
@@ -1424,14 +1424,14 @@ bool engineCacheValid(const std::string& cache_path,
 | 脚步不协调 | 关节顺序映射错误 | 检查 joint_reorder 配置 |
 | 电机过热 | default_dof_pos 不正确 | 偏差导致 PD 持续输出大扭矩 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱:Jetson 上 LibTorch 版本与训练端不匹配**
+> ⚠ **编程陷阱:Jetson 上 LibTorch 版本与训练端不匹配**
 > **错误做法**: 训练用 PyTorch 2.x.0 导出 TorchScript,Jetson 的 LibTorch 是旧版 2.y.0（主版本不一致）。
 > **后果**: TorchScript 有版本兼容性要求，可能加载失败或行为不一致。
 > **正确做法**: 确保版本一致(至少主版本号一致)，或使用 ONNX 格式(版本兼容性更好)。
 
-> ⚠️ **思维陷阱:跳过仿真验证直接上真机**
+> ⚠ **思维陷阱:跳过仿真验证直接上真机**
 > **新手想法**: "Python 里验证过了，直接上真机。"
 > **实际情况**: Python→C++ 转换有太多细节可能出错。先在 Gazebo 的 C++ 仿真中验证策略行为与 Python 一致——这一步可以发现 80% 的部署 bug，成本远低于真机调试。
 
@@ -1456,9 +1456,9 @@ bool engineCacheValid(const std::string& cache_path,
 
 ---
 
-## 64.9 torch.export 与新一代部署路线 ⭐⭐⭐
+## 64.9 torch.export 与新一代部署路线 ★★★
 
-### torch.export:TorchScript 的继任者 ⭐⭐⭐
+### torch.export:TorchScript 的继任者 ★★★
 
 PyTorch 官方自 2.1 起将 TorchScript 标记为 maintenance mode(不再添加新功能)，推荐新项目使用 `torch.export` 作为模型导出的主要路线。这对腿足 RL 部署的影响需要认真评估。
 
@@ -1513,7 +1513,7 @@ onnx_program = torch.onnx.export(
 
 **工程建议(2026)**:对于腿足 RL 的纯 MLP 策略，TorchScript 仍然完全可用且最简单。如果你的策略包含 RNN 或复杂条件逻辑，优先尝试 `torch.export` → ONNX → ONNX Runtime 的路线。
 
-### TensorRT vs ONNX Runtime:延迟对比 ⭐⭐⭐
+### TensorRT vs ONNX Runtime:延迟对比 ★★★
 
 当部署目标是 NVIDIA Jetson 时，TensorRT 是一个重要的优化选项。TensorRT 对模型进行层融合、精度降低(FP16/INT8)、自动调优等深度优化，通常能获得比 ONNX Runtime 更低的推理延迟:
 
@@ -1531,7 +1531,7 @@ onnx_program = torch.onnx.export(
 
 > **本质洞察**:推理后端的选择**不是**"越快越好",**而是**"在满足延迟约束的前提下，选择最简单、最可维护的方案"。腿足 RL 的 MLP 策略推理只需 50-100 $\mu$s,1 ms 控制周期的时间预算绰绰有余。此时 LibTorch CPU 就够用，引入 TensorRT 只增加了工程复杂度(版本管理、平台依赖、FP16 验证)而几乎没有实际收益。TensorRT 的价值在于**大模型**(如 Transformer 策略、视觉编码器)或**极端功耗约束**(如 INT8 量化降低 Jetson 功耗)的场景。
 
-### 跨章综合练习 ⭐⭐⭐
+### 跨章综合练习 ★★★
 
 **练习 64.9.1（跨章综合: 足式/170_实时CPP工程 + 足式/190_腿足RL训练栈 + 本章）**:
 
@@ -1549,14 +1549,14 @@ onnx_program = torch.onnx.export(
 
 | 知识点 | 核心内容 | 难度 | 关键技术 |
 |--------|---------|------|---------|
-| 64.1 部署基本问题 | Python vs C++、GIL/GC、两大方案 | ⭐ | LibTorch / ONNX Runtime |
-| 64.2 TorchScript | trace vs script、IR 优化 pass、导出脚本 | ⭐⭐ | `torch.jit.trace` + `freeze` |
-| 64.3 LibTorch | C++ 加载推理、Eigen 转换、预分配 | ⭐⭐ | `torch::jit::load` + `memcpy` |
-| 64.4 ONNX Runtime | 导出、protobuf 结构、C++ 推理 | ⭐⭐ | `torch.onnx.export` + `Ort::Session` |
-| 64.5 rl_sar 精读 | 观测归一化、关节映射、配置一致性 | ⭐⭐ | 配置对齐是 sim-to-real 关键 |
-| 64.6 实时工程 | 预分配、warmup、线程亲和、延迟监控 | ⭐⭐⭐ | P99 < 500 $\mu$s |
-| 64.7 安全降级 | NaN/限位/跳变/统计、4 级降级 | ⭐⭐⭐ | Hold → Stand → Damp → E-Stop |
-| 64.8 完整流水线 | 8 步 pipeline、Jetson、sim-to-real 调优 | ⭐⭐ | 调优是最耗时环节 |
+| 64.1 部署基本问题 | Python vs C++、GIL/GC、两大方案 | ★ | LibTorch / ONNX Runtime |
+| 64.2 TorchScript | trace vs script、IR 优化 pass、导出脚本 | ★★ | `torch.jit.trace` + `freeze` |
+| 64.3 LibTorch | C++ 加载推理、Eigen 转换、预分配 | ★★ | `torch::jit::load` + `memcpy` |
+| 64.4 ONNX Runtime | 导出、protobuf 结构、C++ 推理 | ★★ | `torch.onnx.export` + `Ort::Session` |
+| 64.5 rl_sar 精读 | 观测归一化、关节映射、配置一致性 | ★★ | 配置对齐是 sim-to-real 关键 |
+| 64.6 实时工程 | 预分配、warmup、线程亲和、延迟监控 | ★★★ | P99 < 500 $\mu$s |
+| 64.7 安全降级 | NaN/限位/跳变/统计、4 级降级 | ★★★ | Hold → Stand → Damp → E-Stop |
+| 64.8 完整流水线 | 8 步 pipeline、Jetson、sim-to-real 调优 | ★★ | 调优是最耗时环节 |
 
 ---
 
@@ -1638,7 +1638,7 @@ onnx_program = torch.onnx.export(
 
 ## 延伸阅读
 
-### 必读 ⭐⭐
+### 必读 ★★
 
 | 资料 | 类型 | 说明 |
 |------|------|------|
@@ -1647,14 +1647,14 @@ onnx_program = torch.onnx.export(
 | rl_sar (`github.com/fan-ziqi/rl_sar`) | 代码 | 腿足 RL C++ 部署的最佳开源参考 |
 | robot_lab (`github.com/fan-ziqi/robot_lab`) | 代码 | 配套 IsaacLab 训练端 |
 
-### 核心论文 ⭐⭐⭐
+### 核心论文 ★★★
 
 | 资料 | 类型 | 说明 |
 |------|------|------|
 | Hwangbo J. et al. (2019) "Learning agile and dynamic motor skills for legged robots", Science Robotics 4(26), eaau5872 | 论文 | 首次 RL 真机部署(ANYmal)，含 actuator network |
 | Rudin N. et al. (2022) "Learning to Walk in Minutes", CoRL | 论文 | legged_gym 框架，含部署流程 |
 
-### 深入技术 ⭐⭐⭐⭐
+### 深入技术 ★★★★
 
 | 资料 | 类型 | 说明 |
 |------|------|------|
@@ -1678,7 +1678,7 @@ onnx_program = torch.onnx.export(
 
 ---
 
-## 64.9 模型版本管理与 A/B 测试 ⭐⭐
+## 64.9 模型版本管理与 A/B 测试 ★★
 
 > **本节解决什么问题**：RL 策略会不断迭代更新。如何在生产环境中管理多个模型版本，并支持安全的在线 A/B 测试？
 
@@ -1794,9 +1794,9 @@ B = v1.1 新策略
 
 > **跨领域类比**：RL 策略的跨平台部署问题与移动游戏的多设备兼容性测试高度类似。手游开发者必须在数百种不同 GPU（Adreno、Mali、PowerVR）上测试同一套 shader 代码的渲染一致性——相同的 GLSL 代码在不同 GPU 上可能产生不同的像素值，因为浮点运算的舍入模式不同。RL 部署面临相同的根源问题——IEEE 754 标准只规定了单次运算的舍入行为，但链式运算的累积误差取决于硬件实现。解决方案也类似：定义一个可接受的误差阈值，跨平台验证所有输出在阈值内。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：在实时线程中加载模型文件**
+> ⚠ **编程陷阱：在实时线程中加载模型文件**
 > **错误做法**：在 `update()` 中直接 `torch::jit::load("new_policy.pt")`
 > **后果**：模型加载涉及文件 I/O 和内存分配，可能阻塞数百毫秒 → 控制循环中断 → 机器人摔倒
 > **正确做法**：在非实时线程中加载和 warmup，用原子指针交换切入实时线程
@@ -1814,7 +1814,7 @@ B = v1.1 新策略
 
 ---
 
-## 64.10 大模型策略的部署展望 ⭐⭐⭐
+## 64.10 大模型策略的部署展望 ★★★
 
 > **本节解决什么问题**：当前腿足 RL 策略主要是小 MLP（< 100K 参数），推理延迟在微秒级。但随着 Transformer 策略、VLA 模型和 Diffusion Policy 的出现，未来策略可能有数百万到数十亿参数。这对部署架构意味着什么？
 
@@ -1887,9 +1887,9 @@ trtexec --onnx=policy.onnx \
 
 > **本质洞察**：RL 策略从小 MLP 到大模型的演进,本质上是在**推理延迟**和**决策能力**之间移动帕累托前沿。小 MLP 的推理延迟极低（50 $\mu$s）但只能做简单的反射式控制，VLA 的决策能力强大（理解语言指令、跨任务泛化）但延迟高达 100 ms。工程的挑战不是"选哪个"，而是**如何在同一系统中让不同时间尺度的决策共存**——1 kHz 的关节力控、50 Hz 的步态规划、2 Hz 的语义导航,分别由不同规模的模型负责,通过分层架构协同工作。这与人类的运动控制系统高度类似：脊髓反射弧（小模型、低延迟）负责关节稳定，小脑（中等模型）负责运动协调，大脑皮层（大模型、高延迟）负责高层决策。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：对大模型直接使用 CPU 推理**
+> ⚠ **编程陷阱：对大模型直接使用 CPU 推理**
 > **错误做法**：用 LibTorch CPU 推理一个 5M 参数的 Transformer 策略
 > **后果**：推理延迟 ~5-10 ms，在 1 kHz 控制循环中远超 1 ms 预算
 > **正确做法**：大模型必须用 GPU 推理 + 异步架构，或用 TensorRT 极致优化到可接受延迟

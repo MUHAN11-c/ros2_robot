@@ -10,7 +10,7 @@
 
 ## 前置自测
 
-📋 **答不出 ≥ 3 题 → 先回前置章节复习**
+◆ **答不出 ≥ 3 题 → 先回前置章节复习**
 
 > 本章直接依赖 Ch13 的四足速度跟踪经验。如果你还没有在 Ch13 中跑通 Go1/Go2 的 flat + rough velocity task，强烈建议先完成。
 
@@ -36,7 +36,7 @@
 
 从 Ch13 的四足速度跟踪到人形，看起来只是"换了个机器人"。但这个"换"会导致你在 Ch13 中建立的大部分工程直觉失效。本节先建立清晰的差异认知，避免你带着四足思维去调人形参数——这是人形 RL 新手最常犯的错误。
 
-## 14.1 人形 vs 四足本质差异 ⭐⭐
+## 14.1 人形 vs 四足本质差异 ★★
 
 > **这一节解决什么问题**：从四足到双足，哪些工程直觉会失效？为什么 G1 的控制问题在本质上更难？
 
@@ -254,15 +254,15 @@ uv run play Mjlab-Velocity-Flat-Unitree-G1 \
 
 **核心原则**：random push 对人形的影响远大于四足（14.1 已分析）。只有在策略已经建立了稳定的步态和角动量管理后，才能引入 push。过早引入 push 会让策略学到"蹲下来降低重心"的保守策略——tracking 变差但不容易被推倒。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区：人形控制就是更多自由度的四足控制**。新手想法："G1 有 29 个关节，Go1 有 12 个，只是规模更大而已。" 实际上：质的变化不仅是量的增加。双足的欠驱动特性、窄支撑面导致的本征不稳定性、上肢对躯干角动量的反向影响——这些都是四足中不存在的物理约束。四足到双足的跨越就像从双翼飞机到直升机——两者都在飞，但飞行原理完全不同。
 
 🧠 **思维陷阱：reward 高就说明步态正确**。G1 可以通过低头冲刺、手臂乱甩或膝盖内扣来满足速度命令。必须**同时看** torso pitch/roll、angular momentum、foot contact 和 self collision。正确做法：永远不要只看总 return。把 reward 分项画出来，尤其关注 upright 和 angular_momentum 是否在恶化。
 
-⚠️ **编程陷阱：四足的 air time reward 照搬给 G1**。四足 trot 和双足行走的支撑/摆动模式完全不同。直接复用四足的 `feet_air_time` reward 可能导致 G1 在站立时也不断抬脚，或者步频异常。需要重新设计适合双足步态的接触 reward。
+⚠ **编程陷阱：四足的 air time reward 照搬给 G1**。四足 trot 和双足行走的支撑/摆动模式完全不同。直接复用四足的 `feet_air_time` reward 可能导致 G1 在站立时也不断抬脚，或者步频异常。需要重新设计适合双足步态的接触 reward。
 
-⚠️ **工程陷阱：用 Go1 的 push force 范围给 G1**。Go1 可以承受 ±15 N 的随机 push 而不摔倒。同样的力施加到 G1 上，由于质心更高和支撑面更窄，可能直接触发失衡。G1 的 push force 初始值应该设为 Go1 的 30-50%。
+⚠ **工程陷阱：用 Go1 的 push force 范围给 G1**。Go1 可以承受 ±15 N 的随机 push 而不摔倒。同样的力施加到 G1 上，由于质心更高和支撑面更窄，可能直接触发失衡。G1 的 push force 初始值应该设为 Go1 的 30-50%。
 
 ### 练习
 
@@ -274,7 +274,7 @@ uv run play Mjlab-Velocity-Flat-Unitree-G1 \
 
 Ch13 中 Go1 的 12 个关节你已经很熟悉——3 个 hip + 1 个 knee × 4 条腿。G1 的 29 个关节分布在腿、腰和手臂上，每一组关节的 action scale、default pose 和 reward 约束都需要独立设计。本节从 G1 的关节地图开始，建立你对人形 action space 的完整理解。
 
-## 14.2 G1 自由度分析与 Action Space 设计 ⭐⭐⭐
+## 14.2 G1 自由度分析与 Action Space 设计 ★★★
 
 > **这一节解决什么问题**：理解 G1 的关节布局、action scale 的物理来源和 variable posture reward 的设计动机。
 
@@ -484,15 +484,15 @@ G1 MJCF 中有一个 `subtreeangmom` sensor（名为 `root_angmom`，body 是 `p
 
 **跨领域类比**：angular momentum penalty 就像汽车的 ESP（电子稳定程序）。ESP 限制车辆的偏航角速率——不是禁止转弯（那样车就不能动了），而是在偏航角速率超过安全范围时介入。angular momentum penalty 同理——不是禁止所有角动量变化（那样就走不了路），而是在角动量超过正常行走范围时给出惩罚。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：action scale 设置不当导致关节抽动**。错误做法：统一给所有关节 0.5 rad 的 action scale。现象：踝和腕关节快速抽动，膝关节动作幅度太小。正确做法：使用 per-joint action scale = 0.25 × effort_limit / stiffness。
+⚠ **编程陷阱：action scale 设置不当导致关节抽动**。错误做法：统一给所有关节 0.5 rad 的 action scale。现象：踝和腕关节快速抽动，膝关节动作幅度太小。正确做法：使用 per-joint action scale = 0.25 × effort_limit / stiffness。
 
 💡 **概念误区：angular momentum penalty 越大越稳定**。正常行走需要角动量变化——每一步都涉及摆腿角动量和摆臂补偿。过大 penalty 逼策略到极小步幅，反而因为步态不自然而更容易在扰动下失稳。
 
 🧠 **思维陷阱：手臂关节不重要**。"行走主要靠腿，手臂 reward 权重可以很低"——实际上手臂挥动产生的角动量直接影响躯干姿态。不约束手臂等于给策略一个"免费"的角动量来源，策略会利用它来换取短期的速度提升。
 
-⚠️ **编程陷阱：23-DoF 和 29-DoF 配置混用**。G1 的 23-DoF 版本没有手腕关节，action dim 是 23；29-DoF 版本包含手腕，action dim 是 29。混用会导致 action shape mismatch——这个错误在 env 创建时就会 crash，但错误信息可能不直观（显示为 tensor shape error）。
+⚠ **编程陷阱：23-DoF 和 29-DoF 配置混用**。G1 的 23-DoF 版本没有手腕关节，action dim 是 23；29-DoF 版本包含手腕，action dim 是 29。混用会导致 action shape mismatch——这个错误在 env 创建时就会 crash，但错误信息可能不直观（显示为 tensor shape error）。
 
 ### G1 Velocity Task 的 Observation 配置
 
@@ -590,7 +590,7 @@ cfg.observations.critic = ObservationGroupCfg(
 
 理解了 G1 的关节结构和 action space 后，下一步是设计人形特有的 reward。Ch13 的四层框架（Tracking/Regularization/Style/Contact）仍然适用，但每一层都需要针对人形做出调整——特别是 Style 层需要加入 angular momentum 和 variable posture 两个四足中不存在的组件。
 
-## 14.3 人形特有 Reward 设计 ⭐⭐⭐
+## 14.3 人形特有 Reward 设计 ★★★
 
 > **这一节解决什么问题**：用 Ch13 的 Reward 四层框架分析人形 velocity task 的 reward 设计，理解每个人形特有 term 的工程动机。
 
@@ -1011,9 +1011,9 @@ cfg.curriculum.command_ranges = CurriculumCfg(
 
 **关键的交叉检查**：如果 `track_linear_velocity` 在上升但 `upright` 在下降，策略在**用前倾换速度**——这在 Go1 上少见但在 G1 上常见。此时不要调 tracking reward——应该增大 upright 权重或收紧 waist_pitch std。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：self_collision 监测了相邻 link**。如果 body_pairs 包含（thigh, shank）这种相邻 link 对，正常弯膝时就会触发自碰撞惩罚——策略会学到不弯膝的僵硬步态。只监测异常碰撞对。
+⚠ **编程陷阱：self_collision 监测了相邻 link**。如果 body_pairs 包含（thigh, shank）这种相邻 link 对，正常弯膝时就会触发自碰撞惩罚——策略会学到不弯膝的僵硬步态。只监测异常碰撞对。
 
 💡 **概念误区：angular_momentum 权重应该和 tracking 一个量级**。angular_momentum 是 L2 范数，其数值量级可能远大于 exponential tracking reward（值域 [0,1]）。-0.02 的权重看起来很小，但乘以 angular_momentum 的实际值后贡献可能很大。先打印初始值确认量级。
 
@@ -1029,7 +1029,7 @@ cfg.curriculum.command_ranges = CurriculumCfg(
 
 mjlab 的 G1 velocity task 配置你已经从 14.2-14.3 中理解了核心设计。但本书的双框架特色要求你也能在 Isaac Lab 中读懂和运行人形 velocity task。本节精读 Isaac Lab 的 H1 velocity task，与 mjlab G1 做对照。
 
-## 14.4 Isaac Lab 人形 Velocity Task 配置精读 ⭐⭐⭐
+## 14.4 Isaac Lab 人形 Velocity Task 配置精读 ★★★
 
 > **这一节解决什么问题**：通过精读 Isaac Lab 的 H1 velocity task，建立人形任务的双框架心智模型。
 
@@ -1244,9 +1244,9 @@ python scripts/reinforcement_learning/rsl_rl/play.py \
 
 **使用方法**："现象"列描述你从视频中观察到的行为。按"优先读数"在 tensorboard 中找到对应指标，确认是否异常。然后去"源码落点"对应的配置文件检查。最后做"单变量动作"——每次只改一个参数，不要同时调多个。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：Isaac Lab H1 的 obs group 名是 `policy` 而不是 `actor`**。Ch13 已经提到这个差异，但在人形上更容易犯错——因为你可能在 mjlab 中调试好 G1，然后复制 obs group 名到 Isaac Lab 的 H1 配置中。
+⚠ **编程陷阱：Isaac Lab H1 的 obs group 名是 `policy` 而不是 `actor`**。Ch13 已经提到这个差异，但在人形上更容易犯错——因为你可能在 mjlab 中调试好 G1，然后复制 obs group 名到 Isaac Lab 的 H1 配置中。
 
 💡 **概念误区：H1 配置可以直接套用到 G1**。H1 和 G1 的关节数、力矩范围、身高体重都不同。即使都是人形，配置也不能互换——action scale、default pose、reward 权重全部需要重新计算。
 
@@ -1350,7 +1350,7 @@ H1 没有手腕关节，std 表只需 19 行（vs G1 的 29 行）。H1 没有 a
 
 ---
 
-## 14.5 sim-to-sim 验证：Isaac Lab → MuJoCo 交叉验证 ⭐⭐
+## 14.5 sim-to-sim 验证：Isaac Lab → MuJoCo 交叉验证 ★★
 
 > **这一节解决什么问题**：学习人形策略的跨引擎验证方法，建立 sim-to-real 之前的鲁棒性评估能力。
 
@@ -1430,9 +1430,9 @@ python eval_onnx.py \
 
 如果跨引擎 fall rate > 50%，通常不是"验证失败"那么简单——它暴露了策略对特定物理引擎的过拟合。解决方案：加大 DR（特别是 friction 和 contact 相关的参数），迫使策略学习更鲁棒的行为。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：obs 顺序不一致导致跨引擎评估全部失败**。这是最常见的问题。mjlab 和 Isaac Lab 的 obs term 注册顺序可能不同，导致 ONNX 模型收到的输入"乱套"。必须在两端打印 obs term name 和 shape 逐一对照。
+⚠ **编程陷阱：obs 顺序不一致导致跨引擎评估全部失败**。这是最常见的问题。mjlab 和 Isaac Lab 的 obs term 注册顺序可能不同，导致 ONNX 模型收到的输入"乱套"。必须在两端打印 obs term name 和 shape 逐一对照。
 
 💡 **概念误区：跨引擎性能下降就是失败**。一定程度的性能下降是正常的——两个物理引擎的接触模型确实不同。关键是判断下降是否在可接受范围内。tracking error 从 0.12 上升到 0.20 是正常的；从 0.12 上升到 0.50 是过拟合信号。
 
@@ -1533,7 +1533,7 @@ uv run play Mjlab-Velocity-Flat-Unitree-G1 \
 
 前面五节建立了人形 velocity tracking 的完整工程方法。但 velocity tracking 只是人形控制的起点——更高级的应用需要一个统一的 whole-body controller 支持多种控制模态（导航、操作、遥操作）。HOVER 正是这样一个系统，它展示了如何用一个策略同时支持多种控制需求。
 
-## 14.6 精读：HOVER 的统一 Whole-Body Controller ⭐⭐⭐
+## 14.6 精读：HOVER 的统一 Whole-Body Controller ★★★
 
 > **这一节解决什么问题**：通过精读 HOVER 的架构和训练管线，理解 mask-conditioned distillation 如何让一个策略支持多种控制模态。
 
@@ -1732,9 +1732,9 @@ python scripts/rsl_rl/play.py \
 
 对于本教材的读者，HOVER 仍然是最好的学习入口——它的代码更简洁、依赖更少、训练资源需求更低。当你掌握了 HOVER 的 teacher-student + mask 模式后，GR00T-WBC 的扩展就很容易理解。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：HOVER 依赖特定 Isaac Lab 版本**。HOVER README 明确说明 "Currently HOVER has been tested with Isaac Lab versions 2.0.0"。使用其他版本可能导致 API 不兼容。
+⚠ **编程陷阱：HOVER 依赖特定 Isaac Lab 版本**。HOVER README 明确说明 "Currently HOVER has been tested with Isaac Lab versions 2.0.0"。使用其他版本可能导致 API 不兼容。
 
 💡 **概念误区：mask-conditioned = 简单地丢弃输入**。mask 不只是把某些 obs 设为零——它改变了 student 的学习信号。被 mask 的部位不贡献 tracking reward，student 学会在这些部位上维持默认行为（而不是随机动作）。
 
@@ -1750,7 +1750,7 @@ python scripts/rsl_rl/play.py \
 
 人形策略无论多稳定，真机部署中总有可能摔倒——外部推力、障碍物、滑倒等意外不可完全避免。摔倒后如何安全地站起来，是人形系统投入实际使用的必要条件。HoST 正是解决这个问题的专用系统。
 
-## 14.7 精读：HoST 跌倒恢复与 Multi-Critic 架构 ⭐⭐
+## 14.7 精读：HoST 跌倒恢复与 Multi-Critic 架构 ★★
 
 > **这一节解决什么问题**：通过精读 HoST 的 multi-critic 架构和训练管线，理解如何构建安全的跌倒恢复能力并集成到 locomotion pipeline 中。
 
@@ -1990,9 +1990,9 @@ class FallDetectorFSM:
 - 切换时的 obs adapter 需要处理 locomotion obs（含 command）到 HoST obs（含摔倒姿态信息）的转换
 - 站稳后切回 locomotion 时，command 应该先设为零速（站立），再逐步恢复
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：HoST 基于 legged_gym 而非 Manager-Based**。HoST 代码仓库使用 IsaacGym + legged_gym 架构（单体类），与本书使用的 mjlab/Isaac Lab Manager-Based 架构不同。直接复制 HoST 代码到 mjlab 不可行——需要重新实现 multi-critic 和辅助力 curriculum。
+⚠ **编程陷阱：HoST 基于 legged_gym 而非 Manager-Based**。HoST 代码仓库使用 IsaacGym + legged_gym 架构（单体类），与本书使用的 mjlab/Isaac Lab Manager-Based 架构不同。直接复制 HoST 代码到 mjlab 不可行——需要重新实现 multi-critic 和辅助力 curriculum。
 
 💡 **概念误区：站起来是简单的逆过程**。摔倒是被动的（重力做功），站起来是主动的（关节力矩做功对抗重力）。两者的动力学完全不同——你不能"倒放摔倒轨迹"来站起来。
 
@@ -2010,16 +2010,16 @@ class FallDetectorFSM:
 
 | 知识点 | 核心要点 | 难度 |
 |--------|---------|------|
-| 四足 vs 人形 | 支撑面缩小一个数量级、质心更高、角动量管理是新挑战 | ⭐⭐ |
-| G1 关节结构 | 29 DoF 分 5 组，per-joint action scale = 0.25 × effort/stiffness | ⭐⭐ |
-| Variable posture | 运动状态自适应的 per-joint 约束强度，完全锁死和完全放松都不行 | ⭐⭐⭐ |
-| Angular momentum penalty | 抑制全身角动量增长，权重 -0.02 是平衡点 | ⭐⭐ |
-| 人形 reward 四层适配 | Style 层加入 variable_posture/angular_momentum，Safety 层加入 self_collision | ⭐⭐⭐ |
-| Isaac Lab H1 vs mjlab G1 | H1 19-DoF / G1 29-DoF，内置配置缺少人形特有 reward | ⭐⭐ |
-| sim-to-sim 验证 | HOVER 提供 Isaac Lab → MuJoCo 工具链，人形上更重要 | ⭐⭐ |
-| HOVER | mask-conditioned distillation，一个策略支持多种控制模态 | ⭐⭐⭐ |
-| HoST | multi-critic + 辅助力 curriculum + smoothness regularization | ⭐⭐⭐ |
-| 安全兜底 | fall_detector → HoST → 站稳后切回 locomotion | ⭐⭐ |
+| 四足 vs 人形 | 支撑面缩小一个数量级、质心更高、角动量管理是新挑战 | ★★ |
+| G1 关节结构 | 29 DoF 分 5 组，per-joint action scale = 0.25 × effort/stiffness | ★★ |
+| Variable posture | 运动状态自适应的 per-joint 约束强度，完全锁死和完全放松都不行 | ★★★ |
+| Angular momentum penalty | 抑制全身角动量增长，权重 -0.02 是平衡点 | ★★ |
+| 人形 reward 四层适配 | Style 层加入 variable_posture/angular_momentum，Safety 层加入 self_collision | ★★★ |
+| Isaac Lab H1 vs mjlab G1 | H1 19-DoF / G1 29-DoF，内置配置缺少人形特有 reward | ★★ |
+| sim-to-sim 验证 | HOVER 提供 Isaac Lab → MuJoCo 工具链，人形上更重要 | ★★ |
+| HOVER | mask-conditioned distillation，一个策略支持多种控制模态 | ★★★ |
+| HoST | multi-critic + 辅助力 curriculum + smoothness regularization | ★★★ |
+| 安全兜底 | fall_detector → HoST → 站稳后切回 locomotion | ★★ |
 
 ### 本章与其他章节的关系
 
@@ -2127,22 +2127,22 @@ Ch14 人形 velocity (本章)
 
 | 资料 | 难度 | 会议/期刊 | 说明 |
 |------|------|----------|------|
-| He et al., "HOVER: Versatile Neural Whole-Body Controller for Humanoid Robots," 2025 | ⭐⭐⭐ | ICRA 2025 | mask-conditioned 多模态统一控制器 |
-| Gu et al., "Humanoid-Gym: RL for Humanoid Robot with Zero-Shot Sim2Real Transfer," 2024 | ⭐⭐ | RSS 2024 | sim-to-sim 验证方法论 + XBot-S/L 部署 |
-| Huang et al., "Learning Humanoid Standing-up Control across Diverse Postures," 2025 | ⭐⭐⭐ | RSS 2025 | multi-critic + 辅助力 curriculum |
-| Radosavovic et al., "Real-World Humanoid Locomotion with RL," 2024 | ⭐⭐ | *Science Robotics* | 真机人形 RL 部署的里程碑 |
-| Luo et al., "SONIC: Supersizing Motion Tracking for Natural Humanoid WBC," 2025 | ⭐⭐⭐ | arXiv 2511.07820 | 100M frames / 42M params 的人形运动基础模型 |
-| Cheng et al., "Expressive Whole-Body Control for Humanoid Robots," 2024 | ⭐⭐ | RSS 2024 | ExBody：上下半身解耦的表达性控制 |
+| He et al., "HOVER: Versatile Neural Whole-Body Controller for Humanoid Robots," 2025 | ★★★ | ICRA 2025 | mask-conditioned 多模态统一控制器 |
+| Gu et al., "Humanoid-Gym: RL for Humanoid Robot with Zero-Shot Sim2Real Transfer," 2024 | ★★ | RSS 2024 | sim-to-sim 验证方法论 + XBot-S/L 部署 |
+| Huang et al., "Learning Humanoid Standing-up Control across Diverse Postures," 2025 | ★★★ | RSS 2025 | multi-critic + 辅助力 curriculum |
+| Radosavovic et al., "Real-World Humanoid Locomotion with RL," 2024 | ★★ | *Science Robotics* | 真机人形 RL 部署的里程碑 |
+| Luo et al., "SONIC: Supersizing Motion Tracking for Natural Humanoid WBC," 2025 | ★★★ | arXiv 2511.07820 | 100M frames / 42M params 的人形运动基础模型 |
+| Cheng et al., "Expressive Whole-Body Control for Humanoid Robots," 2024 | ★★ | RSS 2024 | ExBody：上下半身解耦的表达性控制 |
 
 ### 工具和代码
 
 | 资料 | 难度 | 说明 |
 |------|------|------|
-| NVlabs/HOVER | ⭐⭐⭐ | Isaac Lab extension，teacher-student 训练管线 |
-| InternRobotics/HoST | ⭐⭐ | IsaacGym + legged_gym，multi-critic 跌倒恢复 |
-| roboterax/humanoid-gym | ⭐⭐ | Isaac Gym，sim-to-sim 验证 + symmetric mirror |
-| unitreerobotics/unitree_rl_mjlab | ⭐⭐ | mjlab，G1 velocity + tracking 完整管线 |
-| NVlabs/GR00T-WholeBodyControl | ⭐⭐⭐ | SONIC + GR00T 统一 WBC 平台（2026 最新） |
+| NVlabs/HOVER | ★★★ | Isaac Lab extension，teacher-student 训练管线 |
+| InternRobotics/HoST | ★★ | IsaacGym + legged_gym，multi-critic 跌倒恢复 |
+| roboterax/humanoid-gym | ★★ | Isaac Gym，sim-to-sim 验证 + symmetric mirror |
+| unitreerobotics/unitree_rl_mjlab | ★★ | mjlab，G1 velocity + tracking 完整管线 |
+| NVlabs/GR00T-WholeBodyControl | ★★★ | SONIC + GR00T 统一 WBC 平台（2026 最新） |
 
 ### 阅读路线建议
 
@@ -2438,9 +2438,9 @@ video: logs/rsl_rl/g1_velocity/v3_seed42/videos/iter_5000.mp4
 - "让 G1 像人一样走但方向可控" → 混合路线（velocity + style prior from imitation）
 - "让 G1 做 whole-body control（导航 + 操作）" → HOVER（14.6 的统一框架）
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：混用 velocity 和 tracking 配置**。velocity 的 command 是 `UniformVelocityCommandCfg`（3 维 twist），tracking 的 command 是 `MotionCommandCfg`（参考运动文件）。混用导致 command 维度不匹配，actor observation shape 错误。
+⚠ **编程陷阱：混用 velocity 和 tracking 配置**。velocity 的 command 是 `UniformVelocityCommandCfg`（3 维 twist），tracking 的 command 是 `MotionCommandCfg`（参考运动文件）。混用导致 command 维度不匹配，actor observation shape 错误。
 
 💡 **概念误区：tracking 一定比 velocity 更自然**。tracking 的自然度取决于参考动作质量。retarget 质量差时（比如 SMPL → G1 的骨骼比例不匹配），tracking 忠实复现的是不自然的动作。velocity 配合好的 variable posture 可能反而更自然。
 

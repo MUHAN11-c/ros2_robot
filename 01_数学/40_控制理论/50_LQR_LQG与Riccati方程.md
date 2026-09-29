@@ -9,7 +9,7 @@
 
 ## 前置自测
 
-📋 **前置自测**（答不出 ≥ 2 题 → 先回专题 3.1-3.4 复习）
+◆ **前置自测**（答不出 ≥ 2 题 → 先回专题 3.1-3.4 复习）
 
 1. HJB 方程的一般形式是什么？它与 Bellman 方程的关系？
 2. PMP 的一阶必要条件中，Hamilton 函数、共态方程和横截条件分别是什么？
@@ -101,7 +101,7 @@ $$J(u)=\frac12\int_0^T\bigl(x^\top Qx+u^\top Ru\bigr)\,dt+\frac12 x(T)^\top Q_f 
 
 **离散时间 LQR**：$x_{k+1}=A x_k+B u_k$，代价 $J=\tfrac12\sum_{k=0}^{N-1}(x_k^\top Q x_k+u_k^\top R u_k)+\tfrac12 x_N^\top Q_f x_N$。结构完全平行，Riccati 从微分方程变为差分方程。
 
-#### §3.5.2 有限时域连续 LQR：从 HJB 到 Riccati 微分方程 ⭐⭐
+#### §3.5.2 有限时域连续 LQR：从 HJB 到 Riccati 微分方程 ★★
 
 ##### 动机：为什么值函数是二次的
 
@@ -161,7 +161,7 @@ RDE 中的 $-PBR^{-1}B^\top P$ 项是**控制的"回报"**：当控制代价 $R$
 
 **如果不这样会怎样**：对比一般的矩阵 Riccati 方程 $\dot X=AX+XD+XBX+C$（Bernoulli 型），当符号不对时（例如 $R$ 不正定），解可以在有限时间内爆破（blowup）——这正是"LQR 奇迹"的反面。在 $H_\infty$ 控制中，$\gamma$ 选太小就会触发 Riccati 的有限时间爆破，对应着博弈无解。
 
-#### §3.5.3 有限时域离散 LQR：从 DP 到 Riccati 差分方程 ⭐⭐
+#### §3.5.3 有限时域离散 LQR：从 DP 到 Riccati 差分方程 ★★
 
 ##### 动机：离散时间才是计算机实现的实际形态
 
@@ -209,7 +209,7 @@ $$-\dot P=A_c^\top P+PA_c-PB_c R^{-1}B_c^\top P+Q.$$
 
 这一极限过渡的意义是**离散与连续最优控制的同构**——它保证用高频离散 LQR 近似连续 LQR 的误差随 $\Delta t\to0$ 消失，也是 MPC 与 LQR 等价性的数学基础。
 
-#### §3.5.3b 完备平方法：纯代数的第四条路径 ⭐⭐
+#### §3.5.3b 完备平方法：纯代数的第四条路径 ★★
 
 ##### 动机：不依赖最优性原理的独立推导
 
@@ -282,7 +282,7 @@ $$J=\tfrac12 x(0)^\top P(0)x(0)+\tfrac12\int_0^T\|u+R^{-1}B^\top P(t)x\|^2_R\,dt
 4. 合并得到 $\tfrac12(x^\top Qx+u^\top Ru)+\tfrac{d}{dt}W=\tfrac12\|u+R^{-1}B^\top Px\|^2_R$
 5. 两端从 $0$ 到 $T$ 积分，利用 $W(T)=\tfrac12 x(T)^\top Q_f x(T)$，得到闭式恒等式
 
-#### §3.5.4 无限时域 LQR、ARE 与 DARE ⭐⭐⭐
+#### §3.5.4 无限时域 LQR、ARE 与 DARE ★★★
 
 ##### 从有限时域到无限时域：稳态 Riccati 的诞生
 
@@ -349,7 +349,7 @@ $$J^\star=\tfrac12 x_0^\top P^\star x_0=\tfrac12\|T_{zw}\|_2^2\cdot\|x_0\|^2.$$
 
 这一等价性意味着 LQR 就是 $H_2$ 最优控制——在能量意义下最好的线性反馈。从 $H_2$ 到 $H_\infty$（专题 3.6）只需把"能量最优"改为"最坏情况最优"。
 
-#### §3.5.4b ARE 的深层性质：单调性、解的参数化与极值原理 ⭐⭐⭐
+#### §3.5.4b ARE 的深层性质：单调性、解的参数化与极值原理 ★★★
 
 ##### Riccati 解关于参数的单调性
 
@@ -393,7 +393,7 @@ CARE 可能有多达 $2^n$ 个对称解（对应 Hamiltonian 矩阵 $2n$ 个特�
 
 回顾专题 3.7（Lyapunov 稳定性理论 §7.6）：Lyapunov 方程 $A^\top P+PA=-Q$ 的正定解 $P$ 存在当且仅当 $A$ Hurwitz，且此时 $V(x)=x^\top Px$ 正好是线性系统 $\dot x=Ax$ 的 Lyapunov 函数。Riccati 方程在此基础上多了一个 $-PBR^{-1}B^\top P$ 项——这正是"优化"的代价。如果我们固定某个反馈 $K$（不做优化），CARE 退化为 Lyapunov 方程 $A_K^\top P_K+P_K A_K+Q+K^\top RK=0$。Newton-Kleinman 迭代正是利用这一层级关系：在当前 $K_k$ 处解线性 Lyapunov（快！），然后更新 $K_{k+1}$。
 
-#### §3.5.4c 跟踪问题与仿射 LQR（LQT）⭐⭐
+#### §3.5.4c 跟踪问题与仿射 LQR（LQT）★★
 
 ##### 动机：实际系统需要跟踪参考轨迹，不是调节到零
 
@@ -431,7 +431,7 @@ $$(A-BR^{-1}B^\top P^\star)^\top g_\infty=-P^\star(Ar-\dot r)=-P^\star Ar.$$
 
 $$u_{ff}=-R^{-1}B^\top g_\infty.$$
 
-#### §3.5.4d 典型例题：倒立摆 LQR 设计全流程 ⭐⭐
+#### §3.5.4d 典型例题：倒立摆 LQR 设计全流程 ★★
 
 ##### 系统建模
 
@@ -503,13 +503,13 @@ print(f"闭环极点: {np.linalg.eigvals(A - B @ K)}")
 
 **如果不这样设计会怎样**（反事实）：若取 $Q=I$（不重视摆角），得到的 $K_3$ 会小很多，系统对微小角度扰动的恢复力不足——摆杆在大扰动下倒塌。这就是为什么工程中 $Q$ 的对角元选择必须反映物理优先级。
 
-##### ⚠️ 倒立摆 LQR 的常见陷阱
+##### ⚠ 倒立摆 LQR 的常见陷阱
 
 **编程陷阱**：线性化时把 $\sin\theta\approx\theta$ 的有效范围估计过大。当 $|\theta|>15°$（$\approx0.26\,\text{rad}$）时，$\sin\theta$ 与 $\theta$ 的误差超过 3%，LQR 增益不再有效。解决：限制初始扰动，或使用 TVLQR/iLQR 处理大角度。
 
 **概念误区**：认为"增大 $R$ 就能省电"。增大 $R$ 确实使控制力减小，但响应变慢——如果响应过慢，摆杆可能在恢复前就超出线性化有效范围而倒塌。$R$ 的选择必须保证闭环带宽高于系统的自然不稳定频率 $\sqrt{g/l}\approx4.4\,\text{rad/s}$。
 
-#### §3.5.4e 典型例题：卫星姿态控制 LQR ⭐⭐⭐
+#### §3.5.4e 典型例题：卫星姿态控制 LQR ★★★
 
 ##### 问题描述
 
@@ -585,7 +585,7 @@ $$H_0=H,\qquad H_{k+1}=\tfrac12(H_k+H_k^{-1}).$$
 
 **Laub 1979 的 Schur 方法**（见 §3.5.I）是对稳定不变子空间做数值构造的另一经典方法：对 $H$ 做实 Schur 分解 $H=USU^\top$，按特征值实部排序使左上 $n\times n$ 块对应稳定子空间，然后从 $U$ 的前 $n$ 列提取 $X_1,X_2$。这是 MATLAB `care` 和 SciPy `solve_continuous_are` 的默认算法。
 
-#### §3.5.5b LQR 的经典鲁棒裕度：回差不等式 ⭐⭐
+#### §3.5.5b LQR 的经典鲁棒裕度：回差不等式 ★★
 
 ##### 为什么 LQR 天生鲁棒
 
@@ -710,7 +710,7 @@ Kalman 增益 $L=\Sigma C^\top\Sigma_v^{-1}$。与控制 Riccati 对比：
 2. **条件迁移**：LQR 的可稳定化条件 $(A,B)$ 对偶地变成 Kalman 的可检测条件 $(A,C)$。如果你的 SLAM 系统状态不可观（如单目尺度），对偶地看就是"控制不到"——滤波器的某些误差模态无法收敛。
 3. **增益关系**：LQR 增益 $K=R^{-1}B^\top P$ 对偶于 Kalman 增益 $L=\Sigma C^\top\Sigma_v^{-1}$。增大过程噪声 $\Sigma_w$（对偶于增大状态权重 $Q$）会让 Kalman 增益变大（更相信观测），对偶地 LQR 增益变大（更积极控制）。
 
-#### §3.5.9 有限时域→无穷时域的极限：收敛速率与指数稳定性 ⭐⭐⭐
+#### §3.5.9 有限时域→无穷时域的极限：收敛速率与指数稳定性 ★★★
 
 ##### 动机：MPC 为什么需要"足够长"的 horizon
 
@@ -831,7 +831,7 @@ $$A^\top P+PA+Q-PBR^{-1}B^\top P+\gamma^{-2}PDD^\top P=0.$$
 
 **工程决策规则**：如果你能精确建模系统并知道噪声统计 → 用 LQR/LQG。如果参数有 $>10\%$ 不确定性或环境变化剧烈 → 用 $H_\infty$。对大多数机器人系统（参数不确定但有界），$H_\infty$ 更安全。
 
-#### §3.5.B Loop Transfer Recovery (LTR) ⭐⭐⭐
+#### §3.5.B Loop Transfer Recovery (LTR) ★★★
 
 ##### 动机：如何"修复"LQG 的鲁棒性
 
@@ -923,7 +923,7 @@ $$A^\top P+PA+\sum C_i^\top PC_i-\bigl(PB+\sum C_i^\top PD_i\bigr)\bigl(R+\sum D
 | 辛 SDA（doubling） | Chu 等 2005 | 大规模稀疏 | 收敛快，适合 MPC 内部调用 |
 | 矩阵符号函数 | Roberts 1980 | 并行计算 | 只用矩阵逆，适合 GPU |
 
-##### Newton-Kleinman 迭代的完整推导与收敛证明 ⭐⭐⭐
+##### Newton-Kleinman 迭代的完整推导与收敛证明 ★★★
 
 **动机**：Schur 分解是"一步到位"的直接法，但对大规模系统（$n>100$）代价高昂。Newton-Kleinman 迭代是一种**策略迭代**方法——从一个初始稳定增益 $K_0$ 出发，反复求解 Lyapunov 方程（线性！），以二次速度收敛到 Riccati 解。这正是 RL 中 policy iteration 的连续时间版本。
 
@@ -1132,7 +1132,7 @@ print("gain:", K, "\nclosed-loop eigenvalues:", E)
 - **→ 第六批（RL）**：LQR 是所有连续控制 RL 算法的"果蝇"验证场；Fazel 2018、Dean 2020、Goel-Bartlett 2024 是 RL 理论入门必读。
 - **→ 第七批（具身智能 / foundation model）**：Transformer 做 in-context Kalman/LQG 是"机器人基础模型"的理论内核。
 
-#### §3.5.Ia Schur 分解法求解 ARE 的完整算法推导 ⭐⭐⭐
+#### §3.5.Ia Schur 分解法求解 ARE 的完整算法推导 ★★★
 
 ##### 动机与历史
 
@@ -1205,7 +1205,7 @@ def care_schur(A, B, Q, R):
 
 **实际建议**：生产代码中始终使用成熟库（SciPy/SLICOT），自己实现只用于教学验证。当库函数报错时，首先检查可稳定化/可检测条件（这是最常见的失败原因），其次检查矩阵对称性（`Q=(Q+Q.T)/2`）。
 
-#### §3.5.Ib 广义 Riccati 与描述子系统 ⭐⭐⭐⭐
+#### §3.5.Ib 广义 Riccati 与描述子系统 ★★★★
 
 对具有代数约束的描述子系统 $E\dot x=Ax+Bu$（$E$ 奇异），标准 CARE 不适用，需要**广义 ARE**：
 
@@ -1233,7 +1233,7 @@ $$A^\top X E+E^\top X A-E^\top X B R^{-1}B^\top X E+Q=0.$$
 
 ---
 
-### 十一c. 值迭代与策略迭代在 LQR 上的精确对应 ⭐⭐⭐
+### 十一c. 值迭代与策略迭代在 LQR 上的精确对应 ★★★
 
 ##### 值迭代（Value Iteration）= Riccati 递推
 
@@ -1281,7 +1281,7 @@ Newton-Kleinman 迭代（§3.5.I）本质上就是**策略迭代**：
 
 ---
 
-### 十一d. LQR 与最优控制的其他变体关系 ⭐⭐
+### 十一d. LQR 与最优控制的其他变体关系 ★★
 
 ##### LQR 与 MPC 的精确关系
 
@@ -1353,20 +1353,20 @@ $$\begin{pmatrix}A^\top P+PA+Q & PB\\B^\top P & R\end{pmatrix}\succeq0\quad\text
 
 | 资源 | 难度 | 推荐理由 |
 |------|------|---------|
-| Kirk *Optimal Control Theory: An Introduction* Ch.5 | ⭐ | 最温和入门，证明极其详细 |
-| Tedrake *Underactuated Robotics* Ch.8 | ⭐⭐ | 机器人视角+Drake 代码可跑 |
-| Liberzon *Calculus of Variations* Ch.6 | ⭐⭐ | 简洁优美，PMP→HJB→LQR 一气呵成 |
-| Anderson-Moore *Optimal Control: LQ Methods* | ⭐⭐ | LQR/LQG 工程圣经，含 LTR |
-| Bertsekas *DP and Optimal Control* Vol.I Ch.3-4 | ⭐⭐⭐ | DP 视角严密，连贯到 RL |
-| Zhou-Doyle-Glover *Robust and Optimal Control* Ch.12,14 | ⭐⭐⭐ | $H_\infty$ 圣经，DGKF 解完整 |
-| Lancaster-Rodman *Algebraic Riccati Equations* | ⭐⭐⭐⭐ | ARE 代数理论最完整的专著 |
-| Bini-Iannazzo-Meini *Numerical Solution of ARE* | ⭐⭐⭐⭐ | ARE 数值方法现代综述 |
-| Fazel et al. 2018 (arXiv:1801.05039) | ⭐⭐⭐ | PG on LQR 全局收敛里程碑 |
-| Dean et al. 2020 (arXiv:1710.01688) | ⭐⭐⭐ | Model-based RL 样本复杂度金标准 |
+| Kirk *Optimal Control Theory: An Introduction* Ch.5 | ★ | 最温和入门，证明极其详细 |
+| Tedrake *Underactuated Robotics* Ch.8 | ★★ | 机器人视角+Drake 代码可跑 |
+| Liberzon *Calculus of Variations* Ch.6 | ★★ | 简洁优美，PMP→HJB→LQR 一气呵成 |
+| Anderson-Moore *Optimal Control: LQ Methods* | ★★ | LQR/LQG 工程圣经，含 LTR |
+| Bertsekas *DP and Optimal Control* Vol.I Ch.3-4 | ★★★ | DP 视角严密，连贯到 RL |
+| Zhou-Doyle-Glover *Robust and Optimal Control* Ch.12,14 | ★★★ | $H_\infty$ 圣经，DGKF 解完整 |
+| Lancaster-Rodman *Algebraic Riccati Equations* | ★★★★ | ARE 代数理论最完整的专著 |
+| Bini-Iannazzo-Meini *Numerical Solution of ARE* | ★★★★ | ARE 数值方法现代综述 |
+| Fazel et al. 2018 (arXiv:1801.05039) | ★★★ | PG on LQR 全局收敛里程碑 |
+| Dean et al. 2020 (arXiv:1710.01688) | ★★★ | Model-based RL 样本复杂度金标准 |
 
 ---
 
-### 十五、Riccati 方程完成平方法的连续时间完整证明 ⭐⭐
+### 十五、Riccati 方程完成平方法的连续时间完整证明 ★★
 
 本节给出连续时间完备平方法的**逐步展开**，作为 §3.5.3b 的详细补充。
 
@@ -1425,7 +1425,7 @@ $$J[u]=W(0)+\tfrac12\int_0^T\|u+R^{-1}B^\top Px\|_R^2\,dt=\tfrac12 x(0)^\top P(0
 
 ---
 
-### 十六、LQR 鲁棒性深化：多输入回差不等式与 disk margin ⭐⭐⭐
+### 十六、LQR 鲁棒性深化：多输入回差不等式与 disk margin ★★★
 
 ##### 多输入系统的回差不等式
 
@@ -1462,7 +1462,7 @@ LQR 的裕度保证有三个重要**前提**：
 
 ---
 
-### 十七、Kalman 滤波器完整推导与 LQG 框架总结 ⭐⭐
+### 十七、Kalman 滤波器完整推导与 LQG 框架总结 ★★
 
 ##### 系统模型
 
@@ -1525,7 +1525,7 @@ $$L_\infty=\Sigma_\infty C^\top\Sigma_v^{-1}.$$
 
 ---
 
-### 十八、分离原理的深化讨论与失效条件 ⭐⭐⭐
+### 十八、分离原理的深化讨论与失效条件 ★★★
 
 ##### 分离原理为什么在实际中"几乎从不"严格成立
 
@@ -1551,7 +1551,7 @@ $$L_\infty=\Sigma_\infty C^\top\Sigma_v^{-1}.$$
 
 ---
 
-### 十九、LQR 工程调参指南 ⭐⭐
+### 十九、LQR 工程调参指南 ★★
 
 ##### $Q$ 和 $R$ 的系统化选择方法
 
@@ -1579,7 +1579,7 @@ $$Q_{ii}=\frac{1}{x_{i,\max}^2},\qquad R_{jj}=\frac{1}{u_{j,\max}^2},$$
 
 **切忌**：不要把 $Q,R$ 选成单位矩阵就结束——这几乎从不是好的设计。$Q=I,R=I$ 意味着"所有状态同等重要、所有输入同等昂贵"——这在物理上几乎不可能正确。
 
-##### ⚠️ ���参常见陷阱
+##### ⚠ ���参常见陷阱
 
 **概念误区**：认为"$Q$ 越大系统越稳定"。增大 $Q$ 确实使增益 $K$ 增大，但**过大的增益会放大观测噪声**（在 LQG 中）和**触发执行器饱和**（在实际系统中）。$Q$ 的选择必须与执行器能力和噪声水平匹配——这是 LQR 设计中最需要工程判断力的环节。
 
@@ -1587,7 +1587,7 @@ $$Q_{ii}=\frac{1}{x_{i,\max}^2},\qquad R_{jj}=\frac{1}{u_{j,\max}^2},$$
 
 ---
 
-### 二十、Schur 分解法求解 ARE 的完整算法 ⭐⭐⭐
+### 二十、Schur 分解法求解 ARE 的完整算法 ★★★
 
 ##### 算法步骤
 
@@ -1646,7 +1646,7 @@ def care_schur(A, B, Q, R):
 
 ---
 
-### 二十一、跨章综合练习 ⭐⭐⭐
+### 二十一、跨章综合练习 ★★★
 
 **综合题 1**（结合专题 3.2 PMP + 本章 LQR）：对标量系统 $\dot x=ax+bu$ 最小化 $J=\int_0^\infty(qx^2+ru^2)dt$，分别用 (a) PMP 完整流程（写 Hamilton 函数→协态方程→$u^\star$→Ansatz $\lambda=px$→ARE）；(b) HJB + 值函数 Ansatz；(c) 完备平方法。三种方法得到同一个 ARE $2ap-p^2b^2/r+q=0$。解出 $p=r(a+\sqrt{a^2+qb^2/r})/b^2$，讨论当 $a>0$（不稳定）和 $a<0$（稳定）时解的行为。
 
@@ -1656,7 +1656,7 @@ def care_schur(A, B, Q, R):
 
 ---
 
-### 二十二、PMP 路径推导 Riccati 的详细展开 ⭐⭐
+### 二十二、PMP 路径推导 Riccati 的详细展开 ★★
 
 本节把 §3.5.5 中的 PMP 推导展开为初学者可跟随的逐步形式。
 
@@ -1727,7 +1727,7 @@ $$\boxed{-\dot P=A^\top P+PA-PBR^{-1}B^\top P+Q,\quad P(T)=Q_f.}$$
 
 ---
 
-### 二十三、LQR 设计的完整工程流程总结 ⭐⭐
+### 二十三、LQR 设计的完整工程流程总结 ★★
 
 以下是从问题建模到部署的完整流程，适用于任何线性化后可用 LQR 的机器人系统：
 
@@ -1759,7 +1759,7 @@ $$\boxed{-\dot P=A^\top P+PA-PBR^{-1}B^\top P+Q,\quad P(T)=Q_f.}$$
 [部署]
 ```
 
-##### ⚠️ 全流程常见陷阱
+##### ⚠ 全流程常见陷阱
 
 **思维陷阱**：跳过步骤②直接设计。如果系统不可控（如某个电机断线），ARE 无解但不一定报错——可能返回数值垃圾。**永远先检查可控性**。
 
@@ -2135,15 +2135,15 @@ D18. 设计实验对比 model-based LQR（直接解 ARE）与 model-free policy 
 
 ### 综合练习题
 
-**练习 LQR.1** ⭐（手算 ARE）：对一维不稳定系统 $\dot{x} = 2x + u$，$Q = 1$，$R = 1$，手算连续 ARE 的正定解 $P$。验证闭环极点 $a - b^2P/r = 2 - P$ 在左半平面。
+**练习 LQR.1** ★（手算 ARE）：对一维不稳定系统 $\dot{x} = 2x + u$，$Q = 1$，$R = 1$，手算连续 ARE 的正定解 $P$。验证闭环极点 $a - b^2P/r = 2 - P$ 在左半平面。
 
-**练习 LQR.2** ⭐⭐（离散 Riccati 收敛）：对 cart-pole 系统在倒立平衡点线性化，用 backward Riccati 递推从 $P_N = Q_f$ 出发。画出 $\|P_k - P_\infty\|$ 随 $N-k$ 的曲线，验证指数收敛速度。解释：收敛速率与 Hamilton 矩阵的哪些特征值有关？
+**练习 LQR.2** ★★（离散 Riccati 收敛）：对 cart-pole 系统在倒立平衡点线性化，用 backward Riccati 递推从 $P_N = Q_f$ 出发。画出 $\|P_k - P_\infty\|$ 随 $N-k$ 的曲线，验证指数收敛速度。解释：收敛速率与 Hamilton 矩阵的哪些特征值有关？
 
-**练习 LQR.3** ⭐⭐（LQG 实现）：在仿真中实现完整的 LQG 控制器（Kalman 滤波 + LQR 反馈）。(a) 对双积分器加过程噪声和测量噪声；(b) 比较"全状态反馈 LQR"vs"LQG（只测位置）"的跟踪性能；(c) 验证分离原理——独立调 $Q,R$ 和 $V,W$ 不会相互影响闭环稳定性。
+**练习 LQR.3** ★★（LQG 实现）：在仿真中实现完整的 LQG 控制器（Kalman 滤波 + LQR 反馈）。(a) 对双积分器加过程噪声和测量噪声；(b) 比较"全状态反馈 LQR"vs"LQG（只测位置）"的跟踪性能；(c) 验证分离原理——独立调 $Q,R$ 和 $V,W$ 不会相互影响闭环稳定性。
 
-**练习 LQR.4** ⭐⭐⭐（增益裕度验证）：对 MIMO LQR（$R = \rho I$），数值验证 Anderson-Moore 定理（phase margin $\ge 60°$）。方法：计算开环传递函数 $G(s) = K(sI - A)^{-1}B$ 的 Nyquist 图，验证它不进入以 $(-1,0)$ 为圆心的单位圆。改变 $\rho$ 观察增益裕度的变化。
+**练习 LQR.4** ★★★（增益裕度验证）：对 MIMO LQR（$R = \rho I$），数值验证 Anderson-Moore 定理（phase margin $\ge 60°$）。方法：计算开环传递函数 $G(s) = K(sI - A)^{-1}B$ 的 Nyquist 图，验证它不进入以 $(-1,0)$ 为圆心的单位圆。改变 $\rho$ 观察增益裕度的变化。
 
-**练习 LQR.5** ⭐⭐⭐（跨章 — LQR 作为 MPC 内核）：实现一个 unconstrained linear MPC（有限时域 LQR + receding horizon）。(a) 验证当 horizon $N \to \infty$ 时策略收敛到无限时域 LQR；(b) 加入 box 约束 $|u| \le 1$，观察 MPC 与 LQR 的行为差异；(c) 当约束不 active 时，验证 MPC 输出与 LQR 完全一致。
+**练习 LQR.5** ★★★（跨章 — LQR 作为 MPC 内核）：实现一个 unconstrained linear MPC（有限时域 LQR + receding horizon）。(a) 验证当 horizon $N \to \infty$ 时策略收敛到无限时域 LQR；(b) 加入 box 约束 $|u| \le 1$，观察 MPC 与 LQR 的行为差异；(c) 当约束不 active 时，验证 MPC 输出与 LQR 完全一致。
 
 ---
 

@@ -12,9 +12,9 @@
 
 ---
 
-## 前置自测 ⭐
+## 前置自测 ★
 
-> 📋 **答不出 >= 2 题 → 先回前置章节复习**
+> ◆ **答不出 >= 2 题 → 先回前置章节复习**
 
 | 编号 | 问题 | 答不出时回顾 |
 |:----:|------|------------|
@@ -99,7 +99,7 @@
 | 速查（仅看总结表格） | 1 小时 | 工程实现时查阅 |
 
 
-## F8.1 MPC+WBC 双频率架构 ⭐
+## F8.1 MPC+WBC 双频率架构 ★
 
 ### 动机——为什么 WBC 单独不够
 
@@ -191,7 +191,7 @@ WBC 不知道的信息:
 | 2024 | Zhang (skywoodsz), qm_control, IROS | 四足+臂末端阻抗+摩擦锥一体 QP |
 | 2025 | Zhang et al. (CMU), FALCON, L4DC 2026 Oral | 双智能体 RL 力自适应人形 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 💡 概念误区：认为 MPC 直接输出关节力矩
@@ -225,13 +225,13 @@ WBC 不知道的信息:
 
 ### 练习
 
-1. ⭐ **频率计算**：MPC 以 40 Hz 运行，预测时域 1.0 秒，离散步长 25ms。一个 MPC 周期内有多少个预测步？QP 的决策变量维度是多少（假设 13 维状态、12 维控制、每步 4 面摩擦锥）？
-2. ⭐ **延迟分析**：MPC 求解时间 5ms，WBC 求解时间 0.5ms，通信延迟 0.5ms。从传感器读取到力矩输出的总延迟是多少？这个延迟对 500 Hz WBC 的相位裕度有什么影响？
-3. ⭐⭐ **架构选型**：为以下场景选择控制架构并说明理由：(a) Franka 恒力打磨固定工件，(b) TIAGo 移动到桌前抓杯子，(c) ANYmal 四足走到门前推开门。
+1. ★ **频率计算**：MPC 以 40 Hz 运行，预测时域 1.0 秒，离散步长 25ms。一个 MPC 周期内有多少个预测步？QP 的决策变量维度是多少（假设 13 维状态、12 维控制、每步 4 面摩擦锥）？
+2. ★ **延迟分析**：MPC 求解时间 5ms，WBC 求解时间 0.5ms，通信延迟 0.5ms。从传感器读取到力矩输出的总延迟是多少？这个延迟对 500 Hz WBC 的相位裕度有什么影响？
+3. ★★ **架构选型**：为以下场景选择控制架构并说明理由：(a) Franka 恒力打磨固定工件，(b) TIAGo 移动到桌前抓杯子，(c) ANYmal 四足走到门前推开门。
 
 ---
 
-## F8.2 MIT Cheetah 凸 MPC ⭐⭐
+## F8.2 MIT Cheetah 凸 MPC ★★
 
 ### 动机——用简化模型换取实时性
 
@@ -453,7 +453,7 @@ R = diag(r_f, r_f, r_f, r_f)     # 接触力正则化
 
 > **理论到工程衔接**：Q 矩阵的设计不是数学问题而是**工程决策**——它编码了"什么更重要"。roll/pitch 权重 (80) 远大于 yaw (10)，因为 roll/pitch 偏离会导致摔倒，而 yaw 偏离只影响方向。这种权重设计直接来自机器人物理特性。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 💡 概念误区：认为 SRB 简化意味着 MPC 不准确
@@ -486,13 +486,13 @@ R = diag(r_f, r_f, r_f, r_f)     # 接触力正则化
 
 ### 练习
 
-1. ⭐ **维度计算**：Mini Cheetah 凸 MPC，$N = 15$ 步，4 脚 trot 步态（每步 2 接触腿），计算 QP 的维度：决策变量 $\dim(U)$、不等式约束数。
-2. ⭐⭐ **SRB 推导**：从完整浮动基座动力学 $M\dot{v} + h = S^T\tau + J_c^T f_c$ 出发，令腿质量趋近 0，推导 SRB 动力学方程。指出哪些项消失了。
-3. ⭐⭐ **权重调参**：在一个简单的 SRB 仿真中实现凸 MPC，分别测试 $Q_{pitch} = 10$ 和 $Q_{pitch} = 200$ 的效果。
+1. ★ **维度计算**：Mini Cheetah 凸 MPC，$N = 15$ 步，4 脚 trot 步态（每步 2 接触腿），计算 QP 的维度：决策变量 $\dim(U)$、不等式约束数。
+2. ★★ **SRB 推导**：从完整浮动基座动力学 $M\dot{v} + h = S^T\tau + J_c^T f_c$ 出发，令腿质量趋近 0，推导 SRB 动力学方程。指出哪些项消失了。
+3. ★★ **权重调参**：在一个简单的 SRB 仿真中实现凸 MPC，分别测试 $Q_{pitch} = 10$ 和 $Q_{pitch} = 200$ 的效果。
 
 ---
 
-## F8.3 WBIC 两步结构 ⭐⭐
+## F8.3 WBIC 两步结构 ★★
 
 ### 动机——从 MPC 的参考到关节力矩
 
@@ -632,7 +632,7 @@ MIT Cheetah-Software 代码结构:
     -> 输出 tau
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 💡 概念误区：认为 delta_fb 越小控制越好
@@ -653,13 +653,13 @@ MIT Cheetah-Software 代码结构:
 
 ### 练习
 
-1. ⭐ **松弛分析**：如果 MPC 的力参考恰好满足 SRB 但违反了一个脚的摩擦锥，WBIC 的 QP 会怎么处理？$\delta_{fb}$ 会变大还是 $f_c$ 会偏离 $f_{MPC}$？
-2. ⭐⭐ **维度对比**：对 Mini Cheetah（12 关节，4 脚着地），分别计算 WBIC QP 和标准 WBC-QP 的决策变量维度。
-3. ⭐⭐ **代码精读**：找到 Cheetah-Software 的 `WBIC.cpp`，标注 $\delta_{fb}$ 的定义位置、摩擦锥约束的组装位置、$w_f$ 的设置位置。
+1. ★ **松弛分析**：如果 MPC 的力参考恰好满足 SRB 但违反了一个脚的摩擦锥，WBIC 的 QP 会怎么处理？$\delta_{fb}$ 会变大还是 $f_c$ 会偏离 $f_{MPC}$？
+2. ★★ **维度对比**：对 Mini Cheetah（12 关节，4 脚着地），分别计算 WBIC QP 和标准 WBC-QP 的决策变量维度。
+3. ★★ **代码精读**：找到 Cheetah-Software 的 `WBIC.cpp`，标注 $\delta_{fb}$ 的定义位置、摩擦锥约束的组装位置、$w_f$ 的设置位置。
 
 ---
 
-## F8.4 legged_control 架构——OCS2 + HoQp ⭐⭐
+## F8.4 legged_control 架构——OCS2 + HoQp ★★
 
 ### 动机——教学最友好的 MPC+WBC 实现
 
@@ -772,7 +772,7 @@ wbc:
     torque_regularization: 0.001
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：Gazebo 仿真中忘记设置 use_sim_time
@@ -793,13 +793,13 @@ wbc:
 
 ### 练习
 
-1. ⭐ **legged_control 跑通**：在 Gazebo 中运行 legged_control（Unitree A1），用 rqt_plot 绘制 MPC 接触力参考 vs WBC 关节力矩。
-2. ⭐ **HoQp vs WeightedWbc 对比**：同一 trot 步态下分别使用两种 WBC，对比体姿态 RMSE、接触力精度、CPU 占用。
-3. ⭐⭐ **OCS2 精读**：精读 `LeggedRobotInterface.cpp`，标注代价函数各项、约束类型、模式切换处理。
+1. ★ **legged_control 跑通**：在 Gazebo 中运行 legged_control（Unitree A1），用 rqt_plot 绘制 MPC 接触力参考 vs WBC 关节力矩。
+2. ★ **HoQp vs WeightedWbc 对比**：同一 trot 步态下分别使用两种 WBC，对比体姿态 RMSE、接触力精度、CPU 占用。
+3. ★★ **OCS2 精读**：精读 `LeggedRobotInterface.cpp`，标注代价函数各项、约束类型、模式切换处理。
 
 ---
 
-## F8.5 qm_control 的力控扩展——操作空间中的 MPC ⭐⭐⭐
+## F8.5 qm_control 的力控扩展——操作空间中的 MPC ★★★
 
 ### 动机——从纯行走到 Loco-Manipulation
 
@@ -896,7 +896,7 @@ skywoodsz/qm_control
 └── qm_unitree/                       <-- AlienGo + Z1 硬件
 ```
 
-### 接触力优化——抓取力分配 QP ⭐⭐⭐
+### 接触力优化——抓取力分配 QP ★★★
 
 在 loco-manipulation 中，末端接触力的优化远比纯行走复杂。除了腿的地面反力（F8.2 的摩擦锥），还需要优化末端对物体的抓取/推/滑力。这里给出抓取力分配的完整 QP 建模。
 
@@ -1012,7 +1012,7 @@ def skew(v):
 
 > **跨领域类比**：抓取力分配 QP 与四足站立的力分配 QP（F8.2）本质相同——都是"给定多个接触点和外部 wrench，求满足摩擦锥的最小接触力"。区别在于四足的力分配是 $f_{legs} \in \mathbb{R}^{12}$ 平衡躯干重力，抓取的力分配是 $f_{fingers} \in \mathbb{R}^{6}$（双指）平衡物体重力。统一的数学形式是 $\min \|f\|^2 \text{ s.t. } Gf + w_{ext}=0, f \in \mathcal{FC}$。
 
-### loco-manipulation 全身优化案例——ANYmal 推门 ⭐⭐⭐
+### loco-manipulation 全身优化案例——ANYmal 推门 ★★★
 
 Sleiman et al. 2023 (Science Robotics) 的 ANYmal 推门任务是 loco-manipulation 的标杆。以下分析其全身优化的 QP 结构。
 
@@ -1073,7 +1073,7 @@ $$z = [\dot{v}_{base}(6); \dot{v}_{legs}(12); \dot{v}_{arm}(6); \tau_{legs}(12);
   + ||tau||^2_R                         力矩正则化
 ```
 
-### 与纯阻抗控制的定量 benchmark ⭐⭐⭐
+### 与纯阻抗控制的定量 benchmark ★★★
 
 前面定性对比了 MPC+WBC 和纯阻抗控制。以下给出定量 benchmark 的设计和典型结果。
 
@@ -1142,7 +1142,7 @@ class ForceBenchmark:
 
 > **本质洞察**：MPC+WBC 和纯阻抗控制不是竞争关系，而是层次关系。MPC+WBC 的 WBC 内部的每个任务本身就是一个阻抗控制器（PD 加速度参考 = 阻抗控制律）。MPC 提供的是阻抗控制缺少的**前瞻能力**和**多肢体协调能力**。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 🧠 思维陷阱：认为 MPC+WBC 总是优于阻抗控制
@@ -1165,13 +1165,13 @@ class ForceBenchmark:
 
 ### 练习
 
-1. ⭐ **代价函数设计**：为 ANYmal + DynaArm 的"推门"任务设计 MPC 代价函数，列出所有项及权重的物理直觉。
-2. ⭐⭐ **qm_control 力控实验**：在仿真中让 Z1 臂以 10N 推盒子，调整 $(K, D)$ 参数，记录力波动标准差。
-3. ⭐⭐⭐ **跨章综合题**：结合 F03（力位混合）、F07（WBC-QP）、F08（MPC+WBC），为四足+臂的"擦桌子"任务设计完整控制架构。画出框图，标注 MPC 代价函数、WBC 优先级、末端力控模式。与 F03 纯阻抗控制方案对比。
+1. ★ **代价函数设计**：为 ANYmal + DynaArm 的"推门"任务设计 MPC 代价函数，列出所有项及权重的物理直觉。
+2. ★★ **qm_control 力控实验**：在仿真中让 Z1 臂以 10N 推盒子，调整 $(K, D)$ 参数，记录力波动标准差。
+3. ★★★ **跨章综合题**：结合 F03（力位混合）、F07（WBC-QP）、F08（MPC+WBC），为四足+臂的"擦桌子"任务设计完整控制架构。画出框图，标注 MPC 代价函数、WBC 优先级、末端力控模式。与 F03 纯阻抗控制方案对比。
 
 ---
 
-## F8.6 OCS2/Crocoddyl 在机械臂 MPC 中的配置 ⭐⭐⭐
+## F8.6 OCS2/Crocoddyl 在机械臂 MPC 中的配置 ★★★
 
 ### 动机——通用 MPC 框架的工程实践
 
@@ -1285,7 +1285,7 @@ mu = 0.7
 linearization = 4
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：Crocoddyl FDDP 不收敛
@@ -1309,11 +1309,11 @@ linearization = 4
 
 ### 练习
 
-1. ⭐ **Crocoddyl 入门**：运行上述 Panda MPC 示例，修改末端目标，观察求解时间。
-2. ⭐⭐ **warm-start 效果**：对比 cold-start 和 warm-start 的求解时间和迭代次数。
-3. ⭐⭐ **接触力 MPC**：在 Crocoddyl 中添加接触力代价——末端推墙维持 10N。与 F03 阻抗控制对比力跟踪精度。
+1. ★ **Crocoddyl 入门**：运行上述 Panda MPC 示例，修改末端目标，观察求解时间。
+2. ★★ **warm-start 效果**：对比 cold-start 和 warm-start 的求解时间和迭代次数。
+3. ★★ **接触力 MPC**：在 Crocoddyl 中添加接触力代价——末端推墙维持 10N。与 F03 阻抗控制对比力跟踪精度。
 
-### OCS2 机械臂 MPC 完整配置——从 URDF 到闭环控制 ⭐⭐⭐
+### OCS2 机械臂 MPC 完整配置——从 URDF 到闭环控制 ★★★
 
 上面的 Crocoddyl 示例展示了 DDP/FDDP 的使用方式。但工程中 OCS2 的 SQP 框架因其原生 ROS 接口和模式切换支持而更常用于 MPC+WBC 系统。以下给出从 URDF 加载到 MPC 闭环运行的完整配置代码。
 
@@ -1465,7 +1465,7 @@ penalty_steepness = 1e-3
 
 > **理论到工程衔接**：注意 `sqpIteration = 1`——这意味着每个 MPC 周期只做一次 SQP 迭代。这不是偷懒，而是**实时 MPC 的核心权衡**：用"每次只迈一小步但频率高"代替"每次完全收敛但频率低"。因为 MPC 是滚动时域的，上一步的解为下一步提供了极好的初始猜测（warm-start），单次迭代通常就能得到足够好的更新。
 
-### Crocoddyl 带接触力的操作 MPC——推/拉/滑 ⭐⭐⭐
+### Crocoddyl 带接触力的操作 MPC——推/拉/滑 ★★★
 
 前面的 Crocoddyl 示例只有末端位姿跟踪。在力控任务中，我们还需要优化接触力。以下展示如何在 Crocoddyl 中添加接触模型和力代价。
 
@@ -1592,7 +1592,7 @@ print(f"接触力(第一步): {solver.problem.runningDatas[0].differential.multi
 
 > **不是 X 而是 Y**：Crocoddyl 的接触力**不是**通过摩擦锥硬约束处理的，**而是**通过代价函数中的 barrier/penalty 软约束近似的。这与 QP-based WBC（F07）用硬约束不同。软约束的好处是求解器永远返回解（不会 infeasible），坏处是解可能轻微违反约束——需要通过调大 penalty 权重来控制违反程度。
 
-### MPC 预测时域对力控性能的影响分析 ⭐⭐
+### MPC 预测时域对力控性能的影响分析 ★★
 
 MPC 的预测时域（horizon）$T = N \cdot \Delta t$ 是最重要的超参数之一。它对力控性能的影响是非线性的，且与任务类型密切相关。
 
@@ -1687,7 +1687,7 @@ for T in horizons:
 
 ---
 
-## F8.7 全身运动规划——移动基座+手臂+夹爪联合优化 ⭐⭐⭐⭐
+## F8.7 全身运动规划——移动基座+手臂+夹爪联合优化 ★★★★
 
 ### 动机——操作任务需要全身协调
 
@@ -1786,7 +1786,7 @@ trade-off:
 
 另一个前沿方向是将 WBC 和 MPC 都变为可微分模块，嵌入端到端学习管线。具体做法是将 QP 求解器（如 OSQP、ProxQP）的 KKT 条件隐式微分，使得 QP 的最优解对输入参数（任务权重、参考轨迹、约束边界）可微。这允许 RL 策略通过梯度反向传播直接优化 MPC 的代价函数权重和 WBC 的任务优先级，而不是像传统方法那样手动调参。Amos & Kolter 2017 的 OptNet 框架奠定了可微分 QP 的数学基础，近年 Leziart et al. 2024 和 Melon et al. 2024 将其扩展到了全身控制场景。这个方向本质上是 F09（学习型力控）中"学习与控制共生"理念在 MPC+WBC 层面的体现。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 🧠 思维陷阱：认为全身优化一定比分层架构好
@@ -1830,9 +1830,9 @@ MPC+WBC 架构与纯端到端 RL（如 Isaac Lab 训练的策略直接输出关�
 
 ### 练习
 
-1. ⭐⭐ **模式枚举**：为 ANYmal + DynaArm 的"打开冰箱门"任务，列出所有可能的接触模式序列（从走到冰箱前 → 伸出臂 → 抓住把手 → 拉开门 → 取出物品）。
-2. ⭐⭐⭐ **维度分析**：计算上述 50D 状态的 MPC 在 $N=20$ 步时的 QP/NLP 维度。估算在 ARM Cortex-A72 和 NVIDIA Orin 上的求解时间。
-3. ⭐⭐⭐ **前沿讨论**：mujoco_mpc 的 500 Hz 采样 MPC 能否替代传统 MPC+WBC？分析其在有无 GPU 情况下的可行性。
+1. ★★ **模式枚举**：为 ANYmal + DynaArm 的"打开冰箱门"任务，列出所有可能的接触模式序列（从走到冰箱前 → 伸出臂 → 抓住把手 → 拉开门 → 取出物品）。
+2. ★★★ **维度分析**：计算上述 50D 状态的 MPC 在 $N=20$ 步时的 QP/NLP 维度。估算在 ARM Cortex-A72 和 NVIDIA Orin 上的求解时间。
+3. ★★★ **前沿讨论**：mujoco_mpc 的 500 Hz 采样 MPC 能否替代传统 MPC+WBC？分析其在有无 GPU 情况下的可行性。
 
 ---
 
@@ -1852,13 +1852,13 @@ MPC+WBC 架构与纯端到端 RL（如 Isaac Lab 训练的策略直接输出关�
 
 | 知识点 | 核心内容 | 难度 | 关联章节 |
 |--------|---------|------|---------|
-| F8.1 双频率架构 | MPC(30Hz) + WBC(500Hz) 的设计哲学 | ⭐ | F07 |
-| F8.2 凸 MPC | 单刚体简化，13 维状态，凸 QP | ⭐⭐ | M05 |
-| F8.3 WBIC 两步结构 | KinWBC + QP 力修正，浮动基松弛 | ⭐⭐ | F07 |
-| F8.4 legged_control | OCS2 SQP-MPC + HoQp/WeightedWbc | ⭐⭐ | F07 |
-| F8.5 qm_control 扩展 | 末端阻抗+摩擦锥一体 QP | ⭐⭐⭐ | F03 |
-| F8.6 OCS2/Crocoddyl | 两大 MPC 框架对比与实战 | ⭐⭐⭐ | M05 |
-| F8.7 全身运动规划 | 联合优化，模式枚举，前沿方向 | ⭐⭐⭐⭐ | F07, F08 |
+| F8.1 双频率架构 | MPC(30Hz) + WBC(500Hz) 的设计哲学 | ★ | F07 |
+| F8.2 凸 MPC | 单刚体简化，13 维状态，凸 QP | ★★ | M05 |
+| F8.3 WBIC 两步结构 | KinWBC + QP 力修正，浮动基松弛 | ★★ | F07 |
+| F8.4 legged_control | OCS2 SQP-MPC + HoQp/WeightedWbc | ★★ | F07 |
+| F8.5 qm_control 扩展 | 末端阻抗+摩擦锥一体 QP | ★★★ | F03 |
+| F8.6 OCS2/Crocoddyl | 两大 MPC 框架对比与实战 | ★★★ | M05 |
+| F8.7 全身运动规划 | 联合优化，模式枚举，前沿方向 | ★★★★ | F07, F08 |
 
 ### 术语速查表
 
@@ -1875,7 +1875,7 @@ MPC+WBC 架构与纯端到端 RL（如 Isaac Lab 训练的策略直接输出关�
 
 ---
 
-## MPC+WBC 系统的集成调试指南 ⭐⭐
+## MPC+WBC 系统的集成调试指南 ★★
 
 ### MPC-WBC 接口的关键设计决策
 
@@ -1907,8 +1907,8 @@ MPC 和 WBC 之间的接口定义是系统成功的关键。常见的接口方�
 
 ### 练习
 
-1. ⭐⭐ **接口设计**：为 Franka Panda（固定基座）设计一个 MPC+WBC 系统的接口。MPC 负责生成末端轨迹，WBC 负责力矩计算。明确定义接口数据结构（包含哪些量、频率、坐标系）。
-2. ⭐⭐⭐ **凸 MPC 实现**：用 OSQP 实现一个简化的质心凸 MPC（2D，点质量模型，2 个接触点）。输出接触力序列，验证其满足摩擦锥约束。
+1. ★★ **接口设计**：为 Franka Panda（固定基座）设计一个 MPC+WBC 系统的接口。MPC 负责生成末端轨迹，WBC 负责力矩计算。明确定义接口数据结构（包含哪些量、频率、坐标系）。
+2. ★★★ **凸 MPC 实现**：用 OSQP 实现一个简化的质心凸 MPC（2D，点质量模型，2 个接触点）。输出接触力序列，验证其满足摩擦锥约束。
 
 ---
 
@@ -1950,7 +1950,7 @@ Mini-ForceControl 项目进度:
 2. 尝试将本章方法与其他章节的方法组合
 3. 复现本章引用的前沿工作
 
-## MPC+WBC 系统的性能调优清单 ⭐⭐
+## MPC+WBC 系统的性能调优清单 ★★
 
 ### MPC 层调优
 
@@ -1982,7 +1982,7 @@ Mini-ForceControl 项目进度:
 
 ---
 
-## MPC 在力控任务中的代价函数设计 ⭐⭐⭐
+## MPC 在力控任务中的代价函数设计 ★★★
 
 ### 力控 MPC 的代价函数结构
 
@@ -2012,8 +2012,8 @@ $$J = \sum_{k=0}^{N} \left[ w_x \|x_k - x_d\|^2 + w_f \|f_k - f_d\|^2 + w_\tau \
 
 ### 练习
 
-1. ⭐⭐ **代价函数设计**：为 Franka Panda 的打磨任务设计 MPC 代价函数。法向力目标 20 N，切向速度目标 50 mm/s。给出所有权重的具体值和选择理由。
-2. ⭐⭐⭐ **力平滑分析**：在简化的 1D MPC 中（点质量接触弹性面），分别用 $w_{\dot{f}} = 0$ 和 $w_{\dot{f}} = 10$ 求解最优力轨迹。对比接触过渡阶段的力曲线平滑度。
+1. ★★ **代价函数设计**：为 Franka Panda 的打磨任务设计 MPC 代价函数。法向力目标 20 N，切向速度目标 50 mm/s。给出所有权重的具体值和选择理由。
+2. ★★★ **力平滑分析**：在简化的 1D MPC 中（点质量接触弹性面），分别用 $w_{\dot{f}} = 0$ 和 $w_{\dot{f}} = 10$ 求解最优力轨迹。对比接触过渡阶段的力曲线平滑度。
 
 ---
 
@@ -2021,15 +2021,15 @@ $$J = \sum_{k=0}^{N} \left[ w_x \|x_k - x_d\|^2 + w_f \|f_k - f_d\|^2 + w_\tau \
 
 | 资源 | 类型 | 难度 | 内容 |
 |------|------|------|------|
-| Di Carlo et al. 2018 "Convex MPC" IROS | 论文 | ⭐⭐ | 凸 MPC 奠基 |
-| Kim et al. 2019 "WBIC" IROS | 论文 | ⭐⭐ | WBIC 完整推导 |
-| Sleiman et al. 2021 RA-L | 论文 | ⭐⭐⭐ | 操作空间 MPC |
-| Sleiman et al. 2023 Science Robotics | 论文 | ⭐⭐⭐⭐ | 多接触 loco-manipulation |
-| qiayuanl/legged_control | 代码 | ⭐⭐ | 教学友好 MPC+WBC |
-| skywoodsz/qm_control | 代码 | ⭐⭐⭐ | 四足+臂力控 |
-| OCS2 官方文档 | 文档 | ⭐⭐⭐ | OCS2 框架 |
-| Crocoddyl 官方文档 | 文档 | ⭐⭐⭐ | Crocoddyl 框架 |
-| mujoco_mpc (DeepMind 2023) | 代码 | ⭐⭐⭐⭐ | 采样 MPC |
+| Di Carlo et al. 2018 "Convex MPC" IROS | 论文 | ★★ | 凸 MPC 奠基 |
+| Kim et al. 2019 "WBIC" IROS | 论文 | ★★ | WBIC 完整推导 |
+| Sleiman et al. 2021 RA-L | 论文 | ★★★ | 操作空间 MPC |
+| Sleiman et al. 2023 Science Robotics | 论文 | ★★★★ | 多接触 loco-manipulation |
+| qiayuanl/legged_control | 代码 | ★★ | 教学友好 MPC+WBC |
+| skywoodsz/qm_control | 代码 | ★★★ | 四足+臂力控 |
+| OCS2 官方文档 | 文档 | ★★★ | OCS2 框架 |
+| Crocoddyl 官方文档 | 文档 | ★★★ | Crocoddyl 框架 |
+| mujoco_mpc (DeepMind 2023) | 代码 | ★★★★ | 采样 MPC |
 
 ---
 
@@ -2081,7 +2081,7 @@ $$J = \sum_{k=0}^{N} \left[ w_x \|x_k - x_d\|^2 + w_f \|f_k - f_d\|^2 + w_\tau \
 ---
 
 
-## OCS2 和 Crocoddyl 的配置速查 ⭐⭐
+## OCS2 和 Crocoddyl 的配置速查 ★★
 
 
 ### MPC 在不同机器人平台上的典型配置

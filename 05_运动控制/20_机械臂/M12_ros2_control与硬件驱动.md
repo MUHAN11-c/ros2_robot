@@ -4,7 +4,7 @@
 
 ## 前置自测
 
-📋 **前置自测**（答不出 $\ge$ 2 题 → 先回 M11 / `02_C++基础与进阶/50_ROS2工程化` 复习）
+◆ **前置自测**（答不出 $\ge$ 2 题 → 先回 M11 / `02_C++基础与进阶/50_ROS2工程化` 复习）
 
 1. 什么是 `SCHED_FIFO` 调度策略？它与 `SCHED_OTHER` 的延迟差异量级是多少？（M11）
 2. `pluginlib` 的动态加载机制是什么？它与 `dlopen` 的关系是什么？（`02_C++基础与进阶/50_ROS2工程化/40_硬件集成与RL部署`）
@@ -54,16 +54,16 @@
 
 | § | 标题 | 难度 | 一句话定位 |
 |---|------|------|----------|
-| M12.1 | 架构全景 | ⭐⭐ | 四大组件 + RT 主循环 + 独占/共享语义 |
-| M12.2 | 三种硬件组件类型 | ⭐⭐ | System/Actuator/Sensor 的选型与 URDF 声明 |
-| M12.3 | 编写自定义 SystemInterface | ⭐⭐ | 生命周期回调 + RT-safe read/write 完整实现 |
-| M12.4 | 机械臂常用控制器 | ⭐⭐ | JTC/Forward/Admittance/Gripper 配置与选型 |
-| M12.5 | generate_parameter_library | ⭐⭐⭐ | 类型安全的参数声明与代码生成 |
-| M12.6 | Chainable Controllers | ⭐⭐⭐ | 链式控制器拓扑 + 错误恢复机制 |
-| M12.7 | 参考驱动精读 | ⭐⭐ | libfranka vs ur_robot_driver 源码走读 |
-| M12.8 | EtherCAT 集成 | ⭐⭐⭐⭐ | 工业总线 + SOEM/IgH 驱动开发 |
-| M12.9 | RL 策略部署 | ⭐⭐ | LibTorch vs ONNX Runtime + CRISP 架构 |
-| M12.10 | Chainable 实战与 gz_ros2_control | ⭐⭐⭐ | 链式拓扑实战 + Gazebo 最新集成 |
+| M12.1 | 架构全景 | ★★ | 四大组件 + RT 主循环 + 独占/共享语义 |
+| M12.2 | 三种硬件组件类型 | ★★ | System/Actuator/Sensor 的选型与 URDF 声明 |
+| M12.3 | 编写自定义 SystemInterface | ★★ | 生命周期回调 + RT-safe read/write 完整实现 |
+| M12.4 | 机械臂常用控制器 | ★★ | JTC/Forward/Admittance/Gripper 配置与选型 |
+| M12.5 | generate_parameter_library | ★★★ | 类型安全的参数声明与代码生成 |
+| M12.6 | Chainable Controllers | ★★★ | 链式控制器拓扑 + 错误恢复机制 |
+| M12.7 | 参考驱动精读 | ★★ | libfranka vs ur_robot_driver 源码走读 |
+| M12.8 | EtherCAT 集成 | ★★★★ | 工业总线 + SOEM/IgH 驱动开发 |
+| M12.9 | RL 策略部署 | ★★ | LibTorch vs ONNX Runtime + CRISP 架构 |
+| M12.10 | Chainable 实战与 gz_ros2_control | ★★★ | 链式拓扑实战 + Gazebo 最新集成 |
 
 **推荐阅读路径**：
 
@@ -81,15 +81,15 @@
 
 ---
 
-## M12.1 ros2_control 架构全景 ⭐⭐
+## M12.1 ros2_control 架构全景 ★★
 
-### 动机 ⭐⭐
+### 动机 ★★
 
 假设你有一个 MoveIt2 规划好的关节轨迹，需要在真实的 Franka Panda 上执行。问题来了：MoveIt2 的规划算法不应该知道「这是 Franka」还是「这是 UR5e」还是「这是 Gazebo 仿真」——如果每换一种硬件就要改规划代码，维护成本将指数爆炸。
 
 同时，你可能还想在同一台机器人上切换控制模式：MoveIt2 规划执行时用轨迹跟踪控制器，RL 策略推理时用直接位置转发控制器，力控交互时用导纳控制器。如果每种控制器都要自己实现硬件通信，代码重复将不可收拾。
 
-### 如果不用 ros2_control 会怎样 ⭐⭐
+### 如果不用 ros2_control 会怎样 ★★
 
 在 ros2_control 出现之前（ROS1 早期），每个硬件厂商自己实现 ROS 驱动节点：
 - Franka 有自己的 `franka_ros`，发布 `/joint_states`，订阅 `/joint_commands`
@@ -104,7 +104,7 @@
 
 > **本质洞察**：ros2_control 的核心贡献不是某个具体算法，而是一个**抽象层**——它把「控制算法想读/写什么」和「硬件怎么读/写」彻底解耦。这类似于操作系统中设备驱动的角色：应用程序调用 `read()/write()`，不需要知道底层是 SSD 还是 HDD。
 
-### 历史背景 ⭐
+### 历史背景 ★
 
 ros2_control 的前身是 ROS1 的 `ros_control`（2013 年由 Adolfo Rodriguez Tsouroukdissian 在 PAL Robotics 发起）。ROS1 版本已经引入了 Controller Manager 和 Hardware Interface 的分离，但存在几个关键问题：
 - 线程模型不灵活（所有控制器在同一线程）
@@ -113,7 +113,7 @@ ros2_control 的前身是 ROS1 的 `ros_control`（2013 年由 Adolfo Rodriguez 
 
 ROS2 版本（2020 年由 PickNik Robotics / Bence Magyar 等人主导重写）解决了这些问题，并引入了 Chainable Controllers、generate_parameter_library、更精细的错误处理等现代化设计。
 
-### 四大核心组件 ⭐⭐
+### 四大核心组件 ★★
 
 ros2_control 的架构由四个核心组件构成，它们通过明确的接口协作：
 
@@ -178,7 +178,7 @@ Controller 实现控制算法。它的 `update()` 方法在每个 RT 循环中�
 - 根据目标（轨迹点、力矩指令、导纳目标等）计算控制量
 - 将控制量写入 command interfaces
 
-### 主循环时序 ⭐⭐
+### 主循环时序 ★★
 
 ```
 时间 ────────────────────────────────────────────────────────►
@@ -206,7 +206,7 @@ Controller 实现控制算法。它的 `update()` 方法在每个 RT 循环中�
 | `write()` | 50-200$\mu$s | 命令帧发送 |
 | **总计** | 160-550$\mu$s | 留约 450-840$\mu$s 余量 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：在 read()/write() 中使用 ROS 日志
@@ -249,9 +249,9 @@ Controller 实现控制算法。它的 `update()` 方法在每个 RT 循环中�
 
 ---
 
-## M12.2 三种硬件组件类型 ⭐⭐
+## M12.2 三种硬件组件类型 ★★
 
-### 动机 ⭐⭐
+### 动机 ★★
 
 在 M12.1 中我们知道 Hardware Interface 是与物理硬件通信的代码。但不同硬件的通信模式差异很大：
 - 一台 6-DOF 机械臂的 6 个关节通过同一个 EtherCAT 总线通信——读一次就得到所有关节的状态
@@ -260,7 +260,7 @@ Controller 实现控制算法。它的 `update()` 方法在每个 RT 循环中�
 
 如果用同一个接口来覆盖这三种场景，要么过于复杂（简单传感器也要实现命令写入），要么过于简单（无法表达总线共享的语义）。
 
-### 三种接口类型 ⭐⭐
+### 三种接口类型 ★★
 
 ros2_control 定义了三种硬件组件类型来覆盖这些场景：
 
@@ -331,7 +331,7 @@ Resource Manager 从 URDF 解析这些标签，通过 pluginlib 加载对应的�
 
 分成三种类型后，每种都有最小必要接口，既清晰又高效。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 💡 概念误区：认为 SystemInterface 只能用于工业机械臂
@@ -365,15 +365,15 @@ Resource Manager 从 URDF 解析这些标签，通过 pluginlib 加载对应的�
 
 ---
 
-## M12.3 编写自定义 SystemInterface ⭐⭐
+## M12.3 编写自定义 SystemInterface ★★
 
-### 动机 ⭐⭐
+### 动机 ★★
 
 理解了架构之后，最重要的实践能力是**自己写一个硬件驱动**。无论你用的是哪种机器人——工业臂、协作臂、自定义关节——你都需要实现一个 Hardware Interface 来桥接 ros2_control 和你的硬件通信协议。
 
 本节以 SystemInterface 为例（因为它覆盖最常见的场景），完整演示一个从零开始的硬件驱动。
 
-### 生命周期状态机 ⭐⭐
+### 生命周期状态机 ★★
 
 在写代码之前，必须理解 Hardware Interface 的生命周期。它遵循 ROS2 Lifecycle Node 的状态机模型：
 
@@ -419,7 +419,7 @@ Resource Manager 从 URDF 解析这些标签，通过 pluginlib 加载对应的�
 
 > **跨领域类比**：这种分层设计类似于数据库连接池——`on_configure()` 是「建立连接」，`on_activate()` 是「从池中取出连接开始使用」，`on_deactivate()` 是「归还连接」，`on_cleanup()` 是「关闭连接」。连接的生命周期和使用的生命周期独立管理。
 
-### 完整代码实现 ⭐⭐
+### 完整代码实现 ★★
 
 下面我们分步构建一个完整的自定义 SystemInterface 实现。在深入代码之前，先理解每个文件的设计角色和它们之间的关系。我们分三个文件来组织：头文件、源文件、pluginlib 声明。
 
@@ -918,7 +918,7 @@ CallbackReturn on_activate(...) override {
 }
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：on_activate 不同步初始命令值
@@ -972,7 +972,7 @@ CallbackReturn on_activate(...) override {
 
 ---
 
-## M12.4 机械臂常用控制器 ⭐⭐
+## M12.4 机械臂常用控制器 ★★
 
 ### 动机
 
@@ -980,7 +980,7 @@ CallbackReturn on_activate(...) override {
 
 理解这些控制器不仅是使用它们的前提，更是理解 MoveIt2 执行层的关键——MoveIt2 规划好的轨迹最终通过 JointTrajectoryController 发送给硬件。
 
-### JointTrajectoryController (JTC) ⭐⭐
+### JointTrajectoryController (JTC) ★★
 
 **定位**：JTC 是 MoveIt2 的默认执行后端，也是机械臂最常用的控制器。它接收一个关节轨迹（`FollowJointTrajectory` action），在 RT 循环中用样条插值生成平滑的中间点，并通过 PID 反馈跟踪这些点。
 
@@ -1060,7 +1060,7 @@ joint_trajectory_controller:
 
 **跨领域类比**：JTC 类似于 CNC 加工中的 G-code 执行器——接收离散的路径点（G01 X10 Y20），内部用插值生成连续的电机命令。两者的共同点是「稀疏目标 → 密集命令」的转换，区别在于 CNC 用线性/圆弧插值，JTC 用多项式样条插值。
 
-### ForwardCommandController ⭐⭐
+### ForwardCommandController ★★
 
 **定位**：最简单的控制器——直接将接收到的命令转发给硬件，不做任何插值或反馈。
 
@@ -1082,7 +1082,7 @@ forward_position_controller:
 
 > **反事实推理**：如果 RL 部署也用 JTC 会怎样？JTC 会在策略输出的两个点之间做样条插值，产生「平滑但不受策略控制」的中间命令。对于力控/阻抗控制的 RL 策略，这种插值可能引入非预期的力矩，导致接触行为不稳定。所以 RL 部署首选 ForwardCommandController。
 
-### AdmittanceController ⭐⭐⭐
+### AdmittanceController ★★★
 
 **定位**：实现力感知的柔顺控制——当外力作用于机械臂时，机械臂像弹簧-阻尼系统一样柔顺地响应。
 
@@ -1186,7 +1186,7 @@ admittance_controller:
 - `kinematics.base/tip/group_name/alpha`、`control.frame`、`fixed_world_frame`、`gravity_compensation` 和 `admittance.selected_axes` 在新版本参数库中都是一等参数；缺失时控制器可能配置失败或坐标系/重力补偿错误。
 - 旧发行版或下游 vendor fork 可能把 `group_name` 写成 `group`，或缺少某些 `external`/动态参数字段。产品工程应以本机 `/opt/ros/<distro>/share/admittance_controller` 中的 GPL 参数定义和官方示例为准。
 
-### GripperActionController ⭐
+### GripperActionController ★
 
 专门控制平行夹爪的开合。接收 `GripperCommand` action（目标位置 + 最大力）。
 
@@ -1201,7 +1201,7 @@ gripper_controller:
     stall_timeout: 1.0
 ```
 
-### JointStateBroadcaster ⭐
+### JointStateBroadcaster ★
 
 不是控制器，而是广播器——从 state interfaces 读取关节状态，发布到 `/joint_states` topic。几乎所有系统都需要它。
 
@@ -1249,7 +1249,7 @@ ros2 control list_hardware_interfaces
 
 `--strict` 标志确保如果切换失败（例如两个控制器争夺同一个 command interface），整个操作回滚。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：忘记启动 JointStateBroadcaster
@@ -1288,7 +1288,7 @@ ros2 control list_hardware_interfaces
 
 ---
 
-## M12.5 generate_parameter_library ⭐⭐⭐
+## M12.5 generate_parameter_library ★★★
 
 ### 动机
 
@@ -1397,7 +1397,7 @@ class MyController : public controller_interface::ControllerInterface {
 
 > **跨领域类比**：GPL 之于 ros2_control 参数，就像 Protocol Buffers 之于网络协议——都是用声明式的 schema 自动生成类型安全的代码，消除手动序列化/反序列化的 boilerplate。两者的共同设计哲学是「schema 即文档，schema 即代码」。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 💡 概念误区：认为 GPL 只是"代码生成器"
@@ -1415,7 +1415,7 @@ class MyController : public controller_interface::ControllerInterface {
 
 ---
 
-## M12.6 Chainable Controllers 与错误恢复 ⭐⭐⭐
+## M12.6 Chainable Controllers 与错误恢复 ★★★
 
 ### 动机
 
@@ -1518,7 +1518,7 @@ try {
 }
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 🧠 思维陷阱：认为链式控制器会增加 RT 延迟
@@ -1546,7 +1546,7 @@ try {
 
 ---
 
-## M12.7 机械臂参考驱动精读 ⭐⭐
+## M12.7 机械臂参考驱动精读 ★★
 
 ### 动机
 
@@ -1646,7 +1646,7 @@ UR 控制箱                           你的工作站
 
 **UR driver 是精读 ros2_control 驱动的"金标准"**——代码质量高、注释充分、CI 覆盖完整。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：在 Franka 驱动中超时
@@ -1678,7 +1678,7 @@ UR 控制箱                           你的工作站
 
 ---
 
-## M12.8 EtherCAT 驱动集成 ⭐⭐⭐⭐
+## M12.8 EtherCAT 驱动集成 ★★★★
 
 ### 动机
 
@@ -1767,7 +1767,7 @@ ros2_control RT Loop
 </ros2_control>
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：EtherCAT 需要 root 权限或 CAP_NET_RAW
@@ -1793,7 +1793,7 @@ ros2_control RT Loop
 
 ---
 
-## M12.9 RL 策略部署：LibTorch vs ONNX Runtime ⭐⭐
+## M12.9 RL 策略部署：LibTorch vs ONNX Runtime ★★
 
 ### 动机
 
@@ -2032,7 +2032,7 @@ $$a_{filtered}(t) = \alpha \cdot a_{raw}(t) + (1 - \alpha) \cdot a_{filtered}(t-
 
 > **反事实推理**：如果不做 EMA 滤波会怎样？在仿真中可能看不出问题，但在真机上策略输出的高频抖动会导致电机异响、机械振动、甚至触发安全限制。EMA 是 sim-to-real 部署中最简单有效的平滑手段。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：在 RT 线程中运行推理
@@ -2073,7 +2073,7 @@ $$a_{filtered}(t) = \alpha \cdot a_{raw}(t) + (1 - \alpha) \cdot a_{filtered}(t-
 
 ---
 
-## M12.10 Chainable Controllers 实战与 gz_ros2_control 最新集成 ⭐⭐⭐
+## M12.10 Chainable Controllers 实战与 gz_ros2_control 最新集成 ★★★
 
 ### Chainable Controllers 深入理解
 
@@ -2200,15 +2200,15 @@ admittance_controller:
 
 | 知识点 | 核心内容 | 难度 |
 |--------|---------|------|
-| M12.1 架构全景 | 四大组件、RT 主循环、独占/共享接口 | ⭐⭐ |
-| M12.2 硬件组件类型 | System/Actuator/Sensor 三种类型及选型 | ⭐⭐ |
-| M12.3 自定义 SystemInterface | 生命周期回调、RT-safe read/write | ⭐⭐ |
-| M12.4 常用控制器 | JTC/Forward/Admittance/Gripper/Broadcaster | ⭐⭐ |
-| M12.5 generate_parameter_library | 类型安全参数生成 | ⭐⭐⭐ |
-| M12.6 Chainable Controllers | 链式控制器、错误恢复 | ⭐⭐⭐ |
-| M12.7 参考驱动精读 | libfranka vs ur_robot_driver | ⭐⭐ |
-| M12.8 EtherCAT 集成 | 飞行式帧处理、SOEM/IgH | ⭐⭐⭐⭐ |
-| M12.9 RL 部署 | LibTorch vs ONNX、CRISP 架构 | ⭐⭐ |
+| M12.1 架构全景 | 四大组件、RT 主循环、独占/共享接口 | ★★ |
+| M12.2 硬件组件类型 | System/Actuator/Sensor 三种类型及选型 | ★★ |
+| M12.3 自定义 SystemInterface | 生命周期回调、RT-safe read/write | ★★ |
+| M12.4 常用控制器 | JTC/Forward/Admittance/Gripper/Broadcaster | ★★ |
+| M12.5 generate_parameter_library | 类型安全参数生成 | ★★★ |
+| M12.6 Chainable Controllers | 链式控制器、错误恢复 | ★★★ |
+| M12.7 参考驱动精读 | libfranka vs ur_robot_driver | ★★ |
+| M12.8 EtherCAT 集成 | 飞行式帧处理、SOEM/IgH | ★★★★ |
+| M12.9 RL 部署 | LibTorch vs ONNX、CRISP 架构 | ★★ |
 
 ## 累积项目：本章新增模块
 
@@ -2238,13 +2238,13 @@ mini_manip_ws/
 
 | 资源 | 难度 | 说明 |
 |------|------|------|
-| ros2_control 官方文档 (`control.ros.org`) | ⭐ | 架构概览、教程 |
-| ros2_control_demos 仓库 | ⭐⭐ | 15+ 示例 |
-| UR ROS2 Driver 源码 | ⭐⭐ | 生产级驱动金标准 |
-| franka_ros2 源码 | ⭐⭐ | Franka 驱动 |
-| rl_sar 仓库 (fan-ziqi) | ⭐⭐ | RL 部署框架 |
-| ethercat_driver_ros2 (ICube) | ⭐⭐⭐ | EtherCAT 集成 |
-| Bence Magyar, ROSCon 2022 talk | ⭐ | 架构设计官方演讲 |
+| ros2_control 官方文档 (`control.ros.org`) | ★ | 架构概览、教程 |
+| ros2_control_demos 仓库 | ★★ | 15+ 示例 |
+| UR ROS2 Driver 源码 | ★★ | 生产级驱动金标准 |
+| franka_ros2 源码 | ★★ | Franka 驱动 |
+| rl_sar 仓库 (fan-ziqi) | ★★ | RL 部署框架 |
+| ethercat_driver_ros2 (ICube) | ★★★ | EtherCAT 集成 |
+| Bence Magyar, ROSCon 2022 talk | ★ | 架构设计官方演讲 |
 
 ## 🔧 故障排查手册
 

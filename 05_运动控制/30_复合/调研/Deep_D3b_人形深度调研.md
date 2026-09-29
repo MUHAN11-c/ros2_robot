@@ -75,7 +75,7 @@
 **㉑ He, Xiao, Lin et al. 2024 – HOVER**
 *"HOVER: Versatile Neural Whole-Body Controller for Humanoid Robots"*，arXiv 2410.21229；**ICRA 2025**（pp. 9989-9996）。NVIDIA + CMU + UT Austin 联合。把 motion imitation 作为 **通用预训练**，再通过 **observation masking** 蒸馏出一个可切换控制模式的单一网络（根速度 / 关节角 / 端效位姿）。G1/H1/H1-2 多平台。**定位**：从"多个任务专用策略"走向"单策略多模式"，为 VLA 接入铺路。
 
-**㉒ He et al. 2025 – ASAP** ⭐
+**㉒ He et al. 2025 – ASAP** ★
 *"ASAP: Aligning Simulation and Real-World Physics for Learning Agile Humanoid Whole-Body Skills"*，arXiv 2502.01143，**RSS 2025**。CMU LeCAR-Lab + NVIDIA + UT Austin。**两阶段 sim-to-real**：阶段一，AMASS/TRAM 视频 → SMPL → 机器人重定向 → phase-conditioned motion tracking policy（IsaacGym）；阶段二，真实 rollout → **delta action residual model** $a_{\\text{real}}=\\pi(s)+\\Delta_\\phi(s)$ 最小化 simulation 与真实状态差 → 把 $\\Delta_\\phi$ 注回仿真器 fine-tune → 部署时丢弃 $\\Delta_\\phi$。IsaacGym→G1 实机 tracking error 降低 **52.7%**。开源 `LeCAR-Lab/ASAP`（~1.9k★ MIT）。**定位**：当前 sim-to-real agile humanoid 的 SOTA 基准，复合/240_ASAP_SimToReal 核心论文。
 
 **㉓ Zhuang et al./Chen et al. 2024 – BeyondMimic / OmniRetarget / GMR 系列**（合并列出）。GMR = General Motion Retargeting，OmniRetarget（LeCAR 子项目）与 BeyondMimic（arXiv 2507.xxxxx 类）代表"retargeting-as-a-service"方向：把 SMPL→任意机器人关节的通用可微管线模块化。**定位**：给 复合/230_人形全身RL 提供"数据生成器"教学实操。
@@ -90,7 +90,7 @@ arXiv 2412.07773，**ICRA 2025**。上体 IK 精准操作 + 下体 RL locomotion
 **㉕ Ben, Jia, Zeng et al. 2025 – HOMIE**
 *"HOMIE: Humanoid Loco-Manipulation with Isomorphic Exoskeleton Cockpit"*，arXiv 2502.13013，**RSS 2025**。3D 打印 7-DoF 同构外骨骼（关节-关节一一映射，无 IK 误差）+ 15-DoF Hall 感应手套 + 脚踏板，硬件 ~$500。RL 下体三技术：**任意上体姿态课程 + 高度追踪 reward + 对称正则**。G1 与 GR-1。任务完成时间为 Open-TV 的一半。开源 `InternRobotics/OpenHomie`。**定位**：力敏感谱系的遥操作硬件分支代表。
 
-**㉖ Zhang, He, Shi et al. 2025 – FALCON** ⭐⭐
+**㉖ Zhang, He, Shi et al. 2025 – FALCON** ★★
 *"FALCON: Learning Force-Adaptive Humanoid Loco-Manipulation"*，arXiv 2505.06776，**L4DC 2026**。**双智能体 RL（Dual-Agent PPO）**：下体 agent 维持行走稳定、上体 agent 精确 EE tracking + 隐式力补偿，共享 proprioception 与 commands，各自 reward 与 action head 联合训练。**3D 力课程**：渐进施加 0→100N 外力（~30% 体重），用逆动力学实时验证关节力矩可行性。上体 joint tracking 精度相较 monolithic WBC 和 IK-upper baseline 提升 **2×**；G1 29-DoF 与 Booster T1 跨平台验证；任务：运货 0-20N / 拉车 0-100N / 开门 0-40N。开源 `LeCAR-Lab/FALCON`（~311★ MIT，基于 HumanoidVerse）。**定位**：复合/250_力敏感人形LocoMani 核心论文，力敏感 loco-mani 当前 SOTA。
 
 **㉗ Li, Zhang, Xiao et al. 2025 – SoFTA / Hold My Beer**

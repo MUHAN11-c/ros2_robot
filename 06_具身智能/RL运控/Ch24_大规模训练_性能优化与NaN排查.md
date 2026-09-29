@@ -4,7 +4,7 @@
 
 ## 前置自测
 
-📋 **答不出 ≥ 2 题 → 先回对应章节复习**
+◆ **答不出 ≥ 2 题 → 先回对应章节复习**
 
 1. **[Ch03 MuJoCo Warp]** CUDA Graph 的 capture 机制对数组地址有什么要求？如果 domain randomization 扩展了 per-world 字段，需要做什么操作？
 2. **[Ch07 训练管线]** PPO 的 `num_steps_per_env` 和 `num_mini_batches` 分别控制 rollout 的什么维度？它们对 GPU 显存有什么影响？
@@ -24,7 +24,7 @@
 
 ---
 
-## 24.1 为什么需要大规模训练 ⭐
+## 24.1 为什么需要大规模训练 ★
 
 > **这一节解决什么问题**：从"能训练"到"高效训练"的工程跨越需要关注什么？
 
@@ -55,14 +55,14 @@ Ch13-Ch23 的所有实战都在单 GPU 上完成——4096 个并行环境、100
 
 > **跨领域类比**：多 GPU 训练就像从单厨师厨房升级到多厨师厨房。如果只有一道菜要做，多一个厨师反而碍手碍脚（沟通成本）。但如果要同时准备 5 道不同的菜（多 seed），或者一道菜需要两个人同时操作不同部分（环境并行），多厨师就有价值了。关键是明确"为什么需要多人"，而不是"人多力量大"。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **思维陷阱：认为"多 GPU 训练更好"**
+⚠ **思维陷阱：认为"多 GPU 训练更好"**
 - 多 GPU 的总样本量更大（更多 envs），但每个 update 的 PPO batch 组成可能不同（不同 GPU 上的 env 状态分布不同）
 - 如果不正确核算样本量，可能得出"多 GPU 收敛更快"的错误结论——实际上只是"多 GPU 看了更多数据"
 - 正确做法：比较时使用相同的总样本量（total env steps），而非相同的 iteration 数
 
-⚠️ **编程陷阱：`CUDA_VISIBLE_DEVICES` 映射混淆**
+⚠ **编程陷阱：`CUDA_VISIBLE_DEVICES` 映射混淆**
 - 设置 `CUDA_VISIBLE_DEVICES=2,3` 后，PyTorch 的 `cuda:0` 对应物理 GPU 2，`cuda:1` 对应物理 GPU 3
 - 如果在代码中硬编码 `--gpu-ids "[2, 3]"`，程序看不到逻辑 id 2 和 3——因为可见设备只有 0 和 1
 - 正确做法：传 `--gpu-ids "[0, 1]"`，让框架自动映射到 `CUDA_VISIBLE_DEVICES` 指定的物理设备
@@ -80,11 +80,11 @@ Ch13-Ch23 的所有实战都在单 GPU 上完成——4096 个并行环境、100
 ---
 
 
-## 24.2 多 GPU 训练：双框架配置详解 ⭐⭐⭐
+## 24.2 多 GPU 训练：双框架配置详解 ★★★
 
 > **这一节解决什么问题**：在 mjlab 和 Isaac Lab 中分别如何配置多 GPU 训练？数据并行和环境并行有什么区别？
 
-### 数据并行 vs 环境并行 ⭐⭐
+### 数据并行 vs 环境并行 ★★
 
 GPU 仿真 RL 的多 GPU 有两种范式：
 
@@ -96,7 +96,7 @@ GPU 仿真 RL 的多 GPU 有两种范式：
 | PPO batch 大小 | 不变 | 翻倍 |
 | 通信开销 | 每次 update 一次 all-reduce | 每次 update 一次 gather + all-reduce |
 | 适用场景 | 显存不够放 4096 envs | 需要更多 envs 做 DR 覆盖 |
-| 推荐度 | ⭐⭐（除非显存不足否则不优先） | ⭐⭐⭐（GPU 仿真的主要多 GPU 模式） |
+| 推荐度 | ★★（除非显存不足否则不优先） | ★★★（GPU 仿真的主要多 GPU 模式） |
 
 **关键差异**：在 GPU 仿真 RL 中，env step 通常是计算瓶颈（占总时间 60-80%），而非 PPO update。因此**环境并行**（更多 envs → 更多数据 → 更快收敛）比数据并行（相同数据量 → 梯度同步 → 不增加收敛速度）更有效。
 
@@ -104,7 +104,7 @@ GPU 仿真 RL 的多 GPU 有两种范式：
 
 mjlab 和 Isaac Lab 都默认使用**环境并行 + DDP 梯度同步**的混合模式——每个 GPU 运行独立的环境集合（环境并行），PPO update 时梯度通过 DDP all-reduce 同步（数据并行）。
 
-### mjlab 多 GPU 配置 ⭐⭐⭐
+### mjlab 多 GPU 配置 ★★★
 
 mjlab 使用 **torchrunx** 实现多 GPU 训练。torchrunx 是一个基于 SSH 的纯 Python 分布式启动器——比标准 torchrun 更灵活（支持从单个 Python 脚本启动多节点训练，无需 SLURM）。
 
@@ -153,7 +153,7 @@ uv run train Mjlab-Velocity-Flat-Unitree-Go1 \
   → 所有 rank 的策略权重保持同步
 ```
 
-**多 GPU 训练的样本量核算** ⭐⭐⭐：
+**多 GPU 训练的样本量核算** ★★★：
 
 ```python
 # === 样本量核算公式 ===
@@ -172,7 +172,7 @@ dual_gpu_fair = 4096 * 24 * 2 * 5000  # = 983,040,000 (相同！)
 
 > **反事实推理：如果用双 GPU 跑相同的 iterations 而不缩放会怎样？** 你会看到双 GPU 的 reward 曲线更好——但这不是因为"双 GPU 训练效果更好"，而是因为双 GPU 总共看了 2 倍的数据。这就像两个学生做不同数量的练习题后比考试成绩——做更多题的当然分更高，但这不能证明两人的学习能力有差异。在论文中报告多 GPU 结果时，必须明确标注 x 轴是 total env steps 而非 iterations。
 
-### Isaac Lab 多 GPU 配置 ⭐⭐⭐
+### Isaac Lab 多 GPU 配置 ★★★
 
 Isaac Lab 使用标准的 PyTorch **torchrun** 启动分布式训练：
 
@@ -219,7 +219,7 @@ python -m torch.distributed.run --nnodes=2 --nproc_per_node=4 \
 | Checkpoint | rank 0 写入 | rank 0 写入 |
 | 兼容 RL 库 | RSL-RL | RSL-RL / rl_games / SKRL |
 
-### 单写者原则 ⭐⭐
+### 单写者原则 ★★
 
 多 GPU 训练中一个高频 bug 是**多个 rank 同时写同一个文件**——导致 checkpoint 损坏、日志混乱或视频帧交错。
 
@@ -254,7 +254,7 @@ if is_main_process():
 
 如果忘记了 rank 检查——比如每个 rank 都往同一个 TensorBoard 目录写 events 文件——TensorBoard 会显示混乱的多条曲线（每个 rank 一条，x 轴重叠），你可能误以为训练不稳定（因为看到了多条振荡的曲线），实际上只是日志重复。
 
-### Checkpoint 与 Resume 链路 ⭐⭐
+### Checkpoint 与 Resume 链路 ★★
 
 多 GPU 训练的 checkpoint 管理比单 GPU 复杂——需要处理"从哪个 rank 加载"和"resume 后 rank 数量变化"的问题：
 
@@ -292,21 +292,21 @@ def load_checkpoint(runner, path):
 
 **Resume 时的样本量一致性**：如果你用 2 GPU 训练了 5000 iterations 后中断，用 4 GPU resume，每个 iteration 的样本量变成了原来的 2 倍——如果不调整 `max_iterations`，总样本量会超出预期。resume 前必须重新核算。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：多个 rank 都写 WandB**
+⚠ **编程陷阱：多个 rank 都写 WandB**
 - 每个 rank 独立创建 WandB run，结果出现 N 个重复的 run
 - 正确做法：只在 rank 0 初始化 WandB
 
-⚠️ **编程陷阱：GPU id 映射错误**
+⚠ **编程陷阱：GPU id 映射错误**
 - `CUDA_VISIBLE_DEVICES=2,3` + `--gpu-ids "[2, 3]"` → 设备不可见错误
 - 正确做法：`--gpu-ids "[0, 1]"`（逻辑 id 相对于 CUDA_VISIBLE_DEVICES）
 
-⚠️ **思维陷阱：多 GPU 但不缩放 iterations**
+⚠ **思维陷阱：多 GPU 但不缩放 iterations**
 - 双 GPU × 10000 iterations vs 单 GPU × 10000 iterations：前者看了 2× 数据
 - 论文中报告时必须标明 x 轴是 total env steps 还是 iterations
 
-⚠️ **编程陷阱：torchrunx rank 1 崩溃但 rank 0 日志正常**
+⚠ **编程陷阱：torchrunx rank 1 崩溃但 rank 0 日志正常**
 - torchrunx 的每个 rank 有独立的日志文件（在 `torchrunx/` 目录下）
 - 只看 rank 0 的标准输出可能漏掉 rank 1 的 CUDA crash
 - 正确做法：检查所有 rank 的日志，特别是 stderr
@@ -324,7 +324,7 @@ def load_checkpoint(runner, path):
 ---
 
 
-## 24.3 NaN 排查：从症状到根因的系统方法论 ⭐⭐⭐
+## 24.3 NaN 排查：从症状到根因的系统方法论 ★★★
 
 > **这一节解决什么问题**：训练中突然出现 NaN 时，如何系统化地定位根因并修复？
 
@@ -334,7 +334,7 @@ NaN（Not a Number）是 RL 训练中最常见的崩溃原因——策略输出�
 
 > **跨领域类比**：NaN 在 RL 训练中就像心脏骤停在临床上——它不是疾病本身，而是某种底层病因的终端表现。你不能只治疗心脏骤停（清除 NaN）——你必须找到并治疗底层病因（导致 NaN 的物理/算法配置）。就像急诊流程先 CPR（恢复心跳）再找病因，NaN 排查也是先定位哪个 env/step/variable 最先出现 NaN（等价于 CPR），再追溯根因。
 
-### NaN 的五大根因（按频率排序） ⭐⭐⭐
+### NaN 的五大根因（按频率排序） ★★★
 
 根据 mjlab、Isaac Lab 社区和本教材作者的经验，NaN 的根因按频率排序如下：
 
@@ -346,7 +346,7 @@ NaN（Not a Number）是 RL 训练中最常见的崩溃原因——策略输出�
 | 4 | Policy std 变负 | log_prob 计算时出现 NaN | 15% |
 | 5 | CUDA Graph capture 失效 | 随机化改变内存布局后 graph 无效 | 10% |
 
-### 根因 1：接触求解器发散 ⭐⭐
+### 根因 1：接触求解器发散 ★★
 
 **症状**：训练前 1000 iterations 正常，然后突然某些 env 的 `qvel` 出现 NaN。通常发生在策略学到了高速动作（接触力增大）或 DR 引入了低摩擦（接触更容易滑动）之后。
 
@@ -420,7 +420,7 @@ articulation_props=sim_utils.ArticulationRootPropertiesCfg(
 )
 ```
 
-### 根因 2：Reward 函数中的除零/溢出 ⭐⭐
+### 根因 2：Reward 函数中的除零/溢出 ★★
 
 **症状**：某个 reward term 在特定 env 状态下返回 inf 或 NaN。通常是 `1/distance` 形式的 reward 在距离趋近零时溢出。
 
@@ -461,7 +461,7 @@ def good_distance_reward(env, sigma=0.25):
     return torch.exp(-d**2 / sigma**2)  # d=0 返回 1.0，d→∞ 返回 0
 ```
 
-### 根因 3：Obs normalizer 未预热 ⭐⭐
+### 根因 3：Obs normalizer 未预热 ★★
 
 **症状**：训练的前 1-10 个 iteration 出现 NaN（非常早期）。
 
@@ -491,7 +491,7 @@ def warmup_normalizer(env, policy, num_warmup_steps=500):
         print("  这些维度可能是常数 obs（如固定 command）——检查是否合理")
 ```
 
-### 根因 4：Policy std 变负 ⭐⭐
+### 根因 4：Policy std 变负 ★★
 
 **症状**：PPO update 时 `log_prob` 计算出现 NaN。
 
@@ -513,7 +513,7 @@ self.raw_std = nn.Parameter(torch.ones(action_dim))
 # std = softplus(raw_std) > 0
 ```
 
-### 根因 5：CUDA Graph capture 失效 ⭐
+### 根因 5：CUDA Graph capture 失效 ★
 
 **症状**：训练中突然出现随机的 NaN——不是每次都在同一个 step 或同一个 env。
 
@@ -533,7 +533,7 @@ self.raw_std = nn.Parameter(torch.ones(action_dim))
 #   如果禁用后 NaN 仍在 → graph 不是根因
 ```
 
-### mjlab 的 NaN Guard 工具 ⭐⭐⭐
+### mjlab 的 NaN Guard 工具 ★★★
 
 mjlab 提供了内置的 NaN 检测和 dump 机制：
 
@@ -594,7 +594,7 @@ def analyze_nan_dump(path):
 analyze_nan_dump("/tmp/mjlab/nan_dumps/nan_dump_latest.npz")
 ```
 
-### NaN 排查优先级表 ⭐⭐
+### NaN 排查优先级表 ★★
 
 当 NaN 发生时，按以下优先级逐步排查——每步确认无问题后再进入下一步：
 
@@ -615,19 +615,19 @@ analyze_nan_dump("/tmp/mjlab/nan_dumps/nan_dump_latest.npz")
 
 > **反事实推理：如果不用 NaN guard 直接凭经验猜会怎样？** 你看到 reward 变成 NaN，猜测"可能是 contact 参数不对"，花了两天调 solref/solimp——结果问题是 reward 函数中的 `1/d` 在距离趋零时溢出。NaN guard 的 dump 能在 5 分钟内告诉你"NaN 首先出现在 reward，不是 qvel"——直接指向 reward 函数而非 contact 参数。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：用 `torch.nan_to_num()` 掩盖 NaN**
+⚠ **编程陷阱：用 `torch.nan_to_num()` 掩盖 NaN**
 - 某些框架在 reward 计算后用 `nan_to_num` 把 NaN 替换为 0——这消除了错误信号但不修复根因
 - 训练可能继续但策略行为诡异（因为某些 reward 被静默替换为 0）
 - 正确做法：找到并修复 NaN 的根因，而非掩盖它
 
-⚠️ **思维陷阱：NaN + 多 GPU 一起排查**
+⚠ **思维陷阱：NaN + 多 GPU 一起排查**
 - 如果每个 rank 都偶发 NaN，不要在多 GPU 环境下排查
 - 先缩小到单 GPU + 小 env 数定位根因
 - 确认修复后再扩展回多 GPU 验证
 
-⚠️ **编程陷阱：NaN 在 curriculum 阶段切换后出现**
+⚠ **编程陷阱：NaN 在 curriculum 阶段切换后出现**
 - Curriculum 推进时新增了 reward term 或修改了权重，如果新 term 有 NaN 风险且旧 term 没有，NaN 只在推进后出现
 - 排查：固定 curriculum 在推进前后的阶段各跑 100 iterations，确认 NaN 是哪个阶段的问题
 
@@ -637,7 +637,7 @@ analyze_nan_dump("/tmp/mjlab/nan_dumps/nan_dump_latest.npz")
 2. **[分析题]** 一个训练在第 3000 iteration 出现 NaN（之前 2999 iterations 正常）。列出三个可能的触发条件，并解释为什么这些条件在训练后期才触发。
 3. **[跨章综合题]** 结合 Ch08 的 DR 配置，分析以下场景：DR 的摩擦范围从 [0.5, 1.0] 扩大到 [0.1, 2.0] 后训练开始频繁 NaN。可能的根因是什么？应该怎么修复？（提示：低摩擦 + 高速接触 → 求解器发散）
 
-### CUDA Graph 诊断与修复 ⭐⭐
+### CUDA Graph 诊断与修复 ★★
 
 CUDA Graph 是 mjlab 和 Isaac Lab 高吞吐的关键机制——但它也是 NaN 和性能异常的隐蔽来源。当 Graph 失效但未被正确重新 capture 时，GPU 可能访问无效的内存地址，产生随机的错误值。
 
@@ -706,7 +706,7 @@ def apply_dr_with_graph_rebuild(sim, dr_events):
         print("[INFO] CUDA Graph rebuilt after DR expansion")
 ```
 
-### 多 GPU 环境下的 NaN 特殊处理 ⭐⭐
+### 多 GPU 环境下的 NaN 特殊处理 ★★
 
 多 GPU 训练中 NaN 的排查更困难——因为 NaN 可能只发生在某个 rank 上，而其他 rank 的日志看起来正常。
 
@@ -756,11 +756,11 @@ NaN 排查建立了"训练能稳定运行"的基础。但"能运行"不等于"�
 ---
 
 
-## 24.4 性能优化：从 Profiling 到 Tuning ⭐⭐⭐
+## 24.4 性能优化：从 Profiling 到 Tuning ★★★
 
 > **这一节解决什么问题**：如何量化训练的性能瓶颈？在物理计算、传感器、Manager 和 PPO update 之间，时间花在了哪里？
 
-### 性能度量标准 ⭐⭐
+### 性能度量标准 ★★
 
 RL 训练的性能不只是"steps/s"一个数字——需要区分多个层次：
 
@@ -776,7 +776,7 @@ RL 训练的性能不只是"steps/s"一个数字——需要区分多个层次�
 
 如果 `physics_sps` 很高但 `env_sps` 很低，瓶颈在传感器或 Manager 的 Python 逻辑。如果 `env_sps` 很高但 `train_sps` 很低，瓶颈在 PPO update（网络太大或 mini_batch 太多）。
 
-### 性能 Profiling 工具链 ⭐⭐
+### 性能 Profiling 工具链 ★★
 
 **快速 Benchmark（5 分钟）**：
 
@@ -845,7 +845,7 @@ nsys profile --trace=cuda,nvtx \
 nsys-ui train_profile.nsys-rep
 ```
 
-### 传感器成本量化 ⭐⭐
+### 传感器成本量化 ★★
 
 传感器（contact sensor、height scan、camera）通常是环境吞吐的最大瓶颈。以下代码展示如何量化传感器的性能开销：
 
@@ -888,7 +888,7 @@ def benchmark_sensor_cost(task, num_envs=4096, num_steps=500):
 | PPO update | 10-20% | 网络 forward + backward |
 | 其他 (reset/logging/CUDA sync) | 5-10% | |
 
-### nconmax/njmax 调优 ⭐⭐
+### nconmax/njmax 调优 ★★
 
 `nconmax`（用于推导**全局** contact 容量——MJWarp 中 contacts 存放在异构数组里，单个 world 的接触数可以超过 `nconmax`，只要所有 world 的总接触数不超过 `nworld × nconmax`）和 `njmax`（**每个 world 严格**的最大约束行数上限）直接影响 GPU 显存和性能。设太小会导致接触/约束截断（穿透、物理不稳定）；设太大浪费显存和降低 cache locality。
 
@@ -923,7 +923,7 @@ def find_optimal_nconmax(env, num_steps=1000):
     return recommended
 ```
 
-### num_envs 选择指南 ⭐⭐
+### num_envs 选择指南 ★★
 
 ```python
 # === 自动寻找最优 num_envs ===
@@ -961,7 +961,7 @@ def find_optimal_num_envs(task, env_range=[256, 512, 1024, 2048, 4096, 8192]):
     return best
 ```
 
-### 性能调优决策表 ⭐⭐
+### 性能调优决策表 ★★
 
 | 现象 | 优先怀疑 | 第一检查项 | 调整方向 |
 |------|----------|------------|----------|
@@ -972,17 +972,17 @@ def find_optimal_num_envs(task, env_range=[256, 512, 1024, 2048, 4096, 8192]):
 | PPO update 占比 > 30% | 网络太大或 mini_batch 太多 | profiler 检查 | 减小网络层或 mini_batch |
 | physics_sps 低但 env_sps 合理 | timestep/iterations 过多 | 增大 timestep 试试 | 权衡精度和速度 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：在 reward 函数中用 Python for 循环**
+⚠ **编程陷阱：在 reward 函数中用 Python for 循环**
 - 对每个 env 单独计算 reward（而非 batch tensor 操作）——N 个 env 就执行 N 次 Python 循环
 - 修复：所有 reward/obs 函数必须是 batch tensor 操作
 
-⚠️ **思维陷阱：性能不好就换框架**
+⚠ **思维陷阱：性能不好就换框架**
 - "mjlab 太慢，换 Isaac Lab"——更可能的原因是 sensor 配置或 num_envs 不对
 - 正确做法：先 profile，找到瓶颈再决定
 
-⚠️ **编程陷阱：benchmark 时包含了 warmup**
+⚠ **编程陷阱：benchmark 时包含了 warmup**
 - 前几步包含 CUDA Graph capture、JIT 编译等一次性开销——会拉低平均 steps/s
 - 正确做法：先跑 50-100 步 warmup，再开始计时
 
@@ -992,7 +992,7 @@ def find_optimal_num_envs(task, env_range=[256, 512, 1024, 2048, 4096, 8192]):
 2. **[实验题]** 在一个有 height scan sensor 的四足任务上，分别测量有无 height scan 的 env_sps。Sensor 带来了多大的开销百分比？
 3. **[分析题]** 为什么过大的 nconmax 会降低性能？从 GPU cache locality 的角度解释。
 
-### 完整性能 Profiling 案例 ⭐⭐⭐
+### 完整性能 Profiling 案例 ★★★
 
 以下是一个真实的性能优化案例——从"训练太慢"到"找到瓶颈"到"优化后加速 2.5×"的完整流程。
 
@@ -1046,7 +1046,7 @@ ppo_overhead = 1 - train_sps / env_sps  # 53%!
 
 **关键教训**：性能瓶颈很少在你猜测的地方——这个案例中，用户最初怀疑"MuJoCo Warp 物理引擎太慢"，但实际瓶颈在 sensor 和 PPO 网络大小。没有 profiling 的猜测只会浪费时间。
 
-### Timestep × Decimation × 策略频率的权衡 ⭐⭐
+### Timestep × Decimation × 策略频率的权衡 ★★
 
 这三个参数之间的关系经常被混淆，但它们直接影响训练质量和速度：
 
@@ -1073,7 +1073,7 @@ control_dt = timestep * decimation       # 策略的控制周期
 
 > **反事实推理：如果把 timestep 从 0.005 增大到 0.01（为了加速），但 decimation 不变会怎样？** Policy 频率从 50Hz 降到 25Hz。对于四足行走，25Hz 可能足够（步态周期 ~0.5s，每步 12.5 个决策点）。但对于跑步（步态周期 ~0.3s），25Hz 只有 7.5 个决策点——可能不够精细，导致脚步落点不精确。此外，更大的 timestep 会降低接触求解的精度——高冲击接触（如足端着地）可能产生更大的穿透和不稳定。
 
-### Isaac Lab vs mjlab 性能对比 ⭐⭐
+### Isaac Lab vs mjlab 性能对比 ★★
 
 两个框架在同一硬件上的性能差异主要来自物理引擎（PhysX vs MuJoCo Warp）和框架层开销：
 
@@ -1090,7 +1090,7 @@ control_dt = timestep * decimation       # 策略的控制周期
 
 注意：这些数字是 order-of-magnitude 参考，实际值取决于具体任务配置、GPU 型号和框架版本。不应该仅基于 steps/s 选择框架——物理精度、API 设计、生态支持和部署管线的完整性更重要。
 
-### Benchmark 协议必备字段 ⭐⭐
+### Benchmark 协议必备字段 ★★
 
 报告性能数字时，必须附带完整的实验协议——否则数字无法被复查。"mjlab 比 X 快 3 倍"缺少了使结论有效的全部上下文：什么任务？什么机器人？什么传感器？多少并行环境？什么硬件？warmup 如何处理？没有这些上下文的数字，就像说"A 比 B 跑得快"——但 A 在塑胶跑道上穿跑鞋，B 在沙滩上赤脚。
 
@@ -1112,7 +1112,7 @@ control_dt = timestep * decimation       # 策略的控制周期
 
 **规范的性能结论示例**："在 Mjlab-Velocity-Flat-Unitree-Go1 任务上，使用 RTX 4090、4096 envs、无 viewer/video、121-ray height scan、100 步 warmup 后测量 1000 步，steady-state env_sps 为 185,000。该数字只代表环境步吞吐，不代表训练收敛速度。"
 
-### 显存估算与 num_envs 上限 ⭐⭐
+### 显存估算与 num_envs 上限 ★★
 
 ```python
 # === 显存估算公式 ===
@@ -1164,11 +1164,11 @@ for n in [4096, 8192, 16384, 32768]:
 
 ---
 
-## 24.5 云端训练与成本控制 ⭐⭐
+## 24.5 云端训练与成本控制 ★★
 
 > **这一节解决什么问题**：如何在云端 GPU 上运行训练？如何控制成本？
 
-### SkyPilot 云端训练 ⭐⭐
+### SkyPilot 云端训练 ★★
 
 SkyPilot 是 mjlab 和 Isaac Lab 社区常用的云端 GPU 编排工具——它抽象了 AWS/GCP/Azure 等不同云厂商的 GPU 资源，用统一的 YAML 配置启动训练。
 
@@ -1216,7 +1216,7 @@ sky logs go1-velocity-training
 sky down go1-velocity-training
 ```
 
-### 云端成本控制 ⭐⭐
+### 云端成本控制 ★★
 
 | GPU 类型 | 按需价格 ($/hr) | Spot 价格 ($/hr) | 4096 envs 四足 10k iter 时间 | 总成本 |
 |---------|----------------|-----------------|---------------------------|--------|
@@ -1235,7 +1235,7 @@ sky down go1-velocity-training
 
 > **反事实推理：如果忘记 `sky down` 会怎样？** SkyPilot 启动的 GPU 实例不会自动关闭（除非配置了自动关闭策略）。一块 A100 闲置一天的成本是 ~$72。一个周五下午忘记关的实例到周一上午已经烧掉了 ~$200。正确做法：在 WandB 的训练完成 callback 中自动执行 `sky down`，或设置最大运行时间。
 
-### WandB Sweep 超参搜索 ⭐
+### WandB Sweep 超参搜索 ★
 
 当你需要搜索多组超参时，WandB Sweep 可以自动化管理：
 
@@ -1282,13 +1282,13 @@ CUDA_VISIBLE_DEVICES=3 wandb agent <SWEEP_ID> &
 # 4 个 agent 并行搜索超参
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **成本陷阱：Spot 实例被中断丢失 checkpoint**
+⚠ **成本陷阱：Spot 实例被中断丢失 checkpoint**
 - Spot 实例可能被云厂商随时回收
 - 正确做法：每 500 iterations 自动保存 checkpoint + 上传到 WandB 或 S3
 
-⚠️ **编程陷阱：Sweep agent 抢同一 GPU**
+⚠ **编程陷阱：Sweep agent 抢同一 GPU**
 - 多个 agent 不加 `CUDA_VISIBLE_DEVICES` 限制，全部用 GPU 0
 - 正确做法：每个 agent 绑定独立 GPU
 
@@ -1299,11 +1299,11 @@ CUDA_VISIBLE_DEVICES=3 wandb agent <SWEEP_ID> &
 
 ---
 
-## 24.6 实验管理与可复现性 ⭐⭐
+## 24.6 实验管理与可复现性 ★★
 
 > **这一节解决什么问题**：如何组织大规模训练的实验，使每个结论都可追溯到具体的配置和数据？
 
-### 运行包协议 ⭐⭐
+### 运行包协议 ★★
 
 每次训练都应该产出一个可交接的"运行包"——包含复现该训练所需的所有信息。
 
@@ -1348,7 +1348,7 @@ gpu_type: A100-40GB
 framework: mjlab
 ```
 
-### 自动化实验记录 ⭐⭐
+### 自动化实验记录 ★★
 
 ```python
 # === 自动化实验记录 ===
@@ -1418,7 +1418,7 @@ def create_run_package(run_dir, env_cfg, agent_cfg, command):
     return run_dir
 ```
 
-### 公平实验对比的原则 ⭐⭐
+### 公平实验对比的原则 ★★
 
 在论文或报告中对比不同配置的训练结果时，必须确保对比的公平性：
 
@@ -1440,7 +1440,7 @@ def create_run_package(run_dir, env_cfg, agent_cfg, command):
 | L4 | 消融实验 + 统计检验 | "改进来自组件 X（p<0.05）" |
 | L5 | 跨任务/机器人验证 | "方法具有泛化性" |
 
-### 失败案例库 ⭐⭐
+### 失败案例库 ★★
 
 以下是多 GPU 和大规模训练中的常见失败案例——从中可以学到工程直觉。
 
@@ -1474,7 +1474,7 @@ def create_run_package(run_dir, env_cfg, agent_cfg, command):
 - 修复：每个 agent 绑定独立 GPU
 - 教训：agent 数量等于 GPU 数
 
-### 故障分流表 ⭐⭐
+### 故障分流表 ★★
 
 | 失败层 | 典型现象 | 第一证据 | 优先处理 |
 |--------|---------|---------|---------|
@@ -1488,13 +1488,13 @@ def create_run_package(run_dir, env_cfg, agent_cfg, command):
 
 **分流能减少无效调参**。云端 capacity 不足不是 PPO 参数问题。W&B 登录失败不是模型问题。Rank 1 的 CUDA crash 不一定能从 rank 0 曲线看出来。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **思维陷阱：不记录实验就开始调参**
+⚠ **思维陷阱：不记录实验就开始调参**
 - "跑了十次实验，第三次效果最好但不记得配置是什么"
 - 正确做法：每次实验自动生成运行包，用 WandB 或 Git 追踪
 
-⚠️ **编程陷阱：Checkpoint 名字不匹配**
+⚠ **编程陷阱：Checkpoint 名字不匹配**
 - Resume 时传 `model_latest.pt`，但 run files 只有 `model_500.pt`
 - 正确做法：显式指定存在的 checkpoint 文件名
 
@@ -1506,11 +1506,11 @@ def create_run_package(run_dir, env_cfg, agent_cfg, command):
 
 ---
 
-## 24.7 精读：AGILE 四阶段工业级 Workflow ⭐⭐⭐
+## 24.7 精读：AGILE 四阶段工业级 Workflow ★★★
 
 > **这一节解决什么问题**：AGILE（NVIDIA, arXiv:2603.20147）提出了一个覆盖"准备→训练→评估→部署"全流程的工业级 workflow。它如何组织大规模训练的每个环节？
 
-### AGILE 的四阶段架构 ⭐⭐
+### AGILE 的四阶段架构 ★★
 
 AGILE（缩写展开为 *A Generic Isaac-Lab based Engine*；论文题名为 *A Comprehensive Workflow for Humanoid Loco-Manipulation Learning*）是 NVIDIA 在 2026 年发布的人形 RL 工程化框架。它不是一个算法——而是一套**标准化的工程流程**，把大规模训练中的每个环节（调试、训练、评估、部署）形式化为可重复的阶段。
 
@@ -1553,7 +1553,7 @@ Stage 4: Deploy (部署)
 └── 真机 C++ controller
 ```
 
-### AGILE 的算法工具箱 ⭐⭐⭐
+### AGILE 的算法工具箱 ★★★
 
 AGILE 提供了一系列可开关的 PPO 增强技术——每个都有明确的适用场景和默认参数。
 
@@ -1688,7 +1688,7 @@ def value_bootstrapped_terminal(reward, value, done, gamma=0.99, sigma=5.0):
     return adjusted_value
 ```
 
-### AGILE 的 PPO 默认配置 ⭐⭐
+### AGILE 的 PPO 默认配置 ★★
 
 以下是 AGILE 在 Unitree G1 和 Booster T1 上验证过的 PPO 默认配置——可以作为新项目的起点：
 
@@ -1707,7 +1707,7 @@ def value_bootstrapped_terminal(reward, value, done, gamma=0.99, sigma=5.0):
 | Num steps per env | 24 | |
 | Max iterations | ~20k | |
 
-### AGILE 与本书前序章节的对应 ⭐⭐
+### AGILE 与本书前序章节的对应 ★★
 
 | AGILE 阶段 | 本书对应 | 章节 |
 |------------|---------|------|
@@ -1720,7 +1720,7 @@ def value_bootstrapped_terminal(reward, value, done, gamma=0.99, sigma=5.0):
 | Stage 4: Deploy (export) | ONNX 导出 + metadata | Ch23 §23.3 |
 | Stage 4: Deploy (descriptor) | deploy.yaml | Ch23 §23.5 |
 
-### AGILE Stage 3: 运动质量诊断代码 ⭐⭐⭐
+### AGILE Stage 3: 运动质量诊断代码 ★★★
 
 AGILE 的 Stage 3 不只看 reward 曲线——它还计算一系列运动质量指标（motion quality metrics），用于判断策略的行为是否适合真机部署：
 
@@ -1843,7 +1843,7 @@ def evaluate_motion_quality(env, policy, num_episodes=100):
 
 > **本质洞察**：AGILE 的核心贡献不是某个新算法，而是把"好的工程实践"标准化为可强制执行的流程。在没有 AGILE 的情况下，一个团队的训练质量取决于最有经验的成员是否在场；有了 AGILE，即使新手也能通过遵循四阶段流程达到接近专家的工程质量。这就是"流程"相对于"经验"的价值——它让质量不再依赖个人。
 
-### AGILE 的对称性增强 ⭐⭐
+### AGILE 的对称性增强 ★★
 
 四足和人形机器人通常具有左右对称性——左前腿和右前腿的结构完全相同（镜像）。策略如果学到了左腿的控制，理论上应该能直接镜像应用到右腿。对称性增强（Symmetry Augmentation）利用这个结构先验，在训练数据中注入镜像样本。
 
@@ -1926,7 +1926,7 @@ symmetry = SymmetryAugmentation(
 
 **注意事项**：对称性增强假设 reward 对左右对称——如果你的 reward 本身不对称（如"只用右手抓取"），不要开启对称性增强。
 
-### AGILE 的状态缓存训练技巧 ⭐⭐
+### AGILE 的状态缓存训练技巧 ★★
 
 对于人形 stand-up 任务，策略需要从各种倒地姿态恢复站立。传统方法是在训练中让机器人自己摔倒产生不同的起始姿态——但这很慢，因为"摔倒"本身需要仿真时间。AGILE 的 State Caching 技巧是：
 
@@ -1996,7 +1996,7 @@ class CachedStateReset:
 
 > **本质洞察**：AGILE 不是新算法——而是**把本书前 23 章教过的零散工程最佳实践组织成一条流水线**。如果你已经掌握了 Ch01-Ch23 的内容，AGILE 的每个阶段你都能理解并实现。AGILE 的价值在于**形式化和标准化**——把"好的工程习惯"变成"必须遵循的流程步骤"，从而在团队协作中确保一致性。
 
-### AGILE 的 Scaled-Dict 超参搜索 ⭐⭐
+### AGILE 的 Scaled-Dict 超参搜索 ★★
 
 传统的超参搜索对每个参数独立搜索——如果有 10 个 reward 权重，搜索空间是 10 维。AGILE 的 scaled-dict 技巧把搜索空间压缩到 1 维：
 
@@ -2029,13 +2029,13 @@ searcher = ScaledDictSearch({
 })
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **概念误区：把 AGILE 当作"又一个 RL 框架"**
+⚠ **概念误区：把 AGILE 当作"又一个 RL 框架"**
 - AGILE 不提供 env.step()、不实现 PPO——它是工程流程的组织框架
 - 它在 Isaac Lab 之上运行，使用 RSL-RL 做训练
 
-⚠️ **思维陷阱：跳过 Stage 1 (Prepare) 直接 Stage 2 (Train)**
+⚠ **思维陷阱：跳过 Stage 1 (Prepare) 直接 Stage 2 (Train)**
 - "我的 reward 应该没问题，直接训练吧"——AGILE 的经验表明，90% 的训练失败可以在 Stage 1 的 5 分钟 GUI 检查中提前发现
 
 ### 练习
@@ -2046,7 +2046,7 @@ searcher = ScaledDictSearch({
 
 ---
 
-## 24.8 训练诊断预览：reward 曲线之外的五个信号 ⭐⭐
+## 24.8 训练诊断预览：reward 曲线之外的五个信号 ★★
 
 > **这一节解决什么问题**：当 reward 曲线"看起来还行"但行为不对时，还应该看什么指标？
 
@@ -2054,7 +2054,7 @@ searcher = ScaledDictSearch({
 
 "reward 在涨"是一个必要但不充分的信号——策略可能在 reward hacking（找到了不合理但高 reward 的行为）、action 在饱和（输出都在 ±1 附近）、entropy 塌缩（策略变成了确定性的，不再探索）、value function 不准（GAE 的 baseline 估计偏差大）。这些问题不会让 reward 下降，但会让部署失败。
 
-### 五个信号的联合阅读 ⭐⭐
+### 五个信号的联合阅读 ★★
 
 ```python
 # === PPO 训练诊断五信号联合监控 ===
@@ -2106,7 +2106,7 @@ def log_diagnostics(runner, iteration):
 | reward↓ + ep_len 短 | 训练崩溃 → NaN 或 termination 突变 | 转 §24.3 NaN 排查 |
 | reward↑ + action 饱和 (>90% 在 ±1) | Action scale 太小或探索不足 | 增大 action_scale 或 init_noise |
 
-### Action 饱和检测 ⭐⭐
+### Action 饱和检测 ★★
 
 Action 饱和（策略输出持续接近 ±1）是一个常被忽视但影响严重的问题——饱和意味着策略被"困在角落"，无法精细调节动作。
 
@@ -2142,7 +2142,7 @@ def check_action_saturation(env, policy, num_steps=500):
     return saturation_rate
 ```
 
-### Reward Hacking 检测 ⭐⭐
+### Reward Hacking 检测 ★★
 
 Reward hacking 是策略找到了一种"技术上"满足 reward 定义但"物理上"不合理的行为——例如通过快速抖动来获得高 tracking reward（因为抖动的平均速度恰好接近目标速度），或者通过把脚卡在地面裂缝中来获得稳定的 air_time reward。
 
@@ -2193,7 +2193,7 @@ def detect_reward_hacking(env, policy, num_steps=1000):
         print("  增大 action_rate_l2 penalty")
 ```
 
-### 从诊断到调参的决策流程 ⭐⭐
+### 从诊断到调参的决策流程 ★★
 
 当训练"看起来不太对"时，按以下决策树行动：
 
@@ -2230,13 +2230,13 @@ def detect_reward_hacking(env, policy, num_steps=1000):
 
 > **跨领域类比**：训练诊断就像医生的"查房"——不是只看血压（reward），还要看心率（KL）、体温（entropy）、血氧（value loss）和意识状态（episode length）。五个指标联合阅读才能得出正确的诊断。只看 reward 曲线做决策，就像只看血压就开药一样危险。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **思维陷阱：reward 在涨就不看其他指标**
+⚠ **思维陷阱：reward 在涨就不看其他指标**
 - reward 涨但 entropy 陡降 = 策略找到了一个固定解不再探索
 - 正确做法：五个信号联合阅读
 
-⚠️ **思维陷阱：性能不好先换算法**
+⚠ **思维陷阱：性能不好先换算法**
 - "PPO 太慢，换 SAC"——更可能的原因是 env step 慢或 reward 设计不好
 - 正确做法：先 profile，区分是 env 慢还是 PPO 慢
 
@@ -2294,14 +2294,14 @@ def detect_reward_hacking(env, policy, num_steps=1000):
 
 | 资料 | 难度 | 说明 |
 |------|------|------|
-| AGILE（arXiv:2603.20147） | ⭐⭐⭐ | 四阶段工业级 workflow + 算法工具箱 |
-| torchrunx（github.com/apoorvkh/torchrunx） | ⭐⭐ | mjlab 使用的分布式启动器 |
-| PyTorch DDP 文档 | ⭐⭐ | 理解 all-reduce 和进程组 |
-| SkyPilot 文档 | ⭐⭐ | 云端任务生命周期和成本管理 |
-| WandB Sweep 文档 | ⭐ | 超参搜索配置 |
-| RSL-RL（arXiv:2509.10771） | ⭐⭐ | EmpiricalNormalization + PPO 实现 |
-| MuJoCo Warp 文档 | ⭐⭐ | CUDA Graph capture + nconmax/njmax |
-| NVIDIA OSMO | ⭐⭐⭐ | Isaac Lab 的生产级多节点编排 |
+| AGILE（arXiv:2603.20147） | ★★★ | 四阶段工业级 workflow + 算法工具箱 |
+| torchrunx（github.com/apoorvkh/torchrunx） | ★★ | mjlab 使用的分布式启动器 |
+| PyTorch DDP 文档 | ★★ | 理解 all-reduce 和进程组 |
+| SkyPilot 文档 | ★★ | 云端任务生命周期和成本管理 |
+| WandB Sweep 文档 | ★ | 超参搜索配置 |
+| RSL-RL（arXiv:2509.10771） | ★★ | EmpiricalNormalization + PPO 实现 |
+| MuJoCo Warp 文档 | ★★ | CUDA Graph capture + nconmax/njmax |
+| NVIDIA OSMO | ★★★ | Isaac Lab 的生产级多节点编排 |
 
 ---
 
@@ -2323,7 +2323,7 @@ def detect_reward_hacking(env, policy, num_steps=1000):
 ---
 
 
-### 训练诊断的完整自动化脚本 ⭐⭐
+### 训练诊断的完整自动化脚本 ★★
 
 以下脚本整合了五信号监控、action 饱和检测、reward hacking 检测和运动质量诊断，可以在训练过程中每 1000 iterations 自动运行：
 
@@ -2397,7 +2397,7 @@ for iteration in range(max_iterations):
     checker.check(iteration, stats)
 ```
 
-### 从"单次训练"到"批量实验"的工程升级路径 ⭐
+### 从"单次训练"到"批量实验"的工程升级路径 ★
 
 本章教授的工具按使用阶段可以分为三个层次：
 
@@ -2411,7 +2411,7 @@ for iteration in range(max_iterations):
 
 > **跨领域类比**：这三个层次就像软件开发中的"个人脚本 → 单元测试 → CI/CD 流水线"的升级路径。个人脚本能跑就行（L1），单元测试确保功能正确（L2），CI/CD 确保团队协作中的质量一致性（L3）。不需要一开始就搭建完整的 CI/CD——但当团队和项目规模增长时，这些基础设施是必要的。
 
-### 典型训练时间参考 ⭐
+### 典型训练时间参考 ★
 
 以下是不同任务和配置的典型训练时间参考（单 A100，4096 envs）：
 
@@ -2435,7 +2435,7 @@ for iteration in range(max_iterations):
 > **全书定位**：Ch24 是 Part VI（大规模训练与调试）的第一章。它解决的是"如何高效、稳定、可复现地训练"——从多 GPU 配置到 NaN 排查到性能优化到云端训练到 AGILE 工业级流程。Ch25 紧接其后解决"如何诊断和修复训练问题"——两章合在一起构成了"训练工程"的完整工具箱。
 
 
-### 快速定位决策树（可打印版） ⭐
+### 快速定位决策树（可打印版） ★
 
 遇到训练问题时，按此决策树在 5 分钟内定位到正确的排查方向：
 
@@ -2484,7 +2484,7 @@ for iteration in range(max_iterations):
 
 这棵决策树覆盖了本章 90% 以上的故障场景。把它打印贴在屏幕旁边——每次训练出问题时，从根节点开始走，通常 2-3 步就能找到正确的排查方向。
 
-### Ch24 与全书的关系图 ⭐
+### Ch24 与全书的关系图 ★
 
 ```
 Ch01-03  仿真基础设施
@@ -2536,7 +2536,7 @@ Ch24 是 Part I-V 所有知识的"工程化整合"——你在前面学到的 ob
 > **从 Part V 到 Part VI 的过渡**：Part V（Ch19-Ch23）教你"怎么搭建和部署"，Part VI（Ch24-Ch25）教你"怎么高效和诊断"。两者合在一起构成了完整的机器人 RL 工程能力——从环境搭建到策略训练到部署验证到问题诊断。从 Ch26 开始的 Part VII（网球项目）将在一个综合案例中同时使用 Part V 和 Part VI 的所有工具。
 
 
-### 本章命令速查表 ⭐
+### 本章命令速查表 ★
 
 以下是本章涉及的所有关键命令，按使用场景分组：
 

@@ -6,7 +6,7 @@
 
 ## 前置自测
 
-📋 **前置自测**（答不出 >= 2 题 --> 先回对应章节复习）
+◆ **前置自测**（答不出 >= 2 题 --> 先回对应章节复习）
 
 1. 什么是 Banach 不动点定理？它要求的完备度量空间和压缩映射分别是什么含义？（见 6.1）
 2. 策略梯度定理（Policy Gradient Theorem）的精确陈述是什么？为什么需要"兼容特征"假设？（见 6.2）
@@ -121,7 +121,7 @@
 
 ---
 
-### §6.5.1 随机逼近的起源与动机 ⭐⭐
+### §6.5.1 随机逼近的起源与动机 ★★
 
 #### 从均值估计到增量算法
 
@@ -139,7 +139,7 @@ $$w_{k+1} = \frac{1}{k}\Bigl(\sum_{i=1}^{k-1} x_i + x_k\Bigr) = \frac{1}{k}\bigl
 
 **反事实推理**：如果不用增量式而用批量式，会怎样？在 RL 场景中，agent 与环境交互产生的数据流是无限的（或至少非常长），不可能先收集完所有数据再算均值。更关键的是，RL 中要估计的不是一个简单均值，而是满足 Bellman 方程的不动点——这个方程本身依赖于参数 $\theta$（因为 $T^\pi V_\theta$ 中 $V_\theta = \phi^\top\theta$ 出现在"目标"里）。所以我们必须**一边采样一边更新**，这正是随机逼近的核心需求。
 
-#### Robbins-Monro 1951 的原始问题 ⭐⭐
+#### Robbins-Monro 1951 的原始问题 ★★
 
 1951 年 Herbert Robbins 与 Sutton Monro 在 *Annals of Mathematical Statistics* 22(3):400-407 发表的 "A Stochastic Approximation Method" 提出了如下问题：设 $M(x)$ 是某实验在水平 $x$ 处响应变量 $Y$ 的期望 $M(x)=\mathbb{E}[Y\mid x]$，$M$ 是未知但单调的函数；给定常数 $\alpha$，要求解方程
 
@@ -159,7 +159,7 @@ $$x_{n+1}=x_n+a_n\,(\alpha-y_n)$$
 
 **历史背景**：Robbins 当时在哥伦比亚大学统计系，主要关心的是生物统计中的"剂量-反应"问题——给一定剂量的药物，观察到的反应是随机的，要找到产生特定平均反应的剂量。这个看似简单的应用问题催生了一个横跨统计学、控制论、机器学习三大领域的数学理论。Robbins 的另一个重大贡献是 empirical Bayes 方法，体现了他对"用数据替代模型"思想的一贯追求。
 
-#### SA 在 RL 中的普遍性 ⭐⭐
+#### SA 在 RL 中的普遍性 ★★
 
 **所有主流 RL 算法都是 SA 的特例**。写出它们的通用形式：
 
@@ -184,7 +184,7 @@ $$\boxed{\;\theta_{t+1}=\theta_t+\alpha_t\,h(\theta_t,X_t)\;}\qquad (*)$$
 > 这意味着证明一个新 RL 算法收敛，你只需要做三件事：
 > (1) 写出 $h$；(2) 算出 $\bar h$；(3) 分析 $\dot\theta = \bar h(\theta)$ 的稳定性。
 
-#### SA 与 SGD 的关系 ⭐⭐
+#### SA 与 SGD 的关系 ★★
 
 表面上，随机梯度下降（SGD）$\theta_{t+1}=\theta_t-\alpha_t\nabla\ell(\theta_t,X_t)$ 是 SA 的特例（取 $h=-\nabla\ell$，平均 ODE 即 gradient flow）。**但 RL 中的 SA 普遍不是梯度**：TD(0) 的更新方向 $\delta\phi$ 不是任何标量目标的梯度——它被称为 "semi-gradient"，原因是 Bellman 目标 $T^\pi V_\theta$ 自己依赖 $\theta$，求梯度时没有"穿透"这一层依赖。这是 Baird 反例（见 6.3）出现的根源，也是 **ODE 方法在 RL 中必须取代纯梯度分析**的原因。
 
@@ -200,7 +200,7 @@ $$\boxed{\;\theta_{t+1}=\theta_t+\alpha_t\,h(\theta_t,X_t)\;}\qquad (*)$$
 | 稳定性分析 | 凸性/PL/KL 条件直接给出 | 必须分析 ODE $\dot\theta=\bar h(\theta)$ 的谱 |
 | 反例 | 一般不发散（只是收敛慢） | 可以发散（Baird 反例） |
 
-#### 常数步长 vs 递减步长的 trade-off ⭐⭐
+#### 常数步长 vs 递减步长的 trade-off ★★
 
 这是理论与工程之间最大的裂隙之一，值得深入讨论。
 
@@ -211,7 +211,7 @@ $$\boxed{\;\theta_{t+1}=\theta_t+\alpha_t\,h(\theta_t,X_t)\;}\qquad (*)$$
 
 步长条件的几何直觉将在 §6.5.2 中详细展开。
 
-### ⚠️ 常见陷阱（§6.5.1）
+### ⚠ 常见陷阱（§6.5.1）
 
 **💡 概念误区：认为"SA 就是 SGD 的另一个名字"**
 
@@ -227,7 +227,7 @@ $$\boxed{\;\theta_{t+1}=\theta_t+\alpha_t\,h(\theta_t,X_t)\;}\qquad (*)$$
 
 ---
 
-### §6.5.2 Robbins-Monro 定理：完整证明 ⭐⭐
+### §6.5.2 Robbins-Monro 定理：完整证明 ★★
 
 #### 严格陈述（现代版本）
 
@@ -333,7 +333,7 @@ $$v_t \le v_0 \prod_{s<t}(1-c\alpha_s) + C\sum_{s<t} \alpha_s^2 \prod_{s<k\le t}
 
 因此 $V(\theta_t) \to 0$ a.s.，由 $V$ 的正定性 $\theta_t \to \theta^*$ a.s. $\blacksquare$
 
-#### 步长条件的几何直觉与必要性 ⭐⭐
+#### 步长条件的几何直觉与必要性 ★★
 
 **$\sum\alpha_t = \infty$ 的必要性**：
 
@@ -362,9 +362,9 @@ $$v_t \le v_0 \prod_{s<t}(1-c\alpha_s) + C\sum_{s<t} \alpha_s^2 \prod_{s<k\le t}
 
 不要死记证明，记住这个**思维模版**：遇到"证明 SA 收敛"的任何变体，套路都是"**找 Lyapunov 函数 $V$ --> 证明 $V$ 沿着迭代几乎是 supermartingale --> Doob 收敛 --> 说明唯一可能的极限是 $V=0$**"。本专题后面所有证明（TD、Q-learning、Actor-Critic）都是这个套路的不同变奏。
 
-### ⚠️ 常见陷阱（§6.5.2）
+### ⚠ 常见陷阱（§6.5.2）
 
-**⚠️ 编程陷阱：步长实现中的 off-by-one 错误**
+**⚠ 编程陷阱：步长实现中的 off-by-one 错误**
 
 错误做法：在代码中用 `alpha = c / t` 但 `t` 从 0 开始，导致第一步 `alpha = c/0 = inf`。
 
@@ -388,7 +388,7 @@ $$v_t \le v_0 \prod_{s<t}(1-c\alpha_s) + C\sum_{s<t} \alpha_s^2 \prod_{s<k\le t}
 
 ---
 
-### §6.5.3 Borkar 的 ODE 方法：核心框架 ⭐⭐
+### §6.5.3 Borkar 的 ODE 方法：核心框架 ★★
 
 #### 核心思想
 
@@ -408,7 +408,7 @@ $$\dot\theta(t)=\bar h(\theta(t)),\qquad \bar h(\theta):=\lim_{T\to\infty}\tfrac
 
 **为什么取平稳分布的期望？** 因为 SA 的每一步都在用"当前"的随机样本 $X_t$ 来近似"平均行为"$\bar h$。如果 $X_t$ 是 i.i.d. 的，单次样本就是均值的无偏估计。但如果 $X_t$ 是 Markov 链（RL 中 agent 的状态转移就是 Markov 的），单次样本有偏，但 Markov 链的遍历定理保证时间平均收敛到空间平均（平稳分布下的期望）。这就是为什么平稳分布在这里出现。
 
-#### Borkar-Meyn 定理（2000, SIAM J. Control Optim. 38(2):447-469） ⭐⭐
+#### Borkar-Meyn 定理（2000, SIAM J. Control Optim. 38(2):447-469） ★★
 
 **定理（Borkar-Meyn 2000）**：考虑 SA 递推 $\theta_{t+1}=\theta_t+\alpha_t[h(\theta_t)+M_{t+1}]$。假设：
 
@@ -453,7 +453,7 @@ $$\mathbb{P}\Bigl(\sup_{t\in[t(n),t(n)+T]}\|\bar\theta(t)-\theta^{ODE}(t)\|>\eps
 
 关键工具是 Benaim 1996 的"渐近伪轨迹（asymptotic pseudo-trajectory）"理论：如果一条曲线在每个有限时间窗内都近似追踪某个 ODE 的真实轨迹，那么这条曲线的 $\omega$-极限集必须是 ODE 的某个内部闭不变集。如果 ODE 只有一个不变集（唯一全局渐近稳定平衡点 $\theta^*$），则曲线必须收敛到 $\theta^*$。
 
-#### ODE 方法的具体计算流程（给工程师的操作手册） ⭐⭐
+#### ODE 方法的具体计算流程（给工程师的操作手册） ★★
 
 对任何 RL 算法，应用 ODE 方法的具体步骤如下。这不是抽象理论，而是一个**可操作的流程**：
 
@@ -507,7 +507,7 @@ $$\dot\theta = \bar h(\theta).$$
 > 连接到 ODE 稳定性理论（成熟领域，工具丰富）。
 > **使用 ODE 方法不需要你发明新数学，只需要你会"翻译"。**
 
-### ⚠️ 常见陷阱（§6.5.3）
+### ⚠ 常见陷阱（§6.5.3）
 
 **💡 概念误区：认为"ODE 方法就是取均值忽略噪声"**
 
@@ -531,11 +531,11 @@ $$\dot\theta = \bar h(\theta).$$
 
 ---
 
-### §6.5.4 TD(0) 收敛性的 ODE 完整证明 ⭐⭐（本专题最重要证明之一）
+### §6.5.4 TD(0) 收敛性的 ODE 完整证明 ★★（本专题最重要证明之一）
 
 本节补上 6.3 只陈述不证明的 **Tsitsiklis-Van Roy 1997 定理**（IEEE TAC 42(5):674-690）。这是将 ODE 方法应用于 RL 的最经典范例，每一步都值得仔细理解。
 
-#### Step 1：写出线性 TD(0) 的 SA 形式 ⭐⭐
+#### Step 1：写出线性 TD(0) 的 SA 形式 ★★
 
 用特征 $\phi:\mathcal{S}\to\mathbb{R}^d$，近似 $V_\theta(s)=\phi(s)^\top\theta$。On-policy 采样得到 $(S_t,R_t,S_{t+1})$，TD 误差 $\delta_t=R_t+\gamma\phi(S_{t+1})^\top\theta_t-\phi(S_t)^\top\theta_t$。更新：
 
@@ -549,7 +549,7 @@ $$h(\theta, (S_t, R_t, S_{t+1})) = [R_t + \gamma\phi(S_{t+1})^\top\theta - \phi(
 
 **为什么 TD 更新不是梯度？** 如果 TD 是某个目标 $J(\theta)$ 的梯度下降，那应该有 $h(\theta,X) = -\nabla_\theta J(\theta)$。但 TD 误差中的"目标"$R_t + \gamma\phi(S_{t+1})^\top\theta$ 本身依赖于 $\theta$，而 TD 更新**没有对这一项求导**（所以叫 semi-gradient）。用 PyTorch 的语言：TD 目标做了 `detach()`，梯度没有"穿透"到目标中。如果穿透了，你得到的是所谓的"residual gradient"方法（Baird 1995），那确实是真梯度，但收敛到的不是 Bellman 不动点而是 Bellman 残差的最小化——通常不是我们想要的。
 
-#### Step 2：求平均 ODE 的右端 $\bar h$ ⭐⭐
+#### Step 2：求平均 ODE 的右端 $\bar h$ ★★
 
 设 Markov 链有平稳分布 $d^\pi$，转移矩阵 $P^\pi$。
 
@@ -569,7 +569,7 @@ $$\boxed{\;\dot\theta = -A\theta + b.\;}$$
 
 **与控制理论的连接**：回顾 01_数学/40_控制理论/70_Lyapunov稳定性理论中线性系统稳定性的判据——线性系统 $\dot x = Fx$ 渐近稳定当且仅当 $F$ 是 Hurwitz 的（所有特征值实部为负）。这里 $F = -A$，所以我们需要 $A$ 的所有特征值实部为正。**TD(0) 收敛性的全部秘密就藏在 $A$ 矩阵的谱中。**
 
-#### Step 3：关键引理——$A$ 正定性证明 ⭐⭐（TVR 1997 核心）
+#### Step 3：关键引理——$A$ 正定性证明 ★★（TVR 1997 核心）
 
 **引理（Tsitsiklis-Van Roy 1997）**：若 Markov 链不可约非周期，$\phi$ 列向量在 $D^\pi$ 加权内积下线性无关，则 $A + A^\top \succ 0$（正定）。
 
@@ -610,7 +610,7 @@ $$x^\top M x \ge 2\sum_i d^\pi(i)x_i^2 - 2\gamma\sum_i d^\pi(i)x_i^2 = 2(1-\gamm
 
 **反事实推理——Off-policy 下引理在哪里失效？** 如果用行为策略 $\mu$ 采样（$\mu \neq \pi$），则平稳分布变为 $d^\mu$，但转移矩阵仍是 $P^\pi$（我们要评估的是 $\pi$ 的值函数）。此时 $Q = D^\mu P^\pi$，而 $d^\mu$ 不是 $P^\pi$ 的不变测度，因此 $\sum_i Q_{ij} = \sum_i d^\mu(i) P^\pi_{ij} \neq d^\mu(j)$。AM-GM 步骤中用到的"列和 = $d^\pi(j)$"失效，$M$ 不再保证正定。**在 Baird 反例中，$M$ 确实有负特征值，导致 $A$ 有负实部特征值，ODE 发散**。
 
-#### Step 4：ODE 稳定性 + Lyapunov 函数 ⭐⭐
+#### Step 4：ODE 稳定性 + Lyapunov 函数 ★★
 
 $A$ 所有特征值实部为正 $\Rightarrow -A$ Hurwitz $\Rightarrow$ ODE $\dot\theta = -A\theta + b$ 以 $\theta^* = A^{-1}b$ 为全局指数稳定平衡点。
 
@@ -626,7 +626,7 @@ $$\dot V = \dot e^\top P e + e^\top P \dot e = -e^\top A^\top P e - e^\top P A e
 
 对 $e \neq 0$。因此 $V$ 沿 ODE 轨迹严格递减，$\theta^*$ 是全局指数稳定平衡点。
 
-#### Step 5：调用 Borkar-Meyn 验证四条件 ⭐⭐
+#### Step 5：调用 Borkar-Meyn 验证四条件 ★★
 
 - **(A1)** $\bar h(\theta) = b - A\theta$ 全局 Lipschitz（$A$ 有限矩阵，$\|h(\theta)-h(\theta')\| = \|A(\theta-\theta')\| \le \|A\|\|\theta-\theta'\|$）✓；
 - **(A2)** Robbins-Monro 步长 ✓；
@@ -647,7 +647,7 @@ $$\boxed{\;\theta_t \to \theta^* = A^{-1}b \text{ a.s.}\;}$$
 
 **第三**，Lyapunov 方程 $A^\top P + PA = I$ 出现在控制理论的每个角落——LQR 的 cost-to-go 矩阵、Kalman 滤波的协方差传播、$\mathcal{H}_\infty$ 控制的性能界。**掌握 TD 收敛性证明后，你对 Lyapunov 方程的理解将远超"教科书上一个定理"的水平——它是你亲手用过的工具。**
 
-### ⚠️ 常见陷阱（§6.5.4）
+### ⚠ 常见陷阱（§6.5.4）
 
 **💡 概念误区：认为"$A$ 正定等于 $A$ 对称正定"**
 
@@ -655,7 +655,7 @@ $$\boxed{\;\theta_t \to \theta^* = A^{-1}b \text{ a.s.}\;}$$
 
 实际上：$A = \Phi^\top D^\pi(I-\gamma P^\pi)\Phi$ 通常不对称（因为 $P^\pi$ 不对称）。我们证明的是 $A + A^\top \succ 0$，这等价于"$A$ 的所有特征值实部为正"——对非对称矩阵，这是正定性的正确推广。非对称矩阵可以有复数特征值，但 $A + A^\top \succ 0$ 保证实部为正。
 
-**⚠️ 编程陷阱：计算 $A$ 矩阵时忘记 $D^\pi$ 加权**
+**⚠ 编程陷阱：计算 $A$ 矩阵时忘记 $D^\pi$ 加权**
 
 错误做法：`A = Phi.T @ (np.eye(n) - gamma * P_pi) @ Phi`（漏了 $D^\pi$）
 
@@ -679,7 +679,7 @@ $$\boxed{\;\theta_t \to \theta^* = A^{-1}b \text{ a.s.}\;}$$
 
 ---
 
-### §6.5.5 Q-learning 收敛性的异步 SA 证明 ⭐⭐
+### §6.5.5 Q-learning 收敛性的异步 SA 证明 ★★
 
 #### Watkins 1989 / Tsitsiklis 1994 的三重难点
 
@@ -691,7 +691,7 @@ $$Q_{t+1}(s,a)=Q_t(s,a)+\alpha_t(s,a)\bigl[r+\gamma\max_{a'}Q_t(s',a')-Q_t(s,a)\
 
 **为什么 max 算子是特殊的？** TD(0) 的平均 ODE 是线性的（$\dot\theta = -A\theta + b$），分析起来"只需要"检查 $A$ 的谱。但 Q-learning 含 $\max$，平均 ODE 变成非线性的 $\dot Q = T^* Q - Q$，线性工具不再适用。幸运的是，$\max$ 有一个关键性质弥补了非线性的困难——**非扩展性**。
 
-#### max 算子的非扩展性 ⭐⭐
+#### max 算子的非扩展性 ★★
 
 **引理**：$\max$ 算子是 $\infty$-范数下的非扩展映射（non-expansive）：
 
@@ -701,7 +701,7 @@ $$\bigl|\max_a f(a) - \max_a g(a)\bigr| \le \max_a |f(a) - g(a)| = \|f - g\|_\in
 
 **为什么这很重要？** 由此立即得到 $T^*$ 是 $\gamma$-压缩映射（6.1 已证），但现在我们还需要它在**异步**设置下仍然工作——这正是 Tsitsiklis 1994 的贡献。
 
-#### Tsitsiklis 1994 的异步 SA 框架 ⭐⭐（Machine Learning 16(3):185-202）
+#### Tsitsiklis 1994 的异步 SA 框架 ★★（Machine Learning 16(3):185-202）
 
 **定理（Tsitsiklis 1994 Theorem 1/3 简化版）**：考虑异步 SA
 
@@ -758,7 +758,7 @@ $$\mathbb{E}[e_{t+1}\mid\mathcal{F}_t] \le (1-\alpha_t) e_t + \gamma\alpha_t e_t
 | 关键困难 | $A$ 正定性 | max 非线性 + 异步 |
 | 范数 | $D^\pi$-加权 2-范数 | $\infty$-范数 |
 
-#### 从 ODE 角度理解 $\gamma < 1$ 的必要性 ⭐⭐
+#### 从 ODE 角度理解 $\gamma < 1$ 的必要性 ★★
 
 Q-learning 的平均 ODE 是 $\dot Q = T^*Q - Q$，其中 $T^*$ 是最优 Bellman 算子。定义误差 $e(t) = Q(t) - Q^*$，由 $T^*Q^* = Q^*$：
 
@@ -772,7 +772,7 @@ $$\dot e = T^*Q - Q - (T^*Q^* - Q^*) = (T^*Q - T^*Q^*) - (Q - Q^*) = (T^*Q - T^*
 
 **反事实推理**：如果强行让 $\gamma = 1$（无折扣），Q-learning 的 ODE 会怎样？ODE $\dot Q = T^*Q - Q$ 中 $T^*$ 变成非压缩的——系统可能有多个不动点（平均奖励 MDP 的 bias 不唯一），也可能在它们之间游荡而不收敛。这就是为什么"平均奖励 RL"（R-learning、differential TD）需要完全不同的分析框架——不能直接用压缩映射论证。
 
-#### Q-learning 收敛速率的定量分析 ⭐⭐⭐
+#### Q-learning 收敛速率的定量分析 ★★★
 
 Srikant-Ying 2019 和 Even-Dar-Mansour 2003 给出了 Q-learning 的有限样本复杂度。对同步 Q-learning（tabular，所有 $(s,a)$ 每步更新），步长 $\alpha_t = 1/(1 + (1-\gamma)^{-1} N_{sa}(t))^w$（$w \in (0.5, 1)$，$N_{sa}$ 是访问计数）：
 
@@ -780,7 +780,7 @@ $$\mathbb{E}\|Q_T - Q^*\|_\infty \le \tilde O\Bigl(\frac{1}{(1-\gamma)^3\sqrt{T}
 
 **与 TD(0) 的速率对比**：TD(0) 的速率为 $\tilde O(1/((1-\gamma)\sqrt{T}))$——比 Q-learning 快 $(1-\gamma)^{-2}$ 倍。这反映了一个深刻的事实：**off-policy + max 非线性让 Q-learning 比 on-policy TD 在统计效率上更差**。工程启示：如果你的任务允许 on-policy 采样（如 Isaac Lab 的并行仿真），用 PPO（本质上是 on-policy）比 DQN（off-policy Q-learning）在样本复杂度上更优——这有理论支撑。
 
-### ⚠️ 常见陷阱（§6.5.5）
+### ⚠ 常见陷阱（§6.5.5）
 
 **💡 概念误区：认为"Q-learning 收敛靠 Banach 不动点定理"**
 
@@ -804,7 +804,7 @@ $$\mathbb{E}\|Q_T - Q^*\|_\infty \le \tilde O\Bigl(\frac{1}{(1-\gamma)^3\sqrt{T}
 
 ---
 
-### §6.5.6 Polyak-Ruppert 平均与收敛加速 ⭐⭐⭐
+### §6.5.6 Polyak-Ruppert 平均与收敛加速 ★★★
 
 #### 动机：SA 的渐近方差太大
 
@@ -844,7 +844,7 @@ $$\bar\theta_t = \frac{1}{t}\sum_{s=1}^{t} \theta_s.$$
 
 **反事实推理**：如果在 PPO 的 critic 中使用 Polyak-Ruppert 平均，会怎样？由于 PPO 的目标函数随策略更新而变化（非平稳），简单的 $1/t$ 平均会"记住"过时的 critic 参数，导致值函数估计滞后于当前策略。EMA（$\tau$ 接近 1）通过快速遗忘解决了这个问题——它既有平均化的方差降低效果，又能跟踪非平稳目标。
 
-#### Polyak-Ruppert 平均的完整证明思路 ⭐⭐⭐
+#### Polyak-Ruppert 平均的完整证明思路 ★★★
 
 为了理解 Polyak-Ruppert 为什么达到最优方差，让我们追踪关键步骤。
 
@@ -884,7 +884,7 @@ $$\sqrt{t}\,\bar e_t \xrightarrow{d} \mathcal{N}\Bigl(0, \frac{\sigma^2}{a^2}\Bi
 
 **在 DQN/SAC 中的 target network**（$\theta^- \leftarrow \tau\theta + (1-\tau)\theta^-$）本质上是 Polyak 平均的 EMA 版本。$\tau$ 的选择（通常 0.005 或 0.001）控制了"target 滞后当前多少"——$\tau$ 大则跟踪快但方差大，$\tau$ 小则稳定但滞后。这正是 SA 稳态分布方差（$\propto$ 有效步长）的工程映射。
 
-### ⚠️ 常见陷阱（§6.5.6）
+### ⚠ 常见陷阱（§6.5.6）
 
 **💡 概念误区：把 Polyak 平均与 batch normalization 的 running mean 混为一谈**
 
@@ -892,7 +892,7 @@ $$\sqrt{t}\,\bar e_t \xrightarrow{d} \mathcal{N}\Bigl(0, \frac{\sigma^2}{a^2}\Bi
 
 实际上：BatchNorm 的 running mean 是对**统计量**（激活的均值/方差）做 EMA，用于推理时的归一化。Polyak 平均是对**参数**本身做平均，用于降低估计方差。目的、对象、效果完全不同。
 
-**⚠️ 编程陷阱：在非平稳目标下使用 Polyak 均匀平均**
+**⚠ 编程陷阱：在非平稳目标下使用 Polyak 均匀平均**
 
 错误做法：在 online RL 训练中对 critic 参数做 $\bar\theta_t = \frac{1}{t}\sum \theta_s$。
 
@@ -912,7 +912,7 @@ $$\sqrt{t}\,\bar e_t \xrightarrow{d} \mathcal{N}\Bigl(0, \frac{\sigma^2}{a^2}\Bi
 
 ---
 
-### §6.5.A 两时间尺度 SA 与 Actor-Critic 收敛性 ⭐⭐⭐
+### §6.5.A 两时间尺度 SA 与 Actor-Critic 收敛性 ★★★
 
 #### Actor-Critic 的两时间尺度结构（6.2 回顾）
 
@@ -924,7 +924,7 @@ $$\begin{cases}w_{t+1}=w_t+\beta_t\,g_{\rm critic}(w_t,\theta_t,X_t)\\\theta_{t+
 
 **为什么需要两个时间尺度？** 如果 actor 和 critic 用相同的步长，它们会相互干扰——critic 还没收敛到正确的值函数，actor 就基于错误的值函数做了策略更新，策略更新又改变了 critic 的目标。**两时间尺度分离解决了这个"鸡生蛋还是蛋生鸡"的问题**：让 critic 先收敛（快时间尺度），然后 actor 基于"几乎正确"的 critic 更新（慢时间尺度）。
 
-#### Borkar 1997 两时间尺度 SA 定理 ⭐⭐⭐
+#### Borkar 1997 两时间尺度 SA 定理 ★★★
 
 **定理（Borkar 1997, Systems & Control Letters 29(5):291-294）**：考虑
 
@@ -950,7 +950,7 @@ $$\dot x = f(x,z),\quad \epsilon\dot z = g(x,z).$$
 
 回顾 01_数学/40_控制理论/70_Lyapunov稳定性理论：singular perturbation 理论是 Lyapunov 稳定性的一个重要推广——用快子系统和慢子系统各自的 Lyapunov 函数，构造复合 Lyapunov 函数证明整体稳定性。两时间尺度 SA 的证明走的是完全相同的路线。
 
-#### Konda-Tsitsiklis 2003 Actor-Critic 定理 ⭐⭐⭐
+#### Konda-Tsitsiklis 2003 Actor-Critic 定理 ★★★
 
 **定理（Konda-Tsitsiklis 2003, SIAM J. Control Optim. 42(4):1143-1166）**：在 Polish 状态-动作空间、兼容特征（compatible features）、步长两时间尺度、遍历性条件下，Actor-Critic 的 $\theta_t$ a.s. 收敛到 $\nabla J(\theta)=0$ 的集合；critic 参数 $w_t$ a.s. 收敛到 $w^*(\theta_t)$，即 $Q^{\pi_{\theta_t}}$ 在兼容特征张成子空间上的投影。
 
@@ -958,7 +958,7 @@ $$\dot x = f(x,z),\quad \epsilon\dot z = g(x,z).$$
 
 **对工程师的要点**：在 Isaac Lab / legged_gym 的 PPO 实现中，critic 的学习率通常大于 actor（典型 $5\times 10^{-4}$ vs $3\times 10^{-4}$）——**这正是两时间尺度分离的工程实现**。若违反（critic lr 远小于 actor lr），收敛的理论保证消失。
 
-#### Konda-Tsitsiklis 证明的关键困难 ⭐⭐⭐
+#### Konda-Tsitsiklis 证明的关键困难 ★★★
 
 Konda-Tsitsiklis 2003 的证明比 Borkar 1997 的抽象定理复杂得多，原因是 RL 中的几个特殊困难：
 
@@ -970,7 +970,7 @@ Konda-Tsitsiklis 2003 的证明比 Borkar 1997 的抽象定理复杂得多，原
 
 这些困难的解决需要用到：遍历性理论（保证 Markov 链快速混合）、兼容特征条件（保证 critic 近似误差不影响 actor 梯度方向）、LaSalle 不变集原理（处理非严格下降）。
 
-#### GTD/TDC 作为两时间尺度 SA ⭐⭐⭐
+#### GTD/TDC 作为两时间尺度 SA ★★★
 
 Gradient TD (Sutton-Maei 2009) 解决了 off-policy 线性 TD 的发散问题。它引入辅助变量 $w$ 来估计 $\mathbb{E}[\phi\phi^\top]^{-1}(\cdot)$，主参数 $\theta$ 慢更新。两个变量的更新构成两时间尺度 SA：
 
@@ -980,7 +980,7 @@ $$w_{t+1} = w_t + \beta_t(\delta_t\phi_t - \phi_t\phi_t^\top w_t), \quad \theta_
 
 **GTD/TDC 为什么能在 off-policy 下收敛？** 关键在于它把"不是梯度的 TD 更新"替换成了一个真正的梯度：目标函数是 MSPBE（Mean Squared Projected Bellman Error）$J(\theta) = \|V_\theta - \Pi T^\pi V_\theta\|_{D^\mu}^2$。GTD2 最小化的是这个目标的精确梯度——因此它是 SGD 而非一般 SA，梯度结构自动保证了 ODE 的稳定性（梯度流在凸函数上全局收敛）。
 
-#### 两时间尺度的工程实现方式 ⭐⭐
+#### 两时间尺度的工程实现方式 ★★
 
 理论要求 $\alpha_t/\beta_t \to 0$，但工程中很少严格用不同衰减率。实际的两时间尺度实现有三种方式：
 
@@ -999,9 +999,9 @@ $$w_{t+1} = w_t + \beta_t(\delta_t\phi_t - \phi_t\phi_t^\top w_t), \quad \theta_
 4. 错误的策略产生更差的数据，进一步恶化 critic 的估计
 5. **正反馈循环 --> 训练震荡或发散**
 
-### ⚠️ 常见陷阱（§6.5.A）
+### ⚠ 常见陷阱（§6.5.A）
 
-**⚠️ 编程陷阱：在 PPO 中把 critic lr 设得太小**
+**⚠ 编程陷阱：在 PPO 中把 critic lr 设得太小**
 
 错误做法：`critic_lr = 1e-5, actor_lr = 3e-4`（critic 比 actor 慢 30 倍）。
 
@@ -1021,7 +1021,7 @@ $$w_{t+1} = w_t + \beta_t(\delta_t\phi_t - \phi_t\phi_t^\top w_t), \quad \theta_
 
 ---
 
-### §6.5.B 鞅收敛定理在 RL 中的精细应用 ⭐⭐⭐⭐
+### §6.5.B 鞅收敛定理在 RL 中的精细应用 ★★★★
 
 #### Doob 的 supermartingale 收敛定理（核心工具）
 
@@ -1029,7 +1029,7 @@ $$w_{t+1} = w_t + \beta_t(\delta_t\phi_t - \phi_t\phi_t^\top w_t), \quad \theta_
 
 **在 RL 中的应用**：$V(\theta_t)$ 或其修正版本 $U_t=V(\theta_t)\prod_s(1+C\alpha_s^2)^{-1}$ 是近似 supermartingale，直接调用此定理给出 $V(\theta_t)$ 收敛 $\Rightarrow\theta_t$ 收敛。
 
-#### Azuma-Hoeffding 与有限样本集中 ⭐⭐⭐⭐
+#### Azuma-Hoeffding 与有限样本集中 ★★★★
 
 **定理（Azuma-Hoeffding）**：鞅差 $\{d_t\}$，$|d_t|\le c_t$ a.s.，则
 
@@ -1039,7 +1039,7 @@ $$\mathbb{P}\bigl(\bigl|\sum_{t\le T}d_t\bigr|\ge u\bigr)\le 2\exp\bigl(-u^2/(2\
 
 **这是现代 RL 理论从"渐近收敛"到"样本复杂度"的跨越**——渐近分析只说"最终会收敛"，有限样本分析回答"多少数据才够？"。对机器人 RL 来说，"多少数据"直接转化为"多少 GPU 小时"或"多少真机实验"，有直接的工程价值。
 
-#### 鞅构造技巧：Poisson 方程 ⭐⭐⭐⭐
+#### 鞅构造技巧：Poisson 方程 ★★★★
 
 对 Markov 噪声，严格的鞅差不存在（因为 $X_t$ 依赖于 $X_{t-1}$），但可通过解 **Poisson 方程** $\hat v - P\hat v = h - \bar h$ 把 $h(\theta,X_t)$ 分解为 $\bar h(\theta) + (\hat v(X_t) - P\hat v(X_{t-1})) + \Delta_t$，中间项是严格鞅差，$\Delta_t$ 是小项。
 
@@ -1047,7 +1047,7 @@ $$\mathbb{P}\bigl(\bigl|\sum_{t\le T}d_t\bigr|\ge u\bigr)\le 2\exp\bigl(-u^2/(2\
 
 ---
 
-### §6.5.C 含噪声 ODE 稳定性与 SDE 视角 ⭐⭐⭐⭐
+### §6.5.C 含噪声 ODE 稳定性与 SDE 视角 ★★★★
 
 #### 扩散极限定理
 
@@ -1069,7 +1069,7 @@ $$\mathcal{L}V=\nabla V^\top\bar h+\tfrac{1}{2}\mathrm{tr}(\sigma\sigma^\top\nab
 
 ---
 
-### §6.5.D 异步 SA 框架 ⭐⭐⭐⭐
+### §6.5.D 异步 SA 框架 ★★★★
 
 #### Tsitsiklis 1994 的六条假设
 
@@ -1087,7 +1087,7 @@ Isaac Gym / Isaac Lab 在单 GPU 上并行 4096 个环境，虽然数据在 GPU 
 
 ---
 
-### §6.5.E Lyapunov 函数构造方法 ⭐⭐⭐
+### §6.5.E Lyapunov 函数构造方法 ★★★
 
 #### 线性系统：Lyapunov 方程
 
@@ -1131,7 +1131,7 @@ print(f"P 的特征值: {eigvals_P}")  # 应该全为正
 > 压缩映射用不动点距离（范数给出）；Actor-Critic 用值函数差（策略梯度结构给出）。
 > **找 Lyapunov 函数 = 找到问题的正确"度量衡"。**
 
-#### Lyapunov 函数选择的决策树 ⭐⭐⭐
+#### Lyapunov 函数选择的决策树 ★★★
 
 面对一个新的 SA/ODE 稳定性问题，按以下决策树选择 Lyapunov 函数：
 
@@ -1166,7 +1166,7 @@ ODE 类型？
 
 ---
 
-### §6.5.F Zap SA 与渐近最优性 ⭐⭐⭐⭐
+### §6.5.F Zap SA 与渐近最优性 ★★★★
 
 #### 思想：用 Newton 方向代替梯度
 
@@ -1194,7 +1194,7 @@ Zap SA 在机器人 RL 主流实现中**尚未普及**——工程师担心矩�
 
 ---
 
-### §6.5.G SA 与 SGD 的统一视角 ⭐⭐⭐
+### §6.5.G SA 与 SGD 的统一视角 ★★★
 
 #### 从 SA 到 Adam：统一框架
 
@@ -1216,13 +1216,13 @@ $$\theta_{t+1} = \theta_t + \alpha_t G_t h(\theta_t, X_t),$$
 
 区别只在于增益矩阵 $G_t$ 的选择。$G_t = I$ 最简单但可能不是最优；$G_t = -J^{-1}$（Newton/Zap）渐近最优但计算昂贵；Adam 等自适应方法是介于两者之间的工程折衷。
 
-#### Cramer-Rao 下界与信息几何 ⭐⭐⭐
+#### Cramer-Rao 下界与信息几何 ★★★
 
 **为什么 Zap 的渐近方差是最优的？** 因为在估计理论中，任何无偏估计量的方差不低于 Cramer-Rao 下界 $I(\theta^*)^{-1}$（Fisher 信息矩阵的逆）。Zap SA 的增益矩阵 $G = -J^{-1}$ 恰好让渐近方差达到这个下界。
 
 **Natural Gradient 的信息几何解释**：Amari 1998 的 natural gradient $-F(\theta)^{-1}\nabla J(\theta)$ 在策略空间的 Fisher-Rao 度量下是最速下降方向。**这与 Zap SA 的最优性是同一个思想在不同空间的体现**——Zap 在参数空间最优（Cramer-Rao），Natural Gradient 在分布空间最优（Fisher-Rao）。
 
-#### 从 SA 视角理解 Adam 优化器 ⭐⭐⭐
+#### 从 SA 视角理解 Adam 优化器 ★★★
 
 Adam（Kingma-Ba 2015）是深度学习中最流行的优化器，从 SA 视角看它做了什么？
 
@@ -1281,7 +1281,7 @@ $$\theta_{t+1} = \theta_t - \alpha \frac{\hat m_t}{\sqrt{\hat v_t} + \epsilon}.$
 
 ---
 
-### §6.5.H 发散诊断工程指南 ⭐⭐
+### §6.5.H 发散诊断工程指南 ★★
 
 这一节是本专题对机器人 RL 工程师**最直接有用**的部分。当你在 Isaac Lab / legged_gym / rl_games 中遇到训练发散时，按以下六维诊断框架排查：
 
@@ -1335,7 +1335,7 @@ $$\theta_{t+1} = \theta_t - \alpha \frac{\hat m_t}{\sqrt{\hat v_t} + \epsilon}.$
 2. 增大 dr 的 warmup 期
 3. 从 SA 角度：非平稳 = $\theta^*$ 在移动，递减步长的"冻结"效应使迭代跟不上
 
-#### 完整的发散诊断代码模板 ⭐⭐
+#### 完整的发散诊断代码模板 ★★
 
 以下代码模板可以嵌入你的 RL 训练循环，实时监控 ODE 稳定性相关的诊断量：
 
@@ -1413,7 +1413,7 @@ class SADiagnostics:
         return warnings
 ```
 
-#### A 矩阵特征值的近似在线检查 ⭐⭐⭐
+#### A 矩阵特征值的近似在线检查 ★★★
 
 对线性 TD(0)，$A$ 矩阵可以从采样数据在线估计：
 
@@ -1437,7 +1437,7 @@ if min_real_part < 0:
 
 **注意**：这个诊断只对线性函数近似有效。对 NN 函数近似，可以用 Jacobian 的谱作为近似代理（通过 `torch.autograd.functional.jacobian`），但计算代价高昂，通常只在调试时使用。
 
-### ⚠️ 常见陷阱（§6.5.H）
+### ⚠ 常见陷阱（§6.5.H）
 
 **🧠 思维陷阱：遇到训练发散就盲目降低学习率**
 
@@ -1461,7 +1461,7 @@ if min_real_part < 0:
 
 ---
 
-### §6.5.I Fazel 2018 全局收敛的完整证明工具 ⭐⭐⭐⭐
+### §6.5.I Fazel 2018 全局收敛的完整证明工具 ★★★★
 
 #### PL（梯度支配）条件回顾（6.4 内容）
 
@@ -1475,7 +1475,7 @@ PL 条件的直觉：它说"梯度的大小控制了次优性"——如果你离
 
 **定理（Fazel et al. 2018）**：LQR 的 cost $J(K)$（作为策略增益 $K$ 的函数）非凸，但在稳定区域满足 PL 条件。因此**梯度流** $\dot K = -\nabla J(K)$ 全局收敛到 $K^*$。
 
-#### SA + PL = 全局线性收敛 ⭐⭐⭐⭐
+#### SA + PL = 全局线性收敛 ★★★★
 
 把 Fazel 的梯度流视为 SA 的平均 ODE：
 
@@ -1515,7 +1515,7 @@ $J(K)$ 关于 $K$ 是非凸的——但为什么满足 PL？直觉如下：
 
 ---
 
-### §6.5.J 收敛速率的完整比较与工程选择 ⭐⭐⭐
+### §6.5.J 收敛速率的完整比较与工程选择 ★★★
 
 本节汇总所有 SA 变体的收敛速率，给出实用的工程选择指南。
 
@@ -1570,7 +1570,7 @@ $$T \ge \frac{1}{2\mu\alpha}\log\frac{\|\theta_0-\theta^*\|^2}{\epsilon} + \frac
 
 ---
 
-### 综合练习 ⭐⭐⭐
+### 综合练习 ★★★
 
 以下练习要求综合运用本章多个小节的知识，适合作为 qualifying exam 或 reading group 的讨论题。
 
@@ -1719,14 +1719,14 @@ class SAExperiment:
 
 | 资源 | 难度 | 阅读建议 |
 |------|------|----------|
-| **Borkar 2008** *Stochastic Approximation: A Dynamical Systems Viewpoint* (Cambridge) | ⭐⭐⭐ | **本专题主教材**，176 页薄而精，第 2、3、6、7 章必读 |
-| **Meyn 2022** *Control Systems and Reinforcement Learning* (Cambridge) | ⭐⭐⭐ | **最现代主教材**，免费 PDF，第 4、8、11 章直接对应本专题 |
-| **Kushner-Yin 2003** *Stochastic Approximation and Recursive Algorithms* 2nd ed (Springer) | ⭐⭐⭐⭐ | 百科全书风格参考书，查具体定理用 |
-| **Benveniste-Metivier-Priouret 1990** *Adaptive Algorithms and Stochastic Approximations* (Springer) | ⭐⭐⭐⭐ | 经典，读第 2 章 Markov 噪声处理 |
-| **Bertsekas & Tsitsiklis 1996** *Neuro-Dynamic Programming* (Athena Scientific) | ⭐⭐⭐ | RL 数学"圣经"，第 4-6 章为本专题历史起点 |
-| **赵世钰 *Mathematical Foundations of Reinforcement Learning*** | ⭐⭐ | 中英文双版本，直接讲 SA/ODE/收敛证明，**中文替代首选** |
-| Bhandari-Russo-Singal 2018 "Finite Time Analysis of TD" (COLT) | ⭐⭐⭐⭐ | 有限样本分析的现代里程碑 |
-| Srikant-Ying 2019 "Finite-Time Error Bounds for Linear SA" (COLT) | ⭐⭐⭐⭐ | 常数步长 TD 精细界 |
+| **Borkar 2008** *Stochastic Approximation: A Dynamical Systems Viewpoint* (Cambridge) | ★★★ | **本专题主教材**，176 页薄而精，第 2、3、6、7 章必读 |
+| **Meyn 2022** *Control Systems and Reinforcement Learning* (Cambridge) | ★★★ | **最现代主教材**，免费 PDF，第 4、8、11 章直接对应本专题 |
+| **Kushner-Yin 2003** *Stochastic Approximation and Recursive Algorithms* 2nd ed (Springer) | ★★★★ | 百科全书风格参考书，查具体定理用 |
+| **Benveniste-Metivier-Priouret 1990** *Adaptive Algorithms and Stochastic Approximations* (Springer) | ★★★★ | 经典，读第 2 章 Markov 噪声处理 |
+| **Bertsekas & Tsitsiklis 1996** *Neuro-Dynamic Programming* (Athena Scientific) | ★★★ | RL 数学"圣经"，第 4-6 章为本专题历史起点 |
+| **赵世钰 *Mathematical Foundations of Reinforcement Learning*** | ★★ | 中英文双版本，直接讲 SA/ODE/收敛证明，**中文替代首选** |
+| Bhandari-Russo-Singal 2018 "Finite Time Analysis of TD" (COLT) | ★★★★ | 有限样本分析的现代里程碑 |
+| Srikant-Ying 2019 "Finite-Time Error Bounds for Linear SA" (COLT) | ★★★★ | 常数步长 TD 精细界 |
 
 ---
 

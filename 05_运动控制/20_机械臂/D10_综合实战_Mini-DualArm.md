@@ -54,9 +54,9 @@ D10 综合实战——Mini-DualArm 从零搭建
 
 ---
 
-## 前置自测 ⭐
+## 前置自测 ★
 
-> 📋 **答不出 >= 3 题 → 先回前置章节复习，本章是综合实战，需要全面的前置知识**
+> ◆ **答不出 >= 3 题 → 先回前置章节复习，本章是综合实战，需要全面的前置知识**
 
 | 编号 | 问题 | 答不出时回顾 |
 |:----:|------|------------|
@@ -81,7 +81,7 @@ D10 综合实战——Mini-DualArm 从零搭建
 
 ---
 
-## D10.1 系统架构设计 ⭐⭐
+## D10.1 系统架构设计 ★★
 
 ### 动机——为什么需要统一架构？
 
@@ -162,7 +162,7 @@ D10 综合实战——Mini-DualArm 从零搭建
 3. **统一数据格式**：无论哪种模式，录制的数据格式相同（LeRobot）
 4. **渐进式开发**：先让单臂工作 → 双臂独立 → 双臂协调 → 遥操作 → 策略
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：多个模式同时发送关节指令
@@ -201,7 +201,7 @@ D10 综合实战——Mini-DualArm 从零搭建
 
 ---
 
-## D10.2 阶段式开发路线 ⭐⭐
+## D10.2 阶段式开发路线 ★★
 
 ### 路线 Alpha（基础，2 周）
 
@@ -340,7 +340,7 @@ def test_no_self_collision_at_home():
 
 ---
 
-## D10.3 环境搭建实战（Day 1-2）⭐⭐
+## D10.3 环境搭建实战（Day 1-2）★★
 
 ### 项目目录结构
 
@@ -605,7 +605,7 @@ for _ in range(1000):
 print("All environment tests PASSED")
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：MuJoCo 的 ctrl 索引与 qpos 索引不一致
@@ -650,7 +650,7 @@ print("All environment tests PASSED")
 
 ---
 
-## D10.4 MoveIt2 双臂集成（Day 3-4）⭐⭐
+## D10.4 MoveIt2 双臂集成（Day 3-4）★★
 
 ### 配置验证
 
@@ -703,7 +703,7 @@ int main(int argc, char** argv) {
 
 ---
 
-## D10.5 Object Impedance 双臂搬运（Day 5-6）⭐⭐⭐
+## D10.5 Object Impedance 双臂搬运（Day 5-6）★★★
 
 ### 任务描述
 
@@ -1013,7 +1013,7 @@ def plot_impedance_tuning(log_data):
 >
 > 内力控制的价值正是**主动控制抓持力**，使其不依赖于被动约束力，而是由控制器显式维持。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：内力方向在物体旋转后不更新
@@ -1035,7 +1035,7 @@ def plot_impedance_tuning(log_data):
 
 ---
 
-## D10.6 遥操作数据采集（Day 7-8）⭐⭐
+## D10.6 遥操作数据采集（Day 7-8）★★
 
 ### 遥操作节点实现
 
@@ -1179,7 +1179,7 @@ def hdf5_frame_to_lerobot(h5, t):
 
 ---
 
-## D10.7 ACT 策略训练与部署（Day 9-10）⭐⭐⭐
+## D10.7 ACT 策略训练与部署（Day 9-10）★★★
 
 ### 训练流程
 
@@ -1281,7 +1281,7 @@ class PolicyInferenceNode(Node):
 
 ---
 
-## D10.8 性能对比与评价指标 ⭐⭐
+## D10.8 性能对比与评价指标 ★★
 
 ### 评估指标
 
@@ -1596,7 +1596,7 @@ Step 5: 全速 + 数据采集 + 策略部署
 
 ---
 
-## D10.9 开源参考项目详细对比 ⭐⭐
+## D10.9 开源参考项目详细对比 ★★
 
 > Stars 数据截至 2026-01，实际数字随时间增长，仅供量级参考。
 
@@ -1640,7 +1640,7 @@ Step 5: 全速 + 数据采集 + 策略部署
 
 ---
 
-## D10.10 系统调试经验总结 ⭐⭐
+## D10.10 系统调试经验总结 ★★
 
 ### 黄金法则
 
@@ -1719,9 +1719,9 @@ Level 5: 策略训练 + 部署
 
 ---
 
-## D10.11 Docker 部署与 ROS2 版本兼容性 ⭐⭐
+## D10.11 Docker 部署与 ROS2 版本兼容性 ★★
 
-### ROS2 Iron/Jazzy/Rolling 兼容性 ⭐⭐
+### ROS2 Iron/Jazzy/Rolling 兼容性 ★★
 
 Mini-DualArm 项目默认基于 ROS2 Humble（LTS，2027 年 EOL）。但随着 ROS2 版本演进，以下兼容性问题需要关注：
 
@@ -1739,7 +1739,7 @@ Mini-DualArm 项目默认基于 ROS2 Humble（LTS，2027 年 EOL）。但随着 
 2. **MoveIt2 Jazzy 的新 API**：`MoveGroupInterface` 的 `plan()` 返回类型从 `MoveItErrorCode` 改为 `std::pair<MoveItErrorCode, RobotTrajectory>`
 3. **TF2 API 调整**：Jazzy 中部分 TF2 API 头文件和接口有调整，详见 ROS 2 迁移指南
 
-### Docker 部署最佳实践 ⭐⭐
+### Docker 部署最佳实践 ★★
 
 Docker 容器化是确保 Mini-DualArm 环境可复现的最可靠方式——避免"在我的机器上能跑"问题。
 
@@ -1804,7 +1804,7 @@ services:
 
 ---
 
-## D10.9 跨章综合练习与能力验证 ⭐⭐⭐
+## D10.9 跨章综合练习与能力验证 ★★★
 
 ### 综合练习 1：端到端双臂系统搭建
 
@@ -1957,7 +1957,7 @@ def compute_sync_error(left_ee_positions, right_ee_positions,
     return float(np.mean(errors)), float(np.max(errors))
 ```
 
-> **⚠️ 陷阱：评估时的随机性控制**
+> **⚠ 陷阱：评估时的随机性控制**
 >
 > 每种方法的 50 次试验必须使用**相同的初始条件集**（相同的物体初始位置、相同的随机种子）。如果不控制初始条件，方法间的差异可能被初始条件的随机性淹没。MuJoCo 通过 `mj_resetData()` 后设置固定的 `data.qpos` 来控制初始状态；在加入域随机化时，使用固定的随机种子序列。
 
@@ -1994,16 +1994,16 @@ def compute_sync_error(left_ee_positions, right_ee_positions,
 
 | 编号 | 知识点 | 核心内容 | 难度 | 综合的前置章节 |
 |------|--------|---------|------|-------------|
-| 1 | 系统架构 | 三模式统一设计、微服务类比 | ⭐⭐ | D01-D09 全部 |
-| 2 | 环境搭建 | MuJoCo + ros2_control 桥接 | ⭐⭐ | D09.7, P02 |
-| 3 | MoveIt2 集成 | 双臂配置验证与规划测试 | ⭐⭐ | D09.1-D09.6 |
-| 4 | Object Impedance | 双臂共持搬运、内力控制 | ⭐⭐⭐ | D03 力控 |
-| 5 | 遥操作采集 | GELLO 式镜像 + LeRobot 录制 | ⭐⭐ | D08 |
-| 6 | ACT 部署 | 训练 → 推理节点 → 部署 | ⭐⭐⭐ | D04, D08 |
-| 7 | 性能对比 | 三方法定量评估框架 | ⭐⭐ | — |
-| 8 | Docker/版本兼容 | Humble→Jazzy 迁移、Docker Compose 部署 | ⭐⭐ | — |
-| 9 | 安全模式切换 | Lifecycle 管理、hold 控制器过渡、初始状态同步 | ⭐⭐ | D10.1 |
-| 10 | 性能基准测试 | 标准化评估指标体系（成功率/平滑度/安全性/协调度） | ⭐⭐ | D10.9 |
+| 1 | 系统架构 | 三模式统一设计、微服务类比 | ★★ | D01-D09 全部 |
+| 2 | 环境搭建 | MuJoCo + ros2_control 桥接 | ★★ | D09.7, P02 |
+| 3 | MoveIt2 集成 | 双臂配置验证与规划测试 | ★★ | D09.1-D09.6 |
+| 4 | Object Impedance | 双臂共持搬运、内力控制 | ★★★ | D03 力控 |
+| 5 | 遥操作采集 | GELLO 式镜像 + LeRobot 录制 | ★★ | D08 |
+| 6 | ACT 部署 | 训练 → 推理节点 → 部署 | ★★★ | D04, D08 |
+| 7 | 性能对比 | 三方法定量评估框架 | ★★ | — |
+| 8 | Docker/版本兼容 | Humble→Jazzy 迁移、Docker Compose 部署 | ★★ | — |
+| 9 | 安全模式切换 | Lifecycle 管理、hold 控制器过渡、初始状态同步 | ★★ | D10.1 |
+| 10 | 性能基准测试 | 标准化评估指标体系（成功率/平滑度/安全性/协调度） | ★★ | D10.9 |
 
 ## 本章常见误解汇总
 
@@ -2060,13 +2060,13 @@ D10: 综合实战 ✓
 
 | 资源 | 难度 | 说明 |
 |------|------|------|
-| Zhao et al. (2023) "Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware" | ⭐⭐ | ALOHA/ACT 原论文——本项目的直接灵感来源 |
-| Fu et al. (2024) "Mobile ALOHA" | ⭐⭐ | co-training 方法扩展 |
-| Cadena et al. (2025) "LeRobot: State-of-the-art Machine Learning for Real-World Robotics" | ⭐⭐ | 数据 + 训练框架 |
-| robosuite TwoArmLift documentation | ⭐⭐⭐ | 双臂 RL 环境的标准参考 |
-| Siciliano & Khatib (2016) "Springer Handbook of Robotics", Ch. 30 Dual-Arm Manipulation | ⭐⭐⭐⭐ | 双臂协作的经典理论 |
-| RoboTwin Dual-Arm Collaboration Challenge (CVPR 2025) | ⭐⭐⭐ | 双臂协作基准测试竞赛，包含标准化评估协议 |
-| Agility A2 Dual-Arm Research Platform | ⭐⭐ | 基于 OpenArm 的双臂研究平台，ROS2 原生支持 |
+| Zhao et al. (2023) "Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware" | ★★ | ALOHA/ACT 原论文——本项目的直接灵感来源 |
+| Fu et al. (2024) "Mobile ALOHA" | ★★ | co-training 方法扩展 |
+| Cadena et al. (2025) "LeRobot: State-of-the-art Machine Learning for Real-World Robotics" | ★★ | 数据 + 训练框架 |
+| robosuite TwoArmLift documentation | ★★★ | 双臂 RL 环境的标准参考 |
+| Siciliano & Khatib (2016) "Springer Handbook of Robotics", Ch. 30 Dual-Arm Manipulation | ★★★★ | 双臂协作的经典理论 |
+| RoboTwin Dual-Arm Collaboration Challenge (CVPR 2025) | ★★★ | 双臂协作基准测试竞赛，包含标准化评估协议 |
+| Agility A2 Dual-Arm Research Platform | ★★ | 基于 OpenArm 的双臂研究平台，ROS2 原生支持 |
 
 ### 研究实践建议
 

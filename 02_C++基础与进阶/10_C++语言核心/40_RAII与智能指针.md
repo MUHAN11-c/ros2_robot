@@ -1,12 +1,12 @@
 # RAII、智能指针与资源管理
 
-> **难度**：⭐～⭐⭐⭐ | **建议用时**：2周 | **前置要求**：现代类设计与特殊成员函数
+> **难度**：★～★★★ | **建议用时**：2周 | **前置要求**：现代类设计与特殊成员函数
 
 ---
 
 ## 前置自测
 
-> 📋 答不出 ≥ 2 题 → 先回顾 现代类设计与特殊成员函数
+> ◆ 答不出 ≥ 2 题 → 先回顾 现代类设计与特殊成员函数
 
 1. C++ 的六大特殊成员函数是哪些？声明析构函数会对移动操作产生什么影响？
 2. Rule of Zero 是什么意思？什么时候应该遵循它、什么时候不能？
@@ -67,7 +67,7 @@ RAII、智能指针与资源管理
 
 ---
 
-## 4.1 RAII原则：C++资源管理的哲学基石 ⭐⭐
+## 4.1 RAII原则：C++资源管理的哲学基石 ★★
 
 ### 动机：资源泄漏——长时间运行系统的隐形杀手
 
@@ -176,7 +176,7 @@ void processPointCloud(const std::string& input, const std::string& output) {
 
 注意这段代码中**没有任何显式的释放操作**。文件在 `ifstream`/`ofstream` 析构时自动关闭，内存在 `vector` 析构时自动释放。无论控制流怎么走——正常返回、提前 `return`、异常抛出——资源都会被正确释放。
 
-### 与其他语言资源管理策略的对比 ⭐⭐
+### 与其他语言资源管理策略的对比 ★★
 
 理解 RAII 的独特性，需要和其他语言的策略做对比：
 
@@ -194,7 +194,7 @@ void processPointCloud(const std::string& input, const std::string& output) {
 
 **Rust 的所有权模型与 RAII 的关系。** Rust 的 `Drop` trait 本质上就是 RAII——离开作用域时自动调用 `drop()` 释放资源。Rust 比 C++ 更进一步的是：**编译器在编译期就检查所有权的合法性**，而 C++ 把这个责任交给了程序员（虽然智能指针大大简化了这个工作）。如果你未来学 Rust，会发现 RAII 的概念可以无缝迁移。
 
-### RAII 在机器人系统中的关键应用场景 ⭐⭐
+### RAII 在机器人系统中的关键应用场景 ★★
 
 在机器人软件栈中，RAII 的价值远超"防止内存泄漏"。以下是四个最典型的应用场景：
 
@@ -208,7 +208,7 @@ void processPointCloud(const std::string& input, const std::string& output) {
 
 > **类比**：RAII 在机器人系统中的角色，类似于安全工程中的"失效安全"（fail-safe）设计。核电站的安全系统设计为"断电时阀门自动关闭"——不需要额外的动力来执行安全操作。RAII 的析构函数就是这个"断电自动关闭"机制——不需要额外的代码路径来释放资源，编译器保证在所有退出路径上执行清理。
 
-### RAII 的历史脉络 ⭐⭐⭐
+### RAII 的历史脉络 ★★★
 
 RAII 并非凭空出现。它的诞生与 C++ 异常处理机制的引入密切相关。
 
@@ -216,9 +216,9 @@ RAII 并非凭空出现。它的诞生与 C++ 异常处理机制的引入密切�
 
 1989-1990 年，C++ 引入异常处理（`try/catch/throw`）时，RAII 的价值才真正显现。异常让控制流变得不可预测——任何一行代码都可能跳转到 catch 块。手动的 `acquire-use-release` 模式在异常面前完全崩溃。但 RAII 对象不受影响：编译器保证栈展开时调用析构函数，无论异常从哪里抛出。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **概念误区：认为 RAII 只是"用类包装资源"**
+> ⚠ **概念误区：认为 RAII 只是"用类包装资源"**
 >
 > **新手想法**："RAII 就是把 `new/delete` 放进构造/析构函数呗。"
 >
@@ -254,7 +254,7 @@ RAII 并非凭空出现。它的诞生与 C++ 异常处理机制的引入密切�
 
 ---
 
-## 4.2 std::unique_ptr：独占所有权 ⭐⭐
+## 4.2 std::unique_ptr：独占所有权 ★★
 
 ### 动机：谁负责释放这个对象？
 
@@ -303,7 +303,7 @@ optimizer.addVertex(std::move(v));
 
 Kimera-VIO（MIT SPARK 实验室）展示了现代 SLAM 代码应该怎么写——它通过 `KIMERA_POINTER_TYPEDEFS` 宏为每个类自动生成六种智能指针类型别名（`Ptr`、`ConstPtr`、`UniquePtr`、`ConstUniquePtr`、`WeakPtr`、`WeakConstPtr`），在 `Pipeline.h` 中用 `unique_ptr` 管理所有独占的模块实例（VIO 前端、后端、网格化器、回环检测），形成了清晰的所有权层次。
 
-### unique_ptr 的内部实现：零开销抽象 ⭐⭐
+### unique_ptr 的内部实现：零开销抽象 ★★
 
 `unique_ptr` 是 C++ "零开销抽象"（zero-overhead abstraction）哲学的典范。它的内部实现极其简单——本质上就是一个包装了裸指针的类，再加上析构函数中的 `delete` 调用。
 
@@ -346,7 +346,7 @@ public:
 
 注意移动构造函数中的关键步骤：`other.ptr_ = nullptr`。这不是可选的——如果不把源对象的指针置空，当源对象析构时会 `delete` 同一块内存，导致 double-free。这和 现代类设计与特殊成员函数 中讲的移动语义"偷走资源、置空源对象"的模式完全一致。
 
-### make_unique：为什么不用 new ⭐⭐
+### make_unique：为什么不用 new ★★
 
 C++14 引入了 `std::make_unique`（C++11 中没有，需要手动写 `unique_ptr<T>(new T(args))`），它应该成为你创建 `unique_ptr` 的默认方式。原因有二：
 
@@ -370,7 +370,7 @@ processData(std::make_unique<A>(), std::make_unique<B>());
 
 **原因二：DRY（Don't Repeat Yourself）。** `std::unique_ptr<VeryLongTypeName>(new VeryLongTypeName(args))` 重复了类型名。`std::make_unique<VeryLongTypeName>(args)` 只写一次。
 
-### 自定义删除器：管理非 new 分配的资源 ⭐⭐⭐
+### 自定义删除器：管理非 new 分配的资源 ★★★
 
 默认情况下，`unique_ptr` 用 `delete`（或 `delete[]`）释放资源。但很多资源不是用 `new` 分配的——CUDA 显存用 `cudaMalloc` 分配、`cudaFree` 释放；C 库的 FILE 指针用 `fopen` 打开、`fclose` 关闭。自定义删除器让 `unique_ptr` 能管理任意类型的资源。
 
@@ -405,7 +405,7 @@ CudaPtr allocGPU(size_t bytes) {
 }
 ```
 
-### unique_ptr 在多态场景中的应用 ⭐⭐
+### unique_ptr 在多态场景中的应用 ★★
 
 `unique_ptr` 的一个强大用途是管理多态对象——通过基类 `unique_ptr` 持有派生类对象，利用虚函数实现多态行为。这在 SLAM 系统中的传感器驱动管理、优化器选择、特征检测器选择等场景中非常常见。
 
@@ -447,7 +447,7 @@ public:
 
 > **本质洞察**：工厂函数返回 `unique_ptr` 而非 `shared_ptr` 遵循了"最小权限原则"——给调用者最大的灵活性。`unique_ptr` 可以隐式转为 `shared_ptr`（通过 `shared_ptr<T>(std::move(uptr))`），但反过来不行。所以返回 `unique_ptr` 让调用者可以选择独占还是共享；返回 `shared_ptr` 则强制所有调用者都共享——即使它们不需要。
 
-### unique_ptr 与不完整类型（PIMPL 续篇）⭐⭐⭐
+### unique_ptr 与不完整类型（PIMPL 续篇）★★★
 
 编译模型基础 介绍了 PIMPL（Pointer to Implementation）模式——用指针隐藏实现细节以减少编译依赖。`unique_ptr` 是实现 PIMPL 的首选工具，但有一个微妙的陷阱（Scott Meyers *Effective Modern C++* Item 22 详述）。
 
@@ -489,9 +489,9 @@ Sensor& Sensor::operator=(Sensor&&) noexcept = default;
 
 **注意**：不仅析构函数，移动构造和移动赋值也必须在 `.cpp` 中定义——因为移动赋值可能需要销毁旧的 `pImpl_`（调用 `delete`），同样需要完整类型。这就打破了 Rule of Zero——PIMPL 是 Rule of Zero 的少数合法例外之一。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：对 unique_ptr 调用 `.get()` 后保存裸指针**
+> ⚠ **编程陷阱：对 unique_ptr 调用 `.get()` 后保存裸指针**
 >
 > **错误做法**：`T* raw = uptr.get(); /* ... 某处 uptr 被销毁 ... */ raw->method(); // 悬空指针！`
 >
@@ -523,7 +523,7 @@ Sensor& Sensor::operator=(Sensor&&) noexcept = default;
 
 ---
 
-## 4.3 std::shared_ptr：共享所有权与引用计数 ⭐⭐
+## 4.3 std::shared_ptr：共享所有权与引用计数 ★★
 
 ### 动机：当所有权无法独占时
 
@@ -543,7 +543,7 @@ SLAM 系统中的地图点（MapPoint）是典型案例：一个 MapPoint 被多
 
 这就是为什么 C++ Core Guidelines 把"默认用 `unique_ptr`"作为首要建议（R.20）——不是因为 `shared_ptr` 不好用，而是因为 `unique_ptr` 的确定性让代码更容易理解和维护。`shared_ptr` 是为那些**真正需要协商式管理**的场景保留的——比如多个观测者共同持有一个地图点，没有天然的"唯一所有者"。
 
-### shared_ptr 的内部结构：控制块 ⭐⭐
+### shared_ptr 的内部结构：控制块 ★★
 
 `shared_ptr` 的核心机制是**引用计数（reference counting）**。每个被 `shared_ptr` 管理的对象关联一个**控制块（control block）**，控制块包含：
 
@@ -573,7 +573,7 @@ shared_ptr B ──→ ↑               ──→│ weak_count:   1      │
 
 一个容易忽略但重要的细节：**控制块中的被管理对象指针（managed pointer）可以和 `shared_ptr` 存储的指针（stored pointer）不同。** 这是别名构造函数（aliasing constructor）的基础——你可以创建一个 `shared_ptr<Yolk>` 指向 `Egg` 对象的 `yolk` 子成员，但共享 `Egg` 的所有权。注意：`shared_ptr<Base>` 能在没有虚析构函数时正确删除派生对象，前提是控制块一开始就是从 `Derived*` 或 `make_shared<Derived>` 建立的，删除器记住了真实类型；如果先把对象擦成 `Base*` 再构造 `shared_ptr<Base>`，仍然是危险设计。
 
-### make_shared 的内存优化 ⭐⭐
+### make_shared 的内存优化 ★★
 
 创建 `shared_ptr` 有两种方式，在内存分配行为上有重要区别：
 
@@ -593,7 +593,7 @@ shared_ptr(new T):            make_shared<T>():
 
 但 `make_shared` 有一个不太明显的副作用：由于控制块和对象共享同一块内存，即使对象已经被销毁（强引用计数 = 0），如果还有 `weak_ptr` 指向它（弱引用计数 > 0），控制块不能释放——因此整块内存（包括对象曾经占据的部分）都不能释放。如果 `T` 是一个很大的对象（如 1MB 的图像缓冲区），这意味着即使所有 `shared_ptr` 都已销毁，只要有 `weak_ptr` 存活，那 1MB 内存就一直被占着。对于大对象 + 长生命周期 `weak_ptr` 的场景，`shared_ptr<T>(new T)` 反而更好——它允许对象内存和控制块内存独立释放。
 
-### 线程安全性：精确理解 ⭐⭐
+### 线程安全性：精确理解 ★★
 
 `shared_ptr` 的线程安全性是面试和工程实践中最容易搞错的地方。必须精确区分三个层次：
 
@@ -627,7 +627,7 @@ public:
 };
 ```
 
-### C++20 `std::atomic<shared_ptr<T>>` ⭐⭐⭐
+### C++20 `std::atomic<shared_ptr<T>>` ★★★
 
 C++20 引入了 `std::atomic<std::shared_ptr<T>>`，解决了多线程同时读写同一个 `shared_ptr` 变量的问题。在此之前，需要用 `std::atomic_load`/`std::atomic_store` 这些自由函数来原子地操作 `shared_ptr`——但这些函数的语义和用法都不够直观。
 
@@ -645,7 +645,7 @@ std::atomic<std::shared_ptr<Config>> g_config;
 
 在 SLAM 系统中，全局配置对象（如实时调参接口）经常需要在多线程间共享和更新。`atomic<shared_ptr>` 提供了一种无锁的方式来实现这种"发布/订阅"模式——写者原子地发布新配置，读者原子地获取最新配置。
 
-### shared_ptr 的开销：原子操作不是免费的 ⭐⭐⭐
+### shared_ptr 的开销：原子操作不是免费的 ★★★
 
 `shared_ptr` 不是免费的。每次拷贝（包括按值传递给函数），都会执行一次**原子递增**操作；每次销毁，都会执行一次**原子递减**操作。在 x86-64 上，一次无竞争的 `std::atomic<long>::fetch_add` 约需 5-20 个时钟周期（相比普通整数递增的 1 个周期，慢约 5-20 倍）；在多核竞争下（缓存行弹跳），可达 50-200+ 个周期。
 
@@ -670,9 +670,9 @@ void processPoint(const MapPoint& point) { /* ... */ }
 
 Herb Sutter 在 GotW #91 中总结的规则：**只在函数需要"保留一份共享所有权"时才按值传递 `shared_ptr`**——比如函数要把这个 `shared_ptr` 存起来延长对象生命周期。如果函数只是使用对象而不需要延长其生命周期，传 `const T&` 或 `T*`。"Don't pass a smart pointer as a function parameter unless you want to use or manipulate the smart pointer itself."
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：从同一个裸指针创建多个 shared_ptr**
+> ⚠ **编程陷阱：从同一个裸指针创建多个 shared_ptr**
 >
 > **错误做法**：
 > ```cpp
@@ -685,7 +685,7 @@ Herb Sutter 在 GotW #91 中总结的规则：**只在函数需要"保留一份�
 >
 > **正确做法**：永远用 `make_shared` 创建 `shared_ptr`，或者从已有的 `shared_ptr` 拷贝。C++ Core Guidelines R.11："避免显式 `new`"就是为了防止这类错误。
 
-> ⚠️ **编程陷阱：将 shared_ptr 指向栈上对象**
+> ⚠ **编程陷阱：将 shared_ptr 指向栈上对象**
 >
 > **错误做法**：
 > ```cpp
@@ -726,7 +726,7 @@ Herb Sutter 在 GotW #91 中总结的规则：**只在函数需要"保留一份�
 
 ---
 
-## 4.4 std::weak_ptr：打破循环的观察者 ⭐⭐
+## 4.4 std::weak_ptr：打破循环的观察者 ★★
 
 ### 动机：shared_ptr 的阿喀琉斯之踵
 
@@ -769,7 +769,7 @@ if (auto locked = wp.lock()) {
 }
 ```
 
-### 用 weak_ptr 设计 SLAM 中的双向引用 ⭐⭐
+### 用 weak_ptr 设计 SLAM 中的双向引用 ★★
 
 如果我们要用智能指针重新设计 ORB-SLAM3 的 KeyFrame-MapPoint 关系（ORB-SLAM3 本身用裸指针），最佳的所有权模型是：
 
@@ -806,7 +806,7 @@ class MapPoint {
 
 注意 `std::owner_less` 的使用——`weak_ptr` 没有 `operator<`（因为它不拥有对象，直接比较指针值没有意义），但 `owner_less` 基于控制块地址提供弱序比较，使 `weak_ptr` 可以作为 `std::map` 的键。
 
-### weak_ptr 与 SLAM 地图管理的实际考量 ⭐⭐
+### weak_ptr 与 SLAM 地图管理的实际考量 ★★
 
 在实际的 SLAM 系统中，MapPoint 的删除（culling）不仅涉及所有权管理，还涉及**一致性维护**。当一个 MapPoint 被判定为坏点（观测次数过少、投影误差过大）需要删除时：
 
@@ -835,7 +835,7 @@ std::vector<std::shared_ptr<MapPoint>> KeyFrame::getValidObservations() {
 
 > **反事实推理**：如果 SLAM 系统不使用 `weak_ptr` 而是用裸指针来记录 MapPoint-KeyFrame 的反向引用（ORB-SLAM3 就是这样做的），那么 MapPoint 被删除时必须立即遍历所有 KeyFrame 清理指向它的裸指针——否则悬空指针会在后续访问时崩溃。这种"立即清理"的方式在小规模地图中可以工作，但在大规模地图（数万个 MapPoint 和 KeyFrame）中，一次清理可能阻塞 Tracking 线程数毫秒——影响实时性。`weak_ptr` 的延迟清理模式把清理成本分摊到后续的正常访问中，对实时性更友好。
 
-### weak_ptr 的其他用途 ⭐⭐⭐
+### weak_ptr 的其他用途 ★★★
 
 `weak_ptr` 不仅仅用于打破循环引用。它在以下模式中同样重要：
 
@@ -863,9 +863,9 @@ public:
 
 **观察者模式**：发布者持有观察者的 `weak_ptr` 列表。当某个观察者被销毁时，发布者在下次通知时通过 `lock()` 发现它已失效，自动清理——无需显式的"取消订阅"操作。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：expired() 和 lock() 之间的竞态条件**
+> ⚠ **编程陷阱：expired() 和 lock() 之间的竞态条件**
 >
 > **错误做法**：
 > ```cpp
@@ -898,7 +898,7 @@ public:
 
 ---
 
-## 4.5 所有权转移模式与 API 设计 ⭐⭐
+## 4.5 所有权转移模式与 API 设计 ★★
 
 ### 动机：函数签名即文档
 
@@ -936,7 +936,7 @@ void computeNormal(const std::shared_ptr<PointCloud>& cloud);
 void computeNormal(const PointCloud& cloud);
 ```
 
-### 返回值中的所有权表达 ⭐⭐
+### 返回值中的所有权表达 ★★
 
 返回值同样应该表达所有权。工厂函数应该返回 `unique_ptr`——给调用者最大的灵活性（`unique_ptr` 可以隐式转为 `shared_ptr`，反过来不行）：
 
@@ -956,7 +956,7 @@ auto lidar = createSensor(SensorType::LIDAR);            // 独占
 std::shared_ptr<Sensor> shared = createSensor(SensorType::IMU);  // 隐式转为共享
 ```
 
-### ROS2 的 shared_ptr 架构 ⭐⭐⭐
+### ROS2 的 shared_ptr 架构 ★★★
 
 ROS2 的节点系统以 `shared_ptr` 为核心。`rclcpp::Node` 继承自 `std::enable_shared_from_this<Node>`，标准创建方式是 `auto node = std::make_shared<MyNode>(options)`。这样设计的原因是：执行器（Executor）通过 `shared_ptr` 持有节点引用，节点的生命周期需要被安全管理——节点可能在回调中通过 `shared_from_this()` 传递自身。注意 ROS2 不允许同一个节点同时关联到多个执行器（`add_node` 会检查并抛异常）。
 
@@ -971,7 +971,7 @@ int main(int argc, char* argv[]) {
 
 ROS2 内部使用 `weak_ptr` 避免循环引用——执行器通过 `weak_ptr` 收集回调组中的实体（订阅、定时器、服务等），而非直接持有强引用，确保节点销毁时所有回调实体可以被正确清理。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > 🧠 **思维陷阱：所有权设计先于编码**
 >
@@ -997,7 +997,7 @@ ROS2 内部使用 `weak_ptr` 避免循环引用——执行器通过 `weak_ptr` 
 
 ---
 
-## 4.6 RAII 封装模式：超越内存管理 ⭐⭐
+## 4.6 RAII 封装模式：超越内存管理 ★★
 
 ### 动机：RAII 不只是智能指针
 
@@ -1012,7 +1012,7 @@ RAII 的适用范围远超内存管理。C++ Core Guidelines R.1 指出："使�
 | 文件句柄 | `std::fstream`, `std::ofstream` | `.open()` / 构造 | `.close()` / 析构 |
 | 线程 | `std::jthread` (C++20) | 构造 | 析构时先请求停止，再 join |
 
-### lock_guard 和 unique_lock：互斥锁的 RAII ⭐⭐
+### lock_guard 和 unique_lock：互斥锁的 RAII ★★
 
 互斥锁管理是 RAII 在非内存资源上最经典的应用，也是理解"RAII 不只是智能指针"的最佳切入点。互斥锁的获取/释放模式和内存的分配/释放模式完全同构——都是"获取一个资源，使用它，然后释放"。但互斥锁遗漏释放的后果比内存泄漏更严重：内存泄漏只是浪费空间，死锁会让整个系统永久卡住。
 
@@ -1087,7 +1087,7 @@ void swapMapPoints(Map& map1, Map& map2) {
 }
 ```
 
-### ScopedTimer：SLAM 开发者的性能调试利器 ⭐⭐
+### ScopedTimer：SLAM 开发者的性能调试利器 ★★
 
 SLAM 算法的实时性至关重要——10Hz LiDAR 意味着每帧只有 100ms 的预算。开发者需要频繁测量各个模块的耗时。
 
@@ -1126,7 +1126,7 @@ void Tracking::processFrame(const Frame& frame) {
 
 与 VINS-Fusion 的手动 `TicToc` 相比，RAII 计时器的优势在于**不可遗忘**——析构函数保证在作用域结束时触发，无论执行路径如何。
 
-### C++26 `<scope>` 标准作用域守卫 ⭐⭐⭐
+### C++26 `<scope>` 标准作用域守卫 ★★★
 
 `<scope>` 头文件中的 `scope_exit`、`scope_success`、`scope_fail` 源自 Library Fundamentals TS v3，已被投票纳入 **C++26** 标准，提供了三种标准化的作用域守卫：
 
@@ -1159,7 +1159,7 @@ void transferFunds(Account& from, Account& to, double amount) {
 
 > **反事实推理**：如果 C++ 从 C++11 就标准化了 `scope_exit`，很多手动 try-catch 的资源清理代码可以被简洁的 RAII 守卫替代。`std::unique_ptr` + 自定义删除器在很多场景下是 `scope_exit` 的变通方案，但语义不够直接——用一个"智能指针"来管理"状态恢复"在概念上是牵强的。
 
-### 自定义 RAII 类的设计原则 ⭐⭐
+### 自定义 RAII 类的设计原则 ★★
 
 当标准库没有提供现成的 RAII 包装时，遵循五个原则：
 
@@ -1197,9 +1197,9 @@ void processOnGPU1() {
 }  // 自动恢复之前的 GPU
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：忘记给 RAII 对象命名**
+> ⚠ **编程陷阱：忘记给 RAII 对象命名**
 >
 > **错误做法**：
 > ```cpp
@@ -1231,7 +1231,7 @@ void processOnGPU1() {
 
 ---
 
-## 4.7 enable_shared_from_this：安全地共享自身 ⭐⭐⭐
+## 4.7 enable_shared_from_this：安全地共享自身 ★★★
 
 ### 动机：当对象需要把"自己"传出去
 
@@ -1256,7 +1256,7 @@ mp->registerSelf(observer);
 
 问题的根源：从裸指针构造 `shared_ptr` **总是**创建一个全新的控制块。新控制块不知道原来的 `mp` 已经在管理这个对象——两个控制块各自认为自己是唯一的所有者，各自在强引用计数归零时 `delete this`。
 
-### enable_shared_from_this 的原理 ⭐⭐⭐
+### enable_shared_from_this 的原理 ★★★
 
 `std::enable_shared_from_this<T>` 是一个 CRTP（Curiously Recurring Template Pattern，变参模板折叠表达式与CRTP 将详述）基类。它的内部机制：
 
@@ -1322,7 +1322,7 @@ C++17 还引入了 `weak_from_this()` 成员函数，它不会抛异常——如
 
 ---
 
-## 4.8 智能指针的性能考量与选择指南 ⭐⭐⭐
+## 4.8 智能指针的性能考量与选择指南 ★★★
 
 ### 零开销 vs 有开销：数字说话
 
@@ -1344,7 +1344,7 @@ C++17 还引入了 `weak_from_this()` 成员函数，它不会抛异常——如
 
 3. **移动构造 `shared_ptr` 通常不递增引用计数**——它只是转移两个指针。所以返回 `shared_ptr` 是廉价的；但移动赋值到一个已经持有对象的 `shared_ptr` 时，会先释放旧控制块，仍可能触发原子递减。
 
-### 选择决策树 ⭐⭐
+### 选择决策树 ★★
 
 ```text
 需要动态分配吗？
@@ -1374,7 +1374,7 @@ SLAM 系统中的经验法则：
 
 **默认 unique_ptr**：当你确实需要动态分配时，从 `unique_ptr` 开始。只有当你发现需要共享所有权时才"升级"到 `shared_ptr`。**从 `unique_ptr` 到 `shared_ptr` 的转换是隐式且高效的**——只需创建一个控制块。反过来不行。
 
-### 何时不用智能指针 ⭐⭐⭐
+### 何时不用智能指针 ★★★
 
 智能指针不是银弹。以下场景应该使用裸指针或引用：
 
@@ -1386,7 +1386,7 @@ SLAM 系统中的经验法则：
 
 **场景四：全局/静态生命周期的对象。** 活到程序结束的对象用智能指针管理增加了不必要的复杂性。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > 🧠 **思维陷阱：认为"有智能指针就不会有内存问题"**
 >
@@ -1400,7 +1400,7 @@ SLAM 系统中的经验法则：
 
 ---
 
-## 4.9 RAII 与线程、回调、订阅句柄 ⭐⭐⭐
+## 4.9 RAII 与线程、回调、订阅句柄 ★★★
 
 ### 工程问题：机器人系统的资源不只是内存
 
@@ -1580,7 +1580,7 @@ private:
 如果线程函数可能永远不退出，析构会阻塞。
 因此线程 RAII 必须和停止协议一起设计。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **A. 编程陷阱：回调捕获 this 后对象被销毁**
 
@@ -1596,13 +1596,13 @@ private:
 
 ### 练习
 
-1. **RAII 订阅实现**（⭐⭐）：设计一个 `EventBus` 类，其 `subscribe()` 方法返回一个 RAII 的 `Subscription` 对象。`Subscription` 析构时自动退订。支持移动但禁止拷贝。
+1. **RAII 订阅实现**（★★）：设计一个 `EventBus` 类，其 `subscribe()` 方法返回一个 RAII 的 `Subscription` 对象。`Subscription` 析构时自动退订。支持移动但禁止拷贝。
 
-2. **线程 RAII**（⭐⭐⭐）：编写一个 `BackgroundWorker` 类，构造时启动一个线程执行指定任务，析构时请求停止并 join。使用 `std::stop_token`（C++20）或 `std::atomic<bool>` 实现停止协议。
+2. **线程 RAII**（★★★）：编写一个 `BackgroundWorker` 类，构造时启动一个线程执行指定任务，析构时请求停止并 join。使用 `std::stop_token`（C++20）或 `std::atomic<bool>` 实现停止协议。
 
 ---
 
-## 4.10 RAII 与事务性修改：作用域结束时恢复状态 ⭐⭐
+## 4.10 RAII 与事务性修改：作用域结束时恢复状态 ★★
 
 ### 工程问题：临时修改系统状态后必须恢复
 
@@ -1721,13 +1721,13 @@ RAII 解决释放时机。
 
 ### 练习
 
-1. **ScopeExit 实现**（⭐⭐）：实现上文的 `ScopeExit` 模板类，并用它重写 `runRelocalization` 函数。验证：即使函数提前返回，状态也能正确恢复。
+1. **ScopeExit 实现**（★★）：实现上文的 `ScopeExit` 模板类，并用它重写 `runRelocalization` 函数。验证：即使函数提前返回，状态也能正确恢复。
 
-2. **状态恢复器**（⭐⭐⭐）：为以下场景设计 RAII 状态恢复器：一个机器人控制系统在执行紧急停止时需要临时切换到安全模式，紧急停止流程结束后恢复到之前的控制模式。恢复动作不能抛异常。
+2. **状态恢复器**（★★★）：为以下场景设计 RAII 状态恢复器：一个机器人控制系统在执行紧急停止时需要临时切换到安全模式，紧急停止流程结束后恢复到之前的控制模式。恢复动作不能抛异常。
 
 ---
 
-## 4.11 所有权图：从单个指针扩展到系统架构 ⭐⭐⭐
+## 4.11 所有权图：从单个指针扩展到系统架构 ★★★
 
 ### 工程问题：大型系统的所有权是图，不是一条链
 
@@ -1816,7 +1816,7 @@ private:
 
 ### 练习
 
-1. **所有权图绘制**（⭐⭐）：为以下简化的 SLAM 系统画出所有权关系图（用 `owns`、`shares`、`observes` 标注每条边），并确定每条边应该使用什么指针类型：
+1. **所有权图绘制**（★★）：为以下简化的 SLAM 系统画出所有权关系图（用 `owns`、`shares`、`observes` 标注每条边），并确定每条边应该使用什么指针类型：
    ```text
    System 管理 Tracker、Mapper、Viewer
    Tracker 访问 Map 中的 MapPoint
@@ -1826,7 +1826,7 @@ private:
    Viewer 只读访问 Map 来渲染
    ```
 
-2. **循环检测**（⭐⭐⭐）：在你画的图中，找出所有可能的循环引用，用 `weak_ptr` 打破。解释你选择哪条边改为 `weak_ptr` 的理由。
+2. **循环检测**（★★★）：在你画的图中，找出所有可能的循环引用，用 `weak_ptr` 打破。解释你选择哪条边改为 `weak_ptr` 的理由。
 
 ### 教学结论
 
@@ -1864,14 +1864,14 @@ RAII 的终点不是”把裸指针换成智能指针”。
 
 | 知识点 | 核心要义 | 难度 |
 |--------|---------|------|
-| RAII 原则 | 资源生命周期绑定对象生命周期，析构函数确定性释放 | ⭐⭐ |
-| `unique_ptr` | 独占所有权，零开销，不可拷贝只可移动 | ⭐⭐ |
-| `shared_ptr` | 共享所有权，引用计数，16 字节 + 原子操作开销 | ⭐⭐ |
-| `weak_ptr` | 非拥有观察，打破循环引用，`lock()` 原子安全访问 | ⭐⭐ |
-| 所有权转移模式 | 函数签名表达所有权意图，5 种参数传递模式 | ⭐⭐ |
-| RAII 封装 | `lock_guard`/`unique_lock`/`ScopedTimer`，超越内存 | ⭐⭐ |
-| `enable_shared_from_this` | 对象安全获取指向自身的 `shared_ptr`，CRTP 机制 | ⭐⭐⭐ |
-| 性能考量 | `unique_ptr` 零开销，`shared_ptr` 原子操作开销，移动不涉及原子 | ⭐⭐⭐ |
+| RAII 原则 | 资源生命周期绑定对象生命周期，析构函数确定性释放 | ★★ |
+| `unique_ptr` | 独占所有权，零开销，不可拷贝只可移动 | ★★ |
+| `shared_ptr` | 共享所有权，引用计数，16 字节 + 原子操作开销 | ★★ |
+| `weak_ptr` | 非拥有观察，打破循环引用，`lock()` 原子安全访问 | ★★ |
+| 所有权转移模式 | 函数签名表达所有权意图，5 种参数传递模式 | ★★ |
+| RAII 封装 | `lock_guard`/`unique_lock`/`ScopedTimer`，超越内存 | ★★ |
+| `enable_shared_from_this` | 对象安全获取指向自身的 `shared_ptr`，CRTP 机制 | ★★★ |
+| 性能考量 | `unique_ptr` 零开销，`shared_ptr` 原子操作开销，移动不涉及原子 | ★★★ |
 
 **一句话总结**：`unique_ptr` 是默认选择（零开销 + 清晰语义），`shared_ptr` 用于真正的共享所有权，`weak_ptr` 打破循环——这三者加上 RAII 原则，构成了现代 C++ 资源管理的完整体系。理解了本章内容，你就明白了为什么 现代类设计与特殊成员函数 说"优先遵循 Rule of Zero"——因为智能指针已经替你做了资源管理。
 
@@ -1908,16 +1908,16 @@ RAII 的终点不是”把裸指针换成智能指针”。
 
 | 资源 | 内容 | 难度 |
 |------|------|------|
-| *Effective Modern C++* Items 18-22 (Scott Meyers) | 智能指针最佳实践的权威指南 | ⭐⭐ |
-| C++ Core Guidelines R 节 (R.1-R.37) | 工业级 RAII 与资源管理准则 | ⭐⭐ |
-| GotW #89, #91 (Herb Sutter) | 智能指针选择与参数传递规则 | ⭐⭐⭐ |
-| Raymond Chen "Inside STL" 系列 | `shared_ptr` 控制块的内部实现细节 | ⭐⭐⭐ |
-| CnTransGroup/EffectiveModernCppChinese | 上述 Meyers 条款的中文翻译 | ⭐⭐ |
-| Light-City/CPlusPlusThings `basic_content/` | 智能指针中文实战教程 | ⭐ |
-| Kimera-VIO `Pipeline.h` / `Macros.h` | 现代 C++ SLAM 代码的所有权设计典范 | ⭐⭐⭐ |
-| ORB-SLAM3 `Atlas.h` / `MapPoint.h` / `KeyFrame.h` | 裸指针风格——理解为什么需要智能指针 | ⭐⭐ |
-| RAPIDS RMM `device_buffer.hpp` | GPU 内存 RAII 的工业级实现 | ⭐⭐⭐ |
-| Open3D `core/CUDAUtils.h` | CUDA 设备 RAII 和内存管理 | ⭐⭐⭐ |
+| *Effective Modern C++* Items 18-22 (Scott Meyers) | 智能指针最佳实践的权威指南 | ★★ |
+| C++ Core Guidelines R 节 (R.1-R.37) | 工业级 RAII 与资源管理准则 | ★★ |
+| GotW #89, #91 (Herb Sutter) | 智能指针选择与参数传递规则 | ★★★ |
+| Raymond Chen "Inside STL" 系列 | `shared_ptr` 控制块的内部实现细节 | ★★★ |
+| CnTransGroup/EffectiveModernCppChinese | 上述 Meyers 条款的中文翻译 | ★★ |
+| Light-City/CPlusPlusThings `basic_content/` | 智能指针中文实战教程 | ★ |
+| Kimera-VIO `Pipeline.h` / `Macros.h` | 现代 C++ SLAM 代码的所有权设计典范 | ★★★ |
+| ORB-SLAM3 `Atlas.h` / `MapPoint.h` / `KeyFrame.h` | 裸指针风格——理解为什么需要智能指针 | ★★ |
+| RAPIDS RMM `device_buffer.hpp` | GPU 内存 RAII 的工业级实现 | ★★★ |
+| Open3D `core/CUDAUtils.h` | CUDA 设备 RAII 和内存管理 | ★★★ |
 
 **延伸方向**：
 - 移动语义与完美转发 将从使用者角度深入 `std::move` 和完美转发——本章从资源管理角度奠定了基础
@@ -1985,7 +1985,7 @@ std::shared_ptr<Eigen::Vector3d> pos_ptr(state, &state->position);
 
 这个模式在需要把子对象传递给只接受 `shared_ptr` 的 API 时非常有用，同时保证了父对象的生命周期不会提前结束。
 
-⚠️ **概念误区：别名构造器不是弱引用**
+⚠ **概念误区：别名构造器不是弱引用**
 
 别名构造器创建的 `shared_ptr` 增加了引用计数，会阻止原始对象的释放。这和 `weak_ptr` 完全不同——`weak_ptr` 不增加引用计数，不阻止释放。混淆两者会导致对象生命周期超出预期。
 
@@ -2001,7 +2001,7 @@ std::shared_ptr<Eigen::Vector3d> pos_ptr(state, &state->position);
 
 ---
 
-## 智能指针在多线程 SLAM 系统中的实践模式 ⭐⭐⭐
+## 智能指针在多线程 SLAM 系统中的实践模式 ★★★
 
 在多线程 SLAM 系统中，智能指针的使用模式比单线程场景复杂得多。ORB-SLAM3 使用三个主要线程（Tracking、LocalMapping、LoopClosing），它们共享对 MapPoint 和 KeyFrame 的访问。
 

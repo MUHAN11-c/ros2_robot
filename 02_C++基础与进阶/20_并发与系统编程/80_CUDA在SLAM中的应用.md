@@ -98,7 +98,7 @@ CUDA 在 SLAM 中的实际应用
 
 ---
 
-## 38.1 为什么 SLAM 需要 GPU ⭐⭐
+## 38.1 为什么 SLAM 需要 GPU ★★
 
 SLAM 的实时性压力来自三个方向：
 
@@ -215,7 +215,7 @@ $$
 
 ---
 
-## 38.2 SLAM 中适合 CUDA 的模块地图 ⭐⭐
+## 38.2 SLAM 中适合 CUDA 的模块地图 ★★
 
 不同 SLAM 系统的瓶颈不同。
 但从数据形态看，可以把 CUDA 适用性分成四类。
@@ -364,7 +364,7 @@ $$AI = \frac{\text{FLOP}}{\text{bytes transferred}}$$
 >
 > 吞吐提升必须被延迟预算接受，才算真正有用。
 
-> ⚠️ **编程陷阱：只看 GPU kernel 时间就宣称"加速 10 倍"**
+> ⚠ **编程陷阱：只看 GPU kernel 时间就宣称"加速 10 倍"**
 > **错误做法**：报告中写"GPU 配准 kernel 耗时 2ms，CPU 版本 20ms，加速 10 倍"。
 > **现象**：实际系统端到端延迟从 20ms 降到 15ms，只加速了 1.33 倍。
 > **根本原因**：只测了 kernel 时间，没有计入上传（3ms）、下载（2ms）、同步（1ms）和预处理（7ms 不变）。端到端加速比远低于 kernel 加速比。
@@ -386,7 +386,7 @@ $$AI = \frac{\text{FLOP}}{\text{bytes transferred}}$$
 
 ---
 
-## 38.3 CPU/GPU 边界：真正决定速度的地方 ⭐⭐
+## 38.3 CPU/GPU 边界：真正决定速度的地方 ★★
 
 > **这一节解决什么问题**：CPU-GPU 数据传输是 GPU 加速中最大的瓶颈。用 PCIe 带宽 vs GPU 内存带宽的数量级差异来量化这个问题。
 
@@ -627,13 +627,13 @@ CPU/GPU 边界和跨国供应链的海关是类似的概念：数据过"海关"�
 
 如果每个 GPU 阶段之间都做一次同步会怎样？假设 pipeline 有 6 个阶段，每次 `cudaDeviceSynchronize` 约 50 微秒（包含 CPU-GPU 协调开销）。6 次同步就是 300 微秒——可能比某些阶段的 kernel 本身还长。更严重的是，同步阻止了 CPU 在等待期间做其他工作（如准备下一帧、处理 IMU 数据），白白浪费 CPU 时间。
 
-> ⚠️ **编程陷阱：频繁 `cudaDeviceSynchronize` 破坏 GPU pipeline**
+> ⚠ **编程陷阱：频繁 `cudaDeviceSynchronize` 破坏 GPU pipeline**
 > **错误做法**：每个 Thrust 调用后都加 `cudaDeviceSynchronize()` "确保安全"。
 > **现象**：GPU 利用率只有 20-30%，大量时间 CPU 和 GPU 互相等待。
 > **根本原因**：过度同步把本应异步执行的 GPU 操作串行化。GPU 和 CPU 失去了重叠执行的机会。
 > **正确做法**：只在真正需要 GPU 结果的位置同步。同一 stream 内的操作已经按顺序执行，不需要额外同步。
 
-> ⚠️ **编程陷阱：pinned memory 滥用导致系统可用内存不足**
+> ⚠ **编程陷阱：pinned memory 滥用导致系统可用内存不足**
 > **错误做法**：为所有数据结构都使用 `cudaHostAlloc` 分配 pinned memory，"因为它传输更快"。
 > **现象**：程序运行后系统可用内存急剧下降，其他进程开始 swap，整体性能恶化。
 > **根本原因**：pinned memory 锁定物理页面，不能被操作系统换出。大量 pinned memory 会减少系统可分页内存，影响其他所有进程。
@@ -646,7 +646,7 @@ CPU/GPU 边界和跨国供应链的海关是类似的概念：数据过"海关"�
 
 ---
 
-## 38.4 点云配准库：从 GICP 到 GPU VGICP ⭐⭐
+## 38.4 点云配准库：从 GICP 到 GPU VGICP ★★
 
 LiDAR SLAM 中，配准经常是最主要的热点。
 典型任务是：
@@ -914,7 +914,7 @@ std::unique_ptr<RegistrationBackend> createRegistrationBackend(
 
 配准后端的策略模式和 并行编程框架 的执行策略（SerialPolicy/OpenMPPolicy/TBBPolicy）是完全同构的设计：都是把"做什么"和"怎么做"分离，让调用者选择实现方式而不改变算法逻辑。
 
-> ⚠️ **编程陷阱：GPU 配准首帧延迟尖峰**
+> ⚠ **编程陷阱：GPU 配准首帧延迟尖峰**
 > **错误做法**：没有预热，直接在第一帧调用 GPU 配准。
 > **现象**：第一帧延迟 200ms+，后续帧稳定在 10ms。
 > **根本原因**：首次 CUDA 调用触发驱动初始化、JIT 编译（如果只有 PTX）和内存池建立。这些初始化成本只发生一次，但如果没有预热，就落在了第一帧的实时预算内。
@@ -958,7 +958,7 @@ std::unique_ptr<RegistrationBackend> createRegistrationBackend(
 
 ---
 
-## 38.5 GPU 因子：把加速放进优化问题 ⭐⭐⭐
+## 38.5 GPU 因子：把加速放进优化问题 ★★★
 
 SLAM 后端常写成因子图：
 
@@ -1053,7 +1053,7 @@ GPU 当然可以做稀疏线性代数。
 
 ---
 
-## 38.6 OpenCV CUDA：视觉前端的 GPU 接入 ⭐⭐
+## 38.6 OpenCV CUDA：视觉前端的 GPU 接入 ★★
 
 视觉 SLAM 的前端常见任务包括：
 
@@ -1246,7 +1246,7 @@ C++ 中也要做编译期隔离：
 不要在无 CUDA OpenCV 的平台上包含 CUDA 头文件。
 否则 fallback 还没运行，项目就已经编译失败。
 
-> ⚠️ **编程陷阱：公共头文件无条件包含 CUDA 头**
+> ⚠ **编程陷阱：公共头文件无条件包含 CUDA 头**
 > **错误做法**：在 `registration_backend.hpp` 中写 `#include <cuda_runtime.h>` 和 `cudaStream_t stream_;`。
 > **现象**：没有 CUDA 环境的 CI 或嵌入式平台编译失败。
 > **根本原因**：公共头文件被所有使用配准接口的代码包含。如果公共头依赖 CUDA 头，整个项目就对 CUDA 产生了硬依赖。
@@ -1259,7 +1259,7 @@ C++ 中也要做编译期隔离：
 
 ---
 
-## 38.7 LibTorch C++：学习模块进入 SLAM ⭐⭐⭐
+## 38.7 LibTorch C++：学习模块进入 SLAM ★★★
 
 现代 SLAM 越来越多地接入学习模块：
 
@@ -1416,7 +1416,7 @@ if (last_tracking_ms > budget.tracking_ms) {
 
 学习模块很强，但不能破坏定位闭环。
 
-> ⚠️ **编程陷阱：`torch::from_blob` 不拥有底层内存**
+> ⚠ **编程陷阱：`torch::from_blob` 不拥有底层内存**
 > **错误做法**：`torch::from_blob(mat.data, ...)` 后异步使用 Tensor，但 `mat` 已经被析构或覆盖。
 > **现象**：推理结果偶尔出现随机噪声或全零输出。
 > **根本原因**：`from_blob` 创建的 Tensor 不拥有内存——它只是一个指向外部缓冲区的视图。如果底层 `cv::Mat` 被释放或修改，Tensor 就指向无效或已变化的数据。
@@ -1434,7 +1434,7 @@ if (last_tracking_ms > budget.tracking_ms) {
 
 ---
 
-## 38.8 3D Gaussian Splatting 与 CUDA 渲染链路 ⭐⭐⭐⭐
+## 38.8 3D Gaussian Splatting 与 CUDA 渲染链路 ★★★★
 
 一些新型视觉 SLAM 或重建系统会把 3D Gaussian Splatting 引入地图表达。
 这类系统通常包含：
@@ -1504,7 +1504,7 @@ public:
 
 ---
 
-## 38.9 Jetson 与嵌入式部署 ⭐⭐
+## 38.9 Jetson 与嵌入式部署 ★★
 
 桌面 GPU 和 Jetson 平台在工程特性上差异很大。
 
@@ -1550,7 +1550,7 @@ Jetson 的统一内存和桌面 GPU 的独立显存就像城市内部物流和�
 
 如果在 Jetson 上使用桌面 GPU 的优化策略（如大量 pinned memory）会怎样？Jetson 的物理内存通常只有 8-32GB，且被 CPU 和 GPU 共享。大量 pinned memory 会直接减少 CPU 可用内存。在桌面上合理的策略，在 Jetson 上可能导致 OOM。
 
-> ⚠️ **编程陷阱：Jetson 上 Unified Memory 性能不可预测**
+> ⚠ **编程陷阱：Jetson 上 Unified Memory 性能不可预测**
 > **错误做法**：在 Jetson 上使用 `cudaMallocManaged`，假设"共享内存平台上 Unified Memory 零成本"。
 > **现象**：某些访问模式下延迟不稳定，出现数百微秒的尖峰。
 > **根本原因**：即使物理内存共享，Unified Memory 仍涉及 page migration、cache coherence 和 TLB 管理。在 CPU 和 GPU 交替频繁访问同一页时，一致性协议开销可能很高。
@@ -1638,7 +1638,7 @@ docker/
 
 ---
 
-## 38.10 CMake：让 CUDA 成为可选能力 ⭐
+## 38.10 CMake：让 CUDA 成为可选能力 ★
 
 一个可维护的 SLAM 项目不应该要求所有用户都有 CUDA。
 尤其是教学项目，CPU 版本应该始终可运行。
@@ -1765,7 +1765,7 @@ endif()
 
 ---
 
-## 38.11 运行时 backend 选择 ⭐⭐
+## 38.11 运行时 backend 选择 ★★
 
 一个机器人系统应允许在配置中选择后端：
 
@@ -1886,7 +1886,7 @@ SLAM 系统需要知道失败原因。
 
 ---
 
-## 38.12 benchmark：不要只测 kernel ⭐⭐
+## 38.12 benchmark：不要只测 kernel ★★
 
 GPU 改造必须用 benchmark 闭环。
 否则很容易产生错觉。
@@ -2097,7 +2097,7 @@ benchmark:
 
 ---
 
-## 38.13 正确性验证：GPU 结果不必逐位一致 ⭐⭐
+## 38.13 正确性验证：GPU 结果不必逐位一致 ★★
 
 ### 为什么 CPU 和 GPU 的浮点结果不可能完全一致？
 
@@ -2213,7 +2213,7 @@ GPU 后端最怕的是错误输入触发非法内存访问。
 
 ---
 
-## 38.14 mini pipeline：GPU 点云前端的完整骨架 ⭐⭐
+## 38.14 mini pipeline：GPU 点云前端的完整骨架 ★★
 
 下面构造一个教学版 LiDAR 前端。
 它不绑定具体 SLAM 框架。
@@ -2340,7 +2340,7 @@ private:
 
 ---
 
-## 38.15 CPU/GPU fallback 的实现细节 ⭐⭐
+## 38.15 CPU/GPU fallback 的实现细节 ★★
 
 fallback 不是一句“失败时用 CPU”。
 它需要处理状态一致性。
@@ -2429,7 +2429,7 @@ if (map.gpuCacheDirty()) {
 
 ---
 
-## 38.16 异步 pipeline：让 GPU 和 CPU 同时工作 ⭐⭐⭐
+## 38.16 异步 pipeline：让 GPU 和 CPU 同时工作 ★★★
 
 ### 异步 pipeline 的理论基础：为什么 CPU-GPU 重叠能提高吞吐
 
@@ -2565,7 +2565,7 @@ SLAM pipeline 的异步边界必须服从算法依赖。
 
 ---
 
-## 38.17 内存池与临时缓冲区 ⭐⭐
+## 38.17 内存池与临时缓冲区 ★★
 
 ### GPU 显存分配的特殊性：为什么 `cudaMalloc` 比 CPU `malloc` 更危险
 
@@ -2647,7 +2647,7 @@ if (num_points > max_points_) {
 
 GPU 工作区的复用和 内存分配策略与pmr 的帧级 arena 是完全同构的设计：都是"初始化时分配，运行时只改变有效大小"。区别只是资源位置从 host memory 变成 device memory。这再次证明了一个通用原则：**热路径中的临时对象必须有明确所有者和预分配容量，无论资源在 CPU 还是 GPU 上。**
 
-> ⚠️ **编程陷阱：每帧重新创建 `thrust::device_vector` 导致 GPU 分配抖动**
+> ⚠ **编程陷阱：每帧重新创建 `thrust::device_vector` 导致 GPU 分配抖动**
 > **错误做法**：每帧函数内创建多个 `thrust::device_vector`，函数结束后析构释放显存。
 > **现象**：运行数分钟后 GPU 延迟出现周期性尖峰。
 > **根本原因**：`device_vector` 的构造/析构触发 `cudaMalloc/cudaFree`，这些操作有锁和系统调用开销。长期运行后显存碎片化加剧问题。
@@ -2660,7 +2660,7 @@ GPU 工作区的复用和 内存分配策略与pmr 的帧级 arena 是完全同�
 
 ---
 
-## 38.18 数据精度：float、double 与可重复性 ⭐⭐
+## 38.18 数据精度：float、double 与可重复性 ★★
 
 GPU 上 float 通常更快。
 SLAM 中点云坐标和图像计算也常用 float。
@@ -2693,7 +2693,7 @@ CPU double pose update
 
 如果整条 SLAM 管线全部使用 `float` 会怎样？对于单帧配准，`float` 的精度通常足够。但位姿是累积计算的：每帧的小误差会累积到长序列轨迹中。如果初始位姿在 `(100.0, 200.0, 50.0)` 附近，`float` 只有约 6-7 位有效数字，即约 0.01m 的分辨率。经过 10000 帧的累积，漂移误差可能比 `double` 版本大一个数量级。这就是为什么后端求解和位姿状态通常坚持使用 `double`。
 
-> ⚠️ **编程陷阱：GPU float 归约精度不足导致优化器不收敛**
+> ⚠ **编程陷阱：GPU float 归约精度不足导致优化器不收敛**
 > **错误做法**：在 GPU 上用 `float` 累加 50K 个残差的 Hessian 矩阵。
 > **现象**：优化器迭代次数比 CPU 版本多 2-3 倍，或者直接报告"not converged"。
 > **根本原因**：大量 `float` 累加的舍入误差导致 Hessian 矩阵的精度下降，条件数变差，线性求解器需要更多迭代或无法收敛。
@@ -2745,7 +2745,7 @@ struct HessianBlock {
 
 ---
 
-## 38.20 设计检查清单 ⭐⭐
+## 38.20 设计检查清单 ★★
 
 ### GPU 加速改造的系统工程方法论
 
@@ -2973,10 +2973,10 @@ CUDA 在 SLAM 中最有价值的位置，不是孤立的小函数。
 
 ## 延伸阅读
 
-1. **Koide et al., "Voxelized GICP for Fast and Accurate 3D Point Cloud Registration", ICRA 2021** ⭐⭐——VGICP 的原始论文，解释了体素化协方差估计如何让 GICP 适合 GPU 并行。
-2. **NVIDIA CUDA 12.x Programming Guide: CUDA Graphs 章节** ⭐⭐⭐——CUDA Graphs 通过预录制 kernel 调度序列来消除 launch overhead，对固定流程（如每帧相同的 pipeline）可以进一步降低延迟。
-3. **NVIDIA Jetson 官方文档与 JetPack SDK** ⭐⭐——嵌入式 GPU 部署的权威参考，包含功耗管理、温度限制和共享内存架构的工程建议。
-4. **OpenCV CUDA 模块文档** ⭐⭐——`cv::cuda::GpuMat`、`cv::cuda::Stream`、CUDA 加速的特征检测和光流算法。
-5. **LibTorch C++ API 文档** ⭐⭐⭐——在 C++ SLAM 系统中集成 PyTorch 推理模型，包括 `torch::jit::load`、`torch::Tensor` 设备管理和推理优化。
-6. **Kerbl et al., "3D Gaussian Splatting for Real-Time Radiance Field Rendering", SIGGRAPH 2023** ⭐⭐⭐⭐——3DGS 的原始论文，CUDA 渲染管线的设计对理解 GPU 在新一代 SLAM 中的角色有重要参考价值。
-7. **small_gicp、fast_gicp 等开源 GPU 配准库源码** ⭐⭐——实际 GPU SLAM 项目中配准接口设计、workspace 管理和 fallback 策略的工程参考。
+1. **Koide et al., "Voxelized GICP for Fast and Accurate 3D Point Cloud Registration", ICRA 2021** ★★——VGICP 的原始论文，解释了体素化协方差估计如何让 GICP 适合 GPU 并行。
+2. **NVIDIA CUDA 12.x Programming Guide: CUDA Graphs 章节** ★★★——CUDA Graphs 通过预录制 kernel 调度序列来消除 launch overhead，对固定流程（如每帧相同的 pipeline）可以进一步降低延迟。
+3. **NVIDIA Jetson 官方文档与 JetPack SDK** ★★——嵌入式 GPU 部署的权威参考，包含功耗管理、温度限制和共享内存架构的工程建议。
+4. **OpenCV CUDA 模块文档** ★★——`cv::cuda::GpuMat`、`cv::cuda::Stream`、CUDA 加速的特征检测和光流算法。
+5. **LibTorch C++ API 文档** ★★★——在 C++ SLAM 系统中集成 PyTorch 推理模型，包括 `torch::jit::load`、`torch::Tensor` 设备管理和推理优化。
+6. **Kerbl et al., "3D Gaussian Splatting for Real-Time Radiance Field Rendering", SIGGRAPH 2023** ★★★★——3DGS 的原始论文，CUDA 渲染管线的设计对理解 GPU 在新一代 SLAM 中的角色有重要参考价值。
+7. **small_gicp、fast_gicp 等开源 GPU 配准库源码** ★★——实际 GPU SLAM 项目中配准接口设计、workspace 管理和 fallback 策略的工程参考。

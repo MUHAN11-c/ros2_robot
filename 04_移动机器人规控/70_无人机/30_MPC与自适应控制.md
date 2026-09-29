@@ -1,6 +1,6 @@
 # D2 MPC 与自适应控制——从 OCP 公式到 acados 亚毫秒求解
 
-**性质**：算法工程教学 | **难度跨度**：⭐⭐ ~ ⭐⭐⭐⭐ | **预计精读**：12-16 小时
+**性质**：算法工程教学 | **难度跨度**：★★ ~ ★★★★ | **预计精读**：12-16 小时
 
 > **一句话定位**：从 OCP 标准形式到 SQP-RTI 的"准备-反馈"流水线，从 rpg_mpc 的 Eigen::Map 零拷贝到 acados/HPIPM/BLASFEO 三层栈的亚毫秒反馈延迟，再到 L1 自适应、GP-MPC、Neural-MPC 三条鲁棒性增强路线——本章完整讲透**四旋翼 NMPC 的问题结构、求解器工程与扰动补偿**，建立从"理解 MPC 是什么"到"在嵌入式 CPU 上实时运行 NMPC"的完整知识链。
 
@@ -81,15 +81,15 @@
 
 | 小节 | 主题 | 难度 | 一句话 |
 |------|------|------|--------|
-| §D2.1 | 四旋翼 OCP 问题结构 | ⭐⭐ | 10 状态 4 输入 N=20——最简单的真实机器人 MPC |
-| §D2.2 | rpg_mpc：三层 C++ 架构 | ⭐⭐ | ACADO 代码生成 + Eigen::Map 零拷贝的教科书 |
-| §D2.3 | acados：现代求解器栈 | ⭐⭐⭐ | HPIPM 块三对角 Riccati + BLASFEO 小矩阵优化 |
-| §D2.4 | SQP-RTI 算法深入 | ⭐⭐⭐ | 准备-反馈流水线将延迟压缩到 0.1 ms |
-| §D2.5 | L1 自适应 + NMPC | ⭐⭐⭐ | 零训练、0.01 ms、叠加补偿——首选鲁棒方案 |
-| §D2.6 | GP-MPC | ⭐⭐⭐ | 稀疏高斯过程残差增强 + 预测不确定性 |
-| §D2.7 | Neural-MPC + l4casadi | ⭐⭐⭐⭐ | PyTorch $\to$ CasADi 桥接，82% 误差降低 |
-| §D2.8 | MPPI 对比 | ⭐⭐ | 无导数采样式 MPC 的适用场景与局限 |
-| §D2.9 | 前沿：AC-MPC / MPCC++ | ⭐⭐⭐⭐ | 可微 MPC 作为 RL actor，21 m/s 真机竞速 |
+| §D2.1 | 四旋翼 OCP 问题结构 | ★★ | 10 状态 4 输入 N=20——最简单的真实机器人 MPC |
+| §D2.2 | rpg_mpc：三层 C++ 架构 | ★★ | ACADO 代码生成 + Eigen::Map 零拷贝的教科书 |
+| §D2.3 | acados：现代求解器栈 | ★★★ | HPIPM 块三对角 Riccati + BLASFEO 小矩阵优化 |
+| §D2.4 | SQP-RTI 算法深入 | ★★★ | 准备-反馈流水线将延迟压缩到 0.1 ms |
+| §D2.5 | L1 自适应 + NMPC | ★★★ | 零训练、0.01 ms、叠加补偿——首选鲁棒方案 |
+| §D2.6 | GP-MPC | ★★★ | 稀疏高斯过程残差增强 + 预测不确定性 |
+| §D2.7 | Neural-MPC + l4casadi | ★★★★ | PyTorch $\to$ CasADi 桥接，82% 误差降低 |
+| §D2.8 | MPPI 对比 | ★★ | 无导数采样式 MPC 的适用场景与局限 |
+| §D2.9 | 前沿：AC-MPC / MPCC++ | ★★★★ | 可微 MPC 作为 RL actor，21 m/s 真机竞速 |
 
 **两条阅读线**：
 
@@ -174,7 +174,7 @@
 
 ---
 
-## §D2.1 四旋翼 OCP 问题结构 ⭐⭐
+## §D2.1 四旋翼 OCP 问题结构 ★★
 
 上一章 D1 给了我们四旋翼的动力学模型和 SE(3) 几何控制器——一个"给参考姿态和推力，直接算电机指令"的反馈控制器。它在悬停和慢速飞行时表现完美。但当你要求无人机高速穿越复杂航路点时，SE(3) 控制器暴露了三个根本缺陷：没有前瞻性、不处理约束、不考虑最优性。MPC 正是为了弥补这三个缺口而生的——这就是本节要建立的数学框架。
 
@@ -526,7 +526,7 @@ def create_ocp_solver(N: int = 20, dt: float = 0.05) -> AcadosOcpSolver:
 > 3. **`PARTIAL_CONDENSING_HPIPM`**：利用 OCP 的块三对角 KKT 结构做部分凝聚后用 HPIPM 求解——后面 §D2.3 会详细解释。
 > 4. **推力下限 0.5**（而非 0）：实际电机有最低转速，归一化推力不能降到 0。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱 1（编程陷阱）：四元数未归一化导致漂移**
 
@@ -570,7 +570,7 @@ def create_ocp_solver(N: int = 20, dt: float = 0.05) -> AcadosOcpSolver:
 
 上一节建立了四旋翼 MPC 的数学框架——OCP 的标准形式、状态/输入维度、代价函数设计。但写出 OCP 只是第一步。关键问题是：**怎么在 5 ms 内解出来？** 这正是下面两节的主题——先看一个教科书级的工程实现（rpg_mpc），再看现代求解器栈（acados）如何把延迟压缩到亚毫秒。
 
-## §D2.2 rpg_mpc：三层 C++ 架构 ⭐⭐
+## §D2.2 rpg_mpc：三层 C++ 架构 ★★
 
 ### 动机
 
@@ -694,7 +694,7 @@ public:
 };
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱 1（编程陷阱）：Eigen::Map 的生命周期陷阱**
 
@@ -740,7 +740,7 @@ public:
 
 rpg_mpc 展示了如何把代码生成求解器封装成干净的 C++ 接口。但它的底层 QP 求解器（qpOASES）是通用活性集方法，没有利用 OCP 的特殊结构。下一节介绍的 acados 用结构化求解器（HPIPM）和小矩阵优化（BLASFEO）将性能提升了一个数量级。
 
-## §D2.3 acados：现代无人机 MPC 的默认求解器 ⭐⭐⭐
+## §D2.3 acados：现代无人机 MPC 的默认求解器 ★★★
 
 ### 动机
 
@@ -869,7 +869,7 @@ ocp.solver_options.qp_solver = "PARTIAL_CONDENSING_HPIPM"  # 部分凝聚
 ocp.solver_options.qp_solver = "FULL_CONDENSING_DAQP"
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱 1（编程陷阱）：acados 代码生成目录冲突**
 
@@ -901,7 +901,7 @@ ocp.solver_options.qp_solver = "FULL_CONDENSING_DAQP"
 
 acados 的三层栈（CasADi 自动微分 + HPIPM 结构化 QP + BLASFEO 小矩阵）解释了"硬件层面为什么快"。但还有一个算法层面的问题：标准 SQP 需要多次迭代（3-10 次）才能收敛，即使每次迭代 0.1 ms，总延迟仍达 0.3-1 ms。SQP-RTI 用一步迭代就够——下一节解释为什么。
 
-## §D2.4 SQP-RTI 算法深入 ⭐⭐⭐
+## §D2.4 SQP-RTI 算法深入 ★★★
 
 ### 动机
 
@@ -981,7 +981,7 @@ AS-RTI：  准备 = 线性化 + 凝聚 + QP 预求解（基于 x_pred）
          反馈 = x_0 修正 + QP 增量修正（~0.1 ms）
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱 1（概念误区）：认为 RTI 精度比标准 SQP 差很多**
 
@@ -1016,7 +1016,7 @@ AS-RTI：  准备 = 线性化 + 凝聚 + QP 预求解（基于 x_pred）
 
 到这里我们已经建立了四旋翼 NMPC 的完整技术栈：OCP 公式（§D2.1）$\to$ rpg_mpc 工程架构（§D2.2）$\to$ acados 求解器栈（§D2.3）$\to$ SQP-RTI 算法（§D2.4）。MPC 在名义条件下表现完美。但真实世界不是名义条件——有风、有载荷变化、有模型误差。接下来三节讨论三种让 MPC 在非名义条件下保持鲁棒的方法。
 
-## §D2.5 L1 自适应控制——叠加在 MPC 之上的扰动补偿 ⭐⭐⭐
+## §D2.5 L1 自适应控制——叠加在 MPC 之上的扰动补偿 ★★★
 
 ### 动机
 
@@ -1199,7 +1199,7 @@ void mpcLoopWithL1() {
 
 > **本质洞察**：L1 补偿几乎"免费"（0.01 ms），但在大扰动下将误差降低 80-90%。在名义条件下性能不退化。这是**性价比最高的鲁棒性增强方案**——在你尝试 GP-MPC 或 Neural-MPC 之前，先加 L1。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱 1（编程陷阱）：L1 采样频率太低**
 
@@ -1240,7 +1240,7 @@ void mpcLoopWithL1() {
 
 L1 自适应的核心优势是"零训练、强泛化"——但如果你有训练数据，能不能做得更精确？下面两节讨论用数据驱动的方式增强 MPC 的模型精度。
 
-## §D2.6 GP-MPC——高斯过程残差增强 ⭐⭐⭐
+## §D2.6 GP-MPC——高斯过程残差增强 ★★★
 
 ### 动机
 
@@ -1278,7 +1278,7 @@ $$
 
 > 如果不了解 GP-MPC 的局限直接使用会怎样？你在室内 5 m/s 训练了 GP 模型，然后到室外 15 m/s 飞行——GP 回退到先验均值（零残差），MPC 退化为名义模型，和没加 GP 一样。这就是 OOD 泛化问题——GP 只在"见过的"状态-控制空间区域有效。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱 1（概念误区）：以为 GP 能泛化到任意条件**
 
@@ -1310,7 +1310,7 @@ $$
 
 GP-MPC 的核心瓶颈是推理速度（~4 ms）和雅可比近似。Neural-MPC 用神经网络替代 GP，通过 l4casadi 获得精确雅可比，推理速度也提升到 ~1 ms。
 
-## §D2.7 Neural-MPC——神经网络动力学进入 acados ⭐⭐⭐⭐
+## §D2.7 Neural-MPC——神经网络动力学进入 acados ★★★★
 
 ### 动机
 
@@ -1370,7 +1370,7 @@ $$
 
 Neural-Fly 的独特优势：有 Lyapunov/contraction 稳定性证明；12 分钟真实飞行数据即可训练；在线适应只需 ~0.05 ms。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱 1（概念误区）：以为 Neural-MPC 不需要名义模型**
 
@@ -1401,7 +1401,7 @@ Neural-Fly 的独特优势：有 Lyapunov/contraction 稳定性证明；12 分�
 
 到这里我们覆盖了四旋翼 NMPC 的三种鲁棒增强路线。但上面所有方法都基于**基于优化的 MPC**（SQP-RTI）。还有一种完全不同的方法论：**基于采样的 MPC**（MPPI）。了解它的适用场景对于在不同机器人系统中选择正确的 MPC 方法至关重要。
 
-## §D2.8 采样式 MPC（MPPI）对比 ⭐⭐
+## §D2.8 采样式 MPC（MPPI）对比 ★★
 
 ### 动机
 
@@ -1453,7 +1453,7 @@ def mppi_step(x0, U_nominal, dynamics_fn, cost_fn,
     return U_optimal
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱 1（思维陷阱）：以为 MPPI 总是比 SQP-RTI 差**
 
@@ -1483,7 +1483,7 @@ def mppi_step(x0, U_nominal, dynamics_fn, cost_fn,
 
 ---
 
-## §D2.9 前沿：Actor-Critic MPC 与 MPCC++ ⭐⭐⭐⭐
+## §D2.9 前沿：Actor-Critic MPC 与 MPCC++ ★★★★
 
 ### 动机
 
@@ -1515,7 +1515,7 @@ $$
 
 其中 $e_{\text{lag}}$ 是沿路径切线方向的滞后误差，$e_{\text{con}}$ 是垂直于路径的轮廓误差，$\Delta \theta_k$ 是路径参数进度（要最大化 $\to$ 最短时间）。100 Hz 实时，赛道 > 80 km/h 无碰撞。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 **陷阱 1（思维陷阱）：以为 AC-MPC 可以替代手工调参**
 
@@ -1566,17 +1566,17 @@ $$
 
 | # | 知识点 | 核心要点 | 对应节 | 难度 |
 |---|--------|---------|--------|------|
-| 1 | 四旋翼 OCP 结构 | 10 状态 4 输入 N=20，最简真实机器人 MPC | §D2.1 | ⭐⭐ |
-| 2 | rpg_mpc 三层架构 | C 求解器 $\to$ Eigen::Map $\to$ ROS | §D2.2 | ⭐⭐ |
-| 3 | Eigen::Map 零拷贝 | 包装 C 数组为 Eigen 矩阵，零内存分配 | §D2.2 | ⭐⭐ |
-| 4 | acados 三层栈 | CasADi + HPIPM + BLASFEO | §D2.3 | ⭐⭐⭐ |
-| 5 | HPIPM Riccati | 块三对角 KKT 的结构化求解，比通用 QP 快 400 倍 | §D2.3 | ⭐⭐⭐ |
-| 6 | SQP-RTI | 准备-反馈流水线，反馈延迟 0.1-0.5 ms | §D2.4 | ⭐⭐⭐ |
-| 7 | L1 自适应三组件 | 预测器 + 自适应律 + 低通滤波器，0.01 ms 额外开销 | §D2.5 | ⭐⭐⭐ |
-| 8 | GP-MPC | 稀疏 GP 残差增强，少量数据 + 不确定性 | §D2.6 | ⭐⭐⭐ |
-| 9 | Neural-MPC + l4casadi | PyTorch $\to$ CasADi 桥接，82% 误差降低 | §D2.7 | ⭐⭐⭐⭐ |
-| 10 | SQP-RTI vs MPPI | 凸/低维/嵌入式 $\to$ SQP；非凸/GPU $\to$ MPPI | §D2.8 | ⭐⭐ |
-| 11 | AC-MPC | RL 优化 MPC 代价参数，21 m/s 竞速 | §D2.9 | ⭐⭐⭐⭐ |
+| 1 | 四旋翼 OCP 结构 | 10 状态 4 输入 N=20，最简真实机器人 MPC | §D2.1 | ★★ |
+| 2 | rpg_mpc 三层架构 | C 求解器 $\to$ Eigen::Map $\to$ ROS | §D2.2 | ★★ |
+| 3 | Eigen::Map 零拷贝 | 包装 C 数组为 Eigen 矩阵，零内存分配 | §D2.2 | ★★ |
+| 4 | acados 三层栈 | CasADi + HPIPM + BLASFEO | §D2.3 | ★★★ |
+| 5 | HPIPM Riccati | 块三对角 KKT 的结构化求解，比通用 QP 快 400 倍 | §D2.3 | ★★★ |
+| 6 | SQP-RTI | 准备-反馈流水线，反馈延迟 0.1-0.5 ms | §D2.4 | ★★★ |
+| 7 | L1 自适应三组件 | 预测器 + 自适应律 + 低通滤波器，0.01 ms 额外开销 | §D2.5 | ★★★ |
+| 8 | GP-MPC | 稀疏 GP 残差增强，少量数据 + 不确定性 | §D2.6 | ★★★ |
+| 9 | Neural-MPC + l4casadi | PyTorch $\to$ CasADi 桥接，82% 误差降低 | §D2.7 | ★★★★ |
+| 10 | SQP-RTI vs MPPI | 凸/低维/嵌入式 $\to$ SQP；非凸/GPU $\to$ MPPI | §D2.8 | ★★ |
+| 11 | AC-MPC | RL 优化 MPC 代价参数，21 m/s 竞速 | §D2.9 | ★★★★ |
 
 ---
 
@@ -1606,10 +1606,10 @@ D3 将新增：多项式轨迹生成模块（参考轨迹来源）
 
 | 资源 | 定位 |
 |------|------|
-| Rawlings, Mayne, Diehl, *Model Predictive Control* (2nd ed., 2020) | MPC 理论标准教材——OCP、稳定性、鲁棒 MPC。⭐⭐⭐⭐ |
-| Hovakimyan & Cao, *L1 Adaptive Control Theory* (2010) | L1 自适应控制系统论述。⭐⭐⭐ |
-| Verschueren 等, "acados" (MPC 2022) | acados 系统论文——必读。⭐⭐⭐⭐⭐ |
-| Frison & Diehl, "HPIPM" (IFAC 2020) | HPIPM 算法细节。⭐⭐⭐ |
+| Rawlings, Mayne, Diehl, *Model Predictive Control* (2nd ed., 2020) | MPC 理论标准教材——OCP、稳定性、鲁棒 MPC。★★★★ |
+| Hovakimyan & Cao, *L1 Adaptive Control Theory* (2010) | L1 自适应控制系统论述。★★★ |
+| Verschueren 等, "acados" (MPC 2022) | acados 系统论文——必读。★★★★★ |
+| Frison & Diehl, "HPIPM" (IFAC 2020) | HPIPM 算法细节。★★★ |
 
 ### 关键论文
 
@@ -1627,7 +1627,7 @@ D3 将新增：多项式轨迹生成模块（参考轨迹来源）
 
 | 项目 | GitHub | Stars | 定位 |
 |------|--------|-------|------|
-| acados | `acados/acados` | ~1.3k | 现代 MPC 求解器（⭐⭐⭐⭐⭐ 首选） |
+| acados | `acados/acados` | ~1.3k | 现代 MPC 求解器（★★★★★ 首选） |
 | rpg_mpc | `uzh-rpg/rpg_mpc` | ~486 | Eigen::Map 零拷贝教科书 |
 | data_driven_mpc | `uzh-rpg/data_driven_mpc` | ~347 | GP-MPC 参考实现 |
 | neural-mpc | `TUM-AAS/neural-mpc` | ~261 | Neural-MPC 参考实现 |
@@ -1818,7 +1818,7 @@ D3 将新增：多项式轨迹生成模块（参考轨迹来源）
 
 ---
 
-## 参数选择手册：从零调出一个能飞的 MPC ⭐⭐
+## 参数选择手册：从零调出一个能飞的 MPC ★★
 
 前面各节反复出现"$Q$ 条件数别太大""$N$ 别太短""$\omega_c$ 别太高"这类零散告诫。但读者真正坐到仿真器前面时，面对的是一组空白的数值——**第一组数该填什么，错了往哪个方向改**。这一节把散落在全章的调参经验收拢成一张可执行的流程图。它不引入新理论，只是把"为什么"翻译成"怎么做"。
 

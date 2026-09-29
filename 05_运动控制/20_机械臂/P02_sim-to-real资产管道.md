@@ -70,9 +70,9 @@ P02 sim-to-real 资产管道与多目标部署
 
 ---
 
-## 前置自测 ⭐
+## 前置自测 ★
 
-> 📋 **答不出 >= 2 题 → 先回前置章节复习**
+> ◆ **答不出 >= 2 题 → 先回前置章节复习**
 
 | 编号 | 问题 | 答不出时回顾 |
 |:----:|------|------------|
@@ -97,7 +97,7 @@ P02 sim-to-real 资产管道与多目标部署
 
 ---
 
-## P02.1 URDF 作为 Single Source of Truth 的资产管道 ⭐⭐
+## P02.1 URDF 作为 Single Source of Truth 的资产管道 ★★
 
 ### 动机——为什么需要统一的资产管道？
 
@@ -159,7 +159,7 @@ P02 sim-to-real 资产管道与多目标部署
 | ros2_control | `<hardware>` 标签 | 仿真/真机切换 plugin |
 | 单位 | SI（米、千克、弧度） | 所有仿真器统一 SI |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：URDF 中用了绝对路径引用 mesh
@@ -192,7 +192,7 @@ P02 sim-to-real 资产管道与多目标部署
 
 ---
 
-## P02.2 各目标的转换工具与陷阱 ⭐⭐
+## P02.2 各目标的转换工具与陷阱 ★★
 
 ### Gazebo Harmonic
 
@@ -505,7 +505,7 @@ ok, robot_prim_path = omni.kit.commands.execute(
 
 三个月后，你发现仿真和真机的行为差异越来越大。你想排查是哪个参数有问题——但你面对的是三个不同格式、不同参数值的文件，没人记得谁改了什么。这就是"多源文件"的噩梦。Single Source of Truth 的价值正是**消除这种不一致**。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 💡 概念误区：认为"MuJoCo 和 Gazebo 的物理引擎是一样的"
@@ -525,7 +525,7 @@ ok, robot_prim_path = omni.kit.commands.execute(
 
 ---
 
-## P02.3 域随机化——运行时 API，不改 URDF ⭐⭐
+## P02.3 域随机化——运行时 API，不改 URDF ★★
 
 ### 动机——为什么需要域随机化？
 
@@ -833,7 +833,7 @@ class VisualDRConfig:
 | L2: 中级 | 纹理替换、光源数量/位置 | 背景鲁棒 | +30% |
 | L3: 完整 | 相机位姿、物体外观、distractor 物体 | 全面鲁棒 | +60% |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：在 step 而非 reset 时随机化物理参数
@@ -865,7 +865,7 @@ class VisualDRConfig:
 
 ---
 
-## P02.4 物理参数辨识（System Identification）⭐⭐⭐
+## P02.4 物理参数辨识（System Identification）★★★
 
 ### 动机——精确的基础模型
 
@@ -1132,7 +1132,7 @@ class ActionFilter:
         self.initialized = False
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 💡 概念误区：认为"仿真参数调到完美就不需要域随机化"
@@ -1156,7 +1156,7 @@ class ActionFilter:
 
 ---
 
-## P02.5 sim-to-real gap 的系统性分析 ⭐⭐⭐
+## P02.5 sim-to-real gap 的系统性分析 ★★★
 
 ### 四维分类框架
 
@@ -1359,7 +1359,7 @@ Step 4: 残差分析
   → 这些无法通过参数调整解决——需要在 DR 中覆盖
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 🧠 思维陷阱：认为"sim-to-real gap 只存在于 RL"
@@ -1378,7 +1378,7 @@ Step 4: 残差分析
 
 ---
 
-## P02.6 RL + ros2_control 混合架构——CRISP 模式 ⭐⭐
+## P02.6 RL + ros2_control 混合架构——CRISP 模式 ★★
 
 ### 动机——策略推理和实时控制的矛盾
 
@@ -1466,7 +1466,7 @@ private:
 | Isaac Lab (~3.5k) | GPU 并行训练 | 训练端参考 |
 | robot_descriptions.py | 175+ 描述 | 资产管道中央枢纽 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：在 RT 控制循环中调用 GPU 推理
@@ -1493,7 +1493,7 @@ private:
 
 ---
 
-## P02.7 数字孪生与工业部署 ⭐⭐⭐⭐
+## P02.7 数字孪生与工业部署 ★★★★
 
 ### 数字孪生的三个层次
 
@@ -1725,7 +1725,7 @@ class DigitalTwinBridge(Node):
 
 ---
 
-## P02.7+ sim-to-real 部署安全规程 ⭐⭐
+## P02.7+ sim-to-real 部署安全规程 ★★
 
 ### 为什么 sim-to-real 部署需要安全分级
 
@@ -1840,7 +1840,7 @@ class SafetyLayer:
         return action
 ```
 
-> **⚠️ 陷阱：安全层引入的延迟**
+> **⚠ 陷阱：安全层引入的延迟**
 >
 > 多层安全过滤会引入额外延迟：action filter 平滑 1-2 个控制周期、速度限制裁剪可能"刹车"突变指令。这些延迟在绝大多数场景下是可接受的（机械臂的机械响应本身就有 10-50 ms 延迟），但在高速接触切换场景（如快速抓取释放）中可能导致响应不及时。
 >
@@ -1863,7 +1863,7 @@ class SafetyLayer:
 
 ---
 
-## P02.8 资产管道的 CI/CD 集成 ⭐⭐
+## P02.8 资产管道的 CI/CD 集成 ★★
 
 ### 为什么需要自动化资产验证
 
@@ -1979,7 +1979,7 @@ jobs:
 
 ---
 
-## P02.8 MuJoCo Playground 与现代 Sim-to-Real 工具链 ⭐⭐⭐
+## P02.8 MuJoCo Playground 与现代 Sim-to-Real 工具链 ★★★
 
 ### 动机——2025 年的 Sim-to-Real 生态
 
@@ -2100,7 +2100,7 @@ MuJoCo Playground 在 2025 年的 RSS 论文中展示了六种机器人平台的
 
 MJX 打破了这个循环：快速训练 → 充分训练 → 高质量策略 → 减少 DR 需求 → 更容易收敛。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：MJX 后端与 C 后端的数值差异
@@ -2137,7 +2137,7 @@ MJX 打破了这个循环：快速训练 → 充分训练 → 高质量策略 �
 
 ---
 
-## P02.9 多仿真器一致性验证 ⭐⭐
+## P02.9 多仿真器一致性验证 ★★
 
 ### 动机——"同一个机器人在不同仿真器中行为不同"
 
@@ -2283,7 +2283,7 @@ class CrossSimValidator:
 
 > **反事实推理**：如果你发现 MuJoCo 和 Gazebo 对同一力矩序列的轨迹差异 RMSE > 0.1 rad，应该怎么做？不应该尝试"调参使两者一致"——因为两个物理引擎的数值方法根本不同，强行对齐一个参数可能导致其他参数偏离真实。正确做法是：(1) 确认两者的静态和运动学一致性；(2) 选择一个作为"训练仿真器"，另一个作为"验证仿真器"；(3) 用 DR 覆盖两者之间的动力学差异。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 💡 概念误区：认为"两个仿真器参数相同就应该给出相同结果"
@@ -2317,15 +2317,15 @@ class CrossSimValidator:
 
 | 编号 | 知识点 | 核心要点 | 对应节 | 难度 |
 |------|--------|---------|--------|------|
-| 1 | 资产管道架构 | URDF 单源、5 目标转换、CI/CD 自动化 | P02.1 | ⭐⭐ |
-| 2 | 格式转换实操 | MuJoCo/Gazebo/Isaac Sim 各自陷阱与最佳实践 | P02.2 | ⭐⭐ |
-| 3 | 域随机化 | 运行时 API、5 项标准套餐、课程式 DR | P02.3 | ⭐⭐ |
-| 4 | 物理参数辨识 | SysId 流程、激励轨迹设计、最小二乘标定 | P02.4 | ⭐⭐⭐ |
-| 5 | sim-to-real gap 分析 | 四维分类（动力学/参数/感知/执行）、保真度评估 | P02.5 | ⭐⭐⭐ |
-| 6 | CRISP 部署架构 | GPU 策略 + C++ 合规控制解耦、LibTorch/ONNX 推理 | P02.6 | ⭐⭐ |
-| 7 | 数字孪生 | 三层次架构（镜像/碰撞预警/预测）、工业部署流程 | P02.7 | ⭐⭐⭐⭐ |
-| 8 | CI/CD 资产验证 | 自动化 URDF 检查、惯性验证、格式转换测试、烟雾测试 | P02.8 | ⭐⭐ |
-| 9 | 仿真器选择 | MuJoCo/Isaac Sim/Gazebo 的定位差异与选型决策树 | P02.8 | ⭐⭐ |
+| 1 | 资产管道架构 | URDF 单源、5 目标转换、CI/CD 自动化 | P02.1 | ★★ |
+| 2 | 格式转换实操 | MuJoCo/Gazebo/Isaac Sim 各自陷阱与最佳实践 | P02.2 | ★★ |
+| 3 | 域随机化 | 运行时 API、5 项标准套餐、课程式 DR | P02.3 | ★★ |
+| 4 | 物理参数辨识 | SysId 流程、激励轨迹设计、最小二乘标定 | P02.4 | ★★★ |
+| 5 | sim-to-real gap 分析 | 四维分类（动力学/参数/感知/执行）、保真度评估 | P02.5 | ★★★ |
+| 6 | CRISP 部署架构 | GPU 策略 + C++ 合规控制解耦、LibTorch/ONNX 推理 | P02.6 | ★★ |
+| 7 | 数字孪生 | 三层次架构（镜像/碰撞预警/预测）、工业部署流程 | P02.7 | ★★★★ |
+| 8 | CI/CD 资产验证 | 自动化 URDF 检查、惯性验证、格式转换测试、烟雾测试 | P02.8 | ★★ |
+| 9 | 仿真器选择 | MuJoCo/Isaac Sim/Gazebo 的定位差异与选型决策树 | P02.8 | ★★ |
 
 ## 本章与后续章节的关系
 
@@ -2368,18 +2368,18 @@ P02 新增:
 
 | 资源 | 难度 | 说明 |
 |------|------|------|
-| Tobin et al. (2017) "Domain Randomization for Transferring DNNs from Simulation to Real World" | ⭐⭐ | DR 原论文——视觉域随机化的开创性工作 |
-| Muratore et al. (2022) "Robot Learning from Randomized Simulations: A Review" | ⭐⭐⭐ | DR 综述——覆盖物理和视觉两类 DR |
-| fan-ziqi/rl_sar (~1.2k Stars) | ⭐⭐ | 最完整的 RL locomotion 部署框架 |
-| CRISP 框架 (TUM, 2025) | ⭐⭐⭐ | ros2_control + RL 解耦架构参考 |
-| Isaac Lab 文档 "Domain Randomization" | ⭐⭐ | Isaac Lab 官方 DR 教程 |
-| MuJoCo Playground (RSS 2025) | ⭐⭐ | MuJoCo MJX GPU 后端演示 |
-| robot_descriptions.py | ⭐⭐ | 175+ 机器人描述即取即用 |
-| Peng et al. (2018) "Sim-to-Real Transfer of Robotic Control with Dynamics Randomization" | ⭐⭐⭐ | 物理 DR 在机械臂操作中的经典应用 |
-| Mittal et al. (2025) "Isaac Lab: A Unified and Modular Framework for Robot Learning" | ⭐⭐ | Isaac Lab 的系统设计，包括 USD 资产管道 |
-| ISO 10218-1:2011 "Robots and robotic devices -- Safety requirements" | ⭐⭐⭐⭐ | 工业机器人安全标准，真机部署必读 |
-| Swevers et al. (1997) "Optimal Robot Excitation and Identification" | ⭐⭐⭐ | SysId 激励轨迹设计的经典方法 |
-| Rigyd.com — SimReady Assets for Robotics | ⭐⭐ | 商业级 3D 资产管道参考，OpenUSD 驱动 |
+| Tobin et al. (2017) "Domain Randomization for Transferring DNNs from Simulation to Real World" | ★★ | DR 原论文——视觉域随机化的开创性工作 |
+| Muratore et al. (2022) "Robot Learning from Randomized Simulations: A Review" | ★★★ | DR 综述——覆盖物理和视觉两类 DR |
+| fan-ziqi/rl_sar (~1.2k Stars) | ★★ | 最完整的 RL locomotion 部署框架 |
+| CRISP 框架 (TUM, 2025) | ★★★ | ros2_control + RL 解耦架构参考 |
+| Isaac Lab 文档 "Domain Randomization" | ★★ | Isaac Lab 官方 DR 教程 |
+| MuJoCo Playground (RSS 2025) | ★★ | MuJoCo MJX GPU 后端演示 |
+| robot_descriptions.py | ★★ | 175+ 机器人描述即取即用 |
+| Peng et al. (2018) "Sim-to-Real Transfer of Robotic Control with Dynamics Randomization" | ★★★ | 物理 DR 在机械臂操作中的经典应用 |
+| Mittal et al. (2025) "Isaac Lab: A Unified and Modular Framework for Robot Learning" | ★★ | Isaac Lab 的系统设计，包括 USD 资产管道 |
+| ISO 10218-1:2011 "Robots and robotic devices -- Safety requirements" | ★★★★ | 工业机器人安全标准，真机部署必读 |
+| Swevers et al. (1997) "Optimal Robot Excitation and Identification" | ★★★ | SysId 激励轨迹设计的经典方法 |
+| Rigyd.com — SimReady Assets for Robotics | ★★ | 商业级 3D 资产管道参考，OpenUSD 驱动 |
 
 ### 研究实践建议
 

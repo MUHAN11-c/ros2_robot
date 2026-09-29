@@ -10,7 +10,7 @@
 
 ## 前置自测
 
-📋 **答不出 ≥ 3 题 → 先回前置章节复习**
+◆ **答不出 ≥ 3 题 → 先回前置章节复习**
 
 > 本章是 Part IV（单形态实战）的第一章，依赖 Part II（Ch04-Ch10）的全部基础知识。以下自测题覆盖最关键的前置概念。
 
@@ -33,7 +33,7 @@
 
 ---
 
-## 13.1 足式机器人运动学概要与速度跟踪问题 ⭐⭐
+## 13.1 足式机器人运动学概要与速度跟踪问题 ★★
 
 > **这一节解决什么问题**：建立四足机器人的自由度心智模型，理解速度跟踪任务的 MDP 结构和设计动机。
 
@@ -238,15 +238,15 @@ velocity task 采用非对称 actor-critic（Pinto et al., "Asymmetric Actor Cri
 
 > **双重解读**：非对称 actor-critic 可以从两个角度理解。从 RL 角度：critic 是辅助训练的工具，部署时不需要，所以给它更多信息只会帮助训练不会增加部署负担。从 teacher-student 角度：critic 充当了隐式的"教师"——它用 privileged 信息评估状态价值，通过 advantage 信号引导 actor（"学生"）的更新方向。这两个角度的结合解释了为什么 asymmetric AC 在 sim-to-real 中如此有效：它在训练时就建立了 actor 的"信息贫乏抵抗力"。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：action scale 照搬其他机器人的值**。Go1 的关节范围和 Go2 不同，G1（人形）更是差异巨大。一个对 Go1 合适的 scale 可能让 Go2 的膝关节打到限位。正确做法是查看每个机器人的关节限位范围，设置 scale 使得 $[-1, 1]$ 的 action 覆盖合理的关节偏移区间（通常是限位范围的 30-50%）。
+⚠ **编程陷阱：action scale 照搬其他机器人的值**。Go1 的关节范围和 Go2 不同，G1（人形）更是差异巨大。一个对 Go1 合适的 scale 可能让 Go2 的膝关节打到限位。正确做法是查看每个机器人的关节限位范围，设置 scale 使得 $[-1, 1]$ 的 action 覆盖合理的关节偏移区间（通常是限位范围的 30-50%）。
 
 💡 **概念误区：认为 12 个关节的 action 空间"很小"**。维度小不代表搜索容易。12 维连续空间的体积随维度指数增长，关键是好的初始化（default pose offset）和 reward shaping 把搜索引向合理区域。不给 default offset 的话，初始策略输出接近零的 raw target 角度，机器人以扭曲姿态开始探索。
 
 🧠 **思维陷阱：认为 critic 信息越多越好**。critic 加入不相关的信号（比如遥远目标物体的位置）不会帮助 value estimation，反而增加拟合难度。critic 的 privileged 信息应该和 reward 函数直接相关——你 reward 什么，critic 就应该能看到什么。
 
-⚠️ **工程陷阱：flat 和 rough 共用同一套 actor observation**。flat 任务不需要 height scan（地面是平的），但如果 actor obs 中保留了 height_scan term 却没有对应的 sensor，启动就会 crash。反过来，rough 任务如果漏掉 height_scan，策略会"瞎走"——在平地上可能还行，但在台阶/斜坡上立即失败。
+⚠ **工程陷阱：flat 和 rough 共用同一套 actor observation**。flat 任务不需要 height scan（地面是平的），但如果 actor obs 中保留了 height_scan term 却没有对应的 sensor，启动就会 crash。反过来，rough 任务如果漏掉 height_scan，策略会"瞎走"——在平地上可能还行，但在台阶/斜坡上立即失败。
 
 ### 练习
 
@@ -259,7 +259,7 @@ velocity task 采用非对称 actor-critic（Pinto et al., "Asymmetric Actor Cri
 
 上节建立了四足机器人的自由度模型和 velocity task 的 MDP 结构。但知道 MDP 的数学定义和知道如何在框架中配置它是两回事——这正是本节的主题。
 
-## 13.2 mjlab Velocity Task 逐行精读 ⭐⭐⭐
+## 13.2 mjlab Velocity Task 逐行精读 ★★★
 
 > **这一节解决什么问题**：从 task registry 到每个 manager term，建立 mjlab velocity task 的完整源码地图。
 
@@ -703,15 +703,15 @@ Wensing, Kim, Slotine (RA-L 2018) 提出了 4×4 pseudo-inertia matrix 和 LMI (
 
 **DR 与 Privileged Learning 的交互**：startup DR 使环境参数在 episode 间变化。当你同时使用 privileged learning（Ch09）时，teacher 的 privileged obs 让 critic 能"看到"当前 episode 的环境参数（摩擦、质量等），使 value estimation 更准确。但 student（部署时的 actor）看不到这些参数——它必须从 proprioceptive history 中隐式推断。**DR 范围过窄时**，student 不需要推断（参数变化太小，一个固定策略就够用）；**DR 范围过宽时**，teacher 都学不好（环境太多样化）。这个 sweet spot 通常通过 ablation 找到。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：sensor name regex 匹配空集不报错**。`SceneEntityCfg("robot", site_names=("FR", "FL", "RR", "RL"))` 中的名字必须精确匹配 asset 定义。如果 asset 的 site 命名为 `FR_site` 而你写的是 `FR`，regex 不匹配，ids 为空列表。sensor 和 reward 函数收到空 ids 后返回全零张量，训练继续但对应项完全失效。自检方法：在 zero agent 阶段打印 `entity.data` 确认所有命名。
+⚠ **编程陷阱：sensor name regex 匹配空集不报错**。`SceneEntityCfg("robot", site_names=("FR", "FL", "RR", "RL"))` 中的名字必须精确匹配 asset 定义。如果 asset 的 site 命名为 `FR_site` 而你写的是 `FR`，regex 不匹配，ids 为空列表。sensor 和 reward 函数收到空 ids 后返回全零张量，训练继续但对应项完全失效。自检方法：在 zero agent 阶段打印 `entity.data` 确认所有命名。
 
 💡 **概念误区：flat 忘记同步删除 height scan observation**。flat 删了 terrain scan sensor，但如果 observation 中仍有 `height_scan` term，它引用不存在的 sensor，启动报错。正确做法是同时删除 actor 和 critic 的 `height_scan` term。
 
 🧠 **思维陷阱：看到 loss 下降就认为训练正确**。PPO 的 loss 下降只说明策略在当前 reward 信号下改善了。如果 reward 信号本身是错的（某个关键 term 因 sensor name 拼错而为零），策略只是在最小化其他项。判断正确性的唯一方法是 zero/random agent 先验证 wiring，再看视频。
 
-⚠️ **编程陷阱：command 重采样频率设错**。`resampling_time_range=(3.0, 8.0)` 意味着每 3-8 秒随机重采样一次 command。太频繁（<1 秒）让策略无法学稳定步态，太慢（>15 秒）降低 command 多样性。
+⚠ **编程陷阱：command 重采样频率设错**。`resampling_time_range=(3.0, 8.0)` 意味着每 3-8 秒随机重采样一次 command。太频繁（<1 秒）让策略无法学稳定步态，太慢（>15 秒）降低 command 多样性。
 
 ### 快速读懂陌生 Velocity Task 配置的 5 分钟流程
 
@@ -753,7 +753,7 @@ Wensing, Kim, Slotine (RA-L 2018) 提出了 4×4 pseudo-inertia matrix 和 LMI (
 
 mjlab 的 velocity task 配置精读让你理解了一个框架内的完整链路。但跨框架对比才能建立真正的抽象理解——哪些是框架特定的实现细节，哪些是足式 RL 的通用设计模式。这正是本节要做的。
 
-## 13.3 Isaac Lab 对应 Task 对照 ⭐⭐⭐
+## 13.3 Isaac Lab 对应 Task 对照 ★★★
 
 > **这一节解决什么问题**：用 Isaac Lab 的 velocity task 做对照，建立双框架心智模型。
 
@@ -938,9 +938,9 @@ extras["time_outs"] = truncated & ~terminated
 
 **wrapper 还负责 observation 的拼接与归一化**。RSL-RL 期望接收两个 tensor：`obs`（actor 用）和 `critic_obs`（critic 用）。wrapper 把框架的多个 observation group（每个是一个 dict of terms）拼接成连续 tensor。如果 observation term 的顺序在两次训练之间改变（比如你在 dict 中插入了一个新 term），拼接后的 tensor 布局会变——已有的 checkpoint 就无法加载。这是一个常见但容易忽略的 breaking change。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：从 mjlab 复制 obs_groups 到 Isaac Lab 忘记改名**。mjlab 用 `"actor"`，Isaac Lab 用 `"policy"`。RSL-RL wrapper 按名字查找 observation group，名字不匹配导致静默错误或 KeyError。
+⚠ **编程陷阱：从 mjlab 复制 obs_groups 到 Isaac Lab 忘记改名**。mjlab 用 `"actor"`，Isaac Lab 用 `"policy"`。RSL-RL wrapper 按名字查找 observation group，名字不匹配导致静默错误或 KeyError。
 
 💡 **概念误区：认为两个框架的同名 reward 函数行为相同**。`track_linear_velocity` 在两个框架中实现细节可能不同（exponential kernel 的 sigma 参数、坐标系处理）。迁移 reward 时必须查看源码确认数学形式。
 
@@ -956,7 +956,7 @@ extras["time_outs"] = truncated & ~terminated
 
 两个框架的 velocity task 都支持 rough terrain 变体。但 rough terrain 不只是换一个场景——它要求策略具备地形感知能力。height scan 传感器是这个能力的核心，也是从 flat 升级到 rough 最关键的新增组件。
 
-## 13.4 地形系统与 Height Scan 传感器 ⭐⭐⭐
+## 13.4 地形系统与 Height Scan 传感器 ★★★
 
 > **这一节解决什么问题**：理解地形生成、height scan 配置和 observation 维度之间的关系。
 
@@ -1246,9 +1246,9 @@ Isaac Lab 内置了 `track_air_time` 选项，自动计算每只脚的空中时�
                         └─ 不可以 → 考虑加传感器
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：ray 打到机器人自身**。`include_geom_groups` 如果包含了机器人 body 的 geom group，ray 会命中腿部，返回异常低的高度值。正确做法：确认只包含 terrain geom 的 group，并启用 `exclude_parent_body=True`。
+⚠ **编程陷阱：ray 打到机器人自身**。`include_geom_groups` 如果包含了机器人 body 的 geom group，ray 会命中腿部，返回异常低的高度值。正确做法：确认只包含 terrain geom 的 group，并启用 `exclude_parent_body=True`。
 
 💡 **概念误区：认为分辨率越高越好**。ray 数随分辨率倒数平方增长。训练速度显著下降的同时，策略改善可能很小。从 0.10 m 开始，只有明确需要时才加密。
 
@@ -1264,7 +1264,7 @@ Isaac Lab 内置了 `track_air_time` 选项，自动计算每只脚的空中时�
 
 地形系统和传感器配置好了，下一步就是把环境跑起来。但"跑起来"不是一步完成的——从 zero agent 到 large train 需要分阶段验证，每一步都有明确的通过标准。
 
-## 13.5 完整训练流程：从 Zero Agent 到 Large Train ⭐⭐
+## 13.5 完整训练流程：从 Zero Agent 到 Large Train ★★
 
 > **这一节解决什么问题**：给出从 zero agent 到完整训练的分阶段验证方法，建立可重复的实验流程。
 
@@ -1580,9 +1580,9 @@ if (abs(cmd[0]) < 0.1 and abs(cmd[1]) < 0.1 and abs(cmd[2]) < 0.2):
 | KL divergence 高 | learning rate | 降低 LR 或用 adaptive schedule |
 | entropy 快塌 | entropy coef | 增大 entropy coef（如 0.01→0.02） |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：train 和 play 的 num_envs 参数位置不同**。mjlab train 用 `--env.scene.num-envs`，play 用 `--num-envs`。Isaac Lab 类似但参数格式略有不同。混用导致 CLI 解析失败或使用默认值。
+⚠ **编程陷阱：train 和 play 的 num_envs 参数位置不同**。mjlab train 用 `--env.scene.num-envs`，play 用 `--num-envs`。Isaac Lab 类似但参数格式略有不同。混用导致 CLI 解析失败或使用默认值。
 
 💡 **概念误区：small train reward 不升就是 bug**。按前面 small train 命令的 256 envs，50 iterations × 256 envs × 24 steps_per_env ≈ 30.7 万 steps（若改用 large train 的 4096 envs 才约 500 万 steps）。四足策略通常需要数千万 steps 才开始学会基本步态。small train 只验证接口不验证效果。
 
@@ -1600,7 +1600,7 @@ if (abs(cmd[0]) < 0.1 and abs(cmd[1]) < 0.1 and abs(cmd[2]) < 0.2):
 
 前面四节讲的都是单个机器人的标准配置。但真实研究中，你可能需要在同一个框架中快速切换机器人——Go1、Go2、A1。unitree_rl_mjlab 项目展示了如何用同一个 env cfg 适配多款机器人，这种设计模式对你自己的研究非常有参考价值。
 
-## 13.6 精读：unitree_rl_mjlab 多机器人配置 ⭐⭐
+## 13.6 精读：unitree_rl_mjlab 多机器人配置 ★★
 
 > **这一节解决什么问题**：通过精读 unitree_rl_mjlab 项目，学习在 mjlab 中复用同一 velocity env cfg 适配不同机器人的工程模式。
 
@@ -1818,9 +1818,9 @@ Isaac Lab 生态中，`basic-locomotion-isaaclab`（`github.com/iit-DLSLab/basic
 
 **工程建议**：如果你的目标是快速跑通一个 velocity task 并理解配置，unitree_rl_mjlab 更轻量。如果你需要做系统性的 reward 研究、teacher-student 蒸馏、或 RL vs MPC 对比，basic-locomotion-isaaclab 提供了更完整的工具链。两者可以互补使用——在 mjlab 中快速迭代配置，在 Isaac Lab 中做精细评估。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：迁移新机器人时 site names 不匹配**。不同 MJCF 模型的 foot site 命名不统一——Go1 可能用 `FR`/`FL`/`RR`/`RL`，Go2 可能用 `FR_foot`/`FL_foot`/`RR_foot`/`RL_foot`。必须打开 MJCF 确认精确命名。
+⚠ **编程陷阱：迁移新机器人时 site names 不匹配**。不同 MJCF 模型的 foot site 命名不统一——Go1 可能用 `FR`/`FL`/`RR`/`RL`，Go2 可能用 `FR_foot`/`FL_foot`/`RR_foot`/`RL_foot`。必须打开 MJCF 确认精确命名。
 
 💡 **概念误区：认为换个机器人只需改 asset 路径**。action scale、default pose、joint 命名、body 命名都是 robot-specific 的。任何遗漏都可能导致静默的 wiring 错误。
 
@@ -1834,7 +1834,7 @@ Isaac Lab 生态中，`basic-locomotion-isaaclab`（`github.com/iit-DLSLab/basic
 
 前面六节分别精读了 mjlab 和 Isaac Lab 的 velocity task。但一个自然的问题是：同一个机器人在两个框架中训练出来的策略有什么差异？这个对比实验不仅帮助你建立跨框架直觉，还能验证你对两个框架的理解是否正确。
 
-## 13.7 双框架对比实验 ⭐⭐⭐
+## 13.7 双框架对比实验 ★★★
 
 > **这一节解决什么问题**：用同一机器人（Go2）在 mjlab 和 Isaac Lab 中做对照实验，建立跨框架的定量直觉。
 
@@ -2020,9 +2020,9 @@ uv run train Mjlab-Velocity-Flat-Unitree-Go2 \
 
 这份 checklist 的核心思想是：两个框架的 MDP 定义必须在语义上等价——不是 API 调用相同，而是物理行为和信号含义相同。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：Go2 的 MJCF 和 USD 版本物理参数不一致**。MJCF 版本来自 MuJoCo Menagerie，USD 版本可能来自 URDF 转换。惯性参数、关节阻尼、碰撞几何可能有微妙差异。对比实验前应先确认关键参数一致。
+⚠ **编程陷阱：Go2 的 MJCF 和 USD 版本物理参数不一致**。MJCF 版本来自 MuJoCo Menagerie，USD 版本可能来自 URDF 转换。惯性参数、关节阻尼、碰撞几何可能有微妙差异。对比实验前应先确认关键参数一致。
 
 💡 **概念误区：认为框架差异不影响策略行为**。物理引擎的接触模型差异会传导到步态——MuJoCo 的凸优化接触模型在足-地交互中可能比 PhysX 的 TGS 更稳定，导致策略学到的步态模式不同。
 
@@ -2040,26 +2040,26 @@ uv run train Mjlab-Velocity-Flat-Unitree-Go2 \
 
 | 知识点 | 核心要点 | 难度 |
 |--------|---------|------|
-| 四足自由度 | 6 浮基 + 12 关节 = 18 DoF；qpos 19 维因为四元数 | ⭐⭐ |
-| 四足运控谱系 | 盲控制(Hwangbo/Lee) → 感知控制(Miki) → 视觉跑酷(Extreme Parkour) | ⭐⭐ |
-| 速度跟踪 MDP | command 必须在 actor obs 中；action = default + offset × scale | ⭐⭐ |
-| 状态估计 | base_lin_vel 真机不可直接测量；IMU+FK+EKF 或 RMA adaptation module | ⭐⭐⭐ |
-| 链路阅读法 | Registry → Entity → Scene → Sensors → Managers → RL cfg | ⭐⭐ |
-| Reward 四层框架 | Tracking → Regularization → Style → Contact/Safety；四层独立调参 | ⭐⭐⭐ |
-| 非对称 AC | actor 带噪声看可部署信号，critic 看 privileged 无 noise (Pinto et al. RSS 2018) | ⭐⭐ |
-| Manager-Based 演进 | 从 legged_gym 单体类到 Manager-Based 配置化；RSL-RL 4.0 统一模型抽象 | ⭐⭐ |
-| Flat/Rough | flat = rough − (terrain scan + collision sensors + terrain curriculum) | ⭐⭐ |
-| Height scan | grid pattern、yaw alignment、分辨率-成本权衡 | ⭐⭐⭐ |
-| Terrain curriculum | game-inspired (Rudin CoRL 2021)；per-env difficulty；auto advance/regress | ⭐⭐ |
-| 分阶段验证 | zero → random → small train → large train | ⭐⭐ |
-| 多机器人配置 | 共享 base cfg + robot-specific override；7 款 Unitree 机器人统一管线 | ⭐⭐ |
-| 部署闭环 | ONNX export → C++ onnxruntime (50Hz) → SDK2 (500Hz) → 真机 PD | ⭐⭐⭐ |
-| 双框架对比 | 控制变量实验设计；差异来源是物理引擎接触模型 | ⭐⭐⭐ |
-| Action 链路 | 策略 → scale → default offset → PD → torque clamp → physics | ⭐⭐ |
-| RewardsCfg 注册 | 13 个 RewardTermCfg 字典 → RewardManager 自动聚合 | ⭐⭐⭐ |
-| Reward ablation | 每次关闭一个 term × 3 seeds → 对比表判断重要性 | ⭐⭐⭐ |
-| PD gains | kp=25-50, kd=0.5-1.0; 影响跟踪刚度和阻尼 | ⭐⭐ |
-| Command curriculum | 渐进扩大速度范围；零速命令特殊置零处理 | ⭐⭐ |
+| 四足自由度 | 6 浮基 + 12 关节 = 18 DoF；qpos 19 维因为四元数 | ★★ |
+| 四足运控谱系 | 盲控制(Hwangbo/Lee) → 感知控制(Miki) → 视觉跑酷(Extreme Parkour) | ★★ |
+| 速度跟踪 MDP | command 必须在 actor obs 中；action = default + offset × scale | ★★ |
+| 状态估计 | base_lin_vel 真机不可直接测量；IMU+FK+EKF 或 RMA adaptation module | ★★★ |
+| 链路阅读法 | Registry → Entity → Scene → Sensors → Managers → RL cfg | ★★ |
+| Reward 四层框架 | Tracking → Regularization → Style → Contact/Safety；四层独立调参 | ★★★ |
+| 非对称 AC | actor 带噪声看可部署信号，critic 看 privileged 无 noise (Pinto et al. RSS 2018) | ★★ |
+| Manager-Based 演进 | 从 legged_gym 单体类到 Manager-Based 配置化；RSL-RL 4.0 统一模型抽象 | ★★ |
+| Flat/Rough | flat = rough − (terrain scan + collision sensors + terrain curriculum) | ★★ |
+| Height scan | grid pattern、yaw alignment、分辨率-成本权衡 | ★★★ |
+| Terrain curriculum | game-inspired (Rudin CoRL 2021)；per-env difficulty；auto advance/regress | ★★ |
+| 分阶段验证 | zero → random → small train → large train | ★★ |
+| 多机器人配置 | 共享 base cfg + robot-specific override；7 款 Unitree 机器人统一管线 | ★★ |
+| 部署闭环 | ONNX export → C++ onnxruntime (50Hz) → SDK2 (500Hz) → 真机 PD | ★★★ |
+| 双框架对比 | 控制变量实验设计；差异来源是物理引擎接触模型 | ★★★ |
+| Action 链路 | 策略 → scale → default offset → PD → torque clamp → physics | ★★ |
+| RewardsCfg 注册 | 13 个 RewardTermCfg 字典 → RewardManager 自动聚合 | ★★★ |
+| Reward ablation | 每次关闭一个 term × 3 seeds → 对比表判断重要性 | ★★★ |
+| PD gains | kp=25-50, kd=0.5-1.0; 影响跟踪刚度和阻尼 | ★★ |
+| Command curriculum | 渐进扩大速度范围；零速命令特殊置零处理 | ★★ |
 
 ### 关键数字速查
 
@@ -2216,28 +2216,28 @@ uv run train Mjlab-Velocity-Flat-Unitree-Go2 \
 
 | 资料 | 难度 | 会议/期刊 | 说明 |
 |------|------|----------|------|
-| Hwangbo et al., "Learning agile and dynamic motor skills for legged robots," 2019 | ⭐⭐⭐ | *Science Robotics* 4(26) | 四足 RL sim-to-real 的奠基工作；actuator network 的原始出处；ANYmal 平台 |
-| Lee et al., "Learning quadrupedal locomotion over challenging terrain," 2020 | ⭐⭐⭐ | *Science Robotics* 5(47) | 纯本体感知 zero-shot 到自然地形；teacher-student pipeline 的奠基 |
-| Kumar et al., "RMA: Rapid Motor Adaptation for Legged Robots," 2021 | ⭐⭐⭐ | RSS 2021 | base policy + adaptation module 实现实时在线适应；Unitree A1 部署 |
-| Rudin et al., "Learning to Walk in Minutes Using Massively Parallel Deep RL," 2021 | ⭐⭐ | CoRL 2021 | legged_gym 论文；GPU 并行训练 + terrain curriculum 的工程标准 |
-| Margolis & Agrawal, "Walk These Ways: Tuning Robot Control for Generalization with MoB," 2022 | ⭐⭐ | CoRL 2022 | Multiplicity of Behavior 步态参数化；单策略支持多种步态风格 |
-| Miki et al., "Learning robust perceptive locomotion for quadrupedal robots in the wild," 2022 | ⭐⭐⭐ | *Science Robotics* | 深度图 + 特权学习；DARPA SubT 1700m 零跌倒；从盲控制到感知控制的里程碑 |
-| Pinto et al., "Asymmetric Actor Critic for Image-Based Robot Learning," 2018 | ⭐⭐ | RSS 2018 | Asymmetric actor-critic 的原始论文；actor 看图像，critic 看完整状态 |
-| Cheng et al., "Extreme Parkour with Legged Robots," 2024 | ⭐⭐⭐ | ICRA 2024 | 视觉端到端四足跑酷；三阶段训练管线（盲控制→深度蒸馏→部署） |
-| Schwarke et al., "RSL-RL: A Learning Library for Robotics Research," 2025 | ⭐⭐ | arXiv 2509.10771 | RSL-RL 4.0 论文；PPO + Distillation + Symmetry 统一库 |
+| Hwangbo et al., "Learning agile and dynamic motor skills for legged robots," 2019 | ★★★ | *Science Robotics* 4(26) | 四足 RL sim-to-real 的奠基工作；actuator network 的原始出处；ANYmal 平台 |
+| Lee et al., "Learning quadrupedal locomotion over challenging terrain," 2020 | ★★★ | *Science Robotics* 5(47) | 纯本体感知 zero-shot 到自然地形；teacher-student pipeline 的奠基 |
+| Kumar et al., "RMA: Rapid Motor Adaptation for Legged Robots," 2021 | ★★★ | RSS 2021 | base policy + adaptation module 实现实时在线适应；Unitree A1 部署 |
+| Rudin et al., "Learning to Walk in Minutes Using Massively Parallel Deep RL," 2021 | ★★ | CoRL 2021 | legged_gym 论文；GPU 并行训练 + terrain curriculum 的工程标准 |
+| Margolis & Agrawal, "Walk These Ways: Tuning Robot Control for Generalization with MoB," 2022 | ★★ | CoRL 2022 | Multiplicity of Behavior 步态参数化；单策略支持多种步态风格 |
+| Miki et al., "Learning robust perceptive locomotion for quadrupedal robots in the wild," 2022 | ★★★ | *Science Robotics* | 深度图 + 特权学习；DARPA SubT 1700m 零跌倒；从盲控制到感知控制的里程碑 |
+| Pinto et al., "Asymmetric Actor Critic for Image-Based Robot Learning," 2018 | ★★ | RSS 2018 | Asymmetric actor-critic 的原始论文；actor 看图像，critic 看完整状态 |
+| Cheng et al., "Extreme Parkour with Legged Robots," 2024 | ★★★ | ICRA 2024 | 视觉端到端四足跑酷；三阶段训练管线（盲控制→深度蒸馏→部署） |
+| Schwarke et al., "RSL-RL: A Learning Library for Robotics Research," 2025 | ★★ | arXiv 2509.10771 | RSL-RL 4.0 论文；PPO + Distillation + Symmetry 统一库 |
 
 ### 工具和文档
 
 | 资料 | 难度 | 说明 |
 |------|------|------|
-| RSL-RL 配置文档 | ⭐ | `leggedrobotics.github.io/rsl_rl/guide/configuration.html` |
-| mjlab 官方文档 | ⭐ | `github.com/mujocolab/mjlab` |
-| Isaac Lab velocity tutorial | ⭐⭐ | `isaac-sim.github.io/IsaacLab/main/source/tutorials/` |
-| unitree_rl_mjlab | ⭐⭐ | `github.com/unitreerobotics/unitree_rl_mjlab`，Unitree 官方 mjlab 项目 |
-| unitree_rl_lab | ⭐⭐ | `github.com/unitreerobotics/unitree_rl_lab`，Unitree 官方 Isaac Lab 项目 |
-| basic-locomotion-isaaclab | ⭐⭐ | `github.com/iit-DLSLab/basic-locomotion-isaaclab`，IIT DLS Lab 多机器人项目 |
-| MuJoCo Menagerie | ⭐ | `github.com/google-deepmind/mujoco_menagerie`，50+ 机器人模型库 |
-| MuJoCo XML Reference | ⭐ | `mujoco.readthedocs.io/en/stable/XMLreference.html` |
+| RSL-RL 配置文档 | ★ | `leggedrobotics.github.io/rsl_rl/guide/configuration.html` |
+| mjlab 官方文档 | ★ | `github.com/mujocolab/mjlab` |
+| Isaac Lab velocity tutorial | ★★ | `isaac-sim.github.io/IsaacLab/main/source/tutorials/` |
+| unitree_rl_mjlab | ★★ | `github.com/unitreerobotics/unitree_rl_mjlab`，Unitree 官方 mjlab 项目 |
+| unitree_rl_lab | ★★ | `github.com/unitreerobotics/unitree_rl_lab`，Unitree 官方 Isaac Lab 项目 |
+| basic-locomotion-isaaclab | ★★ | `github.com/iit-DLSLab/basic-locomotion-isaaclab`，IIT DLS Lab 多机器人项目 |
+| MuJoCo Menagerie | ★ | `github.com/google-deepmind/mujoco_menagerie`，50+ 机器人模型库 |
+| MuJoCo XML Reference | ★ | `mujoco.readthedocs.io/en/stable/XMLreference.html` |
 
 ### 阅读路线建议
 

@@ -19,7 +19,7 @@
 
 ---
 
-## 5.1 表达式模板与延迟求值 ⭐⭐
+## 5.1 表达式模板与延迟求值 ★★
 
 > 📎 本节是 `10_C++语言核心/110_Eigen基础与SLAM数学预备` §11.6 表达式模板的**规控视角延伸**——聚焦控制回路里小而高频的矩阵运算（姿态误差、雅可比块、协方差传播），用厨房备菜类比解释为什么减少中间临时盘子最关键。表达式模板的基础机制（lazy evaluation、`auto`/`.eval()` 决策）见该章。
 
@@ -137,7 +137,7 @@ void safeInPlaceSquare(Eigen::MatrixXd* A) {
 
 ---
 
-## 5.2 Map、Ref 与零拷贝接口 ⭐⭐
+## 5.2 Map、Ref 与零拷贝接口 ★★
 
 这一节解决的问题是：怎样把 ROS 消息、求解器数组、C API 内存安全地映射成 Eigen 对象。
 
@@ -244,7 +244,7 @@ Eigen::VectorXd copySolution(const SolverRawResult& raw) {
 
 ---
 
-## 5.3 对齐、容器与 SIMD ⭐⭐⭐
+## 5.3 对齐、容器与 SIMD ★★★
 
 这一节解决的问题是：为什么 Eigen 对齐问题常常在 Release 或特定平台才出现。
 
@@ -315,7 +315,7 @@ using Vec4List = std::vector<Eigen::Vector4d,
 
 ---
 
-## 5.4 模板化标量类型与自动微分桥梁 ⭐⭐⭐
+## 5.4 模板化标量类型与自动微分桥梁 ★★★
 
 这一节解决的问题是：为什么从第一天开始模板化 `Scalar` 会让未来接入自动微分更容易。
 
@@ -395,7 +395,7 @@ Scalar smoothPenalty(Scalar x) {
 
 ---
 
-## 5.5 稀疏矩阵构造与求解 ⭐⭐
+## 5.5 稀疏矩阵构造与求解 ★★
 
 这一节解决的问题是：轨迹优化和 SLAM 中的稀疏结构怎样用 Eigen 安全表达。
 
@@ -447,7 +447,7 @@ Triplet 适合构造阶段。
 
 ---
 
-## 5.6 实时路径中的 Eigen 审计 ⭐⭐
+## 5.6 实时路径中的 Eigen 审计 ★★
 
 这一节解决的问题是：如何确认 Eigen 代码没有在控制循环中偷偷分配。
 
@@ -497,7 +497,7 @@ private:
 
 ---
 
-## 5.7 表达式求值规则的深水区 ⭐⭐⭐
+## 5.7 表达式求值规则的深水区 ★★★
 
 这一节解决的问题是：为什么有些 Eigen 表达式应该保持延迟，有些表达式必须提前落地成值。
 
@@ -662,7 +662,7 @@ void addWeightedJacobianSmall(const Eigen::Matrix<double, 6, 12>& J,
 
 ---
 
-## 5.8 内存布局、步长与缓存局部性 ⭐⭐⭐
+## 5.8 内存布局、步长与缓存局部性 ★★★
 
 这一节解决的问题是：为什么同样的矩阵运算，换一个存储顺序或遍历顺序就会明显变慢。
 
@@ -847,7 +847,7 @@ using WbcHessian12 = Eigen::Matrix<double, 12, 12>;
 
 ---
 
-## 5.9 对齐问题的工程边界 ⭐⭐⭐
+## 5.9 对齐问题的工程边界 ★★★
 
 这一节解决的问题是：哪些对齐问题已经被现代 C++ 缓解，哪些在机器人项目里仍然需要主动防御。
 
@@ -995,7 +995,7 @@ void printSimdBuildInfo() {
 
 ---
 
-## 5.10 稀疏矩阵的结构缓存与块组装 ⭐⭐⭐
+## 5.10 稀疏矩阵的结构缓存与块组装 ★★★
 
 这一节解决的问题是：怎样把稀疏矩阵从“能构造”推进到“适合实时重复求解”。
 
@@ -1205,7 +1205,7 @@ private:
 
 ---
 
-## 5.11 机器人矩阵计算的高频坑 ⭐⭐⭐
+## 5.11 机器人矩阵计算的高频坑 ★★★
 
 这一节解决的问题是：机器人算法里哪些矩阵写法看起来没问题，却会让控制器数值错误或实时性变差。
 
@@ -1372,7 +1372,7 @@ bool normalizeSafe(Eigen::Vector3d* v, double eps = 1e-12) {
 
 ---
 
-## 5.12 设计可维护的 Eigen 接口 ⭐⭐
+## 5.12 设计可维护的 Eigen 接口 ★★
 
 这一节解决的问题是：怎样让 Eigen 代码既快，又不把调用者绑定到某一种矩阵类型。
 
@@ -1503,7 +1503,7 @@ Eigen::Matrix<Scalar, 2, 1> headingVector(const PlanarPoseTpl<Scalar>& pose) {
 
 ---
 
-## 5.13 Map/Ref 深入：与 SLAM 和求解器的零拷贝集成 ⭐⭐⭐
+## 5.13 Map/Ref 深入：与 SLAM 和求解器的零拷贝集成 ★★★
 
 这一节解决的问题是：在多模块机器人系统中，如何用 Map 和 Ref 减少数据拷贝，同时不引入生命周期陷阱。
 
@@ -1614,7 +1614,7 @@ void refTemporaryDemo() {
 
 ---
 
-## 5.14 自定义标量类型与 Ceres Jet 适配 ⭐⭐⭐⭐
+## 5.14 自定义标量类型与 Ceres Jet 适配 ★★★★
 
 这一节解决的问题是：如何让 Eigen 代码在 `double` 和自动微分标量之间无缝切换。
 
@@ -1699,7 +1699,7 @@ manif 的设计类似，但 API 风格不同。两者的共同原则是：模型
 
 ---
 
-## 5.15 Eigen 在 GPU 上的使用限制与替代方案 ⭐⭐⭐
+## 5.15 Eigen 在 GPU 上的使用限制与替代方案 ★★★
 
 这一节解决的问题是：当计算负载需要 GPU 加速时，Eigen 的哪些部分可以迁移，哪些需要替代方案。
 
@@ -1770,7 +1770,7 @@ void processGpuResults(const double* gpu_output_host_copy,
 
 ---
 
-## 5.16 Eigen 3.4 新特性概览 ⭐⭐
+## 5.16 Eigen 3.4 新特性概览 ★★
 
 这一节解决的问题是：Eigen 3.4 引入了哪些与机器人开发相关的改进。
 
@@ -1871,7 +1871,7 @@ void advancedIndexingDemo() {
 
 ---
 
-## 5.17 表达式模板的性能调优 ⭐⭐⭐
+## 5.17 表达式模板的性能调优 ★★★
 
 这一节解决的问题是：如何判断一个 Eigen 表达式应该保持延迟还是手动求值，以及如何系统性地优化数值代码性能。
 
@@ -2005,11 +2005,11 @@ Eigen::VectorXd deepExpressionGood(const Eigen::VectorXd& a,
 
 | 资料 | 难度 | 阅读目的 |
 |------|------|----------|
-| Eigen 官方文档 Expression Templates | ⭐⭐ | 理解延迟求值 |
-| Eigen Map 与 Ref 文档 | ⭐⭐ | 设计零拷贝接口 |
-| Eigen Alignment 文档 | ⭐⭐⭐ | 处理容器和 SIMD |
-| Pinocchio 模板化源码 | ⭐⭐⭐ | 学习 Scalar 泛型设计 |
-| SuiteSparse/CHOLMOD 资料 | ⭐⭐⭐ | 了解大型稀疏求解 |
+| Eigen 官方文档 Expression Templates | ★★ | 理解延迟求值 |
+| Eigen Map 与 Ref 文档 | ★★ | 设计零拷贝接口 |
+| Eigen Alignment 文档 | ★★★ | 处理容器和 SIMD |
+| Pinocchio 模板化源码 | ★★★ | 学习 Scalar 泛型设计 |
+| SuiteSparse/CHOLMOD 资料 | ★★★ | 了解大型稀疏求解 |
 
 ## 故障排查手册
 

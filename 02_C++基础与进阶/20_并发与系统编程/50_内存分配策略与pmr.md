@@ -1,6 +1,6 @@
 # 内存分配策略与 `std::pmr`
 
-> **难度**：⭐⭐⭐⭐ | **建议用时**：2 周 | **前置要求**：C++语言核心/RAII与智能指针 RAII，C++语言核心/移动语义与完美转发 移动语义，线程管理与互斥同步-实时约束与高性能数据传递 并发、原子、并行与实时约束
+> **难度**：★★★★ | **建议用时**：2 周 | **前置要求**：C++语言核心/RAII与智能指针 RAII，C++语言核心/移动语义与完美转发 移动语义，线程管理与互斥同步-实时约束与高性能数据传递 并发、原子、并行与实时约束
 
 ---
 
@@ -70,7 +70,7 @@
 
 ---
 
-## 35.1 为什么分配会成为 SLAM 的性能瓶颈 ⭐⭐
+## 35.1 为什么分配会成为 SLAM 的性能瓶颈 ★★
 
 > **这一节解决什么问题**：pmr 不是"更快的 allocator"——而是让你控制内存生命周期策略。为什么 SLAM 后端优化时 `malloc` 是瓶颈？
 
@@ -256,7 +256,7 @@ private:
 
 如果不做任何分配优化，直接使用默认分配器处理所有场景会怎样？对于桌面离线处理，通常完全可以接受——现代 `malloc` 实现（如 tcmalloc、jemalloc）在平均路径上非常快。但对于实时路径，问题不在平均速度，而在最坏情况：默认分配器可能在任意时刻触发系统调用（`mmap`/`munmap`）、页错误或内部锁竞争，这些操作的耗时从微秒到毫秒不等，且无法预测。
 
-> ⚠️ **编程陷阱：每帧创建新 `std::vector` 导致反复分配**
+> ⚠ **编程陷阱：每帧创建新 `std::vector` 导致反复分配**
 > **错误做法**：每帧的预处理函数返回一个新的 `std::vector<PointXYZI>`，函数结束后局部 vector 析构释放内存，下一帧重新分配。
 > **现象**：perf 显示大量时间花在 `malloc/free` 上，p99 延迟随运行时间缓慢上升。
 > **根本原因**：频繁分配释放导致内存碎片化。碎片化后 `malloc` 需要搜索更长的 free list 或向系统申请新页。
@@ -279,7 +279,7 @@ private:
 
 ---
 
-## 35.2 `std::pmr` 的基本模型 ⭐⭐
+## 35.2 `std::pmr` 的基本模型 ★★
 
 ### 工程问题：容器类型不应被分配策略污染
 
@@ -381,7 +381,7 @@ std::pmr::vector<PointXYZI> makeVector() {
 `pmr` 容器不会拥有 resource。
 resource 生命周期必须由外部保证。
 
-> ⚠️ **编程陷阱：pmr 容器返回后 resource 已析构（UAF）**
+> ⚠ **编程陷阱：pmr 容器返回后 resource 已析构（UAF）**
 > **错误做法**：在函数内创建 `monotonic_buffer_resource` 和 `pmr::vector`，然后返回这个 vector。
 > **现象**：返回的 vector 在后续使用时崩溃，或 TSan 报告 use-after-free。
 > **根本原因**：`pmr::vector` 保存了指向 resource 的指针，但 resource 是栈上局部对象，函数返回后已析构。vector 后续的任何操作（析构、扩容、元素访问）都通过悬空指针访问已销毁的 resource。
@@ -449,7 +449,7 @@ private:
 
 ---
 
-## 35.3 `monotonic_buffer_resource`：帧级临时内存 ⭐⭐
+## 35.3 `monotonic_buffer_resource`：帧级临时内存 ★★
 
 ### 工程问题：一帧内创建的临时对象通常一起死亡
 
@@ -493,7 +493,7 @@ monotonic 适合”批量释放”。
 
 如果把 `monotonic_buffer_resource` 用于长期地图容器会怎样？每次删除地图点时，元素的析构函数会被调用（对象被”逻辑”销毁），但对应的内存不会被回收给 resource。经过数千次增删后，monotonic resource 的指针只会向前移动，占用的内存只会增长，最终可能耗尽 buffer 并向上游 resource 申请更多内存。这不是内存泄漏（resource 析构时会全部释放），但在长期运行的机器人系统中，它会导致 RSS 持续上升直到系统被 OOM killer 终止。
 
-> ⚠️ **编程陷阱：monotonic resource 用于长期容器导致内存只增不减**
+> ⚠ **编程陷阱：monotonic resource 用于长期容器导致内存只增不减**
 > **错误做法**：用全局 `monotonic_buffer_resource` 作为地图点容器的分配来源，并频繁增删地图点。
 > **现象**：程序 RSS 持续上升，几小时后被操作系统杀死。
 > **根本原因**：monotonic resource 不回收单个 deallocate 的内存。每次 `erase` 析构元素但不释放空间，新 `push_back` 继续消耗新空间。
@@ -630,7 +630,7 @@ std::pmr::monotonic_buffer_resource arena(
 
 ---
 
-## 35.4 pool resource：小对象反复分配 ⭐⭐
+## 35.4 pool resource：小对象反复分配 ★★
 
 ### 内存碎片化的理论基础：为什么 malloc 长期运行会变慢
 
@@ -739,7 +739,7 @@ pool resource 管的是内存块。
 分配策略只回答“内存从哪里来”。
 RAII 回答”资源什么时候释放”。
 
-> ⚠️ **编程陷阱：多线程共享 `unsynchronized_pool_resource`**
+> ⚠ **编程陷阱：多线程共享 `unsynchronized_pool_resource`**
 > **错误做法**：`std::pmr::unsynchronized_pool_resource pool;` 被多个 OpenMP 线程同时使用。
 > **现象**：偶发崩溃，堆损坏，TSan 报大量 data race。
 > **根本原因**：`unsynchronized_pool_resource` 顾名思义不做内部同步。多线程同时调用 `allocate`/`deallocate` 会破坏其内部 free list 结构。
@@ -757,7 +757,7 @@ RAII 回答”资源什么时候释放”。
 
 ---
 
-## 35.5 对象池：比内存池更具体的所有权模型 ⭐⭐⭐
+## 35.5 对象池：比内存池更具体的所有权模型 ★★★
 
 ### 从内存池到对象池：抽象层级的提升
 
@@ -957,7 +957,7 @@ private:
 
 对象池和内存池的关系，类似于"汽车租赁公司"和"停车场"的关系。停车场（内存池）只管空间：给你一个车位，你走了还回来。汽车租赁公司（对象池）还管车本身：给你一辆初始化好的车，你还的时候要把车恢复到可用状态。停车场不关心你停什么车；租赁公司关心每辆车的状态。
 
-> ⚠️ **编程陷阱：对象池 Handle 被拷贝导致 double-free**
+> ⚠ **编程陷阱：对象池 Handle 被拷贝导致 double-free**
 > **错误做法**：意外拷贝了一个对象池 `Handle`，两个 Handle 析构时都归还同一个对象。
 > **现象**：同一个槽位被放入 free list 两次。后续两次 `tryCreate` 返回指向同一块内存的 Handle，两个"不同"对象共享内存。
 > **根本原因**：Handle 的拷贝语义和移动语义必须正确——应该 delete 拷贝构造和拷贝赋值，只允许移动。
@@ -970,7 +970,7 @@ private:
 
 ---
 
-## 35.6 pmr 容器传播规则与接口设计 ⭐⭐⭐
+## 35.6 pmr 容器传播规则与接口设计 ★★★
 
 ### 工程问题：容器从哪个 resource 分配，不能靠猜
 
@@ -1063,7 +1063,7 @@ struct MatchResult {
 
 ---
 
-## 35.7 内存增长监控：RSS、容量和高水位 ⭐⭐
+## 35.7 内存增长监控：RSS、容量和高水位 ★★
 
 ### 工程问题：内存问题不总是崩溃，而是慢慢变差
 
@@ -1338,7 +1338,7 @@ void testArenaOverflow() {
 
 ---
 
-## 35.9 多线程中的 resource 隔离 ⭐⭐⭐
+## 35.9 多线程中的 resource 隔离 ★★★
 
 ### 工程问题：分配器本身也会成为共享资源
 
@@ -1488,7 +1488,7 @@ std::vector<Match> parallelFindMatches(const std::vector<Query>& queries) {
 
 ---
 
-## 35.10 `pmr` 与 Eigen、PCL、ROS2 的边界 ⭐⭐⭐
+## 35.10 `pmr` 与 Eigen、PCL、ROS2 的边界 ★★★
 
 ### 分配器传播的理论困境：为什么自定义分配器在实践中很少被使用
 
@@ -1591,7 +1591,7 @@ void process(std::pmr::vector<Point>& points,
 
 只在这些位置引入 `pmr`。
 
-> ⚠️ **编程陷阱：外层 pmr 容器内嵌普通 vector，分配不一致**
+> ⚠ **编程陷阱：外层 pmr 容器内嵌普通 vector，分配不一致**
 > **错误做法**：`std::pmr::vector<std::vector<Match>> buckets;`——外层用 pmr，内层仍走默认分配器。
 > **现象**：`CountingResource` 显示 pmr 分配次数很少，但系统整体 `malloc` 次数仍然很高。
 > **根本原因**：内层 `std::vector<Match>` 使用默认分配器。pmr 只影响外层容器的元素存储，不会自动传播到内层容器。
@@ -1660,7 +1660,7 @@ private:
 
 ---
 
-## 35.11 benchmark：怎样比较分配策略 ⭐⭐
+## 35.11 benchmark：怎样比较分配策略 ★★
 
 ### 工程问题：分配优化很容易被错误 benchmark 误导
 
@@ -1818,16 +1818,16 @@ void compareAllocationCount(const RawCloud& raw) {
 
 ## 延伸阅读
 
-1. **C++ 标准库 `std::pmr` 文档（C++17/20）** ⭐⭐——重点阅读 `memory_resource`、`monotonic_buffer_resource`、`pool_resource` 的精确语义与线程安全保证。
-2. **Pablo Halpern, "Allocators: The Good Parts", CppCon 2017** ⭐⭐——pmr 设计者之一的演讲，解释了 polymorphic allocator 解决的核心问题。
-3. **Robson, "Worst Case Fragmentation of First Fit and Best Fit", Computer Journal 1977** ⭐⭐⭐⭐——内存碎片的理论下界证明，理解为什么 pool allocator 能绕过碎片问题。
-4. **C++ Core Guidelines R 系列（资源管理）和 P 系列（性能）** ⭐——RAII、`unique_ptr`/`shared_ptr` 与自定义 allocator 的最佳实践。
-5. **游戏引擎 frame allocator / arena allocator 设计资料** ⭐⭐——Dice/EA 的 Frostbite 引擎、Epic 的 UE 线性分配器等，与 SLAM 的帧级 arena 同构。
-6. **Linux 内存观测工具：`/proc/self/status`、`pmap`、`perf`、heap profiling** ⭐⭐——实际定位 RSS 增长和分配热点的工具链。
+1. **C++ 标准库 `std::pmr` 文档（C++17/20）** ★★——重点阅读 `memory_resource`、`monotonic_buffer_resource`、`pool_resource` 的精确语义与线程安全保证。
+2. **Pablo Halpern, "Allocators: The Good Parts", CppCon 2017** ★★——pmr 设计者之一的演讲，解释了 polymorphic allocator 解决的核心问题。
+3. **Robson, "Worst Case Fragmentation of First Fit and Best Fit", Computer Journal 1977** ★★★★——内存碎片的理论下界证明，理解为什么 pool allocator 能绕过碎片问题。
+4. **C++ Core Guidelines R 系列（资源管理）和 P 系列（性能）** ★——RAII、`unique_ptr`/`shared_ptr` 与自定义 allocator 的最佳实践。
+5. **游戏引擎 frame allocator / arena allocator 设计资料** ★★——Dice/EA 的 Frostbite 引擎、Epic 的 UE 线性分配器等，与 SLAM 的帧级 arena 同构。
+6. **Linux 内存观测工具：`/proc/self/status`、`pmap`、`perf`、heap profiling** ★★——实际定位 RSS 增长和分配热点的工具链。
 
 ---
 
-## 35.15 分配器感知的容器设计模式 ⭐⭐⭐
+## 35.15 分配器感知的容器设计模式 ★★★
 
 ### 工程问题：第三方库不支持自定义分配器
 
@@ -1897,7 +1897,7 @@ std::pmr::vector<int> v3(v1.begin(), v1.end(), &arena);  // v3 也使用 arena
 
 ---
 
-## 35.16 pmr 与 C++23/26 的演进方向 ⭐⭐⭐
+## 35.16 pmr 与 C++23/26 的演进方向 ★★★
 
 C++23 和 C++26 对内存管理引入了若干相关改进：
 
@@ -1916,7 +1916,7 @@ C++23 和 C++26 对内存管理引入了若干相关改进：
 
 ---
 
-## 35.17 tcmalloc 和 jemalloc 与 pmr 的关系 ⭐⭐
+## 35.17 tcmalloc 和 jemalloc 与 pmr 的关系 ★★
 
 ### 通用分配器替换 vs 算法级定制
 
@@ -1964,7 +1964,7 @@ LD_PRELOAD=/usr/lib/libtcmalloc.so ./my_slam
 
 ---
 
-## 35.18 分配策略的自动化测试 ⭐⭐⭐
+## 35.18 分配策略的自动化测试 ★★★
 
 ### 工程问题：分配策略的正确性难以通过代码审查验证
 

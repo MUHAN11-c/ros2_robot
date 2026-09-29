@@ -96,7 +96,7 @@ M03 IK 求解器深度 知识体系
 
 ---
 
-## M03.1 逆运动学问题形式化 ⭐
+## M03.1 逆运动学问题形式化 ★
 
 ### 动机：为什么 IK 是机械臂的核心问题？
 
@@ -183,7 +183,7 @@ IK 的困难在于解的结构极其复杂：
 
 ---
 
-## M03.2 解析解——Pieper条件与OPW参数化 ⭐⭐⭐
+## M03.2 解析解——Pieper条件与OPW参数化 ★★★
 
 ### 动机：为什么工业臂几乎都有闭式解？
 
@@ -376,7 +376,7 @@ int main() {
 
 ---
 
-## M03.3 Jacobian伪逆IK (KDL方法) ⭐⭐
+## M03.3 Jacobian伪逆IK (KDL方法) ★★
 
 ### 动机：当没有闭式解时怎么办？
 
@@ -636,7 +636,7 @@ int main() {
 
 ---
 
-## M03.4 TRAC-IK——双线程竞速 ⭐⭐⭐
+## M03.4 TRAC-IK——双线程竞速 ★★★
 
 ### 动机：KDL 只有 60% 成功率，能否做到 99%+？
 
@@ -878,7 +878,7 @@ panda_arm:
 
 ---
 
-## M03.5 IKFast——符号消元代码生成 ⭐⭐⭐
+## M03.5 IKFast——符号消元代码生成 ★★★
 
 ### 动机：能否让计算机自动推导闭式解？
 
@@ -1021,7 +1021,7 @@ ur5_arm:
 
 ---
 
-## M03.6 ik_geo——几何子问题分解 ⭐⭐⭐
+## M03.6 ik_geo——几何子问题分解 ★★★
 
 ### 动机：能否不依赖 OpenRAVE，也不手推每种机器人的闭式解？
 
@@ -1236,7 +1236,7 @@ std::vector<std::array<double,6>> solve_ik_spherical_wrist(
 
 ---
 
-## M03.7 pick-ik——优化式IK (L-BFGS + Pinocchio) ⭐⭐
+## M03.7 pick-ik——优化式IK (L-BFGS + Pinocchio) ★★
 
 ### 动机：如何让 IK 求解器"知道"障碍物在哪里？
 
@@ -1423,7 +1423,7 @@ panda_arm:
 
 ---
 
-## M03.8 冗余分解与零空间投影 ⭐⭐⭐
+## M03.8 冗余分解与零空间投影 ★★★
 
 ### 动机：7-DOF 臂有无穷多 IK 解，如何选"最好"的？
 
@@ -1619,7 +1619,7 @@ $$
 
 ---
 
-## M03.9 MoveIt2 IK插件机制 ⭐⭐
+## M03.9 MoveIt2 IK插件机制 ★★
 
 ### 动机：如何在不改代码的情况下切换 IK 求解器？
 
@@ -1829,7 +1829,7 @@ PLUGINLIB_EXPORT_CLASS(my_ik::MyIKPlugin, kinematics::KinematicsBase)
 
 ---
 
-## M03.10 性能光谱与选型 ⭐⭐
+## M03.10 性能光谱与选型 ★★
 
 ### 完整性能对比表
 
@@ -1916,7 +1916,7 @@ PLUGINLIB_EXPORT_CLASS(my_ik::MyIKPlugin, kinematics::KinematicsBase)
 
 ## 实战练习
 
-### A 型 (动手实践) ⭐
+### A 型 (动手实践) ★
 
 **A1: opw_kinematics 基准测试**
 
@@ -1943,7 +1943,7 @@ PLUGINLIB_EXPORT_CLASS(my_ik::MyIKPlugin, kinematics::KinematicsBase)
 - 固定末端位姿，连续改变零空间参数 $\alpha \in [-1, 1]$
 - 观察肘关节如何在不改变末端的情况下"绕圈"运动
 
-### B 型 (源码精读) ⭐⭐
+### B 型 (源码精读) ★★
 
 **B1: TRAC-IK 时序分析**
 
@@ -1964,7 +1964,7 @@ PLUGINLIB_EXPORT_CLASS(my_ik::MyIKPlugin, kinematics::KinematicsBase)
 
 阅读 ik_geo 的 SP2 实现代码，写出完整数学推导（包括两圆求交的几何条件）。
 
-### C 型 (思考题) ⭐⭐⭐
+### C 型 (思考题) ★★★
 
 **C1: 多求解器竞速扩展**
 
@@ -2043,7 +2043,7 @@ M03 (IK 求解器)
 
 ---
 
-## M03.11 前沿方向：Differentiable IK 与 Learning-based IK ⭐⭐⭐⭐
+## M03.11 前沿方向：Differentiable IK 与 Learning-based IK ★★★★
 
 前十节覆盖了从解析解到优化式 IK 的完整经典方法谱系。近年来，可微分优化和深度学习为 IK 问题带来了新的求解范式——它们不是替代传统方法，而是在特定场景下提供互补的能力。
 
@@ -2086,8 +2086,8 @@ $$q^* = \arg\min_q \|FK(q) - T_{\text{target}}\|^2 + \lambda R(q)$$
 
 ### 练习
 
-1. ⭐⭐⭐ 用 Pinocchio CppAD 实现一个简单的 Differentiable IK：用 AD 自动计算 FK 误差对 $q$ 的梯度，然后用梯度下降求解。与手工 Jacobian 伪逆的结果对比。
-2. ⭐⭐⭐⭐ 调研 Theseus 或 JAX-based Differentiable IK 的实现，分析其在 GPU 上的批量 IK 求解性能。
+1. ★★★ 用 Pinocchio CppAD 实现一个简单的 Differentiable IK：用 AD 自动计算 FK 误差对 $q$ 的梯度，然后用梯度下降求解。与手工 Jacobian 伪逆的结果对比。
+2. ★★★★ 调研 Theseus 或 JAX-based Differentiable IK 的实现，分析其在 GPU 上的批量 IK 求解性能。
 
 ---
 
@@ -2154,15 +2154,15 @@ mini-manip/
 
 | 资源 | 难度 | 说明 |
 |------|:---:|------|
-| Beeson & Ames (2015) "TRAC-IK" | ⭐⭐ | 双线程竞速 IK 原论文，IEEE-RAS Humanoids |
-| Diankov (2010) "IKFast" PhD Thesis Ch4 | ⭐⭐⭐ | 符号消元代码生成的完整推导 |
-| Elias & Wen (2022/2025) "ik_geo" | ⭐⭐⭐ | 几何子问题分解——通用闭式 IK 的现代方法 |
-| Brandstotter et al. (2014) "OPW" | ⭐⭐ | 工业臂参数化闭式解 |
-| Siciliano (1991) "Kinematic Control of Redundant Manipulators" | ⭐⭐⭐ | 零空间投影和优先级控制的经典教程 |
-| Starke et al. (2017) "BioIK" | ⭐⭐⭐ | 进化算法 IK——无梯度全局搜索 |
-| Pieper (1968) PhD Thesis | ⭐⭐⭐⭐ | 闭式 IK 存在性的奠基工作 |
-| pick-ik GitHub + MoveIt2 文档 | ⭐⭐ | L-BFGS + Pinocchio 的现代 IK 实现 |
-| Lynch & Park (2017) "Modern Robotics" Ch6 | ⭐⭐ | IK 的教科书级讲解 |
+| Beeson & Ames (2015) "TRAC-IK" | ★★ | 双线程竞速 IK 原论文，IEEE-RAS Humanoids |
+| Diankov (2010) "IKFast" PhD Thesis Ch4 | ★★★ | 符号消元代码生成的完整推导 |
+| Elias & Wen (2022/2025) "ik_geo" | ★★★ | 几何子问题分解——通用闭式 IK 的现代方法 |
+| Brandstotter et al. (2014) "OPW" | ★★ | 工业臂参数化闭式解 |
+| Siciliano (1991) "Kinematic Control of Redundant Manipulators" | ★★★ | 零空间投影和优先级控制的经典教程 |
+| Starke et al. (2017) "BioIK" | ★★★ | 进化算法 IK——无梯度全局搜索 |
+| Pieper (1968) PhD Thesis | ★★★★ | 闭式 IK 存在性的奠基工作 |
+| pick-ik GitHub + MoveIt2 文档 | ★★ | L-BFGS + Pinocchio 的现代 IK 实现 |
+| Lynch & Park (2017) "Modern Robotics" Ch6 | ★★ | IK 的教科书级讲解 |
 
 ---
 

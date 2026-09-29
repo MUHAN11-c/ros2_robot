@@ -121,7 +121,7 @@ mpc.pytorch、Theseus、acados、leap-c、MJX、OCS2、Crocoddyl 都只是不同
 
 ---
 
-## S5.1 从普通 MPC 到可微 MPC ⭐⭐⭐
+## S5.1 从普通 MPC 到可微 MPC ★★★
 
 这一节解决一个基本问题：普通 MPC 已经会在线优化控制，为什么还要让它可微？
 
@@ -377,7 +377,7 @@ def imitation_training_step(encoder, mpc_layer, batch, optimizer):
 
 ---
 
-## S5.2 MPC 与可微分仿真的接口 ⭐⭐⭐
+## S5.2 MPC 与可微分仿真的接口 ★★★
 
 这一节解决的问题是：MPC 求解的是预测模型，可微分仿真也提供预测模型，两者怎样连接而不互相混淆？
 
@@ -641,7 +641,7 @@ MPC 中的接触常通过约束表达。
 
 ---
 
-## S5.3 Shooting 与 Collocation：MPC 离散化如何影响梯度 ⭐⭐⭐
+## S5.3 Shooting 与 Collocation：MPC 离散化如何影响梯度 ★★★
 
 这一节解决的问题是：同一个连续时间最优控制问题，用 shooting 或 collocation 离散化后，最优解和梯度有什么差别？
 
@@ -924,7 +924,7 @@ Eigen::Vector2d trapezoidDefect(
 
 ---
 
-## S5.4 iLQR、DDP 与 SQP：求解器如何提供梯度 ⭐⭐⭐
+## S5.4 iLQR、DDP 与 SQP：求解器如何提供梯度 ★★★
 
 这一节解决的问题是：不同 MPC 求解器的 forward pass 和 backward pass 到底在算什么，可微化时应复用哪些结构？
 
@@ -1330,7 +1330,7 @@ ILQRBackwardStep computeBackwardStep(
 
 ---
 
-## S5.5 KKT 条件与隐式函数定理 ⭐⭐⭐⭐
+## S5.5 KKT 条件与隐式函数定理 ★★★★
 
 这一节是本章数学核心：梯度如何穿过优化器。
 
@@ -1830,7 +1830,7 @@ def implicit_grad_q(H, A, q, b, grad_z):
 
 ---
 
-## S5.6 把求解器作为可微层 ⭐⭐⭐
+## S5.6 把求解器作为可微层 ★★★
 
 这一节解决工程问题：一个求解器怎样变成深度学习框架中的 layer？
 
@@ -2063,7 +2063,7 @@ $$
 
 ---
 
-## S5.7 学习代价、模型参数与残差动力学 ⭐⭐⭐
+## S5.7 学习代价、模型参数与残差动力学 ★★★
 
 这一节解决的问题是：可微 MPC 到底学什么，哪些参数适合学，哪些参数不适合交给神经网络？
 
@@ -2373,7 +2373,7 @@ $$
 
 ---
 
-## S5.8 稳定性、安全边界与可学习性的冲突 ⭐⭐⭐⭐
+## S5.8 稳定性、安全边界与可学习性的冲突 ★★★★
 
 这一节解决的问题是：学习会改变 MPC 参数，怎样避免学到一个在训练 loss 上更好、但在物理上更危险的控制器？
 
@@ -2586,7 +2586,7 @@ def safe_parameter_filter(theta_raw, solver_stats, bounds):
 
 ---
 
-## S5.9 何时不该端到端求导 ⭐⭐⭐⭐
+## S5.9 何时不该端到端求导 ★★★★
 
 这一节很重要：可微并不等于应该求导。
 
@@ -2737,7 +2737,7 @@ def safe_parameter_filter(theta_raw, solver_stats, bounds):
 
 ---
 
-## S5.10 调试可微 MPC：从梯度到行为 ⭐⭐⭐
+## S5.10 调试可微 MPC：从梯度到行为 ★★★
 
 这一节给出排查顺序。
 
@@ -2903,7 +2903,7 @@ finite_difference_check_status
 
 ---
 
-## S5.11 累积项目：可微双积分器 MPC 到四旋翼参数学习 ⭐⭐⭐
+## S5.11 累积项目：可微双积分器 MPC 到四旋翼参数学习 ★★★
 
 本章项目分四个阶段。
 
@@ -3030,14 +3030,14 @@ MPC 仍然保持推力限幅和倾角约束。
 
 | 资料 | 难度 | 重点 |
 |------|------|------|
-| Amos 等，Differentiable MPC for End-to-End Planning and Control | ⭐⭐⭐ | KKT 隐式求导和 box-constrained iLQR |
-| locuslab/mpc.pytorch | ⭐⭐⭐ | 教学级 PyTorch 实现，适合读 backward |
-| Frey 等，Differentiable Nonlinear Model Predictive Control | ⭐⭐⭐⭐ | 通用 NMPC 灵敏度、SQP/IPM 平滑 |
-| leap-c | ⭐⭐⭐ | acados NMPC 作为 PyTorch 层的工程接口 |
-| Theseus | ⭐⭐⭐ | 可微非线性最小二乘层，理解优化层通用模式 |
-| TD-MPC2 | ⭐⭐ | model-based RL 强基线，用于区分采样 MPC 与可微 MPC |
-| Actor-Critic MPC | ⭐⭐⭐ | MPC 作为 actor，RL 学习 MPC 参数 |
-| S4 可微分仿真理论 | ⭐⭐⭐ | 接触梯度偏差和 SHAC/AHAC 边界 |
+| Amos 等，Differentiable MPC for End-to-End Planning and Control | ★★★ | KKT 隐式求导和 box-constrained iLQR |
+| locuslab/mpc.pytorch | ★★★ | 教学级 PyTorch 实现，适合读 backward |
+| Frey 等，Differentiable Nonlinear Model Predictive Control | ★★★★ | 通用 NMPC 灵敏度、SQP/IPM 平滑 |
+| leap-c | ★★★ | acados NMPC 作为 PyTorch 层的工程接口 |
+| Theseus | ★★★ | 可微非线性最小二乘层，理解优化层通用模式 |
+| TD-MPC2 | ★★ | model-based RL 强基线，用于区分采样 MPC 与可微 MPC |
+| Actor-Critic MPC | ★★★ | MPC 作为 actor，RL 学习 MPC 参数 |
+| S4 可微分仿真理论 | ★★★ | 接触梯度偏差和 SHAC/AHAC 边界 |
 
 阅读顺序建议：
 
@@ -3160,15 +3160,15 @@ $$
 | residual dynamics | 在物理模型之外学习的小修正项 |
 | terminal value | 用于弥补有限 horizon 短视的终端代价 |
 
-### ⚠️ 章末陷阱：把优化器未收敛的解拿去反传
+### ⚠ 章末陷阱：把优化器未收敛的解拿去反传
 
 可微 MPC 的 backward 通常默认 forward 解接近最优。若 KKT 残差很大、约束违反明显或求解器提前中止，反传得到的梯度会混合求解误差和真实灵敏度。训练 loop 应记录 solve status，并对失败样本降权或跳过。
 
-### ⚠️ 章末陷阱：让学习器直接改安全约束
+### ⚠ 章末陷阱：让学习器直接改安全约束
 
 外层学习可以调代价权重、模型残差或参考轨迹，但不应随意放松碰撞、力矩、关节限位和摩擦锥这类安全边界。若必须学习约束边界，应加物理先验和人工下界。
 
-### ⚠️ 章末陷阱：忽略 active set 切换
+### ⚠ 章末陷阱：忽略 active set 切换
 
 不等式约束的活动集一旦变化，最优解对参数的导数可能出现不连续。有限差分验证时应同时记录 active set，否则同一个参数扰动可能比较的是两个不同局部问题。
 

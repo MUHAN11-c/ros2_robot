@@ -8,7 +8,7 @@
 
 ## 前置自测
 
-📋 **前置自测**（答不出 2 题以上，先回 3.1/3.2 与泛函分析复习）
+◆ **前置自测**（答不出 2 题以上，先回 3.1/3.2 与泛函分析复习）
 
 1. 什么是完备度量空间？Banach 不动点定理的陈述是什么？（泛函分析 B3）
 2. 离散 PMP 的协态方程 $\lambda_k = \nabla_x L_k + [\nabla_x f_k]^\top \lambda_{k+1}$ 是怎么推出来的？（3.2.6）
@@ -72,7 +72,7 @@
 
 ---
 
-## §3.3.0 战略定位：从轨迹级必要条件到场级充分条件 ⭐
+## §3.3.0 战略定位：从轨迹级必要条件到场级充分条件 ★
 
 ### 动机：为什么需要动态规划？
 
@@ -123,7 +123,7 @@ Richard Bellman（1920–1984）在 RAND Corporation 工作期间，于 1953-195
 
 ---
 
-## §3.3.1 离散时间最优控制问题的标准形式 ⭐
+## §3.3.1 离散时间最优控制问题的标准形式 ★
 
 ### 动机
 
@@ -167,7 +167,7 @@ $$J_\pi(x_0)=\mathbb{E}_{w_0,\ldots,w_{N-1}}\!\left[\Phi(x_N)+\sum_{k=0}^{N-1}L_
 
 > **类比**：折扣因子类似于经济学中的"贴现率"——$\gamma=0.99$ 意味着"明天的一块钱只值今天的 0.99 元"。在机器人学中，这对应着"远处的代价不如近处的代价重要"，这既反映了模型预测能力的衰减，也是数学上保证级数收敛的需要。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 | # | 陷阱 | 正确做法 |
 |---|------|---------|
@@ -182,7 +182,7 @@ $$J_\pi(x_0)=\mathbb{E}_{w_0,\ldots,w_{N-1}}\!\left[\Phi(x_N)+\sum_{k=0}^{N-1}L_
 
 ---
 
-## §3.3.2 Bellman 最优性原理：严格陈述与完整证明 ⭐⭐
+## §3.3.2 Bellman 最优性原理：严格陈述与完整证明 ★★
 
 ### 动机：为什么需要"最优性原理"？
 
@@ -285,7 +285,7 @@ $$\boxed{V_N(x) = \Phi(x), \qquad V_k(x) = \min_{u\in\mathcal{U}_k(x)} \mathbb{E
 
 最优反馈律：$\mu_k^*(x) \in \arg\min_{u} \{L_k(x,u) + V_{k+1}(f_k(x,u))\}$。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 | # | 陷阱 | 正确做法 |
 |---|------|---------|
@@ -302,7 +302,7 @@ $$\boxed{V_N(x) = \Phi(x), \qquad V_k(x) = \min_{u\in\mathcal{U}_k(x)} \mathbb{E
 
 ---
 
-## §3.3.3 值函数与协态的对偶：DP 与 PMP 的统一 ⭐⭐
+## §3.3.3 值函数与协态的对偶：DP 与 PMP 的统一 ★★
 
 ### 动机
 
@@ -350,7 +350,7 @@ $$\lambda_k^* = \nabla_x L_k(x_k^*,u_k^*) + [\nabla_x f_k(x_k^*,u_k^*)]^\top \la
 | Differentiable MPC (Amos-Kolter 2017) | 通过隐函数定理对 KKT 条件求导，等价于值函数梯度传播 |
 | Neural ODE adjoint (Chen-Rubanova 2018, NeurIPS) | 连续时间版的 $\lambda(t) = \nabla_x V(x^*(t), t)$ |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 | # | 陷阱 | 正确做法 |
 |---|------|---------|
@@ -365,7 +365,7 @@ $$\lambda_k^* = \nabla_x L_k(x_k^*,u_k^*) + [\nabla_x f_k(x_k^*,u_k^*)]^\top \la
 
 ---
 
-## §3.3.4 无限时域折扣 Bellman 方程与 Banach 压缩映射 ⭐⭐
+## §3.3.4 无限时域折扣 Bellman 方程与 Banach 压缩映射 ★★
 
 ### 动机
 
@@ -484,7 +484,7 @@ $$k \geq \frac{\log(10000)}{\log(1/0.99)} \approx \frac{9.21}{0.01005} \approx 9
 
 > **本质洞察**：$\gamma$-压缩性意味着 Bellman 算子每次迭代都在**缩小误差**。$\gamma$ 越接近 1，缩小得越慢——这不是算法的缺陷，而是**问题本身的内在困难**：看得越远（$\gamma$ 越大），不确定性越大，需要越多信息才能确定最优策略。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 | # | 陷阱 | 正确做法 |
 |---|------|---------|
@@ -500,7 +500,7 @@ $$k \geq \frac{\log(10000)}{\log(1/0.99)} \approx \frac{9.21}{0.01005} \approx 9
 
 ---
 
-## §3.3.5 策略迭代 (PI)、Modified PI 与收敛性 ⭐⭐
+## §3.3.5 策略迭代 (PI)、Modified PI 与收敛性 ★★
 
 ### 动机：为什么不只用 VI？
 
@@ -601,7 +601,7 @@ $$\text{PI 迭代数} \leq \mathcal{O}\left(\frac{mn}{1-\gamma}\log\frac{n}{1-\g
 | A2C/PPO | MPI | Critic=有限步评估，Actor=梯度改进 |
 | LSPI | PI | 线性函数近似评估 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 | # | 陷阱 | 正确做法 |
 |---|------|---------|
@@ -617,7 +617,7 @@ $$\text{PI 迭代数} \leq \mathcal{O}\left(\frac{mn}{1-\gamma}\log\frac{n}{1-\g
 
 ---
 
-## §3.3.6 随机动态规划与 MDP 形式化 ⭐⭐
+## §3.3.6 随机动态规划与 MDP 形式化 ★★
 
 ### 动机
 
@@ -689,7 +689,7 @@ $$Q^*(s,a) = R(s,a) + \gamma\sum_{s'} P(s'|s,a) \max_{a'} Q^*(s',a')$$
 
 ---
 
-## §3.3.7 维数灾难：精确含义与缓解方法 ⭐⭐⭐
+## §3.3.7 维数灾难：精确含义与缓解方法 ★★★
 
 ### 动机
 
@@ -754,7 +754,7 @@ $$\limsup_{k\to\infty} \|V_k - V^*\|_\infty \leq \frac{\delta}{1-\gamma}$$
 - 海量并行采样（MuJoCo $10^8$ 步）
 - 分布式 critic 稳定化（distributed TD）
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 | # | 陷阱 | 正确做法 |
 |---|------|---------|
@@ -770,7 +770,7 @@ $$\limsup_{k\to\infty} \|V_k - V^*\|_\infty \leq \frac{\delta}{1-\gamma}$$
 
 ---
 
-## §3.3.8 LQR 作为 DP 的精确可解特例 ⭐⭐
+## §3.3.8 LQR 作为 DP 的精确可解特例 ★★
 
 ### 动机
 
@@ -897,7 +897,7 @@ print(f"最优增益 K = {K_dare}")
 print(f"闭环极点 = {np.linalg.eigvals(A - B @ K_dare)}")
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 | # | 陷阱 | 正确做法 |
 |---|------|---------|
@@ -913,7 +913,7 @@ print(f"闭环极点 = {np.linalg.eigvals(A - B @ K_dare)}")
 
 ---
 
-## §3.3.9 从离散 DP 到连续 HJB：极限过渡 ⭐⭐⭐
+## §3.3.9 从离散 DP 到连续 HJB：极限过渡 ★★★
 
 ### 动机
 
@@ -1005,7 +1005,7 @@ $$0 = \frac{1}{2}x^\top Qx + x^\top PAx - \frac{1}{2}x^\top PBR^{-1}B^\top Px$$
 | DRE (Riccati 差分方程) | Riccati ODE $\dot P + A^\top P + PA - PBR^{-1}B^\top P + Q = 0$ | LQR |
 | $\lambda_k = \nabla V_k$ | $\lambda(t) = \nabla_x V(x^*(t),t)$（极小化约定） | 共态-梯度对偶（详见专题 3.4.4） |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 | # | 陷阱 | 正确做法 |
 |---|------|---------|
@@ -1021,7 +1021,7 @@ $$0 = \frac{1}{2}x^\top Qx + x^\top PAx - \frac{1}{2}x^\top PBR^{-1}B^\top Px$$
 
 ---
 
-## §3.3.10 与强化学习的逻辑链 ⭐⭐
+## §3.3.10 与强化学习的逻辑链 ★★
 
 ### 动机
 
@@ -1112,7 +1112,7 @@ $$\text{目标} = \min_\theta \mathbb{E}_{(s,a,r,s')\sim\mathcal{D}} \left[(\und
 
 ---
 
-## §3.3.11 典型例题 ⭐⭐
+## §3.3.11 典型例题 ★★
 
 ### 例题 1：最短路径（Bellman-Ford = VI）
 
@@ -1193,7 +1193,7 @@ print(f"总代价: {0.5*x[-1]@Qf@x[-1] + 0.5*sum(x[k]@Q@x[k]+R[0,0]*u_hist[k]**2
 
 ---
 
-## §3.3.12 数值 DP 方法 ⭐⭐⭐
+## §3.3.12 数值 DP 方法 ★★★
 
 ### 网格离散化方法
 
@@ -1244,7 +1244,7 @@ $$\max_\theta \mu^\top \Phi\theta \quad \text{s.t.} \quad \Phi\theta \leq \mathc
 
 性能界：$\|V^* - \Phi\tilde\theta\|_{1,\mu} \leq \frac{2}{1-\gamma}\min_\theta \|V^* - \Phi\theta\|_{\infty}$
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 | # | 陷阱 | 正确做法 |
 |---|------|---------|
@@ -1254,7 +1254,7 @@ $$\max_\theta \mu^\top \Phi\theta \quad \text{s.t.} \quad \Phi\theta \leq \mathc
 
 ---
 
-## §3.3.13 图搜索与半环统一视角 ⭐⭐⭐
+## §3.3.13 图搜索与半环统一视角 ★★★
 
 ### Dijkstra/A*/Bellman-Ford 全是 DP
 
@@ -1284,7 +1284,7 @@ $$\max_\theta \mu^\top \Phi\theta \quad \text{s.t.} \quad \Phi\theta \leq \mathc
 
 ---
 
-## §3.3.14 博弈论 DP、Minimax 与鲁棒控制 ⭐⭐⭐⭐
+## §3.3.14 博弈论 DP、Minimax 与鲁棒控制 ★★★★
 
 ### Minimax DP
 
@@ -1306,18 +1306,18 @@ $$V(x) = \min_u \max_{w\in W} \{L(x,u,w) + \gamma V(f(x,u,w))\}$$
 
 | 知识点 | 核心结论 | 工程意义 | 难度 |
 |--------|---------|---------|------|
-| 最优性原理 | 最优子策略最优 | DP 反向递推的合法性基础 | ⭐ |
-| Bellman 方程 | $V = \mathcal{T}V$ | 所有最优控制/RL 的统一母方程 | ⭐ |
-| $\gamma$-压缩性 | $\|\mathcal{T}V_1-\mathcal{T}V_2\| \leq \gamma\|V_1-V_2\|$ | VI 收敛的理论保证 | ⭐⭐ |
-| VI 几何收敛 | $\|V_k-V^*\| \leq \gamma^k\|V_0-V^*\|$ | 估计 VI 所需迭代数 | ⭐⭐ |
-| PI 有限步终止 | $\leq |\mathcal{A}|^{|\mathcal{S}|}$ 步 | 中小规模 MDP 首选 PI | ⭐⭐ |
-| PI = Newton | 局部二次收敛 | 解释 PI 为何远快于 VI | ⭐⭐⭐ |
-| LQR Riccati | $V_k = \frac{1}{2}x^\top P_k x$ | iLQR/DDP 的基石 | ⭐⭐ |
-| 协态=梯度 | $\lambda_k = \nabla V_k$ | PMP-DP 统一 | ⭐⭐ |
-| 维数灾难 | $N^d$ 指数爆炸 | MPC/iLQR/RL 的存在理由 | ⭐⭐ |
-| 确定性等价 | 加性噪声不改变 $K$ | LQG 分离定理 | ⭐⭐ |
-| 离散→连续极限 | Bellman → HJB | 连接离散与连续控制 | ⭐⭐⭐ |
-| TD = Bellman 残差 | $\delta = r + \gamma V(s') - V(s)$ | RL 的 DP 本质 | ⭐⭐ |
+| 最优性原理 | 最优子策略最优 | DP 反向递推的合法性基础 | ★ |
+| Bellman 方程 | $V = \mathcal{T}V$ | 所有最优控制/RL 的统一母方程 | ★ |
+| $\gamma$-压缩性 | $\|\mathcal{T}V_1-\mathcal{T}V_2\| \leq \gamma\|V_1-V_2\|$ | VI 收敛的理论保证 | ★★ |
+| VI 几何收敛 | $\|V_k-V^*\| \leq \gamma^k\|V_0-V^*\|$ | 估计 VI 所需迭代数 | ★★ |
+| PI 有限步终止 | $\leq |\mathcal{A}|^{|\mathcal{S}|}$ 步 | 中小规模 MDP 首选 PI | ★★ |
+| PI = Newton | 局部二次收敛 | 解释 PI 为何远快于 VI | ★★★ |
+| LQR Riccati | $V_k = \frac{1}{2}x^\top P_k x$ | iLQR/DDP 的基石 | ★★ |
+| 协态=梯度 | $\lambda_k = \nabla V_k$ | PMP-DP 统一 | ★★ |
+| 维数灾难 | $N^d$ 指数爆炸 | MPC/iLQR/RL 的存在理由 | ★★ |
+| 确定性等价 | 加性噪声不改变 $K$ | LQG 分离定理 | ★★ |
+| 离散→连续极限 | Bellman → HJB | 连接离散与连续控制 | ★★★ |
+| TD = Bellman 残差 | $\delta = r + \gamma V(s') - V(s)$ | RL 的 DP 本质 | ★★ |
 
 ---
 
@@ -1338,16 +1338,16 @@ $$V(x) = \min_u \max_{w\in W} \{L(x,u,w) + \gamma V(f(x,u,w))\}$$
 
 | 资源 | 定位 | 难度 |
 |------|------|------|
-| Bertsekas, *DP & OC Vol.I* (2017) | 本章主教材 | ⭐⭐ |
-| Bertsekas, *DP & OC Vol.II* (2012) | ADP 深化 | ⭐⭐⭐ |
-| Puterman 1994, *MDP* | MDP 严格理论 | ⭐⭐⭐ |
-| Sutton-Barto 2018, *RL Introduction* | RL 视角 DP | ⭐⭐ |
-| Tedrake, *Underactuated Robotics* Ch.7-8 | 机器人 DP 应用 | ⭐⭐ |
-| Bellman 1957, *Dynamic Programming* | 历史原著 | ⭐⭐⭐ |
-| Ye 2011, *Math. Oper. Res.* | PI 强多项式界 | ⭐⭐⭐⭐ |
-| Munos-Szepesv\'ari 2008, *JMLR* | 近似 VI 误差界 | ⭐⭐⭐⭐ |
-| Rawlings-Mayne-Diehl, *MPC* (2017) | MPC 视角 DP | ⭐⭐⭐ |
-| Fazel et al. 2018, ICML | PG on LQR 全局收敛 | ⭐⭐⭐⭐ |
+| Bertsekas, *DP & OC Vol.I* (2017) | 本章主教材 | ★★ |
+| Bertsekas, *DP & OC Vol.II* (2012) | ADP 深化 | ★★★ |
+| Puterman 1994, *MDP* | MDP 严格理论 | ★★★ |
+| Sutton-Barto 2018, *RL Introduction* | RL 视角 DP | ★★ |
+| Tedrake, *Underactuated Robotics* Ch.7-8 | 机器人 DP 应用 | ★★ |
+| Bellman 1957, *Dynamic Programming* | 历史原著 | ★★★ |
+| Ye 2011, *Math. Oper. Res.* | PI 强多项式界 | ★★★★ |
+| Munos-Szepesv\'ari 2008, *JMLR* | 近似 VI 误差界 | ★★★★ |
+| Rawlings-Mayne-Diehl, *MPC* (2017) | MPC 视角 DP | ★★★ |
+| Fazel et al. 2018, ICML | PG on LQR 全局收敛 | ★★★★ |
 
 ---
 
@@ -1367,7 +1367,7 @@ $$V(x) = \min_u \max_{w\in W} \{L(x,u,w) + \gamma V(f(x,u,w))\}$$
 
 以下三个专题是对前面核心内容的理论深化，分别覆盖近似方法的误差界、LP 视角下的 DP、以及随机控制的 Ito-Bellman 方程。
 
-### A. 近似动态规划 (ADP) 与 DQN 的理论根源 ⭐⭐⭐
+### A. 近似动态规划 (ADP) 与 DQN 的理论根源 ★★★
 
 **Fitted Value Iteration (FVI)**：$V_{k+1} = \Pi_{\mathcal{F}} \mathcal{T} V_k$，在函数类 $\mathcal{F}$ 上投影。
 
@@ -1488,7 +1488,7 @@ $$\mathcal{L}^u V = f\cdot\nabla V + \frac{1}{2}\text{tr}(\sigma\sigma^\top \nab
 
 ---
 
-## §3.3.19 Bellman 算子的单调性与其他结构性质 ⭐⭐⭐
+## §3.3.19 Bellman 算子的单调性与其他结构性质 ★★★
 
 ### 动机
 
@@ -1546,7 +1546,7 @@ $$\|V^\mu - V^*\|_\infty \leq \frac{2\gamma}{1-\gamma}\|\tilde V - V^*\|_\infty$
 
 **工程意义**：即使值函数近似有误差 $\epsilon = \|\tilde V - V^*\|$，贪心策略的次优差最多为 $\frac{2\gamma}{1-\gamma}\epsilon$。对 $\gamma=0.99$，放大因子约 198 倍——这就是为什么近似 DP/RL 对值函数精度如此敏感。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 | # | 陷阱 | 正确做法 |
 |---|------|---------|
@@ -1555,7 +1555,7 @@ $$\|V^\mu - V^*\|_\infty \leq \frac{2\gamma}{1-\gamma}\|\tilde V - V^*\|_\infty$
 
 ---
 
-## §3.3.20 Bellman 方程的 LP 对偶与占用测度 ⭐⭐⭐
+## §3.3.20 Bellman 方程的 LP 对偶与占用测度 ★★★
 
 ### 动机
 
@@ -1607,7 +1607,7 @@ LP 视角：专家占用测度 $\lambda_E$ 已知，寻找 $R$ 使 $\lambda_E$ �
 
 ---
 
-## §3.3.21 Bellman 方程在控制论中的具体应用示例 ⭐⭐
+## §3.3.21 Bellman 方程在控制论中的具体应用示例 ★★
 
 ### 示例 1：倒立摆的无限时域 LQR
 
@@ -1790,7 +1790,7 @@ for x in range(n_states):
 
 ---
 
-## §3.3.22 VI/PI 的工程实现考量 ⭐⭐
+## §3.3.22 VI/PI 的工程实现考量 ★★
 
 ### 异步值迭代
 
@@ -1844,7 +1844,7 @@ $$V(x_i) \leftarrow \min_u \{L(x_i,u) + \gamma\sum_j P(x_j|x_i,u) V(x_j)\}$$
 
 ---
 
-## §3.3.23 Bellman 方程与信息论的交叉：熵正则化 DP ⭐⭐⭐
+## §3.3.23 Bellman 方程与信息论的交叉：熵正则化 DP ★★★
 
 ### 动机
 
@@ -1900,7 +1900,7 @@ $$(\mathcal{T}_{\text{soft}}Q)(s,a) = R(s,a) + \gamma\sum_{s'}P(s'|s,a)\tau\log\
 
 SAC 中的自动温度调节：$\tau$ 通过对偶梯度下降自适应选择，约束目标熵 $\mathcal{H}(\pi) \geq \mathcal{H}_{\text{target}}$。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 | # | 陷阱 | 正确做法 |
 |---|------|---------|
@@ -1910,7 +1910,7 @@ SAC 中的自动温度调节：$\tau$ 通过对偶梯度下降自适应选择，
 
 ---
 
-## §3.3.24 DP 的计算复杂性理论视角 ⭐⭐⭐⭐
+## §3.3.24 DP 的计算复杂性理论视角 ★★★★
 
 ### MDP 求解的计算复杂性
 

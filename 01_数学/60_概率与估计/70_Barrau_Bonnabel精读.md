@@ -61,7 +61,7 @@ Barrau-Bonnabel TAC 2017 精读
 
 ---
 
-### §D.1 论文整体结构与核心贡献三件套 ⭐⭐
+### §D.1 论文整体结构与核心贡献三件套 ★★
 
 主论文 **Barrau, A. & Bonnabel, S., "The Invariant Extended Kalman Filter as a Stable Observer", IEEE TAC 62(4):1797–1812, 2017**（arXiv:1410.1465v4, 2015-10-19）按 arXiv 版的章节编排为：
 
@@ -85,7 +85,7 @@ Barrau-Bonnabel TAC 2017 精读
 
 ---
 
-### §D.2 符号约定与对数坐标（严格按 TAC 2017 §II.2） ⭐⭐
+### §D.2 符号约定与对数坐标（严格按 TAC 2017 §II.2） ★★
 
 设 $G\subset GL_n(\mathbb{R})$ 为矩阵李群，李代数 $\mathfrak{g}\subset\mathbb{R}^{N\times N}$，$\dim\mathfrak{g}=d$。选定线性同构 $L_{\mathfrak g}:\mathbb{R}^d\to\mathfrak{g}$，**指数映射**定义为
 
@@ -109,7 +109,7 @@ $$
 
 ---
 
-### §D.3 Theorem 1 的精确陈述 ⭐⭐⭐
+### §D.3 Theorem 1 的精确陈述 ★★★
 
 **Theorem 1（Barrau-Bonnabel TAC 2017, §II.2, p.1800）**　对动力学
 
@@ -139,7 +139,7 @@ $$
 
 ---
 
-### §D.4 Theorem 1 的完整证明（教学版，逐步展开） ⭐⭐⭐⭐
+### §D.4 Theorem 1 的完整证明（教学版，逐步展开） ★★★★
 
 **预备引理**：对任意可微曲线 $\chi_t\in G$，
 
@@ -211,7 +211,7 @@ $$
 
 ---
 
-### §D.5 Group-Affine 的代数直觉 ⭐⭐⭐
+### §D.5 Group-Affine 的代数直觉 ★★★
 
 #### 向量空间退化（Remark 2）
 
@@ -258,7 +258,7 @@ $$
 
 ---
 
-### §D.6 Proposition 2：流的群同态性 ⭐⭐⭐⭐
+### §D.6 Proposition 2：流的群同态性 ★★★★
 
 **Proposition 2（TAC 2017 §III.1.1, p.1804，与任务书的强化版本）**　考虑 group-affine 动力学 (14) 的 LIEKF 传播步 (16)。设 $\xi_t$ 满足线性 ODE
 
@@ -278,7 +278,7 @@ $$
 
 ---
 
-### §D.7 Proposition 2 的证明：流的群同态结构 ⭐⭐⭐⭐
+### §D.7 Proposition 2 的证明：流的群同态结构 ★★★★
 
 #### Part A：流映射 $g_t$ 的存在（Theorem 1 + Picard-Lindelöf）
 
@@ -340,7 +340,7 @@ $$
 
 ---
 
-### §D.8 Theorem 2 精确陈述 ⭐⭐⭐
+### §D.8 Theorem 2 精确陈述 ★★★
 
 **Theorem 2（Log-Linear Property of the Error，TAC 2017 §II.3, eq.(13), p.1801-1802）**　设 $\chi_t,\bar\chi_t$ 为 group-affine 动力学 (12) 的任意两条轨迹，$\eta^i_t$（$i\in\{L,R\}$）为不变误差。取 $\xi^i_0\in\mathbb{R}^d$ 使 $\eta^i_0=\exp(\xi^i_0)$。设 $A^i_{u_t}$ 由
 
@@ -378,7 +378,7 @@ $$
 
 ---
 
-### §D.9 Theorem 2 的 BCH 证明 ⭐⭐⭐⭐
+### §D.9 Theorem 2 的 BCH 证明 ★★★★
 
 完整证明在附录 B（约 1.5 页代数）。结构由三条引理 + 主定理构成，核心已在 §D.7 Part C 给出。这里再总结 BCH 的两层关键作用：
 
@@ -404,7 +404,7 @@ $\mathfrak{se}(3)$ 的平移子空间是阿贝尔的，但旋转对平移的反�
 
 ---
 
-### §D.10 为什么 Log-Linear 是 InEKF 的根本性突破 ⭐⭐
+### §D.10 为什么 Log-Linear 是 InEKF 的根本性突破 ★★
 
 #### 标准 EKF 的致命缺陷
 
@@ -442,7 +442,7 @@ EKF-SLAM 中由于雅可比依赖估计，yaw（沿重力方向旋转）虚假�
 
 ---
 
-### §D.11 可观性条件与 Deyst-Price 1968 ⭐⭐⭐
+### §D.11 可观性条件与 Deyst-Price 1968 ★★★
 
 **可观性 Gramian** 对线性时变系统 $\dot x=A_t x$, $y_n=Hx_{t_n}$，定义状态转移 $\dot\Phi^t_{t_0}=A_t\Phi^t_{t_0}$, $\Phi^{t_0}_{t_0}=I$，则
 
@@ -456,7 +456,7 @@ $$
 
 ---
 
-### §D.12 Theorem 4：连续 IEKF 的渐近稳定性 ⭐⭐⭐
+### §D.12 Theorem 4：连续 IEKF 的渐近稳定性 ★★★
 
 **Theorem 4（TAC 2017 p.1804，主定理）**　考虑 group-affine 系统 (14) 配合左不变观测 (15)（resp. 右不变观测 (22)）。若 Theorem 3 的稳定性条件 (i)-(v) 沿**真实轨迹 $\chi_t$** 线性化后的系统成立，则 LIEKF（resp. RIEKF）(36) 所定义的估计 $\hat\chi_t$ 是 $\chi_t$ 的渐近稳定观测器。**且收敛半径 $\varepsilon>0$ 在整条轨迹上一致成立（独立于初始化时间 $t_0$）**。
 
@@ -474,7 +474,7 @@ InEKF 中 $A_{u_t}$ 仅依赖输入 $u_t$，只要 $u_t$ 在整条轨迹上**均
 
 ---
 
-### §D.13 Theorem 4 离散时间版本 ⭐⭐⭐⭐
+### §D.13 Theorem 4 离散时间版本 ★★★★
 
 虽然 TAC 2017 的 Theorem 4 已经处理"连续传播 + 离散观测"的混合情形，**严格纯离散** IEKF 的 log-linear 证明由 **Barrau-Bonnabel SCL 2019 "Linear observed systems on groups"** 给出。
 
@@ -490,7 +490,7 @@ $$
 
 ---
 
-### §D.14 Theorem 4 证明思路（附录 C） ⭐⭐⭐⭐
+### §D.14 Theorem 4 证明思路（附录 C） ★★★★
 
 附录 C 由 Lemma 4-7 + 主结论组成，核心论证逻辑：
 
@@ -538,7 +538,7 @@ $$
 
 ---
 
-### §D.15 左不变观测 vs 右不变观测的代数分类 ⭐⭐⭐
+### §D.15 左不变观测 vs 右不变观测的代数分类 ★★★
 
 #### 严格定义（TAC 2017 §III-B, eq.(15)/(22)）
 
@@ -581,7 +581,7 @@ $$
 
 ---
 
-### §D.16 Fundamental Observations 与 ICRA 2020 扩展 ⭐⭐⭐⭐
+### §D.16 Fundamental Observations 与 ICRA 2020 扩展 ★★★★
 
 #### 定义
 
@@ -603,7 +603,7 @@ TAC 2017 限定 $\rho$ 为标准矩阵左乘/右乘 $V=\mathbb{R}^N$。ICRA 2020
 
 ---
 
-### §D.17 Imperfect IEKF 与 IMU Bias——Negative Result ⭐⭐⭐
+### §D.17 Imperfect IEKF 与 IMU Bias——Negative Result ★★★
 
 #### 带 bias 的 IMU 动力学
 
@@ -692,7 +692,7 @@ $$
 
 ---
 
-### §D.18 与 Bonnabel CDC 2007 的关系 ⭐⭐⭐
+### §D.18 与 Bonnabel CDC 2007 的关系 ★★★
 
 Bonnabel CDC 2007 "Left-invariant EKF and attitude estimation" 是 IEKF 源头：在 $G=SO(3)$ 上做姿态估计，首次提出"左不变误差 $\eta=R^\top\hat R$ 随 $\omega$-driven 动力学独立于真实 $R$"。
 
@@ -706,7 +706,7 @@ Bonnabel CDC 2007 "Left-invariant EKF and attitude estimation" 是 IEKF 源头�
 
 ---
 
-### §D.19 与 Equivariant Filter (EqF) 的关系 ⭐⭐⭐⭐
+### §D.19 与 Equivariant Filter (EqF) 的关系 ★★★★
 
 #### 基本设定
 
@@ -740,7 +740,7 @@ Fornasier et al. "Overcoming Bias" (RAL 2022, arXiv:2209.12038) 与 EqVIO (arXiv
 
 ---
 
-### §D.20 Bonnabel-Martin-Rouchon 2008 Symmetry-Preserving Observers ⭐⭐⭐⭐
+### §D.20 Bonnabel-Martin-Rouchon 2008 Symmetry-Preserving Observers ★★★★
 
 #### 框架概述
 
@@ -767,7 +767,7 @@ Kalman 滤波对协方差精确传播的依赖来自线性化：$\dot P=AP+PA^\t
 
 ---
 
-### §D.21 定理索引表 ⭐⭐
+### §D.21 定理索引表 ★★
 
 | 定理 | 前置条件 | 核心结论 | 证明位置 | 关键工具 |
 |---|---|---|---|---|
@@ -781,7 +781,7 @@ Kalman 滤波对协方差精确传播的依赖来自线性化：$\dot P=AP+PA^\t
 
 ---
 
-### §D.22 核心教材/论文索引 ⭐
+### §D.22 核心教材/论文索引 ★
 
 | 文献 | 用途 | 关键章节 |
 |---|---|---|
@@ -801,7 +801,7 @@ Kalman 滤波对协方差精确传播的依赖来自线性化：$\dot P=AP+PA^\t
 
 ---
 
-### §D.23 常见理解错误（Common Pitfalls，10 条） ⭐⭐
+### §D.23 常见理解错误（Common Pitfalls，10 条） ★★
 
 1. **"Log-linear 是线性化近似"**——错。Theorem 2 断言 $\xi_t=\log(\eta_t)$ **精确**满足 $\dot\xi=A_{u_t}\xi$，BCH 高阶项通过群同态性 + 相同因子 $[X,X]=0$ **完全消除**。$A_{u_t}$ 虽由一阶导定义，但其解通过 $\exp$ 与真正非线性 $\eta_t$ **任意大误差精确重合**。
 
@@ -825,7 +825,7 @@ Kalman 滤波对协方差精确传播的依赖来自线性化：$\dot P=AP+PA^\t
 
 ---
 
-### §D.24 学习时间预算（档位 4） ⭐
+### §D.24 学习时间预算（档位 4） ★
 
 | 任务 | 时长 |
 |---|---|
@@ -865,7 +865,7 @@ $$
 
 ---
 
-### §D.26 从定理回到 $SE_2(3)$：逐块验证 group-affine ⭐⭐⭐
+### §D.26 从定理回到 $SE_2(3)$：逐块验证 group-affine ★★★
 
 前文已经说明 $SE_2(3)$ IMU 动力学可以写成 $A\chi+\chi B$，从而自动满足 group-affine。本节把这个结论逐块展开，因为很多工程错误都发生在"我知道它成立，但不知道每个块为什么成立"这个断层上。
 
@@ -1021,7 +1021,7 @@ $$
 
 ---
 
-### §D.26b Group-Affine 条件的几何直觉 ⭐⭐⭐
+### §D.26b Group-Affine 条件的几何直觉 ★★★
 
 前面的逐块验证是代数层面的。这里给出 group-affine 的几何含义——为什么这个代数条件如此"自然"。
 
@@ -1055,7 +1055,7 @@ $$f(x+y) = A(x+y)+c = (Ax+c)+Ay = f(x)+Ay \neq f(x)+f(y)$$
 
 ---
 
-### §D.27 Log-linear 的线性系统含义：不仅是漂亮定理 ⭐⭐⭐
+### §D.27 Log-linear 的线性系统含义：不仅是漂亮定理 ★★★
 
 Theorem 2 说：若 $\eta_t=\exp(\xi_t)$，则 $\xi_t$ 满足
 
@@ -1150,7 +1150,7 @@ $$
 
 ---
 
-### §D.27b InEKF vs 标准 EKF：为什么 A 矩阵的差异如此关键 ⭐⭐⭐
+### §D.27b InEKF vs 标准 EKF：为什么 A 矩阵的差异如此关键 ★★★
 
 这一节用具体数值说明 InEKF 的 log-linear 性质带来的实际性能差异。
 
@@ -1195,7 +1195,7 @@ g^\wedge & 0 & 0 \\
 
 ---
 
-### §D.28 不变观测与可观性：从 $H$ 独立于估计到 yaw 零空间 ⭐⭐⭐
+### §D.28 不变观测与可观性：从 $H$ 独立于估计到 yaw 零空间 ★★★
 
 传播段的 log-linear 只解决了一半问题。若观测 Jacobian 仍强依赖估计并破坏 gauge 对称性，滤波器仍可能过度自信。因此 TAC 2017 把 invariant observation 与 group-affine dynamics 放在同一框架下。
 
@@ -1244,7 +1244,7 @@ $$
 
 若测试失败，不要先调噪声。应先检查误差定义、Jacobian 符号、左右扰动约定和 landmark/pose 块排序。
 
-### §D.29 IMU、SLAM 与接触辅助：同一个代数模板 ⭐⭐
+### §D.29 IMU、SLAM 与接触辅助：同一个代数模板 ★★
 
 Barrau-Bonnabel 论文的一个重要价值，是把看似不同的机器人估计问题压到同一个代数模板：
 
@@ -1285,7 +1285,7 @@ $$
 
 如果不按这个模板思考，常见错误是把足端位置当作普通欧氏 bias 一直估计。这样会让已经离地的脚继续对 base pose 施加约束，接触切换后产生不连续误差。正确做法是把接触状态作为观测可用性的开关，并在新接触建立时用当前运动学初始化新的接触点列。
 
-### §D.30 公式复核清单：哪些地方最容易差一个符号 ⭐⭐
+### §D.30 公式复核清单：哪些地方最容易差一个符号 ★★
 
 本专题公式多，最容易出现的错误不是大定理，而是局部符号。实现或授课前建议逐项复核：
 
@@ -1303,7 +1303,7 @@ $$
 
 ---
 
-### §D.31 稳定性定理的工程读法：$\varepsilon$ 独立于 $t_0$ 为什么重要 ⭐⭐⭐
+### §D.31 稳定性定理的工程读法：$\varepsilon$ 独立于 $t_0$ 为什么重要 ★★★
 
 Theorem 4 中最容易被忽略的一句是：收敛半径 $\varepsilon$ 独立于初始化时间 $t_0$。这句话看起来像技术条件，实际非常工程化。
 
@@ -1334,7 +1334,7 @@ $$
 
 这并不表示 InEKF 全局收敛。$\log$ 映射仍有单射半径限制，观测仍可能退化，接触误检仍会破坏模型。它的意义更精确：在可观性和局部误差条件满足时，收敛邻域不随初始化时刻漂移，这是普通 EKF 很难保证的性质。
 
-### §D.32 读论文时的最小复现路线 ⭐⭐
+### §D.32 读论文时的最小复现路线 ★★
 
 若要真正掌握 Barrau-Bonnabel TAC 2017，不建议从头到尾只读文字。更有效的复现路线是把定理变成 5 个可计算实验。
 
@@ -1348,7 +1348,7 @@ $$
 
 这些实验不需要完整机器人系统。它们只需要矩阵指数、对数、随机状态采样和数值差分。若这些实验不通过，直接集成到 VIO/LIO 中只会把代数错误藏得更深。
 
-### §D.33 离散时间 InEKF 完整实现 ⭐⭐⭐
+### §D.33 离散时间 InEKF 完整实现 ★★★
 
 #### 动机
 
@@ -1496,7 +1496,7 @@ RETURN χ̂, P
 
 **Barrau-Bonnabel SCL 2019 的离散 group-affine**条件为 $F_n(ab) = F_n(a)F_n(e)^{-1}F_n(b)$，保证离散误差也满足 log-linear。当输入在 $[t_k, t_{k+1}]$ 内分段常数时，$\Phi_k = \exp(A_{u_k}\Delta t)$ 自动满足此条件。但若输入快速变化（如高频振动），应考虑在 $\Delta t$ 内做 Runge-Kutta-Munthe-Kaas（RKMK）保李群积分。
 
-⚠️ **陷阱：更新步中用错乘法方向**
+⚠ **陷阱：更新步中用错乘法方向**
 
 - 错误做法：RIEKF 中把状态更新写成 $\hat{\chi}^+ = \mathrm{Exp}(Lz) \cdot \hat{\chi}^-$（左乘）。
 - 后果：增益方向与协方差定义不匹配，滤波器在前几步"看似正常"但逐渐发散，NEES 持续偏高。
@@ -1505,7 +1505,7 @@ RETURN χ̂, P
 
 ---
 
-### §D.34 接触辅助 InEKF（足式机器人） ⭐⭐⭐
+### §D.34 接触辅助 InEKF（足式机器人） ★★★
 
 #### 动机：腿式机器人的状态估计挑战
 
@@ -1593,13 +1593,13 @@ Hartley IJRR 2020 通过 60 次 Monte Carlo 实验（初始 yaw 误差 $\pm 45°
 
 #### 34.5 练习
 
-1. **（⭐⭐⭐）** 写出 $SE_4(3)$（四足机器人四个接触点）的矩阵形式和群乘法规则。验证 $\dot{d}_i = 0$ 对应的动力学仍然满足 group-affine。
-2. **（⭐⭐⭐）** 分析接触切换时刻的协方差不连续性：边缘化 vs 直接删除在信息论上的差异是什么？在什么条件下直接删除是合理的近似？
-3. **（⭐⭐⭐⭐）** Hartley IJRR 2020 Table I 给出了 Cassie 实验的具体参数。如果 Cassie 的接触检测有 10ms 延迟，如何在 InEKF 框架中处理这个延迟？提示：考虑 state augmentation 或 measurement delay compensation。
+1. **（★★★）** 写出 $SE_4(3)$（四足机器人四个接触点）的矩阵形式和群乘法规则。验证 $\dot{d}_i = 0$ 对应的动力学仍然满足 group-affine。
+2. **（★★★）** 分析接触切换时刻的协方差不连续性：边缘化 vs 直接删除在信息论上的差异是什么？在什么条件下直接删除是合理的近似？
+3. **（★★★★）** Hartley IJRR 2020 Table I 给出了 Cassie 实验的具体参数。如果 Cassie 的接触检测有 10ms 延迟，如何在 InEKF 框架中处理这个延迟？提示：考虑 state augmentation 或 measurement delay compensation。
 
 ---
 
-### §D.35 InEKF 实用调参与 Allan 方差 ⭐⭐⭐
+### §D.35 InEKF 实用调参与 Allan 方差 ★★★
 
 #### 动机
 
@@ -1672,7 +1672,7 @@ NEES 偏低（过度保守）→ 减小 Q 或增大 N
 
 近期的 **CT-ESKF**（Covariance Transformation-based ESKF，arXiv:2511.00453, 2025）提出了一种统一框架：通过协方差变换把不同误差定义下的 ESKF 算法统一起来，实验表明在含全局和体帧混合观测的导航系统中，CT-ESKF 可能优于 InEKF 和原始 ESKF。这提示"最佳误差定义"可能取决于具体的观测组合。
 
-⚠️ **陷阱：在 bias 项上也期望 InEKF 的结构性优势**
+⚠ **陷阱：在 bias 项上也期望 InEKF 的结构性优势**
 
 - 错误想法："InEKF 的 $A$ 不依赖估计，所以带 bias 的 InEKF 也一定比 ESKF 好。"
 - 后果：过度信任 InEKF 的一致性保证，忽略了 $F_{pb}$ 块对估计的依赖（§D.17）。
@@ -1681,13 +1681,13 @@ NEES 偏低（过度保守）→ 减小 Q 或增大 N
 
 #### 35.4 练习
 
-1. **（⭐⭐）** 查找 ADIS16470 数据手册，提取陀螺和加速度计的噪声密度。将其转换为 InEKF 连续时间过程噪声 $Q_c$ 的对角元素（注意单位转换）。
-2. **（⭐⭐⭐）** 对一个 SO(3) + bias 的简单 IMU 估计问题，分别实现 InEKF 和 ESKF，运行 $N=50$ 次 Monte Carlo。画出两者的平均 NEES 曲线，验证 InEKF 是否更一致。特别观察：在 bias 初始误差很大时，两者的差异是否更显著？
-3. **（⭐⭐⭐）** 解释为什么 `invariant-ekf` ROS 包建议对过程噪声乘以安全系数但对量测噪声不加。从 Bayesian 滤波的角度分析：过度自信和过度保守哪个后果更严重？
+1. **（★★）** 查找 ADIS16470 数据手册，提取陀螺和加速度计的噪声密度。将其转换为 InEKF 连续时间过程噪声 $Q_c$ 的对角元素（注意单位转换）。
+2. **（★★★）** 对一个 SO(3) + bias 的简单 IMU 估计问题，分别实现 InEKF 和 ESKF，运行 $N=50$ 次 Monte Carlo。画出两者的平均 NEES 曲线，验证 InEKF 是否更一致。特别观察：在 bias 初始误差很大时，两者的差异是否更显著？
+3. **（★★★）** 解释为什么 `invariant-ekf` ROS 包建议对过程噪声乘以安全系数但对量测噪声不加。从 Bayesian 滤波的角度分析：过度自信和过度保守哪个后果更严重？
 
 ---
 
-### §D.36 与 A3/A4 的闭环关系 ⭐⭐
+### §D.36 与 A3/A4 的闭环关系 ★★
 
 本专题的定理在 A3/A4 中分别承担不同角色：
 
@@ -1704,7 +1704,7 @@ NEES 偏低（过度保守）→ 减小 Q 或增大 N
 
 ---
 
-### §D.37 最小单元测试设计：把定理变成可运行检查 ⭐⭐⭐
+### §D.37 最小单元测试设计：把定理变成可运行检查 ★★★
 
 理论文档最怕停留在"证明看懂了"。对 InEKF 来说，很多符号错误只有在数值测试中才会暴露。下面给出一组最小单元测试设计，用于把本文的定理级结论转成工程检查。
 
@@ -1790,7 +1790,7 @@ $$
 
 ---
 
-### §D.29c 三大证明的统一结构：从代数到分析 ⭐⭐⭐⭐
+### §D.29c 三大证明的统一结构：从代数到分析 ★★★★
 
 回顾全文的三大定理，它们形成了一条严密的逻辑链：
 
@@ -1854,7 +1854,7 @@ Barrau-Bonnabel TAC 2017 的最深刻洞见是：**李群上一类闭合的"广�
 
 ---
 
-### §D.29b 从 InEKF 到 Equivariant Filter：理论演进路线图 ⭐⭐⭐⭐
+### §D.29b 从 InEKF 到 Equivariant Filter：理论演进路线图 ★★★★
 
 InEKF 的成功在于找到了一类特殊系统（group-affine）使得 EKF 的线性化在对数坐标下精确。但现实中很多系统不满足 group-affine（如带 bias 的 IMU、带弹性关节的机械臂、非平坦地球模型等）。自然的问题是：**能否放宽 group-affine 条件，仍保留部分优势？**
 
@@ -1931,11 +1931,11 @@ group-affine 测试：验证 f(ab)=f(a)b+af(b)-af(e)b
 
 ### 常见陷阱与故障排查
 
-⚠️ **陷阱一：把 $\exp(A\Delta t)$ 本身当成破坏 group-affine 的来源。** 若 $A$ 常值，它是误差线性系统的精确转移；真正危险的是冻结输入、粗糙积分或错误噪声离散化。
+⚠ **陷阱一：把 $\exp(A\Delta t)$ 本身当成破坏 group-affine 的来源。** 若 $A$ 常值，它是误差线性系统的精确转移；真正危险的是冻结输入、粗糙积分或错误噪声离散化。
 
-⚠️ **陷阱二：innovation 中误用真值 $\chi$。** 实现只能用 $\hat\chi$ 和量测 $Y$ 构造残差；写成 $\chi^{-1}Y-d$ 会在数学上消掉误差。
+⚠ **陷阱二：innovation 中误用真值 $\chi$。** 实现只能用 $\hat\chi$ 和量测 $Y$ 构造残差；写成 $\chi^{-1}Y-d$ 会在数学上消掉误差。
 
-⚠️ **陷阱三：看见李群就默认 InEKF 适用。** 必须同时满足 group-affine 动力学和 compatible observation；bias 增广往往破坏完整结论。
+⚠ **陷阱三：看见李群就默认 InEKF 适用。** 必须同时满足 group-affine 动力学和 compatible observation；bias 增广往往破坏完整结论。
 
 | 故障排查现象 | 可能原因 | 处理方式 |
 |---|---|---|
@@ -2032,16 +2032,16 @@ def group_affine_residual(f_u, X1, X2):
 
 | 资源 | 难度 | 内容 | 建议阅读方式 |
 |------|------|------|------------|
-| Barrau-Bonnabel TAC 2017 (arXiv:1410.1465v4) | ⭐⭐⭐⭐ | 原论文，核心定理 + 证明 | 精读 §II + 附录 B/C |
-| Barrau PhD 2015 (HAL: tel-01344622) | ⭐⭐⭐⭐ | 最详细证明版本 | Ch.3-4，BCH 展开细节 |
-| Hartley et al. IJRR 2020 | ⭐⭐⭐ | Cassie 实验 + 接触辅助 InEKF | §III-IV 实现细节 |
-| Bonnabel-Martin-Rouchon TAC 2008 | ⭐⭐⭐ | 不变观测器历史基础 | §II-III 对称性框架 |
-| Bonnabel CDC 2007 | ⭐⭐ | SO(3) 左不变 EKF 最早版本 | 短文，快速阅读 |
-| Mahony-van Goor TAC 2022 | ⭐⭐⭐⭐ | Equivariant Filter 推广 | Thm 1-3 的证明框架 |
-| van Goor-Mahony T-RO 2023 (EqVIO) | ⭐⭐⭐ | EqF 在 VIO 上的工程实现 | 与 InEKF 的对比实验 |
-| Chauchat-Barrau-Bonnabel 2022 | ⭐⭐⭐⭐ | Two-Frames Group 处理 bias | Tangent group 构造 |
-| Deyst-Price TAC 1968 | ⭐⭐⭐⭐ | LTV-KF 稳定性原始论文 | Thm 1-2（被 Barrau 引用） |
-| Reif-Unbehauen TAC 1999 | ⭐⭐⭐⭐ | EKF 稳定性经典论文 | 对比 InEKF 证明的差异 |
+| Barrau-Bonnabel TAC 2017 (arXiv:1410.1465v4) | ★★★★ | 原论文，核心定理 + 证明 | 精读 §II + 附录 B/C |
+| Barrau PhD 2015 (HAL: tel-01344622) | ★★★★ | 最详细证明版本 | Ch.3-4，BCH 展开细节 |
+| Hartley et al. IJRR 2020 | ★★★ | Cassie 实验 + 接触辅助 InEKF | §III-IV 实现细节 |
+| Bonnabel-Martin-Rouchon TAC 2008 | ★★★ | 不变观测器历史基础 | §II-III 对称性框架 |
+| Bonnabel CDC 2007 | ★★ | SO(3) 左不变 EKF 最早版本 | 短文，快速阅读 |
+| Mahony-van Goor TAC 2022 | ★★★★ | Equivariant Filter 推广 | Thm 1-3 的证明框架 |
+| van Goor-Mahony T-RO 2023 (EqVIO) | ★★★ | EqF 在 VIO 上的工程实现 | 与 InEKF 的对比实验 |
+| Chauchat-Barrau-Bonnabel 2022 | ★★★★ | Two-Frames Group 处理 bias | Tangent group 构造 |
+| Deyst-Price TAC 1968 | ★★★★ | LTV-KF 稳定性原始论文 | Thm 1-2（被 Barrau 引用） |
+| Reif-Unbehauen TAC 1999 | ★★★★ | EKF 稳定性经典论文 | 对比 InEKF 证明的差异 |
 
 ---
 
@@ -2057,7 +2057,7 @@ def group_affine_residual(f_u, X1, X2):
 
 ---
 
-### 跨章综合练习 ⭐⭐⭐
+### 跨章综合练习 ★★★
 
 **题目**：综合 5-A3（InEKF 工程实现）+ 5-D（本章定理精读）+ 5-B（因子图优化）的知识：
 

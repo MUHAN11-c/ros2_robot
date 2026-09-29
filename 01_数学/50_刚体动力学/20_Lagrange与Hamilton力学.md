@@ -7,7 +7,7 @@
 
 ## 前置自测
 
-> 📋 **前置自测**（答不出 ≥ 2 题 → 先回前置章节复习）
+> ◆ **前置自测**（答不出 ≥ 2 题 → 先回前置章节复习）
 >
 > 1. 什么是空间向量（spatial vector）？运动向量和力向量有什么对偶关系？（回顾 10_空间向量代数）
 > 2. 对称正定矩阵有哪些性质？为什么 $x^T A x > 0$（$x \neq 0$）意味着 $A$ 的所有特征值为正？
@@ -67,7 +67,7 @@ Lagrange与Hamilton力学
 
 ---
 
-## 1. 为什么 Lagrange-Hamilton 框架是动力学的经典起点 ⭐
+## 1. 为什么 Lagrange-Hamilton 框架是动力学的经典起点 ★
 
 ### 动机：一个方程统治所有机器人控制
 
@@ -117,7 +117,7 @@ $$\boxed{M(q)\ddot{q} + C(q,\dot{q})\dot{q} + g(q) = \tau}$$
 
 ---
 
-## 2. 广义坐标与约束 ⭐
+## 2. 广义坐标与约束 ★
 
 ### 2.1 位形空间与广义坐标
 
@@ -153,7 +153,7 @@ $$q = (q_1, q_2, \ldots, q_n) \in \mathcal{Q}$$
 
 当使用最小坐标集（$n$ 个广义坐标描述 $n$-DOF 系统）时，所有完整约束已被坐标选择隐式满足。但闭链机构和接触约束需要用 Lagrange 乘子显式处理。
 
-### 2.3 非完整约束（Non-holonomic Constraints）⭐⭐
+### 2.3 非完整约束（Non-holonomic Constraints）★★
 
 **定义**：只能写成速度级等式 $A(q)\dot{q} = 0$，且**不可积**（不存在 $\phi(q)$ 使得 $\nabla\phi \cdot \dot{q} = 0$ 等价于 $A(q)\dot{q} = 0$）。
 
@@ -177,7 +177,7 @@ $$\frac{d}{dt}\frac{\partial L}{\partial \dot{q}} - \frac{\partial L}{\partial q
 
 ---
 
-## 3. d'Alembert 原理与虚功 ⭐⭐
+## 3. d'Alembert 原理与虚功 ★★
 
 ### 3.1 虚位移的定义
 
@@ -225,7 +225,7 @@ $$Q_j = \sum_i F_i \cdot \frac{\partial r_i}{\partial q_j}$$
 
 ---
 
-## 4. Euler-Lagrange 方程的完整推导 ⭐
+## 4. Euler-Lagrange 方程的完整推导 ★
 
 ### 4.1 Hamilton 原理（最小作用量原理）
 
@@ -283,7 +283,7 @@ $$\frac{d}{dt}\frac{\partial L}{\partial \dot{q}_i} - \frac{\partial L}{\partial
 
 ---
 
-## 5. 标准方程 M(q)q̈+C(q,q̇)q̇+g(q)=τ 的完整推导 ⭐
+## 5. 标准方程 M(q)q̈+C(q,q̇)q̇+g(q)=τ 的完整推导 ★
 
 ### 5.1 动能 T 与质量矩阵 M(q)
 
@@ -319,7 +319,7 @@ $$T = \frac{1}{2} \sum_{i=1}^n v_i^T \mathcal{I}_i v_i$$
 
 两种方法给出相同的 $M(q)$——前者适合手动符号推导（2-3 DOF），后者适合高效数值计算（任意 DOF）。
 
-### 5.2 M(q) 的性质：对称正定性证明 ⭐⭐
+### 5.2 M(q) 的性质：对称正定性证明 ★★
 
 **定理**：质量矩阵 $M(q)$ 对所有 $q \in \mathcal{Q}$ 是**对称正定**的。
 
@@ -348,7 +348,7 @@ $$\dot{q}^T M \dot{q} = 2T = \sum_i \left( m_i \|J_{v_i}\dot{q}\|^2 + (J_{\omega
 - 运动学奇异（$J$ 失秩）——**操作空间惯性** $\Lambda = (JM^{-1}J^T)^{-1}$ 退化，但 $M$ 本身仍正定！
 - 并联机构的冗余约束——需要约去冗余坐标后 $M$ 才正定
 
-### 5.3 C(q,q̇) 的 Christoffel 符号构造 ⭐⭐
+### 5.3 C(q,q̇) 的 Christoffel 符号构造 ★★
 
 #### 从 Euler-Lagrange 到标准形式
 
@@ -390,7 +390,7 @@ $$C_{ij}(q,\dot{q}) = \sum_k c_{ijk}(q) \dot{q}_k$$
 
 > **跨领域类比**：Christoffel 符号在机器人动力学中的角色，就像在广义相对论中一样——它们描述"坐标系弯曲"导致的表观力。Coriolis 力和离心力不是"真实的力"，而是因为广义坐标系在旋转而产生的"惯性力"。这正是为什么它们可以完全用质量矩阵的偏导数（即度量张量的导数）来表达。
 
-### 5.4 Ṁ-2C 斜对称性的完整证明 ⭐⭐
+### 5.4 Ṁ-2C 斜对称性的完整证明 ★★
 
 这是本章最重要的定理之一，对控制器设计至关重要。
 
@@ -427,7 +427,7 @@ $$N_{ji} = \sum_k \left(\frac{\partial m_{ik}}{\partial q_j} - \frac{\partial m_
 | 物理含义 | 能量守恒（保守系统 $\dot{T} = \dot{q}^T\tau$） | 矩阵本身反对称 |
 | 在控制中的用途 | 证明被动性 | **Slotine-Li 自适应控制器** |
 
-> ⚠️ **概念误区**：认为"任何合法的 C 矩阵都使 Ṁ-2C 反对称"
+> ⚠ **概念误区**：认为"任何合法的 C 矩阵都使 Ṁ-2C 反对称"
 >
 > **新手想法**："$C$ 矩阵代表 Coriolis 力，所以 Ṁ-2C 应该总是反对称的"
 >
@@ -455,7 +455,7 @@ $$g_i(q) = \frac{\partial V}{\partial q_i} = \sum_{j=1}^n m_j g_0^T \frac{\parti
 
 ---
 
-## 6. Hamilton 力学 ⭐⭐
+## 6. Hamilton 力学 ★★
 
 ### 6.1 Legendre 变换
 
@@ -506,7 +506,7 @@ $$\frac{dH}{dt} = \sum_i \left(\frac{\partial H}{\partial q_i}\dot{q}_i + \frac{
 
 即**机械能守恒** $H = T + V = \text{const}$。
 
-### 6.3 Poisson 括号与守恒量 ⭐⭐⭐
+### 6.3 Poisson 括号与守恒量 ★★★
 
 **定义**：对相空间上任意两个光滑函数 $F, G$：
 
@@ -529,7 +529,7 @@ $$\dot{F} = \{F, H\} + \frac{\partial F}{\partial t}$$
 - $H$ 不依赖 $q_k$ $\Rightarrow$ $p_k$ 守恒（$\{p_k, H\} = -\frac{\partial H}{\partial q_k} = 0$）
 - $H$ 旋转不变 $\Rightarrow$ 角动量守恒
 
-### 6.4 辛结构预告 ⭐⭐⭐⭐
+### 6.4 辛结构预告 ★★★★
 
 相空间 $T^*\mathcal{Q}$ 上存在**辛形式**：
 
@@ -545,7 +545,7 @@ $$\text{MPC 跑 1000 步不漂移能量} \Leftarrow \text{用辛积分器} \Left
 
 ---
 
-## 7. 算法实现：Pinocchio/Drake 中的 M, C, g ⭐⭐
+## 7. 算法实现：Pinocchio/Drake 中的 M, C, g ★★
 
 ### 7.1 CRBA 计算 M(q)
 
@@ -700,7 +700,7 @@ print(f"Bias term: {Cv_plus_g[:3]}")
 
 ---
 
-## 8. 典型例题 ⭐⭐
+## 8. 典型例题 ★★
 
 ### 8.1 2R 平面机械臂完整推导
 
@@ -872,7 +872,7 @@ pprint(trigsimp(N + N.T))  # 应为零矩阵
 
 ---
 
-## 9. 标准方程的各项深入解析 ⭐⭐
+## 9. 标准方程的各项深入解析 ★★
 
 ### 9.1 M(q)q̈ 项——配置依赖的惯性力
 
@@ -925,7 +925,7 @@ $g(q) = \partial V / \partial q$ 是势能对广义坐标的梯度。对于重�
 
 ---
 
-## 10. 被动性理论与控制器设计 ⭐⭐
+## 10. 被动性理论与控制器设计 ★★
 
 ### 10.1 什么是被动性
 
@@ -1005,7 +1005,7 @@ $\dot{V}$ 半负定。由 LaSalle 不变性原理，$\dot{V} = 0$ 要求 $\dot{q
 
 **修正**：实际上 PD+ 控制的稳定性依赖于 $K_p$ 足够大使得 $V$ 有唯一最小值。严格证明需要 Lyapunov 函数包含 $V_{grav}(q) - V_{grav}(q_d) - g(q_d)^T(q-q_d)$（势能的修正）。这在 Spong §8 中有详细讨论。
 
-### 10.5 Slotine-Li 自适应控制器 ⭐⭐⭐
+### 10.5 Slotine-Li 自适应控制器 ★★★
 
 **问题**：当 $M$, $C$, $g$ 中的惯性参数（质量、惯性矩、质心位置）不精确时，如何设计自适应控制器？
 
@@ -1052,7 +1052,7 @@ $$\dot{V} = -s^T K_s s + s^T Y\tilde{\theta} - \tilde{\theta}^T\Gamma^{-1}\Gamma
 
 ---
 
-## 11. 标准方程的广义坐标 vs 空间向量双视角 ⭐⭐
+## 11. 标准方程的广义坐标 vs 空间向量双视角 ★★
 
 上一章（空间向量代数）给出了几何工具，本章给出了分析力学工具。两种视角在标准方程中如何统一？
 
@@ -1079,7 +1079,7 @@ $$\dot{V} = -s^T K_s s + s^T Y\tilde{\theta} - \tilde{\theta}^T\Gamma^{-1}\Gamma
 
 ---
 
-## 12. 约束系统的 Lagrange 乘子法 ⭐⭐⭐
+## 12. 约束系统的 Lagrange 乘子法 ★★★
 
 ### 12.1 带约束的运动方程
 
@@ -1107,7 +1107,7 @@ $$J_c\ddot{q} + \dot{J}_c\dot{q} + 2\alpha J_c\dot{q} + \beta^2\phi(q) = 0$$
 
 参数 $\alpha, \beta > 0$ 决定修正速度。典型选择 $\alpha = \beta = 10/\Delta t$。
 
-> ⚠️ **概念误区**：认为 Baumgarte 适用于所有约束
+> ⚠ **概念误区**：认为 Baumgarte 适用于所有约束
 >
 > **实际上**：Baumgarte 公式含 $\phi(q)$——位置级约束函数。非完整约束（$A(q)\dot{q} = 0$）不可积、不存在 $\phi(q)$，所以 Baumgarte 不适用。对非完整约束需要用纯速度级反馈或投影方法
 
@@ -1124,7 +1124,7 @@ Pinocchio 的 `forwardDynamics(model, data, q, v, tau, J, gamma)` 内部就是�
 
 ---
 
-## 13. 标准方程在现代机器人系统中的应用 ⭐⭐
+## 13. 标准方程在现代机器人系统中的应用 ★★
 
 ### 13.1 MPC 中的动力学约束
 
@@ -1161,7 +1161,7 @@ $$\hat{\theta} = (Y^T Y)^{-1} Y^T \tau$$
 
 ---
 
-## 14. Euler-Poincare 方程预告——从广义坐标到 Lie 群 ⭐⭐⭐⭐
+## 14. Euler-Poincare 方程预告——从广义坐标到 Lie 群 ★★★★
 
 ### 14.1 当位形空间是 Lie 群
 
@@ -1195,7 +1195,7 @@ $$\begin{pmatrix} M_{bb} & M_{bj} \\ M_{jb} & M_{jj} \end{pmatrix}\begin{pmatrix
 
 ---
 
-## 15. 数值积分方法比较 ⭐⭐
+## 15. 数值积分方法比较 ★★
 
 ### 15.1 为什么积分方法的选择很重要
 
@@ -1305,9 +1305,9 @@ print(f"Verlet final energy error: {energy_err_vl[-1]:.6e}")
 
 ---
 
-## ⚠️ 常见陷阱
+## ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱**：Pinocchio CRBA 只填充上三角
+> ⚠ **编程陷阱**：Pinocchio CRBA 只填充上三角
 >
 > **错误做法**：直接使用 `data.M` 进行矩阵运算，假设它是完整对称矩阵
 >
@@ -1333,7 +1333,7 @@ print(f"Verlet final energy error: {energy_err_vl[-1]:.6e}")
 >
 > **正确认知**：区分关节空间（$M$）和操作空间（$\Lambda$）的条件数
 
-> ⚠️ **编程陷阱**：Hamilton 方程中 p 和 (q, q̇) 的同步
+> ⚠ **编程陷阱**：Hamilton 方程中 p 和 (q, q̇) 的同步
 >
 > **错误做法**：数值积分 Hamilton 方程时，更新 $p$ 后不重新计算 $\dot{q} = M^{-1}(q_{new})p_{new}$
 >
@@ -1347,7 +1347,7 @@ print(f"Verlet final energy error: {energy_err_vl[-1]:.6e}")
 
 ## 练习题
 
-### 基础练习（⭐-⭐⭐）
+### 基础练习（★-★★）
 
 **练习 1**：对 2R 臂（上面 §8.1 的模型），用 $\ell_1 = \ell_2 = 1$ m, $m_1 = m_2 = 1$ kg, $q = (30°, 45°)$, $\dot{q} = (1, -0.5)$ rad/s：
 (a) 数值计算 $M(q)$ 并验证正定（计算特征值）
@@ -1358,7 +1358,7 @@ print(f"Verlet final energy error: {energy_err_vl[-1]:.6e}")
 
 **练习 3**：写出 1-DOF 单摆（质量 $m$、长 $\ell$、角度 $\theta$）的标准方程。验证 $M = m\ell^2$（常数），$C = 0$，$g = mg\ell\cos\theta$。为什么 $C = 0$？
 
-### 进阶练习（⭐⭐⭐）
+### 进阶练习（★★★）
 
 **练习 4**（编程）：用 SymPy 自动推导 3R 空间机械臂的 $M$、$C$、$g$。与 Pinocchio 的数值结果对比。
 
@@ -1414,7 +1414,7 @@ print(f"Verlet final energy error: {energy_err_vl[-1]:.6e}")
 
 ---
 
-## 16. 3R 空间机械臂完整推导 ⭐⭐⭐
+## 16. 3R 空间机械臂完整推导 ★★★
 
 ### 16.1 模型描述
 
@@ -1597,7 +1597,7 @@ print(f"RNEA vs M*a+nle: max error = {np.max(np.abs(tau - tau_verify)):.2e}")
 
 ---
 
-## 17. 摩擦模型在标准方程中的位置 ⭐⭐
+## 17. 摩擦模型在标准方程中的位置 ★★
 
 ### 17.1 为什么需要摩擦模型
 
@@ -1639,7 +1639,7 @@ $$\text{sign}(\dot{q}) \approx \tanh(\dot{q}/\epsilon)$$
 
 ---
 
-## 18. 电机动力学与反射惯量 ⭐⭐
+## 18. 电机动力学与反射惯量 ★★
 
 ### 18.1 电机力矩与关节力矩的关系
 
@@ -1681,7 +1681,7 @@ $$\bar{M}(q) = M(q) + B$$
 
 ---
 
-## 19. 广义坐标 vs 操作空间的动力学 ⭐⭐⭐
+## 19. 广义坐标 vs 操作空间的动力学 ★★★
 
 ### 19.1 操作空间动力学方程
 
@@ -1721,7 +1721,7 @@ $$\quad\quad \tau_{min} \leq \tau \leq \tau_{max}$$
 
 ---
 
-## 20. 核心教材深度对照表 ⭐
+## 20. 核心教材深度对照表 ★
 
 | 教材 | 核心章节 | 最佳用途 |
 |------|---------|---------|
@@ -1746,14 +1746,14 @@ $$\quad\quad \tau_{min} \leq \tau \leq \tau_{max}$$
 
 | 资源 | 难度 | 推荐理由 |
 |------|------|---------|
-| Goldstein, *Classical Mechanics* 3rd ed. Ch.1-2, Ch.8 | ⭐⭐ | 分析力学圣经，物理直觉最好 |
-| Murray-Li-Sastry, *A Mathematical Introduction to Robotic Manipulation* Ch.4 | ⭐⭐ | 机器人动力学的数学严格处理 |
-| Lynch-Park, *Modern Robotics* Ch.8 | ⭐⭐ | 推导清晰，有配套视频 |
-| Featherstone, *RBDA* Ch.2, 5, 6 | ⭐⭐ | 空间向量视角的标准方程 |
-| Spong-Hutchinson-Vidyasagar, *Robot Modeling and Control* Ch.7 | ⭐ | Christoffel 和斜对称性讲得最好 |
-| Slotine-Li 1987 IJRR 论文 | ⭐⭐⭐ | 自适应控制经典，用 Ṁ-2C |
-| Arnold, *Mathematical Methods of Classical Mechanics* | ⭐⭐⭐⭐ | 辛几何形式化，数学家视角 |
-| Marsden-Ratiu, *Introduction to Mechanics and Symmetry* | ⭐⭐⭐⭐ | 几何力学标准参考 |
+| Goldstein, *Classical Mechanics* 3rd ed. Ch.1-2, Ch.8 | ★★ | 分析力学圣经，物理直觉最好 |
+| Murray-Li-Sastry, *A Mathematical Introduction to Robotic Manipulation* Ch.4 | ★★ | 机器人动力学的数学严格处理 |
+| Lynch-Park, *Modern Robotics* Ch.8 | ★★ | 推导清晰，有配套视频 |
+| Featherstone, *RBDA* Ch.2, 5, 6 | ★★ | 空间向量视角的标准方程 |
+| Spong-Hutchinson-Vidyasagar, *Robot Modeling and Control* Ch.7 | ★ | Christoffel 和斜对称性讲得最好 |
+| Slotine-Li 1987 IJRR 论文 | ★★★ | 自适应控制经典，用 Ṁ-2C |
+| Arnold, *Mathematical Methods of Classical Mechanics* | ★★★★ | 辛几何形式化，数学家视角 |
+| Marsden-Ratiu, *Introduction to Mechanics and Symmetry* | ★★★★ | 几何力学标准参考 |
 
 ---
 
@@ -1846,23 +1846,23 @@ $$M(q)\ddot{q} + C(q,\dot{q})\dot{q} + g(q) = \tau$$
 
 | # | 定理/公式 | 位置 | 档位 |
 |---|----------|------|------|
-| 1 | d'Alembert 原理 | §3.2 | ⭐⭐ |
-| 2 | Hamilton 原理（最小作用量） | §4.1 | ⭐ |
-| 3 | Euler-Lagrange 方程 | §4.2 | ⭐ |
-| 4 | 质量矩阵 Jacobian 叠加 | §5.1 | ⭐ |
-| 5 | $M(q)$ 正定性证明 | §5.2 | ⭐⭐ |
-| 6 | Christoffel 符号定义 | §5.3 | ⭐⭐ |
-| 7 | $\dot{M}-2C$ 斜对称性证明 | §5.4 | ⭐⭐ |
-| 8 | Legendre 变换 | §6.1 | ⭐⭐ |
-| 9 | Hamilton 正则方程 | §6.2 | ⭐⭐ |
-| 10 | Poisson 括号与守恒量 | §6.3 | ⭐⭐⭐ |
-| 11 | 辛形式与 Liouville 定理 | §6.4 | ⭐⭐⭐⭐ |
-| 12 | 被动性定理 | §10.2 | ⭐⭐ |
-| 13 | 计算力矩控制 | §10.3 | ⭐⭐ |
-| 14 | Slotine-Li 自适应控制 | §10.5 | ⭐⭐⭐ |
-| 15 | Euler-Poincare 方程（预告） | §14 | ⭐⭐⭐⭐ |
-| 16 | 2R 臂完整闭式 | §8.1 | ⭐ |
-| 17 | 操作空间动力学 | §19 | ⭐⭐⭐ |
+| 1 | d'Alembert 原理 | §3.2 | ★★ |
+| 2 | Hamilton 原理（最小作用量） | §4.1 | ★ |
+| 3 | Euler-Lagrange 方程 | §4.2 | ★ |
+| 4 | 质量矩阵 Jacobian 叠加 | §5.1 | ★ |
+| 5 | $M(q)$ 正定性证明 | §5.2 | ★★ |
+| 6 | Christoffel 符号定义 | §5.3 | ★★ |
+| 7 | $\dot{M}-2C$ 斜对称性证明 | §5.4 | ★★ |
+| 8 | Legendre 变换 | §6.1 | ★★ |
+| 9 | Hamilton 正则方程 | §6.2 | ★★ |
+| 10 | Poisson 括号与守恒量 | §6.3 | ★★★ |
+| 11 | 辛形式与 Liouville 定理 | §6.4 | ★★★★ |
+| 12 | 被动性定理 | §10.2 | ★★ |
+| 13 | 计算力矩控制 | §10.3 | ★★ |
+| 14 | Slotine-Li 自适应控制 | §10.5 | ★★★ |
+| 15 | Euler-Poincare 方程（预告） | §14 | ★★★★ |
+| 16 | 2R 臂完整闭式 | §8.1 | ★ |
+| 17 | 操作空间动力学 | §19 | ★★★ |
 
 ---
 
@@ -1881,7 +1881,7 @@ $$M(q)\ddot{q} + C(q,\dot{q})\dot{q} + g(q) = \tau$$
 
 ---
 
-## 附录 E：Noether 定理与机器人守恒量 ⭐⭐⭐
+## 附录 E：Noether 定理与机器人守恒量 ★★★
 
 ### E.1 Noether 定理的陈述
 
@@ -1976,13 +1976,13 @@ Dai et al. (2014) 利用此约束设计人形机器人翻滚动作；Wensing et 
 
 | 资源 | 讲师/机构 | 覆盖内容 | 推荐度 |
 |------|---------|---------|--------|
-| MIT OCW 8.09 | Iain Stewart | Lagrange/Hamilton 分析力学 | ⭐⭐⭐ |
-| Stanford CS223A | Oussama Khatib | 动力学 Lec 10-14 | ⭐⭐⭐ |
-| Northwestern Modern Robotics Ch8 | Kevin Lynch | 动力学完整 8 讲 | ⭐⭐⭐⭐ |
-| ETH Robotic Systems | Marco Hutter | 动力学+控制 | ⭐⭐⭐ |
-| MIT Underactuated Robotics | Russ Tedrake | Lagrangian+控制 | ⭐⭐⭐⭐ |
-| David Tong 讲义 | Cambridge | Lagrangian/Hamiltonian 物理 | ⭐⭐⭐ |
-| Featherstone ICRA tutorial | Roy Featherstone | 空间向量+RNEA/ABA | ⭐⭐⭐ |
+| MIT OCW 8.09 | Iain Stewart | Lagrange/Hamilton 分析力学 | ★★★ |
+| Stanford CS223A | Oussama Khatib | 动力学 Lec 10-14 | ★★★ |
+| Northwestern Modern Robotics Ch8 | Kevin Lynch | 动力学完整 8 讲 | ★★★★ |
+| ETH Robotic Systems | Marco Hutter | 动力学+控制 | ★★★ |
+| MIT Underactuated Robotics | Russ Tedrake | Lagrangian+控制 | ★★★★ |
+| David Tong 讲义 | Cambridge | Lagrangian/Hamiltonian 物理 | ★★★ |
+| Featherstone ICRA tutorial | Roy Featherstone | 空间向量+RNEA/ABA | ★★★ |
 
 ### 中文资源
 

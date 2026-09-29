@@ -2,7 +2,7 @@
 
 ## 第 55 章:OCS2 完整栈 + 双线程 MPC 实时架构
 
-> **难度**: ⭐⭐⭐ | **预计学时**: 40-50 小时(2 周) | **前置**: 足式/30_Pinocchio深度精读-50, 足式/80_接触力学与约束优化-54
+> **难度**: ★★★ | **预计学时**: 40-50 小时(2 周) | **前置**: 足式/30_Pinocchio深度精读-50, 足式/80_接触力学与约束优化-54
 
 > **一句话概要**: OCS2 是 ETH RSL 打造的工业级 MPC 基础设施——把"切换系统最优控制"抽象为一等公民,用 SQP+HPIPM 求解,以双线程 Triple Buffer 架构保证实时性,是 ANYmal/Go2/HyQ 的生产控制栈。
 
@@ -10,7 +10,7 @@
 
 ## 前置自测
 
-📋 前置自测（答不出 ≥ 2 题 → 先回 足式/60_QP_NLP建模/足式/100_DDP家族与Crocoddyl 复习）
+◆ 前置自测（答不出 ≥ 2 题 → 先回 足式/60_QP_NLP建模/足式/100_DDP家族与Crocoddyl 复习）
 
 1. DDP 的 backward pass 计算什么？forward pass 做什么？
 2. SQP 与 DDP 的核心区别是什么？各自的优势场景？
@@ -50,7 +50,7 @@ ROS2 Lifecycle Node ──> MPC ROS Wrapper 是 Lifecycle Node
 
 ---
 
-### 55.1 OCS2 的定位——ETH RSL 的 MPC 基础设施 ⭐
+### 55.1 OCS2 的定位——ETH RSL 的 MPC 基础设施 ★
 
 #### 55.1.1 动机:为什么需要一个"MPC 框架"?
 
@@ -78,7 +78,7 @@ ROS2 Lifecycle Node ──> MPC ROS Wrapper 是 Lifecycle Node
 
 **OCS2 的价值**: 把上面这些"轮子"全部集成为一个**可插拔、可扩展、已验证的框架**。用户只需定义自己机器人的 OCP(动力学+代价+约束),其余全由框架处理。这就像游戏引擎(Unity/Unreal)之于游戏开发:引擎把渲染、物理、音频、网络等底层模块全部封装好,游戏开发者只需定义自己的游戏逻辑(角色、关卡、规则)。OCS2 对 MPC 的角色与之类似于——用户定义"我的机器人长什么样、要优化什么目标",框架负责"怎么高效求解、怎么实时部署"。
 
-> **⚠️ 陷阱**: OCS2 的"价值"也是它的"代价"——抽象层次多,学习曲线陡。初学者容易迷失在继承层次中。本章的目标就是帮你建立清晰的心智模型。
+> **⚠ 陷阱**: OCS2 的"价值"也是它的"代价"——抽象层次多,学习曲线陡。初学者容易迷失在继承层次中。本章的目标就是帮你建立清晰的心智模型。
 
 #### 55.1.2 OCS2 的名字与历史
 
@@ -221,7 +221,7 @@ $$\hat{\bar{\mathbf{u}}} = (M^T P M + W)^{-1} M^T P \mathbf{s}$$
 
 ---
 
-### 55.2 OCS2 的五层架构 ⭐⭐
+### 55.2 OCS2 的五层架构 ★★
 
 OCS2 的定位明确之后,下一个问题是:如此庞大的系统如何组织代码?OCS2 的答案是五层解耦架构——每层只依赖下层接口,上层可独立替换。
 
@@ -331,7 +331,7 @@ WBC (足式/90_WBC分层优化与TSID) 或 PD 控制器: 跟踪 MPC 输出
 | 第四层 | `ocs2_mpc/include/ocs2_mpc/MPC_MRT_Interface.h` | `MPC_MRT_Interface` | **核心**(部署) |
 | 第五层 | `ocs2_legged_robot_ros/src/LeggedRobotMpcNode.cpp` | ROS Node | 是(启动入口) |
 
-> **⚠️ 陷阱**: 初学者常犯的错误是试图"从第三层开始读"——直接看 SqpSolver 源码。正确的学习顺序是 **第二层(定义问题) -> 第四层(部署架构) -> 第三层(求解细节)**。先知道"OCS2 解什么问题",再知道"怎么部署",最后才看"怎么解"。
+> **⚠ 陷阱**: 初学者常犯的错误是试图"从第三层开始读"——直接看 SqpSolver 源码。正确的学习顺序是 **第二层(定义问题) -> 第四层(部署架构) -> 第三层(求解细节)**。先知道"OCS2 解什么问题",再知道"怎么部署",最后才看"怎么解"。
 
 #### 55.2.4 与 nav2 架构的类比
 
@@ -369,7 +369,7 @@ Lifecycle Node(生命周期)    <->  MPC_ROS_Interface(ROS 封装)
 
 ---
 
-### 55.3 OCP 抽象——OptimalControlProblem ⭐⭐
+### 55.3 OCP 抽象——OptimalControlProblem ★★
 
 #### 55.3.1 动机:为什么需要 OCP 抽象?
 
@@ -440,7 +440,7 @@ auto& cost = problem.cost.get("base_tracking");
 
 > **💡 为什么用 string 做 key?** 灵活性。用户可以在运行时动态添加/删除代价项。比如"地形感知模式"下加入"落脚点代价","平地模式"下移除它。代价是一次 `std::map::find`(O(log N),N 通常 < 10),对 MPC 求解时间(ms 级)来说可忽略。
 
-> **⚠️ 陷阱**: 不要在 MPC 循环中频繁调用 `add()`/`erase()`——这涉及堆分配。正确做法是用 `isActive()` 方法动态启用/禁用已注册的约束。
+> **⚠ 陷阱**: 不要在 MPC 循环中频繁调用 `add()`/`erase()`——这涉及堆分配。正确做法是用 `isActive()` 方法动态启用/禁用已注册的约束。
 
 #### 55.3.3 SystemDynamicsBase: flowMap() 和 jumpMap()
 
@@ -474,7 +474,7 @@ $$\dot{\boldsymbol{h}}_G = \sum_{i \in \mathcal{C}} \begin{bmatrix} \boldsymbol{
 - `jumpMap()` 默认恒等(常见 OCS2 腿足 MPC 实现中忽略或软化冲击效应,故常用 identity jump map。若需显式建模 touchdown impact,应使用 reset map)
 - `linearApproximation()` 由 CppADCodeGen 自动生成(足式/40_CppAD与代码生成 流水线)
 
-> **⚠️ 陷阱**: `jumpMap()` 在腿足中几乎不用,但在**弹跳机器人**(hopper)中很重要——着地瞬间速度突变。不要因为腿足不用就忽略这个接口。
+> **⚠ 陷阱**: `jumpMap()` 在腿足中几乎不用,但在**弹跳机器人**(hopper)中很重要——着地瞬间速度突变。不要因为腿足不用就忽略这个接口。
 
 #### 55.3.4 代价和约束的时间分类
 
@@ -542,7 +542,7 @@ void LeggedRobotDynamics::flowMapImpl(
 
 ---
 
-### 55.4 SQP 算法——为什么 OCS2 不用 DDP ⭐⭐⭐
+### 55.4 SQP 算法——为什么 OCS2 不用 DDP ★★★
 
 #### 55.4.1 动机:足式/100_DDP家族与Crocoddyl 的续篇
 
@@ -631,7 +631,7 @@ SQP 第 j 次迭代:
    ──> 若收敛,退出; 否则回到步骤 1
 ```
 
-> **⚠️ 重要**: OCS2 的 SQP 用的是 **Multiple Shooting** 格式(足式/100_DDP家族与Crocoddyl 已介绍),不是 Single Shooting。这意味着 $\mathbf{x}_0, \ldots, \mathbf{x}_N$ 都是优化变量,而不是通过前向积分得到。Multiple Shooting 的好处是**QP 子问题有带状稀疏结构**,HPIPM 可以 O(N) 求解。
+> **⚠ 重要**: OCS2 的 SQP 用的是 **Multiple Shooting** 格式(足式/100_DDP家族与Crocoddyl 已介绍),不是 Single Shooting。这意味着 $\mathbf{x}_0, \ldots, \mathbf{x}_N$ 都是优化变量,而不是通过前向积分得到。Multiple Shooting 的好处是**QP 子问题有带状稀疏结构**,HPIPM 可以 O(N) 求解。
 
 #### 55.4.4 SQP-RTI: Real-Time Iteration
 
@@ -690,7 +690,7 @@ RTI 收缩性直觉图:
 
 > **🧠 深度理解**: RTI 的思想来自 Moritz Diehl (Uni. Freiburg) 的经典论文。OCS2 的 `sqpIteration = 1` 参数就是 RTI 模式。设 `sqpIteration = 5` 就是传统 SQP。**实际部署中,RTI 几乎总是够用**——因为四足运动变化缓慢(相对于 MPC 频率)。
 
-> **⚠️ 陷阱**: RTI 可行需要满足前提条件: (1) 采样时间足够小, (2) 预测时域足够长, (3) 积分器足够精确, (4) 使用了 shifting 策略。如果 MPC 频率太低(如 10Hz),RTI 可能不够——因为相邻两个问题差异太大,一步 SQP 无法收缩到足够近。
+> **⚠ 陷阱**: RTI 可行需要满足前提条件: (1) 采样时间足够小, (2) 预测时域足够长, (3) 积分器足够精确, (4) 使用了 shifting 策略。如果 MPC 频率太低(如 10Hz),RTI 可能不够——因为相邻两个问题差异太大,一步 SQP 无法收缩到足够近。
 
 #### 55.4.5 OCS2 SqpSolver 源码导读
 
@@ -746,7 +746,7 @@ OCS2 实现:
   settings_.g_min = 1e-6   // 最小权重(避免数值问题)
 ```
 
-> **⚠️ 陷阱**: 如果 line search 总是回缩到很小的 alpha(比如 0.001),说明 QP 子问题的搜索方向不好。可能原因: (1) Hessian 不正定(需要正则化), (2) 约束不一致(infeasible 问题), (3) 线性化点离最优太远(热启动没做好)。
+> **⚠ 陷阱**: 如果 line search 总是回缩到很小的 alpha(比如 0.001),说明 QP 子问题的搜索方向不好。可能原因: (1) Hessian 不正定(需要正则化), (2) 约束不一致(infeasible 问题), (3) 线性化点离最优太远(热启动没做好)。
 
 **练习 55.4a**: 在 task.info 中把 `sqpIteration` 从 1 改到 5。记录每次迭代的 `||delta||` 和 `alpha`。画收敛曲线,验证 RTI(iter=1)是否已经"足够好"。
 
@@ -754,7 +754,7 @@ OCS2 实现:
 
 ---
 
-### 55.5 HPIPM 作为 SQP 后端 ⭐⭐⭐
+### 55.5 HPIPM 作为 SQP 后端 ★★★
 
 #### 55.5.1 回顾与定位
 
@@ -868,7 +868,7 @@ void HpipmInterface::initialize() {
 }
 ```
 
-> **⚠️ 陷阱**: 如果你修改了 QP 的维度(比如添加了新约束),必须重新调用 `resize()` -> `initialize()`。运行时动态改变约束数量会导致内存不足 segfault。OCS2 的做法是**预分配最大可能的约束数量**,运行时用 `isActive()` 启用/禁用。
+> **⚠ 陷阱**: 如果你修改了 QP 的维度(比如添加了新约束),必须重新调用 `resize()` -> `initialize()`。运行时动态改变约束数量会导致内存不足 segfault。OCS2 的做法是**预分配最大可能的约束数量**,运行时用 `isActive()` 启用/禁用。
 
 #### 55.5.6 Condensing vs Non-condensing
 
@@ -893,7 +893,7 @@ Condensing:
 
 ---
 
-### 55.6 模型选型——Centroidal vs Kino-centroidal ⭐⭐
+### 55.6 模型选型——Centroidal vs Kino-centroidal ★★
 
 SQP 框架和 HPIPM 后端确定了"怎么解",但 MPC 的性能上限取决于"解什么"——即动力学模型的选择。模型太简(如 LIPM)则无法表达复杂动作,模型太复杂(如全身动力学)则求解太慢。Centroidal 和 Kino-centroidal 是当前腿足 MPC 最主流的两种折中方案。
 
@@ -992,13 +992,13 @@ Centroidal:                    Kino-centroidal:
     └── 两者都试, 对比论文
 ```
 
-> **⚠️ 陷阱**: `centroidalModelType = 1` (SRBD) 不是"Kino-centroidal"——它是更简化的"单刚体模型"。SRBD 假设惯量矩阵恒定(不随关节角变化),适用于小型四足。对于大型四足(如 ANYmal),SRBD 误差较大,应用 FCD。
+> **⚠ 陷阱**: `centroidalModelType = 1` (SRBD) 不是"Kino-centroidal"——它是更简化的"单刚体模型"。SRBD 假设惯量矩阵恒定(不随关节角变化),适用于小型四足。对于大型四足(如 ANYmal),SRBD 误差较大,应用 FCD。
 
 **练习 55.6**: 用 Pinocchio 计算你的四足机器人在站立姿态和最大弯腿姿态下的 Centroidal Momentum Matrix $\mathbf{A}_G$。比较两者的差异大小(Frobenius 范数)。如果差异小于 5%,SRBD 就足够了。
 
 ---
 
-### 55.7 双线程 MPC 架构——OCS2 的灵魂 ⭐⭐⭐
+### 55.7 双线程 MPC 架构——OCS2 的灵魂 ★★★
 
 #### 55.7.1 问题背景:MPC 的实时困境
 
@@ -1216,7 +1216,7 @@ State-based view (闭环):
 └──────────────┴──────────────┴──────────────┘
 ```
 
-> **⚠️ 陷阱**: "实时安全"不仅仅是"快"——更重要的是**可预测性**。Mutex 在无竞争时很快(~20ns),但在竞争时可能导致几百微秒的阻塞,且不确定何时发生。Triple Buffer 的延迟始终是常数时间(一次 atomic exchange ~5ns)。
+> **⚠ 陷阱**: "实时安全"不仅仅是"快"——更重要的是**可预测性**。Mutex 在无竞争时很快(~20ns),但在竞争时可能导致几百微秒的阻塞,且不确定何时发生。Triple Buffer 的延迟始终是常数时间(一次 atomic exchange ~5ns)。
 
 #### 55.7.7 当 MPC 求解慢时
 
@@ -1276,7 +1276,7 @@ void setRealtimePriority(int priority = 49) {
 // ROS 话题: SCHED_OTHER, nice 10      (低优先级)
 ```
 
-> **⚠️ 陷阱**: 在 Ubuntu 上设置 SCHED_FIFO 需要 root 权限或 `CAP_SYS_NICE`。可以用 `ulimit -r 99` 或在 `/etc/security/limits.conf` 中配置。忘记设置实时优先级是腿足机器人摔倒的常见原因之一——MRT 被其他线程抢占导致控制延迟。
+> **⚠ 陷阱**: 在 Ubuntu 上设置 SCHED_FIFO 需要 root 权限或 `CAP_SYS_NICE`。可以用 `ulimit -r 99` 或在 `/etc/security/limits.conf` 中配置。忘记设置实时优先级是腿足机器人摔倒的常见原因之一——MRT 被其他线程抢占导致控制延迟。
 
 #### 55.7.9 延迟分析: 从观测到力矩
 
@@ -1320,7 +1320,7 @@ ANYmal 部署参考 (Intel i7-8850H, 6 核):
 
 ---
 
-### 55.8 ReferenceManager 与步态管理 ⭐⭐
+### 55.8 ReferenceManager 与步态管理 ★★
 
 #### 55.8.1 ReferenceManagerInterface
 
@@ -1439,7 +1439,7 @@ class ZeroVelocityConstraint : public StateInputConstraint {
 
 ---
 
-### 55.9 ROS Wrapper——MPC_Node 和 MRT_Node ⭐⭐
+### 55.9 ROS Wrapper——MPC_Node 和 MRT_Node ★★
 
 #### 55.9.1 两种部署模式
 
@@ -1489,7 +1489,7 @@ PolicyData 的大小 (ANYmal, N=15, nx=24, nu=24):
   跨进程总开销:    ~1-2 ms per update
 ```
 
-> **⚠️ 陷阱**: 如果你用 `ros2 topic echo` 监控 `/mpc_policy`,可能看到延迟增加——因为 `echo` 也要反序列化。监控 MPC 性能应该用内部计时,不要依赖 ROS 工具。
+> **⚠ 陷阱**: 如果你用 `ros2 topic echo` 监控 `/mpc_policy`,可能看到延迟增加——因为 `echo` 也要反序列化。监控 MPC 性能应该用内部计时,不要依赖 ROS 工具。
 
 #### 55.9.3 Dummy Node: 快速验证
 
@@ -1508,7 +1508,7 @@ Dummy Node 的工作方式:
 
 ---
 
-### 55.10 task.info 完整配置教程 ⭐⭐
+### 55.10 task.info 完整配置教程 ★★
 
 #### 55.10.1 task.info 关键参数详解
 
@@ -1619,7 +1619,7 @@ relaxedLogBarrierMu = 0.1            ; log barrier 参数
 relaxedLogBarrierDelta = 5.0
 ```
 
-> **⚠️ 关键调参提示**:
+> **⚠ 关键调参提示**:
 > 1. `Q(8,0) = 500.0` (z 位置) 远大于 `Q(12,0) = 20.0` (关节角)——保持站立高度比保持关节角更重要
 > 2. `R(12,0) = 5000.0 * 1e-3 = 5.0` (关节速度) 远大于 `R(0,0) = 1.0 * 1e-3 = 0.001` (力)——鼓励用力来跟踪,而不是大幅运动
 > 3. `swingHeight = 0.1` 是 10cm——平地足够,崎岖地形需增大到 0.15-0.2
@@ -1629,7 +1629,7 @@ relaxedLogBarrierDelta = 5.0
 
 ---
 
-### 55.11 OCS2 调试技巧 ⭐⭐
+### 55.11 OCS2 调试技巧 ★★
 
 #### 55.11.1 常见问题与解决方案
 
@@ -1667,7 +1667,7 @@ RCLCPP_INFO(logger_, "MPC solve: %.2f ms, success: %d",
 
 ---
 
-### 55.12 OCS2 与 legged_control 的关系 ⭐⭐
+### 55.12 OCS2 与 legged_control 的关系 ★★
 
 #### 55.12.1 legged_control 是什么?
 
@@ -1736,7 +1736,7 @@ legged_control:
 
 ---
 
-### 55.13 roboticsTemplateLibrary(RTL)与编译期优化 ⭐⭐
+### 55.13 roboticsTemplateLibrary(RTL)与编译期优化 ★★
 
 OCS2 内部有一个模板化的运动学层: `ocs2_robotic_tools` 的 RTL(roboticsTemplateLibrary)。
 
@@ -1778,7 +1778,7 @@ EndEffectorKinematics<cg_scalar_t>   // CppADCodeGen 代码生成
 
 ---
 
-## 55.14 本章小结 ⭐
+## 55.14 本章小结 ★
 
 #### 核心概念回顾
 
@@ -1917,13 +1917,13 @@ void controlLoop() {
 
 ### 实战练习
 
-#### [A 型 - 基础] 练习 55.1: OCS2 环境搭建 ⭐
+#### [A 型 - 基础] 练习 55.1: OCS2 环境搭建 ★
 
 从头搭建 OCS2 + ocs2_legged_robot 的开发环境。编译并运行示例,在 RViz 中看到四足机器人行走。
 
 **验收标准**: RViz 中能看到预测轨迹和接触力箭头,MPC 控制台无 error。
 
-#### [A 型 - 中等] 练习 55.2: 改变 MPC Horizon ⭐⭐
+#### [A 型 - 中等] 练习 55.2: 改变 MPC Horizon ★★
 
 修改 `task.info` 中 `timeHorizon` 为 0.3 / 1.0 / 2.0,记录:
 1. 单次 MPC 求解时间
@@ -1932,11 +1932,11 @@ void controlLoop() {
 
 **提交**: 三组参数的对比表和分析。
 
-#### [A 型 - 进阶] 练习 55.3: 添加自定义 Cost ⭐⭐⭐
+#### [A 型 - 进阶] 练习 55.3: 添加自定义 Cost ★★★
 
 在 OCP 中添加一个 cost: "让基座高度保持在 0.5m"。验证运行效果。
 
-#### [B 型 - 源码阅读] 练习 55.4: 精读 SqpSolver ⭐⭐⭐
+#### [B 型 - 源码阅读] 练习 55.4: 精读 SqpSolver ★★★
 
 精读 `ocs2_sqp/src/SqpSolver.cpp`(约 800 行),回答:
 1. `runImpl()` 的主循环结构是什么?
@@ -1944,7 +1944,7 @@ void controlLoop() {
 3. Armijo line search 的参数值是多少?
 4. 收敛判定的数学含义?
 
-#### [B 型 - 双线程架构] 练习 55.5: 精读 MPC_MRT_Interface ⭐⭐⭐
+#### [B 型 - 双线程架构] 练习 55.5: 精读 MPC_MRT_Interface ★★★
 
 精读 `ocs2_mpc/src/MPC_MRT_Interface.cpp`:
 1. `advanceMpc()` 的调用链?
@@ -1952,7 +1952,7 @@ void controlLoop() {
 3. BufferedValue 的 swap 是否真正无锁?
 4. MPC 失败时 MRT 的行为?
 
-#### [B 型 - 对比精读] 练习 55.6: OCS2 vs legged_control ⭐⭐
+#### [B 型 - 对比精读] 练习 55.6: OCS2 vs legged_control ★★
 
 对比两个代码库的主循环:
 - OCS2: `LeggedRobotMpcNode.cpp`
@@ -1960,7 +1960,7 @@ void controlLoop() {
 
 列出差异、简化和增强。
 
-#### [思考题] 练习 55.7: 切换系统抽象的通用性 ⭐⭐
+#### [思考题] 练习 55.7: 切换系统抽象的通用性 ★★
 
 "切换系统"的抽象对以下场景是否有意义?
 1. 机械臂(无离散切换)
@@ -1968,11 +1968,11 @@ void controlLoop() {
 3. 轮足复合机器人(轮 vs 腿模式)
 4. 人形机器人(步态 + 抓取)
 
-#### [思考题] 练习 55.8: SQP vs DDP 的工业选型 ⭐⭐⭐
+#### [思考题] 练习 55.8: SQP vs DDP 的工业选型 ★★★
 
 列出支持 SQP 和支持 DDP 的论据。如果你要做新的腿足 MPC 框架,选哪个?为什么?
 
-#### [跨章综合题] 练习 55.9: 从动力学到实时部署的完整链路 ⭐⭐⭐
+#### [跨章综合题] 练习 55.9: 从动力学到实时部署的完整链路 ★★★
 
 本题需要综合 足式/50_空间向量与浮动基座动力学(浮动基座动力学)、足式/80_接触力学与约束优化(接触力学)和本章(OCS2 MPC)的知识。
 
@@ -2007,7 +2007,7 @@ void controlLoop() {
 
 8. **Frison G., Diehl M. (2020)** "HPIPM: a high-performance QP framework for model predictive control" — IFAC. HPIPM 论文。
 
-#### OCS2 与 ALIGATOR/Crocoddyl/ProxDDP 的性能对比 ⭐⭐⭐
+#### OCS2 与 ALIGATOR/Crocoddyl/ProxDDP 的性能对比 ★★★
 
 随着腿足 MPC 框架的生态日趋丰富,理解不同框架的性能特征对工程选型至关重要。以下对比基于 2024-2025 年的公开基准测试(Stark et al. 2024, Jallet et al. 2024)和社区实测数据:
 
@@ -2026,7 +2026,7 @@ void controlLoop() {
 
 > **本质洞察**:SQP 和 ProxDDP 处理约束的哲学根本不同。SQP 把约束"交给 QP 求解器"——每次 SQP 迭代都精确满足线性化约束,通过多次迭代让非线性约束也收敛。ProxDDP 把约束"融入代价函数"——用近端算子(proximal operator)将约束违反惩罚到 DDP 的 Q-function 中,通过增广拉格朗日的外循环让约束逐步满足。**前者像法官(每步都判对错),后者像教练(让你逐步改进)**。在腿足场景中,摩擦锥等安全关键约束需要精确满足,这是 OCS2 选择 SQP 的核心理由。
 
-#### ADMM-based MPC 趋势 ⭐⭐⭐
+#### ADMM-based MPC 趋势 ★★★
 
 2024-2025 年,**ADMM(交替方向乘子法)** 作为 MPC 求解器后端正在成为新的研究热点,主要动力来自两个方向:
 

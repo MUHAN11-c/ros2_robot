@@ -8,7 +8,7 @@
 
 | 属性 | 值 |
 |------|----|
-| **难度** | ⭐ |
+| **难度** | ★ |
 | **周数** | 1.0 周 |
 | **前置依赖** | 02_C++基础与进阶/ROS2 Launch + TF2 基础 |
 | **共享标记** | ✅ 全方向共享 |
@@ -92,7 +92,7 @@ P01 URDF / Xacro 机器人建模
 
 ---
 
-## P01.1 URDF XML Schema——机器人的统一描述语言 ⭐
+## P01.1 URDF XML Schema——机器人的统一描述语言 ★
 
 ### 1.1 动机：为什么不能把机器人尺寸硬编码在代码里
 
@@ -278,7 +278,7 @@ check_urdf two_link_arm.urdf        # 输出: robot name is: two_link_arm  ...  
 urdf_to_graphviz two_link_arm.urdf   # 生成运动链 PDF 图
 ```
 
-> **⚠️ Pitfall：惯性张量必须正定**
+> **⚠ Pitfall：惯性张量必须正定**
 >
 > 惯性张量 $I$ 的三个主轴惯量必须满足三角不等式：$I_{xx} + I_{yy} \geq I_{zz}$（对所有排列成立）。违反此条件意味着物理上不可能的质量分布——没有任何实心物体能产生这样的惯量。Gazebo 会在加载时警告或拒绝模型；即使加载成功，仿真也会表现为剧烈振荡或"爆炸"。
 >
@@ -294,7 +294,7 @@ urdf_to_graphviz two_link_arm.urdf   # 生成运动链 PDF 图
 
 ---
 
-## P01.2 Xacro 宏系统——让 URDF 可维护 ⭐⭐
+## P01.2 Xacro 宏系统——让 URDF 可维护 ★★
 
 ### 2.1 问题：原始 URDF 的重复灾难
 
@@ -422,7 +422,7 @@ xacro robot.urdf.xacro robot_model:=ur5e > /tmp/robot.urdf
 
 ---
 
-## P01.3 惯性参数与 Mesh 管理 ⭐⭐
+## P01.3 惯性参数与 Mesh 管理 ★★
 
 ### 3.1 惯性参数的三条获取路径
 
@@ -487,7 +487,7 @@ my_robot_description/
 
 碰撞 mesh 简化工具：MeshLab 的 Quadric Edge Collapse Decimation 滤波器，或 CoACD（学习增强凸分解），将复杂形状分解为少量凸包的并集。
 
-> **⚠️ Pitfall：mesh scale 单位 m vs mm**
+> **⚠ Pitfall：mesh scale 单位 m vs mm**
 >
 > CAD 软件（SolidWorks、Fusion 360）默认使用毫米，URDF 的 SI 单位是米。忘记转换的后果：
 >
@@ -504,7 +504,7 @@ my_robot_description/
 
 ---
 
-## P01.4 多格式转换——URDF 不是终点 ⭐⭐
+## P01.4 多格式转换——URDF 不是终点 ★★
 
 ### 4.1 为什么需要多格式
 
@@ -590,7 +590,7 @@ def generate_launch_description():
 
 ---
 
-## P01.5 `<transmission>` 与 ros2_control ⭐⭐
+## P01.5 `<transmission>` 与 ros2_control ★★
 
 ### 5.1 `<ros2_control>` 标签：连接描述与硬件
 
@@ -650,7 +650,7 @@ URDF 描述的是机器人的几何和物理属性。控制器还需要知道：
 
 ## 练习
 
-### 练习 1（A 型 -- 参数化 Xacro）⭐
+### 练习 1（A 型 -- 参数化 Xacro）★
 
 **任务**：用 Xacro 为 Franka Panda 写参数化 URDF，支持通过 launch 参数切换三种配置：
 
@@ -665,7 +665,7 @@ URDF 描述的是机器人的几何和物理属性。控制器还需要知道：
 
 **验收标准**：`xacro robot.urdf.xacro config:=7dof | check_urdf /dev/stdin` 输出正确的 link/joint 数量。
 
-### 练习 2（B 型 -- 多格式转换与仿真对比）⭐⭐
+### 练习 2（B 型 -- 多格式转换与仿真对比）★★
 
 **任务**：将练习 1 的 URDF 转换为 SDF 和 MJCF，在 Gazebo Harmonic 和 MuJoCo 中各运行 10 秒自由落体仿真（移除固定底座约束），记录末端执行器轨迹。
 
@@ -688,7 +688,7 @@ URDF 描述的是机器人的几何和物理属性。控制器还需要知道：
 
 ---
 
-## P01.11 URDF 调试工作流与命名规范 ⭐⭐
+## P01.11 URDF 调试工作流与命名规范 ★★
 
 ### 系统化调试流程
 
@@ -946,18 +946,18 @@ jobs:
 
 | 编号 | 知识点 | 核心要点 | 对应节 | 难度 |
 |------|--------|---------|--------|------|
-| 1 | URDF 定位 | ROS 生态的 single source of truth，所有工具链的起点 | P01.1, P01.6 | ⭐ |
-| 2 | `<link>` 元素 | visual / collision / inertial 三子树，分离渲染与碰撞几何 | P01.1 | ⭐ |
-| 3 | `<joint>` 元素 | 6 种类型；`revolute` 最常用；effort/velocity 设为 0 会阻止运动 | P01.1 | ⭐ |
-| 4 | Xacro 宏系统 | property / macro / include / conditional 四大机制消除重复 | P01.2, P01.7 | ⭐⭐ |
-| 5 | 惯性参数 | 几何近似 → CAD 导出 → SysId 三级精度；三角不等式是合法性底线 | P01.3, P01.8 | ⭐⭐ |
-| 6 | Mesh 管理 | visual(DAE) vs collision(STL) 分离；注意 m/mm 单位转换 | P01.3 | ⭐ |
-| 7 | 多格式转换 | URDF → SDF(gz sdf) / MJCF(mujoco)；URDF 不支持闭链 | P01.4 | ⭐⭐ |
-| 8 | ros2_control | `<hardware><plugin>` 决定后端；Xacro 条件分支实现 sim/real 切换 | P01.5, P01.9 | ⭐⭐ |
-| 9 | URDF 设计哲学 | 树结构限制、单一坐标约定、纯描述性定位的设计权衡 | P01.6 | ⭐ |
-| 10 | 惯性张量物理 | 主轴/惯性椭球/平行轴定理/正定性检查的完整理论 | P01.8 | ⭐⭐⭐ |
-| 11 | 调试工作流 | 静态语法 → 拓扑可视化 → RViz 几何 → 仿真物理 → 跨格式一致性 | P01.11 | ⭐⭐ |
-| 12 | 命名规范 | REP-105 + 描述性命名 + prefix 多实例 + CI 自动验证 | P01.11 | ⭐ |
+| 1 | URDF 定位 | ROS 生态的 single source of truth，所有工具链的起点 | P01.1, P01.6 | ★ |
+| 2 | `<link>` 元素 | visual / collision / inertial 三子树，分离渲染与碰撞几何 | P01.1 | ★ |
+| 3 | `<joint>` 元素 | 6 种类型；`revolute` 最常用；effort/velocity 设为 0 会阻止运动 | P01.1 | ★ |
+| 4 | Xacro 宏系统 | property / macro / include / conditional 四大机制消除重复 | P01.2, P01.7 | ★★ |
+| 5 | 惯性参数 | 几何近似 → CAD 导出 → SysId 三级精度；三角不等式是合法性底线 | P01.3, P01.8 | ★★ |
+| 6 | Mesh 管理 | visual(DAE) vs collision(STL) 分离；注意 m/mm 单位转换 | P01.3 | ★ |
+| 7 | 多格式转换 | URDF → SDF(gz sdf) / MJCF(mujoco)；URDF 不支持闭链 | P01.4 | ★★ |
+| 8 | ros2_control | `<hardware><plugin>` 决定后端；Xacro 条件分支实现 sim/real 切换 | P01.5, P01.9 | ★★ |
+| 9 | URDF 设计哲学 | 树结构限制、单一坐标约定、纯描述性定位的设计权衡 | P01.6 | ★ |
+| 10 | 惯性张量物理 | 主轴/惯性椭球/平行轴定理/正定性检查的完整理论 | P01.8 | ★★★ |
+| 11 | 调试工作流 | 静态语法 → 拓扑可视化 → RViz 几何 → 仿真物理 → 跨格式一致性 | P01.11 | ★★ |
+| 12 | 命名规范 | REP-105 + 描述性命名 + prefix 多实例 + CI 自动验证 | P01.11 | ★ |
 
 **下一章预告**：P02 sim-to-real 资产管道——从 CAD 到仿真到真机的完整管线，Domain Randomization，Docker 多阶段构建。
 
@@ -1024,15 +1024,15 @@ mini-manip/
 
 | 资源 | 难度 | 说明 |
 |------|:---:|------|
-| [ROS 官方 URDF 规范](http://wiki.ros.org/urdf/XML) | ⭐ | 权威参考，所有标签和属性的完整定义 |
-| [Xacro 官方文档](http://wiki.ros.org/xacro) | ⭐ | Xacro 语法和 Python 表达式支持 |
-| [REP-103 标准坐标系约定](https://www.ros.org/reps/rep-0103.html) | ⭐ | ROS 坐标系约定（右手系、SI 单位） |
-| [MuJoCo MJCF 文档](https://mujoco.readthedocs.io/en/latest/XMLreference.html) | ⭐⭐ | MJCF 格式完整参考，对比 URDF 差异 |
-| [SDF 格式规范](http://sdformat.org/spec) | ⭐⭐ | Gazebo 原生格式，比 URDF 更强的表达能力 |
-| [robot_descriptions.py](https://github.com/robot-descriptions/robot_descriptions.py) | ⭐ | 175+ 种机器人 URDF 即取即用，学习优秀建模范例 |
-| Lynch & Park (2017) "Modern Robotics" Ch4 | ⭐⭐ | 运动链的数学基础（DH 参数 vs Product of Exponentials） |
-| Coumans & Bai (2021) "MuJoCo Physics Engine" | ⭐⭐⭐ | MuJoCo 物理引擎设计，理解 MJCF 的设计动机 |
-| [onshape-to-robot](https://github.com/Rhoban/onshape-to-robot) | ⭐⭐ | 从 Onshape CAD 自动导出 URDF 的工具 |
+| [ROS 官方 URDF 规范](http://wiki.ros.org/urdf/XML) | ★ | 权威参考，所有标签和属性的完整定义 |
+| [Xacro 官方文档](http://wiki.ros.org/xacro) | ★ | Xacro 语法和 Python 表达式支持 |
+| [REP-103 标准坐标系约定](https://www.ros.org/reps/rep-0103.html) | ★ | ROS 坐标系约定（右手系、SI 单位） |
+| [MuJoCo MJCF 文档](https://mujoco.readthedocs.io/en/latest/XMLreference.html) | ★★ | MJCF 格式完整参考，对比 URDF 差异 |
+| [SDF 格式规范](http://sdformat.org/spec) | ★★ | Gazebo 原生格式，比 URDF 更强的表达能力 |
+| [robot_descriptions.py](https://github.com/robot-descriptions/robot_descriptions.py) | ★ | 175+ 种机器人 URDF 即取即用，学习优秀建模范例 |
+| Lynch & Park (2017) "Modern Robotics" Ch4 | ★★ | 运动链的数学基础（DH 参数 vs Product of Exponentials） |
+| Coumans & Bai (2021) "MuJoCo Physics Engine" | ★★★ | MuJoCo 物理引擎设计，理解 MJCF 的设计动机 |
+| [onshape-to-robot](https://github.com/Rhoban/onshape-to-robot) | ★★ | 从 Onshape CAD 自动导出 URDF 的工具 |
 
 ---
 
@@ -1049,7 +1049,7 @@ mini-manip/
 
 ---
 
-## P01.6 URDF 的来龙去脉与设计哲学 ⭐
+## P01.6 URDF 的来龙去脉与设计哲学 ★
 
 ### 历史溯源
 
@@ -1103,7 +1103,7 @@ URDF做了三个关键的设计决策，理解它们有助于理解后续遇到�
 
 ---
 
-## P01.7 Xacro 高级技巧与设计模式 ⭐⭐
+## P01.7 Xacro 高级技巧与设计模式 ★★
 
 ### 条件分支实战
 
@@ -1415,7 +1415,7 @@ my_robot_description/
 </robot>
 ```
 
-> **⚠️ Pitfall：Xacro变量作用域**
+> **⚠ Pitfall：Xacro变量作用域**
 >
 > `<xacro:property>`在macro内部定义时是**局部变量**，仅在该macro调用范围内可见。在macro外部（文件顶层）定义的property是**全局变量**。一个常见错误是在macro A内部定义了一个property，然后试图在macro B中读取它——这会得到一个空值或解析错误，且错误信息往往不直观（显示为"undefined"而非指出作用域问题）。
 >
@@ -1423,7 +1423,7 @@ my_robot_description/
 
 ---
 
-## P01.8 惯性参数详解与系统辨识 ⭐⭐⭐
+## P01.8 惯性参数详解与系统辨识 ★★★
 
 ### 惯性张量的物理含义
 
@@ -1582,7 +1582,7 @@ def inertia_from_mesh(mesh_path, density=1000.0):
     return mass, com, I
 ```
 
-> **⚠️ Pitfall：CAD导出的惯性单位陷阱**
+> **⚠ Pitfall：CAD导出的惯性单位陷阱**
 >
 > 许多CAD软件（SolidWorks、Fusion360）默认使用$\text{g} \cdot \text{mm}^2$作为惯性单位，而URDF要求$\text{kg} \cdot \text{m}^2$。两者之间差**6个数量级**（$1 \text{ g} \cdot \text{mm}^2 = 10^{-9} \text{ kg} \cdot \text{m}^2$）。
 >
@@ -1592,7 +1592,7 @@ def inertia_from_mesh(mesh_path, density=1000.0):
 
 ---
 
-## P01.9 ros2_control 标签详解 ⭐⭐
+## P01.9 ros2_control 标签详解 ★★
 
 ### `<ros2_control>`标签完整解剖
 
@@ -1800,7 +1800,7 @@ P01中`<ros2_control>`标签的作用是**声明接口契约**：这个机器人
 
 P01和M12的关系可以类比为：P01是"接口定义"（header file），M12是"接口实现"（source file）。两者必须严格一致——如果P01声明了`effort` command_interface，但M12的`write()`方法只处理了`position`，那么effort命令会被静默忽略。
 
-> **⚠️ Pitfall：command_interface类型与控制器不匹配**
+> **⚠ Pitfall：command_interface类型与控制器不匹配**
 >
 > ros2_control中最常见也最难调试的错误之一：`<command_interface>`声明的类型与控制器期望的类型不匹配。
 >
@@ -2133,7 +2133,7 @@ def sample_workspace(n_samples=50000):
 
 ---
 
-## P01.11 URDF 验证自动化与 CI/CD 集成 ⭐⭐
+## P01.11 URDF 验证自动化与 CI/CD 集成 ★★
 
 ### 动机——手动验证不可扩展
 
@@ -2365,7 +2365,7 @@ jobs:
 
 > **跨领域类比——URDF CI 与代码编译**：URDF 验证在机器人项目中的角色，等同于编译检查在软件项目中的角色。没有人会跳过编译直接部署 C++ 代码，但很多机器人团队跳过 URDF 验证直接在 Gazebo 中"试试看"。URDF CI 的成本极低（几秒钟），但它能在最早阶段捕获惯性错误、限位错误、mesh 引用错误——这些错误如果到仿真阶段才发现，调试成本会高出 10-100 倍。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：CI 中 Xacro 展开使用了错误的参数

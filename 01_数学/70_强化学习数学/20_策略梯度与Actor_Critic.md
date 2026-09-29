@@ -1,6 +1,6 @@
 # 策略梯度与 Actor-Critic 理论
 
-> **档位说明**：⭐ = 必学；⭐⭐ = 核心；⭐⭐⭐ = 进阶；⭐⭐⭐⭐ = 研究级
+> **档位说明**：★ = 必学；★★ = 核心；★★★ = 进阶；★★★★ = 研究级
 > **前置**：专题 6.1（MDP 与动态规划基础）——Bellman 算子 $T^\pi$/$T^*$ 的 $\gamma$-压缩性（sup-norm 下）、占用测度 $d^\pi(s)=(1-\gamma)\sum_{t=0}^\infty\gamma^t\Pr(s_t=s|\mu_0,\pi)$ 的对偶 LP 形式化、值迭代/策略迭代收敛性。
 > **读者定位**：机器人综合交叉方向博士候选，主力语言 C++ / Python，专攻 RL-based motion control、embodied intelligence、SLAM。
 > **核心格言**（Bertsekas 2019）：*"Policy iteration is the engine; policy gradient is its differentiable, scalable form."*
@@ -9,7 +9,7 @@
 
 ## 前置自测
 
-📋 **前置自测**（答不出 ≥ 2 题，先回 6.1 复习）
+◆ **前置自测**（答不出 ≥ 2 题，先回 6.1 复习）
 
 1. 写出 Bellman 最优方程 $V^*(s)$ 的完整形式，并解释 $\gamma$-压缩算子的含义。
 2. 什么是占用测度 $d^\pi(s)$？它与策略 $\pi$ 和初始分布 $\mu_0$ 的关系是什么？
@@ -80,7 +80,7 @@
 
 ---
 
-## §1 引言：为什么策略梯度是现代 RL 的心脏 ⭐
+## §1 引言：为什么策略梯度是现代 RL 的心脏 ★
 
 ### 动机：策略迭代的三重墙
 
@@ -112,7 +112,7 @@
 
 ---
 
-## §2 从值函数到策略参数化 ⭐
+## §2 从值函数到策略参数化 ★
 
 ### 目标函数的形式化
 
@@ -153,7 +153,7 @@ $$
 
 ---
 
-## §3 策略梯度定理完整证明 ⭐⭐
+## §3 策略梯度定理完整证明 ★★
 
 ### §3.1 定理陈述
 
@@ -169,7 +169,7 @@ $$
 
 > **归一化约定说明**：$d^\pi$ 含 $(1-\gamma)$ 使其和为 1。boxed 公式中的 $\frac{1}{1-\gamma}$ 在实现中被吸收进学习率（梯度方向不变）。on-policy 采样时经验频率自然正比于未归一化的 $\tilde{d}^\pi$。
 
-### §3.2 完整证明（不跳步）⭐⭐
+### §3.2 完整证明（不跳步）★★
 
 **为什么这个定理如此重要？** 它告诉我们：尽管 $J(\theta)$ 的梯度看似需要对整个轨迹分布求导（包括环境转移概率），但最终结果只涉及 $\nabla_\theta \log \pi_\theta$ 和 $Q^\pi$——前者是策略的 score function（我们可以计算），后者是值函数（我们可以估计）。**环境模型 $P(s'|s,a)$ 完全不出现在梯度公式中**。
 
@@ -239,7 +239,7 @@ $$
 
 许多教材在第 3 步跳步。**关键观察**：$\mu_0$ 是外部给定的、不依赖 $\theta$ 的先验。若误把 $\mu_0$ 视作 $\pi_\theta$ 的函数（例如在 meta-RL 中），则出现 "missing initial distribution term"——off-policy PG 需要 importance sampling 修正的根源。
 
-### §3.4 三种等价形式 ⭐
+### §3.4 三种等价形式 ★
 
 **（A）Q 形式**：$\nabla_\theta J=\frac{1}{1-\gamma}\mathbb{E}_{s\sim d^\pi,a\sim\pi}\bigl[\nabla_\theta\log\pi(a|s)\,Q^\pi(s,a)\bigr]$
 
@@ -263,7 +263,7 @@ $$
 
 > **本质洞察**：策略梯度 = 在占用测度 $\rho^\pi$ 加权下的 advantage-weighted log-likelihood gradient。它不是在最大化某个固定的似然函数，而是在最大化"好动作被选中的倾向"。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 | 陷阱 | 表现 | 正确做法 |
 |------|------|---------|
@@ -279,7 +279,7 @@ $$
 
 ---
 
-## §4 REINFORCE 与方差分析 ⭐⭐
+## §4 REINFORCE 与方差分析 ★★
 
 ### §4.1 REINFORCE 算法推导
 
@@ -329,7 +329,7 @@ $$
 > - 小学习率导致收敛极慢
 > - 在实际机器人任务中（数百维状态/动作，数千步 horizon），REINFORCE 几乎不可用
 
-### §4.4 Baseline 减方差 ⭐⭐
+### §4.4 Baseline 减方差 ★★
 
 **核心思想**：引入任意与动作 $a$ 无关的函数 $b(s)$：
 
@@ -367,7 +367,7 @@ $$
 
 > **跨领域类比**：Baseline 之于策略梯度，如同 control variate 之于蒙特卡罗积分。在金融衍生品定价中，control variate 通过减去一个已知期望的随机变量来降低估计方差——完全相同的数学原理。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 | 陷阱类型 | 错误描述 | 后果 | 正确做法 |
 |---------|---------|------|---------|
@@ -383,7 +383,7 @@ $$
 
 ---
 
-## §5 Advantage 函数与广义优势估计 GAE ⭐⭐
+## §5 Advantage 函数与广义优势估计 GAE ★★
 
 ### §5.0 Advantage 函数的数学性质
 
@@ -422,7 +422,7 @@ $$
 
 **问题**：如何在 MC（无偏高方差）和 TD（有偏低方差）之间找到最优折中？
 
-### §5.2 GAE 的完整推导 ⭐⭐
+### §5.2 GAE 的完整推导 ★★
 
 **GAE（Schulman-Moritz-Levine-Jordan-Abbeel, ICLR 2016, arXiv:1506.02438）** 的核心思想：对所有 $n$-step 估计做**指数加权平均**。
 
@@ -534,7 +534,7 @@ for t in reversed(range(T)):
     advantages[t] = lastgaelam = delta + gamma * lam * (1 - dones[t]) * lastgaelam
 ```
 
-> ⚠️ **编程陷阱**：GAE 在 episode 边界处不 mask `done`，会导致 bootstrap 跨 episode，梯度污染。必须 `(1-done[t])` 截断。
+> ⚠ **编程陷阱**：GAE 在 episode 边界处不 mask `done`，会导致 bootstrap 跨 episode，梯度污染。必须 `(1-done[t])` 截断。
 
 ### 练习
 
@@ -565,7 +565,7 @@ for t in reversed(range(T)):
 
 ---
 
-## §6 Actor-Critic 架构 ⭐⭐
+## §6 Actor-Critic 架构 ★★
 
 ### §6.1 核心思想与 PI 的精确对应
 
@@ -613,7 +613,7 @@ Actor-Critic 把 $Q^\pi$ 或 $A^\pi$ 也用一个参数化 **critic** $V_\phi$ �
 
 > **跨领域类比**：Actor-Critic 类似于 GAN 的 Generator-Discriminator 交互——Actor 生成动作，Critic 评价动作质量。两者通过对抗/协作不断改进。区别在于：GAN 的 Discriminator 试图区分真假，Critic 试图预测长期价值。
 
-### §6.2 Compatible Function Approximation ⭐⭐⭐
+### §6.2 Compatible Function Approximation ★★★
 
 **问题**：若 critic 用有限参数族 $Q_\psi$，用 $Q_\psi$ 替代 $Q^\pi$ 的"伪 PG"是否还等于真 PG？
 
@@ -635,7 +635,7 @@ $$
 
 > **机器人直觉**：工程实现中 critic 通常是独立 MLP，并**不**满足 compatibility——所以实际 actor-critic 是有偏的，但偏差在 critic 训练充分后较小。
 
-### §6.3 两时间尺度分析 ⭐⭐⭐
+### §6.3 两时间尺度分析 ★★★
 
 Actor-Critic 是典型的**两时间尺度随机逼近系统**（Borkar 2008）：
 
@@ -651,7 +651,7 @@ Actor-Critic 是典型的**两时间尺度随机逼近系统**（Borkar 2008）�
 
 > **与 6.5 随机逼近的桥梁**：这正是 6.5 专题将深入讨论的 ODE method。核心思想：当快变量"几乎收敛"时，慢变量看到的是一个"平均化"后的梯度场——两时间尺度系统可以逐层分析。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 | 陷阱 | 表现 | 根本原因 | 正确做法 |
 |------|------|---------|---------|
@@ -661,7 +661,7 @@ Actor-Critic 是典型的**两时间尺度随机逼近系统**（Borkar 2008）�
 
 ---
 
-## §7 自然策略梯度 NPG ⭐⭐⭐
+## §7 自然策略梯度 NPG ★★★
 
 ### §7.1 动机：参数空间 vs 分布空间
 
@@ -742,7 +742,7 @@ Fisher 矩阵的 $(i,j)$ 分量：$F_{ij} = \mathbb{E}_{s\sim d^\pi}[\pi_i(1_{i=
 
 **NPG 的历史贡献**：虽然 NPG 本身（因为需要精确 $F^{-1}$）在实践中不如 PPO，但它提供了理解 TRPO/PPO "为什么稳定" 的理论基础——它们都是在策略分布空间（而非参数空间）做有约束的优化。
 
-### ⚠️ NPG/TRPO 常见陷阱
+### ⚠ NPG/TRPO 常见陷阱
 
 | 陷阱 | 表现 | 正确做法 |
 |------|------|---------|
@@ -752,7 +752,7 @@ Fisher 矩阵的 $(i,j)$ 分量：$F_{ij} = \mathbb{E}_{s\sim d^\pi}[\pi_i(1_{i=
 
 ---
 
-## §8 TRPO：单调改进与 trust region ⭐⭐⭐
+## §8 TRPO：单调改进与 trust region ★★★
 
 ### §8.1 动机：从 NPG 到 TRPO
 
@@ -851,7 +851,7 @@ $$
 
 > **与 SQP 的类比**：TRPO 的 trust-region 子问题结构上是 SQP（Sequential Quadratic Programming）的一次迭代。目标线性化 + 约束二次化。
 
-### ⚠️ TRPO 常见陷阱
+### ⚠ TRPO 常见陷阱
 
 | 陷阱 | 表现 | 正确做法 |
 |------|------|---------|
@@ -861,7 +861,7 @@ $$
 
 ---
 
-## §9 PPO：clip 的艺术 ⭐⭐
+## §9 PPO：clip 的艺术 ★★
 
 ### §9.1 从 TRPO 到 PPO 的数学动机
 
@@ -971,7 +971,7 @@ Engstrom et al. (ICLR 2020) "Implementation Matters in Deep Policy Gradients" �
 | entropy coef | 0.0-0.01 | 任务相关 | locomotion 通常 0.01 |
 | value clip | 有/无 | 低 | 一般开启 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 | 陷阱 | 表现 | 排查 | 修正 |
 |------|------|------|------|
@@ -988,7 +988,7 @@ Engstrom et al. (ICLR 2020) "Implementation Matters in Deep Policy Gradients" �
 
 ---
 
-## §10 确定性策略梯度 DPG/DDPG/TD3 ⭐⭐⭐
+## §10 确定性策略梯度 DPG/DDPG/TD3 ★★★
 
 ### §10.1 DPG 定理 (Silver 2014)
 
@@ -1022,7 +1022,7 @@ $$
 3. 泰勒展开 $Q^{\pi_\sigma}(s,a)\approx Q(s,\mu_\theta)+\nabla_a Q\cdot(a-\mu_\theta)$
 4. 取 $\sigma\to 0$，得 $\nabla_\theta J=\mathbb{E}[\nabla_\theta\mu_\theta\cdot\nabla_a Q|_{a=\mu_\theta}]$
 
-> ⚠️ **严格性警告**：取 $\sigma\to 0$ 时 $Q^{\pi_\sigma}$ 本身依赖 $\sigma$，严格证明需额外论证收敛性。Silver 2014 原文通过 Regular Policy Gradient Theorem 的极限做了更精细的处理。
+> ⚠ **严格性警告**：取 $\sigma\to 0$ 时 $Q^{\pi_\sigma}$ 本身依赖 $\sigma$，严格证明需额外论证收敛性。Silver 2014 原文通过 Regular Policy Gradient Theorem 的极限做了更精细的处理。
 
 ### §10.2 DDPG 架构
 
@@ -1074,7 +1074,7 @@ DDPG 的 Q-overestimation 严重。**核心问题**：神经网络近似 Q 函�
 
 > **DDPG 在 2026 年基本只有教学价值，生产环境已被 TD3/SAC 取代。** 其历史贡献在于启发了 TD3 的 twin critics 和 target policy smoothing。
 
-### ⚠️ DPG/DDPG/TD3 常见陷阱
+### ⚠ DPG/DDPG/TD3 常见陷阱
 
 | 陷阱 | 表现 | 根本原因 | 正确做法 |
 |------|------|---------|---------|
@@ -1085,7 +1085,7 @@ DDPG 的 Q-overestimation 严重。**核心问题**：神经网络近似 Q 函�
 
 ---
 
-## §11 最大熵 RL 与 SAC ⭐⭐⭐
+## §11 最大熵 RL 与 SAC ★★★
 
 ### §11.1 最大熵 MDP 目标
 
@@ -1111,7 +1111,7 @@ $$
 2. **多模态**：策略可以捕获多种近优行为模式
 3. **鲁棒性**：对模型误差和估计误差更稳健（Ziebart 2010）
 
-### §11.2 Soft Bellman 算子 ⭐⭐⭐
+### §11.2 Soft Bellman 算子 ★★★
 
 **Soft value functions**：
 
@@ -1149,7 +1149,7 @@ $$
 
 **证明**：最大化 $\mathbb{E}_a[Q-\alpha\log\pi]$ s.t. $\sum\pi=1$。拉格朗日：$\frac{\partial}{\partial\pi(a|s)}[Q/\alpha - \log\pi - 1 - \lambda]=0$，解得 $\pi \propto \exp(Q/\alpha)$。
 
-### §11.4 SAC 算法 ⭐⭐
+### §11.4 SAC 算法 ★★
 
 **SAC（Haarnoja-Zhou-Abbeel-Levine, ICML 2018）** 把 soft PI 做 off-policy 连续动作化：
 
@@ -1212,7 +1212,7 @@ $$
 | sim-to-real | 中 | **高** | 域随机化选 PPO |
 | 探索能力 | **强**（内嵌熵） | 中（entropy bonus） | 稀疏奖励选 SAC |
 
-### §11.5 SAC v1 到 v2 的演进 ⭐⭐⭐
+### §11.5 SAC v1 到 v2 的演进 ★★★
 
 | 版本 | 网络 | Temperature | 改进 |
 |------|------|-------------|------|
@@ -1245,14 +1245,14 @@ $\mathcal{H}_{\text{target}}$ 通常设为 $-\dim(\mathcal{A})$（每个动作�
 - 离散动作空间（需要修改为 Discrete SAC）
 - Domain randomization 场景（replay buffer 中 DR 参数混合导致 critic 方差大）
 
-> ⚠️ **SAC 的 $\tanh$ squashing Jacobian 陷阱**：
+> ⚠ **SAC 的 $\tanh$ squashing Jacobian 陷阱**：
 > 由于 $a = \tanh(u)$，对数概率需要修正：
 > 
 > $\log\pi(a|s) = \log\pi_{\text{pre}}(u|s) - \sum_{i=1}^d \log(1-\tanh^2(u_i))$
 > 
 > 忘记这个 Jacobian 修正是最常见的 SAC 实现 bug。
 
-### §11.6 与变分推断的统一视角 ⭐⭐⭐⭐
+### §11.6 与变分推断的统一视角 ★★★★
 
 **Levine 2018（arXiv:1805.00909）**："RL = Control as Inference"
 
@@ -1292,7 +1292,7 @@ $$
 
 ---
 
-## §12 机器人应用：PPO 的主导地位 ⭐⭐
+## §12 机器人应用：PPO 的主导地位 ★★
 
 ### §12.1 为什么 PPO 主导足式 RL
 
@@ -1378,7 +1378,7 @@ Isaac Lab / legged_gym 使用**同步并行**（所有 env 在同一 GPU 上同�
 
 ---
 
-## §12.7 重要性采样与 Off-Policy 策略梯度 ⭐⭐
+## §12.7 重要性采样与 Off-Policy 策略梯度 ★★
 
 ### Off-Policy 的动机
 
@@ -1470,7 +1470,7 @@ def update_ppo(actor, critic, states, actions, old_log_probs, advantages, return
 
 ---
 
-## §13 与控制理论的映射 ⭐⭐⭐
+## §13 与控制理论的映射 ★★★
 
 ### §13.1 对应关系总览
 
@@ -1517,7 +1517,7 @@ $$
 
 ---
 
-## §14 算法全家族对比 ⭐⭐
+## §14 算法全家族对比 ★★
 
 ### 演进路线
 
@@ -1584,7 +1584,7 @@ REINFORCE (1992) --> + Baseline --> Actor-Critic (A2C, 2016)
 
 ---
 
-## §15 部署：从训练到真机推理 ⭐⭐
+## §15 部署：从训练到真机推理 ★★
 
 ### ONNX 导出与 C++ 推理
 
@@ -1643,15 +1643,15 @@ send_to_motors(action);
 
 | 资源 | 难度 | 价值 |
 |------|------|------|
-| Sutton & Barto 2018 Ch.13 | ⭐ | 入门首选 |
-| Schulman 博士论文 "Optimizing Expectations" (2016) | ⭐⭐⭐ | TRPO/GAE 一手推导 |
-| Agarwal-Kakade-Lee-Mahajan "On the Theory of PG Methods" (JMLR 2021) | ⭐⭐⭐⭐ | PG 全局收敛理论 |
-| Levine CS285 Lec 5-10 | ⭐⭐ | 现代 deep RL 全覆盖 |
-| CleanRL `ppo_continuous_action.py` | ⭐⭐ | 单文件精读 PPO |
-| Spinning Up (OpenAI) | ⭐⭐ | VPG/PPO/SAC 专页 |
-| Lilian Weng "Policy Gradient Algorithms" | ⭐⭐ | 全家族对照 |
-| Bertsekas 2019 Ch.5 | ⭐⭐⭐ | PI 视角的 PG 理论 |
-| Meyn 2022 Ch.9-10 | ⭐⭐⭐⭐ | 随机逼近 + PG 收敛性严格分析 |
+| Sutton & Barto 2018 Ch.13 | ★ | 入门首选 |
+| Schulman 博士论文 "Optimizing Expectations" (2016) | ★★★ | TRPO/GAE 一手推导 |
+| Agarwal-Kakade-Lee-Mahajan "On the Theory of PG Methods" (JMLR 2021) | ★★★★ | PG 全局收敛理论 |
+| Levine CS285 Lec 5-10 | ★★ | 现代 deep RL 全覆盖 |
+| CleanRL `ppo_continuous_action.py` | ★★ | 单文件精读 PPO |
+| Spinning Up (OpenAI) | ★★ | VPG/PPO/SAC 专页 |
+| Lilian Weng "Policy Gradient Algorithms" | ★★ | 全家族对照 |
+| Bertsekas 2019 Ch.5 | ★★★ | PI 视角的 PG 理论 |
+| Meyn 2022 Ch.9-10 | ★★★★ | 随机逼近 + PG 收敛性严格分析 |
 
 ---
 
@@ -1691,7 +1691,7 @@ send_to_motors(action);
 
 ---
 
-## §16 策略梯度在 LLM 对齐中的应用 ⭐⭐⭐
+## §16 策略梯度在 LLM 对齐中的应用 ★★★
 
 ### RLHF 中的 PPO
 
@@ -1922,7 +1922,7 @@ c) 这对 PPO 中 actor lr / critic lr 的比例选择有什么指导？
 
 ## 附录 E：时间预算与学习建议
 
-**总时间**：基础（⭐⭐以下）约 3-4 周；完整（含⭐⭐⭐）额外 2-3 周。按 20h/周 估算。
+**总时间**：基础（★★以下）约 3-4 周；完整（含★★★）额外 2-3 周。按 20h/周 估算。
 
 | 任务 | 时间 | 产出物 |
 |------|------|--------|

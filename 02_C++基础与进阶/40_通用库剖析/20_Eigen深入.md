@@ -1,12 +1,12 @@
 # Eigen 深入——表达式模板、对齐与 SIMD
 
-> **难度**：⭐⭐～⭐⭐⭐ | **建议用时**：1周 | **前置要求**：通用库·文件IO 文件I/O与字符串处理、Eigen基础用法
+> **难度**：★★～★★★ | **建议用时**：1周 | **前置要求**：通用库·文件IO 文件I/O与字符串处理、Eigen基础用法
 
 ---
 
 ## 前置自测
 
-> 📋 答不出 >= 2 题 → 先回顾 Eigen 基础章节
+> ◆ 答不出 >= 2 题 → 先回顾 Eigen 基础章节
 
 1. `Eigen::Matrix3d` 和 `Eigen::MatrixXd` 在内存分配上有什么本质区别？前者分配在哪里、后者分配在哪里？
 2. `Eigen::Vector3d v; std::cout << v.norm();` 会输出什么？为什么结果不确定？问题出在哪一步？
@@ -31,7 +31,7 @@
 
 ---
 
-## 22.1 表达式模板详解 ⭐⭐⭐
+## 22.1 表达式模板详解 ★★★
 
 > 📎 本节是 `10_C++语言核心/110_Eigen基础与SLAM数学预备` §11.6 表达式模板的**工程深化**——同一机制，这里换用 NaiveMatrix 朴素实现对比，并以 1000×1000 大矩阵展开临时对象的内存与缓存代价。表达式模板的基础机制（lazy evaluation、与 SQL 查询优化器的类比、`auto`/`.eval()` 决策）见该章，本节不再重复推导。
 
@@ -257,9 +257,9 @@ Eigen 对矩阵乘法的处理是：**`A * B` 返回 `Product<A, B>` 表达式�
 
 这就引出了下一节的主题：当你确定目标矩阵不与源矩阵重叠时，可以用 `noalias()` 告诉 Eigen 跳过这个临时矩阵。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：存储表达式对象的引用**
+> ⚠ **编程陷阱：存储表达式对象的引用**
 >
 > **错误做法**：将表达式模板对象存入变量并延迟使用。
 > ```cpp
@@ -280,7 +280,7 @@ Eigen 对矩阵乘法的处理是：**`A * B` 返回 `Product<A, B>` 表达式�
 > ```
 > **自检方法**：避免对 Eigen 表达式使用 `auto`。如果你发现自己写了 `auto expr = ...` 且 `expr` 涉及 Eigen 运算，几乎一定是一个 bug。
 
-> ⚠️ **概念误区：认为 `auto` 总是安全的**
+> ⚠ **概念误区：认为 `auto` 总是安全的**
 >
 > **新手想法**："现代 C++ 推荐使用 `auto`，所以 Eigen 代码也应该多用 `auto`。"
 >
@@ -290,7 +290,7 @@ Eigen 对矩阵乘法的处理是：**`A * B` 返回 `Product<A, B>` 表达式�
 >
 > **为什么重要**：SLAM 代码中经常在循环里做矩阵运算。如果用 `auto` 接住一个表达式并在下一次迭代中使用，而源矩阵在迭代间被覆盖，就会产生非常难以追踪的 bug。
 
-> ⚠️ **思维陷阱：认为表达式模板总是更快**
+> ⚠ **思维陷阱：认为表达式模板总是更快**
 >
 > **新手想法**："表达式模板避免了临时矩阵，所以任何 Eigen 操作都比手写循环快。"
 >
@@ -300,7 +300,7 @@ Eigen 对矩阵乘法的处理是：**`A * B` 返回 `Product<A, B>` 表达式�
 
 ### 练习
 
-**练习 22.1.1** ⭐⭐：编写一个程序，分别用 Eigen 和朴素循环实现 `D = A + B + C`（1000x1000 矩阵），用 `std::chrono` 测量各自的执行时间。运行 1000 次取平均值。解释你观察到的性能差异。
+**练习 22.1.1** ★★：编写一个程序，分别用 Eigen 和朴素循环实现 `D = A + B + C`（1000x1000 矩阵），用 `std::chrono` 测量各自的执行时间。运行 1000 次取平均值。解释你观察到的性能差异。
 
 ```cpp
 #include <Eigen/Dense>
@@ -320,11 +320,11 @@ int main() {
 }
 ```
 
-**练习 22.1.2** ⭐⭐⭐：修改上面的简化表达式模板实现，添加 `SubExpr`（减法）和 `ScaleExpr`（标量乘法）。验证 `result = 2.0 * a + b - c` 只需一次遍历。提示：`ScaleExpr` 只需要存储一个标量和一个表达式引用。
+**练习 22.1.2** ★★★：修改上面的简化表达式模板实现，添加 `SubExpr`（减法）和 `ScaleExpr`（标量乘法）。验证 `result = 2.0 * a + b - c` 只需一次遍历。提示：`ScaleExpr` 只需要存储一个标量和一个表达式引用。
 
 ---
 
-## 22.2 Aliasing 问题 ⭐⭐
+## 22.2 Aliasing 问题 ★★
 
 ### 动机：一个看起来正确的等式如何产生错误结果
 
@@ -504,9 +504,9 @@ auto d_rotation = error_state.segment<3>(6);   // 旋转误差（so(3) 切空间
 
 但这也意味着 aliasing 需要特别注意。如果在 ESKF 的更新步骤中，你用状态向量的某个 block 来更新另一个 block，并且两者通过矩阵乘法耦合，就可能出现 aliasing。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：在存在 aliasing 时使用 `noalias()`**
+> ⚠ **编程陷阱：在存在 aliasing 时使用 `noalias()`**
 >
 > **错误做法**：
 > ```cpp
@@ -525,7 +525,7 @@ auto d_rotation = error_state.segment<3>(6);   // 旋转误差（so(3) 切空间
 > ```
 > **自检方法**：全局搜索 `.noalias()`，检查每一处使用的左边变量是否出现在右边表达式中（包括作为 block 的父矩阵）。
 
-> ⚠️ **概念误区：认为 `eval()` 和 `noalias()` 是对立的**
+> ⚠ **概念误区：认为 `eval()` 和 `noalias()` 是对立的**
 >
 > **新手想法**："`eval()` 强制分配临时矩阵，`noalias()` 避免分配临时矩阵，它们是相反的操作。"
 >
@@ -537,7 +537,7 @@ auto d_rotation = error_state.segment<3>(6);   // 旋转误差（so(3) 切空间
 >
 > **正确理解**：`eval()` 控制"何时计算"，`noalias()` 控制"是否分配乘法的临时缓冲区"。
 
-> ⚠️ **思维陷阱：过早优化——到处加 `noalias()`**
+> ⚠ **思维陷阱：过早优化——到处加 `noalias()`**
 >
 > **新手想法**："既然 `noalias()` 能提升 10-30% 性能，我应该在所有矩阵乘法上都加上它。"
 >
@@ -545,7 +545,7 @@ auto d_rotation = error_state.segment<3>(6);   // 旋转误差（so(3) 切空间
 >
 > **正确思维**：只在以下条件同时满足时使用 `noalias()`：(1) 矩阵是动态大小（`MatrixXd`）；(2) 矩阵维度较大（>100）；(3) 你能证明没有 aliasing；(4) 性能分析（profiling）表明矩阵乘法是瓶颈。
 
-> ⚠️ **编程陷阱：block 操作隐藏的 aliasing**
+> ⚠ **编程陷阱：block 操作隐藏的 aliasing**
 >
 > **错误做法**：
 > ```cpp
@@ -565,9 +565,9 @@ auto d_rotation = error_state.segment<3>(6);   // 旋转误差（so(3) 切空间
 
 ### 练习
 
-**练习 22.2.1** ⭐⭐：编写一个程序验证 `A = A.transpose()` 的 aliasing 问题。用 3x3 矩阵，打印赋值前后的矩阵，与 `A.transpose().eval()` 的正确结果对比。
+**练习 22.2.1** ★★：编写一个程序验证 `A = A.transpose()` 的 aliasing 问题。用 3x3 矩阵，打印赋值前后的矩阵，与 `A.transpose().eval()` 的正确结果对比。
 
-**练习 22.2.2** ⭐⭐：基准测试 `C = A * B` 与 `C.noalias() = A * B` 在不同矩阵大小（10x10、100x100、1000x1000）下的性能差异。使用 `std::chrono` 测量，循环 10000 次取平均。在什么维度下 `noalias()` 的收益变得明显？
+**练习 22.2.2** ★★：基准测试 `C = A * B` 与 `C.noalias() = A * B` 在不同矩阵大小（10x10、100x100、1000x1000）下的性能差异。使用 `std::chrono` 测量，循环 10000 次取平均。在什么维度下 `noalias()` 的收益变得明显？
 
 ```cpp
 #include <Eigen/Dense>
@@ -593,11 +593,11 @@ int main() {
 }
 ```
 
-**练习 22.2.3** ⭐⭐⭐：实现一个 ESKF 风格的协方差预测函数，正确处理 aliasing。函数签名为 `void predictCovariance(Eigen::MatrixXd& P, const Eigen::MatrixXd& F, const Eigen::MatrixXd& Q)`。要求：P 在函数结束后变为 $F P F^T + Q$，不允许在 P 上使用 `noalias()`（因为 P 同时是输入和输出）。
+**练习 22.2.3** ★★★：实现一个 ESKF 风格的协方差预测函数，正确处理 aliasing。函数签名为 `void predictCovariance(Eigen::MatrixXd& P, const Eigen::MatrixXd& F, const Eigen::MatrixXd& Q)`。要求：P 在函数结束后变为 $F P F^T + Q$，不允许在 P 上使用 `noalias()`（因为 P 同时是输入和输出）。
 
 ---
 
-## 22.3 Eigen::Map 高级用法 ⭐⭐⭐
+## 22.3 Eigen::Map 高级用法 ★★★
 
 ### 动机：当 Eigen 遇到外部数据
 
@@ -824,9 +824,9 @@ cv::Mat R_cv2(3, 3, CV_64F, R_eig.data());
 
 关键注意点：OpenCV 的 `cv::Mat` 默认是行主序（row-major），Eigen 默认是列主序（column-major）。在做 Map 时必须指定 `Eigen::RowMajor`，否则矩阵的行列会互换。这是一个极其常见的 bug 来源。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：Map 的生命周期问题**
+> ⚠ **编程陷阱：Map 的生命周期问题**
 >
 > **错误做法**：
 > ```cpp
@@ -850,7 +850,7 @@ cv::Mat R_cv2(3, 3, CV_64F, R_eig.data());
 > ```
 > 返回值会隐式拷贝为 `Vector3d`，安全。
 
-> ⚠️ **编程陷阱：cv::Mat 与 Eigen 的存储顺序不匹配**
+> ⚠ **编程陷阱：cv::Mat 与 Eigen 的存储顺序不匹配**
 >
 > **错误做法**：
 > ```cpp
@@ -866,13 +866,13 @@ cv::Mat R_cv2(3, 3, CV_64F, R_eig.data());
 >     R.ptr<double>());
 > ```
 
-> ⚠️ **概念误区：认为 Map 只能映射 double 数组**
+> ⚠ **概念误区：认为 Map 只能映射 double 数组**
 >
 > **新手想法**："Map 只能用在 `double*` 上。"
 >
 > **实际上**：Map 可以映射任何标量类型——`float*`、`int*`，甚至 Ceres 的 `Jet<double, N>*`。Map 的标量类型由矩阵类型决定：`Map<Matrix3f>` 映射 `float*`，`Map<Matrix3d>` 映射 `double*`。在 Ceres 的自动微分中，Map 能够无缝处理 `Jet` 类型，这是它被广泛用于 Ceres 代价函数的原因之一。
 
-> ⚠️ **思维陷阱：为了"安全"总是拷贝而不用 Map**
+> ⚠ **思维陷阱：为了"安全"总是拷贝而不用 Map**
 >
 > **新手想法**："Map 涉及指针和生命周期问题，不如每次都拷贝一份 Eigen 矩阵更安全。"
 >
@@ -882,9 +882,9 @@ cv::Mat R_cv2(3, 3, CV_64F, R_eig.data());
 
 ### 练习
 
-**练习 22.3.1** ⭐⭐：编写一个函数，接受 `const float* data` 和 `int n`，使用 `Eigen::Map` 将其映射为 `Eigen::VectorXf`，计算并返回其 L2 范数。不允许拷贝数据。
+**练习 22.3.1** ★★：编写一个函数，接受 `const float* data` 和 `int n`，使用 `Eigen::Map` 将其映射为 `Eigen::VectorXf`，计算并返回其 L2 范数。不允许拷贝数据。
 
-**练习 22.3.2** ⭐⭐⭐：编写一个 Ceres 代价函数（使用自动微分），实现 3D 点到平面距离的最小化。参数块包含一个 3D 点（3 个 double），观测值是一个平面方程（法向量 + 距离，共 4 个 double）。在 `operator()` 中使用 `Eigen::Map<const Eigen::Matrix<T, 3, 1>>` 映射参数块。
+**练习 22.3.2** ★★★：编写一个 Ceres 代价函数（使用自动微分），实现 3D 点到平面距离的最小化。参数块包含一个 3D 点（3 个 double），观测值是一个平面方程（法向量 + 距离，共 4 个 double）。在 `operator()` 中使用 `Eigen::Map<const Eigen::Matrix<T, 3, 1>>` 映射参数块。
 
 ```cpp
 #include <ceres/ceres.h>
@@ -906,11 +906,11 @@ struct PointToPlaneError {
 };
 ```
 
-**练习 22.3.3** ⭐⭐：编写一个函数，将 `cv::Mat`（CV_64F, 行主序）的内容用 `Eigen::Map` 零拷贝映射为 `Eigen::MatrixXd`（列主序），并验证转换后的矩阵元素顺序是否正确。
+**练习 22.3.3** ★★：编写一个函数，将 `cv::Mat`（CV_64F, 行主序）的内容用 `Eigen::Map` 零拷贝映射为 `Eigen::MatrixXd`（列主序），并验证转换后的矩阵元素顺序是否正确。
 
 ---
 
-## 22.4 内存对齐深入 ⭐⭐⭐
+## 22.4 内存对齐深入 ★★★
 
 ### 动机：为什么 SLAM 代码会在某些机器上随机崩溃？
 
@@ -1052,9 +1052,9 @@ std::vector<Eigen::Vector4d> poses;
                           (Vector3d, Matrix3d 不需要对齐)
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：给 `Vector3d` 成员加了不必要的对齐宏**
+> ⚠ **编程陷阱：给 `Vector3d` 成员加了不必要的对齐宏**
 >
 > **错误做法**：
 > ```cpp
@@ -1071,7 +1071,7 @@ std::vector<Eigen::Vector4d> poses;
 >
 > **正确做法**：只有当类包含字节数是 16 倍数的固定大小 Eigen 成员时才添加宏。
 
-> ⚠️ **概念误区：认为 C++17 完全解决了对齐问题**
+> ⚠ **概念误区：认为 C++17 完全解决了对齐问题**
 >
 > **新手想法**："用了 C++17 就不用管对齐了。"
 >
@@ -1082,7 +1082,7 @@ std::vector<Eigen::Vector4d> poses;
 >
 > **正确做法**：在标准的 C++17 环境中，默认不加宏。但如果使用了自定义内存管理器或 placement new，需要手动确保对齐。
 
-> ⚠️ **思维陷阱：混淆"对齐"与"性能"的唯一关联**
+> ⚠ **思维陷阱：混淆"对齐"与"性能"的唯一关联**
 >
 > **新手想法**："对齐只是为了正确性，不影响性能。"
 >
@@ -1090,7 +1090,7 @@ std::vector<Eigen::Vector4d> poses;
 
 ### 练习
 
-**练习 22.4.1** ⭐⭐：编写一个程序，检测你的编译器是否支持 C++17 over-aligned new。创建一个包含 `Eigen::Vector4d` 成员的类，不加 `EIGEN_MAKE_ALIGNED_OPERATOR_NEW`，用 `new` 分配 1000 个实例，检查每个实例中 `Vector4d` 成员的地址是否是 16 字节对齐的。
+**练习 22.4.1** ★★：编写一个程序，检测你的编译器是否支持 C++17 over-aligned new。创建一个包含 `Eigen::Vector4d` 成员的类，不加 `EIGEN_MAKE_ALIGNED_OPERATOR_NEW`，用 `new` 分配 1000 个实例，检查每个实例中 `Vector4d` 成员的地址是否是 16 字节对齐的。
 
 ```cpp
 #include <Eigen/Dense>
@@ -1119,11 +1119,11 @@ int main() {
 }
 ```
 
-**练习 22.4.2** ⭐⭐：列出以下 Eigen 类型中哪些需要对齐、哪些不需要（在 C++14 下）：`Vector2f`、`Vector3f`、`Vector4f`、`Matrix3f`、`Matrix4f`、`Vector2d`、`Vector3d`、`Vector4d`、`Matrix3d`、`Matrix4d`、`Quaterniond`。给出每种类型的元素数、字节数和对齐判断依据。
+**练习 22.4.2** ★★：列出以下 Eigen 类型中哪些需要对齐、哪些不需要（在 C++14 下）：`Vector2f`、`Vector3f`、`Vector4f`、`Matrix3f`、`Matrix4f`、`Vector2d`、`Vector3d`、`Vector4d`、`Matrix3d`、`Matrix4d`、`Quaterniond`。给出每种类型的元素数、字节数和对齐判断依据。
 
 ---
 
-## 22.5 SIMD 自动向量化 ⭐⭐⭐
+## 22.5 SIMD 自动向量化 ★★★
 
 ### 动机：同样的代码，速度差 4 倍？
 
@@ -1273,9 +1273,9 @@ grep -E 'addpd|mulpd|vaddpd|vmulpd|fmla' output.s
 
 搜索到 `vaddpd`/`vmulpd` 表示 AVX 双精度加法/乘法在使用中；`addpd`/`mulpd` 是 SSE 版本；`fmla` 是 ARM NEON 浮点乘加。如果搜索结果为空，说明 SIMD 没有被使用——最常见的原因是忘了加 `-march=native`。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：忘记在 CMakeLists.txt 中启用 `-march=native`**
+> ⚠ **编程陷阱：忘记在 CMakeLists.txt 中启用 `-march=native`**
 >
 > **错误做法**：CMakeLists.txt 中没有设置 SIMD 相关编译选项。
 >
@@ -1287,13 +1287,13 @@ grep -E 'addpd|mulpd|vaddpd|vmulpd|fmla' output.s
 >
 > **自检方法**：在代码中打印 `EIGEN_VECTORIZE_AVX` 等宏的定义状态（参考上面的 `printSimdInfo()` 函数）。
 
-> ⚠️ **概念误区：认为 SIMD 只加速大矩阵**
+> ⚠ **概念误区：认为 SIMD 只加速大矩阵**
 >
 > **新手想法**："SIMD 是并行计算，只有大矩阵才能受益。3x3 或 4x4 矩阵太小，SIMD 没用。"
 >
 > **实际上**：SIMD 对固定大小的小矩阵同样有效。`Vector4d` 的加法在 AVX 下是一条指令（`vaddpd`），比 4 次标量加法快。`Matrix4d` 乘法在 AVX 下可以用分块方案，比标量方案快 2-4 倍。实际上，固定大小小矩阵是 SIMD 最能发挥作用的场景——因为编译器可以在编译期完全展开循环并映射到 SIMD 指令，没有循环控制开销。
 
-> ⚠️ **思维陷阱：在交叉编译时使用 `-march=native`**
+> ⚠ **思维陷阱：在交叉编译时使用 `-march=native`**
 >
 > **新手想法**："到处加 `-march=native` 就好了。"
 >
@@ -1303,9 +1303,9 @@ grep -E 'addpd|mulpd|vaddpd|vmulpd|fmla' output.s
 
 ### 练习
 
-**练习 22.5.1** ⭐⭐：编写一个程序，分别用 `-O2` 和 `-O2 -march=native` 编译，对比 `Matrix4d` 乘法的性能（循环 100 万次）。打印性能差异和检测到的 SIMD 指令集。
+**练习 22.5.1** ★★：编写一个程序，分别用 `-O2` 和 `-O2 -march=native` 编译，对比 `Matrix4d` 乘法的性能（循环 100 万次）。打印性能差异和检测到的 SIMD 指令集。
 
-**练习 22.5.2** ⭐⭐⭐：编写一个 3D 点云旋转的基准测试。生成 10 万个随机 3D 点，分别用 `Matrix3d` 乘法和 `Quaterniond` 旋转来变换所有点。比较两种方式在 `-march=native` 下的性能。解释你观察到的差异。
+**练习 22.5.2** ★★★：编写一个 3D 点云旋转的基准测试。生成 10 万个随机 3D 点，分别用 `Matrix3d` 乘法和 `Quaterniond` 旋转来变换所有点。比较两种方式在 `-march=native` 下的性能。解释你观察到的差异。
 
 ```cpp
 #include <Eigen/Dense>
@@ -1331,7 +1331,7 @@ int main() {
 
 ---
 
-## 22.6 Eigen::Ref<T> ⭐⭐
+## 22.6 Eigen::Ref<T> ★★
 
 ### 动机：如何编写一个接受"任何 Eigen 向量"的函数？
 
@@ -1492,9 +1492,9 @@ auto R3 = rodrigues(params.col(0));
 
 使用 `Ref<const Vector3d>` 而不是模板参数，这个函数可以定义在 `.cpp` 文件中，不会造成代码膨胀，同时接受各种 3 维 Eigen 表达式。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：对 `Ref<VectorXd>` 传入行向量**
+> ⚠ **编程陷阱：对 `Ref<VectorXd>` 传入行向量**
 >
 > **错误做法**：
 > ```cpp
@@ -1510,13 +1510,13 @@ auto R3 = rodrigues(params.col(0));
 >
 > **正确做法**：用 `col()` 代替 `row()`，或者将函数参数改为 `Ref<const VectorXd>`（const 版本在布局不兼容时会创建临时拷贝以保证正确性）。
 
-> ⚠️ **概念误区：认为 Ref 和 Map 完全等价**
+> ⚠ **概念误区：认为 Ref 和 Map 完全等价**
 >
 > **新手想法**："`Ref` 和 `Map` 都是零拷贝引用，用哪个都行。"
 >
 > **实际上**：`Map` 只能从原始指针创建，`Ref` 可以从任何 Eigen 表达式创建。`Map` 不做任何兼容性检查，你必须自己保证指针和大小正确；`Ref` 在编译期检查类型兼容性。`Map` 适用于与外部数据交互（Ceres、OpenCV），`Ref` 适用于编写接受多种 Eigen 类型的 C++ 函数。两者的使用场景是互补的，不是替代关系。
 
-> ⚠️ **思维陷阱：在每个函数都用 Ref**
+> ⚠ **思维陷阱：在每个函数都用 Ref**
 >
 > **新手想法**："既然 Ref 这么好用，所有接受 Eigen 参数的函数都应该用 Ref。"
 >
@@ -1526,9 +1526,9 @@ auto R3 = rodrigues(params.col(0));
 
 ### 练习
 
-**练习 22.6.1** ⭐⭐：实现函数 `double computeWeightedNorm(Eigen::Ref<const Eigen::VectorXd> v, Eigen::Ref<const Eigen::VectorXd> w)`，计算加权范数 $\sqrt{\sum_i w_i v_i^2}$。验证它能接受 `VectorXd`、`Vector3d`、`matrix.col(0)`、`vector.segment(2, 5)` 等各种类型。
+**练习 22.6.1** ★★：实现函数 `double computeWeightedNorm(Eigen::Ref<const Eigen::VectorXd> v, Eigen::Ref<const Eigen::VectorXd> w)`，计算加权范数 $\sqrt{\sum_i w_i v_i^2}$。验证它能接受 `VectorXd`、`Vector3d`、`matrix.col(0)`、`vector.segment(2, 5)` 等各种类型。
 
-**练习 22.6.2** ⭐⭐⭐：编写两个版本的矩阵列归一化函数——一个用模板参数，一个用 `Ref`。比较它们的编译时间和二进制大小（提示：用 `size` 命令查看 `.o` 文件大小）。
+**练习 22.6.2** ★★★：编写两个版本的矩阵列归一化函数——一个用模板参数，一个用 `Ref`。比较它们的编译时间和二进制大小（提示：用 `size` 命令查看 `.o` 文件大小）。
 
 ```cpp
 // 版本 A：模板
@@ -1549,7 +1549,7 @@ void normalizeColumns_v2(Eigen::Ref<Eigen::MatrixXd> M) {
 
 ---
 
-## 22.7 Eigen 工程边界与验证清单 ⭐⭐
+## 22.7 Eigen 工程边界与验证清单 ★★
 
 > **这一节解决什么问题**：Eigen 的危险不在语法，而在"代码看起来正确、运行结果偶尔错误"。本节把表达式模板、aliasing、Map、对齐和 SIMD 放到同一张工程检查表里，说明什么时候必须验证，怎么验证。
 
@@ -1655,7 +1655,7 @@ void verifyPointBlock(const double* raw, int rows, int cols) {
 
 ---
 
-## 22.8 Eigen 与外部框架的互操作 ⭐⭐⭐
+## 22.8 Eigen 与外部框架的互操作 ★★★
 
 前面几节集中在 Eigen 自身的内部机制。但在现代机器人系统中，Eigen 矩阵经常需要与深度学习框架（PyTorch C++）或 GPU 计算框架交互。本节讨论这些跨框架互操作的关键技术和注意事项。
 
@@ -1663,7 +1663,7 @@ void verifyPointBlock(const double* raw, int rows, int cols) {
 
 随着深度学习在 SLAM 中的渗透——SuperPoint/SuperGlue 替代传统特征、学习型位姿估计、NeRF/3D Gaussian Splatting 地图表示——SLAM 系统越来越多地需要在同一个 C++ 进程中同时使用 Eigen（几何计算）和 PyTorch/LibTorch（神经网络推理）。如果每次数据交互都做深拷贝，推理延迟就无法满足实时性要求。
 
-### Eigen 与 PyTorch C++ (LibTorch) 的互操作 ⭐⭐⭐
+### Eigen 与 PyTorch C++ (LibTorch) 的互操作 ★★★
 
 LibTorch 是 PyTorch 的 C++ 前端，它的核心数据结构 `torch::Tensor` 和 Eigen 的 `MatrixXd` 在概念上非常相似——都是多维数组的封装。但它们的内存管理和存储约定有本质差异。
 
@@ -1722,7 +1722,7 @@ Eigen::Map<Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
 
 如果不遵循这个模式，可能出现什么问题？假设你把点云数据存在 `std::vector<Eigen::Vector3f>` 中，用 `from_blob` 映射为 Tensor，然后 `vector` 因 `push_back` 触发重新分配——Tensor 指向的内存已经无效，后续推理会读到垃圾数据或直接崩溃。这和 Ceres 参数块的地址稳定性问题（24.8 节）本质上是同一个模式：非拥有视图的生命周期必须短于底层数据。
 
-### Eigen 与 GPU 计算 ⭐⭐⭐⭐
+### Eigen 与 GPU 计算 ★★★★
 
 Eigen 主要面向 CPU 计算，但在机器人学中偶尔需要将矩阵运算卸载到 GPU——特别是在大规模点云处理、批量矩阵运算或神经网络推理中。
 
@@ -1768,9 +1768,9 @@ __global__ void transformPoints(
 
 > **反事实推理**：如果 Eigen 完全支持 GPU 上的动态矩阵运算会怎样？理论上可以将 ESKF 的协方差预测（19x19 矩阵乘法）放到 GPU 上。但实际收益很小——19x19 矩阵太小，GPU kernel 启动的开销就超过了计算本身。GPU 的优势在于大规模并行，而不是单个小矩阵的加速。SLAM 中真正受益于 GPU 的环节是图像处理（卷积）和大规模点云操作（数十万点的变换），而不是状态估计中的小矩阵运算。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：Eigen-LibTorch 互操作时忽略存储顺序**
+> ⚠ **编程陷阱：Eigen-LibTorch 互操作时忽略存储顺序**
 >
 > **错误做法**：直接用 `torch::from_blob(eigen_mat.data(), {rows, cols})` 映射 Eigen 矩阵
 >
@@ -1782,7 +1782,7 @@ __global__ void transformPoints(
 >
 > **自检方法**：用一个已知的小矩阵（如 `[1,2; 3,4]`）做互转，打印 Tensor 元素验证顺序。
 
-> ⚠️ **思维陷阱：认为所有 Eigen 运算都应该搬到 GPU**
+> ⚠ **思维陷阱：认为所有 Eigen 运算都应该搬到 GPU**
 >
 > **新手想法**："GPU 比 CPU 快，所以把 Eigen 运算都放到 GPU 上。"
 >
@@ -1792,13 +1792,13 @@ __global__ void transformPoints(
 
 ### 练习
 
-**练习 22.8.1** ⭐⭐⭐：编写一个完整的 Eigen-LibTorch 互转测试程序。创建一个 100x3 的 Eigen 矩阵（RowMajor），映射为 PyTorch Tensor，对 Tensor 做归一化（每行除以自身范数），再映射回 Eigen 矩阵，验证结果正确。
+**练习 22.8.1** ★★★：编写一个完整的 Eigen-LibTorch 互转测试程序。创建一个 100x3 的 Eigen 矩阵（RowMajor），映射为 PyTorch Tensor，对 Tensor 做归一化（每行除以自身范数），再映射回 Eigen 矩阵，验证结果正确。
 
-**练习 22.8.2** ⭐⭐⭐⭐：编写一个 CUDA kernel，用 Eigen 的 `Matrix3f` 和 `Vector3f` 在 GPU 上批量旋转 10 万个 3D 点。与 CPU 版本（Eigen 循环）对比性能，分析 GPU 的加速比在多少点以上变得有意义。
+**练习 22.8.2** ★★★★：编写一个 CUDA kernel，用 Eigen 的 `Matrix3f` 和 `Vector3f` 在 GPU 上批量旋转 10 万个 3D 点。与 CPU 版本（Eigen 循环）对比性能，分析 GPU 的加速比在多少点以上变得有意义。
 
-**练习 22.8.3** ⭐⭐⭐：在一个 CMake 项目中同时链接 Eigen 和 LibTorch。编写一个函数，接受 Eigen::MatrixXf 格式的 N x 3 点云，用 LibTorch 加载一个预训练的 PointNet 分类模型（ONNX 格式），返回分类结果。注意处理行/列主序的转换。
+**练习 22.8.3** ★★★：在一个 CMake 项目中同时链接 Eigen 和 LibTorch。编写一个函数，接受 Eigen::MatrixXf 格式的 N x 3 点云，用 LibTorch 加载一个预训练的 PointNet 分类模型（ONNX 格式），返回分类结果。注意处理行/列主序的转换。
 
-### Eigen 在多线程环境中的注意事项 ⭐⭐
+### Eigen 在多线程环境中的注意事项 ★★
 
 在 SLAM 系统中，前端和后端通常运行在不同线程上。Eigen 矩阵运算本身是线程安全的——多个线程可以同时读取同一个矩阵，也可以各自操作独立的矩阵。但以下场景需要注意：
 
@@ -1821,7 +1821,7 @@ __global__ void transformPoints(
 
 这个问题与 cv::Mat 的浅拷贝线程安全问题（28.1 节）本质相同：非拥有视图（Map、浅拷贝）在并发环境中需要额外的同步机制。
 
-> ⚠️ **编程陷阱：SLAM 后端线程修改状态向量的同时前端线程在读**
+> ⚠ **编程陷阱：SLAM 后端线程修改状态向量的同时前端线程在读**
 >
 > **错误做法**：后端优化完成后直接写入共享的 `Eigen::VectorXd state_`，前端同时在读取 `state_` 做预测。
 >
@@ -1831,7 +1831,7 @@ __global__ void transformPoints(
 
 ---
 
-### Eigen 版本演进与未来方向 ⭐⭐
+### Eigen 版本演进与未来方向 ★★
 
 Eigen 经历了从 2.x 到 3.4 的长期演进，每个版本都带来了重要的改进：
 
@@ -1853,7 +1853,7 @@ Eigen 的设计哲学是"零运行时开销的线性代数"。它通过 C++ 模�
 
 ### 练习
 
-**练习 22.8.4** ⭐⭐：检查你的 SLAM 项目中所有用到 Eigen 的地方，列出使用的 Eigen 版本、C++ 标准和编译选项。确认是否需要 `EIGEN_MAKE_ALIGNED_OPERATOR_NEW` 宏，是否启用了 `-march=native`。
+**练习 22.8.4** ★★：检查你的 SLAM 项目中所有用到 Eigen 的地方，列出使用的 Eigen 版本、C++ 标准和编译选项。确认是否需要 `EIGEN_MAKE_ALIGNED_OPERATOR_NEW` 宏，是否启用了 `-march=native`。
 
 ---
 
@@ -1890,14 +1890,14 @@ Eigen 如何做到零开销抽象？
 
 | 节 | 知识点 | 核心要点 | 难度 |
 |----|--------|---------|------|
-| 22.1 | 表达式模板 | `A + B` 返回表达式对象，不立即计算；`=` 触发一次性求值；`C = A + B + D` 只遍历一次 | ⭐⭐⭐ |
-| 22.2 | Aliasing | 左右两边引用同一内存时会静默损坏数据；`eval()` 强制求值；`noalias()` 声明无重叠（程序员的正确性承诺） | ⭐⭐ |
-| 22.3 | Eigen::Map | 零拷贝映射原始内存为 Eigen 矩阵；Ceres 代价函数中 `Map<const Vector3d>(params)` 是最重要的用途 | ⭐⭐⭐ |
-| 22.4 | 内存对齐 | 字节数是 16 倍数的类型需要对齐；C++17 over-aligned new 消除了手动对齐的需求 | ⭐⭐⭐ |
-| 22.5 | SIMD | `-march=native` 启用自动向量化；`float` 比 `double` SIMD 加速倍数更高 | ⭐⭐⭐ |
-| 22.6 | Eigen::Ref | 接受任何布局兼容的 Eigen 表达式；库 API 的最佳参数类型 | ⭐⭐ |
-| 22.7 | 工程边界 | 五类边界条件的验证清单，协方差安全写法 | ⭐⭐ |
-| 22.8 | 外部框架互操作 | Eigen 与 LibTorch 零拷贝映射，GPU 计算的边界 | ⭐⭐⭐ |
+| 22.1 | 表达式模板 | `A + B` 返回表达式对象，不立即计算；`=` 触发一次性求值；`C = A + B + D` 只遍历一次 | ★★★ |
+| 22.2 | Aliasing | 左右两边引用同一内存时会静默损坏数据；`eval()` 强制求值；`noalias()` 声明无重叠（程序员的正确性承诺） | ★★ |
+| 22.3 | Eigen::Map | 零拷贝映射原始内存为 Eigen 矩阵；Ceres 代价函数中 `Map<const Vector3d>(params)` 是最重要的用途 | ★★★ |
+| 22.4 | 内存对齐 | 字节数是 16 倍数的类型需要对齐；C++17 over-aligned new 消除了手动对齐的需求 | ★★★ |
+| 22.5 | SIMD | `-march=native` 启用自动向量化；`float` 比 `double` SIMD 加速倍数更高 | ★★★ |
+| 22.6 | Eigen::Ref | 接受任何布局兼容的 Eigen 表达式；库 API 的最佳参数类型 | ★★ |
+| 22.7 | 工程边界 | 五类边界条件的验证清单，协方差安全写法 | ★★ |
+| 22.8 | 外部框架互操作 | Eigen 与 LibTorch 零拷贝映射，GPU 计算的边界 | ★★★ |
 
 **关键记忆点**：
 
@@ -1969,15 +1969,15 @@ target_compile_options(mini_lio PRIVATE
 
 | 资源 | 类型 | 难度 | 说明 |
 |------|------|------|------|
-| [Eigen: Lazy Evaluation and Aliasing](https://eigen.tuxfamily.org/dox/TopicLazyEvaluation.html) | 官方文档 | ⭐⭐ | Eigen 对惰性求值的官方解释 |
-| [Eigen: Aliasing](https://eigen.tuxfamily.org/dox/group__TopicAliasing.html) | 官方文档 | ⭐⭐ | aliasing 问题的全面指南 |
-| [Eigen: Writing Functions Taking Eigen Types](https://eigen.tuxfamily.org/dox/TopicFunctionTakingEigenTypes.html) | 官方文档 | ⭐⭐ | Ref vs 模板参数的官方建议 |
-| Todd Veldhuizen, "Expression Templates", C++ Report, 1995 | 论文 | ⭐⭐⭐ | 表达式模板技术的原始论文 |
-| [Intel Intrinsics Guide](https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html) | 工具文档 | ⭐⭐⭐ | SSE/AVX 指令速查手册 |
-| Agner Fog, "Optimizing Software in C++" | 技术手册 | ⭐⭐⭐⭐ | 系统级 C++ 性能优化指南，涵盖 SIMD、缓存、分支预测 |
-| FAST-LIO2 源码 | 代码 | ⭐⭐⭐ | ESKF 中 Eigen 的高性能用法实例 |
-| VINS-Mono `factor/` 目录 | 代码 | ⭐⭐⭐ | Ceres + Eigen::Map 的工业级示例 |
-| [Compiler Explorer (godbolt.org)](https://godbolt.org) | 在线工具 | ⭐⭐ | 在线查看 Eigen 代码的汇编输出，验证 SIMD 是否生效 |
+| [Eigen: Lazy Evaluation and Aliasing](https://eigen.tuxfamily.org/dox/TopicLazyEvaluation.html) | 官方文档 | ★★ | Eigen 对惰性求值的官方解释 |
+| [Eigen: Aliasing](https://eigen.tuxfamily.org/dox/group__TopicAliasing.html) | 官方文档 | ★★ | aliasing 问题的全面指南 |
+| [Eigen: Writing Functions Taking Eigen Types](https://eigen.tuxfamily.org/dox/TopicFunctionTakingEigenTypes.html) | 官方文档 | ★★ | Ref vs 模板参数的官方建议 |
+| Todd Veldhuizen, "Expression Templates", C++ Report, 1995 | 论文 | ★★★ | 表达式模板技术的原始论文 |
+| [Intel Intrinsics Guide](https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html) | 工具文档 | ★★★ | SSE/AVX 指令速查手册 |
+| Agner Fog, "Optimizing Software in C++" | 技术手册 | ★★★★ | 系统级 C++ 性能优化指南，涵盖 SIMD、缓存、分支预测 |
+| FAST-LIO2 源码 | 代码 | ★★★ | ESKF 中 Eigen 的高性能用法实例 |
+| VINS-Mono `factor/` 目录 | 代码 | ★★★ | Ceres + Eigen::Map 的工业级示例 |
+| [Compiler Explorer (godbolt.org)](https://godbolt.org) | 在线工具 | ★★ | 在线查看 Eigen 代码的汇编输出，验证 SIMD 是否生效 |
 
 ---
 
@@ -1995,7 +1995,7 @@ target_compile_options(mini_lio PRIVATE
 
 ---
 
-## Eigen 编译期矩阵大小选择的决策框架 ⭐⭐
+## Eigen 编译期矩阵大小选择的决策框架 ★★
 
 Eigen 最独特的设计之一是通过模板参数在编译期指定矩阵大小。选择固定大小（`Matrix3d`）还是动态大小（`MatrixXd`）不仅影响性能，还影响代码的可维护性和类型安全性。在机器人系统中，这个选择遍布各处——IMU 预积分用 `Matrix<double, 15, 15>`、雅可比矩阵可能是固定大小也可能是动态大小、点云坐标通常用 `Vector3f`。
 

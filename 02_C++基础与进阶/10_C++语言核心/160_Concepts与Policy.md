@@ -1,12 +1,12 @@
 # C++20 Concepts 与 Policy-based Design
 
-> **难度**：⭐⭐⭐～⭐⭐⭐⭐ | **建议用时**：2周 | **前置要求**：函数模板与类模板基础、模板特化SFINAE与类型萃取 模板特化与类型萃取、变参模板折叠表达式与CRTP 变参模板与 CRTP、预处理器与宏
+> **难度**：★★★～★★★★ | **建议用时**：2周 | **前置要求**：函数模板与类模板基础、模板特化SFINAE与类型萃取 模板特化与类型萃取、变参模板折叠表达式与CRTP 变参模板与 CRTP、预处理器与宏
 
 ---
 
 ## 前置自测
 
-> 📋 答不出 2 题以上时，先回顾 函数模板与类模板基础-预处理器与宏。
+> ◆ 答不出 2 题以上时，先回顾 函数模板与类模板基础-预处理器与宏。
 
 1. `std::enable_if_t<std::is_floating_point_v<T>, int> = 0` 为什么能让某个模板只对浮点类型参与重载？
 2. `if constexpr` 和普通 `if` 的差异是什么？未选分支是否会实例化？
@@ -39,7 +39,7 @@
 
 ---
 
-## 16.1 Concepts 的动机：把隐含模板要求提到接口上 ⭐⭐⭐⭐
+## 16.1 Concepts 的动机：把隐含模板要求提到接口上 ★★★★
 
 ### Concepts 的历史演进：从 Stroustrup 的二十年愿景到 C++20 的落地
 
@@ -171,7 +171,7 @@ static_assert(!IndexableVector3Cloud<BadCloud>);
 
 Concepts 之于模板参数，就像类型声明之于函数参数。C 语言时代，函数声明可以不写参数类型（K&R 风格），编译器在调用时才发现类型不匹配。现代 C++ 的函数声明必须写明参数类型，错误在调用处就能捕获。Concepts 对模板参数做了同样的事——把"进入函数体后才发现不对"提前到"约束检查时就拒绝"。
 
-> ⚠️ **编程陷阱：concept 接口过大导致可复用性下降**
+> ⚠ **编程陷阱：concept 接口过大导致可复用性下降**
 > **错误做法**：为质心计算函数要求 `cloud.points`、`cloud.header`、`cloud.frame_id`、`cloud.sensor_origin`，而实际只需要 `.size()` 和 `operator[]`。
 > **现象**：其他满足最小需求的点云容器（如 `std::vector<Eigen::Vector3d>`）被拒绝。
 > **根本原因**：concept 应表达算法的最小需求，而不是某个具体数据结构的完整接口。过大的 concept 等于把实现细节泄漏到接口上。
@@ -190,7 +190,7 @@ Concepts 之于模板参数，就像类型声明之于函数参数。C 语言时
 
 ---
 
-## 16.2 Requirement kinds：`requires` 表达式到底检查什么 ⭐⭐⭐⭐⭐
+## 16.2 Requirement kinds：`requires` 表达式到底检查什么 ★★★★★
 
 ### 工程问题：一个策略接口由多种要求组成
 
@@ -328,7 +328,7 @@ concept IndexableCloud = HasSize<T> && HasIndexAccess<T>;
 
 拆小 concept 有两个好处：错误诊断更具体，算法能按最小需求复用。
 
-> ⚠️ **编程陷阱：复合要求的返回类型约束写得过窄**
+> ⚠ **编程陷阱：复合要求的返回类型约束写得过窄**
 > **错误做法**：`{ Traits::point(cloud, i) } -> std::same_as<Eigen::Vector3d>;`
 > **现象**：如果 traits 返回 `const Eigen::Vector3d&`、`Eigen::Map<const Eigen::Vector3d>` 或可转换的代理对象，concept 检查失败。算法本来能正确工作的类型被拒绝。
 > **根本原因**：`std::same_as` 要求精确类型匹配，包括 cv 限定和引用。大多数数值算法只关心"能当 `Vector3d` 用"，不关心是值还是引用。
@@ -347,7 +347,7 @@ concept IndexableCloud = HasSize<T> && HasIndexAccess<T>;
 
 ---
 
-## 16.3 Constraint satisfaction、normalization 与 subsumption ⭐⭐⭐⭐⭐
+## 16.3 Constraint satisfaction、normalization 与 subsumption ★★★★★
 
 > **这一节解决什么问题**：当多个 concept 约束的重载同时匹配时，编译器怎么决定"谁更具体"？subsumption 规则不是需要死记硬背的语法细节，而是编译器判断"约束 A 是否逻辑上蕴含约束 B"的推理机制。理解它，就能设计出不会二义的 concept 层次。
 
@@ -466,7 +466,7 @@ static_assert(SizedRange<std::vector<int>>);
 
 如果 C++ 没有 subsumption 机制会怎样？那么所有 concept 约束的重载都需要程序员手动用互斥条件（如 `requires (!HasBeginEnd<T>)`）消解二义性。每新增一个 concept 变体，就要修改所有已有重载的约束条件。Subsumption 让编译器自动判断"更具体的约束优先"，大幅减少了这种维护负担。
 
-> ⚠️ **编程陷阱：两个互不蕴含的 concept 重载导致二义性**
+> ⚠ **编程陷阱：两个互不蕴含的 concept 重载导致二义性**
 > **错误做法**：分别写 `template<HasSize T> void f(T)` 和 `template<HasBeginEnd T> void f(T)`，期望编译器"选更合适的"。
 > **现象**：对 `std::vector<int>` 调用 `f()` 时编译报错：二义性调用。
 > **根本原因**：`HasSize` 和 `HasBeginEnd` 之间没有蕴含关系，编译器不知道哪个更具体。subsumption 只比较约束表达式的逻辑结构，不理解名字含义。
@@ -485,7 +485,7 @@ static_assert(SizedRange<std::vector<int>>);
 
 ---
 
-## 16.4 SFINAE 到 Concepts：同一需求的两种表达 ⭐⭐⭐⭐
+## 16.4 SFINAE 到 Concepts：同一需求的两种表达 ★★★★
 
 ### 工程问题：Concepts 到底解决了 SFINAE 的什么问题？
 
@@ -602,7 +602,7 @@ static_assert(!CloudTraits<cloud_traits<BadCloud>, BadCloud>);
 
 从 SFINAE 到 Concepts 的迁移过程，类似于把一栋老建筑的隐藏管线改为明线。SFINAE 就像藏在墙体里的水管——功能正常，但出了问题很难定位。Concepts 把管线外露到墙面上——接口一目了然，漏水点也容易找。迁移时最大的风险不是语法转换，而是在"明线化"过程中无意收紧或放宽了管径（接口约束）。
 
-> ⚠️ **编程陷阱：迁移到 Concepts 后无意改变了可接受类型集合**
+> ⚠ **编程陷阱：迁移到 Concepts 后无意改变了可接受类型集合**
 > **错误做法**：把 SFINAE 的 `std::void_t<decltype(...)>` 检测直接翻译成 `requires` 表达式，但添加了额外的返回类型约束。
 > **现象**：旧代码能接受 `Eigen::Map` 或代理返回类型，新代码拒绝了它们。迁移后某些调用点报约束失败。
 > **根本原因**：SFINAE 版本可能只检查"表达式能编译"，Concepts 版本可能同时加了 `-> std::same_as<...>` 的返回类型约束，比原来更严。
@@ -616,7 +616,7 @@ static_assert(!CloudTraits<cloud_traits<BadCloud>, BadCloud>);
 
 ---
 
-## 16.5 Concepts 的语义边界：坐标系、单位、扰动方向不能靠它证明 ⭐⭐⭐⭐⭐
+## 16.5 Concepts 的语义边界：坐标系、单位、扰动方向不能靠它证明 ★★★★★
 
 ### 工程问题：机器人类型的关键错误常不是“有没有函数”
 
@@ -726,7 +726,7 @@ boxplus 后 boxminus 能恢复小扰动
 
 如果没有三层契约的区分会怎样？如果程序员只写了 `LieGroupLike` concept 就认为类型"已经安全"，那么一个 `exp()` 返回零矩阵的假实现也能通过约束。当这个假实现被用于 SLAM 后端优化时，迭代立刻发散，但错误信息会指向优化器而非类型实现——因为 concept 已经"放行"了。三层契约的意义在于：concept 阻止明显错误的类型，`static_assert` 验证编译期维度，运行时测试验证数学性质。每层挡住一类错误，缺一层就多一类漏网之鱼。
 
-> ⚠️ **编程陷阱：concept 名字暗示了它不能证明的数学性质**
+> ⚠ **编程陷阱：concept 名字暗示了它不能证明的数学性质**
 > **错误做法**：命名为 `RotationMatrix` concept，但只检查 `.matrix()` 返回 `Matrix3d`。
 > **现象**：一个返回非正交矩阵的类型也通过了约束，后续计算中出现数值发散。
 > **根本原因**：concept 只检查语法（"有 `.matrix()` 方法且返回 `Matrix3d`"），不验证正交性（$R^TR = I$）或行列式（$\det(R) = 1$）。
@@ -737,7 +737,7 @@ boxplus 后 boxminus 能恢复小扰动
 > **实际上**：`PoseLike` 只知道 `pose.translation()` 能返回 `Vector3d`，完全不知道它是 `T_world_body` 还是 `T_body_world`，单位是米还是毫米，参考系是 ENU 还是 NED。坐标系和单位属于接口语义，只能通过类型命名、文档和测试表达。
 > **正确理解**：Concepts 是"类型系统的海关"，它检查"证件格式"（接口合法性），不检查"证件内容"（数据语义）。
 
-### 机器人库中 Concepts 语义边界的实际案例 ⭐⭐⭐⭐
+### 机器人库中 Concepts 语义边界的实际案例 ★★★★
 
 在真实的机器人 C++ 库中，Concepts 语义边界的问题不是理论上的担忧，而是反复出现的实际 bug 来源。
 
@@ -755,7 +755,7 @@ boxplus 后 boxminus 能恢复小扰动
 
 ---
 
-## 16.6 `constexpr`、`consteval`、`if constexpr` 与 Ranges：只服务泛型接口主线 ⭐⭐⭐
+## 16.6 `constexpr`、`consteval`、`if constexpr` 与 Ranges：只服务泛型接口主线 ★★★
 
 ### 工程问题：固定维度和运行时配置经常混在一起
 
@@ -864,7 +864,7 @@ int configureIterations(const Config& config) {
 
 固定维度用 `static_assert`；运行时配置用普通测试和参数校验。分清边界比使用新语法更重要。
 
-> ⚠️ **编程陷阱：用 `consteval` 函数处理运行时配置**
+> ⚠ **编程陷阱：用 `consteval` 函数处理运行时配置**
 > **错误做法**：`consteval int maxIter(const Config& cfg) { return cfg.max_iterations; }` 尝试编译期读取配置文件。
 > **现象**：编译报错——`consteval` 函数的参数必须是常量表达式，而 `Config` 来自运行时解析。
 > **根本原因**：`consteval` 强制要求编译期求值。传感器参数、YAML 配置、ROS 参数都是运行时数据，不可能在编译期确定。
@@ -883,7 +883,7 @@ int configureIterations(const Config& config) {
 
 ---
 
-## 16.7 Policy-based Design：从真实算法变化轴拆策略 ⭐⭐⭐⭐⭐
+## 16.7 Policy-based Design：从真实算法变化轴拆策略 ★★★★★
 
 ### 工程问题：配准算法变化按乘法增长
 
@@ -1076,7 +1076,7 @@ Policy-based Design 的思想可以类比乐高积木。每种策略就像一种
 
 如果把运行时配置参数也做成模板参数会怎样？每种迭代次数、每种体素大小都会生成一个新的模板实例。改一个参数就要重新编译，二进制中充斥着只有参数值不同的重复代码。更致命的是，这些参数通常来自 YAML 配置文件——编译期根本不知道值是多少。Policy 应该只封装"算法种类"这种编译期决策，数值参数属于对象运行时状态。
 
-> ⚠️ **编程陷阱：把运行时数值参数做成模板参数**
+> ⚠ **编程陷阱：把运行时数值参数做成模板参数**
 > **错误做法**：`template <int MaxIterations, int VoxelSizeMillimeters> class Kernel;`
 > **现象**：每种参数组合生成一份代码，编译时间暴增，配置文件的参数值无法在运行时生效。
 > **根本原因**：模板参数是编译期常量，不能接受运行时值。算法种类（ICP vs GICP）是编译期选择，参数值（迭代次数、阈值）是运行时选择。
@@ -1087,7 +1087,7 @@ Policy-based Design 的思想可以类比乐高积木。每种策略就像一种
 > **实际上**：策略轴之间可能有隐含的依赖关系。例如 GICP 距离度量需要协方差矩阵，而点到点距离不需要——它们对点类型的要求不同。如果 `DistancePolicy` 的 concept 太宽，不兼容的组合可能在深层模板展开时才报错。
 > **正确思维**：策略组合需要有效性约束。用 concept 表达"这种搜索策略和这种距离策略能组合"的条件，而不是假设所有组合都合法。
 
-### Policy 在机器人库中的实际应用 ⭐⭐⭐
+### Policy 在机器人库中的实际应用 ★★★
 
 理解 Policy-based Design 的最好方式是看真实机器人库如何使用它。
 
@@ -1107,7 +1107,7 @@ Policy-based Design 的思想可以类比乐高积木。每种策略就像一种
 
 ---
 
-## 16.8 Traits + Policy：数据访问和算法策略分层 ⭐⭐⭐⭐⭐
+## 16.8 Traits + Policy：数据访问和算法策略分层 ★★★★★
 
 ### 工程问题：数据类型变化和算法变化不是一回事
 
@@ -1237,7 +1237,7 @@ static_assert(!requires(const NoTraitsCloud& cloud, std::size_t i) {
 
 如果希望错误更集中，也可以给主算法入口加自定义静态断言或 concept 约束，让错误信息指向 `CloudTraits` 名称。
 
-> ⚠️ **编程陷阱：traits 返回引用指向临时对象导致悬空引用**
+> ⚠ **编程陷阱：traits 返回引用指向临时对象导致悬空引用**
 > **错误做法**：`static const Eigen::Vector3d& point(const PclCloud& cloud, std::size_t i)` 内部构造临时 `Eigen::Vector3d` 并返回其引用。
 > **现象**：返回值引用的临时对象在函数返回时已经销毁。调用者读到垃圾数据或段错误。
 > **根本原因**：C++ 临时对象的生命周期在创建它的完整表达式结束时终止。函数返回局部临时对象的引用是经典的悬空引用。
@@ -1256,7 +1256,7 @@ static_assert(!requires(const NoTraitsCloud& cloud, std::size_t i) {
 
 ---
 
-## 16.9 Type erasure、虚接口与编译期内核：分层组合 ⭐⭐⭐⭐⭐
+## 16.9 Type erasure、虚接口与编译期内核：分层组合 ★★★★★
 
 ### Type Erasure 的理论基础：在运行时多态和编译期多态之间架桥
 
@@ -1436,7 +1436,7 @@ size mini_registration_demo
 
 分层设计的思想可以类比餐厅的前厅与后厨。前厅（虚接口/type erasure）对顾客展示统一菜单，顾客用菜名点餐；后厨（Policy + traits）内部用最高效的设备和流程做菜。顾客不需要知道后厨用了什么型号的烤箱，后厨也不需要因为换了烤箱就让顾客重新看菜单。虚接口是"菜单"，Policy 是"烹饪方法"，traits 是"食材处理方式"。分层让每一层的变化不影响其他层。
 
-> ⚠️ **编程陷阱：`std::function` 放进每点残差热路径**
+> ⚠ **编程陷阱：`std::function` 放进每点残差热路径**
 > **错误做法**：在百万点的内循环中用 `std::function<double(double)>` 作为损失函数。
 > **现象**：性能比直接调用慢 10-50 倍。profiler 显示大量间接调用和可能的堆分配开销。
 > **根本原因**：`std::function` 使用 type erasure，涉及间接调用（虚函数或函数指针）；如果捕获的 lambda 超过小缓冲区优化（SBO）大小，还会触发堆分配。
@@ -1455,7 +1455,7 @@ size mini_registration_demo
 
 ---
 
-## 16.10 设计原则：小 concept、明确策略轴、边界处擦除类型 ⭐⭐⭐⭐
+## 16.10 设计原则：小 concept、明确策略轴、边界处擦除类型 ★★★★
 
 ### 工程问题：工具太多时容易按语法而不是按变化选型
 
@@ -1553,7 +1553,7 @@ concept 是否足够小
 
 这五问比”是否用了 C++20”更能判断接口质量。
 
-> ⚠️ **编程陷阱：一个 concept 承担过多角色**
+> ⚠ **编程陷阱：一个 concept 承担过多角色**
 > **错误做法**：定义 `RobotState` concept 要求同时有 `pose()`、`velocity()`、`bias()`、`covariance()`、`timestamp()`、`frameId()`。
 > **现象**：某个只需要 `pose()` 的函数却要求完整的 `RobotState`，把只有位姿的轻量状态排除在外。
 > **根本原因**：大 concept 把多个独立角色捆绑在一起。函数的约束应匹配其真实需求，不应要求它不使用的能力。
@@ -1572,7 +1572,7 @@ concept 是否足够小
 
 ---
 
-## 16.11 C++23/26 前沿：`deducing this`、Contracts 与模式匹配 ⭐⭐⭐⭐
+## 16.11 C++23/26 前沿：`deducing this`、Contracts 与模式匹配 ★★★★
 
 > **这一节解决什么问题**：Concepts 和 Policy 是 C++20 的最佳实践。但 C++ 标准仍在快速演进。理解即将到来的特性如何与 Concepts/Policy 交互，有助于做出更具前瞻性的设计决策。
 

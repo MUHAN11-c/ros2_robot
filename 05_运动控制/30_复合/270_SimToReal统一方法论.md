@@ -2,7 +2,7 @@
 
 | 元信息 | 值 |
 |--------|-----|
-| 难度 | ⭐⭐⭐⭐（跨方法理论推导 + 工程部署闭环 + 方法选型决策） |
+| 难度 | ★★★★（跨方法理论推导 + 工程部署闭环 + 方法选型决策） |
 | 预计时间 | 2 周（40-50 小时） |
 | 前置依赖 | 足式/190_腿足RL训练栈（PPO/奖励设计），足式/200_RL的CPP部署（ONNX/LibTorch），复合/240_ASAP_SimToReal（Delta-Action 实例），复合/110_轮足SimToReal与硬件（硬件接口） |
 | 下游章节 | 复合/280_多机协作LocoMani，复合/290_感知操作运动统一闭环 |
@@ -12,7 +12,7 @@
 
 ## 前置自测
 
-📋 **前置自测（答不出 >= 2 题，先回复合/240 和足式/190 复习）**
+◆ **前置自测（答不出 >= 2 题，先回复合/240 和足式/190 复习）**
 
 | # | 问题 | 前置来源 | 合格关键词 |
 |---|------|---------|-----------|
@@ -45,7 +45,7 @@
 
 ---
 
-## 97.1 动机与全景：为什么 Sim-to-Real 是机器人 RL 的瓶颈？ ⭐
+## 97.1 动机与全景：为什么 Sim-to-Real 是机器人 RL 的瓶颈？ ★
 
 ### 动机：仿真中 10 分钟跑通，真机 10 秒摔倒
 
@@ -127,9 +127,9 @@ Sim-to-Real 方法的演进不是偶然的，每一代都是对上一代局限�
 | 2025 | PACE (ETH) | 20 秒编码器数据即可辨识执行器 | 对复杂执行器建模能力有限 |
 | 2025 | Newton 物理引擎 (NVIDIA/DeepMind/Disney) | GPU 加速可微仿真 | 接触微分仍不稳定 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：训练和部署的观测归一化不一致**
+> ⚠ **编程陷阱：训练和部署的观测归一化不一致**
 > 错误做法：训练时用 IsaacGym 内部的 running normalization，部署时重新初始化统计量
 > 现象：策略输出的关节角幅值差 10-100 倍，机器人剧烈抖动或完全不动
 > 根本原因：观测的 mean/std 与训练时不同，等价于输入了完全不同的状态
@@ -148,15 +148,15 @@ Sim-to-Real 方法的演进不是偶然的，每一代都是对上一代局限�
 
 ### 练习 97.1
 
-**[A] ⭐** 列出你使用或了解的一个机器人平台（四足/人形/机械臂均可），分析其 Sim-to-Real Gap 在六个维度上各自的严重程度（用"低/中/高/极高"评级），并解释理由。
+**[A] ★** 列出你使用或了解的一个机器人平台（四足/人形/机械臂均可），分析其 Sim-to-Real Gap 在六个维度上各自的严重程度（用"低/中/高/极高"评级），并解释理由。
 
-**[B] ⭐⭐** 阅读 Tan et al. 2018 "Sim-to-Real: Learning Agile Locomotion For Quadruped Robots" 的方法部分，列出论文中使用了上表哪些方法的组合。为什么单一方法不够？
+**[B] ★★** 阅读 Tan et al. 2018 "Sim-to-Real: Learning Agile Locomotion For Quadruped Robots" 的方法部分，列出论文中使用了上表哪些方法的组合。为什么单一方法不够？
 
-**[C] ⭐⭐⭐** （跨章综合题）结合 复合/20_浮动基座臂统一动力学 中的质量矩阵分块结构 $\mathbf{M}_{ba}$，分析为什么复合机器人（四足+臂）的 D1 维度 Gap 比纯四足更严重。提示：臂的构型变化会改变基座惯量。
+**[C] ★★★** （跨章综合题）结合 复合/20_浮动基座臂统一动力学 中的质量矩阵分块结构 $\mathbf{M}_{ba}$，分析为什么复合机器人（四足+臂）的 D1 维度 Gap 比纯四足更严重。提示：臂的构型变化会改变基座惯量。
 
 ---
 
-## 97.2 Domain Randomization：从工程直觉到鲁棒优化理论 ⭐⭐
+## 97.2 Domain Randomization：从工程直觉到鲁棒优化理论 ★★
 
 ### 动机：为什么"随机一下"就能跨越 Gap？
 
@@ -416,9 +416,9 @@ def apply_domain_randomization(env, config):
     # 这部分在 env.step() 中实现，不在 reset 中
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：DR 参数在 episode 中间变化**
+> ⚠ **编程陷阱：DR 参数在 episode 中间变化**
 > 错误做法：每一步都重新采样摩擦系数
 > 现象：策略根本无法学会稳定行走，因为"地面"在每一步都变化
 > 根本原因：现实中摩擦系数在一个场景内是固定的，每步变化违反了物理规律
@@ -437,15 +437,15 @@ def apply_domain_randomization(env, config):
 
 ### 练习 97.2
 
-**[A] ⭐⭐** 实现上述消融验证框架，在 IsaacGym 的 Anymal 环境中逐类关闭 DR，绘制消融结果柱状图。哪类随机化对 sim-to-real 最关键？
+**[A] ★★** 实现上述消融验证框架，在 IsaacGym 的 Anymal 环境中逐类关闭 DR，绘制消融结果柱状图。哪类随机化对 sim-to-real 最关键？
 
-**[B] ⭐⭐⭐** 在 PPO 训练中实现 CVaR 目标：将每个 batch 中的 episode 按总回报排序，只用最差 20% 的 episode 计算 policy gradient。对比标准 DR 和 CVaR-DR 的训练曲线和 sim-to-sim 迁移性能。
+**[B] ★★★** 在 PPO 训练中实现 CVaR 目标：将每个 batch 中的 episode 按总回报排序，只用最差 20% 的 episode 计算 policy gradient。对比标准 DR 和 CVaR-DR 的训练曲线和 sim-to-sim 迁移性能。
 
-**[C] ⭐⭐⭐⭐** （推导题）从 $\chi^2$ 散度约束的 DRO 对偶出发，证明当不确定性集合为 $\{p : D_{\chi^2}(p \| p_0) \leq \delta\}$ 时，最差分布的解析形式为 $p^*(\xi) \propto p_0(\xi) \cdot [c - J(\pi, \xi)]^+$，其中 $c$ 是使得分布积分为 1 的常数。提示：用 Lagrange 乘子法。
+**[C] ★★★★** （推导题）从 $\chi^2$ 散度约束的 DRO 对偶出发，证明当不确定性集合为 $\{p : D_{\chi^2}(p \| p_0) \leq \delta\}$ 时，最差分布的解析形式为 $p^*(\xi) \propto p_0(\xi) \cdot [c - J(\pi, \xi)]^+$，其中 $c$ 是使得分布积分为 1 的常数。提示：用 Lagrange 乘子法。
 
 ---
 
-## 97.3 System Identification：让仿真器逼近真实 ⭐⭐⭐
+## 97.3 System Identification：让仿真器逼近真实 ★★★
 
 ### 动机：DR 的互补方案
 
@@ -629,9 +629,9 @@ def pace_identify(real_traj, sim_fn, param_bounds, n_iter=500):
     return result.x
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：辨识数据中加速度的数值微分不稳定**
+> ⚠ **编程陷阱：辨识数据中加速度的数值微分不稳定**
 > 错误做法：直接对关节位置做有限差分 $\ddot{q} \approx (q_{k+1} - 2q_k + q_{k-1})/\Delta t^2$ 来获得加速度
 > 现象：辨识结果高度不稳定，重复实验差异巨大
 > 根本原因：有限差分放大高频噪声，$\Delta t$ 越小放大越严重（$1/\Delta t^2$ 因子）
@@ -650,15 +650,15 @@ def pace_identify(real_traj, sim_fn, param_bounds, n_iter=500):
 
 ### 练习 97.3
 
-**[A] ⭐⭐** 用 Pinocchio 的 `computeJointTorqueRegressor` 函数生成一个 3-DOF 平面机械臂的回归矩阵 $\mathbf{Y}$，验证 $\boldsymbol{\tau} = \mathbf{Y}\boldsymbol{\phi}$ 的正确性。
+**[A] ★★** 用 Pinocchio 的 `computeJointTorqueRegressor` 函数生成一个 3-DOF 平面机械臂的回归矩阵 $\mathbf{Y}$，验证 $\boldsymbol{\tau} = \mathbf{Y}\boldsymbol{\phi}$ 的正确性。
 
-**[B] ⭐⭐⭐** 对上题的回归矩阵做 SVD 分析。$\text{rank}(\mathbf{A})$ 是多少？哪些参数组合是不可辨识的？给出物理解释。
+**[B] ★★★** 对上题的回归矩阵做 SVD 分析。$\text{rank}(\mathbf{A})$ 是多少？哪些参数组合是不可辨识的？给出物理解释。
 
-**[C] ⭐⭐⭐** （跨章综合题）结合 复合/20_浮动基座臂统一动力学 中的质量矩阵分块结构，讨论为什么复合机器人的 SysID 比纯四足更困难。提示：考虑 $\mathbf{M}_{ba}$ 耦合项对辨识的影响。
+**[C] ★★★** （跨章综合题）结合 复合/20_浮动基座臂统一动力学 中的质量矩阵分块结构，讨论为什么复合机器人的 SysID 比纯四足更困难。提示：考虑 $\mathbf{M}_{ba}$ 耦合项对辨识的影响。
 
 ---
 
-## 97.4 Actuator Network：用神经网络学习执行器非线性 ⭐⭐⭐
+## 97.4 Actuator Network：用神经网络学习执行器非线性 ★★★
 
 ### 动机：为什么物理模型不够？
 
@@ -853,9 +853,9 @@ $$
 
 这需要仿真器是**可微的**——梯度需要从状态误差穿过仿真器的积分步到达 Actuator Network 的参数。这正是可微仿真（如 MuJoCo MJX、Brax、Newton）的用武之地。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：Actuator Network 的输入顺序与训练时不一致**
+> ⚠ **编程陷阱：Actuator Network 的输入顺序与训练时不一致**
 > 错误做法：训练时输入是 [q_des_t, q_des_{t-1}, ..., q_act, dq_act]，部署时误写为 [q_act, dq_act, q_des_t, ...]
 > 现象：仿真器中策略仍然不稳定，与不用 Actuator Network 没有区别
 > 根本原因：神经网络对输入顺序敏感，错误的顺序等于完全错误的输入
@@ -867,15 +867,15 @@ $$
 
 ### 练习 97.4
 
-**[A] ⭐⭐** 实现上述 `ActuatorNetwork` 类，用合成数据（理想PD + 随机延迟 + 库仑摩擦）训练它。验证训练后的网络能否准确预测带摩擦的力矩。
+**[A] ★★** 实现上述 `ActuatorNetwork` 类，用合成数据（理想PD + 随机延迟 + 库仑摩擦）训练它。验证训练后的网络能否准确预测带摩擦的力矩。
 
-**[B] ⭐⭐⭐** 在 MuJoCo 环境中，对比使用理想PD模型和 Actuator Network 训练的策略在"修改后仿真器"（增加摩擦和延迟）中的表现。量化 sim-to-sim 迁移的性能差异。
+**[B] ★★★** 在 MuJoCo 环境中，对比使用理想PD模型和 Actuator Network 训练的策略在"修改后仿真器"（增加摩擦和延迟）中的表现。量化 sim-to-sim 迁移的性能差异。
 
-**[C] ⭐⭐⭐⭐** 讨论 Actuator Network 与 PACE 方法的优劣。在什么条件下你会选择 Actuator Network 而非 PACE？
+**[C] ★★★★** 讨论 Actuator Network 与 PACE 方法的优劣。在什么条件下你会选择 Actuator Network 而非 PACE？
 
 ---
 
-## 97.5 Action History 与延迟建模：状态增广的数学 ⭐⭐
+## 97.5 Action History 与延迟建模：状态增广的数学 ★★
 
 ### 动机：看不见的"时间错位"
 
@@ -1034,9 +1034,9 @@ class DelayRandomization:
         return delayed_obs
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：reset 时忘记清空历史缓冲区**
+> ⚠ **编程陷阱：reset 时忘记清空历史缓冲区**
 > 错误做法：环境 reset 后，缓冲区中残留上一个 episode 的动作历史
 > 现象：episode 开始的前几步策略行为异常（因为"看到了"不属于当前 episode 的动作）
 > 根本原因：跨 episode 的动作历史破坏了 MDP 的 Markov 性质
@@ -1049,13 +1049,13 @@ class DelayRandomization:
 
 ### 练习 97.5
 
-**[A] ⭐⭐** 在一个简单的 CartPole 环境中，对比有无 Action History 在人为加入 2 步延迟后的训练效果。绘制 reward 曲线。
+**[A] ★★** 在一个简单的 CartPole 环境中，对比有无 Action History 在人为加入 2 步延迟后的训练效果。绘制 reward 曲线。
 
-**[B] ⭐⭐⭐** 推导：当延迟 $d$ 是**随机变量**（每步独立采样）时，Action History 方法的理论保证是否仍然成立？如果不成立，需要什么额外条件？
+**[B] ★★★** 推导：当延迟 $d$ 是**随机变量**（每步独立采样）时，Action History 方法的理论保证是否仍然成立？如果不成立，需要什么额外条件？
 
 ---
 
-## 97.6 RMA 在线适应：运行时估计环境参数 ⭐⭐⭐⭐
+## 97.6 RMA 在线适应：运行时估计环境参数 ★★★★
 
 ### 动机：DR 的根本局限
 
@@ -1214,9 +1214,9 @@ $$
 
 > **本质洞察**：RMA 的环境编码器不是在学"环境是什么样"（物理参数），而是在学"在这个环境中应该怎么走"（行为相关表征）。这比显式系统辨识更高效——两个物理上不同但行为上等价的环境会被编码到相近的 $z_t$。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：适应模块训练时用的观测与部署时不一致**
+> ⚠ **编程陷阱：适应模块训练时用的观测与部署时不一致**
 > 错误做法：阶段 2 训练适应模块时用的是无噪声观测，但部署时的观测有传感器噪声
 > 现象：适应模块在仿真中完美推断 $z_t$，但在真机上完全失效
 > 根本原因：分布偏移——训练数据和部署数据的分布不同
@@ -1234,15 +1234,15 @@ $$
 
 ### 练习 97.6
 
-**[A] ⭐⭐⭐** 在 IsaacGym 中实现 RMA 的完整三阶段训练流程。用 Anymal 环境，随机化质量和摩擦系数。对比 RMA 和纯 DR 在 sim-to-sim 迁移（训练参数范围之外）的表现。
+**[A] ★★★** 在 IsaacGym 中实现 RMA 的完整三阶段训练流程。用 Anymal 环境，随机化质量和摩擦系数。对比 RMA 和纯 DR 在 sim-to-sim 迁移（训练参数范围之外）的表现。
 
-**[B] ⭐⭐⭐** 训练完 RMA 后，将 $z_t$ 的每个维度与各物理参数做散点图和相关系数分析。验证是否存在可解释的对应关系。
+**[B] ★★★** 训练完 RMA 后，将 $z_t$ 的每个维度与各物理参数做散点图和相关系数分析。验证是否存在可解释的对应关系。
 
-**[C] ⭐⭐⭐⭐** （推导题）证明：当环境编码器 $\mu$ 是双射函数时，适应模块的最优解满足 $\phi^* = \mu \circ g$，其中 $g$ 是从观测历史到环境参数的后验估计。讨论这意味着什么。
+**[C] ★★★★** （推导题）证明：当环境编码器 $\mu$ 是双射函数时，适应模块的最优解满足 $\phi^* = \mu \circ g$，其中 $g$ 是从观测历史到环境参数的后验估计。讨论这意味着什么。
 
 ---
 
-## 97.7 Delta-Action / 残差策略：在基线上做修正 ⭐⭐⭐
+## 97.7 Delta-Action / 残差策略：在基线上做修正 ★★★
 
 ### 动机：利用少量真机数据高效修正
 
@@ -1369,9 +1369,9 @@ def deploy_with_delta(obs, base_policy, delta_model):
     return a_base + delta                 # 组合动作
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：残差模型的输出范围未限制**
+> ⚠ **编程陷阱：残差模型的输出范围未限制**
 > 错误做法：残差网络最后一层用 ReLU 或无激活函数
 > 现象：残差模型输出可能达到 $\pm 1$ rad 甚至更大，完全覆盖基线策略的贡献
 > 根本原因：没有约束残差的幅度，"修正"变成了"替代"
@@ -1383,15 +1383,15 @@ def deploy_with_delta(obs, base_policy, delta_model):
 
 ### 练习 97.7
 
-**[A] ⭐⭐⭐** 在 MuJoCo 中实现 Delta-Action 的 sim-to-sim 实验：在 MuJoCo-v4 中训练基线策略，然后在修改了摩擦和质量的 MuJoCo-v4' 中用 Delta-Action 修正。对比直接迁移 vs Delta-Action 修正的性能。
+**[A] ★★★** 在 MuJoCo 中实现 Delta-Action 的 sim-to-sim 实验：在 MuJoCo-v4 中训练基线策略，然后在修改了摩擦和质量的 MuJoCo-v4' 中用 Delta-Action 修正。对比直接迁移 vs Delta-Action 修正的性能。
 
-**[B] ⭐⭐⭐** 实验 $\text{max\_delta}$ 参数对性能的影响：分别设为 0.01, 0.05, 0.1, 0.2, 0.5 rad，绘制迁移性能曲线。是否存在最优值？
+**[B] ★★★** 实验 $\text{max\_delta}$ 参数对性能的影响：分别设为 0.01, 0.05, 0.1, 0.2, 0.5 rad，绘制迁移性能曲线。是否存在最优值？
 
-**[C] ⭐⭐⭐⭐** （跨章综合题）结合 复合/240_ASAP_SimToReal 中 ASAP 的具体实现，讨论为什么 ASAP 在人形机器人（G1）上用 Delta-Action 而不用 Delta-Dynamics。关键因素是什么？
+**[C] ★★★★** （跨章综合题）结合 复合/240_ASAP_SimToReal 中 ASAP 的具体实现，讨论为什么 ASAP 在人形机器人（G1）上用 Delta-Action 而不用 Delta-Dynamics。关键因素是什么？
 
 ---
 
-## 97.8 Teacher-Student 蒸馏：从特权信息到可部署策略 ⭐⭐⭐
+## 97.8 Teacher-Student 蒸馏：从特权信息到可部署策略 ★★★
 
 ### 动机：特权信息在部署时不可用
 
@@ -1525,9 +1525,9 @@ Teacher-Student 蒸馏和 RMA 有紧密的联系，但也有关键区别：
 
 > **本质洞察**：Teacher-Student 蒸馏将"在有完整信息时怎么做"压缩为"在信息不完整时怎么近似"。RMA 更进一步——不只是近似教师的行为，而是恢复教师使用的信息（环境编码），然后让同一个基础策略做出相应调整。RMA 可以被视为"更智能的蒸馏"，因为它保留了适应性。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：教师和学生的观测空间部分重叠导致信息泄露**
+> ⚠ **编程陷阱：教师和学生的观测空间部分重叠导致信息泄露**
 > 错误做法：学生的输入中不小心包含了某些特权信息（如精确接触状态标志位）
 > 现象：学生在仿真中完美模仿教师，但部署时特权通道为零或噪声，行为完全不同
 > 根本原因：学生过度依赖了本应不可用的信息
@@ -1539,13 +1539,13 @@ Teacher-Student 蒸馏和 RMA 有紧密的联系，但也有关键区别：
 
 ### 练习 97.8
 
-**[A] ⭐⭐⭐** 在 IsaacGym 中训练一个使用地形高度图的教师策略，然后蒸馏为只用本体感觉的学生策略。对比两者在随机地形上的成功率。
+**[A] ★★★** 在 IsaacGym 中训练一个使用地形高度图的教师策略，然后蒸馏为只用本体感觉的学生策略。对比两者在随机地形上的成功率。
 
-**[B] ⭐⭐⭐** 实验蒸馏系数 $\lambda_{\text{BC}}$ 的衰减策略：(a) 固定不衰减，(b) 线性衰减到 0，(c) 指数衰减到 0.01。哪种策略产生最好的学生？
+**[B] ★★★** 实验蒸馏系数 $\lambda_{\text{BC}}$ 的衰减策略：(a) 固定不衰减，(b) 线性衰减到 0，(c) 指数衰减到 0.01。哪种策略产生最好的学生？
 
 ---
 
-## 97.9 Physics Parameter Adaptation：在线参数估计 ⭐⭐⭐⭐
+## 97.9 Physics Parameter Adaptation：在线参数估计 ★★★★
 
 ### 动机：将 RMA 的隐式辨识变为显式
 
@@ -1591,7 +1591,7 @@ $$
 
 > **不是X而是Y**：Physics Parameter Adaptation 不是 RMA 的替代品，而是互补工具。当你只需要策略鲁棒性时用 RMA（编码空间更紧凑、学习更容易）；当你需要物理参数的精确值时用参数估计（例如调整 MPC 的模型参数或触发安全约束）。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > 💡 **概念误区：认为在线参数估计能估计所有参数**
 > 新手想法："我有 20 个物理参数，训练一个网络把它们全估出来"
@@ -1600,13 +1600,13 @@ $$
 
 ### 练习 97.9
 
-**[A] ⭐⭐⭐** 训练一个从观测历史预测摩擦系数的神经网络。在不同摩擦系数的环境中测试其准确性。
+**[A] ★★★** 训练一个从观测历史预测摩擦系数的神经网络。在不同摩擦系数的环境中测试其准确性。
 
-**[B] ⭐⭐⭐⭐** 对比 RMA 编码空间和显式参数估计在以下场景中的表现：(a) 环境参数在 episode 内变化（如从硬地走到草地），(b) 参数在训练分布之外。
+**[B] ★★★★** 对比 RMA 编码空间和显式参数估计在以下场景中的表现：(a) 环境参数在 episode 内变化（如从硬地走到草地），(b) 参数在训练分布之外。
 
 ---
 
-## 97.10 综合比较与选型指南 ⭐⭐
+## 97.10 综合比较与选型指南 ★★
 
 ### 方法选择决策树
 
@@ -1658,7 +1658,7 @@ $$
 | **灵巧手** | D2（接触）+ D4（触觉） | 大规模 DR + Teacher-Student | 接触物理是最大瓶颈 |
 | **无人机** | D1（空气动力学）+ D5 | DR + SysID | 空气动力学可精确辨识 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > 🧠 **思维陷阱：用最新的方法就不需要基础方法**
 > 新手想法："RMA + Delta-Action 这么强大，DR 就不用了吧？"
@@ -1667,16 +1667,16 @@ $$
 
 ### 练习 97.10
 
-**[A] ⭐⭐** 为以下三个场景设计 Sim-to-Real 方案，说明选择每种方法的理由：
+**[A] ★★** 为以下三个场景设计 Sim-to-Real 方案，说明选择每种方法的理由：
   - (a) Unitree Go2 在室外草地上行走
   - (b) Franka Emika 灵巧操作任务
   - (c) 多旋翼无人机在强风中飞行
 
-**[B] ⭐⭐⭐** （跨章综合题）结合 复合/20_浮动基座臂统一动力学 和 复合/110_轮足SimToReal与硬件，设计一个完整的 Go2+Z1 复合机器人的 Sim-to-Real 方案。需要考虑腿部和臂部的 Gap 差异、腿臂耦合效应、以及硬件安全约束。
+**[B] ★★★** （跨章综合题）结合 复合/20_浮动基座臂统一动力学 和 复合/110_轮足SimToReal与硬件，设计一个完整的 Go2+Z1 复合机器人的 Sim-to-Real 方案。需要考虑腿部和臂部的 Gap 差异、腿臂耦合效应、以及硬件安全约束。
 
 ---
 
-## 97.11 工程部署流程：从训练完成到真机验证 ⭐⭐
+## 97.11 工程部署流程：从训练完成到真机验证 ★★
 
 ### 动机：训练完成只是开始
 
@@ -1833,9 +1833,9 @@ class SafetyMonitor:
         return clipped, self.safety_level
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：部署时忘记 clamp 动作到安全范围**
+> ⚠ **编程陷阱：部署时忘记 clamp 动作到安全范围**
 > 错误做法：策略输出直接发送到电机，没有限幅
 > 现象：策略输出一个极端值 → 电机瞬间拉到位置极限 → 碰撞/过流保护 → 机器人断电倒地
 > 根本原因：仿真中策略可能偶尔输出极端动作但被仿真器的积分步"平滑"掉了，真机上没有这种保护
@@ -1848,15 +1848,15 @@ class SafetyMonitor:
 
 ### 练习 97.11
 
-**[A] ⭐⭐** 实现上述 `deployment_alignment_check` 函数，用一个训练好的 IsaacGym 策略测试。刻意引入一个关节顺序错误，验证检查能否捕获。
+**[A] ★★** 实现上述 `deployment_alignment_check` 函数，用一个训练好的 IsaacGym 策略测试。刻意引入一个关节顺序错误，验证检查能否捕获。
 
-**[B] ⭐⭐** 实现 `SafetyMonitor` 类，在仿真环境中测试三级降级策略的触发和恢复逻辑。
+**[B] ★★** 实现 `SafetyMonitor` 类，在仿真环境中测试三级降级策略的触发和恢复逻辑。
 
-**[C] ⭐⭐⭐** 设计一个完整的部署日志格式（包含哪些字段、采样频率、存储格式），使得任何真机失败都能事后分析根因。
+**[C] ★★★** 设计一个完整的部署日志格式（包含哪些字段、采样频率、存储格式），使得任何真机失败都能事后分析根因。
 
 ---
 
-## 97.12 前沿：可微仿真与世界模型辅助 Sim-to-Real ⭐⭐⭐⭐
+## 97.12 前沿：可微仿真与世界模型辅助 Sim-to-Real ★★★★
 
 ### 动机：从"黑盒仿真"到"可微仿真"
 
@@ -1911,7 +1911,7 @@ $$
 | Foundation Model for Robotics | 2026-2028 | 预训练的通用机器人策略，少样本适应 |
 | 可微仿真+RL 统一框架 | 2027+ | 端到端可微的训练-部署-适应流程 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > 🧠 **思维陷阱：认为可微仿真可以完全替代 RL**
 > 新手想法："有了解析梯度就不需要 PPO 了，直接梯度下降优化策略"
@@ -1922,9 +1922,9 @@ $$
 
 ### 练习 97.12
 
-**[A] ⭐⭐⭐** 用 MuJoCo MJX 实现一个简单的可微仿真实验：倒立摆控制。对比用解析梯度和 PPO 分别优化策略的收敛速度。
+**[A] ★★★** 用 MuJoCo MJX 实现一个简单的可微仿真实验：倒立摆控制。对比用解析梯度和 PPO 分别优化策略的收敛速度。
 
-**[B] ⭐⭐⭐⭐** 调研 Newton 物理引擎的最新进展，总结其在接触微分上的解决方案，并讨论其对腿足机器人 Sim-to-Real 的潜在影响。
+**[B] ★★★★** 调研 Newton 物理引擎的最新进展，总结其在接触微分上的解决方案，并讨论其对腿足机器人 Sim-to-Real 的潜在影响。
 
 ---
 
@@ -1975,16 +1975,16 @@ $$
 
 | 资源 | 难度 | 说明 |
 |------|------|------|
-| Tobin et al. "Domain Randomization for Transferring Deep Neural Networks from Simulation to the Real World" (2017) | ⭐⭐ | DR 的开创性工作 |
-| Tan et al. "Sim-to-Real: Learning Agile Locomotion For Quadruped Robots" (RSS 2018) | ⭐⭐⭐ | 最早在四足上做完整 Sim-to-Real 的工作 |
-| Hwangbo et al. "Learning Agile and Dynamic Motor Skills for Legged Robots" (Science Robotics 2019) | ⭐⭐⭐ | Actuator Network 的提出 |
-| Kumar et al. "RMA: Rapid Motor Adaptation for Legged Robots" (2021) | ⭐⭐⭐ | RMA 原始论文 |
-| He et al. "ASAP: Aligning Simulation and Real-World Physics" (2025) | ⭐⭐⭐⭐ | Delta-Action 在人形上的最新应用 |
-| PACE: "Towards Bridging the Gap: Systematic Sim-to-Real Transfer for Diverse Legged Robots" (2025) | ⭐⭐⭐ | 20 秒数据完成系统辨识 |
-| Aljalbout et al. "The Reality Gap in Robotics: Challenges, Solutions, and Best Practices" (2025) | ⭐⭐⭐ | 最全面的 Sim-to-Real 综述 |
-| Lim & Xu "Distributionally Robust Reinforcement Learning" (2022) | ⭐⭐⭐⭐ | DR 的 DRO 理论基础 |
-| Mehta et al. "Learning Domain Randomization Distributions for Training Robust Locomotion Policies" (2020) | ⭐⭐⭐ | CVaR + DR 的结合 |
-| Newton Physics Engine Documentation (2025) | ⭐⭐⭐ | 可微仿真最新引擎 |
+| Tobin et al. "Domain Randomization for Transferring Deep Neural Networks from Simulation to the Real World" (2017) | ★★ | DR 的开创性工作 |
+| Tan et al. "Sim-to-Real: Learning Agile Locomotion For Quadruped Robots" (RSS 2018) | ★★★ | 最早在四足上做完整 Sim-to-Real 的工作 |
+| Hwangbo et al. "Learning Agile and Dynamic Motor Skills for Legged Robots" (Science Robotics 2019) | ★★★ | Actuator Network 的提出 |
+| Kumar et al. "RMA: Rapid Motor Adaptation for Legged Robots" (2021) | ★★★ | RMA 原始论文 |
+| He et al. "ASAP: Aligning Simulation and Real-World Physics" (2025) | ★★★★ | Delta-Action 在人形上的最新应用 |
+| PACE: "Towards Bridging the Gap: Systematic Sim-to-Real Transfer for Diverse Legged Robots" (2025) | ★★★ | 20 秒数据完成系统辨识 |
+| Aljalbout et al. "The Reality Gap in Robotics: Challenges, Solutions, and Best Practices" (2025) | ★★★ | 最全面的 Sim-to-Real 综述 |
+| Lim & Xu "Distributionally Robust Reinforcement Learning" (2022) | ★★★★ | DR 的 DRO 理论基础 |
+| Mehta et al. "Learning Domain Randomization Distributions for Training Robust Locomotion Policies" (2020) | ★★★ | CVaR + DR 的结合 |
+| Newton Physics Engine Documentation (2025) | ★★★ | 可微仿真最新引擎 |
 
 ---
 

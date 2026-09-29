@@ -16,7 +16,7 @@
 
 ---
 
-## S3-B.0 前置自测 ⭐
+## S3-B.0 前置自测 ★
 
 答不出 2 题以上，建议先回到 S1 和 S3 复习 MuJoCo 数据结构与 GPU 生态。
 
@@ -28,7 +28,7 @@
 | 4 | JAX 的 `vmap` 和 Python `for` 循环在执行模型上有什么差异？ | 函数式、批量轴、编译、静态形状、设备端并行 |
 | 5 | 域随机化要覆盖哪些 sim2real gap？ | 动力学、接触、传感器、执行器、延迟、外扰 |
 
-### 本章目标 ⭐
+### 本章目标 ★
 
 学完本章后，你应能完成 7 件事。
 
@@ -48,7 +48,7 @@
 7. 把已有的单环境 MuJoCo 代码迁移为批量训练环境，
    并能在 MuJoCo CPU 中做 sim2sim 回放。
 
-### 知识地图 ⭐
+### 知识地图 ★
 
 ```text
 单环境 MuJoCo
@@ -85,9 +85,9 @@ mjlab 风格训练环境
 
 ---
 
-## S3-B.1 为什么批量环境是 RL 仿真的第一性原理 ⭐⭐⭐
+## S3-B.1 为什么批量环境是 RL 仿真的第一性原理 ★★★
 
-### 动机：单环境很直观，但训练效率很低 ⭐
+### 动机：单环境很直观，但训练效率很低 ★
 
 在 S1 中，MuJoCo CPU 的最小循环通常长这样。
 
@@ -138,7 +138,7 @@ PPO 的典型流程是先收集一批轨迹，
 > PPO 看到的不是一条很长的故事，
 > 而是一张由很多短故事拼成的经验表格。
 
-### 从控制视角理解批量环境 ⭐⭐
+### 从控制视角理解批量环境 ★★
 
 回顾腿足简化模型章节：
 LIPM、SRBD、Centroidal Model 都在做一件事，
@@ -194,7 +194,7 @@ $$
 老师批改时不需要换一套规则，
 只需要对每一行答案应用同一个评分函数。
 
-### 如果不批量化会怎样 ⭐
+### 如果不批量化会怎样 ★
 
 假设一个四足 velocity tracking 策略需要 $2 \times 10^8$ 个仿真步。
 
@@ -230,7 +230,7 @@ $$
 策略失败到底是动作空间错、奖励错、终止错、物理参数错，
 就很难分辨。
 
-### 批量环境的数学接口 ⭐⭐
+### 批量环境的数学接口 ★★
 
 一个 RL 环境可以抽象成两个函数。
 
@@ -273,7 +273,7 @@ $$
 换一个起点后，
 这种线索就失效。
 
-### 批量 reset 的关键细节 ⭐⭐
+### 批量 reset 的关键细节 ★★
 
 批量环境中最容易被低估的是 reset。
 
@@ -318,7 +318,7 @@ batch 形状就会变化。
 形状变化会破坏编译缓存，
 也会让 PPO 的 rollout buffer 变得复杂。
 
-### 教学版批量环境接口 ⭐⭐
+### 教学版批量环境接口 ★★
 
 下面的代码不依赖 mjlab，
 用于说明批量环境的最小数学形态。
@@ -388,7 +388,7 @@ def step_batch(state: BatchPointMassState, action: jax.Array, dt: float = 0.02):
 策略关心速度命令和身体姿态，
 不应该记住训练场地的绝对坐标。
 
-### 常见陷阱 ⭐
+### 常见陷阱 ★
 
 | 类型 | 错误做法 | 现象 | 根本原因 | 正确做法 |
 |------|----------|------|----------|----------|
@@ -397,7 +397,7 @@ def step_batch(state: BatchPointMassState, action: jax.Array, dt: float = 0.02):
 | 思维 | 认为更多环境一定更好 | 显存爆、更新变慢、曲线不稳 | batch size、horizon、mini-batch 有耦合 | 先看 throughput 和 learning stability |
 | 编程 | 所有环境使用同一个随机种子 | 行为高度同步，样本多样性差 | 随机数没有 per-env 分裂 | reset/event 都使用 per-env key |
 
-### 练习 ⭐
+### 练习 ★
 
 1. 把上面的 `BatchPointMassState` 扩展为 1D LIPM 环境：
    状态包含 $x,\dot{x}$，
@@ -414,9 +414,9 @@ def step_batch(state: BatchPointMassState, action: jax.Array, dt: float = 0.02):
 
 ---
 
-## S3-B.2 MJLab/MJX/MuJoCo Warp 的分层关系 ⭐⭐
+## S3-B.2 MJLab/MJX/MuJoCo Warp 的分层关系 ★★
 
-### 动机：名字相近，但抽象层级不同 ⭐
+### 动机：名字相近，但抽象层级不同 ★
 
 MuJoCo GPU 生态里有几个名字容易混在一起。
 
@@ -448,7 +448,7 @@ MJX 负责“函数式批量物理”的思维模型，
 MuJoCo Warp 负责“高吞吐前向仿真”，
 mjlab 负责“把 RL 任务拆成可维护的 Manager 配置”。
 
-### 五层数据流 ⭐⭐
+### 五层数据流 ★★
 
 ```text
 Task / Registry
@@ -509,7 +509,7 @@ Manager-based API 的价值就是分离关注点。
 > 不收敛查 Reward 和 Termination，
 > sim2real 差查 Event。
 
-### 与 IsaacLab 的迁移关系 ⭐⭐
+### 与 IsaacLab 的迁移关系 ★★
 
 如果读者有 IsaacLab 经验，
 mjlab 最容易理解成：
@@ -548,7 +548,7 @@ IsaacLab Manager API
 而是先建立物理等价性，
 再迁移 MDP 结构。
 
-### MJX 风格与 mjlab 风格的互补 ⭐⭐
+### MJX 风格与 mjlab 风格的互补 ★★
 
 MJX 风格强调函数式。
 
@@ -580,7 +580,7 @@ events = {...}
 再看 mjlab 的 Manager 配置，
 会比直接背 API 更稳。
 
-### 安装与快速试跑的稳健方式 ⭐
+### 安装与快速试跑的稳健方式 ★
 
 根据 mjlab 官方仓库说明，
 训练通常需要 NVIDIA GPU；
@@ -612,7 +612,7 @@ uv run train Mjlab-Velocity-Flat-Unitree-G1 --env.scene.num-envs 4096
 3. 可视化评估是否能加载训练中的 checkpoint。
 4. 失败时日志能否指出是安装、模型、GPU 还是任务配置问题。
 
-### 常见陷阱 ⭐
+### 常见陷阱 ★
 
 | 类型 | 错误做法 | 现象 | 根本原因 | 正确做法 |
 |------|----------|------|----------|----------|
@@ -621,7 +621,7 @@ uv run train Mjlab-Velocity-Flat-Unitree-G1 --env.scene.num-envs 4096
 | 思维 | 认为 API 迁移等于 sim2real 迁移 | 训练曲线正常，部署失败 | sim2real gap 在物理和传感器层 | 增加 MuJoCo CPU 回放与参数消融 |
 | 编程 | 在 CPU/GPU 间频繁拷贝观测 | GPU 利用率低 | Python 端同步破坏批量吞吐 | 让 rollout 主路径留在设备端 |
 
-### 练习 ⭐
+### 练习 ★
 
 1. 画出你熟悉的 IsaacLab 或 legged_gym 环境的 `step()` 数据流，
    标注哪些部分可以对应到 Observation/Action/Reward/Termination/Event。
@@ -632,9 +632,9 @@ uv run train Mjlab-Velocity-Flat-Unitree-G1 --env.scene.num-envs 4096
 
 ---
 
-## S3-B.3 JAX 自动向量化直觉：把一个环境提升成一批环境 ⭐⭐⭐
+## S3-B.3 JAX 自动向量化直觉：把一个环境提升成一批环境 ★★★
 
-### 动机：不要把 `vmap` 理解成语法糖 ⭐⭐
+### 动机：不要把 `vmap` 理解成语法糖 ★★
 
 很多 C++/Python 工程师第一次看到 `jax.vmap`，
 会把它理解成自动写了一个 for 循环。
@@ -669,7 +669,7 @@ JAX `vmap` 是把函数变成带批量轴的数组程序。
 > 编译器只有看见整个批量计算图，
 > 才能把调度、内存布局和 kernel 融合做对。
 
-### 函数式 step 的三个约束 ⭐⭐
+### 函数式 step 的三个约束 ★★
 
 JAX 风格环境通常要求 step 是接近纯函数的。
 
@@ -698,7 +698,7 @@ env.viewer.render(...)
 | 显式随机数 | 随机 key 作为输入输出管理 | 环境同步或不可复现 |
 | 固定形状 | 每一步数组形状不变 | 反复编译或直接报错 |
 
-### 用 `vmap` 写单环境到批量环境 ⭐⭐
+### 用 `vmap` 写单环境到批量环境 ★★
 
 下面代码演示单环境函数如何被提升。
 
@@ -761,7 +761,7 @@ log_prob: [T, B]
 [T * B, ...]
 ```
 
-### PRNG：为什么不能用全局随机数 ⭐⭐⭐
+### PRNG：为什么不能用全局随机数 ★★★
 
 JAX 的随机数是显式 key。
 
@@ -810,7 +810,7 @@ def step_with_random_push(state, action, key):
 曲线看上去很平滑，
 但样本多样性很差。
 
-### 静态形状：接触仿真的隐藏约束 ⭐⭐⭐
+### 静态形状：接触仿真的隐藏约束 ★★★
 
 JAX 编译喜欢静态形状。
 
@@ -845,7 +845,7 @@ active_contact_mask: [num_envs, max_contacts]
 因此“最大接触数”不是小细节，
 而是性能和稳定性的边界条件。
 
-### `jit` 的第一次慢与后续快 ⭐⭐
+### `jit` 的第一次慢与后续快 ★★
 
 JAX/MJX/Warp 风格代码经常出现：
 第一次运行很慢，
@@ -879,7 +879,7 @@ JAX/MJX/Warp 风格代码经常出现：
 | steady SPS | 稳态 steps per second | 衡量训练吞吐 |
 | reset SPS | 含 reset 的吞吐 | 发现终止过频问题 |
 
-### 常见陷阱 ⭐
+### 常见陷阱 ★
 
 | 类型 | 错误做法 | 现象 | 根本原因 | 正确做法 |
 |------|----------|------|----------|----------|
@@ -888,7 +888,7 @@ JAX/MJX/Warp 风格代码经常出现：
 | 概念 | 把 `vmap` 当成多线程 | 期待任意 Python 代码都能加速 | `vmap` 向量化数组程序，不加速 Python 副作用 | 先函数式化 step |
 | 思维 | 第一帧慢就判断性能差 | 误判后端吞吐 | 编译/捕获是一次性开销 | 分开记录 warmup 和 steady |
 
-### 练习 ⭐
+### 练习 ★
 
 1. 修改 `rollout()`，
    让它同时返回 `reward_history` 和 `done_history`，
@@ -900,9 +900,9 @@ JAX/MJX/Warp 风格代码经常出现：
    并给出一个 mask buffer 的设计。
 
 ---
-## S3-B.4 mjlab 风格环境：把 MDP 拆成可维护的 Manager ⭐⭐⭐
+## S3-B.4 mjlab 风格环境：把 MDP 拆成可维护的 Manager ★★★
 
-### 动机：环境不是一个 `step()` 函数那么简单 ⭐
+### 动机：环境不是一个 `step()` 函数那么简单 ★
 
 强化学习中的 MDP 通常写成五元组：
 
@@ -960,7 +960,7 @@ Manager-based API 的设计就是把这些函数拆开。
    保存 episode return、速度误差、摔倒率等
 ```
 
-### 为什么 Manager 分离比手写大函数更适合教学 ⭐⭐
+### 为什么 Manager 分离比手写大函数更适合教学 ★★
 
 在单环境调试中，
 手写一个 300 行 `step()` 也能工作。
@@ -992,7 +992,7 @@ Manager 分离带来实验隔离。
 如果所有逻辑都混在一起，
 调试就会从“定位问题”变成“猜测问题”。
 
-### 一个 Go2 velocity tracking 任务的最小配置形态 ⭐⭐
+### 一个 Go2 velocity tracking 任务的最小配置形态 ★★
 
 下面代码是 mjlab 风格的教学配置。
 
@@ -1066,7 +1066,7 @@ class Go2SceneCfg:
 
 这就是 Scene 层的边界。
 
-### MDP 配置骨架 ⭐⭐
+### MDP 配置骨架 ★★
 
 ```python
 # envs/go2_velocity/env_cfg.py
@@ -1123,7 +1123,7 @@ class Go2VelocityEnvCfg:
 机器人来不及响应扰动，
 尤其在奔跑、跳跃和快速转向任务中会失败。
 
-### Manager 的调度顺序与时间尺度 ⭐⭐⭐
+### Manager 的调度顺序与时间尺度 ★★★
 
 不同 Manager 不一定以同一频率运行。
 
@@ -1147,7 +1147,7 @@ class Go2VelocityEnvCfg:
 策略学到的不是鲁棒控制，
 而是在噪声中挣扎。
 
-### 常见陷阱 ⭐
+### 常见陷阱 ★
 
 | 类型 | 错误做法 | 现象 | 根本原因 | 正确做法 |
 |------|----------|------|----------|----------|
@@ -1156,7 +1156,7 @@ class Go2VelocityEnvCfg:
 | 思维 | 一次性打开复杂地形和强随机化 | 训练早期完全不动 | 任务难度超过探索能力 | 平地 sanity check 后逐步加难 |
 | 编程 | 忽略 `decimation` 对动作频率的影响 | 策略抖动或迟钝 | 物理频率和策略频率混淆 | 明确 `control_dt = physics_dt * decimation` |
 
-### 练习 ⭐
+### 练习 ★
 
 1. 写出一个机械臂 reaching 任务的 Manager 划分：
    哪些属于 Observation，
@@ -1170,9 +1170,9 @@ class Go2VelocityEnvCfg:
 
 ---
 
-## S3-B.5 观测设计：策略应该看见什么 ⭐⭐⭐
+## S3-B.5 观测设计：策略应该看见什么 ★★★
 
-### 动机：观测不是”数据越多越好” ⭐
+### 动机：观测不是”数据越多越好” ★
 
 观测设计决定策略的输入信息。
 
@@ -1206,7 +1206,7 @@ RL locomotion 的观测也遵循类似思想。
 策略要知道身体相对自身怎么动，
 而不是知道“训练场地第 12 米处有什么”。
 
-### 典型 policy observation ⭐⭐
+### 典型 policy observation ★★
 
 四足速度跟踪常见观测如下。
 
@@ -1228,7 +1228,7 @@ RL locomotion 的观测也遵循类似思想。
 
 这能帮助学生理解“仿真最优”和“部署稳健”不是同一个目标。
 
-### 投影重力为什么重要 ⭐⭐
+### 投影重力为什么重要 ★★
 
 IMU 可以给出身体姿态或重力方向。
 
@@ -1261,7 +1261,7 @@ $g_b$ 的横向分量会变化。
 策略不需要知道 roll/pitch 的具体参数化，
 只需要知道重力从身体哪个方向“指过来”。
 
-### 观测归一化 ⭐⭐
+### 观测归一化 ★★
 
 神经网络对尺度很敏感。
 
@@ -1290,7 +1290,7 @@ PPO 的 policy 网络第一层看到的是观测向量。
 
 这会降低样本效率。
 
-### privileged observation 与 policy observation ⭐⭐⭐
+### privileged observation 与 policy observation ★★★
 
 训练时可以给 critic 更多信息。
 
@@ -1313,7 +1313,7 @@ critic observation 可以包含仿真内部信息，
 > 只要 actor 输入不包含部署不可得信息，
 > 策略执行时仍然是可部署的。
 
-### MJLab 风格观测配置示例 ⭐⭐
+### MJLab 风格观测配置示例 ★★
 
 ```python
 # 观测配置示例：字段名以当前 mjlab 版本为准。
@@ -1364,7 +1364,7 @@ observations = {
 }
 ```
 
-### 观测噪声的设计 ⭐⭐⭐
+### 观测噪声的设计 ★★★
 
 观测噪声是域随机化的一部分。
 
@@ -1388,7 +1388,7 @@ observations = {
 先在无噪声环境确认 MDP 能学，
 再逐步加入传感器噪声。
 
-### 常见陷阱 ⭐
+### 常见陷阱 ★
 
 | 类型 | 错误做法 | 现象 | 根本原因 | 正确做法 |
 |------|----------|------|----------|----------|
@@ -1397,7 +1397,7 @@ observations = {
 | 思维 | 观测维度越多越好 | 收敛慢、泛化差 | 信息泄漏和噪声放大 | 只给任务必要且可部署的信息 |
 | 编程 | 观测缩放只在训练用，部署忘记 | 真机动作异常 | policy 输入分布漂移 | 缩放参数随模型一起导出 |
 
-### 练习 ⭐
+### 练习 ★
 
 1. 为机械臂 reaching 任务设计 policy obs 和 critic obs，
    标出哪些信息部署不可得。
@@ -1408,9 +1408,9 @@ observations = {
 
 ---
 
-## S3-B.6 动作设计：策略输出不是电机力矩的自由通行证 ⭐⭐⭐
+## S3-B.6 动作设计：策略输出不是电机力矩的自由通行证 ★★★
 
-### 动机：动作空间决定学习难度和部署风险 ⭐
+### 动机：动作空间决定学习难度和部署风险 ★
 
 在 MuJoCo 中，
 `d.ctrl[:]` 可以代表不同含义。
@@ -1454,7 +1454,7 @@ $$
 3. PD 控制提供局部稳定性，
    减少纯力矩探索的危险。
 
-### 动作尺度不是小超参数 ⭐⭐
+### 动作尺度不是小超参数 ★★
 
 如果 $s_a$ 太小，
 机器人迈不开腿。
@@ -1490,7 +1490,7 @@ $$
 | 关节长期撞限位 | 默认姿态或尺度不合理 | 检查关节范围和动作映射 |
 | reward 初期全为负 | 初始动作导致摔倒 | 降尺度、加站立课程 |
 
-### 动作延迟与 action history ⭐⭐⭐
+### 动作延迟与 action history ★★★
 
 真机执行有延迟。
 
@@ -1529,7 +1529,7 @@ $$
 先让策略学会站立和跟踪，
 再逐步提高平滑和能耗惩罚。
 
-### 动作配置示例 ⭐⭐
+### 动作配置示例 ★★
 
 ```python
 actions = {
@@ -1556,7 +1556,7 @@ def policy_action_to_motor_target(action, default_joint_pos, action_scale):
     return target_joint_pos
 ```
 
-### 正确写法与错误写法 ⭐⭐
+### 正确写法与错误写法 ★★
 
 ```python
 # 正确：动作语义明确，训练和部署共用同一函数
@@ -1577,7 +1577,7 @@ def wrong_deploy_action(action):
     return action
 ```
 
-### 常见陷阱 ⭐
+### 常见陷阱 ★
 
 | 类型 | 错误做法 | 现象 | 根本原因 | 正确做法 |
 |------|----------|------|----------|----------|
@@ -1586,7 +1586,7 @@ def wrong_deploy_action(action):
 | 思维 | action rate 惩罚越大越好 | 策略不动或跟踪差 | 平滑惩罚压制必要动作 | 逐步调度平滑权重 |
 | 编程 | 忘记力矩限幅 | 仿真电机不现实 | 策略使用真实电机无法输出的力 | 执行器层强制 limit |
 
-### 练习 ⭐
+### 练习 ★
 
 1. 给定 $k_p=25$、动作尺度 $s_a=0.25$，
    估算初始最大等效 PD 力矩。
@@ -1600,9 +1600,9 @@ def wrong_deploy_action(action):
 
 ---
 
-## S3-B.7 奖励与终止：把控制目标翻译成可学习信号 ⭐⭐⭐
+## S3-B.7 奖励与终止：把控制目标翻译成可学习信号 ★★★
 
-### 动机：奖励不是 MPC 代价的简单复制 ⭐
+### 动机：奖励不是 MPC 代价的简单复制 ★
 
 多模态 MPC 章节中，
 代价函数通常写成：
@@ -1631,7 +1631,7 @@ RL 策略是在大量交互中学习一个反馈函数。
 | 平滑 | 控制变化率代价 | action rate penalty | 通常逐步加强 |
 | 接触模式 | 接触约束/模式表 | air time/contact reward | 奖励会塑造步态 |
 
-### 速度跟踪奖励 ⭐⭐
+### 速度跟踪奖励 ★★
 
 常见写法是指数核：
 
@@ -1665,7 +1665,7 @@ $$
 误差大到离谱时奖励接近 0，
 不让极端坏样本主导更新。
 
-### 正则项不是越多越好 ⭐⭐
+### 正则项不是越多越好 ★★
 
 典型正则项如下。
 
@@ -1683,7 +1683,7 @@ $$
 > 早期奖励要让策略找到“能动起来”的通道，
 > 后期奖励才逐步要求平滑、节能、优雅。
 
-### 足端腾空时间奖励 ⭐⭐⭐
+### 足端腾空时间奖励 ★★★
 
 四足 locomotion 中常用 air time 奖励鼓励迈步。
 
@@ -1732,7 +1732,7 @@ def feet_air_time_reward(first_contact,
     return reward * moving.astype(reward.dtype)
 ```
 
-### 终止条件的教学意义 ⭐⭐
+### 终止条件的教学意义 ★★
 
 终止条件决定哪些状态被认为 episode 结束。
 
@@ -1766,7 +1766,7 @@ def feet_air_time_reward(first_contact,
 
 应检查动作尺度、默认姿态、初始 reset 和终止阈值。
 
-### 奖励配置示例 ⭐⭐
+### 奖励配置示例 ★★
 
 ```python
 rewards = {
@@ -1811,7 +1811,7 @@ rewards = {
 }
 ```
 
-### 终止配置示例 ⭐⭐
+### 终止配置示例 ★★
 
 ```python
 terminations = {
@@ -1836,7 +1836,7 @@ terminations = {
 }
 ```
 
-### reward terms 的日志化 ⭐⭐
+### reward terms 的日志化 ★★
 
 只记录总 reward 不够。
 
@@ -1857,7 +1857,7 @@ terminations = {
 | `episode/timeout_rate` | 正常结束比例 |
 | `task/command_speed_mean` | 命令分布是否合理 |
 
-### 常见陷阱 ⭐
+### 常见陷阱 ★
 
 | 类型 | 错误做法 | 现象 | 根本原因 | 正确做法 |
 |------|----------|------|----------|----------|
@@ -1866,7 +1866,7 @@ terminations = {
 | 思维 | 总 reward 不涨就调学习率 | 越调越乱 | 可能是某个 reward term 错 | 先看分项日志 |
 | 编程 | 站立命令也给 air time 奖励 | 原地踏步 | 奖励和命令条件冲突 | 用命令速度门控 |
 
-### 练习 ⭐
+### 练习 ★
 
 1. 设计一个能耗奖励：
    $r=-\sum_i|\tau_i\dot q_i|$，
@@ -1880,9 +1880,9 @@ terminations = {
 
 ---
 
-## S3-B.8 域随机化：不是让仿真更像真实，而是让策略更不挑剔 ⭐⭐⭐
+## S3-B.8 域随机化：不是让仿真更像真实，而是让策略更不挑剔 ★★★
 
-### 动机：真实世界不是某一个精确参数点 ⭐
+### 动机：真实世界不是某一个精确参数点 ★
 
 sim2real gap 常被描述成“仿真和真实不一样”。
 
@@ -1911,7 +1911,7 @@ sim2real gap 常被描述成“仿真和真实不一样”。
 > 它解决的是“策略过度挑剔”的问题，
 > 不是替代 system identification 的万能方法。
 
-### reset 随机化与 interval 随机化 ⭐⭐
+### reset 随机化与 interval 随机化 ★★
 
 事件按触发时机分两类。
 
@@ -1929,7 +1929,7 @@ sim2real gap 常被描述成“仿真和真实不一样”。
 
 命令重采样也适合 interval。
 
-### 物理一致的惯量随机化 ⭐⭐⭐
+### 物理一致的惯量随机化 ★★★
 
 传统写法会分别随机：
 
@@ -1963,7 +1963,7 @@ Rucker/Wensing 一类参数化方法的核心思想是：
 | 只随机质量缩放 | 安全 | 覆盖不足 |
 | 物理一致参数化 | 约束更合理 | 实现更复杂 |
 
-### 域随机化配置示例 ⭐⭐
+### 域随机化配置示例 ★★
 
 ```python
 events = {
@@ -2017,7 +2017,7 @@ events = {
 }
 ```
 
-### 随机化课程 ⭐⭐⭐
+### 随机化课程 ★★★
 
 不要一开始就开最大随机化。
 
@@ -2036,7 +2036,7 @@ events = {
 | Stage 2 | 摩擦、质量、观测噪声 | 学会参数鲁棒 |
 | Stage 3 | 外推、延迟、地形课程 | 学会扰动恢复和泛化 |
 
-### 域随机化的诊断 ⭐⭐⭐
+### 域随机化的诊断 ★★★
 
 域随机化开得越多，
 训练曲线越难解释。
@@ -2064,7 +2064,7 @@ events = {
 | 0.6-0.9 | 普通地面 | 主测试 |
 | 1.0-1.3 | 高摩擦 | 观察高冲击 |
 
-### 常见陷阱 ⭐
+### 常见陷阱 ★
 
 | 类型 | 错误做法 | 现象 | 根本原因 | 正确做法 |
 |------|----------|------|----------|----------|
@@ -2073,7 +2073,7 @@ events = {
 | 编程 | 随机化参数不进日志 | 不知道失败来自哪个扰动 | 随机性不可追踪 | 记录采样值和分桶成功率 |
 | 思维 | 用 DR 替代所有系统辨识 | 真机仍失败 | DR 覆盖不了结构性错误 | 先修正模型方向性错误，再随机化 |
 
-### 练习 ⭐
+### 练习 ★
 
 1. 为 Go2 velocity tracking 设计三阶段域随机化课程，
    每阶段列出随机化项、范围、开启条件。
@@ -2083,9 +2083,9 @@ events = {
 
 ---
 
-## S3-B.9 训练 loop：从批量 rollout 到 PPO 更新 ⭐⭐⭐
+## S3-B.9 训练 loop：从批量 rollout 到 PPO 更新 ★★★
 
-### 动机：环境写对不等于训练系统写对 ⭐
+### 动机：环境写对不等于训练系统写对 ★
 
 很多训练失败不是物理环境错，
 而是训练 loop 的数据语义错。
@@ -2101,7 +2101,7 @@ events = {
 
 因此需要把训练 loop 的结构讲清楚。
 
-### PPO rollout 数据结构 ⭐⭐
+### PPO rollout 数据结构 ★★
 
 一个 on-policy rollout 通常包含：
 
@@ -2139,7 +2139,7 @@ timeout 不一定应该让 value bootstrap 断开。
 
 这时通常需要用 $V(s_{t+1})$ bootstrap。
 
-### 教学版 PPO rollout loop ⭐⭐
+### 教学版 PPO rollout loop ★★
 
 ```python
 def collect_rollout(env, policy, state, obs, rollout_len):
@@ -2195,7 +2195,7 @@ rollout loop 不负责手动重置单个环境。
 
 否则训练 loop 会把 reset 逻辑和环境逻辑耦合在一起。
 
-### GAE 计算示例 ⭐⭐⭐
+### GAE 计算示例 ★★★
 
 ```python
 def compute_gae(rewards, dones, values, last_value, gamma=0.99, lam=0.95):
@@ -2229,7 +2229,7 @@ terminal = dones & (~timeouts)
 
 这对长 episode 截断任务非常重要。
 
-### PPO update 的核心 ⭐⭐⭐
+### PPO update 的核心 ★★★
 
 PPO 的 clipped objective：
 
@@ -2259,7 +2259,7 @@ $$
 3. gradient clipping。
 4. learning rate schedule。
 
-### 训练 loop 的最小闭环 ⭐⭐
+### 训练 loop 的最小闭环 ★★
 
 ```python
 for iteration in range(max_iterations):
@@ -2299,7 +2299,7 @@ for iteration in range(max_iterations):
         save_checkpoint(policy, optimizer, obs_normalizer, action_spec, iteration)
 ```
 
-### checkpoint 与导出 ⭐⭐
+### checkpoint 与导出 ★★
 
 一个可部署 checkpoint 不只是网络权重。
 
@@ -2329,7 +2329,7 @@ def build_deploy_package(policy_path, obs_spec, action_spec, control_dt):
     }
 ```
 
-### 常见陷阱 ⭐
+### 常见陷阱 ★
 
 | 类型 | 错误做法 | 现象 | 根本原因 | 正确做法 |
 |------|----------|------|----------|----------|
@@ -2338,7 +2338,7 @@ def build_deploy_package(policy_path, obs_spec, action_spec, control_dt):
 | 编程 | checkpoint 只保存网络 | ONNX 回放失败 | 缺少观测/动作语义 | 保存 obs/action spec |
 | 思维 | PPO 不收敛先调网络结构 | 反复无效 | 多数问题在 MDP 和数据 | 先做 zero/random policy sanity check |
 
-### 练习 ⭐
+### 练习 ★
 
 1. 写出一个包含 `timeouts` 的 GAE 公式。
 2. 给定 `T=24`、`B=4096`、`obs_dim=48`，
@@ -2348,9 +2348,9 @@ def build_deploy_package(policy_path, obs_spec, action_spec, control_dt):
 
 ---
 
-## S3-B.10 日志系统：让训练曲线能回答工程问题 ⭐⭐
+## S3-B.10 日志系统：让训练曲线能回答工程问题 ★★
 
-### 动机：没有分项日志，就没有可调试训练 ⭐
+### 动机：没有分项日志，就没有可调试训练 ★
 
 训练曲线不是给人看的装饰。
 
@@ -2381,7 +2381,7 @@ return 上升可能来自速度跟踪变好。
 
 因此日志必须分层。
 
-### 四类日志 ⭐⭐
+### 四类日志 ★★
 
 | 类别 | 频率 | 示例 | 目的 |
 |------|------|------|------|
@@ -2390,7 +2390,7 @@ return 上升可能来自速度跟踪变好。
 | task | 每个 episode/rollout | 速度误差、命令分布 | 判断任务完成度 |
 | system | 每秒或每 rollout | SPS、GPU 显存、reset 次数 | 判断性能瓶颈 |
 
-### 推荐日志字段 ⭐⭐
+### 推荐日志字段 ★★
 
 ```python
 def build_log_dict(train_stats, env_stats, reward_terms, perf_stats):
@@ -2429,7 +2429,7 @@ def build_log_dict(train_stats, env_stats, reward_terms, perf_stats):
     return logs
 ```
 
-### 训练健康指标 ⭐⭐
+### 训练健康指标 ★★
 
 PPO 的训练指标可以快速发现算法层异常。
 
@@ -2449,7 +2449,7 @@ PPO 的训练指标可以快速发现算法层异常。
 entropy 却很快归零，
 通常说明策略过早收敛到坏行为。
 
-### 环境健康指标 ⭐⭐
+### 环境健康指标 ★★
 
 环境指标比算法指标更接近机器人行为。
 
@@ -2462,7 +2462,7 @@ entropy 却很快归零，
 | `robot/action_rate` | 动作变化率 | 平滑惩罚、策略频率 |
 | `contact/feet_air_time_mean` | 足端腾空时间 | gait 是否成形 |
 
-### 可视化 rollout ⭐⭐
+### 可视化 rollout ★★
 
 纯标量日志仍然不够。
 
@@ -2492,7 +2492,7 @@ time
 
 这能把“训练曲线还可以”转化为“行为真的对”。
 
-### 常见陷阱 ⭐
+### 常见陷阱 ★
 
 | 类型 | 错误做法 | 现象 | 根本原因 | 正确做法 |
 |------|----------|------|----------|----------|
@@ -2501,7 +2501,7 @@ time
 | 概念 | KL 大就一定坏 | 误调学习率 | 需要结合 return 和 entropy 看 | 建立指标组合判断 |
 | 编程 | 不记录终止原因 | 不知道为什么 episode 短 | done mask 信息丢失 | 每类 termination 单独计数 |
 
-### 练习 ⭐
+### 练习 ★
 
 1. 为 S3-B.7 的奖励配置设计完整日志字段。
 2. 解释为什么 `torque_sat_rate` 高时，
@@ -2510,9 +2510,9 @@ time
 
 ---
 
-## S3-B.11 性能诊断：把慢分解到物理、策略、数据和日志 ⭐⭐⭐
+## S3-B.11 性能诊断：把慢分解到物理、策略、数据和日志 ★★★
 
-### 动机：GPU 训练慢不一定是物理慢 ⭐
+### 动机：GPU 训练慢不一定是物理慢 ★
 
 看到 steps per second 低，
 初学者常说“仿真器慢”。
@@ -2539,7 +2539,7 @@ policy forward
 不要先优化，
 先分解计时。
 
-### 性能指标层级 ⭐⭐
+### 性能指标层级 ★★
 
 | 指标 | 定义 | 用途 |
 |------|------|------|
@@ -2551,7 +2551,7 @@ policy forward
 | host sync count | CPU/GPU 同步次数 | 发现 `.item()`、打印、日志阻塞 |
 | GPU memory | 显存占用 | 判断 batch 是否过大 |
 
-### num_envs 不是越大越好 ⭐⭐
+### num_envs 不是越大越好 ★★
 
 增加环境数通常会提高物理吞吐，
 直到遇到瓶颈。
@@ -2580,7 +2580,7 @@ SPS 只提升 5%，
 但显存和 update 时间明显增加，
 就没有必要继续增大。
 
-### decimation 的性能与控制权衡 ⭐⭐⭐
+### decimation 的性能与控制权衡 ★★★
 
 策略频率：
 
@@ -2599,7 +2599,7 @@ decimation 越大，
 | 10 | 50Hz | 常见折中 | 需要动作平滑 |
 | 20 | 25Hz | 推理少 | 快速扰动恢复差 |
 
-### 接触复杂度 ⭐⭐⭐
+### 接触复杂度 ★★★
 
 腿足和灵巧手任务性能常被接触支配。
 
@@ -2626,7 +2626,7 @@ decimation 越大，
 3. 先在平地和站姿课程训练。
 4. 简化碰撞几何。
 
-### 性能 profile 示例 ⭐⭐⭐
+### 性能 profile 示例 ★★★
 
 ```python
 class Timer:
@@ -2661,7 +2661,7 @@ def train_iteration(env, policy, timer):
 
 教学阶段可以先做粗粒度计时。
 
-### 常见性能故障 ⭐⭐
+### 常见性能故障 ★★
 
 | 症状 | 可能原因 | 快速验证 |
 |------|----------|----------|
@@ -2672,7 +2672,7 @@ def train_iteration(env, policy, timer):
 | reset 很慢 | 终止太频繁或随机化复杂 | 统计 reset rate |
 | update 很慢 | 网络太大或 mini-batch 不合理 | 固定 rollout，单测 PPO update |
 
-### 常见陷阱 ⭐
+### 常见陷阱 ★
 
 | 类型 | 错误做法 | 现象 | 根本原因 | 正确做法 |
 |------|----------|------|----------|----------|
@@ -2681,7 +2681,7 @@ def train_iteration(env, policy, timer):
 | 概念 | 盲目增加 num_envs | 学习变差或显存爆 | batch 与优化超参耦合 | 扫描环境数并调 mini-batch |
 | 编程 | 复杂 mesh 直接用于训练碰撞 | 接触慢、不稳定 | 碰撞几何过复杂 | 使用简化 collision geom |
 
-### 练习 ⭐
+### 练习 ★
 
 1. 设计一个性能扫描表：
    `num_envs = 512, 1024, 2048, 4096, 8192`，
@@ -2692,9 +2692,9 @@ def train_iteration(env, policy, timer):
 
 ---
 
-## S3-B.12 从 MuJoCo 单环境迁移到批量训练 ⭐⭐⭐⭐
+## S3-B.12 从 MuJoCo 单环境迁移到批量训练 ★★★★
 
-### 动机：迁移不是把 for 循环外面套一层 batch ⭐
+### 动机：迁移不是把 for 循环外面套一层 batch ★
 
 已有 MuJoCo 环境通常是面向调试写的。
 
@@ -2722,7 +2722,7 @@ Step 7  接入 PPO rollout buffer
 Step 8  增加日志和 sim2sim 回放
 ```
 
-### Step 1：先修好单环境 ⭐⭐
+### Step 1：先修好单环境 ★★
 
 单环境必须通过 sanity check。
 
@@ -2738,7 +2738,7 @@ Step 8  增加日志和 sim2sim 回放
 如果单环境都不稳定，
 批量化只会把 bug 放大。
 
-### Step 2：拆出函数 ⭐⭐
+### Step 2：拆出函数 ★★
 
 手写单环境常见结构：
 
@@ -2789,7 +2789,7 @@ class SplitEnv:
 后续迁移到 mjlab 时，
 每个函数都能找到归属。
 
-### Step 3：写出观测规范 ⭐⭐
+### Step 3：写出观测规范 ★★
 
 迁移前必须写 obs spec。
 
@@ -2805,7 +2805,7 @@ class SplitEnv:
 有了 spec，
 部署和训练才不会拼错。
 
-### Step 4：动作映射单元测试 ⭐⭐
+### Step 4：动作映射单元测试 ★★
 
 动作映射必须单独测试。
 
@@ -2836,7 +2836,7 @@ def test_action_mapping(default_q, q_min, q_max):
 
 这类测试比直接训练更快暴露错误。
 
-### Step 5：从 Python list 到静态 buffer ⭐⭐⭐
+### Step 5：从 Python list 到静态 buffer ★★★
 
 回顾 S3-B.3 中的静态形状要求：JAX/MJX/Warp 风格的 GPU 编译需要在编译期确定所有张量的形状。接触数量天然是动态的——走路时两脚接地，站稳时四脚接地，摔倒时接触可能更多。如果每步根据实际接触数分配数组，形状就会变化，编译器无法为固定计算图生成高效 kernel。因此迁移时必须把动态长度的 Python list 改为预分配的固定大小 buffer，用 mask 标记哪些位置有效。
 
@@ -2864,7 +2864,7 @@ def build_contact_buffer(raw_contacts, max_contacts):
 
 这一步对应 MJX/Warp 的静态形状要求。
 
-### Step 6：批量 reset mask ⭐⭐⭐
+### Step 6：批量 reset mask ★★★
 
 批量环境中，每个 episode 独立结束。某些环境达到 timeout 或 failure 时需要 reset，其余环境继续运行。在 CPU 单环境中直接调用 `reset()` 即可；在批量环境中，reset 必须用 mask 化的 `where` 操作选择性地覆盖已结束环境的状态，同时保持其余环境不受影响。这是批量化迁移中最容易出错的步骤之一，因为每个状态字段的维度不同，broadcast 规则也不同。
 
@@ -2893,7 +2893,7 @@ def reset_where_done(state, reset_state, done):
 
 难点是每个状态字段都必须知道 batch 维度在哪里。
 
-### Step 7：从单环境 reward 到批量 reward ⭐⭐
+### Step 7：从单环境 reward 到批量 reward ★★
 
 单环境 reward：
 
@@ -2917,7 +2917,7 @@ def reward_batch(base_vel, cmd_vel):
 
 应使用数组库函数。
 
-### Step 8：迁移到 mjlab Manager ⭐⭐⭐
+### Step 8：迁移到 mjlab Manager ★★★
 
 迁移完成后，
 原来的拆分函数对应：
@@ -2936,7 +2936,7 @@ def reward_batch(base_vel, cmd_vel):
 
 你要重新检查每个函数是否只做自己的事。
 
-### 常见陷阱 ⭐
+### 常见陷阱 ★
 
 | 类型 | 错误做法 | 现象 | 根本原因 | 正确做法 |
 |------|----------|------|----------|----------|
@@ -2945,7 +2945,7 @@ def reward_batch(base_vel, cmd_vel):
 | 编程 | 批量函数中保留 Python `if done` | JIT/向量化失败 | done 是数组，不是标量 | 使用 mask/where |
 | 概念 | reset 改变 batch 大小 | rollout buffer 崩 | 批量训练需要静态形状 | 原地 reset，不删除环境 |
 
-### 练习 ⭐
+### 练习 ★
 
 1. 找一个已有 MuJoCo Gym 风格环境，
    写出它的 `apply_action/observe/reward/done/reset` 拆分表。
@@ -2956,9 +2956,9 @@ def reward_batch(base_vel, cmd_vel):
 
 ---
 
-## S3-B.13 CPU reference replay、Sim2Sim 与部署前回放 ⭐⭐⭐
+## S3-B.13 CPU reference replay、Sim2Sim 与部署前回放 ★★★
 
-### 动机：GPU 训练成功只是第一关 ⭐
+### 动机：GPU 训练成功只是第一关 ★
 
 策略在 mjlab/MuJoCo Warp 中训练成功，
 不代表可以直接上真机。
@@ -2971,7 +2971,7 @@ def reward_batch(base_vel, cmd_vel):
 2. GPU 批量后端和 CPU 后端可能存在数值、接触和特性覆盖差异。
 3. 回放代码更接近最终部署控制循环。
 
-### 回放循环 ⭐⭐⭐
+### 回放循环 ★★★
 
 CPU 回放的核心要求是让观测构造、动作映射和控制频率与训练环境完全对齐。下面的 `PolicyPlayer` 类展示了这个对齐结构：它加载 MuJoCo CPU 模型和导出的 ONNX 策略，按训练时的 obs spec 拼接观测，按训练时的 action spec 反归一化动作，并用 decimation 控制物理步与策略步的比例。如果其中任何一个环节与训练环境不一致，回放时策略的行为就会偏离训练预期——这正是 sim2sim 最常见的失败原因。
 
@@ -3046,7 +3046,7 @@ class PolicyPlayer:
 3. 控制频率必须按训练配置。
 4. 物理步进和策略步进必须用 decimation 对齐。
 
-### 回放验收清单 ⭐⭐
+### 回放验收清单 ★★
 
 | 检查项 | 通过标准 |
 |--------|----------|
@@ -3059,7 +3059,7 @@ class PolicyPlayer:
 | joint limits | 关节不过度撞限 |
 | torque saturation | 饱和比例可接受 |
 
-### 与真机部署的边界 ⭐⭐⭐
+### 与真机部署的边界 ★★★
 
 本章只覆盖仿真到回放。
 
@@ -3079,7 +3079,7 @@ class PolicyPlayer:
 这里的核心原则是：
 任何训练框架都不能替代硬件安全工程。
 
-### 常见陷阱 ⭐
+### 常见陷阱 ★
 
 | 类型 | 错误做法 | 现象 | 根本原因 | 正确做法 |
 |------|----------|------|----------|----------|
@@ -3088,7 +3088,7 @@ class PolicyPlayer:
 | 概念 | GPU 成功就跳过 CPU 回放 | 难定位部署问题 | 缺少 sim2sim 检查 | 必做 CPU 回放 |
 | 思维 | 回放只看一个命令 | 泛化未知 | 测试覆盖不足 | 固定评估套件 |
 
-### 练习 ⭐
+### 练习 ★
 
 1. 写一个 CPU 回放日志表，
    每 0.1 秒记录命令速度、实际速度、base height、最大力矩。
@@ -3098,7 +3098,7 @@ class PolicyPlayer:
 
 ---
 
-## S3-B.14 故障排查手册 ⭐⭐
+## S3-B.14 故障排查手册 ★★
 
 | 症状 | 可能原因 | 排查步骤 | 相关小节 |
 |------|----------|----------|----------|
@@ -3113,7 +3113,7 @@ class PolicyPlayer:
 | 多 GPU 或大 batch 后学习变差 | batch size 改变但 PPO 超参未调 | 1. 看 KL/clip fraction；2. 调 mini-batch 和 epoch；3. 调学习率 | S3-B.9、S3-B.11 |
 | 足端乱碰或拖地 | reward 缺少足端节奏约束、默认姿态不合适 | 1. 看 foot contact ratio；2. 检查 air time；3. 可视化足端轨迹 | S3-B.7、S3-B.10 |
 
-### 调试顺序建议 ⭐⭐
+### 调试顺序建议 ★★
 
 不要同时改多个大项。
 
@@ -3134,9 +3134,9 @@ class PolicyPlayer:
 
 ---
 
-## S3-B.15 综合练习 ⭐
+## S3-B.15 综合练习 ★
 
-### A 型：最小可行 Go2 velocity tracking ⭐⭐
+### A 型：最小可行 Go2 velocity tracking ★★
 
 目标：
 创建一个平地 Go2 velocity tracking 任务。
@@ -3161,7 +3161,7 @@ class PolicyPlayer:
 | 训练 100 iter | reward 分项有非零变化 |
 | play 回放 | 命令改变时策略响应方向正确 |
 
-### A 型：域随机化消融 ⭐⭐⭐
+### A 型：域随机化消融 ★★★
 
 训练三组策略：
 
@@ -3186,7 +3186,7 @@ class PolicyPlayer:
 2. 哪组鲁棒性最好？
 3. 哪个随机化项带来最大收益？
 
-### A 型：单环境迁移 ⭐⭐⭐
+### A 型：单环境迁移 ★★★
 
 选择一个已有 MuJoCo Python 环境。
 
@@ -3203,7 +3203,7 @@ class PolicyPlayer:
 同一随机种子和同一动作序列下，
 B=1 批量环境与原单环境的前 100 步观测、奖励差异可解释。
 
-### B 型：训练 loop 精读 ⭐⭐
+### B 型：训练 loop 精读 ★★
 
 精读你所用 runner 的 rollout 和 PPO update 代码。
 
@@ -3219,7 +3219,7 @@ B=1 批量环境与原单环境的前 100 步观测、奖励差异可解释。
 如果删除 observation normalizer，
 训练和部署分别会出现什么问题？
 
-### B 型：性能 profile ⭐⭐⭐
+### B 型：性能 profile ★★★
 
 对同一个任务扫描：
 
@@ -3243,7 +3243,7 @@ num_envs = 512, 1024, 2048, 4096
 2. 瓶颈在物理还是 PPO update？
 3. 环境数变化后是否需要调 learning rate 或 mini-batch？
 
-### 跨章综合题 ⭐⭐⭐
+### 跨章综合题 ★★★
 
 结合腿足简化模型和多模态 MPC 两章，
 设计一个“RL policy + SRBD safety monitor”的混合系统。
@@ -3263,9 +3263,9 @@ num_envs = 512, 1024, 2048, 4096
 
 ---
 
-## S3-B.16 本章小结 ⭐⭐
+## S3-B.16 本章小结 ★★
 
-### 一张表回顾全章 ⭐
+### 一张表回顾全章 ★
 
 | 模块 | 本章结论 | 工程检查 |
 |------|----------|----------|
@@ -3283,7 +3283,7 @@ num_envs = 512, 1024, 2048, 4096
 | 迁移 | 先拆单环境，再批量化 | B=1 一致性测试 |
 | sim2sim | GPU 成功后仍要 CPU 回放 | obs/action/control_dt 对齐 |
 
-### 三句话记忆 ⭐
+### 三句话记忆 ★
 
 1. 批量环境的本质是：
    同一套物理和 MDP 函数，
@@ -3294,7 +3294,7 @@ num_envs = 512, 1024, 2048, 4096
 3. sim2real 的第一步不是上真机，
    而是让训练环境、回放环境和部署控制循环共享同一份观测与动作语义。
 
-### 本章形成的判断力 ⭐⭐
+### 本章形成的判断力 ★★
 
 读到一个新的 GPU RL 仿真框架时，
 不要先问“它有多快”。
@@ -3316,7 +3316,7 @@ num_envs = 512, 1024, 2048, 4096
 
 ---
 
-## 累积项目：批量 Go2 训练环境模块 ⭐⭐
+## 累积项目：批量 Go2 训练环境模块 ★★
 
 本章新增模块：
 
@@ -3343,29 +3343,29 @@ num_envs = 512, 1024, 2048, 4096
 
 ---
 
-## 延伸阅读 ⭐
+## 延伸阅读 ★
 
 | 资料 | 难度 | 阅读重点 |
 |------|------|----------|
-| MuJoCo 官方 MJX 文档：`https://mujoco.readthedocs.io/en/latest/mjx.html` | ⭐⭐⭐ | `put_model`、`make_data`、`vmap`、MJX-Warp 限制 |
-| MuJoCo Warp 仓库：`https://github.com/google-deepmind/mujoco_warp` | ⭐⭐⭐ | Warp 后端定位、功能覆盖、不可微边界 |
-| mjlab 官方仓库：`https://github.com/mujocolab/mjlab` | ⭐⭐ | Manager-based API、demo、训练命令 |
-| mjlab 论文：`https://arxiv.org/abs/2601.22074` | ⭐⭐⭐ | 框架动机、组合式环境、GPU robot learning |
-| S1 MuJoCo 核心引擎 | ⭐⭐ | `mjModel/mjData`、MJCF、CPU 调试 |
-| S3 MuJoCo GPU 生态 | ⭐⭐ | MJX-JAX、MuJoCo Warp、Isaac Lab、Playground 等 GPU 仿真路线选型 |
-| 腿足简化模型理论 | ⭐⭐⭐ | LIPM/SRBD/Centroidal 与 locomotion 状态设计 |
-| 多模态 MPC | ⭐⭐⭐ | 代价、约束、模式和 RL 环境设计的边界 |
+| MuJoCo 官方 MJX 文档：`https://mujoco.readthedocs.io/en/latest/mjx.html` | ★★★ | `put_model`、`make_data`、`vmap`、MJX-Warp 限制 |
+| MuJoCo Warp 仓库：`https://github.com/google-deepmind/mujoco_warp` | ★★★ | Warp 后端定位、功能覆盖、不可微边界 |
+| mjlab 官方仓库：`https://github.com/mujocolab/mjlab` | ★★ | Manager-based API、demo、训练命令 |
+| mjlab 论文：`https://arxiv.org/abs/2601.22074` | ★★★ | 框架动机、组合式环境、GPU robot learning |
+| S1 MuJoCo 核心引擎 | ★★ | `mjModel/mjData`、MJCF、CPU 调试 |
+| S3 MuJoCo GPU 生态 | ★★ | MJX-JAX、MuJoCo Warp、Isaac Lab、Playground 等 GPU 仿真路线选型 |
+| 腿足简化模型理论 | ★★★ | LIPM/SRBD/Centroidal 与 locomotion 状态设计 |
+| 多模态 MPC | ★★★ | 代价、约束、模式和 RL 环境设计的边界 |
 
 ---
 
-### ⚠️ 实战陷阱：只看总奖励不看分项 ⭐
+### ⚠ 实战陷阱：只看总奖励不看分项 ★
 
 MJLab 这类 manager 化训练环境会把 reward 拆成多个 term。若只看总奖励，速度跟踪、动作惩罚、接触节奏和生存奖励之间的互相抵消会被隐藏。训练日志必须记录每个 term 的均值、方差和关闭后的消融结果。
 
-### ⚠️ 实战陷阱：reset 随机化改变了观测分布 ⭐
+### ⚠ 实战陷阱：reset 随机化改变了观测分布 ★
 
 随机化不只改变物理参数，也会改变策略看到的状态分布。若初始姿态、地形、命令和质量同时大范围随机，策略可能在站稳之前就被失败样本淹没。更稳妥的做法是先固定 reset，再逐项打开随机化。
 
-### ⚠️ 实战陷阱：批量训练成功不代表部署接口正确 ⭐
+### ⚠ 实战陷阱：批量训练成功不代表部署接口正确 ★
 
 训练环境里的动作往往是归一化目标，部署端可能需要关节位置、速度或力矩命令。导出策略前必须写明动作反归一化、默认姿态、PD 增益和控制频率，否则 CPU 回放和真机部署会出现同一个策略控制两套物理接口的问题。

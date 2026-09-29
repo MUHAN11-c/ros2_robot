@@ -4,7 +4,7 @@
 
 ## 前置自测
 
-📋 **答不出 $\ge$ 2 题 → 先回对应章节复习**
+◆ **答不出 $\ge$ 2 题 → 先回对应章节复习**
 
 1. **[Ch04 Manager-Based]** mjlab 的九大 Manager 分别管理 MDP 的哪些组件？`ObservationManager` 和 `RewardManager` 的调用时序是什么？
 2. **[Ch05 Obs/Action]** `ObservationGroupCfg` 中 `enable_corruption=False` 的含义是什么？它在 teacher-student 训练中扮演什么角色？
@@ -25,7 +25,7 @@
 
 ---
 
-## 22.1 为什么需要一个专门的"DIY 章节" ⭐
+## 22.1 为什么需要一个专门的"DIY 章节" ★
 
 > **这一节解决什么问题**：建立从"用框架内置任务训练"到"为自己的机器人和任务搭建全新环境"的跨越，明确这个跨越中的核心难点。
 
@@ -67,19 +67,19 @@
 
 > **跨领域类比**：DVI 方法论就像硬件工程中的"板级测试"。你不会把所有芯片焊到 PCB 上才通电测试——你先测试电源模块能否输出正确电压，再测试时钟信号是否稳定，然后逐步焊接其他芯片。每焊一个芯片就重新测试——如果新芯片导致系统不工作，错误一定出在最后焊的那个芯片上。类比到 RL 环境：每加一个 Manager 配置就重新跑 smoke test——如果环境崩溃，错误一定在最后加的那个配置中。这个类比的边界在于：PCB 测试有明确的"通过/不通过"判据（电压在阈值内），而 RL 环境的"正确性"有时需要更多领域判断（比如"random agent 的 reward 方差应该多大"）。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **思维陷阱：认为"环境搭建是一次性工作"**
+⚠ **思维陷阱：认为"环境搭建是一次性工作"**
 - 错误想法：花两天搭好环境，后面只需要调超参
 - 实际上：环境中的细微问题（obs 归一化错误、reward 量纲不对、DR 范围不合理）可能在训练数千 iterations 后才暴露。环境搭建是一个持续验证和迭代的过程
 - 正确做法：把环境验证脚本作为 CI 的一部分——每次修改环境后自动运行 smoke test
 
-⚠️ **编程陷阱：不在 git 中管理环境配置**
+⚠ **编程陷阱：不在 git 中管理环境配置**
 - 错误做法：在 Jupyter notebook 或交互式 shell 中修改配置、运行训练
 - 后果：三天后你不记得改了什么，无法复现之前的结果
 - 正确做法：每次环境修改都 commit + WandB 自动记录 git hash（AGILE 的标准流程）
 
-⚠️ **概念误区：认为"MuJoCo 中能跑就够了"**
+⚠ **概念误区：认为"MuJoCo 中能跑就够了"**
 - 错误想法：先在 MuJoCo 中把环境搞对，Isaac Lab 版本以后再说
 - 实际上：双框架的 API 差异可能导致同一个"正确"的 obs 配置在另一个框架中行为不同（如 quaternion 顺序、frame 约定）
 - 正确做法：从一开始就维护双框架版本，用 sim2sim 交叉验证
@@ -97,7 +97,7 @@ DVI 方法论确立了"先验证模块、再集成系统"的工程原则。但�
 ---
 
 
-## 22.2 mjlab 自定义任务全流程 ⭐⭐⭐
+## 22.2 mjlab 自定义任务全流程 ★★★
 
 > **这一节解决什么问题**：在 mjlab 中从零创建一个完整的自定义 RL 环境，掌握 EntityCfg → SceneCfg → ManagerBasedRlEnvCfg → Registry 的全流程。
 
@@ -117,7 +117,7 @@ mjlab 的环境设计哲学是**配置即环境**——你不需要继承任何�
 
 **反事实推理：如果不配置 EventManager 会怎样？** 每个 episode 的初始状态完全相同。策略会 overfit 到这个特定的初始状态——换一个稍微不同的初始位姿，策略就失效。这在固定基座操作中尤其严重：物体每次都在同一个位置，策略学到了一个固定的抓取轨迹而不是泛化的抓取能力。
 
-### 全流程六步法 ⭐⭐
+### 全流程六步法 ★★
 
 以下用一个"自定义四足速度跟踪"任务作为贯穿案例。假设你有一个非标四足机器人（不是 Go2/ANYmal），MJCF 文件已经准备好（来自 Ch11 的 sw2urdf 流程）。
 
@@ -388,7 +388,7 @@ python scripts/train.py MyQuad-Velocity-Flat --env.scene.num-envs=4096
 python scripts/play.py MyQuad-Velocity-Flat --num-envs=1
 ```
 
-### 验证三步走 ⭐⭐⭐
+### 验证三步走 ★★★
 
 环境注册后，**不要立即开始训练**。先执行三步验证，确保 MDP 的每个组件都工作正常：
 
@@ -495,7 +495,7 @@ print(f"Min/Max reward: {np.min(ep_rewards):.2f} / {np.max(ep_rewards):.2f}")
 
 如果 random agent 的 reward 总是相同的常数，说明 reward 函数没有和动作关联——可能是 obs 中的状态量没有被 reward 使用，或者 reward 函数引用了错误的变量。
 
-### 自定义 Reward/Obs Term 的编写 ⭐⭐
+### 自定义 Reward/Obs Term 的编写 ★★
 
 当框架内置的 reward/obs term 无法满足需求时，你需要编写自定义 term。以下是完整的编写模式：
 
@@ -544,30 +544,30 @@ class RewardsCfg:
 
 **自定义 term 的命名约定**：函数名应该描述"计算什么"而不是"在哪个任务中用"。好的命名：`track_lin_vel_xy_exp`、`feet_air_time`、`base_height_penalty`。坏的命名：`my_reward`、`task1_bonus`、`reward_v2`。好的命名让 term 可以在不同任务间复用。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：joint_names 正则表达式不匹配**
+⚠ **编程陷阱：joint_names 正则表达式不匹配**
 - 错误做法：直接用 `[".*"]` 匹配所有关节，但 MJCF 中还有 freejoint（6-DOF 基座关节）
 - 后果：action 维度包含了 freejoint 的 6 维，策略直接控制底盘位姿——训练出的策略无意义
 - 正确做法：用精确的正则 `["FL_.*", "FR_.*", "HL_.*", "HR_.*"]` 或 `["(?!root).*"]`（排除 root joint）
 - 验证：打印 `env.action_manager.action_term_dim` 确认维度
 
-⚠️ **编程陷阱：sim.dt 和 decimation 设置不合理**
+⚠ **编程陷阱：sim.dt 和 decimation 设置不合理**
 - 错误做法：dt=0.01, decimation=1 → 策略频率 100 Hz
 - 后果：策略频率太高，每步之间状态变化极小，reward 信号极弱，PPO 难以学到有效更新
 - 正确做法：dt=0.002~0.005, decimation=4~10 → 策略频率 20-50 Hz。策略频率应该和真机部署频率匹配
 
-⚠️ **思维陷阱：一次性配置所有 Manager**
+⚠ **思维陷阱：一次性配置所有 Manager**
 - 错误做法：把 7 个 Manager 的配置全部写完再跑 smoke test
 - 后果：如果 smoke test 失败，不知道是哪个 Manager 的配置有问题
 - 正确做法：按 DVI 流程逐步添加——先只配置 scene + action（其他 Manager 用默认值），跑通后加 obs，再加 reward，每步验证
 
-⚠️ **编程陷阱：RewTerm 的 func 返回了错误形状**
+⚠ **编程陷阱：RewTerm 的 func 返回了错误形状**
 - 错误做法：reward 函数返回 `[B, 1]` 而不是 `[B]`
 - 后果：RewardManager 内部 squeeze 失败或维度广播出错
 - 正确做法：所有 reward/termination term 的返回值必须是 `[B]` 形状（一维 tensor，长度等于 num_envs）
 
-⚠️ **编程陷阱：observation 中的 base_lin_vel 使用了 world frame**
+⚠ **编程陷阱：observation 中的 base_lin_vel 使用了 world frame**
 - 错误做法：用 `root_link_lin_vel_w`（world frame 速度）作为 obs
 - 后果：底盘朝向改变时，相同的前进速度在 world frame 中有不同的表示——obs 变得不稳定
 - 正确做法：用 `root_link_lin_vel_b`（body frame 速度）——前进方向始终是 x 轴，与朝向无关
@@ -585,7 +585,7 @@ mjlab 的全流程展示了"配置即环境"的开发模式。但如果你需要
 ---
 
 
-## 22.3 Isaac Lab Extension 开发模式 ⭐⭐⭐
+## 22.3 Isaac Lab Extension 开发模式 ★★★
 
 > **这一节解决什么问题**：在 Isaac Lab 中创建独立的 extension 项目，遵循 HOVER 仓库的目录范式，理解 Manager-based 和 Direct workflow 的选择依据。
 
@@ -600,7 +600,7 @@ Extension 模式是**推荐的生产模式**，原因有三：
 
 回顾 writing_guide.md §6.1 中的 HOVER 项目：HOVER（ICRA 2025，NVIDIA + CMU + UT Austin）是 Isaac Lab extension 的标杆范例。其仓库结构清晰地展示了"如何为一个研究项目组织 Isaac Lab 代码"。
 
-### HOVER 仓库结构精读 ⭐⭐
+### HOVER 仓库结构精读 ★★
 
 HOVER 的仓库 `NVlabs/HOVER` 的顶层目录结构如下：
 
@@ -640,7 +640,7 @@ NVlabs/HOVER/
 | 配置方式 | Hydra-style YAML | 灵活覆盖超参而不修改源码 |
 | 部署 | ONNX export + MuJoCo sim2sim + hw_wrapper | 完整的三阶段部署链 |
 
-### 从零创建 Isaac Lab Extension ⭐⭐
+### 从零创建 Isaac Lab Extension ★★
 
 Isaac Lab 从 2025 版开始提供了 **template generator**，可以快速生成 extension 骨架。但为了理解每个文件的作用，这里手动创建：
 
@@ -815,7 +815,7 @@ pip install -e .
 # extension 项目内若自带 wrapper，也可用项目自己的 scripts/rsl_rl/train.py
 ```
 
-### Manager-Based vs Direct Workflow 选择 ⭐⭐
+### Manager-Based vs Direct Workflow 选择 ★★
 
 Isaac Lab 提供两种环境开发 workflow。选择哪种取决于任务特征：
 
@@ -849,7 +849,7 @@ Isaac Lab 提供两种环境开发 workflow。选择哪种取决于任务特征�
 
 对于本教材的绝大多数任务（速度跟踪、操作、移动操作），Manager-Based 是正确选择。HOVER、ExBody、unitree_rl_lab 等主流项目都使用 Manager-Based。
 
-### URDF/MJCF → USD 转换 ⭐⭐
+### URDF/MJCF → USD 转换 ★★
 
 如果你已经有 MJCF 模型（来自 Ch11 的 sw2urdf → MJCF 流程），可以离线转换为 USD 以便检查和复用；但 Isaac Lab 也支持 URDF/MJCF——通过 `UrdfFileCfg`/`MjcfFileCfg` 在运行时转换并 spawn，不是必须先手动转 USD。离线转换用官方工具（命令为**位置参数** `<input> <output>`，而非 `--input_path/--output_path`；启动器是 `./isaaclab.sh -p`）：
 
@@ -876,17 +876,17 @@ Isaac Lab 提供两种环境开发 workflow。选择哪种取决于任务特征�
 
 > **反事实推理：如果跳过转换验证会怎样？** 一个常见问题是 URDF → USD 转换时 mesh 碰撞体被简化为凸包——原来的凹面（如机器人底盘内部的空腔）变成了凸面，导致本不应该碰撞的 body 产生了接触。在训练中的表现是：机器人的某些关节角度范围被"墙"挡住了（凸包碰撞），策略学到的运动范围比预期小。这类 bug 极难通过 reward 曲线发现——你只会看到"策略的步幅不够大"，但真正的原因是碰撞体形状错误。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：Isaac Lab 版本不兼容**
+⚠ **编程陷阱：Isaac Lab 版本不兼容**
 - HOVER 要求 Isaac Lab v2.0.0 + Isaac Sim 4.5。如果你用了更新的版本，可能遇到 `rsl_rl` → `rsl_rl_lib` 的重命名问题
 - 正确做法：检查 extension 的 README 中指定的版本要求，用 conda 环境隔离不同版本
 
-⚠️ **编程陷阱：`{ENV_REGEX_NS}` 占位符遗漏**
+⚠ **编程陷阱：`{ENV_REGEX_NS}` 占位符遗漏**
 - 在 SceneCfg 中，robot 的 `prim_path` 必须包含 `{ENV_REGEX_NS}`，它在运行时被替换为每个 env 的唯一路径
 - 如果写成了固定路径（如 `/World/Robot`），所有 env 共享同一个机器人——物理完全混乱
 
-⚠️ **思维陷阱：认为 Manager-Based 和 Direct 可以混用**
+⚠ **思维陷阱：认为 Manager-Based 和 Direct 可以混用**
 - 一个环境只能选择一种 workflow，不能在 Manager-Based 环境中插入 Direct-style 的自定义 step 逻辑
 - 如果需要自定义 step 逻辑中的一小部分，优先考虑用自定义 Manager term 实现
 
@@ -903,7 +903,7 @@ Isaac Lab 提供两种环境开发 workflow。选择哪种取决于任务特征�
 ---
 
 
-## 22.4 完整端到端流程：从 CAD 到策略训练 ⭐⭐⭐
+## 22.4 完整端到端流程：从 CAD 到策略训练 ★★★
 
 > **这一节解决什么问题**：给出从机器人 CAD 设计到 RL 策略训练的完整九步流程，每一步有明确的输入/输出和验证标准。
 
@@ -923,22 +923,22 @@ Step 5        Step 6        Step 7        Step 8       Step 9
 接入                                验证       导出
 ```
 
-### Step 1：选构型 ⭐
+### Step 1：选构型 ★
 
 构型（morphology）选择决定了后续所有步骤的复杂度。以下决策表帮助你评估选择：
 
 | 构型 | DOF | 接触模式 | 训练难度 | 建模难度 | 本书参考 |
 |------|-----|---------|---------|---------|---------|
-| 倒立摆 | 1-2 | 简单 | ⭐ | ⭐ | 入门练习 |
-| 固定基座臂 | 6-7 | 中等 | ⭐⭐ | ⭐⭐ | Ch17 |
-| 四足 | 12 | 复杂（步态） | ⭐⭐⭐ | ⭐⭐ | Ch13 |
-| 轮式+臂 | 8-10 | 混合 | ⭐⭐⭐ | ⭐⭐⭐ | Ch21 |
-| 人形 | 19-29 | 非常复杂 | ⭐⭐⭐⭐ | ⭐⭐⭐ | Ch14 |
-| 人形+灵巧手 | 50+ | 极其复杂 | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | Ch20 |
+| 倒立摆 | 1-2 | 简单 | ★ | ★ | 入门练习 |
+| 固定基座臂 | 6-7 | 中等 | ★★ | ★★ | Ch17 |
+| 四足 | 12 | 复杂（步态） | ★★★ | ★★ | Ch13 |
+| 轮式+臂 | 8-10 | 混合 | ★★★ | ★★★ | Ch21 |
+| 人形 | 19-29 | 非常复杂 | ★★★★ | ★★★ | Ch14 |
+| 人形+灵巧手 | 50+ | 极其复杂 | ★★★★★ | ★★★★ | Ch20 |
 
 **经验法则**：你的第一个自定义环境应该选择 DOF $\le$ 12 的构型。DOF 越高，debug 的搜索空间越大——12 DOF 的四足已经有 $2^{12} = 4096$ 种"某个关节配置错误"的可能性。
 
-### Step 2-3：SolidWorks → sw2urdf → URDF ⭐
+### Step 2-3：SolidWorks → sw2urdf → URDF ★
 
 这两步在 Ch11 中已经详细讲解。这里只列出从 Ch11 到 Ch22 的衔接检查清单：
 
@@ -950,7 +950,7 @@ Step 5        Step 6        Step 7        Step 8       Step 9
 | 没有自碰撞（在初始姿态下） | `mj_step` 后 `data.ncon == 0`（不含地面接触） | Ch12 §12.2 |
 | Actuator effort 和 velocity 上限与 datasheet 匹配 | 比较 MJCF 中的 `ctrlrange` 和电机 spec | Ch12 §12.3 |
 
-### Step 4：MJCF/USD 调优 ⭐⭐
+### Step 4：MJCF/USD 调优 ★★
 
 从 URDF 转换来的 MJCF/USD 通常需要手动调优以下参数：
 
@@ -997,7 +997,7 @@ decimation = 10  # 每 10 个物理步输出一个 obs → 50 Hz 策略
 | Velocity | 速度目标 | 轮式底盘 | `velocity` actuator | `ImplicitActuatorCfg(stiffness=0)` |
 | Actuator Net | 学习模型 | 精确 sim2real | — | `ActuatorNetLSTMCfg` |
 
-### Step 5：双框架接入 ⭐⭐
+### Step 5：双框架接入 ★★
 
 接入就是 §22.2（mjlab）和 §22.3（Isaac Lab）中描述的流程。两个框架可以并行进行，用以下对照表确保配置一致：
 
@@ -1043,7 +1043,7 @@ def verify_dual_framework_consistency(mjlab_env, isaaclab_env):
 - 初始关节角的 offset 计算方式不同
 - 求解器精度设置不同（MuJoCo 的 Newton solver vs PhysX 的 TGS solver）
 
-### Step 6：环境设计 ⭐⭐
+### Step 6：环境设计 ★★
 
 环境设计的核心是 MDP 四元组 $(S, A, R, T)$ 的工程化实现。这在 §22.2 中已经展示了代码模板。这里补充设计层面的决策框架：
 
@@ -1076,7 +1076,7 @@ def verify_dual_framework_consistency(mjlab_env, isaaclab_env):
       例如：抓取成功（bool）、站立（bool）、连续步数（counter）
 ```
 
-### Step 7：训练启动 ⭐
+### Step 7：训练启动 ★
 
 训练的标准流程（回顾 Ch07 的训练管线章节）：
 
@@ -1124,7 +1124,7 @@ class MyQuadPPOCfg:
 | 前 100 iterations | episode length | 逐渐增长 | 如果始终很短 → termination 太严格 |
 | 前 500 iterations | KL divergence | 在 target 附近波动 | 如果持续偏高 → LR 太大 |
 
-### Step 8：Sim2Sim 交叉验证 ⭐⭐
+### Step 8：Sim2Sim 交叉验证 ★★
 
 在一个框架中训练完成后，在另一个框架中加载策略验证——这是 sim2real 的前置步骤。
 
@@ -1162,7 +1162,7 @@ def sim2sim_eval(
 
 **Sim2Sim 成功标准**：两个框架的 tracking error 差异 < 15%。如果差异更大，优先检查接触摩擦和 actuator 参数的跨框架差异。
 
-### Step 9：ONNX 导出 ⭐
+### Step 9：ONNX 导出 ★
 
 ONNX 导出是部署到真机的必要步骤。回顾 Ch23 的 ProtoMotions "obs computation baked-in" 模式——部署时不需要重写 obs 函数：
 
@@ -1200,19 +1200,19 @@ def export_onnx(policy, obs_dim, path="policy.onnx"):
 - **obs 归一化**必须 baked-in：如果训练时使用了 `EmpiricalNormalization`（running mean/std），导出时必须把 mean 和 std 固化到 ONNX 图中，否则部署时 obs 不归一化，策略行为完全错误
 - **RNN 隐状态**：如果使用了 LSTM 策略，hidden state 的初始化和传递必须在 ONNX 图中显式处理
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **流程陷阱：跳过 Step 4 直接训练**
+⚠ **流程陷阱：跳过 Step 4 直接训练**
 - 错误做法：URDF 转换完就直接接入框架训练
 - 后果：接触参数不对导致机器人脚底打滑、actuator 力矩限制不对导致关节锁死
 - 正确做法：在 MuJoCo viewer 中花 30 分钟手动验证模型——拖动关节、检查碰撞、确认 actuator 范围
 
-⚠️ **流程陷阱：在 Step 7 之前花大量时间调 reward 权重**
+⚠ **流程陷阱：在 Step 7 之前花大量时间调 reward 权重**
 - 错误做法：在纸上设计完美的 reward 权重再开始训练
 - 后果：你的权重假设基于对环境行为的猜测——真实的行为往往和猜测差异很大
 - 正确做法：用粗略的权重快速跑一次（500 iterations），看行为再调。"先跑后调"比"先想后跑"高效得多
 
-⚠️ **编程陷阱：ONNX 导出忘记 bake obs normalization**
+⚠ **编程陷阱：ONNX 导出忘记 bake obs normalization**
 - 后果：部署时 obs 不归一化，policy 输出随机动作
 - 正确做法：导出时显式检查 `policy.normalizer` 是否被包含在 ONNX 图中
 
@@ -1229,11 +1229,11 @@ def export_onnx(policy, obs_dim, path="policy.onnx"):
 ---
 
 
-## 22.5 实战案例精读：HOVER 和 HUSKY ⭐⭐⭐
+## 22.5 实战案例精读：HOVER 和 HUSKY ★★★
 
 > **这一节解决什么问题**：通过两个来自顶会的真实项目（HOVER 使用 Isaac Lab，HUSKY 使用 mjlab），展示 DIY 环境搭建在研究级项目中的实际样貌。
 
-### 案例一：HOVER — Isaac Lab Extension 范式 ⭐⭐
+### 案例一：HOVER — Isaac Lab Extension 范式 ★★
 
 **论文**：Tairan He et al., "HOVER: Versatile Neural Whole-Body Controller for Humanoid Robots," ICRA 2025, arXiv:2410.21229
 **框架**：Isaac Lab v2.0.0 + Isaac Sim 4.5
@@ -1307,7 +1307,7 @@ def generate_masks(num_envs, mode_dim, device):
 
 这种双重 mask 机制的训练效果是：student 策略在任意 mask 组合下都能正确执行——它学到了"如果命令被屏蔽，就保持默认行为"的泛化能力。这比为每种控制模式训练独立策略高效得多。
 
-### 案例二：HUSKY — mjlab 研究项目范式 ⭐⭐
+### 案例二：HUSKY — mjlab 研究项目范式 ★★
 
 **论文**：Jinrui Han et al., "HUSKY: Humanoid Skateboarding System via Physics-Aware Whole-Body Control," RSS 2026, arXiv:2602.03205
 **框架**：**mjlab** + RSL-RL + MuJoCo Warp
@@ -1404,13 +1404,13 @@ Phase 3: 推进↔转向切换
 
 **选择建议**：如果你的任务需要多模态控制、视觉输入或 USD 资产，参考 HOVER 的 Isaac Lab extension 模式。如果你的任务涉及复杂的物理建模（自定义约束、器具耦合）或偏好更轻量级的 codebase，参考 HUSKY 的 mjlab 模式。两者不互斥——你可以在 mjlab 中快速原型验证，然后用 Isaac Lab extension 做生产级训练。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **概念误区：认为"HOVER/HUSKY 的代码可以直接用"**
+⚠ **概念误区：认为"HOVER/HUSKY 的代码可以直接用"**
 - 这些项目的代码针对特定机器人（H1/G1）和特定任务（全身控制/滑板）优化
 - 正确做法：学习它们的**架构模式**（mask obs group、AMP 集成、equality constraint），然后在你的任务中重新实现
 
-⚠️ **编程陷阱：HOVER 的 rsl_rl 是定制 fork**
+⚠ **编程陷阱：HOVER 的 rsl_rl 是定制 fork**
 - HOVER 依赖的 `rsl_rl` 是 NVIDIA 定制版本，和 upstream RSL-RL 有 API 差异
 - 如果你用 pip install rsl-rl 安装的标准版本，训练脚本会报错
 - 正确做法：使用 HOVER 仓库中 `third_party/` 目录下 pin 的版本
@@ -1427,7 +1427,7 @@ Phase 3: 推进↔转向切换
 
 ---
 
-## 22.6 EventsCfg 与 CommandsCfg 设计 ⭐⭐
+## 22.6 EventsCfg 与 CommandsCfg 设计 ★★
 
 > **这一节解决什么问题**：设计完整的 DR（Domain Randomization）和指令采样配置——这两个 Manager 是自定义环境中最容易被忽视但对 sim2real 影响最大的组件。
 
@@ -1441,7 +1441,7 @@ Phase 3: 推进↔转向切换
 | `reset` | 每次 episode reset 时 | 初始状态随机化（位姿、关节角、速度） | 低 |
 | `interval` | 每隔 N 步执行一次 | 外部扰动（push force、风力） | 中 |
 
-> ⚠️ **没有自动的 `step` 模式**：EventManager 不会"每个仿真步"自动触发某个 mode。Event mode 可以自定义，但**必须由环境显式调用 `event_manager.apply(mode="step")` 才会执行**——配置 `mode="step"` 本身不会让它每步自动运行。需要逐步扰动（如 action delay、逐步 obs noise）时，通常应放在 action/observation term、actuator delay（如 `DelayedPDActuatorCfg`）或环境 step 逻辑里，而不是依赖一个自动的 step event。
+> ⚠ **没有自动的 `step` 模式**：EventManager 不会"每个仿真步"自动触发某个 mode。Event mode 可以自定义，但**必须由环境显式调用 `event_manager.apply(mode="step")` 才会执行**——配置 `mode="step"` 本身不会让它每步自动运行。需要逐步扰动（如 action delay、逐步 obs noise）时，通常应放在 action/observation term、actuator delay（如 `DelayedPDActuatorCfg`）或环境 step 逻辑里，而不是依赖一个自动的 step event。
 
 **自定义任务中 EventsCfg 的推荐配置模板**：
 
@@ -1522,7 +1522,7 @@ class EventsCfg:
 | 5000-8000 iter | + push disturbance | 测试抗扰能力 |
 | 8000+ iter | + action delay + obs noise | sim2real 准备 |
 
-### CommandsCfg 设计 ⭐⭐
+### CommandsCfg 设计 ★★
 
 CommandsCfg 定义了策略需要完成的"任务指令"。对于速度跟踪任务，指令是目标速度；对于导航任务，指令是目标位置；对于操作任务，指令是目标物体位姿。
 
@@ -1599,14 +1599,14 @@ class GoalPositionCommand(CommandTerm):
 
 > **本质洞察**：CommandTerm 不一定是"给策略的目标指令"——它也可以是 **episode 级实验条件生成器**。在 Ch22 §22.2 的速度跟踪中，command 是策略要追踪的目标速度；但在自定义的物理验证环境中（如网球发射器），command 可以是"发球参数"——速度、仰角、落点范围——策略不需要追踪这些参数，它们只是定义了每个 episode 的物理条件。把随机化条件封装为 CommandTerm 而非硬编码到 reset 函数中，有两个工程好处：(1) 条件的采样范围可以通过 CLI 参数覆盖（如 `--env.commands.launch.speed-range "[20, 45]"`），不需要改代码；(2) 每个 episode 的条件被显式记录在 command buffer 中，可复现、可分析。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：resampling_time_range 太短导致指令抖动**
+⚠ **编程陷阱：resampling_time_range 太短导致指令抖动**
 - 如果 `resampling_time_range=(1.0, 1.0)`，策略每秒收到一个新指令——还没执行完上一个就被要求做新的
 - 后果：策略学到"忽略指令"的行为（因为执行指令反而被惩罚——tracking error 在指令切换时瞬间变大）
 - 正确做法：resampling time $\ge$ 机器人到达目标速度所需的时间 $\times$ 2
 
-⚠️ **编程陷阱：Command 返回的是 world frame 而非 base frame**
+⚠ **编程陷阱：Command 返回的是 world frame 而非 base frame**
 - 后果：obs 中的指令随底盘旋转而变化——相同的"向前走"在不同朝向下有不同的 obs 表示
 - 正确做法：Command 的 `_compute_command()` 必须返回 base frame 中的值
 
@@ -1618,7 +1618,7 @@ class GoalPositionCommand(CommandTerm):
 
 ---
 
-## 22.7 环境搭建的十大常见 Bug 与排查 ⭐⭐⭐
+## 22.7 环境搭建的十大常见 Bug 与排查 ★★★
 
 > **这一节解决什么问题**：系统化地覆盖自定义环境中最常见的 10 类 bug，每类给出症状、根因、排查步骤和修复方法。
 
@@ -1628,7 +1628,7 @@ class GoalPositionCommand(CommandTerm):
 
 以下 10 类 bug 覆盖了作者和社区经验中 90% 以上的自定义环境问题。每类 bug 按"症状→根因→排查→修复"的固定格式组织。
 
-### Bug 1：机器人初始化时"弹飞" ⭐
+### Bug 1：机器人初始化时"弹飞" ★
 
 **症状**：环境 reset 后第一步，机器人 base height 暴增到 5-50 m，然后 terminated。
 
@@ -1649,7 +1649,7 @@ for i in range(data.ncon):
 
 **修复**：调整 `init_state.joint_pos` 使初始姿态无穿模。或者增大 `solimp` 的 width 参数，允许更大的初始穿透被逐步修正（不推荐，治标不治本）。
 
-### Bug 2：Zero Agent 下机器人缓慢倒塌 ⭐
+### Bug 2：Zero Agent 下机器人缓慢倒塌 ★
 
 **症状**：action=0 时机器人在 100-200 步内逐渐倒下。
 
@@ -1675,7 +1675,7 @@ for i in range(model.njnt):
 
 **修复**：增大 stiffness（但不要太大，否则 PD 控制会产生高频振荡）。或者调整初始关节角到更"平衡"的姿态。
 
-### Bug 3：Obs 维度不匹配导致训练崩溃 ⭐
+### Bug 3：Obs 维度不匹配导致训练崩溃 ★
 
 **症状**：训练开始时报 RuntimeError: shape mismatch，或者 obs tensor 形状和 policy 网络输入维度不一致。
 
@@ -1695,7 +1695,7 @@ for name, term in env.observation_manager.active_terms["policy"]:
 
 **修复**：确保 PPO 配置中的 `num_observations` 等于所有 obs term 维度之和。更好的做法：让 PPO 配置自动从环境推断 obs 维度。
 
-### Bug 4：Reward 始终为常数 ⭐⭐
+### Bug 4：Reward 始终为常数 ★★
 
 **症状**：reward 曲线从第一步开始就是一个固定值，不随训练变化。
 
@@ -1717,7 +1717,7 @@ for name, val in env.reward_manager.compute().items():
 
 **修复**：找到 std=0 的 reward term，检查其函数实现。
 
-### Bug 5：策略学到"原地抖动"而不是行走 ⭐⭐
+### Bug 5：策略学到"原地抖动"而不是行走 ★★
 
 **症状**：reward 曲线上升，但 viewer 中机器人原地高频颤抖而不是行走。
 
@@ -1727,7 +1727,7 @@ for name, val in env.reward_manager.compute().items():
 
 **修复**：(1) 增大 action_rate_l2 权重；(2) 检查 velocity command 的分布——如果零速度概率太高，调整 command sampler；(3) 增加 feet_air_time reward 鼓励迈步。
 
-### Bug 6：训练中途突然 NaN ⭐⭐
+### Bug 6：训练中途突然 NaN ★★
 
 **症状**：训练前 1000 iterations 正常，然后 obs 或 reward 突然出现 NaN，训练崩溃。
 
@@ -1759,7 +1759,7 @@ for step in range(10000):
 
 **修复**：(1) 加入更严格的 termination（关节角超限、base 高度过低/过高）；(2) clip obs 到合理范围；(3) 降低学习率或 gradient clip。
 
-### Bug 7：两个框架训练结果差异巨大 ⭐⭐
+### Bug 7：两个框架训练结果差异巨大 ★★
 
 **症状**：同一个任务在 mjlab 中 reward 正常上升，在 Isaac Lab 中 reward 远低于预期（或反之）。
 
@@ -1769,7 +1769,7 @@ for step in range(10000):
 
 **修复**：调整接触参数使两个框架的物理行为尽可能接近。MuJoCo 的 `solref/solimp` 和 PhysX 的 `solver_position_iteration_count` 没有直接对应关系——需要通过实验对齐（drop test、slide test）。
 
-### Bug 8：Curriculum 不推进 ⭐
+### Bug 8：Curriculum 不推进 ★
 
 **症状**：策略在 Phase 0 训练了数千 iterations，success rate 不达标，curriculum 永远不推进到下一阶段。
 
@@ -1785,7 +1785,7 @@ print(f"Avg episode length: {env.metrics.get('ep_len_mean', 0):.0f}")
 
 **修复**：降低 Phase 0 的 success 阈值（如从 50% 降到 30%），或者缩小物体初始范围让任务更容易。
 
-### Bug 9：env.reset() 后 obs 不变 ⭐
+### Bug 9：env.reset() 后 obs 不变 ★
 
 **症状**：连续调用 `env.reset()` 多次，返回的 obs 完全相同。
 
@@ -1808,7 +1808,7 @@ class EventsCfg:
     )
 ```
 
-### Bug 10：训练极慢（< 100 steps/s） ⭐
+### Bug 10：训练极慢（< 100 steps/s） ★
 
 **症状**：预期 4096 envs 下应该达到 ~50,000 steps/s，但实际只有几百。
 
@@ -1840,13 +1840,13 @@ nvidia-smi -l 1  # 持续监控
 | 9. Reset 不变 | obs 恒定 | 检查 EventsCfg | 加 reset event | Ch08 |
 | 10. 训练慢 | < 100 steps/s | torch.profiler | 增 env / 消除 for loop | Ch24 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **排查陷阱：只看 reward 曲线不看行为**
+⚠ **排查陷阱：只看 reward 曲线不看行为**
 - reward 上升不等于行为正确。策略可能找到了 reward hacking 的捷径（如利用仿真 bug 获得高 reward）
 - 正确做法：每 500 iterations 用 viewer 观察一次行为，确认和预期一致
 
-⚠️ **排查陷阱：修改多项配置后一起测试**
+⚠ **排查陷阱：修改多项配置后一起测试**
 - 同时改了 obs、reward 和 DR，训练变好了——你不知道是哪个改动起了作用
 - 正确做法：每次只改一项，记录结果。这就是 AGILE 四阶段 workflow 中 Prepare 阶段的核心精神
 
@@ -1858,7 +1858,7 @@ nvidia-smi -l 1  # 持续监控
 
 ---
 
-### 系统化排查工作流 ⭐⭐
+### 系统化排查工作流 ★★
 
 当你遇到"策略不收敛"这类模糊症状时，按以下决策树系统化排查，避免盲目猜测：
 
@@ -1936,7 +1936,7 @@ def compare_with_random(env, policy, n_episodes=50):
 ---
 
 
-## 22.8 双框架 DIY 实战：自定义四足速度跟踪完整代码 ⭐⭐⭐
+## 22.8 双框架 DIY 实战：自定义四足速度跟踪完整代码 ★★★
 
 > **这一节解决什么问题**：以一个假想的非标四足机器人（MyQuad）为例，给出双框架中从配置到训练的**完整可运行代码**，读者可以直接复制修改。
 
@@ -1944,7 +1944,7 @@ def compare_with_random(env, policy, n_episodes=50):
 
 前面的节给出了概念框架和代码片段。但真正的 DIY 需要一个完整的、端到端的代码参考——不是 30 行的片段，而是 300 行的完整配置文件。本节就是这个参考。
 
-### mjlab 完整环境代码 ⭐⭐
+### mjlab 完整环境代码 ★★
 
 以下代码展示了一个完整的 mjlab 自定义四足速度跟踪环境的所有配置文件。读者可以用自己的 MJCF 替换 `my_quad.xml`，修改 joint names，即可运行。
 
@@ -2181,7 +2181,7 @@ class MyQuadVelocityFlatEnvCfg(ManagerBasedRlEnvCfg):
     episode_length_s = 20.0
 ```
 
-### Isaac Lab 等价代码要点 ⭐⭐
+### Isaac Lab 等价代码要点 ★★
 
 将上述 mjlab 代码迁移到 Isaac Lab 时，核心差异集中在以下几处：
 
@@ -2256,7 +2256,7 @@ gym.register(
 | PhysX 求解器 | — | `solver_position_iteration_count` | mjlab 不需要（MuJoCo 统一求解） |
 | 地面 | MJCF 内定义 | `GroundPlaneCfg()` | Isaac Lab 需要显式添加地面 |
 
-### DIY 全流程检查清单 ⭐⭐⭐
+### DIY 全流程检查清单 ★★★
 
 以下是一个可打印的检查清单，覆盖从模型导入到策略训练的所有关键步骤。每个检查项有"通过"和"不通过"两种结果，不通过时指向对应的修复小节。
 
@@ -2367,7 +2367,7 @@ python scripts/export_onnx.py MyQuad-Velocity-Flat \
     --load-run=latest
 ```
 
-### 关键配置参数调优指南 ⭐⭐
+### 关键配置参数调优指南 ★★
 
 在上述完整代码中，有些参数需要根据你的具体机器人调整。以下是调优的优先级排序：
 
@@ -2386,13 +2386,13 @@ python scripts/export_onnx.py MyQuad-Velocity-Flat \
 
 > **跨领域类比**：参数调优的优先级就像修车——先确保轮子安装正确（P0），再调整悬挂和刹车（P1），然后优化发动机参数（P2），最后做空气动力学微调（P3）。不要在轮子还没装好的时候就去风洞做空气动力学测试。不幸的是，很多人在环境搭建中做的正是这件事——初始化都不对就开始调 reward 权重。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：复制整段代码后忘记改 joint names**
+⚠ **编程陷阱：复制整段代码后忘记改 joint names**
 - 后果：action 引用了不存在的 joint name，action 维度变为 0，策略没有动作输出
 - 正确做法：复制后第一件事是在你的 MJCF 中搜索所有 joint name，更新代码中的正则表达式
 
-⚠️ **编程陷阱：ContactSensorCfg 的 body_names 和 MJCF 不匹配**
+⚠ **编程陷阱：ContactSensorCfg 的 body_names 和 MJCF 不匹配**
 - 后果：feet_air_time reward 返回零（因为没有检测到脚接触），策略不学步态
 - 正确做法：打印 `model.geom_bodyid` 和 body names 的映射，确认 ContactSensorCfg 引用的 body name 确实存在
 
@@ -2469,18 +2469,18 @@ python scripts/export_onnx.py MyQuad-Velocity-Flat \
 
 | 资源 | 内容 | 难度 |
 |------|------|------|
-| Isaac Lab 官方 Tutorial "Creating a Manager-Based Base Environment" | 从 CartPole 出发的 step-by-step 教程 | ⭐ |
-| Isaac Lab 官方 Tutorial "Creating a Direct Workflow RL Environment" | Direct 模式的 CartPole 教程 | ⭐ |
-| NVlabs/HOVER 仓库 README + 代码 | Isaac Lab extension 的标杆范例 | ⭐⭐⭐ |
-| TeleHuman/humanoid_skateboarding 仓库 | mjlab 研究项目的标杆范例 | ⭐⭐⭐ |
-| AGILE 论文（arXiv:2603.20147）| 四阶段工业级 workflow | ⭐⭐⭐ |
-| Isaac Lab Extension Development 官方文档 | Omniverse extension 机制详解 | ⭐⭐ |
-| Legged Lab（github.com/Hellod035/LeggedLab） | Direct 模式的足式 RL 实现 | ⭐⭐ |
-| MuJoCo Menagerie（google-deepmind/mujoco_menagerie） | MJCF 模型库（Go2/G1/ANYmal 等） | ⭐ |
-| mjlab 官方文档 + task 注册示例 | mjlab 的 EntityCfg → Registry 完整流程 | ⭐⭐ |
-| awesome-robot-descriptions（github.com/robot-descriptions） | 跨格式（URDF/MJCF/USD）机器人模型聚合索引 | ⭐ |
-| awesome-loco-manipulation（github.com/aCodeDog/awesome-loco-manipulation） | 复合机器人 URDF 集合（Go2+Arx、B1+Z1 等） | ⭐⭐ |
-| Isaac Lab Quickstart: Template Generator | 自动生成 extension 骨架的命令行工具 | ⭐ |
+| Isaac Lab 官方 Tutorial "Creating a Manager-Based Base Environment" | 从 CartPole 出发的 step-by-step 教程 | ★ |
+| Isaac Lab 官方 Tutorial "Creating a Direct Workflow RL Environment" | Direct 模式的 CartPole 教程 | ★ |
+| NVlabs/HOVER 仓库 README + 代码 | Isaac Lab extension 的标杆范例 | ★★★ |
+| TeleHuman/humanoid_skateboarding 仓库 | mjlab 研究项目的标杆范例 | ★★★ |
+| AGILE 论文（arXiv:2603.20147）| 四阶段工业级 workflow | ★★★ |
+| Isaac Lab Extension Development 官方文档 | Omniverse extension 机制详解 | ★★ |
+| Legged Lab（github.com/Hellod035/LeggedLab） | Direct 模式的足式 RL 实现 | ★★ |
+| MuJoCo Menagerie（google-deepmind/mujoco_menagerie） | MJCF 模型库（Go2/G1/ANYmal 等） | ★ |
+| mjlab 官方文档 + task 注册示例 | mjlab 的 EntityCfg → Registry 完整流程 | ★★ |
+| awesome-robot-descriptions（github.com/robot-descriptions） | 跨格式（URDF/MJCF/USD）机器人模型聚合索引 | ★ |
+| awesome-loco-manipulation（github.com/aCodeDog/awesome-loco-manipulation） | 复合机器人 URDF 集合（Go2+Arx、B1+Z1 等） | ★★ |
+| Isaac Lab Quickstart: Template Generator | 自动生成 extension 骨架的命令行工具 | ★ |
 
 > **阅读建议**：如果你只有时间读一个外部参考，读 HOVER 仓库——它是目前 Isaac Lab extension 模式的最佳工程范例。如果你用 mjlab，读 HUSKY 仓库——它展示了如何用 mjlab 做复杂的器具建模和多阶段训练。两个仓库的 README 都写得非常详细，包含安装、训练、评估的完整命令。
 

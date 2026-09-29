@@ -56,9 +56,9 @@ D09 双臂 MoveIt2 / ros2_control 系统集成
 
 ---
 
-## 前置自测 ⭐
+## 前置自测 ★
 
-> 📋 **答不出 >= 2 题 → 先回前置章节复习**
+> ◆ **答不出 >= 2 题 → 先回前置章节复习**
 
 | 编号 | 问题 | 答不出时回顾 |
 |:----:|------|------------|
@@ -130,7 +130,7 @@ D9.4 控制器管理（ros2_control） ⭐⭐
 
 ---
 
-## D9.1 双臂 URDF/Xacro 建模 ⭐⭐
+## D9.1 双臂 URDF/Xacro 建模 ★★
 
 ### 动机——为什么双臂建模不是"复制粘贴两次"？
 
@@ -345,7 +345,7 @@ ros2 run tf2_tools view_frames
 # 应看到以 world 为根的树，左右臂各自的 link chain
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：Xacro prefix 末尾缺少下划线
@@ -378,7 +378,7 @@ ros2 run tf2_tools view_frames
 
 ---
 
-## D9.2 SRDF 双臂 Planning Group 配置 ⭐⭐
+## D9.2 SRDF 双臂 Planning Group 配置 ★★
 
 ### 动机——为什么需要 SRDF？
 
@@ -535,7 +535,7 @@ both_arms:
 
 > **本质洞察**：`both_arms` 组的强项是 14D 联合关节空间规划和双臂碰撞检测，不要假设 MoveIt2 会自动为合成组调用左右子组 IK 并可靠拼接。工程上处理双末端笛卡尔目标的稳妥流程是：分别用 `left_arm`、`right_arm` 的 IK 求解两个末端目标，检查左右解和跨臂碰撞，再把 14D 关节目标交给 `both_arms` 做联合规划。若目标包含闭链、相对位姿或“共持物体距离固定”等协调约束，应转到 D02 的约束 IK/约束规划，而不是依赖 `both_arms` 的普通 IK。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：SRDF 中 both_arms 组重复定义关节
@@ -567,7 +567,7 @@ both_arms:
 
 ---
 
-## D9.3 同步 vs 异步双臂规划 ⭐⭐
+## D9.3 同步 vs 异步双臂规划 ★★
 
 ### 动机——14D 规划的代价
 
@@ -865,7 +865,7 @@ both_arms:
 
 工程案例：一个双臂系统执行"两臂末端交换位置"的任务。左臂从左移到右，右臂从右移到左。独立规划时，两条路径都经过中间区域——在 $t \approx T/2$ 时两臂在中间相撞。同步规划会自动避开这个碰撞，生成一条"绕行"路径（如一臂先上升、另一臂先通过、然后第一臂下降）。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：both_arms 规划超时后不做 fallback
@@ -903,7 +903,7 @@ both_arms:
 
 ---
 
-## D9.4 碰撞矩阵（ACM）优化 ⭐⭐
+## D9.4 碰撞矩阵（ACM）优化 ★★
 
 ### 动机——碰撞检查是规划的瓶颈
 
@@ -967,7 +967,7 @@ acm.setEntry("left_panda_hand", "right_panda_hand", false);  // false = 检查�
 
 规划器"看不到"两臂之间的碰撞。它生成的路径可能让左臂直接穿过右臂——在仿真中表现为物体穿模，在真机上表现为两臂相撞，可能损坏硬件。更隐蔽的情况：大部分时间没问题，但在某些特殊构型下偶尔碰撞——这种间歇性 bug 极难调试。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：Setup Assistant 的采样数不够
@@ -990,7 +990,7 @@ acm.setEntry("left_panda_hand", "right_panda_hand", false);  // false = 检查�
 
 ---
 
-## D9.5 MoveIt Task Constructor (MTC) 双臂扩展 ⭐⭐⭐
+## D9.5 MoveIt Task Constructor (MTC) 双臂扩展 ★★★
 
 ### 动机——复杂双臂任务的模块化编排
 
@@ -1145,7 +1145,7 @@ if (task->plan(10) && !task->solutions().empty()) {  // 最多规划 10 个方�
 
 > **本质洞察**：Merger 不是简单的"拼接"——它是一个**后验碰撞检查器**。它允许两臂各自独立高效规划（7D），然后在合并时检查 14D 碰撞。如果碰撞则重试。这种"投机执行 + 回滚"的策略在大多数情况下比直接 14D 规划更快，因为大部分独立规划的路径不会碰撞。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：MTC Merger 中子 stage 使用 both_arms 组
@@ -1171,7 +1171,7 @@ if (task->plan(10) && !task->solutions().empty()) {  // 最多规划 10 个方�
 
 ---
 
-## D9.6 ros2_control 双臂同步执行 ⭐⭐
+## D9.6 ros2_control 双臂同步执行 ★★
 
 ### 动机——规划完成后的"最后一公里"
 
@@ -1316,7 +1316,7 @@ right_admittance_controller:
 | 并行执行器 | $\pm$5-10 ms | 中 | 独立操作，需要各自 admittance |
 | 同步触发 | $\pm$1 ms | 高（需自定义） | 精密同步（工业装配） |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：合并轨迹方案下用两个独立控制器
@@ -1343,7 +1343,7 @@ right_admittance_controller:
 
 ---
 
-## D9.7 仿真环境搭建 ⭐⭐
+## D9.7 仿真环境搭建 ★★
 
 ### 动机——没有仿真就没有调试
 
@@ -1454,7 +1454,7 @@ def generate_launch_description():
 | Gazebo Harmonic | 原生 ROS2 集成、传感器仿真丰富 | 接触不如 MuJoCo | MoveIt2 联调、完整系统测试 |
 | Isaac Sim/Lab | GPU 并行、渲染真实 | 重量级、需 NVIDIA GPU | 大规模 RL、视觉策略训练 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：MuJoCo 导入 URDF 时关节顺序变化
@@ -1812,9 +1812,9 @@ def replay_trajectory_in_mujoco(env, trajectory_msg):
 
 ---
 
-## D9.8 MoveIt2 2026 新特性与 Servo 2.0 双臂联动 ⭐⭐⭐
+## D9.8 MoveIt2 2026 新特性与 Servo 2.0 双臂联动 ★★★
 
-### MoveIt2 Jazzy/Rolling 新特性对双臂的影响 ⭐⭐⭐
+### MoveIt2 Jazzy/Rolling 新特性对双臂的影响 ★★★
 
 MoveIt2 在 ROS2 Jazzy (2024) 和 Rolling (2025-2026) 版本中引入了多项对双臂系统有重大影响的改进：
 
@@ -1822,15 +1822,15 @@ MoveIt2 在 ROS2 Jazzy (2024) 和 Rolling (2025-2026) 版本中引入了多项�
 
 **OMPL 2.0（规划中/实验性）集成**：OMPL 2.0 引入了 Informed RRT* 的改进变体和 Experience-based Planning——规划器可以利用历史成功路径加速后续规划。对 14D 双臂规划的提速效果显著：D9.3 中讨论的 both_arms 规划超时问题（14D 空间太大）可以通过 experience database 缓解——首次规划可能需要 5 秒，但相似构型下的后续规划可降至 <0.5 秒。
 
-> ⚠️ **状态说明**：截至 2026-06，OMPL 2.0 尚在规划阶段，上述特性基于社区讨论和 RFC 描述，可能随正式发布发生变化。请关注 [OMPL GitHub](https://github.com/ompl/ompl) 获取最新进展。
+> ⚠ **状态说明**：截至 2026-06，OMPL 2.0 尚在规划阶段，上述特性基于社区讨论和 RFC 描述，可能随正式发布发生变化。请关注 [OMPL GitHub](https://github.com/ompl/ompl) 获取最新进展。
 
 **Parallel Planning API（实验性）**：MoveIt2 2025+ 讨论中的 `planMultipleGoals()` API 设计，允许对同一请求并行运行多个规划器（RRT*, BIT*, PRM*），取最先成功的结果。这有望解决 D9.3 中"同步规划选型困难"的问题——不必在规划器之间做选择，而是让它们赛跑。
 
-> ⚠️ **状态说明**：截至 2026-06，`planMultipleGoals()` API 尚未在 MoveIt2 主线正式发布，基于社区 PR 讨论和设计文档描述。如需使用请关注 [MoveIt2 GitHub](https://github.com/moveit/moveit2) 的相关 PR 和 issue。
+> ⚠ **状态说明**：截至 2026-06，`planMultipleGoals()` API 尚未在 MoveIt2 主线正式发布，基于社区 PR 讨论和设计文档描述。如需使用请关注 [MoveIt2 GitHub](https://github.com/moveit/moveit2) 的相关 PR 和 issue。
 
-### Servo 2.0 双臂联动（计划中特性）⭐⭐⭐
+### Servo 2.0 双臂联动（计划中特性）★★★
 
-> ⚠️ **状态说明**：截至 2026-06，以下关于 Servo 2.0 双臂联动的描述基于 MoveIt2 社区开发路线图和相关 PR/issue 讨论，尚未在 MoveIt2 主线正式发布。具体 API 和行为可能随正式发布发生变化。请关注 [MoveIt2 Servo GitHub](https://github.com/moveit/moveit2/tree/main/moveit_ros/moveit_servo) 获取最新状态。
+> ⚠ **状态说明**：截至 2026-06，以下关于 Servo 2.0 双臂联动的描述基于 MoveIt2 社区开发路线图和相关 PR/issue 讨论，尚未在 MoveIt2 主线正式发布。具体 API 和行为可能随正式发布发生变化。请关注 [MoveIt2 Servo GitHub](https://github.com/moveit/moveit2/tree/main/moveit_ros/moveit_servo) 获取最新状态。
 
 MoveIt Servo（实时关节速度/笛卡尔速度命令接口）在计划中的 2.0 版本中将增加多组联动支持——可以同时对 `left_arm` 和 `right_arm` 发送笛卡尔速度命令，Servo 内部保证两组的速度指令在同一控制周期内下发。这对双臂遥操作（D08）和 Object Impedance 实时控制（D03.4）至关重要。
 
@@ -1843,7 +1843,7 @@ Servo 2.0 的双臂模式设计支持两种协调方式：
 
 协调模式下，Servo 内部将物体速度分解为两臂速度（利用 D01 的增广 Jacobian），并执行实时碰撞检查——如果预测到碰撞，自动降速或停止，比 D9.3 的离线规划更适合动态场景。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 ```
 ⚠️ 编程陷阱：Servo 2.0 的 twist 命令坐标系不一致
@@ -1885,16 +1885,16 @@ Servo 2.0 的双臂模式设计支持两种协调方式：
 
 | 知识点 | 核心内容 | 难度 | 关联章节 |
 |--------|---------|------|---------|
-| 双臂 URDF/Xacro | prefix 参数化、布局设计、维护策略 | ⭐⭐ | P01 URDF |
-| SRDF 配置 | both_arms 组、ACM、named states、末端执行器 | ⭐⭐ | M14 MoveIt2 |
-| 同步 vs 异步规划 | 14D 联合 vs 两个 7D、加速策略、选型决策 | ⭐⭐ | D02 双臂规划 |
-| ACM 优化 | 碰撞对削减方法、动态 ACM、安全原则 | ⭐⭐ | M04 碰撞检测 |
-| MTC 双臂 | Merger stage、协同搬运管线、逆向推理 | ⭐⭐⭐ | M14 MTC |
-| ros2_control 同步 | 合并轨迹/并行/导纳三策略、选型 | ⭐⭐ | M12 ros2_control |
-| 仿真环境 | MuJoCo/Gazebo/Isaac Sim 选型与搭建 | ⭐⭐ | P02 sim-to-real |
-| MoveIt2 2026 新特性 | Parallel Planning、Experience-based、Servo 2.0 双臂联动 | ⭐⭐⭐ | — |
+| 双臂 URDF/Xacro | prefix 参数化、布局设计、维护策略 | ★★ | P01 URDF |
+| SRDF 配置 | both_arms 组、ACM、named states、末端执行器 | ★★ | M14 MoveIt2 |
+| 同步 vs 异步规划 | 14D 联合 vs 两个 7D、加速策略、选型决策 | ★★ | D02 双臂规划 |
+| ACM 优化 | 碰撞对削减方法、动态 ACM、安全原则 | ★★ | M04 碰撞检测 |
+| MTC 双臂 | Merger stage、协同搬运管线、逆向推理 | ★★★ | M14 MTC |
+| ros2_control 同步 | 合并轨迹/并行/导纳三策略、选型 | ★★ | M12 ros2_control |
+| 仿真环境 | MuJoCo/Gazebo/Isaac Sim 选型与搭建 | ★★ | P02 sim-to-real |
+| MoveIt2 2026 新特性 | Parallel Planning、Experience-based、Servo 2.0 双臂联动 | ★★★ | — |
 
-### 双臂系统的 ROS2 话题设计 ⭐⭐
+### 双臂系统的 ROS2 话题设计 ★★
 
 双臂 ROS2 系统的话题命名和消息类型设计直接影响系统可维护性：
 
@@ -1944,7 +1944,7 @@ state_qos = QoSProfile(
 
 根据工程经验，双臂 MoveIt2 系统从零配置到稳定运行的时间分配大致为：URDF/SRDF 配置占 20%，碰撞矩阵调试占 15%，规划器参数调优占 25%，控制器集成占 25%，系统联调占 15%。初学者应预留 2-3 周的纯调试时间。
 
-## 部署检查清单 ⭐
+## 部署检查清单 ★
 
 从仿真到真机部署的系统化检查：
 
@@ -2017,13 +2017,13 @@ D09 新增:
 
 | 资源 | 难度 | 说明 |
 |------|------|------|
-| MoveIt2 官方文档 "Dual Arm Panda Tutorial" | ⭐⭐ | 官方双臂配置教程 |
-| ros2_control 官方文档 "Multi-interface Robot" | ⭐⭐ | 多接口/多控制器配置 |
-| Coleman et al. (2014) "Reducing the Barrier to Entry of Complex Robotic Software: a MoveIt! Case Study" | ⭐⭐⭐ | MoveIt 的设计哲学 |
-| MoveIt Task Constructor GitHub Wiki | ⭐⭐⭐ | MTC 的 stage 类型和用法 |
-| Risi et al. (2026) "Simplifying ROS2 Controllers" arXiv 2601.08514 | ⭐⭐⭐⭐ | 模块化参考生成器 |
-| PickNik MoveIt Pro 文档 | ⭐⭐⭐ | 双臂 MTC 工业化参考 |
-| RoboTwin Dual-Arm Collaboration Challenge (CVPR 2025) | ⭐⭐⭐ | 双臂操作 benchmark，17 个任务覆盖刚性/柔性/触觉场景 |
+| MoveIt2 官方文档 "Dual Arm Panda Tutorial" | ★★ | 官方双臂配置教程 |
+| ros2_control 官方文档 "Multi-interface Robot" | ★★ | 多接口/多控制器配置 |
+| Coleman et al. (2014) "Reducing the Barrier to Entry of Complex Robotic Software: a MoveIt! Case Study" | ★★★ | MoveIt 的设计哲学 |
+| MoveIt Task Constructor GitHub Wiki | ★★★ | MTC 的 stage 类型和用法 |
+| Risi et al. (2026) "Simplifying ROS2 Controllers" arXiv 2601.08514 | ★★★★ | 模块化参考生成器 |
+| PickNik MoveIt Pro 文档 | ★★★ | 双臂 MTC 工业化参考 |
+| RoboTwin Dual-Arm Collaboration Challenge (CVPR 2025) | ★★★ | 双臂操作 benchmark，17 个任务覆盖刚性/柔性/触觉场景 |
 
 
 ## 研究实践建议

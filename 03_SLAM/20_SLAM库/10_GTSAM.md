@@ -8,7 +8,7 @@
 
 ## 前置自测
 
-📋 **前置自测**（答不出 ≥ 2 题 → 先回前置章节复习）
+◆ **前置自测**（答不出 ≥ 2 题 → 先回前置章节复习）
 
 1. **[通用库·李群manif]** 李群 $SE(3)$ 的切空间维度是多少？`Exp` 映射和 `Log` 映射分别做什么？
 2. **[通用库·李群manif]** manif 库中 `Pose3d::rplus(tangent)` 执行的是左扰动还是右扰动？写出数学表达式。
@@ -94,7 +94,7 @@
 
 ---
 
-## 25.1 因子图基础 ⭐⭐
+## 25.1 因子图基础 ★★
 
 ### 这一节解决什么问题
 
@@ -212,9 +212,9 @@ $$
 
 > **与 Ceres 的对比**：Ceres 没有内置边缘化机制。如果你想在 Ceres 中实现滑动窗口优化，需要手动计算 Schur 补并构造先验因子——这正是 VINS-Mono 中 `marginalization_factor.cpp` 做的事情。而 GTSAM 的因子图天然支持边缘化操作。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **概念误区：混淆因子图、马尔可夫随机场和贝叶斯网络**
+> ⚠ **概念误区：混淆因子图、马尔可夫随机场和贝叶斯网络**
 >
 > **新手想法**："因子图和贝叶斯网络不都是概率图模型吗？应该可以互换使用。"
 >
@@ -230,7 +230,7 @@ $$
 >
 > **正确理解**：因子图 → MRF（每个因子变成势函数）→ 贝叶斯网络（需要指定方向）。因子图信息量最大，转换过程会丢失信息。
 
-> ⚠️ **思维陷阱：认为边缘化是"无损"的**
+> ⚠ **思维陷阱：认为边缘化是"无损"的**
 >
 > **新手想法**："边缘化只是移除了变量，信息都保留在 Schur 补中，所以没有任何损失。"
 >
@@ -250,7 +250,7 @@ $$
 
 ---
 
-## 25.2 GTSAM 核心 API ⭐⭐
+## 25.2 GTSAM 核心 API ★★
 
 ### 这一节解决什么问题
 
@@ -537,9 +537,9 @@ int main() {
 2. 如果去掉回环因子，优化后的轨迹会有累积漂移——回环是闭合漂移的关键
 3. 先验因子的噪声不宜太小，否则会过度约束 $x_0$，导致其他位姿无法自由调整
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：Key 冲突**
+> ⚠ **编程陷阱：Key 冲突**
 >
 > **错误做法**：用裸整数作为 Key，不同类型的变量编号重叠
 > ```cpp
@@ -557,7 +557,7 @@ int main() {
 > initial.insert(L(0), Point3(...));
 > ```
 
-> ⚠️ **编程陷阱：噪声模型维度不匹配**
+> ⚠ **编程陷阱：噪声模型维度不匹配**
 >
 > **错误做法**：`Pose3` 因子用 3 维噪声（应该是 6 维）
 > ```cpp
@@ -577,7 +577,7 @@ int main() {
 >
 > **自检方法**：记住常用类型的维度——`Pose2` → 3 维，`Pose3` → 6 维，`Point2` → 2 维，`Point3` → 3 维。
 
-> ⚠️ **概念误区：GTSAM 的 Pose3 切向量排列与论文惯例不同**
+> ⚠ **概念误区：GTSAM 的 Pose3 切向量排列与论文惯例不同**
 >
 > **新手想法**："SE(3) 的切向量应该是 $[v, \omega]^T$，平移在前旋转在后。"
 >
@@ -603,7 +603,7 @@ int main() {
 
 ---
 
-## 25.3 iSAM2 增量优化 ⭐⭐
+## 25.3 iSAM2 增量优化 ★★
 
 ### 这一节解决什么问题
 
@@ -785,9 +785,9 @@ iSAM2 为每个变量维护一个"自上次线性化以来的估计变化量" $\
 
 **一句话总结**：Ceres 是"通用瑞士军刀"——什么优化问题都能解但不针对 SLAM 优化；GTSAM+iSAM2 是"SLAM 专用利器"——利用因子图的结构实现增量更新。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：不调用额外的 `update()` 导致线性化陈旧**
+> ⚠ **编程陷阱：不调用额外的 `update()` 导致线性化陈旧**
 >
 > **错误做法**：每帧只调用一次 `update(new_factors, new_values)`，即使回环闭合后也不额外迭代
 >
@@ -804,7 +804,7 @@ iSAM2 为每个变量维护一个"自上次线性化以来的估计变化量" $\
 >
 > **自检方法**：对比 `isam2.update()` 一次和多次后的结果差异。如果差异很大，说明一次更新不够。
 
-> ⚠️ **概念误区：认为 iSAM2 每帧都是"精确"解**
+> ⚠ **概念误区：认为 iSAM2 每帧都是"精确"解**
 >
 > **新手想法**："iSAM2 是增量优化，所以每帧给出的结果和批量 LM 优化一样。"
 >
@@ -812,7 +812,7 @@ iSAM2 为每个变量维护一个"自上次线性化以来的估计变化量" $\
 >
 > **正确理解**：iSAM2 在精度和速度之间做了精心的权衡。对于大多数 SLAM 应用，这个近似是完全可接受的。如果需要最高精度（如离线地图构建），可以最后再跑一次批量优化。
 
-> ⚠️ **思维陷阱：认为 iSAM2 可以无限增长因子图**
+> ⚠ **思维陷阱：认为 iSAM2 可以无限增长因子图**
 >
 > **新手想法**："iSAM2 是增量的，所以可以一直往里加因子，不需要管内存。"
 >
@@ -830,7 +830,7 @@ iSAM2 为每个变量维护一个"自上次线性化以来的估计变化量" $\
 
 ---
 
-## 25.4 IMU 预积分 ⭐⭐⭐
+## 25.4 IMU 预积分 ★★★
 
 ### 这一节解决什么问题
 
@@ -887,7 +887,7 @@ GTSAM 提供两种 IMU 因子：
 
 LIO-SAM 使用 `ImuFactor`（5 路因子）+ 单独的 `BetweenFactor<imuBias::ConstantBias>` 来约束偏差随机游走。这与 `CombinedImuFactor`（6 路因子，内置偏差约束）的方式不同——LIO-SAM 选择前者是因为解耦后调参更灵活。
 
-> ⚠️ **常见误解：LIO-SAM 使用 CombinedImuFactor**
+> ⚠ **常见误解：LIO-SAM 使用 CombinedImuFactor**
 >
 > **错误认知**：许多教程声称 LIO-SAM 使用 `CombinedImuFactor`。
 >
@@ -975,9 +975,9 @@ gtsam::NavState predicted_state = preintegrated.predict(
 4. **用 iSAM2 优化**：同时估计位姿、速度和偏差
 5. **重置预积分器**：用优化后的偏差重置
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：IMU 坐标系方向错误**
+> ⚠ **编程陷阱：IMU 坐标系方向错误**
 >
 > **错误做法**：不区分 NED（North-East-Down）和 ENU（East-North-Up）坐标系
 > ```cpp
@@ -1000,7 +1000,7 @@ gtsam::NavState predicted_state = preintegrated.predict(
 > auto params = PreintegrationParams::MakeSharedD();
 > ```
 
-> ⚠️ **概念误区：忘记在偏差更新后重置预积分器**
+> ⚠ **概念误区：忘记在偏差更新后重置预积分器**
 >
 > **错误做法**：优化后偏差改变了，但继续使用旧偏差的预积分器
 >
@@ -1024,7 +1024,7 @@ gtsam::NavState predicted_state = preintegrated.predict(
 
 ---
 
-## 25.5 自定义因子 ⭐⭐
+## 25.5 自定义因子 ★★
 
 ### 这一节解决什么问题
 
@@ -1223,9 +1223,9 @@ std::cout << "Max Jacobian error: "
 // 应该 < 1e-5
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：Jacobian 维度错误**
+> ⚠ **编程陷阱：Jacobian 维度错误**
 >
 > **错误做法**：返回的 Jacobian 矩阵行列数不对
 > ```cpp
@@ -1246,7 +1246,7 @@ std::cout << "Max Jacobian error: "
 > // BearingRangeFactor: 2 x 3 (对 Point2 变量)
 > ```
 
-> ⚠️ **编程陷阱：忘记检查 optional Jacobian**
+> ⚠ **编程陷阱：忘记检查 optional Jacobian**
 >
 > **错误做法**：不检查 H 是否为 nullptr 就直接赋值
 > ```cpp
@@ -1273,7 +1273,7 @@ std::cout << "Max Jacobian error: "
 
 ---
 
-## 25.6 GTSAM 与其他库集成 ⭐⭐
+## 25.6 GTSAM 与其他库集成 ★★
 
 ### 这一节解决什么问题
 
@@ -1382,9 +1382,9 @@ target_link_libraries(my_node gtsam)
 
 **常见问题**：GTSAM 自带一个 Eigen 版本（在 `gtsam/3rdparty/Eigen`），可能与系统 Eigen 或其他库（PCL、OpenCV）使用的版本冲突。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：Eigen 版本冲突**
+> ⚠ **编程陷阱：Eigen 版本冲突**
 >
 > **现象**：编译时出现大量模板错误，或运行时出现段错误、结果异常。
 >
@@ -1400,7 +1400,7 @@ target_link_libraries(my_node gtsam)
 >
 > **自检方法**：用 `ldd` 检查你的可执行文件链接了哪些 Eigen 相关的共享库，确保只有一个版本。
 
-> ⚠️ **概念误区：把 GTSAM 的 Pose3 和 PCL 的 Eigen::Matrix4f 直接混用**
+> ⚠ **概念误区：把 GTSAM 的 Pose3 和 PCL 的 Eigen::Matrix4f 直接混用**
 >
 > **错误做法**：忘记 float/double 的转换
 > ```cpp
@@ -1424,7 +1424,7 @@ target_link_libraries(my_node gtsam)
 
 ---
 
-## 25.7 SLAM 代码精读：LIO-SAM ⭐⭐⭐
+## 25.7 SLAM 代码精读：LIO-SAM ★★★
 
 ### 这一节解决什么问题
 
@@ -1618,9 +1618,9 @@ LIO-SAM 根据配准质量动态设置噪声：ICP fitness score 越小（配准
 
 每次 `isam.update()` 后，所有变量的估计值都会更新——回环约束会"拉回"整条轨迹，消除累积漂移。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **思维陷阱：不理解 iSAM2 就读 LIO-SAM 代码**
+> ⚠ **思维陷阱：不理解 iSAM2 就读 LIO-SAM 代码**
 >
 > **新手想法**："LIO-SAM 的代码不复杂，直接读就好了。"
 >
@@ -1628,7 +1628,7 @@ LIO-SAM 根据配准质量动态设置噪声：ICP fitness score 越小（配准
 >
 > **正确做法**：先理解 25.1-25.3 节的理论，再读 LIO-SAM。重点关注：(a) 每种因子的噪声模型如何设定；(b) `update()` 调用的时机和次数；(c) 初始估计的来源。
 
-> ⚠️ **编程陷阱：LIO-SAM 的 Key 管理方式不可扩展**
+> ⚠ **编程陷阱：LIO-SAM 的 Key 管理方式不可扩展**
 >
 > **LIO-SAM 做法**：用 `cloudKeyPoses3D->size()` 作为整数 Key
 >
@@ -1642,7 +1642,7 @@ LIO-SAM 根据配准质量动态设置噪声：ICP fitness score 越小（配准
 > using gtsam::symbol_shorthand::L;  // 路标
 > ```
 
-> ⚠️ **概念误区：认为 LIO-SAM 中有两个独立的因子图**
+> ⚠ **概念误区：认为 LIO-SAM 中有两个独立的因子图**
 >
 > **新手想法**："LIO-SAM 有 `mapOptimization.cpp` 和 `imuPreintegration.cpp`，它们有各自的因子图，互不相关。"
 >
@@ -1763,19 +1763,19 @@ private:
 
 | 论文 | 内容 | 难度 |
 |------|------|------|
-| Dellaert & Kaess, "Factor Graphs for Robot Perception", *Found. Trends Robot.*, 2017 | 因子图综述，GTSAM 设计哲学 | ⭐⭐ |
-| Kaess et al., "iSAM2: Incremental Smoothing and Mapping Using the Bayes Tree", *IJRR*, 2012 | iSAM2 算法原始论文 | ⭐⭐⭐ |
-| Forster et al., "On-Manifold Preintegration for Real-Time Visual-Inertial Odometry", *IEEE T-RO*, 2017 | IMU 预积分理论 | ⭐⭐⭐ |
-| Shan et al., "LIO-SAM: Tightly-coupled Lidar Inertial Odometry via Smoothing and Mapping", *IROS*, 2020 | LIO-SAM 系统论文 | ⭐⭐ |
-| Dellaert, "Factor Graphs and GTSAM: A Hands-on Introduction", Tech Report, 2012 | GTSAM 入门教程 | ⭐ |
+| Dellaert & Kaess, "Factor Graphs for Robot Perception", *Found. Trends Robot.*, 2017 | 因子图综述，GTSAM 设计哲学 | ★★ |
+| Kaess et al., "iSAM2: Incremental Smoothing and Mapping Using the Bayes Tree", *IJRR*, 2012 | iSAM2 算法原始论文 | ★★★ |
+| Forster et al., "On-Manifold Preintegration for Real-Time Visual-Inertial Odometry", *IEEE T-RO*, 2017 | IMU 预积分理论 | ★★★ |
+| Shan et al., "LIO-SAM: Tightly-coupled Lidar Inertial Odometry via Smoothing and Mapping", *IROS*, 2020 | LIO-SAM 系统论文 | ★★ |
+| Dellaert, "Factor Graphs and GTSAM: A Hands-on Introduction", Tech Report, 2012 | GTSAM 入门教程 | ★ |
 
 ### 在线资源
 
-- **GTSAM 官方教程**：`https://gtsam.org/tutorials/intro.html` ⭐
-- **GTSAM API 文档**：`https://gtsam.org/doxygen/` ⭐⭐
-- **GTSAM by Example**：`https://gtbook.github.io/gtsam-examples/` ⭐
-- **LIO-SAM 源码**：`https://github.com/TixiaoShan/LIO-SAM` ⭐⭐
-- **GTSAM 用户论坛**：`https://groups.google.com/g/gtsam-users` ⭐⭐
+- **GTSAM 官方教程**：`https://gtsam.org/tutorials/intro.html` ★
+- **GTSAM API 文档**：`https://gtsam.org/doxygen/` ★★
+- **GTSAM by Example**：`https://gtbook.github.io/gtsam-examples/` ★
+- **LIO-SAM 源码**：`https://github.com/TixiaoShan/LIO-SAM` ★★
+- **GTSAM 用户论坛**：`https://groups.google.com/g/gtsam-users` ★★
 
 ### 源码推荐阅读
 
@@ -1790,7 +1790,7 @@ private:
 
 ---
 
-## 25.8 GTSAM 工程边界与验证清单 ⭐⭐
+## 25.8 GTSAM 工程边界与验证清单 ★★
 
 > **这一节解决什么问题**：GTSAM 的抽象层比 g2o 更高，容易让人误以为"因子图写出来就一定正确"。本节强调 Key、Values、噪声模型、增量更新和边缘化的工程边界。
 
@@ -1894,7 +1894,7 @@ GTSAM 的边缘化和协方差查询有两个常见边界：
 
 ---
 
-## 25.9 边缘协方差 Marginals 与退化诊断 ⭐⭐⭐
+## 25.9 边缘协方差 Marginals 与退化诊断 ★★★
 
 ### 这一节解决什么问题
 
@@ -1975,7 +1975,7 @@ gtsam::Matrix cov_28 = joint(X(2), X(8));  // x2-x8 的 6x6 互协方差块（�
 gtsam::Matrix fullJoint = joint.fullMatrix();
 ```
 
-> ⚠️ **概念误区：联合边缘 ≠ 两次单变量边缘拼起来**
+> ⚠ **概念误区：联合边缘 ≠ 两次单变量边缘拼起来**
 >
 > **新手想法**："`jointMarginalCovariance({X(2),X(8)})` 的对角块，和分别调两次 `marginalCovariance` 应该一样，所以联合查询只是多给了个互协方差块。"
 >
@@ -1994,7 +1994,7 @@ gtsam::Matrix cov = isam2.marginalCovariance(X(currentKey));
 
 这与对"iSAM2 当前因子 + 当前线性化点"构造一个 `Marginals` 得到的结果一致——因为 Bayes Tree 本质就是 $\Lambda = R^\top R$ 的 Cholesky 因子（回顾 25.3），从 $R$ 回代即可得到协方差列，无需重新分解。
 
-> ⚠️ **思维陷阱：以为 iSAM2 取协方差和取点估计一样廉价**
+> ⚠ **思维陷阱：以为 iSAM2 取协方差和取点估计一样廉价**
 >
 > **新手想法**："`calculateEstimate()` 很快，那 `marginalCovariance()` 也应该是 $O(1)$ 的。"
 >
@@ -2046,9 +2046,9 @@ try {
 
 **一句话总结**：Ceres 让你"自己决定要不要算协方差、自己检查退化"；GTSAM 把协方差查询和退化检测做成了一等公民，代价是你必须理解它的右扰动坐标约定，否则会把切空间协方差误读成欧氏方差。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：在未优化的 Values 上构造 Marginals**
+> ⚠ **编程陷阱：在未优化的 Values 上构造 Marginals**
 >
 > **错误做法**：用 `initial`（初始估计）而不是 `result`（优化结果）构造 `Marginals`
 > ```cpp
@@ -2062,7 +2062,7 @@ try {
 >
 > **正确做法**：先 `optimizer.optimize()` 得到 `result`，再 `Marginals(graph, result)`。
 
-> ⚠️ **概念误区：把切空间协方差当欧氏位置方差画椭圆**
+> ⚠ **概念误区：把切空间协方差当欧氏位置方差画椭圆**
 >
 > **新手想法**："`marginalCovariance(X(i))` 的右下 $3\times 3$ 块就是位置 $(x,y,z)$ 的方差，可以直接画 $3\sigma$ 椭球。"
 >
@@ -2072,7 +2072,7 @@ try {
 >
 > **正确做法**：需要全局坐标椭球时，用 $R^*$ 把平移块旋转过去；或直接对感兴趣的几何量（如 2D 位置）写一个投影函数，用其雅可比传播协方差。
 
-> ⚠️ **思维陷阱：协方差越小越好**
+> ⚠ **思维陷阱：协方差越小越好**
 >
 > **新手想法**："优化后某变量协方差非常小，说明估计非常准，系统很健康。"
 >
@@ -2090,7 +2090,7 @@ try {
 
 ---
 
-## 25.10 鲁棒优化与 GNC ⭐⭐⭐
+## 25.10 鲁棒优化与 GNC ★★★
 
 ### 这一节解决什么问题
 
@@ -2137,7 +2137,7 @@ graph.emplace_shared<gtsam::BetweenFactor<gtsam::Pose3>>(
 
 > **本质洞察**：鲁棒核不是"另一种噪声模型"，而是**对每个因子做了自适应降权**。M-估计的全部魔法都在影响函数 $\psi(e)=\rho'(e)$ 上：$\psi$ 在大残差处是否饱和（Huber）还是归零（Tukey），决定了外点是"被削弱"还是"被彻底踢出"。理解这一点，你就能根据外点的严重程度选核，而不是照抄默认值。
 
-> ⚠️ **思维陷阱：鲁棒核能解决一切外点问题**
+> ⚠ **思维陷阱：鲁棒核能解决一切外点问题**
 >
 > **新手想法**："套上 Huber 或 Cauchy 核，外点就自动被处理了，初值差也没关系。"
 >
@@ -2194,7 +2194,7 @@ gtsam::Values result = gnc.optimize();
 
 > **本质洞察**：GNC 与 M-估计的根本区别在于**对初值的依赖**。M-估计在固定的非凸代价上做 IRLS，初值决定落入哪个盆地；GNC 用 $\mu$ 把优化路径从一个凸问题出发，**主动控制**它落入正确盆地。代价是更多的迭代和计算——GNC 是"用算力换鲁棒性"。这也解释了它的定位：离线/准实时的位姿图优化、回环验证；而强实时前端仍倾向用便宜的 Huber + 几何预筛。
 
-> ⚠️ **概念误区：GNC 不需要噪声模型，可以替代鲁棒核**
+> ⚠ **概念误区：GNC 不需要噪声模型，可以替代鲁棒核**
 >
 > **新手想法**："用了 GncOptimizer 就不用设噪声模型了，它会全自动处理。"
 >
@@ -2215,9 +2215,9 @@ gtsam::Values result = gnc.optimize();
 
 > **本质洞察**：鲁棒性不是单一开关，而是**分层防御**——前端几何预筛挡掉明显错误，中间噪声模型 + 鲁棒核处理常规外点，后端 GNC 兜底处理初值差或高外点比例的硬场景。任何一层都不足以独当一面；真实系统（如带回环的 LIO/VIO）是三层叠加。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：对 prior 和里程计也套强鲁棒核**
+> ⚠ **编程陷阱：对 prior 和里程计也套强鲁棒核**
 >
 > **错误做法**：图里所有因子统一套 Tukey/TLS
 > ```cpp
@@ -2231,7 +2231,7 @@ gtsam::Values result = gnc.optimize();
 >
 > **正确做法**：只对可能含外点的因子（回环、远距离观测、GPS）加鲁棒核；prior、相邻里程计用普通高斯噪声。用 GNC 时把这些可信因子通过 `setKnownInliers` 固定为内点。
 
-> ⚠️ **思维陷阱：把 GNC 当成强实时前端的默认优化器**
+> ⚠ **思维陷阱：把 GNC 当成强实时前端的默认优化器**
 >
 > **新手想法**："GNC 这么鲁棒，干脆每帧都用它替代 iSAM2。"
 >
@@ -2253,7 +2253,7 @@ gtsam::Values result = gnc.optimize();
 
 ---
 
-## 🔧 故障排查手册
+## ◆ 故障排查手册
 
 | 症状 | 可能原因 | 排查步骤 | 相关章节 |
 |------|----------|----------|----------|

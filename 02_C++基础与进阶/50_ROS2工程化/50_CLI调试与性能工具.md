@@ -1,6 +1,6 @@
 ## ROS2 CLI、调试与性能分析工具链
 
-> **难度**：⭐～⭐⭐⭐ | **建议用时**：1 周 | **前置要求**：设计哲学与架构演进（ROS2 架构与 QoS）、SLAM导航与仿真生态（SLAM 与 Nav2 基础）、基础 Linux 命令行
+> **难度**：★～★★★ | **建议用时**：1 周 | **前置要求**：设计哲学与架构演进（ROS2 架构与 QoS）、SLAM导航与仿真生态（SLAM 与 Nav2 基础）、基础 Linux 命令行
 
 **教学目标**：掌握ROS2日常开发中的完整调试工具箱——从命令行内省、QoS诊断、TF调试、bag录制回放，到LTTng性能分析和GDB远程调试。这是SLAM工程师每天都要用的工具参考。
 
@@ -8,7 +8,7 @@
 
 ## 前置自测
 
-📋 **答不出 ≥ 2 题 → 先回前置章节复习**
+◆ **答不出 ≥ 2 题 → 先回前置章节复习**
 
 1. **[设计哲学与架构演进]** QoS 的 Reliability 不匹配时会发生什么？有错误消息吗？（提示：沉默失败，不报错不传数据）
 2. **[SLAM导航与仿真生态]** REP-105 的标准 TF 树中，`map→odom` 变换由谁发布？（提示：SLAM 节点或 AMCL）
@@ -65,7 +65,7 @@
 
 ---
 
-## 0. 调试工具不是命令背诵，而是证据链构建 ⭐
+## 0. 调试工具不是命令背诵，而是证据链构建 ★
 
 ROS2 系统的调试难点在于：一个症状往往跨越多个层级。比如“机器人不动”可能来自 `/cmd_vel` 没发布、QoS 不兼容、controller 未激活、tf 缺失、生命周期状态错误、底盘驱动拒绝命令或仿真时间没有推进。只背命令会让调试变成随机尝试；真正有效的做法是建立证据链。
 
@@ -103,7 +103,7 @@ tf 与时间是否一致
 
 本章的每个命令都应放在这条证据链中理解。命令不是目的，排除假设才是目的。
 
-### 0.1 从症状到证据链：五步闭环 ⭐
+### 0.1 从症状到证据链：五步闭环 ★
 
 调试时最容易犯的错误是“看到一个症状，立刻改一个参数”。这种做法偶尔能碰巧解决问题，但无法沉淀经验，也无法解释为什么问题消失。更稳妥的流程是把调试写成五步闭环：
 
@@ -175,7 +175,7 @@ ros2 run tf2_ros tf2_echo odom base_link
 
 **核心知识点**：
 
-## 从排查流程出发理解 CLI 工具 ⭐⭐
+## 从排查流程出发理解 CLI 工具 ★★
 
 > **这一节解决什么问题**：ROS2 CLI 工具不是"需要背诵的命令列表"，而是"排查问题时的证据采集工具"。本节按照排查流程组织工具介绍：先检查图结构（节点和话题是否存在），再检查通信语义（QoS 是否匹配），再检查数据流（消息是否正常流动），最后检查时间和坐标一致性。每个命令都应放在"我要排除哪个假设"的上下文中理解。
 
@@ -185,7 +185,7 @@ ros2 run tf2_ros tf2_echo odom base_link
 
 ROS2 的 CLI 架构位于 `ros2/ros2cli` 仓库（https://github.com/ros2/ros2cli）。每个命令都遵循 `ros2 <verb> <subverb> [args]` 的命名模式。所有命令、主题名称和消息类型均支持 Tab 键补全——请务必充分利用这一功能。
 
-### 节点与主题的内省：确认图结构是否完整 ⭐
+### 节点与主题的内省：确认图结构是否完整 ★
 
 ```bash
 # 列出当前活跃节点，默认不显示隐藏节点
@@ -204,7 +204,7 @@ ros2 topic info /scan --verbose
 
 `ros2 topic info` 上的 `--verbose` 标志是解决 QoS 不匹配问题的 **最重要的调试命令**。它会显示每个发布者和订阅者的可靠性、持久性、历史记录深度以及活跃度设置。当 `ros2 topic echo` 显示无结果时，此命令会告诉你原因。
 
-### 带 QoS 覆盖的主题回显：为什么 echo 什么也没有 ⭐⭐
+### 带 QoS 覆盖的主题回显：为什么 echo 什么也没有 ★★
 
 QoS 不匹配是 ROS2 中最常见也最令人困惑的问题。它的危险性在于**完全沉默**——不报错、不警告、不建立连接、不传输数据。一个初学者看到 `ros2 topic echo /scan` 没有输出，第一反应通常是"传感器坏了"或"驱动没启动"。实际上，在大多数情况下传感器和驱动都正常运行，只是 CLI 的默认 QoS 和驱动的 QoS 不兼容。
 
@@ -229,7 +229,7 @@ ros2 topic echo /imu --csv > imu_data.csv
 ros2 topic echo /camera/image --no-arr
 ```
 
-### QoS 案例：激光雷达存在但 `echo` 没有输出 ⭐⭐
+### QoS 案例：激光雷达存在但 `echo` 没有输出 ★★
 
 这是一个几乎每个 ROS2 初学者都会遇到的问题，值得详细讲解排查过程。它完美地展示了"证据链思维"的价值——按顺序采集证据、逐步排除假设，比"随便试试"高效得多。
 
@@ -268,7 +268,7 @@ QoS 调试要特别注意“方向性”。发布方提供能力，订阅方提�
 2. 解释为什么 `/tf_static` 通常需要 `transient_local`，而 `/scan` 通常不需要。
 3. 构造一个 QoS 不匹配案例，并用 CLI 证明修复前后端点连接变化。
 
-### 发布、服务、操作和参数：从 CLI 直接操纵系统 ⭐
+### 发布、服务、操作和参数：从 CLI 直接操纵系统 ★
 
 CLI 不只是"读取"工具——它也可以"写入"。`ros2 topic pub` 可以从命令行直接发布消息，`ros2 service call` 可以调用服务，`ros2 param set` 可以修改节点参数。这些写入能力在调试中非常有价值：当你怀疑"控制器收到命令后是否正常响应"时，可以用 `topic pub` 发送一个已知的速度命令，观察机器人是否按预期运动——这比通过完整的导航栈发送目标更直接、更可控，能有效隔离问题是在上层规划还是在下层执行。
 
@@ -302,7 +302,7 @@ ros2 run my_pkg my_node --ros-args \
   -p use_sim_time:=true
 ```
 
-### 系统诊断和生命周期管理 ⭐⭐
+### 系统诊断和生命周期管理 ★★
 
 系统级诊断工具帮助你在"不知道问题在哪一层"时快速获取全局画面。`ros2 doctor` 相当于给 ROS2 系统做一次全面体检——检查 RMW 实现、DDS 配置、网络多播状态、节点图完整性和 QoS 兼容性。当你刚拿到一台新机器人、或在新网络环境下部署、或两台机器人之间看不到对方的话题时，`ros2 doctor --report` 是最好的起点。
 
@@ -330,7 +330,7 @@ ros2 multicast send       # Terminal 2
 ros2 daemon stop && ros2 daemon start
 ```
 
-### ros2 CLI 完整命令族系统化讲解 ⭐⭐
+### ros2 CLI 完整命令族系统化讲解 ★★
 
 ROS2 的 CLI 工具组织成一致的 `ros2 <verb> <subverb>` 模式。理解命令族的结构比记住每个命令的参数更重要——因为你可以通过 `ros2 <verb> --help` 随时查看参数，但你需要知道"当我想做 X 时应该用哪个 verb"。
 
@@ -439,7 +439,7 @@ ros2 doctor --report | grep -A5 "NETWORK"
 
 报告中最有价值的部分是 `NETWORK` 和 `QOS`——前者告诉你多播是否可用（很多"节点看不到"的问题来自多播被阻断），后者告诉你是否存在 QoS 不兼容。
 
-### DDS 性能诊断 ⭐⭐⭐
+### DDS 性能诊断 ★★★
 
 当 CLI 基础命令（`topic hz/bw/delay`）已经确认了"话题频率不稳定"或"延迟偶发变大"，但原因不在应用层时，需要深入 DDS 层面诊断。
 
@@ -481,7 +481,7 @@ sudo sysctl -w net.core.wmem_max=4194304
 | 频率偶发下降 | DDS 背压（Reliable 模式重传） | 检查 QoS 是否应该用 BestEffort |
 | 同一话题数据到达顺序乱 | History depth 太大 + 多线程 | 减小 depth 或用 SingleThreadedExecutor |
 
-### rosbag2 高级用法 ⭐⭐
+### rosbag2 高级用法 ★★
 
 基础的 `ros2 bag record` 和 `ros2 bag play` 在前面已经覆盖。本节介绍高级用法——MCAP 格式的优化、录制过滤、回放同步和离线分析。
 
@@ -563,7 +563,7 @@ rosbags-convert ros1_data.bag
 ros2 bag convert -i input.db3 -o convert_config.yaml
 ```
 
-### ros2 trace（LTTng）性能追踪 ⭐⭐⭐
+### ros2 trace（LTTng）性能追踪 ★★★
 
 当 `ros2 topic hz` 显示频率正常但控制系统仍有偶发抖动时，需要更精细的工具——`ros2 trace` 提供回调级的时间戳追踪，开销仅 0.0033 ms/tracepoint，不会显著影响系统行为。
 
@@ -598,7 +598,7 @@ handler = Ros2Handler.process(events)
 "
 ```
 
-**callback 延迟诊断方法 ⭐⭐**：
+**callback 延迟诊断方法 ★★**：
 
 trace 数据最有价值的用法是定位"哪个回调偶发变慢"。分析步骤：
 
@@ -616,9 +616,9 @@ trace 数据最有价值的用法是定位"哪个回调偶发变慢"。分析步
 
 > **本质洞察**：性能调试的核心技能不是"会用 trace 工具"，而是"能从 trace 数据中区分正常变异和异常尖峰"。一个 SLAM 回调的处理时间在 5-15 ms 之间波动是正常的（取决于点云密度和回环检测）；偶发一次 200 ms 是异常的（可能是内存分配或日志阻塞）。区分两者需要看分布形状，而不只是看最大值。
 
-### ⚠️ 性能追踪陷阱
+### ⚠ 性能追踪陷阱
 
-> ⚠️ **工程陷阱：在追踪期间运行完整系统导致 trace 文件过大**
+> ⚠ **工程陷阱：在追踪期间运行完整系统导致 trace 文件过大**
 >
 > **错误做法**：开启 trace 后运行完整的 Nav2 + SLAM + 30 个传感器节点，录制 10 分钟。
 >
@@ -626,7 +626,7 @@ trace 数据最有价值的用法是定位"哪个回调偶发变慢"。分析步
 >
 > **正确做法**：只运行能复现问题的最小节点集。如果问题在控制器回调中，只启动 ros2_control + 硬件接口。录制时间控制在 30-60 秒。
 
-> ⚠️ **概念误区：认为 trace 开销为零可以一直开着**
+> ⚠ **概念误区：认为 trace 开销为零可以一直开着**
 >
 > **新手想法**："0.0033 ms/tracepoint 几乎没开销，生产系统一直开着 trace。"
 >
@@ -640,7 +640,7 @@ trace 数据最有价值的用法是定位"哪个回调偶发变慢"。分析步
 2. **[分析题]** 设计一个自动化脚本，从 trace 文件中提取所有回调的持续时间，计算 p50/p95/p99/max，并标记超过阈值的异常回调。
 3. **[综合题]** 一个控制系统的 `update()` 回调平均 0.4 ms，但 p99 是 8 ms。设计排查方案，区分是回调内部计算慢（算法/锁/分配）还是外部因素（系统调度/页面错误/DDS 阻塞）。
 
-### ROS1 到 ROS2 命令映射：不只是改了命令名 ⭐
+### ROS1 到 ROS2 命令映射：不只是改了命令名 ★
 
 从 ROS1 迁移到 ROS2 时，初学者倾向于把 ROS2 命令理解为"ROS1 命令的重命名"——`rosnode list` 变成了 `ros2 node list`，`rostopic echo` 变成了 `ros2 topic echo`。表面上确实如此，但底层有三个架构差异会影响日常使用。
 
@@ -668,13 +668,13 @@ trace 数据最有价值的用法是定位"哪个回调偶发变慢"。分析步
 
 ---
 
-## rosbag2 和 MCAP：数据集的录制、回放与 SLAM ⭐⭐
+## rosbag2 和 MCAP：数据集的录制、回放与 SLAM ★★
 
 > **这一节解决什么问题**：SLAM 开发的核心工作流是"录制一次真实数据，在办公室反复回放调试"。bag 系统就是这个工作流的基础设施。但录制一个"能用"的 bag 远不止 `ros2 bag record` 一条命令——QoS 覆盖、话题选择、时间源统一、格式选择都直接影响 bag 是否能被 SLAM 算法正确消费。录了一个空 bag（因为 QoS 不匹配）或回放时 SLAM 不动（因为 `/clock` 没发布），是初学者最常浪费时间的两类问题。
 
 bag 系统（https://github.com/ros2/rosbag2）是 SLAM 开发中对工作流至关重要的工具。 **MCAP**（https://github.com/foxglove/mcap）已成为 ROS2 Iron 的默认格式，它提供包含嵌入式消息定义的自包含文件，具备仅追加写入的安全性，并且通过 Zstd 压缩，**比 SQLite3 节省 20–50% 的空间**。
 
-### 采用合适的 QoS 和压缩方式进行记录 ⭐⭐
+### 采用合适的 QoS 和压缩方式进行记录 ★★
 
 ```bash
 # Basic MCAP recording with compression preset
@@ -715,7 +715,7 @@ ros2 service call /rosbag2_recorder/snapshot rosbag2_interfaces/srv/Snapshot
   history: keep_all
 ```
 
-### SLAM 数据集记录的必备主题 ⭐⭐
+### SLAM 数据集记录的必备主题 ★★
 
 | 主题 | 类型 | 频率 | 用途 |
 |---|---|---|---|
@@ -728,7 +728,7 @@ ros2 service call /rosbag2_recorder/snapshot rosbag2_interfaces/srv/Snapshot
 | `/camera/color/image_raw` | `Image` | 15–30 Hz | RGB 摄像头 |
 | `/camera/camera_info` | `CameraInfo` | 与图像相同 | 摄像头内参 |
 
-### SLAM 开发中的回放 ⭐⭐
+### SLAM 开发中的回放 ★★
 
 ```bash
 # The canonical SLAM replay command
@@ -751,7 +751,7 @@ mcap info recording.mcap    # More detail for MCAP files
 
 **回放期间的键盘控制**：空格键暂停/继续，方向键以10%为增量调整速率，暂停时按右箭头键可逐条消息跳转。
 
-### Bag 案例：回放有数据但 SLAM 不动 ⭐⭐
+### Bag 案例：回放有数据但 SLAM 不动 ★★
 
 症状：`ros2 bag info` 显示 `/scan`、`/odom`、`/tf` 都存在，`ros2 bag play` 也在输出进度，但 SLAM 节点没有建图，RViz 中机器人不动或时间停在 0。
 
@@ -799,7 +799,7 @@ ros2 run tf2_ros tf2_echo odom base_link
 2. 解释为什么 bag 回放时不能只给 SLAM 节点设置 `use_sim_time`，还要给 RViz 和 TF 相关节点设置。
 3. 设计一个 `slam_qos.yaml`，同时覆盖 `/scan`、`/imu` 和 `/tf_static`。
 
-### 格式转换与bag工具 ⭐⭐
+### 格式转换与bag工具 ★★
 
 ```bash
 # SQLite3 → MCAP (create a YAML config)
@@ -817,7 +817,7 @@ rosbags-convert input.bag
 
 ---
 
-## TF2调试：系统化工作流 ⭐⭐
+## TF2调试：系统化工作流 ★★
 
 > **这一节解决什么问题**：TF（变换树）是 ROS2 中所有空间信息的基础——SLAM 节点需要知道传感器相对于机器人底盘的位置（静态 TF），导航节点需要知道机器人在地图中的位姿（动态 TF），RViz 需要知道每个可视化元素应该画在哪里。TF 链一旦断裂或时间戳不一致，所有依赖空间信息的功能都会失效，而且症状千变万化——可能是"SLAM 不建图"、"导航不规划路径"、"RViz 中机器人消失"或"向未来外推"错误信息刷屏。
 
@@ -825,7 +825,7 @@ TF 问题之所以难排查，是因为它是一个"无声依赖"——没有任
 
 TF问题是SLAM和导航系统中最常见的错误类型。该工具套件位于`ros2/geometry2` (https://github.com/ros2/geometry2)。
 
-### 三个必备的TF调试命令 ⭐
+### 三个必备的TF调试命令 ★
 
 ```bash
 # 1. Visualize the entire TF tree (generates frames.pdf)
@@ -847,7 +847,7 @@ ros2 run tf2_ros static_transform_publisher \
   --frame-id base_link --child-frame-id laser_frame
 ```
 
-### 诊断”向未来外推”问题 ⭐⭐
+### 诊断”向未来外推”问题 ★★
 
 “向未来外推”（extrapolation into the future）是 TF 系统中最常见的错误消息之一。初学者看到这个错误时通常很困惑——“我没有请求未来的数据，为什么说我在向未来外推？”理解这个错误需要意识到 TF 系统的工作方式：它维护一个时间缓冲区，记录不同时间点的变换。当你查询时间 T 的变换时，TF 系统会在缓冲区中找到 T 前后的两个变换进行插值。如果 T 超过了缓冲区中最新数据的时间戳，TF 系统就认为你在”向未来外推”——它没有未来的数据来做插值。
 
@@ -859,15 +859,15 @@ ros2 run tf2_ros static_transform_publisher \
 - **`use_sim_time` 设置不一致**：如果部分节点使用模拟时间（从接近 0 开始），而其他节点使用墙钟时间（Unix 纪元约 17 亿），时间戳之间的差距将非常巨大。**解决方法**：在回放数据包或使用模拟时，请在每个节点上统一设置 `use_sim_time:=true`。
 - **未发布 `/clock`**：当 `use_sim_time` 为 true 且没有任何节点发布 `/clock` 时，节点会在时间 0 处冻结。**解决方法**：使用 `ros2 bag play --clock 100` 或确保 Gazebo 发布时钟。
 
-### 诊断“向过去外推”问题 ⭐⭐
+### 诊断“向过去外推”问题 ★★
 
 请求的时间戳早于 TF 缓冲区中的最旧数据。原因包括 TF 缓冲区过短（默认 **10 秒**），或数据处理存在较大延迟。**解决方法**：在代码中增加缓冲区时长：`tf2_ros::Buffer(this->get_clock(), tf2::Duration(std::chrono::seconds(30)))`。
 
-### 双树断开问题 ⭐⭐
+### 双树断开问题 ★★
 
 如果 `view_frames` 显示两棵独立的树（例如 `map→odom→base_link` 和一个断开的 `camera_link→camera_optical_frame`），则表示缺少某些变换。在 SLAM 系统中，最常见的缺失环节是 `base_link→sensor_frame` 静态变换。 **修复**：请确认您的 URDF 通过 `robot_state_publisher` 发布了所有传感器帧，或显式添加 `static_transform_publisher` 节点。
 
-### 多机器人 TF 命名空间 ⭐⭐⭐
+### 多机器人 TF 命名空间 ★★★
 
 对于多机器人系统，请在所有帧 ID 前添加机器人命名空间前缀。在启动文件中配置：
 
@@ -882,13 +882,13 @@ Node(
 
 ---
 
-## ROS2 启动系统的实际应用 ⭐⭐
+## ROS2 启动系统的实际应用 ★★
 
 > **这一节解决什么问题**：真实机器人系统通常由 10-30 个节点组成，手动在每个终端启动节点既不可复现也不可维护。启动文件把"以什么参数、什么顺序、什么条件启动哪些节点"编码成可版本控制的脚本。好的启动文件组织能让调试更高效——按功能拆分后，可以只启动出问题的子系统而不加载整个栈。
 
 ROS2 启动文件（https://github.com/ros2/launch、https://github.com/ros2/launch_ros)）是构建动作有向无环图的 Python 脚本。核心概念模型：**DeclareLaunchArgument** 定义了可从命令行传递的内容，而 **LaunchConfiguration** 则在启动描述中检索这些值。
 
-### 展示所有主要功能的实用启动文件 ⭐⭐
+### 展示所有主要功能的实用启动文件 ★★
 
 ```python
 import os
@@ -967,7 +967,7 @@ def generate_launch_description():
     ])
 ```
 
-### 启动文件调试 ⭐⭐
+### 启动文件调试 ★★
 
 ```bash
 ros2 launch my_pkg my_launch.py --show-args     # List available arguments
@@ -976,7 +976,7 @@ ros2 launch my_pkg my_launch.py --debug          # Verbose launch logging
 python3 path/to/my_launch.py                      # Catch Python syntax errors
 ```
 
-### XML 和 YAML 替代方案 ⭐
+### XML 和 YAML 替代方案 ★
 
 ```xml
 <!-- my_launch.launch.xml -->
@@ -993,13 +993,13 @@ python3 path/to/my_launch.py                      # Catch Python syntax errors
 
 ---
 
-## C++/Python 节点的日志记录、GDB 和安全检查器 ⭐⭐
+## C++/Python 节点的日志记录、GDB 和安全检查器 ★★
 
 > **这一节解决什么问题**：当 CLI 工具和 trace 已经把问题缩小到"某个回调内部"时，需要更精细的工具来定位具体代码行。日志宏帮助记录运行时决策变量；GDB 帮助在崩溃现场检查变量和调用栈；AddressSanitizer 帮助发现内存错误——这三者是逐层深入的，不是可以互相替代的。
 
 日志、GDB 和 Sanitizer 对应不同粒度的问题：日志回答"系统做了什么决策"（宏观），GDB 回答"崩溃时变量是什么值"（微观），Sanitizer 回答"是否存在内存安全违规"（静态错误检测）。排查时应按照从宏观到微观的顺序使用——先用日志定位问题区域，再用 GDB 深入检查，最后用 Sanitizer 排除隐藏的内存错误。不要一开始就把复杂系统放进 GDB 单步运行——单步会改变时序，可能让并发问题消失。
 
-### ROS2 日志记录宏 ⭐
+### ROS2 日志记录宏 ★
 
 ```cpp
 // Standard levels
@@ -1041,7 +1041,7 @@ ros2 run my_pkg my_node --ros-args --disable-rosout-logs
 
 日志文件写入 **`~/.ros/log/`**（可通过 `ROS_LOG_DIR` 配置）。若需基于 GUI 的过滤，请使用 `rqt_console`。
 
-### 使用 GDB 调试 ⭐⭐
+### 使用 GDB 调试 ★★
 
 ```bash
 # Build with debug symbols first
@@ -1068,7 +1068,7 @@ ros2 run --prefix 'gdbserver localhost:3000' my_package my_node
 
 **使用组件容器的 GDB**：可组合节点共享一个进程，因此无法为单个组件添加前缀。调试时请禁用组合功能（`use_composition:=False`），或通过 PID 将 GDB 附加到容器进程。
 
-### AddressSanitizer 及其他 ⭐⭐⭐
+### AddressSanitizer 及其他 ★★★
 
 ```bash
 # AddressSanitizer (catches buffer overflows, use-after-free)
@@ -1092,13 +1092,13 @@ rr replay
 
 ---
 
-## 性能监控与 DDS 调优 ⭐⭐⭐
+## 性能监控与 DDS 调优 ★★★
 
 > **这一节解决什么问题**：控制系统关心的不是"平均快不快"，而是"最慢的那次有多慢"。一个 1 kHz 控制器如果平均 0.5 ms 完成，但每 1000 次有一次需要 20 ms，这个控制器在工程上是不合格的。性能监控工具帮助你找到这些尖峰（p99、max）及其来源——是回调本身慢、是 executor 排队、还是系统级调度被打断。
 
 性能问题和功能问题有一个根本区别：功能问题通常是确定性的（输入 A 总是产生错误输出 B），性能问题通常是统计性的（99% 的时候正常，1% 的时候异常慢）。这意味着性能排查不能靠"跑一次看看"，需要收集统计分布，找到尖峰的模式。`ros2 topic hz` 给出的平均值只是冰山一角——真正有价值的是 max period、p95 和 p99。
 
-### 快速性能检查 ⭐⭐
+### 快速性能检查 ★★
 
 ```bash
 ros2 topic hz /scan           # Is the sensor publishing at expected rate?
@@ -1106,7 +1106,7 @@ ros2 topic bw /camera/image   # How much bandwidth does this consume?
 ros2 topic delay /scan        # End-to-end latency (requires Header timestamps)
 ```
 
-### ros2_tracing 用于生产级延迟分析 ⭐⭐⭐
+### ros2_tracing 用于生产级延迟分析 ★★★
 
 该追踪框架（https://github.com/ros2/ros2_tracing）采用 LTTng，平均每个追踪点的开销仅为 **0.0033 毫秒**，因此非常适合实时系统：
 
@@ -1127,7 +1127,7 @@ pip install tracetools-analysis bokeh
 
 跟踪记录会捕获 `callback_start`/`callback_end`、`rclcpp_publish`、`rmw_take` 以及执行器调度事件。这使您能够构建火焰图风格的可视化图表，直观展示回调链中时间的消耗情况。
 
-### ros2 trace、LTTng 与 GDB 的分层使用 ⭐⭐⭐
+### ros2 trace、LTTng 与 GDB 的分层使用 ★★★
 
 性能问题和崩溃问题要分层处理。`ros2 trace` 适合回答“时间花在哪里”；LTTng 适合回答“系统级事件如何排列”；GDB 适合回答“某个时刻变量为什么是这个值”。三者不是替代关系，而是从宏观到微观逐层缩小范围。
 
@@ -1196,7 +1196,7 @@ continue
 2. 设计一个性能问题的分层排查表，至少包含 topic 统计、trace、GDB 三层。
 3. 解释为什么 GDB 单步调试不适合直接证明控制周期满足实时要求。
 
-### DDS 中间件调优 ⭐⭐⭐
+### DDS 中间件调优 ★★★
 
 ROS2 的通信性能很大程度上取决于底层 DDS 中间件的配置。默认配置适合大多数轻量场景，但当系统需要传输大消息（如 PointCloud2、Image）或在无线网络中工作时，默认配置可能导致丢包、高延迟或消息到达不稳定。DDS 调优不是"高级用户才需要"的操作——对于 SLAM 系统，传输一帧 16 线激光雷达的 PointCloud2 可能需要多个 UDP 分片，默认内核缓冲区可能不够大，导致偶发丢帧。
 
@@ -1237,13 +1237,13 @@ sudo sysctl -w net.core.wmem_max=4194304
 
 ---
 
-## 按症状分类的实用调试流程 ⭐⭐
+## 按症状分类的实用调试流程 ★★
 
 > **这一节解决什么问题**：前面的内容按工具分类——先讲 CLI、再讲 TF、再讲 bag、再讲 trace。本节转换视角，按症状分类——“机器人不动时怎么查”、”bag 回放不工作时怎么查”、”控制周期偶发超时怎么查”。这更接近实际工作中的使用方式：你不是从”我要学 ros2 topic info”出发的，而是从”我的 SLAM 系统出了问题”出发的。
 
 每个症状对应的排查流程都遵循 0.1 节介绍的五步闭环：症状 -> 假设 -> 证据采集 -> 判断 -> 最小改动。下面的流程图已经为你预组织了最常见的假设和对应的证据采集命令。用它们的方式是：先看症状匹配哪一条，按顺序执行证据采集命令，每一步的结果要么排除一个假设要么确认一个假设，直到找到根因。
 
-### “主题未收到消息” —— QoS 诊断检查清单 ⭐⭐
+### “主题未收到消息” —— QoS 诊断检查清单 ★★
 
 1. `ros2 topic info /topic` —— 确认发布者数量 &gt; 0
 2. `ros2 topic info /topic --verbose` —— 比较发布方与订阅方的 QoS 配置文件
@@ -1254,7 +1254,7 @@ sudo sysctl -w net.core.wmem_max=4194304
 
 最常见的原因是**QoS可靠性不匹配**：订阅者请求 RELIABLE，但发布者提供 BEST_EFFORT。此时不会建立连接，也不会输出错误信息。
 
-### “rosbag 重放对 SLAM 无效” ⭐⭐
+### “rosbag 重放对 SLAM 无效” ★★
 
 1. `ros2 bag info bag/` — 验证 `/scan`、`/odom`、`/tf`、`/tf_static` 是否存在
 2. 尝试使用 `--clock`：`ros2 bag play bag/ --clock 100`
@@ -1263,7 +1263,7 @@ sudo sysctl -w net.core.wmem_max=4194304
 5. 如有需要，为回放添加 QoS 覆盖设置
 6. 验证 `robot_description` 是否可用（静态变换依赖于它）
 
-### “节点出现在 ros2 节点列表中但无响应” ⭐⭐
+### “节点出现在 ros2 节点列表中但无响应” ★★
 
 1. `ros2 node info /node` — 检查订阅是否存在
 2. `ros2 topic hz /input_topic` — 数据是否正在到达？
@@ -1271,7 +1271,7 @@ sudo sysctl -w net.core.wmem_max=4194304
 4. `ros2 param list /node` — 检查参数是否设置正确
 5. 运行 `--log-level debug` 以查看内部状态
 
-### Lifecycle 案例：控制器加载了但机器人不执行 ⭐⭐
+### Lifecycle 案例：控制器加载了但机器人不执行 ★★
 
 症状：`ros2 control list_controllers` 能看到控制器，`/joint_states` 也在发布，但机器人不响应轨迹或速度命令。
 
@@ -1310,7 +1310,7 @@ ros2 control switch_controllers \
 2. 解释为什么 `joint_state_broadcaster` active 不能证明命令链路可用。
 3. 设计一个控制器切换失败的证据链，区分接口冲突和硬件未激活。
 
-### “TF 错误淹没控制台” ⭐⭐
+### “TF 错误淹没控制台” ★★
 
 1. `ros2 run tf2_tools view_frames` — 查找断开连接的树或缺失的帧
 2. `ros2 run tf2_ros tf2_monitor` — 检查每个帧的速率和延迟
@@ -1318,7 +1318,7 @@ ros2 control switch_controllers \
 4. 检查同一帧上是否存在重复的 TF 广播器
 5. 验证 URDF 是否已加载：`ros2 topic echo /robot_description`
 
-### Performance 案例：平均频率正常但控制偶发卡顿 ⭐⭐⭐
+### Performance 案例：平均频率正常但控制偶发卡顿 ★★★
 
 症状：`ros2 topic hz /joint_states` 显示平均接近 1 kHz，但机器人偶发抖动，日志中偶尔出现控制周期超时。
 
@@ -1359,7 +1359,7 @@ colcon build --packages-select my_controller \
 
 ---
 
-## 辅助工具与多终端工作流 ⭐
+## 辅助工具与多终端工作流 ★
 
 ROS2 开发的日常工作通常需要同时运行和监控多个终端——一个运行 launch 文件、一个播放 bag、一个打开 RViz、一个监控话题频率、一个查看 TF、还有一个留给临时调试命令。手动在 6 个终端之间切换既低效又容易遗忘状态。多终端管理工具把这些窗口组织成可复现的布局。
 
@@ -1373,9 +1373,9 @@ ROS2 开发的日常工作通常需要同时运行和监控多个终端——一
 
 ---
 
-## 值得研究的 GitHub 项目 ⭐
+## 值得研究的 GitHub 项目 ★
 
-### 核心基础设施 ⭐
+### 核心基础设施 ★
 
 | 仓库 | 学习重点 |
 |---|---|
@@ -1386,7 +1386,7 @@ ROS2 开发的日常工作通常需要同时运行和监控多个终端——一
 | [ros2/geometry2](https://github.com/ros2/geometry2) | TF2 库、tf2_ros、tf2_tools |
 | [foxglove/mcap](https://github.com/foxglove/mcap) | MCAP 格式规范及工具 |
 
-### SLAM 与导航 ⭐⭐
+### SLAM 与导航 ★★
 
 | 仓库 | 相关性说明 |
 |---|---|
@@ -1396,7 +1396,7 @@ ROS2 开发的日常工作通常需要同时运行和监控多个终端——一
 | [moveit/moveit2](https://github.com/moveit/moveit2) | 运动规划；出色的启动文件组织 |
 | [turtlebot/turtlebot4](https://github.com/turtlebot/turtlebot4) | 完整的机器人调试流程，具备结构良好的启动系统 |
 
-### 基于强化学习的运动控制与具身智能 ⭐⭐
+### 基于强化学习的运动控制与具身智能 ★★
 
 | 仓库 | 描述 |
 |---|---|
@@ -1409,7 +1409,7 @@ ROS2 开发的日常工作通常需要同时运行和监控多个终端——一
 | [nasa-jpl/rosa](https://github.com/nasa-jpl/rosa) | NASA JPL 基于 LLM 的 ROS 调试代理 |
 | [Auromix/ROS-LLM](https://github.com/Auromix/ROS-LLM) | 用于具身智能的 LLM + ROS2 框架 |
 
-### 可视化、调试和学习资源 ⭐
+### 可视化、调试和学习资源 ★
 
 | 仓库 | 描述 |
 |---|---|
@@ -1478,7 +1478,7 @@ ROS2 开发的日常工作通常需要同时运行和监控多个终端——一
 
 这棵树的根是"证据链思维"——所有工具都是为排除或确认假设服务的。记住这个原则，比记住命令参数重要得多。当你遇到新问题时，先问"我的假设是什么"，再问"用什么工具采集证据"。
 
-### rqt 工具族系统化讲解 ⭐⭐
+### rqt 工具族系统化讲解 ★★
 
 rqt 是 ROS2 中基于 Qt 的 GUI 工具框架。它的核心架构是"一个窗口多个可停靠插件"——你可以在同一个窗口中同时打开 rqt_graph、rqt_plot、rqt_console 和 rqt_reconfigure，组成自定义的监控面板。
 
@@ -1530,9 +1530,9 @@ rqt --perspective-file my_slam_dashboard.perspective
 - `nav_tuning.perspective`：rqt_reconfigure + rqt_plot(cmd_vel) + rqt_console(过滤 Nav2)
 - `hardware_debug.perspective`：rqt_plot(joint_states) + rqt_console(过滤 controller_manager)
 
-### ⚠️ rqt 使用陷阱
+### ⚠ rqt 使用陷阱
 
-> ⚠️ **工程陷阱：rqt_plot 用于高频数据导致 CPU 暴涨**
+> ⚠ **工程陷阱：rqt_plot 用于高频数据导致 CPU 暴涨**
 >
 > **错误做法**：用 rqt_plot 绘制 1 kHz 的关节状态，同时显示 12 个关节的位置和速度。
 >
@@ -1548,7 +1548,7 @@ rqt --perspective-file my_slam_dashboard.perspective
 2. **[实操题]** 用 rqt_reconfigure 在线修改 Nav2 的 `inflation_radius` 参数。观察 RViz 中 costmap 的膨胀区域如何实时变化。
 3. **[设计题]** 为一个四足 RL 部署系统设计 rqt perspective，包含哪些插件、监控哪些话题。
 
-## 工具链总结与方法论 ⭐⭐
+## 工具链总结与方法论 ★★
 
 回顾本章的核心教学目标：CLI 工具不是需要死记硬背的命令列表，而是排查 ROS2 系统问题的证据采集工具箱。每个工具对应证据链中的一个环节——`ros2 node list` 确认图结构、`ros2 topic info --verbose` 确认 QoS 兼容性、`tf2_echo` 确认坐标变换、`ros2 trace` 确认回调级时序。把工具和排查假设关联起来，比记住命令参数重要得多。
 
@@ -1559,11 +1559,11 @@ rqt --perspective-file my_slam_dashboard.perspective
 
 ---
 
-## 调试方法论：从初学者到高效诊断者 ⭐⭐
+## 调试方法论：从初学者到高效诊断者 ★★
 
 > **这一节解决什么问题**：把前面所有工具和技巧整合成一套可重复使用的方法论。目标不是让你记住更多命令，而是让你在面对任何 ROS2 系统问题时，有一个稳定的"思考框架"——先问什么、先做什么、怎么判断证据是否充分。
 
-### 调试的三个认知误区 ⭐
+### 调试的三个认知误区 ★
 
 **误区一："改了之后好了就是修好了"**
 
@@ -1577,7 +1577,7 @@ rqt --perspective-file my_slam_dashboard.perspective
 
 同时打开 rqt_graph、rqt_console、PlotJuggler、RViz、四个终端跑 topic echo——这种"撒网"式调试效率极低。正确方式是根据假设选择一个工具，采集证据后决定下一步，而不是同时用所有工具希望"碰巧看到问题"。
 
-### 调试的四个问题层级 ⭐⭐
+### 调试的四个问题层级 ★★
 
 ROS2 系统的问题可以按层级分类，每个层级对应不同的工具和方法：
 
@@ -1600,9 +1600,9 @@ ROS2 系统的问题可以按层级分类，每个层级对应不同的工具和
 
 ---
 
-## ROS2 高级调试模式与常见编程陷阱 ⭐⭐
+## ROS2 高级调试模式与常见编程陷阱 ★★
 
-### ROS2 Action 编程模式 ⭐⭐
+### ROS2 Action 编程模式 ★★
 
 ROS2 的三种通信模式（Topic、Service、Action）不是"三种难度递增的 API"——它们面向不同时间尺度和交互模式的问题。理解它们的设计动机比记住它们的 API 更重要。
 
@@ -1621,7 +1621,7 @@ Action 填补了 Topic（连续流、发后不管）和 Service（同步阻塞�
 
 > **本质洞察**：Topic、Service 和 Action 不是三种"难度递增"的通信方式，而是面向不同时间尺度和交互模式的工具。Topic 用于持续数据流（不关心谁在听），Service 用于瞬时请求-响应（阻塞调用者），Action 用于长时间异步任务（需要进度反馈和取消能力）。选择依据是任务的持续时间和交互需求，而不是"高级用户才用 Action"。
 
-### Callback Group 经典死锁模式 ⭐⭐
+### Callback Group 经典死锁模式 ★★
 
 Callback Group 和 Executor 的交互是 ROS2 中最容易产生死锁的区域。死锁不同于普通 bug——程序不崩溃、不报错，只是永远"卡住"。如果你的 ROS2 节点在某个时间点之后不再响应任何话题、服务和定时器，且进程仍在运行，很可能就是 Callback Group 死锁。
 
@@ -1637,9 +1637,9 @@ Callback Group 和 Executor 的交互是 ROS2 中最容易产生死锁的区域�
 
 ---
 
-### ⚠️ 调试工具常见陷阱
+### ⚠ 调试工具常见陷阱
 
-> ⚠️ **工程陷阱：`ros2 topic echo /scan` 无输出就认为传感器坏了**
+> ⚠ **工程陷阱：`ros2 topic echo /scan` 无输出就认为传感器坏了**
 >
 > **错误做法**：看到 echo 没输出，立刻去检查硬件连接或驱动代码。
 >
@@ -1649,7 +1649,7 @@ Callback Group 和 Executor 的交互是 ROS2 中最容易产生死锁的区域�
 >
 > **正确做法**：先用 `ros2 topic info /scan --verbose` 确认发布方存在及其 QoS 策略，再用 `ros2 topic echo /scan --qos-reliability best_effort` 或 `--qos-profile sensor_data` 重试。
 
-> ⚠️ **工程陷阱：录制 SLAM bag 时忘记 QoS 覆盖**
+> ⚠ **工程陷阱：录制 SLAM bag 时忘记 QoS 覆盖**
 >
 > **错误做法**：直接 `ros2 bag record /scan /imu /tf /tf_static`，不指定 QoS 覆盖文件。
 >
@@ -1659,7 +1659,7 @@ Callback Group 和 Executor 的交互是 ROS2 中最容易产生死锁的区域�
 >
 > **正确做法**：始终使用 QoS 覆盖文件：`ros2 bag record --qos-profile-overrides-path slam_qos.yaml ...`。创建并复用 `slam_qos.yaml`，覆盖 `/scan`、`/imu`、`/camera/*` 为 BestEffort，`/tf_static` 为 TransientLocal。
 
-> ⚠️ **概念误区：认为 `ros2 topic hz` 平均频率正常就没有延迟问题**
+> ⚠ **概念误区：认为 `ros2 topic hz` 平均频率正常就没有延迟问题**
 >
 > **新手想法**："`ros2 topic hz /joint_states` 显示平均 999.8 Hz，控制周期没问题。"
 >
@@ -1667,7 +1667,7 @@ Callback Group 和 Executor 的交互是 ROS2 中最容易产生死锁的区域�
 >
 > **正确做法**：用 `--window` 参数增大统计窗口，关注 max period；用 `ros2 trace` 采集回调级时间戳分析分布。
 
-> ⚠️ **工程陷阱：用 `ros2 bag play` 回放但 SLAM 不动**
+> ⚠ **工程陷阱：用 `ros2 bag play` 回放但 SLAM 不动**
 >
 > **错误做法**：`ros2 bag play slam_dataset/` 不加任何参数。
 >
@@ -1798,7 +1798,7 @@ windows:
 | trace 采集成功 | babeltrace 显示 callback_start/callback_end 事件 |
 | 调试记录完整 | 每条记录包含症状、排查命令和结论 |
 
-### 调试工具的投资回报分析 ⭐
+### 调试工具的投资回报分析 ★
 
 学习调试工具需要时间投入。以下是各工具的投资回报估计，帮助你决定优先学习什么：
 
@@ -1829,7 +1829,7 @@ windows:
 | 控制周期偶发超过阈值 | 回调排队、日志阻塞或内存分配 | 1. `ros2 trace` 定位慢回调 2. 关闭高频日志 3. 检查 executor 线程数 | Performance 案例 |
 | bag 录制传感器话题为 0 条消息 | QoS 覆盖文件缺失 | 创建 `slam_qos.yaml`，传感器话题设为 BestEffort | Bag 章节 |
 
-### 调试经验总结：SLAM 工程师的日常工具链 ⭐⭐
+### 调试经验总结：SLAM 工程师的日常工具链 ★★
 
 经过本章的学习，一个 SLAM/导航工程师的日常调试工具链可以组织成以下层次。每一层解决一类问题，从最常见到最深层：
 
@@ -1879,7 +1879,7 @@ ros2 run --prefix 'gdb -ex run --args' my_pkg my_node
 
 > **本质洞察**：调试效率与"在正确的层级使用正确的工具"成正比。用 GDB 调试 QoS 问题是浪费时间——`ros2 topic info --verbose` 一条命令就能解决。用 `ros2 topic hz` 调试回调内部的性能尖峰也不行——它只看到频率的统计值，看不到单次回调的耗时分布。匹配问题层级和工具层级，是高效调试的关键。
 
-### 调试记录模板 ⭐
+### 调试记录模板 ★
 
 建议为每次非平凡的调试会话保留一份简短记录。记录不需要很长——三行足够：
 
@@ -1899,7 +1899,7 @@ ros2 run --prefix 'gdb -ex run --args' my_pkg my_node
 
 这类记录的价值不在于"当时"——而在于"三个月后另一台机器人遇到相同问题时"。如果没有记录，你会重新经历一遍相同的排查过程。
 
-### 调试工具选择决策树 ⭐
+### 调试工具选择决策树 ★
 
 ```text
 问题是什么类型？
@@ -1929,20 +1929,20 @@ ros2 run --prefix 'gdb -ex run --args' my_pkg my_node
 
 | 资源 | 难度 | 说明 |
 |------|------|------|
-| [ros2/ros2cli 源码](https://github.com/ros2/ros2cli) | ⭐⭐ | 理解 CLI 插件架构 |
-| [ros2/ros2_tracing](https://github.com/ros2/ros2_tracing) | ⭐⭐⭐ | LTTng 集成与 tracetools_analysis |
-| [ros2_tracing 论文](https://arxiv.org/abs/2201.00393) | ⭐⭐⭐ | Bedard et al., 追踪框架的设计与性能分析 |
-| [MCAP 规范](https://mcap.dev) | ⭐⭐ | ROS2 默认 bag 格式的技术规范 |
-| [PlotJuggler](https://github.com/facontidavide/PlotJuggler) | ⭐ | 时间序列可视化的事实标准 |
-| [PlotJuggler ROS 插件](https://github.com/PlotJuggler/plotjuggler-ros-plugins) | ⭐ | ROS2 话题和 bag 支持 |
-| [catmux](https://github.com/fmauch/catmux) | ⭐ | tmux 会话管理，ROS 多终端工作流 |
-| [Foxglove Bridge](https://github.com/foxglove/ros-foxglove-bridge) | ⭐⭐ | 远程 WebSocket 可视化桥接 |
-| [grepros](https://github.com/suurjaak/grepros) | ⭐⭐ | grep 风格的 bag 搜索工具 |
-| [ros2bag_extensions (Tier4)](https://github.com/tier4/ros2bag_extensions) | ⭐⭐ | Autoware 中使用的 bag 过滤/合并/切片 |
-| [rqt 插件列表](https://docs.ros.org/en/jazzy/Concepts/Intermediate/About-RQt.html) | ⭐ | 所有可用 rqt 插件的概览 |
-| [LTTng 官方文档](https://lttng.org/docs/) | ⭐⭐⭐ | 底层追踪框架的完整参考 |
-| [TraceCompass](https://www.eclipse.org/tracecompass/) | ⭐⭐⭐ | LTTng trace 的 GUI 分析工具 |
-| [colcon-sanitizer-reports](https://github.com/colcon/colcon-sanitizer-reports) | ⭐⭐ | ASan/TSan 与 colcon 测试集成 |
+| [ros2/ros2cli 源码](https://github.com/ros2/ros2cli) | ★★ | 理解 CLI 插件架构 |
+| [ros2/ros2_tracing](https://github.com/ros2/ros2_tracing) | ★★★ | LTTng 集成与 tracetools_analysis |
+| [ros2_tracing 论文](https://arxiv.org/abs/2201.00393) | ★★★ | Bedard et al., 追踪框架的设计与性能分析 |
+| [MCAP 规范](https://mcap.dev) | ★★ | ROS2 默认 bag 格式的技术规范 |
+| [PlotJuggler](https://github.com/facontidavide/PlotJuggler) | ★ | 时间序列可视化的事实标准 |
+| [PlotJuggler ROS 插件](https://github.com/PlotJuggler/plotjuggler-ros-plugins) | ★ | ROS2 话题和 bag 支持 |
+| [catmux](https://github.com/fmauch/catmux) | ★ | tmux 会话管理，ROS 多终端工作流 |
+| [Foxglove Bridge](https://github.com/foxglove/ros-foxglove-bridge) | ★★ | 远程 WebSocket 可视化桥接 |
+| [grepros](https://github.com/suurjaak/grepros) | ★★ | grep 风格的 bag 搜索工具 |
+| [ros2bag_extensions (Tier4)](https://github.com/tier4/ros2bag_extensions) | ★★ | Autoware 中使用的 bag 过滤/合并/切片 |
+| [rqt 插件列表](https://docs.ros.org/en/jazzy/Concepts/Intermediate/About-RQt.html) | ★ | 所有可用 rqt 插件的概览 |
+| [LTTng 官方文档](https://lttng.org/docs/) | ★★★ | 底层追踪框架的完整参考 |
+| [TraceCompass](https://www.eclipse.org/tracecompass/) | ★★★ | LTTng trace 的 GUI 分析工具 |
+| [colcon-sanitizer-reports](https://github.com/colcon/colcon-sanitizer-reports) | ★★ | ASan/TSan 与 colcon 测试集成 |
 
 **阅读建议**：
 

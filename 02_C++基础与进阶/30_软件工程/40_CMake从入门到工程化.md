@@ -1,12 +1,12 @@
 # CMake 从入门到工程化
 
-> **难度**：⭐⭐～⭐⭐⭐ | **建议用时**：1 周 | **前置要求**：C++语言核心/编译模型基础 C++ 编译模型、基本 CMake 使用经验
+> **难度**：★★～★★★ | **建议用时**：1 周 | **前置要求**：C++语言核心/编译模型基础 C++ 编译模型、基本 CMake 使用经验
 
 ---
 
 ## 前置自测
 
-> 📋 答不出 >= 2 题时，先回顾 C++语言核心/编译模型基础 和 CMake 入门教程。
+> ◆ 答不出 >= 2 题时，先回顾 C++语言核心/编译模型基础 和 CMake 入门教程。
 
 1. C++ 编译的四个阶段是什么？链接阶段做什么？
 2. `#include` 是在哪个阶段被处理的？头文件路径如何传递给编译器？
@@ -59,7 +59,7 @@ CMake 从入门到工程化
 
 ---
 
-## 0. 为什么 CMake 经常成为机器人项目的隐性故障源 ⭐
+## 0. 为什么 CMake 经常成为机器人项目的隐性故障源 ★
 
 很多 C++ 初学者第一次写 CMake 时，会形成一个非常直接的心智模型：
 
@@ -94,7 +94,7 @@ CMake 工程化的目标是把这些隐性关系显式表达出来：
 
 ---
 
-## 1. 从全局变量到 target-based CMake ⭐⭐
+## 1. 从全局变量到 target-based CMake ★★
 
 > **这一节解决什么问题**：为什么现代 CMake 不再推荐 `include_directories()`、`link_directories()` 这些全局命令？target-based 模型解决了什么根本性的工程问题？
 
@@ -186,9 +186,9 @@ target_link_libraries(slam_core PUBLIC Eigen3::Eigen)
 
 > **本质洞察**：现代 CMake 的 target-based 思想可以类比面向对象编程中的封装。传统 CMake 的 `include_directories()` 就像全局变量——所有 target 都能看到，你不知道谁在用。`target_include_directories()` 就像成员变量——只有声明了 `PUBLIC` 的才暴露给外部。这个类比还能延伸：`PRIVATE` 依赖是实现细节（private 成员），`PUBLIC` 依赖是公共接口（public 成员），`INTERFACE` 依赖是纯接口规范（abstract base class）。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：把所有依赖都写成 PUBLIC**
+> ⚠ **编程陷阱：把所有依赖都写成 PUBLIC**
 >
 > **错误做法**：`target_link_libraries(slam_core PUBLIC Eigen3::Eigen Ceres::ceres spdlog::spdlog yaml-cpp)`
 >
@@ -211,7 +211,7 @@ target_link_libraries(slam_core PUBLIC Eigen3::Eigen)
 
 ---
 
-## 2. find_package：依赖是如何被找到的 ⭐⭐
+## 2. find_package：依赖是如何被找到的 ★★
 
 > **这一节解决什么问题**：`find_package(Eigen3 REQUIRED)` 一行代码背后发生了什么？为什么有两种查找模式？理解这个机制，才能在依赖查找失败时知道从哪里排查。
 
@@ -277,9 +277,9 @@ find_package(OpenCV REQUIRED COMPONENTS core imgproc features2d calib3d)
 
 原因是机器人项目很容易链接过多组件，导致编译慢、链接慢、运行时依赖复杂。只链接需要的组件，可以减少二进制体积和部署难度。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：手写绝对路径代替 find_package**
+> ⚠ **编程陷阱：手写绝对路径代替 find_package**
 >
 > **错误做法**：`include_directories(/usr/local/include/eigen3)` `link_directories(/usr/local/lib)`
 >
@@ -296,7 +296,7 @@ find_package(OpenCV REQUIRED COMPONENTS core imgproc features2d calib3d)
 
 ---
 
-## 3. 一个可复用 SLAM 核心库的组织方式 ⭐⭐
+## 3. 一个可复用 SLAM 核心库的组织方式 ★★
 
 > **这一节解决什么问题**：很多初学者的第一个 SLAM 项目把所有代码塞进一个 `CMakeLists.txt`，一个 target 编出一个可执行文件，就认为"构建完成了"。但当你想让别人用你的算法、想在没有 ROS2 的环境下测试、想为嵌入式设备交叉编译时，这种结构就会崩溃。本节展示的不只是一个目录结构，而是一种**让算法库可复用的工程思维**。
 
@@ -378,7 +378,7 @@ endif()
 
 ---
 
-## 4. 安装与导出：让别人能找到你的库 ⭐⭐
+## 4. 安装与导出：让别人能找到你的库 ★★
 
 > **这一节解决什么问题**：你的库在自己的电脑上能编译，但安装到 `/usr/local` 后别人能用 `find_package()` 找到它吗？安装导出是把"本地能编"变成"任何人能用"的关键一步。
 
@@ -443,7 +443,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/my_slamTargets.cmake")
 
 ---
 
-## 5. FetchContent、ExternalProject 与系统依赖 ⭐⭐
+## 5. FetchContent、ExternalProject 与系统依赖 ★★
 
 > **这一节解决什么问题**：C++ 没有 `pip install` 或 `cargo add`。当你的项目依赖十几个库时，怎么管理它们的版本、下载和构建？三种方式各有适用场景，选错了会让构建系统变成噩梦。
 
@@ -490,7 +490,7 @@ superbuild 的价值在于**可复现性**。论文的实验结果能否被审�
 
 ---
 
-## 6. ROS2 与 ament_cmake ⭐⭐
+## 6. ROS2 与 ament_cmake ★★
 
 > **这一节解决什么问题**：ROS2 的构建系统 `ament_cmake` 在 CMake 之上添加了一层。理解它和原生 CMake 的关系，才能正确设计 ROS2 项目的构建结构。
 
@@ -535,7 +535,7 @@ ament_package()
 
 ---
 
-## 7. CUDA 与混合语言构建 ⭐⭐
+## 7. CUDA 与混合语言构建 ★★
 
 > **这一节解决什么问题**：机器人感知系统越来越多地使用 GPU 加速——体素滤波、最近邻搜索、深度学习推理都可以受益于 CUDA。但 CUDA 代码引入了混合语言构建的复杂性。本节展示如何用现代 CMake 管理 CUDA target，使得没有 GPU 的开发者不受影响。
 
@@ -583,7 +583,7 @@ set(CMAKE_CUDA_ARCHITECTURES "87" CACHE STRING "CUDA architectures")
 
 ---
 
-## 8. 测试、Sanitizer 与编译缓存 ⭐⭐
+## 8. 测试、Sanitizer 与编译缓存 ★★
 
 > **这一节解决什么问题**：构建系统的职责不止于"编译出可执行文件"。一个成熟的构建配置还应该支持测试运行、内存错误检测和编译加速。这些工具在机器人项目中尤其重要——SLAM 和控制系统中的内存越界、数据竞争和未定义行为往往在部署后才以偶发崩溃的形式暴露。
 
@@ -643,7 +643,7 @@ ccache 对模板多、头文件重的机器人项目非常有用，尤其是反�
 
 ---
 
-## 9. 故障排查表 ⭐
+## 9. 故障排查表 ★
 
 > 构建系统的故障往往不是"完全编不过"，而是"在我的电脑上能编，换一台就不行"。下面的排查表覆盖了机器人 CMake 项目中最常见的六类隐蔽故障。遇到构建问题时，先在这张表中定位症状，再按检查方法逐步排查。
 
@@ -675,7 +675,7 @@ ccache 对模板多、头文件重的机器人项目非常有用，尤其是反�
 
 ---
 
-## 11. 自测题 ⭐
+## 11. 自测题 ★
 
 > 以下问题检验你对本章前半部分的理解。如果答不出 2 题以上，建议重新阅读对应小节。这些问题覆盖了 CMake 工程化的核心判断——不是"怎么写命令"，而是"为什么这样写"。
 
@@ -686,7 +686,7 @@ ccache 对模板多、头文件重的机器人项目非常有用，尤其是反�
 
 ---
 
-## 12. 阶段小结：从能编译到能交付 ⭐⭐
+## 12. 阶段小结：从能编译到能交付 ★★
 
 CMake 工程化的核心是把项目关系表达清楚。从前面的内容中，可以提炼出一条贯穿全章的主线：**现代 CMake 不是构建脚本，而是项目关系的声明式描述。** 每一个 `target_*` 命令都在回答一个关系问题——“谁依赖谁？””这个依赖是公共的还是私有的？””安装后下游怎么找到我？”
 
@@ -700,7 +700,7 @@ target-based CMake 让 include、编译特性、依赖和宏定义都有明确�
 
 ---
 
-## 13. PUBLIC / PRIVATE / INTERFACE 的依赖传播模型 ⭐⭐⭐
+## 13. PUBLIC / PRIVATE / INTERFACE 的依赖传播模型 ★★★
 
 > **这一节解决什么问题**：`PUBLIC`、`PRIVATE`、`INTERFACE` 不只是三个关键字，而是在描述“当前库怎么构建”和“别人怎么使用当前库”这两组关系。理解它们，是写出可复用 C++ 库的分水岭。
 
@@ -1040,7 +1040,7 @@ message(STATUS "mini_slam_core public links: ${core_links}")
 
 ---
 
-## 14. 安装导出完整链路 ⭐⭐⭐
+## 14. 安装导出完整链路 ★★★
 
 > **这一节解决什么问题**：让一个库从“源码目录里能用”变成“安装后能被 `find_package()` 稳定找到”。这一步是工程化 CMake 的核心闭环。
 
@@ -1256,7 +1256,7 @@ cmake --build build
 
 ---
 
-## 15. ROS2 wrapper 与核心库边界 ⭐⭐⭐
+## 15. ROS2 wrapper 与核心库边界 ★★★
 
 > **这一节解决什么问题**：机器人项目经常既要支持 ROS2 在线运行，又要支持离线测试、Python 绑定和嵌入式部署。核心库与 ROS2 wrapper 的边界决定了这个项目能走多远。
 
@@ -1498,7 +1498,7 @@ private:
 
 ---
 
-## 16. CUDA、测试、Sanitizer 与 CI 的组合 ⭐⭐⭐
+## 16. CUDA、测试、Sanitizer 与 CI 的组合 ★★★
 
 > **这一节解决什么问题**：机器人项目的构建系统不应只覆盖“正常编译”。它还要让 CPU/GPU 后端可切换，让测试可分层运行，让内存错误尽早暴露，并让 CI 自动验证关键配置。
 
@@ -1783,7 +1783,7 @@ cmake --build build-consumer
 
 ---
 
-## 17. 一套可交付 CMake 工程的检查表 ⭐⭐
+## 17. 一套可交付 CMake 工程的检查表 ★★
 
 > **这一节解决什么问题**：把本章的工程判断压缩成可执行的检查表。每次新建 C++/ROS2/CUDA 项目时，都可以按这个顺序排查构建系统是否健康。
 
@@ -1848,7 +1848,7 @@ cmake --build build-consumer
 
 ---
 
-## 18. CMake 3.28+ 新特性与 C++ 模块支持 ⭐⭐⭐
+## 18. CMake 3.28+ 新特性与 C++ 模块支持 ★★★
 
 > **这一节解决什么问题**：CMake 3.28（2023 年末）和 3.30（2024 年中）引入了对 C++20 模块的实验性支持，以及 `import std` 的能力。这对机器人项目意味着什么？现阶段是否应该采用？
 
@@ -1906,9 +1906,9 @@ int main() {
 
 过早采用模块化会遇到工具链不成熟带来的大量摩擦——ccache 缓存失效、clangd 无法跳转、CI 环境需要特定编译器版本。这些问题在工具生态成熟后会自然消失，但现在强行采用的调试成本远超编译速度收益。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **工程陷阱：在依赖未模块化的项目中强制使用 C++20 模块**
+> ⚠ **工程陷阱：在依赖未模块化的项目中强制使用 C++20 模块**
 >
 > **错误做法**：核心算法库使用 `export module slam_core;`，但内部 `#include <Eigen/Core>`。
 >
@@ -1918,7 +1918,7 @@ int main() {
 
 ---
 
-## 19. FetchContent 高级用法 ⭐⭐⭐
+## 19. FetchContent 高级用法 ★★★
 
 > **这一节解决什么问题**：第 5 节介绍了 FetchContent 的基本用法。本节深入版本锁定、子项目隔离和依赖冲突等进阶工程问题。
 
@@ -2001,9 +2001,9 @@ FetchContent_Declare(
 | 大型依赖 | | Eigen、PCL、OpenCV、Ceres |
 | ROS2 包 | | rclcpp、sensor_msgs（通过 colcon） |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **工程陷阱：FetchContent 拉取的依赖与系统安装的版本冲突**
+> ⚠ **工程陷阱：FetchContent 拉取的依赖与系统安装的版本冲突**
 >
 > **错误做法**：系统已安装 Eigen 3.4.0，同时通过 FetchContent 拉取 Eigen 3.3.9——两个版本的头文件路径同时存在。
 >
@@ -2053,10 +2053,10 @@ FetchContent_Declare(
 
 | 资源 | 难度 | 说明 |
 |------|------|------|
-| [CMake 官方文档](https://cmake.org/cmake/help/latest/) | ⭐ | 命令和变量的权威参考 |
-| *Professional CMake: A Practical Guide* (Craig Scott, 2024) | ⭐⭐ | 最全面的现代 CMake 工程化指南 |
-| [*Effective Modern CMake*](https://gist.github.com/mbinna/c61dbb39bca0e4fb7d1f73b0d66a4fd1) | ⭐⭐ | 社区总结的现代 CMake 最佳实践清单 |
-| [CMake 3.x 从入门到项目实战](https://www.youtube.com/playlist?list=PLalVdRk2RC6o5GHu618ARWh0VO0bFlif4) | ⭐ | 视频系列，适合初学者跟练 |
-| [KISS-ICP CMakeLists.txt](https://github.com/PRBonn/kiss-icp) | ⭐⭐ | 简洁的核心库 + ROS2 wrapper 分离示范 |
-| [Ceres Solver CMake](https://github.com/ceres-solver/ceres-solver) | ⭐⭐⭐ | 大型 C++ 库的安装导出和依赖管理参考 |
-| [GTSAM CMake](https://github.com/borglab/gtsam) | ⭐⭐⭐ | 复杂依赖（Eigen、Boost、TBB）的工程化管理 |
+| [CMake 官方文档](https://cmake.org/cmake/help/latest/) | ★ | 命令和变量的权威参考 |
+| *Professional CMake: A Practical Guide* (Craig Scott, 2024) | ★★ | 最全面的现代 CMake 工程化指南 |
+| [*Effective Modern CMake*](https://gist.github.com/mbinna/c61dbb39bca0e4fb7d1f73b0d66a4fd1) | ★★ | 社区总结的现代 CMake 最佳实践清单 |
+| [CMake 3.x 从入门到项目实战](https://www.youtube.com/playlist?list=PLalVdRk2RC6o5GHu618ARWh0VO0bFlif4) | ★ | 视频系列，适合初学者跟练 |
+| [KISS-ICP CMakeLists.txt](https://github.com/PRBonn/kiss-icp) | ★★ | 简洁的核心库 + ROS2 wrapper 分离示范 |
+| [Ceres Solver CMake](https://github.com/ceres-solver/ceres-solver) | ★★★ | 大型 C++ 库的安装导出和依赖管理参考 |
+| [GTSAM CMake](https://github.com/borglab/gtsam) | ★★★ | 复杂依赖（Eigen、Boost、TBB）的工程化管理 |

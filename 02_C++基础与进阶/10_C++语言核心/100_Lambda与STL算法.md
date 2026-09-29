@@ -1,12 +1,12 @@
 # Lambda 表达式与 STL 算法深入
 
-> **难度**：⭐⭐～⭐⭐⭐⭐ | **建议用时**：2周 | **前置要求**：继承与多态深入、错误处理与异常安全、运算符重载
+> **难度**：★★～★★★★ | **建议用时**：2周 | **前置要求**：继承与多态深入、错误处理与异常安全、运算符重载
 
 ---
 
 ## 前置自测
 
-> 📋 答不出 >= 2 题时，先回顾 继承与多态深入-运算符重载 的对应内容。
+> ◆ 答不出 >= 2 题时，先回顾 继承与多态深入-运算符重载 的对应内容。
 
 1. 继承与多态深入 中虚函数和函数重载有什么区别？哪个发生在运行时，哪个发生在编译期？
 2. 运算符重载 中 `operator()` 为什么能让对象像函数一样被调用？Lambda 和它有什么关系？
@@ -60,7 +60,7 @@ C++ 可调用机制
 
 ---
 
-## 10.1 函数重载、默认参数与函数指针：Lambda 出现前的回调工具 ⭐⭐
+## 10.1 函数重载、默认参数与函数指针：Lambda 出现前的回调工具 ★★
 
 ### 动机：同一个操作名服务不同数据类型
 
@@ -183,11 +183,11 @@ bool ok = (filter.*pred)(point);
 
 ### 常见陷阱
 
-> ⚠️ **概念陷阱：函数重载不是多态**
+> ⚠ **概念陷阱：函数重载不是多态**
 >
 > 重载在编译期根据静态类型选择函数。虚函数在运行时根据动态类型选择函数。两者都可以让调用代码看起来相似，但机制完全不同。
 
-> ⚠️ **设计陷阱：用函数指针承载有状态回调**
+> ⚠ **设计陷阱：用函数指针承载有状态回调**
 >
 > 函数指针不能捕获状态。需要阈值、配置、节点对象或统计信息时，Lambda、函数对象或 `std::function` 更自然。
 
@@ -201,7 +201,7 @@ bool ok = (filter.*pred)(point);
 
 ---
 
-## 10.2 `std::bind`、成员回调与 ROS2 历史写法 ⭐⭐⭐
+## 10.2 `std::bind`、成员回调与 ROS2 历史写法 ★★★
 
 `std::bind` 是 C++11 引入的函数适配器。它的核心能力是"预先绑定一个可调用对象的部分参数"，生成一个新的可调用对象。在 ROS2 节点中，`std::bind` 最常见的用途是把成员函数和 `this` 指针绑定在一起——因为成员函数需要 `this` 才能调用，但订阅回调系统期望的是一个普通的可调用对象。
 
@@ -291,11 +291,11 @@ auto callback = [weak_self](const PointCloudMsg& msg) {
 
 ### 常见陷阱
 
-> ⚠️ **生命周期陷阱：异步 Lambda 捕获 `this`**
+> ⚠ **生命周期陷阱：异步 Lambda 捕获 `this`**
 >
 > `[this]` 只捕获裸指针，不拥有对象。回调可能晚于对象析构执行时，应使用明确的生命周期管理，例如 `weak_ptr`。
 
-> ⚠️ **可读性陷阱：过度使用 `std::bind` 的参数标记**
+> ⚠ **可读性陷阱：过度使用 `std::bind` 的参数标记**
 >
 > `_1`、`_2`、参数重排和嵌套 bind 会让回调意图不清晰。现代代码优先 Lambda。
 
@@ -309,7 +309,7 @@ auto callback = [weak_self](const PointCloudMsg& msg) {
 
 ---
 
-## 10.3 Lambda 语法与匿名函数对象本质 ⭐⭐⭐
+## 10.3 Lambda 语法与匿名函数对象本质 ★★★
 
 Lambda 表达式是 C++11 引入的最具影响力的语言特性之一。在 Lambda 出现之前，给 STL 算法传递自定义操作需要定义完整的函数对象类——即使逻辑只有一行，也要写构造函数、`operator()`、数据成员。Lambda 把这个过程压缩到一行表达式中，同时保留了函数对象的全部能力：可以携带状态（通过捕获）、可以参与模板实例化（具有唯一的具体类型）、可以被内联（编译器能看到完整定义）。
 
@@ -483,11 +483,11 @@ auto score = [](bool ok) -> double {
 
 ### 常见陷阱
 
-> ⚠️ **类型陷阱：两个长得一样的 Lambda 类型也不同**
+> ⚠ **类型陷阱：两个长得一样的 Lambda 类型也不同**
 >
 > 每个 Lambda 表达式都有唯一闭包类型。`auto f = []{}; auto g = []{};` 中 `f` 和 `g` 类型不同。需要统一存储时，可以用模板、`std::function` 或函数指针。
 
-> ⚠️ **返回类型陷阱：分支返回类型不一致**
+> ⚠ **返回类型陷阱：分支返回类型不一致**
 >
 > Lambda 返回类型推导要求各返回语句能推导出一致类型。复杂分支中显式写 `-> ReturnType` 更清楚。
 
@@ -501,7 +501,7 @@ auto score = [](bool ok) -> double {
 
 ---
 
-## 10.4 捕获模式：值、引用、移动与 `mutable` ⭐⭐⭐⭐
+## 10.4 捕获模式：值、引用、移动与 `mutable` ★★★★
 
 捕获列表是 Lambda 最关键的安全边界。值捕获、引用捕获和移动捕获三种方式各有不同的所有权语义和生命周期保证。选择错误的捕获方式是 C++ 并发和异步编程中最常见的 bug 来源之一——悬垂引用、数据竞争和 use-after-free 都可能由不当捕获引起。
 
@@ -653,11 +653,11 @@ C++ Core Guidelines F.52 建议：在局部同步使用的 Lambda 中 `[&]` 可�
 
 ### 常见陷阱
 
-> ⚠️ **异步陷阱：默认引用捕获 `[&]`**
+> ⚠ **异步陷阱：默认引用捕获 `[&]`**
 >
 > `[&]` 在异步任务中很危险，因为它可能捕获多个局部变量引用。异步 Lambda 优先显式列出捕获，并偏向值捕获或移动捕获。
 
-> ⚠️ **语义陷阱：`mutable` 修改的是副本**
+> ⚠ **语义陷阱：`mutable` 修改的是副本**
 >
 > `[count]() mutable { ++count; }` 不会修改外部 `count`。需要写回外部变量时，应引用捕获或使用共享状态。
 
@@ -671,7 +671,7 @@ C++ Core Guidelines F.52 建议：在局部同步使用的 Lambda 中 `[&]` 可�
 
 ---
 
-## 10.5 泛型 Lambda、`std::function` 与类型擦除 ⭐⭐⭐⭐
+## 10.5 泛型 Lambda、`std::function` 与类型擦除 ★★★★
 
 前面几节把 Lambda 理解为"带有固定参数类型的匿名函数对象"。但在泛型编程中，参数类型本身也应该是可变的。C++14 引入的泛型 Lambda 让参数类型可以写 `auto`——编译器会为每种调用参数类型生成一份独立的 `operator()` 实例。泛型 Lambda 和函数模板的关系，就像普通 Lambda 和普通函数对象的关系：语义等价，只是写法更简洁。
 
@@ -806,11 +806,11 @@ if (callback) {
 
 ### 常见陷阱
 
-> ⚠️ **性能陷阱：把 STL 算法的 Lambda 先装进 `std::function`**
+> ⚠ **性能陷阱：把 STL 算法的 Lambda 先装进 `std::function`**
 >
 > `std::sort(begin, end, std::function<bool(...)>{lambda})` 会丢失具体类型信息，增加间接调用。算法参数直接传 Lambda 更好。
 
-> ⚠️ **空回调陷阱：调用默认构造的 `std::function`**
+> ⚠ **空回调陷阱：调用默认构造的 `std::function`**
 >
 > 默认构造的 `std::function` 为空。调用前检查，或在构造时保证有效。
 
@@ -824,7 +824,7 @@ if (callback) {
 
 ---
 
-## 10.6 STL 算法：让遍历意图显式化 ⭐⭐⭐
+## 10.6 STL 算法：让遍历意图显式化 ★★★
 
 STL 算法是 C++ 标准库中最强大也最被低估的工具集。它的核心设计哲学是"把遍历模式命名化"——`std::transform` 表达"逐元素变换"，`std::remove_if` 表达"按条件移除"，`std::accumulate` 表达"归约求和"。每个算法名字本身就是文档：读者看到算法名就知道遍历的目的，不需要逐行阅读循环体来推断意图。
 
@@ -973,11 +973,11 @@ std::sort(points.begin(), points.end(),
 
 ### 常见陷阱
 
-> ⚠️ **迭代器陷阱：`remove_if` 后忘记 `erase`**
+> ⚠ **迭代器陷阱：`remove_if` 后忘记 `erase`**
 >
 > `remove_if` 只移动元素并返回新末尾，不改变容器大小。删除元素要配合 `erase`。
 
-> ⚠️ **累积陷阱：`std::accumulate` 初始值类型错误**
+> ⚠ **累积陷阱：`std::accumulate` 初始值类型错误**
 >
 > 初始值 `0` 会让累积走整数类型。矩阵、向量、浮点累积应给正确初始对象。
 
@@ -991,7 +991,7 @@ STL 算法需要合适的容器和迭代器。下一节讲 range-for 的底层�
 
 ---
 
-## 10.7 range-for、迭代器与容器选型 ⭐⭐⭐
+## 10.7 range-for、迭代器与容器选型 ★★★
 
 容器选型是数据结构设计中最基础的决策之一。在机器人代码中，容器的选择直接影响内存布局、cache 效率和算法复杂度。`std::vector` 的连续内存布局让逐点遍历极其高效（cache 友好），但中间插入和删除是 O(n) 的。`std::deque` 支持两端高效插入，适合 IMU 数据缓冲。`std::unordered_map` 的 O(1) 查找适合体素地图，但哈希冲突会导致性能退化。
 
@@ -1114,11 +1114,11 @@ std::unordered_map<VoxelKey, VoxelBlock, VoxelKeyHash> map;
 
 ### 常见陷阱
 
-> ⚠️ **容器陷阱：在点云主路径使用 `std::list`**
+> ⚠ **容器陷阱：在点云主路径使用 `std::list`**
 >
 > 链表节点分散，cache 命中差。即使中间插入是 O(1)，遍历点云时通常比 `vector` 慢。
 
-> ⚠️ **视图陷阱：`std::span` 不拥有数据**
+> ⚠ **视图陷阱：`std::span` 不拥有数据**
 >
 > 返回指向局部 `vector` 的 `span` 会悬垂。`span` 适合参数，不适合延长生命周期。
 
@@ -1132,7 +1132,7 @@ std::unordered_map<VoxelKey, VoxelBlock, VoxelKeyHash> map;
 
 ---
 
-## 10.8 结构化绑定、`optional`、`variant`、`if constexpr` 与并行 STL ⭐⭐⭐
+## 10.8 结构化绑定、`optional`、`variant`、`if constexpr` 与并行 STL ★★★
 
 C++17 引入了一系列实用工具，它们共同的设计目标是"让代码更接近意图表达"。结构化绑定让多返回值不再需要临时变量解包；`optional` 让"可能没有结果"成为类型系统的一部分；`variant` 让"有限类型集合"的安全访问成为编译器可检查的契约；`if constexpr` 让模板函数中的类型分支更加自然。这些工具不是独立的语法糖，而是现代 C++ 类型安全理念的具体体现——把运行时可能犯的错误尽可能推到编译期。
 
@@ -1245,11 +1245,11 @@ std::for_each(std::execution::par,
 
 ### 常见陷阱
 
-> ⚠️ **并行陷阱：Lambda 捕获共享变量并写入**
+> ⚠ **并行陷阱：Lambda 捕获共享变量并写入**
 >
 > `std::execution::par` 下多个元素可能同时执行。引用捕获计数器并 `++count` 会数据竞争。使用归约、原子或线程局部累积。
 
-> ⚠️ **设计陷阱：用 `variant` 模拟开放插件**
+> ⚠ **设计陷阱：用 `variant` 模拟开放插件**
 >
 > `variant` 适合固定类型集合。插件系统需要第三方新增类型时，虚函数和工厂更合适。
 
@@ -1261,11 +1261,11 @@ std::for_each(std::execution::par,
 
 ---
 
-## 10.9 C++23 Lambda 演进：`static operator()`、deducing this 与 ranges 适配 ⭐⭐⭐⭐
+## 10.9 C++23 Lambda 演进：`static operator()`、deducing this 与 ranges 适配 ★★★★
 
 C++ 标准对 Lambda 的改进从未停止。C++23 带来了三项对 Lambda 有深远影响的特性：`static operator()` 消除了无捕获 Lambda 的隐式 `this` 指针开销；deducing this 让 Lambda 能够通过显式对象参数实现递归和 CRTP 风格的自引用；`std::ranges` 进一步强化了 Lambda 与管线式数据处理的配合。这些演进的共同方向是让 Lambda 更接近"零开销抽象"的 C++ 理想。
 
-### `static operator()`：无捕获 Lambda 的最终形态 ⭐⭐⭐
+### `static operator()`：无捕获 Lambda 的最终形态 ★★★
 
 C++23 之前，即使 Lambda 不捕获任何变量，编译器生成的 `operator()` 仍然是非静态成员函数——它有一个隐式的 `this` 参数（指向闭包对象）。对于无捕获 Lambda，这个 `this` 完全没有用处：闭包对象是空的，没有数据成员可以通过 `this` 访问。但 `this` 参数仍然占据一个寄存器传递位置，在某些调用约定下可能影响内联和参数传递效率。
 
@@ -1300,7 +1300,7 @@ double threshold = 10.0;
 
 `static operator()` 和运算符重载中讨论的 `operator()` 是同一个机制——C++23 只是允许它在闭包类型中被标记为 `static`，这在以前的 C++ 版本中对普通类的 `operator()` 也不被允许。
 
-### deducing this：Lambda 的显式对象参数 ⭐⭐⭐⭐
+### deducing this：Lambda 的显式对象参数 ★★★★
 
 C++23 的 deducing this（显式对象参数）是一个更深刻的语言扩展。它允许成员函数（包括 Lambda 的 `operator()`）把通常隐式的 `this` 参数写成显式的模板参数，从而在函数体内推导自身的类型和值类别。
 
@@ -1345,7 +1345,7 @@ auto traverse = [&visitor](this auto self, const OctreeNode& node) -> void {
 traverse(root);
 ```
 
-### `std::ranges` 与 Lambda 的管线式配合 ⭐⭐⭐
+### `std::ranges` 与 Lambda 的管线式配合 ★★★
 
 C++20 引入的 `std::ranges` 和 C++23 的扩展让 STL 算法的使用方式发生了范式转变。传统 STL 算法需要成对的迭代器（`begin`, `end`），ranges 版本直接接受容器，并支持管线式组合——用 `|` 运算符把多个操作串联起来：
 
@@ -1377,9 +1377,9 @@ auto valid_world_points = points
 
 需要注意的是，ranges 视图持有对原始数据的引用——和 Eigen 表达式模板一样，如果原始容器在视图使用之前被销毁或修改，行为是未定义的。工程上应在同一作用域内完成视图的创建和消费，或显式用 `std::ranges::to<std::vector>()` (C++23) 物化结果。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-> ⚠️ **编程陷阱：对有捕获的 Lambda 使用 `static`**
+> ⚠ **编程陷阱：对有捕获的 Lambda 使用 `static`**
 >
 > **错误做法**：`[threshold](double x) static { return x > threshold; }`。
 >
@@ -1407,7 +1407,7 @@ auto valid_world_points = points
 
 ---
 
-## 10.10 回调与算法选型：把工具放在正确层次 ⭐⭐⭐
+## 10.10 回调与算法选型：把工具放在正确层次 ★★★
 
 ### 回顾：本章工具不是互相替代
 
@@ -1466,11 +1466,11 @@ registration->align(source, target);
 
 ### 常见陷阱
 
-> ⚠️ **层次陷阱：把局部 Lambda 提升成全局架构接口**
+> ⚠ **层次陷阱：把局部 Lambda 提升成全局架构接口**
 >
 > Lambda 很适合局部操作，但大型模块边界仍需要命名清晰的接口、生命周期约束和测试入口。
 
-> ⚠️ **性能陷阱：把所有策略都放进 `std::function`**
+> ⚠ **性能陷阱：把所有策略都放进 `std::function`**
 >
 > `std::function` 提供运行时统一存储，但会隐藏具体类型。高频内核优先模板参数或函数对象。
 
@@ -1483,7 +1483,7 @@ registration->align(source, target);
 
 ---
 
-## 10.11 工程案例：从 ROS2 回调到点云预处理流水线 ⭐⭐⭐
+## 10.11 工程案例：从 ROS2 回调到点云预处理流水线 ★★★
 
 ### 动机：真实代码不是单独使用一个 Lambda
 
@@ -1702,11 +1702,11 @@ auto filter = [max2](const PointXYZI& p) {
 
 ### 常见陷阱
 
-> ⚠️ **架构陷阱：订阅回调里写完整业务逻辑**
+> ⚠ **架构陷阱：订阅回调里写完整业务逻辑**
 >
 > 回调入口应尽量薄。把转换、过滤、排序、发布拆成命名函数，测试和性能分析会更直接。
 
-> ⚠️ **迭代器陷阱：回调发布期间修改回调列表**
+> ⚠ **迭代器陷阱：回调发布期间修改回调列表**
 >
 > `vector` 增删可能使迭代器失效。需要明确禁止重入修改，或采用快照/延迟修改策略。
 
@@ -1720,7 +1720,7 @@ auto filter = [max2](const PointXYZI& p) {
 
 ---
 
-## 10.12 调试路径：回调生命周期、算法谓词与并行数据竞争 ⭐⭐⭐
+## 10.12 调试路径：回调生命周期、算法谓词与并行数据竞争 ★★★
 
 ### 回调没有触发
 
@@ -1932,16 +1932,16 @@ private:
 
 | 资源 | 内容 | 难度 |
 |------|------|------|
-| cppreference: Lambda expressions | Lambda 语法、捕获规则、闭包类型和模板化 | ⭐⭐ |
-| cppreference: `std::function` | 类型擦除机制、小对象优化和调用语义 | ⭐⭐ |
-| cppreference: STL algorithms | 算法前置条件、迭代器类别和复杂度保证 | ⭐⭐ |
-| cppreference: execution policies | `seq`、`par`、`par_unseq` 的语义差异和异常行为 | ⭐⭐⭐ |
-| C++ Core Guidelines F.50-F.52 | Lambda 捕获、资源生命周期、算法优先于手写循环 | ⭐⭐ |
-| ROS2 官方教程：订阅回调写法 | 对比 `std::bind` 和 Lambda 在 ROS2 节点中的实际用法 | ⭐⭐ |
-| KISS-ICP、Patchwork++、Faster-LIO 源码 | 点云处理管线中 Lambda、STL 算法和并行循环的工程实践 | ⭐⭐⭐ |
-| Anthony Williams, *C++ Concurrency in Action* | 异步任务中的捕获和生命周期，线程安全回调设计 | ⭐⭐⭐ |
-| range-v3 / C++20 ranges 文档 | 管线式数据处理、惰性求值和视图组合 | ⭐⭐⭐⭐ |
-| Scott Meyers, *Effective Modern C++*, Item 31-34 | Lambda 默认捕获、初始化捕获、`std::function` 替代方案 | ⭐⭐⭐ |
+| cppreference: Lambda expressions | Lambda 语法、捕获规则、闭包类型和模板化 | ★★ |
+| cppreference: `std::function` | 类型擦除机制、小对象优化和调用语义 | ★★ |
+| cppreference: STL algorithms | 算法前置条件、迭代器类别和复杂度保证 | ★★ |
+| cppreference: execution policies | `seq`、`par`、`par_unseq` 的语义差异和异常行为 | ★★★ |
+| C++ Core Guidelines F.50-F.52 | Lambda 捕获、资源生命周期、算法优先于手写循环 | ★★ |
+| ROS2 官方教程：订阅回调写法 | 对比 `std::bind` 和 Lambda 在 ROS2 节点中的实际用法 | ★★ |
+| KISS-ICP、Patchwork++、Faster-LIO 源码 | 点云处理管线中 Lambda、STL 算法和并行循环的工程实践 | ★★★ |
+| Anthony Williams, *C++ Concurrency in Action* | 异步任务中的捕获和生命周期，线程安全回调设计 | ★★★ |
+| range-v3 / C++20 ranges 文档 | 管线式数据处理、惰性求值和视图组合 | ★★★★ |
+| Scott Meyers, *Effective Modern C++*, Item 31-34 | Lambda 默认捕获、初始化捕获、`std::function` 替代方案 | ★★★ |
 
 ---
 

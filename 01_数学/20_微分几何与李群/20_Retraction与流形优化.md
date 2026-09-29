@@ -10,7 +10,7 @@
 
 ### 前置自测
 
-📋 **前置自测**（答不出 >= 2 题 → 先回专题1「光滑流形一般理论」复习）
+◆ **前置自测**（答不出 >= 2 题 → 先回专题1「光滑流形一般理论」复习）
 
 1. 切空间 $T_xM$ 的定义是什么？它与流形 $M$ 的区别在哪里？
 2. 光滑映射 $F: M \to N$ 的切映射 $dF_p$ 把什么映射到什么？
@@ -18,7 +18,7 @@
 4. 梯度下降公式 $x_{k+1} = x_k - \alpha \nabla f(x_k)$ 隐含了什么关于状态空间的假设？
 5. Riemannian 度量（内积）为什么在流形优化中不可或缺？
 
-#### 0 为什么这个专题是连接几何与优化的桥梁 ⭐
+#### 0 为什么这个专题是连接几何与优化的桥梁 ★
 
 **Retraction 是"切空间→流形"的回退映射（retraction map），它让流形上的优化算法成为可能。** 欧氏空间中梯度下降的更新 $x_{k+1} = x_k - \alpha\nabla f(x_k)$ 在流形上失效——因为 $x_k - \alpha\nabla f(x_k)$ 通常不在流形上。Retraction 正是解决这一矛盾的核心工具：先在切空间做"欧氏式"的一步，再通过 retraction 映射回流形。
 
@@ -28,9 +28,9 @@
 
 ---
 
-#### 1 核心章节清单（档位3必学，25-35小时） ⭐
+#### 1 核心章节清单（档位3必学，25-35小时） ★
 
-##### 1.1 Retraction 的一般定义（Absil-Mahony-Sepulchre 框架） ⭐⭐
+##### 1.1 Retraction 的一般定义（Absil-Mahony-Sepulchre 框架） ★★
 
 - **Retraction** $R_x: T_xM \to M$ 的严格定义：满足 $R_x(0_x)=x$ 且 $\mathrm{D}R_x(0_x) = \mathrm{id}_{T_xM}$ 的光滑映射
 - 一阶 retraction 为何对一阶优化（梯度下降）已经足够——因为一步迭代的误差为 $O(\|\xi\|^2)$，不影响一阶收敛性
@@ -39,7 +39,7 @@
 
 **资源**：Boumal 书 Ch.3 §3.5–3.6；Absil 书 Ch.4 Definition 4.1.1；Absil Ch.4 免费 PDF（press.princeton.edu/absil）
 
-##### 1.2 常见 retraction 的例子与计算成本 ⭐⭐
+##### 1.2 常见 retraction 的例子与计算成本 ★★
 
 | 流形 | Retraction 类型 | 计算复杂度 | 备注 |
 |------|----------------|-----------|------|
@@ -57,7 +57,7 @@
 
 **核心洞察**：retraction 的选择直接影响每步迭代的计算量，在大规模 PGO（数万 pose）中累积差异显著。
 
-##### 1.3 Vector transport ⭐⭐⭐
+##### 1.3 Vector transport ★★★
 
 - **定义**：两个切空间 $T_xM$ 与 $T_{R_x(\xi)}M$ 之间的线性映射，作为 parallel transport 的一阶近似
 - **为什么需要**：共轭梯度法需要将上一步梯度"搬运"到新切空间做 $\beta$ 系数计算；动量方法同理
@@ -66,21 +66,21 @@
 
 **资源**：Absil 书 Ch.8；Boumal 书 Ch.10；Absil ICIAM'07 vector transport 报告（perso.uclouvain.be/pa.absil/Talks/ICIAM070717\_oom\_05.pdf）
 
-##### 1.4 Riemannian 度量的引入 ⭐⭐
+##### 1.4 Riemannian 度量的引入 ★★
 
 - 流形上定义梯度依赖内积：$\langle \mathrm{grad}\,f(x), \xi \rangle_x = \mathrm{D}f(x)[\xi]$，没有度量就没有梯度
 - **Riemannian 度量张量** $g_x: T_xM \times T_xM \to \mathbb{R}$，逐点光滑变化的内积
 - **诱导度量 vs 内在度量**：嵌入子流形从环境空间继承度量（如 Stiefel 用 $\mathrm{tr}(\xi^T\eta)$）；商流形需要 horizontal lift 定义度量
 - SO(3)/SE(3) 上的 **bi-invariant metric**：$\langle \Omega_1, \Omega_2 \rangle = \mathrm{tr}(\Omega_1^T \Omega_2)$，此度量下李群 exp = Riemannian exp
 
-##### 1.5 Riemannian gradient 与测地线 ⭐⭐
+##### 1.5 Riemannian gradient 与测地线 ★★
 
 - **Riemannian gradient** 的定义：欧氏梯度在切空间上的正交投影 $\mathrm{grad}\,f(x) = \mathrm{Proj}_{T_xM}(\nabla f(x))$（对嵌入子流形）
 - 为什么 $\nabla f$ 不等于 $\mathrm{grad}\,f$：前者可能有法向分量，后者严格在切空间内
 - Exponential map 作为测地线 retraction：$\mathrm{Exp}_x(\xi)$ = 从 $x$ 出发沿 $\xi$ 方向走单位时间的测地线终点
 - **关键区分**：李群 $\exp$（代数定义，$e^{tX}$ 是单参数子群）vs Riemannian $\mathrm{Exp}$（几何定义，测地线），二者在 bi-invariant metric 下重合，但一般旋量群的 left-invariant metric 下不等
 
-##### 1.6 流形上的一阶优化算法 ⭐⭐
+##### 1.6 流形上的一阶优化算法 ★★
 
 **Riemannian Gradient Descent 完整算法**：
 ```
@@ -98,7 +98,7 @@ end
 
 ---
 
-#### 2 进阶章节清单（档位4选学，额外15-25小时） ⭐⭐⭐⭐
+#### 2 进阶章节清单（档位4选学，额外15-25小时） ★★★★
 
 | 主题 | 核心内容 | 推荐资源 |
 |------|---------|---------|
@@ -113,9 +113,9 @@ end
 
 ---
 
-#### 3 核心教材深度指南 ⭐
+#### 3 核心教材深度指南 ★
 
-##### 3.1 Boumal《An Introduction to Optimization on Smooth Manifolds》(2023) ⭐
+##### 3.1 Boumal《An Introduction to Optimization on Smooth Manifolds》(2023) ★
 
 **定位**：当代流形优化的最佳入门教材，无需几何或优化先修。
 
@@ -130,7 +130,7 @@ end
 | 档位4 追加 | Ch.5-6（二阶几何 + Newton/TR）+ Ch.9（商流形）+ Ch.10-11（transport, 测地凸性） |
 | 难度 | ★★★☆☆ 教学友好，自包含；每章末有习题 |
 
-##### 3.2 Absil-Mahony-Sepulchre《Optimization Algorithms on Matrix Manifolds》(2008) ⭐⭐
+##### 3.2 Absil-Mahony-Sepulchre《Optimization Algorithms on Matrix Manifolds》(2008) ★★
 
 **定位**：流形优化的奠基之作，理论严谨度更高，更偏数学。
 
@@ -143,13 +143,13 @@ end
 | 难度 | ★★★★☆ 比 Boumal 更抽象，适合参考而非首次学习 |
 | 与 Boumal 的关系 | Boumal 书是其"现代化教学版"，读 Boumal 为主、Absil 为辅是最优路径 |
 
-##### 3.3 Nocedal & Wright《Numerical Optimization》（欧氏对照） ⭐
+##### 3.3 Nocedal & Wright《Numerical Optimization》（欧氏对照） ★
 
 流形上每种算法都有欧氏对应物。对照阅读可加深理解：**Ch.3（线搜索 → Riemannian Armijo）**、**Ch.4（Trust-region → Riemannian TR）**、Ch.5（CG → Riemannian CG + vector transport）、Ch.6（BFGS → Riemannian BFGS）。
 
 ---
 
-#### 4 关键定理清单 ⭐⭐
+#### 4 关键定理清单 ★★
 
 | # | 定理 | 档位 | 来源 |
 |---|------|------|------|
@@ -164,7 +164,7 @@ end
 
 ---
 
-#### 5 关键论文清单 ⭐⭐
+#### 5 关键论文清单 ★★
 
 **奠基论文**
 
@@ -195,7 +195,7 @@ end
 
 ---
 
-#### 6 软件库与工具 ⭐
+#### 6 软件库与工具 ★
 
 ##### 研究工具
 
@@ -220,7 +220,7 @@ end
 
 ---
 
-#### 7 学习资源汇总 ⭐
+#### 7 学习资源汇总 ★
 
 ##### 视频课程（推荐顺序）
 
@@ -245,7 +245,7 @@ end
 
 ---
 
-#### 8 学习时间预算与节奏 ⭐
+#### 8 学习时间预算与节奏 ★
 
 | 阶段 | 内容 | 时间 | 建议节奏 |
 |------|------|------|---------|
@@ -258,7 +258,7 @@ end
 
 ---
 
-#### 9 自测题目 ⭐⭐
+#### 9 自测题目 ★★
 
 | # | 题目 | 档位 | 考察点 |
 |---|------|------|--------|
@@ -270,7 +270,7 @@ end
 
 ---
 
-#### 10 与后续专题的桥梁 ⭐
+#### 10 与后续专题的桥梁 ★
 
 本专题在整个路线图中起承上启下的枢纽作用。**向后看**：专题1提供的切空间和光滑映射语言是 retraction 定义的地基。**向前看**：
 
@@ -282,7 +282,7 @@ end
 
 ---
 
-#### 11 常见陷阱 ⭐
+#### 11 常见陷阱 ★
 
 **陷阱1：把 RGD 理解为"先梯度下降再投影"。** 正确理解是：先在切空间计算 Riemannian gradient（已经是投影后的），然后经 retraction 回到流形。顺序和概念都不同于"project-after-step"。
 
@@ -296,7 +296,7 @@ end
 
 ---
 
-### 12. Retraction 的完整教学主线 ⭐
+### 12. Retraction 的完整教学主线 ★
 
 前面的章节给出了 Retraction 的定义、资源和算法清单。
 
@@ -310,7 +310,7 @@ end
 
 这句话同时解释了 Retraction 的必要性、流形优化的算法结构，以及 Ceres/GTSAM/Pinocchio 中 `Plus`、`retract`、`integrate` 这些接口为什么存在。
 
-#### 12.1 前置自测 ⭐
+#### 12.1 前置自测 ★
 
 学习本节前，先检查五个问题：
 
@@ -326,9 +326,9 @@ end
 
 ---
 
-### 13. 从欧氏梯度下降的失败开始 ⭐
+### 13. 从欧氏梯度下降的失败开始 ★
 
-#### 13.1 欧氏梯度下降隐含什么 ⭐
+#### 13.1 欧氏梯度下降隐含什么 ★
 
 在 $\mathbb{R}^n$ 中，最简单的优化问题是：
 
@@ -356,7 +356,7 @@ $$
 
 Retraction 可以类比导航系统中的"贴地飞行"：飞行员根据仪表（梯度）判断方向，先在平坦的仪表平面（切空间）上规划下一步，然后"贴回"地形表面（流形）。仪表显示是线性的，地形是弯曲的，Retraction 正是那个把仪表规划投射回真实地形的过程。类比的边界在于：飞机可以选择贴地飞行也可以离地，但流形优化的状态必须严格停留在流形上。
 
-#### 13.2 单位圆上的反面例子 ⭐
+#### 13.2 单位圆上的反面例子 ★
 
 考虑：
 
@@ -444,9 +444,9 @@ $$
 
 ---
 
-### 14. Retraction 的正式定义与每个条件的含义 ⭐⭐
+### 14. Retraction 的正式定义与每个条件的含义 ★★
 
-#### 14.1 定义 ⭐⭐
+#### 14.1 定义 ★★
 
 设 $M$ 是光滑流形。
 
@@ -474,7 +474,7 @@ $$
 
 Retraction 的两个条件可以类比 Taylor 展开的零阶和一阶：$R_x(0) = x$ 相当于函数在展开点的值正确（零阶），$DR_x(0) = \mathrm{id}$ 相当于斜率正确（一阶）。正如一阶 Taylor 近似对小 $h$ 足够好一样，一阶 Retraction 对小步长的优化迭代也足够好。这不是巧合——背后的数学原因完全一致。
 
-#### 14.2 条件一：零增量不动 ⭐⭐
+#### 14.2 条件一：零增量不动 ★★
 
 第一个条件：
 
@@ -492,7 +492,7 @@ $$
 
 这会破坏临界点概念。
 
-#### 14.3 条件二：一阶导数是恒等映射 ⭐⭐
+#### 14.3 条件二：一阶导数是恒等映射 ★★
 
 第二个条件：
 
@@ -522,7 +522,7 @@ $$
 
 **如果 Retraction 不满足一阶条件会怎样？** 考虑一个"坏"的回退映射 $\tilde{R}_x(\xi) = x + 2\xi + O(\|\xi\|^2)$（一阶导数是 $2I$ 而非 $I$）。算法以为走了步长 $\alpha$，实际一阶走了 $2\alpha$。结果是 Armijo 线搜索的充分下降估计失效，原本应该收敛的步长变得过大，迭代可能发散。更隐蔽的情况是 $DR_x(0) = A$（某个非恒等矩阵），此时下降方向被隐式旋转，梯度下降不再沿最陡下降方向移动。
 
-#### 14.4 为什么一阶条件已经够用 ⭐⭐
+#### 14.4 为什么一阶条件已经够用 ★★
 
 一阶梯度下降的收敛性只依赖一阶下降：
 
@@ -559,9 +559,9 @@ $$
 
 ---
 
-### 15. Exponential Map 与 Retraction 的区别 ⭐⭐
+### 15. Exponential Map 与 Retraction 的区别 ★★
 
-#### 15.1 Riemannian Exp ⭐⭐
+#### 15.1 Riemannian Exp ★★
 
 若 $M$ 上有 Riemannian 度量，可以定义测地线。
 
@@ -591,7 +591,7 @@ $$
 从 x 出发，以初速度 xi 沿最直的曲线走 1 个单位时间。
 ```
 
-#### 15.2 李群 Exp ⭐⭐
+#### 15.2 李群 Exp ★★
 
 在李群上，指数映射：
 
@@ -607,7 +607,7 @@ $$
 
 两者相等需要额外条件，例如 bi-invariant metric。
 
-#### 15.3 Retraction 更一般 ⭐⭐
+#### 15.3 Retraction 更一般 ★★
 
 Retraction 只要求：
 
@@ -631,7 +631,7 @@ $$
 | Riemannian Exp | Riemannian 度量 | 沿测地线走 | 常较高 |
 | 李群 exp | 群结构 | 李代数到群 | 依群而定 |
 
-#### 15.4 反事实：如果坚持使用 Exp 会怎样 ⭐⭐
+#### 15.4 反事实：如果坚持使用 Exp 会怎样 ★★
 
 在 $SO(3)$ 和 $SE(3)$ 中，指数映射有闭式，使用它很合理。
 
@@ -651,9 +651,9 @@ $$
 
 ---
 
-### 16. 常见 Retraction 逐个推导 ⭐⭐
+### 16. 常见 Retraction 逐个推导 ★★
 
-#### 16.1 球面归一化 Retraction ⭐⭐
+#### 16.1 球面归一化 Retraction ★★
 
 在单位球面：
 
@@ -715,7 +715,7 @@ $$
 
 所以 $DR_x(0)=I$。
 
-#### 16.2 SO(3) 上的指数 Retraction ⭐⭐
+#### 16.2 SO(3) 上的指数 Retraction ★★
 
 对 $R\in SO(3)$，右扰动更新：
 
@@ -751,7 +751,7 @@ $$
 
 的一阶方向中。
 
-#### 16.3 SO(3) 上的 Cayley Retraction ⭐⭐⭐
+#### 16.3 SO(3) 上的 Cayley Retraction ★★★
 
 Cayley 映射定义为：
 
@@ -787,7 +787,7 @@ $$
 
 但作为局部优化更新通常足够。
 
-#### 16.4 Stiefel 流形的 QR Retraction ⭐⭐⭐
+#### 16.4 Stiefel 流形的 QR Retraction ★★★
 
 Stiefel 流形：
 
@@ -819,7 +819,7 @@ $$
 
 > **本质洞察**：Retraction 的多样性不是理论上的冗余，而是工程上的自由度。对于同一个流形，不同的 Retraction 在计算代价、数值稳定性和几何精度之间取不同的权衡。选择 Retraction 就像选择数值积分器——Euler 够用就不必用 Runge-Kutta，QR 够用就不必用矩阵指数。
 
-⚠️ **陷阱：把 QR 的符号约定忘掉**
+⚠ **陷阱：把 QR 的符号约定忘掉**
 
 QR 分解不唯一。
 
@@ -831,9 +831,9 @@ QR 分解不唯一。
 
 ---
 
-### 17. Riemannian Gradient 的推导 ⭐⭐
+### 17. Riemannian Gradient 的推导 ★★
 
-#### 17.1 微分先于梯度 ⭐⭐
+#### 17.1 微分先于梯度 ★★
 
 函数：
 
@@ -873,7 +873,7 @@ $$
 
 Riemannian gradient 的投影公式可以类比受约束系统中的力分解：一个物体被约束在光滑曲面上运动（如珠子在铁丝上），重力可以分解为沿曲面的分力（切向分量，真正让物体运动）和垂直于曲面的法向分力（被约束力抵消）。Riemannian gradient 就是"沿流形的有效下降力"——法向分量被约束消灭，只留下切向分量推动优化。
 
-#### 17.2 嵌入子流形中的投影公式 ⭐⭐
+#### 17.2 嵌入子流形中的投影公式 ★★
 
 若 $M$ 嵌入在欧氏空间中，且使用诱导度量。
 
@@ -912,7 +912,7 @@ $$
 =(I-xx^\top)\nabla \bar{f}(x)
 $$
 
-#### 17.3 为什么法向分量必须去掉 ⭐⭐
+#### 17.3 为什么法向分量必须去掉 ★★
 
 欧氏梯度可以分解为：
 
@@ -950,9 +950,9 @@ $$
 
 ---
 
-### 18. 流形上的线搜索 ⭐⭐
+### 18. 流形上的线搜索 ★★
 
-#### 18.1 欧氏 Armijo 条件 ⭐⭐
+#### 18.1 欧氏 Armijo 条件 ★★
 
 欧氏空间中，沿下降方向 $\eta$ 做线搜索：
 
@@ -974,7 +974,7 @@ $$
 f(x)-c\alpha\|\nabla f(x)\|^2
 $$
 
-#### 18.2 流形 Armijo 条件 ⭐⭐
+#### 18.2 流形 Armijo 条件 ★★
 
 在流形上，线变成 Retraction 曲线：
 
@@ -1013,7 +1013,7 @@ $$
 被 Retraction 曲线 R_x(alpha eta) 取代。
 ```
 
-#### 18.3 伪代码 ⭐⭐
+#### 18.3 伪代码 ★★
 
 ```cpp
 // Riemannian gradient descent on a manifold.
@@ -1039,7 +1039,7 @@ for (int iter = 0; iter < max_iter; ++iter) {
 }
 ```
 
-⚠️ **编程陷阱：在回溯线搜索中忘记重新计算代价函数**
+⚠ **编程陷阱：在回溯线搜索中忘记重新计算代价函数**
 
 流形上 `cost(x_trial)` 的计算可能涉及约束检查（如矩阵正交性验证）。如果 Retraction 实现有 bug（返回的点不严格在流形上），代价函数可能返回 NaN 或异常值，但回溯线搜索会静默接受一个"足够下降"的坏点。建议在 debug 模式下加入流形约束残差检查。
 
@@ -1051,9 +1051,9 @@ for (int iter = 0; iter < max_iter; ++iter) {
 
 ---
 
-### 19. Gauss-Newton 与 LM 在流形上怎么变 ⭐⭐⭐
+### 19. Gauss-Newton 与 LM 在流形上怎么变 ★★★
 
-#### 19.1 最小二乘问题 ⭐⭐⭐
+#### 19.1 最小二乘问题 ★★★
 
 机器人后端优化常写为：
 
@@ -1087,7 +1087,7 @@ $$
 J=D(r\circ R_x)(0)
 $$
 
-#### 19.2 Gauss-Newton 步 ⭐⭐⭐
+#### 19.2 Gauss-Newton 步 ★★★
 
 局部二次模型：
 
@@ -1114,7 +1114,7 @@ $$
 状态更新永远通过 Retraction 回到流形。
 ```
 
-#### 19.3 LM 阻尼 ⭐⭐⭐
+#### 19.3 LM 阻尼 ★★★
 
 Levenberg-Marquardt 在切空间里加阻尼：
 
@@ -1130,7 +1130,7 @@ $$
 
 直接使用同一个阻尼可能导致平移和旋转权重不合理。
 
-⚠️ **陷阱：把环境空间维度当成切空间维度**
+⚠ **陷阱：把环境空间维度当成切空间维度**
 
 单位四元数存储为 4 维。
 
@@ -1144,9 +1144,9 @@ Ceres 中四元数参数块大小是 4，局部增量大小是 3。
 
 ---
 
-### 20. 工程接口对照 ⭐
+### 20. 工程接口对照 ★
 
-#### 20.1 Ceres ⭐
+#### 20.1 Ceres ★
 
 Ceres 的 `Manifold` 接口核心是：
 
@@ -1179,7 +1179,7 @@ AmbientSize = 4
 TangentSize = 3
 ```
 
-#### 20.2 GTSAM ⭐
+#### 20.2 GTSAM ★
 
 GTSAM 使用：
 
@@ -1204,7 +1204,7 @@ Pose3 的局部坐标是 6 维。
 
 但要特别注意 GTSAM 的切向量排序通常是旋转在前。
 
-#### 20.3 Pinocchio ⭐
+#### 20.3 Pinocchio ★
 
 Pinocchio 对配置空间提供：
 
@@ -1217,7 +1217,7 @@ difference(model, q0, q1)
 
 这正是 Retraction 思想在刚体动力学库中的体现。
 
-#### 20.4 Sophus / manif ⭐
+#### 20.4 Sophus / manif ★
 
 Sophus 和 manif 更接近李群接口：
 
@@ -1240,7 +1240,7 @@ Sophus 和 manif 更接近李群接口：
 
 ---
 
-### 21. 故障排查表 ⭐
+### 21. 故障排查表 ★
 
 | 现象 | 可能原因 | 检查方法 | 修复思路 |
 |------|----------|----------|----------|
@@ -1254,9 +1254,9 @@ Sophus 和 manif 更接近李群接口：
 
 ---
 
-### 22. 学习中的易错概念辨析 ⭐⭐
+### 22. 学习中的易错概念辨析 ★★
 
-⚠️ **陷阱：Retraction 不是 Projection 的同义词**
+⚠ **陷阱：Retraction 不是 Projection 的同义词**
 
 Projection 通常指从环境空间投影到流形。
 
@@ -1266,7 +1266,7 @@ Retraction 的定义域是切空间。
 
 但在抽象流形、商流形或李群中，Retraction 不必表现为环境投影。
 
-⚠️ **陷阱：梯度投影和状态投影不是一回事**
+⚠ **陷阱：梯度投影和状态投影不是一回事**
 
 梯度投影把欧氏梯度投到 $T_xM$。
 
@@ -1276,7 +1276,7 @@ Retraction 的定义域是切空间。
 
 混淆二者会导致算法解释混乱。
 
-⚠️ **陷阱：`Minus` 不总是简单的反向 `Plus`**
+⚠ **陷阱：`Minus` 不总是简单的反向 `Plus`**
 
 在非线性流形上，`Minus(y, x)` 通常是局部坐标：
 
@@ -1332,9 +1332,9 @@ $$
 
 ---
 
-### 23. Riemannian 共轭梯度与 L-BFGS ⭐⭐⭐
+### 23. Riemannian 共轭梯度与 L-BFGS ★★★
 
-#### 23.1 为什么梯度下降不够：病态问题的困境 ⭐⭐⭐
+#### 23.1 为什么梯度下降不够：病态问题的困境 ★★★
 
 前面 §18 介绍的 Riemannian 梯度下降（RGD）在理论上有全局收敛保证，但在实际大规模问题中常常**收敛极慢**。原因与欧氏空间中完全一致：当目标函数的 Hessian 条件数 $\kappa = \lambda_{\max}/\lambda_{\min}$ 很大时，梯度方向与 Newton 方向偏差严重，迭代沿"窄谷"反复锯齿震荡。
 
@@ -1342,7 +1342,7 @@ $$
 
 用一个类比来说明：梯度下降就像在山谷中只看脚下最陡的方向走路——如果山谷又长又窄，你会不断在两侧山壁之间来回碰撞，前进极慢。共轭梯度则像一位有记忆的登山者——他记住了上次走过的方向，这次故意选择一个"不重复上次错误"的方向，从而更快穿过窄谷。L-BFGS 更进一步，像一个带笔记本的登山者，记录最近几次的地形曲率信息，据此估计最优前进方向。
 
-#### 23.2 Riemannian 共轭梯度（Riemannian CG） ⭐⭐⭐
+#### 23.2 Riemannian 共轭梯度（Riemannian CG） ★★★
 
 **核心思想**：在切空间中构造共轭方向，用 vector transport 把上一步方向搬运到新切空间。
 
@@ -1377,7 +1377,7 @@ $$
 
 Sato 与 Iwai（SIAM J. Optim., 2022）建立了 Riemannian CG 方法的统一收敛分析框架，证明在适当的 $\beta_k$ 选择和 Wolfe 条件下，Riemannian CG 具有全局收敛性，且在强凸情况下达到 $O(\sqrt{\kappa} \log(1/\varepsilon))$ 的迭代复杂度。
 
-#### 23.3 Riemannian L-BFGS ⭐⭐⭐⭐
+#### 23.3 Riemannian L-BFGS ★★★★
 
 **动机**：Newton 方法需要精确 Hessian，代价太高。L-BFGS 用最近 $m$ 步的梯度差来近似 Hessian 逆，在欧氏空间中是大规模优化的标准选择。
 
@@ -1392,7 +1392,7 @@ Sato 与 Iwai（SIAM J. Optim., 2022）建立了 Riemannian CG 方法的统一�
 
 Huang, Absil 与 Gallivan（SIAM J. Optim., 2018）发表的"A Riemannian BFGS Method for Nonconvex Optimization Problems"证明了 Riemannian BFGS 在非凸情况下的全局收敛性和在非退化极小值点附近的超线性收敛。
 
-#### 23.4 收敛速率对比 ⭐⭐⭐
+#### 23.4 收敛速率对比 ★★★
 
 | 算法 | 每步代价 | 迭代复杂度 | 存储 | 适用场景 |
 |------|---------|-----------|------|---------|
@@ -1404,7 +1404,7 @@ Huang, Absil 与 Gallivan（SIAM J. Optim., 2018）发表的"A Riemannian BFGS M
 
 > **本质洞察**：流形优化的算法谱系与欧氏优化完全平行——GD、CG、L-BFGS、Newton、Trust-Region 各有流形版。差别仅在于每步需要 retraction（替代加法）和 vector transport（替代向量直接复用）。理解了欧氏版本，流形版本只需加上这两个"几何税"。
 
-#### 23.5 Pymanopt 代码示例 ⭐⭐⭐
+#### 23.5 Pymanopt 代码示例 ★★★
 
 ```python
 import pymanopt
@@ -1432,7 +1432,7 @@ print(f"最大特征值: {-result.cost:.6f}")
 
 **参考文献**：Absil, Mahony, Sepulchre, *Optimization Algorithms on Matrix Manifolds*, Princeton University Press, 2008. Boumal, *An Introduction to Optimization on Smooth Manifolds*, Cambridge University Press, 2023, Ch.8-10.
 
-⚠️ **编程陷阱：Pymanopt 中忘记指定 retraction 类型**
+⚠ **编程陷阱：Pymanopt 中忘记指定 retraction 类型**
 
 Pymanopt 对大多数流形有默认 retraction（如 Sphere 用归一化、Stiefel 用 QR）。但如果研究 retraction 选择对收敛的影响，需要显式设置。不同 retraction 可能导致相同 CG 算法在迭代次数上差 2-3 倍——原因不是收敛理论变了，而是 retraction 曲线与测地线的偏差影响了线搜索的效率。
 
@@ -1444,9 +1444,9 @@ Pymanopt 对大多数流形有默认 retraction（如 Sphere 用归一化、Stie
 
 ---
 
-### 24. 测地凸性与全局最优保证 ⭐⭐⭐⭐
+### 24. 测地凸性与全局最优保证 ★★★★
 
-#### 24.1 从欧氏凸性到测地凸性 ⭐⭐⭐⭐
+#### 24.1 从欧氏凸性到测地凸性 ★★★★
 
 在欧氏空间中，凸函数的定义依赖直线段：
 
@@ -1468,7 +1468,7 @@ $$
 
 Boumal 书 Ch.11 对测地凸性有完整的处理，包括强测地凸性（geodesic strong convexity）和其对收敛速率的改善。
 
-#### 24.2 旋转平均的测地凸性 ⭐⭐⭐⭐
+#### 24.2 旋转平均的测地凸性 ★★★★
 
 旋转平均（rotation averaging）问题是：给定一组相对旋转测量 $\tilde{R}_{ij}$，求绝对旋转 $R_i \in SO(3)$ 使得
 
@@ -1484,7 +1484,7 @@ $$
 
 **如果噪声超过凸性半径会怎样？** 当相对旋转测量的误差超过 $\pi/4$（约 45 度）时，测地凸性开始失效，目标函数可能出现伪局部极小值。此时传统迭代方法（Gauss-Newton、LM）可能收敛到错误解。这正是 SE-Sync 和 Shonan Rotation Averaging 的核心应用场景——它们通过 SDP 松弛提供全局最优性证书，即使在凸性失效的区域也能识别全局最优。
 
-#### 24.3 SE-Sync 中的对偶证书 ⭐⭐⭐⭐
+#### 24.3 SE-Sync 中的对偶证书 ★★★★
 
 SE-Sync（Rosen, Carlone, Bandeira, Leonard, IJRR 2019）的全局最优保证来自 SDP 对偶理论：
 
@@ -1499,7 +1499,7 @@ Rosen 等人证明，当测量噪声低于某个阈值时，SDP 松弛精确成�
 
 **Shonan Rotation Averaging**（Dellaert, Rosen 等, ECCV 2020）提供了一种优雅的实现策略："Riemannian Staircase"——从 $SO(3)$ 出发，逐步提升到 $SO(p)$（$p > 3$），在更高维空间中用 Riemannian trust-region 求解，直到验证全局最优。这个过程每一步都在 Stiefel 流形上做优化，直接使用本专题 §16.4 的 QR retraction 和 §23 的 Riemannian CG/trust-region。
 
-#### 24.4 与可认证感知的连接 ⭐⭐⭐⭐
+#### 24.4 与可认证感知的连接 ★★★★
 
 测地凸性和 SDP 松弛理论为整个**可认证感知（certifiable perception）**领域提供了数学基础。这些方法不仅用于旋转平均，还扩展到：
 
@@ -1509,7 +1509,7 @@ Rosen 等人证明，当测量噪声低于某个阈值时，SDP 松弛精确成�
 
 这些方法的共同数学工具正是本专题建立的 retraction、Riemannian trust-region 和 Stiefel 流形优化。
 
-⚠️ **概念误区：认为"可认证"等于"一定正确"**
+⚠ **概念误区：认为"可认证"等于"一定正确"**
 
 - 错误想法：SE-Sync 给出的证书说明解一定是物理真实的。
 - 实际上：证书只保证解是**该数学模型下的全局最优**。如果数据关联错误（把 A 楼的特征匹配到 B 楼）、噪声模型不准确（假设高斯但实际有离群值）、或外参标定有偏差，全局最优解仍然是错的——只是在错误模型下最优而已。
@@ -1517,9 +1517,9 @@ Rosen 等人证明，当测量噪声低于某个阈值时，SDP 松弛精确成�
 
 ---
 
-### 25. 实战案例：旋转平均与 SE-Sync ⭐⭐⭐
+### 25. 实战案例：旋转平均与 SE-Sync ★★★
 
-#### 25.1 问题表述 ⭐⭐⭐
+#### 25.1 问题表述 ★★★
 
 旋转平均是 Structure-from-Motion 和多视角 SLAM 中的基础子问题：给定一个图 $\mathcal{G} = (\mathcal{V}, \mathcal{E})$，其中节点 $i \in \mathcal{V}$ 对应未知的绝对旋转 $R_i \in SO(3)$，边 $(i,j) \in \mathcal{E}$ 对应观测到的相对旋转 $\tilde{R}_{ij} \approx R_i^{-1} R_j$。
 
@@ -1531,7 +1531,7 @@ $$
 
 这是 $SO(3)^n$ 上的优化问题。每个 $R_i$ 必须严格满足正交约束 $R_i^\top R_i = I$，$\det R_i = 1$。
 
-#### 25.2 Retraction 选择如何影响收敛 ⭐⭐⭐
+#### 25.2 Retraction 选择如何影响收敛 ★★★
 
 在 $SO(3)$ 上做梯度下降时，每步需要一次 retraction。回顾 §16 中 SO(3) 的两种 retraction：
 
@@ -1544,7 +1544,7 @@ $$
 
 > **本质洞察**：Retraction 的选择是"精度-速度"权衡的工程决策。在大规模问题中，这个决策的累积效应可以决定算法是否能实时运行。对 SLAM 后端优化（通常需要在 100ms 内完成），用 Cayley 替代 Exp 可能是实现实时性的关键一步。
 
-#### 25.3 从旋转平均到完整 PGO ⭐⭐⭐
+#### 25.3 从旋转平均到完整 PGO ★★★
 
 旋转平均只优化旋转分量。完整的位姿图优化（PGO）还包含平移：
 
@@ -1573,13 +1573,13 @@ double min_eigenvalue = shonan.computeMinEigenValue(result);
 
 这段代码背后的数学正是本专题全部内容的工程落地：retraction（§16）用于流形更新、Riemannian gradient（§17）用于计算下降方向、trust-region（§2 进阶）用于步长控制、Stiefel 流形优化（§16.4 的 QR retraction）用于 Burer-Monteiro 分解。
 
-⚠️ **编程陷阱：Shonan Rotation Averaging 中 $p$ 的初始值设太大**
+⚠ **编程陷阱：Shonan Rotation Averaging 中 $p$ 的初始值设太大**
 
 - 错误做法：直接从 $p = 10$ 开始求解，希望"一步到位"。
 - 后果：$SO(10)^n$ 上的优化问题维度是 $SO(3)^n$ 的 $\binom{10}{2}/\binom{3}{2} \approx 15$ 倍。计算量暴增，可能比简单的 Gauss-Newton + 初始化策略还慢。
 - 正确做法：Riemannian Staircase 从 $p = 3$ 开始，检查最优性证书。如果证书通过（最小特征值 $\ge 0$），直接返回；否则将 $p$ 加 1 重试。实践中 90% 以上的问题在 $p = 3$ 或 $p = 4$ 就通过了。
 
-#### 25.4 练习 ⭐⭐⭐
+#### 25.4 练习 ★★★
 
 1. （手推）对两个旋转 $R_1, R_2 \in SO(3)$，写出代价 $\|R_1 \tilde{R}_{12} - R_2\|_F^2$ 关于 $R_1$ 右扰动 $\delta_1$ 的一阶展开。指出 Riemannian gradient 的形式。
 2. （编程）用 Pymanopt 实现简单的旋转平均：随机生成 $n = 20$ 个旋转和它们之间的带噪声相对旋转，分别用 RGD 和 CG 求解，比较迭代次数和收敛速度。
@@ -1587,9 +1587,9 @@ double min_eigenvalue = shonan.computeMinEigenValue(result);
 
 ---
 
-### 25bis. Retraction 的数值实现细节 ⭐⭐
+### 25bis. Retraction 的数值实现细节 ★★
 
-#### 25bis.1 数值稳定性：小角度与大角度 ⭐⭐
+#### 25bis.1 数值稳定性：小角度与大角度 ★★
 
 SO(3) 上的 Rodrigues 指数映射：
 
@@ -1627,11 +1627,11 @@ $$
 | 正常范围 | $10^{-8} < \theta < \pi - 10^{-6}$ | 无 | 直接公式 |
 | 接近 $\pi$ | $\theta > \pi - 10^{-6}$ | 轴方向退化 | 特征值分解或四元数路径 |
 
-⚠️ **编程陷阱：忽略 Rodrigues 公式的小角度分支**
+⚠ **编程陷阱：忽略 Rodrigues 公式的小角度分支**
 
 很多实现（包括某些版本的 OpenCV）在 $\theta \to 0$ 时不做 Taylor 切换，导致在接近零旋转处返回 NaN 或巨大数值。在迭代优化中，优化收敛时 $\delta\phi \to 0$ 恰好触发此分支——如果没有正确处理，会在最后几步迭代中突然发散。
 
-#### 25bis.2 Cayley Map 的优势与限制 ⭐⭐
+#### 25bis.2 Cayley Map 的优势与限制 ★★
 
 Cayley retraction 避免了三角函数：
 
@@ -1657,7 +1657,7 @@ $$
 
 **如果优化步长接近 $\pi$ 会怎样？** 这意味着当前估计与最优解相差几乎 $180°$ 旋转。此时算法本身已经有问题——如此大的步长说明初始化极差或问题几何严重非凸。正确做法不是换用 exp retraction，而是改善初始化。
 
-#### 25bis.3 SE(3) 上的分解 Retraction ⭐⭐
+#### 25bis.3 SE(3) 上的分解 Retraction ★★
 
 SE(3) 上最常用的不是完整的群指数映射，而是分解 retraction：
 
@@ -1675,9 +1675,9 @@ GTSAM 和 Ceres 默认使用的分解 retraction。误差是 $O(\|\phi\|\|\rho\|
 
 ---
 
-### 26. Retraction 的收敛性理论 ⭐⭐⭐
+### 26. Retraction 的收敛性理论 ★★★
 
-#### 26.1 一阶 Retraction 保证一阶收敛 ⭐⭐⭐
+#### 26.1 一阶 Retraction 保证一阶收敛 ★★★
 
 Riemannian 梯度下降使用一阶 retraction 时的收敛保证：
 
@@ -1693,7 +1693,7 @@ $$
 
 **如果使用零阶"retraction"（比如简单的归一化投影）会怎样？** 零阶近似的误差是 $O(\|\xi\|)$，与步长本身同阶。这意味着每步更新中，retraction 引入的误差与优化方向的增益同量级——等于一步前进、一步后退，梯度下降可能完全不收敛。这就是为什么 retraction 的一阶条件 $DR_x(0) = \operatorname{id}$ 是不可协商的最低要求。
 
-#### 26.2 二阶 Retraction 与 Newton 方法 ⭐⭐⭐⭐
+#### 26.2 二阶 Retraction 与 Newton 方法 ★★★★
 
 对于 Riemannian Newton 方法或 trust-region 方法，需要二阶 retraction。
 
@@ -1714,7 +1714,7 @@ Newton 方法需要 Hessian 信息，步长由二阶 Taylor 展开确定。如�
 
 > **本质洞察**：retraction 的阶数与优化方法的阶数必须匹配。用高阶方法配低阶 retraction 是浪费计算——如同用精密天平称重，但把东西放在晃动的桌面上。反过来，用低阶方法配高阶 retraction 则是过度设计——精确的 retraction 带来的二阶精度在一阶方法中根本用不到。
 
-#### 26.3 全局收敛与测地强凸 ⭐⭐⭐⭐
+#### 26.3 全局收敛与测地强凸 ★★★★
 
 局部收敛保证通常已够工程使用。但对可认证方法，需要全局结果。
 
@@ -1734,9 +1734,9 @@ $$
 
 ---
 
-### 27. Retraction 在深度学习中的应用 ⭐⭐⭐
+### 27. Retraction 在深度学习中的应用 ★★★
 
-#### 27.1 正交约束层 ⭐⭐⭐
+#### 27.1 正交约束层 ★★★
 
 深度学习中越来越多的架构要求权重满足正交约束：
 
@@ -1758,7 +1758,7 @@ $$
 
 常用 QR retraction 或 Cayley retraction（避免计算昂贵的矩阵指数）。
 
-#### 27.2 Geoopt 与 PyTorch 中的流形优化 ⭐⭐⭐
+#### 27.2 Geoopt 与 PyTorch 中的流形优化 ★★★
 
 Geoopt 是 PyTorch 生态中的流形优化库，直接实现了本专题的数学：
 
@@ -1791,7 +1791,7 @@ Geoopt 支持的流形包括：Sphere、Stiefel、Grassmann、SPD matrices、Poi
 
 ---
 
-### 28. 本章知识树总结 ⭐
+### 28. 本章知识树总结 ★
 
 ```text
 Retraction 与流形优化
@@ -1838,7 +1838,7 @@ Retraction 与流形优化
 
 ---
 
-### 29. 本章小结 ⭐
+### 29. 本章小结 ★
 
 | 核心概念 | 一句话定义 | 工程对应 | 关键公式 |
 |----------|-----------|----------|----------|
@@ -1852,7 +1852,7 @@ Retraction 与流形优化
 
 ---
 
-### 30. 累积项目：本章新增模块 ⭐
+### 30. 累积项目：本章新增模块 ★
 
 **项目方向**：手写几何验证库
 
@@ -1895,21 +1895,21 @@ print("两种 retraction 差异:", np.linalg.norm(R_exp - R_cay))
 
 ---
 
-### 延伸阅读 ⭐
+### 延伸阅读 ★
 
 | 资源 | 难度 | 核心价值 |
 |------|------|----------|
-| Boumal《An Introduction to Optimization on Smooth Manifolds》(2023) | ⭐⭐⭐ | 现代流形优化标准教材，免费在线 |
-| Absil, Mahony, Sepulchre《Optimization on Matrix Manifolds》(2008) | ⭐⭐⭐ | 经典参考，Ch.4 retraction 定义开创性 |
-| Boumal EPFL MATH-512 视频课程（14周） | ⭐⭐ | 最权威入门，含习题解答 |
-| Rosen et al.《SE-Sync》(IJRR 2019) | ⭐⭐⭐⭐ | 可认证 SLAM 的数学核心 |
-| Geomstats Python 库 | ⭐⭐ | 流形操作可视化与实验 |
-| Geoopt（PyTorch 流形优化） | ⭐⭐⭐ | 深度学习中的流形约束 |
-| Pymanopt（Python 流形优化框架） | ⭐⭐ | 支持 CG/trust-region/SD |
-| Manopt（Matlab/Julia 原版） | ⭐⭐⭐ | 最早的流形优化工具箱 |
-| Manifolds.jl（Julia 流形计算） | ⭐⭐⭐ | 最丰富的 retraction 实现集合 |
-| Boumal "Introduction to smooth manifolds" SIAM OP 2023 幻灯片 | ⭐⭐ | 精美可视化，适合快速回顾 |
-| Ruda Zhang et al. "A Survey of Numerical Methods on Manifolds" (2020) | ⭐⭐⭐ | retraction 对比的系统综述 |
+| Boumal《An Introduction to Optimization on Smooth Manifolds》(2023) | ★★★ | 现代流形优化标准教材，免费在线 |
+| Absil, Mahony, Sepulchre《Optimization on Matrix Manifolds》(2008) | ★★★ | 经典参考，Ch.4 retraction 定义开创性 |
+| Boumal EPFL MATH-512 视频课程（14周） | ★★ | 最权威入门，含习题解答 |
+| Rosen et al.《SE-Sync》(IJRR 2019) | ★★★★ | 可认证 SLAM 的数学核心 |
+| Geomstats Python 库 | ★★ | 流形操作可视化与实验 |
+| Geoopt（PyTorch 流形优化） | ★★★ | 深度学习中的流形约束 |
+| Pymanopt（Python 流形优化框架） | ★★ | 支持 CG/trust-region/SD |
+| Manopt（Matlab/Julia 原版） | ★★★ | 最早的流形优化工具箱 |
+| Manifolds.jl（Julia 流形计算） | ★★★ | 最丰富的 retraction 实现集合 |
+| Boumal "Introduction to smooth manifolds" SIAM OP 2023 幻灯片 | ★★ | 精美可视化，适合快速回顾 |
+| Ruda Zhang et al. "A Survey of Numerical Methods on Manifolds" (2020) | ★★★ | retraction 对比的系统综述 |
 
 **SymPy 验证提示**：
 
@@ -1937,14 +1937,14 @@ print("差异:", diff)  # O(theta^2) 项不同 -> retraction 只保证一阶一�
 
 这验证了核心定理：Cayley map 是一阶 retraction（与 Exp 在 $O(\|\xi\|)$ 处一致），但不是二阶 retraction（$O(\|\xi\|^2)$ 项不同）。因此 Cayley 适合梯度下降，但不适合 Newton 方法。
 
-| Dellaert et al.《Shonan Rotation Averaging》(ECCV 2020) | ⭐⭐⭐⭐ | Riemannian Staircase 实现 |
-| Yang, Carlone《TEASER++》(T-RO 2021) | ⭐⭐⭐⭐ | 可认证点云配准 |
-| Sato, Iwai "A Riemannian CG Method" (SIAM J. Optim. 2022) | ⭐⭐⭐⭐ | CG 收敛分析统一框架 |
-| Huang, Absil, Gallivan "RBFGS" (SIAM J. Optim. 2018) | ⭐⭐⭐⭐ | Riemannian BFGS 非凸全局收敛 |
+| Dellaert et al.《Shonan Rotation Averaging》(ECCV 2020) | ★★★★ | Riemannian Staircase 实现 |
+| Yang, Carlone《TEASER++》(T-RO 2021) | ★★★★ | 可认证点云配准 |
+| Sato, Iwai "A Riemannian CG Method" (SIAM J. Optim. 2022) | ★★★★ | CG 收敛分析统一框架 |
+| Huang, Absil, Gallivan "RBFGS" (SIAM J. Optim. 2018) | ★★★★ | Riemannian BFGS 非凸全局收敛 |
 
 ---
 
-### 🔧 故障排查手册 ⭐
+### 🔧 故障排查手册 ★
 
 | 症状 | 可能原因 | 排查步骤 | 相关节 |
 |------|----------|----------|--------|
@@ -1958,7 +1958,7 @@ print("差异:", diff)  # O(theta^2) 项不同 -> retraction 只保证一阶一�
 
 ---
 
-### 31. 跨章综合题 ⭐⭐
+### 31. 跨章综合题 ★★
 
 **综合题 A**（结合专题1切空间 + 本专题 Retraction）：
 

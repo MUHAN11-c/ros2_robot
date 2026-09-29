@@ -8,7 +8,7 @@
 
 ## 前置自测
 
-📋 **前置自测**（答不出 >= 2 题，先回前置章节复习）
+◆ **前置自测**（答不出 >= 2 题，先回前置章节复习）
 
 1. 变分法中，Euler-Lagrange 方程的推导思路是什么？什么是"第一变分为零"？
 2. 什么是凸锥？什么是凸锥的分离定理（Minkowski 分离定理）？
@@ -63,7 +63,7 @@
 
 ---
 
-## §3.2.1 最优控制问题的标准形式 ⭐⭐
+## §3.2.1 最优控制问题的标准形式 ★★
 
 ### 动机：为什么需要超越变分法
 
@@ -160,7 +160,7 @@ $$J = \phi(x(t_f)) + x_{n+1}(t_f) = \tilde\phi(\tilde x(t_f)).$$
 
 如果三种形式不等价，那么每种形式下的 PMP 就需要单独证明，而且对同一个物理问题，选用不同数学形式会得到不同的最优解——这显然是荒谬的。等价性保证了**问题的数学描述不影响物理结论**，这是一种"坐标无关性"——类似于力学中不同坐标系下运动方程形式不同但描述同一运动。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区：混淆"代价形式"与"问题结构"**
 
@@ -180,7 +180,7 @@ $$J = \phi(x(t_f)) + x_{n+1}(t_f) = \tilde\phi(\tilde x(t_f)).$$
 
 ---
 
-## §3.2.2 Hamiltonian 与共态方程 ⭐⭐
+## §3.2.2 Hamiltonian 与共态方程 ★★
 
 ### 动机：为什么需要引入共态变量
 
@@ -286,9 +286,9 @@ $$\dot\lambda = -A^\top \lambda + \lambda_0 \left(\frac{\partial L}{\partial x}\
 
 对 LQR 问题，$\lambda(t) = P(t) x(t)$ 是线性的，$P(t)$ 就是 Riccati 矩阵。对最小时间问题，$\lambda$ 的符号决定 bang-bang 切换时刻。在 RL 语境下，$\lambda(t) = \partial V^* / \partial x$ 精确等于值函数对状态的梯度——这解释了为什么 policy gradient 方法在数学上等价于 adjoint method（参见 Tedrake《Underactuated Robotics》https://underactuated.mit.edu/）。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：共态方程的数值积分方向**
+⚠ **编程陷阱：共态方程的数值积分方向**
 
 错误做法：像状态方程一样从 $t_0$ 正向积分共态
 
@@ -306,7 +306,7 @@ $$\dot\lambda = -A^\top \lambda + \lambda_0 \left(\frac{\partial L}{\partial x}\
 
 ---
 
-## §3.2.3 PMP 的完整陈述 ⭐⭐
+## §3.2.3 PMP 的完整陈述 ★★
 
 ### 动机：一阶必要条件的完整形式
 
@@ -424,9 +424,9 @@ $$\boxed{u^* = R^{-1} B^\top \lambda \quad \text{（PMP 极大化约定）}}$$
 
 **DDP/iLQR 的视角**：在非线性问题中，沿参考轨迹做局部 LQ 近似后，每个时步的极大化条件就变成了二次型的极大化——这正是 DDP backward pass 中计算反馈增益 $K_k$ 的来源。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：min 与 max 约定导致符号全错**
+⚠ **编程陷阱：min 与 max 约定导致符号全错**
 
 错误做法：从 Kirk 教材（极小约定）抄公式，直接代入 Pontryagin 约定的代码
 
@@ -450,7 +450,7 @@ $$\boxed{u^* = R^{-1} B^\top \lambda \quad \text{（PMP 极大化约定）}}$$
 
 ---
 
-## §3.2.4 PMP 证明思想详解：needle variation → 分离锥 ⭐⭐⭐
+## §3.2.4 PMP 证明思想详解：needle variation → 分离锥 ★★★
 
 ### 动机：理解"为什么 PMP 成立"
 
@@ -581,7 +581,7 @@ PMP 证明的每一步都对应数值方法设计中的一个关键决策：
 
 特别地，adjoint method（共态反向传播）是深度学习中 backpropagation 的连续时间版本——二者的数学结构完全相同，只是一个作用在 ODE 上，另一个作用在离散计算图上。Neural ODE (Chen et al. 2018 NeurIPS) 明确利用了这个联系。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 🧠 **思维陷阱：认为 PMP 证明需要 $U$ 凸**
 
@@ -595,7 +595,7 @@ PMP 证明的每一步都对应数值方法设计中的一个关键决策：
 
 ---
 
-## §3.2.5 与 Euler-Lagrange 方程的精确关系 ⭐⭐
+## §3.2.5 与 Euler-Lagrange 方程的精确关系 ★★
 
 ### 动机：PMP 如何"包含"变分法
 
@@ -659,7 +659,7 @@ $$\frac{d}{dt}\frac{\partial L}{\partial \dot x} = \frac{\partial L}{\partial x}
 
 > **本质洞察**：PMP 对 EL 的推广不是"小修小补"，而是质的飞跃。EL 要求控制取遍整个空间且动力学形式为 $\dot x = u$；PMP 只要求 $U$ 紧且 $f$ 连续可微。这个推广使得所有欠驱动机器人（cart-pole、acrobot、四旋翼——控制维度远小于状态维度）都落入 PMP 的管辖范围。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区：认为"PMP 只是 EL 加上控制约束"**
 
@@ -673,7 +673,7 @@ $$\frac{d}{dt}\frac{\partial L}{\partial \dot x} = \frac{\partial L}{\partial x}
 
 ---
 
-## §3.2.6 与 HJB 的关系：必要条件 vs 充分条件 ⭐⭐⭐
+## §3.2.6 与 HJB 的关系：必要条件 vs 充分条件 ★★★
 
 ### 动机：PMP 给轨迹，HJB 给场
 
@@ -792,7 +792,7 @@ HJB 的维数灾难（$n > 5$ 时网格方法不可行）催生了多种近似�
 
 这说明 PMP 和 HJB 不是"竞争关系"，而是"互补层次"：PMP 给**单条轨迹**的精确信息，HJB 给**全状态空间**的近似信息，DDP 取中间路线（局部状态空间的精确信息）。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区："PMP 不如 HJB，因为只是必要条件"**
 
@@ -810,7 +810,7 @@ HJB 的维数灾难（$n > 5$ 时网格方法不可行）催生了多种近似�
 
 ---
 
-## §3.2.7 与 LQR/Riccati 的关系 ⭐⭐
+## §3.2.7 与 LQR/Riccati 的关系 ★★
 
 ### 动机：PMP 的唯一解析可解大类
 
@@ -897,9 +897,9 @@ LQR 是 PMP **唯一能手工解析解出的一般类**。所有复杂非线性�
 
 2. **MPC 的 QP 子问题**：线性 MPC 本质上是有限时域 LQR + 不等式约束。无约束时 MPC = 有限时域 LQR（Riccati 给出的 explicit solution）。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：Riccati 方程的积分方向**
+⚠ **编程陷阱：Riccati 方程的积分方向**
 
 错误做法：从 $t_0$ 正向积分 $\dot P = \ldots$，初始条件 $P(t_0) = ?$（未知）
 
@@ -917,13 +917,13 @@ LQR 直接适用于线性系统。但通过**线性化 + LQR** 的组合（即 i
 
 ---
 
-## §3.2.8 经典可解实例 ⭐⭐
+## §3.2.8 经典可解实例 ★★
 
 ### 动机：PMP 的三种典型面目
 
 PMP 的力量体现在对具体问题的求解中。本节详细推导五个经典例题，它们分别展示了 PMP 在不同 Hamiltonian 结构下的不同最优控制形态。
 
-### 实例 1：双积分器最小时间（bang-bang）⭐⭐
+### 实例 1：双积分器最小时间（bang-bang）★★
 
 **系统**：$\ddot x = u$，$|u| \le 1$；状态 $(x_1, x_2) = (x, \dot x)$。目标：最小化 $t_f$ 使 $(x_1(t_f), x_2(t_f)) = (0, 0)$。
 
@@ -994,7 +994,7 @@ $2 = -\frac{1}{2}$——矛盾！
 
 LQR 之所以能解析求解，关键在于两个"线性"条件同时满足：(1) 动力学 $f = Ax + Bu$ 关于 $(x, u)$ 线性；(2) 代价的 Hessian 关于 $(x, u)$ 是常数矩阵。这使得共态与状态之间保持线性关系 $\lambda = Px$，从而把 BVP 化为 Riccati ODE——一个有限维非线性 ODE（而非无穷维算子方程）。任何破坏这两个条件的情形（非线性动力学、非二次代价）都导致 $\lambda$ 与 $x$ 的关系非线性，PMP BVP 不再有显式解。
 
-### 实例 3：Dubins 车最短路径 ⭐⭐⭐
+### 实例 3：Dubins 车最短路径 ★★★
 
 **系统**：$\dot x = \cos\theta$，$\dot y = \sin\theta$，$\dot\theta = u$，$|u| \le 1$。起点 $(p_0, \theta_0)$ 到终点 $(p_f, \theta_f)$ 的最短弧长路径。
 
@@ -1038,7 +1038,7 @@ $$\dot\lambda_\theta = -\frac{\partial H}{\partial \theta} = \lambda_x \sin\thet
 
 **与 PMP 的深层联系**：Dubins 定理不仅仅是一个"几何结果"——它的证明本质上是 PMP 在特定系统上的应用。共态的结构（$\lambda_x, \lambda_y$ 守恒，$\lambda_\theta$ 是正弦函数）决定了路径类型的有限性。这展示了 PMP 如何把"无穷维优化"（在所有曲线中找最短的）降维为"有限参数优化"（在6种类型中选最好的）——这种降维是 PMP 最强大的工程价值之一。
 
-### 实例 4：Goddard 火箭最优推力 ⭐⭐⭐
+### 实例 4：Goddard 火箭最优推力 ★★★
 
 **系统**（一维垂直，1919 年 Goddard 原问题）：
 
@@ -1060,7 +1060,7 @@ $$T_{\max} \longrightarrow \text{奇异弧} \longrightarrow 0 \; (\text{coast}).
 
 出处：Bonnans-Martinon-Trelat 2008 *JOTA* 139(2):439-461。
 
-### 实例 5：四旋翼最小时间（现代机器人应用）⭐⭐⭐
+### 实例 5：四旋翼最小时间（现代机器人应用）★★★
 
 Foehn-Romero-Scaramuzza 2021《Time-optimal planning for quadrotor waypoint flight》*Science Robotics* 6(56):eabh1221。
 
@@ -1079,13 +1079,13 @@ Foehn-Romero-Scaramuzza 2021《Time-optimal planning for quadrotor waypoint flig
 | Goddard | 0（Mayer）| $[0, T_{\max}]$ | 线性 | max + singular + coast |
 | 四旋翼最小时间 | 1 | 推力箱 | 线性 | bang-bang（大部分饱和）|
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区：所有最小时间问题都是 bang-bang**
 
 这只对"$H$ 关于 $u$ 严格线性"的情况成立。如果动力学 $f$ 中控制 $u$ 以非线性方式出现（如 $f = u^2 + x$），$H$ 关于 $u$ 不再线性，极大化可能给出连续的控制（非 bang-bang）。
 
-⚠️ **编程陷阱：bang-bang 切换时刻的数值检测**
+⚠ **编程陷阱：bang-bang 切换时刻的数值检测**
 
 在数值求解中，切换函数 $\Sigma(t)$ 经过零点的精确时刻很难捕捉（数值积分的步长可能跨越零点）。对策：使用事件检测（event detection）功能（如 `scipy.integrate.solve_ivp` 的 `events` 参数）或自适应步长在 $|\Sigma| < \varepsilon$ 时缩小。
 
@@ -1099,7 +1099,7 @@ Foehn-Romero-Scaramuzza 2021《Time-optimal planning for quadrotor waypoint flig
 
 ---
 
-## §3.2.8.5 PMP 求解工作流：从建模到验证 ⭐⭐
+## §3.2.8.5 PMP 求解工作流：从建模到验证 ★★
 
 ### 动机：如何系统化地用 PMP 解题
 
@@ -1150,7 +1150,7 @@ Step 7: 验证    → H 守恒？横截满足？二阶条件？
 
 ---
 
-## §3.2.9 Bang-Bang 控制与切换函数分析 ⭐⭐⭐
+## §3.2.9 Bang-Bang 控制与切换函数分析 ★★★
 
 ### 动机
 
@@ -1180,7 +1180,7 @@ $$\dot x_1 = x_2, \quad \dot x_2 = u, \quad |u| \le 1, \quad J = \int_0^\infty x
 
 出处：Fuller 1960 *J. Electronics and Control* 8(5):381-401；Marchal 1973 *J. Optimization Theory and Applications* 11:441-486。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 🧠 **思维陷阱：认为 bang-bang 控制总是"粗暴的"**
 
@@ -1194,7 +1194,7 @@ $$\dot x_1 = x_2, \quad \dot x_2 = u, \quad |u| \le 1, \quad J = \int_0^\infty x
 
 ---
 
-## §3.2.10 奇异弧与 Kelley 条件 ⭐⭐⭐
+## §3.2.10 奇异弧与 Kelley 条件 ★★★
 
 ### 动机
 
@@ -1245,7 +1245,7 @@ $$(-1)^q \frac{\partial}{\partial u}\left[\frac{d^{2q}}{dt^{2q}}\frac{\partial H
 | 航天低推力转移 | 推力方向渐变段 |
 | 化工反应器温度控制 | 温度维持段 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区：奇异弧上 $u$ 可以取任意值**
 
@@ -1259,7 +1259,7 @@ $$(-1)^q \frac{\partial}{\partial u}\left[\frac{d^{2q}}{dt^{2q}}\frac{\partial H
 
 ---
 
-## §3.2.11 状态约束下的 PMP 扩展 ⭐⭐⭐
+## §3.2.11 状态约束下的 PMP 扩展 ★★★
 
 ### 动机
 
@@ -1321,9 +1321,9 @@ $$d\lambda = -\frac{\partial H}{\partial x}\,dt + \frac{\partial g}{\partial x}^
 | 自碰撞 | $\|p_i - p_j\| \ge d_{\min}$ | 2 | 罚函数或CBF |
 | 工作空间边界 | CoM 在支撑多边形内 | 2 | ZMP/DCM约束 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：状态约束在直接法中的数值困难**
+⚠ **编程陷阱：状态约束在直接法中的数值困难**
 
 将状态约束直接加为硬约束（$g(x_k) \le 0$）在约束活跃时会导致 NLP 求解器困难（约束 Jacobian 秩亏缺或条件数极大）。对策：用 relaxed barrier（松弛障碍）或 exact penalty（精确罚）方法平滑化。
 
@@ -1340,7 +1340,7 @@ $$d\lambda = -\frac{\partial H}{\partial x}\,dt + \frac{\partial g}{\partial x}^
 
 ---
 
-## §3.2.12 离散时间 PMP 与 DDP 的对应 ⭐⭐
+## §3.2.12 离散时间 PMP 与 DDP 的对应 ★★
 
 ### 动机
 
@@ -1374,9 +1374,9 @@ $$Q_{xx} = \ell_{xx} + f_x^\top V'_{xx} f_x + V'_x \cdot f_{xx}, \quad Q_{uu} = 
 
 > **本质洞察**：$\lambda_{k+1}$（**不是** $\lambda_k$）出现在 $u_k$ 的极大化中——共态在时间上"滞后一步"。这是离散 PMP 与连续 PMP 的关键区别。在 DDP 代码中，这对应于用 `Vx_next`（下一时步的值函数梯度）来计算当前时步的最优控制。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：离散共态更新的下标错位**
+⚠ **编程陷阱：离散共态更新的下标错位**
 
 错误代码：`lambda[k] = fx.T @ lambda[k] + lx`（用了 $\lambda_k$ 而非 $\lambda_{k+1}$）
 正确代码：`lambda[k] = fx.T @ lambda[k+1] + lx`
@@ -1391,7 +1391,7 @@ $$Q_{xx} = \ell_{xx} + f_x^\top V'_{xx} f_x + V'_x \cdot f_{xx}, \quad Q_{uu} = 
 
 ---
 
-## §3.2.13 数值间接法 ⭐⭐⭐
+## §3.2.13 数值间接法 ★★★
 
 ### 间接法 vs 直接法
 
@@ -1450,9 +1450,9 @@ $$Q_{xx} = \ell_{xx} + f_x^\top V'_{xx} f_x + V'_x \cdot f_{xx}, \quad Q_{uu} = 
 | Drake | C++/Python | 直接 collocation 内置 | 通用机器人 |
 | OCS2 | C++ | quadruped/humanoid | ETH 腿足控制栈 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：单次打靶的指数不稳定性**
+⚠ **编程陷阱：单次打靶的指数不稳定性**
 
 对 $n = 10$ 的系统，$\lambda(t_0)$ 的 $10^{-6}$ 扰动可能在 $t_f$ 处产生 $10^6$ 的误差（因为线性化系统的 Lyapunov 指数正值导致前向积分指数放大）。对策：永远用 multiple shooting 或 collocation，single shooting 只用于教学演示。
 
@@ -1464,7 +1464,7 @@ $$Q_{xx} = \ell_{xx} + f_x^\top V'_{xx} f_x + V'_x \cdot f_{xx}, \quad Q_{uu} = 
 
 ---
 
-## §3.2.14 混合/切换系统的 PMP ⭐⭐⭐⭐
+## §3.2.14 混合/切换系统的 PMP ★★★★
 
 ### 混合系统
 
@@ -1504,19 +1504,19 @@ $$Q_{xx} = \ell_{xx} + f_x^\top V'_{xx} f_x + V'_x \cdot f_{xx}, \quad Q_{uu} = 
 
 | 知识点 | 核心内容 | 难度 | 工程应用 |
 |--------|---------|------|---------|
-| 标准形式 | Bolza/Mayer/Lagrange 三形式等价 | ⭐⭐ | MPC/LQR/最小时间 |
-| Hamiltonian | 控制 Hamiltonian + 两种约定 | ⭐⭐ | 所有轨迹优化器 |
-| PMP 五件套 | 状态/共态/极大化/横截/守恒 | ⭐⭐ | 理论基线 |
-| Needle variation | 针状扰动 → 凸锥 → 分离 | ⭐⭐⭐ | 理解 PMP 适用范围 |
-| PMP ⇒ EL | 无约束特例退化为 Euler-Lagrange | ⭐⭐ | 理论联系 |
-| PMP vs HJB | 必要 vs 充分、轨迹 vs 场、$\lambda = \nabla V$ | ⭐⭐⭐ | DDP = 局部 HJB |
-| PMP ⇒ Riccati | LQR 是 PMP 的解析解 | ⭐⭐ | iLQR/DDP 基本模块 |
-| Bang-bang | $H$ 对 $u$ 线性 → 切换控制 | ⭐⭐ | 最小时间/推力饱和 |
-| 奇异弧 | $\partial H/\partial u \equiv 0$ → Kelley 条件 | ⭐⭐⭐ | 火箭/机械臂 |
-| 状态约束 | 共态跳跃 + 测度乘子 | ⭐⭐⭐ | 避障/限位 |
-| 离散 PMP | $\lambda_k = f_x^\top \lambda_{k+1} + L_x^\top$ | ⭐⭐ | DDP backward pass |
-| 数值间接法 | shooting/collocation | ⭐⭐⭐ | CasADi/Bocop |
-| 混合 PMP | 切换时共态跳跃 | ⭐⭐⭐⭐ | 腿足步态 |
+| 标准形式 | Bolza/Mayer/Lagrange 三形式等价 | ★★ | MPC/LQR/最小时间 |
+| Hamiltonian | 控制 Hamiltonian + 两种约定 | ★★ | 所有轨迹优化器 |
+| PMP 五件套 | 状态/共态/极大化/横截/守恒 | ★★ | 理论基线 |
+| Needle variation | 针状扰动 → 凸锥 → 分离 | ★★★ | 理解 PMP 适用范围 |
+| PMP ⇒ EL | 无约束特例退化为 Euler-Lagrange | ★★ | 理论联系 |
+| PMP vs HJB | 必要 vs 充分、轨迹 vs 场、$\lambda = \nabla V$ | ★★★ | DDP = 局部 HJB |
+| PMP ⇒ Riccati | LQR 是 PMP 的解析解 | ★★ | iLQR/DDP 基本模块 |
+| Bang-bang | $H$ 对 $u$ 线性 → 切换控制 | ★★ | 最小时间/推力饱和 |
+| 奇异弧 | $\partial H/\partial u \equiv 0$ → Kelley 条件 | ★★★ | 火箭/机械臂 |
+| 状态约束 | 共态跳跃 + 测度乘子 | ★★★ | 避障/限位 |
+| 离散 PMP | $\lambda_k = f_x^\top \lambda_{k+1} + L_x^\top$ | ★★ | DDP backward pass |
+| 数值间接法 | shooting/collocation | ★★★ | CasADi/Bocop |
+| 混合 PMP | 切换时共态跳跃 | ★★★★ | 腿足步态 |
 
 ---
 
@@ -1574,16 +1574,16 @@ $$Q_{xx} = \ell_{xx} + f_x^\top V'_{xx} f_x + V'_x \cdot f_{xx}, \quad Q_{uu} = 
 
 | 资料 | 难度 | 说明 |
 |------|------|------|
-| Liberzon 2012《Calculus of Variations and Optimal Control Theory》| ⭐⭐ | **首选教材**，最清晰的现代入门 |
-| Kirk 2004《Optimal Control Theory: An Introduction》| ⭐⭐ | 例题丰富，工程友好 |
-| Bryson-Ho 1975《Applied Optimal Control》| ⭐⭐⭐ | 航天工程导向 |
-| Pontryagin et al. 1962《The Mathematical Theory of Optimal Processes》| ⭐⭐⭐⭐ | 原著，难但必翻 Ch.I-II |
-| Betts 2020《Practical Methods for Optimal Control》3rd ed. | ⭐⭐⭐ | 数值直接法圣经 |
-| Tedrake《Underactuated Robotics》(MIT 6.832 online) | ⭐⭐ | 机器人+RL 导向 |
-| Rawlings-Mayne-Diehl 2020《Model Predictive Control》2nd ed. | ⭐⭐⭐ | MPC 理论与实践 |
-| Agrachev-Sachkov 2004《Control Theory from the Geometric Viewpoint》| ⭐⭐⭐⭐ | 几何控制权威 |
-| Sussmann-Willems 1997 *IEEE CSM* "300 Years of Optimal Control" | ⭐⭐ | 历史综述，极佳 |
-| Hartl-Sethi-Vickson 1995 *SIAM Review* "State Constraints Survey" | ⭐⭐⭐ | 状态约束完整综述 |
+| Liberzon 2012《Calculus of Variations and Optimal Control Theory》| ★★ | **首选教材**，最清晰的现代入门 |
+| Kirk 2004《Optimal Control Theory: An Introduction》| ★★ | 例题丰富，工程友好 |
+| Bryson-Ho 1975《Applied Optimal Control》| ★★★ | 航天工程导向 |
+| Pontryagin et al. 1962《The Mathematical Theory of Optimal Processes》| ★★★★ | 原著，难但必翻 Ch.I-II |
+| Betts 2020《Practical Methods for Optimal Control》3rd ed. | ★★★ | 数值直接法圣经 |
+| Tedrake《Underactuated Robotics》(MIT 6.832 online) | ★★ | 机器人+RL 导向 |
+| Rawlings-Mayne-Diehl 2020《Model Predictive Control》2nd ed. | ★★★ | MPC 理论与实践 |
+| Agrachev-Sachkov 2004《Control Theory from the Geometric Viewpoint》| ★★★★ | 几何控制权威 |
+| Sussmann-Willems 1997 *IEEE CSM* "300 Years of Optimal Control" | ★★ | 历史综述，极佳 |
+| Hartl-Sethi-Vickson 1995 *SIAM Review* "State Constraints Survey" | ★★★ | 状态约束完整综述 |
 
 **推荐阅读顺序**：Liberzon（整体）→ Kirk（例题）→ Bryson-Ho（工程直觉）→ Rawlings-Mayne-Diehl Ch.8（MPC 接口）→ Betts（直接法）。
 
@@ -1694,7 +1694,7 @@ $$Q_{xx} = \ell_{xx} + f_x^\top V'_{xx} f_x + V'_x \cdot f_{xx}, \quad Q_{uu} = 
 
 ---
 
-## §3.2.14.5 PMP 与 KKT 条件的精确对应 ⭐⭐
+## §3.2.14.5 PMP 与 KKT 条件的精确对应 ★★
 
 ### 动机：理解"NLP 的 KKT = 离散 PMP"
 
@@ -1743,7 +1743,7 @@ lambda_pmp = -lam_g[dynamics_constraint_indices] / dt
 
 ---
 
-## §3.2.15 PMP 在 SE(3) 上的推广 ⭐⭐⭐⭐
+## §3.2.15 PMP 在 SE(3) 上的推广 ★★★★
 
 ### 动机：刚体的最优控制需要李群结构
 
@@ -1783,7 +1783,7 @@ $$\langle \text{ad}^*_\xi\, p,\, \eta \rangle = \langle p,\, \text{ad}_\xi\, \et
 
 ---
 
-## §3.2.16 PMP 与最优传输/Wasserstein 梯度流 ⭐⭐⭐⭐
+## §3.2.16 PMP 与最优传输/Wasserstein 梯度流 ★★★★
 
 ### 动机：从"单条轨迹"到"概率分布的最优运输"
 
@@ -1809,7 +1809,7 @@ $$W_2^2(\rho_0, \rho_1) = \inf_{v}\left\{\int_0^1 \int_{\mathbb{R}^n} \|v(x,t)\|
 
 ---
 
-## §3.2.17 二阶充分条件（共轭点理论）⭐⭐⭐
+## §3.2.17 二阶充分条件（共轭点理论）★★★
 
 ### 动机：如何验证极值轨迹是否真正最优
 
@@ -1843,7 +1843,7 @@ $$\dot{\delta z} = \mathcal{H}'(t)\,\delta z,$$
 
 ---
 
-## §3.2.18 PMP 与凸优化/SDP 松弛 ⭐⭐⭐
+## §3.2.18 PMP 与凸优化/SDP 松弛 ★★★
 
 ### 动机：什么时候 PMP 给出全局最优？
 
@@ -1870,7 +1870,7 @@ LQR 问题满足 Mangasarian 条件（$H$ 关于 $(x, u)$ 联合凹，因为 $-\
 
 ---
 
-## §3.2.19 典型例题详解：最省燃料问题 ⭐⭐
+## §3.2.19 典型例题详解：最省燃料问题 ★★
 
 ### 问题设定
 
@@ -1919,7 +1919,7 @@ $\lambda_2$ 可能：
 
 > **本质洞察**：最小时间控制和最省燃料控制代表了控制器设计中的根本权衡——**性能 vs 资源**。PMP 的统一框架让我们可以通过改变代价函数 $L$ 来精确调控这个权衡，而无需改变求解方法论。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区：认为 $L = |u|$ 的不可微性让 PMP 失效**
 
@@ -1933,7 +1933,7 @@ $\lambda_2$ 可能：
 
 ---
 
-## §3.2.20 PMP 的二阶条件与 Sufficient Conditions ⭐⭐⭐
+## §3.2.20 PMP 的二阶条件与 Sufficient Conditions ★★★
 
 ### 加强的 Legendre-Clebsch 条件
 
@@ -1968,7 +1968,7 @@ $$\frac{\partial^2 H}{\partial u^2}\bigg|_{u^*} < 0 \quad (\text{严格负定}).
 
 ---
 
-## §3.2.21 完整求解范例：从问题建模到数值验证 ⭐⭐
+## §3.2.21 完整求解范例：从问题建模到数值验证 ★★
 
 ### 范例：Cart-Pole Swing-Up 的 PMP 分析
 

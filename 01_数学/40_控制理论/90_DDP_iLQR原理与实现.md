@@ -1,4 +1,4 @@
-# 专题 3.9：DDP/iLQR 原理与实现 ⭐⭐
+# 专题 3.9：DDP/iLQR 原理与实现 ★★
 
 > 博士前数学路线图 · 第三批 · 专题 3.9
 > 前置：3.5 LQR 与 Riccati 方程、3.3 动态规划与 Bellman 方程、3.2 Pontryagin 极大值原理
@@ -8,7 +8,7 @@
 
 ## 前置自测
 
-📋 **前置自测**（答不出 >=2 题 → 先回 3.5/3.3/3.2 复习）
+◆ **前置自测**（答不出 >=2 题 → 先回 3.5/3.3/3.2 复习）
 
 1. 写出离散时间 LQR 的 Riccati 递推方程，说明 $P_k$ 的物理含义是什么？
 2. Bellman 最优性原理的核心表述是什么？它把 $N$ 步决策问题如何分解？
@@ -62,7 +62,7 @@ DDP/iLQR 知识树
 
 ---
 
-## §3.9.1 非线性轨迹优化问题的标准形式 ⭐⭐
+## §3.9.1 非线性轨迹优化问题的标准形式 ★★
 
 ### 动机：为什么需要 DDP/iLQR
 
@@ -155,7 +155,7 @@ Mayne 在 1966 年提出 DDP 时，计算机的计算能力还不足以处理高
 | ANYmal 四足 | 24 | 12 | 25 | 20 ms | 300 | 600 |
 | Talos 人形全身 | 74 | 30 | 100 | 10 ms | 3000 | 7400 |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区：把 DDP 当成"一种近似 DP"**
 
@@ -179,7 +179,7 @@ Mayne 在 1966 年提出 DDP 时，计算机的计算能力还不足以处理高
 
 ---
 
-## §3.9.2 DDP 的完整推导——Backward Pass ⭐⭐
+## §3.9.2 DDP 的完整推导——Backward Pass ★★
 
 ### 动机：从 Bellman 方程到局部二次近似
 
@@ -402,9 +402,9 @@ $$
 
 **证明**：$V_{xx} = Q_{xx} - Q_{ux}^\top Q_{uu}^{-1}Q_{ux}$ 是分块矩阵 $\begin{pmatrix}Q_{xx} & Q_{ux}^\top \\ Q_{ux} & Q_{uu}\end{pmatrix}$ 关于 $Q_{uu}$ 的 Schur 补。由 Schur 补定理，当 $Q_{uu} \succ 0$ 时，$V_{xx} \succeq 0$ 当且仅当整个分块矩阵 $\succeq 0$。对 iLQR，$Q_{xx} = \ell_{xx} + f_x^\top V'_{xx}f_x \succeq 0$（若 $\ell_{xx} \succeq 0$ 且归纳假设 $V'_{xx} \succeq 0$），配合 $Q_{uu} \succ 0$，Schur 补非负确保 $V_{xx} \succeq 0$。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：$V_{xx}$ 的对称性丢失**
+⚠ **编程陷阱：$V_{xx}$ 的对称性丢失**
 
 在浮点运算中，反复做矩阵乘法后 $V_{xx}$ 可能丧失精确对称性（差异在 $10^{-15}$ 量级，但累积后可达 $10^{-12}$）。若 Cholesky 分解 $Q_{uu}$ 时输入了非对称的 $V_{xx}$，会导致数值错误或 Cholesky 失败。
 
@@ -414,7 +414,7 @@ $$
 
 $\Delta V = -\frac{1}{2}k^\top Q_{uu} k$ 是 $V_k$ 在名义点处的**零阶修正量**，不是轨迹代价的实际改进。真正的代价改进在 Forward Pass 中通过 line search 实测得到。$\sum_k \Delta V$ 只是"期望改进"的二阶估计。
 
-⚠️ **编程陷阱：$Q_u$ 和 $Q_x$ 的维度搞错**
+⚠ **编程陷阱：$Q_u$ 和 $Q_x$ 的维度搞错**
 
 $Q_u \in \mathbb{R}^m$（控制维），$Q_x \in \mathbb{R}^n$（状态维）。如果代码中 $f_u$ 的形状写反（$(m,n)$ vs $(n,m)$），$Q_u = \ell_u + f_u^\top V'_x$ 的矩阵乘法会出错但不一定报 shape error（如果 $n=m$），导致极隐蔽的 bug。建议用 assert 检查所有中间量维度。
 
@@ -426,7 +426,7 @@ $Q_u \in \mathbb{R}^m$（控制维），$Q_x \in \mathbb{R}^n$（状态维）。
 
 ---
 
-## §3.9.3 iLQR 作为 DDP 的 Gauss-Newton 近似 ⭐⭐
+## §3.9.3 iLQR 作为 DDP 的 Gauss-Newton 近似 ★★
 
 ### 动机
 
@@ -514,7 +514,7 @@ $$
 
 在绝大多数机器人实时控制场景（$\Delta t = 5$-$20$ ms、刚性关节）中，**iLQR 是唯一正确的选择**。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区：混淆 DDP 与 iLQR**
 
@@ -536,7 +536,7 @@ $$
 
 ---
 
-## §3.9.4 与 PMP/DP/LQR 的精确关系——统一视角 ⭐⭐⭐
+## §3.9.4 与 PMP/DP/LQR 的精确关系——统一视角 ★★★
 
 ### 动机
 
@@ -622,7 +622,7 @@ HJB/DP 给出全空间、全时刻的值函数——维数灾难。DDP 放弃全
 | backward pass | 积分共态 ODE | 值迭代的二阶版 | Riccati 递推 |
 | forward pass | 用反馈律仿真 | 策略改进 | 闭环 rollout |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 🧠 **思维陷阱：认为"DDP 是间接法"**
 
@@ -640,7 +640,7 @@ DDP 的分类实际上是**混合的**：
 
 ---
 
-## §3.9.5 Forward Pass 与 Line Search ⭐⭐
+## §3.9.5 Forward Pass 与 Line Search ★★
 
 ### 动机
 
@@ -705,9 +705,9 @@ $$
 
 **如果 $\alpha = 1$ 在前几次迭代就被接受**：可能表明 (a) 初始猜测已经很好，或 (b) 正则化 $\mu$ 过大使步方向退化为梯度方向（小幅改进总能被接受）。需要监控 $\Delta_1$ 的绝对值来区分。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：Forward pass 反馈项随 $\alpha$ 缩放**
+⚠ **编程陷阱：Forward pass 反馈项随 $\alpha$ 缩放**
 
 错误写法：$\hat u = \bar u + \alpha(k + K\Delta x)$
 
@@ -715,7 +715,7 @@ $$
 
 前者在 $\alpha \to 0$ 时反馈也消失，闭环退化为开环——小步长时轨迹无人"看护"，可能漂移。后者保证任何步长下都有闭环稳定化。
 
-⚠️ **编程陷阱：期望下降量只算一阶项**
+⚠ **编程陷阱：期望下降量只算一阶项**
 
 若 $\Delta J$ 只取 $\alpha \Delta_1$（忽略 $\alpha^2 \Delta_2 / 2$），则 $z$ 的分母在 $\alpha = 1$ 时偏大（因为真正的期望下降应含二阶修正），导致 $z$ 偏小，频繁拒绝好的步长。必须包含二阶项。
 
@@ -731,7 +731,7 @@ Line search 失败（所有 $\alpha$ 都不满足 Armijo）是正常情况——
 
 ---
 
-## §3.9.6 正则化技巧——从 Levenberg-Marquardt 到 Trust Region ⭐⭐
+## §3.9.6 正则化技巧——从 Levenberg-Marquardt 到 Trust Region ★★
 
 ### 动机
 
@@ -854,9 +854,9 @@ $$
 | 推荐场景 | 教学/低维 | 工程/高维 |
 | LM/TR 等价 | 控制 TR | 状态 TR |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：$Q_{uu}$ 非 PD 不处理直接求逆 → NaN**
+⚠ **编程陷阱：$Q_{uu}$ 非 PD 不处理直接求逆 → NaN**
 
 在不加正则化的情况下对 $Q_{uu}$ 做 `np.linalg.inv` 或 Cholesky，若 $Q_{uu}$ 有负特征值，会得到垃圾值或 NaN。整个 backward pass 被污染。
 
@@ -866,7 +866,7 @@ $$
 
 $\mu$ 过大会使步方向退化为梯度方向（一阶），丧失 Newton 的二阶优势。极端情况下，$\mu = 10^6$ 的 DDP 还不如一阶梯度法快——因为 backward pass 的计算量白白付出了。
 
-⚠️ **编程陷阱：$\mu$ 调度的初始值过大**
+⚠ **编程陷阱：$\mu$ 调度的初始值过大**
 
 如果初始 $\mu = 100$（远大于 $Q_{uu}$ 的特征值 $\sim 1$），前几次迭代全是梯度方向，浪费计算。应从 $\mu = 10^{-6}$ 或 $\mu = 0$ 开始，只在失败时增大。
 
@@ -878,7 +878,7 @@ $\mu$ 过大会使步方向退化为梯度方向（一阶），丧失 Newton 的
 
 ---
 
-## §3.9.7 连续时间 DDP 与采样时间选择 ⭐⭐
+## §3.9.7 连续时间 DDP 与采样时间选择 ★★
 
 ### 连续时间 vs 离散时间
 
@@ -946,9 +946,9 @@ $\Delta t$ 是 DDP 的隐含超参数，影响深远：
 
 对 iLQR 而言，**Euler + 短 $\Delta t$ 通常优于 RK4 + 长 $\Delta t$**——因为 Euler 的 $f_x = I + A\Delta t$ 导数计算最简单，且短 $\Delta t$ 使线性化误差本身很小。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：连续 vs 离散代价权重混淆**
+⚠ **编程陷阱：连续 vs 离散代价权重混淆**
 
 若连续代价为 $\int_0^T \frac{1}{2}x^\top Q x\,dt$，离散化后阶段代价应是 $\frac{1}{2}x_k^\top (Q\Delta t) x_k$。忘乘 $\Delta t$ 会导致权重随 $\Delta t$ 变化——改变采样率时"最优轨迹"莫名其妙地变了。
 
@@ -966,7 +966,7 @@ $\Delta t$ 过小使 $N = T/\Delta t$ 暴增，不仅增加计算量，还可能
 
 ---
 
-## §3.9.8 DDP/iLQR 完整实现 ⭐⭐
+## §3.9.8 DDP/iLQR 完整实现 ★★
 
 ### 主循环伪代码
 
@@ -1174,13 +1174,13 @@ def ilqr_forward(X, U, kk, KK, alpha, dyn_params):
     return jnp.stack(X_new), jnp.stack(U_new)
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：忘记在 rollout 中 clip $u$ 到物理约束**
+⚠ **编程陷阱：忘记在 rollout 中 clip $u$ 到物理约束**
 
 大 $\alpha$ 可能使 $\hat u_k$ 超出执行器极限（如电机最大力矩 30 N·m）。超限输入送入仿真器会导致数值爆炸。应在 forward pass 内部做 clip 或直接用 Box-DDP。
 
-⚠️ **编程陷阱：$N$ 太大未用并行导数**
+⚠ **编程陷阱：$N$ 太大未用并行导数**
 
 $N = 500$ 时顺序计算动力学导数可能 > 1 s。应使用 OpenMP（C++）或 `jax.vmap`（Python）并行每步导数计算。
 
@@ -1188,7 +1188,7 @@ $N = 500$ 时顺序计算动力学导数可能 > 1 s。应使用 OpenMP（C++）
 
 MPC 中 shifting warm-start 把旧 $K_{1:N-1}$ 直接用到新周期第 $0:N-2$ 上，但物理时间已偏移一步。应至少跑 1 次 backward 重算——这是 RTI（Real-Time Iteration）的核心思想（§3.9.10）。
 
-⚠️ **编程陷阱：JAX 循环中 append 列表导致重新编译**
+⚠ **编程陷阱：JAX 循环中 append 列表导致重新编译**
 
 JAX 的 `jit` 要求静态形状。上面的 `for k in range(N)` 配合 Python list append 会导致每次 `N` 变化时重新编译。生产代码应用 `jax.lax.scan` 替代：
 
@@ -1211,7 +1211,7 @@ final_carry, (kk, KK) = jax.lax.scan(backward_step, init_carry, all_inputs, reve
 
 ---
 
-## §3.9.9 可微动力学与自动微分 ⭐⭐
+## §3.9.9 可微动力学与自动微分 ★★
 
 ### 动力学导数的四种获取方式
 
@@ -1287,13 +1287,13 @@ def finite_diff_fx(dynamics, x, u, params, eps=1e-6):
 
 **工程建议**：刚性关节用 Pinocchio 解析；接触/软体/流体用可微仿真 AD；原型开发用 JAX。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：有限差分 $\epsilon$ 选得不当**
+⚠ **编程陷阱：有限差分 $\epsilon$ 选得不当**
 
 最优 $\epsilon$ 为 $\sqrt{\text{machine epsilon}} \approx 10^{-8}$（64-bit）。过大（$10^{-4}$）→ 截断误差主导；过小（$10^{-12}$）→ 舍入误差主导。
 
-⚠️ **编程陷阱：对四元数/李群状态直接做有限差分**
+⚠ **编程陷阱：对四元数/李群状态直接做有限差分**
 
 浮动基座的配置空间包含 $SE(3)$（或四元数+位置），不能对四元数的 4 个分量独立加扰动（会破坏单位约束 $\|q\| = 1$）。正确做法：在切空间（李代数 $\mathfrak{se}(3)$）上加扰动 $\delta\xi$，用 $q_\text{perturbed} = q \oplus \epsilon\,e_i$ 的指数映射。Pinocchio 的 `integrate` 函数自动处理此问题。
 
@@ -1305,7 +1305,7 @@ def finite_diff_fx(dynamics, x, u, params, eps=1e-6):
 
 ---
 
-## §3.9.10 在线 iLQR / Warm-Starting MPC ⭐⭐⭐
+## §3.9.10 在线 iLQR / Warm-Starting MPC ★★★
 
 ### iLQR 作为 MPC 内层求解器
 
@@ -1374,13 +1374,13 @@ $$
     （延迟 = 步骤 6-7 的时间 ≈ 0.1 ms）
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 🧠 **思维陷阱：认为"一次迭代不够精确所以不能用"**
 
 RTI 的数学保证不需要精确解——只要**warm-start 足够好**且**系统变化足够慢**（$\|\hat x_0^{k+1} - \hat x_0^k\| < \delta$），单次迭代就能保持 ISS 稳定性。这就是为什么腿足 MPC 可以只跑 1-3 次 iLQR 迭代：上一步的解已经是非常好的初始猜测。
 
-⚠️ **编程陷阱：RTI 的 preparation 阶段用了新测量**
+⚠ **编程陷阱：RTI 的 preparation 阶段用了新测量**
 
 如果 preparation 等待新测量才开始，延迟增加一个完整的 preparation 时间。正确做法：用旧的 shifted 解做 preparation，新测量只在 feedback 阶段使用。
 
@@ -1392,7 +1392,7 @@ RTI 的数学保证不需要精确解——只要**warm-start 足够好**且**�
 
 ---
 
-## §3.9.11 Model-Based RL 中的 iLQR ⭐⭐⭐
+## §3.9.11 Model-Based RL 中的 iLQR ★★★
 
 ### 三大 MBRL 规划器对比
 
@@ -1431,7 +1431,7 @@ Hansen et al. 2023 (TD-MPC2) 在**隐空间**（latent space）做 iLQR/MPPI：
 
 iLQR 在此场景中的优势：可以利用 $\partial f_\phi / \partial a$（神经网络 Jacobian 通过 backprop 自动获得）做高效梯度规划。但需注意隐空间的流形结构不一定满足 iLQR 的欧氏假设。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 💡 **概念误区：把 acados 当作 DDP**
 
@@ -1449,7 +1449,7 @@ acados 是直接 multiple-shooting + 结构化 QP（HPIPM/BLASFEO），**不是 
 
 ---
 
-## §3.9.12 与 SQP/直接法的对比 ⭐⭐⭐
+## §3.9.12 与 SQP/直接法的对比 ★★★
 
 ### 对比表
 
@@ -1494,7 +1494,7 @@ $$
                 └── 否 → acados RTI（嵌入式部署）
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 🧠 **思维陷阱：认为"直接法一定比间接法好"**
 
@@ -1512,17 +1512,17 @@ $$
 
 | 知识点 | 核心内容 | 难度 | 工程价值 |
 |--------|---------|------|---------|
-| OCP 标准形式 | 单射击表述 + Bellman 分解 | ⭐⭐ | 理解所有 DDP 变体的基础 |
-| DDP Backward Pass | Q 函数六系数 + Riccati-like 递推 | ⭐⭐ | 手推能力 |
-| iLQR = GN 近似 | 丢弃动力学 Hessian → 超线性 | ⭐⭐ | 95% 工程场景的默认选择 |
-| PMP/DP/LQR 统一 | 三条线的精确交汇 | ⭐⭐⭐ | 理论理解的"灵魂" |
-| Forward Pass + Line Search | Armijo 准则 + backtracking | ⭐⭐ | 鲁棒收敛的关键 |
-| 正则化 | 状态正则化 > 控制正则化（LM 等价） | ⭐⭐ | 工程必备 |
-| 采样时间 | $\Delta t$ 选择与变步长 | ⭐⭐ | 性能调优 |
-| 计算瓶颈 | 动力学导数 → Pinocchio 解析 | ⭐⭐ | 10-50x 加速 |
-| MPC warm-start | Shift + RTI 分离 | ⭐⭐⭐ | 实时控制核心 |
-| MBRL 交叉 | DiffMPC + MPPI-iLQR 等价 | ⭐⭐⭐ | 研究前沿 |
-| SQP 对比 | DDP = condensed Riccati SQP | ⭐⭐⭐ | 架构选型依据 |
+| OCP 标准形式 | 单射击表述 + Bellman 分解 | ★★ | 理解所有 DDP 变体的基础 |
+| DDP Backward Pass | Q 函数六系数 + Riccati-like 递推 | ★★ | 手推能力 |
+| iLQR = GN 近似 | 丢弃动力学 Hessian → 超线性 | ★★ | 95% 工程场景的默认选择 |
+| PMP/DP/LQR 统一 | 三条线的精确交汇 | ★★★ | 理论理解的"灵魂" |
+| Forward Pass + Line Search | Armijo 准则 + backtracking | ★★ | 鲁棒收敛的关键 |
+| 正则化 | 状态正则化 > 控制正则化（LM 等价） | ★★ | 工程必备 |
+| 采样时间 | $\Delta t$ 选择与变步长 | ★★ | 性能调优 |
+| 计算瓶颈 | 动力学导数 → Pinocchio 解析 | ★★ | 10-50x 加速 |
+| MPC warm-start | Shift + RTI 分离 | ★★★ | 实时控制核心 |
+| MBRL 交叉 | DiffMPC + MPPI-iLQR 等价 | ★★★ | 研究前沿 |
+| SQP 对比 | DDP = condensed Riccati SQP | ★★★ | 架构选型依据 |
 
 ---
 
@@ -1552,16 +1552,16 @@ $$
 
 | 资源 | 难度 | 说明 |
 |------|------|------|
-| Tedrake《Underactuated》Ch.10 | ⭐⭐ | 最易读的 DDP/iLQR 引论 |
-| Tassa-Erez-Todorov IROS 2012 | ⭐⭐ | 工程化 DDP 标准参考 |
-| CMU 16-745 Lecture 10 视频 | ⭐⭐ | Manchester 边推导边编码 |
-| Giftthaler et al. IROS 2018 | ⭐⭐⭐ | iLQR = GN 的精确证明 |
-| Liao-Shoemaker IEEE TAC 1991 | ⭐⭐⭐⭐ | DDP 二次收敛的严格分析 |
-| Jacobson-Mayne 1970 专著 | ⭐⭐⭐⭐ | DDP 原始理论（历史文献） |
-| Amos et al. NeurIPS 2018 | ⭐⭐⭐⭐ | Differentiable MPC |
-| Pantoja IJC 1988 | ⭐⭐⭐⭐ | DDP = stagewise Newton |
-| Diehl-Bock-Schloder Automatica 2005 | ⭐⭐⭐ | RTI 理论保证 |
-| Mastalli ICRA 2020 (Crocoddyl) | ⭐⭐⭐ | FDDP + 框架设计 |
+| Tedrake《Underactuated》Ch.10 | ★★ | 最易读的 DDP/iLQR 引论 |
+| Tassa-Erez-Todorov IROS 2012 | ★★ | 工程化 DDP 标准参考 |
+| CMU 16-745 Lecture 10 视频 | ★★ | Manchester 边推导边编码 |
+| Giftthaler et al. IROS 2018 | ★★★ | iLQR = GN 的精确证明 |
+| Liao-Shoemaker IEEE TAC 1991 | ★★★★ | DDP 二次收敛的严格分析 |
+| Jacobson-Mayne 1970 专著 | ★★★★ | DDP 原始理论（历史文献） |
+| Amos et al. NeurIPS 2018 | ★★★★ | Differentiable MPC |
+| Pantoja IJC 1988 | ★★★★ | DDP = stagewise Newton |
+| Diehl-Bock-Schloder Automatica 2005 | ★★★ | RTI 理论保证 |
+| Mastalli ICRA 2020 (Crocoddyl) | ★★★ | FDDP + 框架设计 |
 
 ---
 
@@ -1665,7 +1665,7 @@ $$
 
 ---
 
-## §3.9.13 DDP/iLQR 与 SQP 的统一视角 ⭐⭐⭐
+## §3.9.13 DDP/iLQR 与 SQP 的统一视角 ★★★
 
 ### 动机：为什么需要统一视角
 
@@ -1741,7 +1741,7 @@ DDP 用 exact Hessian（含动力学 Hessian 张量），所以二次收敛。iL
 
 ---
 
-## §3.9.14 DDP 的收敛性分析——严格数学处理 ⭐⭐⭐⭐
+## §3.9.14 DDP 的收敛性分析——严格数学处理 ★★★★
 
 ### DDP 的局部二次收敛定理
 
@@ -1829,7 +1829,7 @@ DDP 没有**全局**二次收敛保证——它依赖初始猜测落在最优解
 
 这意味着 DDP 的收敛理论并非"独立发明"——它继承了非线性优化的完整理论体系。理解这个桥梁，可以让我们在遇到新问题时直接借用 NLP 文献的分析工具，而非从头推导。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 🧠 **思维陷阱：用迭代次数判断算法"好坏"**
 
@@ -1856,7 +1856,7 @@ DDP 没有**全局**二次收敛保证——它依赖初始猜测落在最优解
 
 ---
 
-## §3.9.15 DDP 在非欧状态空间上的推广 ⭐⭐⭐
+## §3.9.15 DDP 在非欧状态空间上的推广 ★★★
 
 ### 动机：为什么需要李群 DDP
 
@@ -1884,9 +1884,9 @@ $\delta x$ 现在是切空间向量 $\delta\xi \in \mathfrak{g}$，维度仍为 
 2. Forward pass 用 `state.integrate` 而非加法
 3. 代价函数的残差用 $\log_{SE(3)}$ 而非欧氏距离
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：对四元数状态做 $q_1 - q_2$**
+⚠ **编程陷阱：对四元数状态做 $q_1 - q_2$**
 
 四元数减法 $(q_1 - q_2)$ 不是旋转差——它甚至不在单位四元数流形上。正确做法：$\delta\omega = 2 \cdot \text{Im}(q_2^{-1} \cdot q_1)$（轴角形式的旋转差）。在 Pinocchio 中：`pinocchio.difference(model, q1, q2)`。
 
@@ -1897,7 +1897,7 @@ $\delta x$ 现在是切空间向量 $\delta\xi \in \mathfrak{g}$，维度仍为 
 
 ---
 
-## §3.9.16 计算示例：Cart-Pole 摆起的完整数值流程 ⭐⭐
+## §3.9.16 计算示例：Cart-Pole 摆起的完整数值流程 ★★
 
 ### 问题设置
 

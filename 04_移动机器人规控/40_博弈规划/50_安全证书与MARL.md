@@ -163,7 +163,7 @@ G2 的 iLQGames 在少数 agent 时很漂亮，但耦合 Riccati 的维度随 ag
 
 ---
 
-## §4.1　CBF + 博弈：多智能体安全证书　⭐⭐⭐　★ 本章地基
+## §4.1　CBF + 博弈：多智能体安全证书　★★★　★ 本章地基
 
 > **这一节解决什么问题**：G3 用"预测即均衡"消除了 frozen robot，但均衡的正确性依赖对手模型正确，而推断可能错（§3.4 陷阱 2）。
 > 这一节给出**不依赖对手模型正确性**的硬安全层——把控制屏障函数（CBF）和博弈耦合：多个机器人各解一个带共享 CBF 约束的最小范数 QP，这组 QP 的 KKT 条件**联合等价于一个广义 Nash 均衡（GNE）**。
@@ -553,7 +553,7 @@ relaxed QP 总有解——靠松弛量 δ≈2.84 让约束可行：
 > 很多论文只有其中一点强（如方法新颖但实验薄弱、或实验扎实但问题平凡），难上顶刊。
 > 一句话：**评估一篇论文（也包括写自己的论文）时，沿"问题定义 / 框架完整性 / 实验方法论"三个维度逐一打分——三者都硬才是顶刊，缺一个就会成为审稿人的攻击点。** 这个三维框架是你读任何一篇系统类论文都能套用的评估工具，比单纯"觉得这篇好/不好"精确得多。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > **陷阱 1（概念误区）：以为 CBF 保证"一定到达目标"**
 > - **错误描述**：既然 CBF-QP 保证安全又追踪标称控制，就以为它既安全又一定能完成任务（到达目标）。
@@ -599,7 +599,7 @@ relaxed QP 总有解——靠松弛量 δ≈2.84 让约束可行：
 
 ---
 
-## §4.2　势博弈与多机器人：分布式协调何时收敛　⭐⭐⭐
+## §4.2　势博弈与多机器人：分布式协调何时收敛　★★★
 
 > **这一节解决什么问题**：§4.1 的 CBF 保证安全但不保证活性（会死锁）。更一般地，多个 agent 各自优化时，集体行为何时会**收敛**到一个好的稳态？
 > 这一节介绍一类特殊博弈——**势博弈**：存在一个势函数，使所有 agent 的自私优化等价于优化同一个全局目标。势博弈保证纯 Nash 存在、且分布式学习收敛，是多机覆盖、编队、任务分配的理论基石，也为合作 MARL（§4.3）的收敛性提供保证。
@@ -811,7 +811,7 @@ print(f"Φ: {hist[0]:.1f} → {hist[-1]:.1f}  单调下降={all(hist[i]>=hist[i+
 > 分水岭另一侧（**无势结构**）：一般和、竞争博弈——独立 RL 不收敛（§4.3 反面案例），必须用 PSRO（种群）、CFR（no-regret）等专门机制逼近均衡。这是 §4.3 PSRO 主线和 §4.4 的地盘。
 > 一句话：**判断一个多智能体问题"好不好学"，第一刀就是看它有没有（近似）势结构——有则落入收敛安全区（简单方法即可），无则要上 PSRO/CFR 这类重武器。** 这也是为什么 §4.2（势博弈）放在 §4.3（一般 MARL）之前：先理解"幸运的可分解情形"，再面对"一般的困难情形"，正是从易到难的认知路径。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > **陷阱 1（概念误区）：以为任何多机协调问题都是势博弈**
 > - **错误描述**：看到势博弈这么好用（保证收敛），就以为只要是合作的多机问题，自然就是势博弈、自然就收敛。
@@ -840,7 +840,7 @@ print(f"Φ: {hist[0]:.1f} → {hist[-1]:.1f}  单调下降={all(hist[i]>=hist[i+
 
 ---
 
-## §4.3　MARL 三主线与 PSRO：从自博弈中学出均衡　⭐⭐⭐　★ 核心论文
+## §4.3　MARL 三主线与 PSRO：从自博弈中学出均衡　★★★　★ 核心论文
 
 > **这一节解决什么问题**：G1–G3 的博弈求解器都是"显式建模 + 数值求解"，但 agent 很多、博弈很大（扑克、围棋、大规模 swarm）时，无法显式写出代价求解。
 > 这一节转向另一条路——**用强化学习从自博弈中学出均衡**。它有三条主流路线（值分解、Stackelberg RL、种群博弈 PSRO），以及统一性最强的框架 PSRO（把 Double Oracle 推广到深度 RL）。
@@ -1147,7 +1147,7 @@ GCBF+ 是"系统类"论文，PSRO 则是"框架类"论文——它的贡献形�
 > 一般和大博弈（竞争/混合）→ PSRO：因为没有特殊结构可利用，只能用种群 + 经验博弈逼近均衡。
 > 一句话：**选 MARL 方法的第一性原则，是先判断博弈的结构（合作？层级？一般和？），结构决定方法**——这和 §4.2"先判断是否势博弈"、G2"先判断 Nash 还是 Stackelberg"是同一种思维：**博弈结构先于求解方法**。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > **陷阱 1（概念误区）：以为独立 RL（每个 agent 各跑一个 RL）能直接解多智能体问题**
 > - **错误描述**：把单 agent RL（DQN/PPO）直接套到每个 agent 上、各自独立训练，期望它们学出好的协调/竞争策略。
@@ -1187,7 +1187,7 @@ GCBF+ 是"系统类"论文，PSRO 则是"框架类"论文——它的贡献形�
 
 ---
 
-## §4.4　OpenSpiel 架构与自博弈：操作博弈的统一框架　⭐⭐
+## §4.4　OpenSpiel 架构与自博弈：操作博弈的统一框架　★★
 
 > **这一节解决什么问题**：§4.1–§4.3 给了博弈安全（CBF）、协调（势博弈）、学习（PSRO）的方法，但散落在不同实现里。研究和工程需要一个**统一框架**来定义博弈、运行算法、对比方法。
 > 这一节介绍 OpenSpiel——博弈-MARL 研究的事实标准框架（Game/State/Policy 抽象 + CFR/PSRO/AlphaZero 全家桶），并借它讲清自博弈、虚拟博弈、CFR 的博弈论诠释，以及"离散扩展式博弈（OpenSpiel）vs 连续微分博弈（iLQGames）"的分工。
@@ -1383,7 +1383,7 @@ OpenSpiel 不是一篇方法论文，而是一个**研究框架/基础设施**�
 > **本质洞察（玩具示例的"干净"会掩盖真实的"脏"）**：本章 CFR 在 RPS 上的示意代码很干净（单状态、遍历 3 个动作），但它掩盖了真实 CFR 的两个"脏"现实——博弈树爆炸（要采样）、收敛慢（要 CFR+ 等加速）。
 > 一句话：**用玩具示例学原理是对的（看清核心机制），但要清醒地知道玩具的"干净"掩盖了真实问题的"脏"——从 RPS 的 CFR 到扑克的 CFR，中间隔着采样、加速、信息集抽象等一大堆工程，这些才是 Pluribus 真正的难点。** 这也呼应全章基调：示意代码讲清原理，但原理到工业级实现之间的工程鸿沟，是论文解读要帮你看见的。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > **陷阱 1（概念误区）：以为 CFR 的当前策略收敛到 Nash**
 > - **错误描述**：跑 CFR 时盯着当前迭代的策略，期望它收敛到 Nash。
@@ -1488,7 +1488,7 @@ OpenSpiel 不是一篇方法论文，而是一个**研究框架/基础设施**�
 > 还有一条新兴的"正交"方向：与大模型结合（ToM via LLMs、LLM 发现算法）和安全 × 学习的深度融合（HMARL-CBF）。
 > 一句话：**博弈安全/学习的前沿，主线是沿"更大规模"和"更一般结构"两条轴外推，新兴是与大模型、与硬安全的深度交叉**——理解了设计空间的两条轴，就能预判前沿会往哪走、新工作该挂在哪。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 > **陷阱 1（思维陷阱）：盲目追最新、最复杂的方法**
 > - **错误描述**：看到 GCBF+、PSRO、Deep CFR 这些 SOTA，就默认它们一定比 CBF-QP、势博弈、CFR+ 好，无脑用最新最复杂的。
@@ -1682,27 +1682,27 @@ OpenSpiel 不是一篇方法论文，而是一个**研究框架/基础设施**�
 
 | 节 | 知识点 | 难度 | 一句话 |
 |----|--------|------|--------|
-| §4.1 | CBF-QP ↔ GNE 等价 | ⭐⭐⭐ ★ | 多机 CBF-QP 的 KKT 联合 = 广义 Nash 均衡 (4.1)(4.2) |
-| §4.1 | CBF 安全证书 | ⭐⭐⭐ | min-norm QP 把标称控制最小修正到安全；保 safety 不保 liveness |
-| §4.1 | GCBF+ | ⭐⭐⭐ ★ | GNN 学图控制屏障函数，8 agent 训练泛化到 1024 |
-| §4.1 | 死锁与对称破缺 | ⭐⭐ | CBF 只保安全会死锁，需切向偏置/优先级/高层协调 |
-| §4.2 | 势博弈与势函数 | ⭐⭐⭐ | (4.3) 自私优化 = 集体降 $\Phi$；纯 NE 存在 + 收敛 |
-| §4.2 | Voronoi 覆盖 | ⭐⭐ | (4.4) locational cost 为势函数，Lloyd = 坐标下降 |
-| §4.2 | Markov Potential Games | ⭐⭐⭐ | 合作 MARL = 势博弈，policy gradient 收敛 |
-| §4.3 | MARL 三主线 | ⭐⭐⭐ | 值分解（合作）/Stackelberg（层级）/PSRO（一般和） |
-| §4.3 | PSRO | ⭐⭐⭐ ★ | Double Oracle 推广，meta-solver 可插拔统一诸方法 |
-| §4.3 | Nash-Q | ⭐⭐ | Q-learning 的 max 换 stage game Nash 值 |
-| §4.3 | 独立 RL 的失效 | ⭐⭐ | 非平稳 + 过拟合训练对手，需 MARL 专门方法 |
-| §4.4 | OpenSpiel 抽象 | ⭐⭐ | Game/State/Policy 解耦"博弈"与"算法" |
-| §4.4 | CFR | ⭐⭐⭐ | regret matching，平均策略收敛 Nash（不完美信息博弈） |
-| §4.4 | 自博弈诠释 | ⭐⭐ | AlphaZero/FP/CFR/PSRO 都是"对弈一族对手逼近均衡" |
-| §4.4 | 离散 vs 连续博弈 | ⭐⭐ | OpenSpiel（扩展式）vs iLQGames（微分），按博弈类型选 |
-| §4.4 | CFR 家族演进 | ⭐⭐⭐ | CFR+（加速）/MCCFR（采样）/Deep CFR（神经网络）突破规模 |
-| §4.4 | exploitability | ⭐⭐⭐ | 对最坏对手的可利用度，博弈求解的客观标尺 |
-| §4.1 | relaxed CBF | ⭐⭐ | 软约束 + 松弛保 QP 永远可行，δ 当安全裕度传感器 |
-| §4.1 | GCBF 局部聚合 | ⭐⭐⭐ | "碰撞是成对事件"让局部安全聚合成任意规模全局安全 |
-| §4.3 | 值分解三剑客 | ⭐⭐⭐ | VDN（求和）/QMIX（单调混合）/MAPPO（PPO+中心critic）解信用分配 |
-| §4.5 | 设计空间两条轴 | ⭐⭐⭐ | 博弈结构（多特殊）× 规模（求解 vs 学习）决定选型 |
+| §4.1 | CBF-QP ↔ GNE 等价 | ★★★ ★ | 多机 CBF-QP 的 KKT 联合 = 广义 Nash 均衡 (4.1)(4.2) |
+| §4.1 | CBF 安全证书 | ★★★ | min-norm QP 把标称控制最小修正到安全；保 safety 不保 liveness |
+| §4.1 | GCBF+ | ★★★ ★ | GNN 学图控制屏障函数，8 agent 训练泛化到 1024 |
+| §4.1 | 死锁与对称破缺 | ★★ | CBF 只保安全会死锁，需切向偏置/优先级/高层协调 |
+| §4.2 | 势博弈与势函数 | ★★★ | (4.3) 自私优化 = 集体降 $\Phi$；纯 NE 存在 + 收敛 |
+| §4.2 | Voronoi 覆盖 | ★★ | (4.4) locational cost 为势函数，Lloyd = 坐标下降 |
+| §4.2 | Markov Potential Games | ★★★ | 合作 MARL = 势博弈，policy gradient 收敛 |
+| §4.3 | MARL 三主线 | ★★★ | 值分解（合作）/Stackelberg（层级）/PSRO（一般和） |
+| §4.3 | PSRO | ★★★ ★ | Double Oracle 推广，meta-solver 可插拔统一诸方法 |
+| §4.3 | Nash-Q | ★★ | Q-learning 的 max 换 stage game Nash 值 |
+| §4.3 | 独立 RL 的失效 | ★★ | 非平稳 + 过拟合训练对手，需 MARL 专门方法 |
+| §4.4 | OpenSpiel 抽象 | ★★ | Game/State/Policy 解耦"博弈"与"算法" |
+| §4.4 | CFR | ★★★ | regret matching，平均策略收敛 Nash（不完美信息博弈） |
+| §4.4 | 自博弈诠释 | ★★ | AlphaZero/FP/CFR/PSRO 都是"对弈一族对手逼近均衡" |
+| §4.4 | 离散 vs 连续博弈 | ★★ | OpenSpiel（扩展式）vs iLQGames（微分），按博弈类型选 |
+| §4.4 | CFR 家族演进 | ★★★ | CFR+（加速）/MCCFR（采样）/Deep CFR（神经网络）突破规模 |
+| §4.4 | exploitability | ★★★ | 对最坏对手的可利用度，博弈求解的客观标尺 |
+| §4.1 | relaxed CBF | ★★ | 软约束 + 松弛保 QP 永远可行，δ 当安全裕度传感器 |
+| §4.1 | GCBF 局部聚合 | ★★★ | "碰撞是成对事件"让局部安全聚合成任意规模全局安全 |
+| §4.3 | 值分解三剑客 | ★★★ | VDN（求和）/QMIX（单调混合）/MAPPO（PPO+中心critic）解信用分配 |
+| §4.5 | 设计空间两条轴 | ★★★ | 博弈结构（多特殊）× 规模（求解 vs 学习）决定选型 |
 
 ---
 ## 累积项目：本章新增模块
@@ -1723,76 +1723,76 @@ OpenSpiel 不是一篇方法论文，而是一个**研究框架/基础设施**�
 按主题与难度标注，括号内为定位。**特别收入 2021–2026 年机器人/AI 顶会顶刊的代表工作**，帮助你把握本章方向的最新进展。
 
 **CBF 安全证书与多机安全（本章 §4.1 地基，必读）**
-- Ames, Coogan, Egerstedt, Notomista, Sreenath, Tabuada, "Control Barrier Functions: Theory and Applications," ECC 2019（⭐⭐⭐⭐ CBF 理论与应用的权威综述，入门 CBF 必读）
-- Wang, Ames, Egerstedt, "Safety Barrier Certificates for Collisions-Free Multirobot Systems," IEEE T-RO 2017, 33(3):661-674（⭐⭐⭐⭐ 多机 CBF 安全证书奠基，DOI 10.1109/TRO.2017.2659727）
-- Notomista, Egerstedt, "Constraint-Driven Coordinated Control of Multi-Robot Systems," ACC 2019（⭐⭐⭐ 约束驱动协调，用 CBF 编码长期自主任务，arXiv:1811.02465）
+- Ames, Coogan, Egerstedt, Notomista, Sreenath, Tabuada, "Control Barrier Functions: Theory and Applications," ECC 2019（★★★★ CBF 理论与应用的权威综述，入门 CBF 必读）
+- Wang, Ames, Egerstedt, "Safety Barrier Certificates for Collisions-Free Multirobot Systems," IEEE T-RO 2017, 33(3):661-674（★★★★ 多机 CBF 安全证书奠基，DOI 10.1109/TRO.2017.2659727）
+- Notomista, Egerstedt, "Constraint-Driven Coordinated Control of Multi-Robot Systems," ACC 2019（★★★ 约束驱动协调，用 CBF 编码长期自主任务，arXiv:1811.02465）
 
 **神经安全证书与可扩展 swarm（2021–2026 前沿，重点）**
-- Qin, Zhang, Chen, Fan, "Learning Safe Multi-Agent Control with Decentralized Neural Barrier Certificates," ICLR 2021（⭐⭐⭐⭐ GCBF 前身，联合学习 CBF + 控制器，8 agent 训练泛化到 1024，arXiv:2101.05436）
-- Zhang, So, Garg, Fan, "GCBF+: A Neural Graph Control Barrier Function Framework for Distributed Safe Multi-Agent Control," IEEE T-RO 2025, 41:1533-1552（⭐⭐⭐⭐⭐ 本章核心，GNN 学图 CBF，任意规模单一证书，可吃 LiDAR 点云，DOI 10.1109/TRO.2025.3530348，arXiv:2401.14554，代码 MIT-REALM/gcbfplus）
-- Dawson, Gao, Fan, "Safe Control with Learned Certificates: A Survey of Neural Lyapunov, Barrier, and Contraction Methods for Robotics and Control," IEEE T-RO 2023（⭐⭐⭐⭐ 神经证书方法综述，系统梳理 learned Lyapunov/barrier/contraction）
-- So, Serlin, Mann, Gonzales, Rutledge, Roy, Fan, "How to Train Your Neural Control Barrier Function: Learning Safety Filters for Complex Input-Constrained Systems (PNCBF)," ICRA 2024（⭐⭐⭐⭐ 学标称策略的值函数作 CBF，证明"最大-over-时间代价"的值函数是 CBF，攻克高相对度 + 输入约束下难构造 CBF）
-- Xiao, Wang, Hasani, Chahine, Amini, Li, Rus, "BarrierNet: Differentiable Control Barrier Functions for Learning of Safe Robot Control," IEEE T-RO 2023, 39(3):2289-2307（⭐⭐⭐⭐ 把 CBF-QP 做成可微层嵌入神经控制器，端到端训练、安全约束随环境自适应，DOI 10.1109/TRO.2023.3249564）
-- Hsu, Hu, Fisac, "The Safety Filter: A Unified View of Safety-Critical Control in Autonomous Systems," Annual Review of Control, Robotics, and Autonomous Systems 2024（⭐⭐⭐⭐ 把 CBF / HJ 可达 / MPC 等安全滤波统一在一个视角下的权威综述，强烈推荐建立全局观）
-- Lin, Peng, Bansal, "One Filter to Deploy Them All: Robust Safety for Quadrupedal Navigation in Unknown Environments," IEEE T-RO 2026（⭐⭐⭐ 单一鲁棒安全滤波器跨场景部署于四足导航）
+- Qin, Zhang, Chen, Fan, "Learning Safe Multi-Agent Control with Decentralized Neural Barrier Certificates," ICLR 2021（★★★★ GCBF 前身，联合学习 CBF + 控制器，8 agent 训练泛化到 1024，arXiv:2101.05436）
+- Zhang, So, Garg, Fan, "GCBF+: A Neural Graph Control Barrier Function Framework for Distributed Safe Multi-Agent Control," IEEE T-RO 2025, 41:1533-1552（★★★★★ 本章核心，GNN 学图 CBF，任意规模单一证书，可吃 LiDAR 点云，DOI 10.1109/TRO.2025.3530348，arXiv:2401.14554，代码 MIT-REALM/gcbfplus）
+- Dawson, Gao, Fan, "Safe Control with Learned Certificates: A Survey of Neural Lyapunov, Barrier, and Contraction Methods for Robotics and Control," IEEE T-RO 2023（★★★★ 神经证书方法综述，系统梳理 learned Lyapunov/barrier/contraction）
+- So, Serlin, Mann, Gonzales, Rutledge, Roy, Fan, "How to Train Your Neural Control Barrier Function: Learning Safety Filters for Complex Input-Constrained Systems (PNCBF)," ICRA 2024（★★★★ 学标称策略的值函数作 CBF，证明"最大-over-时间代价"的值函数是 CBF，攻克高相对度 + 输入约束下难构造 CBF）
+- Xiao, Wang, Hasani, Chahine, Amini, Li, Rus, "BarrierNet: Differentiable Control Barrier Functions for Learning of Safe Robot Control," IEEE T-RO 2023, 39(3):2289-2307（★★★★ 把 CBF-QP 做成可微层嵌入神经控制器，端到端训练、安全约束随环境自适应，DOI 10.1109/TRO.2023.3249564）
+- Hsu, Hu, Fisac, "The Safety Filter: A Unified View of Safety-Critical Control in Autonomous Systems," Annual Review of Control, Robotics, and Autonomous Systems 2024（★★★★ 把 CBF / HJ 可达 / MPC 等安全滤波统一在一个视角下的权威综述，强烈推荐建立全局观）
+- Lin, Peng, Bansal, "One Filter to Deploy Them All: Robust Safety for Quadrupedal Navigation in Unknown Environments," IEEE T-RO 2026（★★★ 单一鲁棒安全滤波器跨场景部署于四足导航）
 
 **大规模学习式避碰与多机导航（2018–2026，§4.1/§4.3 实践）**
-- Long, Fan, Liao, Liu, Zhang, Pan, "Towards Optimally Decentralized Multi-Robot Collision Avoidance via Deep RL," ICRA 2018（⭐⭐⭐⭐ 传感器级 DRL 避碰，100 机器人，sim-to-real，去中心化导航经典）
-- Everett, Chen, How, "Motion Planning Among Dynamic, Decision-Making Agents with Deep RL," IROS 2018（⭐⭐⭐ 行人间导航的深度 RL，CADRL 系列）
-- 一系列 GNN + MARL 大规模 swarm 工作（如图神经网络聚合局部邻域 + CTDE 训练上百 UAV）（⭐⭐⭐ 把 §4.1 的图聚合思想与 §4.3 的 CTDE 结合用于大规模导航）
+- Long, Fan, Liao, Liu, Zhang, Pan, "Towards Optimally Decentralized Multi-Robot Collision Avoidance via Deep RL," ICRA 2018（★★★★ 传感器级 DRL 避碰，100 机器人，sim-to-real，去中心化导航经典）
+- Everett, Chen, How, "Motion Planning Among Dynamic, Decision-Making Agents with Deep RL," IROS 2018（★★★ 行人间导航的深度 RL，CADRL 系列）
+- 一系列 GNN + MARL 大规模 swarm 工作（如图神经网络聚合局部邻域 + CTDE 训练上百 UAV）（★★★ 把 §4.1 的图聚合思想与 §4.3 的 CTDE 结合用于大规模导航）
 
 **势博弈与合作控制（本章 §4.2 基石）**
-- Monderer, Shapley, "Potential Games," Games and Economic Behavior 1996, 14(1):124-143（⭐⭐⭐⭐ 势博弈奠基，DOI 10.1006/game.1996.0044）
-- Marden, Arslan, Shamma, "Cooperative Control and Potential Games," IEEE TSMCB 2009, 39(6):1393-1407（⭐⭐⭐⭐ 合作控制的博弈论视角，覆盖/一致性/任务分配，DOI 10.1109/TSMCB.2009.2017273）
-- Marden, Arslan, Shamma, "Joint Strategy Fictitious Play with Inertia for Potential Games," IEEE TAC 2009, 54(2):208-220（⭐⭐⭐ JSFP with inertia，势博弈的分布式学习算法）
-- Leonardos, Overman, Panageas, Piliouras, "Global Convergence of Multi-Agent Policy Gradient in Markov Potential Games," ICLR 2022（⭐⭐⭐⭐ 证明 MPG 中 policy gradient 全局收敛，合作 MARL 的收敛理论支柱）
-- Ding, Wei, Zhang, Jovanović, "Independent Policy Gradient for Large-Scale Markov Potential Games: Sharper Rates, Function Approximation, and Game-Agnostic Convergence," ICML 2022（⭐⭐⭐⭐ MPG 中独立 policy gradient 找 ε-Nash 的 $O(1/\epsilon^2)$ 复杂度、不依赖状态空间大小，对零和与合作博弈均收敛，arXiv:2202.04129）
+- Monderer, Shapley, "Potential Games," Games and Economic Behavior 1996, 14(1):124-143（★★★★ 势博弈奠基，DOI 10.1006/game.1996.0044）
+- Marden, Arslan, Shamma, "Cooperative Control and Potential Games," IEEE TSMCB 2009, 39(6):1393-1407（★★★★ 合作控制的博弈论视角，覆盖/一致性/任务分配，DOI 10.1109/TSMCB.2009.2017273）
+- Marden, Arslan, Shamma, "Joint Strategy Fictitious Play with Inertia for Potential Games," IEEE TAC 2009, 54(2):208-220（★★★ JSFP with inertia，势博弈的分布式学习算法）
+- Leonardos, Overman, Panageas, Piliouras, "Global Convergence of Multi-Agent Policy Gradient in Markov Potential Games," ICLR 2022（★★★★ 证明 MPG 中 policy gradient 全局收敛，合作 MARL 的收敛理论支柱）
+- Ding, Wei, Zhang, Jovanović, "Independent Policy Gradient for Large-Scale Markov Potential Games: Sharper Rates, Function Approximation, and Game-Agnostic Convergence," ICML 2022（★★★★ MPG 中独立 policy gradient 找 ε-Nash 的 $O(1/\epsilon^2)$ 复杂度、不依赖状态空间大小，对零和与合作博弈均收敛，arXiv:2202.04129）
 
 **MARL 三主线（本章 §4.3 核心）**
-- Hu, Wellman, "Nash Q-Learning for General-Sum Stochastic Games," JMLR 2003, 4:1039-1069（⭐⭐⭐⭐ 表格式多人 RL 奠基，Nash 替代 max）
-- Lowe, Wu, Tamar, Harb, Abbeel, Mordatch, "Multi-Agent Actor-Critic for Mixed Cooperative-Competitive Environments (MADDPG)," NeurIPS 2017（⭐⭐⭐⭐ CTDE 范式开创，arXiv:1706.02275）
-- Rashid, Samvelyan, de Witt, Farquhar, Foerster, Whiteson, "QMIX: Monotonic Value Function Factorisation for Deep Multi-Agent RL," ICML 2018（⭐⭐⭐⭐ 单调值分解，合作 MARL 标杆，arXiv:1803.11485）
-- Yu, Velu, Vinitsky, Gao, Wang, Bayen, Wu, "The Surprising Effectiveness of PPO in Cooperative Multi-Agent Games (MAPPO)," NeurIPS 2022（⭐⭐⭐⭐ 证明 PPO 在合作 MARL 出奇有效，强基线，arXiv:2103.01955）
-- Lanctot et al., "A Unified Game-Theoretic Approach to Multiagent Reinforcement Learning (PSRO)," NeurIPS 2017（⭐⭐⭐⭐ 本章核心，种群博弈统一框架，arXiv:1711.00832）
+- Hu, Wellman, "Nash Q-Learning for General-Sum Stochastic Games," JMLR 2003, 4:1039-1069（★★★★ 表格式多人 RL 奠基，Nash 替代 max）
+- Lowe, Wu, Tamar, Harb, Abbeel, Mordatch, "Multi-Agent Actor-Critic for Mixed Cooperative-Competitive Environments (MADDPG)," NeurIPS 2017（★★★★ CTDE 范式开创，arXiv:1706.02275）
+- Rashid, Samvelyan, de Witt, Farquhar, Foerster, Whiteson, "QMIX: Monotonic Value Function Factorisation for Deep Multi-Agent RL," ICML 2018（★★★★ 单调值分解，合作 MARL 标杆，arXiv:1803.11485）
+- Yu, Velu, Vinitsky, Gao, Wang, Bayen, Wu, "The Surprising Effectiveness of PPO in Cooperative Multi-Agent Games (MAPPO)," NeurIPS 2022（★★★★ 证明 PPO 在合作 MARL 出奇有效，强基线，arXiv:2103.01955）
+- Lanctot et al., "A Unified Game-Theoretic Approach to Multiagent Reinforcement Learning (PSRO)," NeurIPS 2017（★★★★ 本章核心，种群博弈统一框架，arXiv:1711.00832）
 
 **PSRO 家族与 Stackelberg RL（2020–2026 进阶）**
-- Muller et al., "A Generalized Training Approach for Multiagent Learning (α-PSRO/α-Rank)," ICLR 2020（⭐⭐⭐⭐ 用 α-Rank 作 meta-solver 推广 PSRO 到一般和，arXiv:1909.12823）
-- McAleer, Lanier, Fox, Baldi, "Pipeline PSRO: A Scalable Approach for Finding Approximate Nash Equilibria in Large Games," NeurIPS 2020（⭐⭐⭐⭐ 流水线并行 PSRO，Barrage Stratego SOTA，arXiv:2006.08555）
-- Marris, Muller, Lanctot, Tuyls, Graepel, "Multi-Agent Training beyond Zero-Sum with Correlated Equilibrium Meta-Solvers (JPSRO)," ICML 2021（⭐⭐⭐⭐ 用 CCE 作 meta-solver 推广到 n 人一般和，避开 Nash 的 PPAD-hard，arXiv:2106.09435）
-- Gerstgrasser, Parkes, "Oracles & Followers: Stackelberg Equilibria in Deep Multi-Agent Reinforcement Learning," ICML 2023（⭐⭐⭐⭐ Stackelberg RL 的统一框架，用 meta-RL 学 follower 响应，arXiv:2210.11942）
+- Muller et al., "A Generalized Training Approach for Multiagent Learning (α-PSRO/α-Rank)," ICLR 2020（★★★★ 用 α-Rank 作 meta-solver 推广 PSRO 到一般和，arXiv:1909.12823）
+- McAleer, Lanier, Fox, Baldi, "Pipeline PSRO: A Scalable Approach for Finding Approximate Nash Equilibria in Large Games," NeurIPS 2020（★★★★ 流水线并行 PSRO，Barrage Stratego SOTA，arXiv:2006.08555）
+- Marris, Muller, Lanctot, Tuyls, Graepel, "Multi-Agent Training beyond Zero-Sum with Correlated Equilibrium Meta-Solvers (JPSRO)," ICML 2021（★★★★ 用 CCE 作 meta-solver 推广到 n 人一般和，避开 Nash 的 PPAD-hard，arXiv:2106.09435）
+- Gerstgrasser, Parkes, "Oracles & Followers: Stackelberg Equilibria in Deep Multi-Agent Reinforcement Learning," ICML 2023（★★★★ Stackelberg RL 的统一框架，用 meta-RL 学 follower 响应，arXiv:2210.11942）
 
 **自博弈与超人博弈 AI（里程碑）**
-- Silver et al., "Mastering the Game of Go without Human Knowledge (AlphaGo Zero)," Nature 2017（⭐⭐⭐⭐ 纯自博弈达到超人围棋，两人零和完美信息的策略迭代）
-- Vinyals et al., "Grandmaster Level in StarCraft II Using Multi-Agent Reinforcement Learning (AlphaStar)," Nature 2019（⭐⭐⭐⭐ League 种群训练，星际争霸宗师级，PSRO 式自博弈的工业级应用）
-- Brown, Sandholm, "Superhuman AI for Multiplayer Poker (Pluribus)," Science 2019（⭐⭐⭐⭐ 六人德州扑克超人，CFR 家族 + 自博弈）
+- Silver et al., "Mastering the Game of Go without Human Knowledge (AlphaGo Zero)," Nature 2017（★★★★ 纯自博弈达到超人围棋，两人零和完美信息的策略迭代）
+- Vinyals et al., "Grandmaster Level in StarCraft II Using Multi-Agent Reinforcement Learning (AlphaStar)," Nature 2019（★★★★ League 种群训练，星际争霸宗师级，PSRO 式自博弈的工业级应用）
+- Brown, Sandholm, "Superhuman AI for Multiplayer Poker (Pluribus)," Science 2019（★★★★ 六人德州扑克超人，CFR 家族 + 自博弈）
 
 **几何避碰家族（不依赖意图的硬几何安全，§4.1/§4.2 对照）**
-- Zhou, Wang, Bandyopadhyay, Schwager, "Fast, On-line Collision Avoidance for Dynamic Vehicles Using Buffered Voronoi Cells (BVC)," IEEE RA-L 2017, 2(2):1047-1054（⭐⭐⭐⭐ Voronoi 分割做避碰，O(k)、只需相对位置无需通信，5 架四旋翼实验）
-- van den Berg, Guy, Lin, Manocha, "Reciprocal n-Body Collision Avoidance (ORCA)," ISRR 2011（⭐⭐⭐⭐ 速度障碍法的奠基，互惠避碰，多机避碰经典基线）
-- 概率 BVC（Probabilistic Buffered Voronoi Cell）（⭐⭐⭐ 把 BVC 推广到带感知噪声的概率安全级别，呼应 §4.1 感知误差讨论）
+- Zhou, Wang, Bandyopadhyay, Schwager, "Fast, On-line Collision Avoidance for Dynamic Vehicles Using Buffered Voronoi Cells (BVC)," IEEE RA-L 2017, 2(2):1047-1054（★★★★ Voronoi 分割做避碰，O(k)、只需相对位置无需通信，5 架四旋翼实验）
+- van den Berg, Guy, Lin, Manocha, "Reciprocal n-Body Collision Avoidance (ORCA)," ISRR 2011（★★★★ 速度障碍法的奠基，互惠避碰，多机避碰经典基线）
+- 概率 BVC（Probabilistic Buffered Voronoi Cell）（★★★ 把 BVC 推广到带感知噪声的概率安全级别，呼应 §4.1 感知误差讨论）
 
 **博弈求解算法谱系（CFR 家族与 no-regret 学习，§4.4 深入）**
-- Zinkevich, Johanson, Bowling, Piccione, "Regret Minimization in Games with Incomplete Information (CFR)," NeurIPS 2007（⭐⭐⭐⭐ CFR 奠基，不完美信息博弈的后悔最小化）
-- Tammelin, "Solving Large Imperfect Information Games Using CFR+," 2014（⭐⭐⭐⭐ CFR+，regret matching+ 与线性加权，现代 CFR 标配，用于解出极限德州扑克）
-- Brown, Lerer, Gross, Sandholm, "Deep Counterfactual Regret Minimization (Deep CFR)," ICML 2019（⭐⭐⭐⭐ 用神经网络逼近后悔，CFR 与深度学习结合，突破表格内存瓶颈）
-- Lanctot, Waugh, Zinkevich, Bowling, "Monte Carlo Sampling for Regret Minimization in Extensive Games (MCCFR)," NeurIPS 2009（⭐⭐⭐ 采样式 CFR，避免全树遍历）
+- Zinkevich, Johanson, Bowling, Piccione, "Regret Minimization in Games with Incomplete Information (CFR)," NeurIPS 2007（★★★★ CFR 奠基，不完美信息博弈的后悔最小化）
+- Tammelin, "Solving Large Imperfect Information Games Using CFR+," 2014（★★★★ CFR+，regret matching+ 与线性加权，现代 CFR 标配，用于解出极限德州扑克）
+- Brown, Lerer, Gross, Sandholm, "Deep Counterfactual Regret Minimization (Deep CFR)," ICML 2019（★★★★ 用神经网络逼近后悔，CFR 与深度学习结合，突破表格内存瓶颈）
+- Lanctot, Waugh, Zinkevich, Bowling, "Monte Carlo Sampling for Regret Minimization in Extensive Games (MCCFR)," NeurIPS 2009（★★★ 采样式 CFR，避免全树遍历）
 
 **博弈 + 学习的新兴方向（2023–2026 选读）**
-- Strouse, McKee, Botvinick, Hughes, Everett, "Collaborating with Humans without Human Data," NeurIPS 2021（⭐⭐⭐ zero-shot 人机协调，避免对特定人类数据过拟合）
-- Li, Chong, Stepputtis, Campbell, Hughes, Lewis, Sycara, "Theory of Mind for Multi-Agent Collaboration via Large Language Models," EMNLP 2023（⭐⭐⭐ LLM 做多智能体协作的心智推理，博弈 + 大模型交界，呼应 G3 §3.1 ToM）
-- Wang, Zhang et al., "ZSC-Eval: An Evaluation Toolkit and Benchmark for Multi-Agent Zero-Shot Coordination," NeurIPS 2024（⭐⭐⭐ zero-shot 协调的系统评测基准）
+- Strouse, McKee, Botvinick, Hughes, Everett, "Collaborating with Humans without Human Data," NeurIPS 2021（★★★ zero-shot 人机协调，避免对特定人类数据过拟合）
+- Li, Chong, Stepputtis, Campbell, Hughes, Lewis, Sycara, "Theory of Mind for Multi-Agent Collaboration via Large Language Models," EMNLP 2023（★★★ LLM 做多智能体协作的心智推理，博弈 + 大模型交界，呼应 G3 §3.1 ToM）
+- Wang, Zhang et al., "ZSC-Eval: An Evaluation Toolkit and Benchmark for Multi-Agent Zero-Shot Coordination," NeurIPS 2024（★★★ zero-shot 协调的系统评测基准）
 
 **生成式多机规划与安全 MARL（2024–2026 前沿，与本章主题交汇）**
-- Shaoul, Mishani, Vats, Li, Likhachev, "Multi-Robot Motion Planning with Diffusion Models (MMD)," NeurIPS 2024（⭐⭐⭐⭐ 用单机数据 + 经典搜索生成无碰撞多机轨迹，组合多扩散模型扩展到大环境，arXiv:2410.03072）
-- Liang, Christopher, Koenig, Fioretto, "Simultaneous Multi-Robot Motion Planning with Projected Diffusion Models (SMD)," ICML 2025（⭐⭐⭐⭐ 把约束优化嵌入扩散采样生成无碰撞、运动学可行轨迹，附 MRMP 基准，arXiv:2502.03607）
-- "Solving Multi-Agent Safe Optimal Control with Distributed Epigraph Form MARL," RSS 2025（⭐⭐⭐ 分布式 epigraph 形式的安全最优控制 MARL）
-- "HMARL-CBF: Hierarchical Multi-Agent RL with Control Barrier Functions for Safety-Critical Autonomous Systems," NeurIPS 2025（⭐⭐⭐ 分层 MARL：高层学协作技能、底层 CBF 保安全，直接结合 §4.1 + §4.3）
+- Shaoul, Mishani, Vats, Li, Likhachev, "Multi-Robot Motion Planning with Diffusion Models (MMD)," NeurIPS 2024（★★★★ 用单机数据 + 经典搜索生成无碰撞多机轨迹，组合多扩散模型扩展到大环境，arXiv:2410.03072）
+- Liang, Christopher, Koenig, Fioretto, "Simultaneous Multi-Robot Motion Planning with Projected Diffusion Models (SMD)," ICML 2025（★★★★ 把约束优化嵌入扩散采样生成无碰撞、运动学可行轨迹，附 MRMP 基准，arXiv:2502.03607）
+- "Solving Multi-Agent Safe Optimal Control with Distributed Epigraph Form MARL," RSS 2025（★★★ 分布式 epigraph 形式的安全最优控制 MARL）
+- "HMARL-CBF: Hierarchical Multi-Agent RL with Control Barrier Functions for Safety-Critical Autonomous Systems," NeurIPS 2025（★★★ 分层 MARL：高层学协作技能、底层 CBF 保安全，直接结合 §4.1 + §4.3）
 
 **统一框架与开源工具（动手）**
-- Lanctot et al., "OpenSpiel: A Framework for Reinforcement Learning in Games," arXiv:1908.09453（⭐⭐⭐⭐ OpenSpiel 白皮书，设计哲学 + 算法清单）
-- `google-deepmind/open_spiel`（⭐⭐⭐ 官方代码，80+ 游戏 + CFR/PSRO/AlphaZero 全家桶，C++/Python）
-- `MIT-REALM/gcbfplus`（⭐⭐⭐ GCBF+ 官方 JAX 实现，含 SingleIntegrator/DoubleIntegrator/DubinsCar/drone 环境）
-- PettingZoo / MARLlib / EPyMARL（⭐⭐⭐ 多智能体环境与算法库，MARL 实验标准工具）
+- Lanctot et al., "OpenSpiel: A Framework for Reinforcement Learning in Games," arXiv:1908.09453（★★★★ OpenSpiel 白皮书，设计哲学 + 算法清单）
+- `google-deepmind/open_spiel`（★★★ 官方代码，80+ 游戏 + CFR/PSRO/AlphaZero 全家桶，C++/Python）
+- `MIT-REALM/gcbfplus`（★★★ GCBF+ 官方 JAX 实现，含 SingleIntegrator/DoubleIntegrator/DubinsCar/drone 环境）
+- PettingZoo / MARLlib / EPyMARL（★★★ 多智能体环境与算法库，MARL 实验标准工具）
 
 ---
 

@@ -10,7 +10,7 @@
 
 ## 前置自测
 
-📋 **答不出 ≥ 3 题 → 先回前置章节复习**
+◆ **答不出 ≥ 3 题 → 先回前置章节复习**
 
 | # | 问题 | 检查目的 |
 |---|------|----------|
@@ -34,7 +34,7 @@
 
 ---
 
-## 12.1 算法回顾：Actuator 模型层级 ⭐
+## 12.1 算法回顾：Actuator 模型层级 ★
 
 > **这一节解决什么问题**：用 20% 的篇幅建立 actuator 建模的全局视角——四个层级的递进关系、每个层级解决什么问题、适用什么场景。
 
@@ -91,7 +91,7 @@ Level 3: Delta Action Model a_corrected = a_policy + MLP_delta(s)
 
 > **重要更正：** Actuator Network 的原创者是 **Hwangbo et al. 2019**（ANYmal, Science Robotics），而非 walk-these-ways。walk-these-ways（Margolis & Agrawal, **CoRL 2022**, arXiv 2212.03238）的核心贡献是**Multiplicity-of-Behavior (MoB) gait conditioning**，它使用了标准的 Isaac Gym DR（Rudin et al. 2021），不是 actuator network。很多中文资料错误地把 actuator network 归因于 walk-these-ways——本教材做出纠正。注意：大纲中将 walk-these-ways 标注为 "RSS'23" 是将其与同组的另一篇论文混淆，此处已修正。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 🧠 **思维陷阱：更高精度的 actuator 模型总是更好。** 如果你的 DR 范围足够宽（Ch08 的 kp 随机化 U(0.75, 1.5)），Ideal PD + DR 可能已经"覆盖"了真机的 actuator 特性。只有当 DR 不够时（例如需要跳跃、旋转等极限动作），才值得投入 Level 2-3 的工程量。
 
@@ -107,7 +107,7 @@ Level 3: Delta Action Model a_corrected = a_policy + MLP_delta(s)
 
 上一节建立了四个层级的全局视角。下两节分别讲解最常用的两个层级的工程实现：DC Motor 模型和 Actuator Network。
 
-## 12.2 Level 0-1：Ideal PD 与 DC Motor 模型 ⭐⭐⭐
+## 12.2 Level 0-1：Ideal PD 与 DC Motor 模型 ★★★
 
 > **这一节解决什么问题**：最基础也是最常用的 actuator 模型——Ideal PD 和 DC Motor——在 mjlab 和 Isaac Lab 中如何配置、每个参数的物理意义、以及何时从 Level 0 升级到 Level 1。
 
@@ -134,7 +134,7 @@ $$\tau = K_p \cdot (q^* - q) - K_v \cdot \dot{q}$$
 
 其中 $q^* = \text{ctrl}$ 是策略输出的目标角度。注意 MuJoCo 使用 `kv`（velocity gain）而非 `kd`（derivative gain）——两者在 position actuator 中等价，但在 MuJoCo 的 `<general>` actuator 中有区别。
 
-⚠️ **关键细节：MuJoCo 的 `<position>` actuator 的 kv 和 `<joint>` 的 damping 效果叠加。** 如果你设了 `<position kv="4"/>` 且 `<joint damping="0.5"/>`，总阻尼是 4.5。这和 Ch11 讨论的跨仿真器对齐直接相关。
+⚠ **关键细节：MuJoCo 的 `<position>` actuator 的 kv 和 `<joint>` 的 damping 效果叠加。** 如果你设了 `<position kv="4"/>` 且 `<joint damping="0.5"/>`，总阻尼是 4.5。这和 Ch11 讨论的跨仿真器对齐直接相关。
 
 ### Ideal PD 在 Isaac Lab 中的实现
 
@@ -455,11 +455,11 @@ biastype="affine", biasprm=[b0, b1, b2]
 | 摩擦 | `<joint frictionloss>` | `ActuatorBaseCfg(friction)` |
 | armature | `<joint armature>` | `ActuatorBaseCfg(armature)` |
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：Isaac Lab 的 ImplicitActuator 和 IdealPDActuator 在 DR 下行为不同。** ImplicitActuator 的 DR 通过 PhysX 内部参数修改实现，IdealPDActuator 的 DR 在 Python 中修改。两种方式可能有微小的数值差异。如果你在对比实验中混用这两种，需要注意。
+⚠ **编程陷阱：Isaac Lab 的 ImplicitActuator 和 IdealPDActuator 在 DR 下行为不同。** ImplicitActuator 的 DR 通过 PhysX 内部参数修改实现，IdealPDActuator 的 DR 在 Python 中修改。两种方式可能有微小的数值差异。如果你在对比实验中混用这两种，需要注意。
 
-⚠️ **编程陷阱：MuJoCo 的 forcerange 在 position actuator 上限制的是"actuator 输出力矩"，而非"关节总力矩"。** 关节总力矩还包括重力补偿、约束力等——forcerange 只限制 actuator 贡献的部分。
+⚠ **编程陷阱：MuJoCo 的 forcerange 在 position actuator 上限制的是"actuator 输出力矩"，而非"关节总力矩"。** 关节总力矩还包括重力补偿、约束力等——forcerange 只限制 actuator 贡献的部分。
 
 💡 **概念误区：DC Motor 的 saturation_effort 就是电机的最大力矩。** saturation_effort 是**堵转力矩**（转速为零时的最大力矩）。当关节高速旋转时，实际可用力矩小于 saturation_effort。如果你只关心静止或低速情况，saturation_effort ≈ effort_limit 就够了。
 
@@ -570,7 +570,7 @@ datasheet_to_mjcf(example_motor)
 
 上一节讲完了 Level 0-1 的工程实现。下一节进入 Level 2——用神经网络直接拟合真机的 actuator 响应。
 
-## 12.3 Level 2：Actuator Network ⭐⭐⭐
+## 12.3 Level 2：Actuator Network ★★★
 
 > **这一节解决什么问题**：当 DC Motor 模型的精度不够时（真机力矩响应有复杂的非线性特征），用神经网络直接拟合真机的 actuator 响应。本节从数据收集到 MLP 训练到仿真器集成完整讲解。
 
@@ -1046,11 +1046,11 @@ def uan_loss(actuator_net, sim_env, real_trajectory):
 
 UAN 和 ASAP Delta Action Model 的关系：两者都只需要 (s, a, s'_real) 数据，不需要力矩传感器。区别是 UAN 修正的是力矩（actuator 层面），ASAP 修正的是 action（策略层面）。
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：actuator network 的训练数据和部署数据的分布必须匹配。** 如果你在低频正弦（0.5-5 Hz）上收集数据，网络在高频命令（>10 Hz）上的预测可能不准确。数据收集时的频率范围应该覆盖 RL 策略实际产生的命令频率。
+⚠ **编程陷阱：actuator network 的训练数据和部署数据的分布必须匹配。** 如果你在低频正弦（0.5-5 Hz）上收集数据，网络在高频命令（>10 Hz）上的预测可能不准确。数据收集时的频率范围应该覆盖 RL 策略实际产生的命令频率。
 
-⚠️ **编程陷阱：历史长度 H 的选择影响延迟补偿。** H 太小（如 H=2）无法捕捉电机的动态延迟。H 太大（如 H=20）增加了 observation 维度但收益递减。推荐 H=4-8，对应 20-40ms 历史（在 200 Hz 控制频率下）。
+⚠ **编程陷阱：历史长度 H 的选择影响延迟补偿。** H 太小（如 H=2）无法捕捉电机的动态延迟。H 太大（如 H=20）增加了 observation 维度但收益递减。推荐 H=4-8，对应 20-40ms 历史（在 200 Hz 控制频率下）。
 
 🧠 **思维陷阱：认为 actuator network 可以替代 DR。** Actuator network 提高了 nominal model 的精度，但真机的 actuator 特性仍然会随温度、磨损、负载变化。仍然需要 DR 来覆盖这些变化——只是 DR 的范围可以缩小。
 
@@ -1061,7 +1061,7 @@ UAN 和 ASAP Delta Action Model 的关系：两者都只需要 (s, a, s'_real) �
 
 ---
 
-## 12.4 Level 3：ASAP Delta Action Model ⭐⭐
+## 12.4 Level 3：ASAP Delta Action Model ★★
 
 > **这一节解决什么问题**：当 actuator network 仍然不够精确（或获取力矩数据困难）时，ASAP 提出了一种更优雅的方法：不建模 actuator 物理，而是直接学习 action 空间中的修正。
 
@@ -1370,11 +1370,11 @@ def validate_delta_model(delta_model, sim_env, real_trajectories):
     return improvement
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：`max_delta` 设得太大会导致策略微调不稳定。** 如果 Δa 的范围太大，修正后的 action 可能超出策略训练时见过的 action 范围——导致策略在这些"陌生"的 action 下行为不可预测。推荐从 max_delta=0.05 开始，逐步增大到不超过 0.2。
+⚠ **编程陷阱：`max_delta` 设得太大会导致策略微调不稳定。** 如果 Δa 的范围太大，修正后的 action 可能超出策略训练时见过的 action 范围——导致策略在这些"陌生"的 action 下行为不可预测。推荐从 max_delta=0.05 开始，逐步增大到不超过 0.2。
 
-⚠️ **编程陷阱：ASAP 要求 Step 4 的微调在"冻结的 delta action model"下进行。** 如果 delta model 和策略同时训练，会出现两个网络互相"追逐"的不稳定现象。冻结 delta model 确保策略适应的是一个固定的仿真器。
+⚠ **编程陷阱：ASAP 要求 Step 4 的微调在"冻结的 delta action model"下进行。** 如果 delta model 和策略同时训练，会出现两个网络互相"追逐"的不稳定现象。冻结 delta model 确保策略适应的是一个固定的仿真器。
 
 ### 练习
 
@@ -1385,7 +1385,7 @@ def validate_delta_model(delta_model, sim_env, real_trajectories):
 
 上两节讲完了 Level 2（Actuator Network）和 Level 3（Delta Action Model）的工程实现。但无论选择哪个层级，都需要真机的实验数据来确定参数或训练网络。下一节讲解三种基本的系统辨识实验——它们是所有 actuator 建模的"数据基础"。
 
-## 12.5 系统辨识方法 ⭐⭐
+## 12.5 系统辨识方法 ★★
 
 > **这一节解决什么问题**：如何从真机的实验数据中获取 actuator 模型的参数——扫频、阶跃响应和摩擦测量的实战流程。
 
@@ -1867,9 +1867,9 @@ class Go1WithSysIdActuator:
         return spec
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
-⚠️ **编程陷阱：扫频实验中幅度太大会导致非线性效应。** 如果扫频幅度让关节接近限位或力矩饱和，频率响应不再是线性系统的特征。推荐幅度 <30% 的关节范围。
+⚠ **编程陷阱：扫频实验中幅度太大会导致非线性效应。** 如果扫频幅度让关节接近限位或力矩饱和，频率响应不再是线性系统的特征。推荐幅度 <30% 的关节范围。
 
 💡 **概念误区：认为系统辨识一次就够了。** 电机特性随温度变化（热机后摩擦降低、效率变化）。如果你的实验在冷机状态下做，但部署在热机状态下，辨识结果可能不准确。推荐在"热机稳态"下做辨识（先运行 5-10 分钟让电机暖机）。
 
@@ -1882,7 +1882,7 @@ class Go1WithSysIdActuator:
 
 前面四节分别讲解了四个层级的工程实现和系统辨识方法。但面对一个具体项目，你应该选哪个层级？投入的工程时间值不值得？下一节用定量分析和实际场景帮你做出决策。
 
-## 12.6 Actuator 建模与 Sim-to-Real Gap ⭐⭐
+## 12.6 Actuator 建模与 Sim-to-Real Gap ★★
 
 > **这一节解决什么问题**：用具体数据说明 actuator 模型对 sim-to-real gap 的影响，帮助学生建立"什么时候该投入时间做 actuator 建模"的工程直觉。
 
@@ -2119,11 +2119,11 @@ experiment_configs = {
 │   └── 不够 → 升级一个层级
 ```
 
-### ⚠️ 常见陷阱
+### ⚠ 常见陷阱
 
 🧠 **思维陷阱：认为"做了 actuator modeling 就不需要 DR 了"。** 即使用了最精确的 actuator network，真机的 actuator 特性仍然会随时间变化（温度、磨损、电池电量）。DR 仍然需要——只是范围可以缩小（从 U(0.5, 2.0) 缩小到 U(0.85, 1.15)）。
 
-⚠️ **编程陷阱：在仿真中训练时启用 actuator network 会降低吞吐量。** Actuator Network 的前向计算发生在 Python（或 GPU 上的自定义 kernel）中，而 Ideal PD 的计算在 C++ 内核中——可能慢 2-3x。推荐策略：先用 Ideal PD 训练到 80% 性能，再切换到 Actuator Network 做最后的微调。
+⚠ **编程陷阱：在仿真中训练时启用 actuator network 会降低吞吐量。** Actuator Network 的前向计算发生在 Python（或 GPU 上的自定义 kernel）中，而 Ideal PD 的计算在 C++ 内核中——可能慢 2-3x。推荐策略：先用 Ideal PD 训练到 80% 性能，再切换到 Actuator Network 做最后的微调。
 
 ---
 
@@ -2131,24 +2131,24 @@ experiment_configs = {
 
 | 知识点 | 核心结论 | 重要程度 |
 |--------|---------|---------|
-| 四层 actuator 模型层级 | Ideal PD → DC Motor → Actuator Net → Delta Action | ⭐ |
-| Actuator Network 原创归因 | Hwangbo 2019 (ANYmal Science Robotics)，非 walk-these-ways | ⭐⭐ |
-| MuJoCo position actuator | kp/kv + forcerange，kv 与 joint damping 叠加 | ⭐⭐⭐ |
-| MuJoCo general actuator | gaintype + biastype + dyntype = 任意线性 actuator 模型 | ⭐⭐⭐ |
-| Isaac Lab actuator 层级 | Implicit → IdealPD → DCMotor → DelayedPD → ActuatorNetMLP | ⭐⭐⭐ |
-| DC Motor 力矩-速度约束 | τ_max(q̇) = τ_stall × (1 - \|q̇\|/q̇_max) | ⭐⭐⭐ |
-| dyntype="filter" | 一阶低通滤波器模拟电机带宽限制 | ⭐⭐⭐ |
-| Actuator Network 架构 | MLP [128,128] ELU + H 步历史输入 | ⭐⭐⭐ |
-| Actuator Network 数据需求 | 5-10 分钟真机数据（扫频 + 随机正弦） | ⭐⭐ |
-| UAN 无监督方法 | 不需要力矩传感器，只需 (s, a, s') | ⭐⭐⭐ |
-| ASAP Delta Action Model | 在 action 空间做残差修正，部署时零开销 | ⭐⭐⭐ |
-| Delta Action vs Actuator Net | 建模目标不同 + 数据需求不同 | ⭐⭐⭐ |
-| 扫频辨识 | chirp → FFT → 带宽 + 阻尼比 | ⭐⭐ |
-| 阶跃响应辨识 | 上升时间 → ωn，超调量 → ζ | ⭐⭐ |
-| 摩擦辨识 | 恒速扫描 → 库仑 τ_c + 粘性 b | ⭐⭐ |
-| DR 与 actuator model 的关系 | 互补非替代：model 提高名义精度，DR 覆盖参数变化 | ⭐⭐⭐⭐ |
-| 选型决策 | 先问"DR 够不够"→ 不够才升级 actuator 建模层级 | ⭐⭐⭐ |
-| 双框架配置速查表 | MuJoCo ↔ Isaac Lab 的每种 actuator 类型对应关系 | ⭐⭐⭐ |
+| 四层 actuator 模型层级 | Ideal PD → DC Motor → Actuator Net → Delta Action | ★ |
+| Actuator Network 原创归因 | Hwangbo 2019 (ANYmal Science Robotics)，非 walk-these-ways | ★★ |
+| MuJoCo position actuator | kp/kv + forcerange，kv 与 joint damping 叠加 | ★★★ |
+| MuJoCo general actuator | gaintype + biastype + dyntype = 任意线性 actuator 模型 | ★★★ |
+| Isaac Lab actuator 层级 | Implicit → IdealPD → DCMotor → DelayedPD → ActuatorNetMLP | ★★★ |
+| DC Motor 力矩-速度约束 | τ_max(q̇) = τ_stall × (1 - \|q̇\|/q̇_max) | ★★★ |
+| dyntype="filter" | 一阶低通滤波器模拟电机带宽限制 | ★★★ |
+| Actuator Network 架构 | MLP [128,128] ELU + H 步历史输入 | ★★★ |
+| Actuator Network 数据需求 | 5-10 分钟真机数据（扫频 + 随机正弦） | ★★ |
+| UAN 无监督方法 | 不需要力矩传感器，只需 (s, a, s') | ★★★ |
+| ASAP Delta Action Model | 在 action 空间做残差修正，部署时零开销 | ★★★ |
+| Delta Action vs Actuator Net | 建模目标不同 + 数据需求不同 | ★★★ |
+| 扫频辨识 | chirp → FFT → 带宽 + 阻尼比 | ★★ |
+| 阶跃响应辨识 | 上升时间 → ωn，超调量 → ζ | ★★ |
+| 摩擦辨识 | 恒速扫描 → 库仑 τ_c + 粘性 b | ★★ |
+| DR 与 actuator model 的关系 | 互补非替代：model 提高名义精度，DR 覆盖参数变化 | ★★★★ |
+| 选型决策 | 先问"DR 够不够"→ 不够才升级 actuator 建模层级 | ★★★ |
+| 双框架配置速查表 | MuJoCo ↔ Isaac Lab 的每种 actuator 类型对应关系 | ★★★ |
 
 ## 累积项目
 
@@ -2386,15 +2386,15 @@ Part 5: 结论
 
 | 资料 | 难度 | 推荐原因 |
 |------|------|---------|
-| Hwangbo et al. 2019, "Learning agile and dynamic motor skills for legged robots" (Science Robotics) | ⭐⭐⭐ | Actuator Network 的**原创论文**，必读 |
-| He et al. 2025, "ASAP: Aligning Simulation and Real-World Physics" (RSS) | ⭐⭐⭐ | Delta Action Model，2025 sim2real SOTA |
-| Fey et al. 2025, "Bridging the Sim-to-Real Gap for Athletic Loco-Manipulation" (UAN, MIT) | ⭐⭐⭐ | 无监督 actuator network，5 分钟真机数据 |
-| Margolis & Agrawal 2022, "Walk These Ways" (CoRL) | ⭐⭐ | MoB gait conditioning（注意：非 actuator net 原创） |
-| MuJoCo actuator 文档 (mujoco.readthedocs.io/en/stable/XMLreference.html#actuator) | ⭐⭐ | general actuator 的完整参数参考 |
-| Isaac Lab actuator API (isaac-sim.github.io/IsaacLab) | ⭐⭐ | ImplicitActuator/DCMotor/ActuatorNetMLP 配置 |
-| Singh et al. 2023, "Learning Bipedal Walking for Humanoids with Current Feedback" | ⭐⭐ | 电流反馈在 sim2real 的应用 |
-| Lee et al. 2025, "Learning Quadrupedal Locomotion for Heavy Hydraulic Robot Using Actuator Model" | ⭐⭐ | 液压 actuator 建模（非电机） |
-| Sehoon Ha et al. 2025, "Learning-based legged locomotion: State of the art" (IJRR survey) | ⭐⭐ | actuator modeling 在 sim2real 中角色的综述 |
+| Hwangbo et al. 2019, "Learning agile and dynamic motor skills for legged robots" (Science Robotics) | ★★★ | Actuator Network 的**原创论文**，必读 |
+| He et al. 2025, "ASAP: Aligning Simulation and Real-World Physics" (RSS) | ★★★ | Delta Action Model，2025 sim2real SOTA |
+| Fey et al. 2025, "Bridging the Sim-to-Real Gap for Athletic Loco-Manipulation" (UAN, MIT) | ★★★ | 无监督 actuator network，5 分钟真机数据 |
+| Margolis & Agrawal 2022, "Walk These Ways" (CoRL) | ★★ | MoB gait conditioning（注意：非 actuator net 原创） |
+| MuJoCo actuator 文档 (mujoco.readthedocs.io/en/stable/XMLreference.html#actuator) | ★★ | general actuator 的完整参数参考 |
+| Isaac Lab actuator API (isaac-sim.github.io/IsaacLab) | ★★ | ImplicitActuator/DCMotor/ActuatorNetMLP 配置 |
+| Singh et al. 2023, "Learning Bipedal Walking for Humanoids with Current Feedback" | ★★ | 电流反馈在 sim2real 的应用 |
+| Lee et al. 2025, "Learning Quadrupedal Locomotion for Heavy Hydraulic Robot Using Actuator Model" | ★★ | 液压 actuator 建模（非电机） |
+| Sehoon Ha et al. 2025, "Learning-based legged locomotion: State of the art" (IJRR survey) | ★★ | actuator modeling 在 sim2real 中角色的综述 |
 
 **阅读顺序建议**：先读 Hwangbo 2019（理解 actuator network 的原始动机和方法），再读 ASAP 2025（理解 delta action model 为什么更优），然后读 MuJoCo/Isaac Lab 文档（掌握双框架的配置方式）。UAN 和 Singh 论文作为 actuator modeling 前沿的补充阅读。
 
@@ -2487,9 +2487,9 @@ ActuatorBase (抽象基类)
 | `joint damping` | (叠加在 actuator damping 中) | 粘性摩擦 |
 | `joint armature` | `ActuatorBaseCfg(armature)` | 虚拟转子惯量 |
 
-⚠️ **MuJoCo 的 `kv` 和 `joint damping` 效果叠加**——这是跨框架对齐中最常见的 bug 来源。如果 MuJoCo 中 actuator kv=4 + joint damping=0.5，Isaac Lab 中应设 damping=4.5。详见 Ch11.9 跨仿真器参数对齐。
+⚠ **MuJoCo 的 `kv` 和 `joint damping` 效果叠加**——这是跨框架对齐中最常见的 bug 来源。如果 MuJoCo 中 actuator kv=4 + joint damping=0.5，Isaac Lab 中应设 damping=4.5。详见 Ch11.9 跨仿真器参数对齐。
 
-⚠️ **Isaac Lab v2.0 后 `effort_limit` 和 `effort_limit_sim` 区分**——`effort_limit` 是 actuator 模型的软限制（Python 中 clip），`effort_limit_sim` 是 PhysX 求解器的硬限制。如果只设了 `effort_limit` 而未设 `effort_limit_sim`，PhysX 可能允许超过 `effort_limit` 的力矩——导致仿真和真机行为不一致。推荐两者设为相同值。
+⚠ **Isaac Lab v2.0 后 `effort_limit` 和 `effort_limit_sim` 区分**——`effort_limit` 是 actuator 模型的软限制（Python 中 clip），`effort_limit_sim` 是 PhysX 求解器的硬限制。如果只设了 `effort_limit` 而未设 `effort_limit_sim`，PhysX 可能允许超过 `effort_limit` 的力矩——导致仿真和真机行为不一致。推荐两者设为相同值。
 
 > **对于只使用 mjlab 的读者**：重点关注 12.2 的 MuJoCo `<general>` actuator 配置、12.3 的 mjcb_control callback 集成方式、和 12.5 的系统辨识方法。MuJoCo 的 actuator 系统比 Isaac Lab 更灵活——一个 `<general>` actuator 通过 gaintype/biastype/dyntype 的组合就能实现 Isaac Lab 需要 4-5 个不同 Cfg 类的功能。
 
