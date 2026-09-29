@@ -1,5 +1,5 @@
-site_name: Robotics Tutorial
-site_description: 樱雷机器人研习社 · 面向机器人开发者的系统化知识库——从数学基础、C++ 和 ROS 2，到 SLAM、运动控制与具身智能。
+site_name: 樱机实验室 SakuraBot Lab
+site_description: 樱机实验室 SakuraBot Lab · 面向机器人开发者的系统化知识库——从数学基础、C++ 和 ROS 2，到 SLAM、运动控制与具身智能。
 site_author: Pengfei Guo
 site_url: https://muhuan11-c.github.io/ros2_robot/
 
@@ -16,8 +16,8 @@ theme:
   name: material
   custom_dir: overrides
   language: zh
-  logo: assets/images/logo.svg
-  favicon: assets/images/favicon.svg
+  logo: assets/mascots/avatar-128.webp
+  favicon: assets/mascots/favicon.png
   features:
     - navigation.sections
     - navigation.prune
@@ -109,7 +109,7 @@ extra_javascript:
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 
 extra:
-  copyright: Sakura Robotics Lab · 樱雷机器人研习社
+  copyright: SakuraBot Lab · 樱机实验室
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/MUHAN11-c/ros2_robot

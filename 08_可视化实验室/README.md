@@ -15,7 +15,7 @@
 
 <div class="rt-mascot-tip" markdown>
 
-![紫樱](../assets/images/mascot.svg)
+![紫樱](../assets/mascots/bust.webp)
 
 **紫樱的实验守则**只有三条——抄一遍再跑、每次只改一个参数、看到意外的形状别慌，意外就是理解的开端。
 

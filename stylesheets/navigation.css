@@ -3,20 +3,37 @@
    Sidebar 是本站最重要的 UI：一级分组醒目，二三级递减视觉权重
    ========================================================================== */
 
-/* ---- 一级分组标题（如「数学：从零到前沿」） ---- */
+/* ---- 一级分组标题（如「数学：从零到前沿」）：小型标签化 ---- */
 
 .md-nav__item--nested > .md-nav__link,
 .md-nav__item--nested > label.md-nav__link {
   margin-top: 0.9em;
-  font-size: 0.76rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.045em;
   color: var(--rt-text-primary);
 }
 
 .md-nav__item--nested > .md-nav__link:hover,
 .md-nav__item--nested > label.md-nav__link:hover {
   color: var(--rt-primary);
+}
+
+/* 分组之间发丝分隔（首个分组除外） */
+.md-nav__list > .md-nav__item--nested + .md-nav__item--nested {
+  position: relative;
+  margin-top: 0.5em;
+  padding-top: 0.55em;
+}
+
+.md-nav__list > .md-nav__item--nested + .md-nav__item--nested::before {
+  content: "";
+  position: absolute;
+  left: 0.4rem;
+  right: 0.6rem;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--rt-border), transparent);
 }
 
 /* 分组图标（app.js 注入 .rt-nav-ico） */
@@ -81,7 +98,7 @@
   bottom: 15%;
   width: 3px;
   border-radius: 2px;
-  background: var(--rt-primary);
+  background: linear-gradient(180deg, var(--rt-primary), var(--rt-secondary));
 }
 
 /* 已读标记（LocalStorage，app.js 注入 .is-visited） */

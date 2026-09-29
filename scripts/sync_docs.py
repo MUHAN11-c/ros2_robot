@@ -167,7 +167,7 @@ def write_home(markdown_count: int, asset_count: int) -> None:
     (DOCS_DIR / "index.md").write_text(
         f"""---
 template: home.html
-title: Robotics Tutorial · 樱雷机器人研习社
+title: Robotics Tutorial · 樱机实验室
 hide:
   - navigation
   - toc
@@ -394,7 +394,10 @@ def count_code_blocks() -> int:
 
 
 def write_404() -> None:
-    """原创 404 页：紫樱 + 节点未连接。"""
+    """原创 404 页：紫樱 + 节点未连接。
+    注意：GitHub Pages 以站点根级 /404.html 提供服务，图片与链接用根相对 raw HTML
+    （mkdocs 会重写 markdown 链接为 /404/ 前缀的 ../ 相对路径，在根级文件中失效）。
+    """
     (DOCS_DIR / "404.md").write_text(
         """---
 hide:
@@ -404,14 +407,14 @@ hide:
 
 <div class="rt-404" markdown>
 
-![紫樱](assets/images/mascot.svg)
+<img class="rt-404__mascot" src="assets/mascots/sakura-04.webp" alt="紫樱" width="180">
 
 # 404 · 这个节点没有连接
 
 紫樱没有在这个坐标找到页面——它可能已移动，或从未存在。
 
-[返回首页](/){{ .md-button .md-button--primary }}
-[浏览目录索引](catalog/){{ .md-button }}
+<a class="md-button md-button--primary" href="./">返回首页</a>
+<a class="md-button" href="catalog/">浏览目录索引</a>
 
 </div>
 """,
@@ -885,7 +888,7 @@ def write_catalog(catalog: list[SummaryNode]) -> None:
         "",
         '<div class="rt-mascot-tip" markdown>',
         "",
-        "![紫樱](assets/images/mascot.svg)",
+        "![紫樱](assets/mascots/bust.webp)",
         "",
         "**紫樱小提示**：按 `Ctrl+K` 全局搜索；第一次来请先看 [从零开始学习路线总图](00_项目导航/从零开始学习路线总图.md)。",
         "",

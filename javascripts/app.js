@@ -1,5 +1,5 @@
 /**
- * Sakura Robotics Lab · app.js
+ * SakuraBot Lab · app.js
  * 模块化轻交互：进度条 / 搜索增强 / 面包屑 / 阅读时长 / 已读标记 / 导航图标
  * 原则：原生 JS + IntersectionObserver，无动画库，200ms 内过渡，支持 reduced-motion
  */

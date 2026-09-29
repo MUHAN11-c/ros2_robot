@@ -1,5 +1,5 @@
 /* =========================================================
-   Sakura Robotics Lab · 浮动吉祥物助手（rt-assistant）
+   SakuraBot Lab · 樱机实验室 · 浮动吉祥物助手（rt-assistant）
    规格：58px 头像按钮 + 展开功能面板；不遮挡正文/代码/目录。
    配色对齐 tokens.css 品牌色板。
    ========================================================= */
@@ -54,6 +54,17 @@
 /* 助手面板已内置「返回顶部」，隐藏 Material 原生回到顶部按钮，避免双悬浮冲突 */
 .md-top {
   display: none !important;
+}
+
+/* 页脚社交图标（右下角）为浮动助手按钮让位，避免遮挡 */
+.md-social {
+  margin-right: 5rem;
+}
+
+@media (max-width: 600px) {
+  .md-social {
+    margin-right: 4rem;
+  }
 }
 
 /* 3. Root Container */

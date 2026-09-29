@@ -1,5 +1,5 @@
 /**
- * Sakura Robotics Lab · 浮动吉祥物助手（紫樱）
+ * SakuraBot Lab · 樱机实验室 · 浮动吉祥物助手（紫樱）
  * 58px 头像按钮 + 功能面板：搜索 / 返回顶部 / 阅读状态 / 首次气泡提示。
  * 兼容 Material instant navigation：面板随内容区重建，全局监听只绑一次。
  */
@@ -63,6 +63,9 @@
   }
 
   function currentPageLabel() {
+    /* 首页不显示具体标题 */
+    var path = window.location.pathname.replace(/\/index\.html$/, "/");
+    if (/\/$/.test(path)) return "樱机实验室";
     var h1 = document.querySelector(".md-content h1");
     if (h1) {
       var t = (h1.textContent || "").replace(/\s+/g, " ").trim();
@@ -131,9 +134,14 @@
     btn.classList.toggle("is-reading", window.scrollY > 280);
   }
 
+  /* 订阅 instant navigation；并兜底：若脚本执行晚于 document$ 首次发射（partial 在
+     scripts block 末尾、晚于主题 bundle 解析），DOM ready 后直接初始化。rtBound 守卫保证幂等。 */
   if (window.document$) {
     window.document$.subscribe(initAssistant);
-  } else {
+  }
+  if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", initAssistant);
+  } else {
+    initAssistant();
   }
 })();

@@ -25,12 +25,9 @@
     justify-content: center;
   }
 
-  .rt-hero__mascot {
+  .rt-hero__figure {
     order: -1;
-  }
-
-  .rt-hero__mascot img {
-    width: 200px;
+    width: 260px;
   }
 
   .rt-header-links {
@@ -68,12 +65,16 @@
     font-size: 1.9rem;
   }
 
-  .rt-hero__title-sub {
-    font-size: 1.1rem;
+  .rt-hero__title {
+    font-size: 1.9rem;
   }
 
-  .rt-hero__mascot img {
-    width: 160px;
+  .rt-hero__figure {
+    width: 200px;
+  }
+
+  .rt-hero__glow {
+    display: none;
   }
 
   .rt-quick,
@@ -119,8 +120,8 @@
     font-size: 1.6rem;
   }
 
-  .rt-hero__mascot img {
-    width: 132px;
+  .rt-hero__figure {
+    width: 160px;
   }
 
   .md-typeset {

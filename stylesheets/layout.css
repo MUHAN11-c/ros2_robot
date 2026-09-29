@@ -2,15 +2,37 @@
    layout.css · 页面骨架：Header 64px / 内容列 / 侧边栏宽度 / Footer / 进度条
    ========================================================================== */
 
-/* ---- Header：64px，轻毛玻璃 ---- */
+/* ---- Header：64px，Linear 式毛玻璃 + 发丝渐变底线 ---- */
 
 .md-header {
   height: var(--rt-header-height);
   background: var(--rt-header-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--rt-border);
+  backdrop-filter: blur(20px) saturate(1.6);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  border-bottom: none;
   box-shadow: none;
+}
+
+/* 发丝渐变底线：中段可见、两端淡出 */
+.md-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--rt-border) 18%,
+    var(--rt-border) 82%,
+    transparent
+  );
+  pointer-events: none;
+}
+
+.md-header[data-md-state="shadow"] {
+  background: var(--rt-header-bg);
 }
 
 .md-header__inner {
@@ -20,9 +42,25 @@
   padding-inline: 1rem;
 }
 
+/* 品牌区：圆形头像 logo + 实验室名 */
+.md-header__logo img,
+.md-header__button.md-logo img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--rt-border);
+  transition: transform var(--rt-transition);
+}
+
+.md-header__logo:hover img,
+.md-header__button.md-logo:hover img {
+  transform: scale(1.06);
+}
+
 .md-header__title {
   font-size: 0.95rem;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.01em;
 }
 
 .md-header__title .md-ellipsis {
@@ -35,9 +73,22 @@
   color: var(--rt-text-secondary);
 }
 
-/* 头部搜索框宽度（桌面） */
+/* 头部搜索：胶囊化 + ⌘K 提示 */
 .md-header .md-search__form {
-  width: 340px;
+  width: 300px;
+  border-radius: 999px;
+  background: var(--rt-surface-soft);
+  border: 1px solid var(--rt-border);
+  transition: border-color var(--rt-transition), box-shadow var(--rt-transition);
+}
+
+.md-header .md-search__form:focus-within {
+  border-color: var(--rt-primary-light);
+  box-shadow: 0 0 0 3px var(--rt-primary-soft);
+}
+
+.md-header .md-search__input {
+  font-size: 0.78rem;
 }
 
 .md-header__button:hover,
