@@ -207,7 +207,7 @@ hide:
 
 #### 可视化实验室
 
-10 个实验室：每个理论配一套可运行代码与实测图表。
+11 个实验室：每个理论配一套可运行代码与实测图表。
 
 [动手实验](08_可视化实验室/README.md)
 
@@ -361,7 +361,7 @@ Sutton RL → Spinning Up → RL 运控 28 章 Isaac Lab 全链路。
 
 <div class="rt-stat" markdown>
 
-<span class="rt-stat__num">10</span>
+<span class="rt-stat__num">11</span>
 <span class="rt-stat__label">可视化实验</span>
 
 </div>

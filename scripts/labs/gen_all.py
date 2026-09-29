@@ -704,6 +704,68 @@ def fig_kf_2d():
     save(fig, "lab10_kf_2d.svg")
 
 
+
+# ---------------------------------------------------------------- lab11 凸优化
+def _qp_setup():
+    """f(x) = (x1-3)² + (x2-2)²，约束 x1 + x2 ≤ 2（解析最优 x* = (1.5, 0.5)）"""
+    def f(x1, x2):
+        return (x1 - 3) ** 2 + (x2 - 2) ** 2
+    return f, (1.5, 0.5)
+
+
+def fig_qp_contour():
+    f, xstar = _qp_setup()
+    g = np.linspace(-1, 4.5, 300)
+    X1, X2 = np.meshgrid(g, g)
+    fig, ax = plt.subplots(figsize=(7.4, 5.6))
+    cs = ax.contour(X1, X2, f(X1, X2), levels=14, cmap="plasma_r", alpha=0.75)
+    ax.clabel(cs, inline=True, fontsize=7, fmt="%.0f")
+    # 可行域：x1 + x2 ≤ 2（配合第一象限画多边形）
+    feas = Polygon([(-1, -1), (3, -1), (-1, 3)], closed=True, color=VIOLET, alpha=0.13)
+    ax.add_patch(feas)
+    ax.plot([-1, 3], [3, -1], color=VIOLET, lw=2.4, label="约束边界 $x_1+x_2=2$")
+    # 无约束最优点（不可行）与约束最优点
+    ax.scatter(3, 2, s=110, facecolor="none", edgecolor=DEEP, linewidth=2, zorder=6,
+               label="无约束最优 (3, 2)——在可行域外")
+    ax.scatter(*xstar, color=GOLD, s=180, marker="*", zorder=6, edgecolor=DEEP,
+               linewidth=0.8, label="约束最优 x* = (1.5, 0.5)")
+    ax.annotate("", xstar, (3, 2),
+                arrowprops=dict(arrowstyle="-|>", color=SAKURA, lw=2, ls="--"))
+    ax.text(2.05, 1.42, "最近可行点", color=SAKURA, fontsize=10, rotation=18)
+    ax.set_aspect("equal")
+    ax.set_xlim(-1, 4.5)
+    ax.set_ylim(-1, 4.5)
+    ax.set_title("约束优化：最优解落在约束边界上（等高线=目标函数）")
+    ax.legend(fontsize=8.5, loc="upper left")
+    save(fig, "lab11_qp_contour.svg")
+
+
+def fig_lagrangian_geometry():
+    """KKT 几何：在最优点处 ∇f 与 ∇g 反向共线（λ ≥ 0 的来源）"""
+    f, xstar = _qp_setup()
+    fig, ax = plt.subplots(figsize=(6.8, 5.6))
+    g = np.linspace(-0.5, 3.2, 200)
+    X1, X2 = np.meshgrid(g, g)
+    ax.contour(X1, X2, f(X1, X2), levels=[1.25, 2.5, 5, 8.5, 13], cmap="plasma_r", alpha=0.6)
+    ax.plot([-0.5, 3], [2.5, -0.5], color=VIOLET, lw=2.4, label="约束边界")
+    # 约束最优点 (1.5, 0.5)：∇f = (2(x1-3), 2(x2-2)) = (-3, -3)；∇g = (1, 1)
+    ax.scatter(*xstar, color=GOLD, s=170, marker="*", zorder=6, edgecolor=DEEP)
+    for vec, c, name in [((-3, -3), SAKURA, "∇f（负）"), ((1, 1), VIOLET, "∇g")]:
+        ax.add_patch(FancyArrowPatch(xstar, (xstar[0] + vec[0] * 0.32, xstar[1] + vec[1] * 0.32),
+                                     color=c, lw=2.8, arrowstyle="-|>", mutation_scale=16))
+        ax.text(xstar[0] + vec[0] * 0.36, xstar[1] + vec[1] * 0.36, name, color=c,
+                fontsize=11, fontweight="bold")
+    ax.text(1.62, 0.18, r"$
+abla f = -\lambda
+abla g,\ \lambda = 3 > 0$", color=DEEP, fontsize=10.5)
+    ax.set_aspect("equal")
+    ax.set_xlim(-0.5, 3.2)
+    ax.set_ylim(-0.7, 3.0)
+    ax.set_title("KKT 几何：最优点处目标梯度与约束梯度反向共线")
+    ax.legend(fontsize=9, loc="upper right")
+    save(fig, "lab11_lagrangian.svg")
+
+
 if __name__ == "__main__":
     print("生成实验室插图 →", OUT)
     fig_tangent(); fig_taylor(); fig_gradient_descent()
@@ -714,6 +776,7 @@ if __name__ == "__main__":
     fig_workspace()
     fig_point_rotation(); fig_frame_chain(); fig_body_to_world()
     fig_kf_1d(); fig_kf_2d()
+    fig_qp_contour(); fig_lagrangian_geometry()
     fig_astar(); fig_rrt()
     fig_qlearning()
     print("全部完成。")

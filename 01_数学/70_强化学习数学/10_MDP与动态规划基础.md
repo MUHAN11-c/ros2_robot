@@ -2116,3 +2116,7 @@ $$
 | Policy iteration | 策略迭代 | 评估+改进循环 | §5 |
 | Occupancy measure | 占用测度 | $d^\pi(s,a)$ | §9 |
 | Bellman operator | Bellman 算子 | $T^\pi, T^*$ | §3.3 |
+
+---
+
+> 🔬 **配套实验**：Q-learning 从乱走到直奔目标：价值热力图与回报曲线——打开 [lab08 · 强化学习实验室](../../08_可视化实验室/lab08_强化学习实验室.md)，亲手跑一遍。
