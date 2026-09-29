@@ -93,9 +93,9 @@ Level 3: Delta Action Model a_corrected = a_policy + MLP_delta(s)
 
 ### ⚠ 常见陷阱
 
-🧠 **思维陷阱：更高精度的 actuator 模型总是更好。** 如果你的 DR 范围足够宽（Ch08 的 kp 随机化 U(0.75, 1.5)），Ideal PD + DR 可能已经"覆盖"了真机的 actuator 特性。只有当 DR 不够时（例如需要跳跃、旋转等极限动作），才值得投入 Level 2-3 的工程量。
+◎ **思维陷阱：更高精度的 actuator 模型总是更好。** 如果你的 DR 范围足够宽（Ch08 的 kp 随机化 U(0.75, 1.5)），Ideal PD + DR 可能已经"覆盖"了真机的 actuator 特性。只有当 DR 不够时（例如需要跳跃、旋转等极限动作），才值得投入 Level 2-3 的工程量。
 
-💡 **概念误区：Actuator Network 和 Delta Action Model 是互斥的。** 它们解决的是不同层面的问题：Actuator Network 建模的是"电机物理"（给定命令 → 实际力矩），Delta Action Model 建模的是"整体 gap"（包括电机、延迟、软件栈差异）。理论上可以同时使用——先用 actuator network 提高电机建模精度，再用 delta action 处理残余 gap。但实际上 ASAP 的结果表明 delta action 单独就足够了。
+◇ **概念误区：Actuator Network 和 Delta Action Model 是互斥的。** 它们解决的是不同层面的问题：Actuator Network 建模的是"电机物理"（给定命令 → 实际力矩），Delta Action Model 建模的是"整体 gap"（包括电机、延迟、软件栈差异）。理论上可以同时使用——先用 actuator network 提高电机建模精度，再用 delta action 处理残余 gap。但实际上 ASAP 的结果表明 delta action 单独就足够了。
 
 ### 练习
 
@@ -461,7 +461,7 @@ biastype="affine", biasprm=[b0, b1, b2]
 
 ⚠ **编程陷阱：MuJoCo 的 forcerange 在 position actuator 上限制的是"actuator 输出力矩"，而非"关节总力矩"。** 关节总力矩还包括重力补偿、约束力等——forcerange 只限制 actuator 贡献的部分。
 
-💡 **概念误区：DC Motor 的 saturation_effort 就是电机的最大力矩。** saturation_effort 是**堵转力矩**（转速为零时的最大力矩）。当关节高速旋转时，实际可用力矩小于 saturation_effort。如果你只关心静止或低速情况，saturation_effort ≈ effort_limit 就够了。
+◇ **概念误区：DC Motor 的 saturation_effort 就是电机的最大力矩。** saturation_effort 是**堵转力矩**（转速为零时的最大力矩）。当关节高速旋转时，实际可用力矩小于 saturation_effort。如果你只关心静止或低速情况，saturation_effort ≈ effort_limit 就够了。
 
 ### 练习
 
@@ -1052,7 +1052,7 @@ UAN 和 ASAP Delta Action Model 的关系：两者都只需要 (s, a, s'_real) �
 
 ⚠ **编程陷阱：历史长度 H 的选择影响延迟补偿。** H 太小（如 H=2）无法捕捉电机的动态延迟。H 太大（如 H=20）增加了 observation 维度但收益递减。推荐 H=4-8，对应 20-40ms 历史（在 200 Hz 控制频率下）。
 
-🧠 **思维陷阱：认为 actuator network 可以替代 DR。** Actuator network 提高了 nominal model 的精度，但真机的 actuator 特性仍然会随温度、磨损、负载变化。仍然需要 DR 来覆盖这些变化——只是 DR 的范围可以缩小。
+◎ **思维陷阱：认为 actuator network 可以替代 DR。** Actuator network 提高了 nominal model 的精度，但真机的 actuator 特性仍然会随温度、磨损、负载变化。仍然需要 DR 来覆盖这些变化——只是 DR 的范围可以缩小。
 
 ### 练习
 
@@ -1871,7 +1871,7 @@ class Go1WithSysIdActuator:
 
 ⚠ **编程陷阱：扫频实验中幅度太大会导致非线性效应。** 如果扫频幅度让关节接近限位或力矩饱和，频率响应不再是线性系统的特征。推荐幅度 <30% 的关节范围。
 
-💡 **概念误区：认为系统辨识一次就够了。** 电机特性随温度变化（热机后摩擦降低、效率变化）。如果你的实验在冷机状态下做，但部署在热机状态下，辨识结果可能不准确。推荐在"热机稳态"下做辨识（先运行 5-10 分钟让电机暖机）。
+◇ **概念误区：认为系统辨识一次就够了。** 电机特性随温度变化（热机后摩擦降低、效率变化）。如果你的实验在冷机状态下做，但部署在热机状态下，辨识结果可能不准确。推荐在"热机稳态"下做辨识（先运行 5-10 分钟让电机暖机）。
 
 ### 练习
 
@@ -2121,7 +2121,7 @@ experiment_configs = {
 
 ### ⚠ 常见陷阱
 
-🧠 **思维陷阱：认为"做了 actuator modeling 就不需要 DR 了"。** 即使用了最精确的 actuator network，真机的 actuator 特性仍然会随时间变化（温度、磨损、电池电量）。DR 仍然需要——只是范围可以缩小（从 U(0.5, 2.0) 缩小到 U(0.85, 1.15)）。
+◎ **思维陷阱：认为"做了 actuator modeling 就不需要 DR 了"。** 即使用了最精确的 actuator network，真机的 actuator 特性仍然会随时间变化（温度、磨损、电池电量）。DR 仍然需要——只是范围可以缩小（从 U(0.5, 2.0) 缩小到 U(0.85, 1.15)）。
 
 ⚠ **编程陷阱：在仿真中训练时启用 actuator network 会降低吞吐量。** Actuator Network 的前向计算发生在 Python（或 GPU 上的自定义 kernel）中，而 Ideal PD 的计算在 C++ 内核中——可能慢 2-3x。推荐策略：先用 Ideal PD 训练到 80% 性能，再切换到 Actuator Network 做最后的微调。
 
@@ -2398,7 +2398,7 @@ Part 5: 结论
 
 **阅读顺序建议**：先读 Hwangbo 2019（理解 actuator network 的原始动机和方法），再读 ASAP 2025（理解 delta action model 为什么更优），然后读 MuJoCo/Isaac Lab 文档（掌握双框架的配置方式）。UAN 和 Singh 论文作为 actuator modeling 前沿的补充阅读。
 
-## 🔧 故障排查手册
+## ◆ 故障排查手册
 
 | 症状 | 可能原因 | 排查步骤 | 相关章节 |
 |------|---------|---------|---------|

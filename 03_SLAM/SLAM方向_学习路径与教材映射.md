@@ -1,5 +1,15 @@
 # SLAM 方向学习路径与教材映射
 
+<div class="rt-chapter-header">
+<div class="rt-chapter-header__top">
+<span class="rt-chapter-header__code">MODULE 03 · SLAM</span>
+<span class="rt-chapter-header__tagline">从零理解定位与建图</span>
+</div>
+<div class="rt-chapter-header__meta">
+<span>◆ 十四讲路线</span><span>◆ 概率机器人</span><span>◆ 配套实验 ×1</span>
+</div>
+</div>
+
 > 本文档是 SLAM 方向的**总导航**：回答三个问题——学什么、用什么教材、按什么顺序学。
 > 四阶段全站架构见 [机器人学导论学习地图](../07_机器人学导论/00_机器人学导论_学习地图.md)；
 > 深层内容全貌见 [SLAM方向总大纲](SLAM方向_总大纲.md)。

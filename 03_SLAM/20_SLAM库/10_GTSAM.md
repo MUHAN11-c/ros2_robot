@@ -1786,7 +1786,7 @@ private:
 | `gtsam/navigation/ImuFactor.cpp` | ImuFactor 实现（LIO-SAM 使用） | ~400 行 |
 | `LIO-SAM/src/mapOptimization.cpp` | 完整的因子图管理工程实践 | ~1500 行 |
 
-> 📎 **附录参考**：GTSAM vs g2o 性能对比、Ceres vs GTSAM 使用场景划分、Eigen 版本一致性警告，详见**附录 J：数学库选型对比参考**。
+> ◆ **附录参考**：GTSAM vs g2o 性能对比、Ceres vs GTSAM 使用场景划分、Eigen 版本一致性警告，详见**附录 J：数学库选型对比参考**。
 
 ---
 

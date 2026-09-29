@@ -2,7 +2,7 @@
 
 > **本章定位**：Part II 建立了 RL 工程基础——observation、action、reward、DR、PPO、teacher-student。本章是 Part IV 的起点，把这些模块全部组合到一个完整的四足速度跟踪任务上。你将在 mjlab 和 Isaac Lab 中分别精读、训练和对比同一类任务，建立"从配置文件到策略行为"的完整因果链理解。
 >
-> **参考项目**：🔧 mjlab velocity（Go1/Go2 内置任务） · 🔧 Isaac Lab velocity（ANYmal-C/Go2 内置任务） · ✅ unitree_rl_mjlab（`github.com/unitreerobotics/unitree_rl_mjlab`） · ✅ basic-locomotion-isaaclab（`github.com/iit-DLSLab/basic-locomotion-isaaclab`）
+> **参考项目**：◆ mjlab velocity（Go1/Go2 内置任务） · ◆ Isaac Lab velocity（ANYmal-C/Go2 内置任务） · ✅ unitree_rl_mjlab（`github.com/unitreerobotics/unitree_rl_mjlab`） · ✅ basic-locomotion-isaaclab（`github.com/iit-DLSLab/basic-locomotion-isaaclab`）
 >
 > **机器人**：Go1/Go2（mjlab）、ANYmal-C/Go2（Isaac Lab） · **累积项目**：**A**
 
@@ -242,9 +242,9 @@ velocity task 采用非对称 actor-critic（Pinto et al., "Asymmetric Actor Cri
 
 ⚠ **编程陷阱：action scale 照搬其他机器人的值**。Go1 的关节范围和 Go2 不同，G1（人形）更是差异巨大。一个对 Go1 合适的 scale 可能让 Go2 的膝关节打到限位。正确做法是查看每个机器人的关节限位范围，设置 scale 使得 $[-1, 1]$ 的 action 覆盖合理的关节偏移区间（通常是限位范围的 30-50%）。
 
-💡 **概念误区：认为 12 个关节的 action 空间"很小"**。维度小不代表搜索容易。12 维连续空间的体积随维度指数增长，关键是好的初始化（default pose offset）和 reward shaping 把搜索引向合理区域。不给 default offset 的话，初始策略输出接近零的 raw target 角度，机器人以扭曲姿态开始探索。
+◇ **概念误区：认为 12 个关节的 action 空间"很小"**。维度小不代表搜索容易。12 维连续空间的体积随维度指数增长，关键是好的初始化（default pose offset）和 reward shaping 把搜索引向合理区域。不给 default offset 的话，初始策略输出接近零的 raw target 角度，机器人以扭曲姿态开始探索。
 
-🧠 **思维陷阱：认为 critic 信息越多越好**。critic 加入不相关的信号（比如遥远目标物体的位置）不会帮助 value estimation，反而增加拟合难度。critic 的 privileged 信息应该和 reward 函数直接相关——你 reward 什么，critic 就应该能看到什么。
+◎ **思维陷阱：认为 critic 信息越多越好**。critic 加入不相关的信号（比如遥远目标物体的位置）不会帮助 value estimation，反而增加拟合难度。critic 的 privileged 信息应该和 reward 函数直接相关——你 reward 什么，critic 就应该能看到什么。
 
 ⚠ **工程陷阱：flat 和 rough 共用同一套 actor observation**。flat 任务不需要 height scan（地面是平的），但如果 actor obs 中保留了 height_scan term 却没有对应的 sensor，启动就会 crash。反过来，rough 任务如果漏掉 height_scan，策略会"瞎走"——在平地上可能还行，但在台阶/斜坡上立即失败。
 
@@ -707,9 +707,9 @@ Wensing, Kim, Slotine (RA-L 2018) 提出了 4×4 pseudo-inertia matrix 和 LMI (
 
 ⚠ **编程陷阱：sensor name regex 匹配空集不报错**。`SceneEntityCfg("robot", site_names=("FR", "FL", "RR", "RL"))` 中的名字必须精确匹配 asset 定义。如果 asset 的 site 命名为 `FR_site` 而你写的是 `FR`，regex 不匹配，ids 为空列表。sensor 和 reward 函数收到空 ids 后返回全零张量，训练继续但对应项完全失效。自检方法：在 zero agent 阶段打印 `entity.data` 确认所有命名。
 
-💡 **概念误区：flat 忘记同步删除 height scan observation**。flat 删了 terrain scan sensor，但如果 observation 中仍有 `height_scan` term，它引用不存在的 sensor，启动报错。正确做法是同时删除 actor 和 critic 的 `height_scan` term。
+◇ **概念误区：flat 忘记同步删除 height scan observation**。flat 删了 terrain scan sensor，但如果 observation 中仍有 `height_scan` term，它引用不存在的 sensor，启动报错。正确做法是同时删除 actor 和 critic 的 `height_scan` term。
 
-🧠 **思维陷阱：看到 loss 下降就认为训练正确**。PPO 的 loss 下降只说明策略在当前 reward 信号下改善了。如果 reward 信号本身是错的（某个关键 term 因 sensor name 拼错而为零），策略只是在最小化其他项。判断正确性的唯一方法是 zero/random agent 先验证 wiring，再看视频。
+◎ **思维陷阱：看到 loss 下降就认为训练正确**。PPO 的 loss 下降只说明策略在当前 reward 信号下改善了。如果 reward 信号本身是错的（某个关键 term 因 sensor name 拼错而为零），策略只是在最小化其他项。判断正确性的唯一方法是 zero/random agent 先验证 wiring，再看视频。
 
 ⚠ **编程陷阱：command 重采样频率设错**。`resampling_time_range=(3.0, 8.0)` 意味着每 3-8 秒随机重采样一次 command。太频繁（<1 秒）让策略无法学稳定步态，太慢（>15 秒）降低 command 多样性。
 
@@ -942,9 +942,9 @@ extras["time_outs"] = truncated & ~terminated
 
 ⚠ **编程陷阱：从 mjlab 复制 obs_groups 到 Isaac Lab 忘记改名**。mjlab 用 `"actor"`，Isaac Lab 用 `"policy"`。RSL-RL wrapper 按名字查找 observation group，名字不匹配导致静默错误或 KeyError。
 
-💡 **概念误区：认为两个框架的同名 reward 函数行为相同**。`track_linear_velocity` 在两个框架中实现细节可能不同（exponential kernel 的 sigma 参数、坐标系处理）。迁移 reward 时必须查看源码确认数学形式。
+◇ **概念误区：认为两个框架的同名 reward 函数行为相同**。`track_linear_velocity` 在两个框架中实现细节可能不同（exponential kernel 的 sigma 参数、坐标系处理）。迁移 reward 时必须查看源码确认数学形式。
 
-🧠 **思维陷阱：认为 Isaac Lab 因为 stars 多所以一定更好**。Stars 反映社区规模不反映技术优劣。mjlab 在接触密集任务上因 MuJoCo Warp 的凸优化接触模型可能更稳定；Isaac Lab 在视觉任务上因 RTX 渲染有本质优势。选型应基于任务需求（回顾 Ch01）。
+◎ **思维陷阱：认为 Isaac Lab 因为 stars 多所以一定更好**。Stars 反映社区规模不反映技术优劣。mjlab 在接触密集任务上因 MuJoCo Warp 的凸优化接触模型可能更稳定；Isaac Lab 在视觉任务上因 RTX 渲染有本质优势。选型应基于任务需求（回顾 Ch01）。
 
 ### 练习
 
@@ -1250,9 +1250,9 @@ Isaac Lab 内置了 `track_air_time` 选项，自动计算每只脚的空中时�
 
 ⚠ **编程陷阱：ray 打到机器人自身**。`include_geom_groups` 如果包含了机器人 body 的 geom group，ray 会命中腿部，返回异常低的高度值。正确做法：确认只包含 terrain geom 的 group，并启用 `exclude_parent_body=True`。
 
-💡 **概念误区：认为分辨率越高越好**。ray 数随分辨率倒数平方增长。训练速度显著下降的同时，策略改善可能很小。从 0.10 m 开始，只有明确需要时才加密。
+◇ **概念误区：认为分辨率越高越好**。ray 数随分辨率倒数平方增长。训练速度显著下降的同时，策略改善可能很小。从 0.10 m 开始，只有明确需要时才加密。
 
-🧠 **思维陷阱：修改 resolution 后忘记检查 observation 维度**。ray 数改变直接影响 observation tensor 形状。如果网络输入维度没有同步更新（或者不是动态推断），训练会报 shape mismatch。
+◎ **思维陷阱：修改 resolution 后忘记检查 observation 维度**。ray 数改变直接影响 observation tensor 形状。如果网络输入维度没有同步更新（或者不是动态推断），训练会报 shape mismatch。
 
 ### 练习
 
@@ -1584,9 +1584,9 @@ if (abs(cmd[0]) < 0.1 and abs(cmd[1]) < 0.1 and abs(cmd[2]) < 0.2):
 
 ⚠ **编程陷阱：train 和 play 的 num_envs 参数位置不同**。mjlab train 用 `--env.scene.num-envs`，play 用 `--num-envs`。Isaac Lab 类似但参数格式略有不同。混用导致 CLI 解析失败或使用默认值。
 
-💡 **概念误区：small train reward 不升就是 bug**。按前面 small train 命令的 256 envs，50 iterations × 256 envs × 24 steps_per_env ≈ 30.7 万 steps（若改用 large train 的 4096 envs 才约 500 万 steps）。四足策略通常需要数千万 steps 才开始学会基本步态。small train 只验证接口不验证效果。
+◇ **概念误区：small train reward 不升就是 bug**。按前面 small train 命令的 256 envs，50 iterations × 256 envs × 24 steps_per_env ≈ 30.7 万 steps（若改用 large train 的 4096 envs 才约 500 万 steps）。四足策略通常需要数千万 steps 才开始学会基本步态。small train 只验证接口不验证效果。
 
-🧠 **思维陷阱：只看 tensorboard 曲线不看视频**。reward 上升但策略可能学到了 hack（利用 simulator 接触 bug 获取 reward）。每隔 1000 iterations 看一次 play 视频是必要的 sanity check。
+◎ **思维陷阱：只看 tensorboard 曲线不看视频**。reward 上升但策略可能学到了 hack（利用 simulator 接触 bug 获取 reward）。每隔 1000 iterations 看一次 play 视频是必要的 sanity check。
 
 ### 练习
 
@@ -1822,7 +1822,7 @@ Isaac Lab 生态中，`basic-locomotion-isaaclab`（`github.com/iit-DLSLab/basic
 
 ⚠ **编程陷阱：迁移新机器人时 site names 不匹配**。不同 MJCF 模型的 foot site 命名不统一——Go1 可能用 `FR`/`FL`/`RR`/`RL`，Go2 可能用 `FR_foot`/`FL_foot`/`RR_foot`/`RL_foot`。必须打开 MJCF 确认精确命名。
 
-💡 **概念误区：认为换个机器人只需改 asset 路径**。action scale、default pose、joint 命名、body 命名都是 robot-specific 的。任何遗漏都可能导致静默的 wiring 错误。
+◇ **概念误区：认为换个机器人只需改 asset 路径**。action scale、default pose、joint 命名、body 命名都是 robot-specific 的。任何遗漏都可能导致静默的 wiring 错误。
 
 ### 练习
 
@@ -2024,9 +2024,9 @@ uv run train Mjlab-Velocity-Flat-Unitree-Go2 \
 
 ⚠ **编程陷阱：Go2 的 MJCF 和 USD 版本物理参数不一致**。MJCF 版本来自 MuJoCo Menagerie，USD 版本可能来自 URDF 转换。惯性参数、关节阻尼、碰撞几何可能有微妙差异。对比实验前应先确认关键参数一致。
 
-💡 **概念误区：认为框架差异不影响策略行为**。物理引擎的接触模型差异会传导到步态——MuJoCo 的凸优化接触模型在足-地交互中可能比 PhysX 的 TGS 更稳定，导致策略学到的步态模式不同。
+◇ **概念误区：认为框架差异不影响策略行为**。物理引擎的接触模型差异会传导到步态——MuJoCo 的凸优化接触模型在足-地交互中可能比 PhysX 的 TGS 更稳定，导致策略学到的步态模式不同。
 
-🧠 **思维陷阱：只用 1 个 seed 对比**。RL 训练的随机性很大，单 seed 的对比可能被随机噪声淹没。至少用 3 个 seed，报告均值和标准差。
+◎ **思维陷阱：只用 1 个 seed 对比**。RL 训练的随机性很大，单 seed 的对比可能被随机噪声淹没。至少用 3 个 seed，报告均值和标准差。
 
 ### 练习
 
@@ -2246,7 +2246,7 @@ uv run train Mjlab-Velocity-Flat-Unitree-Go2 \
 - **进阶路线**（准备做视觉控制）：上述 + Miki 2022 + Extreme Parkour → Ch18
 - **研究路线**（准备发论文）：上述 + RMA + Walk These Ways + Hwangbo 2019 → 设计自己的 reward/DR 方案
 
-## 🔧 故障排查手册
+## ◆ 故障排查手册
 
 | # | 症状 | 可能原因 | 排查步骤 | 相关小节 |
 |---|------|---------|---------|---------|

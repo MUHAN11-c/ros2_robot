@@ -2,7 +2,7 @@
 
 > **本章定位**：Part IV（单形态实战）第三章。Ch13 建立了四足速度跟踪，Ch14 把它迁移到人形。但速度跟踪只告诉机器人"走多快"——它不能指定**怎么走**。本章从 velocity tracking 切换到 motion imitation：给定一个参考运动序列（来自 MoCap 或视频），策略学习忠实地复现这个动作。这是从"让机器人走路"到"让机器人像人一样动"的关键跨越。
 >
-> **参考**：🔧 mjlab tracking (BeyondMimic) · ✅ ProtoMotions · ✅ g1_spinkick · ✅ PHC（ICCV'23）· ✅ KungfuBot（NeurIPS'25）
+> **参考**：◆ mjlab tracking (BeyondMimic) · ✅ ProtoMotions · ✅ g1_spinkick · ✅ PHC（ICCV'23）· ✅ KungfuBot（NeurIPS'25）
 >
 > **机器人**：G1 · **累积项目**：**C**
 
@@ -491,9 +491,9 @@ Step 5: 检查动作难度
 
 ⚠ **编程陷阱：motion file 的帧率与训练帧率不匹配**。错误做法：直接使用 30 Hz 的 MoCap 文件训练 50 Hz 的 tracking task。现象：策略看到的参考帧每 1.67 个仿真步才更新一次——中间步看到重复的帧，tracking reward 出现阶梯状跳变。正确做法：用 `csv_to_npz.py --input-fps 30 --output-fps 50` 对齐帧率后再训练。
 
-💡 **概念误区：tracking reward 越高动作越像**。tracking reward 使用 exponential kernel，σ 决定了"多接近算好"。σ 太大时 reward 容易饱和（误差 5cm 和误差 1cm 的 reward 差异不大）；σ 太小时 reward 信号稀疏（只有极接近参考时才有明显 reward）。标准配置 σ=0.1m 是经验平衡点。
+◇ **概念误区：tracking reward 越高动作越像**。tracking reward 使用 exponential kernel，σ 决定了"多接近算好"。σ 太大时 reward 容易饱和（误差 5cm 和误差 1cm 的 reward 差异不大）；σ 太小时 reward 信号稀疏（只有极接近参考时才有明显 reward）。标准配置 σ=0.1m 是经验平衡点。
 
-🧠 **思维陷阱：velocity reward 和 tracking reward 可以同时使用**。理论上可以，但实践中会产生冲突：velocity reward 鼓励策略按命令走，tracking reward 要求策略跟踪参考动作。如果参考动作的速度和 velocity command 不一致，两个 reward 会相互矛盾。标准做法是二选一，或者用 HOVER 的 mask 机制明确分离两种模态。
+◎ **思维陷阱：velocity reward 和 tracking reward 可以同时使用**。理论上可以，但实践中会产生冲突：velocity reward 鼓励策略按命令走，tracking reward 要求策略跟踪参考动作。如果参考动作的速度和 velocity command 不一致，两个 reward 会相互矛盾。标准做法是二选一，或者用 HOVER 的 mask 机制明确分离两种模态。
 
 ⚠ **编程陷阱：body_names 拼写错误静默失败**。错误做法：`body_names=["torso", "left_foot", ...]`（但 MJCF 中的名字实际是 `torso_link`）。现象：函数返回零 tensor，reward 看起来在涨但实际上缺少关键 body 的约束——策略的 torso 完全不跟踪参考。正确做法：训练前用 zero play 打印所有 body_names 对应的 body_id，确认均非空。
 
@@ -840,9 +840,9 @@ python protomotions/train_agent.py \
 
 ⚠ **编程陷阱：ProtoMotions 依赖特定的 simulator 版本**。`+simulator=isaacgym` 需要 IsaacGym Preview 4；`+simulator=isaaclab` 需要特定版本的 Isaac Lab。版本不匹配会导致隐晦的 tensor shape 错误。
 
-💡 **概念误区：AMP 不需要精确的参考动作**。AMP 的判别器学习动作分布的统计特性，不需要逐帧对齐。但参考数据的质量仍然非常重要——如果参考数据包含大量不自然的动作（retarget 质量差），判别器会学到"不自然也是正常的"。
+◇ **概念误区：AMP 不需要精确的参考动作**。AMP 的判别器学习动作分布的统计特性，不需要逐帧对齐。但参考数据的质量仍然非常重要——如果参考数据包含大量不自然的动作（retarget 质量差），判别器会学到"不自然也是正常的"。
 
-🧠 **思维陷阱：ASE 的 latent space 自动学到有意义的技能分解**。ASE 的 encoder 学到的 latent 可能不对应人类直觉中的"技能"（如走、跑、跳）。它学到的是数据驱动的分解——可能是"左脚先迈 vs 右脚先迈"这种无语义的划分。
+◎ **思维陷阱：ASE 的 latent space 自动学到有意义的技能分解**。ASE 的 encoder 学到的 latent 可能不对应人类直觉中的"技能"（如走、跑、跳）。它学到的是数据驱动的分解——可能是"左脚先迈 vs 右脚先迈"这种无语义的划分。
 
 ⚠ **编程陷阱：MuJoCo backend 只支持 num_envs=1**。ProtoMotions 的 MuJoCo 后端是 CPU-only 的，只用于调试和可视化，不用于训练。训练必须使用 GPU 后端（IsaacGym、IsaacLab、Newton、Genesis）。
 
@@ -1114,7 +1114,7 @@ def check_motion_quality(motion_data, robot_model):
 
 ⚠ **编程陷阱：per-GPU 分片后 batch statistics 不一致**。如果每个 GPU 的 motion 分布不同，PPO 的 advantage normalization 在不同 GPU 上会产生不同的 mean/std。使用 `torch.distributed.all_reduce` 在 normalize 前同步统计量。
 
-💡 **概念误区：更多 motion = 更好的策略**。如果低质量动作占比过大，策略会学到"平均化"行为——每个动作都能跟踪一点但没有一个做得好。quality > quantity。先用 physics filter 清洗数据。
+◇ **概念误区：更多 motion = 更好的策略**。如果低质量动作占比过大，策略会学到"平均化"行为——每个动作都能跟踪一点但没有一个做得好。quality > quantity。先用 physics filter 清洗数据。
 
 ⚠ **编程陷阱：motion 长度差异导致 batch padding 问题**。不同 motion 长度不同（3 秒 vs 30 秒），如果 episode 长度等于 motion 长度，batch 中的 episode 长度差异很大。PPO 的 advantage 计算需要固定长度的 trajectory。解决方案：(a) 把长 motion 切成固定长度的片段，(b) 使用 variable-length rollout + padding。
 
@@ -1433,9 +1433,9 @@ PHC+ 在 AMASS 数据集上达到了 **100% 的 eval_success_rate**——意味�
 
 ⚠ **编程陷阱：PHC 基于 Isaac Gym 而非 Manager-Based**。PHC 的原始代码使用 IsaacGym Preview 4，不兼容 mjlab/Isaac Lab 的 Manager-Based API。MuJoCo 版本在 `ZhengyiLuo/PHC_MJX`。
 
-💡 **概念误区：更多 primitive 一定更好**。每个 primitive 增加了推理时间和训练复杂度。通常 3-5 个 primitive 就能覆盖 AMASS 的全部动作。过多 primitive 意味着每个 primitive 只处理很少的动作——相当于记忆而非泛化。
+◇ **概念误区：更多 primitive 一定更好**。每个 primitive 增加了推理时间和训练复杂度。通常 3-5 个 primitive 就能覆盖 AMASS 的全部动作。过多 primitive 意味着每个 primitive 只处理很少的动作——相当于记忆而非泛化。
 
-🧠 **思维陷阱：PMCP 完全解决了灾难性遗忘**。PMCP 通过冻结旧参数避免了参数级别的遗忘，但新 primitive 的 gate 机制可能在某些 obs 下错误地抑制旧 primitive 的输出——这是一种更微妙的"功能性遗忘"。
+◎ **思维陷阱：PMCP 完全解决了灾难性遗忘**。PMCP 通过冻结旧参数避免了参数级别的遗忘，但新 primitive 的 gate 机制可能在某些 obs 下错误地抑制旧 primitive 的输出——这是一种更微妙的"功能性遗忘"。
 
 ### PMCP vs 其他避免遗忘的方案
 
@@ -1730,7 +1730,7 @@ KungfuBot 已在 Unitree G1 上验证了多种高动态动作：功夫套路、�
 
 ⚠ **编程陷阱：GVHMR 的估计质量影响全局**。如果视频中的人体估计不准确（遮挡、低分辨率），physics filter 会拒绝大量动作，导致训练数据不足。使用高质量视频源。
 
-💡 **概念误区：BLO 是一个复杂的优化算法**。KungfuBot 的 BLO 实际上是一个简单的在线估计——根据当前误差调整 σ。"bi-level"指的是 σ 优化（外层）和策略优化（内层 PPO）的嵌套关系，不涉及复杂的二阶优化。
+◇ **概念误区：BLO 是一个复杂的优化算法**。KungfuBot 的 BLO 实际上是一个简单的在线估计——根据当前误差调整 σ。"bi-level"指的是 σ 优化（外层）和策略优化（内层 PPO）的嵌套关系，不涉及复杂的二阶优化。
 
 ### 练习
 
@@ -1904,11 +1904,11 @@ def convert_protomotions_to_mjlab(npy_path, npz_path):
 
 ⚠ **编程陷阱：两个框架的 body_names 对应关系不同**。mjlab 使用 MJCF body 名字（如 `torso_link`），ProtoMotions 可能使用 URDF link 名字（如 `torso`）。跨框架对比时必须确认 body 对应关系。
 
-💡 **概念误区：一个框架的结果更好就说明它更优**。motion tracking 的效果高度依赖配置（reward 权重、body_names、σ 值）。在没有对齐所有配置之前，不能说某个框架"更好"——只能说在当前配置下表现不同。
+◇ **概念误区：一个框架的结果更好就说明它更优**。motion tracking 的效果高度依赖配置（reward 权重、body_names、σ 值）。在没有对齐所有配置之前，不能说某个框架"更好"——只能说在当前配置下表现不同。
 
 ⚠ **编程陷阱：四元数约定不一致**。MuJoCo (w,x,y,z) vs PhysX (x,y,z,w)。不转换 → root 朝向完全错误。这是跨框架 motion tracking 最常见的 bug。
 
-🧠 **思维陷阱：跨框架对比的目的是找"更好的框架"**。真正的目的是建立你对两个物理引擎差异的理解——哪些行为是物理引擎共有的（物理真实），哪些是特定引擎的 artifact（可能在真机上不成立）。
+◎ **思维陷阱：跨框架对比的目的是找"更好的框架"**。真正的目的是建立你对两个物理引擎差异的理解——哪些行为是物理引擎共有的（物理真实），哪些是特定引擎的 artifact（可能在真机上不成立）。
 
 ### 练习
 
@@ -2078,7 +2078,7 @@ Ch14 人形 velocity (基础运动)
 
 ---
 
-## 🔧 故障排查手册
+## ◆ 故障排查手册
 
 | # | 症状 | 可能原因 | 排查步骤 | 相关小节 |
 |---|------|---------|---------|---------|

@@ -1,5 +1,15 @@
 # C++ 方向学习路径与教材映射
 
+<div class="rt-chapter-header">
+<div class="rt-chapter-header__top">
+<span class="rt-chapter-header__code">MODULE 02 · C++ 与编程</span>
+<span class="rt-chapter-header__tagline">从第一行代码到工程化开发</span>
+</div>
+<div class="rt-chapter-header__meta">
+<span>◆ 零基础入门</span><span>◆ Python 工具链</span><span>◆ 通往 ROS2 工程</span>
+</div>
+</div>
+
 > 本文档是 C++ 方向的**总导航**：回答三个问题——学什么、用什么教材、按什么顺序学。
 > 四阶段全站架构见 [机器人学导论学习地图](../07_机器人学导论/00_机器人学导论_学习地图.md)；
 > 深层内容全貌见 [C++基础与进阶方向总大纲](C++基础与进阶方向_总大纲.md)。

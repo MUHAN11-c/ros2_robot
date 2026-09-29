@@ -1,81 +1,90 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 260" role="img" aria-label="Sakura Robotics Lab 吉祥物：樱雷工程狐·小樱丸">
-  <!-- 原创吉祥物「小樱丸」：参考樱雷意象——乳白狐 · 樱粉内耳 · 额雷菱纹 · 樱环金铃；机械护目镜 + 扳手为工程特征 -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 320" role="img" aria-label="Sakura Robotics Lab 吉祥物：紫樱（Sakura）">
+  <!-- 紫樱 v4 · Bongo Cat 风极简二次元小人：扁平色块 + 粗描边 + 大头小身。
+       品牌元素仅三处：雷紫波波头、雷菱发饰、樱花瓣点缀。 -->
   <defs>
-    <linearGradient id="mz-fur" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#FFFDFB"/>
-      <stop offset="100%" stop-color="#FBF3EC"/>
-    </linearGradient>
-    <linearGradient id="mz-tailtip" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0%" stop-color="#F4C8D9"/>
-      <stop offset="100%" stop-color="#DE9FBA"/>
-    </linearGradient>
-    <linearGradient id="mz-scarf" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#9370DB"/>
-      <stop offset="100%" stop-color="#7C5FBE"/>
+    <linearGradient id="sy-hair" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#B9A0E4"/>
+      <stop offset="100%" stop-color="#9A7DD0"/>
     </linearGradient>
   </defs>
 
-  <!-- 尾巴：乳白大尾 + 樱粉梢 -->
-  <path d="M150 184 Q210 198 218 142 Q223 106 198 94" fill="none" stroke="#3A3540" stroke-width="26" stroke-linecap="round"/>
-  <path d="M150 184 Q210 198 218 142 Q223 106 198 94" fill="none" stroke="url(#mz-fur)" stroke-width="19" stroke-linecap="round"/>
-  <path d="M212 112 Q219 99 202 92" fill="none" stroke="url(#mz-tailtip)" stroke-width="19" stroke-linecap="round"/>
+  <!-- 地面阴影 -->
+  <ellipse cx="140" cy="284" rx="62" ry="8" fill="#292530" opacity="0.10"/>
 
-  <!-- 身体（坐姿） -->
-  <path d="M92 216 Q92 168 128 168 Q164 168 164 216 Q128 230 92 216 Z" fill="url(#mz-fur)" stroke="#3A3540" stroke-width="3.5" stroke-linejoin="round"/>
-  <ellipse cx="106" cy="222" rx="13" ry="8" fill="#FBF3EC" stroke="#3A3540" stroke-width="3"/>
-  <ellipse cx="150" cy="222" rx="13" ry="8" fill="#FBF3EC" stroke="#3A3540" stroke-width="3"/>
+  <!-- 后层头发（波波头外轮廓） -->
+  <path d="M78 122 Q74 50 140 44 Q206 50 202 122 L204 162 Q204 182 184 184
+           Q170 185 168 170 L166 148 L114 148 L112 170 Q110 185 96 184
+           Q76 182 76 162 Z"
+        fill="url(#sy-hair)" stroke="#7B5FAE" stroke-width="3" stroke-linejoin="round"/>
 
-  <!-- 樱雷项圈：紫围巾 + 樱花扣 + 金铃 -->
-  <path d="M96 172 Q128 186 160 172 L160 184 Q128 198 96 184 Z" fill="url(#mz-scarf)" stroke="#3A3540" stroke-width="3" stroke-linejoin="round"/>
-  <g fill="#DE9FBA" stroke="#C77E9F" stroke-width="1">
-    <ellipse cx="121" cy="176" rx="3.4" ry="5"/>
-    <ellipse cx="121" cy="176" rx="3.4" ry="5" transform="rotate(72 121 178)"/>
-    <ellipse cx="121" cy="176" rx="3.4" ry="5" transform="rotate(144 121 178)"/>
-    <ellipse cx="121" cy="176" rx="3.4" ry="5" transform="rotate(216 121 178)"/>
-    <ellipse cx="121" cy="176" rx="3.4" ry="5" transform="rotate(288 121 178)"/>
+  <!-- 身体：白色小裙 -->
+  <path d="M102 170 L178 170 Q192 174 190 192 L186 250 Q140 262 94 250 L90 192
+           Q88 174 102 170 Z"
+        fill="#FFFFFF" stroke="#3A3540" stroke-width="3" stroke-linejoin="round"/>
+  <!-- 领口水手领 -->
+  <path d="M118 170 L140 186 L162 170 L166 178 L140 194 L114 178 Z"
+        fill="#8166B1" stroke="#3A3540" stroke-width="3" stroke-linejoin="round"/>
+  <!-- 下摆饰带 -->
+  <path d="M97 242 Q140 250 183 242" fill="none" stroke="#8166B1" stroke-width="5" stroke-linecap="round"/>
+  <!-- 裙上樱花点缀 -->
+  <g fill="#EFAFC5">
+    <ellipse cx="120" cy="216" rx="3.4" ry="5" transform="rotate(18 120 216)"/>
+    <ellipse cx="120" cy="216" rx="3.4" ry="5" transform="rotate(108 120 216)"/>
+    <ellipse cx="120" cy="216" rx="3.4" ry="5" transform="rotate(198 120 216)"/>
+    <ellipse cx="161" cy="224" rx="3" ry="4.4" transform="rotate(18 161 224)"/>
+    <ellipse cx="161" cy="224" rx="3" ry="4.4" transform="rotate(108 161 224)"/>
+    <ellipse cx="161" cy="224" rx="3" ry="4.4" transform="rotate(198 161 224)"/>
   </g>
-  <circle cx="121" cy="178" r="2" fill="#C9A96E"/>
-  <circle cx="136" cy="188" r="6" fill="#C9A96E" stroke="#3A3540" stroke-width="2.5"/>
-  <path d="M133 185 Q136 183 139 185" fill="none" stroke="#8A6F3A" stroke-width="1.6" stroke-linecap="round"/>
 
-  <!-- 左手扳手（工程特征） -->
-  <path d="M84 196 L102 188" stroke="#9AA7C7" stroke-width="5.5" stroke-linecap="round"/>
-  <circle cx="81" cy="198" r="6" fill="none" stroke="#9AA7C7" stroke-width="4"/>
-  <circle cx="103" cy="196" r="10" fill="#FFF9F4" stroke="#3A3540" stroke-width="3"/>
+  <!-- 左臂（下垂小短手） -->
+  <path d="M96 186 Q82 196 78 216" fill="none" stroke="#3A3540" stroke-width="20" stroke-linecap="round"/>
+  <path d="M96 186 Q82 196 78 216" fill="none" stroke="#FFFFFF" stroke-width="14" stroke-linecap="round"/>
+  <circle cx="78" cy="220" r="11" fill="#FFF9FC" stroke="#3A3540" stroke-width="3"/>
 
-  <!-- 头 -->
-  <circle cx="128" cy="105" r="52" fill="url(#mz-fur)" stroke="#3A3540" stroke-width="3.5"/>
+  <!-- 双腿小短腿 -->
+  <rect x="116" y="252" width="17" height="20" rx="8" fill="#FFF9FC" stroke="#3A3540" stroke-width="3"/>
+  <rect x="147" y="252" width="17" height="20" rx="8" fill="#FFF9FC" stroke="#3A3540" stroke-width="3"/>
 
-  <!-- 狐耳：紫粉外耳 + 樱粉内耳 -->
-  <path d="M92 74 Q76 34 100 30 Q110 50 118 64 Z" fill="#8166B1" stroke="#3A3540" stroke-width="3" stroke-linejoin="round"/>
-  <path d="M96 62 Q88 42 99 40 Q104 52 109 60 Z" fill="#F4C8D9"/>
-  <path d="M164 74 Q180 34 156 30 Q146 50 138 64 Z" fill="#8166B1" stroke="#3A3540" stroke-width="3" stroke-linejoin="round"/>
-  <path d="M160 62 Q168 42 157 40 Q152 52 147 60 Z" fill="#F4C8D9"/>
+  <!-- 右臂（举起挥手 · Bongo Cat 姿势） -->
+  <path d="M184 184 Q200 174 208 156" fill="none" stroke="#3A3540" stroke-width="20" stroke-linecap="round"/>
+  <path d="M184 184 Q200 174 208 156" fill="none" stroke="#FFFFFF" stroke-width="14" stroke-linecap="round"/>
+  <!-- 挥手小肉爪 -->
+  <circle cx="212" cy="150" r="13" fill="#FFF9FC" stroke="#3A3540" stroke-width="3"/>
+  <path d="M204 140 Q203 134 206 131 M212 137 Q212 131 212 128 M220 140 Q221 134 218 131"
+        fill="none" stroke="#3A3540" stroke-width="2.5" stroke-linecap="round"/>
 
-  <!-- 机械护目镜（推在额上，工程特征）：紫带 + 金圈青白镜片 -->
-  <rect x="82" y="72" width="92" height="13" rx="6.5" fill="#8166B1" stroke="#3A3540" stroke-width="2.5"/>
-  <circle cx="107" cy="78" r="13" fill="#9ADCF0" stroke="#C9A96E" stroke-width="3.5"/>
-  <circle cx="149" cy="78" r="13" fill="#9ADCF0" stroke="#C9A96E" stroke-width="3.5"/>
-  <circle cx="103" cy="74" r="3.5" fill="#FFFFFF" opacity="0.9"/>
-  <circle cx="145" cy="74" r="3.5" fill="#FFFFFF" opacity="0.9"/>
+  <!-- 脸 -->
+  <ellipse cx="140" cy="118" rx="58" ry="54" fill="#FFF9FC" stroke="#3A3540" stroke-width="3"/>
 
-  <!-- 额头樱雷菱纹（小樱丸的印记） -->
-  <polygon points="128,88 133.5,96 128,104 122.5,96" fill="#9370DB"/>
-  <polygon points="128,91.5 130.8,96 128,100.5 125.2,96" fill="#E8DDF6"/>
+  <!-- 前发刘海（平刘海 + 圆弧缺口） -->
+  <path d="M82 116 Q78 56 140 50 Q202 56 198 116 Q196 100 184 98 Q186 84 170 84
+           Q164 72 148 78 Q140 68 128 78 Q112 72 106 84 Q92 86 96 100 Q84 102 82 116 Z"
+        fill="url(#sy-hair)" stroke="#7B5FAE" stroke-width="3" stroke-linejoin="round"/>
+  <!-- 樱粉挑染 -->
+  <path d="M150 56 Q156 68 151 80 Q146 70 148 58 Z" fill="#EFAFC5"/>
+  <!-- 呆毛 -->
+  <path d="M138 52 Q132 36 148 32 Q138 42 143 50" fill="none" stroke="#9A7DD0" stroke-width="5" stroke-linecap="round"/>
 
-  <!-- 表情：眯眼 ^ ^ + 樱粉腮红 + 小鼻嘴 -->
-  <path d="M104 114 Q112 105 120 114" fill="none" stroke="#3A3540" stroke-width="3.8" stroke-linecap="round"/>
-  <path d="M136 114 Q144 105 152 114" fill="none" stroke="#3A3540" stroke-width="3.8" stroke-linecap="round"/>
-  <ellipse cx="96" cy="124" rx="8" ry="4.5" fill="#F2A0BC" opacity="0.75"/>
-  <ellipse cx="160" cy="124" rx="8" ry="4.5" fill="#F2A0BC" opacity="0.75"/>
-  <polygon points="125,122 131,122 128,127" fill="#D98FAF"/>
-  <path d="M123 130 Q128 135 133 130" fill="none" stroke="#3A3540" stroke-width="2.6" stroke-linecap="round"/>
+  <!-- 雷菱发饰 -->
+  <g transform="rotate(-12 103 86)">
+    <path d="M103 76 L111 86 L103 96 L95 86 Z" fill="#9370DB" stroke="#E8DDF6" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M103 81 L107 86 L103 91 L99 86 Z" fill="#E8DDF6"/>
+  </g>
 
-  <!-- 胸前樱雷徽（小） -->
-  <polygon points="136,200 128,213 136,224 144,213" fill="#9370DB" stroke="#3A3540" stroke-width="1.6"/>
+  <!-- 五官：Bongo Cat 式极简 -->
+  <ellipse cx="116" cy="124" rx="7" ry="10" fill="#3A3540"/>
+  <ellipse cx="164" cy="124" rx="7" ry="10" fill="#3A3540"/>
+  <circle cx="114" cy="119" r="2.6" fill="#FFFFFF"/>
+  <circle cx="162" cy="119" r="2.6" fill="#FFFFFF"/>
+  <path d="M132 146 Q140 154 148 146" fill="none" stroke="#3A3540" stroke-width="3" stroke-linecap="round"/>
+  <ellipse cx="98" cy="140" rx="9" ry="6" fill="#F4B8CC" opacity="0.85"/>
+  <ellipse cx="182" cy="140" rx="9" ry="6" fill="#F4B8CC" opacity="0.85"/>
 
-  <!-- 漂浮樱瓣 -->
-  <path d="M36 92 q6 -8 12 0 q-6 8 -12 0" fill="#F4C8D9" opacity="0.85"/>
-  <path d="M222 176 q6 -8 12 0 q-6 8 -12 0" fill="#DE9FBA" opacity="0.7"/>
-  <path d="M52 200 q5 -7 10 0 q-5 7 -10 0" fill="#EFAFC5" opacity="0.6"/>
+  <!-- 樱花瓣点缀 -->
+  <g transform="rotate(24 236 118)">
+    <path d="M236 110 Q242 114 236 122 Q230 114 236 110 Z" fill="#F4C8D9" stroke="#E5A8C2" stroke-width="1.5"/>
+  </g>
+  <g transform="rotate(-28 62 108)">
+    <path d="M62 102 Q67 105 62 112 Q57 105 62 102 Z" fill="#F4C8D9" stroke="#E5A8C2" stroke-width="1.2"/>
+  </g>
 </svg>

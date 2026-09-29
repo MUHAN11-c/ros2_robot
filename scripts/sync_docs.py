@@ -394,7 +394,7 @@ def count_code_blocks() -> int:
 
 
 def write_404() -> None:
-    """原创 404 页：小樱丸 + 节点未连接。"""
+    """原创 404 页：紫樱 + 节点未连接。"""
     (DOCS_DIR / "404.md").write_text(
         """---
 hide:
@@ -404,11 +404,11 @@ hide:
 
 <div class="rt-404" markdown>
 
-![樱雷工程狐·小樱丸](assets/images/mascot.svg)
+![紫樱](assets/images/mascot.svg)
 
 # 404 · 这个节点没有连接
 
-小樱丸在这片区域没有找到话题——页面可能已移动或从未存在。
+紫樱没有在这个坐标找到页面——它可能已移动，或从未存在。
 
 [返回首页](/){{ .md-button .md-button--primary }}
 [浏览目录索引](catalog/){{ .md-button }}
@@ -883,11 +883,11 @@ def write_catalog(catalog: list[SummaryNode]) -> None:
     lines = [
         "# 目录索引",
         "",
-        '<div class="robotics-catalog-mascot" markdown>',
+        '<div class="rt-mascot-tip" markdown>',
         "",
-        "![樱雷工程狐·小樱丸](assets/images/mascot.svg)",
+        "![紫樱](assets/images/mascot.svg)",
         "",
-        "**小樱丸小提示**：按 `Ctrl+K` 全局搜索；第一次来请先看 [从零开始学习路线总图](00_项目导航/从零开始学习路线总图.md)。",
+        "**紫樱小提示**：按 `Ctrl+K` 全局搜索；第一次来请先看 [从零开始学习路线总图](00_项目导航/从零开始学习路线总图.md)。",
         "",
         "</div>",
         "",

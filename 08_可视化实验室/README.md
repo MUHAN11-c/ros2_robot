@@ -1,13 +1,23 @@
 # 可视化实验室 · 总览
 
-> **樱雷工程狐 · 小樱丸 的实验室**——理论书上每一条公式，在这里都变成一段你能亲手运行、亲手修改的代码和一张你能看懂的图。
+<div class="rt-chapter-header">
+<div class="rt-chapter-header__top">
+<span class="rt-chapter-header__code">VIS LAB · 可视化实验室</span>
+<span class="rt-chapter-header__tagline">每条公式都能亲手运行、亲手修改</span>
+</div>
+<div class="rt-chapter-header__meta">
+<span>◆ 11 个实验</span><span>◆ 纯 numpy 可复现</span><span>◆ 固定种子出图</span>
+</div>
+</div>
+
+> **紫樱的可视化实验室**——理论书上每一条公式，在这里都变成一段你能亲手运行、亲手修改的代码和一张你能看懂的图。
 > 本实验室与第〇阶筑基章节一一对应：**读书觉得抽象时，来跑代码；跑完代码，回去读书会突然通透。**
 
-<div class="robotics-catalog-mascot" markdown>
+<div class="rt-mascot-tip" markdown>
 
-![樱雷工程狐·小樱丸](../assets/images/mascot.svg)
+![紫樱](../assets/images/mascot.svg)
 
-**小樱丸**：实验守则只有三条——抄一遍再跑、每次只改一个参数、看到意外的形状别慌，意外就是理解的开端。
+**紫樱的实验守则**只有三条——抄一遍再跑、每次只改一个参数、看到意外的形状别慌，意外就是理解的开端。
 
 </div>
 
@@ -52,7 +62,7 @@ pip install numpy matplotlib
 
 
 
-## 使用守则（小樱丸的三条叮嘱）
+## 使用守则（紫樱的三条叮嘱）
 
 1. **抄一遍再跑**，不要复制粘贴——肌肉记忆也是记忆
 2. **每次只改一个参数**，跑完对比图的差异，猜为什么，再回去看书

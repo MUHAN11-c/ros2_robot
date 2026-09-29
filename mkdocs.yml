@@ -100,10 +100,12 @@ extra_css:
   - stylesheets/code.css
   - stylesheets/components.css
   - stylesheets/responsive.css
+  - stylesheets/mascot-assistant.css
 
 extra_javascript:
   - javascripts/mathjax.js
   - javascripts/app.js
+  - javascripts/mascot.js
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 
 extra:

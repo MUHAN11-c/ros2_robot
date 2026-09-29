@@ -250,12 +250,12 @@ $$y = \nabla f(x^*) \quad \Rightarrow \quad x^* = (\nabla f)^{-1}(y)$$
 
 ### ⚠ 常见陷阱
 
-> 💡 **概念误区：认为"共轭的共轭一定回到原函数"**
+> ◇ **概念误区：认为"共轭的共轭一定回到原函数"**
 > - $f^{**} = f$ 仅当 $f$ 是 proper + closed + convex 时成立
 > - 非凸 $f$ 的 $f^{**}$ 只是 $f$ 的闭凸包（最大的不超过 $f$ 的闭凸函数）
 > - 这个条件在实际中通常满足，但自定义函数需要检查
 
-> 🧠 **思维陷阱：混淆"共轭"和"proximal"**
+> ◎ **思维陷阱：混淆"共轭"和"proximal"**
 > - 共轭 $f^*(y) = \sup_x[\langle y,x \rangle - f(x)]$ 是一个函数变换
 > - Proximal $\text{prox}_f(v) = \arg\min_x[f(x) + \frac{1}{2}\|x-v\|^2]$ 是一个点映射
 > - 二者有深刻联系（通过 Moreau 分解），但不是同一个东西
@@ -348,7 +348,7 @@ $$f(x) = \sup_{y}[\langle y, x \rangle - f^*(y)]$$
 
 ### ⚠ 常见陷阱
 
-> 💡 **概念误区：$f$ 的共轭一定取有限值**
+> ◇ **概念误区：$f$ 的共轭一定取有限值**
 > - 对非强制（non-coercive）的 $f$，$f^*$ 可能在某些点取 $+\infty$
 > - 例如 $f(x) = a^\top x + b$ 的共轭 $f^*(y) = \delta_{\{a\}}(y) - b$，只在 $y = a$ 处有限
 > - 这是正常的——$\text{dom}(f^*)$ 不必等于全空间
@@ -537,7 +537,7 @@ $$0 \in \partial\left[f(x) + \frac{1}{2}\|x-v\|^2\right]\bigg|_{x=p} = \partial 
 
 ### ⚠ 常见陷阱
 
-> 💡 **概念误区："PPO 的 proximal 就是 Moreau 意义的 prox"**
+> ◇ **概念误区："PPO 的 proximal 就是 Moreau 意义的 prox"**
 > - PPO（Proximal Policy Optimization）的"proximal"来自 KL trust region / clipped surrogate
 > - 与 Moreau-Yosida proximal 算子**没有直接数学关系**，只是术语巧合
 > - Schulman 2017 的命名来源是 TRPO 的 trust-region 思想，不是 Moreau 1965 的 proximity operator
@@ -720,7 +720,7 @@ $$\text{prox}_{\lambda\|\cdot\|_*}(V) = U \cdot \text{diag}((\sigma_i - \lambda)
 
 ### ⚠ 常见陷阱
 
-> 💡 **概念误区：范数 vs 范数平方的 prox 差异很大**
+> ◇ **概念误区：范数 vs 范数平方的 prox 差异很大**
 > - $\text{prox}_{\lambda\|\cdot\|_2}(v) = (1 - \lambda/\|v\|)_+ v$（块软阈值，有死区）
 > - $\text{prox}_{\lambda \cdot \frac{1}{2}\|\cdot\|^2}(v) = v/(1+\lambda)$（简单缩放，无死区）
 > - 混淆两者是 ADMM 实现中最常见的 bug 之一
@@ -849,7 +849,7 @@ $f_\mu$ 是 $f$ 的光滑近似，误差 $|f_\mu - f| \leq \frac{\mu}{2}D^2$（$
 
 ### ⚠ 常见陷阱
 
-> 💡 **概念误区："Moreau 包络 $M_f^\lambda$ 就是 $f$ 加上二次项"**
+> ◇ **概念误区："Moreau 包络 $M_f^\lambda$ 就是 $f$ 加上二次项"**
 > - $M_f^\lambda(v) = \min_x[f(x) + \frac{1}{2\lambda}\|x-v\|^2]$ 是对 $x$ 取 min 后的结果
 > - 它不是简单地把 $\frac{1}{2\lambda}\|x-v\|^2$ 加到 $f$ 上——加法后的函数是 $v$ 和 $x$ 的联合函数，取 min 后才变成只关于 $v$ 的函数
 > - Moreau 包络 $\leq f$ 处处成立（因为取了 min），而"$f$ + 二次项" $> f$
@@ -1050,13 +1050,13 @@ ADMM 的每步迭代可以写成 $x_{k+1} = T_{\text{ADMM}}(x_k)$，其中 $T_{\
 
 ### ⚠ 常见陷阱
 
-> 💡 **概念误区：firmly nonexpansive $=$ 收缩映射**
+> ◇ **概念误区：firmly nonexpansive $=$ 收缩映射**
 > - 收缩映射要求 $\|Tx-Ty\| \leq c\|x-y\|$（$c < 1$），保证线性收敛
 > - Firmly nonexpansive 只要求 $c = 1$（不严格收缩），收敛可以是次线性的
 > - 强凸函数的 $\text{prox}$ 是收缩映射（$c = 1/(1+\lambda\mu) < 1$），保证线性收敛
 > - 一般凸函数的 $\text{prox}$ 只是 nonexpansive，收敛率 $O(1/k)$
 
-> 🧠 **思维陷阱：以为 PPA 不需要精确 prox**
+> ◎ **思维陷阱：以为 PPA 不需要精确 prox**
 > - 理论上 PPA 要求精确计算 $\text{prox}_{\lambda f}$
 > - 不精确 PPA（inexact PPA）允许近似计算，但需要误差序列可求和 $\sum \epsilon_k < \infty$
 > - ADMM 的 $x$-步通常不精确解——这相当于不精确 PPA，需要控制近似误差
@@ -1270,7 +1270,7 @@ $$x_{k+1} = \text{prox}_{\eta g}(y_{k+1} - \eta\nabla f(y_{k+1}))$$
 > - 计算 $\lambda_{\max}$ 可能很贵。实践中用 backtracking line search 更常见
 > - FISTA 的动量系数 $\frac{k-1}{k+2}$ 不能用固定值替代——它的递增性是加速的关键
 
-> 💡 **概念误区：proximal gradient 只适用于 $\ell_1$ 正则化**
+> ◇ **概念误区：proximal gradient 只适用于 $\ell_1$ 正则化**
 > - proximal gradient 适用于任何 $f + g$ 结构（$f$ 光滑，$g$ 有闭式 prox）
 > - 包括但不限于：$\ell_1$（软阈值）、group lasso（块软阈值）、核范数（SVT）、指示函数（投影）
 > - 只要 $g$ 的 prox 能高效计算，proximal gradient 就能用
@@ -1390,7 +1390,7 @@ $$u_{k+1} = u_k + x_{k+1} - z_{k+1} = (x_{k+1} + u_k) - z_{k+1}$$
 > - $\rho$ 太大：$x$-更新的二次项主导，$f$ 的信息被淹没，也收敛慢
 > - 最佳 $\rho$ 依赖问题结构——自适应调节是最佳实践
 
-> 💡 **概念误区：ADMM 一定比其他方法快**
+> ◇ **概念误区：ADMM 一定比其他方法快**
 > - ADMM 的优势是**分裂**——可以把大问题拆成简单子问题
 > - 对本身就容易解的问题（如小规模 QP），active-set（qpOASES）或 IPM 可能更快
 > - ADMM 的 $O(1/k)$ 收敛率是中等精度的——高精度需要 polishing 或换方法
@@ -2002,7 +2002,7 @@ $(\delta_C)^* = \sigma_C$ （指示 ↔ 支撑）
 
 ---
 
-## 🔧 故障排查手册
+## ◆ 故障排查手册
 
 | 症状 | 可能原因 | 排查步骤 | 相关章节 |
 |------|---------|---------|---------|

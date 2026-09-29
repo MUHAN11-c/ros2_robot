@@ -2246,7 +2246,7 @@ mini_manip_ws/
 | ethercat_driver_ros2 (ICube) | ★★★ | EtherCAT 集成 |
 | Bence Magyar, ROSCon 2022 talk | ★ | 架构设计官方演讲 |
 
-## 🔧 故障排查手册
+## ◆ 故障排查手册
 
 | 症状 | 可能原因 | 排查步骤 | 相关小节 |
 |------|---------|---------|---------|

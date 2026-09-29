@@ -267,9 +267,9 @@ $$
 
 | 陷阱 | 表现 | 正确做法 |
 |------|------|---------|
-| 💡 把 $\nabla_\theta \log\pi$ 对 $a\sim\pi_{\text{old}}$ 算 | Off-policy PG 忘 importance sampling | 显式乘 $\rho_t=\pi_\theta/\pi_{\text{old}}$ |
-| 🧠 认为 PG 定理需要环境模型 | 试图估计 $P(s'|s,a)$ | 定理已消去 $P$，只需采样 |
-| 💡 推导中漏掉 $\nabla_\theta Q^\pi$ 项 | 只写 $\sum_a \nabla_\theta \pi \cdot Q$ | 必须递推展开第二项 |
+| ◇ 把 $\nabla_\theta \log\pi$ 对 $a\sim\pi_{\text{old}}$ 算 | Off-policy PG 忘 importance sampling | 显式乘 $\rho_t=\pi_\theta/\pi_{\text{old}}$ |
+| ◎ 认为 PG 定理需要环境模型 | 试图估计 $P(s'|s,a)$ | 定理已消去 $P$，只需采样 |
+| ◇ 推导中漏掉 $\nabla_\theta Q^\pi$ 项 | 只写 $\sum_a \nabla_\theta \pi \cdot Q$ | 必须递推展开第二项 |
 
 ### 练习
 
@@ -1655,7 +1655,7 @@ send_to_motors(action);
 
 ---
 
-## 🔧 故障排查手册
+## ◆ 故障排查手册
 
 | 症状 | 可能原因 | 排查步骤 | 相关节 |
 |------|---------|---------|--------|

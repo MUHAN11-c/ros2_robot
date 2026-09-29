@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140" role="img" aria-label="紫樱（Sakura）头像">
+  <!-- 紫樱头像变体：mascot.svg 头部裁剪（translate -70,-48），浮动助手按钮等小尺寸场景 -->
+  <defs>
+    <linearGradient id="syh-hair" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#B9A0E4"/>
+      <stop offset="100%" stop-color="#9A7DD0"/>
+    </linearGradient>
+  </defs>
+
+  <g transform="translate(-70,-48)">
+    <!-- 后层头发 -->
+    <path d="M78 122 Q74 50 140 44 Q206 50 202 122 L204 162 Q204 182 184 184
+             Q170 185 168 170 L166 148 L114 148 L112 170 Q110 185 96 184
+             Q76 182 76 162 Z"
+          fill="url(#syh-hair)" stroke="#7B5FAE" stroke-width="3" stroke-linejoin="round"/>
+
+    <!-- 脸 -->
+    <ellipse cx="140" cy="118" rx="58" ry="54" fill="#FFF9FC" stroke="#3A3540" stroke-width="3"/>
+
+    <!-- 前发刘海 -->
+    <path d="M82 116 Q78 56 140 50 Q202 56 198 116 Q196 100 184 98 Q186 84 170 84
+             Q164 72 148 78 Q140 68 128 78 Q112 72 106 84 Q92 86 96 100 Q84 102 82 116 Z"
+          fill="url(#syh-hair)" stroke="#7B5FAE" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M150 56 Q156 68 151 80 Q146 70 148 58 Z" fill="#EFAFC5"/>
+    <path d="M138 52 Q132 36 148 32 Q138 42 143 50" fill="none" stroke="#9A7DD0" stroke-width="5" stroke-linecap="round"/>
+
+    <!-- 雷菱发饰 -->
+    <g transform="rotate(-12 103 86)">
+      <path d="M103 76 L111 86 L103 96 L95 86 Z" fill="#9370DB" stroke="#E8DDF6" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M103 81 L107 86 L103 91 L99 86 Z" fill="#E8DDF6"/>
+    </g>
+
+    <!-- 五官 -->
+    <ellipse cx="116" cy="124" rx="7" ry="10" fill="#3A3540"/>
+    <ellipse cx="164" cy="124" rx="7" ry="10" fill="#3A3540"/>
+    <circle cx="114" cy="119" r="2.6" fill="#FFFFFF"/>
+    <circle cx="162" cy="119" r="2.6" fill="#FFFFFF"/>
+    <path d="M132 146 Q140 154 148 146" fill="none" stroke="#3A3540" stroke-width="3" stroke-linecap="round"/>
+    <ellipse cx="98" cy="140" rx="9" ry="6" fill="#F4B8CC" opacity="0.85"/>
+    <ellipse cx="182" cy="140" rx="9" ry="6" fill="#F4B8CC" opacity="0.85"/>
+  </g>
+</svg>

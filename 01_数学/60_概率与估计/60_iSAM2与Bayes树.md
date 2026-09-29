@@ -99,7 +99,7 @@ iSAM2 与 Bayes 树
 | 2012 | Kaess et al. | **iSAM2**：Bayes 树 + fluid relin + wildfire | 当前工业标准 |
 | 2017 | Dellaert-Kaess | FnT 综述：统一因子图范式 | 教材，非新算法 |
 
-这条脉络清晰地展示了：**从 EKF 的"全耦合"到 iSAM2 的"局部编辑"，本质上是对条件独立结构的逐步开发**。EKF 无视所有结构，把 $N$ 个变量捆成一个稠密块；SqrtSAM ���现了稀疏性但只能 batch 利用；iSAM1 发现了增量更新 $R$ 的可能但无法避免周期性 batch；iSAM2 最终通过 Bayes 树把"哪些团受影响"的判断编码进数据结构本身，实现了真正���义上的"只更新必须更新的部分"。
+这条脉络清晰地展示了：**从 EKF 的"全耦合"到 iSAM2 的"局部编辑"，本质上是对条件独立结构的逐步开发**。EKF 无视所有结构，把 $N$ 个变量捆成一个稠密块；SqrtSAM 实现了稀疏性但只能 batch 利用；iSAM1 发现了增量更新 $R$ 的可能但无法避免周期性 batch；iSAM2 最终通过 Bayes 树把"哪些团受影响"的判断编码进数据结构本身，实现了真正意义上的"只更新必须更新的部分"。
 
 ---
 
@@ -489,7 +489,7 @@ isam.marginalizeLeaves(marginalizableKeys);
 - Fluid relinearization + 多次 update 足以拉回最优；
 - 保底方案 RISE（Rosen-Kaess-Leonard, TRO 2014）在 iSAM2 之上加 trust region。
 
-**收敛速率的严格分析**：对增量 GN 的每次 update，在良好线性化点附近（$\|\delta\|$ 小）��GN 具有**二次收敛率**（Nocedal-Wright *Numerical Optimization* 2006, Thm 10.2）：
+**收敛速率的严格分析**：对增量 GN 的每次 update，在良好线性化点附近（$\|\delta\|$ 小）时 GN 具有**二次收敛率**（Nocedal-Wright *Numerical Optimization* 2006, Thm 10.2）：
 
 $$\|\delta^{(k+1)}\| \le C\|\delta^{(k)}\|^2$$
 
@@ -499,7 +499,7 @@ $$\|\delta^{(k+1)}\| \le C\|\delta^{(k)}\|^2$$
 - **回环闭合后**：$\|\delta\|$ 可能很大（如 1m 级的闭合误差），需要多次 update 才能收敛
 - **多次空 update 的数学含义**：每次空 update 在当前 $\Theta$ 处重新线性化并求解，等价于 GN 的多次迭代
 
-LIO-SAM 回环后跑 6 次空 update 的经验来自：闭合误差通常 $<5$ m，6 次二次收���可把误差降到 $5\times(C\cdot 5)^{2^6}\approx 10^{-10}$ m（假设 $C\approx 0.1$），远低于传感器精度。
+LIO-SAM 回环后跑 6 次空 update 的经验来自：闭合误差通常 $<5$ m，6 次二次收敛可把误差降到 $5\times(C\cdot 5)^{2^6}\approx 10^{-10}$ m（假设 $C\approx 0.1$），远低于传感器精度。
 
 **Dogleg 信赖域的数学形式**：当 GN 步 $\delta_{gn}$ 超出信赖域半径 $\Delta$ 时，Powell Dogleg 取
 
@@ -510,9 +510,9 @@ $$\delta_{dl} = \begin{cases}
 
 其中 $\delta_{sd}=-\alpha_{sd}J^\top r$（梯度方向的 Cauchy 点），$\alpha$ 由 $\|\delta_{dl}\|=\Delta$ 确定。在 Bayes 树上实现 Dogleg 需要存储额外的 `deltaNewton_` 和 `RgProd_`（梯度投影），这就是 `ISAM2::deltaNewton_` 成员的用途。
 
-**Rosen-Kaess-Leonard RISE (TRO 2014)**：在 iSAM2 之上加信赖域控制——如果单步 update 使非线性���差增加，缩小信赖域并重试。这比切换到完整 Dogleg 更轻量（不需要每步都计算 Cauchy 点），但代价是偶尔触发 batch-like 行为。
+**Rosen-Kaess-Leonard RISE (TRO 2014)**：在 iSAM2 之上加信赖域控制——如果单步 update 使非线性残差增加，缩小信赖域并重试。这比切换到完整 Dogleg 更轻量（不需要每步都计算 Cauchy 点），但代价是偶尔触发 batch-like 行为。
 
-> **反事实推理——如果 iSAM2 用 LM 而非 GN 会怎样？** LM 需要调节阻尼参数 $\lambda$：成功则减小，失败则增大。但 iSAM2 的 Bayes 树结构假设 Hessian 不变（只做局部更新）—��每次改变 $\lambda$ 等于修改所有因子的"虚拟 prior"（$\lambda I$ 加在对角），这破坏了局部性，使每步必须 relinearize 全图。因此 iSAM2 选择 GN（无 $\lambda$）作为默认，在需要鲁棒性时用 Dogleg（信赖域）而非 LM（阻尼矩阵）。这是**算法-数据结构协同设计**的典型例子：数据结构的局部性假设约束了可用的优化策略。
+> **反事实推理——如果 iSAM2 用 LM 而非 GN 会怎样？** LM 需要调节阻尼参数 $\lambda$：成功则减小，失败则增大。但 iSAM2 的 Bayes 树结构假设 Hessian 不变（只做局部更新）——则每次改变 $\lambda$ 等于修改所有因子的"虚拟 prior"（$\lambda I$ 加在对角），这破坏了局部性，使每步必须 relinearize 全图。因此 iSAM2 选择 GN（无 $\lambda$）作为默认，在需要鲁棒性时用 Dogleg（信赖域）而非 LM（阻尼矩阵）。这是**算法-数据结构协同设计**的典型例子：数据结构的局部性假设约束了可用的优化策略。
 
 ---
 
@@ -526,9 +526,9 @@ $$\delta_{dl} = \begin{cases}
 
 #### Lipton-Rose-Tarjan 嵌套剖分定理的直觉
 
-这个 1979 年的定理是理解 SLAM 求解器复��度的数学基石。核心思想如下：
+这个 1979 年的定理是理解 SLAM 求解器复杂度的数学基石。核心思想如下：
 
-**平面分隔符定理（Planar Separator Theorem, Lipton-Tarjan 1979）**：任何 $N$ 节点平面图都存在一个大小为 $O(\sqrt{N})$ 的**分隔符集合** $S$，使得删除 $S$ 后图分裂为两��大小各不超过 $\frac{2}{3}N$ 的子图。
+**平面分隔符定理（Planar Separator Theorem, Lipton-Tarjan 1979）**：任何 $N$ 节点平面图都存在一个大小为 $O(\sqrt{N})$ 的**分隔符集合** $S$，使得删除 $S$ 后图分裂为两部分大小各不超过 $\frac{2}{3}N$ 的子图。
 
 **对 SLAM 的意义**：2D pose graph 本质上是平面图（或近似平面图——少量回环跨越平面不影响渐近行为）。当我们对信息矩阵做 Cholesky 分解时，消元一个变量 $x_i$ 会在其所有邻居之间引入 fill-in 边。嵌套剖分排序（Nested Dissection）递归地找分隔符、先消元两侧的子图、最后消元分隔符——这保证了 fill-in 被控制在 $O(N\log N)$ 个非零元内，总 Cholesky 运算量为 $O(N^{3/2})$。
 
@@ -550,7 +550,7 @@ $$\delta_{dl} = \begin{cases}
 | **滑窗 BA (VINS-Mono)** | $O(k^3), k$ 窗长 | $O(k^2)$ | 显式 Schur 边缘化 |
 | **Batch LM (g2o)** | $O(N^{3/2})$ 每次 | 同上 | 全图重优化 |
 
-> **跨领域类比**：iSAM2 的复杂度结构类似于数据库的 B 树索引更新。在 B 树中，插入一条记录最坏需要分裂 $O(\log N)$ 个节点，但平均只影响 $O(1)$ 个���节点。同理，iSAM2 中添加一个里程计因子平均只影响 $O(1)$ 个叶团；添加一个回环因子影响 $O(\sqrt{N})$ 个团（路径到 LCA）。两者都利用了"树状层次结构把局部操作控制在子树内"的设计原理。
+> **跨领域类比**：iSAM2 的复杂度结构类似于数据库的 B 树索引更新。在 B 树中，插入一条记录最坏需要分裂 $O(\log N)$ 个节点，但平均只影响 $O(1)$ 个邻节点。同理，iSAM2 中添加一个里程计因子平均只影响 $O(1)$ 个叶团；添加一个回环因子影响 $O(\sqrt{N})$ 个团（路径到 LCA）。两者都利用了"树状层次结构把局部操作控制在子树内"的设计原理。
 
 ---
 
@@ -1769,19 +1769,19 @@ iSAM2 假设每个变量的维度在创建后不变。若需要动态改变变�
 | Incremental Certifiable | SDP 松弛与增量 Bayes 树结合 | warm-start Burer-Monteiro；增量对偶证书更新 |
 | iSAM2 + GNC | 全局权重退火 vs 局部更新 | 分区域退火；双线程（iSAM2 实时 + GNC 后台） |
 | 语义因子 | 离散-连续混合变量 | Hybrid Bayes Tree（GTSAM 开发中） |
-| 大规模长时运行 | 内存/计算��性增长 | 分层地图；稀疏化子图 |
+| 大规模长时运行 | 内存/计算线性增长 | 分层地图；稀疏化子图 |
 | 分布式多机器人 | 各机器人 Bayes 树同步 | DC2-PGO + anti-factor |
 
 ---
 
 ### §C.33 设计决策总结：何时用 iSAM2、何时不用 ★★
 
-这是工程选型的核心问��。以下决策流程图基于实际系统的经验总结：
+这是工程选型的核心问题。以下决策流程图基于实际系统的经验总结：
 
 **用 iSAM2 的典型场景**：
 - LiDAR SLAM 后端（LIO-SAM、SC-LIO-SAM、LeGO-LOAM-v2）：关键帧频率 2-10 Hz，pose graph 结构稀疏，偶尔回环
 - 固定延迟 VIO（Kimera-VIO、OKVIS2）：滑窗 + 边缘化，每帧添加少量因子
-- 多传感器融合：IMU + GPS + LiDAR 异步因子，需要全��迹一致估计
+- 多传感器融合：IMU + GPS + LiDAR 异步因子，需要全轨迹一致估计
 - 在线语义建图（Hydra、Kimera-Multi）：需要随时查询历史 pose 的边缘协方差
 
 **不适合用 iSAM2 的场景**：
@@ -1813,13 +1813,13 @@ iSAM2 假设每个变量的维度在创建后不变。若需要动态改变变�
 | 密集特征环境（仓库） | iSAM2 + SmartFactor | 大量 landmark，注意缓存冲突 |
 | 水下 SLAM（声学） | iSAM2 + 强先验 | 测量稀疏但噪声大，需要鲁棒核 |
 
-> **反事实推理——如果所有 SLAM 系统都用 iSAM2 会��样？** ORB-SLAM3 的视觉 BA 每帧涉及 ~200 个 map point 的可见性变化——每帧都要大量 remove + reinsert factor，iSAM2 的 `cacheLinearizedFactors` 反复失效，性能可能反而比直接 batch Schur 补更差。这解释了为什么 ORB-SLAM3 选择 g2o 而非 GTSAM/iSAM2。**正确的工程直觉是：当因子图拓扑稳定时，iSAM2 的增量缓存优势最大；当拓扑频繁变动时，batch 方法的简单性反而更高效。**
+> **反事实推理——如果所有 SLAM 系统都用 iSAM2 会怎样？** ORB-SLAM3 的视觉 BA 每帧涉及 ~200 个 map point 的可见性变化——每帧都要大量 remove + reinsert factor，iSAM2 的 `cacheLinearizedFactors` 反复失效，性能可能反而比直接 batch Schur 补更差。这解释了为什么 ORB-SLAM3 选择 g2o 而非 GTSAM/iSAM2。**正确的工程直觉是：当因子图拓扑稳定时，iSAM2 的增量缓存优势最大；当拓扑频繁变动时，batch 方法的简单性反而更高效。**
 
 ---
 
 ### §C.34 信息形式与协方差形式的对偶视角 ★★★
 
-理解 Bayes 树需要区分两种表示联合高斯分布的方式，以及它们���自擅长的操作。
+理解 Bayes 树需要区分两种表示联合高斯分布的方式，以及它们各自擅长的操作。
 
 **信息形式（Information Form / Canonical Form）**：
 
@@ -1842,7 +1842,7 @@ $$p(\Theta)\propto\exp\!\Big(-\frac{1}{2}(\Theta-\mu)^\top\Sigma^{-1}(\Theta-\mu
 | 条件化（给定 $x_j$ 的值） | 直接删行/列 — $O(1)$ | Schur 补 $O(N)$ |
 | 查询单变量边缘协方差 | 需要求解/部分求逆 — $O(\text{path length}^2)$ | 直接读取 $\Sigma_{jj}$ — $O(1)$ |
 
-**Bayes 树的定位**：Bayes 树同时编码了 $R$（信息的平方根 $\Lambda=R^\top R$）和��件密度（类似协方差的分层表达）。它在信息形式下操作（添加因子 = 局部��改、消元 = QR），但也能高效回答协方差查询（沿路径回代计算 `marginalCovariance`）。
+**Bayes 树的定位**：Bayes 树同时编码了 $R$（信息的平方根 $\Lambda=R^\top R$）和边缘密度（类似协方差的分层表达）。它在信息形式下操作（添加因子 = 局部修改、消元 = QR），但也能高效回答协方差查询（沿路径回代计算 `marginalCovariance`）。
 
 **EKF vs iSAM2 的本质差异**从此表一目了然：EKF 维护协方差形式（方便预测/更新但代价 $O(N^2)$），iSAM2 维护信息形式的平方根因子（方便添加因子但边缘协方差查询代价正比于 Bayes 树路径长度）。
 
@@ -1969,7 +1969,7 @@ class ISAM2Backend:
 
 ---
 
-### 🔧 故障排查手册
+### ◆ 故障排查手册
 
 | 症状 | 可能原因 | 排查步骤 | 相关章节 |
 |------|---------|---------|---------|

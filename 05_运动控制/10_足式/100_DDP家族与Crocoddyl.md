@@ -154,7 +154,7 @@ $$V_k(\mathbf{x}) = \min_{\mathbf{u}} \left[ l_k(\mathbf{x}, \mathbf{u}) + V_{k+
 | Ipopt (利用带状稀疏) | $O(N \cdot n_x^6)$ | ~10 ms |
 | **DDP** | $O(N \cdot (n_x^3 + n_u^3))$ | **~2 ms** |
 
-> 💡 **洞察**: DDP 的复杂度对 N 是**线性**的。这意味着延长规划时域(增大 N)的代价是可控的。而 Ipopt 的代价随 N 超线性增长。
+> ◇ **洞察**: DDP 的复杂度对 N 是**线性**的。这意味着延长规划时域(增大 N)的代价是可控的。而 Ipopt 的代价随 N 超线性增长。
 
 ### 54.1.4 历史脉络 ★
 
@@ -175,7 +175,7 @@ $$V_k(\mathbf{x}) = \min_{\mathbf{u}} \left[ l_k(\mathbf{x}, \mathbf{u}) + V_{k+
 2025 ─ Jallet et al. ─ ProxDDP(T-RO 41:2605-2624)+ ParallelRiccati(RSS 2024)+ Aligator 库
 ```
 
-> 🧠 **深入理解**: Jacobson 1970 年的 DDP 论文是一本书,不是一篇文章!那时候的"论文"可以是 200 页。现代 DDP 的实用化是 2000 年代 Todorov 的工作推动的——他在 MuJoCo 里把 iLQR 变成了实用工具。
+> ◎ **深入理解**: Jacobson 1970 年的 DDP 论文是一本书,不是一篇文章!那时候的"论文"可以是 200 页。现代 DDP 的实用化是 2000 年代 Todorov 的工作推动的——他在 MuJoCo 里把 iLQR 变成了实用工具。
 
 **练习 54.1a** (★): 给定 $n_x = 12, n_u = 6, N = 30$,分别计算 DDP 和稠密 Ipopt 的单次迭代 FLOP 估计(用大 O 量级比较即可)。
 
@@ -259,7 +259,7 @@ $$Q_\mathbf{u} + Q_{\mathbf{uu}} \delta \mathbf{u} + Q_{\mathbf{ux}} \delta \mat
 
 $$\boxed{\delta \mathbf{u}^* = \underbrace{-Q_{\mathbf{uu}}^{-1} Q_\mathbf{u}}_{\mathbf{k}_k \text{ (前馈项)}} + \underbrace{(-Q_{\mathbf{uu}}^{-1} Q_{\mathbf{ux}})}_{\mathbf{K}_k \text{ (反馈增益)}} \delta \mathbf{x}}$$
 
-> 💡 **洞察**: DDP 的 backward pass 不仅给出了最优轨迹修正,还给出了**反馈增益** $\mathbf{K}_k$。这是 DDP 相对于 SQP 的天然优势——SQP 只给出开环轨迹,而 DDP 给出闭环控制策略。
+> ◇ **洞察**: DDP 的 backward pass 不仅给出了最优轨迹修正,还给出了**反馈增益** $\mathbf{K}_k$。这是 DDP 相对于 SQP 的天然优势——SQP 只给出开环轨迹,而 DDP 给出闭环控制策略。
 
 ### 54.2.5 价值函数递推(Riccati-like) ★★★
 
@@ -273,7 +273,7 @@ $$\boxed{V_{\mathbf{x},k} = Q_\mathbf{x} - Q_{\mathbf{ux}}^T Q_{\mathbf{uu}}^{-1
 
 $$\boxed{V_{\mathbf{xx},k} = Q_{\mathbf{xx}} - Q_{\mathbf{ux}}^T Q_{\mathbf{uu}}^{-1} Q_{\mathbf{ux}}}$$
 
-> 🧠 **深入理解**: 这与离散时间 Riccati 方程**形式相同**!当代价是二次的、动力学是线性的时,DDP 退化为精确的 LQR。这就是为什么 DDP 也叫"迭代 LQR"的原因。
+> ◎ **深入理解**: 这与离散时间 Riccati 方程**形式相同**!当代价是二次的、动力学是线性的时,DDP 退化为精确的 LQR。这就是为什么 DDP 也叫"迭代 LQR"的原因。
 
 ### 54.2.6 Backward Pass 完整伪代码 ★★
 
@@ -387,7 +387,7 @@ $$\tilde{Q}_{\mathbf{ux}} = l_{\mathbf{ux}} + \mathbf{f}_\mathbf{u}^T (V_{\mathb
 
 注意此时正则化**同时影响** $Q_{\mathbf{uu}}$ 和 $Q_{\mathbf{ux}}$,因此也影响反馈增益 $\mathbf{K}=-\tilde Q_{\mathbf{uu}}^{-1}\tilde Q_{\mathbf{ux}}$。
 
-> 💡 **洞察**:control-reg 只让**前馈** $\mathbf{k}$ 变保守,反馈结构 $\mathbf{K}$ 几乎不变;state-reg 同时让前馈和反馈都变保守,相当于"假装离最优解更近的轨迹也有不确定性"。Tassa 发现 state-reg 在强非线性问题上更鲁棒——因为它正则化的是"未来代价对状态的敏感度",这正是 trust-region 思想:不信任远处的二次近似,就把那里的曲率信息打个折扣。
+> ◇ **洞察**:control-reg 只让**前馈** $\mathbf{k}$ 变保守,反馈结构 $\mathbf{K}$ 几乎不变;state-reg 同时让前馈和反馈都变保守,相当于"假装离最优解更近的轨迹也有不确定性"。Tassa 发现 state-reg 在强非线性问题上更鲁棒——因为它正则化的是"未来代价对状态的敏感度",这正是 trust-region 思想:不信任远处的二次近似,就把那里的曲率信息打个折扣。
 
 ```
 两种正则化的几何对比:
@@ -496,7 +496,7 @@ int main() {
 }
 ```
 
-> 💡 **洞察**: 对于这个线性-二次问题,DDP 一次迭代就能找到全局最优解——因为它退化为精确的 LQR。非线性问题则需要多次迭代。
+> ◇ **洞察**: 对于这个线性-二次问题,DDP 一次迭代就能找到全局最优解——因为它退化为精确的 LQR。非线性问题则需要多次迭代。
 
 **练习 54.2a** (★★): 扩展上面的代码,加入 forward pass 和 line search,实现完整的 DDP 迭代。让小车从 $[0,0]$ 到达 $[1,0]$,绘制状态轨迹和控制序列。
 
@@ -544,7 +544,7 @@ Eigen::MatrixXd Qxx = Lxx + fx.transpose() * Vxx_next * fx;
 | 单步计算代价 | 需要动力学 Hessian | 不需要 |
 | 数值稳定性 | 动力学 Hessian 可能导致 $Q_{uu}$ 不正定 | 更稳定(GN 近似天然半正定）|
 
-> 🧠 **深入理解**: 理论上 iLQR 只有超线性收敛(Roulet et al., ICML 2019 证明了 iLQR/iDDP 的局部线性收敛保证),但实践中观察到的收敛速度接近 DDP,因为对大多数机器人问题,动力学 Hessian 项的贡献相对较小。
+> ◎ **深入理解**: 理论上 iLQR 只有超线性收敛(Roulet et al., ICML 2019 证明了 iLQR/iDDP 的局部线性收敛保证),但实践中观察到的收敛速度接近 DDP,因为对大多数机器人问题,动力学 Hessian 项的贡献相对较小。
 
 > **本质洞察**:DDP 和 iLQR 的差异本质上是**Newton 法 vs Gauss-Newton 法**在最优控制中的投影。Gauss-Newton 用 $J^TJ$ 近似 Hessian,天然半正定且无需二阶导数;Newton 法用精确 Hessian,收敛更快但可能不正定。这与 足式/60_QP_NLP建模 中非线性最小二乘的讨论完全对应——只是这里的"残差"是沿时间轴展开的代价函数。
 
@@ -624,7 +624,7 @@ $$Q_\mathbf{x} = l_\mathbf{x} + \mathbf{f}_\mathbf{x}^T (V_{\mathbf{x},k+1} + V_
 
 $$Q_\mathbf{u} = l_\mathbf{u} + \mathbf{f}_\mathbf{u}^T (V_{\mathbf{x},k+1} + V_{\mathbf{xx},k+1} \bar{\mathbf{f}}_k)$$
 
-> 💡 **洞察**: Gap $\bar{\mathbf{f}}_k$ 出现在 $V_\mathbf{x}$ 的修正中——相当于把"消除 gap"也作为代价的一部分,让优化器自动去消除它。
+> ◇ **洞察**: Gap $\bar{\mathbf{f}}_k$ 出现在 $V_\mathbf{x}$ 的修正中——相当于把"消除 gap"也作为代价的一部分,让优化器自动去消除它。
 
 ### 54.4.4 FDDP Forward Pass:带 Gap 的 Rollout ★★★
 
@@ -735,7 +735,7 @@ $$\boxed{\delta\mathbf{u}^* = \arg\min_{\delta\mathbf{u}} \; \frac{1}{2}\delta\m
 
 这是一个**带箱型约束的二次规划(box-constrained QP,简称 box-QP)**。注意约束边界是 $\underline{\mathbf{u}}-\bar{\mathbf{u}}$ 到 $\overline{\mathbf{u}}-\bar{\mathbf{u}}$,因为 $\delta\mathbf{u}$ 是相对当前 $\bar{\mathbf{u}}$ 的扰动。
 
-> 💡 **洞察**:这一步是"把约束从 forward pass 搬到 backward pass"的关键。无约束 DDP 在每个时间步解一个**线性方程组**($Q_{\mathbf{uu}}\delta\mathbf{u} = -Q_\mathbf{u}$);box-DDP 在每个时间步解一个**小规模 box-QP**($n_u$ 维,$n_u$ 通常只有 12)。$n_u$ 维的 box-QP 用 projected-Newton 几次迭代就收敛,代价远小于一次 Pinocchio 动力学求导。
+> ◇ **洞察**:这一步是"把约束从 forward pass 搬到 backward pass"的关键。无约束 DDP 在每个时间步解一个**线性方程组**($Q_{\mathbf{uu}}\delta\mathbf{u} = -Q_\mathbf{u}$);box-DDP 在每个时间步解一个**小规模 box-QP**($n_u$ 维,$n_u$ 通常只有 12)。$n_u$ 维的 box-QP 用 projected-Newton 几次迭代就收敛,代价远小于一次 Pinocchio 动力学求导。
 
 ### 54.4B.3 Projected-Newton 求解 box-QP ★★★★
 
@@ -770,7 +770,7 @@ Projected-Newton 求解 box-QP (单个时间步):
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-> 🧠 **深入理解**:为什么是"projected-**Newton**"而不是"projected-**gradient**"?因为在自由子空间里我们用了完整的二阶信息 $(Q_{\mathbf{uu}}^{\mathcal{F}\mathcal{F}})^{-1}$,这保住了 DDP 的二次收敛特性——Tassa 论文的标题结论正是"box-DDP exhibits quadratic convergence"。如果只用投影梯度,会退化成一阶方法,收敛慢得多。这与 足式/60_QP_NLP建模 中"梯度法 vs 牛顿法"的对比一脉相承,只是这里的牛顿步被限制在激活集补集上。
+> ◎ **深入理解**:为什么是"projected-**Newton**"而不是"projected-**gradient**"?因为在自由子空间里我们用了完整的二阶信息 $(Q_{\mathbf{uu}}^{\mathcal{F}\mathcal{F}})^{-1}$,这保住了 DDP 的二次收敛特性——Tassa 论文的标题结论正是"box-DDP exhibits quadratic convergence"。如果只用投影梯度,会退化成一阶方法,收敛慢得多。这与 足式/60_QP_NLP建模 中"梯度法 vs 牛顿法"的对比一脉相承,只是这里的牛顿步被限制在激活集补集上。
 
 ### 54.4B.4 钳制分量的反馈增益必须置零 ★★★
 
@@ -919,7 +919,7 @@ struct ActionDataAbstractTpl {
 };
 ```
 
-> 💡 **洞察**: 所有矩阵在 `createData()` 时**一次性分配**,之后 `calc()` / `calcDiff()` 只是**填充已有内存**,不做任何堆分配。这对实时性至关重要——02_C++基础与进阶/40_内存管理 中深入讨论了 pmr(Polymorphic Memory Resource)分配器的原理:通过在启动时预分配一块连续内存池,运行时的所有"分配"都变成指针偏移操作(O(1),无系统调用),从而消除 `malloc` 在实时线程中引发的不确定延迟。Crocoddyl 的 `createData()` 预分配策略与 pmr 的思路一致,只是实现层面更简单——直接在构造函数中 resize 所有 Eigen 矩阵。
+> ◇ **洞察**: 所有矩阵在 `createData()` 时**一次性分配**,之后 `calc()` / `calcDiff()` 只是**填充已有内存**,不做任何堆分配。这对实时性至关重要——02_C++基础与进阶/40_内存管理 中深入讨论了 pmr(Polymorphic Memory Resource)分配器的原理:通过在启动时预分配一块连续内存池,运行时的所有"分配"都变成指针偏移操作(O(1),无系统调用),从而消除 `malloc` 在实时线程中引发的不确定延迟。Crocoddyl 的 `createData()` 预分配策略与 pmr 的思路一致,只是实现层面更简单——直接在构造函数中 resize 所有 Eigen 矩阵。
 
 ### 54.5.4 线程安全性分析 ★★★
 
@@ -1059,7 +1059,7 @@ $$\begin{bmatrix} \mathbf{M} & -\mathbf{J}_c^T \\ \mathbf{J}_c & \mathbf{0} \end
 2. $\boldsymbol{\lambda} = (\mathbf{J}_c \mathbf{M}^{-1} \mathbf{J}_c^T)^{-1} (\mathbf{J}_c \mathbf{M}^{-1}(\mathbf{S}^T\boldsymbol{\tau} - \mathbf{h}) + \dot{\mathbf{J}}_c \dot{\mathbf{q}})$
 3. $\ddot{\mathbf{q}} = \mathbf{M}^{-1} (\mathbf{S}^T\boldsymbol{\tau} - \mathbf{h} + \mathbf{J}_c^T \boldsymbol{\lambda})$
 
-> 🧠 **深入理解**: KKT 系统的 Jacobian(即 `calcDiff()` 的输出)比无接触情况复杂得多——需要对 $\mathbf{M}, \mathbf{J}_c, \mathbf{h}$ 同时求导。Pinocchio 的 `computeConstraintDynamicsDerivatives()` 用高效的解析方法完成这个计算,复杂度 $O(n_{\text{dof}}^2 \cdot n_c)$。回顾 足式/80_接触力学与约束优化:接触 Jacobian $J_c$ 把关节速度映射到接触点速度,其转置 $J_c^T$ 把接触力映射回关节空间广义力,两者构成虚功原理要求的对偶映射。这里的 KKT 系统正是将这一对偶关系与动力学方程 $M\ddot{q} + h = S^T\tau + J_c^T\lambda$ 联立求解,使得接触约束 $J_c\ddot{q} = -\dot{J}_c\dot{q}$ 被隐式满足。
+> ◎ **深入理解**: KKT 系统的 Jacobian(即 `calcDiff()` 的输出)比无接触情况复杂得多——需要对 $\mathbf{M}, \mathbf{J}_c, \mathbf{h}$ 同时求导。Pinocchio 的 `computeConstraintDynamicsDerivatives()` 用高效的解析方法完成这个计算,复杂度 $O(n_{\text{dof}}^2 \cdot n_c)$。回顾 足式/80_接触力学与约束优化:接触 Jacobian $J_c$ 把关节速度映射到接触点速度,其转置 $J_c^T$ 把接触力映射回关节空间广义力,两者构成虚功原理要求的对偶映射。这里的 KKT 系统正是将这一对偶关系与动力学方程 $M\ddot{q} + h = S^T\tau + J_c^T\lambda$ 联立求解,使得接触约束 $J_c\ddot{q} = -\dot{J}_c\dot{q}$ 被隐式满足。
 
 ### 54.6.4 CostModelResidual:残差式代价 ★★
 
@@ -1081,7 +1081,7 @@ CostModelResidual(state, activation, residual)
                 ResidualModelContactForce → r = λ - λ_ref
 ```
 
-> 💡 **洞察**: 这种"激活函数 + 残差"的分离让代价函数的构建非常灵活。例如,Huber 损失可以通过 `ActivationModelSmooth1Norm` + 任何残差来实现,无需修改残差代码。
+> ◇ **洞察**: 这种"激活函数 + 残差"的分离让代价函数的构建非常灵活。例如,Huber 损失可以通过 `ActivationModelSmooth1Norm` + 任何残差来实现,无需修改残差代码。
 
 ### 54.6.5 IntegratedActionModel:Euler vs RK4 ★★
 
@@ -1186,7 +1186,7 @@ CRTP 无法做到这一点——Python 不能"模板化继承" C++ 类。
 └────────────────┴──────────────────┴──────────────────┘
 ```
 
-> 🧠 **深入理解**: 这个案例说明**性能优化要看瓶颈**。如果你在写高频矩阵库(Eigen),每次调用只有几纳秒,虚函数的 5ns 开销是 100% 的性能损失——必须 CRTP。如果你在写应用层框架(Crocoddyl),每次调用要做 20 微秒的 Pinocchio 运算,虚函数的 5ns 是噪音中的噪音——用虚函数省事。
+> ◎ **深入理解**: 这个案例说明**性能优化要看瓶颈**。如果你在写高频矩阵库(Eigen),每次调用只有几纳秒,虚函数的 5ns 开销是 100% 的性能损失——必须 CRTP。如果你在写应用层框架(Crocoddyl),每次调用要做 20 微秒的 Pinocchio 运算,虚函数的 5ns 是噪音中的噪音——用虚函数省事。
 
 **练习 54.7** (★★★): 写一个 benchmark:分别用虚函数和 CRTP 实现一个简单的 `calc()` 函数(内部做一次矩阵乘法)。在 $36 \times 36$ 矩阵上测量两种方式的耗时差异。结论是什么?
 
@@ -1258,7 +1258,7 @@ void ShootingProblem::calcDiff(const std::vector<VectorXd>& xs,
 
 > ⚠ **陷阱**: False sharing 是 OpenMP 的经典陷阱。如果 `Data[0]` 和 `Data[1]` 的某些成员恰好在同一个 64 字节缓存行,一个线程写 `Data[0]` 会导致另一个线程的缓存行失效,造成不必要的缓存同步。Crocoddyl 通过让每个 Data 对象足够大(几 KB)来自然避免这个问题。
 
-> 💡 **洞察**: 实际中 4 核是 Crocoddyl OpenMP 的"甜蜜点"——80% 效率,3.2 倍加速。超过 8 核后收益递减严重,因为 backward pass 是串行瓶颈(Amdahl 定律)。这正是 ParallelRiccati 要解决的问题。
+> ◇ **洞察**: 实际中 4 核是 Crocoddyl OpenMP 的"甜蜜点"——80% 效率,3.2 倍加速。超过 8 核后收益递减严重,因为 backward pass 是串行瓶颈(Amdahl 定律)。这正是 ParallelRiccati 要解决的问题。
 
 **练习 54.8** (★★): 编译 Crocoddyl 并用 `OMP_NUM_THREADS=1,2,4,8` 运行 `examples/cpp/quadrupedal_walking.cpp`。记录不同核数下的求解时间,绘制加速比曲线。观察到什么?
 
@@ -1345,7 +1345,7 @@ $$\mathcal{L}_{\mu}(\mathbf{x}, \mathbf{u}, \boldsymbol{\lambda}) = l(\mathbf{x}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-> 💡 **洞察**: ProxDDP 的精妙之处在于:**内层循环用的是标准 DDP,不需要任何修改**。约束信息被"编码"进了增广代价函数。这意味着 ProxDDP 可以复用所有的 DDP 基础设施(backward pass、forward pass、line search)。
+> ◇ **洞察**: ProxDDP 的精妙之处在于:**内层循环用的是标准 DDP,不需要任何修改**。约束信息被"编码"进了增广代价函数。这意味着 ProxDDP 可以复用所有的 DDP 基础设施(backward pass、forward pass、line search)。
 
 ### 54.9.4 ProxDDP vs FDDP:何时用哪个? ★★★
 
@@ -1398,7 +1398,7 @@ Level 3:        T₀₁₂₃₄₅₆₇                     ← 1 次乘法
 | 串行 Riccati | $O(N \cdot n_x^3)$ | 200 步顺序 |
 | Parallel Scan | $O(\log N \cdot n_x^3)$ on $P$ 处理器 | ~8 步 (32 核) |
 
-> 🧠 **深入理解**: Parallel scan 算法在计算机科学中早已成熟(parallel prefix sum),但把它应用到 Riccati 递推上需要一个关键观察:Riccati 算子构成一个**半群**,即它满足结合律。这不是显然的——需要仔细证明 $\mathbf{T}_k$ 的乘法确实是结合的。
+> ◎ **深入理解**: Parallel scan 算法在计算机科学中早已成熟(parallel prefix sum),但把它应用到 Riccati 递推上需要一个关键观察:Riccati 算子构成一个**半群**,即它满足结合律。这不是显然的——需要仔细证明 $\mathbf{T}_k$ 的乘法确实是结合的。
 
 **性能数据** (Jallet et al. RSS 2024):
 
@@ -1606,7 +1606,7 @@ print(f"Final gap norm: "
 
 > ⚠ **陷阱**: `isFeasible=False` 告诉 FDDP 初始轨迹**不满足动力学**(有 gaps)。如果你传 `True` 但轨迹实际不可行,FDDP 的 line search 会行为异常。保险起见,warm-start 时始终传 `False`。
 
-> 💡 **洞察**: `quasiStatic()` 是一个聪明的初始化方法:它计算让机器人在每个构型下"静力平衡"的控制输入。这比零初始化好得多,因为零扭矩会让机器人在重力下自由坠落。
+> ◇ **洞察**: `quasiStatic()` 是一个聪明的初始化方法:它计算让机器人在每个构型下"静力平衡"的控制输入。这比零初始化好得多,因为零扭矩会让机器人在重力下自由坠落。
 
 **练习 54.10a** (★★★): 修改上面的代码,把 trot 步态改为 bound 步态(前两脚同时、后两脚同时)。观察优化出的运动有什么不同。
 
@@ -1682,7 +1682,7 @@ MPC + DDP 反馈增益:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-> 💡 **洞察**: 这是 DDP 相对于 SQP 的天然优势。SQP 只给出开环轨迹 $\{\mathbf{u}_k^*\}$,没有反馈增益。OCS2 的 SQP 方案需要额外跑一次 LQR 来得到反馈增益,而 DDP 的反馈增益是"免费"的副产品。
+> ◇ **洞察**: 这是 DDP 相对于 SQP 的天然优势。SQP 只给出开环轨迹 $\{\mathbf{u}_k^*\}$,没有反馈增益。OCS2 的 SQP 方案需要额外跑一次 LQR 来得到反馈增益,而 DDP 的反馈增益是"免费"的副产品。
 
 > ⚠ **陷阱**: 反馈增益 $\mathbf{K}_k$ 只在当前最优解附近有效。如果实际状态偏离太多(比如外部扰动),$\mathbf{K}_k$ 的修正可能不够——需要等下一次 MPC 重新规划。
 
@@ -1716,11 +1716,11 @@ DDP 流派 (Crocoddyl, MuJoCo)       SQP 流派 (OCS2, ALTRO)
 | 工业级产品 | OCS2 (SQP) | 代码成熟度,ETH ANYmal 验证 |
 | 研究前沿 | Aligator (ProxDDP) | 最灵活,ParallelRiccati |
 
-> 🧠 **深入理解**: 两派的分歧不是技术水平的差异,而是**设计哲学**的差异。DDP 把动力学"嵌入"求解器(通过 rollout),获得了效率和反馈增益;SQP 把动力学"外化"为约束,获得了通用性和约束处理能力。ProxDDP 试图兼得两者——用 ALM 在 DDP 框架内处理约束。
+> ◎ **深入理解**: 两派的分歧不是技术水平的差异,而是**设计哲学**的差异。DDP 把动力学"嵌入"求解器(通过 rollout),获得了效率和反馈增益;SQP 把动力学"外化"为约束,获得了通用性和约束处理能力。ProxDDP 试图兼得两者——用 ALM 在 DDP 框架内处理约束。
 
 ---
 
-## 🔧 故障排查手册
+## ◆ 故障排查手册
 
 > 本表覆盖 DDP/FDDP/Crocoddyl 工程中最高频的 8 类故障。列顺序遵循"症状(可观测)→可能原因(机制)→排查步骤(可执行)→相关章节"。注意排查时**先看现象再猜原因**——很多人一上来就调 $\mu$,结果真正的 bug 是 URDF 惯量写错了。
 
@@ -1976,7 +1976,7 @@ DDP 流派 (Crocoddyl, MuJoCo)       SQP 流派 (OCS2, ALTRO)
 
 逆动力学路线的好处是 Mastalli 所说的"coarse optimization 与高收敛率"——优化问题的曲率更友好,迭代次数更少。代价是引入了**大量等式约束**(每个时间步一组动力学方程)。论文的核心贡献是用 **nullspace 参数化**(零空间分解)高效消去这些等式约束——这与 足式/90_WBC分层优化与TSID 里 WBC 的零空间投影是同一套数学工具(把约束方向投影掉,只在零空间里自由优化)。报告的计算量减少最高达 **47.3%**,并首次在 ANYmal 硬件上实现逆动力学 MPC,做出了 state-of-the-art 的动态攀爬。该算法已并入 Crocoddyl。
 
-> 🧠 **深入理解**:为什么逆动力学能"粗粒度优化"?正动力学把"解 $\mathbf{M}^{-1}$"这一非线性操作埋进了每次 `calc()`,使得代价对 $\boldsymbol{\tau}$ 的依赖高度非线性;逆动力学把 $\ddot{\mathbf{q}}$ 暴露成独立变量后,代价对 $\ddot{\mathbf{q}}$ 往往是简单的二次型,$\mathbf{M}$ 只出现在线性的等式约束里。优化器面对的"非线性"被从代价转移到了约束,而约束的非线性更容易用 SQP/ALM 的局部线性化处理。这是"变量增多反而更快"的典型案例——维度不是唯一的复杂度指标,**问题的曲率结构**同样关键。
+> ◎ **深入理解**:为什么逆动力学能"粗粒度优化"?正动力学把"解 $\mathbf{M}^{-1}$"这一非线性操作埋进了每次 `calc()`,使得代价对 $\boldsymbol{\tau}$ 的依赖高度非线性;逆动力学把 $\ddot{\mathbf{q}}$ 暴露成独立变量后,代价对 $\ddot{\mathbf{q}}$ 往往是简单的二次型,$\mathbf{M}$ 只出现在线性的等式约束里。优化器面对的"非线性"被从代价转移到了约束,而约束的非线性更容易用 SQP/ALM 的局部线性化处理。这是"变量增多反而更快"的典型案例——维度不是唯一的复杂度指标,**问题的曲率结构**同样关键。
 
 **进展二:GPU 并行 Primal-Dual iLQR。** *Primal-Dual iLQR for GPU-Accelerated Learning and Control in Legged Robots*(arXiv 2506.07823, 2025)。
 
@@ -1990,7 +1990,7 @@ DDP 流派 (Crocoddyl, MuJoCo)       SQP 流派 (OCS2, ALTRO)
 | 报告加速 | 8 核 $4.4\times$,32 核 $8\times$ | 对比 acados/Crocoddyl,WB-MPC 最高 +60%,SRBD-MPC 最高 +700% |
 | 额外能力 | — | 可在 GPU 上集中控制 $\leq 16$ 个四足($< 25$ ms);支持 MPC-in-the-loop 学习 |
 
-> 💡 **洞察**:GPU 版本最深远的意义不在"更快",而在**把 MPC 求解器变成可微、可批量的计算图**(JAX 实现)。这让"MPC 在训练回路里"成为可能——可以在 GPU 上同时跑数千个环境,每个环境内嵌一个 MPC 求解器,端到端训练。这正是 足式/210_RL与MPC混合范式 讨论的 RL+MPC 融合方向的算力基础:当 MPC 本身可微且可批量,它就不再是 RL 之外的黑盒,而能作为一层"可微分控制先验"嵌入策略网络。
+> ◇ **洞察**:GPU 版本最深远的意义不在"更快",而在**把 MPC 求解器变成可微、可批量的计算图**(JAX 实现)。这让"MPC 在训练回路里"成为可能——可以在 GPU 上同时跑数千个环境,每个环境内嵌一个 MPC 求解器,端到端训练。这正是 足式/210_RL与MPC混合范式 讨论的 RL+MPC 融合方向的算力基础:当 MPC 本身可微且可批量,它就不再是 RL 之外的黑盒,而能作为一层"可微分控制先验"嵌入策略网络。
 
 > ⚠ **思维陷阱**:看到"对比 Crocoddyl 加速 700%"不要简单理解为"Crocoddyl 过时了"。这些加速是在**特定问题规模**(长 horizon、SRBD)和**特定硬件**(高端 GPU)上测得的。对于短 horizon、需要在嵌入式 CPU 上跑的场景,Crocoddyl 的 CPU 友好、零 GPU 依赖、成熟稳定仍是巨大优势(回顾 §54.9.5 陷阱:N 小时串行 Riccati 反而更快)。选型永远是"问题规模 $\times$ 硬件 $\times$ 工程成熟度"的综合权衡,不是单看 benchmark 数字。
 

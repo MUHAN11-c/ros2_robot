@@ -178,14 +178,14 @@ $$T_{k+1} = T_k \cdot \exp([\Delta\xi]_\wedge)$$
 - **根本原因**：欧拉角在 pitch $= \pm 90°$ 时存在万向锁（Gimbal Lock），此时 Jacobian $\partial(\text{rotation})/\partial(\text{euler angles})$ 的秩从 3 降为 2，优化器的正规方程 $J^T J \Delta x = -J^T r$ 变得欠定。这不是数值精度问题，而是表示本身的拓扑缺陷——$\mathbb{R}^3$ 无法全局覆盖 SO(3)
 - **正确做法**：使用李代数参数化旋转。manif 和 Sophus 都在内部处理了 exp/log 的边界情况，不会出现万向锁
 
-**💡 概念误区：认为 $\exp(\phi_1) \cdot \exp(\phi_2) = \exp(\phi_1 + \phi_2)$**
+**◇ 概念误区：认为 $\exp(\phi_1) \cdot \exp(\phi_2) = \exp(\phi_1 + \phi_2)$**
 
 - **新手想法**："矩阵指数和标量指数一样，$e^a \cdot e^b = e^{a+b}$"
 - **实际上**：这个等式只在 $\phi_1$ 和 $\phi_2$ 对应的反对称矩阵可交换时成立（即 $[\phi_1]_\times [\phi_2]_\times = [\phi_2]_\times [\phi_1]_\times$），也就是两个旋转绕同一轴旋转。一般情况下，$\exp(\phi_1) \cdot \exp(\phi_2) = \exp(\phi_1 + \phi_2 + \frac{1}{2}[\phi_1, \phi_2] + \cdots)$，其中 $[\phi_1, \phi_2]$ 是李括号，后面是 Baker-Campbell-Hausdorff（BCH）公式的高阶项
 - **为什么重要**：如果你在代码中写 `SO3::Exp(phi1 + phi2)` 来表示两个旋转的组合，结果是错误的。正确做法是 `SO3::Exp(phi1).compose(SO3::Exp(phi2))`
 - **自检方法**：取 $\phi_1 = [0.5, 0, 0]$，$\phi_2 = [0, 0.5, 0]$，比较 $\exp(\phi_1)\exp(\phi_2)$ 和 $\exp(\phi_1 + \phi_2)$，会发现差异约为 $0.12$ 弧度
 
-**🧠 思维陷阱：认为所有旋转表示是等价的**
+**◎ 思维陷阱：认为所有旋转表示是等价的**
 
 - **新手想法**："旋转矩阵、四元数、欧拉角、轴角、李代数——都是旋转的不同表示，想用哪个用哪个"
 - **实际上**：不同表示有本质差异。四元数和旋转矩阵是 SO(3) 的全局参数化（但有冗余），欧拉角只是局部参数化（有万向锁），轴角/李代数是切空间参数化（只在单位元附近有效，远离单位元时 exp 映射不再是双射——因为旋转 $\theta$ 和 $\theta + 2\pi$ 对应同一个旋转矩阵）
@@ -342,13 +342,13 @@ assert((lhs - rhs).norm() < 1e-10);
 - **根本原因**：齐次坐标乘法得到的是正确的变换结果，但它绕过了 manif 的类型系统和自动 Jacobian 功能。在 SLAM 优化中，你几乎总是需要 Jacobian
 - **正确做法**：用 `T.act(p, J_T, J_p)` 一步到位获取变换结果和两个 Jacobian
 
-**💡 概念误区：认为 SE(3) 群作用和 SO(3) 群作用是独立的概念**
+**◇ 概念误区：认为 SE(3) 群作用和 SO(3) 群作用是独立的概念**
 
 - **新手想法**："SO(3) 的作用是旋转，SE(3) 的作用是刚体运动，这是两种不同的操作"
 - **实际上**：SE(3) 的群作用 $M \cdot p = Rp + t$ 可以分解为先执行 SO(3) 的作用（旋转 $Rp$），再执行平移（$+t$）。SE(3) 不是"另一种"群作用，而是 SO(3) 群作用的自然扩展。理解这个层级关系，才能理解为什么 SE(3) 的 Jacobian 中包含了 SO(3) 的 Jacobian 作为子块
 - **延伸**：SE(3) 可以看作 SO(3) 和 $\mathbb{R}^3$ 的半直积（semidirect product），记作 $SE(3) = SO(3) \ltimes \mathbb{R}^3$。"半直积"意味着旋转和平移不是简单地"叠加"，而是旋转会影响平移（$R_1 t_2 + t_1$ 中的 $R_1 t_2$ 项）
 
-**🧠 思维陷阱：认为 $q$ 和 $-q$ 的双覆盖在实际编程中无关紧要**
+**◎ 思维陷阱：认为 $q$ 和 $-q$ 的双覆盖在实际编程中无关紧要**
 
 - **新手想法**："既然 $q$ 和 $-q$ 对应同一个旋转，那忽略它也没问题"
 - **实际上**：在四元数插值（SLERP）中，如果 $q_1 \cdot q_2 < 0$（两个四元数在 $S^3$ 上的内积为负），直接插值会走"长弧"（绕远路）而不是"短弧"。正确做法是在插值前检查内积符号，如果为负则取反其中一个四元数。manif 内部使用四元数存储 SO(3)，但在 `log()` 等操作中已经处理了符号问题，用户通常不需要手动处理。但如果你直接操作底层的 `Eigen::Quaterniond`，就必须自己注意
@@ -509,7 +509,7 @@ assert((omega_hat - omega_hat_check).norm() < 1e-12);
 
 ### ⚠ 常见陷阱
 
-**💡 概念误区：认为 $\dot{R}$ 本身就是角速度**
+**◇ 概念误区：认为 $\dot{R}$ 本身就是角速度**
 
 - **新手想法**："$\dot{R}$ 是旋转的导数，所以它就是角速度"
 - **实际上**：$\dot{R}$ 是一个 $3\times3$ 矩阵，属于 $R$ 处的切空间 $T_R SO(3)$，它不是角速度。角速度 $\omega$ 是一个 3D 向量，需要通过 $[\omega]_\times = R^T \dot{R}$（或 $[\omega']_\times = \dot{R} R^T$）来提取。$\dot{R}$ 和 $\omega$ 的关系就像"流形上的速度"和"切空间中的坐标"的关系
@@ -522,7 +522,7 @@ assert((omega_hat - omega_hat_check).norm() < 1e-12);
 - **根本原因**：$\dot{R} = R[\omega]_\times$ 是 body 系角速度的公式，$\dot{R} = [\omega']_\times R$ 是 world 系角速度的公式。IMU 测量的是 body 系角速度，必须用 $\dot{R} = R[\omega]_\times$
 - **正确做法**：`R_new = R * manif::SO3d::Exp(omega * dt);`（body 系角速度 + 右乘更新）
 
-**🧠 思维陷阱：认为 hat/vee 只是"存储格式转换"**
+**◎ 思维陷阱：认为 hat/vee 只是"存储格式转换"**
 
 - **新手想法**："hat 只是把 3 个数塞进 $3\times3$ 矩阵，没什么深刻含义"
 - **实际上**：hat 算子的核心性质是 $[\omega]_\times v = \omega \times v$，它把叉积（一个非线性的向量运算）表达为矩阵乘法（一个线性运算）。这使得叉积可以参与线性代数的推导框架（如求 Jacobian、做矩阵分解）。整个 Rodrigues 公式的推导都依赖于这个性质
@@ -767,13 +767,13 @@ assert((exp_neg.inverse() * exp_inv).log().coeffs().norm() < 1e-12);
 - **根本原因**：$\sin\theta / \theta$ 在 $\theta = 0$ 处虽然有极限值 $1$，但浮点计算 $\sin(10^{-15}) / 10^{-15}$ 会因为分子分母都接近零而产生大的相对误差
 - **正确做法**：当 $\|\theta\| < \epsilon$（$\epsilon \approx 10^{-10}$）时使用 Taylor 展开：$\sin\theta/\theta \approx 1 - \theta^2/6$，$(1-\cos\theta)/\theta^2 \approx 1/2 - \theta^2/24$。manif 内部已经做了这个处理
 
-**💡 概念误区：混淆大写 Exp/Log 和小写 exp/log**
+**◇ 概念误区：混淆大写 Exp/Log 和小写 exp/log**
 
 - **新手想法**："Exp 和 exp 不就是同一个东西吗？"
 - **实际上**：$\exp$ 的输入是李代数矩阵（$\hat{\tau} \in \mathfrak{g}$），$\text{Exp}$ 的输入是向量（$\tau \in \mathbb{R}^m$）。关系是 $\text{Exp}(\tau) = \exp(\hat{\tau})$。在代码中我们几乎总是用大写 Exp（因为处理向量比处理矩阵方便），但在数学推导中两者的区别很重要——很多公式（如 BCH 公式、伴随性质）是用小写 exp 写的
 - **自检方法**：问自己"这个函数的输入是向量还是矩阵？"——向量用 Exp，矩阵用 exp
 
-**🧠 思维陷阱：认为 $V(\theta)$ 只是一个"技术细节"**
+**◎ 思维陷阱：认为 $V(\theta)$ 只是一个"技术细节"**
 
 - **新手想法**："SE(3) 的 exp 不就是旋转部分用 Rodrigues、平移部分直接用 $\rho$ 吗？$V(\theta)$ 只是一个小修正"
 - **实际上**：$V(\theta)$ 是 SE(3) 指数映射的核心。如果忽略它（令 $t = \rho$），你得到的变换会有 $O(\|\theta\|)$ 量级的误差。对于 SLAM 中常见的每帧 $5°\sim 10°$ 的旋转，这个误差可以达到几厘米——足以让 ICP 不收敛。$V(\theta)$ 不是"小修正"，它是旋转和平移耦合效应的精确表达
@@ -931,7 +931,7 @@ ESKF 用线性卡尔曼滤波器估计 $\delta x$（因为 $\delta x$ 是欧几�
 - **根本原因**：$\oplus$ 不是分别更新旋转和平移。正确的公式 $T \cdot \text{Exp}(\delta)$ 中，$\text{Exp}(\delta)$ 的平移部分是 $V(\theta)\rho$（而不是 $\rho$），旋转会影响平移的更新方向。如果你分别更新旋转和平移，就丢失了 $V(\theta)$ 的修正
 - **正确做法**：用 `T.plus(delta)` 或 `T + delta`，让 manif 处理内部的耦合效应
 
-**💡 概念误区：认为右加和左加的结果只是"差一个旋转"**
+**◇ 概念误区：认为右加和左加的结果只是"差一个旋转"**
 
 - **新手想法**："右加和左加不就是一个用 body 系、一个用 world 系吗？它们的结果应该差不多吧"
 - **实际上**：当扰动 $\tau$ 很小时（优化中通常如此），右加和左加的差异确实是二阶小量，所以"差不多"。但数学上，$X \cdot \text{Exp}({}^X\tau) \neq \text{Exp}({}^\varepsilon\tau) \cdot X$，除非 ${}^\varepsilon\tau = \text{Ad}_X \cdot {}^X\tau$（通过伴随矩阵转换）。两者的 Jacobian 也不同。在 SLAM 优化中选错约定会导致收敛变慢甚至发散——23.8 节详细讨论这个问题
@@ -1119,7 +1119,7 @@ Eigen::Matrix<double, 3, 6> J_act_T_left2 = J_act_T_right * T.inverse().adj();
 - **根本原因**：SE(3) 不是 SO(3) 和 $\mathbb{R}^3$ 的直积——旋转和平移是耦合的。$[t]_\times R$ 项反映了"旋转一个切向量时，平移分量也会随之改变"
 - **正确做法**：用 manif 的 `T.adj()` 方法获取完整的 $6\times6$ 伴随矩阵，不要手动构造
 
-**💡 概念误区：认为 SO(3) 的伴随矩阵"太简单了，不重要"**
+**◇ 概念误区：认为 SO(3) 的伴随矩阵"太简单了，不重要"**
 
 - **新手想法**："$\text{Ad}_R = R$，这也太 trivial 了。伴随的概念是不是被过度复杂化了？"
 - **实际上**：SO(3) 的伴随恰好等于旋转矩阵本身，这是因为 SO(3) 是**紧致**的且其李代数 $\mathfrak{so}(3)$ 是 $\mathbb{R}^3$（维度等于群的维度）。对于 SE(3)，伴随矩阵就不再是 trivial 的了——它是一个 $6\times6$ 矩阵，包含了旋转-平移耦合信息。理解 SO(3) 的简单情况有助于理解伴随的几何含义，但不要因此低估 SE(3) 伴随的复杂性
@@ -1348,13 +1348,13 @@ double d_pose = compute_distance(T1, T2);
 - **根本原因**：`manif::SE3Tangentd` 是一个独立的类型，不是 Eigen 向量的 typedef。它包含群结构信息，支持 `hat()`、`exp()` 等操作
 - **正确做法**：使用 `.coeffs()` 方法获取底层的 Eigen 向量：`Eigen::Matrix<double,6,1> xi = T.log().coeffs();`
 
-**💡 概念误区：认为 manif 的 `act(point)` 和矩阵乘法 $Tp$ 完全等价**
+**◇ 概念误区：认为 manif 的 `act(point)` 和矩阵乘法 $Tp$ 完全等价**
 
 - **新手想法**："act 就是做一次矩阵乘法，没什么特别的"
 - **实际上**：`act` 做的确实是 $Rp + t$（对 SE3 而言），但 act 方法的真正价值在于它可以同时输出关于群元素和点的 Jacobian。如果你只是做变换不需要 Jacobian，直接用矩阵乘法也行。但在 SLAM 优化中，你几乎总是需要 Jacobian，此时 `act` 比手动计算更简洁且不容易出错
 - **延伸**：对于 SO(3) 的 act，结果就是 $Rp$，Jacobian $\partial(Rp)/\partial R$ 在右扰动下等于 $-R[p]_\times$
 
-**🧠 思维陷阱：因为 manif 有 Jacobian 就不去理解 Jacobian 的推导**
+**◎ 思维陷阱：因为 manif 有 Jacobian 就不去理解 Jacobian 的推导**
 
 - **新手想法**："manif 能自动算 Jacobian，我只需要调用 API 就行了"
 - **实际上**：manif 确实能给你正确的 Jacobian，但你需要知道这个 Jacobian 是关于什么的（右扰动下的切空间增量）、输出的是什么（目标函数在切空间中的变化），才能正确地把它传给 Ceres 或 GTSAM。如果你不理解 Jacobian 的含义，即使拿到了正确的矩阵也不知道怎么用
@@ -1508,13 +1508,13 @@ gtsam::Matrix J_numerical = gtsam::numericalDerivative11(f, pose);
 - **根本原因**：虽然 manif 和 GTSAM 都使用右扰动，但 GTSAM 的 `H` 矩阵要求的导数定义是相对于 `localCoordinates` 的，可能与 manif 的 Jacobian 定义有微妙的差异（如误差定义方向、切空间排列顺序）。不验证就用会引入 bug
 - **正确做法**：始终用数值有限差分（如 `gtsam::numericalDerivative`）对解析 Jacobian 做验证。如果差异超过 1e-5，检查误差函数的定义方向和 Jacobian 的链式法则
 
-**💡 概念误区：认为"左右扰动只影响 Jacobian 的符号"**
+**◇ 概念误区：认为"左右扰动只影响 Jacobian 的符号"**
 
 - **新手想法**："左扰动和右扰动的 Jacobian 可能就差一个负号或者转置"
 - **实际上**：差异是一个完整的伴随矩阵 $\text{Ad}_T$（$6\times6$ 矩阵），包含旋转和耦合项。只有在 SO(3) 且绕单一轴旋转时，伴随矩阵才退化为简单的旋转矩阵。在 SE(3) 中，伴随矩阵包含 $[t]_\times R$ 耦合项，左右扰动 Jacobian 的差异远不是一个符号那么简单
 - **自检方法**：对一个具体的 SE3d 位姿，同时计算 compose 的左右扰动 Jacobian，打印出来比较。你会发现它们是完全不同的 $6\times6$ 矩阵
 
-**🧠 思维陷阱：混淆"左/右 Jacobian"（BCH）和"左/右扰动 Jacobian"**
+**◎ 思维陷阱：混淆"左/右 Jacobian"（BCH）和"左/右扰动 Jacobian"**
 
 - **新手想法**："右 Jacobian 就是右扰动下的 Jacobian"
 - **实际上**：这是两个完全不同的概念。"左/右 Jacobian"（$J_l, J_r$）来自 BCH 公式，是 $\exp(\phi + \delta) \approx \exp(\phi) \cdot \exp(J_r^{-1} \delta)$ 中的那个 $J_r$。"左/右扰动 Jacobian"是对群操作 $f(T)$ 的求导约定。它们之间有联系（某些群操作的扰动 Jacobian 可以用 $J_l$ 或 $J_r$ 表达），但概念上不是一回事
@@ -1882,12 +1882,12 @@ $$\mathbf{J}_{\mathcal{X}}^{\mathcal{Y} \ominus \mathcal{X}} = -\mathbf{J}_l^{-1
 > 根本原因：C++ 的栈变量不自动初始化。`manif::SE3d::Jacobian` 是 `Eigen::Matrix<double,6,6>` 的别名，不会零初始化。
 > 正确做法：始终通过 `compose(T2, J1, J2)` 等函数填充 Jacobian 值，不要手动创建后直接使用。如果需要零初始化，写 `manif::SE3d::Jacobian J = manif::SE3d::Jacobian::Zero();`。
 
-> 💡 **概念误区：认为对 $\mathcal{Y}$ 的 compose Jacobian 总是单位矩阵**
+> ◇ **概念误区：认为对 $\mathcal{Y}$ 的 compose Jacobian 总是单位矩阵**
 > 新手想法："manif 算出来 $J_{\mathcal{Y}} = I$，那所有 compose 的第二个参数的 Jacobian 都是 $I$。"
 > 实际上：$J_{\mathcal{Y}} = I$ 仅对**右扰动**成立。如果你使用左扰动约定，$\mathbf{J}_{\mathcal{Y}}^{\mathcal{X}\circ\mathcal{Y}} = \text{Ad}_{\mathcal{X}}$。在 GTSAM 中混用 manif 的 Jacobian 时会出错。
 > 正确做法：明确你的代码和论文使用哪种扰动约定，所有 Jacobian 必须在同一约定下计算。
 
-> 🧠 **思维陷阱：跳过"小量近似"检查**
+> ◎ **思维陷阱：跳过"小量近似"检查**
 > 新手想法："理论公式推出来了，直接代入代码就行。"
 > 实际上：理论 Jacobian 与数值有限差分 Jacobian 比较是**必做的验证步骤**。很多 bug 来自切空间排列顺序不同（$[\rho; \theta]$ vs $[\theta; \rho]$）、左右扰动混淆、或符号错误。
 > 正确做法：对每个新写的 Jacobian，都用 $10^{-8}$ 量级的有限差分验证，最大绝对误差应 $< 10^{-5}$。
@@ -2043,7 +2043,7 @@ std::cout << "World 系协方差对角线: " << Sigma_global.diagonal().transpos
 
 ### ⚠ 常见陷阱
 
-> 💡 **概念误区：认为流形上的"高斯分布"是真正的高斯分布**
+> ◇ **概念误区：认为流形上的"高斯分布"是真正的高斯分布**
 > 新手想法："$\tau \sim \mathcal{N}(0, \Sigma)$ 且 $\mathcal{X} = \bar{\mathcal{X}} \oplus \tau$，所以 $\mathcal{X}$ 服从高斯分布。"
 > 实际上：$\tau$ 在切空间（$\mathbb{R}^m$）中是高斯分布，但通过指数映射到流形后，$\mathcal{X}$ 的分布**不再是高斯的**——它在流形上是"集中在均值附近的近似高斯"。当不确定性很大时（如旋转不确定性超过 30 度），高斯近似失效，需要使用更复杂的分布模型（如 von Mises-Fisher 分布）。
 > 正确做法：在典型 SLAM 场景中，帧间旋转不确定性通常 < 1 度，高斯近似非常好。但在初始化阶段或退化场景中要警惕。
@@ -2218,7 +2218,7 @@ std::cout << "欧拉积分 R^T R - I:\n"
 > 根本原因：`Exp(omega * dt)` 期望 `omega` 的单位是 rad/s。
 > 正确做法：在 IMU 数据预处理阶段统一转换为 rad/s 和 m/s^2，添加单元测试验证。
 
-> 🧠 **思维陷阱：认为"流形积分就不需要高阶方法了"**
+> ◎ **思维陷阱：认为"流形积分就不需要高阶方法了"**
 > 新手想法："既然流形积分保持在 SO(3) 上，精度就不是问题了。"
 > 实际上：流形积分的零阶保持（$\omega$ 在一个步长内视为常数）仍然只有一阶精度。当 IMU 频率低或旋转速度快时，误差依然显著。更高阶的方法包括：中值积分（使用 $(\omega_k + \omega_{k+1})/2$，二阶精度）和四阶 Runge-Kutta（流形上的 RK4）。ORB-SLAM3 使用中值积分。
 > 正确做法：理解精度阶数的概念，根据应用场景选择合适的积分方法。
@@ -2482,7 +2482,7 @@ $$S = \begin{bmatrix} sR & t \\ 0^T & 1 \end{bmatrix}, \quad s > 0, R \in SO(3),
 
 ### ⚠ 常见陷阱
 
-**💡 概念误区：认为 manif 和 Sophus 的 twist 分量顺序不同**
+**◇ 概念误区：认为 manif 和 Sophus 的 twist 分量顺序不同**
 
 - **新手想法**："manif 用 $[\rho, \omega]$，Sophus 用 $[\omega, \rho]$，需要交换前后三个分量"
 - **实际上**：当前版本的 Sophus 和 manif **都使用 $[\rho, \omega]$（平移在前，旋转在后）**。Sophus 的 `hat()` 函数将 `a.head<3>()` 映射到平移列、`a.tail<3>()` 映射到旋转块，与 manif 一致
@@ -2502,7 +2502,7 @@ manif::SE3d T_manif = manif::SE3d::Exp(sophus_twist);  // 直接使用
 - **根本原因**：manif 构造 `SE3d(t, q)` 平移在前，Sophus 构造 `SE3d(q, t)` 旋转在前
 - **正确做法**：查看 IDE 的函数签名提示，或在代码中用注释标明参数含义
 
-**💡 概念误区：认为 Sophus 进入维护模式意味着不能用了**
+**◇ 概念误区：认为 Sophus 进入维护模式意味着不能用了**
 
 - **新手想法**："Sophus 不再更新了，之前用它的代码要赶紧迁移到 manif"
 - **实际上**：维护模式意味着不再添加新功能，但会继续修复关键 bug。ORB-SLAM3 和 FAST-LIVO2 的代码库已经稳定，Sophus 对它们来说完全够用。"迁移到 manif" 需要修改所有 Lie group 操作的调用点，工作量巨大且容易引入新 bug，对已有项目通常不值得
@@ -2671,7 +2671,7 @@ std::cout << summary.FullReport() << std::endl;
 - **根本原因**：没有 Manifold，Ceres 在 $\mathbb{R}^7$ 中做更新步 $q_{k+1} = q_k + \Delta q$，不保证 $\|q_{k+1}\| = 1$
 - **正确做法**：始终使用 Manifold 参数化。或者至少使用 Ceres 内置的 `ceres::EigenQuaternionManifold` + 单独的平移参数块（但 manif 的一体化方案更简洁）
 
-**💡 概念误区：认为 AutoDiff 比解析 Jacobian 慢很多**
+**◇ 概念误区：认为 AutoDiff 比解析 Jacobian 慢很多**
 
 - **新手想法**："自动微分毕竟是'自动'的，肯定比手写的慢"
 - **实际上**：Ceres 的 AutoDiff 基于 `Jet` 类型的正向模式自动微分，在编译时展开为高效的内联代码。实测中，AutoDiff 通常只比手写解析 Jacobian 慢 1.5-3 倍。考虑到 SLAM 后端优化的时间主要花在求解线性方程组（Cholesky 分解）而不是 Jacobian 计算上，这个开销几乎可以忽略
@@ -2905,13 +2905,13 @@ void update(State& state, const Eigen::Matrix<double, 15, 1>& delta_x) {
 - **根本原因**：ESKF 的误差状态动力学方程（$F$ 矩阵和 $G$ 矩阵）是在特定扰动约定下推导的。如果你的代码用了不同的约定，$F$ 和 $G$ 与实际更新不匹配，协方差传播就是错的
 - **正确做法**：严格按照 ESKF 推导时的约定执行更新。如果论文/教材用左扰动推导，代码就用左乘
 
-**💡 概念误区：认为 ESKF 中预测和更新必须用同一种扰动约定**
+**◇ 概念误区：认为 ESKF 中预测和更新必须用同一种扰动约定**
 
 - **新手想法**："既然更新步用左扰动，那预测步也应该用左扰动，即 R_new = Exp(omega*dt) * R_old"
 - **实际上**：预测步中 IMU 的角速度 $\omega$ 是在 body 坐标系中测量的，所以旋转增量 $\exp(\omega \cdot dt)$ 自然要**右乘**（即在 body 坐标系中施加旋转）。如果你左乘，意味着在 world 坐标系中施加一个 body 坐标系下的角速度旋转——这在物理上是错误的
 - **正确理解**：预测步的"左乘还是右乘"由物理含义决定（IMU 测量在 body 系 -> 右乘），更新步的扰动约定由你的 Jacobian 推导约定决定（可以选左或右，但要和协方差传播一致）
 
-**🧠 思维陷阱：认为读懂 SLAM 代码只需要理解算法**
+**◎ 思维陷阱：认为读懂 SLAM 代码只需要理解算法**
 
 - **新手想法**："我理解了 ESKF 的数学推导，就能读懂 FAST-LIVO2 的代码"
 - **实际上**：算法理解只是第一步。真实代码中还有大量的工程细节：坐标系约定（哪个是 world，哪个是 body？）、变量命名约定（Tcw 还是 Twc？）、数据类型选择（float 还是 double？）、库 API 差异（manif 的 log 顺序和 Sophus 的 log 顺序不同）。这些细节在论文中通常不会提到，但在代码中处处可见
@@ -3067,7 +3067,7 @@ $$f(g \cdot x) = g \cdot f(x), \quad \forall g \in G$$
 >
 > **实际上**：$SE_2(3)$ 只在状态包含速度且旋转-速度耦合显著时才有优势。纯位姿估计（如视觉 SLAM 的关键帧位姿）仍然用 SE(3)。选择群结构要匹配物理问题——群"越大"不等于"越好"，它意味着更多的约定需要维护和更复杂的 Jacobian。
 
-> 🧠 **思维陷阱：认为等变网络不需要理解李群**
+> ◎ **思维陷阱：认为等变网络不需要理解李群**
 >
 > **新手想法**："等变网络是深度学习方向，和经典李群理论没关系。"
 >
@@ -3148,7 +3148,7 @@ mini_lio/
 
 ---
 
-## 🔧 故障排查手册
+## ◆ 故障排查手册
 
 | 症状 | 可能原因 | 排查步骤 | 相关章节 |
 |------|----------|----------|----------|

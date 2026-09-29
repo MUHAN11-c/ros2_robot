@@ -132,7 +132,7 @@ OCS2 把这种"模式切换"抽象为框架的**一等公民**:
            GPU 加速和 RL 混合是前沿方向
 ```
 
-> **💡 洞察**: OCS2 的演化路线是 **ALM -> SLQ/DDP -> SQP+HPIPM**。选择 SQP 不是因为它"更好",而是因为腿足场景有大量硬约束(摩擦锥、关节限位),SQP 能直接处理,DDP 需要用罚函数近似。这是**需求驱动的技术选择**。
+> **◇ 洞察**: OCS2 的演化路线是 **ALM -> SLQ/DDP -> SQP+HPIPM**。选择 SQP 不是因为它"更好",而是因为腿足场景有大量硬约束(摩擦锥、关节限位),SQP 能直接处理,DDP 需要用罚函数近似。这是**需求驱动的技术选择**。
 
 #### 55.1.3 四大 MPC 框架对比
 
@@ -162,7 +162,7 @@ OCS2 把这种"模式切换"抽象为框架的**一等公民**:
 └── 学术 NLP 研究 ──> CasADi 或 自写
 ```
 
-> **🧠 深度理解**: acados 和 OCS2 的后端都是 HPIPM——它们在 QP 层是等价的。差异在上层抽象: OCS2 专注切换系统和 ROS 集成,acados 专注嵌入式部署和代码生成。如果你需要在 ARM 嵌入式平台上跑纯 C 代码,acados 更合适;如果你需要 ROS 生态和步态管理,OCS2 更合适。
+> **◎ 深度理解**: acados 和 OCS2 的后端都是 HPIPM——它们在 QP 层是等价的。差异在上层抽象: OCS2 专注切换系统和 ROS 集成,acados 专注嵌入式部署和代码生成。如果你需要在 ARM 嵌入式平台上跑纯 C 代码,acados 更合适;如果你需要 ROS 生态和步态管理,OCS2 更合适。
 
 **练习 55.1a**: 你的课题组已有 Crocoddyl 的使用经验,现在要给 Unitree Go2 做生产级 MPC。列出三条"为什么应该切换到 OCS2"的理由和一条"坚持用 Crocoddyl"的理由。
 
@@ -311,9 +311,9 @@ WBC (足式/90_WBC分层优化与TSID) 或 PD 控制器: 跟踪 MPC 输出
 关节力矩 tau -> 电机驱动器
 ```
 
-> **💡 洞察**: 注意数据流中**没有一步涉及"手动调 PID"**——MPC 直接输出最优前馈力和反馈增益。WBC 负责把 Centroidal 层面的力分配到关节。这就是"规划即控制"的思想。
+> **◇ 洞察**: 注意数据流中**没有一步涉及"手动调 PID"**——MPC 直接输出最优前馈力和反馈增益。WBC 负责把 Centroidal 层面的力分配到关节。这就是"规划即控制"的思想。
 
-> 💡 **为什么 WBC 不够——MPC 的动机**
+> ◇ **为什么 WBC 不够——MPC 的动机**
 >
 > WBC 基于浮动基逆动力学，考虑了完整的机器人动力学模型，但它只求解**当前瞬时**的最优关节力矩。这意味着 WBC 无法为未来做准备：在支撑相的后半段，WBC 不会提前为即将到来的飞行相调整力分配；在飞行相后半程，WBC 也不会为着地冲击做预准备。MPC 通过在时间轴上前瞻，弥补了这一"短视"缺陷。
 
@@ -438,7 +438,7 @@ problem.costPtr->erase("base_tracking");
 auto& cost = problem.cost.get("base_tracking");
 ```
 
-> **💡 为什么用 string 做 key?** 灵活性。用户可以在运行时动态添加/删除代价项。比如"地形感知模式"下加入"落脚点代价","平地模式"下移除它。代价是一次 `std::map::find`(O(log N),N 通常 < 10),对 MPC 求解时间(ms 级)来说可忽略。
+> **◇ 为什么用 string 做 key?** 灵活性。用户可以在运行时动态添加/删除代价项。比如"地形感知模式"下加入"落脚点代价","平地模式"下移除它。代价是一次 `std::map::find`(O(log N),N 通常 < 10),对 MPC 求解时间(ms 级)来说可忽略。
 
 > **⚠ 陷阱**: 不要在 MPC 循环中频繁调用 `add()`/`erase()`——这涉及堆分配。正确做法是用 `isActive()` 方法动态启用/禁用已注册的约束。
 
@@ -531,7 +531,7 @@ void LeggedRobotDynamics::flowMapImpl(
 }
 ```
 
-> **🧠 深度理解**: 为什么 OCS2 用 CppADCodeGen 而不是符号微分(SymPy)或有限差分?
+> **◎ 深度理解**: 为什么 OCS2 用 CppADCodeGen 而不是符号微分(SymPy)或有限差分?
 > - **符号微分**: 对复杂的刚体动力学表达式会"爆炸"(表达式指数级膨胀)
 > - **有限差分**: 精度差(O(h) 或 O(h^2)),且需要多次前向求值
 > - **CppADCodeGen**: 精确到机器精度,且可以预编译为高效的 C 代码
@@ -688,7 +688,7 @@ RTI 收缩性直觉图:
    (已经很接近 z*(t))
 ```
 
-> **🧠 深度理解**: RTI 的思想来自 Moritz Diehl (Uni. Freiburg) 的经典论文。OCS2 的 `sqpIteration = 1` 参数就是 RTI 模式。设 `sqpIteration = 5` 就是传统 SQP。**实际部署中,RTI 几乎总是够用**——因为四足运动变化缓慢(相对于 MPC 频率)。
+> **◎ 深度理解**: RTI 的思想来自 Moritz Diehl (Uni. Freiburg) 的经典论文。OCS2 的 `sqpIteration = 1` 参数就是 RTI 模式。设 `sqpIteration = 5` 就是传统 SQP。**实际部署中,RTI 几乎总是够用**——因为四足运动变化缓慢(相对于 MPC 频率)。
 
 > **⚠ 陷阱**: RTI 可行需要满足前提条件: (1) 采样时间足够小, (2) 预测时域足够长, (3) 积分器足够精确, (4) 使用了 shifting 策略。如果 MPC 频率太低(如 10Hz),RTI 可能不够——因为相邻两个问题差异太大,一步 SQP 无法收缩到足够近。
 
@@ -728,7 +728,7 @@ void SqpSolver::runImpl(scalar_t initTime,
 }
 ```
 
-> **💡 关键设计**: 步骤 2 的线性化可以**多线程并行**。如果 horizon 有 N=15 个节点,`nThreads=3` 则每个线程处理 5 个节点。这是 SQP 相对于 DDP 的并行优势——DDP 的 backward pass 是串行的。ANYmal 的生产部署使用 4 核并行。
+> **◇ 关键设计**: 步骤 2 的线性化可以**多线程并行**。如果 horizon 有 N=15 个节点,`nThreads=3` 则每个线程处理 5 个节点。这是 SQP 相对于 DDP 的并行优势——DDP 的 backward pass 是串行的。ANYmal 的生产部署使用 4 核并行。
 
 #### 55.4.6 Line Search: Armijo 条件
 
@@ -846,7 +846,7 @@ OCS2 OptimalControlProblem
 | 全身动力学 | 54 | 24 | 10 | **5-10 ms** | 30-50 ms | 不适用 |
 | Mobile manipulator | 18 | 12 | 20 | **0.5-1 ms** | 1-2 ms | 2-3 ms |
 
-> **💡 洞察**: HPIPM 的优势在**高维状态**和**长 horizon** 时更显著。因为 HPIPM 利用 OCP 的带状稀疏结构,复杂度是 O(N * n^3);而通用 QP 求解器(qpOASES/OSQP)把稀疏结构展平,复杂度是 O(N^3 * n^3)。最近的基准测试(Stark et al. 2024)在桌面 x86、LattePanda Alpha、Jetson Orin NX 三种平台上验证了这一点。
+> **◇ 洞察**: HPIPM 的优势在**高维状态**和**长 horizon** 时更显著。因为 HPIPM 利用 OCP 的带状稀疏结构,复杂度是 O(N * n^3);而通用 QP 求解器(qpOASES/OSQP)把稀疏结构展平,复杂度是 O(N^3 * n^3)。最近的基准测试(Stark et al. 2024)在桌面 x86、LattePanda Alpha、Jetson Orin NX 三种平台上验证了这一点。
 
 #### 55.5.5 内存预分配策略
 
@@ -938,7 +938,7 @@ $$\dot{\mathbf{q}}_{\text{base}} = \mathbf{A}_b(\mathbf{q})^{-1} \left(\mathbf{h
 
 $$\dot{\mathbf{q}}_{\text{joint}} = \mathbf{u}_{\text{joint}}$$
 
-> **💡 关键洞察**: 注意**接触力 $\boldsymbol{\lambda}_i$ 是输入变量**,不是动力学的输出。MPC 直接优化"应该施加什么力"。这和 WBC(足式/90_WBC分层优化与TSID)不同——WBC 是给定期望力后求关节力矩。
+> **◇ 关键洞察**: 注意**接触力 $\boldsymbol{\lambda}_i$ 是输入变量**,不是动力学的输出。MPC 直接优化"应该施加什么力"。这和 WBC(足式/90_WBC分层优化与TSID)不同——WBC 是给定期望力后求关节力矩。
 
 #### 55.6.2 Full Centroidal vs SRBD
 
@@ -1126,7 +1126,7 @@ public:
 };
 ```
 
-> **🧠 深度理解**: 注意 `memory_order` 的选择。`acq_rel` 用于 swap 操作(同步点),`relaxed` 用于同一线程内的读写(无需同步)。这比 `seq_cst` 更高效,但正确性依赖于"只有一个生产者和一个消费者"的假设(SPSC)。这是 C++ 并发编程中经典的 SPSC 无锁数据结构在 MPC 场景的落地——生产者(MPC 线程)写入最新 policy,消费者(MRT 线程)读取最新可用 policy,中间无锁、无阻塞、延迟确定。
+> **◎ 深度理解**: 注意 `memory_order` 的选择。`acq_rel` 用于 swap 操作(同步点),`relaxed` 用于同一线程内的读写(无需同步)。这比 `seq_cst` 更高效,但正确性依赖于"只有一个生产者和一个消费者"的假设(SPSC)。这是 C++ 并发编程中经典的 SPSC 无锁数据结构在 MPC 场景的落地——生产者(MPC 线程)写入最新 policy,消费者(MRT 线程)读取最新可用 policy,中间无锁、无阻塞、延迟确定。
 
 > **本质洞察**:Triple Buffer 的设计哲学不是"让两个线程同时访问同一数据",而是**让每个线程始终拥有自己的独占副本,通过原子指针交换来传递所有权**。这和 Rust 的所有权模型有异曲同工之妙——不共享可变数据,而是转移所有权,从根本上消除数据竞争。在 MPC 场景中,这意味着 MRT 线程读到的永远是一个完整、一致的 policy(不会读到"半写入"的脏数据),而 MPC 线程的写入也永远不会被阻塞。
 
@@ -1186,7 +1186,7 @@ State-based view (闭环):
   前提: solver 必须计算 feedback policy (controllerTrajectory)
 ```
 
-> **💡 实用建议**: 对于 MPC + WBC 的架构(如 legged_control),用 time-based view 就够了——WBC 本身就是反馈控制器。只有当直接用 MPC 输出驱动电机(无 WBC)时,才需要 state-based view 的反馈增益。
+> **◇ 实用建议**: 对于 MPC + WBC 的架构(如 legged_control),用 time-based view 就够了——WBC 本身就是反馈控制器。只有当直接用 MPC 输出驱动电机(无 WBC)时,才需要 state-based view 的反馈增益。
 
 #### 55.7.6 线程安全分析
 
@@ -1254,7 +1254,7 @@ bool MPC_MRT_Interface::advanceMpc() {
 }
 ```
 
-> **💡 洞察**: 这种"失败时用旧 policy"的策略叫做 **graceful degradation**。只要 MPC 偶尔失败(不是连续失败),系统可以继续运行。这在真实硬件上非常重要——QP solver 可能因为突发的大扰动而暂时无解。
+> **◇ 洞察**: 这种"失败时用旧 policy"的策略叫做 **graceful degradation**。只要 MPC 偶尔失败(不是连续失败),系统可以继续运行。这在真实硬件上非常重要——QP solver 可能因为突发的大扰动而暂时无解。
 
 #### 55.7.8 实时线程配置
 
@@ -1396,7 +1396,7 @@ Pronk        [0, 15]              全腾空 + 全触地
 Flying trot  [6, 0, 9, 0]         对角 + 腾空相
 ```
 
-> **💡 与 足式/120_步态管理与接触序列 的关系**: 足式/120_步态管理与接触序列 会完全展开步态管理(GaitSchedule、步态切换、自适应步态)。本节只需理解 ModeSchedule 的数据结构和编码方式。
+> **◇ 与 足式/120_步态管理与接触序列 的关系**: 足式/120_步态管理与接触序列 会完全展开步态管理(GaitSchedule、步态切换、自适应步态)。本节只需理解 ModeSchedule 的数据结构和编码方式。
 
 #### 55.8.3 按 mode 启用/禁用约束
 
@@ -1435,7 +1435,7 @@ class ZeroVelocityConstraint : public StateInputConstraint {
 };
 ```
 
-> **🧠 深度理解**: 同一条腿在不同时刻有完全不同的约束集——触地相有摩擦锥约束+零速度约束,摆动相有零力约束。这种"约束随时间切换"的模式就是 OCS2 作为"切换系统"框架的核心价值。
+> **◎ 深度理解**: 同一条腿在不同时刻有完全不同的约束集——触地相有摩擦锥约束+零速度约束,摆动相有零力约束。这种"约束随时间切换"的模式就是 OCS2 作为"切换系统"框架的核心价值。
 
 ---
 
@@ -1643,7 +1643,7 @@ relaxedLogBarrierDelta = 5.0
 | 步态切换不稳 | 切换瞬间跌倒 | `phaseTransitionStanceTime` 太短 | 增大过渡时间到 0.5-0.6 |
 | 首次运行慢 | 启动后等待 30s | CppAD 正在编译 .so | 正常,后续启动自动加载缓存 |
 
-> **💡 调试顺序建议**: (1) 先看 MPC 是否求解成功(打印 return value), (2) 看求解时间是否在预算内, (3) 看轨迹是否合理(RViz 可视化), (4) 最后看力的分布。
+> **◇ 调试顺序建议**: (1) 先看 MPC 是否求解成功(打印 return value), (2) 看求解时间是否在预算内, (3) 看轨迹是否合理(RViz 可视化), (4) 最后看力的分布。
 
 #### 55.11.2 性能 profiling
 
@@ -1732,7 +1732,7 @@ legged_control:
   + 社区衍生: legged_control_go2 等
 ```
 
-> **💡 学习路径**: 先用 OCS2 官方示例理解 MPC 原理(本章),再用 legged_control 学习完整系统集成(足式/240_legged_control精读)。OCS2 是"引擎",legged_control 是"整车"。
+> **◇ 学习路径**: 先用 OCS2 官方示例理解 MPC 原理(本章),再用 legged_control 学习完整系统集成(足式/240_legged_control精读)。OCS2 是"引擎",legged_control 是"整车"。
 
 ---
 
@@ -1766,7 +1766,7 @@ EndEffectorKinematics<cg_scalar_t>   // CppADCodeGen 代码生成
 
 ---
 
-## 🔧 故障排查手册
+## ◆ 故障排查手册
 
 | 症状 | 可能原因 | 排查步骤 | 相关章节 |
 |------|---------|---------|---------|

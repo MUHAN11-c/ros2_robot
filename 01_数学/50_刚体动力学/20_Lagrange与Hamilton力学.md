@@ -1317,7 +1317,7 @@ print(f"Verlet final energy error: {energy_err_vl[-1]:.6e}")
 >
 > **正确做法**：`M = data.M; M = np.triu(M) + np.triu(M,1).T` 或使用 `data.M.selfadjointView<Eigen::Upper>()`
 
-> 💡 **概念误区**：认为"C 矩阵唯一确定"
+> ◇ **概念误区**：认为"C 矩阵唯一确定"
 >
 > **新手想法**："给定 $M(q)$，$C(q,\dot{q})$ 就确定了"
 >
@@ -1325,7 +1325,7 @@ print(f"Verlet final energy error: {energy_err_vl[-1]:.6e}")
 >
 > **正确认知**：当需要显式 C 矩阵时（如自适应控制），总是用 Christoffel 构造。当只需要 $C\dot{q}$ 时（如仿真），用 RNEA 更高效
 
-> 🧠 **思维陷阱**：认为"M(q) 条件数大 = 运动学奇异"
+> ◎ **思维陷阱**：认为"M(q) 条件数大 = 运动学奇异"
 >
 > **新手想法**："$M(q)$ 快不可逆了，说明机器人在奇异位形"
 >

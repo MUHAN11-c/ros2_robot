@@ -2113,7 +2113,7 @@ Isaac Lab 除了 Manager-Based workflow，还提供了 **Direct workflow**——
 
 ---
 
-## 🔧 故障排查手册
+## ◆ 故障排查手册
 
 ### Manager 配置问题
 
@@ -2301,7 +2301,7 @@ uv run train Mjlab-Velocity-Flat-Unitree-Go2 \
 >
 > **如果你从 legged_gym 迁移**：重点读 §4.3（Manager 动机 + 迁移工作流 + 隐式依赖问题）。迁移表可以作为你的工作 checklist。
 >
-> **如果你遇到具体 wiring 问题**：直接跳到 velocity task Debug Checklist 和 🔧 故障排查手册——它们按症状组织，可以快速定位。
+> **如果你遇到具体 wiring 问题**：直接跳到 velocity task Debug Checklist 和 ◆ 故障排查手册——它们按症状组织，可以快速定位。
 
 ---
 

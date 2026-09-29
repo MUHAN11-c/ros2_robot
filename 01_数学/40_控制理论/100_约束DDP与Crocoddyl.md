@@ -152,11 +152,11 @@ Step 5. 当 $\mathcal A = \varnothing$（无活动约束）时，$G_{\mathcal A}
 
 ### ⚠ 常见陷阱
 
-💡 **概念误区：认为"加个 clip 就行"**
+◇ **概念误区：认为"加个 clip 就行"**
 
 新手直觉：DDP 照常求 $\delta u^\star = -Q_{uu}^{-1}Q_u$，把最终控制 $\hat u = u + \alpha k + K\Delta x$ 做逐元素 clip 到 $[\underline u, \bar u]$。Tassa 2014 指出三大缺陷：(i) clip 后 $Q_u^\top\delta u$ 不再保证为负，方向不再下降；(ii) 求逆时忽略边界耦合项 $Q_{fc}\delta u_c$；(iii) 反馈 $K$ 行在活动约束上本应置零，否则闭环振荡。
 
-🧠 **思维陷阱：认为"约束越多越难"**
+◎ **思维陷阱：认为"约束越多越难"**
 
 约束的数量不是关键——关键是**活动约束的数量和识别**。100 个 box 约束中只有 3 个活动，则 Box-DDP 的额外计算量极小（只多 3 次 1D 投影）。反之，若约束全部活动（如饱和操作），等价于完全锁定控制维度，问题退化。
 
@@ -367,7 +367,7 @@ Tassa 2014 §III.A 详细分析了三种"简单"处理方式的缺陷：
 
 完整 $K$ 做前向反馈会在边界附近 chattering。物理原因：如果电机已经在最大力矩，状态偏差来了，反馈试图加更多力矩——但 clip 会截断，下一步又减小——形成振荡。$K[\mathcal C,:]=0$ 告诉控制器："这个维度已经尽力了，别再管它。"
 
-💡 **概念误区：认为 box-QP 子问题很贵**
+◇ **概念误区：认为 box-QP 子问题很贵**
 
 对 $m = 12$（四足机器人），box-QP 是 $12\times 12$ 的 Cholesky（$\sim 300$ flops）+ 几次 clamp 检查。比动力学导数计算快 1000 倍。box-QP 不是瓶颈。
 
@@ -590,7 +590,7 @@ function ALTRO(x0, X_init, U_init; constraints)
 
 若 $\mu_0 = 10^4$ 而初始轨迹本身近似可行，AL 的罚项会淹没原始代价 $\ell$——iLQR 内层只顾满足约束而忽略目标，产生"可行但代价极差"的解。应从 $\mu_0 = 0.1$ 或 $1$ 开始。
 
-💡 **概念误区：认为 AL 外层迭代数等于 iLQR 总迭代数**
+◇ **概念误区：认为 AL 外层迭代数等于 iLQR 总迭代数**
 
 AL 外层每步调用一次完整的 iLQR（可能 10-50 次内层迭代）。如果外层跑 5 步、每步内层 20 次迭代，总共 100 次 backward+forward pass——比无约束 iLQR 的 15 次贵约 7 倍。
 
@@ -692,7 +692,7 @@ Mastalli 2022 在 humanoid pull-up、front-flip 等场景中验证：Box-FDDP �
 
 如果漏掉 $V_x' \leftarrow V_x' + V_{xx}'\bar f$，当 gap > 0 时产生错误 Newton 方向——merit 不降反升，算法表现为"第一步 gap 消除，但代价反而增加"的异常。
 
-💡 **概念误区：认为"FDDP 就是多射击"**
+◇ **概念误区：认为"FDDP 就是多射击"**
 
 准确说法：FDDP 是多射击 SQP 的 **condensed Riccati 实现**——数学等价但计算组织不同。多射击 SQP（如 acados）把 $(x,u)$ 全部作为显式变量、动力学作等式约束、用稀疏 KKT solver。FDDP 把 $x$ 通过 Bellman 递推消去，只显式保留 $(u, \bar f)$。
 
@@ -1051,11 +1051,11 @@ Jallet 2025 在 Solo-12 四足机器人上的实验数据：
 
 ### ⚠ 常见陷阱
 
-💡 **概念误区：认为"ProxDDP 只是换了个 AL 实现"**
+◇ **概念误区：认为"ProxDDP 只是换了个 AL 实现"**
 
 ProxDDP 与 ALTRO 的核心差异不在于 AL vs proximal AL，而在于**约束信息的传播方式**。ALTRO 在外层独立更新乘子，内层 iLQR "不知道"约束存在（只看到修改后的代价）。ProxDDP 让乘子参与 Riccati backward——约束信息在时间维上通过值函数传播。这使得 ProxDDP 能在**单次 backward-forward** 中同时改善 primal 可行性和 dual 最优性。
 
-🧠 **思维陷阱：认为"实时约束 MPC 不可能"**
+◎ **思维陷阱：认为"实时约束 MPC 不可能"**
 
 Jallet 2025 在 Solo-12 四足机器人上验证了 ProxDDP 以 **kHz 级**运行 whole-body MPC（含摩擦锥硬约束）——每步约 0.5-1 ms。关键：Pinocchio 解析导数 + ProxDDP 的单次迭代收敛（warm-start 后）。
 
@@ -1226,7 +1226,7 @@ terminal_costs.addCost("terminal_lqr",
 
 如果终端代价只是简单的 $\|x_N - x_\text{goal}\|^2$（权重不够大），闭环 MPC 可能 drift——因为优化器"不在乎" $x_N$ 之后发生什么。正确做法：按 Mayne 四条件设计终端代价，或至少用 $Q_f \gg Q$ 的大权重近似 LQR $P$。
 
-💡 **概念误区：认为"视域越长越好"**
+◇ **概念误区：认为"视域越长越好"**
 
 视域 $N$ 增大：(a) 计算量线性增长 $O(N)$；(b) 对终端条件的依赖减小。但过长视域在不稳定系统中会导致 Hessian 条件数 $\sim e^{2\lambda N\Delta t}$ 爆炸。经验法则：$T = N\Delta t$ 应覆盖 2-3 个系统时间常数（如步态周期），不必更长。
 
@@ -1376,7 +1376,7 @@ terminal_costs.addCost("terminal_lqr",
 
 ---
 
-## 🔧 故障排查手册
+## ◆ 故障排查手册
 
 | 症状 | 可能原因 | 排查步骤 | 相关节 |
 |------|---------|---------|--------|
@@ -1518,7 +1518,7 @@ $$
 
 新手想法：落脚时让接触力从 0 线性增加到正常值（"平滑过渡"）。实际上这引入非物理拉力——因为在 ramp-up 期间法向力为正但很小，可能不满足摩擦锥。正确做法：用 `ImpulseActionModel` 处理瞬时碰撞，之后立即按正常接触力计算。
 
-💡 **概念误区：认为"节点越多越精确"**
+◇ **概念误区：认为"节点越多越精确"**
 
 对固定相长度（如 $0.2$ s）的 trot，用 10 节点（$\Delta t = 20$ ms）通常就足够了。增加到 100 节点不会显著改善轨迹质量，但计算量增加 10 倍。关键是在**接触切换瞬间**加密网格，而非全局加密。
 
@@ -1581,7 +1581,7 @@ OCS2 的 SLQ（Sequential Linear Quadratic）在连续时间做 Riccati ODE 积�
 
 ---
 
-## §3.10.12 Contact-Implicit 轨迹优化（选学）��★★★
+## §3.10.12 Contact-Implicit 轨迹优化（选学）★★★★
 
 ### 核心思想
 
@@ -1630,7 +1630,7 @@ $\phi_\text{FB}(a,b) = 0 \iff a \ge 0, b \ge 0, ab = 0$。零水平集是非负�
 
 ### ⚠ 常见陷阱
 
-🧠 **思维陷阱：认为"contact-implicit 一定比 contact-scheduled 好"**
+◎ **思维陷阱：认为"contact-implicit 一定比 contact-scheduled 好"**
 
 Contact-implicit 的优势是"自动发现接触"，但代价是：(a) NLP 规模增大 2-3 倍（$+\lambda, \gamma$ 变量）；(b) 互补约束引入多局部极小；(c) 求解时间 100-10000x 于 contact-scheduled。对已知步态的实时 MPC，contact-scheduled（Crocoddyl/OCS2）远远更合适。
 
@@ -1689,7 +1689,7 @@ arXiv:2403.00748 "Primal-Dual iLQR"（2024）批评 FDDP 缺乏正式的二阶�
 
 ---
 
-## §3.10.14 Warm-Starting 与实时性策�� ★★★
+## §3.10.14 Warm-Starting 与实时性策略 ★★★★
 
 ### Shifting Warm-Start 的完整流程
 
@@ -1747,7 +1747,7 @@ Crocoddyl 内部使用 OpenMP 并行计算导数。线程调度的不确定性�
 
 ---
 
-## §3.10.15 可微约束轨迹优化与学习 ★��★★
+## §3.10.15 可微约束轨迹优化与学习 ★★★★
 
 ### 核心思想
 
@@ -1789,7 +1789,7 @@ Mastalli-Lembono-Fernbach-Mansard (ICRA 2020)：
 
 ### ⚠ 常见陷阱
 
-💡 **概念误区：把 "unrolling iLQR" 当作可微 MPC**
+◇ **概念误区：把 "unrolling iLQR" 当作可微 MPC**
 
 展开 iLQR 的 20 次迭代形成计算图再 backprop——梯度会爆炸（经过 20 层 Riccati 递推的嵌套）。正确做法：**隐式微分**（只在不动点处用 KKT 隐函数定理），避免展开。
 

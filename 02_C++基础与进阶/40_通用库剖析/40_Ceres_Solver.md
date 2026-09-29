@@ -149,13 +149,13 @@ options.dogleg_type = ceres::TRADITIONAL_DOGLEG;  // 或 SUBSPACE_DOGLEG
 >
 > **正确理解**：非线性最小二乘 = 反复解线性最小二乘。每次迭代在当前点做线性化，解一个线性问题得到增量，更新估计，重新线性化。
 
-> 💡 **概念误区：认为 Gauss-Newton 的 $J^T J$ 就是 Hessian 矩阵**
+> ◇ **概念误区：认为 Gauss-Newton 的 $J^T J$ 就是 Hessian 矩阵**
 >
 > **新手想法**："$J^T J$ 是目标函数的二阶导数矩阵。"
 >
 > **实际上**：目标函数 $F(x) = \frac{1}{2} \sum \|f_i\|^2$ 的真正 Hessian 是 $H = J^T J + \sum_i f_i \cdot \nabla^2 f_i$。Gauss-Newton **丢弃了** $\sum f_i \cdot \nabla^2 f_i$ 这一项，用 $J^T J$ 近似 Hessian。这个近似在残差 $f_i$ 较小时（接近最优解）非常好，但在残差很大时（远离最优解或有大量外点）会不准确——这就是为什么需要 LM 阻尼和鲁棒核函数。
 
-> 🧠 **思维陷阱：认为 Trust Region 总是比 Line Search 好**
+> ◎ **思维陷阱：认为 Trust Region 总是比 Line Search 好**
 >
 > **新手想法**："既然 SLAM 都用 Trust Region，那 Line Search 就是劣等方法。"
 >
@@ -661,7 +661,7 @@ Ceres 并不直接实现 IRLS。它将核函数的效果嵌入到法方程的构
 >
 > **正确做法**：先不带 LossFunction 跑一次，统计残差分布，再设 $\delta$。
 
-> 💡 **概念误区：认为核函数能"删除"外点**
+> ◇ **概念误区：认为核函数能"删除"外点**
 >
 > **实际上**：核函数降权但不删除。彻底排除外点用两阶段策略：先带核函数优化，根据残差剔除外点，再无核函数精优化。
 
@@ -808,7 +808,7 @@ problem.SetManifold(pose, new SE3Manifold());
 >
 > **正确做法**：Eigen 四元数用 `EigenQuaternionManifold`。
 
-> 💡 **概念误区：认为不用 Manifold "优化完归一化就行"**
+> ◇ **概念误区：认为不用 Manifold "优化完归一化就行"**
 >
 > **问题**：(1) 中间步骤的未归一化四元数不是有效旋转；(2) $J^T J$ 维度变大（4 vs 3），浪费计算；(3) 秩亏导致数值不稳定。
 >
@@ -1002,7 +1002,7 @@ $$\Sigma_{\text{tangent}} = J_{\text{minus}} \cdot \Sigma_{\text{ambient}} \cdot
 >
 > **根本原因**：未利用 Schur 补消元 3D 点。`SPARSE_SCHUR` 对 BA 快数十到数百倍。
 
-> 💡 **概念误区：认为更多迭代总更好**
+> ◇ **概念误区：认为更多迭代总更好**
 >
 > **实际上**：良好初始化的 SLAM 问题 20-50 次迭代就收敛。关注 `termination_type`——如果已是 `CONVERGENCE`，增加迭代无意义。
 
@@ -1568,7 +1568,7 @@ SLAM 后端优化有两个主流框架：Ceres 和 GTSAM。它们的设计哲学
 
 ### ⚠ 常见陷阱
 
-> 🧠 **思维陷阱：认为必须在 Ceres 和 GTSAM 之间二选一**
+> ◎ **思维陷阱：认为必须在 Ceres 和 GTSAM 之间二选一**
 >
 > **实际上**：许多系统混合使用。LIO-SAM 的后端用 GTSAM，但标定和某些离线优化用 Ceres。两者可以在同一个项目中共存——只要注意李群约定的一致性（GTSAM 默认右扰动，manif/Ceres 通常也采用右扰动，因此约定上天然兼容）。
 
@@ -1751,7 +1751,7 @@ SLAM 后端优化
 
 ---
 
-## 🔧 故障排查手册
+## ◆ 故障排查手册
 
 | 症状 | 可能原因 | 排查步骤 | 相关章节 |
 |------|----------|----------|----------|

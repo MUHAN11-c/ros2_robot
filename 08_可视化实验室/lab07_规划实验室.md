@@ -118,4 +118,4 @@ while cur is not None:
 | [AtsushiSakai/PythonRobotics](https://github.com/AtsushiSakai/PythonRobotics) | `PathPlanning` 目录有 A*/RRT/RRT* 全家桶动画 |
 | [ompl/ompl](https://github.com/ompl/ompl) | ROS/MoveIt2 背后的采样规划官方库（第三阶） |
 
-> 小樱丸备注：把两个实验的"探索区域"对比着看，你就懂了为什么工程上"结构化环境用 A*，高维连续空间用 RRT 系"。
+> 紫樱备注：把两个实验的"探索区域"对比着看，你就懂了为什么工程上"结构化环境用 A*，高维连续空间用 RRT 系"。

@@ -90,4 +90,4 @@ plt.axis("equal"); plt.legend(); plt.title("特征向量=主轴"); plt.show()
 | [3b1b/manim](https://github.com/3b1b/manim) | 3Blue1Brown 数学动画引擎；《线性代数的本质》同款视觉 |
 | [MIT 18.06 Linear Algebra](https://math.mit.edu/~gs/linearalgebra/) | Strang 教授课程主页：讲义、习题与视频（免费） |
 
-> 小樱丸备注：线性代数直觉的第一推荐是 3Blue1Brown《Essence of Linear Algebra》系列视频（官方免费），本实验是其第 3/4/14 集的代码版。
+> 紫樱备注：线性代数直觉的第一推荐是 3Blue1Brown《Essence of Linear Algebra》系列视频（官方免费），本实验是其第 3/4/14 集的代码版。

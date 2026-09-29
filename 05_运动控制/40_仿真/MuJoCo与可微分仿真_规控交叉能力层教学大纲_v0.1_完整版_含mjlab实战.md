@@ -1150,13 +1150,13 @@ for iteration in range(max_iterations):
 |------|--------|-------|---------|----------|---------|
 | **MJX** | google-deepmind/mujoco | 12k+ | JAX reverse-mode | ✅ 主流 | MuJoCo 生态内的可微分仿真 |
 | **Brax** | google/brax | ~2.7k | JAX reverse | ⚠ 物理维护期 | 训练循环（PPO/SAC）仍活跃 |
-| **MuJoCo Warp** | google-deepmind/mujoco_warp | 新 | **暂不可微** | 🆕 速度王 | 大规模 PPO（不需要梯度） |
+| **MuJoCo Warp** | google-deepmind/mujoco_warp | 新 | **暂不可微** | ◆ 速度王 | 大规模 PPO（不需要梯度） |
 | **NVIDIA Warp** | NVIDIA/warp | ~5.4k | tape-based reverse | ✅ 活跃 | 自定义可微物理+渲染 |
-| **Newton** | newton-physics/newton | ~4.3k | Warp tape | 🆕 alpha | Isaac Lab 3.0 后端 |
+| **Newton** | newton-physics/newton | ~4.3k | Warp tape | ◆ alpha | Isaac Lab 3.0 后端 |
 | **Genesis** | Genesis-Embodied-AI/Genesis | ~25k | 部分（MPM 可微） | ⚠ 性能宣称有争议 | 多物理场 |
 | **Drake AutoDiffXd** | RobotLocomotion/drake | ~3.8k | forward-mode C++ | ✅ | MPC/TrajOpt 的 C++ 可微 |
-| **Dojo** | dojo-sim/Dojo.jl | ~400 | 隐函数定理（Julia） | 🟡 研究原型 | 接触丰富场景的精确梯度 |
-| **DiffTaichi** | taichi-dev/difftaichi | ~2.4k | source-to-source | 🟡 基本冻结 | 教学+MPM 软体 |
+| **Dojo** | dojo-sim/Dojo.jl | ~400 | 隐函数定理（Julia） | ● 研究原型 | 接触丰富场景的精确梯度 |
+| **DiffTaichi** | taichi-dev/difftaichi | ~2.4k | source-to-source | ● 基本冻结 | 教学+MPM 软体 |
 | **Nimble** | keenon/nimblephysics | ~480 | PyTorch reverse | ✅ | 生物力学 |
 
 **教学建议**：用 MJX 做可微分仿真实验（最成熟+MuJoCo 物理保真度最高）；用 Brax 的训练代码做 SHAC 实现；用 DiffTaichi 做 MPM 软体的教学演示。

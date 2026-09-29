@@ -2484,7 +2484,7 @@ python scripts/export_onnx.py MyQuad-Velocity-Flat \
 
 > **阅读建议**：如果你只有时间读一个外部参考，读 HOVER 仓库——它是目前 Isaac Lab extension 模式的最佳工程范例。如果你用 mjlab，读 HUSKY 仓库——它展示了如何用 mjlab 做复杂的器具建模和多阶段训练。两个仓库的 README 都写得非常详细，包含安装、训练、评估的完整命令。
 
-## 🔧 故障排查手册
+## ◆ 故障排查手册
 
 以下手册覆盖了本章 DIY 流程中最常见的故障场景。遇到问题时，先定位症状所在行，然后按排查步骤逐一检查。
 

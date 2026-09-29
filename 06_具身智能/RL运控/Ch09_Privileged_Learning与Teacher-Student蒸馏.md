@@ -6,7 +6,7 @@
 >
 > **关键文献**：Pinto et al., RSS 2018（Asymmetric Actor Critic for Image-Based Robot Learning）、Kumar et al. 2021（RMA: Rapid Motor Adaptation for Legged Robots）、Lee et al. 2020（Learning Quadrupedal Locomotion over Challenging Terrain）、Cheng et al. 2024（Extreme Parkour with Legged Robots, ICRA'24）
 >
-> **参考项目**：🔧 mjlab actor/critic group 配置 · 🔧 Isaac Lab observation group 配置 · ✅ `github.com/chengxuxin/extreme-parkour`（ICRA'24）
+> **参考项目**：◆ mjlab actor/critic group 配置 · ◆ Isaac Lab observation group 配置 · ✅ `github.com/chengxuxin/extreme-parkour`（ICRA'24）
 
 ---
 
@@ -103,9 +103,9 @@ Estimator 的训练有两种时机：与 policy 同步训练（online）和 poli
 
 ⚠ **编程陷阱：混淆 asymmetric AC 和 teacher-student。** 新手经常把两者搞混——因为都涉及"一个角色看到更多信息"。关键区分：asymmetric AC 的 critic 输出 value（标量），teacher-student 的 teacher 输出 action（向量）。critic 帮助训练但不产生动作，teacher 直接产生可模仿的动作。
 
-💡 **概念误区：认为"privileged learning 只用于 locomotion"。** 实际上 manipulation 任务（灵巧手操作、抓取）中同样存在大量 privileged 信息——物体精确位姿、接触法线、滑移检测。只是 locomotion 文献中 privileged learning 被更系统地研究和工程化了。
+◇ **概念误区：认为"privileged learning 只用于 locomotion"。** 实际上 manipulation 任务（灵巧手操作、抓取）中同样存在大量 privileged 信息——物体精确位姿、接触法线、滑移检测。只是 locomotion 文献中 privileged learning 被更系统地研究和工程化了。
 
-🧠 **思维陷阱：认为"teacher 越强 student 就越好"。** teacher 太强可能是因为过度依赖 privileged 信息做出了 student 根本无法复现的行为。最好的 teacher 是"在 privileged 信息帮助下找到一种 student 也能近似复现的高质量行为模式"——而不是"充分利用一切 privileged 信息达到极致表现"。这就像请一个数学天才教小学生——如果天才用高等数学解题，小学生无法模仿；如果天才用小学方法但解得又快又准，小学生才能学到东西。
+◎ **思维陷阱：认为"teacher 越强 student 就越好"。** teacher 太强可能是因为过度依赖 privileged 信息做出了 student 根本无法复现的行为。最好的 teacher 是"在 privileged 信息帮助下找到一种 student 也能近似复现的高质量行为模式"——而不是"充分利用一切 privileged 信息达到极致表现"。这就像请一个数学天才教小学生——如果天才用高等数学解题，小学生无法模仿；如果天才用小学方法但解得又快又准，小学生才能学到东西。
 
 ### 四个角色的生命周期总结
 
@@ -155,9 +155,9 @@ HoST（Learning Humanoid Standing-up Control）在训练人形机器人起身任
 
 ⚠ **编程陷阱：混淆 asymmetric AC 和 teacher-student。** 新手经常把两者搞混——因为都涉及"一个角色看到更多信息"。关键区分：asymmetric AC 的 critic 输出 value（标量），teacher-student 的 teacher 输出 action（向量）。critic 帮助训练但不产生动作，teacher 直接产生可模仿的动作。
 
-💡 **概念误区：认为"privileged learning 只用于 locomotion"。** 实际上 manipulation 任务（灵巧手操作、抓取）中同样存在大量 privileged 信息——物体精确位姿、接触法线、滑移检测。只是 locomotion 文献中 privileged learning 被更系统地研究和工程化了。
+◇ **概念误区：认为"privileged learning 只用于 locomotion"。** 实际上 manipulation 任务（灵巧手操作、抓取）中同样存在大量 privileged 信息——物体精确位姿、接触法线、滑移检测。只是 locomotion 文献中 privileged learning 被更系统地研究和工程化了。
 
-🧠 **思维陷阱：认为"teacher 越强 student 就越好"。** teacher 太强可能是因为过度依赖 privileged 信息做出了 student 根本无法复现的行为。最好的 teacher 是"在 privileged 信息帮助下找到一种 student 也能近似复现的高质量行为模式"——而不是"充分利用一切 privileged 信息达到极致表现"。这就像请一个数学天才教小学生——如果天才用高等数学解题，小学生无法模仿；如果天才用小学方法但解得又快又准，小学生才能学到东西。
+◎ **思维陷阱：认为"teacher 越强 student 就越好"。** teacher 太强可能是因为过度依赖 privileged 信息做出了 student 根本无法复现的行为。最好的 teacher 是"在 privileged 信息帮助下找到一种 student 也能近似复现的高质量行为模式"——而不是"充分利用一切 privileged 信息达到极致表现"。这就像请一个数学天才教小学生——如果天才用高等数学解题，小学生无法模仿；如果天才用小学方法但解得又快又准，小学生才能学到东西。
 
 ⚠ **编程陷阱：teacher checkpoint 被当作部署 actor。** 这是一个隐蔽但严重的错误。如果你把 teacher 的 checkpoint 直接导出 ONNX 部署，真机上会失败——因为 teacher 的输入中包含 privileged 信号。部署时应该加载 student（如果用了蒸馏）或 actor（如果只用了 asymmetric AC）的权重。自检方法：部署前打印模型输入维度，确认与部署传感器提供的维度一致。
 
@@ -306,9 +306,9 @@ DR 的范围直接决定了 student 能否从 history 中做 implicit system ide
 
 ⚠ **编程陷阱：把 `foot_contact` 放进 actor_terms。** 仿真中的 `foot_contact` 是通过 `ContactSensor` 直接读取的二值信号。在真机上，这个信号需要力传感器或阻抗估计器——两者的精度、延迟和语义都与仿真不同。如果你在 actor_terms 中使用了 `foot_contact`，即使在真机上有力传感器，阈值设置不当也会导致接触检测的 timing 和仿真不一致，策略表现下降。
 
-💡 **概念误区：认为"所有 privileged 信息价值相等"。** 不同 privileged 信号对 value 估计的帮助差异很大。接触力直接影响步态切换决策，价值很高；而质量偏移在整个 episode 内恒定，一旦 policy 适应了就不需要再看。如果 critic 的输入维度有限制，应该优先加入变化快、对决策影响大的信号。
+◇ **概念误区：认为"所有 privileged 信息价值相等"。** 不同 privileged 信号对 value 估计的帮助差异很大。接触力直接影响步态切换决策，价值很高；而质量偏移在整个 episode 内恒定，一旦 policy 适应了就不需要再看。如果 critic 的输入维度有限制，应该优先加入变化快、对决策影响大的信号。
 
-🧠 **思维陷阱：认为"未来信息只要不给 actor 就没问题"。** 即使只给 teacher，如果 teacher 学会了基于未来地形"提前 5 步调整步态"的行为，student 永远无法复现——因为触发这个行为的信息（未来地形）在 student 的输入中不存在。teacher 蒸馏的前提是 teacher 的行为可以被 student 的输入空间"近似解释"。
+◎ **思维陷阱：认为"未来信息只要不给 actor 就没问题"。** 即使只给 teacher，如果 teacher 学会了基于未来地形"提前 5 步调整步态"的行为，student 永远无法复现——因为触发这个行为的信息（未来地形）在 student 的输入中不存在。teacher 蒸馏的前提是 teacher 的行为可以被 student 的输入空间"近似解释"。
 
 ### 练习
 
@@ -982,9 +982,9 @@ Play检查: 只加载actor, corruption=False → 通过
 
 ⚠ **编程陷阱：Isaac Lab 中忘记在 CriticCfg 中设 `enable_corruption = False`。** 如果 critic 也启用了 corruption，它看到的 privileged 信号也会有噪声，导致 value 估计方差增大。自检方法：打印 critic group 的 corruption 状态。
 
-💡 **概念误区：认为"critic 维度越大越好"。** critic 的 privileged 输入不是越多越好——如果 privileged 信号维度太高而对 value 估计帮助不大（如全身 100+ 个关键点的完整位置），反而会增加 critic 的拟合难度和训练时间。应该选择对 value 估计帮助最大的 privileged 信号（通常是接触信息和地形信息）。
+◇ **概念误区：认为"critic 维度越大越好"。** critic 的 privileged 输入不是越多越好——如果 privileged 信号维度太高而对 value 估计帮助不大（如全身 100+ 个关键点的完整位置），反而会增加 critic 的拟合难度和训练时间。应该选择对 value 估计帮助最大的 privileged 信号（通常是接触信息和地形信息）。
 
-🧠 **思维陷阱：认为"Isaac Lab 和 mjlab 的配置可以直接复制粘贴"。** 虽然两个框架的逻辑相同，但 term 名称、函数接口和 sensor 配置方式不同。把 mjlab 的 `mdp.foot_contact` 直接写进 Isaac Lab 配置会报错。始终参考各框架自己的 mdp 模块。
+◎ **思维陷阱：认为"Isaac Lab 和 mjlab 的配置可以直接复制粘贴"。** 虽然两个框架的逻辑相同，但 term 名称、函数接口和 sensor 配置方式不同。把 mjlab 的 `mdp.foot_contact` 直接写进 Isaac Lab 配置会报错。始终参考各框架自己的 mdp 模块。
 
 ### 练习
 
@@ -1489,9 +1489,9 @@ DAgger 通常比纯 BC 蒸馏多花 2-3 倍训练时间，但在 student-teacher
 
 ⚠ **编程陷阱：latent 维度过大导致训练不稳定。** latent 维度从 4 开始实验是一个好的经验法则。如果从 16 或 32 开始，encoder 可能在 latent 空间中产生高方差的表示，adaptation module 难以拟合。先确认 4 维 latent 能工作，再逐步增大。
 
-💡 **概念误区：认为"adaptation module 的 MSE loss 越低越好"。** MSE loss 衡量的是"history 能多好地预测 latent"，但最终目标是"使用估计 latent 时 policy 的 rollout 表现"。有时 MSE loss 中等但 rollout 表现好（estimator 捕捉了对控制最重要的信息），MSE loss 很低但 rollout 表现差（estimator 过拟合了 training distribution）。始终以 rollout 表现为最终判据。
+◇ **概念误区：认为"adaptation module 的 MSE loss 越低越好"。** MSE loss 衡量的是"history 能多好地预测 latent"，但最终目标是"使用估计 latent 时 policy 的 rollout 表现"。有时 MSE loss 中等但 rollout 表现好（estimator 捕捉了对控制最重要的信息），MSE loss 很低但 rollout 表现差（estimator 过拟合了 training distribution）。始终以 rollout 表现为最终判据。
 
-🧠 **思维陷阱：认为"DAgger 一定比纯 BC 好"。** DAgger 的优势在于弥合分布偏移，但如果 teacher 和 student 的信息差很小（student 输入几乎可以复现 teacher 的行为），纯 BC 就足够了——DAgger 的额外轮次反而是浪费。只有当 rollout performance 指标（而非 imitation loss）不合格时才需要考虑 DAgger。
+◎ **思维陷阱：认为"DAgger 一定比纯 BC 好"。** DAgger 的优势在于弥合分布偏移，但如果 teacher 和 student 的信息差很小（student 输入几乎可以复现 teacher 的行为），纯 BC 就足够了——DAgger 的额外轮次反而是浪费。只有当 rollout performance 指标（而非 imitation loss）不合格时才需要考虑 DAgger。
 
 ### 练习
 
@@ -2017,11 +2017,11 @@ print(f"Loaded {len(compatible_keys)}/{len(stage1_state)} layers from Stage 1")
 
 ⚠ **编程陷阱：Stage 3 蒸馏数据中 student obs 与部署 obs 不一致。** 如果蒸馏数据收集时 student obs 中混入了某些 env 特有的信号（如 reward 中间量），部署时这些信号不存在。student 的 obs 配置必须严格等于部署配置。
 
-💡 **概念误区：认为"三阶段管线只适用于视觉任务"。** 三阶段的思想（渐进式信息降级）适用于任何存在大跨度信息鸿沟的任务。即使不涉及视觉，如果 actor 和部署之间有多类 privileged 信息需要逐步移除，多阶段管线也是值得考虑的。
+◇ **概念误区：认为"三阶段管线只适用于视觉任务"。** 三阶段的思想（渐进式信息降级）适用于任何存在大跨度信息鸿沟的任务。即使不涉及视觉，如果 actor 和部署之间有多类 privileged 信息需要逐步移除，多阶段管线也是值得考虑的。
 
-💡 **概念误区：认为"Stage 3 必须用 BC 蒸馏"。** BC 是最常用的蒸馏方式，但不是唯一的。你也可以在 Stage 3 用 RL fine-tuning——student 先通过 BC 初始化，然后用 RL reward 做微调，减轻 compounding error。这相当于"先模仿老师打基础，然后自己练习改进"。
+◇ **概念误区：认为"Stage 3 必须用 BC 蒸馏"。** BC 是最常用的蒸馏方式，但不是唯一的。你也可以在 Stage 3 用 RL fine-tuning——student 先通过 BC 初始化，然后用 RL reward 做微调，减轻 compounding error。这相当于"先模仿老师打基础，然后自己练习改进"。
 
-🧠 **思维陷阱：认为"teacher 的 rollout 数据量越多蒸馏越好"。** 数据量重要，但**数据多样性**更重要。10M 帧数据如果都来自同一种 DR 参数，不如 1M 帧数据覆盖 100 种 DR 参数组合。蒸馏数据的采集应该在 DR 参数空间上做均匀或分层采样。
+◎ **思维陷阱：认为"teacher 的 rollout 数据量越多蒸馏越好"。** 数据量重要，但**数据多样性**更重要。10M 帧数据如果都来自同一种 DR 参数，不如 1M 帧数据覆盖 100 种 DR 参数组合。蒸馏数据的采集应该在 DR 参数空间上做均匀或分层采样。
 
 ### 练习
 
@@ -2242,9 +2242,9 @@ extreme-parkour 的三阶段管线很强大，但工程复杂度也很高——�
 
 ⚠ **编程陷阱：在简单任务上使用过于复杂的 privileged learning 方案。** 如果你的任务是平地行走且传感器充足，asymmetric AC 就够了——不需要上三阶段蒸馏。过度复杂的管线增加了调试难度和出错概率。遵循"足够用就好"的原则。
 
-💡 **概念误区：认为"privileged learning 只是一种可选的优化技巧"。** 对于需要部署到真机的项目，privileged learning 不是优化——它是正确性保证。没有信息边界设计的策略在部署时几乎必然失败。
+◇ **概念误区：认为"privileged learning 只是一种可选的优化技巧"。** 对于需要部署到真机的项目，privileged learning 不是优化——它是正确性保证。没有信息边界设计的策略在部署时几乎必然失败。
 
-🧠 **思维陷阱：认为"选了方案就不需要回退"。** 工程实践中，你可能先选了 asymmetric AC，训练后发现 actor 在某些环境参数下表现差（说明 actor 的 observation 信息不够），需要升级到 RMA。也可能先选了三阶段蒸馏，但发现 teacher 在 Stage 1 就无法稳定训练（说明 reward 设计或 DR 范围有问题，不是 privileged learning 层面的问题），需要先退回去修 Ch06/Ch08 的内容。**方案选型是迭代的，不是一次性的。** 决策树给出的是起点，不是终点。
+◎ **思维陷阱：认为"选了方案就不需要回退"。** 工程实践中，你可能先选了 asymmetric AC，训练后发现 actor 在某些环境参数下表现差（说明 actor 的 observation 信息不够），需要升级到 RMA。也可能先选了三阶段蒸馏，但发现 teacher 在 Stage 1 就无法稳定训练（说明 reward 设计或 DR 范围有问题，不是 privileged learning 层面的问题），需要先退回去修 Ch06/Ch08 的内容。**方案选型是迭代的，不是一次性的。** 决策树给出的是起点，不是终点。
 
 ### 练习
 
@@ -2521,7 +2521,7 @@ seed：42
 
 **阅读顺序建议**：先读 Pinto 2018（理解 asymmetric AC 的基本原理），再读 Kumar 2021（理解 RMA 的两阶段框架），然后读 Cheng 2024（理解多阶段蒸馏的完整管线）。在此基础上读 HOVER 2025（理解 mask-conditioned distillation 如何统一多种控制模式）。Miki 2022 和 Radosavovic 2024 作为"从盲控制到感知控制"和"显式 vs 隐式适应"的对比阅读材料。RSL-RL 4.0 论文中关于 obs_groups、DistillationRunner 和 ONNX exporter 的工程说明应作为持续参考。
 
-## 🔧 故障排查手册
+## ◆ 故障排查手册
 
 | 症状 | 可能原因 | 排查步骤 | 相关章节 |
 |------|---------|---------|---------|

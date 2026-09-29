@@ -2078,7 +2078,7 @@ mini_manip_ws/
 | M12 ros2_control | BT 通过 Action 触发控制器执行轨迹 | M13.5 中 MoveGroup Action 间接触发 JTC 执行 |
 | Nav2 导航栈 | Nav2 的顶层任务编排完全基于 BT.CPP | M13.1-M13.6 的全部内容直接适用于 Nav2 BT Navigator |
 
-## 🔧 故障排查手册
+## ◆ 故障排查手册
 
 | 症状 | 可能原因 | 排查步骤 | 相关小节 |
 |------|---------|---------|---------|

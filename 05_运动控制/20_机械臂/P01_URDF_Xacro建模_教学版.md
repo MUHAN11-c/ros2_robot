@@ -574,7 +574,7 @@ def generate_launch_description():
 3. 各 link 相对位置正确（无 link 悬空、穿透、或错位）
 4. RViz 中开启 Mass Properties 可视化，惯量椭球形状合理（不会出现极度扁平或极度细长的椭球）
 
-> **💡 URDF 不支持闭链——MJCF 的 `<equality><connect>` 可以**
+> **◇ URDF 不支持闭链——MJCF 的 `<equality><connect>` 可以**
 >
 > URDF 强制树状结构：每个 link 只有一个 parent joint。这意味着平行四连杆、达芬奇手术机器人等闭链机构无法直接表达。URDF 的 `<mimic>` 标签只是近似——让一个关节角度跟随另一个关节，但不是真正的运动学闭环约束。
 >
@@ -1036,7 +1036,7 @@ mini-manip/
 
 ---
 
-## 🔧 故障排查手册
+## ◆ 故障排查手册
 
 | 症状 | 可能原因 | 排查步骤 | 相关章节 |
 |------|---------|---------|---------|

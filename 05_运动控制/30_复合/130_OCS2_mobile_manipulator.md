@@ -1987,7 +1987,7 @@ ddp::Settings    // maxNumIterations、minRelCost、constraintTolerance 等
 
 ---
 
-## 83.40 🔧 故障排查手册
+## 83.40 ◆ 故障排查手册
 
 | 症状 | 可能原因 | 排查步骤 | 相关小节 |
 |------|----------|----------|----------|

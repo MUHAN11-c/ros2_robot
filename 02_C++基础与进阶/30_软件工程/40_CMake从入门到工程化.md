@@ -198,7 +198,7 @@ target_link_libraries(slam_core PUBLIC Eigen3::Eigen)
 >
 > **正确做法**：逐个检查每个依赖是否出现在公共头文件中。只在头文件中使用的才写 `PUBLIC`，只在 `.cpp` 中使用的写 `PRIVATE`。
 
-> 💡 **概念误区：认为 `target_link_libraries` 只是链接库**
+> ◇ **概念误区：认为 `target_link_libraries` 只是链接库**
 >
 > **新手想法**：”`target_link_libraries` 就是告诉链接器要链接哪个 `.so`。”
 >
@@ -1817,7 +1817,7 @@ cmake --build build-consumer
 | 下游能找 | `find_package(<pkg> REQUIRED)` |
 | 路径可搬迁 | 导出文件中不含源码树绝对 include 路径 |
 
-### 17.4 🔧 故障排查手册
+### 17.4 ◆ 故障排查手册
 
 | 症状 | 可能原因 | 排查步骤 | 修复方向 |
 |------|----------|----------|----------|

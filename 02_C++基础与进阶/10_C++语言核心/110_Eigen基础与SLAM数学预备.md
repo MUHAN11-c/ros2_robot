@@ -3117,7 +3117,7 @@ inline Eigen::VectorXd solveSymmetricSystem(const Eigen::MatrixXd& H,
 
 ---
 
-## 🔧 故障排查手册
+## ◆ 故障排查手册
 
 | 现象 | 可能原因 | 检查路径 |
 |------|----------|----------|

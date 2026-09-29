@@ -271,6 +271,118 @@
   }
 }
 
+/* Hero 舞台：光晕 + 双轨道环 + 环上节点（克制的品牌视觉，不抢正文） */
+.rt-hero__stage {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  display: grid;
+  place-items: center;
+}
+
+.rt-hero__stage img {
+  position: relative;
+  z-index: 2;
+  width: 260px;
+  height: auto;
+}
+
+.rt-hero__glow {
+  position: absolute;
+  inset: 6%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(129, 102, 177, 0.14) 0%,
+    rgba(239, 175, 197, 0.08) 45%,
+    transparent 70%
+  );
+}
+
+[data-md-color-scheme="slate"] .rt-hero__glow {
+  background: radial-gradient(
+    circle,
+    rgba(168, 139, 216, 0.16) 0%,
+    rgba(222, 159, 186, 0.08) 45%,
+    transparent 70%
+  );
+}
+
+.rt-hero__orbit {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(129, 102, 177, 0.28);
+}
+
+.rt-hero__orbit--1 {
+  inset: 4%;
+}
+
+.rt-hero__orbit--2 {
+  inset: -3%;
+  border-color: rgba(239, 175, 197, 0.30);
+}
+
+[data-md-color-scheme="slate"] .rt-hero__orbit {
+  border-color: rgba(168, 139, 216, 0.34);
+}
+
+[data-md-color-scheme="slate"] .rt-hero__orbit--2 {
+  border-color: rgba(222, 159, 186, 0.32);
+}
+
+.rt-hero__orbit-node {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--rt-primary);
+  box-shadow: 0 0 0 3px rgba(129, 102, 177, 0.16);
+}
+
+.rt-hero__orbit-node--a {
+  top: 9%;
+  right: 12%;
+}
+
+.rt-hero__orbit-node--b {
+  bottom: 14%;
+  left: 7%;
+  background: var(--rt-secondary);
+  box-shadow: 0 0 0 3px rgba(239, 175, 197, 0.18);
+}
+
+/* Hero 技术栈标签 */
+.rt-hero__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 1.4rem;
+}
+
+.rt-hero__tag {
+  padding: 0.22rem 0.7rem;
+  border: 1px solid var(--rt-border);
+  border-radius: 999px;
+  background: var(--rt-surface);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--rt-text-secondary);
+}
+
+.rt-hero__tag:nth-child(odd) {
+  color: var(--rt-primary);
+  border-color: rgba(129, 102, 177, 0.28);
+  background: rgba(129, 102, 177, 0.07);
+}
+
+.rt-hero__tag:nth-child(even) {
+  color: var(--rt-electro);
+  border-color: rgba(239, 175, 197, 0.36);
+  background: rgba(239, 175, 197, 0.10);
+}
+
 /* =============== 5. 首页知识地图 / 统计 / 模块卡 =============== */
 
 .rt-home-section {
@@ -430,31 +542,7 @@
   color: var(--rt-text-secondary);
 }
 
-/* =============== 6. 目录页吉祥物便签（兼容类名保留） =============== */
-
-.robotics-catalog-mascot {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin: 0.6rem 0 1.2rem;
-  padding: 0.8rem 1rem;
-  border: 1px dashed var(--rt-border);
-  border-radius: var(--rt-radius-md);
-  background: var(--rt-surface-soft);
-}
-
-.robotics-catalog-mascot img {
-  width: 68px;
-  height: auto;
-  flex: 0 0 68px;
-}
-
-.robotics-catalog-mascot p {
-  margin: 0.2em 0;
-  font-size: 0.74rem;
-}
-
-/* 目录页「静待绽放」占位徽章（兼容 sync_docs 输出） */
+/* =============== 6. 目录页占位徽章（兼容 sync_docs 输出） =============== */
 .robotics-catalog-badge {
   display: inline-block;
   padding: 0.08rem 0.6rem;
@@ -522,9 +610,166 @@
   display: none;
 }
 
-/* 内容页中的吉祥物出场尺寸约束（首页 Hero / 404 由专属 class 控制） */
-.md-typeset img[src*="assets/images/mascot"] {
+/* 内容页中的吉祥物默认出场尺寸约束（:where 置零优先级，让 hero/tip/404 专属尺寸生效） */
+.md-typeset :where(img[src*="assets/images/mascot"]) {
   width: 200px;
   margin-inline: auto;
   display: block;
+}
+
+/* =============== 10. rt-chapter-header 模块章节头 =============== */
+/* 模块入口页 H1 下方的品牌信息条：模块代码 + 定位语 + 元信息徽章（纯文本，不含吉祥物） */
+
+.rt-chapter-header {
+  margin: 0.4rem 0 1.6rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--rt-border);
+  border-left: 3px solid var(--rt-primary);
+  border-radius: var(--rt-radius-md, 10px);
+  background: linear-gradient(135deg, rgba(129, 102, 177, 0.055), rgba(239, 175, 197, 0.045));
+}
+
+[data-md-color-scheme="slate"] .rt-chapter-header {
+  background: linear-gradient(135deg, rgba(168, 139, 216, 0.08), rgba(222, 159, 186, 0.05));
+}
+
+.rt-chapter-header__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.rt-chapter-header__code {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.14rem 0.6rem;
+  border-radius: 6px;
+  background: var(--rt-primary);
+  color: #FFFFFF;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.rt-chapter-header__tagline {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--rt-text-primary);
+}
+
+.rt-chapter-header__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.55rem;
+}
+
+.rt-chapter-header__meta span {
+  padding: 0.12rem 0.55rem;
+  border: 1px solid var(--rt-border);
+  border-radius: 999px;
+  background: var(--rt-surface);
+  font-size: 0.66rem;
+  color: var(--rt-text-secondary);
+}
+
+/* =============== 11. rt-mascot-tip 吉祥物提示卡 =============== */
+/* 全站唯一的吉祥物正文出场形态：小图 + 一句提示。每页最多 1 次。 */
+
+.rt-mascot-tip {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.4rem 0;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--rt-border);
+  border-radius: var(--rt-radius-md, 10px);
+  background: var(--rt-secondary-soft);
+}
+
+[data-md-color-scheme="slate"] .rt-mascot-tip {
+  background: rgba(222, 159, 186, 0.07);
+}
+
+.rt-mascot-tip > p:first-child,
+.rt-mascot-tip > p:only-child {
+  margin: 0;
+  flex: 1;
+  font-size: 0.82rem;
+  line-height: 1.75;
+}
+
+/* md_in_html 结构（div > p(仅 img) + p(文本)）与小图约束 */
+.rt-mascot-tip img,
+.rt-mascot-tip > img {
+  width: 92px;
+  max-width: 92px;
+  display: block;
+  margin: 0;
+}
+
+.rt-mascot-tip > img {
+  flex: 0 0 92px;
+}
+
+.rt-mascot-tip > p > strong:first-child {
+  color: var(--rt-primary);
+}
+
+/* =============== 12. rt-complete 章节完成卡 =============== */
+/* 筑基章末尾：完成反馈 + 下一步 + 配套实验回链 */
+
+.rt-complete {
+  margin: 2.2rem 0 1rem;
+  padding: 1rem 1.2rem;
+  border: 1px solid rgba(129, 102, 177, 0.22);
+  border-radius: var(--rt-radius-md, 10px);
+  background: linear-gradient(135deg, rgba(129, 102, 177, 0.07), rgba(239, 175, 197, 0.06));
+}
+
+[data-md-color-scheme="slate"] .rt-complete {
+  border-color: rgba(168, 139, 216, 0.28);
+  background: linear-gradient(135deg, rgba(168, 139, 216, 0.10), rgba(222, 159, 186, 0.06));
+}
+
+.rt-complete__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--rt-primary);
+}
+
+.rt-complete__badge {
+  display: inline-grid;
+  place-items: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 50%;
+  background: var(--rt-primary);
+  color: #FFFFFF;
+  font-size: 0.72rem;
+}
+
+.rt-complete__body {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.8;
+  color: var(--rt-text-secondary);
+}
+
+@media (max-width: 48em) {
+  .rt-mascot-tip {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .rt-mascot-tip img,
+  .rt-mascot-tip > img {
+    width: 76px;
+    max-width: 76px;
+    flex-basis: auto;
+  }
 }

@@ -119,7 +119,7 @@ plt.title("协方差椭圆逐步收紧"); plt.show()
 | [rlabbe/filterpy](https://github.com/rlabbe/filterpy) | `filterpy.kalman.KalmanFilter` 就是本页 5 行公式的工业级封装 |
 | [pykalman/pykalman](https://github.com/pykalman/pykalman) | 经典卡尔曼/平滑库，API 极简，适合快速原型 |
 
-> 小樱丸备注：粒子滤波（lab03）是"非线性/非高斯通吃但费算力"，卡尔曼是"线性高斯下精确解析"——两者在[概率与估计深层章](../01_数学/60_概率与估计/10_贝叶斯滤波与线性高斯滤波.md)里统一于贝叶斯滤波框架。
+> 紫樱备注：粒子滤波（lab03）是"非线性/非高斯通吃但费算力"，卡尔曼是"线性高斯下精确解析"——两者在[概率与估计深层章](../01_数学/60_概率与估计/10_贝叶斯滤波与线性高斯滤波.md)里统一于贝叶斯滤波框架。
 
 ## 回到理论
 

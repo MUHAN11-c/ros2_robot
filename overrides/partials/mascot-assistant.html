@@ -1,0 +1,50 @@
+<!-- 浮动吉祥物助手：紫樱 · 58px 头像按钮 + 功能面板（搜索 / 返回顶部 / 阅读状态） -->
+<div class="rt-assistant" id="rt-assistant">
+
+  <div class="rt-assistant__bubble" id="rt-assistant-bubble" hidden>
+    有问题可以点我，快速搜索全站教程～
+  </div>
+
+  <button
+    class="rt-assistant__button"
+    id="rt-assistant-button"
+    aria-label="打开学习助手"
+    aria-expanded="false"
+  >
+    <img src="{{ 'assets/images/mascot-head.svg' | url }}" alt="">
+  </button>
+
+  <div class="rt-assistant__panel" id="rt-assistant-panel" hidden>
+
+    <div class="rt-assistant__header">
+      <div>
+        <strong>紫樱助手</strong>
+        <span>Sakura · Robotics Study Assistant</span>
+      </div>
+      <button id="rt-assistant-close" aria-label="关闭助手">×</button>
+    </div>
+
+    <div class="rt-assistant__body">
+
+      <p>需要快速定位知识点吗？</p>
+
+      <a href="#__search" id="rt-assistant-search">
+        搜索本站
+        <span class="rt-assistant__action-arrow">→</span>
+      </a>
+
+      <button type="button" id="rt-scroll-top">
+        返回顶部
+        <span class="rt-assistant__action-arrow">↑</span>
+      </button>
+
+      <div class="rt-assistant__status">
+        <span class="rt-assistant__status-dot"></span>
+        <span id="rt-assistant-reading">正在阅读机器人教程</span>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
