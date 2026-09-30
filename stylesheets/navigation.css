@@ -7,11 +7,11 @@
 
 .md-nav__item--nested > .md-nav__link,
 .md-nav__item--nested > label.md-nav__link {
-  margin-top: 0.9em;
+  margin-top: 1.15em;
   font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.045em;
-  color: var(--rt-text-primary);
+  letter-spacing: 0.05em;
+  color: var(--rt-text-secondary);
 }
 
 .md-nav__item--nested > .md-nav__link:hover,
@@ -22,8 +22,8 @@
 /* 分组之间发丝分隔（首个分组除外） */
 .md-nav__list > .md-nav__item--nested + .md-nav__item--nested {
   position: relative;
-  margin-top: 0.5em;
-  padding-top: 0.55em;
+  margin-top: 0.55em;
+  padding-top: 0.6em;
 }
 
 .md-nav__list > .md-nav__item--nested + .md-nav__item--nested::before {
@@ -61,7 +61,9 @@
   font-size: 0.72rem;
   color: var(--rt-text-secondary);
   border-radius: var(--rt-radius-sm);
-  margin-top: 1px;
+  margin-top: 2px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   transition: color var(--rt-transition), background var(--rt-transition);
 }
 
@@ -73,9 +75,14 @@
 /* ---- 三级及更深：降低视觉权重 ---- */
 
 .md-nav__item .md-nav__item .md-nav__link {
-  font-size: 0.69rem;
+  font-size: 0.7rem;
   color: var(--rt-text-secondary);
-  opacity: 0.85;
+  opacity: 0.92;
+}
+
+/* 左栏层级缩进（TOC 规则已作用域化到右栏，主导航的层级缩进在此显式声明） */
+.md-sidebar--primary .md-nav__list .md-nav__list {
+  padding-left: 0.65rem;
 }
 
 /* ---- Active 条目：3px 主色左侧条 + 浅紫底 + 主色文字 ---- */
@@ -93,9 +100,9 @@
 .md-nav__link[data-md-state="active"]::before {
   content: "";
   position: absolute;
-  left: -0.4rem;
-  top: 15%;
-  bottom: 15%;
+  left: -0.35rem;
+  top: 18%;
+  bottom: 18%;
   width: 3px;
   border-radius: 2px;
   background: linear-gradient(180deg, var(--rt-primary), var(--rt-secondary));
@@ -111,33 +118,48 @@
   color: var(--rt-green);
 }
 
-/* ---- 右侧 TOC：「本页目录」+ Scroll Spy ---- */
+/* ---- 右侧 TOC：「目录」标题 + 层级缩进 + 激活左线（作用域限定，不侵入主导航） ---- */
 
 .md-sidebar--secondary .md-nav__title {
-  font-size: 0.72rem;
+  margin-bottom: 0.55rem;
+  font-size: 0.74rem;
   font-weight: 700;
+  letter-spacing: 0.04em;
   color: var(--rt-text-primary);
 }
 
-.md-nav__list .md-nav__link {
-  font-size: 0.68rem;
+.md-sidebar--secondary .md-nav__link {
+  font-size: 0.72rem;
+  line-height: 1.55;
   border-left: 2px solid transparent;
   border-radius: 0 var(--rt-radius-sm) var(--rt-radius-sm) 0;
-  padding-left: 0.7rem;
+  padding-left: 0.75rem;
+  padding-top: 2px;
+  padding-bottom: 2px;
 }
 
-.md-nav__list .md-nav__link:hover {
+/* 层级缩进：二级 / 三级标题逐级加深，缩进差 0.6rem */
+.md-sidebar--secondary .md-nav__item .md-nav__item > .md-nav__link {
+  padding-left: 1.35rem;
+}
+
+.md-sidebar--secondary .md-nav__item .md-nav__item .md-nav__item > .md-nav__link {
+  padding-left: 1.95rem;
+}
+
+.md-sidebar--secondary .md-nav__link:hover {
+  color: var(--rt-primary);
   border-left-color: var(--rt-border);
 }
 
-.md-nav__list .md-nav__link--active,
-.md-nav__list .md-nav__link[data-md-state="active"] {
+.md-sidebar--secondary .md-nav__link--active,
+.md-sidebar--secondary .md-nav__link[data-md-state="active"] {
   color: var(--rt-primary);
   border-left-color: var(--rt-primary);
   background: none;
 }
 
-.md-nav__list .md-nav__link--active::before {
+.md-sidebar--secondary .md-nav__link--active::before {
   display: none;
 }
 
@@ -240,9 +262,9 @@
   pointer-events: none;
 }
 
-/* TOC 条目：激活项加重 + 圆点指示 */
-.md-nav__list .md-nav__link--active,
-.md-nav__list .md-nav__link[data-md-state="active"] {
+/* TOC 条目：激活项加重 */
+.md-sidebar--secondary .md-nav__link--active,
+.md-sidebar--secondary .md-nav__link[data-md-state="active"] {
   font-weight: 600;
   color: var(--rt-primary);
 }

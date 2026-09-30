@@ -112,6 +112,17 @@ def copy_docs(source: Path) -> tuple[int, int]:
     return markdown_count, asset_count
 
 
+def _ignore_mascot_src(mascots_dir: Path):
+    """站点不带贴纸包原始档（assets/mascots/src，约 11MB，仅本地素材构建用）。"""
+
+    def _ignore(directory: str, names: list[str]) -> set[str]:
+        if Path(directory) == mascots_dir and "src" in names:
+            return {"src"}
+        return set()
+
+    return _ignore
+
+
 def copy_site_assets() -> None:
     for dirname in SITE_ASSET_DIRS:
         source = ROOT / dirname
@@ -121,7 +132,10 @@ def copy_site_assets() -> None:
         target = DOCS_DIR / dirname
         if target.exists():
             shutil.rmtree(target)
-        shutil.copytree(source, target)
+        if dirname == "assets":
+            shutil.copytree(source, target, ignore=_ignore_mascot_src(source / "mascots"))
+        else:
+            shutil.copytree(source, target)
 
 
 def write_home(markdown_count: int, asset_count: int) -> None:
@@ -175,37 +189,35 @@ hide:
 
 <h1 class="rt-visually-hidden">Robotics Tutorial · 机器人系统化学习教程</h1>
 
-<div class="rt-home-section" markdown>
-
-### 知识库统计 Statistics
+<div class="rt-home-section rt-home-section--stats" markdown>
 
 <div class="rt-stats" markdown>
 
 <div class="rt-stat" markdown>
 
 <span class="rt-stat__num">{markdown_count}+</span>
-<span class="rt-stat__label">文档页</span>
+<span class="rt-stat__label">文档页 · 持续连载</span>
 
 </div>
 
 <div class="rt-stat" markdown>
 
 <span class="rt-stat__num">{code_display}</span>
-<span class="rt-stat__label">代码示例</span>
+<span class="rt-stat__label">代码示例 · 可运行</span>
 
 </div>
 
 <div class="rt-stat" markdown>
 
 <span class="rt-stat__num">12</span>
-<span class="rt-stat__label">可视化实验</span>
+<span class="rt-stat__label">可视化实验 · 实测出图</span>
 
 </div>
 
 <div class="rt-stat" markdown>
 
 <span class="rt-stat__num">7</span>
-<span class="rt-stat__label">方向模块</span>
+<span class="rt-stat__label">方向模块 · 系统化</span>
 
 </div>
 
@@ -215,37 +227,141 @@ hide:
 
 <div class="rt-home-section" markdown>
 
-### 开始学习 Start Here
+## 开始学习 Start Here
 
-<div class="rt-quick" markdown>
+<p class="rt-section-desc">三步走完从零基础到前沿——每一步都有系统化教材、可运行代码与紫樱陪跑。</p>
 
-<div class="rt-quick__card" markdown>
+<div class="rt-steps" markdown>
 
-#### 第一步 · 打地基（零基础）
+<div class="rt-step" markdown>
 
-数学 7 章 + C++ 7 章 + Python 工具链 + 机器人学导论，零基础友好。
+![紫樱敬礼：跟我开始吧](assets/mascots/step-start.webp)
 
-[进入筑基](01_数学/00_大学基础筑基/00_零基础数学学习地图.md)
+### 第一步 · 打地基（零基础）
 
-</div>
+数学筑基 7 章 + C++ 入门 7 章 + Python 工具链 + 机器人学导论。零基础友好，每章 30–60 分钟，附动手练习与完整解答。
 
-<div class="rt-quick__card" markdown>
-
-#### 第二步 · 边学边练
-
-12 个可视化实验室：每个理论配一套可运行代码与实测图表。
-
-[动手实验](08_可视化实验室/README.md)
+[进入筑基](01_数学/00_大学基础筑基/00_零基础数学学习地图.md){{ .rt-go }}
 
 </div>
 
-<div class="rt-quick__card" markdown>
+<div class="rt-step" markdown>
 
-#### 第三步 · 冲进深水区
+![紫樱竖起大拇指](assets/mascots/step-lab.webp)
 
-足式 27 章、机械臂 51 篇、RL 运控 28 章与论文精读。
+### 第二步 · 边学边练
 
-[进入前沿](05_运动控制/10_足式/10_序章上篇_全景与四分法.md)
+12 个可视化实验室：每个理论点都配一套可运行代码与实测图表——跑一遍，胜过读三遍。
+
+[动手实验](08_可视化实验室/README.md){{ .rt-go }}
+
+</div>
+
+<div class="rt-step" markdown>
+
+![紫樱持地图指路](assets/mascots/step-adv.webp)
+
+### 第三步 · 冲进深水区
+
+足式 27 章、机械臂 51 篇、RL 运控 28 章与论文精读——通往科研与工程前沿。
+
+[进入前沿](05_运动控制/10_足式/10_序章上篇_全景与四分法.md){{ .rt-go }}
+
+</div>
+
+</div>
+
+</div>
+
+<div class="rt-home-section" markdown>
+
+## 核心模块 Core Topics
+
+<p class="rt-section-desc">七大方向模块互相衔接：从数学地基一路直抵具身智能前沿。</p>
+
+<div class="rt-mods" markdown>
+
+<div class="rt-mod rt-mod--wide" markdown>
+
+![数学模块 · 紫樱认真讲授](assets/mascots/mod-math.webp)
+
+### 数学 · 从零到前沿
+
+筑基 7 章起步，深处直抵李群、优化与随机分析——一切算法的地基。
+
+[进入模块]({module_links["math"]}){{ .rt-go }}
+
+</div>
+
+<div class="rt-mod" markdown>
+
+![C++ 模块 · 紫樱敬礼](assets/mascots/mod-cpp.webp)
+
+### C++ 与编程
+
+零基础入门 + Python 工具链，通往并发与 ROS2 工程。
+
+[进入模块]({module_links["foundation"]}){{ .rt-go }}
+
+</div>
+
+<div class="rt-mod" markdown>
+
+![机器人学导论 · 紫樱比心](assets/mascots/mod-intro.webp)
+
+### 机器人学导论
+
+坐标变换、正运动学、ROS2 初体验。
+
+[进入模块]({module_links["robotics"]}){{ .rt-go }}
+
+</div>
+
+<div class="rt-mod" markdown>
+
+![SLAM · 紫樱竖大拇指](assets/mascots/mod-slam.webp)
+
+### SLAM
+
+从零理解定位与建图，直通 GTSAM 与系统精读。
+
+[进入模块]({module_links["slam"]}){{ .rt-go }}
+
+</div>
+
+<div class="rt-mod" markdown>
+
+![规控 · 紫樱打气](assets/mascots/mod-plan.webp)
+
+### 移动机器人规控
+
+时空规划、采样 MPC、博弈、多机与无人机。
+
+[进入模块]({module_links["mobile"]}){{ .rt-go }}
+
+</div>
+
+<div class="rt-mod" markdown>
+
+![运控 · 紫樱挥手](assets/mascots/mod-ctrl.webp)
+
+### 运动控制
+
+足式、机械臂、复合机器人、仿真与实时控制工程。
+
+[进入模块]({module_links["control"]}){{ .rt-go }}
+
+</div>
+
+<div class="rt-mod rt-mod--wide" markdown>
+
+![具身智能 · 紫樱白板讲解](assets/mascots/mod-emb.webp)
+
+### 具身智能 · 前沿深水区
+
+RL 运控 28 章 Isaac Lab 全链路训练与具身前沿论文精读。
+
+[进入模块]({module_links["embodied"]}){{ .rt-go }}
 
 </div>
 
@@ -255,109 +371,59 @@ hide:
 
 <div class="rt-home-section" markdown>
 
-### 核心模块 Core Topics
+## 学习路径 Learning Paths
 
-<div class="grid cards" markdown>
-
--   **数学：从零到前沿**
-
-    筑基 7 章起步，深处直抵李群、优化与随机分析。
-
-    [进入模块]({module_links["math"]})
-
--   **C++ 与编程**
-
-    零基础入门 + Python 工具链，通往并发与 ROS2 工程。
-
-    [进入模块]({module_links["foundation"]})
-
--   **机器人学导论**
-
-    坐标变换、正运动学、ROS2 初体验。
-
-    [进入模块]({module_links["robotics"]})
-
--   **SLAM**
-
-    从零理解定位与建图，直通 GTSAM 与系统精读。
-
-    [进入模块]({module_links["slam"]})
-
--   **移动机器人规控**
-
-    时空规划、采样 MPC、博弈、多机与无人机。
-
-    [进入模块]({module_links["mobile"]})
-
--   **运动控制**
-
-    足式、机械臂、复合机器人、仿真与实时控制工程。
-
-    [进入模块]({module_links["control"]})
-
--   **具身智能**
-
-    RL 运控 28 章 Isaac Lab 全链路与具身前沿。
-
-    [进入模块]({module_links["embodied"]})
-
-</div>
-
-</div>
-
-<div class="rt-home-section" markdown>
-
-### 学习路径 Learning Paths
+<p class="rt-section-desc">按目标岗位组织的五条路径——每条都是一条完整的成长主线。</p>
 
 <div class="rt-paths" markdown>
 
 <div class="rt-path-card" markdown>
 
-#### ROS2 软件工程师
+### ROS2 软件工程师
 
 C++ 零基础入门 → 语言核心 → 并发 → ROS2 工程化。
 
-[路径详情](02_C++基础与进阶/C++方向_学习路径与教材映射.md)
+[路径详情](02_C++基础与进阶/C++方向_学习路径与教材映射.md){{ .rt-go }}
 
 </div>
 
 <div class="rt-path-card" markdown>
 
-#### 导航 / SLAM 工程师
+### 导航 / SLAM 工程师
 
 机器人导论 → SLAM 是什么 → 十四讲 → 概率机器人 → 精读。
 
-[路径详情](03_SLAM/SLAM方向_学习路径与教材映射.md)
+[路径详情](03_SLAM/SLAM方向_学习路径与教材映射.md){{ .rt-go }}
 
 </div>
 
 <div class="rt-path-card" markdown>
 
-#### 规划控制工程师
+### 规划控制工程师
 
 自控原理 → MPC → LaValle → 采样式 MPC 与时空规划。
 
-[路径详情](04_移动机器人规控/移动规控方向_学习路径与教材映射.md)
+[路径详情](04_移动机器人规控/移动规控方向_学习路径与教材映射.md){{ .rt-go }}
 
 </div>
 
 <div class="rt-path-card" markdown>
 
-#### 运动控制工程师
+### 运动控制工程师
 
 自控原理 → Craig → Modern Robotics → WBC 与足式全栈。
 
-[路径详情](05_运动控制/运动控制方向_学习路径与教材映射.md)
+[路径详情](05_运动控制/运动控制方向_学习路径与教材映射.md){{ .rt-go }}
 
 </div>
 
 <div class="rt-path-card" markdown>
 
-#### 具身智能工程师
+### 具身智能工程师
 
 Sutton RL → Spinning Up → RL 运控 28 章 Isaac Lab 全链路。
 
-[路径详情](06_具身智能/具身智能方向_学习路径与教材映射.md)
+[路径详情](06_具身智能/具身智能方向_学习路径与教材映射.md){{ .rt-go }}
 
 </div>
 
@@ -367,11 +433,17 @@ Sutton RL → Spinning Up → RL 运控 28 章 Isaac Lab 全链路。
 
 <div class="rt-home-section" markdown>
 
-### 知识主线 Knowledge Map
+## 知识主线 Knowledge Map
 
-沿着一条主线从零基础走到具身智能，每个节点都是一组系统化教材：
+<p class="rt-section-desc">沿着一条主线从零基础走到具身智能，每个节点都是一组系统化教材。</p>
+
+![紫樱比心讲解知识主线](assets/mascots/kmap-guide.webp){{ .rt-kmap__guide }}
+
+<div class="rt-kmap" markdown>
 
 ![知识地图：数学基础 → C++ 工程 → ROS 2 → 感知/SLAM → Planning/Control → 机械臂/足式 → 具身智能](assets/labs/diagrams/home_kmap.svg)
+
+</div>
 
 [查看完整学习路线总图（一条主线 · 每章学时与毕业自测）](00_项目导航/从零开始学习路线总图.md){{ .rt-kmap__more }}
 
@@ -857,6 +929,11 @@ def render_catalog_items(items: list[SummaryNode], level: int = 0) -> list[str]:
                 if level > 0 and item.title != "静待绽放" and all_leaf_pages_missing(item)
                 else escape(item.title)
             )
+            if item.title == "静待绽放":
+                summary_title = (
+                    '<img class="rt-catalog-sleep" src="../assets/mascots/sleep.webp" alt="紫樱打盹" '
+                    'width="20" height="20" loading="lazy">' + summary_title
+                )
             details_attrs = f'class="{details_class}" markdown'
             if level == 0:
                 details_attrs += " open"

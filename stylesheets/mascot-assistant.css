@@ -239,10 +239,21 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px;
   padding: 16px 16px 14px;
   border-bottom: 1px solid var(--rt-assistant-border);
   background: linear-gradient(135deg, rgba(239, 175, 197, 0.065), rgba(129, 102, 177, 0.055));
+}
+
+/* 15b. Header mascot sticker (咨询讲解贴纸) */
+.rt-assistant__mascot {
+  flex: 0 0 auto;
+  width: 46px;
+  height: 46px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid var(--rt-assistant-border);
+  background: var(--rt-assistant-bg-soft);
 }
 
 /* 16. Header Text */
@@ -399,6 +410,16 @@
   border-radius: 50%;
   background: var(--rt-assistant-primary);
   box-shadow: 0 0 0 3px rgba(129, 102, 177, 0.10);
+}
+
+/* 25b. Status 尾部小贴纸（端咖啡） */
+.rt-assistant__status .rt-assistant__coffee {
+  width: 20px;
+  height: 10px;
+  flex: 0 0 auto;
+  margin-left: auto;
+  object-fit: contain;
+  opacity: 0.9;
 }
 
 /* 26. Speech Bubble */

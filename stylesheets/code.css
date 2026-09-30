@@ -20,7 +20,7 @@
   background: transparent;
   color: var(--rt-code-fg);
   font-family: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
-  font-size: 0.72rem; /* ≈14.5px */
+  font-size: 0.75rem; /* ≈15px，随正文 0.84rem 同步 */
   line-height: 1.65;
 }
 

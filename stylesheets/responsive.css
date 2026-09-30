@@ -81,9 +81,42 @@
     filter: drop-shadow(0 8px 18px rgba(129, 102, 177, 0.14));
   }
 
-  .rt-quick,
+  .rt-steps,
+  .rt-mods,
   .rt-stats {
     grid-template-columns: 1fr;
+  }
+
+  .rt-stats {
+    border-radius: var(--rt-radius-md, 10px);
+  }
+
+  .rt-stat {
+    border-left: none;
+    border-top: 1px solid var(--rt-border);
+  }
+
+  .rt-stat:first-child {
+    border-top: none;
+  }
+
+  /* 跨列模块卡回落为竖排 */
+  .rt-mod--wide {
+    grid-column: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .rt-step > p:first-child img,
+  .rt-mod--wide > p:first-child img {
+    width: 48px;
+    height: 48px;
+  }
+
+  .rt-kmap__guide {
+    float: none;
+    width: 48px;
+    margin: 0 0 0.6rem;
   }
 
   .rt-paths {
@@ -129,7 +162,7 @@
   }
 
   .md-typeset {
-    font-size: 0.76rem;
+    font-size: 0.8rem;
   }
 }
 

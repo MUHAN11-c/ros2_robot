@@ -6,20 +6,26 @@
 
 .md-typeset .admonition,
 .md-typeset details {
-  margin: 1em 0;
+  margin: 1.3em 0;
   border: 1px solid var(--rt-border);
   border-left-width: 3px;
   border-radius: var(--rt-radius-md);
   background: var(--rt-surface);
   box-shadow: none;
-  font-size: 0.74rem;
+  font-size: 0.78rem;
+}
+
+/* 提示框内部行距与留白（默认太瘪） */
+.md-typeset .admonition,
+.md-typeset details[open] {
+  line-height: 1.7;
 }
 
 .md-typeset .admonition > .admonition-title,
 .md-typeset details > summary {
   background: var(--rt-surface-soft);
   padding: 0.5rem 0.9rem;
-  font-size: 0.72rem;
+  font-size: 0.76rem;
   font-weight: 700;
   letter-spacing: 0.02em;
   border: none;
@@ -114,14 +120,16 @@
 /* =============== 2. 表格 =============== */
 
 .md-typeset table {
+  margin: 1.5em 0;
   border: 1px solid var(--rt-border);
   border-radius: var(--rt-radius-md);
   background: var(--rt-surface);
-  font-size: 0.72rem;
+  font-size: 0.76rem;
   box-shadow: none;
 }
 
 .md-typeset table th {
+  padding: 0.6em 0.85em;
   background: var(--rt-surface-soft);
   color: var(--rt-text-primary);
   font-weight: 700;
@@ -130,8 +138,10 @@
 }
 
 .md-typeset table td {
+  padding: 0.55em 0.85em;
+  line-height: 1.65;
   border-bottom: 1px solid var(--rt-border);
-  vertical-align: middle;
+  vertical-align: top;
 }
 
 .md-typeset table tr:hover td {
@@ -368,23 +378,24 @@
   }
 }
 
-/* =============== 5. 首页知识地图 / 统计 / 模块卡 =============== */
+/* =============== 5. 首页：区块骨架 / 统计条 / 步骤卡 / 模块 bento / 路径卡 / 知识地图 =============== */
 
 .rt-home-section {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 1.6rem 1.5rem;
+  padding: 1.3rem 1.5rem 1.7rem;
 }
 
 .rt-home-section > h2 {
   display: flex;
   align-items: center;
   gap: 0.55rem;
-  margin: 0 0 1rem;
+  margin: 0 0 0.4rem;
   padding: 0;
   border: none;
-  font-size: 1.15rem;
+  font-size: 1.18rem;
   font-weight: 700;
+  letter-spacing: 0.01em;
 }
 
 .rt-home-section > h2::before {
@@ -396,16 +407,32 @@
 }
 
 .rt-home-section > p.rt-section-desc {
-  margin: -0.4rem 0 1.1rem;
-  font-size: 0.76rem;
+  margin: 0 0 1.15rem;
+  font-size: 0.78rem;
+  line-height: 1.7;
   color: var(--rt-text-secondary);
 }
 
+/* 统计条区块：紧贴 hero 下缘，弱化为一条带 */
+.rt-home-section--stats {
+  padding-top: 0.3rem;
+  padding-bottom: 0.4rem;
+}
+
 .rt-kmap {
+  clear: both;
   padding: 1rem;
   border: 1px solid var(--rt-border);
   border-radius: var(--rt-radius-lg);
   background: var(--rt-surface);
+}
+
+/* 知识主线区的小陪读贴纸（浮于标题行右侧，克制小尺寸） */
+.rt-kmap__guide {
+  float: right;
+  width: 58px;
+  height: auto;
+  margin: -0.3rem 0 0.3rem 1.2rem;
 }
 
 .rt-kmap img {
@@ -422,58 +449,237 @@
   text-align: right;
 }
 
-/* 开始学习：三个入口 */
-.rt-quick {
+/* 开始学习：三步骤卡（贴纸图标 + 步骤号 + 按钮 CTA） */
+.rt-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+  counter-reset: rt-step;
+}
+
+.rt-step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 1.1rem 1.1rem;
+  border: 1px solid var(--rt-border);
+  border-radius: var(--rt-radius-lg);
+  background: var(--rt-surface);
+  transition: border-color var(--rt-transition), transform var(--rt-transition),
+    box-shadow 180ms ease;
+}
+
+.rt-step:hover {
+  border-color: rgba(129, 102, 177, 0.38);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(129, 102, 177, 0.12);
+}
+
+[data-md-color-scheme="slate"] .rt-step:hover {
+  border-color: rgba(168, 139, 216, 0.42);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+}
+
+.rt-step::before {
+  counter-increment: rt-step;
+  content: "STEP 0" counter(rt-step);
+  position: absolute;
+  top: 1.05rem;
+  right: 1.1rem;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--rt-primary);
+  opacity: 0.45;
+}
+
+/* 贴纸图标（glightbox 会把 img 包进 a，样式落在 p:first-child 上） */
+.rt-step > p:first-child {
+  margin: 0 0 0.65rem;
+}
+
+.rt-step > p:first-child img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  margin: 0;
+  display: block;
+}
+
+.rt-step h3 {
+  margin: 0 0 0.4rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--rt-text-primary);
+}
+
+.rt-step > p:not(:first-child) {
+  margin: 0 0 0.85rem;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: var(--rt-text-secondary);
+}
+
+/* 卡片通用 CTA：胶囊按钮化链接（markdown attr_list 挂 .rt-go） */
+.rt-go {
+  margin-top: auto;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.34rem 0.9rem;
+  border: 1px solid var(--rt-border);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: border-color var(--rt-transition), background var(--rt-transition),
+    color var(--rt-transition);
+}
+
+.rt-go::after {
+  content: "→";
+  font-weight: 700;
+}
+
+.rt-go:hover {
+  border-color: var(--rt-primary);
+  background: var(--rt-primary-soft);
+  color: var(--rt-primary);
+  text-decoration: none;
+}
+
+/* 核心模块：bento 卡（首尾两张跨 2 列横排，其余竖排） */
+.rt-mods {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.9rem;
 }
 
-.rt-quick__card {
-  padding: 0.9rem 1rem;
+.rt-mod {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 1.1rem 1.1rem;
   border: 1px solid var(--rt-border);
-  border-radius: var(--rt-radius-md);
+  border-radius: var(--rt-radius-lg);
   background: var(--rt-surface);
-  transition: border-color var(--rt-transition), transform var(--rt-transition);
+  transition: border-color var(--rt-transition), transform var(--rt-transition),
+    box-shadow 180ms ease;
 }
 
-.rt-quick__card:hover {
-  border-color: var(--rt-primary-light);
-  transform: translateY(-2px);
+.rt-mod:hover {
+  border-color: rgba(129, 102, 177, 0.38);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(129, 102, 177, 0.12);
 }
 
-.rt-quick__card h3 {
-  margin: 0 0 0.3rem;
-  font-size: 0.82rem;
+[data-md-color-scheme="slate"] .rt-mod:hover {
+  border-color: rgba(168, 139, 216, 0.42);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+}
+
+/* 模块贴纸图标：44px 方形圆角容器（与内容页章节头一致） */
+.rt-mod > p:first-child {
+  margin: 0 0 0.7rem;
+}
+
+.rt-mod > p:first-child img {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  margin: 0;
+  display: block;
+  border-radius: 10px;
+  border: 1px solid var(--rt-border);
+  background: var(--rt-surface-soft);
+}
+
+.rt-mod h3 {
+  margin: 0 0 0.35rem;
+  font-size: 0.92rem;
   font-weight: 700;
   color: var(--rt-text-primary);
 }
 
-.rt-quick__card p {
-  margin: 0 0 0.5rem;
-  font-size: 0.72rem;
+.rt-mod > p:not(:first-child) {
+  margin: 0 0 0.85rem;
+  font-size: 0.78rem;
+  line-height: 1.7;
   color: var(--rt-text-secondary);
 }
 
-.rt-quick__card a {
-  font-size: 0.7rem;
-  font-weight: 600;
+/* 跨 2 列的横排卡：图标左、文字右 */
+.rt-mod--wide {
+  grid-column: span 2;
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  grid-template-areas:
+    "icon head"
+    "icon desc"
+    "icon go";
+  column-gap: 1.1rem;
+  row-gap: 0.2rem;
+  align-items: center;
 }
 
-/* 学习路径（岗位卡） */
+.rt-mod--wide > p:first-child {
+  grid-area: icon;
+  margin: 0;
+  align-self: center;
+}
+
+.rt-mod--wide > p:first-child img {
+  width: 56px;
+  height: 56px;
+}
+
+.rt-mod--wide > h3 {
+  grid-area: head;
+  margin: 0;
+  align-self: end;
+}
+
+.rt-mod--wide > p:nth-of-type(2) {
+  grid-area: desc;
+  margin: 0;
+}
+
+.rt-mod--wide > p:nth-of-type(3) {
+  grid-area: go;
+  margin: 0;
+}
+
+.rt-mod--wide > p:nth-of-type(3) .rt-go {
+  margin-top: 0;
+}
+
+/* 学习路径（岗位卡）：PATH 序号 + 链路 */
 .rt-paths {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(196px, 1fr));
   gap: 0.9rem;
+  counter-reset: rt-path;
 }
 
 .rt-path-card {
-  padding: 0.85rem 1rem;
+  padding: 0.95rem 1rem 1.05rem;
   border: 1px solid var(--rt-border);
   border-top: 3px solid var(--rt-primary-light);
   border-radius: var(--rt-radius-md);
   background: var(--rt-surface);
+  display: flex;
+  flex-direction: column;
   transition: border-top-color var(--rt-transition), transform var(--rt-transition);
+}
+
+.rt-path-card::before {
+  counter-increment: rt-path;
+  content: "PATH 0" counter(rt-path);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--rt-secondary);
+  margin-bottom: 0.4rem;
 }
 
 .rt-path-card:hover {
@@ -483,47 +689,49 @@
 
 .rt-path-card h3 {
   margin: 0 0 0.3rem;
-  font-size: 0.78rem;
+  font-size: 0.85rem;
   font-weight: 700;
 }
 
-.rt-path-card p {
-  margin: 0 0 0.45rem;
-  font-size: 0.68rem;
-  line-height: 1.6;
+.rt-path-card > p {
+  margin: 0 0 0.8rem;
+  font-size: 0.74rem;
+  line-height: 1.65;
   color: var(--rt-text-secondary);
 }
 
-.rt-path-card a {
-  font-size: 0.68rem;
-  font-weight: 600;
-}
-
-/* 知识库统计 */
+/* 知识库统计：hero 下的一条带（分隔线代替独立卡片） */
 .rt-stats {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.9rem;
+  border: 1px solid var(--rt-border);
+  border-radius: var(--rt-radius-lg);
+  background: var(--rt-surface);
+  overflow: hidden;
 }
 
 .rt-stat {
-  padding: 0.9rem 1rem;
-  border: 1px solid var(--rt-border);
-  border-radius: var(--rt-radius-md);
-  background: var(--rt-surface-soft);
+  padding: 0.8rem 0.6rem 0.9rem;
+  border: none;
+  border-left: 1px solid var(--rt-border);
+  background: transparent;
   text-align: center;
+}
+
+.rt-stat:first-child {
+  border-left: none;
 }
 
 .rt-stat__num {
   display: block;
-  font-size: 1.5rem;
+  font-size: 1.55rem;
   font-weight: 700;
   color: var(--rt-primary);
   font-variant-numeric: tabular-nums;
 }
 
 .rt-stat__label {
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   color: var(--rt-text-secondary);
 }
 
@@ -541,6 +749,16 @@
 
 .robotics-catalog-missing {
   opacity: 0.72;
+}
+
+/* 「静待绽放」分组标题旁的内联打盹贴纸（write_catalog 注入 raw HTML） */
+.rt-catalog-sleep {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  vertical-align: -5px;
+  margin-right: 0.3rem;
+  opacity: 0.9;
 }
 
 /* =============== 7. 404 页 =============== */
@@ -843,10 +1061,6 @@
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: var(--rt-primary);
-}
-
-.rt-stat {
-  border-radius: var(--rt-radius-lg);
 }
 
 /* =============== 4b. 活体吉祥物反应气泡（点击 hero 贴纸触发） =============== */

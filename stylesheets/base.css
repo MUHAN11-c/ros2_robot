@@ -13,15 +13,24 @@ body {
 /* ---- 正文排版 ---- */
 
 .md-typeset {
-  font-size: 0.8rem; /* Material 根 20px → 16px 正文 */
-  line-height: 1.75;
+  font-size: 0.84rem; /* Material 根 20px → 16.8px 正文，长文阅读更从容 */
+  line-height: 1.78;
 }
 
 .md-typeset p {
-  margin: 0.9em 0;
+  margin: 1.0em 0;
 }
 
-/* 标题层级：H1 32 / H2 26 / H3 21 / H4 18 */
+/* 列表条目呼吸感（左侧导航不受影响：.md-nav 不在 .md-typeset 排版范围） */
+.md-typeset :is(ul, ol) > li {
+  margin-block: 0.3em;
+}
+
+.md-typeset :is(ul, ol) {
+  margin-block: 1.05em;
+}
+
+/* 标题层级：H1 32 / H2 24 / H3 19.5 / H4 16.8（级差平滑递减） */
 .md-typeset h1 {
   margin: 0 0 1.2rem;
   font-size: 2rem;
@@ -31,9 +40,9 @@ body {
 }
 
 .md-typeset h2 {
-  margin: 2.2em 0 0.9em;
-  padding-top: 0.4em;
-  font-size: 1.625rem;
+  margin: 2.5em 0 0.95em;
+  padding-top: 0.5em;
+  font-size: 1.5rem;
   font-weight: 700;
   line-height: 1.35;
   color: var(--rt-text-primary);
@@ -45,15 +54,15 @@ body {
 }
 
 .md-typeset h3 {
-  margin: 1.6em 0 0.7em;
-  font-size: 1.3rem;
+  margin: 1.9em 0 0.75em;
+  font-size: 1.22rem;
   font-weight: 600;
   color: var(--rt-text-primary);
 }
 
 .md-typeset h4 {
   margin: 1.3em 0 0.6em;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 600;
   color: var(--rt-text-primary);
 }

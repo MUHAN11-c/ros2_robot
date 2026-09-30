@@ -160,6 +160,13 @@
   width: var(--rt-sidebar-width);
 }
 
+/* 主导航右缘发丝线：与正文形成结构分区（仅桌面常驻侧栏；抽屉模式不加） */
+@media screen and (min-width: 76.25em) {
+  .md-sidebar--primary {
+    border-right: 1px solid var(--rt-border);
+  }
+}
+
 /* 右侧 TOC 底部留白：避让右下角 58px 浮动助手按钮 */
 .md-sidebar--secondary .md-sidebar__scrollwrap {
   padding-bottom: 96px;
@@ -188,6 +195,29 @@
 
 .md-footer-copyright {
   font-size: 0.68rem;
+  color: var(--rt-text-secondary);
+}
+
+/* 紫樱鞠躬感谢条（footer partial 覆写注入，介于上下篇导航与版权行之间） */
+.rt-footer-thanks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 1.1rem 1rem 0.5rem;
+  border-top: 1px solid var(--rt-border);
+}
+
+.rt-footer-thanks img {
+  width: 52px;
+  height: auto;
+  margin: 0;
+  display: block;
+}
+
+.rt-footer-thanks p {
+  margin: 0;
+  font-size: 0.72rem;
   color: var(--rt-text-secondary);
 }
 

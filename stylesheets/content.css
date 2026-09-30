@@ -30,7 +30,8 @@
   border-left: 3px solid var(--rt-primary-light);
   background: var(--rt-surface-soft);
   border-radius: 0 var(--rt-radius-sm) var(--rt-radius-sm) 0;
-  padding: 0.4em 1em;
+  padding: 0.75em 1.15em;
+  line-height: 1.75;
   color: var(--rt-text-secondary);
 }
 
@@ -92,7 +93,7 @@
 .md-typeset .rt-formula-card .rt-card-title {
   display: block;
   margin-bottom: 0.4rem;
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   font-weight: 700;
   letter-spacing: 0.03em;
   color: var(--rt-gold);
@@ -117,7 +118,7 @@
   background: var(--rt-surface-soft);
   border-bottom: 1px solid var(--rt-border);
   font-family: "JetBrains Mono", monospace;
-  font-size: 0.74rem;
+  font-size: 0.76rem;
   font-weight: 600;
   color: var(--rt-text-primary);
 }
@@ -134,7 +135,7 @@
 
 .md-typeset .rt-api__body {
   padding: 0.8rem 0.9rem;
-  font-size: 0.74rem;
+  font-size: 0.78rem;
 }
 
 .md-typeset .rt-api__section {
