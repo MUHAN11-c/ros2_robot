@@ -76,6 +76,9 @@ markdown_extensions:
   - tables
   - toc:
       permalink: true
+      # 默认 slugify 会丢弃中文字符，导致中文标题锚点全部失效；
+      # slugify_unicode 保留 Unicode，锚点与标题文本一致且稳定
+      slugify: !!python/name:markdown.extensions.toc.slugify_unicode
   - pymdownx.arithmatex:
       generic: true
   - pymdownx.betterem:

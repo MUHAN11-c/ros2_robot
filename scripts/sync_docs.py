@@ -20,16 +20,12 @@ INCLUDE_TOP_DIRS = {
     "00_项目导航",
     "01_数学",
     "02_C++基础与进阶",
-    "02_基础",
     "03_SLAM",
     "04_移动机器人规控",
     "05_运动控制",
     "06_具身智能",
     "07_机器人学导论",
     "08_可视化实验室",
-    "media",
-    "media_足式RL",
-    "media_足式控制",
 }
 EXCLUDE_PARTS = {
     ".git",
@@ -37,7 +33,6 @@ EXCLUDE_PARTS = {
     ".agents",
     ".claude",
     ".codex",
-    "_archive",
     "__pycache__",
 }
 COPY_EXTENSIONS = {
@@ -69,10 +64,14 @@ def should_copy(relative_path: Path) -> bool:
     if parts & EXCLUDE_PARTS:
         return False
 
+    # `_` 前缀目录（_archive、_调研_* 等）是作者内部工作区，不发布到站点
+    if any(part.startswith("_") for part in relative_path.parts[:-1]):
+        return False
+
     if relative_path.name.endswith(".bak"):
         return False
 
-    if "复制版本" in relative_path.name:
+    if "复制版本" in relative_path.name or "修复记录" in relative_path.name:
         return False
 
     if relative_path.parent == Path("."):
