@@ -221,7 +221,7 @@ hide:
 
 <div class="rt-quick__card" markdown>
 
-#### 第〇阶 · 零基础筑基
+#### 第一步 · 打地基（零基础）
 
 数学 7 章 + C++ 7 章 + Python 工具链 + 机器人学导论，零基础友好。
 
@@ -231,9 +231,9 @@ hide:
 
 <div class="rt-quick__card" markdown>
 
-#### 可视化实验室
+#### 第二步 · 边学边练
 
-11 个实验室：每个理论配一套可运行代码与实测图表。
+12 个可视化实验室：每个理论配一套可运行代码与实测图表。
 
 [动手实验](08_可视化实验室/README.md)
 
@@ -241,7 +241,7 @@ hide:
 
 <div class="rt-quick__card" markdown>
 
-#### 深水区 · 前沿
+#### 第三步 · 冲进深水区
 
 足式 27 章、机械臂 51 篇、RL 运控 28 章与论文精读。
 
@@ -373,7 +373,7 @@ Sutton RL → Spinning Up → RL 运控 28 章 Isaac Lab 全链路。
 
 ![知识地图：数学基础 → C++ 工程 → ROS 2 → 感知/SLAM → Planning/Control → 机械臂/足式 → 具身智能](assets/labs/diagrams/home_kmap.svg)
 
-[查看完整学习路线总图（四阶段 · 每章学时与毕业自测）](00_项目导航/从零开始学习路线总图.md){{ .rt-kmap__more }}
+[查看完整学习路线总图（一条主线 · 每章学时与毕业自测）](00_项目导航/从零开始学习路线总图.md){{ .rt-kmap__more }}
 
 </div>
 """,
