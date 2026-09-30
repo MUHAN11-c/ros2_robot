@@ -15,7 +15,5 @@ fi
 "$PYTHON_BIN" scripts/sync_docs.py
 "$PYTHON_BIN" -m mkdocs build -f mkdocs.generated.yml "$@"
 
-# 自定义 404 页覆盖 Material 默认 404（GitHub Pages 以 /404.html 提供服务）
-if [ -f site/404/index.html ]; then
-  cp site/404/index.html site/404.html
-fi
+# 根级 404.html 由 override_404_hook（mkdocs.yml hooks）统一覆盖并修正相对路径，
+# 此处无需再拷贝（原样 cp 会把 ../ 前缀带回去，导致根级 404 资源引用失效）

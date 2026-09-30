@@ -32,6 +32,7 @@ theme:
     - search.suggest
     - content.code.copy
     - content.code.select
+    - content.action.edit
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
@@ -50,6 +51,7 @@ theme:
 
 hooks:
   - scripts/override_404_hook.py
+  - scripts/edit_source_hook.py
 
 plugins:
   - search:

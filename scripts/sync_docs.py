@@ -466,8 +466,10 @@ def count_code_blocks() -> int:
 
 def write_404() -> None:
     """原创 404 页：紫樱 + 节点未连接。
-    注意：GitHub Pages 以站点根级 /404.html 提供服务，图片与链接用根相对 raw HTML
-    （mkdocs 会重写 markdown 链接为 /404/ 前缀的 ../ 相对路径，在根级文件中失效）。
+
+    图片与链接用 markdown 语法：mkdocs 会按 /404/ 页面位置重写为 ../ 前缀相对路径；
+    GitHub Pages 服务的根级 404.html 由 override_404_hook 在拷贝时统一剥掉一层 ../，
+    两份副本（site/404/index.html 与 site/404.html）因此都能正确解析。
     """
     (DOCS_DIR / "404.md").write_text(
         """---
@@ -478,14 +480,14 @@ hide:
 
 <div class="rt-404" markdown>
 
-<img class="rt-404__mascot" src="assets/mascots/404.webp" alt="紫樱" width="180">
+![紫樱](assets/mascots/404.webp){: .rt-404__mascot }
 
 # 404 · 这个节点没有连接
 
 紫樱没有在这个坐标找到页面——它可能已移动，或从未存在。
 
-<a class="md-button md-button--primary" href="./">返回首页</a>
-<a class="md-button" href="catalog/">浏览目录索引</a>
+[返回首页](index.md){: .md-button .md-button--primary }
+[浏览目录索引](catalog.md){: .md-button }
 
 </div>
 """,

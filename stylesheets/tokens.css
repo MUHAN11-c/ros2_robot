@@ -23,12 +23,6 @@
   --rt-sakura: #EFAFC5;
   --rt-electro: #9370DB;
 
-  /* ---- 代码块：双主题统一深色（Stripe Docs 式） ---- */
-  --rt-code-bg: #282531;
-  --rt-code-header: #211E2A;
-  --rt-code-fg: #E6E1EE;
-  --rt-code-border: #393340;
-
   /* ---- 语义色（admonition 用，全部低饱和） ---- */
   --rt-green: #6FA57C;
   --rt-green-bg: rgba(111, 165, 124, 0.09);
@@ -61,6 +55,20 @@
   --rt-warning: #B08D4F;
   --rt-warning-bg: rgba(201, 169, 110, 0.1);
 
+  /* ---- 代码块：浅底（Linear 式软色井），语法色为金/紫/粉低饱和加深档 ---- */
+  --rt-code-bg: #F6F3FA;
+  --rt-code-header: #F0EBF6;
+  --rt-code-fg: #3B3547;
+  --rt-code-border: #E3DBEC;
+
+  --rt-code-lang-base: #9A93A3;
+  --rt-code-lang-pink: #9E5480;
+  --rt-code-lang-blue: #456F96;
+  --rt-code-lang-green: #3A7450;
+  --rt-code-lang-gold: #8A682A;
+  --rt-code-lang-purple: #6D55A0;
+  --rt-code-filename: #8A682A;
+
   /* Material 变量映射 */
   --md-default-bg-color: #FCFBFE;
   --md-default-fg-color: #292530;
@@ -73,8 +81,8 @@
   --md-accent-fg-color: #9370DB;
   --md-typeset-a-color: #8166B1;
   --md-code-bg-color: var(--rt-code-bg);
-  --md-code-fg-color: #E6E1EE;
-  --md-code-fg-color--light: #B9B1C0;
+  --md-code-fg-color: var(--rt-code-fg);
+  --md-code-fg-color--light: #857E96;
   --md-footer-bg: #F7F4FA;
   --md-footer-fg-color: #292530;
   --md-footer-fg-color--light: #6C6574;
@@ -103,6 +111,20 @@
   --rt-warning: #C9A96E;
   --rt-warning-bg: rgba(201, 169, 110, 0.12);
 
+  /* ---- 代码块：深色（与主题表面同族的紫黑） ---- */
+  --rt-code-bg: #282531;
+  --rt-code-header: #211E2A;
+  --rt-code-fg: #E6E1EE;
+  --rt-code-border: #393340;
+
+  --rt-code-lang-base: #8A8394;
+  --rt-code-lang-pink: #DE9FBA;
+  --rt-code-lang-blue: #8FB8D0;
+  --rt-code-lang-green: #8FC6B2;
+  --rt-code-lang-gold: #D9BE8A;
+  --rt-code-lang-purple: #C4B1E8;
+  --rt-code-filename: #C9A96E;
+
   /* Material 变量映射 */
   --md-default-bg-color: #17151C;
   --md-default-fg-color: #EEEAF2;
@@ -115,7 +137,7 @@
   --md-accent-fg-color: #DE9FBA;
   --md-typeset-a-color: #A88BD8;
   --md-code-bg-color: var(--rt-code-bg);
-  --md-code-fg-color: #E6E1EE;
+  --md-code-fg-color: var(--rt-code-fg);
   --md-code-fg-color--light: #B9B1C0;
   --md-footer-bg: #1D1A23;
   --md-footer-fg-color: #EEEAF2;
@@ -124,8 +146,24 @@
   --md-shadow-z2: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
-/* ---- 代码高亮：金/紫/粉低饱和系（双主题统一，因代码底恒为深色） ---- */
-:root {
+/* ---- 代码高亮：金/紫/粉低饱和系，浅色主题用加深档、深色主题用柔光档 ---- */
+[data-md-color-scheme="default"] {
+  --md-code-hl-color: rgba(129, 102, 177, 0.14);
+  --md-code-hl-number-color: #8A682A;
+  --md-code-hl-string-color: #3A7450;
+  --md-code-hl-keyword-color: #9E5480;
+  --md-code-hl-function-color: #6D55A0;
+  --md-code-hl-constant-color: #8A682A;
+  --md-code-hl-class-color: #456F96;
+  --md-code-hl-special-color: #AC4F4F;
+  --md-code-hl-operator-color: #6C6574;
+  --md-code-hl-punctuation-color: #6C6574;
+  --md-code-hl-comment-color: #857E96;
+  --md-code-hl-generic-color: #6E54A6;
+  --md-code-hl-variable-color: #3B3547;
+}
+
+[data-md-color-scheme="slate"] {
   --md-code-hl-color: rgba(147, 112, 219, 0.22);
   --md-code-hl-number-color: #D9BE8A;
   --md-code-hl-string-color: #8FC6B2;

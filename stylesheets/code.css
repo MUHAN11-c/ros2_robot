@@ -1,6 +1,6 @@
 /* ==========================================================================
-   code.css · 代码块：深色 #282531 + 语言标签头 + 复制按钮
-   全站最重要的组件之一；双主题统一深色（Stripe Docs 式）
+   code.css · 代码块：跟随主题（浅色=浅底软色井，深色=紫黑）+ 语言标签头 + 复制按钮
+   全站最重要的组件之一；颜色一律取 tokens.css 的 --rt-code-* / --md-code-hl-* 令牌
    ========================================================================== */
 
 .md-typeset .highlight {
@@ -24,16 +24,16 @@
   line-height: 1.65;
 }
 
-/* 行内代码回到浅色（不被 pre 规则波及） */
+/* 行内代码回到浅色（不被 pre 规则波及；双主题各自的 surface-soft） */
 .md-typeset :not(pre) > code {
   background: var(--rt-surface-soft);
   border: 1px solid var(--rt-border);
   color: var(--rt-primary);
 }
 
-/* ---- 语言标签头：左下角常显 ---- */
+/* ---- 语言标签头：左下角常显（语言 class 在包裹层 div.language-*.highlight 上） ---- */
 
-.md-typeset .highlight::after {
+.md-typeset div.highlight::after {
   content: attr(data-rt-lang);
   position: absolute;
   top: 0.45rem;
@@ -43,31 +43,31 @@
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #8A8394;
+  color: var(--rt-code-lang-base);
   pointer-events: none;
 }
 
-/* 常见语言 → 标签（依赖 pymdownx highlight 的 language-* class） */
-.md-typeset .highlight:has(> pre > code.language-cpp)::after { content: "C++"; color: #DE9FBA; }
-.md-typeset .highlight:has(> pre > code.language-python)::after { content: "Python"; color: #8FB8D0; }
-.md-typeset .highlight:has(> pre > code.language-bash)::after,
-.md-typeset .highlight:has(> pre > code.language-sh)::after,
-.md-typeset .highlight:has(> pre > code.language-shell)::after { content: "Shell"; color: #8FC6B2; }
-.md-typeset .highlight:has(> pre > code.language-yaml)::after { content: "YAML"; color: #D9BE8A; }
-.md-typeset .highlight:has(> pre > code.language-cmake)::after { content: "CMake"; color: #C4B1E8; }
-.md-typeset .highlight:has(> pre > code.language-xml)::after { content: "XML"; color: #C4B1E8; }
-.md-typeset .highlight:has(> pre > code.language-json)::after { content: "JSON"; color: #D9BE8A; }
-.md-typeset .highlight:has(> pre > code.language-javascript)::after { content: "JavaScript"; color: #D9BE8A; }
-.md-typeset .highlight:has(> pre > code.language-text)::after { content: "TEXT"; }
-.md-typeset .highlight:has(> pre > code.language-console)::after { content: "Console"; color: #8FC6B2; }
-.md-typeset .highlight:has(> pre > code.language-mathjax)::after { content: "Math"; color: #C4B1E8; }
+/* 常见语言 → 标签（pymdownx pygments_lang_class 把 language-* 放在包裹 div 上，颜色随主题） */
+.md-typeset div.highlight.language-cpp::after { content: "C++"; color: var(--rt-code-lang-pink); }
+.md-typeset div.highlight.language-python::after { content: "Python"; color: var(--rt-code-lang-blue); }
+.md-typeset div.highlight.language-bash::after,
+.md-typeset div.highlight.language-sh::after,
+.md-typeset div.highlight.language-shell::after { content: "Shell"; color: var(--rt-code-lang-green); }
+.md-typeset div.highlight.language-yaml::after { content: "YAML"; color: var(--rt-code-lang-gold); }
+.md-typeset div.highlight.language-cmake::after { content: "CMake"; color: var(--rt-code-lang-purple); }
+.md-typeset div.highlight.language-xml::after { content: "XML"; color: var(--rt-code-lang-purple); }
+.md-typeset div.highlight.language-json::after { content: "JSON"; color: var(--rt-code-lang-gold); }
+.md-typeset div.highlight.language-javascript::after { content: "JavaScript"; color: var(--rt-code-lang-gold); }
+.md-typeset div.highlight.language-text::after { content: "TEXT"; }
+.md-typeset div.highlight.language-console::after { content: "Console"; color: var(--rt-code-lang-green); }
+.md-typeset div.highlight.language-mathjax::after { content: "Math"; color: var(--rt-code-lang-purple); }
 
 /* ROS2 专用：文件名标注语法（```yaml title=... 由 Material 支持） */
 .md-typeset .highlight .filename {
   position: static;
   border-radius: 0;
   background: transparent;
-  color: #C9A96E;
+  color: var(--rt-code-filename);
   font-size: 0.66rem;
   font-weight: 600;
   padding: 0.5rem 0 0 0.8rem;
@@ -75,7 +75,7 @@
 }
 
 /* 带文件名时语言标签右上移避免重叠 */
-.md-typeset .highlight:has(.filename)::after {
+.md-typeset div.highlight:has(.filename)::after {
   left: auto;
   right: 3.2rem;
 }
@@ -84,12 +84,12 @@
 
 .md-typeset .highlight + * .md-clipboard,
 .md-clipboard {
-  color: #8A8394;
+  color: var(--rt-code-lang-base);
   transition: color var(--rt-transition);
 }
 
 .md-clipboard:hover {
-  color: #DE9FBA;
+  color: var(--rt-secondary);
 }
 
 /* ---- 行号列（若启用）与行内高亮 ---- */
@@ -100,7 +100,7 @@
 
 .md-typeset .linenodiv pre {
   background: var(--rt-code-header);
-  color: #6C6574;
+  color: var(--rt-code-lang-base);
 }
 
 .md-typeset mark,
@@ -113,6 +113,6 @@
 .md-typeset .highlight .c,
 .md-typeset .highlight .c1,
 .md-typeset .highlight .cm {
-  color: #8A8394;
+  color: var(--md-code-hl-comment-color);
   font-style: italic;
 }
