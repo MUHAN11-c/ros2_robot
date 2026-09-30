@@ -19,6 +19,8 @@ theme:
   logo: assets/mascots/avatar-128.webp
   favicon: assets/mascots/favicon.png
   features:
+    - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.sections
     - navigation.prune
     - navigation.top

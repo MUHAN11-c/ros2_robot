@@ -902,7 +902,11 @@ def write_catalog(catalog: list[SummaryNode]) -> None:
 
 def generate_config(nav: list[dict[str, object]]) -> None:
     base = yaml.load((ROOT / "mkdocs.yml").read_text(encoding="utf-8"), Loader=yaml.Loader)
-    base["nav"] = [{"首页": "index.md"}, {"项目说明": "project.md"}, {"目录索引": "catalog.md"}, *nav]
+    # 顶部 Tabs 架构：首页单独一个 Tab；项目说明/目录索引收进「学习路线」分组，
+    # 避免顶级 Tab 膨胀（顶级 = 首页 + 9 个模块）
+    first_key = next(iter(nav[0]))
+    nav[0][first_key] = [{"项目说明": "project.md"}, {"目录索引": "catalog.md"}, *nav[0][first_key]]
+    base["nav"] = [{"首页": "index.md"}, *nav]
     (ROOT / "mkdocs.generated.yml").write_text(
         yaml.dump(base, allow_unicode=True, sort_keys=False),
         encoding="utf-8",

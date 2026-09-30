@@ -302,3 +302,76 @@
   color: var(--rt-primary);
   background: var(--rt-primary-soft);
 }
+
+/* ============================================================
+   顶部 Tabs 导航（navigation.tabs + sticky）：与毛玻璃页头一体化
+   ============================================================ */
+
+.md-tabs {
+  background: var(--rt-header-bg);
+  backdrop-filter: blur(20px) saturate(1.6);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  border-bottom: 1px solid var(--rt-border);
+  box-shadow: none;
+}
+
+/* 与页头之间的衔接：tabs 紧贴 header 下沿 */
+.md-tabs {
+  margin-top: -1px;
+}
+
+.md-tabs__list {
+  max-width: 1600px;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+.md-tabs__link {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--rt-text-secondary);
+  opacity: 0.92;
+  margin-top: 0;
+  transition: color 150ms ease;
+}
+
+.md-tabs__item:nth-child(odd) .md-tabs__link:hover,
+.md-tabs__item:nth-child(even) .md-tabs__link:hover {
+  color: var(--rt-primary);
+  opacity: 1;
+}
+
+/* 当前 Tab：品牌渐变下划线 */
+.md-tabs__item--active .md-tabs__link,
+.md-tabs__link[aria-current="page"] {
+  color: var(--rt-primary);
+  opacity: 1;
+  font-weight: 700;
+}
+
+.md-tabs__item--active .md-tabs__link::after,
+.md-tabs__link[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  left: 0.6rem;
+  right: 0.6rem;
+  bottom: 0;
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+  background: linear-gradient(90deg, var(--rt-primary), var(--rt-secondary));
+}
+
+/* 紧凑间距：9 个中文 Tab 不溢出 */
+.md-tabs__item {
+  padding-inline: 0.55rem;
+}
+
+.md-tabs__link {
+  padding: 0.9rem 0.2rem;
+}
+
+/* 移动端：Material 自动折叠为下拉，下拉样式跟随品牌 */
+.md-tabs__link.md-tabs__link--active {
+  color: var(--rt-primary);
+}

@@ -110,29 +110,6 @@
   opacity: 1;
 }
 
-/* 顶栏快捷入口（app.js 注入）：目录 / 路线 */
-.rt-header-links {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin-right: 0.4rem;
-}
-
-.rt-header-link {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.3rem 0.7rem;
-  border-radius: var(--rt-radius-sm);
-  font-size: 0.72rem;
-  color: var(--rt-text-secondary);
-  transition: color var(--rt-transition), background var(--rt-transition);
-}
-
-.rt-header-link:hover {
-  color: var(--rt-primary);
-  background: var(--rt-primary-soft);
-}
-
 /* ---- 阅读进度条（顶部 2px，樱→雷渐变） ---- */
 
 .rt-progress {
