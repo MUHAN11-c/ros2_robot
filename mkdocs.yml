@@ -20,11 +20,12 @@ theme:
   logo: assets/mascots/avatar-128.webp
   favicon: assets/mascots/favicon.png
   features:
-    # 不开 navigation.tabs / navigation.sections：
+    # 不开 navigation.tabs / navigation.sections / navigation.prune：
     # - tabs 的 lifted 侧栏在窄屏抽屉里会与顶级列表、页内目录互相叠层盖住章节，
     #   回归无 tabs 的经典折叠侧栏（当前模块展开、其余折叠）在桌面/窄屏都稳定；
-    # - sections 会把当前模块全部分组平铺（一栏 100+ 条），同样不用
-    - navigation.prune
+    # - sections 会把当前模块全部分组平铺（一栏 100+ 条），同样不用；
+    # - prune 会把非当前路径的分组剪成纯链接（无折叠开关），点击分组变成直接
+    #   跳转而不是展开——抽屉手风琴（见 navigation.css）依赖完整子树，故关闭
     - navigation.top
     - navigation.footer
     - navigation.tracking

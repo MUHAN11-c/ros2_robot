@@ -147,7 +147,6 @@
   padding: 0 1.2rem 2.6rem;
 }
 
-.md-sidebar--primary:not([hidden]) ~ .md-content .md-content__inner,
 .md-content__inner {
   max-width: var(--rt-content-width);
   margin-inline: auto;
