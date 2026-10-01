@@ -8,7 +8,9 @@
    - 普通内容页：生成路径与源目录 1:1（sync_docs.copy_docs 原样拷贝），直接映射；
    - project.md → README.md（sync_docs 的改名规则）；
    - 纯生成页（首页 index.md / 目录索引 catalog.md / 404.md）：置 None 隐藏按钮。
-   访客在 GitHub 网页编辑器里提交后，push 到 main 触发 deploy-docs.yml 自动重建发布。
+   - `mkdocs serve`（本地预览）时改为 EDITOR_SCHEME://file/ 直开本地源文件，
+     方便「本地改完 → git push → CI 发布」；正式构建（mkdocs build）仍指向
+     GitHub 网页编辑器，访客提交后 push 到 main 触发 deploy-docs.yml 自动重建发布。
 
 2. on_page_markdown 在章节 H1 下方注入「最后更新于 <日期>」（Stripe/GitBook 式
    活文档元信息）。日期来自一次 `git log --name-only` 扫描建立的
@@ -16,11 +18,17 @@
    全站 400+ 页只起一个子进程，构建耗时影响可忽略。
 """
 import subprocess
+import sys
 from pathlib import Path
 from urllib.parse import quote
 
 GENERATED_PAGES = {"index.md", "catalog.md", "404.md"}
 RENAME = {"project.md": "README.md"}
+
+# 本地预览点「编辑此页」时用哪个编辑器协议拉起：VS Code 用 vscode，Cursor 改 cursor
+EDITOR_SCHEME = "vscode"
+# `mkdocs serve` 子命令在 sys.argv 里（CI 走 build_site.sh → `mkdocs build`，不含 serve）
+SERVING = "serve" in sys.argv
 
 ROOT = Path(__file__).resolve().parents[1]
 _updated_cache = None  # {posix 相对路径: "YYYY-MM-DD"}
@@ -74,11 +82,15 @@ def on_page_context(context, *, page, config, **kwargs):
     if src_path in GENERATED_PAGES:
         page.edit_url = None
     elif src_path.endswith(".md"):
-        repo_url = (config.get("repo_url") or "").rstrip("/")
-        edit_uri = (config.get("edit_uri") or "").strip("/")
-        if repo_url and edit_uri:
-            source = RENAME.get(src_path, src_path)
-            page.edit_url = f"{repo_url}/{edit_uri}/{quote(source)}"
+        source = RENAME.get(src_path, src_path)
+        if SERVING:
+            # 本地预览：直接在编辑器里打开源文件（盘符冒号不编码，中文路径走 quote）
+            page.edit_url = f"{EDITOR_SCHEME}://file/{quote((ROOT / source).as_posix(), safe='/:')}"
+        else:
+            repo_url = (config.get("repo_url") or "").rstrip("/")
+            edit_uri = (config.get("edit_uri") or "").strip("/")
+            if repo_url and edit_uri:
+                page.edit_url = f"{repo_url}/{edit_uri}/{quote(source)}"
 
     context["page"] = page
     return context
