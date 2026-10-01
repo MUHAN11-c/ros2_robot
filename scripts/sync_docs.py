@@ -35,6 +35,11 @@ EXCLUDE_PARTS = {
     ".codex",
     "__pycache__",
 }
+# 不进侧栏与目录索引的 SUMMARY 顶级节（页面仍会被拷贝、可直链访问，
+# 仅从读者导航中隐藏；SUMMARY.md 是 nav 唯一真源，这里做展示层过滤）
+EXCLUDE_NAV_SECTIONS = {
+    "项目维护（作者向）",
+}
 COPY_EXTENSIONS = {
     ".md",
     ".png",
@@ -998,6 +1003,7 @@ def main() -> None:
     write_home(markdown_count, asset_count)
     write_404()
     catalog = select_catalog(source)
+    catalog = [n for n in catalog if n.title not in EXCLUDE_NAV_SECTIONS]
     nav = build_navigation(catalog)
     write_catalog(catalog)
     generate_config(nav)

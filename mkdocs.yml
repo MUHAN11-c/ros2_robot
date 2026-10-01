@@ -3,9 +3,10 @@ site_description: 樱机实验室 SakuraBot Lab · 面向机器人开发者的�
 site_author: Pengfei Guo
 site_url: https://muhuan11-c.github.io/ros2_robot/
 
-repo_name: MUHAN11-c/ros2_robot
-repo_url: https://github.com/MUHAN11-c/ros2_robot
-edit_uri: edit/main/
+# 不配置 repo_url：Material 9.7 的 repo 徽章会 fetch api.github.com 拉取
+# star/版本，匿名限流(403)时 bundle 抛未捕获异常；「编辑此页」按钮由
+# scripts/edit_source_hook.py 直接设置 page.edit_url 提供，不依赖 repo_url。
+# 若恢复 GitHub Pages 托管并需要页头仓库入口，再加回时需评估限流容错。
 docs_dir: .generated/docs
 site_dir: site
 

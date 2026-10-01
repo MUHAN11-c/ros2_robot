@@ -1,0 +1,12 @@
+{
+  "name": "sakurabot-e2e-nav",
+  "private": true,
+  "description": "侧栏导航端到端测试:playwright-core 驱动系统 Edge 无头浏览器,多视口走查抽屉/手风琴/叠印/导航链",
+  "type": "module",
+  "scripts": {
+    "test": "node e2e_nav.mjs"
+  },
+  "dependencies": {
+    "playwright-core": "^1.40.0"
+  }
+}

@@ -252,34 +252,54 @@
     );
   }
 
-  /* ============ 模块：窄屏抽屉深链 ============
-     Material 的层叠抽屉在 ~600–960px 区间打开时停在顶级模块列表，当前分组
-     的条目标题还会与「目录」标题绝对定位叠印（文字被盖住只剩箭头）。窄屏下
-     把当前页的祖先分组折叠开关勾选并派发 change，打开抽屉即直接进入当前
-     分组（与 375px 行为一致）；≥960px 的桌面侧栏不受影响。 */
-  function initDrawerDeepLink() {
-    var mq = window.matchMedia("(max-width: 959.98px)");
-    function apply() {
-      if (!mq.matches) return;
-      var active = document.querySelector(
-        '.md-sidebar--primary .md-nav__link--active,' +
-          '.md-sidebar--primary .md-nav__link[data-md-state="active"]'
-      );
-      if (!active) return;
-      var el = active.closest(".md-nav__item");
-      while (el) {
-        if (el.classList.contains("md-nav__item--nested")) {
-          var toggle = el.querySelector(':scope > input.md-nav__toggle[type="checkbox"]');
-          if (toggle && !toggle.checked) {
-            toggle.checked = true;
-            toggle.dispatchEvent(new Event("change", { bubbles: true }));
-          }
+  /* ============ 模块：抽屉手风琴深链 ============
+     抽屉手风琴（见 navigation.css「层叠滑入 → 手风琴」补丁，<1220px 生效）下，
+     当前页祖先分组的展开状态由服务端渲染自带 checked；本模块只兜底两个
+     场景：1) 构建异常/模板变化导致 SSR 未勾；2) 用户手动收起当前分组后
+     关抽屉再开——在抽屉打开瞬间重新展开当前链。 */
+  var drawerMq = null;
+
+  function applyDrawerDeepLink() {
+    if (!drawerMq.matches) return;
+    var active = document.querySelector(
+      '.md-sidebar--primary .md-nav__link--active,' +
+        '.md-sidebar--primary .md-nav__link[data-md-state="active"]'
+    );
+    if (!active) return;
+    var el = active.closest(".md-nav__item");
+    while (el) {
+      if (el.classList.contains("md-nav__item--nested")) {
+        var toggle = el.querySelector(':scope > input.md-nav__toggle[type="checkbox"]');
+        if (toggle && !toggle.checked) {
+          toggle.checked = true;
+          toggle.dispatchEvent(new Event("change", { bubbles: true }));
         }
-        el = el.parentElement;
+      }
+      el = el.parentElement;
+    }
+  }
+
+  function initDrawerDeepLink() {
+    /* matchMedia 与宽度监听只建一次（setup 每次站内导航都会跑，
+       重复创建会累积 MediaQueryList 监听器） */
+    if (!drawerMq) {
+      drawerMq = window.matchMedia("(max-width: 1219.98px)");
+      if (drawerMq.addEventListener) {
+        drawerMq.addEventListener("change", applyDrawerDeepLink);
+      } else if (drawerMq.addListener) {
+        drawerMq.addListener(applyDrawerDeepLink);
       }
     }
-    apply();
-    if (mq.addEventListener) mq.addEventListener("change", apply);
+    applyDrawerDeepLink();
+    /* 抽屉打开时重展开当前链；监听挂在抽屉 checkbox 上，元素随站内
+       导航整体替换，旧监听随之释放，不会泄漏 */
+    var drawer = document.getElementById("__drawer");
+    if (drawer && !drawer.dataset.rtDeepLink) {
+      drawer.dataset.rtDeepLink = "1";
+      drawer.addEventListener("change", function () {
+        if (drawer.checked) applyDrawerDeepLink();
+      });
+    }
   }
 
   /* ============ 启动 ============ */
