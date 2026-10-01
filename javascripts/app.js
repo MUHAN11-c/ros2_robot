@@ -102,11 +102,13 @@
       .filter(function (seg) { return seg && seg.indexOf(".html") === -1; });
 
     if (!parts.length) return;
+    /* 站点根：优先取主题 logo 链接（GitHub Pages 子路径部署下 '/' 会跳出站点） */
+    var logoLink = document.querySelector('.md-header .md-header__button, .md-logo a, a.md-logo');
+    var rootHref = (logoLink && logoLink.getAttribute("href")) || "/";
     var bc = document.createElement("nav");
     bc.className = "rt-breadcrumb";
     bc.setAttribute("aria-label", "面包屑");
-    var html = "<a href='" + (window.location.protocol === "file:" ? "/" : "/") +
-      "' style='text-decoration:none'>首页</a>";
+    var html = "<a href='" + rootHref + "' style='text-decoration:none'>首页</a>";
     parts.forEach(function (seg) {
       var label = prettify(seg);
       if (!label) return;
@@ -158,10 +160,15 @@
     document.querySelectorAll("a").forEach(function (a) {
       var href = a.getAttribute("href") || "";
       if (!href.endsWith("/") && !href.endsWith(".html")) return;
-      var path = href.replace(/\.html?$/, "");
+      /* 侧栏链接是相对路径（../xx/），必须先解析成绝对路径名再与访问记录比对 */
+      var path;
+      try { path = new URL(href, location.href).pathname.replace(/\.html?$/, "").replace(/\/$/, ""); }
+      catch (e) { return; }
+      if (!path) return;
       var match = visited.some(function (v) {
         var norm = v.replace(/\.html?$/, "").replace(/\/$/, "");
-        return norm && (path.indexOf(norm) !== -1 || norm.indexOf(path.replace(/\/$/, "")) !== -1);
+        /* 仅认「完全同页」或「visited 是该链接的父目录」两种情况 */
+        return norm === path || path.indexOf(norm + "/") === 0;
       });
       if (match) a.classList.add("is-visited");
     });

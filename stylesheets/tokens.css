@@ -37,6 +37,17 @@
 /* ===================== Light Theme · 樱昼 ===================== */
 [data-md-color-scheme="default"] {
   --rt-bg-primary: #FCFBFE;
+
+  /* 文字用途的品牌/语义色加深（:root 的主题无关中间值在白底只有 2-3:1，
+     低于 WCAG AA 4.5）；暗色（slate）继续沿用 :root 原值，其对深面板 ≥4.2:1 */
+  --rt-gold: #8A682A;
+  --rt-sakura: #B0577C;
+  --rt-electro: #6D55A0;
+  --rt-green: #3A7450;
+  --rt-red: #AC4F4F;
+  --rt-blue: #456F96;
+  --rt-teal: #2E7D73;
+
   --rt-bg-secondary: #F7F4FA;
   --rt-surface: #FFFFFF;
   --rt-surface-soft: #FAF7FD;
@@ -52,7 +63,7 @@
   --rt-secondary-soft: rgba(217, 143, 175, 0.1);
   --rt-gold-soft: rgba(201, 169, 110, 0.12);
   --rt-header-bg: rgba(252, 251, 254, 0.88);
-  --rt-warning: #B08D4F;
+  --rt-warning: #8A682A; /* 提示标题文字用途，白底 5.13:1 */
   --rt-warning-bg: rgba(201, 169, 110, 0.1);
 
   /* ---- 代码块：浅底（Linear 式软色井），语法色为金/紫/粉低饱和加深档 ---- */

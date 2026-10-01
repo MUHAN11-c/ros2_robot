@@ -2,10 +2,10 @@
    layout.css · 页面骨架：Header 64px / 内容列 / 侧边栏宽度 / Footer / 进度条
    ========================================================================== */
 
-/* ---- Header：64px，Linear 式毛玻璃 + 发丝渐变底线 ---- */
+/* ---- Header：内行 64px（.md-header__inner），整体高度自适应以容纳 tabs 行。
+   不可在 header 上钳 64px：tabs 栏是其子元素，钳高会使其溢出覆盖内容顶部 48px ---- */
 
 .md-header {
-  height: var(--rt-header-height);
   background: var(--rt-header-bg);
   backdrop-filter: blur(20px) saturate(1.6);
   -webkit-backdrop-filter: blur(20px) saturate(1.6);

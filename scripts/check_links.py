@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""校验 SUMMARY.md 全部条目与全仓库 md 相对链接的真实性（零死链门禁）。"""
+"""校验 SUMMARY.md 全部条目 + 指定范围（新写章节/方向映射/导航）内相对链接的真实性。
+
+范围外（各方向深层旧章）由 mkdocs 构建时的相对链接告警兜底；旧章里形如
+`$x_k-x^*$` 的 LaTeX 括号会被朴素链接正则误报，不纳入本门禁。
+"""
 import re
 import sys
 from pathlib import Path
