@@ -228,7 +228,7 @@ hide:
 
 ## 开始学习 Start Here
 
-<p class="rt-section-desc">三步走完从零基础到前沿——每一步都有系统化教材、可运行代码与紫樱陪跑。</p>
+<p class="rt-section-desc">三步走完从零起步到前沿——每一步都有系统化教材、可运行代码与紫樱陪跑。</p>
 
 <div class="rt-steps" markdown>
 
@@ -236,11 +236,11 @@ hide:
 
 ![紫樱敬礼：跟我开始吧](assets/mascots/step-start.webp)
 
-### 第一步 · 打地基（零基础）
+### 第一步 · 打地基（从零起步）
 
-数学筑基 7 章 + C++ 入门 7 章 + Python 工具链 + 机器人学导论。零基础友好，每章 30–60 分钟，附动手练习与完整解答。
+数学筑基 7 章 + C++ 入门 7 章 + Python 工具链 + 机器人学导论。从零起步，每章 30–60 分钟，附动手练习与完整解答。
 
-[进入筑基](01_数学/00_大学基础筑基/00_零基础数学学习地图.md){{ .rt-go }}
+[进入筑基](01_数学/00_大学基础筑基/00_数学入门学习地图.md){{ .rt-go }}
 
 </div>
 
@@ -298,7 +298,7 @@ hide:
 
 ### C++ 与编程
 
-零基础入门 + Python 工具链，通往并发与 ROS2 工程。
+C++ 入门 + Python 工具链，通往并发与 ROS2 工程。
 
 [进入模块]({module_links["foundation"]}){{ .rt-go }}
 
@@ -380,7 +380,7 @@ RL 运控 28 章 Isaac Lab 全链路训练与具身前沿论文精读。
 
 ### ROS2 软件工程师
 
-C++ 零基础入门 → 语言核心 → 并发 → ROS2 工程化。
+C++ 入门 → 语言核心 → 并发 → ROS2 工程化。
 
 [路径详情](02_C++基础与进阶/C++方向_学习路径与教材映射.md){{ .rt-go }}
 
@@ -434,7 +434,7 @@ Sutton RL → Spinning Up → RL 运控 28 章 Isaac Lab 全链路。
 
 ## 知识主线 Knowledge Map
 
-<p class="rt-section-desc">沿着一条主线从零基础走到具身智能，每个节点都是一组系统化教材。</p>
+<p class="rt-section-desc">沿着一条主线从零起步走到具身智能，每个节点都是一组系统化教材。</p>
 
 ![紫樱比心讲解知识主线](assets/mascots/kmap-guide.webp){{ .rt-kmap__guide }}
 
