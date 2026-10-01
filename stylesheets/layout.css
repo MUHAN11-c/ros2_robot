@@ -35,9 +35,9 @@
   background: var(--rt-header-bg);
 }
 
-/* 锚点跳转避让吸顶 Header：目标标题停在 header 之下，不被 64px 导航盖住 */
+/* 锚点跳转避让吸顶栈：header 64px + sticky tabs 49px + 呼吸空间 */
 .md-typeset [id] {
-  scroll-margin-top: calc(var(--rt-header-height, 64px) + 0.75rem);
+  scroll-margin-top: calc(var(--rt-header-height, 64px) + 3.9rem);
 }
 
 .md-header__inner {

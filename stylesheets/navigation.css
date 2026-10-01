@@ -393,6 +393,35 @@
   padding: 0.9rem 0.2rem;
 }
 
+/* 窄视口：模块 Tab 全员可见（1280px 下 11 个 Tab 原尺寸会裁掉 4 个） */
+@media screen and (max-width: 1440px) {
+  .md-tabs__item {
+    padding-inline: 0.3rem;
+  }
+
+  .md-tabs__link {
+    font-size: 0.72rem;
+    letter-spacing: 0;
+    padding: 0.9rem 0.15rem;
+  }
+
+  .md-tabs__item--active .md-tabs__link::after,
+  .md-tabs__link[aria-current="page"]::after {
+    left: 0.35rem;
+    right: 0.35rem;
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .md-tabs__item {
+    padding-inline: 0.14rem;
+  }
+
+  .md-tabs__link {
+    font-size: 0.65rem;
+  }
+}
+
 /* 移动端：Material 自动折叠为下拉，下拉样式跟随品牌 */
 .md-tabs__link.md-tabs__link--active {
   color: var(--rt-primary);

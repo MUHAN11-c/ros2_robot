@@ -81,15 +81,17 @@
   right: 3.2rem;
 }
 
-/* ---- 复制按钮 ---- */
+/* ---- 复制按钮（Material 9.7+ 注入为 .md-code__button，旧类名 .md-clipboard 保留兜底） ---- */
 
 .md-typeset .highlight + * .md-clipboard,
-.md-clipboard {
+.md-clipboard,
+.md-typeset .md-code__button {
   color: var(--rt-code-lang-base);
   transition: color var(--rt-transition);
 }
 
-.md-clipboard:hover {
+.md-clipboard:hover,
+.md-typeset .md-code__button:hover {
   color: var(--rt-secondary);
 }
 

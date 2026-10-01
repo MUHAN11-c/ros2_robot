@@ -8,6 +8,30 @@
 
   var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /* ============ 模块：锚点纠偏 ============
+     浏览器锚点跳转发生在字体/MathJax 排版完成之前，晚到的布局变化会把
+     目标标题顶偏（实测可偏 200px+）。加载完成与字体就绪后按 hash 重对齐一次。 */
+  function realignAnchor() {
+    if (!location.hash || location.hash === "#") return;
+    var id = decodeURIComponent(location.hash.slice(1));
+    var el = document.getElementById(id);
+    if (el) el.scrollIntoView({ block: "start", behavior: "instant" });
+  }
+  function initAnchorRealign() {
+    if (document.readyState === "complete") {
+      realignAnchor();
+    } else {
+      window.addEventListener("load", realignAnchor);
+    }
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () {
+        /* 字体换装后再纠一次，并给晚到的排版留 300ms */
+        setTimeout(realignAnchor, 300);
+      });
+    }
+  }
+  initAnchorRealign();
+
   /* ============ 模块：阅读进度条 ============ */
   var progressBar = null;
   function initProgress() {
