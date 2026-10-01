@@ -1,0 +1,7 @@
+
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#FFFFFF","primaryBorderColor":"#8166B1","primaryTextColor":"#292530","lineColor":"#B39ADE","fontSize":"14px"}}}%%
+flowchart LR
+    G["李群 SO(3) / SE(3)<br/>旋转矩阵 R · 变换 T<br/>（弯空间：只有乘法）"]
+    A["李代数 so(3) / se(3)<br/>旋转向量 φ · 旋量 ξ<br/>（平空间：随便加减）"]
+    G -->|"对数映射 ln<br/>罗德里格斯逆推"| A
+    A -->|"指数映射 exp<br/>罗德里格斯公式"| G

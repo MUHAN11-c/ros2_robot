@@ -729,6 +729,59 @@ t=13s dist=0.40m
 
 ---
 
+## 综合习题：给状态监控器加"故障统计面板"（全章知识串联）
+
+在 §6 命令行状态监控器的基础上扩展：CPU 负载序列 `{72, 95, 40, 88, 61}`，>80 记一次"过载"故障；另有"低电"故障一次。产出四行统计：故障计数、排序后峰值、均值、去重后的负载数。
+
+**(a) 计数面板**（§2 map）：用 `map<string,int>` 累计故障名 → 次数，并按 `auto& [k,v]` 遍历打印。
+
+**(b) 去重花名册**（§3 set）：把负载序列灌进 `set`，回答"几个不同档位的负载"。
+
+**(c) 四把电动工具**（§5 算法）：用 `sort`、`accumulate`、`count_if`（配合 lambda）、`back()` 完成峰值/均值/超载帧数。
+
+**(d) 迭代器即通用取物夹**（§4）：为什么同一套算法函数能同时作用于 `vector` 和数组？
+
+**(e) 工程复盘**（§6）：这个面板离一个真正的机器人 watchdog 还差什么（提示：谁在刷新数据？超限后做什么）？
+
+??? details "综合习题完整解答（程序已实测编译运行）"
+
+    ```cpp
+    #include <algorithm>
+    #include <iostream>
+    #include <map>
+    #include <numeric>
+    #include <set>
+    #include <vector>
+    int main() {
+        std::map<std::string, int> faults;                       // (a)
+        std::vector<int> loads = {72, 95, 40, 88, 61};
+        for (int x : loads) if (x > 80) faults["过载"]++;
+        faults["低电"] = 1;
+        for (const auto& [k, v] : faults)
+            std::cout << k << " x" << v << "  ";
+        std::cout << "\n";
+        std::sort(loads.begin(), loads.end());                   // (c)
+        double mean = std::accumulate(loads.begin(), loads.end(), 0.0) / loads.size();
+        auto n_over = std::count_if(loads.begin(), loads.end(),
+                                    [](int x){ return x > 60; });
+        std::set<int> uniq(loads.begin(), loads.end());          // (b)
+        std::cout << "排序后最大=" << loads.back() << " 均值=" << mean
+                  << " 超载帧=" << n_over << " 去重后=" << uniq.size() << "\n";
+        return 0;
+    }
+    ```
+
+    实测输出：
+
+    ```text
+    低电 x1  过载 x2
+    排序后最大=95 均值=71.2 超载帧=4 去重后=5
+    ```
+
+    **(b)** `set` 自动排序去重，5 个负载两两不同 → 5。**(d)** 算法函数收的是迭代器区间 `[first, last)`——迭代器是"会走路的指针"，vector、数组、甚至 `set` 都提供同款接口，这就是 STL "容器 × 算法"可自由拼装的秘密（§4 通用取物夹）。**(e)** 还差三块：①数据源接成回调/主循环（§6 的 while 结构）而不是写死的数组；②超限要**触发动作**（降速、告警日志），不是只打印；③阈值与计数需要随时间衰减（滑动窗口），否则一次尖峰永久占着"过载"名额——这三步正是从"练习题"到"工程代码"的距离。
+
+---
+
 ## 本章速查卡
 
 | 想做的事 | 写法 | 头文件 |

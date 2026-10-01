@@ -729,6 +729,51 @@ int main() {
 
 ---
 
+## 综合习题：一路激光数据的质量报告（全章知识串联）
+
+激光雷达一圈回来 5 个原始距离 `{120, 90, 300, 85, 95}`（厘米），超过 250 的判定为无效点。写程序产出质量报告：有效帧数、均值、最大、最小，并把结论拼成一条 `std::string` 日志。
+
+**(a) 原始收纳**（§2 C 数组）：为什么原始数据先用 C 数组装是合理的？它的致命限制是什么？
+
+**(b) 动态筛选**（§4 vector）：把有效帧 `push_back` 进 `vector<double>`，写出筛选循环。
+
+**(c) 统计三件套**（§4 遍历 + 范围 for）：均值、最大、最小——用范围 for 一趟算完。
+
+**(d) 日志拼接**（§3 string 与 `std::to_string`）：把"有效帧 4/5 均值 97.5"拼成一条字符串。
+
+**(e) 数据口粮**（§5）：点云、轨迹、IMU 序列，为什么工程上首选 `vector` 而不是 C 数组？
+
+??? details "综合习题完整解答（程序已实测编译运行）"
+
+    ```cpp
+    #include <iostream>
+    #include <string>
+    #include <vector>
+    int main() {
+        int raw[5] = {120, 90, 300, 85, 95};              // (a) 固定 5 帧原始数据
+        std::vector<double> valid;                         // (b)
+        for (int i = 0; i < 5; ++i)
+            if (raw[i] < 250) valid.push_back(raw[i]);
+        double sum = 0, mx = valid[0], mn = valid[0];      // (c)
+        for (double v : valid) { sum += v; if (v > mx) mx = v; if (v < mn) mn = v; }
+        std::string log = "有效帧 " + std::to_string(valid.size()) + "/" +   // (d)
+                          std::to_string(5) + " 均值 " + std::to_string(sum / valid.size());
+        std::cout << log << "\n最大=" << mx << " 最小=" << mn << "\n";
+        return 0;
+    }
+    ```
+
+    实测输出：
+
+    ```text
+    有效帧 4/5 均值 97.500000
+    最大=120 最小=85
+    ```
+
+    **(a)** 帧数在编译期已知、只读一遍——C 数组零开销、最直接；限制是**长度写死、不能增删、不知道自己多长**（要靠额外的 5）。**(d)** 注意 `std::to_string` 把数字变字符串才能用 `+` 拼接；`valid.size()` 返回无符号数，与 `int` 混算会有编译警告，这里单独处理。**(e)** 点云大小逐帧不同、轨迹边跑边长——`vector` 自动扩容、自带 `size()`、与算法无缝（60 章），而 C 数组三项全无；机器人数据结构"默认 `vector`"的军规由此立下。
+
+---
+
 ## 本章速查卡
 
 | 想做的事 | 写法 |
