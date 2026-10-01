@@ -29,6 +29,7 @@
   background: var(--rt-surface-soft);
   border: 1px solid var(--rt-border);
   color: var(--rt-primary);
+  overflow-wrap: break-word; /* 长标识符在窄列/表格里断行，不撑破版心 */
 }
 
 /* ---- 语言标签头：左下角常显（语言 class 在包裹层 div.language-*.highlight 上） ---- */

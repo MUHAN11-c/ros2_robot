@@ -196,6 +196,9 @@
 .md-footer__inner {
   max-width: 1600px;
   margin-inline: auto;
+  display: flex;
+  gap: 0.9rem;
+  padding-block: 0.9rem;
 }
 
 .md-footer-copyright {
@@ -226,32 +229,76 @@
   color: var(--rt-text-secondary);
 }
 
-/* 上/下页卡片 */
+/* 上/下页卡片：Stripe / Rust Book 式常显双卡片（方向金字标签 + 章标题可换行） */
 .md-footer__link {
-  max-width: 24rem;
-  border: 1px solid transparent;
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: none;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  border: 1px solid var(--rt-border);
   border-radius: var(--rt-radius-md);
-  padding: 0.5rem 0.8rem;
-  transition: border-color var(--rt-transition), background var(--rt-transition);
+  background: var(--rt-surface);
+  padding: 0.75rem 0.95rem;
+  opacity: 1;
+  box-shadow: var(--rt-shadow-sm);
+  transition: border-color var(--rt-transition), background var(--rt-transition),
+    transform var(--rt-transition), box-shadow var(--rt-transition);
 }
 
 .md-footer__link:hover {
   background: var(--rt-primary-soft);
-  border-color: var(--rt-border);
+  border-color: var(--rt-primary-light);
+  transform: translateY(-2px);
+  box-shadow: var(--rt-shadow-md);
   opacity: 1;
 }
 
-.md-footer__link .md-ellipsis {
-  color: var(--rt-text-primary);
-  font-weight: 600;
+.md-footer__link .md-footer__button {
+  flex: none;
+  margin: 0;
+  color: var(--rt-text-secondary);
+  transition: color var(--rt-transition);
+}
+
+.md-footer__link:hover .md-footer__button {
+  color: var(--rt-primary);
 }
 
 .md-footer__link .md-footer__title {
-  font-size: 0.72rem;
+  flex: 1 1 0;
+  min-width: 0;
+  font-size: 0.8rem;
+}
+
+.md-footer__link .md-footer__direction {
+  display: block;
+  margin-bottom: 0.15rem;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--rt-gold);
+}
+
+.md-footer__link .md-ellipsis {
+  display: block;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  color: var(--rt-text-primary);
+  font-weight: 600;
+  line-height: 1.5;
 }
 
 .md-footer__link--next {
   text-align: right;
+}
+
+@media screen and (max-width: 600px) {
+  .md-footer__inner {
+    flex-direction: column;
+  }
 }
 
 /* ---- 面包屑与阅读元信息（app.js 注入） ---- */

@@ -5,6 +5,15 @@
 
 /* ---- 标题锚点 #：hover 显示 ---- */
 
+/* H1 下的「最后更新于」元信息（edit_source_hook 注入，Stripe/GitBook 式活文档感） */
+.md-typeset h1 + p.rt-updated,
+.md-typeset h1 + .rt-updated {
+  margin: -0.7rem 0 1rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+  color: var(--rt-text-secondary);
+}
+
 .md-typeset h2 .md-header__button,
 .md-typeset h3 .md-header__button,
 .md-typeset h4 .md-header__button {
