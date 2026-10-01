@@ -19,9 +19,10 @@ theme:
   logo: assets/mascots/avatar-128.webp
   favicon: assets/mascots/favicon.png
   features:
-    - navigation.tabs
-    - navigation.tabs.sticky
-    - navigation.sections
+    # 不开 navigation.tabs / navigation.sections：
+    # - tabs 的 lifted 侧栏在窄屏抽屉里会与顶级列表、页内目录互相叠层盖住章节，
+    #   回归无 tabs 的经典折叠侧栏（当前模块展开、其余折叠）在桌面/窄屏都稳定；
+    # - sections 会把当前模块全部分组平铺（一栏 100+ 条），同样不用
     - navigation.prune
     - navigation.top
     - navigation.footer
@@ -76,6 +77,8 @@ markdown_extensions:
   - tables
   - toc:
       permalink: true
+      # 侧栏/目录只到 H2：章节里 4.1/5.3 这类 H3 小节太多，全量渲染会把目录糊满
+      toc_depth: 2
       # 默认 slugify 会丢弃中文字符，导致中文标题锚点全部失效；
       # slugify_unicode 保留 Unicode，锚点与标题文本一致且稳定
       slugify: !!python/name:markdown.extensions.toc.slugify_unicode

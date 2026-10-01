@@ -252,6 +252,36 @@
     );
   }
 
+  /* ============ 模块：窄屏抽屉深链 ============
+     Material 的层叠抽屉在 ~600–960px 区间打开时停在顶级模块列表，当前分组
+     的条目标题还会与「目录」标题绝对定位叠印（文字被盖住只剩箭头）。窄屏下
+     把当前页的祖先分组折叠开关勾选并派发 change，打开抽屉即直接进入当前
+     分组（与 375px 行为一致）；≥960px 的桌面侧栏不受影响。 */
+  function initDrawerDeepLink() {
+    var mq = window.matchMedia("(max-width: 959.98px)");
+    function apply() {
+      if (!mq.matches) return;
+      var active = document.querySelector(
+        '.md-sidebar--primary .md-nav__link--active,' +
+          '.md-sidebar--primary .md-nav__link[data-md-state="active"]'
+      );
+      if (!active) return;
+      var el = active.closest(".md-nav__item");
+      while (el) {
+        if (el.classList.contains("md-nav__item--nested")) {
+          var toggle = el.querySelector(':scope > input.md-nav__toggle[type="checkbox"]');
+          if (toggle && !toggle.checked) {
+            toggle.checked = true;
+            toggle.dispatchEvent(new Event("change", { bubbles: true }));
+          }
+        }
+        el = el.parentElement;
+      }
+    }
+    apply();
+    if (mq.addEventListener) mq.addEventListener("change", apply);
+  }
+
   /* ============ 启动 ============ */
   function setup() {
     initProgress();
@@ -263,6 +293,7 @@
     initNavIcons();
     initReveal();
     initTocProgress();
+    initDrawerDeepLink();
   }
 
   if (window.document$) {

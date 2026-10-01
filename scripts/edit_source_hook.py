@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
-"""mkdocs 构建钩子：编辑按钮回链源文件 + H1 下注入「最后更新于」。
+"""mkdocs 构建钩子：编辑按钮直开本地源文件 + H1 下注入「最后更新于」。
 
-背景：站点从 .generated/docs 构建，该目录不入库。mkdocs 默认按 docs_dir 相对路径
-拼接 edit_uri，编辑链接会指向仓库中不存在的生成文件（GitHub 上 404）。本钩子：
+背景：站点从 .generated/docs 构建，该目录不入库，mkdocs 默认按 docs_dir 相对路径
+拼接 edit_uri 的链接指向仓库中不存在的生成文件（GitHub 上 404）；GitHub 托管侧
+暂不可改，故本地/构建统一一套：编辑按钮一律用编辑器协议直开仓库里的源文件
+（「本地改完 → git push」的工作流）。本钩子：
 
 1. on_page_context 改写 page.edit_url：
    - 普通内容页：生成路径与源目录 1:1（sync_docs.copy_docs 原样拷贝），直接映射；
    - project.md → README.md（sync_docs 的改名规则）；
    - 纯生成页（首页 index.md / 目录索引 catalog.md / 404.md）：置 None 隐藏按钮。
-   - `mkdocs serve`（本地预览）时改为 EDITOR_SCHEME://file/ 直开本地源文件，
-     方便「本地改完 → git push → CI 发布」；正式构建（mkdocs build）仍指向
-     GitHub 网页编辑器，访客提交后 push 到 main 触发 deploy-docs.yml 自动重建发布。
+   注意：链接含本机绝对路径，仅对持有仓库的工作机有意义；若日后恢复线上
+   「GitHub 在线编辑」，把 on_page_context 换回 repo_url/edit_uri 拼接即可。
 
 2. on_page_markdown 在章节 H1 下方注入「最后更新于 <日期>」（Stripe/GitBook 式
    活文档元信息）。日期来自一次 `git log --name-only` 扫描建立的
@@ -18,17 +19,14 @@
    全站 400+ 页只起一个子进程，构建耗时影响可忽略。
 """
 import subprocess
-import sys
 from pathlib import Path
 from urllib.parse import quote
 
 GENERATED_PAGES = {"index.md", "catalog.md", "404.md"}
 RENAME = {"project.md": "README.md"}
 
-# 本地预览点「编辑此页」时用哪个编辑器协议拉起：VS Code 用 vscode，Cursor 改 cursor
+# 「编辑此页」用哪个编辑器协议拉起：VS Code 用 vscode，Cursor 改 cursor
 EDITOR_SCHEME = "vscode"
-# `mkdocs serve` 子命令在 sys.argv 里（CI 走 build_site.sh → `mkdocs build`，不含 serve）
-SERVING = "serve" in sys.argv
 
 ROOT = Path(__file__).resolve().parents[1]
 _updated_cache = None  # {posix 相对路径: "YYYY-MM-DD"}
@@ -83,14 +81,8 @@ def on_page_context(context, *, page, config, **kwargs):
         page.edit_url = None
     elif src_path.endswith(".md"):
         source = RENAME.get(src_path, src_path)
-        if SERVING:
-            # 本地预览：直接在编辑器里打开源文件（盘符冒号不编码，中文路径走 quote）
-            page.edit_url = f"{EDITOR_SCHEME}://file/{quote((ROOT / source).as_posix(), safe='/:')}"
-        else:
-            repo_url = (config.get("repo_url") or "").rstrip("/")
-            edit_uri = (config.get("edit_uri") or "").strip("/")
-            if repo_url and edit_uri:
-                page.edit_url = f"{repo_url}/{edit_uri}/{quote(source)}"
+        # 直开本地源文件（盘符冒号不编码，中文路径走 quote）
+        page.edit_url = f"{EDITOR_SCHEME}://file/{quote((ROOT / source).as_posix(), safe='/:')}"
 
     context["page"] = page
     return context

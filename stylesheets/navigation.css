@@ -422,6 +422,55 @@
   }
 }
 
+/* ============================================================
+   窄屏抽屉：层叠滑入 → 手风琴就地展开
+   Material <960px 的侧栏抽屉是"层叠替换"式（点分组整层滑入），
+   在本站的深导航上表现为：打开只见模块名、返回栏标题与顶级列表
+   叠印盖字。此处把桌面端（≥960px）的 grid-template-rows 手风琴
+   行为搬到窄屏：点分组就地向下展开，顶级列表保留在上方。
+   ============================================================ */
+
+@media screen and (max-width: 59.984375em) {
+  /* 嵌套导航层不再整层绝对定位滑入 */
+  .md-sidebar--primary .md-nav--primary .md-nav {
+    position: static !important;
+    height: auto !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+  }
+
+  /* 折叠态：0 高度行 + 不可见；展开态：1fr 行 + 可见（高度动画） */
+  .md-sidebar--primary .md-nav__toggle ~ .md-nav {
+    display: grid !important;
+    grid-template-rows: minmax(0.4rem, 0fr) !important;
+    opacity: 0;
+    transform: none !important;
+    visibility: collapse;
+    transition: grid-template-rows 0.25s cubic-bezier(0.86, 0, 0.07, 1),
+      opacity 0.25s, visibility 0ms 0.25s;
+  }
+
+  .md-sidebar--primary .md-nav__toggle:checked ~ .md-nav,
+  .md-sidebar--primary .md-nav__toggle.md-toggle--indeterminate ~ .md-nav {
+    grid-template-rows: minmax(0.4rem, 1fr) !important;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* 层叠模式独有的分组返回栏（「← 分组名」）在手风琴下没有意义且
+     会与顶级列表叠印，隐藏；站点标题（for=__drawer）不受影响 */
+  .md-sidebar--primary .md-nav__item--nested > .md-nav > .md-nav__title {
+    display: none !important;
+  }
+
+  /* 层叠模式让当前条目吸顶，手风琴下会错位 */
+  .md-sidebar--primary .md-nav__item--active > .md-nav__link {
+    position: static !important;
+    box-shadow: none !important;
+  }
+}
+
 /* 移动端：Material 自动折叠为下拉，下拉样式跟随品牌 */
 .md-tabs__link.md-tabs__link--active {
   color: var(--rt-primary);
