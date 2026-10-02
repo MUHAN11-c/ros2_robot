@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import os
 import re
 import shutil
@@ -51,6 +52,15 @@ COPY_EXTENSIONS = {
     ".pdf",
 }
 SITE_ASSET_DIRS = ("stylesheets", "javascripts", "assets")
+# 全站 0 引用的遗留资源（已核对 mkdocs.yml/overrides/JS/CSS/生成页与构建产物）：
+# 不删仓库源文件（留作素材），仅不拷入站点。hero-aurora.jpg 约 700KB，
+# 现行首页 hero 为纯 CSS 光晕；logo/favicon 的 svg 版均未被主题引用。
+EXCLUDE_SITE_ASSETS = {
+    "images/hero-aurora.jpg",
+    "images/logo.svg",
+    "images/favicon.svg",
+    "mascots/avatar-64.webp",
+}
 
 
 def source_dir() -> Path:
@@ -116,13 +126,23 @@ def copy_docs(source: Path) -> tuple[int, int]:
     return markdown_count, asset_count
 
 
-def _ignore_mascot_src(mascots_dir: Path):
-    """站点不带贴纸包原始档（assets/mascots/src，约 11MB，仅本地素材构建用）。"""
+def _ignore_unshipped(assets_dir: Path):
+    """站点不带：贴纸包原始档（assets/mascots/src，约 11MB，仅本地素材构建用）
+    与 EXCLUDE_SITE_ASSETS 中的 0 引用遗留资源。"""
 
     def _ignore(directory: str, names: list[str]) -> set[str]:
-        if Path(directory) == mascots_dir and "src" in names:
-            return {"src"}
-        return set()
+        skip: set[str] = set()
+        if Path(directory) == assets_dir / "mascots" and "src" in names:
+            skip.add("src")
+        try:
+            rel = Path(directory).relative_to(assets_dir).as_posix()
+        except ValueError:
+            return skip
+        for item in EXCLUDE_SITE_ASSETS:
+            parent, _, name = item.rpartition("/")
+            if parent == rel and name in names:
+                skip.add(name)
+        return skip
 
     return _ignore
 
@@ -137,7 +157,7 @@ def copy_site_assets() -> None:
         if target.exists():
             shutil.rmtree(target)
         if dirname == "assets":
-            shutil.copytree(source, target, ignore=_ignore_mascot_src(source / "mascots"))
+            shutil.copytree(source, target, ignore=_ignore_unshipped(source))
         else:
             shutil.copytree(source, target)
 
@@ -466,6 +486,35 @@ def count_code_blocks() -> int:
         except OSError:
             continue
     return total // 2
+
+
+def write_manifest() -> None:
+    """PWA 基础 manifest：支持「安装到主屏」（og/theme-color 头部由
+    overrides/main.html 的 extrahead 注入）。颜色取 tokens.css 樱昼/雷夜底色；
+    图标复用现有头像资源（128 webp / 512 webp / 180 png），不新增素材。"""
+    manifest = {
+        "name": "樱机实验室 SakuraBot Lab",
+        "short_name": "樱机实验室",
+        "description": (
+            "面向机器人开发者的系统化知识库——从数学基础、C++ 和 ROS 2，"
+            "到 SLAM、运动控制与具身智能。"
+        ),
+        "lang": "zh-CN",
+        "dir": "ltr",
+        "start_url": ".",
+        "scope": ".",
+        "display": "standalone",
+        "background_color": "#FCFBFE",
+        "theme_color": "#FCFBFE",
+        "icons": [
+            {"src": "assets/mascots/avatar-128.webp", "sizes": "128x128", "type": "image/webp"},
+            {"src": "assets/mascots/apple-touch-icon.png", "sizes": "180x180", "type": "image/png"},
+            {"src": "assets/mascots/avatar-512.webp", "sizes": "512x512", "type": "image/webp", "purpose": "any"},
+        ],
+    }
+    (DOCS_DIR / "manifest.webmanifest").write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
 
 
 def write_404() -> None:
@@ -1009,6 +1058,7 @@ def main() -> None:
     copy_site_assets()
     write_home(markdown_count, asset_count)
     write_404()
+    write_manifest()
     catalog = select_catalog(source)
     catalog = [n for n in catalog if n.title not in EXCLUDE_NAV_SECTIONS]
     nav = build_navigation(catalog)

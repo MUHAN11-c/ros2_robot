@@ -212,6 +212,8 @@
   filter: blur(70px);
   pointer-events: none;
   z-index: 0;
+  /* 仅首页 2 个元素：提升到合成层，滚动时不再逐帧重算 blur(70px) 光栅化 */
+  will-change: transform;
 }
 
 .rt-hero__glow--violet {
@@ -788,24 +790,9 @@
   margin-top: 1.4rem;
 }
 
-/* =============== 8. 回到顶部：固定右下，不遮正文 =============== */
-
-.md-top {
-  top: auto !important;
-  bottom: 1.4rem !important;
-  left: auto !important;
-  right: 1.4rem !important;
-  margin: 0 !important;
-  border-radius: 999px;
-  border: 1px solid var(--rt-border);
-  background: var(--rt-surface);
-  color: var(--rt-primary);
-  box-shadow: var(--rt-shadow-md);
-}
-
-.md-top:hover {
-  background: var(--rt-primary-soft);
-}
+/* =============== 8. 回到顶部 ===============
+   Material 的 .md-top 由浮动助手接管：mascot-assistant.css 里
+   display:none 隐藏原按钮（助手面板内置回顶），此处不再重复定义样式 */
 
 /* =============== 9. 隐藏 generator 文案（版权行已在 extra.copyright） =============== */
 

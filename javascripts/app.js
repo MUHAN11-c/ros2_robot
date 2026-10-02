@@ -108,13 +108,23 @@
     var bc = document.createElement("nav");
     bc.className = "rt-breadcrumb";
     bc.setAttribute("aria-label", "面包屑");
-    var html = "<a href='" + rootHref + "' style='text-decoration:none'>首页</a>";
+    /* 路径段来自 URL，逐节点 textContent 构建，不走 innerHTML */
+    var home = document.createElement("a");
+    home.setAttribute("href", rootHref);
+    home.style.textDecoration = "none";
+    home.textContent = "首页";
+    bc.appendChild(home);
     parts.forEach(function (seg) {
       var label = prettify(seg);
       if (!label) return;
-      html += "<span class='rt-bc-sep'>/</span><span>" + label + "</span>";
+      var sep = document.createElement("span");
+      sep.className = "rt-bc-sep";
+      sep.textContent = "/";
+      var item = document.createElement("span");
+      item.textContent = label;
+      bc.appendChild(sep);
+      bc.appendChild(item);
     });
-    bc.innerHTML = html;
     h1.parentNode.insertBefore(bc, h1);
   }
 
@@ -204,6 +214,7 @@
   }
 
   /* ============ 模块：滚动显现（仅淡入 200ms） ============ */
+  var revealFallbackTimer = 0;
   function initReveal() {
     if (reducedMotion || !("IntersectionObserver" in window)) {
       document.querySelectorAll(".rt-reveal").forEach(function (el) { el.classList.add("is-visible"); });
@@ -223,7 +234,10 @@
         observer.observe(el);
       }
     });
-    window.setTimeout(function () {
+    /* 兜底定时器可清除：instant 导航换页时先撤掉旧定时器，不累积 */
+    if (revealFallbackTimer) window.clearTimeout(revealFallbackTimer);
+    revealFallbackTimer = window.setTimeout(function () {
+      revealFallbackTimer = 0;
       document.querySelectorAll(".rt-reveal").forEach(function (el) { el.classList.add("is-visible"); });
     }, 3000);
   }
@@ -284,6 +298,8 @@
     /* matchMedia 与宽度监听只建一次（setup 每次站内导航都会跑，
        重复创建会累积 MediaQueryList 监听器） */
     if (!drawerMq) {
+      /* 断点与 navigation.css / responsive.css 的 76.234375em 抽屉断点联动
+         （16px 根字号 = 1219.75px），改任意一处须同步其余处 */
       drawerMq = window.matchMedia("(max-width: 1219.98px)");
       if (drawerMq.addEventListener) {
         drawerMq.addEventListener("change", applyDrawerDeepLink);
@@ -395,6 +411,38 @@
     });
   }
 
+  /* ============ 模块：MathJax 按需加载 ============
+     MathJax 运行时(1.17MB)不再全站声明加载，仅当页面出现公式容器时注入。
+     - 运行时 URL 必须在「初始整页解析」时一次性算好：instant 导航后
+       Material 会用旧的相对 src 重建 script 标签、按新页面地址重新解析，
+       运行期再取 src 会得到错误基准（实测 404），故闭包缓存绝对 URL；
+     - mathjax.js(同步,先于本文件执行)已设好 window.MathJax 配置，运行时
+       加载后自行完成首屏 typeset；instant 导航后的补渲染由 mathjax.js 里的
+       document$ 订阅负责，与全站加载时行为一致；
+     - 从无公式页 instant 导航到有公式页时，setup() 随 document$ 重跑，此处
+       再度检测并注入即可。 */
+  var mathjaxUrl = (function () {
+    var self = document.querySelector('script[src*="javascripts/app.js"]');
+    if (!self) return null;
+    try {
+      return new URL("../assets/mathjax/tex-mml-chtml.js", new URL(self.getAttribute("src"), location.href)).href;
+    } catch (e) { return null; }
+  })();
+  var mathjaxLoading = false;
+  function initMathJax() {
+    if (mathjaxLoading) return;
+    /* 注意判断条件：mathjax.js 的配置对象本身就带 startup 键（pageReady
+       钩子），配置先于运行时执行，用 MathJax.startup 判断会恒真而永远
+       不加载；已启动的运行时才会挂 typesetPromise 函数 */
+    if (window.MathJax && typeof window.MathJax.typesetPromise === "function") return;
+    if (!document.querySelector(".arithmatex") || !mathjaxUrl) return;
+    mathjaxLoading = true;
+    var s = document.createElement("script");
+    s.src = mathjaxUrl;
+    s.async = true;
+    document.head.appendChild(s);
+  }
+
   /* ============ 启动 ============ */
   function setup() {
     initProgress();
@@ -410,6 +458,7 @@
     initCatalogFilter();
     initPagerKeys();
     initLazyImages();
+    initMathJax();
   }
 
   if (window.document$) {

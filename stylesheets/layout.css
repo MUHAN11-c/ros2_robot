@@ -35,10 +35,7 @@
   background: var(--rt-header-bg);
 }
 
-/* 锚点跳转避让吸顶栈：header 64px + sticky tabs 49px + 呼吸空间 */
-.md-typeset [id] {
-  scroll-margin-top: calc(var(--rt-header-height, 64px) + 3.9rem);
-}
+/* 锚点滚动偏移与跳转避让的统一规则在文件末尾（4.4rem）维护 */
 
 .md-header__inner {
   height: var(--rt-header-height);
@@ -143,13 +140,9 @@
 /* ---- 内容列：约 860px（75-90 字符/行） ---- */
 
 .md-content__inner {
-  margin-inline: auto;
-  padding: 0 1.2rem 2.6rem;
-}
-
-.md-content__inner {
   max-width: var(--rt-content-width);
   margin-inline: auto;
+  padding: 0 1.2rem 2.6rem;
 }
 
 /* 首页（含知识地图）放宽内容列 */

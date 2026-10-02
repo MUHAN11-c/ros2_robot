@@ -17,10 +17,6 @@
     padding-top: 2.2rem;
   }
 
-  .rt-hero__desc {
-    margin-inline: auto;
-  }
-
   .rt-hero__actions {
     justify-content: center;
   }
@@ -28,10 +24,6 @@
   .rt-hero__figure {
     order: -1;
     width: 260px;
-  }
-
-  .rt-header-links {
-    display: none;
   }
 }
 
@@ -59,10 +51,6 @@
 
   .rt-hero {
     padding: 1.8rem 1rem 1.6rem;
-  }
-
-  .rt-hero__title {
-    font-size: 1.9rem;
   }
 
   .rt-hero__title {
@@ -171,8 +159,7 @@
   .md-header,
   .md-sidebar,
   .md-footer,
-  .rt-progress,
-  .rt-header-links {
+  .rt-progress {
     display: none !important;
   }
 

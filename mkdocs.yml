@@ -17,6 +17,10 @@ theme:
   name: material
   custom_dir: overrides
   language: zh
+  # 不请求 Google Fonts：Material 默认注入的 Roboto 会被 base.css 的
+  # Noto Sans SC → system-ui 字体栈整体覆盖，等于每个页面白拉一次
+  # 渲染阻塞的外链（国内访问 fonts.googleapis.com 还经常不可达）
+  font: false
   logo: assets/mascots/avatar-128.webp
   favicon: assets/mascots/favicon.png
   features:
@@ -61,6 +65,10 @@ theme:
 hooks:
   - scripts/override_404_hook.py
   - scripts/edit_source_hook.py
+  # 构建期资源优化：正文图懒加载属性注入 + 自研 CSS/JS 压缩 + 删 source map
+  - scripts/optimize_assets_hook.py
+  # 搜索索引瘦身：代码块不进索引 + CJK 以 UTF-8 原文重编码（126MB 级降一个数量级）
+  - scripts/search_diet_hook.py
 
 plugins:
   - search:
@@ -124,12 +132,15 @@ extra_css:
   - stylesheets/mascot-assistant.css
 
 extra_javascript:
+  # 保持同步（不加 defer）：与 document$ 引导时序的原始语义完全一致，
+  # 且三脚本合计 ~20KB、位于 body 尾，阻塞成本可忽略；大头的 MathJax
+  # 运行时已改为按需动态注入（见下），defer 在此处没有实际收益
   - javascripts/mathjax.js
   - javascripts/app.js
   - javascripts/mascot.js
-  # MathJax 运行时本地化(assets/mathjax/ 含字体):全站 380+ 章公式不再依赖
-  # jsdelivr CDN,本地部署断网/CDN 限流时公式照常渲染
-  - assets/mathjax/tex-mml-chtml.js
+  # MathJax 运行时(assets/mathjax/ 含字体)不再全站加载：全站仅约 8 成
+  # 页面含公式，由 app.js 检测到 .arithmatex 后按需注入（无公式页与
+  # hover 预取各省 1.17MB）；断网/CDN 限流时公式照常渲染的特性不变
 
 extra:
   copyright: SakuraBot Lab · 樱机实验室

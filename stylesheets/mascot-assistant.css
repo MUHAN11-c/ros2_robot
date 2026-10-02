@@ -4,22 +4,23 @@
    配色对齐 tokens.css 品牌色板。
    ========================================================= */
 
-/* 1. Design Tokens */
+/* 1. Design Tokens
+   颜色一律引用 tokens.css 的主题令牌（--rt-primary 等随 樱昼/雷夜 切换），
+   不再平行维护色板；仅半透明底、阴影、圆角、尺寸为组件私有令牌。 */
 :root {
-  --rt-assistant-primary: #8166B1;
-  --rt-assistant-primary-hover: #6F55A0;
-  --rt-assistant-primary-soft: rgba(129, 102, 177, 0.10);
+  --rt-assistant-primary: var(--rt-primary);
+  --rt-assistant-primary-hover: var(--md-primary-fg-color--dark);
+  --rt-assistant-primary-soft: var(--rt-primary-soft);
 
+  /* 装饰渐变专用：tokens 的 --rt-sakura 在浅色主题被加深（文字对比档），
+     面板里的粉紫渐变要的是主题无关的柔和中间值，保留字面值 */
   --rt-assistant-pink: #EFAFC5;
-  --rt-assistant-pink-soft: rgba(239, 175, 197, 0.14);
-
-  --rt-assistant-gold: #C9A96E;
 
   --rt-assistant-bg: rgba(255, 255, 255, 0.96);
-  --rt-assistant-bg-soft: #F7F4FA;
+  --rt-assistant-bg-soft: var(--rt-surface-soft);
 
-  --rt-assistant-text: #292530;
-  --rt-assistant-text-muted: #6C6574;
+  --rt-assistant-text: var(--rt-text-primary);
+  --rt-assistant-text-muted: var(--rt-text-secondary);
 
   --rt-assistant-border: rgba(111, 83, 145, 0.14);
 
@@ -37,13 +38,9 @@
   --rt-assistant-z: 50;
 }
 
-/* 2. Dark Mode */
+/* 2. Dark Mode（文字/软底已由主题令牌自动切换，这里只调半透明底与阴影） */
 [data-md-color-scheme="slate"] {
   --rt-assistant-bg: rgba(36, 32, 43, 0.96);
-  --rt-assistant-bg-soft: #2E2937;
-
-  --rt-assistant-text: #EEEAF2;
-  --rt-assistant-text-muted: #B9B1C0;
 
   --rt-assistant-border: rgba(206, 184, 232, 0.12);
 

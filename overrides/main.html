@@ -1,5 +1,35 @@
 {% extends "base.html" %}
 
+{% block extrahead %}
+  {# 分享预览（微信/QQ/Twitter 等抓取 og:*）+ PWA 基础（manifest/theme-color）。
+     og:image 用绝对 URL（爬虫不解析相对路径）；manifest/apple-touch 用页面相对
+     base_url，适配 GitHub Pages 子路径部署。颜色取 tokens.css 樱昼/雷夜底色。
+     注意：mkdocs 渲染根级 404 模板时无 page 上下文（会被 override_404_hook
+     覆盖），页面相关标签须先判空。 #}
+  {# 分享标题优先取页面 meta 显式 title（如首页「Robotics Tutorial · 樱机实验室」），
+     无 meta 时回落 nav 标题（page.title，nav 名会覆盖 meta，故显式先判 meta） #}
+  {% set page_title = (page.meta.title if page and page.meta else none) or (page.title if page else none) or config.site_name %}
+  {% set page_desc = ((page.meta.description if page and page.meta else none) or config.site_description) %}
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{ config.site_name | e }}">
+  <meta property="og:title" content="{{ page_title | e }}">
+  <meta property="og:description" content="{{ page_desc | truncate(160, true) | e }}">
+  {% if page and page.canonical_url %}
+  <meta property="og:url" content="{{ page.canonical_url }}">
+  {% endif %}
+  <meta property="og:image" content="{{ config.site_url }}assets/mascots/avatar-512.webp">
+  <meta property="og:image:alt" content="樱机实验室 SakuraBot Lab 看板娘头像">
+  <meta property="og:locale" content="zh_CN">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="{{ page_title | e }}">
+  <meta name="twitter:description" content="{{ page_desc | truncate(160, true) | e }}">
+  <meta name="twitter:image" content="{{ config.site_url }}assets/mascots/avatar-512.webp">
+  <meta name="theme-color" content="#FCFBFE" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#17151C" media="(prefers-color-scheme: dark)">
+  <link rel="manifest" href="{{ base_url }}/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="{{ base_url }}/assets/mascots/apple-touch-icon.png">
+{% endblock %}
+
 {% block scripts %}
   {{ super() }}
   {% include "partials/mascot-assistant.html" %}

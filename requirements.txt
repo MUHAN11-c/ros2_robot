@@ -3,3 +3,6 @@ mkdocs-glightbox>=0.4,<1
 pymdown-extensions>=10.7,<11
 PyYAML>=6,<7
 jieba>=0.42,<1
+# scripts/optimize_assets_hook.py 构建期压缩自研 CSS/JS（纯 Python 实现）
+rcssmin>=1.1,<2
+rjsmin>=1.2,<2
