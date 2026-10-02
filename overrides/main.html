@@ -17,13 +17,13 @@
   {% if page and page.canonical_url %}
   <meta property="og:url" content="{{ page.canonical_url }}">
   {% endif %}
-  <meta property="og:image" content="{{ config.site_url }}assets/mascots/avatar-512.webp">
+  <meta property="og:image" content="{{ config.site_url }}assets/mascots/og-image.jpg">
   <meta property="og:image:alt" content="樱机实验室 SakuraBot Lab 看板娘头像">
   <meta property="og:locale" content="zh_CN">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="{{ page_title | e }}">
   <meta name="twitter:description" content="{{ page_desc | truncate(160, true) | e }}">
-  <meta name="twitter:image" content="{{ config.site_url }}assets/mascots/avatar-512.webp">
+  <meta name="twitter:image" content="{{ config.site_url }}assets/mascots/og-image.jpg">
   <meta name="theme-color" content="#FCFBFE" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#17151C" media="(prefers-color-scheme: dark)">
   <link rel="manifest" href="{{ base_url }}/manifest.webmanifest">

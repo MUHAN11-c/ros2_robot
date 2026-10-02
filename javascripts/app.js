@@ -167,19 +167,29 @@
   function paintVisited() {
     var visited = getVisited();
     if (!visited.length) return;
+    /* 目录索引页有数千个链接：先归一化进 Set，再对每个链接沿祖先目录
+       上溯查找（原实现每链接 × 全部访问记录线性扫，O(链接数×记录数)） */
+    var set = new Set();
+    visited.forEach(function (v) {
+      var norm = v.replace(/\.html?$/, "").replace(/\/$/, "");
+      if (norm) set.add(norm);
+    });
     document.querySelectorAll("a").forEach(function (a) {
       var href = a.getAttribute("href") || "";
       if (!href.endsWith("/") && !href.endsWith(".html")) return;
-      /* 侧栏链接是相对路径（../xx/），必须先解析成绝对路径名再与访问记录比对 */
       var path;
       try { path = new URL(href, location.href).pathname.replace(/\.html?$/, "").replace(/\/$/, ""); }
       catch (e) { return; }
       if (!path) return;
-      var match = visited.some(function (v) {
-        var norm = v.replace(/\.html?$/, "").replace(/\/$/, "");
-        /* 仅认「完全同页」或「visited 是该链接的父目录」两种情况 */
-        return norm === path || path.indexOf(norm + "/") === 0;
-      });
+      /* 语义与原实现一致：「完全同页」或 visited 是该链接的父目录 */
+      var match = set.has(path);
+      if (!match) {
+        var idx = path.indexOf("/", 1);
+        while (idx !== -1 && !match) {
+          match = set.has(path.slice(0, idx));
+          idx = path.indexOf("/", idx + 1);
+        }
+      }
       if (match) a.classList.add("is-visited");
     });
   }
