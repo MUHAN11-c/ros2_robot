@@ -1131,3 +1131,41 @@
     transition: none;
   }
 }
+
+/* ---- 目录索引页筛选框（app.js initCatalogFilter 接管过滤逻辑） ---- */
+.rt-catalog-filter {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 1rem 0 1.4rem;
+}
+
+.rt-catalog-filter input[type="search"] {
+  flex: 1;
+  max-width: 30rem;
+  padding: 0.55rem 0.9rem;
+  font-size: 0.88rem;
+  font-family: inherit;
+  color: var(--rt-text-primary);
+  background: var(--rt-surface-soft);
+  border: 1px solid var(--rt-border);
+  border-radius: var(--rt-radius-sm);
+  outline: none;
+  transition: border-color var(--rt-transition), box-shadow var(--rt-transition);
+}
+
+.rt-catalog-filter input[type="search"]:focus {
+  border-color: var(--rt-primary);
+  box-shadow: 0 0 0 3px var(--rt-primary-soft);
+}
+
+.rt-catalog-filter input[type="search"]::placeholder {
+  color: var(--rt-text-secondary);
+}
+
+.rt-catalog-filter #rt-catalog-count {
+  flex-shrink: 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--rt-primary);
+}

@@ -36,7 +36,7 @@ const VIEWPORTS = [
 const PAGES = [
   { name: 'home', path: '/' },
   { name: 'slam-hub', path: '/03_SLAM/SLAM方向_学习路径与教材映射/' },
-  { name: 'slam-3level', path: '/03_SLAM/00_入门/20_十四讲第2讲_三维空间刚体运动/' },
+  { name: 'slam-3level', path: '/03_SLAM/00_入门/20_十四讲第2讲_三维空间刚体运动/', math: true },
   { name: 'math-hub', path: '/01_数学/数学方向_学习路径与教材映射/' },
   { name: 'cpp-2level', path: '/02_C++基础与进阶/00_入门/20_控制流_函数与程序结构/' },
   { name: 'lab07', path: '/08_可视化实验室/lab07_规划实验室/' },
@@ -147,8 +147,19 @@ async function runCell(browser, viewport, pageDef) {
       await page.waitForTimeout(700);
     }
 
-    // ① JS 异常
+    // ① JS 异常 + CDN 依赖检查(本地部署不应请求任何外部 JS)
     record(cellName, '', 'js-errors', pageErrors.length === 0, pageErrors.join(' | '));
+    const cdnHits = await page.evaluate(() =>
+      [...document.scripts].filter((s) => s.src && !s.src.startsWith(location.origin)).map((s) => s.src.slice(0, 60))
+    );
+    record(cellName, '', 'no-cdn-scripts', cdnHits.length === 0, cdnHits.join(', '));
+
+    // ①b 公式渲染(MathJax 本地化后,含公式的页面应有 <mjx-container> 标签——
+    //    注意 mjx-container 是自定义元素标签名,不是 class)
+    const mjx = await page.evaluate(() => document.querySelectorAll('mjx-container').length);
+    if (pageDef.math) {
+      record(cellName, '', 'mathjax-render', mjx > 0, `${mjx} 个公式容器`);
+    }
 
     // ② 叠印检测
     const overlap = await page.evaluate(CHECK_OVERLAP);
@@ -160,6 +171,30 @@ async function runCell(browser, viewport, pageDef) {
     if (chain.reason !== 'no-active') {
       record(cellName, '', 'current-chain', chain.ok, chain.ok ? '' : `未展开: ${chain.unchecked.join(', ')}`);
       record(cellName, '', 'active-highlight', await page.evaluate(CHECK_ACTIVE));
+    }
+
+    // ③b 目录索引页筛选(catalog 页):输入关键词应有命中统计并过滤
+    if (pageDef.name === 'catalog') {
+      const box = page.locator('#rt-catalog-search');
+      if ((await box.count()) > 0) {
+        await box.fill('微积分');
+        await page.waitForTimeout(300);
+        const t = await page.evaluate(() => document.getElementById('rt-catalog-count')?.textContent || '');
+        record(cellName, '', 'catalog-filter', t.includes('命中'), t);
+        await box.fill('');
+        await page.waitForTimeout(200);
+      } else {
+        record(cellName, '', 'catalog-filter', false, '筛选框不存在');
+      }
+    }
+
+    // ③c 面包屑(navigation.path):内容页 H1 上方应有模块路径
+    if (pageDef.name !== 'home' && pageDef.name !== 'catalog') {
+      const crumb = await page.evaluate(() => {
+        const nav = document.querySelector('.md-path');
+        return nav ? { links: nav.querySelectorAll('a').length, text: nav.textContent.trim().replace(/\s+/g, ' ').slice(0, 40) } : null;
+      });
+      record(cellName, '', 'breadcrumb', !!crumb && crumb.links >= 1, crumb ? crumb.text : '无面包屑');
     }
 
     // ④ 手风琴交互(抽屉态):点未展开组 → 展开 → 再点 → 收起

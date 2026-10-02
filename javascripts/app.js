@@ -303,6 +303,63 @@
     }
   }
 
+  /* ============ 模块：目录索引页筛选 ============
+     catalog 页顶部的筛选框：输入即过滤全部章节链接；命中的分组自动
+     展开，无命中的分组/模块整组隐藏；清空恢复。纯前端，无索引依赖。 */
+  function initCatalogFilter() {
+    var input = document.getElementById("rt-catalog-search");
+    var counter = document.getElementById("rt-catalog-count");
+    if (!input || !counter) return;
+    var sections = [...document.querySelectorAll(".robotics-catalog-section")];
+    if (!sections.length) return;
+
+    function apply() {
+      var q = input.value.trim().toLowerCase();
+      var shown = 0;
+
+      sections.forEach(function (section) {
+        var directLinks = [...section.querySelectorAll(":scope > ul li a")];
+        var groups = [...section.querySelectorAll("details.robotics-catalog-group")];
+        var hit = 0;
+
+        /* 模块直属章节（不在分组里） */
+        directLinks.forEach(function (a) {
+          var ok = !q || a.textContent.toLowerCase().indexOf(q) !== -1;
+          var li = a.closest("li");
+          if (li) li.hidden = !ok;
+          if (ok) hit++;
+        });
+
+        /* 各分组内章节 */
+        groups.forEach(function (group) {
+          var groupHit = 0;
+          [...group.querySelectorAll("ul li a")].forEach(function (a) {
+            var ok = !q || a.textContent.toLowerCase().indexOf(q) !== -1;
+            var li = a.closest("li");
+            if (li) li.hidden = !ok;
+            if (ok) groupHit++;
+          });
+          group.hidden = q && groupHit === 0;
+          if (q && groupHit > 0) group.open = true;
+          hit += groupHit;
+        });
+
+        /* 直属列表整体空了就隐藏（分组的显隐已各自处理） */
+        var directUl = section.querySelector(":scope > ul");
+        if (directUl) {
+          directUl.hidden = !!q && [...directUl.querySelectorAll("li")].every(function (li) { return li.hidden; });
+        }
+        section.hidden = !!q && hit === 0;
+        shown += hit;
+      });
+
+      var total = document.querySelectorAll(".robotics-catalog-section ul li a").length;
+      counter.textContent = q ? "命中 " + shown + " / " + total + " 章" : "";
+    }
+
+    input.addEventListener("input", apply);
+  }
+
   /* ============ 启动 ============ */
   function setup() {
     initProgress();
@@ -315,6 +372,7 @@
     initReveal();
     initTocProgress();
     initDrawerDeepLink();
+    initCatalogFilter();
   }
 
   if (window.document$) {

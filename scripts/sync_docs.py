@@ -978,6 +978,13 @@ def write_catalog(catalog: list[SummaryNode]) -> None:
         "",
         "❖ 按模块折叠展开，拾级而入对应章节。",
         "",
+        # 章节筛选框：app.js 的 initCatalogFilter 接管,输入即过滤下方全部章节
+        '<div class="rt-catalog-filter">',
+        '  <input id="rt-catalog-search" type="search" autocomplete="off"',
+        '         placeholder="筛选 463 个章节：微积分 / SLAM / MPPI / 双臂 …" />',
+        '  <span id="rt-catalog-count" aria-live="polite"></span>',
+        "</div>",
+        "",
         *render_catalog_items(catalog),
     ]
     (DOCS_DIR / "catalog.md").write_text("\n".join(lines), encoding="utf-8")

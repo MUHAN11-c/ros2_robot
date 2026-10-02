@@ -412,3 +412,11 @@
     padding-bottom: 0.4rem;
   }
 }
+
+/* ---- prefers-reduced-motion:关闭手风琴高度动画(等价瞬开) ---- */
+@media (prefers-reduced-motion: reduce) {
+  .md-sidebar--primary .md-nav__toggle ~ .md-nav,
+  .md-sidebar--primary .md-nav__toggle:checked ~ .md-nav {
+    transition: none;
+  }
+}

@@ -29,6 +29,8 @@ theme:
     - navigation.top
     - navigation.footer
     - navigation.tracking
+    # 面包屑:H1 上方显示「模块 / 分组 / 当前页」路径,深目录里知道自己在哪
+    - navigation.path
     - toc.follow
     - search.highlight
     - search.share
@@ -121,7 +123,9 @@ extra_javascript:
   - javascripts/mathjax.js
   - javascripts/app.js
   - javascripts/mascot.js
-  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+  # MathJax 运行时本地化(assets/mathjax/ 含字体):全站 380+ 章公式不再依赖
+  # jsdelivr CDN,本地部署断网/CDN 限流时公式照常渲染
+  - assets/mathjax/tex-mml-chtml.js
 
 extra:
   copyright: SakuraBot Lab · 樱机实验室
