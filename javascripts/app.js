@@ -360,6 +360,41 @@
     input.addEventListener("input", apply);
   }
 
+  /* ============ 模块：键盘翻页 ============
+     ← / → (或 [ / ])切换上一篇/下一篇,输入框聚焦时忽略;
+     通过点击页脚 pager 链接实现,自动走即时导航。 */
+  function initPagerKeys() {
+    if (document.body.dataset.rtPagerKeys) return;
+    document.body.dataset.rtPagerKeys = "1";
+    document.addEventListener("keydown", function (event) {
+      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+      var tag = (document.activeElement && document.activeElement.tagName) || "";
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight" && event.key !== "[" && event.key !== "]") return;
+      var links = [...document.querySelectorAll(".md-footer__link")];
+      var target = null;
+      if (event.key === "ArrowLeft" || event.key === "[") {
+        target = links.find(function (a) { return a.classList.contains("md-footer__link--previous"); });
+      } else {
+        target = links.find(function (a) { return a.classList.contains("md-footer__link--next"); });
+      }
+      if (target) {
+        event.preventDefault();
+        target.click();
+      }
+    });
+  }
+
+  /* ============ 模块：图片懒加载 ============
+     构建管线不注入 loading 属性,这里给正文图片补 loading=lazy
+     (对尚未加载的图片生效),长页面按需取图。 */
+  function initLazyImages() {
+    document.querySelectorAll(".md-typeset img:not([loading])").forEach(function (img) {
+      img.loading = "lazy";
+      img.decoding = "async";
+    });
+  }
+
   /* ============ 启动 ============ */
   function setup() {
     initProgress();
@@ -373,6 +408,8 @@
     initTocProgress();
     initDrawerDeepLink();
     initCatalogFilter();
+    initPagerKeys();
+    initLazyImages();
   }
 
   if (window.document$) {

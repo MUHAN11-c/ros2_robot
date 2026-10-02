@@ -26,6 +26,10 @@ theme:
     # - sections 会把当前模块全部分组平铺（一栏 100+ 条），同样不用；
     # - prune 会把非当前路径的分组剪成纯链接（无折叠开关），点击分组变成直接
     #   跳转而不是展开——抽屉手风琴（见 navigation.css）依赖完整子树，故关闭
+    # 即时导航:站内点击不整页刷新(标题/进度/滚动状态无跳变),配合
+    # hover 预取进一步降低切换延迟;公式重渲染由 app.js 兜底
+    - navigation.instant
+    - navigation.instant.prefetch
     - navigation.top
     - navigation.footer
     - navigation.tracking

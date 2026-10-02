@@ -346,3 +346,9 @@
   height: 0.85rem;
   stroke: var(--rt-text-secondary);
 }
+
+/* ---- 锚点滚动偏移:sticky 页头高约 3.5rem,补 4.4rem 余量,避免
+   点 TOC/正文锚点后目标标题被页头盖住(scrollIntoView 同样生效) ---- */
+.md-typeset [id] {
+  scroll-margin-top: 4.4rem;
+}
