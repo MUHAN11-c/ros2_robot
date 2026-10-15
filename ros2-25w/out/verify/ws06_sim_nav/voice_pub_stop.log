@@ -1,0 +1,4 @@
+--- run: ros2 topic pub --once /voice_cmd_text std_msgs/msg/String {data: 停止} (timeout 6s)
+publisher: beginning loop
+publishing #1: std_msgs.msg.String(data='停止')
+

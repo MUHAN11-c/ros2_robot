@@ -1,0 +1,1 @@
+--- run: ros2 topic echo /imu --once --no-arr --spin-time 5 (timeout 7s)

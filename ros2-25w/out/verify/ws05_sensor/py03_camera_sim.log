@@ -1,0 +1,21 @@
+--- run: ros2 run py03_camera_sim camera_sim_py (bg 10s)
+[INFO] [1792042383.244505265] [camera_sim_node_py]: 单目相机仿真节点创建!(python)
+Traceback (most recent call last):
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws05_sensor/install/py03_camera_sim/lib/py03_camera_sim/camera_sim_py", line 33, in <module>
+    sys.exit(load_entry_point('py03-camera-sim==0.0.0', 'console_scripts', 'camera_sim_py')())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws05_sensor/install/py03_camera_sim/lib/python3.12/site-packages/py03_camera_sim/camera_sim_py.py", line 42, in main
+    rclpy.spin(CameraSimPy())
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
+    executor.spin_once()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 926, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 907, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 877, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 785, in _wait_for_ready_callbacks
+    raise ExternalShutdownException()
+rclpy.executors.ExternalShutdownException

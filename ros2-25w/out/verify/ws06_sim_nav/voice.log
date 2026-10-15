@@ -1,0 +1,27 @@
+--- run: ros2 run demo_voice voice_controller (bg 20s)
+[INFO] [1792044174.742972372] [voice_controller_node_py]: 语音控制节点创建!
+[WARN] [1792044174.743174479] [voice_controller_node_py]: 未设置 IFLYTEK_APPID 环境变量，仅支持文本指令模拟
+[INFO] [1792044177.569673169] [voice_controller_node_py]: 收到语音指令:前进
+[INFO] [1792044177.569888143] [voice_controller_node_py]: 执行: linear=0.30 angular=0.00
+[INFO] [1792044186.612650906] [voice_controller_node_py]: 收到语音指令:停止
+[INFO] [1792044186.612922321] [voice_controller_node_py]: 执行: linear=0.00 angular=0.00
+Traceback (most recent call last):
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws06_sim_nav/install/demo_voice/lib/demo_voice/voice_controller", line 33, in <module>
+    sys.exit(load_entry_point('demo-voice==0.0.0', 'console_scripts', 'voice_controller')())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws06_sim_nav/install/demo_voice/lib/python3.12/site-packages/demo_voice/voice_controller.py", line 59, in main
+    rclpy.spin(VoiceController())
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
+    executor.spin_once()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 926, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 907, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 877, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 781, in _wait_for_ready_callbacks
+    wait_set.wait(timeout_nsec)
+KeyboardInterrupt
+[ros2run]: Interrupt

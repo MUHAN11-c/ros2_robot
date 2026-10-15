@@ -1,0 +1,9 @@
+--- run: ros2 run cpp05_exercise exer03_tf_listener --ros-args -p father_frame:=t2 -p child_frame:=turtle1 (bg 12s)
+[INFO] [1792040675.758319041] [exer03_tf_listener_node_cpp]: 异常提示:"t2" passed to lookupTransform argument target_frame does not exist. 
+[INFO] [1792040676.758216150] [exer03_tf_listener_node_cpp]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[INFO] [1792040677.758151525] [exer03_tf_listener_node_cpp]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[INFO] [1792040678.758157273] [exer03_tf_listener_node_cpp]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[INFO] [1792040679.758271451] [exer03_tf_listener_node_cpp]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[INFO] [1792040680.758163652] [exer03_tf_listener_node_cpp]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[INFO] [1792040681.758224173] [exer03_tf_listener_node_cpp]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[INFO] [1792040682.645455474] [rclcpp]: signal_handler(SIGINT/SIGTERM)

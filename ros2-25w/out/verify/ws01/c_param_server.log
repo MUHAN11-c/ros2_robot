@@ -1,0 +1,16 @@
+--- run: ros2 run cpp04_param demo01_param_server (bg 18s)
+[INFO] [1792040505.580503075] [param_server_node_cpp]: 参数服务端创建了!
+[INFO] [1792040505.580539720] [param_server_node_cpp]: -------------增-------------
+[INFO] [1792040505.580551484] [param_server_node_cpp]: -------------查-------------
+[INFO] [1792040505.580554050] [param_server_node_cpp]: car_name = tiger
+[INFO] [1792040505.580556359] [param_server_node_cpp]: width = 1.55
+[INFO] [1792040505.580561162] [param_server_node_cpp]: wheels = 5
+[INFO] [1792040505.580563042] [param_server_node_cpp]: -------------改-------------
+[INFO] [1792040505.580567837] [param_server_node_cpp]: -------------查-------------
+[INFO] [1792040505.580569520] [param_server_node_cpp]: car_name = tiger
+[INFO] [1792040505.580571156] [param_server_node_cpp]: width = 1.65
+[INFO] [1792040505.580573063] [param_server_node_cpp]: wheels = 5
+[INFO] [1792040505.580574759] [param_server_node_cpp]: -------------删-------------
+terminate called after throwing an instance of 'rclcpp::exceptions::InvalidParameterTypeException'
+  what():  parameter 'car_name' has invalid type: cannot undeclare a statically typed parameter
+[ros2run]: Aborted

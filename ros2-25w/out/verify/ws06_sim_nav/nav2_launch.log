@@ -1,0 +1,98 @@
+[INFO] [launch]: All log files can be found below /home/mu/.ros/log/2026-10-15-13-34-42-740117-mu-MS-7E34-441320
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [map_server-1]: process started with pid [441419]
+[INFO] [amcl-2]: process started with pid [441420]
+[INFO] [planner_server-3]: process started with pid [441426]
+[INFO] [controller_server-4]: process started with pid [441427]
+[INFO] [bt_navigator-5]: process started with pid [441428]
+[INFO] [behavior_server-6]: process started with pid [441429]
+[INFO] [lifecycle_manager-7]: process started with pid [441430]
+[INFO] [rviz2-8]: process started with pid [441436]
+[amcl-2] [INFO] [1792042482.815680782] [amcl]: 
+[amcl-2] 	amcl lifecycle node launched. 
+[amcl-2] 	Waiting on external lifecycle transitions to activate
+[amcl-2] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[amcl-2] [INFO] [1792042482.816803478] [amcl]: Creating
+[lifecycle_manager-7] [INFO] [1792042482.818552276] [lifecycle_manager_navigation]: Creating
+[lifecycle_manager-7] terminate called after throwing an instance of 'rclcpp::exceptions::ParameterUninitializedException'
+[lifecycle_manager-7]   what():  parameter 'node_names' is not initialized
+[bt_navigator-5] [INFO] [1792042482.819060815] [bt_navigator]: 
+[bt_navigator-5] 	bt_navigator lifecycle node launched. 
+[bt_navigator-5] 	Waiting on external lifecycle transitions to activate
+[bt_navigator-5] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-3] [INFO] [1792042482.820789376] [planner_server]: 
+[planner_server-3] 	planner_server lifecycle node launched. 
+[planner_server-3] 	Waiting on external lifecycle transitions to activate
+[planner_server-3] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-5] [INFO] [1792042482.821345390] [bt_navigator]: Creating
+[planner_server-3] [INFO] [1792042482.823882264] [planner_server]: Creating
+[map_server-1] [INFO] [1792042482.825808594] [map_server]: 
+[map_server-1] 	map_server lifecycle node launched. 
+[map_server-1] 	Waiting on external lifecycle transitions to activate
+[map_server-1] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[map_server-1] [INFO] [1792042482.825854605] [map_server]: Creating
+[controller_server-4] [INFO] [1792042482.826207103] [controller_server]: 
+[controller_server-4] 	controller_server lifecycle node launched. 
+[controller_server-4] 	Waiting on external lifecycle transitions to activate
+[controller_server-4] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-3] [INFO] [1792042482.828040965] [global_costmap.global_costmap]: 
+[planner_server-3] 	global_costmap lifecycle node launched. 
+[planner_server-3] 	Waiting on external lifecycle transitions to activate
+[planner_server-3] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-3] [INFO] [1792042482.829252814] [global_costmap.global_costmap]: Creating Costmap
+[behavior_server-6] [INFO] [1792042482.830518489] [behavior_server]: 
+[behavior_server-6] 	behavior_server lifecycle node launched. 
+[behavior_server-6] 	Waiting on external lifecycle transitions to activate
+[behavior_server-6] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-4] [INFO] [1792042482.834098953] [controller_server]: Creating controller server
+[controller_server-4] [INFO] [1792042482.837130910] [local_costmap.local_costmap]: 
+[controller_server-4] 	local_costmap lifecycle node launched. 
+[controller_server-4] 	Waiting on external lifecycle transitions to activate
+[controller_server-4] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-4] [INFO] [1792042482.837925753] [local_costmap.local_costmap]: Creating Costmap
+[rviz2-8] [INFO] [1792042483.407442793] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-8] [INFO] [1792042483.407497009] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[rviz2-8] [INFO] [1792042483.512347827] [rviz2]: Stereo is NOT SUPPORTED
+[ERROR] [lifecycle_manager-7]: process has died [pid 441430, exit code -6, cmd '/opt/ros/jazzy/lib/nav2_lifecycle_manager/lifecycle_manager --ros-args -r __node:=lifecycle_manager_navigation --params-file /home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws06_sim_nav/install/demo_nav2/share/demo_nav2/param/nav2_params.yaml --params-file /tmp/launch_params_mvwgzlt_'].
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT) again, ignoring...
+[INFO] [rviz2-8]: sending signal 'SIGINT' to process[rviz2-8]
+[INFO] [behavior_server-6]: sending signal 'SIGINT' to process[behavior_server-6]
+[INFO] [bt_navigator-5]: sending signal 'SIGINT' to process[bt_navigator-5]
+[INFO] [controller_server-4]: sending signal 'SIGINT' to process[controller_server-4]
+[INFO] [planner_server-3]: sending signal 'SIGINT' to process[planner_server-3]
+[INFO] [amcl-2]: sending signal 'SIGINT' to process[amcl-2]
+[INFO] [map_server-1]: sending signal 'SIGINT' to process[map_server-1]
+[ERROR] [bt_navigator-5]: process has died [pid 441428, exit code -2, cmd '/opt/ros/jazzy/lib/nav2_bt_navigator/bt_navigator --ros-args -r __node:=bt_navigator --params-file /home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws06_sim_nav/install/demo_nav2/share/demo_nav2/param/nav2_params.yaml --params-file /tmp/launch_params_u4xnqltb'].
+[planner_server-3] [INFO] [1792042497.551436913] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[planner_server-3] [INFO] [1792042497.551537154] [planner_server]: Running Nav2 LifecycleNode rcl preshutdown (planner_server)
+[planner_server-3] [INFO] [1792042497.551576815] [planner_server]: Destroying bond (planner_server) to lifecycle manager.
+[ERROR] [behavior_server-6]: process has died [pid 441429, exit code -2, cmd '/opt/ros/jazzy/lib/nav2_behaviors/behavior_server --ros-args -r __node:=behavior_server --params-file /home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws06_sim_nav/install/demo_nav2/share/demo_nav2/param/nav2_params.yaml --params-file /tmp/launch_params_gnvv_78y'].
+[ERROR] [planner_server-3]: process has died [pid 441426, exit code -2, cmd '/opt/ros/jazzy/lib/nav2_planner/planner_server --ros-args -r __node:=planner_server --params-file /home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws06_sim_nav/install/demo_nav2/share/demo_nav2/param/nav2_params.yaml --params-file /tmp/launch_params_v5jwhe8k'].
+[map_server-1] [INFO] [1792042497.551526511] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[map_server-1] [INFO] [1792042497.551593287] [map_server]: Running Nav2 LifecycleNode rcl preshutdown (map_server)
+[map_server-1] [INFO] [1792042497.551621098] [map_server]: Destroying bond (map_server) to lifecycle manager.
+[map_server-1] [INFO] [1792042497.552498048] [map_server]: Destroying
+[amcl-2] [INFO] [1792042497.551534099] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[amcl-2] [INFO] [1792042497.551627114] [amcl]: Running Nav2 LifecycleNode rcl preshutdown (amcl)
+[amcl-2] [INFO] [1792042497.551651646] [amcl]: Destroying bond (amcl) to lifecycle manager.
+[rviz2-8] [INFO] [1792042497.551559174] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[controller_server-4] [INFO] [1792042497.551640369] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[controller_server-4] [INFO] [1792042497.551704462] [controller_server]: Running Nav2 LifecycleNode rcl preshutdown (controller_server)
+[controller_server-4] [INFO] [1792042497.551732152] [controller_server]: Destroying bond (controller_server) to lifecycle manager.
+[controller_server-4] [INFO] [1792042497.552622678] [local_costmap.local_costmap]: Destroying
+[behavior_server-6] [INFO] [1792042497.551656935] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[behavior_server-6] [INFO] [1792042497.551722777] [behavior_server]: Running Nav2 LifecycleNode rcl preshutdown (behavior_server)
+[behavior_server-6] [INFO] [1792042497.551748174] [behavior_server]: Destroying bond (behavior_server) to lifecycle manager.
+[behavior_server-6] [INFO] [1792042497.552519113] [behavior_server]: Destroying
+[bt_navigator-5] [INFO] [1792042497.551887320] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[bt_navigator-5] [INFO] [1792042497.551939361] [bt_navigator]: Running Nav2 LifecycleNode rcl preshutdown (bt_navigator)
+[bt_navigator-5] [INFO] [1792042497.551959481] [bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.
+[bt_navigator-5] [INFO] [1792042497.552556225] [bt_navigator]: Destroying
+[planner_server-3] [INFO] [1792042497.552787958] [global_costmap.global_costmap]: Destroying
+[rviz2-8] [INFO] [1792042497.553049003] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ERROR] [amcl-2]: process has died [pid 441420, exit code -2, cmd '/opt/ros/jazzy/lib/nav2_amcl/amcl --ros-args -r __node:=amcl --params-file /home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws06_sim_nav/install/demo_nav2/share/demo_nav2/param/nav2_params.yaml --params-file /tmp/launch_params_660xiiqq'].
+[amcl-2] [INFO] [1792042497.553222400] [amcl]: Destroying
+[ERROR] [map_server-1]: process has died [pid 441419, exit code -2, cmd '/opt/ros/jazzy/lib/nav2_map_server/map_server --ros-args -r __node:=map_server --params-file /home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws06_sim_nav/install/demo_nav2/share/demo_nav2/param/nav2_params.yaml --params-file /tmp/launch_params_86rvjf1w --params-file /tmp/launch_params_h551_kdj'].
+[ERROR] [controller_server-4]: process has died [pid 441427, exit code -2, cmd '/opt/ros/jazzy/lib/nav2_controller/controller_server --ros-args -r __node:=controller_server --params-file /home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws06_sim_nav/install/demo_nav2/share/demo_nav2/param/nav2_params.yaml --params-file /tmp/launch_params_6724t4g6'].
+[INFO] [rviz2-8]: process has finished cleanly [pid 441436]

@@ -1,0 +1,41 @@
+--- run: ros2 run py02_homework homework_action_server (bg 18s)
+[INFO] [1792045536.288913861] [hw_action_server_node_py]: 期中大作业-动作通信服务端(python)
+[INFO] [1792045538.624271087] [hw_action_server_node_py]: 收到目标:前进 0.03 米
+[ERROR] [1792045550.837738705] [hw_action_server_node_py.action_server]: Error raised in execute callback: Failed to publish: publisher's context is invalid, at ./src/rcl/publisher.c:423
+Failed to publish log message to rosout: publisher's context is invalid, at ./src/rcl/publisher.c:423
+Traceback (most recent call last):
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/action/server.py", line 360, in _execute_goal
+    execute_result = await await_or_execute(execute_callback, goal_handle)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 115, in await_or_execute
+    return callback(*args)
+           ^^^^^^^^^^^^^^^
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws02_middle/install/py02_homework/lib/python3.12/site-packages/py02_homework/homework_action_server.py", line 55, in execute_callback
+    self.pub.publish(twist)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/publisher.py", line 70, in publish
+    self.__publisher.publish(msg)
+rclpy._rclpy_pybind11.RCLError: Failed to publish: publisher's context is invalid, at ./src/rcl/publisher.c:423
+[WARN] [1792045550.838334012] [hw_action_server_node_py.action_server]: Goal state not set, assuming aborted. Goal ID: [203 207 113  33 168 142  70 213 135  82  73   6 205 127  13 159]
+Failed to publish log message to rosout: publisher's context is invalid, at ./src/rcl/publisher.c:423
+Traceback (most recent call last):
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws02_middle/install/py02_homework/lib/py02_homework/homework_action_server", line 33, in <module>
+    sys.exit(load_entry_point('py02-homework==0.0.0', 'console_scripts', 'homework_action_server')())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws02_middle/install/py02_homework/lib/python3.12/site-packages/py02_homework/homework_action_server.py", line 64, in main
+    rclpy.spin(HomeworkActionServer())
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
+    executor.spin_once()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 926, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 918, in _spin_once_impl
+    raise handler.exception()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py", line 286, in _execute_coroutine_step
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/action/server.py", line 371, in _execute_goal
+    goal_handle.abort()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/action/server.py", line 168, in abort
+    self._update_state(_rclpy.GoalEvent.ABORT)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/action/server.py", line 117, in _update_state
+    self._action_server._handle.publish_status()
+rclpy._rclpy_pybind11.RCLError: Failed get goal status array: feedback publisher is invalid, at ./src/rcl_action/action_server.c:1004

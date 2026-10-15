@@ -1,0 +1,27 @@
+[INFO] [launch]: All log files can be found below /home/mu/.ros/log/2026-10-15-13-31-03-013319-mu-MS-7E34-437524
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [goal_broadcaster-1]: process started with pid [437527]
+[INFO] [follow_controller-2]: process started with pid [437528]
+[follow_controller-2] [INFO] [1792042263.072191527] [follow_controller_node_cpp]: 车辆跟随控制方创建!
+[goal_broadcaster-1] [INFO] [1792042263.072194984] [goal_broadcaster_node_cpp]: 目标坐标系广播方创建!
+[follow_controller-2] [INFO] [1792042263.174088876] [follow_controller_node_cpp]: 异常提示:"base_footprint" passed to lookupTransform argument target_frame does not exist. 
+[follow_controller-2] [INFO] [1792042263.274089118] [follow_controller_node_cpp]: 异常提示:"base_footprint" passed to lookupTransform argument target_frame does not exist. 
+[follow_controller-2] [INFO] [1792042263.374968957] [follow_controller_node_cpp]: 异常提示:"base_footprint" passed to lookupTransform argument target_frame does not exist. 
+[follow_controller-2] [INFO] [1792042263.474115175] [follow_controller_node_cpp]: 异常提示:"base_footprint" passed to lookupTransform argument target_frame does not exist. 
+[follow_controller-2] [INFO] [1792042263.574135539] [follow_controller_node_cpp]: 异常提示:"base_footprint" passed to lookupTransform argument target_frame does not exist. 
+[follow_controller-2] [INFO] [1792042263.674142353] [follow_controller_node_cpp]: 异常提示:"base_footprint" passed to lookupTransform argument target_frame does not exist. 
+[follow_controller-2] [INFO] [1792042263.774127022] [follow_controller_node_cpp]: 异常提示:"base_footprint" passed to lookupTransform argument target_frame does not exist. 
+[follow_controller-2] [INFO] [1792042263.874139653] [follow_controller_node_cpp]: 异常提示:"base_footprint" passed to lookupTransform argument target_frame does not exist. 
+[follow_controller-2] [INFO] [1792042263.974132023] [follow_controller_node_cpp]: 异常提示:"base_footprint" passed to lookupTransform argument target_frame does not exist. 
+/follow_controller_node_cpp
+/goal_broadcaster_node_cpp
+/transform_listener_impl_62c9712ead00
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[goal_broadcaster-1] [INFO] [1792042274.834034247] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[follow_controller-2] [INFO] [1792042274.834140063] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [follow_controller-2]: sending signal 'SIGINT' to process[follow_controller-2]
+[INFO] [goal_broadcaster-1]: sending signal 'SIGINT' to process[goal_broadcaster-1]
+[follow_controller-2] [INFO] [1792042274.835361041] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[goal_broadcaster-1] [INFO] [1792042274.835553973] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [goal_broadcaster-1]: process has finished cleanly [pid 437527]
+[INFO] [follow_controller-2]: process has finished cleanly [pid 437528]

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "mimosa-hook-status/v1",
+  "recordedAt": "2026-10-15T08:29:34.728Z",
+  "sessionId": "sess_56d1a13a-a752-46af-bc3b-87dfac83ae2c",
+  "event": "PostToolUse",
+  "toolName": "Edit",
+  "file": "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/教程/SUMMARY.md",
+  "outcome": "clear",
+  "coverage": "complete",
+  "findingCount": 0,
+  "durationMs": 2,
+  "hostState": "hook_complete",
+  "reportHint": ".mimosa/reports/"
+}

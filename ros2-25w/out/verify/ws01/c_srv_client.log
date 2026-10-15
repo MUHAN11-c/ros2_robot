@@ -1,0 +1,4 @@
+--- run: ros2 run cpp02_service demo02_client 3 5 (timeout 10s)
+[INFO] [1792040476.542803831] [add_ints_client_node_cpp]: 客户端节点创建!
+[INFO] [1792040476.650248818] [add_ints_client_node_cpp]: 发送请求: num1=3, num2=5
+[INFO] [1792040476.720246445] [add_ints_client_node_cpp]: 收到响应: sum=8

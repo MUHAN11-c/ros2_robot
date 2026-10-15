@@ -1,0 +1,3 @@
+--- run: ros2 topic echo /point_cloud --once --no-arr --spin-time 5 (timeout 7s)
+WARNING: topic [/point_cloud] does not appear to be published yet
+Could not determine the type for the passed topic

@@ -1,0 +1,25 @@
+--- run: ros2 run demo_param_events_py demo_param_events_py (bg 16s)
+[INFO] [1792042301.416715886] [param_events_node_py]: 参数事件节点创建!(python)
+[INFO] [1792042304.278158968] [param_events_node_py]: 监听到参数修改事件: width -> 2.5
+[INFO] [1792042304.278578919] [param_events_node_py]: 收到参数事件，来自节点:/param_events_node_py
+[INFO] [1792042304.417733987] [param_events_node_py]: 监听到参数修改事件: width -> 3.5
+[INFO] [1792042304.418265929] [param_events_node_py]: 收到参数事件，来自节点:/param_events_node_py
+Traceback (most recent call last):
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws04_advanced/install/demo_param_events_py/lib/demo_param_events_py/demo_param_events_py", line 33, in <module>
+    sys.exit(load_entry_point('demo-param-events-py==0.0.0', 'console_scripts', 'demo_param_events_py')())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws04_advanced/install/demo_param_events_py/lib/python3.12/site-packages/demo_param_events_py/demo_param_events_py.py", line 42, in main
+    rclpy.spin(ParamEventsPy())
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
+    executor.spin_once()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 926, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 907, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 877, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 785, in _wait_for_ready_callbacks
+    raise ExternalShutdownException()
+rclpy.executors.ExternalShutdownException

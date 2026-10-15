@@ -1,0 +1,12 @@
+// generated from rosidl_generator_c/resource/idl.h.em
+// with input from my_exer_interfaces:srv/Cru.idl
+// generated code does not contain a copyright notice
+
+#ifndef MY_EXER_INTERFACES__SRV__CRU_H_
+#define MY_EXER_INTERFACES__SRV__CRU_H_
+
+#include "my_exer_interfaces/srv/detail/cru__struct.h"
+#include "my_exer_interfaces/srv/detail/cru__functions.h"
+#include "my_exer_interfaces/srv/detail/cru__type_support.h"
+
+#endif  // MY_EXER_INTERFACES__SRV__CRU_H_

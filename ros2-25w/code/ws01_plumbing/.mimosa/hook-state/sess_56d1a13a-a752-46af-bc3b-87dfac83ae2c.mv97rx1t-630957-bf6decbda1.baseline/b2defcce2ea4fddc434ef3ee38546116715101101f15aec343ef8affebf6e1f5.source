@@ -1,0 +1,80 @@
+/*
+    需求：编写参数服务客户端，实现参数的增、删、改、查操作。
+    流程：
+        1.包含头文件；
+        2.初始化 ROS2 客户端；
+        3.自定义节点类；
+            3-1.声明参数；
+            3-2.增；
+            3-3.查；
+            3-4.改；
+            3-5.删。
+        4.调用spin函数，并传入节点对象指针；
+        5.释放资源。
+*/
+// 1.包含头文件；
+#include "rclcpp/rclcpp.hpp"
+
+// 3.自定义节点类；
+class ParamServer: public rclcpp::Node{
+public:
+    // 如果允许删除参数，那么需要通过 NodeOptions 声明。
+    ParamServer():Node("param_server_node_cpp",rclcpp::NodeOptions().allow_undeclared_parameters(true)){
+        RCLCPP_INFO(this->get_logger(),"参数服务端创建了!");
+        // 3-1.增；
+        declare_param();
+        // 3-3.查；
+        get_param();
+        // 3-4.改；
+        update_param();
+        // 3-3.查；
+        get_param();
+        // 3-5.删；
+        del_param();
+        // 3-3.查；
+        get_param();
+    }
+private:
+    // 3-1.增；
+    // 说明：Jazzy 下 declare_parameter 声明的是静态类型参数，无法被 undeclare(删)；
+    //       需配合 allow_undeclared_options，用 set_parameter 创建动态类型参数；
+    void declare_param(){
+        RCLCPP_INFO(this->get_logger(),"-------------增-------------");
+        this->set_parameter(rclcpp::Parameter("car_name","tiger"));
+        this->set_parameter(rclcpp::Parameter("width",1.55));
+        this->set_parameter(rclcpp::Parameter("wheels",5));
+    }
+    // 3-2.删；
+    void del_param(){
+        RCLCPP_INFO(this->get_logger(),"-------------删-------------");
+        this->undeclare_parameter("car_name");
+    }
+    // 3-3.查；
+    void get_param(){
+        RCLCPP_INFO(this->get_logger(),"-------------查-------------");
+        rclcpp::Parameter parameter;
+        if (this->get_parameter("car_name",parameter)) {
+            RCLCPP_INFO(this->get_logger(),"car_name = %s",parameter.as_string().c_str());
+        } else {
+            RCLCPP_INFO(this->get_logger(),"car_name 已被删除!");
+        }
+        RCLCPP_INFO(this->get_logger(),"width = %.2f",this->get_parameter("width").as_double());
+        RCLCPP_INFO(this->get_logger(),"wheels = %ld",this->get_parameter("wheels").as_int());
+    }
+    // 3-4.改；
+    void update_param(){
+        RCLCPP_INFO(this->get_logger(),"-------------改-------------");
+        this->set_parameter(rclcpp::Parameter("width",1.65));
+    }
+};
+
+int main(int argc, char ** argv)
+{
+    // 2.初始化 ROS2 客户端；
+    rclcpp::init(argc,argv);
+    // 4.调用spin函数，并传入节点对象指针；
+    rclcpp::spin(std::make_shared<ParamServer>());
+    // 5.释放资源；
+    rclcpp::shutdown();
+    return 0;
+}

@@ -1,0 +1,8 @@
+# 需求：客户端提交运动控制请求，服务端执行并响应执行结果。
+# 字段为依据课程需求(需求03:服务通信控制小车运动)重建；视频未展示字段细节。
+float64 linear_x
+float64 angular_z
+float64 duration
+---
+bool success
+string message

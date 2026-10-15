@@ -1,0 +1,2 @@
+--- run: ros2 param get /param_server_node_cpp car_name (timeout 6s)
+Node not found

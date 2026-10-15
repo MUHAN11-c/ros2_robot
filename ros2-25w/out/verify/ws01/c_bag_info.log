@@ -1,0 +1,12 @@
+
+Files:             demo01_bag_0.mcap
+Bag size:          4.0 KiB
+Storage id:        mcap
+ROS Distro:        jazzy
+Duration:          1.000360447s
+Start:             Oct 15 2026 13:03:03.296919718 (1792040583.296919718)
+End:               Oct 15 2026 13:03:04.297280165 (1792040584.297280165)
+Messages:          3
+Topic information: Topic: /turtle1/cmd_vel | Type: geometry_msgs/msg/Twist | Count: 3 | Serialization Format: cdr
+Service:           0
+Service information: 

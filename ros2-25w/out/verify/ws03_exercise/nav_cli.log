@@ -1,0 +1,54 @@
+--- run: ros2 action send_goal /nav my_exer_interfaces/action/Nav {goal: {x: 3.0, y: 4.0}} --feedback (timeout 14s)
+Waiting for an action server to become available...
+Sending goal:
+     goal:
+  x: 3.0
+  y: 4.0
+  z: 0.0
+
+Goal accepted with ID: 58a952618ead43c5b7e2959b22a21e90
+
+Feedback:
+    remaining: 5.0
+
+Feedback:
+    remaining: 5.0
+
+Feedback:
+    remaining: 5.0
+
+Feedback:
+    remaining: 5.0
+
+Feedback:
+    remaining: 5.0
+
+Feedback:
+    remaining: 5.0
+
+Feedback:
+    remaining: 5.0
+
+Feedback:
+    remaining: 5.0
+
+Feedback:
+    remaining: 5.0
+
+Feedback:
+    remaining: 5.0
+
+Feedback:
+    remaining: 5.0
+
+Feedback:
+    remaining: 5.0
+
+Feedback:
+    remaining: 5.0
+
+Feedback:
+    remaining: 5.0
+
+Canceling goal...
+Executor is already spinning

@@ -1,0 +1,9 @@
+# 需求：客户端提交目标点，服务端控制小车驶向目标点：
+#       过程中周期性发布剩余距离(连续反馈)，到达后响应执行结果(最终响应)。
+# 字段为依据课程需求(需求04:动作通信控制小车导航)与 nav_server.cpp 逻辑重建。
+geometry_msgs/Point goal
+---
+bool reached
+float64 distance
+---
+float64 remaining

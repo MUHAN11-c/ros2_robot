@@ -1,0 +1,9 @@
+--- run: ros2 action send_goal /turtle_forward ...
+Waiting for an action server to become available...
+Sending goal:
+     num: 3
+
+Goal accepted with ID: cbcf7121a88e46d587524906cd7f0d9f
+
+Canceling goal...
+Executor is already spinning

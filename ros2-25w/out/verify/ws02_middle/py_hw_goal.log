@@ -1,0 +1,9 @@
+--- run: ros2 action send_goal /turtle_forward base_interfaces_demo/action/Progress {num: 3} --feedback (timeout 12s)
+Waiting for an action server to become available...
+Sending goal:
+     num: 3
+
+Goal accepted with ID: 1a3ae8cc35cd4855a61ff0802264546b
+
+Canceling goal...
+Executor is already spinning

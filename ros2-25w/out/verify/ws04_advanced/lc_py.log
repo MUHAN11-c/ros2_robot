@@ -1,0 +1,23 @@
+--- run: ros2 run lifecycle_py demo_lifecycle_py (bg 24s)
+[INFO] [1792043920.463619360] [my_lifecycle_node_py]: 生命周期节点创建!(python)
+[INFO] [1792043925.566310925] [my_lifecycle_node_py]: 节点配置......
+[INFO] [1792043928.057134269] [my_lifecycle_node_py]: 节点激活------------
+Traceback (most recent call last):
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws04_advanced/install/lifecycle_py/lib/lifecycle_py/demo_lifecycle_py", line 33, in <module>
+    sys.exit(load_entry_point('lifecycle-py==0.0.0', 'console_scripts', 'demo_lifecycle_py')())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws04_advanced/install/lifecycle_py/lib/python3.12/site-packages/lifecycle_py/demo_lifecycle_py.py", line 41, in main
+    rclpy.spin(MyLifecycleNode())
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
+    executor.spin_once()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 926, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 907, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 877, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 785, in _wait_for_ready_callbacks
+    raise ExternalShutdownException()
+rclpy.executors.ExternalShutdownException

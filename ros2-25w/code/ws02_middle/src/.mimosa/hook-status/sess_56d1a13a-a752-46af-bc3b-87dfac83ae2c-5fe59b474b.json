@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "mimosa-hook-status/v1",
+  "recordedAt": "2026-10-15T03:10:30.080Z",
+  "sessionId": "sess_56d1a13a-a752-46af-bc3b-87dfac83ae2c",
+  "event": "PostToolUse",
+  "toolName": "Write",
+  "file": "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws03_exercise/src/my_exer08_follow/data/waypoints.csv",
+  "outcome": "clear",
+  "coverage": "complete",
+  "findingCount": 0,
+  "durationMs": 1,
+  "hostState": "hook_complete",
+  "reportHint": ".mimosa/reports/"
+}

@@ -1,0 +1,15 @@
+--- run: ros2 topic echo /point_cloud --once --no-arr --spin-time 5 (timeout 7s)
+header:
+  stamp:
+    sec: 1792042368
+    nanosec: 918354881
+  frame_id: laser
+height: 1
+width: 360
+fields: '<sequence type: sensor_msgs/msg/PointField, length: 3>'
+is_bigendian: false
+point_step: 16
+row_step: 5760
+data: '<sequence type: uint8, length: 5760>'
+is_dense: false
+---

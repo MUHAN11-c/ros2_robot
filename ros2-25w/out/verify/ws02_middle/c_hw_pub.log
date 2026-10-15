@@ -1,0 +1,3 @@
+--- run: ros2 run cpp02_homework homework_topic_pub --ros-args -p linear_x:=0.5 -p angular_z:=0.2 (bg 12s)
+[INFO] [1792040781.477671180] [hw_pub_vel_node_cpp]: 发布速度指令，控制机器人作圆周运动!
+[INFO] [1792040793.295116643] [rclcpp]: signal_handler(SIGINT/SIGTERM)

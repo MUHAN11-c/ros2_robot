@@ -1,0 +1,47 @@
+[INFO] [launch]: All log files can be found below /home/mu/.ros/log/2026-10-15-14-57-52-382290-mu-MS-7E34-566792
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [turtlesim_node-1]: process started with pid [566795]
+[INFO] [exer01_spawn-2]: process started with pid [566796]
+[INFO] [exer02_tf_broadcaster-3]: process started with pid [566797]
+[INFO] [exer02_tf_broadcaster-4]: process started with pid [566798]
+[INFO] [exer03_tf_listener-5]: process started with pid [566799]
+[exer01_spawn-2] [INFO] [1792047472.454669032] [exer01_spawn_node_cpp]: 乌龟生成客户端创建!
+[exer02_tf_broadcaster-3] [INFO] [1792047472.455163484] [b1]: 广播 t1 的坐标变换!
+[exer02_tf_broadcaster-4] [INFO] [1792047472.457962488] [b2]: 广播 t2 的坐标变换!
+[exer01_spawn-2] [INFO] [1792047472.519232391] [exer01_spawn_node_cpp]: 请求生成乌龟:t2
+[turtlesim_node-1] [INFO] [1792047472.519323535] [sim]: Starting turtlesim with node name /sim
+[turtlesim_node-1] [INFO] [1792047472.522150774] [sim]: Spawning turtle [turtle1] at x=[5.544445], y=[5.544445], theta=[0.000000]
+[turtlesim_node-1] [INFO] [1792047472.992396724] [sim]: Spawning turtle [t2] at x=[3.000000], y=[3.000000], theta=[0.000000]
+[exer01_spawn-2] [INFO] [1792047472.998344426] [exer01_spawn_node_cpp]: 新乌龟名称:t2
+[INFO] [exer01_spawn-2]: process has finished cleanly [pid 566796]
+[exer03_tf_listener-5] [INFO] [1792047473.458156077] [exer03_tf_listener_node_cpp]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[exer03_tf_listener-5] [INFO] [1792047474.457956536] [exer03_tf_listener_node_cpp]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[exer03_tf_listener-5] [INFO] [1792047475.457811931] [exer03_tf_listener_node_cpp]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[exer03_tf_listener-5] [INFO] [1792047476.457868217] [exer03_tf_listener_node_cpp]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[exer03_tf_listener-5] [INFO] [1792047477.457828802] [exer03_tf_listener_node_cpp]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[exer03_tf_listener-5] [INFO] [1792047478.457938937] [exer03_tf_listener_node_cpp]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[exer03_tf_listener-5] [INFO] [1792047479.458543937] [exer03_tf_listener_node_cpp]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[exer03_tf_listener-5] [INFO] [1792047480.457913261] [exer03_tf_listener_node_cpp]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[exer03_tf_listener-5] [INFO] [1792047481.459540694] [exer03_tf_listener_node_cpp]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[exer03_tf_listener-5] [INFO] [1792047482.457816768] [exer03_tf_listener_node_cpp]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[exer03_tf_listener-5] [INFO] [1792047483.458152180] [exer03_tf_listener_node_cpp]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[exer03_tf_listener-5] [INFO] [1792047484.457816856] [exer03_tf_listener_node_cpp]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[exer03_tf_listener-5] [INFO] [1792047485.458325100] [exer03_tf_listener_node_cpp]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[exer03_tf_listener-5] [INFO] [1792047486.457811609] [exer03_tf_listener_node_cpp]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[exer03_tf_listener-5] [INFO] [1792047487.457967122] [exer03_tf_listener_node_cpp]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[exer03_tf_listener-5] [INFO] [1792047488.201523758] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[turtlesim_node-1] [INFO] [1792047488.201543654] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[exer02_tf_broadcaster-3] [INFO] [1792047488.201712271] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[exer02_tf_broadcaster-4] [INFO] [1792047488.201723536] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [exer03_tf_listener-5]: sending signal 'SIGINT' to process[exer03_tf_listener-5]
+[INFO] [exer02_tf_broadcaster-4]: sending signal 'SIGINT' to process[exer02_tf_broadcaster-4]
+[INFO] [exer02_tf_broadcaster-3]: sending signal 'SIGINT' to process[exer02_tf_broadcaster-3]
+[INFO] [turtlesim_node-1]: sending signal 'SIGINT' to process[turtlesim_node-1]
+[exer03_tf_listener-5] [INFO] [1792047488.204775042] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[exer02_tf_broadcaster-3] [INFO] [1792047488.205129026] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[turtlesim_node-1] [INFO] [1792047488.205224313] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ERROR] [exer02_tf_broadcaster-4]: process has died [pid 566798, exit code -2, cmd '/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws01_plumbing/install/cpp05_exercise/lib/cpp05_exercise/exer02_tf_broadcaster --ros-args -r __node:=b2 --params-file /tmp/launch_params_vhb34kv5'].
+[INFO] [exer03_tf_listener-5]: process has finished cleanly [pid 566799]
+[INFO] [exer02_tf_broadcaster-3]: process has finished cleanly [pid 566797]
+[INFO] [turtlesim_node-1]: process has finished cleanly [pid 566795]

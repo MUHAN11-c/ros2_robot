@@ -1,0 +1,2 @@
+--- run: ros2 lifecycle set /my_lifecycle_node_cpp cleanup (timeout 6s)
+Transitioning successful

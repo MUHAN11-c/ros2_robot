@@ -1,0 +1,4 @@
+--- run: ros2 run py02_service demo02_client_py 4 6 (timeout 10s)
+[INFO] [1792040479.171571016] [add_ints_client_node_py]: 客户端创建了!(python)
+[INFO] [1792040479.673023367] [add_ints_client_node_py]: 发送请求: num1=4, num2=6
+[INFO] [1792040479.674072458] [add_ints_client_node_py]: 收到响应: sum=10

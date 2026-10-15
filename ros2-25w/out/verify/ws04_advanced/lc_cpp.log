@@ -1,0 +1,8 @@
+--- run: ros2 run lifecycle_cpp demo_lifecycle (bg 34s)
+[INFO] [1792043909.359533231] [my_lifecycle_node_cpp]: 生命周期节点创建!
+[INFO] [1792043912.481272349] [my_lifecycle_node_cpp]: 节点配置......
+[INFO] [1792043914.016002566] [my_lifecycle_node_cpp]: 节点激活------------
+[INFO] [1792043916.496231955] [my_lifecycle_node_cpp]: 节点待激活+++++++++++++++++++++
+[INFO] [1792043919.156271027] [my_lifecycle_node_cpp]: 节点清空配置+++++++++++++++++++++
+[INFO] [1792043919.346729092] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1792043919.348624881] [rclcpp]: signal_handler(SIGINT/SIGTERM)

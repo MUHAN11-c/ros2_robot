@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+    乌龟护航案例：启动 turtlesim、两只护航乌龟(t2/t3)、各自的 tf 广播器，
+                 以及护航监听节点(以 t1 为父坐标系)。
+    ros2 launch cpp05_exercise escort_launch.xml
+-->
+<launch>
+    <node pkg="turtlesim" exec="turtlesim_node" name="sim"/>
+    <node pkg="turtlesim" exec="spawn" name="spawn_t2" args="-x 8.0 -y 3.0 -theta 0.0 -name t2"/>
+    <node pkg="turtlesim" exec="spawn" name="spawn_t3" args="-x 8.0 -y 8.0 -theta 0.0 -name t3"/>
+    <node pkg="cpp05_exercise" exec="exer02_tf_broadcaster" name="b1">
+        <param name="turtle" value="t1"/>
+    </node>
+    <node pkg="cpp05_exercise" exec="exer02_tf_broadcaster" name="b2">
+        <param name="turtle" value="t2"/>
+    </node>
+    <node pkg="cpp05_exercise" exec="exer02_tf_broadcaster" name="b3">
+        <param name="turtle" value="t3"/>
+    </node>
+    <node pkg="cpp05_exercise" exec="exer03_tf_listener" name="listener_t2">
+        <param name="father_frame" value="turtle1"/>
+        <param name="child_frame" value="t2"/>
+    </node>
+    <node pkg="cpp05_exercise" exec="exer03_tf_listener" name="listener_t3">
+        <param name="father_frame" value="turtle1"/>
+        <param name="child_frame" value="t3"/>
+    </node>
+</launch>

@@ -1,0 +1,7 @@
+--- run: ros2 service call /add_ints base_interfaces_demo/srv/AddInts {num1: 3, num2: 5} (timeout 10s)
+waiting for service to become available...
+requester: making request: base_interfaces_demo.srv.AddInts_Request(num1=3, num2=5)
+
+response:
+base_interfaces_demo.srv.AddInts_Response(sum=8)
+

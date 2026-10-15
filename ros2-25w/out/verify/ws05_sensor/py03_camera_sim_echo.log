@@ -1,0 +1,13 @@
+--- run: ros2 topic echo /image_raw --once --no-arr --spin-time 5 (timeout 7s)
+header:
+  stamp:
+    sec: 1792042391
+    nanosec: 663937798
+  frame_id: camera
+height: 240
+width: 320
+encoding: mono8
+is_bigendian: 0
+step: 320
+data: '<sequence type: uint8, length: 76800>'
+---

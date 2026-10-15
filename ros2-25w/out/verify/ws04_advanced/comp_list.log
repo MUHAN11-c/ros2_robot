@@ -1,0 +1,4 @@
+--- run: ros2 component list (timeout 5s)
+/ComponentManager
+  1  /talker_component_node_cpp
+  2  /listener_component_node_cpp

@@ -1,0 +1,10 @@
+--- run: ros2 run cpp01_topic demo02_listener_str (bg 8s)
+[INFO] [1792040421.417895843] [listener_node_cpp]: 订阅方创建!
+[INFO] [1792040422.416583063] [listener_node_cpp]: 订阅的消息：'hello world!2'
+[INFO] [1792040423.416494642] [listener_node_cpp]: 订阅的消息：'hello world!3'
+[INFO] [1792040424.416535745] [listener_node_cpp]: 订阅的消息：'hello world!4'
+[INFO] [1792040425.416550359] [listener_node_cpp]: 订阅的消息：'hello world!5'
+[INFO] [1792040426.418644654] [listener_node_cpp]: 订阅的消息：'hello world!6'
+[INFO] [1792040427.416467862] [listener_node_cpp]: 订阅的消息：'hello world!7'
+[INFO] [1792040428.416503727] [listener_node_cpp]: 订阅的消息：'hello world!8'
+[INFO] [1792040429.274646123] [rclcpp]: signal_handler(SIGINT/SIGTERM)

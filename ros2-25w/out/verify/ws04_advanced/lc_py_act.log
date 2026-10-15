@@ -1,0 +1,2 @@
+--- run: ros2 lifecycle set /my_lifecycle_node_py activate (timeout 6s)
+Transitioning successful

@@ -1,0 +1,39 @@
+--- ros2 run lifecycle_py demo_lifecycle_py (bg 26s)
+--- get
+unconfigured [1]
+--- set configure
+[INFO] [1792052882.471082768] [demo_lifecycle_py_node]: 配置中......(py)
+Transitioning successful
+--- set activate
+[INFO] [1792052883.428912374] [demo_lifecycle_py_node]: 激活中......(py)
+Transitioning successful
+--- set deactivate
+[INFO] [1792052884.480961803] [demo_lifecycle_py_node]: 待激活......(py)
+Transitioning successful
+--- set cleanup
+[INFO] [1792052885.495043591] [demo_lifecycle_py_node]: 清空....(py)
+Transitioning successful
+--- set shutdown
+[INFO] [1792052886.524071382] [demo_lifecycle_py_node]: 关闭......(py)
+Transitioning successful
+--- get final
+finalized [4]
+Traceback (most recent call last):
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws04_advanced/install/lifecycle_py/lib/lifecycle_py/demo_lifecycle_py", line 33, in <module>
+    sys.exit(load_entry_point('lifecycle-py==0.0.0', 'console_scripts', 'demo_lifecycle_py')())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws04_advanced/install/lifecycle_py/lib/python3.12/site-packages/lifecycle_py/demo_lifecycle_py.py", line 42, in main
+    rclpy.spin(MyNode())
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
+    executor.spin_once()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 926, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 907, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 877, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 781, in _wait_for_ready_callbacks
+    wait_set.wait(timeout_nsec)
+KeyboardInterrupt

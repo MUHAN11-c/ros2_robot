@@ -1,0 +1,3 @@
+--- run: ros2 run cpp02_homework homework_param_client (timeout 12s)
+[INFO] [1792040792.028001634] [hw_param_client_node_cpp]: 期中大作业-参数服务客户端(C++)
+[ros2run]: Segmentation fault

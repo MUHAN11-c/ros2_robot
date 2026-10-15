@@ -1,0 +1,16 @@
+[37;1m2026-10-15 15:59:43.713 [31;1m[[37;1mRTPS_TRANSPORT_SHM[31;1m Error] [37mFailed init_port fastrtps_port7004: open_and_lock_file failed[34;1m -> Function [36mopen_port_internal[m
+[37;1m2026-10-15 15:59:43.713 [31;1m[[37;1mRTPS_TRANSPORT_SHM[31;1m Error] [37mFailed init_port fastrtps_port7018: open_and_lock_file failed[34;1m -> Function [36mopen_port_internal[m
+[INFO] [1792051183.725787578] [map_saver]: 
+	map_saver lifecycle node launched. 
+	Waiting on external lifecycle transitions to activate
+	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [1792051183.725990804] [map_saver]: Creating
+[INFO] [1792051183.726030643] [map_saver]: Configuring
+[INFO] [1792051183.731242266] [map_saver]: Saving map from 'map' topic to '/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/out/verify/e2e/e2e_slam_map' file
+[WARN] [1792051183.731307060] [map_saver]: Free threshold unspecified. Setting it to default value: 0.250000
+[WARN] [1792051183.731315254] [map_saver]: Occupied threshold unspecified. Setting it to default value: 0.650000
+[ERROR] [1792051185.733698099] [map_saver]: Failed to spin map subscription
+[INFO] [1792051185.734492154] [map_saver]: Destroying
+[ros2run]: Process exited with failure 1
+ls: 无法访问 '/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/out/verify/e2e/e2e_slam_map*': 没有那个文件或目录
+head: 无法以读模式打开 '/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/out/verify/e2e/e2e_slam_map.pgm': 没有那个文件或目录

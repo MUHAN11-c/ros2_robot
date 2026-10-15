@@ -1,0 +1,10 @@
+--- run: ros2 run cpp01_topic demo04_listener_stu (bg 8s)
+[INFO] [1792040442.764384266] [listenerstu_node_cpp]: 学生消息订阅方创建!
+[INFO] [1792040443.762187016] [listenerstu_node_cpp]: 订阅的消息:{huluwa,20,2.20}
+[INFO] [1792040444.762105448] [listenerstu_node_cpp]: 订阅的消息:{huluwa,21,2.20}
+[INFO] [1792040445.761963484] [listenerstu_node_cpp]: 订阅的消息:{huluwa,22,2.20}
+[INFO] [1792040446.762027776] [listenerstu_node_cpp]: 订阅的消息:{huluwa,23,2.20}
+[INFO] [1792040447.762036978] [listenerstu_node_cpp]: 订阅的消息:{huluwa,24,2.20}
+[INFO] [1792040448.762024005] [listenerstu_node_cpp]: 订阅的消息:{huluwa,25,2.20}
+[INFO] [1792040449.762136448] [listenerstu_node_cpp]: 订阅的消息:{huluwa,26,2.20}
+[INFO] [1792040450.616568583] [rclcpp]: signal_handler(SIGINT/SIGTERM)

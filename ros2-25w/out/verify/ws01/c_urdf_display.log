@@ -1,0 +1,35 @@
+[INFO] [launch]: All log files can be found below /home/mu/.ros/log/2026-10-15-13-05-54-522603-mu-MS-7E34-427179
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [robot_state_publisher-1]: process started with pid [427183]
+[INFO] [joint_state_publisher-2]: process started with pid [427184]
+[INFO] [rviz2-3]: process started with pid [427185]
+[robot_state_publisher-1] [INFO] [1792040754.596265711] [robot_state_publisher]: Robot initialized
+[joint_state_publisher-2] [INFO] [1792040755.088972573] [joint_state_publisher]: Waiting for robot_description to be published on the robot_description topic...
+[joint_state_publisher-2] [INFO] [1792040755.215041251] [joint_state_publisher]: Got description, configuring robot
+[rviz2-3] [INFO] [1792040755.279672639] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-3] [INFO] [1792040755.279762770] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[rviz2-3] [INFO] [1792040755.418533412] [rviz2]: Stereo is NOT SUPPORTED
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[rviz2-3] [INFO] [1792040768.314906984] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[robot_state_publisher-1] [INFO] [1792040768.314907231] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [rviz2-3]: sending signal 'SIGINT' to process[rviz2-3]
+[INFO] [joint_state_publisher-2]: sending signal 'SIGINT' to process[joint_state_publisher-2]
+[INFO] [robot_state_publisher-1]: sending signal 'SIGINT' to process[robot_state_publisher-1]
+[rviz2-3] [INFO] [1792040768.316487566] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[robot_state_publisher-1] [INFO] [1792040768.316764033] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[joint_state_publisher-2] Traceback (most recent call last):
+[joint_state_publisher-2]   File "/opt/ros/jazzy/lib/joint_state_publisher/joint_state_publisher", line 33, in <module>
+[joint_state_publisher-2]     sys.exit(load_entry_point('joint-state-publisher==2.4.3', 'console_scripts', 'joint_state_publisher')())
+[joint_state_publisher-2]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[joint_state_publisher-2]   File "/opt/ros/jazzy/lib/python3.12/site-packages/joint_state_publisher/joint_state_publisher.py", line 571, in main
+[joint_state_publisher-2]     jsp.destroy_node()
+[joint_state_publisher-2]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1962, in destroy_node
+[joint_state_publisher-2]     self.destroy_service(self._services[0])
+[joint_state_publisher-2]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1886, in destroy_service
+[joint_state_publisher-2]     service.destroy()
+[joint_state_publisher-2]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/service.py", line 123, in destroy
+[joint_state_publisher-2]     self.__service.destroy_when_not_in_use()
+[joint_state_publisher-2] KeyboardInterrupt
+[ERROR] [joint_state_publisher-2]: process has died [pid 427184, exit code -2, cmd '/opt/ros/jazzy/lib/joint_state_publisher/joint_state_publisher --ros-args'].
+[INFO] [robot_state_publisher-1]: process has finished cleanly [pid 427183]
+[INFO] [rviz2-3]: process has finished cleanly [pid 427185]

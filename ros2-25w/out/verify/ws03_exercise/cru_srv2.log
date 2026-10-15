@@ -1,0 +1,5 @@
+--- run: cru_server (bg 16s)
+[INFO] [1792045527.385115070] [cru_server_node_cpp]: Cru 服务端创建!
+[INFO] [1792045529.904299845] [cru_server_node_cpp]: 收到请求: linear=0.50 angular=0.10 duration=2.0
+[INFO] [1792045531.904437234] [cru_server_node_cpp]: 运动执行完成
+[INFO] [1792045532.044036617] [rclcpp]: signal_handler(SIGINT/SIGTERM)

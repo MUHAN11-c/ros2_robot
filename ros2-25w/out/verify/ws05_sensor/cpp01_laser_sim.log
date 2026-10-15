@@ -1,0 +1,4 @@
+--- run: ros2 run cpp01_laser_sim laser_sim (bg 10s)
+[INFO] [1792042341.691147718] [laser_sim_node_cpp]: 单线激光雷达仿真节点创建!
+[INFO] [1792042350.441049810] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1792042350.441515552] [rclcpp]: signal_handler(SIGINT/SIGTERM)

@@ -1,0 +1,10 @@
+# launch 之 yaml 实现：启动两个 turtlesim 窗口（helloworld 案例）
+launch:
+  - node:
+      pkg: turtlesim
+      exec: turtlesim_node
+      name: t1
+  - node:
+      pkg: turtlesim
+      exec: turtlesim_node
+      name: t2

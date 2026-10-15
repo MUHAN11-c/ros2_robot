@@ -1,0 +1,11 @@
+--- run: ros2 run cpp01_time demo01_time_api (timeout 8s)
+[INFO] [1792040770.296031499] [time_api_node_cpp]: 当前时刻:1792040770.29603
+[INFO] [1792040770.296175030] [time_api_node_cpp]: t2:1.50
+[INFO] [1792040770.296181312] [time_api_node_cpp]: d1 = 3.00 s, d2 = 2.00 s
+[INFO] [1792040770.296188558] [time_api_node_cpp]: t1 + 3s = 1792040773.29603
+[INFO] [1792040770.296194668] [time_api_node_cpp]: d1 - d2 = 1.00 s
+[INFO] [1792040770.296197959] [time_api_node_cpp]: d1 > d2 ? true
+[INFO] [1792040770.296206770] [time_api_node_cpp]: Rate 循环 0
+[INFO] [1792040771.296283056] [time_api_node_cpp]: Rate 循环 1
+[INFO] [1792040772.296278633] [time_api_node_cpp]: Rate 循环 2
+[INFO] [1792040778.111105256] [rclcpp]: signal_handler(SIGINT/SIGTERM)

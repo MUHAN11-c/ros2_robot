@@ -1,0 +1,4 @@
+--- run: ros2 run turtlesim turtlesim_node (bg 30s)
+[INFO] [1792040624.168607119] [turtlesim]: Starting turtlesim with node name /turtlesim
+[INFO] [1792040624.171962144] [turtlesim]: Spawning turtle [turtle1] at x=[5.544445], y=[5.544445], theta=[0.000000]
+[INFO] [1792040653.902161229] [rclcpp]: signal_handler(SIGINT/SIGTERM)

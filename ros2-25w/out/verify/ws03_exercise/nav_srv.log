@@ -1,0 +1,21 @@
+--- run: ros2 run my_exer05_action_server nav_server (bg 22s)
+[INFO] [1792040853.471190166] [nav_server_node_cpp]: Nav 动作服务端创建!
+[INFO] [1792040856.719610217] [nav_server_node_cpp]: 接收到导航目标点:(3.00,4.00)
+[INFO] [1792040856.720006450] [nav_server_node_cpp]: 剩余距离:5.00
+[INFO] [1792040857.720094996] [nav_server_node_cpp]: 剩余距离:5.00
+[INFO] [1792040858.720092781] [nav_server_node_cpp]: 剩余距离:5.00
+[INFO] [1792040859.720089730] [nav_server_node_cpp]: 剩余距离:5.00
+[INFO] [1792040860.720072898] [nav_server_node_cpp]: 剩余距离:5.00
+[INFO] [1792040861.720088154] [nav_server_node_cpp]: 剩余距离:5.00
+[INFO] [1792040862.720110719] [nav_server_node_cpp]: 剩余距离:5.00
+[INFO] [1792040863.720461979] [nav_server_node_cpp]: 剩余距离:5.00
+[INFO] [1792040864.720469594] [nav_server_node_cpp]: 剩余距离:5.00
+[INFO] [1792040865.720277540] [nav_server_node_cpp]: 剩余距离:5.00
+[INFO] [1792040866.720099394] [nav_server_node_cpp]: 剩余距离:5.00
+[INFO] [1792040867.720764494] [nav_server_node_cpp]: 剩余距离:5.00
+[INFO] [1792040868.720141907] [nav_server_node_cpp]: 剩余距离:5.00
+[INFO] [1792040869.720079335] [nav_server_node_cpp]: 剩余距离:5.00
+[INFO] [1792040870.720178015] [nav_server_node_cpp]: 剩余距离:5.00
+[INFO] [1792040870.919501830] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+terminate called after throwing an instance of 'std::runtime_error'
+  what():  Asked to publish result for goal that does not exist

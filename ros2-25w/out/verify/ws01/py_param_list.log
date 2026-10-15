@@ -1,0 +1,5 @@
+--- run: ros2 param list /param_server_node_py (timeout 6s)
+  start_type_description_service
+  use_sim_time
+  wheels
+  width

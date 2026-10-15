@@ -1,0 +1,4 @@
+from my_exer_interfaces.srv._cru import Cru  # noqa: F401
+from my_exer_interfaces.srv._cru import Cru_Event  # noqa: F401
+from my_exer_interfaces.srv._cru import Cru_Request  # noqa: F401
+from my_exer_interfaces.srv._cru import Cru_Response  # noqa: F401

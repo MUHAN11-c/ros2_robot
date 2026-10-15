@@ -1,0 +1,33 @@
+--- run: ros2 run py03_action demo01_action_server_py (bg 22s)
+[INFO] [1792040492.831325753] [progress_action_server_node_py]: 动作通信服务端创建!(python)
+[INFO] [1792040495.274364635] [progress_action_server_node_py]: 接收到客户端请求，目标值:10
+[INFO] [1792040495.274924901] [progress_action_server_node_py]: 连续反馈:0.10
+[INFO] [1792040496.275482015] [progress_action_server_node_py]: 连续反馈:0.20
+[INFO] [1792040497.275988690] [progress_action_server_node_py]: 连续反馈:0.30
+[INFO] [1792040498.276549669] [progress_action_server_node_py]: 连续反馈:0.40
+[INFO] [1792040499.277084052] [progress_action_server_node_py]: 连续反馈:0.50
+[INFO] [1792040500.277568384] [progress_action_server_node_py]: 连续反馈:0.60
+[INFO] [1792040501.278136351] [progress_action_server_node_py]: 连续反馈:0.70
+[INFO] [1792040502.278706245] [progress_action_server_node_py]: 连续反馈:0.80
+[INFO] [1792040503.279232020] [progress_action_server_node_py]: 连续反馈:0.90
+[INFO] [1792040504.279840120] [progress_action_server_node_py]: 连续反馈:1.00
+[INFO] [1792040505.281053783] [progress_action_server_node_py]: 最终结果:55
+Traceback (most recent call last):
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws01_plumbing/install/py03_action/lib/py03_action/demo01_action_server_py", line 33, in <module>
+    sys.exit(load_entry_point('py03-action==0.0.0', 'console_scripts', 'demo01_action_server_py')())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws01_plumbing/install/py03_action/lib/python3.12/site-packages/py03_action/demo01_action_server_py.py", line 76, in main
+    rclpy.spin(ProgressActionServer())
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
+    executor.spin_once()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 926, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 907, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 877, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 785, in _wait_for_ready_callbacks
+    raise ExternalShutdownException()
+rclpy.executors.ExternalShutdownException

@@ -1,0 +1,51 @@
+[INFO] [launch]: All log files can be found below /home/mu/.ros/log/2026-10-15-16-01-19-802083-mu-MS-7E34-677858
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [gz-1]: process started with pid [677861]
+[INFO] [parameter_bridge-2]: process started with pid [677862]
+[INFO] [rviz2-3]: process started with pid [677863]
+[gz-1] [1;33mWarning [Utils.cc:132][0m [/sdf/world[@name="demo_world"]/model[@name="robot1"]/link[@name="chassis"]/sensor[@name="gpu_lidar"]/gz_frame_id:/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws06_sim_nav/install/demo_ign_sim/share/demo_ign_sim/worlds/demo.sdf:L86]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[parameter_bridge-2] [INFO] [1792051280.897072600] [ros_gz_bridge]: Creating ROS->GZ Bridge: [/cmd_vel (geometry_msgs/msg/Twist) -> /cmd_vel (ignition.msgs.Twist)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1792051280.898590751] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/scan (ignition.msgs.LaserScan) -> /scan (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1792051280.899506552] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/model/robot1/odometry (ignition.msgs.Odometry) -> /odom (nav_msgs/msg/Odometry)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1792051280.900400463] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/model/robot1/tf (ignition.msgs.Pose_V) -> /tf (tf2_msgs/msg/TFMessage)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1792051280.901166012] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/clock (ignition.msgs.Clock) -> /clock (rosgraph_msgs/msg/Clock)] (Lazy 0)
+[rviz2-3] [INFO] [1792051281.233589552] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-3] [INFO] [1792051281.233644765] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[rviz2-3] [INFO] [1792051281.330966859] [rviz2]: Stereo is NOT SUPPORTED
+[gz-1] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="robot1"]/link[@name="chassis"]/sensor[@name="gpu_lidar"]/gz_frame_id:<data-string>:L60]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gz-1] libEGL warning: pci id for fd 81: 10de:2204, driver (null)
+[gz-1] 
+[gz-1] pci id for fd 82: 10de:2204, driver (null)
+[gz-1] pci id for fd 83: 10de:2204, driver (null)
+[gz-1] libEGL warning: egl: failed to create dri2 screen
+[gz-1] libEGL warning: pci id for fd 81: 10de:2204, driver (null)
+[gz-1] 
+[gz-1] pci id for fd 82: 10de:2204, driver (null)
+[gz-1] pci id for fd 83: 10de:2204, driver (null)
+[gz-1] libEGL warning: egl: failed to create dri2 screen
+[gz-1] libEGL warning: pci id for fd 81: 10de:2204, driver (null)
+[gz-1] 
+[gz-1] libEGL warning: pci id for fd 127: 10de:2204, driver (null)
+[gz-1] 
+[gz-1] pci id for fd 128: 10de:2204, driver (null)
+[gz-1] pci id for fd 129: 10de:2204, driver (null)
+[gz-1] libEGL warning: egl: failed to create dri2 screen
+[gz-1] libEGL warning: pci id for fd 127: 10de:2204, driver (null)
+[gz-1] 
+[gz-1] pci id for fd 128: 10de:2204, driver (null)
+[gz-1] pci id for fd 129: 10de:2204, driver (null)
+[gz-1] libEGL warning: egl: failed to create dri2 screen
+[gz-1] libEGL warning: pci id for fd 127: 10de:2204, driver (null)
+[gz-1] 
+[ERROR] [gz-1]: process has died [pid 677861, exit code -9, cmd 'gz sim -r /home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws06_sim_nav/install/demo_ign_sim/share/demo_ign_sim/worlds/demo.sdf'].
+[parameter_bridge-2] [INFO] [1792051311.727645606] [ros_gz_bridge]: Passing message from ROS geometry_msgs/msg/Twist to Gazebo gz.msgs.Twist (showing msg only once per type)
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT) again, ignoring...
+[INFO] [rviz2-3]: sending signal 'SIGINT' to process[rviz2-3]
+[INFO] [parameter_bridge-2]: sending signal 'SIGINT' to process[parameter_bridge-2]
+[parameter_bridge-2] [INFO] [1792051449.612644704] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[rviz2-3] [INFO] [1792051449.612720685] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[parameter_bridge-2] [INFO] [1792051449.614694156] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[rviz2-3] [INFO] [1792051449.614760468] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [parameter_bridge-2]: process has finished cleanly [pid 677862]
+[INFO] [rviz2-3]: process has finished cleanly [pid 677863]

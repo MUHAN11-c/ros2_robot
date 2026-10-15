@@ -1,0 +1,6 @@
+--- run: ros2 run tf2_ros static_transform_publisher --x 1 --y 2 --z 3 --frame-id camera --child-frame-id laser (bg 14s)
+[INFO] [1792040649.316003659] [static_transform_publisher_Lacwc3RRPdNaCuKk]: Spinning until stopped - publishing transform
+translation: ('1.000000', '2.000000', '3.000000')
+rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+from 'camera' to 'laser'
+[INFO] [1792040660.187694270] [rclcpp]: signal_handler(SIGINT/SIGTERM)

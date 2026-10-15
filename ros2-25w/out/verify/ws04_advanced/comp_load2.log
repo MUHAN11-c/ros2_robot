@@ -1,0 +1,2 @@
+--- run: ros2 component load /ComponentManager demo_component ListenerComponent (timeout 6s)
+Loaded component 2 into '/ComponentManager' container node as '/listener_component_node_cpp'

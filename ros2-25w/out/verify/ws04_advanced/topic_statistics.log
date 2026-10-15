@@ -1,0 +1,31 @@
+--- run: topic_statistics --ros-args -p topic:=/chatter (bg 12s)
+[INFO] [1792045729.833339326] [topic_statistics_node_py]: 话题统计节点创建!(python)
+[INFO] [1792045730.834803671] [topic_statistics_node_py]: 近5s统计: 0 条消息, 平均频率 0.00 Hz
+[INFO] [1792045731.834927338] [topic_statistics_node_py]: 近5s统计: 0 条消息, 平均频率 0.00 Hz
+[INFO] [1792045732.834993113] [topic_statistics_node_py]: 近5s统计: 1 条消息, 平均频率 0.20 Hz
+[INFO] [1792045733.834880746] [topic_statistics_node_py]: 近5s统计: 2 条消息, 平均频率 0.40 Hz
+[INFO] [1792045734.834840580] [topic_statistics_node_py]: 近5s统计: 3 条消息, 平均频率 0.60 Hz
+[INFO] [1792045735.834854519] [topic_statistics_node_py]: 近5s统计: 4 条消息, 平均频率 0.80 Hz
+[INFO] [1792045736.834834837] [topic_statistics_node_py]: 近5s统计: 5 条消息, 平均频率 1.00 Hz
+[INFO] [1792045737.834826684] [topic_statistics_node_py]: 近5s统计: 5 条消息, 平均频率 1.00 Hz
+[INFO] [1792045738.837767358] [topic_statistics_node_py]: 近5s统计: 5 条消息, 平均频率 1.00 Hz
+[INFO] [1792045739.834810932] [topic_statistics_node_py]: 近5s统计: 5 条消息, 平均频率 1.00 Hz
+Traceback (most recent call last):
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws04_advanced/install/demo_topic_tools/lib/demo_topic_tools/topic_statistics", line 33, in <module>
+    sys.exit(load_entry_point('demo-topic-tools==0.0.0', 'console_scripts', 'topic_statistics')())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws04_advanced/install/demo_topic_tools/lib/python3.12/site-packages/demo_topic_tools/topic_statistics.py", line 42, in main
+    rclpy.spin(TopicStatistics())
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
+    executor.spin_once()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 926, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 907, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 877, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 785, in _wait_for_ready_callbacks
+    raise ExternalShutdownException()
+rclpy.executors.ExternalShutdownException

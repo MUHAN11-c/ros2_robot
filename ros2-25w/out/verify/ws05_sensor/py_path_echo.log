@@ -1,0 +1,1 @@
+--- run: ros2 topic echo /path --once --spin-time 6 (timeout 8s)

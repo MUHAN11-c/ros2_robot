@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<launch>
+    <node pkg="turtlesim" exec="turtlesim_node" name="t1"/>
+    <node pkg="turtlesim" exec="turtlesim_node" name="t2"/>
+</launch>

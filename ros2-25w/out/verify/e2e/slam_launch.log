@@ -1,0 +1,14 @@
+[INFO] [launch]: All log files can be found below /home/mu/.ros/log/2026-10-15-15-59-11-104704-mu-MS-7E34-672159
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [sync_slam_toolbox_node-1]: process started with pid [672173]
+[INFO] [rviz2-2]: process started with pid [672174]
+[sync_slam_toolbox_node-1] [37;1m2026-10-15 15:59:11.247 [31;1m[[37;1mRTPS_TRANSPORT_SHM[31;1m Error] [37mFailed init_port fastrtps_port7004: open_and_lock_file failed[34;1m -> Function [36mopen_port_internal[m
+[sync_slam_toolbox_node-1] [37;1m2026-10-15 15:59:11.248 [31;1m[[37;1mRTPS_TRANSPORT_SHM[31;1m Error] [37mFailed init_port fastrtps_port7018: open_and_lock_file failed[34;1m -> Function [36mopen_port_internal[m
+[sync_slam_toolbox_node-1] [INFO] [1792051151.260080357] [slam_toolbox]: Node using stack size 40000000
+[rviz2-2] [INFO] [1792051151.940228955] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-2] [INFO] [1792051151.940430461] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[rviz2-2] [INFO] [1792051152.079508993] [rviz2]: Stereo is NOT SUPPORTED
+[sync_slam_toolbox_node-1] [INFO] [1792051185.931571855] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [sync_slam_toolbox_node-1]: process has finished cleanly [pid 672173]
+[rviz2-2] [INFO] [1792051186.073312973] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [rviz2-2]: process has finished cleanly [pid 672174]

@@ -1,0 +1,19 @@
+--- run: ros2 topic echo /tf --once --spin-time 6 (timeout 8s)
+transforms:
+- header:
+    stamp:
+      sec: 1792040674
+      nanosec: 399448111
+    frame_id: world
+  child_frame_id: t2
+  transform:
+    translation:
+      x: 3.0
+      y: 3.0
+      z: 0.0
+    rotation:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+      w: 1.0
+---

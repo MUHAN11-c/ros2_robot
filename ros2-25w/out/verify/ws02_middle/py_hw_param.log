@@ -1,0 +1,29 @@
+--- run: ros2 run py02_homework homework_param_client (timeout 12s)
+[INFO] [1792040794.488374809] [hw_param_client_node_py]: 期中大作业-参数服务客户端(python)
+[INFO] [1792040794.751741763] [hw_param_client_node_py]: 修改背景色:成功
+[INFO] [1792040794.751957508] [hw_param_client_node_py]: 修改背景色:成功
+[INFO] [1792040794.752118090] [hw_param_client_node_py]: 修改背景色:成功
+Traceback (most recent call last):
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws02_middle/install/py02_homework/lib/py02_homework/homework_param_client", line 33, in <module>
+    sys.exit(load_entry_point('py02-homework==0.0.0', 'console_scripts', 'homework_param_client')())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws02_middle/install/py02_homework/lib/python3.12/site-packages/py02_homework/homework_param_client.py", line 53, in main
+    client.set_background(100, 84, 105)
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws02_middle/install/py02_homework/lib/python3.12/site-packages/py02_homework/homework_param_client.py", line 44, in set_background
+    rclpy.spin_until_future_complete(self, clear_future)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 274, in spin_until_future_complete
+    executor.spin_until_future_complete(future, timeout_sec)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 381, in spin_until_future_complete
+    self._spin_once_until_future_complete(future, timeout_sec)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 935, in _spin_once_until_future_complete
+    self._spin_once_impl(timeout_sec, future.done)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 907, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 877, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 781, in _wait_for_ready_callbacks
+    wait_set.wait(timeout_nsec)
+KeyboardInterrupt
+[ros2run]: Interrupt

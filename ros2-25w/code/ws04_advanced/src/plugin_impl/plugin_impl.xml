@@ -1,0 +1,8 @@
+<library path="polygon_impl">
+  <class name="polygon_plugins/Triangle" type="polygon_plugins::Triangle" base_class_type="polygon_base::RegularPolygon">
+    <description>三角形插件</description>
+  </class>
+  <class name="polygon_plugins/Square" type="polygon_plugins::Square" base_class_type="polygon_base::RegularPolygon">
+    <description>正方形插件</description>
+  </class>
+</library>

@@ -1,0 +1,41 @@
+--- run: ros2 action send_goal /get_sum base_interfaces_demo/action/Progress {num: 10} --feedback (timeout 18s)
+Waiting for an action server to become available...
+Sending goal:
+     num: 10
+
+Goal accepted with ID: 3b3c18db994442828e1ee14fc059d1d3
+
+Feedback:
+    progress: 0.1
+
+Feedback:
+    progress: 0.2
+
+Feedback:
+    progress: 0.3
+
+Feedback:
+    progress: 0.4
+
+Feedback:
+    progress: 0.5
+
+Feedback:
+    progress: 0.6
+
+Feedback:
+    progress: 0.7
+
+Feedback:
+    progress: 0.8
+
+Feedback:
+    progress: 0.9
+
+Feedback:
+    progress: 1.0
+
+Result:
+    sum: 55
+
+Goal finished with status: SUCCEEDED

@@ -1,0 +1,3 @@
+--- run: ros2 run py02_homework homework_service_client (timeout 12s)
+[INFO] [1792040817.671831908] [hw_spawn_node_py]: 期中大作业-服务通信客户端(python)
+[INFO] [1792040817.936674553] [hw_spawn_node_py]: 已生成乌龟:t1

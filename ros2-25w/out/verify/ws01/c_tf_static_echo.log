@@ -1,0 +1,19 @@
+--- run: ros2 topic echo /tf_static --once --spin-time 6 (timeout 8s)
+transforms:
+- header:
+    stamp:
+      sec: 1792040607
+      nanosec: 13718738
+    frame_id: camera
+  child_frame_id: laser
+  transform:
+    translation:
+      x: 1.0
+      y: 2.0
+      z: 3.0
+    rotation:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+      w: 1.0
+---

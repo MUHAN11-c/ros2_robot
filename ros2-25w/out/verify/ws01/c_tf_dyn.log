@@ -1,0 +1,2 @@
+--- run: ros2 run cpp03_tf_broadcaster demo02_dynamic_tf_broadcaster (bg 14s)
+[INFO] [1792040637.510672729] [rclcpp]: signal_handler(SIGINT/SIGTERM)

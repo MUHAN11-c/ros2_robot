@@ -1,0 +1,4 @@
+--- run: ros2 run cpp05_gnss_demo gnss_demo (timeout 10s)
+[INFO] [1792044210.745861942] [gnss_node_cpp]: GNSS 案例节点创建!
+[INFO] [1792044212.474761969] [gnss_node_cpp]: 定位原点:(31.100000,121.300000)
+[INFO] [1792044220.596121372] [rclcpp]: signal_handler(SIGINT/SIGTERM)

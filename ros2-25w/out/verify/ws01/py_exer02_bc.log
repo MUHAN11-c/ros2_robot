@@ -1,0 +1,21 @@
+--- run: ros2 run py05_exercise exer02_tf_broadcaster_py --ros-args -p turtle:=t2 (bg 14s)
+[INFO] [1792040711.004583900] [exer02_tf_broadcaster_node_py]: 广播 t2 的坐标变换!(python)
+Traceback (most recent call last):
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws01_plumbing/install/py05_exercise/lib/py05_exercise/exer02_tf_broadcaster_py", line 33, in <module>
+    sys.exit(load_entry_point('py05-exercise==0.0.0', 'console_scripts', 'exer02_tf_broadcaster_py')())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws01_plumbing/install/py05_exercise/lib/python3.12/site-packages/py05_exercise/exer02_tf_broadcaster_py.py", line 44, in main
+    rclpy.spin(Exer02TFBroadcasterPy())
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
+    executor.spin_once()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 926, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 907, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 877, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 785, in _wait_for_ready_callbacks
+    raise ExternalShutdownException()
+rclpy.executors.ExternalShutdownException

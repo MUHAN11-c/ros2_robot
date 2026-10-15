@@ -1,0 +1,4 @@
+--- run: ros2 run py00_odom odom2path_py (bg 12s)
+[INFO] [1792042328.866617309] [odom2path_node_py]: odom2path 节点创建!(python)
+python3: ./.obj-x86_64-linux-gnu/rosidl_generator_py/geometry_msgs/msg/_pose_stamped_s.c:56: geometry_msgs__msg__pose_stamped__convert_from_py: Assertion `strncmp("geometry_msgs.msg._pose_stamped.PoseStamped", full_classname_dest, 43) == 0' failed.
+[ros2run]: Aborted

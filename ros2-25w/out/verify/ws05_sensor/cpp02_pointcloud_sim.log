@@ -1,0 +1,3 @@
+--- run: ros2 run cpp02_pointcloud_sim pointcloud_sim (bg 10s)
+[INFO] [1792042360.316938937] [pointcloud_sim_node_cpp]: 多线激光雷达仿真节点创建!
+[INFO] [1792042369.071011102] [rclcpp]: signal_handler(SIGINT/SIGTERM)

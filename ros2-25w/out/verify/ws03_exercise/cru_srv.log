@@ -1,0 +1,3 @@
+--- run: ros2 run my_exer03_service_server cru_server (bg 16s)
+[INFO] [1792040847.675736097] [cru_server_node_cpp]: Cru 服务端创建!
+[INFO] [1792040850.250410026] [rclcpp]: signal_handler(SIGINT/SIGTERM)

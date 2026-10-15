@@ -1,0 +1,12 @@
+--- run: ros2 run cpp01_topic demo01_talker_str (bg 10s)
+[INFO] [1792040419.415738570] [talker_node_cpp]: 发布节点创建!
+[INFO] [1792040420.416271471] [talker_node_cpp]: 发布方发布的消息:hello world!0
+[INFO] [1792040421.416414106] [talker_node_cpp]: 发布方发布的消息:hello world!1
+[INFO] [1792040422.416264720] [talker_node_cpp]: 发布方发布的消息:hello world!2
+[INFO] [1792040423.416259025] [talker_node_cpp]: 发布方发布的消息:hello world!3
+[INFO] [1792040424.416259420] [talker_node_cpp]: 发布方发布的消息:hello world!4
+[INFO] [1792040425.416263233] [talker_node_cpp]: 发布方发布的消息:hello world!5
+[INFO] [1792040426.416263928] [talker_node_cpp]: 发布方发布的消息:hello world!6
+[INFO] [1792040427.416313861] [talker_node_cpp]: 发布方发布的消息:hello world!7
+[INFO] [1792040428.416258929] [talker_node_cpp]: 发布方发布的消息:hello world!8
+[INFO] [1792040429.273454327] [rclcpp]: signal_handler(SIGINT/SIGTERM)

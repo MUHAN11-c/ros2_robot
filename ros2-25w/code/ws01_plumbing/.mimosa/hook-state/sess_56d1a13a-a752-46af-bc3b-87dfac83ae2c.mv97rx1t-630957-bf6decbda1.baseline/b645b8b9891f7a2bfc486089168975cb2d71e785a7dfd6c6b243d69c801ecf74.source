@@ -1,0 +1,54 @@
+# -*- coding: utf-8 -*-
+"""
+    需求：以固定频率发布学生信息（自定义接口消息）。
+    流程：
+        1.导包；
+        2.初始化 ROS2 客户端；
+        3.自定义节点类；
+            3-1.创建发布方；
+            3-2.创建定时器；
+            3-3.组织并发布学生消息。
+        4.调用spin函数，并传入节点对象；
+        5.释放资源。
+"""
+# 1.导包；
+import rclpy
+from rclpy.node import Node
+from base_interfaces_demo.msg import Student
+
+
+# 3.自定义节点类；
+class MinimalPublisher(Node):
+
+    def __init__(self):
+        super().__init__('talkerstu_node_py')
+        self.get_logger().info('学生消息发布方创建!(python)')
+        # 3-1.创建发布方；
+        self.publisher_ = self.create_publisher(Student, 'chatter_stu', 10)
+        # 3-2.创建定时器；
+        timer_period = 0.5
+        self.timer = self.create_timer(timer_period, self.timer_callback)
+        self.age = 6
+
+    # 3-3.组织并发布学生消息；
+    def timer_callback(self):
+        stu = Student()
+        stu.name = 'huluwa'
+        stu.age = self.age
+        stu.height = 2.2
+        self.get_logger().info('发布的消息:{%s,%d,%.2f}' % (stu.name, stu.age, stu.height))
+        self.publisher_.publish(stu)
+        self.age += 1
+
+
+def main():
+    # 2.初始化 ROS2 客户端；
+    rclpy.init()
+    # 4.调用spin函数，并传入节点对象；
+    rclpy.spin(MinimalPublisher())
+    # 5.释放资源；
+    rclpy.shutdown()
+
+
+if __name__ == '__main__':
+    main()

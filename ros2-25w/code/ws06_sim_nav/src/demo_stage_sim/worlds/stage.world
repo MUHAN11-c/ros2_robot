@@ -1,0 +1,66 @@
+# 第24周 stage_ros2 仿真 world：全局参数(窗体/分辨率/间隔)
+# stage_ros2 需要配合 setup.sh 使用，详见 launch/sim.launch.py
+resolution 0.05
+interval_sim 100
+interval_realtime 100
+update_gui 100
+
+window
+(
+  size [ 700.000 700.000 ]
+  center [ 0.000 0.000 ]
+  rotate [ 0.000 0.000 ]
+  scale 25.000
+)
+
+# 激光雷达模型定义(供机器人引用)；
+define laser ranger
+(
+  sensor
+  (
+    range [0.15 12.0]
+    fov 360.0
+    samples 360
+    size [0.025 0.025 0.025]
+  )
+  color "black"
+)
+
+# 机器人模型：差速底盘 + 激光雷达；
+define robot position
+(
+  drive "diff"
+  size [0.35 0.35 0.25]
+  origin [0 0 0 0]
+  odom_err [0.0 0.0 999999 0.0 0.0 999999]
+  color "blue"
+  laser ( pose [0.08 0 0 0] )
+)
+
+# 仿真环境：四面墙体(坐标单位: 米)；
+define wall model
+(
+  size [0.2 0.2 0.5]
+  color "gray"
+  block
+  (
+    points 4
+    point [0 0]
+    point [1 0]
+    point [1 1]
+    point [0 1]
+    z [0 0.5]
+  )
+)
+
+# 场景实例；
+wall ( pose [4 0 0 90] size [8 0.2 0.5] name "wall_north" )
+wall ( pose [-4 0 0 90] size [8 0.2 0.5] name "wall_south" )
+wall ( pose [0 4 0 0] size [8 0.2 0.5] name "wall_east" )
+wall ( pose [0 -4 0 0] size [8 0.2 0.5] name "wall_west" )
+
+# 障碍物；
+wall ( pose [0 0 0 0] size [1 1 0.5] name "obstacle_center" )
+
+# 机器人实例；
+robot ( pose [0 -2 0 0] name "robot1" )

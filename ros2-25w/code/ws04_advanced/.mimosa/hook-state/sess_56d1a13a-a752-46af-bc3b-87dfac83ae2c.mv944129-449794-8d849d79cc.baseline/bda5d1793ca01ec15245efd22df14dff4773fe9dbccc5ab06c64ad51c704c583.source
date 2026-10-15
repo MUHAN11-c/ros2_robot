@@ -1,0 +1,73 @@
+/*
+    需求：高效的进程内通信 —— 将发布方与订阅方集成到同一进程，并启用进程内通信优化。
+    流程：
+        1.包含头文件；
+        2.初始化 ROS2 客户端；
+        3.定义发布方与订阅方类(设置进程内通信选项)；
+        4.核心：将发布方对象和订阅方对象集成到同一进程；
+            4-1.创建一个进程执行器；
+            4-2.创建节点对象并添加进进程执行器；
+            4-3.执行器执行。
+        5.释放资源。
+*/
+// 1.包含头文件；
+#include "rclcpp/rclcpp.hpp"
+#include "std_msgs/msg/string.hpp"
+
+using std::placeholders::_1;
+using namespace std::chrono_literals;
+
+// 3.自定义节点类(发布方)；
+class MinimalPublisher : public rclcpp::Node
+{
+public:
+    MinimalPublisher(): Node("intra_pub_node_cpp"){
+        publisher_ = this->create_publisher<std_msgs::msg::String>("chatter",10);
+        timer_ = this->create_wall_timer(1s,std::bind(&MinimalPublisher::on_timer,this));
+    }
+private:
+    void on_timer(){
+        auto message = std_msgs::msg::String();
+        message.data = "hello intra process!";
+        RCLCPP_INFO(this->get_logger(),"发布:%s",message.data.c_str());
+        publisher_->publish(message);
+    }
+    rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;
+    rclcpp::TimerBase::SharedPtr timer_;
+};
+
+// 自定义节点类(订阅方)；
+class MinimalSubscriber : public rclcpp::Node
+{
+public:
+    MinimalSubscriber(): Node("intra_sub_node_cpp"){
+        // 3-1.节点设置：允许进程内通信；
+        rclcpp::SubscriptionOptions sub_options;
+        sub_options.use_intra_process_comm = rclcpp::IntraProcessSetting::Enable;
+        subscription_ = this->create_subscription<std_msgs::msg::String>("chatter",10,
+            std::bind(&MinimalSubscriber::topic_callback,this,_1),sub_options);
+    }
+private:
+    // 3-2.处理订阅到的消息；
+    void topic_callback(const std_msgs::msg::String & msg) const{
+        RCLCPP_INFO(this->get_logger(),"订阅的消息：'%s'",msg.data.c_str());
+    }
+    rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
+};
+
+int main(int argc, char ** argv)
+{
+    // 2.初始化 ros2 客户端；
+    rclcpp::init(argc,argv);
+    // 4.核心：将发布方对象和订阅方对象集成到同一进程；
+    // 4-1.创建一个进程执行器
+    rclcpp::executors::SingleThreadedExecutor executor;
+    // 4-2.创建节点对象并添加进进程执行器
+    executor.add_node(std::make_shared<MinimalPublisher>());
+    executor.add_node(std::make_shared<MinimalSubscriber>());
+    // 4-3.执行器执行
+    executor.spin();
+    // 5.释放资源；
+    rclcpp::shutdown();
+    return 0;
+}

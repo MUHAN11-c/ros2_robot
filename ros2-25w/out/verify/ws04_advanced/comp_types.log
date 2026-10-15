@@ -1,0 +1,148 @@
+--- run: ros2 component types (timeout 5s)
+demo_component
+  TalkerComponent
+  ListenerComponent
+nav2_waypoint_follower
+  nav2_waypoint_follower::WaypointFollower
+rtabmap_slam
+  rtabmap_slam::CoreWrapper
+ros_gz_bridge
+  ros_gz_bridge::RosGzBridge
+rtabmap_odom
+  rtabmap_odom::RGBDOdometry
+  rtabmap_odom::StereoOdometry
+  rtabmap_odom::ICPOdometry
+image_transport
+  image_transport::Republisher
+nav2_smoother
+  nav2_smoother::SmootherServer
+opennav_docking
+  opennav_docking::DockingServer
+nav2_velocity_smoother
+  nav2_velocity_smoother::VelocitySmoother
+realsense2_camera
+  realsense2_camera::RealSenseNodeFactory
+rtabmap_util
+  rtabmap_util::RGBDRelay
+  rtabmap_util::RGBDSplit
+  rtabmap_util::DisparityToDepth
+  rtabmap_util::ImuToTF
+  rtabmap_util::DbPlayer
+  rtabmap_util::LidarDeskewing
+  rtabmap_util::PointCloudXYZ
+  rtabmap_util::PointCloudXYZRGB
+  rtabmap_util::PointCloudToDepthImage
+  rtabmap_util::ObstaclesDetection
+  rtabmap_util::PointCloudAggregator
+  rtabmap_util::PointCloudAssembler
+  rtabmap_util::MapAssembler
+nav2_behaviors
+  behavior_server::BehaviorServer
+velodyne_driver
+  velodyne_driver::VelodyneDriver
+rosbag2_transport
+  rosbag2_transport::Player
+  rosbag2_transport::Recorder
+image_view
+  image_view::DisparityViewNode
+  image_view::ExtractImagesNode
+  image_view::ImageViewNode
+  image_view::ImageSaverNode
+  image_view::StereoViewNode
+  image_view::VideoRecorderNode
+nav2_controller
+  nav2_controller::ControllerServer
+camera_ros
+  camera::CameraNode
+imu_filter_madgwick
+  ImuFilterMadgwickRos
+tf2_ros
+  tf2_ros::StaticTransformBroadcasterNode
+image_publisher
+  image_publisher::ImagePublisher
+teleop_twist_joy
+  teleop_twist_joy::TeleopTwistJoy
+pcl_ros
+  pcl_ros::ExtractIndices
+  pcl_ros::PassThrough
+  pcl_ros::ProjectInliers
+  pcl_ros::RadiusOutlierRemoval
+  pcl_ros::StatisticalOutlierRemoval
+  pcl_ros::CropBox
+  pcl_ros::VoxelGrid
+  pcl_ros::PCDPublisher
+  pcl_ros::PointCloudToPCD
+  pcl_ros::CombinedPointCloudToPCD
+robot_state_publisher
+  robot_state_publisher::RobotStatePublisher
+nav2_map_server
+  nav2_map_server::CostmapFilterInfoServer
+  nav2_map_server::MapSaver
+  nav2_map_server::MapServer
+slam_toolbox
+  slam_toolbox::AsynchronousSlamToolbox
+  slam_toolbox::SynchronousSlamToolbox
+  slam_toolbox::LocalizationSlamToolbox
+  slam_toolbox::LifelongSlamToolbox
+  slam_toolbox::MapAndLocalizationSlamToolbox
+rtabmap_sync
+  rtabmap_sync::RGBDSync
+  rtabmap_sync::StereoSync
+  rtabmap_sync::RGBSync
+  rtabmap_sync::RGBDXSync
+nav2_bt_navigator
+  nav2_bt_navigator::BtNavigator
+nav2_lifecycle_manager
+  nav2_lifecycle_manager::LifecycleManager
+image_proc
+  image_proc::RectifyNode
+  image_proc::DebayerNode
+  image_proc::ResizeNode
+  image_proc::CropDecimateNode
+  image_proc::CropNonZeroNode
+  image_proc::TrackMarkerNode
+nav2_collision_monitor
+  nav2_collision_monitor::CollisionMonitor
+  nav2_collision_monitor::CollisionDetector
+moveit_servo
+  moveit_servo::ServoNode
+joy
+  joy::Joy
+  joy::GameController
+ros_gz_sim
+  ros_gz_sim::GzServer
+pointcloud_to_laserscan
+  pointcloud_to_laserscan::LaserScanToPointCloudNode
+  pointcloud_to_laserscan::PointCloudToLaserScanNode
+irobot_create_nodes
+  irobot_create_nodes::HazardsVectorPublisher
+  irobot_create_nodes::IrIntensityVectorPublisher
+  irobot_create_nodes::MotionControlNode
+  irobot_create_nodes::WheelsPublisher
+  irobot_create_nodes::RobotState
+  irobot_create_nodes::UIMgr
+  irobot_create_nodes::MockPublisher
+  irobot_create_nodes::KidnapEstimator
+moveit_ros_planning
+  moveit_ros_planning::SrdfPublisher
+apriltag_ros
+  AprilTagNode
+nav2_amcl
+  nav2_amcl::AmclNode
+nav2_route
+  nav2_route::RouteServer
+topic_tools
+  topic_tools::RelayNode
+  topic_tools::ThrottleNode
+  topic_tools::DropNode
+  topic_tools::MuxNode
+  topic_tools::DemuxNode
+  topic_tools::DelayNode
+point_cloud_transport
+  point_cloud_transport::Republisher
+velodyne_pointcloud
+  velodyne_pointcloud::Transform
+nav2_planner
+  nav2_planner::PlannerServer
+velodyne_laserscan
+  velodyne_laserscan::VelodyneLaserScan

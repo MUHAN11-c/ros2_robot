@@ -1,0 +1,29 @@
+--- run: ros2 run py02_pointcloud_sim pointcloud_sim_py (bg 10s)
+[INFO] [1792042369.856590183] [pointcloud_sim_node_py]: 多线激光雷达仿真节点创建!(python)
+Traceback (most recent call last):
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws05_sensor/install/py02_pointcloud_sim/lib/py02_pointcloud_sim/pointcloud_sim_py", line 33, in <module>
+    sys.exit(load_entry_point('py02-pointcloud-sim==0.0.0', 'console_scripts', 'pointcloud_sim_py')())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws05_sensor/install/py02_pointcloud_sim/lib/python3.12/site-packages/py02_pointcloud_sim/pointcloud_sim_py.py", line 37, in main
+    rclpy.spin(PointCloudSimPy())
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
+    executor.spin_once()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 926, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 918, in _spin_once_impl
+    raise handler.exception()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py", line 286, in _execute_coroutine_step
+    result = coro.send(None)
+             ^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 592, in handler
+    await call_coroutine()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 454, in _execute
+    await await_or_execute(tmr.callback)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 115, in await_or_execute
+    return callback(*args)
+           ^^^^^^^^^^^^^^^
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws05_sensor/install/py02_pointcloud_sim/lib/python3.12/site-packages/py02_pointcloud_sim/pointcloud_sim_py.py", line 31, in on_timer
+    cloud.header.frame_id = "laser"
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Time' object has no attribute 'frame_id'
+[ros2run]: Process exited with failure 1

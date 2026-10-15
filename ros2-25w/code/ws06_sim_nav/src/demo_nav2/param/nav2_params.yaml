@@ -1,0 +1,101 @@
+# Nav2 导航参数(课程第25周 导航服务器 还原：map_server/AMCL/规划/控制/行为树)
+amcl:
+  ros__parameters:
+    use_sim_time: true
+    odom_frame: odom
+    base_frame_id: base_footprint
+    global_frame_id: map
+    scan_topic: scan
+    set_initial_pose: true
+    initial_pose:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+      yaw: 0.0
+    max_beams: 60
+    min_particles: 500
+    max_particles: 2000
+
+map_server:
+  ros__parameters:
+    use_sim_time: true
+    yaml_filename: "demo_map.yaml"
+
+planner_server:
+  ros__parameters:
+    use_sim_time: true
+    expected_planner_frequency: 1.0
+    planner_plugins: [GridBased]
+    GridBased:
+      plugin: "nav2_navfn_planner/NavfnPlanner"
+      tolerance: 0.5
+      use_astar: false
+      allow_unknown: true
+
+controller_server:
+  ros__parameters:
+    use_sim_time: true
+    controller_frequency: 5.0
+    controller_plugins: [FollowPath]
+    FollowPath:
+      plugin: "dwb_core::DWBLocalPlanner"
+      min_vel_x: 0.0
+      max_vel_x: 0.5
+      min_vel_theta: -1.0
+      max_vel_theta: 1.0
+      xy_goal_tolerance: 0.15
+      yaw_goal_tolerance: 0.25
+    goal_checker_plugins: ["goal_checker"]
+    goal_checker:
+      plugin: "nav2_controller::SimpleGoalChecker"
+      xy_goal_tolerance: 0.15
+      yaw_goal_tolerance: 0.25
+
+bt_navigator:
+  ros__parameters:
+    use_sim_time: true
+    global_frame: map
+    robot_base_frame: base_footprint
+    bt_loop_duration: 10
+    default_server_timeout: 20
+    default_bt_xml_filename: "navigate_w_replanning.xml"
+
+behavior_server:
+  ros__parameters:
+    use_sim_time: true
+    cycle_frequency: 10.0
+
+local_costmap:
+  local_costmap:
+    ros__parameters:
+      use_sim_time: true
+      global_frame: odom
+      robot_base_frame: base_footprint
+      update_frequency: 5.0
+      publish_frequency: 2.0
+      width: 3
+      height: 3
+      resolution: 0.05
+
+global_costmap:
+  global_costmap:
+    ros__parameters:
+      use_sim_time: true
+      global_frame: map
+      robot_base_frame: base_footprint
+      update_frequency: 1.0
+      publish_frequency: 1.0
+      resolution: 0.05
+
+lifecycle_manager:
+  lifecycle_manager_navigation:
+    ros__parameters:
+      use_sim_time: true
+      autostart: true
+      node_names:
+        - map_server
+        - amcl
+        - planner_server
+        - controller_server
+        - bt_navigator
+        - behavior_server

@@ -1,0 +1,5 @@
+[37;1m2026-10-15 16:01:50.176 [31;1m[[37;1mRTPS_TRANSPORT_SHM[31;1m Error] [37mFailed init_port fastrtps_port7004: open_and_lock_file failed[34;1m -> Function [36mopen_port_internal[m
+x: -6.785380781996157e-18
+y: 9.535933117822e-36
+z: 0.0
+---

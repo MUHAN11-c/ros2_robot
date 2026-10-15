@@ -1,0 +1,223 @@
+// generated from rosidl_generator_cpp/resource/idl__builder.hpp.em
+// with input from my_exer_interfaces:srv/Cru.idl
+// generated code does not contain a copyright notice
+
+// IWYU pragma: private, include "my_exer_interfaces/srv/cru.hpp"
+
+
+#ifndef MY_EXER_INTERFACES__SRV__DETAIL__CRU__BUILDER_HPP_
+#define MY_EXER_INTERFACES__SRV__DETAIL__CRU__BUILDER_HPP_
+
+#include <algorithm>
+#include <utility>
+
+#include "my_exer_interfaces/srv/detail/cru__struct.hpp"
+#include "rosidl_runtime_cpp/message_initialization.hpp"
+
+
+namespace my_exer_interfaces
+{
+
+namespace srv
+{
+
+namespace builder
+{
+
+class Init_Cru_Request_duration
+{
+public:
+  explicit Init_Cru_Request_duration(::my_exer_interfaces::srv::Cru_Request & msg)
+  : msg_(msg)
+  {}
+  ::my_exer_interfaces::srv::Cru_Request duration(::my_exer_interfaces::srv::Cru_Request::_duration_type arg)
+  {
+    msg_.duration = std::move(arg);
+    return std::move(msg_);
+  }
+
+private:
+  ::my_exer_interfaces::srv::Cru_Request msg_;
+};
+
+class Init_Cru_Request_angular_z
+{
+public:
+  explicit Init_Cru_Request_angular_z(::my_exer_interfaces::srv::Cru_Request & msg)
+  : msg_(msg)
+  {}
+  Init_Cru_Request_duration angular_z(::my_exer_interfaces::srv::Cru_Request::_angular_z_type arg)
+  {
+    msg_.angular_z = std::move(arg);
+    return Init_Cru_Request_duration(msg_);
+  }
+
+private:
+  ::my_exer_interfaces::srv::Cru_Request msg_;
+};
+
+class Init_Cru_Request_linear_x
+{
+public:
+  Init_Cru_Request_linear_x()
+  : msg_(::rosidl_runtime_cpp::MessageInitialization::SKIP)
+  {}
+  Init_Cru_Request_angular_z linear_x(::my_exer_interfaces::srv::Cru_Request::_linear_x_type arg)
+  {
+    msg_.linear_x = std::move(arg);
+    return Init_Cru_Request_angular_z(msg_);
+  }
+
+private:
+  ::my_exer_interfaces::srv::Cru_Request msg_;
+};
+
+}  // namespace builder
+
+}  // namespace srv
+
+template<typename MessageType>
+auto build();
+
+template<>
+inline
+auto build<::my_exer_interfaces::srv::Cru_Request>()
+{
+  return my_exer_interfaces::srv::builder::Init_Cru_Request_linear_x();
+}
+
+}  // namespace my_exer_interfaces
+
+
+namespace my_exer_interfaces
+{
+
+namespace srv
+{
+
+namespace builder
+{
+
+class Init_Cru_Response_message
+{
+public:
+  explicit Init_Cru_Response_message(::my_exer_interfaces::srv::Cru_Response & msg)
+  : msg_(msg)
+  {}
+  ::my_exer_interfaces::srv::Cru_Response message(::my_exer_interfaces::srv::Cru_Response::_message_type arg)
+  {
+    msg_.message = std::move(arg);
+    return std::move(msg_);
+  }
+
+private:
+  ::my_exer_interfaces::srv::Cru_Response msg_;
+};
+
+class Init_Cru_Response_success
+{
+public:
+  Init_Cru_Response_success()
+  : msg_(::rosidl_runtime_cpp::MessageInitialization::SKIP)
+  {}
+  Init_Cru_Response_message success(::my_exer_interfaces::srv::Cru_Response::_success_type arg)
+  {
+    msg_.success = std::move(arg);
+    return Init_Cru_Response_message(msg_);
+  }
+
+private:
+  ::my_exer_interfaces::srv::Cru_Response msg_;
+};
+
+}  // namespace builder
+
+}  // namespace srv
+
+template<typename MessageType>
+auto build();
+
+template<>
+inline
+auto build<::my_exer_interfaces::srv::Cru_Response>()
+{
+  return my_exer_interfaces::srv::builder::Init_Cru_Response_success();
+}
+
+}  // namespace my_exer_interfaces
+
+
+namespace my_exer_interfaces
+{
+
+namespace srv
+{
+
+namespace builder
+{
+
+class Init_Cru_Event_response
+{
+public:
+  explicit Init_Cru_Event_response(::my_exer_interfaces::srv::Cru_Event & msg)
+  : msg_(msg)
+  {}
+  ::my_exer_interfaces::srv::Cru_Event response(::my_exer_interfaces::srv::Cru_Event::_response_type arg)
+  {
+    msg_.response = std::move(arg);
+    return std::move(msg_);
+  }
+
+private:
+  ::my_exer_interfaces::srv::Cru_Event msg_;
+};
+
+class Init_Cru_Event_request
+{
+public:
+  explicit Init_Cru_Event_request(::my_exer_interfaces::srv::Cru_Event & msg)
+  : msg_(msg)
+  {}
+  Init_Cru_Event_response request(::my_exer_interfaces::srv::Cru_Event::_request_type arg)
+  {
+    msg_.request = std::move(arg);
+    return Init_Cru_Event_response(msg_);
+  }
+
+private:
+  ::my_exer_interfaces::srv::Cru_Event msg_;
+};
+
+class Init_Cru_Event_info
+{
+public:
+  Init_Cru_Event_info()
+  : msg_(::rosidl_runtime_cpp::MessageInitialization::SKIP)
+  {}
+  Init_Cru_Event_request info(::my_exer_interfaces::srv::Cru_Event::_info_type arg)
+  {
+    msg_.info = std::move(arg);
+    return Init_Cru_Event_request(msg_);
+  }
+
+private:
+  ::my_exer_interfaces::srv::Cru_Event msg_;
+};
+
+}  // namespace builder
+
+}  // namespace srv
+
+template<typename MessageType>
+auto build();
+
+template<>
+inline
+auto build<::my_exer_interfaces::srv::Cru_Event>()
+{
+  return my_exer_interfaces::srv::builder::Init_Cru_Event_info();
+}
+
+}  // namespace my_exer_interfaces
+
+#endif  // MY_EXER_INTERFACES__SRV__DETAIL__CRU__BUILDER_HPP_

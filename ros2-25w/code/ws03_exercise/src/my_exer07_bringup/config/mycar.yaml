@@ -1,0 +1,17 @@
+/**:
+  ros__parameters:
+    # 底盘参数(串口)；
+    base:
+      serial_port: /dev/baseController
+      baud_rate: 115200
+      wheel_radius: 0.0325
+      wheel_separation: 0.145
+    # 激光雷达参数(思岚 A1)；
+    lidar:
+      frame_id: laser
+      serial_port: /dev/ttyUSB0
+      baud_rate: 115200
+      angle_min: -3.1415926
+      angle_max: 3.1415926
+      range_max: 12.0
+    use_sim_time: false

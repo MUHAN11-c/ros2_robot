@@ -1,0 +1,10 @@
+--- run: ros2 topic echo /t1/cmd_vel --once --spin-time 6 (timeout 8s)
+linear:
+  x: 0.3
+  y: 0.0
+  z: 0.0
+angular:
+  x: 0.0
+  y: 0.0
+  z: 0.1
+---

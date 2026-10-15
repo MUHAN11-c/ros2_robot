@@ -1,0 +1,31 @@
+--- run: ros2 run py01_topic demo03_talker_stu_py (bg 10s)
+[INFO] [1792040463.010582916] [talkerstu_node_py]: 学生消息发布方创建!(python)
+[INFO] [1792040464.014141762] [talkerstu_node_py]: 发布的消息:{huluwa,18,2.20}
+[INFO] [1792040465.013515943] [talkerstu_node_py]: 发布的消息:{huluwa,19,2.20}
+[INFO] [1792040466.013466146] [talkerstu_node_py]: 发布的消息:{huluwa,20,2.20}
+[INFO] [1792040467.013519677] [talkerstu_node_py]: 发布的消息:{huluwa,21,2.20}
+[INFO] [1792040468.013514384] [talkerstu_node_py]: 发布的消息:{huluwa,22,2.20}
+[INFO] [1792040469.013517325] [talkerstu_node_py]: 发布的消息:{huluwa,23,2.20}
+[INFO] [1792040470.013419078] [talkerstu_node_py]: 发布的消息:{huluwa,24,2.20}
+[INFO] [1792040471.013376796] [talkerstu_node_py]: 发布的消息:{huluwa,25,2.20}
+[INFO] [1792040472.013457311] [talkerstu_node_py]: 发布的消息:{huluwa,26,2.20}
+Traceback (most recent call last):
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws01_plumbing/install/py01_topic/lib/py01_topic/demo03_talker_stu_py", line 33, in <module>
+    sys.exit(load_entry_point('py01-topic==0.0.0', 'console_scripts', 'demo03_talker_stu_py')())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws01_plumbing/install/py01_topic/lib/python3.12/site-packages/py01_topic/demo03_talker_stu_py.py", line 48, in main
+    rclpy.spin(MinimalPublisher())
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
+    executor.spin_once()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 926, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 907, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 877, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 781, in _wait_for_ready_callbacks
+    wait_set.wait(timeout_nsec)
+KeyboardInterrupt
+[ros2run]: Interrupt

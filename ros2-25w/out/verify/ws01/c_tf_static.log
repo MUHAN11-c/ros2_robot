@@ -1,0 +1,2 @@
+--- run: ros2 run cpp03_tf_broadcaster demo01_static_tf_broadcaster 1 2 3 0 0 0 camera laser (bg 12s)
+[INFO] [1792040615.369705278] [rclcpp]: signal_handler(SIGINT/SIGTERM)

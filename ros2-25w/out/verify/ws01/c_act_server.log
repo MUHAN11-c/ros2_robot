@@ -1,0 +1,15 @@
+--- run: ros2 run cpp03_action demo01_action_server (bg 22s)
+[INFO] [1792040479.964015489] [progress_action_server_node_cpp]: 动作通信服务端创建!
+[INFO] [1792040482.353872422] [progress_action_server_node_cpp]: 接收到客户端请求，目标值:10
+[INFO] [1792040482.354249542] [progress_action_server_node_cpp]: 连续反馈中，进度:0.10
+[INFO] [1792040483.354481362] [progress_action_server_node_cpp]: 连续反馈中，进度:0.20
+[INFO] [1792040484.354491570] [progress_action_server_node_cpp]: 连续反馈中，进度:0.30
+[INFO] [1792040485.354423168] [progress_action_server_node_cpp]: 连续反馈中，进度:0.40
+[INFO] [1792040486.354475102] [progress_action_server_node_cpp]: 连续反馈中，进度:0.50
+[INFO] [1792040487.354448881] [progress_action_server_node_cpp]: 连续反馈中，进度:0.60
+[INFO] [1792040488.354437560] [progress_action_server_node_cpp]: 连续反馈中，进度:0.70
+[INFO] [1792040489.354346400] [progress_action_server_node_cpp]: 连续反馈中，进度:0.80
+[INFO] [1792040490.354421720] [progress_action_server_node_cpp]: 连续反馈中，进度:0.90
+[INFO] [1792040491.354498535] [progress_action_server_node_cpp]: 连续反馈中，进度:1.00
+[INFO] [1792040492.354486777] [progress_action_server_node_cpp]: 最终结果:55
+[INFO] [1792040492.502132517] [rclcpp]: signal_handler(SIGINT/SIGTERM)

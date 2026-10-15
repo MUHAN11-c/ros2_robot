@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<!--
+    xacro 优化：车体 + 驱动轮 + 支撑轮，使用属性、宏与文件包含组织模型。
+    演示：xacro 属性(properties) 与 宏(macro)。
+-->
+<robot name="xacro_car" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- 1.属性定义 -->
+    <xacro:property name="wheel_radius" value="0.075"/>
+    <xacro:property name="wheel_length" value="0.04"/>
+    <xacro:property name="wheel_x" value="-0.1"/>
+    <xacro:property name="wheel_y" value="0.175"/>
+    <xacro:property name="wheel_z" value="0.075"/>
+
+    <!-- 2.宏定义：驱动轮 -->
+    <xacro:macro name="wheel_macro" params="wheel_name flag y_offset">
+        <link name="${wheel_name}_wheel">
+            <visual>
+                <geometry>
+                    <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+                </geometry>
+                <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+                <material name="black">
+                    <color rgba="0.1 0.1 0.1 1.0"/>
+                </material>
+            </visual>
+        </link>
+        <joint name="${wheel_name}_wheel2base_link" type="continuous">
+            <parent link="base_link"/>
+            <child link="${wheel_name}_wheel"/>
+            <origin xyz="${wheel_x} ${flag * y_offset} ${wheel_z}" rpy="0 0 0"/>
+            <axis xyz="0 1 0"/>
+        </joint>
+    </xacro:macro>
+
+    <!-- 3.根坐标系 -->
+    <link name="base_footprint">
+        <visual>
+            <geometry>
+                <sphere radius="0.001"/>
+            </geometry>
+        </visual>
+    </link>
+
+    <!-- 4.车体 -->
+    <link name="base_link">
+        <visual>
+            <geometry>
+                <box size="0.5 0.3 0.1"/>
+            </geometry>
+            <origin xyz="0 0 0.1" rpy="0 0 0"/>
+            <material name="blue">
+                <color rgba="0.2 0.4 0.8 1.0"/>
+            </material>
+        </visual>
+    </link>
+    <joint name="base_link2base_footprint" type="fixed">
+        <parent link="base_footprint"/>
+        <child link="base_link"/>
+        <origin xyz="0 0 0.075" rpy="0 0 0"/>
+    </joint>
+
+    <!-- 5.调用宏生成左右驱动轮 -->
+    <xacro:wheel_macro wheel_name="left" flag="1" y_offset="${wheel_y}"/>
+    <xacro:wheel_macro wheel_name="right" flag="-1" y_offset="${wheel_y}"/>
+
+    <!-- 6.支撑轮 -->
+    <link name="front_wheel">
+        <visual>
+            <geometry>
+                <sphere radius="0.0375"/>
+            </geometry>
+            <material name="gray">
+                <color rgba="0.5 0.5 0.5 1.0"/>
+            </material>
+        </visual>
+    </link>
+    <joint name="front_wheel2base_link" type="fixed">
+        <parent link="base_link"/>
+        <child link="front_wheel"/>
+        <origin xyz="0.175 0 -0.0375" rpy="0 0 0"/>
+    </joint>
+</robot>

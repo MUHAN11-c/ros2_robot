@@ -1,0 +1,24 @@
+[INFO] [launch]: All log files can be found below /home/mu/.ros/log/2026-10-15-13-57-13-327548-mu-MS-7E34-468740
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [turtlesim_node-1]: process started with pid [468782]
+[INFO] [turtlesim_node-2]: process started with pid [468783]
+[turtlesim_node-1] [INFO] [1792043833.484878941] [t1]: Starting turtlesim with node name /t1
+[turtlesim_node-1] [INFO] [1792043833.488403339] [t1]: Spawning turtle [turtle1] at x=[5.544445], y=[5.544445], theta=[0.000000]
+[turtlesim_node-2] [INFO] [1792043833.493150996] [t2]: Starting turtlesim with node name /t2
+[turtlesim_node-2] [INFO] [1792043833.497501007] [t2]: Spawning turtle [turtle1] at x=[5.544445], y=[5.544445], theta=[0.000000]
+/odom_tf_relay
+/robot_state_publisher
+/ros_gz_bridge
+/spawner_joint_state_broadcaster
+/t1
+/t2
+/test_sim_controllers
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [turtlesim_node-2]: sending signal 'SIGINT' to process[turtlesim_node-2]
+[INFO] [turtlesim_node-1]: sending signal 'SIGINT' to process[turtlesim_node-1]
+[turtlesim_node-2] [INFO] [1792043847.139593597] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[turtlesim_node-1] [INFO] [1792043847.139879486] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[turtlesim_node-2] [INFO] [1792043847.142268522] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[turtlesim_node-1] [INFO] [1792043847.142389403] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [turtlesim_node-1]: process has finished cleanly [pid 468782]
+[INFO] [turtlesim_node-2]: process has finished cleanly [pid 468783]

@@ -1,0 +1,2 @@
+--- run: ros2 param set /param_events_node_py width 2.5 (timeout 6s)
+Set parameter successful

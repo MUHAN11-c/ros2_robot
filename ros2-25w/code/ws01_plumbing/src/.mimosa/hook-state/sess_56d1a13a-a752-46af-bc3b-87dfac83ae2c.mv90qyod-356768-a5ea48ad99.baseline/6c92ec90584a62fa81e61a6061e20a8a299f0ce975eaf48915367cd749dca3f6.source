@@ -1,0 +1,80 @@
+/*
+    需求：提交两个整数到服务端，并处理响应结果。
+    流程：
+        1.包含头文件；
+        2.初始化 ROS2 客户端；
+        3.自定义节点类；
+            3-1.创建客户端；
+            3-2.等待服务连接；
+            3-3.组织并提交请求数据；
+            3-4.处理响应。
+        4.调用spin函数，并传入节点对象指针；
+        5.释放资源。
+*/
+// 1.包含头文件；
+#include "rclcpp/rclcpp.hpp"
+#include "base_interfaces_demo/srv/add_ints.hpp"
+
+using namespace std::chrono_literals;
+
+// 3.自定义节点类；
+class AddIntsClient: public rclcpp::Node{
+public:
+    AddIntsClient():Node("add_ints_client_node_cpp"){
+        RCLCPP_INFO(this->get_logger(),"客户端节点创建!");
+        // 3-1.创建客户端；
+        client_ = this->create_client<AddInts>("add_ints");
+    }
+    // 3-2.等待服务连接；
+    bool connect_server(){
+        while (!client_->wait_for_service(1s)) {
+            if (!rclcpp::ok()) {
+                RCLCPP_INFO(this->get_logger(),"客户端退出...");
+                return false;
+            }
+            RCLCPP_INFO(this->get_logger(),"服务连接中，请稍候...");
+        }
+        return true;
+    }
+    // 3-3.组织并提交请求数据；
+    rclcpp::Client<AddInts>::SharedFuture send_request(int32_t num1, int32_t num2){
+        auto request = std::make_shared<AddInts::Request>();
+        request->num1 = num1;
+        request->num2 = num2;
+        RCLCPP_INFO(this->get_logger(),"发送请求: num1=%d, num2=%d",num1,num2);
+        return client_->async_send_request(request);
+    }
+    // 3-4.处理响应；
+    void response_callback(rclcpp::Client<AddInts>::SharedFuture future){
+        auto response = future.get();
+        RCLCPP_INFO(this->get_logger(),"收到响应: sum=%d",response->sum);
+    }
+private:
+    rclcpp::Client<AddInts>::SharedPtr client_;
+};
+
+int main(int argc, char ** argv)
+{
+    // 2.初始化 ROS2 客户端；
+    rclcpp::init(argc,argv);
+    // 请求提交的数据从命令行参数获取；
+    if (argc != 3) {
+        RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"请提交两个整型数据!");
+        return 1;
+    }
+    int32_t num1 = atoi(argv[1]);
+    int32_t num2 = atoi(argv[2]);
+    auto client = std::make_shared<AddIntsClient>();
+    bool flag = client->connect_server();
+    if (!flag) {
+        rclcpp::shutdown();
+        return 0;
+    }
+    // 4.调用spin函数，并传入节点对象指针；回调方式处理响应。
+    auto future = client->send_request(num1,num2);
+    rclcpp::spin_until_future_complete(client,future);
+    client->response_callback(future);
+    // 5.释放资源；
+    rclcpp::shutdown();
+    return 0;
+}

@@ -1,0 +1,7 @@
+--- run: ros2 run demo_param_events demo_param_events (bg 16s)
+[INFO] [1792042295.509492542] [param_events_node_cpp]: 参数事件节点创建!
+[INFO] [1792042298.509875043] [param_events_node_cpp]: 监听到参数修改事件: width -> 2.000000
+[INFO] [1792042298.509987357] [param_events_node_cpp]: 收到参数事件，来自节点:/param_events_node_cpp
+[INFO] [1792042298.544589026] [param_events_node_cpp]: 监听到参数修改事件: width -> 2.000000
+[INFO] [1792042298.544718210] [param_events_node_cpp]: 收到参数事件，来自节点:/param_events_node_cpp
+[INFO] [1792042300.693687552] [rclcpp]: signal_handler(SIGINT/SIGTERM)

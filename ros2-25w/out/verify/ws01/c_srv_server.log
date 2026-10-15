@@ -1,0 +1,6 @@
+--- run: ros2 run cpp02_service demo01_server (bg 16s)
+[INFO] [1792040473.878426053] [add_ints_server_node_cpp]: 服务端节点创建!
+[INFO] [1792040476.270907909] [add_ints_server_node_cpp]: 3 + 5 = 8
+[INFO] [1792040476.650504680] [add_ints_server_node_cpp]: 3 + 5 = 8
+[INFO] [1792040476.854627546] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1792040476.855039359] [rclcpp]: signal_handler(SIGINT/SIGTERM)

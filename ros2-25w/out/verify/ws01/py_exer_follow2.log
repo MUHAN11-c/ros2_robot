@@ -1,0 +1,99 @@
+[INFO] [launch]: All log files can be found below /home/mu/.ros/log/2026-10-15-14-58-08-567275-mu-MS-7E34-567106
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [turtlesim_node-1]: process started with pid [567110]
+[INFO] [exer01_spawn_py-2]: process started with pid [567111]
+[INFO] [exer02_tf_broadcaster_py-3]: process started with pid [567112]
+[INFO] [exer02_tf_broadcaster_py-4]: process started with pid [567113]
+[INFO] [exer03_tf_listener_py-5]: process started with pid [567114]
+[turtlesim_node-1] [INFO] [1792047488.731862855] [sim]: Starting turtlesim with node name /sim
+[turtlesim_node-1] [INFO] [1792047488.734560458] [sim]: Spawning turtle [turtle1] at x=[5.544445], y=[5.544445], theta=[0.000000]
+[exer02_tf_broadcaster_py-4] [INFO] [1792047488.912789905] [b2]: 广播 t2 的坐标变换!(python)
+[exer02_tf_broadcaster_py-3] [INFO] [1792047488.919395234] [b1]: 广播 t1 的坐标变换!(python)
+[exer01_spawn_py-2] [INFO] [1792047489.182557324] [exer01_spawn_node_py]: 乌龟生成客户端创建!(python)
+[exer01_spawn_py-2] [INFO] [1792047489.184547693] [exer01_spawn_node_py]: 请求生成乌龟:t2
+[turtlesim_node-1] [INFO] [1792047489.197121826] [sim]: Spawning turtle [t2] at x=[3.000000], y=[3.000000], theta=[0.000000]
+[exer01_spawn_py-2] [INFO] [1792047489.197941445] [exer01_spawn_node_py]: 新乌龟名称:t2
+[INFO] [exer01_spawn_py-2]: process has finished cleanly [pid 567111]
+[exer03_tf_listener_py-5] [INFO] [1792047489.950980420] [exer03_tf_listener_node_py]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[exer03_tf_listener_py-5] [INFO] [1792047490.942246757] [exer03_tf_listener_node_py]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[exer03_tf_listener_py-5] [INFO] [1792047491.942616423] [exer03_tf_listener_node_py]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[exer03_tf_listener_py-5] [INFO] [1792047492.941992227] [exer03_tf_listener_node_py]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[exer03_tf_listener_py-5] [INFO] [1792047493.942100248] [exer03_tf_listener_node_py]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[exer03_tf_listener_py-5] [INFO] [1792047494.941991790] [exer03_tf_listener_node_py]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[exer03_tf_listener_py-5] [INFO] [1792047495.942049782] [exer03_tf_listener_node_py]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[exer03_tf_listener_py-5] [INFO] [1792047496.943753747] [exer03_tf_listener_node_py]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[exer03_tf_listener_py-5] [INFO] [1792047497.941965608] [exer03_tf_listener_node_py]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[exer03_tf_listener_py-5] [INFO] [1792047498.942026574] [exer03_tf_listener_node_py]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[exer03_tf_listener_py-5] [INFO] [1792047499.942200881] [exer03_tf_listener_node_py]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[exer03_tf_listener_py-5] [INFO] [1792047500.941914592] [exer03_tf_listener_node_py]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[exer03_tf_listener_py-5] [INFO] [1792047501.942048998] [exer03_tf_listener_node_py]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[exer03_tf_listener_py-5] [INFO] [1792047502.943243121] [exer03_tf_listener_node_py]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[exer03_tf_listener_py-5] [INFO] [1792047503.941994413] [exer03_tf_listener_node_py]: 异常提示:"turtle1" passed to lookupTransform argument source_frame does not exist. 
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [exer03_tf_listener_py-5]: sending signal 'SIGINT' to process[exer03_tf_listener_py-5]
+[INFO] [exer02_tf_broadcaster_py-4]: sending signal 'SIGINT' to process[exer02_tf_broadcaster_py-4]
+[INFO] [exer02_tf_broadcaster_py-3]: sending signal 'SIGINT' to process[exer02_tf_broadcaster_py-3]
+[INFO] [turtlesim_node-1]: sending signal 'SIGINT' to process[turtlesim_node-1]
+[exer02_tf_broadcaster_py-3] Traceback (most recent call last):
+[exer02_tf_broadcaster_py-3]   File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws01_plumbing/install/py05_exercise/lib/py05_exercise/exer02_tf_broadcaster_py", line 33, in <module>
+[exer02_tf_broadcaster_py-3]     sys.exit(load_entry_point('py05-exercise==0.0.0', 'console_scripts', 'exer02_tf_broadcaster_py')())
+[exer02_tf_broadcaster_py-3]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[exer02_tf_broadcaster_py-3]   File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws01_plumbing/install/py05_exercise/lib/python3.12/site-packages/py05_exercise/exer02_tf_broadcaster_py.py", line 44, in main
+[exer02_tf_broadcaster_py-3]     rclpy.spin(Exer02TFBroadcasterPy())
+[exer02_tf_broadcaster_py-3]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
+[exer02_tf_broadcaster_py-3]     executor.spin_once()
+[exer02_tf_broadcaster_py-3]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 926, in spin_once
+[exer02_tf_broadcaster_py-3]     self._spin_once_impl(timeout_sec)
+[exer02_tf_broadcaster_py-3]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 907, in _spin_once_impl
+[exer02_tf_broadcaster_py-3]     handler, entity, node = self.wait_for_ready_callbacks(
+[exer02_tf_broadcaster_py-3]                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[exer02_tf_broadcaster_py-3]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 877, in wait_for_ready_callbacks
+[exer02_tf_broadcaster_py-3]     return next(self._cb_iter)
+[exer02_tf_broadcaster_py-3]            ^^^^^^^^^^^^^^^^^^^
+[exer02_tf_broadcaster_py-3]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 781, in _wait_for_ready_callbacks
+[exer02_tf_broadcaster_py-3]     wait_set.wait(timeout_nsec)
+[exer02_tf_broadcaster_py-3] KeyboardInterrupt
+[exer03_tf_listener_py-5] Traceback (most recent call last):
+[exer03_tf_listener_py-5]   File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws01_plumbing/install/py05_exercise/lib/py05_exercise/exer03_tf_listener_py", line 33, in <module>
+[exer03_tf_listener_py-5]     sys.exit(load_entry_point('py05-exercise==0.0.0', 'console_scripts', 'exer03_tf_listener_py')())
+[exer03_tf_listener_py-5]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[exer03_tf_listener_py-5]   File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws01_plumbing/install/py05_exercise/lib/python3.12/site-packages/py05_exercise/exer03_tf_listener_py.py", line 49, in main
+[exer03_tf_listener_py-5]     rclpy.spin(Exer03TFListenerPy())
+[exer03_tf_listener_py-5]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
+[exer03_tf_listener_py-5]     executor.spin_once()
+[exer03_tf_listener_py-5]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 926, in spin_once
+[exer03_tf_listener_py-5]     self._spin_once_impl(timeout_sec)
+[exer03_tf_listener_py-5]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 907, in _spin_once_impl
+[exer03_tf_listener_py-5]     handler, entity, node = self.wait_for_ready_callbacks(
+[exer03_tf_listener_py-5]                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[exer03_tf_listener_py-5]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 877, in wait_for_ready_callbacks
+[exer03_tf_listener_py-5]     return next(self._cb_iter)
+[exer03_tf_listener_py-5]            ^^^^^^^^^^^^^^^^^^^
+[exer03_tf_listener_py-5]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 781, in _wait_for_ready_callbacks
+[exer03_tf_listener_py-5]     wait_set.wait(timeout_nsec)
+[exer03_tf_listener_py-5] KeyboardInterrupt
+[turtlesim_node-1] [INFO] [1792047504.377927098] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[exer02_tf_broadcaster_py-4] Traceback (most recent call last):
+[exer02_tf_broadcaster_py-4]   File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws01_plumbing/install/py05_exercise/lib/py05_exercise/exer02_tf_broadcaster_py", line 33, in <module>
+[exer02_tf_broadcaster_py-4]     sys.exit(load_entry_point('py05-exercise==0.0.0', 'console_scripts', 'exer02_tf_broadcaster_py')())
+[exer02_tf_broadcaster_py-4]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[exer02_tf_broadcaster_py-4]   File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws01_plumbing/install/py05_exercise/lib/python3.12/site-packages/py05_exercise/exer02_tf_broadcaster_py.py", line 44, in main
+[exer02_tf_broadcaster_py-4]     rclpy.spin(Exer02TFBroadcasterPy())
+[exer02_tf_broadcaster_py-4]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
+[exer02_tf_broadcaster_py-4]     executor.spin_once()
+[exer02_tf_broadcaster_py-4]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 926, in spin_once
+[exer02_tf_broadcaster_py-4]     self._spin_once_impl(timeout_sec)
+[exer02_tf_broadcaster_py-4]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 907, in _spin_once_impl
+[exer02_tf_broadcaster_py-4]     handler, entity, node = self.wait_for_ready_callbacks(
+[exer02_tf_broadcaster_py-4]                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[exer02_tf_broadcaster_py-4]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 877, in wait_for_ready_callbacks
+[exer02_tf_broadcaster_py-4]     return next(self._cb_iter)
+[exer02_tf_broadcaster_py-4]            ^^^^^^^^^^^^^^^^^^^
+[exer02_tf_broadcaster_py-4]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 781, in _wait_for_ready_callbacks
+[exer02_tf_broadcaster_py-4]     wait_set.wait(timeout_nsec)
+[exer02_tf_broadcaster_py-4] KeyboardInterrupt
+[turtlesim_node-1] [INFO] [1792047504.380105160] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ERROR] [exer03_tf_listener_py-5]: process has died [pid 567114, exit code -2, cmd '/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws01_plumbing/install/py05_exercise/lib/py05_exercise/exer03_tf_listener_py --ros-args --params-file /tmp/launch_params_mmjb9gqg'].
+[ERROR] [exer02_tf_broadcaster_py-3]: process has died [pid 567112, exit code -2, cmd '/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws01_plumbing/install/py05_exercise/lib/py05_exercise/exer02_tf_broadcaster_py --ros-args -r __node:=b1 --params-file /tmp/launch_params_sb718q17'].
+[ERROR] [exer02_tf_broadcaster_py-4]: process has died [pid 567113, exit code -2, cmd '/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws01_plumbing/install/py05_exercise/lib/py05_exercise/exer02_tf_broadcaster_py --ros-args -r __node:=b2 --params-file /tmp/launch_params_uyh5zm_d'].
+[INFO] [turtlesim_node-1]: process has finished cleanly [pid 567110]

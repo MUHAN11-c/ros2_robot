@@ -1,0 +1,21 @@
+--- run: ros2 run intra_process_cpp demo_intra_process (timeout 10s)
+[INFO] [1792043928.933210204] [main]: 节点已加入执行器，开始 spin
+[INFO] [1792043929.931736874] [intra_pub_node_cpp]: 发布:hello intra process!
+[INFO] [1792043929.931847239] [intra_sub_node_cpp]: 订阅的消息：'hello intra process!'
+[INFO] [1792043930.931652485] [intra_pub_node_cpp]: 发布:hello intra process!
+[INFO] [1792043930.931743558] [intra_sub_node_cpp]: 订阅的消息：'hello intra process!'
+[INFO] [1792043931.931650681] [intra_pub_node_cpp]: 发布:hello intra process!
+[INFO] [1792043931.931760023] [intra_sub_node_cpp]: 订阅的消息：'hello intra process!'
+[INFO] [1792043932.932425968] [intra_pub_node_cpp]: 发布:hello intra process!
+[INFO] [1792043932.932512974] [intra_sub_node_cpp]: 订阅的消息：'hello intra process!'
+[INFO] [1792043933.931710835] [intra_pub_node_cpp]: 发布:hello intra process!
+[INFO] [1792043933.931894190] [intra_sub_node_cpp]: 订阅的消息：'hello intra process!'
+[INFO] [1792043934.931793584] [intra_pub_node_cpp]: 发布:hello intra process!
+[INFO] [1792043934.931876337] [intra_sub_node_cpp]: 订阅的消息：'hello intra process!'
+[INFO] [1792043935.932127301] [intra_pub_node_cpp]: 发布:hello intra process!
+[INFO] [1792043935.932214040] [intra_sub_node_cpp]: 订阅的消息：'hello intra process!'
+[INFO] [1792043936.933053793] [intra_pub_node_cpp]: 发布:hello intra process!
+[INFO] [1792043936.933131008] [intra_sub_node_cpp]: 订阅的消息：'hello intra process!'
+[INFO] [1792043937.931646461] [intra_pub_node_cpp]: 发布:hello intra process!
+[INFO] [1792043937.931735453] [intra_sub_node_cpp]: 订阅的消息：'hello intra process!'
+[INFO] [1792043938.759969708] [rclcpp]: signal_handler(SIGINT/SIGTERM)

@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "mimosa-finding-ledger-batch/v1",
+  "batchId": "stop-20261015T072146979Z-626341-63b37b1b87bb",
+  "runId": "20261015T072146979Z-626341-63b37b1b87bb",
+  "runStatus": "inconclusive",
+  "coverage": {
+    "status": "partial",
+    "reasons": [
+      {
+        "code": "baseline_partial",
+        "stage": "baseline",
+        "target": ".",
+        "detail": "baseline capture had enumeration or snapshot errors",
+        "affectsCompletion": true
+      },
+      {
+        "code": "project_check_failed",
+        "stage": "baseline",
+        "target": ".",
+        "detail": "baseline_partial: baseline capture had enumeration or snapshot errors",
+        "affectsCompletion": true
+      }
+    ]
+  },
+  "source": {
+    "component": "zcode-hook",
+    "operationId": "Stop"
+  },
+  "revision": null,
+  "diffHash": "c3227cd1e064cd3579b179530fed3169b34fb706ba0a50d7b09c5f0ca162af91",
+  "rulesVersion": "unavailable",
+  "sessionHash": "5fe59b474b334b16da3695342d59e91df80e04fccf78656f072c6463d1c07270",
+  "reportRef": ".mimosa/reports/task-review-sess_56d1a13a-a752-46af-bc3b-87dfac83ae2c-20261015T072146979Z-626341-63b37b1b87bb.json",
+  "events": [],
+  "observedFindingIds": [],
+  "verifiedFiles": [
+    {
+      "file": "src/cpp01_topic/src/demo03_talker_stu.cpp",
+      "direct": "complete",
+      "projectContext": "partial"
+    },
+    {
+      "file": "src/cpp01_topic/src/demo04_listener_stu.cpp",
+      "direct": "complete",
+      "projectContext": "partial"
+    },
+    {
+      "file": "src/py01_topic/py01_topic/demo03_talker_stu_py.py",
+      "direct": "complete",
+      "projectContext": "partial"
+    },
+    {
+      "file": "src/py01_topic/py01_topic/demo04_listener_stu_py.py",
+      "direct": "complete",
+      "projectContext": "partial"
+    },
+    {
+      "file": "install/py01_topic/lib/python3.12/site-packages/py01_topic/demo03_talker_stu_py.py",
+      "direct": "complete",
+      "projectContext": "partial"
+    },
+    {
+      "file": "install/py01_topic/lib/python3.12/site-packages/py01_topic/demo04_listener_stu_py.py",
+      "direct": "complete",
+      "projectContext": "partial"
+    }
+  ],
+  "recordedAt": "2026-10-15T07:21:47.293Z"
+}

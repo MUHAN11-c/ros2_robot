@@ -1,0 +1,16 @@
+--- run: ros2 topic echo /scan --once --no-arr --spin-time 5 (timeout 7s)
+header:
+  stamp:
+    sec: 1792042359
+    nanosec: 615757627
+  frame_id: laser
+angle_min: -3.1415927410125732
+angle_max: 3.1415927410125732
+angle_increment: 0.01745329238474369
+time_increment: 0.0
+scan_time: 0.10000000149011612
+range_min: 0.15000000596046448
+range_max: 12.0
+ranges: '<sequence type: float, length: 360>'
+intensities: '<sequence type: float, length: 360>'
+---

@@ -1,0 +1,38 @@
+from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration
+# from launch.actions import ExecuteProcess, RegisterEventHandler, LogInfo
+# from launch.actions import IncludeLaunchDescription
+# from launch.launch_description_sources import PythonLaunchDescriptionSource
+# from launch_ros.actions import PushRosNamespace
+# from launch.actions import GroupAction
+# from launch.event_handlers import OnProcessStart, OnProcessExit
+# from ament_index_python.packages import get_package_share_directory
+
+
+def generate_launch_description():
+    # 优化坐标系的设置
+    # 优化思想：频繁抽取变量
+
+    # 1.启动 turtlesim_node 节点；
+    turtle = Node(package="turtlesim",executable="turtlesim_node",name="sim")
+    # 2.启动自定义的 spawn 节点；
+    spawn = Node(
+        package="cpp05_exercise",executable="exer01_spawn",
+        parameters=[{"turtle_name": "t2"}]
+    )
+
+    # 3.分别广播两只乌龟相对于world的坐标变换
+    broadcaster1 = Node(package="cpp05_exercise",executable="exer02_tf_broadcaster",name="b1",
+        parameters=[{"turtle": "t1"}]
+    )
+    broadcaster2 = Node(package="cpp05_exercise",executable="exer02_tf_broadcaster",name="b2",
+        parameters=[{"turtle": "t2"}]
+    )
+
+    # 4.创建监听节点
+    listener = Node(package="cpp05_exercise",executable="exer03_tf_listener",
+        parameters=[{"father_frame": "t2","child_frame": "turtle1"}]
+    )
+
+    return LaunchDescription([turtle, spawn, broadcaster1, broadcaster2, listener])

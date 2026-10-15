@@ -1,0 +1,5 @@
+[INFO] [1792040592.858465709] [simple_bag_play_node_cpp]: 消息回放对象创建!
+[INFO] [1792040592.861620868] [simple_bag_play_node_cpp]: 读取消息:(1.50,0.50)
+[INFO] [1792040593.062721180] [simple_bag_play_node_cpp]: 读取消息:(1.50,0.50)
+[INFO] [1792040593.262874512] [simple_bag_play_node_cpp]: 读取消息:(1.50,0.50)
+[INFO] [1792040606.716990921] [rclcpp]: signal_handler(SIGINT/SIGTERM)

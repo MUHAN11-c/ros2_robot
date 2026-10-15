@@ -1,0 +1,3 @@
+--- run: ros2 run cpp04_imu_demo imu_demo (bg 10s)
+[INFO] [1792042392.358196894] [imu_node_cpp]: IMU 案例节点创建!
+[INFO] [1792042402.225620558] [rclcpp]: signal_handler(SIGINT/SIGTERM)

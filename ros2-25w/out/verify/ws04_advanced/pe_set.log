@@ -1,0 +1,2 @@
+--- run: ros2 param set /param_events_node_cpp width 2.0 (timeout 6s)
+Set parameter successful

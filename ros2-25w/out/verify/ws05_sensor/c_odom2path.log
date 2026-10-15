@@ -1,0 +1,4 @@
+--- run: ros2 run cpp00_odom odom2path (bg 12s)
+[INFO] [1792042317.281490020] [odom2path_node_cpp]: odom2path 节点创建!
+[INFO] [1792042328.129974957] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1792042328.130489237] [rclcpp]: signal_handler(SIGINT/SIGTERM)

@@ -1,0 +1,115 @@
+[INFO] [launch]: All log files can be found below /home/mu/.ros/log/2026-10-15-13-34-15-146266-mu-MS-7E34-440776
+[INFO] [launch]: Default logging verbosity is set to INFO
+[ERROR] [ign-1]: exception occurred while executing process:
+Traceback (most recent call last):
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/launch/actions/execute_local.py", line 569, in __execute_process
+    transport, self._subprocess_protocol = await async_execute_process(
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/osrf_pycommon/process_utils/async_execute_process_asyncio/impl.py", line 139, in async_execute_process
+    transport, protocol = await _async_execute_process_nopty(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/osrf_pycommon/process_utils/async_execute_process_asyncio/impl.py", line 45, in _async_execute_process_nopty
+    transport, protocol = await loop.subprocess_exec(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/base_events.py", line 1744, in subprocess_exec
+    transport = await self._make_subprocess_transport(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/unix_events.py", line 211, in _make_subprocess_transport
+    transp = _UnixSubprocessTransport(self, protocol, args, shell,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/base_subprocess.py", line 36, in __init__
+    self._start(args=args, shell=shell, stdin=stdin, stdout=stdout,
+  File "/usr/lib/python3.12/asyncio/unix_events.py", line 820, in _start
+    self._proc = subprocess.Popen(
+                 ^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/usr/lib/python3.12/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'ign'
+
+[INFO] [parameter_bridge-2]: process started with pid [440780]
+[INFO] [rviz2-3]: process started with pid [440781]
+[rviz2-3] [INFO] [1792042455.801912270] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-3] [INFO] [1792042455.801972873] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[rviz2-3] [INFO] [1792042455.896801128] [rviz2]: Stereo is NOT SUPPORTED
+[parameter_bridge-2] [INFO] [1792042456.223284923] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/cmd_vel (ignition.msgs.Twist) -> /cmd_vel (geometry_msgs/msg/Twist)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1792042456.225762982] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/scan (ignition.msgs.LaserScan) -> /scan (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1792042456.226533532] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/model/robot1/odometry (ignition.msgs.Odometry) -> /odom (nav_msgs/msg/Odometry)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1792042456.227225993] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/model/robot1/tf (ignition.msgs.Pose_V) -> /tf (tf2_msgs/msg/TFMessage)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1792042456.227948637] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/clock (ignition.msgs.Clock) -> /clock (rosgraph_msgs/msg/Clock)] (Lazy 0)
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [rviz2-3]: sending signal 'SIGINT' to process[rviz2-3]
+[INFO] [parameter_bridge-2]: sending signal 'SIGINT' to process[parameter_bridge-2]
+[parameter_bridge-2] [INFO] [1792042468.972085548] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[rviz2-3] [INFO] [1792042468.972686882] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[rviz2-3] [INFO] [1792042468.973856210] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[parameter_bridge-2] [INFO] [1792042468.974500090] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [parameter_bridge-2]: process has finished cleanly [pid 440780]
+[INFO] [rviz2-3]: process has finished cleanly [pid 440781]
+[INFO] [launch]: All log files can be found below /home/mu/.ros/log/2026-10-15-14-03-43-103807-mu-MS-7E34-476074
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [gz-1]: process started with pid [476077]
+[INFO] [parameter_bridge-2]: process started with pid [476078]
+[INFO] [rviz2-3]: process started with pid [476079]
+[gz-1] [1;33mWarning [Utils.cc:132][0m [/sdf/world[@name="demo_world"]/ground_plane[@name="ground_plane"]:/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws06_sim_nav/install/demo_ign_sim/share/demo_ign_sim/worlds/demo.sdf:L29]: XML Element[ground_plane], child of element[world], not defined in SDF. Copying[ground_plane] as children of [world].
+[gz-1] [1;33mWarning [Utils.cc:132][0m [/sdf/world[@name="demo_world"]/model[@name="robot1"]/link[@name="chassis"]/sensor[@name="gpu_lidar"]/gz_frame_id:/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws06_sim_nav/install/demo_ign_sim/share/demo_ign_sim/worlds/demo.sdf:L86]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gz-1] [1;31m[Err] [SystemLoader.cc:164] [0m[1;31mFailed to load system plugin: (Reason: library does not contain requested plugin)
+[gz-1] - Requested plugin name: [diff_drive]
+[gz-1] - Requested library name: [gz-sim-diff-drive-system]
+[gz-1] - Resolved library path: [/opt/ros/jazzy/opt/gz_sim_vendor/lib/gz-sim-8/plugins/libgz-sim-diff-drive-system.so]
+[gz-1] - Detected Plugins:
+[gz-1]   - gz::sim::v8::systems::DiffDrive
+[gz-1] 
+[gz-1]     aliases:
+[gz-1]       gz::sim::systems::DiffDrive[0m
+[parameter_bridge-2] [INFO] [1792044224.186981463] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/cmd_vel (ignition.msgs.Twist) -> /cmd_vel (geometry_msgs/msg/Twist)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1792044224.188788243] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/scan (ignition.msgs.LaserScan) -> /scan (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1792044224.189749031] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/model/robot1/odometry (ignition.msgs.Odometry) -> /odom (nav_msgs/msg/Odometry)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1792044224.190631427] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/model/robot1/tf (ignition.msgs.Pose_V) -> /tf (tf2_msgs/msg/TFMessage)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1792044224.191623368] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/clock (ignition.msgs.Clock) -> /clock (rosgraph_msgs/msg/Clock)] (Lazy 0)
+[rviz2-3] [INFO] [1792044224.587569575] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-3] [INFO] [1792044224.587624364] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[rviz2-3] [INFO] [1792044224.692779184] [rviz2]: Stereo is NOT SUPPORTED
+[gz-1] libEGL warning: pci id for fd 79: 10de:2204, driver (null)
+[gz-1] 
+[gz-1] pci id for fd 80: 10de:2204, driver (null)
+[gz-1] pci id for fd 81: 10de:2204, driver (null)
+[gz-1] libEGL warning: egl: failed to create dri2 screen
+[gz-1] libEGL warning: pci id for fd 79: 10de:2204, driver (null)
+[gz-1] 
+[gz-1] pci id for fd 80: 10de:2204, driver (null)
+[gz-1] pci id for fd 81: 10de:2204, driver (null)
+[gz-1] libEGL warning: egl: failed to create dri2 screen
+[gz-1] libEGL warning: pci id for fd 79: 10de:2204, driver (null)
+[gz-1] 
+[gz-1] libEGL warning: pci id for fd 133: 10de:2204, driver (null)
+[gz-1] 
+[gz-1] pci id for fd 134: 10de:2204, driver (null)
+[gz-1] pci id for fd 135: 10de:2204, driver (null)
+[gz-1] libEGL warning: egl: failed to create dri2 screen
+[gz-1] libEGL warning: pci id for fd 133: 10de:2204, driver (null)
+[gz-1] 
+[gz-1] pci id for fd 134: 10de:2204, driver (null)
+[gz-1] pci id for fd 135: 10de:2204, driver (null)
+[gz-1] libEGL warning: egl: failed to create dri2 screen
+[gz-1] libEGL warning: pci id for fd 133: 10de:2204, driver (null)
+[gz-1] 
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[parameter_bridge-2] [INFO] [1792044238.910388923] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [rviz2-3]: sending signal 'SIGINT' to process[rviz2-3]
+[INFO] [parameter_bridge-2]: sending signal 'SIGINT' to process[parameter_bridge-2]
+[INFO] [gz-1]: sending signal 'SIGINT' to process[gz-1]
+[rviz2-3] [INFO] [1792044238.910814003] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[parameter_bridge-2] [INFO] [1792044238.912327246] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[rviz2-3] [INFO] [1792044238.914385004] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [parameter_bridge-2]: process has finished cleanly [pid 476078]
+[INFO] [rviz2-3]: process has finished cleanly [pid 476079]
+[gz-1] /opt/ros/jazzy/opt/gz_sim_vendor/lib/ruby/gz/cmdsim8.rb:201:in `kill': No such process (Errno::ESRCH)
+[gz-1] 	from /opt/ros/jazzy/opt/gz_sim_vendor/lib/ruby/gz/cmdsim8.rb:201:in `killProcess'
+[gz-1] 	from /opt/ros/jazzy/opt/gz_sim_vendor/lib/ruby/gz/cmdsim8.rb:569:in `handle_signal'
+[gz-1] 	from /opt/ros/jazzy/opt/gz_sim_vendor/lib/ruby/gz/cmdsim8.rb:574:in `block in execute'
+[gz-1] 	from /opt/ros/jazzy/opt/gz_sim_vendor/lib/ruby/gz/cmdsim8.rb:584:in `wait2'
+[gz-1] 	from /opt/ros/jazzy/opt/gz_sim_vendor/lib/ruby/gz/cmdsim8.rb:584:in `execute'
+[gz-1] 	from /opt/ros/jazzy/opt/gz_tools_vendor/bin/gz:317:in `<main>'
+[ERROR] [gz-1]: process has died [pid 476077, exit code 1, cmd 'gz sim -r /home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws06_sim_nav/install/demo_ign_sim/share/demo_ign_sim/worlds/demo.sdf'].

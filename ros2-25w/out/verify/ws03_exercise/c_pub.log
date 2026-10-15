@@ -1,0 +1,3 @@
+--- run: ros2 run my_exer01_topic_pub pub_vel --ros-args -p linear_x:=0.4 -p angular_z:=0.2 (bg 12s)
+[INFO] [1792040822.277871096] [pub_vel_node_cpp]: 发布速度指令，控制机器人作圆周运动!
+[INFO] [1792040834.108431645] [rclcpp]: signal_handler(SIGINT/SIGTERM)

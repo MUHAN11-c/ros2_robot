@@ -1,0 +1,2 @@
+[INFO] [1792040579.642890692] [simple_bag_recorder_node_cpp]: 消息录制对象创建!
+[INFO] [1792040589.495044426] [rclcpp]: signal_handler(SIGINT/SIGTERM)
