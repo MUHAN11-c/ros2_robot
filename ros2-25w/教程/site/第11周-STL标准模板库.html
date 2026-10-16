@@ -1,0 +1,824 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <title>第11章 STL 标准模板库（容器选型与实践） · HonKit</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="HonKit 6.2.2">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/@honkit/honkit-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/@honkit/honkit-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="第12周-常用算法与技术.html" />
+    
+    
+    <link rel="prev" href="第10周-高级特性与编程范式.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book honkit-cloak">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    导读
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第一篇 Python 基础与视觉（第1-3周）</li>
+        
+        
+    
+        <li class="chapter " data-level="2.1" data-path="第1周-列表与元组.html">
+            
+                <a href="第1周-列表与元组.html">
+            
+                    
+                    第1章 列表与元组（Python 基础入门）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.2" data-path="第2周-Python进阶编程.html">
+            
+                <a href="第2周-Python进阶编程.html">
+            
+                    
+                    第2章 Python 进阶编程（函数/类/异常/并发）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.3" data-path="第3周-数据处理与计算机视觉.html">
+            
+                <a href="第3周-数据处理与计算机视觉.html">
+            
+                    
+                    第3章 数据处理与计算机视觉（NumPy/OpenCV）
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第二篇 C 语言核心编程（第4-7周）</li>
+        
+        
+    
+        <li class="chapter " data-level="3.1" data-path="第4周-C语言基础入门.html">
+            
+                <a href="第4周-C语言基础入门.html">
+            
+                    
+                    第4章 C 语言基础入门（编译/类型/输入输出）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2" data-path="第5周-C语言进阶编程.html">
+            
+                <a href="第5周-C语言进阶编程.html">
+            
+                    
+                    第5章 C 语言进阶编程（运算符/控制流/数组）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.3" data-path="第6周-C语言高级特性.html">
+            
+                <a href="第6周-C语言高级特性.html">
+            
+                    
+                    第6章 C 语言高级特性（函数/指针/字符串/内存）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.4" data-path="第7周-C语言数据结构与文件操作.html">
+            
+                <a href="第7周-C语言数据结构与文件操作.html">
+            
+                    
+                    第7章 C 语言数据结构与文件操作
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第三篇 C++ 高级编程（第8-12周）</li>
+        
+        
+    
+        <li class="chapter " data-level="4.1" data-path="第8周-C++基础特性入门.html">
+            
+                <a href="第8周-C++基础特性入门.html">
+            
+                    
+                    第8章 C++ 基础特性入门（命名空间/引用/封装）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.2" data-path="第9周-类与对象进阶.html">
+            
+                <a href="第9周-类与对象进阶.html">
+            
+                    
+                    第9章 类与对象进阶（构造析构/深浅拷贝/运算符重载）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.3" data-path="第10周-高级特性与编程范式.html">
+            
+                <a href="第10周-高级特性与编程范式.html">
+            
+                    
+                    第10章 高级特性与编程范式（继承多态/模板/异常/IO）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="4.4" data-path="第11周-STL标准模板库.html">
+            
+                <a href="第11周-STL标准模板库.html">
+            
+                    
+                    第11章 STL 标准模板库（容器选型与实践）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.5" data-path="第12周-常用算法与技术.html">
+            
+                <a href="第12周-常用算法与技术.html">
+            
+                    
+                    第12章 常用算法与技术（algorithm/chrono/lambda/线程）
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第四篇 Linux 与 Shell（第13周）</li>
+        
+        
+    
+        <li class="chapter " data-level="5.1" data-path="第13周-Linux与Shell入门.html">
+            
+                <a href="第13周-Linux与Shell入门.html">
+            
+                    
+                    第13章 Linux 与 Shell 入门（操作系统地基）
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第五篇 ROS2 核心架构解析（第14-18周）</li>
+        
+        
+    
+        <li class="chapter " data-level="6.1" data-path="第14周-ROS2概述与环境搭建.html">
+            
+                <a href="第14周-ROS2概述与环境搭建.html">
+            
+                    
+                    第14章 ROS2 概述与环境搭建
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="6.2" data-path="第15周-通信机制深度剖析.html">
+            
+                <a href="第15周-通信机制深度剖析.html">
+            
+                    
+                    第15章 通信机制深度剖析
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="6.3" data-path="第16周-通信机制拓展与时间API.html">
+            
+                <a href="第16周-通信机制拓展与时间API.html">
+            
+                    
+                    第16章 通信机制拓展与时间 API
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="6.4" data-path="第17周-工具应用实操.html">
+            
+                <a href="第17周-工具应用实操.html">
+            
+                    
+                    第17章 工具应用实操（launch 与 rosbag2）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="6.5" data-path="第18周-乌龟案例与可视化.html">
+            
+                <a href="第18周-乌龟案例与可视化.html">
+            
+                    
+                    第18章 坐标变换与机器人建模
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第六篇 Mycar 智能车实战（第19-20周）</li>
+        
+        
+    
+        <li class="chapter " data-level="7.1" data-path="第19周-Mycar开发基础实战.html">
+            
+                <a href="第19周-Mycar开发基础实战.html">
+            
+                    
+                    第19章 Mycar 自定义接口与运动控制
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="7.2" data-path="第20周-Mycar开发进阶实践.html">
+            
+                <a href="第20周-Mycar开发进阶实践.html">
+            
+                    
+                    第20章 Mycar 整车集成与多机协同
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第七篇 高效通信与组件开发（第21周）</li>
+        
+        
+    
+        <li class="chapter " data-level="8.1" data-path="第21周-高效通信与组件开发.html">
+            
+                <a href="第21周-高效通信与组件开发.html">
+            
+                    
+                    第21章 生命周期/进程内通信/组件/插件
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第八篇 机器人应用领域实训（第22-25周）</li>
+        
+        
+    
+        <li class="chapter " data-level="9.1" data-path="第22周-ROS2功能实践.html">
+            
+                <a href="第22周-ROS2功能实践.html">
+            
+                    
+                    第22章 里程计与虚拟传感器实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="9.2" data-path="第23周-传感器实践开发.html">
+            
+                <a href="第23周-传感器实践开发.html">
+            
+                    
+                    第23章 传感器仿真开发
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="9.3" data-path="第24周-仿真导航与SLAM.html">
+            
+                <a href="第24周-仿真导航与SLAM.html">
+            
+                    
+                    第24章 仿真导航与 SLAM
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="9.4" data-path="第25周-多功能实践开发.html">
+            
+                <a href="第25周-多功能实践开发.html">
+            
+                    
+                    第25章 多功能实践（编队与语音）
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">附录</li>
+        
+        
+    
+        <li class="chapter " data-level="10.1" data-path="深度对照报告.html">
+            
+                <a href="深度对照报告.html">
+            
+                    
+                    深度对照验证报告（视频帧 × 实测运行）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="10.2" data-path="端到端核对报告.html">
+            
+                <a href="端到端核对报告.html">
+            
+                    
+                    端到端核对验证报告（课程视频 × 本机复现）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="10.3" data-path="学习笔记附录/代码项目导览.html">
+            
+                <a href="学习笔记附录/代码项目导览.html">
+            
+                    
+                    代码项目导览（code/）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="10.4" data-path="验证矩阵.html">
+            
+                <a href="验证矩阵.html">
+            
+                    
+                    运行验证矩阵（实测 vs 视频效果）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="10.5" data-path="verify-README.html">
+            
+                <a href="verify-README.html">
+            
+                    
+                    运行验证存档（out/verify/）说明
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://github.com/honkit/honkit" target="blank" class="gitbook-link">
+            Published with HonKit
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >第11章 STL 标准模板库（容器选型与实践）</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="第11章-stl-标准模板库（容器选型与实践）">第11章 STL 标准模板库（容器选型与实践）</h1>
+<blockquote>
+<p>本章对应课程第 11 周：容器 + 迭代器 + 算法三件套。string/vector 打底，deque/list/stack/queue/set/map 进阶，机器人开发中的消息缓存、路径序列、去重与查询全落在这些容器上。</p>
+</blockquote>
+<h2 id="111-案例以及案例分析">11.1 案例以及案例分析</h2>
+<p><strong>需求</strong>：传感器滑动窗口（保留最近 3 帧）、降序分数集合（去重）、按键查询表（map）——三种访问模式对应三种容器。</p>
+<h2 id="112-知识点与实现">11.2 知识点与实现</h2>
+<h3 id="1121-string-与-vector">11.2.1 string 与 vector</h3>
+<ul>
+<li>string：<code>substr/find/append/replace/compare/c_str</code>；<code>find</code> 失败返回 <code>npos</code>；</li>
+<li>vector：<code>size()</code>（元素数）vs <code>capacity()</code>（已分配）；扩容策略是倍增、会使迭代器失效；</li>
+<li><code>reserve(n)</code> 预分配避免反复扩容；<code>shrink_to_fit</code> 或 swap 技巧收缩内存；</li>
+<li>遍历中删除必须 <code>it = c.erase(it)</code>。</li>
+</ul>
+<h3 id="1122-容器选型速查">11.2.2 容器选型速查</h3>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>容器</th>
+<th>关键操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>随机访问/与 C 接口互操作</td>
+<td><code>vector</code></td>
+<td><code>[]/push_back/reserve</code></td>
+</tr>
+<tr>
+<td>头尾操作/滑动窗口</td>
+<td><code>deque</code></td>
+<td><code>push_front/pop_front</code></td>
+</tr>
+<tr>
+<td>中间频繁插删</td>
+<td><code>list</code></td>
+<td>成员函数 <code>sort/remove_if</code></td>
+</tr>
+<tr>
+<td>去重有序</td>
+<td><code>set/multiset</code></td>
+<td><code>insert</code> 返回 <code>pair&lt;it,bool&gt;</code></td>
+</tr>
+<tr>
+<td>键值有序查询</td>
+<td><code>map</code></td>
+<td><code>find/at/[]</code>（<code>[]</code> 会隐式插入！）</td>
+</tr>
+<tr>
+<td>高频 O(1) 点查</td>
+<td><code>unordered_map</code></td>
+<td>哈希实现、无序</td>
+</tr>
+<tr>
+<td>LIFO/FIFO/优先级</td>
+<td><code>stack/queue/priority_queue</code></td>
+<td><code>top/front/pop</code></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>自定义类型进 set/map 需提供 <code>operator&lt;</code> 或比较器；<code>insert</code> 去重可用 C++17 结构化绑定接收结果。</li>
+</ul>
+<h2 id="113-运行效果（实测）">11.3 运行效果（实测）</h2>
+<pre><code class="lang-text">2 3 4 
+insert dup ok=0 top=90
+lidar=1
+0
+</code></pre>
+<p>编译命令：<code>g++ -std=c++17 -Wall w11_setmap.cpp -o w11 &amp;&amp; ./w11</code>（滑动窗口淘汰最旧帧；重复插入 <code>ok=0</code>；<code>count("camera")==0</code>）。</p>
+<h2 id="114-端到端实战（实测）：csv-点位分组统计">11.4 端到端实战（实测）：CSV 点位分组统计</h2>
+<p>传感器点位按名称分组（<code>map + stringstream</code> 解析、结构化绑定遍历）——轨迹/标定数据处理的标准形态：</p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// csv_group.cpp</span>
+std::map&lt;std::string, std::vector&lt;<span class="hljs-type">double</span>&gt;&gt; groups;      <span class="hljs-comment">// name -&gt; 坐标序列</span>
+<span class="hljs-function">std::istringstream <span class="hljs-title">in</span><span class="hljs-params">(csv)</span></span>;
+std::string line;
+<span class="hljs-keyword">while</span> (std::<span class="hljs-built_in">getline</span>(in, line)) {                        <span class="hljs-comment">// 逐行</span>
+    <span class="hljs-function">std::stringstream <span class="hljs-title">ss</span><span class="hljs-params">(line)</span></span>;
+    std::string name, xs, ys;
+    std::<span class="hljs-built_in">getline</span>(ss, name, <span class="hljs-string">','</span>);                        <span class="hljs-comment">// 按逗号分列</span>
+    std::<span class="hljs-built_in">getline</span>(ss, xs, <span class="hljs-string">','</span>);
+    std::<span class="hljs-built_in">getline</span>(ss, ys, <span class="hljs-string">','</span>);
+    groups[name].<span class="hljs-built_in">push_back</span>(std::<span class="hljs-built_in">stod</span>(xs));
+    groups[name].<span class="hljs-built_in">push_back</span>(std::<span class="hljs-built_in">stod</span>(ys));
+}
+<span class="hljs-keyword">for</span> (<span class="hljs-type">const</span> <span class="hljs-keyword">auto</span>&amp; [name, coords] : groups) {             <span class="hljs-comment">// 结构化绑定，按 name 升序</span>
+    std::cout &lt;&lt; name &lt;&lt; <span class="hljs-string">": "</span> &lt;&lt; coords.<span class="hljs-built_in">size</span>() / <span class="hljs-number">2</span> &lt;&lt; <span class="hljs-string">" 点 -&gt; "</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">double</span> v : coords) std::cout &lt;&lt; v &lt;&lt; <span class="hljs-string">" "</span>;
+}
+</code></pre>
+<p>实测（输入 CSV 含 lidar/imu/camera 共 5 行）：</p>
+<pre><code class="lang-text">camera: 1 点 -&gt; 100 200 
+imu: 2 点 -&gt; 1 2 3 4 
+lidar: 2 点 -&gt; 10 20 30 40
+</code></pre>
+<h2 id="115-本章小结">11.5 本章小结</h2>
+<ul>
+<li>迭代器失效是头号坑：扩容、erase 之后旧迭代器不可用；</li>
+<li><code>map::operator[]</code> 在键不存在时<strong>插入默认值</strong>——只查不改用 <code>find/at</code>；</li>
+<li>nav2 路径就是 <code>vector&lt;PoseStamped&gt;</code>；open/closed 列表用 <code>set/priority_queue</code>；TF 帧缓存用 <code>unordered_map</code>；</li>
+<li>实时循环里 <code>reserve</code> 优先 <code>vector</code>：缓存友好且与 DDS 序列化零拷贝兼容。</li>
+</ul>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="第10周-高级特性与编程范式.html" class="navigation navigation-prev " aria-label="Previous page: 第10章 高级特性与编程范式（继承多态/模板/异常/IO）">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="第12周-常用算法与技术.html" class="navigation navigation-next " aria-label="Next page: 第12章 常用算法与技术（algorithm/chrono/lambda/线程）">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"第11章 STL 标准模板库（容器选型与实践）","level":"4.4","depth":1,"next":{"title":"第12章 常用算法与技术（algorithm/chrono/lambda/线程）","level":"4.5","depth":1,"path":"第12周-常用算法与技术.md","ref":"第12周-常用算法与技术.md","articles":[]},"previous":{"title":"第10章 高级特性与编程范式（继承多态/模板/异常/IO）","level":"4.3","depth":1,"path":"第10周-高级特性与编程范式.md","ref":"第10周-高级特性与编程范式.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第11周-STL标准模板库.md","mtime":"2026-10-16T01:25:57.811Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T01:25:58.966Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <noscript>
+        <style>
+            .honkit-cloak {
+                display: block !important;
+            }
+        </style>
+    </noscript>
+    <script>
+        // Restore sidebar state as critical path for prevent layout shift
+        function __init__getSidebarState(defaultValue){
+            var baseKey = "";
+            var key = baseKey + ":sidebar";
+            try {
+                var value = localStorage[key];
+                if (value === undefined) {
+                    return defaultValue;
+                }
+                var parsed = JSON.parse(value);
+                return parsed == null ? defaultValue : parsed;
+            } catch (e) {
+                return defaultValue;
+            }
+        }
+        function __init__restoreLastSidebarState() {
+            var isMobile = window.matchMedia("(max-width: 600px)").matches;
+            if (isMobile) {
+                // Init last state if not mobile
+                return;
+            }
+            var sidebarState = __init__getSidebarState(true);
+            var book = document.querySelector(".book");
+            // Show sidebar if it enabled
+            if (sidebarState && book) {
+                book.classList.add("without-animation", "with-summary");
+            }
+        }
+
+        try {
+            __init__restoreLastSidebarState();
+        } finally {
+            var book = document.querySelector(".book");
+            book.classList.remove("honkit-cloak");
+        }
+    </script>
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/@honkit/honkit-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

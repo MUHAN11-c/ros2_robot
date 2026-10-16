@@ -1,0 +1,785 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <title>第8章 C++ 基础特性入门（命名空间/引用/封装） · HonKit</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="HonKit 6.2.2">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/@honkit/honkit-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/@honkit/honkit-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="第9周-类与对象进阶.html" />
+    
+    
+    <link rel="prev" href="第7周-C语言数据结构与文件操作.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book honkit-cloak">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    导读
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第一篇 Python 基础与视觉（第1-3周）</li>
+        
+        
+    
+        <li class="chapter " data-level="2.1" data-path="第1周-列表与元组.html">
+            
+                <a href="第1周-列表与元组.html">
+            
+                    
+                    第1章 列表与元组（Python 基础入门）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.2" data-path="第2周-Python进阶编程.html">
+            
+                <a href="第2周-Python进阶编程.html">
+            
+                    
+                    第2章 Python 进阶编程（函数/类/异常/并发）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.3" data-path="第3周-数据处理与计算机视觉.html">
+            
+                <a href="第3周-数据处理与计算机视觉.html">
+            
+                    
+                    第3章 数据处理与计算机视觉（NumPy/OpenCV）
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第二篇 C 语言核心编程（第4-7周）</li>
+        
+        
+    
+        <li class="chapter " data-level="3.1" data-path="第4周-C语言基础入门.html">
+            
+                <a href="第4周-C语言基础入门.html">
+            
+                    
+                    第4章 C 语言基础入门（编译/类型/输入输出）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2" data-path="第5周-C语言进阶编程.html">
+            
+                <a href="第5周-C语言进阶编程.html">
+            
+                    
+                    第5章 C 语言进阶编程（运算符/控制流/数组）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.3" data-path="第6周-C语言高级特性.html">
+            
+                <a href="第6周-C语言高级特性.html">
+            
+                    
+                    第6章 C 语言高级特性（函数/指针/字符串/内存）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.4" data-path="第7周-C语言数据结构与文件操作.html">
+            
+                <a href="第7周-C语言数据结构与文件操作.html">
+            
+                    
+                    第7章 C 语言数据结构与文件操作
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第三篇 C++ 高级编程（第8-12周）</li>
+        
+        
+    
+        <li class="chapter active" data-level="4.1" data-path="第8周-C++基础特性入门.html">
+            
+                <a href="第8周-C++基础特性入门.html">
+            
+                    
+                    第8章 C++ 基础特性入门（命名空间/引用/封装）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.2" data-path="第9周-类与对象进阶.html">
+            
+                <a href="第9周-类与对象进阶.html">
+            
+                    
+                    第9章 类与对象进阶（构造析构/深浅拷贝/运算符重载）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.3" data-path="第10周-高级特性与编程范式.html">
+            
+                <a href="第10周-高级特性与编程范式.html">
+            
+                    
+                    第10章 高级特性与编程范式（继承多态/模板/异常/IO）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.4" data-path="第11周-STL标准模板库.html">
+            
+                <a href="第11周-STL标准模板库.html">
+            
+                    
+                    第11章 STL 标准模板库（容器选型与实践）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.5" data-path="第12周-常用算法与技术.html">
+            
+                <a href="第12周-常用算法与技术.html">
+            
+                    
+                    第12章 常用算法与技术（algorithm/chrono/lambda/线程）
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第四篇 Linux 与 Shell（第13周）</li>
+        
+        
+    
+        <li class="chapter " data-level="5.1" data-path="第13周-Linux与Shell入门.html">
+            
+                <a href="第13周-Linux与Shell入门.html">
+            
+                    
+                    第13章 Linux 与 Shell 入门（操作系统地基）
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第五篇 ROS2 核心架构解析（第14-18周）</li>
+        
+        
+    
+        <li class="chapter " data-level="6.1" data-path="第14周-ROS2概述与环境搭建.html">
+            
+                <a href="第14周-ROS2概述与环境搭建.html">
+            
+                    
+                    第14章 ROS2 概述与环境搭建
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="6.2" data-path="第15周-通信机制深度剖析.html">
+            
+                <a href="第15周-通信机制深度剖析.html">
+            
+                    
+                    第15章 通信机制深度剖析
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="6.3" data-path="第16周-通信机制拓展与时间API.html">
+            
+                <a href="第16周-通信机制拓展与时间API.html">
+            
+                    
+                    第16章 通信机制拓展与时间 API
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="6.4" data-path="第17周-工具应用实操.html">
+            
+                <a href="第17周-工具应用实操.html">
+            
+                    
+                    第17章 工具应用实操（launch 与 rosbag2）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="6.5" data-path="第18周-乌龟案例与可视化.html">
+            
+                <a href="第18周-乌龟案例与可视化.html">
+            
+                    
+                    第18章 坐标变换与机器人建模
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第六篇 Mycar 智能车实战（第19-20周）</li>
+        
+        
+    
+        <li class="chapter " data-level="7.1" data-path="第19周-Mycar开发基础实战.html">
+            
+                <a href="第19周-Mycar开发基础实战.html">
+            
+                    
+                    第19章 Mycar 自定义接口与运动控制
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="7.2" data-path="第20周-Mycar开发进阶实践.html">
+            
+                <a href="第20周-Mycar开发进阶实践.html">
+            
+                    
+                    第20章 Mycar 整车集成与多机协同
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第七篇 高效通信与组件开发（第21周）</li>
+        
+        
+    
+        <li class="chapter " data-level="8.1" data-path="第21周-高效通信与组件开发.html">
+            
+                <a href="第21周-高效通信与组件开发.html">
+            
+                    
+                    第21章 生命周期/进程内通信/组件/插件
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第八篇 机器人应用领域实训（第22-25周）</li>
+        
+        
+    
+        <li class="chapter " data-level="9.1" data-path="第22周-ROS2功能实践.html">
+            
+                <a href="第22周-ROS2功能实践.html">
+            
+                    
+                    第22章 里程计与虚拟传感器实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="9.2" data-path="第23周-传感器实践开发.html">
+            
+                <a href="第23周-传感器实践开发.html">
+            
+                    
+                    第23章 传感器仿真开发
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="9.3" data-path="第24周-仿真导航与SLAM.html">
+            
+                <a href="第24周-仿真导航与SLAM.html">
+            
+                    
+                    第24章 仿真导航与 SLAM
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="9.4" data-path="第25周-多功能实践开发.html">
+            
+                <a href="第25周-多功能实践开发.html">
+            
+                    
+                    第25章 多功能实践（编队与语音）
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">附录</li>
+        
+        
+    
+        <li class="chapter " data-level="10.1" data-path="深度对照报告.html">
+            
+                <a href="深度对照报告.html">
+            
+                    
+                    深度对照验证报告（视频帧 × 实测运行）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="10.2" data-path="端到端核对报告.html">
+            
+                <a href="端到端核对报告.html">
+            
+                    
+                    端到端核对验证报告（课程视频 × 本机复现）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="10.3" data-path="学习笔记附录/代码项目导览.html">
+            
+                <a href="学习笔记附录/代码项目导览.html">
+            
+                    
+                    代码项目导览（code/）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="10.4" data-path="验证矩阵.html">
+            
+                <a href="验证矩阵.html">
+            
+                    
+                    运行验证矩阵（实测 vs 视频效果）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="10.5" data-path="verify-README.html">
+            
+                <a href="verify-README.html">
+            
+                    
+                    运行验证存档（out/verify/）说明
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://github.com/honkit/honkit" target="blank" class="gitbook-link">
+            Published with HonKit
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >第8章 C++ 基础特性入门（命名空间/引用/封装）</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="第8章-c-基础特性入门（命名空间引用封装）">第8章 C++ 基础特性入门（命名空间/引用/封装）</h1>
+<blockquote>
+<p>本章对应课程第 8 周：C++ 相对 C 的增强（类型检查、bool、const、引用）、命名空间与 <code>::</code>、内联函数与函数重载、类与封装入门——后续 rclcpp 节点类设计的第一块基石。</p>
+</blockquote>
+<h2 id="81-案例以及案例分析">8.1 案例以及案例分析</h2>
+<p><strong>需求</strong>：设计带访问权限的 <code>Cube</code> 类——成员私有、构造校验尺寸为正、提供体积与「点是否在立方体内」判断，体验封装与接口设计。</p>
+<h2 id="82-知识点与实现">8.2 知识点与实现</h2>
+<h3 id="821-命名空间与作用域">8.2.1 命名空间与作用域</h3>
+<ul>
+<li><code>::</code> 作用域解析：<code>::value</code> 强制取全局版本；</li>
+<li><code>namespace</code> 只能写在全局、可嵌套、同名空间可分散声明（rclcpp 就是这么组织的）、支持匿名空间与别名；</li>
+<li><code>using 名字;</code>（细粒度）优先于 <code>using namespace 空间;</code>（易冲突）；<strong>头文件中禁止 using namespace</strong>。</li>
+</ul>
+<h3 id="822-c-相对-c-的增强">8.2.2 C++ 相对 C 的增强</h3>
+<ul>
+<li>严格检查：全局变量重定义、实参类型/个数、<code>void*</code> 必须显式转换；</li>
+<li><code>struct</code> 可有成员函数与访问权限（默认 public 的 class）；</li>
+<li><code>const</code> 是编译期常量（可作数组长度）、内部链接；取地址后退化为只读变量；用 <code>const/constexpr</code> 代替 <code>#define</code>；</li>
+<li><strong>引用</strong>：<code>T&amp; 别名</code> 是必须初始化、不可改指向的别名（底层 <code>T* const</code>）；<code>const T&amp;</code> 只读传参避免拷贝；<code>T*&amp;</code> 可在函数内改变外部指针指向。</li>
+</ul>
+<h3 id="823-内联、重载与封装">8.2.3 内联、重载与封装</h3>
+<ul>
+<li><code>inline</code> 替代宏函数（有类型检查）；<code>constexpr</code> 编译期计算；</li>
+<li>函数重载：参数列表不同即可，仅返回类型不同不算；<code>extern "C"</code> 按 C 规则链接以调用硬件 SDK；</li>
+<li>封装：成员 <code>private</code>、<code>public</code> 接口受控（setter 里做校验）；<code>class</code> 默认 private、<code>struct</code> 默认 public。</li>
+</ul>
+<h2 id="83-运行效果（实测）">8.3 运行效果（实测）</h2>
+<pre><code class="lang-text">24 1
+caught: size must be &gt; 0
+</code></pre>
+<p>编译命令：<code>g++ -std=c++17 -Wall w8_cube.cpp -o w8 &amp;&amp; ./w8</code>（体积 24、点 (1,1,1) 在内部、非法尺寸被异常拦截）。</p>
+<h2 id="84-端到端实战（实测）：rectangle-类">8.4 端到端实战（实测）：Rectangle 类</h2>
+<p>封装 + 构造校验异常 + 全局协作函数的综合案例（与课程立方体案例同型）：</p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// rect.cpp</span>
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Rectangle</span> {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-built_in">Rectangle</span>(<span class="hljs-type">double</span> w, <span class="hljs-type">double</span> h) : <span class="hljs-built_in">w_</span>(w), <span class="hljs-built_in">h_</span>(h) {
+        <span class="hljs-keyword">if</span> (w &lt;= <span class="hljs-number">0</span> || h &lt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">throw</span> std::<span class="hljs-built_in">invalid_argument</span>(<span class="hljs-string">"尺寸必须为正"</span>);
+    }
+    <span class="hljs-function"><span class="hljs-type">double</span> <span class="hljs-title">area</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>{ <span class="hljs-keyword">return</span> w_ * h_; }
+    <span class="hljs-function"><span class="hljs-type">double</span> <span class="hljs-title">perimeter</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-number">2</span> * (w_ + h_); }
+    <span class="hljs-function"><span class="hljs-type">double</span> <span class="hljs-title">width</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>{ <span class="hljs-keyword">return</span> w_; }
+    <span class="hljs-function"><span class="hljs-type">double</span> <span class="hljs-title">height</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>{ <span class="hljs-keyword">return</span> h_; }
+<span class="hljs-keyword">private</span>:
+    <span class="hljs-type">double</span> w_, h_;
+};
+
+<span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">can_form_square</span><span class="hljs-params">(<span class="hljs-type">const</span> Rectangle&amp; a, <span class="hljs-type">const</span> Rectangle&amp; b)</span> </span>{
+    <span class="hljs-keyword">return</span> std::<span class="hljs-built_in">fabs</span>(a.<span class="hljs-built_in">width</span>() - b.<span class="hljs-built_in">height</span>()) &lt; <span class="hljs-number">1e-9</span> &amp;&amp;
+           std::<span class="hljs-built_in">fabs</span>(a.<span class="hljs-built_in">height</span>() - b.<span class="hljs-built_in">width</span>()) &lt; <span class="hljs-number">1e-9</span>;   <span class="hljs-comment">// 旋转后可拼成正方形</span>
+}
+</code></pre>
+<p>实测（g++ -std=c++17 -Wall）：</p>
+<pre><code class="lang-text">r1 面积=12 周长=14
+可组正方形=1
+caught: 尺寸必须为正
+</code></pre>
+<h2 id="85-本章小结">8.5 本章小结</h2>
+<ul>
+<li>命名空间即库边界（<code>rclcpp</code>、<code>sensor_msgs::msg</code>）——自己的功能包从第一天起建命名空间；</li>
+<li>引用与 <code>const T&amp;</code> 是回调函数标准签名的理论基础；</li>
+<li>封装 = 节点类设计：publisher/subscription 收进私有成员、只暴露必要接口；</li>
+<li><code>extern "C"</code> 打通 C 语言编写的传感器 SDK。</li>
+</ul>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="第7周-C语言数据结构与文件操作.html" class="navigation navigation-prev " aria-label="Previous page: 第7章 C 语言数据结构与文件操作">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="第9周-类与对象进阶.html" class="navigation navigation-next " aria-label="Next page: 第9章 类与对象进阶（构造析构/深浅拷贝/运算符重载）">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"第8章 C++ 基础特性入门（命名空间/引用/封装）","level":"4.1","depth":1,"next":{"title":"第9章 类与对象进阶（构造析构/深浅拷贝/运算符重载）","level":"4.2","depth":1,"path":"第9周-类与对象进阶.md","ref":"第9周-类与对象进阶.md","articles":[]},"previous":{"title":"第7章 C 语言数据结构与文件操作","level":"3.4","depth":1,"path":"第7周-C语言数据结构与文件操作.md","ref":"第7周-C语言数据结构与文件操作.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第8周-C++基础特性入门.md","mtime":"2026-10-16T01:25:57.811Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T01:25:58.966Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <noscript>
+        <style>
+            .honkit-cloak {
+                display: block !important;
+            }
+        </style>
+    </noscript>
+    <script>
+        // Restore sidebar state as critical path for prevent layout shift
+        function __init__getSidebarState(defaultValue){
+            var baseKey = "";
+            var key = baseKey + ":sidebar";
+            try {
+                var value = localStorage[key];
+                if (value === undefined) {
+                    return defaultValue;
+                }
+                var parsed = JSON.parse(value);
+                return parsed == null ? defaultValue : parsed;
+            } catch (e) {
+                return defaultValue;
+            }
+        }
+        function __init__restoreLastSidebarState() {
+            var isMobile = window.matchMedia("(max-width: 600px)").matches;
+            if (isMobile) {
+                // Init last state if not mobile
+                return;
+            }
+            var sidebarState = __init__getSidebarState(true);
+            var book = document.querySelector(".book");
+            // Show sidebar if it enabled
+            if (sidebarState && book) {
+                book.classList.add("without-animation", "with-summary");
+            }
+        }
+
+        try {
+            __init__restoreLastSidebarState();
+        } finally {
+            var book = document.querySelector(".book");
+            book.classList.remove("honkit-cloak");
+        }
+    </script>
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/@honkit/honkit-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

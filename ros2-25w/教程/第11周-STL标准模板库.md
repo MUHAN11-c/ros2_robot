@@ -40,7 +40,39 @@ lidar=1
 
 编译命令：`g++ -std=c++17 -Wall w11_setmap.cpp -o w11 && ./w11`（滑动窗口淘汰最旧帧；重复插入 `ok=0`；`count("camera")==0`）。
 
-## 11.4 本章小结
+## 11.4 端到端实战（实测）：CSV 点位分组统计
+
+传感器点位按名称分组（`map + stringstream` 解析、结构化绑定遍历）——轨迹/标定数据处理的标准形态：
+
+```cpp
+// csv_group.cpp
+std::map<std::string, std::vector<double>> groups;      // name -> 坐标序列
+std::istringstream in(csv);
+std::string line;
+while (std::getline(in, line)) {                        // 逐行
+    std::stringstream ss(line);
+    std::string name, xs, ys;
+    std::getline(ss, name, ',');                        // 按逗号分列
+    std::getline(ss, xs, ',');
+    std::getline(ss, ys, ',');
+    groups[name].push_back(std::stod(xs));
+    groups[name].push_back(std::stod(ys));
+}
+for (const auto& [name, coords] : groups) {             // 结构化绑定，按 name 升序
+    std::cout << name << ": " << coords.size() / 2 << " 点 -> ";
+    for (double v : coords) std::cout << v << " ";
+}
+```
+
+实测（输入 CSV 含 lidar/imu/camera 共 5 行）：
+
+```text
+camera: 1 点 -> 100 200 
+imu: 2 点 -> 1 2 3 4 
+lidar: 2 点 -> 10 20 30 40 
+```
+
+## 11.5 本章小结
 
 - 迭代器失效是头号坑：扩容、erase 之后旧迭代器不可用；
 - `map::operator[]` 在键不存在时**插入默认值**——只查不改用 `find/at`；

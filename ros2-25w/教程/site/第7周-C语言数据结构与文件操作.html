@@ -1,0 +1,794 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <title>第7章 C 语言数据结构与文件操作 · HonKit</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="HonKit 6.2.2">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/@honkit/honkit-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/@honkit/honkit-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="第8周-C++基础特性入门.html" />
+    
+    
+    <link rel="prev" href="第6周-C语言高级特性.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book honkit-cloak">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    导读
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第一篇 Python 基础与视觉（第1-3周）</li>
+        
+        
+    
+        <li class="chapter " data-level="2.1" data-path="第1周-列表与元组.html">
+            
+                <a href="第1周-列表与元组.html">
+            
+                    
+                    第1章 列表与元组（Python 基础入门）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.2" data-path="第2周-Python进阶编程.html">
+            
+                <a href="第2周-Python进阶编程.html">
+            
+                    
+                    第2章 Python 进阶编程（函数/类/异常/并发）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.3" data-path="第3周-数据处理与计算机视觉.html">
+            
+                <a href="第3周-数据处理与计算机视觉.html">
+            
+                    
+                    第3章 数据处理与计算机视觉（NumPy/OpenCV）
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第二篇 C 语言核心编程（第4-7周）</li>
+        
+        
+    
+        <li class="chapter " data-level="3.1" data-path="第4周-C语言基础入门.html">
+            
+                <a href="第4周-C语言基础入门.html">
+            
+                    
+                    第4章 C 语言基础入门（编译/类型/输入输出）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2" data-path="第5周-C语言进阶编程.html">
+            
+                <a href="第5周-C语言进阶编程.html">
+            
+                    
+                    第5章 C 语言进阶编程（运算符/控制流/数组）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.3" data-path="第6周-C语言高级特性.html">
+            
+                <a href="第6周-C语言高级特性.html">
+            
+                    
+                    第6章 C 语言高级特性（函数/指针/字符串/内存）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="3.4" data-path="第7周-C语言数据结构与文件操作.html">
+            
+                <a href="第7周-C语言数据结构与文件操作.html">
+            
+                    
+                    第7章 C 语言数据结构与文件操作
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第三篇 C++ 高级编程（第8-12周）</li>
+        
+        
+    
+        <li class="chapter " data-level="4.1" data-path="第8周-C++基础特性入门.html">
+            
+                <a href="第8周-C++基础特性入门.html">
+            
+                    
+                    第8章 C++ 基础特性入门（命名空间/引用/封装）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.2" data-path="第9周-类与对象进阶.html">
+            
+                <a href="第9周-类与对象进阶.html">
+            
+                    
+                    第9章 类与对象进阶（构造析构/深浅拷贝/运算符重载）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.3" data-path="第10周-高级特性与编程范式.html">
+            
+                <a href="第10周-高级特性与编程范式.html">
+            
+                    
+                    第10章 高级特性与编程范式（继承多态/模板/异常/IO）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.4" data-path="第11周-STL标准模板库.html">
+            
+                <a href="第11周-STL标准模板库.html">
+            
+                    
+                    第11章 STL 标准模板库（容器选型与实践）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.5" data-path="第12周-常用算法与技术.html">
+            
+                <a href="第12周-常用算法与技术.html">
+            
+                    
+                    第12章 常用算法与技术（algorithm/chrono/lambda/线程）
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第四篇 Linux 与 Shell（第13周）</li>
+        
+        
+    
+        <li class="chapter " data-level="5.1" data-path="第13周-Linux与Shell入门.html">
+            
+                <a href="第13周-Linux与Shell入门.html">
+            
+                    
+                    第13章 Linux 与 Shell 入门（操作系统地基）
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第五篇 ROS2 核心架构解析（第14-18周）</li>
+        
+        
+    
+        <li class="chapter " data-level="6.1" data-path="第14周-ROS2概述与环境搭建.html">
+            
+                <a href="第14周-ROS2概述与环境搭建.html">
+            
+                    
+                    第14章 ROS2 概述与环境搭建
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="6.2" data-path="第15周-通信机制深度剖析.html">
+            
+                <a href="第15周-通信机制深度剖析.html">
+            
+                    
+                    第15章 通信机制深度剖析
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="6.3" data-path="第16周-通信机制拓展与时间API.html">
+            
+                <a href="第16周-通信机制拓展与时间API.html">
+            
+                    
+                    第16章 通信机制拓展与时间 API
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="6.4" data-path="第17周-工具应用实操.html">
+            
+                <a href="第17周-工具应用实操.html">
+            
+                    
+                    第17章 工具应用实操（launch 与 rosbag2）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="6.5" data-path="第18周-乌龟案例与可视化.html">
+            
+                <a href="第18周-乌龟案例与可视化.html">
+            
+                    
+                    第18章 坐标变换与机器人建模
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第六篇 Mycar 智能车实战（第19-20周）</li>
+        
+        
+    
+        <li class="chapter " data-level="7.1" data-path="第19周-Mycar开发基础实战.html">
+            
+                <a href="第19周-Mycar开发基础实战.html">
+            
+                    
+                    第19章 Mycar 自定义接口与运动控制
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="7.2" data-path="第20周-Mycar开发进阶实践.html">
+            
+                <a href="第20周-Mycar开发进阶实践.html">
+            
+                    
+                    第20章 Mycar 整车集成与多机协同
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第七篇 高效通信与组件开发（第21周）</li>
+        
+        
+    
+        <li class="chapter " data-level="8.1" data-path="第21周-高效通信与组件开发.html">
+            
+                <a href="第21周-高效通信与组件开发.html">
+            
+                    
+                    第21章 生命周期/进程内通信/组件/插件
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第八篇 机器人应用领域实训（第22-25周）</li>
+        
+        
+    
+        <li class="chapter " data-level="9.1" data-path="第22周-ROS2功能实践.html">
+            
+                <a href="第22周-ROS2功能实践.html">
+            
+                    
+                    第22章 里程计与虚拟传感器实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="9.2" data-path="第23周-传感器实践开发.html">
+            
+                <a href="第23周-传感器实践开发.html">
+            
+                    
+                    第23章 传感器仿真开发
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="9.3" data-path="第24周-仿真导航与SLAM.html">
+            
+                <a href="第24周-仿真导航与SLAM.html">
+            
+                    
+                    第24章 仿真导航与 SLAM
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="9.4" data-path="第25周-多功能实践开发.html">
+            
+                <a href="第25周-多功能实践开发.html">
+            
+                    
+                    第25章 多功能实践（编队与语音）
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">附录</li>
+        
+        
+    
+        <li class="chapter " data-level="10.1" data-path="深度对照报告.html">
+            
+                <a href="深度对照报告.html">
+            
+                    
+                    深度对照验证报告（视频帧 × 实测运行）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="10.2" data-path="端到端核对报告.html">
+            
+                <a href="端到端核对报告.html">
+            
+                    
+                    端到端核对验证报告（课程视频 × 本机复现）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="10.3" data-path="学习笔记附录/代码项目导览.html">
+            
+                <a href="学习笔记附录/代码项目导览.html">
+            
+                    
+                    代码项目导览（code/）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="10.4" data-path="验证矩阵.html">
+            
+                <a href="验证矩阵.html">
+            
+                    
+                    运行验证矩阵（实测 vs 视频效果）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="10.5" data-path="verify-README.html">
+            
+                <a href="verify-README.html">
+            
+                    
+                    运行验证存档（out/verify/）说明
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://github.com/honkit/honkit" target="blank" class="gitbook-link">
+            Published with HonKit
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >第7章 C 语言数据结构与文件操作</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="第7章-c-语言数据结构与文件操作（结构体联合体枚举文件）">第7章 C 语言数据结构与文件操作（结构体/联合体/枚举/文件）</h1>
+<blockquote>
+<p>本章对应课程第 7 周：内存函数（memset/memcpy）、结构体（ROS2 消息类型的 C 原型）、联合体与枚举、文件读写——完成「读文件 → 结构体数组 → 排序 → 写文件」的完整数据流水线。</p>
+</blockquote>
+<h2 id="71-案例以及案例分析">7.1 案例以及案例分析</h2>
+<p><strong>需求</strong>：把结构体记录写入二进制文件，再<strong>随机读取</strong>第 2 条——rosbag 索引「按记录号定位」的朴素原理。</p>
+<h2 id="72-知识点与实现">7.2 知识点与实现</h2>
+<h3 id="721-内存函数与结构体">7.2.1 内存函数与结构体</h3>
+<ul>
+<li><code>memset</code> 清零、<code>memcpy</code>（不重叠）/<code>memmove</code>（可重叠）拷贝、<code>memcmp</code> 按字节比较；</li>
+<li>结构体聚合字段，同类型可整体赋值；嵌套结构体链式访问 <code>r.bat.voltage</code>；</li>
+<li><code>sizeof(struct)</code> ≠ 成员之和——<strong>内存对齐</strong>产生填充；<code>#pragma pack(1)</code> 用于通信协议（牺牲性能）；</li>
+<li>结构体数组 + 冒泡排序 = 小型数据库；传参用指针 <code>const struct S *</code> 只读不拷贝；</li>
+<li>堆上结构体数组：<code>malloc(n * sizeof(struct S))</code>，数量运行时才定的场景。</li>
+</ul>
+<h3 id="722-联合体与枚举">7.2.2 联合体与枚举</h3>
+<ul>
+<li><code>union</code> 所有成员共享内存，<code>sizeof</code> 取最大成员；同一时刻只有一个成员有效；</li>
+<li>枚举替代魔法数字表达状态（<code>enum State { IDLE, RUN, ERROR }</code>）；</li>
+<li>经典组合是 tagged union：<code>type 枚举 + union</code>，用枚举标记当前有效成员（协议解析常用）。</li>
+</ul>
+<h3 id="723-文件操作">7.2.3 文件操作</h3>
+<ul>
+<li><code>fopen(模式 r/w/a/rb/wb)</code> 必须判 <code>NULL</code>，<code>perror</code> 打原因；用完 <code>fclose</code>（落盘）；</li>
+<li>逐字符 <code>fgetc/fputc</code>、按行 <code>fgets/fputs</code>、格式化 <code>fprintf/fscanf</code>、块读写 <code>fread/fwrite</code>（返回<strong>块数</strong>）；</li>
+<li><code>feof</code> 正确姿势是<strong>先读后判</strong>；<code>while (!feof(fp))</code> 是经典错误；</li>
+<li>随机读取：<code>fseek(fp, N*sizeof(Rec), SEEK_SET)</code>；文件大小 <code>fseek(END)+ftell</code> 或 <code>stat</code>；</li>
+<li>读写混合时需 <code>fseek/fflush</code> 切换方向；stdio 带缓冲，崩溃/断电丢数据多源于没 <code>fclose/fflush</code>。</li>
+</ul>
+<h2 id="73-运行效果（实测）">7.3 运行效果（实测）</h2>
+<pre><code class="lang-text">随机读第2条: id=2 value=2.5
+data.bin 总大小 = 48 字节
+</code></pre>
+<p>编译命令：<code>gcc -Wall w7_binfile.c -o w7 &amp;&amp; ./w7</code>（3 条 <code>struct Rec</code> 每条 16 字节）。</p>
+<h2 id="74-端到端实战（实测）：成绩文件流水线">7.4 端到端实战（实测）：成绩文件流水线</h2>
+<p>完整闭环：<strong>生成源文件 → fgets+sscanf 读入结构体数组 → 冒泡降序 → 写回 sorted.txt</strong>。</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* sort_scores.c（节选） */</span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Student</span> {</span> <span class="hljs-type">char</span> name[<span class="hljs-number">32</span>]; <span class="hljs-type">double</span> score; };
+
+<span class="hljs-comment">/* 1.生成源数据 */</span>
+FILE *fp = fopen(<span class="hljs-string">"scores.txt"</span>, <span class="hljs-string">"w"</span>);
+<span class="hljs-built_in">fprintf</span>(fp, <span class="hljs-string">"alice,88.5\nbob,95\ncarol,72.5\ndave,81\n"</span>);
+fclose(fp);
+
+<span class="hljs-comment">/* 2.读入结构体数组（先读后判 EOF） */</span>
+<span class="hljs-keyword">while</span> (fgets(line, <span class="hljs-keyword">sizeof</span>(line), fp) != <span class="hljs-literal">NULL</span> &amp;&amp; n &lt; <span class="hljs-number">8</span>) {
+    line[<span class="hljs-built_in">strcspn</span>(line, <span class="hljs-string">"\n"</span>)] = <span class="hljs-string">'\0'</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">sscanf</span>(line, <span class="hljs-string">"%31[^,],%lf"</span>, stu[n].name, &amp;stu[n].score) == <span class="hljs-number">2</span>) n++;
+}
+
+<span class="hljs-comment">/* 3.冒泡降序（结构体整体交换） */</span>
+<span class="hljs-keyword">if</span> (stu[j].score &lt; stu[j + <span class="hljs-number">1</span>].score) {
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Student</span> <span class="hljs-title">tmp</span> =</span> stu[j]; stu[j] = stu[j + <span class="hljs-number">1</span>]; stu[j + <span class="hljs-number">1</span>] = tmp;
+}
+
+<span class="hljs-comment">/* 4.写回 */</span>
+<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) <span class="hljs-built_in">fprintf</span>(fp, <span class="hljs-string">"%s,%.1f\n"</span>, stu[i].name, stu[i].score);
+</code></pre>
+<p>实测（gcc 13.3.0）：</p>
+<pre><code class="lang-text">已写入 sorted.txt（4 条，降序）
+-- sorted.txt --
+bob,95.0
+alice,88.5
+dave,81.0
+carol,72.5
+</code></pre>
+<h2 id="75-本章小结">7.5 本章小结</h2>
+<ul>
+<li>结构体 = <code>.msg</code> 消息的 C 原型；理解对齐与指针成员才能理解 DDS 序列化与消息 <code>SharedPtr</code>；</li>
+<li>tagged union（枚举 + 联合体）是机器人状态与变体数据的通用手法；</li>
+<li>rosbag 二进制记录、YAML/地图/日志落盘全是 <code>fopen + fread/fwrite/fprintf</code> 的应用形态；</li>
+<li>长时间运行的节点若日志不 <code>fflush</code>，崩溃会丢最后一段数据——缓冲区机制决定记录器设计。</li>
+</ul>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="第6周-C语言高级特性.html" class="navigation navigation-prev " aria-label="Previous page: 第6章 C 语言高级特性（函数/指针/字符串/内存）">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="第8周-C++基础特性入门.html" class="navigation navigation-next " aria-label="Next page: 第8章 C++ 基础特性入门（命名空间/引用/封装）">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"第7章 C 语言数据结构与文件操作","level":"3.4","depth":1,"next":{"title":"第8章 C++ 基础特性入门（命名空间/引用/封装）","level":"4.1","depth":1,"path":"第8周-C++基础特性入门.md","ref":"第8周-C++基础特性入门.md","articles":[]},"previous":{"title":"第6章 C 语言高级特性（函数/指针/字符串/内存）","level":"3.3","depth":1,"path":"第6周-C语言高级特性.md","ref":"第6周-C语言高级特性.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第7周-C语言数据结构与文件操作.md","mtime":"2026-10-16T01:25:57.811Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T01:25:58.966Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <noscript>
+        <style>
+            .honkit-cloak {
+                display: block !important;
+            }
+        </style>
+    </noscript>
+    <script>
+        // Restore sidebar state as critical path for prevent layout shift
+        function __init__getSidebarState(defaultValue){
+            var baseKey = "";
+            var key = baseKey + ":sidebar";
+            try {
+                var value = localStorage[key];
+                if (value === undefined) {
+                    return defaultValue;
+                }
+                var parsed = JSON.parse(value);
+                return parsed == null ? defaultValue : parsed;
+            } catch (e) {
+                return defaultValue;
+            }
+        }
+        function __init__restoreLastSidebarState() {
+            var isMobile = window.matchMedia("(max-width: 600px)").matches;
+            if (isMobile) {
+                // Init last state if not mobile
+                return;
+            }
+            var sidebarState = __init__getSidebarState(true);
+            var book = document.querySelector(".book");
+            // Show sidebar if it enabled
+            if (sidebarState && book) {
+                book.classList.add("without-animation", "with-summary");
+            }
+        }
+
+        try {
+            __init__restoreLastSidebarState();
+        } finally {
+            var book = document.querySelector(".book");
+            book.classList.remove("honkit-cloak");
+        }
+    </script>
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/@honkit/honkit-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

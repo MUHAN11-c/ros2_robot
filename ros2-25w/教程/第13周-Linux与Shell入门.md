@@ -38,14 +38,50 @@
 
 运行命令：`bash w13.sh zcode`（Ubuntu 24.04 / bash 实测）。
 
-## 13.4 本章小结
+## 13.4 端到端实战（实测）：日志清理脚本
+
+课程动手任务的实现：删除指定目录下 7 天前的 `.log` 文件，执行前列出待删文件并确认，参数缺失时给出用法并以非 0 码退出。
+
+```bash
+# clean_log.sh
+DIR="${1:-}"
+if [ -z "$DIR" ] || [ ! -d "$DIR" ]; then
+    echo "用法: $0 <日志目录>"
+    exit 1
+fi
+echo "将删除以下 7 天前的 .log 文件："
+find "$DIR" -mtime +7 -name "*.log" -type f
+read -r -p "确认删除? (y/N): " ans
+if [ "$ans" = "y" ]; then
+    find "$DIR" -mtime +7 -name "*.log" -type f -delete
+    echo "已删除"
+else
+    echo "已取消"
+fi
+```
+
+实测（构造新/旧两个日志文件后运行）：
+
+```text
+$ mkdir -p logs && touch -d "10 days ago" logs/old.log && echo x > logs/new.log
+$ printf "y\n" | bash clean_log.sh logs
+将删除以下 7 天前的 .log 文件：
+logs/old.log
+已删除
+$ ls logs/
+new.log
+```
+
+旧日志被清理、新日志保留，确认机制生效。
+
+## 13.5 本章小结
 
 - `source` 与 `bash` 执行的区别决定了 ROS2 环境为什么必须 `source setup.bash`；
 - 把「进入工作空间 → colcon build → source 产物」固化成脚本，用 `$?` 判失败、`set -e` 出错即停，是本周技能的直接落地；
 - SSH + `scp` + `tail -f` + `top` + `ss -tlnp` 是远程调试无显示器机器人的标准工具链；
 - 三大经典坑：`[ ]` 内侧空格、赋值两侧不能有空格、`$?` 只反映上一条命令。
 
-## 13.5 基础篇总结（第 1~13 周）
+## 13.6 基础篇总结（第 1~13 周）
 
 | 篇 | 周 | 内容 | 与 ROS2 的关系 |
 | --- | --- | --- | --- |

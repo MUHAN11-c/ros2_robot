@@ -1,0 +1,832 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <title>第16章 通信机制拓展与时间 API · HonKit</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="HonKit 6.2.2">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/@honkit/honkit-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/@honkit/honkit-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="第17周-工具应用实操.html" />
+    
+    
+    <link rel="prev" href="第15周-通信机制深度剖析.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book honkit-cloak">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    导读
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第一篇 Python 基础与视觉（第1-3周）</li>
+        
+        
+    
+        <li class="chapter " data-level="2.1" data-path="第1周-列表与元组.html">
+            
+                <a href="第1周-列表与元组.html">
+            
+                    
+                    第1章 列表与元组（Python 基础入门）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.2" data-path="第2周-Python进阶编程.html">
+            
+                <a href="第2周-Python进阶编程.html">
+            
+                    
+                    第2章 Python 进阶编程（函数/类/异常/并发）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.3" data-path="第3周-数据处理与计算机视觉.html">
+            
+                <a href="第3周-数据处理与计算机视觉.html">
+            
+                    
+                    第3章 数据处理与计算机视觉（NumPy/OpenCV）
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第二篇 C 语言核心编程（第4-7周）</li>
+        
+        
+    
+        <li class="chapter " data-level="3.1" data-path="第4周-C语言基础入门.html">
+            
+                <a href="第4周-C语言基础入门.html">
+            
+                    
+                    第4章 C 语言基础入门（编译/类型/输入输出）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2" data-path="第5周-C语言进阶编程.html">
+            
+                <a href="第5周-C语言进阶编程.html">
+            
+                    
+                    第5章 C 语言进阶编程（运算符/控制流/数组）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.3" data-path="第6周-C语言高级特性.html">
+            
+                <a href="第6周-C语言高级特性.html">
+            
+                    
+                    第6章 C 语言高级特性（函数/指针/字符串/内存）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.4" data-path="第7周-C语言数据结构与文件操作.html">
+            
+                <a href="第7周-C语言数据结构与文件操作.html">
+            
+                    
+                    第7章 C 语言数据结构与文件操作
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第三篇 C++ 高级编程（第8-12周）</li>
+        
+        
+    
+        <li class="chapter " data-level="4.1" data-path="第8周-C++基础特性入门.html">
+            
+                <a href="第8周-C++基础特性入门.html">
+            
+                    
+                    第8章 C++ 基础特性入门（命名空间/引用/封装）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.2" data-path="第9周-类与对象进阶.html">
+            
+                <a href="第9周-类与对象进阶.html">
+            
+                    
+                    第9章 类与对象进阶（构造析构/深浅拷贝/运算符重载）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.3" data-path="第10周-高级特性与编程范式.html">
+            
+                <a href="第10周-高级特性与编程范式.html">
+            
+                    
+                    第10章 高级特性与编程范式（继承多态/模板/异常/IO）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.4" data-path="第11周-STL标准模板库.html">
+            
+                <a href="第11周-STL标准模板库.html">
+            
+                    
+                    第11章 STL 标准模板库（容器选型与实践）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.5" data-path="第12周-常用算法与技术.html">
+            
+                <a href="第12周-常用算法与技术.html">
+            
+                    
+                    第12章 常用算法与技术（algorithm/chrono/lambda/线程）
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第四篇 Linux 与 Shell（第13周）</li>
+        
+        
+    
+        <li class="chapter " data-level="5.1" data-path="第13周-Linux与Shell入门.html">
+            
+                <a href="第13周-Linux与Shell入门.html">
+            
+                    
+                    第13章 Linux 与 Shell 入门（操作系统地基）
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第五篇 ROS2 核心架构解析（第14-18周）</li>
+        
+        
+    
+        <li class="chapter " data-level="6.1" data-path="第14周-ROS2概述与环境搭建.html">
+            
+                <a href="第14周-ROS2概述与环境搭建.html">
+            
+                    
+                    第14章 ROS2 概述与环境搭建
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="6.2" data-path="第15周-通信机制深度剖析.html">
+            
+                <a href="第15周-通信机制深度剖析.html">
+            
+                    
+                    第15章 通信机制深度剖析
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="6.3" data-path="第16周-通信机制拓展与时间API.html">
+            
+                <a href="第16周-通信机制拓展与时间API.html">
+            
+                    
+                    第16章 通信机制拓展与时间 API
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="6.4" data-path="第17周-工具应用实操.html">
+            
+                <a href="第17周-工具应用实操.html">
+            
+                    
+                    第17章 工具应用实操（launch 与 rosbag2）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="6.5" data-path="第18周-乌龟案例与可视化.html">
+            
+                <a href="第18周-乌龟案例与可视化.html">
+            
+                    
+                    第18章 坐标变换与机器人建模
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第六篇 Mycar 智能车实战（第19-20周）</li>
+        
+        
+    
+        <li class="chapter " data-level="7.1" data-path="第19周-Mycar开发基础实战.html">
+            
+                <a href="第19周-Mycar开发基础实战.html">
+            
+                    
+                    第19章 Mycar 自定义接口与运动控制
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="7.2" data-path="第20周-Mycar开发进阶实践.html">
+            
+                <a href="第20周-Mycar开发进阶实践.html">
+            
+                    
+                    第20章 Mycar 整车集成与多机协同
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第七篇 高效通信与组件开发（第21周）</li>
+        
+        
+    
+        <li class="chapter " data-level="8.1" data-path="第21周-高效通信与组件开发.html">
+            
+                <a href="第21周-高效通信与组件开发.html">
+            
+                    
+                    第21章 生命周期/进程内通信/组件/插件
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第八篇 机器人应用领域实训（第22-25周）</li>
+        
+        
+    
+        <li class="chapter " data-level="9.1" data-path="第22周-ROS2功能实践.html">
+            
+                <a href="第22周-ROS2功能实践.html">
+            
+                    
+                    第22章 里程计与虚拟传感器实践
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="9.2" data-path="第23周-传感器实践开发.html">
+            
+                <a href="第23周-传感器实践开发.html">
+            
+                    
+                    第23章 传感器仿真开发
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="9.3" data-path="第24周-仿真导航与SLAM.html">
+            
+                <a href="第24周-仿真导航与SLAM.html">
+            
+                    
+                    第24章 仿真导航与 SLAM
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="9.4" data-path="第25周-多功能实践开发.html">
+            
+                <a href="第25周-多功能实践开发.html">
+            
+                    
+                    第25章 多功能实践（编队与语音）
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">附录</li>
+        
+        
+    
+        <li class="chapter " data-level="10.1" data-path="深度对照报告.html">
+            
+                <a href="深度对照报告.html">
+            
+                    
+                    深度对照验证报告（视频帧 × 实测运行）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="10.2" data-path="端到端核对报告.html">
+            
+                <a href="端到端核对报告.html">
+            
+                    
+                    端到端核对验证报告（课程视频 × 本机复现）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="10.3" data-path="学习笔记附录/代码项目导览.html">
+            
+                <a href="学习笔记附录/代码项目导览.html">
+            
+                    
+                    代码项目导览（code/）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="10.4" data-path="验证矩阵.html">
+            
+                <a href="验证矩阵.html">
+            
+                    
+                    运行验证矩阵（实测 vs 视频效果）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="10.5" data-path="verify-README.html">
+            
+                <a href="verify-README.html">
+            
+                    
+                    运行验证存档（out/verify/）说明
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://github.com/honkit/honkit" target="blank" class="gitbook-link">
+            Published with HonKit
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >第16章 通信机制拓展与时间 API</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="第16章-通信机制拓展与时间-api">第16章 通信机制拓展与时间 API</h1>
+<blockquote>
+<p>本章包含两部分：ROS2 时间相关 API（Time/Duration/Rate 及运算）与<strong>期中大作业</strong>——在 turtlesim 上综合运用话题、服务、动作、参数四种机制。</p>
+<p>本章对应代码：<code>code/ws01_plumbing/src/cpp01_time</code>、<code>code/ws02_middle/src/cpp02_homework</code>、<code>py02_homework</code>。</p>
+</blockquote>
+<h2 id="161-时间相关-api">16.1 时间相关 API</h2>
+<h3 id="1611-案例以及案例分析">16.1.1 案例以及案例分析</h3>
+<p><strong>需求</strong>：演示 <code>rclcpp::Time</code>、<code>rclcpp::Duration</code>、<code>rclcpp::Rate</code> 的创建与运算（时刻加减时段、时段比较等）。</p>
+<h3 id="1612-c-实现要点">16.1.2 C++ 实现要点</h3>
+<pre><code class="lang-cpp"><span class="hljs-comment">// Time：now() 获取当前时刻；</span>
+rclcpp::Time t1 = <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">now</span>();
+<span class="hljs-comment">// Duration：两种构造方式；</span>
+rclcpp::Duration d1 = <span class="hljs-number">3</span>s;
+<span class="hljs-function">rclcpp::Duration <span class="hljs-title">d2</span><span class="hljs-params">(<span class="hljs-number">2</span>,<span class="hljs-number">0</span>)</span></span>;
+<span class="hljs-comment">// 运算；</span>
+rclcpp::Time t2 = t1 + d1;      <span class="hljs-comment">// 时刻 + 时段 = 时刻</span>
+rclcpp::Duration d3 = d1 - d2;  <span class="hljs-comment">// 时段 - 时段 = 时段</span>
+<span class="hljs-type">bool</span> flag = d1 &gt; d2;            <span class="hljs-comment">// 时段可比较</span>
+<span class="hljs-comment">// Rate：固定周期休眠；</span>
+<span class="hljs-function">rclcpp::Rate <span class="hljs-title">rate</span><span class="hljs-params">(<span class="hljs-number">1.0</span>)</span></span>;          <span class="hljs-comment">// 1Hz</span>
+rate.<span class="hljs-built_in">sleep</span>();
+</code></pre>
+<h3 id="1613-运行效果（实测）">16.1.3 运行效果（实测）</h3>
+<pre><code class="lang-bash">ros2 run cpp01_time demo01_time_api
+</code></pre>
+<pre><code class="lang-text">[INFO] [...]: 当前时刻:1792040770.29603
+[INFO] [...]: t2:1.50
+[INFO] [...]: d1 = 3.00 s, d2 = 2.00 s
+[INFO] [...]: t1 + 3s = 1792040773.29603
+[INFO] [...]: d1 - d2 = 1.00 s
+[INFO] [...]: d1 &gt; d2 ? true
+[INFO] [...]: Rate 循环 0
+</code></pre>
+<blockquote>
+<p>兼容提示：<code>rclpy</code> 中对应 <code>self.get_clock().now()</code>、<code>Duration(seconds=3)</code>、<code>Rate(self, 1.0)</code>，语义一致。</p>
+</blockquote>
+<h2 id="162-期中大作业">16.2 期中大作业</h2>
+<h3 id="1621-案例以及案例分析">16.2.1 案例以及案例分析</h3>
+<p><strong>需求</strong>：综合运用四种通信机制控制乌龟：</p>
+<table>
+<thead>
+<tr>
+<th>子任务</th>
+<th>机制</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>话题</td>
+<td>/t1/cmd_vel</td>
+<td>按参数 linear_x/angular_z 周期发布速度，控制乌龟运动</td>
+</tr>
+<tr>
+<td>服务</td>
+<td>/spawn</td>
+<td>请求生成一只新乌龟</td>
+</tr>
+<tr>
+<td>动作</td>
+<td>turtle_forward</td>
+<td>提交前进距离目标，连续反馈并驱动乌龟前进</td>
+</tr>
+<tr>
+<td>参数</td>
+<td>/turtlesim/set_parameters + /clear</td>
+<td>修改乌龟背景色并刷新生效</td>
+</tr>
+</tbody>
+</table>
+<h3 id="1622-c-实现要点">16.2.2 C++ 实现要点</h3>
+<ul>
+<li><code>homework_topic_pub.cpp</code>：参数 <code>linear_x</code>/<code>angular_z</code> → 10Hz 发布 <code>Twist</code>；</li>
+<li><code>homework_param_client.cpp</code>：远程调用 <code>/turtlesim/set_parameters</code> 修改 <code>background_r/g/b</code>，成功后再调用 <code>std_srvs/srv/Empty</code> 类型的 <code>/turtlesim/clear</code> 刷新背景。</li>
+</ul>
+<blockquote>
+<p>兼容提示：<code>/turtlesim/clear</code> 是 <strong>std_srvs/Empty</strong> 类型（初学常见错误是误用 rcl_interfaces 的 Empty）。</p>
+</blockquote>
+<h3 id="1623-运行效果（实测）">16.2.3 运行效果（实测）</h3>
+<p>先启动乌龟（<code>ros2 run turtlesim turtlesim_node</code>），再运行参数客户端：</p>
+<pre><code class="lang-text">[INFO] [...]: 期中大作业-参数服务客户端(C++)
+[INFO] [...]: 修改背景色:成功
+[INFO] [...]: 修改背景色:成功
+[INFO] [...]: 修改背景色:成功
+</code></pre>
+<p>窗口背景即时变为设定颜色；话题客户端可用 <code>ros2 topic echo /t1/cmd_vel</code> 验证：</p>
+<pre><code class="lang-text">linear:
+  x: 0.5
+  y: 0.0
+  z: 0.0
+angular:
+  x: 0.0
+  y: 0.0
+  z: 0.2
+---
+</code></pre>
+<h3 id="1624-python-实现">16.2.4 Python 实现</h3>
+<p><code>py02_homework</code> 提供四个节点：<code>homework_topic_pub</code>、<code>homework_service_client</code>（生成乌龟）、<code>homework_action_server</code>（动作名 <code>turtle_forward</code>，复用 <code>Progress</code> 接口，周期发布 <code>/t1/cmd_vel</code> 直到前进量达标）、<code>homework_param_client</code>。</p>
+<p>实测生成乌龟：</p>
+<pre><code class="lang-text">[INFO] [...]: 期中大作业-服务通信客户端(python)
+[INFO] [...]: 已生成乌龟:t1
+</code></pre>
+<p>实测动作目标（需同时 source 接口包所在工作空间 ws01）：</p>
+<pre><code class="lang-bash">ros2 action send_goal /turtle_forward base_interfaces_demo/action/Progress <span class="hljs-string">"{num: 3}"</span> --feedback
+</code></pre>
+<h2 id="163-本章小结">16.3 本章小结</h2>
+<ul>
+<li>Time/Duration/Rate 是周期任务与超时控制的基础，时刻与时段的运算法则要区分；</li>
+<li>期中大作业把四种通信机制落在同一只乌龟上，是通信篇的验收案例；</li>
+<li>远程修改 turtlesim 参数后必须调用 <code>/clear</code> 才会刷新显示。</li>
+</ul>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="第15周-通信机制深度剖析.html" class="navigation navigation-prev " aria-label="Previous page: 第15章 通信机制深度剖析">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="第17周-工具应用实操.html" class="navigation navigation-next " aria-label="Next page: 第17章 工具应用实操（launch 与 rosbag2）">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"第16章 通信机制拓展与时间 API","level":"6.3","depth":1,"next":{"title":"第17章 工具应用实操（launch 与 rosbag2）","level":"6.4","depth":1,"path":"第17周-工具应用实操.md","ref":"第17周-工具应用实操.md","articles":[]},"previous":{"title":"第15章 通信机制深度剖析","level":"6.2","depth":1,"path":"第15周-通信机制深度剖析.md","ref":"第15周-通信机制深度剖析.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第16周-通信机制拓展与时间API.md","mtime":"2026-10-16T01:25:57.811Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T01:25:58.966Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <noscript>
+        <style>
+            .honkit-cloak {
+                display: block !important;
+            }
+        </style>
+    </noscript>
+    <script>
+        // Restore sidebar state as critical path for prevent layout shift
+        function __init__getSidebarState(defaultValue){
+            var baseKey = "";
+            var key = baseKey + ":sidebar";
+            try {
+                var value = localStorage[key];
+                if (value === undefined) {
+                    return defaultValue;
+                }
+                var parsed = JSON.parse(value);
+                return parsed == null ? defaultValue : parsed;
+            } catch (e) {
+                return defaultValue;
+            }
+        }
+        function __init__restoreLastSidebarState() {
+            var isMobile = window.matchMedia("(max-width: 600px)").matches;
+            if (isMobile) {
+                // Init last state if not mobile
+                return;
+            }
+            var sidebarState = __init__getSidebarState(true);
+            var book = document.querySelector(".book");
+            // Show sidebar if it enabled
+            if (sidebarState && book) {
+                book.classList.add("without-animation", "with-summary");
+            }
+        }
+
+        try {
+            __init__restoreLastSidebarState();
+        } finally {
+            var book = document.querySelector(".book");
+            book.classList.remove("honkit-cloak");
+        }
+    </script>
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/@honkit/honkit-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
