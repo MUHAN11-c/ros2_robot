@@ -601,13 +601,130 @@
                                 
                                 <h1 id="第20章-mycar-整车集成与多机协同">第20章 Mycar 整车集成与多机协同</h1>
 <blockquote>
-<p>本章把第 19 章的驱动节点集成为<strong>整车 bringup</strong>，并实现<strong>多机器人多 tf 树</strong>与<strong>航点跟随</strong>。</p>
+<p>本章把第 19 章的驱动节点集成为<strong>整车 bringup</strong>，并实现<strong>多机器人多 tf 树</strong>与<strong>航点跟随</strong>；同时补齐多机通信隔离、launch 工程化、rosbag2 数据管理与 URDF 机器人模型等系统能力。</p>
 <p>本章对应代码：<code>code/ws03_exercise/src/my_exer07_bringup</code>、<code>my_exer08_follow</code>、<code>my_exer09_multi_tf</code>。</p>
 </blockquote>
-<h2 id="201-整车-bringup">20.1 整车 bringup</h2>
-<h3 id="2011-案例以及案例分析">20.1.1 案例以及案例分析</h3>
+<h2 id="201-概览与课时结构">20.1 概览与课时结构</h2>
+<p>本章把 Mycar 从「能跑」推进到「能交付、能协同」：先解决多机/多车并存时的<strong>通信隔离与命名规范</strong>问题，再用 launch 把整车驱动与坐标变换<strong>一键集成</strong>、用 rosbag2 做<strong>数据管理</strong>，最后深入坐标变换（TF）——实现多机器人 TF 树、车辆跟随与多车编队护航，并把 URDF 机器人模型接入 rviz2。在 25 周体系中，本章是把 ROS2 系统工程能力（隔离、编排、数据、TF、模型）在真实机器人上做完整闭环的收尾阶段；学完能独立 bringup 一台车，并具备多车协同开发的基础。</p>
+<table>
+<thead>
+<tr>
+<th>课</th>
+<th>小节</th>
+<th>时长</th>
+<th>一句话导览</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第1课 系统管理与工具应用</td>
+<td>1 节 17 个视频</td>
+<td>2h12m</td>
+<td>本地/分组通信隔离、节点与话题命名规范、rqt_graph 拓扑分析、日志与 rqt_console、rqt_plot 曲线监控</td>
+</tr>
+<tr>
+<td>第2课 launch 与数据管理实践</td>
+<td>2 节 25 个视频</td>
+<td>3h46m</td>
+<td>整车启动 launch 集成与优化（含静态 TF），launch 封装与仿真/实体两套集成，rosbag2 录制回放</td>
+</tr>
+<tr>
+<td>第3课 坐标变换、多机器人协同与模型应用实践</td>
+<td>4 节 46 个视频</td>
+<td>6h55m</td>
+<td>map/odom 概念与关系、多机器人 TF 树与实体部署、车辆跟随与多车编队护航、URDF 模型显示/修改/集成</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>全周视频 88 个，总时长约 12h54m（2h12m + 3h46m + 6h55m），难度进阶→高阶。20.5 节的输出均为本机（Jazzy）实测。</p>
+</blockquote>
+<h2 id="202-知识点梳理">20.2 知识点梳理</h2>
+<h3 id="2021-第1课-系统管理与工具应用">20.2.1 第1课 系统管理与工具应用</h3>
+<p><strong>核心概念</strong>：ROS2 默认「全网同 domain 自由发现」，真实项目必须主动做<strong>隔离（Isolation）</strong>与<strong>命名（Naming）</strong>管理，再用可视化工具观测系统。</p>
+<p><strong>要点 1：本地隔离（ROS_LOCALHOST_ONLY）</strong>。<code>export ROS_LOCALHOST_ONLY=1</code> 后节点只走 loopback，不与外界通信——用于本机调试/上课演示避免「串台」。特点：影响整机所有节点、优先级高、粒度最粗；只隔离「本机 ↔ 外界」，不隔离本机内部。</p>
+<p><strong>要点 2：分组隔离（ROS_DOMAIN_ID）</strong>。DDS 用 domain 划分「发现域」：<code>export ROS_DOMAIN_ID=0</code> 的机器只能看到同 ID 的机器。多机器人/多组实验时给每组分配不同 ID（0~232），这是<strong>多机通信与多车协同的分组基础</strong>。注意：ID 相同才互通，且两台机器 ID 冲突会互相「串台」。</p>
+<p><strong>要点 3：话题名称设置</strong>。话题名支持相对名（<code>scan</code>）、绝对名（<code>/scan</code>）与命名空间修饰（<code>camera/image_raw</code>）；通过 launch 的 <code>namespace</code> 参数或 remap（<code>--ros-args -r scan:=mycar/scan</code>）统一加前缀。规范：传感器话题带命名空间，控制话题统一 <code>/xxx/cmd_vel</code> 结构。</p>
+<p><strong>要点 4：节点名称设置</strong>。节点名可在代码构造时指定，也可用 <code>--ros-args -r __node:=my_driver</code> 覆盖；同名节点会导致旧节点被踢下线，驱动类节点建议「车型+功能」命名（如 <code>mycar_lidar_driver</code>）。</p>
+<p><strong>要点 5：节点与话题名称联合设置</strong>。多车场景的标准做法：<strong>命名空间 = 车名</strong>（<code>/robot1/...</code>、<code>/robot2/...</code>），节点名在空间内唯一，话题自动继承空间前缀；配合 <code>push_ros_namespace</code>（launch）或 <code>GroupAction</code> 成组管理。</p>
+<p><strong>要点 6：rqt_graph 三种视角</strong>。两种启动方式（独立 <code>rqt_graph</code> 或 rqt 插件面板）；节点视图查看单节点连接、多节点关系视图看清「谁发谁收」、话题筛选（按前缀/正则过滤）在大系统里快速定位问题链路。多车时配合命名空间筛选，能一眼看出两台车是否互相干扰。</p>
+<p><strong>要点 7：日志系统</strong>。rclpy <code>get_logger().info/warn/error</code>（rclcpp <code>RCLCPP_INFO/WARN/ERROR</code>），支持<strong>节流输出</strong>（throttle）避免刷屏；日志落盘到 <code>~/.ros/log/</code>，配合 <strong>rqt_console</strong> 按级别/节点/关键词过滤，是复盘偶发故障的第一手材料。调试期多打 INFO，交付期收敛到 WARN 以上并保留关键状态迁移日志。</p>
+<p><strong>要点 8：rqt_plot</strong>。把话题里的数值字段画成实时曲线（如 <code>/odom/pose/pose/position/x</code>、<code>/battery/voltage</code>），用于验证速度平滑度、里程计抖动、PID 响应等「看数字没感觉」的问题。</p>
+<h3 id="2022-第2课-launch-与数据管理实践">20.2.2 第2课 launch 与数据管理实践</h3>
+<p><strong>核心概念</strong>：launch 是机器人应用的「总装线」——把驱动、TF、参数、命名空间编排成一键启动；rosbag2 是「黑匣子」——把运行数据录下来离线复现。</p>
+<p><strong>要点 1：机器人启动 launch（bringup）</strong>。集成顺序：硬件准备与单体测试 → <strong>雷达端口映射</strong>（udev 规则绑定 <code>/dev/lidar</code>，避免 ttyUSB 编号漂移）→ 每个驱动各自写 launch（底盘、雷达、摄像头）→ 摄像头驱动优化（参数化分辨率/帧率/设备名，失败自动重启）→ 简单集成 → 优化集成（分组、参数文件、条件启动、respawn）→ 整车测试（<code>ros2 node list</code> / <code>ros2 topic hz</code> 逐项验收）。</p>
+<p><strong>要点 2：launch 中发布静态坐标变换</strong>。雷达/相机安装位姿是常量，用 <code>static_transform_publisher</code>（CLI 或 launch 节点）发布 laser→base_footprint、camera→base_link；<strong>base_footprint 与 base_link 的约定</strong>：base_footprint 在地面投影（供导航/定位使用），base_link 在车体中心，二者只差一个 z（及安装偏移），由静态 TF 连接。</p>
+<p><strong>要点 3：launch 应用与封装</strong>。四层递进：简单集成（全写在一个 launch.py）→ 仿真集成（stage_ros2 + 传感器模拟）→ 实体机器人集成（真实串口/设备参数）→ <strong>文件封装</strong>（公共部分抽 <code>IncludeLaunchDescription</code> + <code>launch_arguments</code> 传参 + <code>PythonLaunchDescriptionSource</code> 复用，仿真/实体共用一套上层 launch）。其他案例：条件启动（IfCondition）、事件处理（OnProcessExit 顺序拉起）、参数 YAML 加载。</p>
+<p><strong>要点 4：数据管理（rosbag2）</strong>。rqt bag 插件可视化录制/回放/查看信息；命令行 <code>ros2 bag record</code>（可指定话题、QoS、分卷）与 <code>ros2 bag play</code>（<code>-r</code> 倍速、<code>--loop</code>、<code>-s</code> 起始偏移、<code>--clock</code> 发布仿真时钟）。把「雷达丢帧」「里程计跳变」录下来，离线反复回放调试，不用反复跑车。</p>
+<blockquote>
+<p><strong>注意：</strong> 回放 rosbag 时若节点依赖 <code>/tf_static</code>，需包含 TF 相关话题（<code>/tf</code>、<code>/tf_static</code>）一起录制；带时间戳的算法（如 SLAM）回放时记得加 <code>--clock</code> 并把节点 <code>use_sim_time</code> 设为 true。</p>
+</blockquote>
+<h3 id="2023-第3课-坐标变换、多机器人协同与模型应用实践">20.2.3 第3课 坐标变换、多机器人协同与模型应用实践</h3>
+<p><strong>核心概念</strong>：TF2 是机器人系统的「坐标骨架」；多机器人 = 多棵 TF 树 + 命名空间隔离；URDF 是「模型骨架」，与 TF 共同构成 rviz2 中可理解的机器人表示。</p>
+<p><strong>要点 1：静态坐标变换</strong>。安装关系（雷达相对车体）不随时间变化，用静态 TF 发布一次即可（<code>static_transform_publisher x y z yaw pitch roll frame_id child_frame_id</code>）；动态变换（车体在世界中的位姿）则由里程计/定位节点持续发布。</p>
+<p><strong>要点 2：map 与 odom</strong>。四层坐标系经典结构：</p>
+<table>
+<thead>
+<tr>
+<th>变换</th>
+<th>来源</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>map→odom</td>
+<td>SLAM / AMCL</td>
+<td>可能跳变，修正累积误差（全局、绝对）</td>
+</tr>
+<tr>
+<td>odom→base_footprint</td>
+<td>底盘里程计积分</td>
+<td>平滑连续，但会漂移（局部、相对）</td>
+</tr>
+<tr>
+<td>base_footprint→base_link</td>
+<td>静态安装关系</td>
+<td>固定不变</td>
+</tr>
+<tr>
+<td>base_link→sensor</td>
+<td>静态安装关系</td>
+<td>固定不变</td>
+</tr>
+</tbody>
+</table>
+<p><strong>概念</strong>：odom 是「连续但漂移」的局部位姿，map 是「精确但会跳」的全局位姿；<strong>关系</strong>：map→odom 就是二者的修正量。导航要求 TF 树完整且时间连续，缺一环全链路瘫痪。</p>
+<p><strong>要点 3：多机器人坐标变换</strong>。多车时每台车一棵 TF 树：<code>robot1/odom → robot1/base_footprint → robot1/laser</code>。实现要点：全部 frame_id 加车名前缀、命名空间隔离话题、仿真中用不同初始位姿/不同 domain 启动多车，launch 用 <code>GroupAction + push_ros_namespace</code> 集成；实体部署时每台车独立主控板 + 独立 ROS_DOMAIN_ID（或同 domain + 命名空间），PC 侧统一查看。课程视频覆盖仿真实现 → launch 集成 → 实体机器人需求/分析 → 底盘集成 → 雷达集成 → 摄像头集成 → 部署全流程。</p>
+<p><strong>要点 4：view_frames 工具</strong>。<code>ros2 run tf2_tools view_frames</code> 生成 TF 树 PDF，用于验证父子关系、查找断链与多余发布者（两个节点发布同一变换是常见事故源）。</p>
+<p><strong>要点 5：车辆跟随</strong>。需求：后车保持与前车的固定位姿关系。实现链路：前车发布自身目标坐标系（如 <code>robot1/odom</code> 下的车身 frame，或专设 <code>follow_target</code> frame）→ 后车<strong>订阅坐标变换</strong>（tf2 监听两车 base_footprint 的相对变换）→ 计算位置/航向误差 → 输出后车 <code>/cmd_vel</code>（P 控制即可）→ 移植到实体机器人。这是「TF 当作跨车状态接口」的典型用法。</p>
+<p><strong>要点 6：多车编队护航</strong>。在仿真环境准备多车 → 每车发布目标坐标系（编队队形偏移：领航车 + 2~N 跟随车位姿）→ 跟随车订阅 TF 计算期望位姿并控制跟随，实现「护航」队形。编队核心是把<strong>队形几何</strong>编码成各车的目标 frame 偏移，控制层复用车辆跟随逻辑。</p>
+<p><strong>要点 7：机器人模型（URDF）应用</strong>。URDF（Unified Robot Description Format）用 link/joint 描述刚体树，配合 <code>robot_state_publisher</code> 把关节状态转成 TF。三步走：<strong>本地显示</strong>（<code>joint_state_publisher_gui</code> + <code>robot_state_publisher</code> + rviz2 RobotModel）→ <strong>分布式显示</strong>（模型在车上发布、rviz2 在 PC 显示，TF 经 DDS 跨机）→ <strong>修改模型</strong>（改尺寸/颜色/添加雷达与相机 link）→ <strong>集成模型</strong>（把 URDF 放进 bringup launch，与静态 TF、驱动一起启动，形成完整机器人描述）。</p>
+<h2 id="203-重点与难点">20.3 重点与难点</h2>
+<ol>
+<li><strong>隔离策略的分层选择</strong>：<code>ROS_LOCALHOST_ONLY</code>（单机封闭）→ <code>ROS_DOMAIN_ID</code>（多机分组）→ 命名空间（同域内多车/多实例）→ 话题 remap（细粒度改名）。四者常叠加使用，理解各自作用域是多机开发的第一道门槛。</li>
+<li><strong>map/odom/base 的职责划分</strong>：何时该看 odom（控制反馈）、何时必须用 map（全局定位）；map→odom 跳变对导航的影响与排查思路。</li>
+<li><strong>多机器人 TF 树设计</strong>：frame 前缀 + 命名空间 + 独立 odom 源，三者必须一致；漏改一个 frame_id 就会出现「两车抢同一坐标系」的灵异现象。</li>
+<li><strong>bringup launch 的工程化</strong>：参数外置 YAML、设备名 udev 固定、respawn 自愈、仿真/实体复用同一上层 launch——这些决定项目能否长期维护。</li>
+<li><strong>车辆跟随/编队的控制闭环</strong>：TF 查询有延迟与时戳要求（用 <code>lookup_transform</code> 的 timeout），控制频率、误差平滑、到达死区都要调；先仿真后实车，先单车后多车。</li>
+</ol>
+<h2 id="204-代码与命令实战">20.4 代码与命令实战</h2>
+<h3 id="2041-通信隔离与命名规范（bash）">20.4.1 通信隔离与命名规范（bash）</h3>
+<pre><code class="lang-bash"><span class="hljs-comment"># 车载板（robot1）：命名空间=车名，domain 分组</span>
+<span class="hljs-built_in">export</span> ROS_DOMAIN_ID=1
+<span class="hljs-built_in">export</span> ROS_NAMESPACE=robot1
+<span class="hljs-built_in">source</span> /opt/ros/humble/setup.bash &amp;&amp; <span class="hljs-built_in">source</span> ~/mycar_ws/install/setup.bash
+ros2 run mycar_bringup lidar_driver --ros-args -r __node:=lidar_driver -r scan:=scan
+
+<span class="hljs-comment"># PC（调试终端）：只做本机调试时开启本地隔离，跨机调试务必取消</span>
+<span class="hljs-built_in">export</span> ROS_LOCALHOST_ONLY=1   <span class="hljs-comment"># 1=禁止跨机；调试多机时改为 0 或 unset</span>
+
+<span class="hljs-comment"># 验证隔离是否生效</span>
+ros2 node list                 <span class="hljs-comment"># 只应看到本组节点</span>
+ros2 topic list                <span class="hljs-comment"># 话题应带 /robot1/ 前缀</span>
+</code></pre>
+<h3 id="2042-整车-bringup-launch">20.4.2 整车 bringup launch</h3>
 <p><strong>需求</strong>：一条命令启动小车的全部底层节点——底盘驱动（base_driver）、雷达驱动（lidar_driver）、机器人模型发布（robot_state_publisher + mycar.urdf.xacro）、参数加载（mycar.yaml）。</p>
-<h3 id="2012-实现">20.1.2 实现</h3>
 <p><code>car_bringup_launch.py</code> 结构：</p>
 <pre><code class="lang-python">robot_description = Command([<span class="hljs-string">"xacro "</span>, model_path])   <span class="hljs-comment"># 加载 xacro 模型</span>
 Node(package=<span class="hljs-string">"robot_state_publisher"</span>, executable=<span class="hljs-string">"robot_state_publisher"</span>,
@@ -623,23 +740,171 @@ Node(package=<span class="hljs-string">"my_exer07_bringup"</span>, executable=<s
 </code></pre>
 <p>直接写 <code>('share/' + package_name, ['model/mycar.urdf.xacro'])</code> 会平铺到 share 根目录，导致 xacro 找不到文件。</p>
 </blockquote>
-<h3 id="2013-运行效果（实测）">20.1.3 运行效果（实测）</h3>
+<p>launch 工程化模式清单：<code>DeclareLaunchArgument</code> + <code>LaunchConfiguration</code> 参数化（如 <code>use_sim</code>、<code>namespace</code>）；<code>GroupAction</code> + <code>PushRosNamespace</code> 一组节点统一命名空间；<code>IncludeLaunchDescription</code> + <code>PythonLaunchDescriptionSource</code> 复用子 launch 并传 <code>launch_arguments</code>；<code>IfCondition</code>/<code>UnlessCondition</code> 切换仿真与实体节点；<code>respawn=True</code> + <code>respawn_delay</code> 自愈重启；<code>parameters=[yaml]</code> 外置参数；<code>static_transform_publisher</code> 节点发布安装位姿（laser→base_footprint、base_footprint→base_link）。</p>
+<h3 id="2043-车辆跟随控制器（rclpy）">20.4.3 车辆跟随控制器（rclpy）</h3>
+<p>后车订阅领航车与本车的 TF，P 控制保持跟随距离——<code>mycar_formation/follow_controller.py</code> 模式：</p>
+<pre><code class="lang-python"><span class="hljs-comment">#!/usr/bin/env python3</span>
+<span class="hljs-string">"""后车订阅 robot1（领航车）与 robot2（本车）的 TF，P 控制保持跟随距离。"""</span>
+<span class="hljs-keyword">import</span> math
+<span class="hljs-keyword">import</span> rclpy
+<span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
+<span class="hljs-keyword">from</span> geometry_msgs.msg <span class="hljs-keyword">import</span> Twist
+<span class="hljs-keyword">from</span> tf2_ros <span class="hljs-keyword">import</span> Buffer, TransformListener, LookupException, ConnectivityException, ExtrapolationException
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">FollowController</span>(<span class="hljs-title class_ inherited__">Node</span>):
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">'follow_controller'</span>)
+        <span class="hljs-variable language_">self</span>.declare_parameter(<span class="hljs-string">'follow_distance'</span>, <span class="hljs-number">1.0</span>)   <span class="hljs-comment"># 期望跟车距离（米）</span>
+        <span class="hljs-variable language_">self</span>.declare_parameter(<span class="hljs-string">'kp_linear'</span>, <span class="hljs-number">0.6</span>)
+        <span class="hljs-variable language_">self</span>.declare_parameter(<span class="hljs-string">'kp_angular'</span>, <span class="hljs-number">1.2</span>)
+        <span class="hljs-variable language_">self</span>.declare_parameter(<span class="hljs-string">'leader_frame'</span>, <span class="hljs-string">'robot1/base_footprint'</span>)
+        <span class="hljs-variable language_">self</span>.declare_parameter(<span class="hljs-string">'self_frame'</span>, <span class="hljs-string">'robot2/base_footprint'</span>)
+        <span class="hljs-variable language_">self</span>.tf_buffer = Buffer()
+        <span class="hljs-variable language_">self</span>.tf_listener = TransformListener(<span class="hljs-variable language_">self</span>.tf_buffer, <span class="hljs-variable language_">self</span>)
+        <span class="hljs-variable language_">self</span>.cmd_pub = <span class="hljs-variable language_">self</span>.create_publisher(Twist, <span class="hljs-string">'/robot2/cmd_vel'</span>, <span class="hljs-number">10</span>)
+        <span class="hljs-variable language_">self</span>.create_timer(<span class="hljs-number">0.05</span>, <span class="hljs-variable language_">self</span>.on_timer)  <span class="hljs-comment"># 20 Hz 控制</span>
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">on_timer</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-keyword">try</span>:
+            t = <span class="hljs-variable language_">self</span>.tf_buffer.lookup_transform(
+                <span class="hljs-variable language_">self</span>.get_parameter(<span class="hljs-string">'self_frame'</span>).value,
+                <span class="hljs-variable language_">self</span>.get_parameter(<span class="hljs-string">'leader_frame'</span>).value,
+                rclpy.time.Time())  <span class="hljs-comment"># 最新可用变换</span>
+        <span class="hljs-keyword">except</span> (LookupException, ConnectivityException, ExtrapolationException):
+            <span class="hljs-keyword">return</span>
+        dx = t.transform.translation.x
+        dy = t.transform.translation.y
+        dist = math.hypot(dx, dy)
+        heading = math.atan2(dy, dx)          <span class="hljs-comment"># 领航车在本车坐标系中的方位</span>
+        err = dist - <span class="hljs-variable language_">self</span>.get_parameter(<span class="hljs-string">'follow_distance'</span>).value
+
+        cmd = Twist()
+        cmd.linear.x = <span class="hljs-built_in">max</span>(-<span class="hljs-number">0.5</span>, <span class="hljs-built_in">min</span>(<span class="hljs-number">0.5</span>, <span class="hljs-variable language_">self</span>.get_parameter(<span class="hljs-string">'kp_linear'</span>).value * err))
+        cmd.angular.z = <span class="hljs-built_in">max</span>(-<span class="hljs-number">1.0</span>, <span class="hljs-built_in">min</span>(<span class="hljs-number">1.0</span>, <span class="hljs-variable language_">self</span>.get_parameter(<span class="hljs-string">'kp_angular'</span>).value * heading))
+        <span class="hljs-keyword">if</span> <span class="hljs-built_in">abs</span>(err) &lt; <span class="hljs-number">0.05</span> <span class="hljs-keyword">and</span> <span class="hljs-built_in">abs</span>(heading) &lt; <span class="hljs-number">0.05</span>:   <span class="hljs-comment"># 到位死区：避免抖动</span>
+            cmd = Twist()
+        <span class="hljs-variable language_">self</span>.cmd_pub.publish(cmd)
+        <span class="hljs-variable language_">self</span>.get_logger().info(
+            <span class="hljs-string">f'dist=<span class="hljs-subst">{dist:<span class="hljs-number">.2</span>f}</span> heading=<span class="hljs-subst">{heading:<span class="hljs-number">.2</span>f}</span>'</span>, throttle_duration_sec=<span class="hljs-number">1.0</span>)
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():
+    rclpy.init()
+    rclpy.spin(FollowController())
+
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:
+    main()
+</code></pre>
+<h3 id="2044-urdf-模型片段与显示">20.4.4 URDF 模型片段与显示</h3>
+<p><code>mycar_description/urdf/mycar.urdf.xacro</code>（link/joint 描述 + 雷达/相机安装位姿）：</p>
+<pre><code class="lang-xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">"1.0"</span>?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">robot</span> <span class="hljs-attr">xmlns:xacro</span>=<span class="hljs-string">"http://www.ros.org/wiki/xacro"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"mycar"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"base_footprint"</span>/&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-name">joint</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"base_joint"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"fixed"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">parent</span> <span class="hljs-attr">link</span>=<span class="hljs-string">"base_footprint"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">child</span> <span class="hljs-attr">link</span>=<span class="hljs-string">"base_link"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">origin</span> <span class="hljs-attr">xyz</span>=<span class="hljs-string">"0 0 0.10"</span> <span class="hljs-attr">rpy</span>=<span class="hljs-string">"0 0 0"</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">joint</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"base_link"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">visual</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">geometry</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">box</span> <span class="hljs-attr">size</span>=<span class="hljs-string">"0.40 0.30 0.15"</span>/&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">geometry</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">material</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"blue"</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">color</span> <span class="hljs-attr">rgba</span>=<span class="hljs-string">"0.1 0.3 0.8 1.0"</span>/&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">material</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">visual</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">collision</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">geometry</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">box</span> <span class="hljs-attr">size</span>=<span class="hljs-string">"0.40 0.30 0.15"</span>/&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">geometry</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">collision</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">link</span>&gt;</span>
+
+  <span class="hljs-comment">&lt;!-- 雷达：相对 base_link 的安装位姿 --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">joint</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"laser_joint"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"fixed"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">parent</span> <span class="hljs-attr">link</span>=<span class="hljs-string">"base_link"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">child</span> <span class="hljs-attr">link</span>=<span class="hljs-string">"laser_link"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">origin</span> <span class="hljs-attr">xyz</span>=<span class="hljs-string">"0.10 0 0.15"</span> <span class="hljs-attr">rpy</span>=<span class="hljs-string">"0 0 0"</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">joint</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"laser_link"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">visual</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">geometry</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">cylinder</span> <span class="hljs-attr">radius</span>=<span class="hljs-string">"0.035"</span> <span class="hljs-attr">length</span>=<span class="hljs-string">"0.04"</span>/&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">geometry</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">visual</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">link</span>&gt;</span>
+
+  <span class="hljs-comment">&lt;!-- 摄像头 --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">joint</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"camera_joint"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"fixed"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">parent</span> <span class="hljs-attr">link</span>=<span class="hljs-string">"base_link"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">child</span> <span class="hljs-attr">link</span>=<span class="hljs-string">"camera_link"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">origin</span> <span class="hljs-attr">xyz</span>=<span class="hljs-string">"0.20 0 0.12"</span> <span class="hljs-attr">rpy</span>=<span class="hljs-string">"0 0 0"</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">joint</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"camera_link"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">visual</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">geometry</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">box</span> <span class="hljs-attr">size</span>=<span class="hljs-string">"0.03 0.06 0.03"</span>/&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">geometry</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">visual</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">link</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">robot</span>&gt;</span>
+</code></pre>
+<pre><code class="lang-bash"><span class="hljs-comment"># 本地显示机器人模型：joint_state_publisher_gui + robot_state_publisher + rviz2</span>
+ros2 launch mycar_description display.launch.py
+<span class="hljs-comment"># 分布式显示：模型与 robot_state_publisher 跑在车上，PC 只开 rviz2 并连接同一 ROS_DOMAIN_ID</span>
+ros2 run tf2_ros tf2_echo base_link laser_link     <span class="hljs-comment"># 验证模型 TF</span>
+</code></pre>
+<h3 id="2045-多机器人集成与数据管理命令">20.4.5 多机器人集成与数据管理命令</h3>
+<pre><code class="lang-bash"><span class="hljs-comment"># 多车编队仿真：两台车、两棵 TF 树、同一 domain 不同命名空间</span>
+ros2 launch mycar_formation multi_robot.launch.py use_sim:=<span class="hljs-literal">true</span> robot_count:=2
+
+<span class="hljs-comment"># TF 树检查：确认 robot1/robot2 各自成树、无交叉发布</span>
+ros2 run tf2_tools view_frames          <span class="hljs-comment"># 生成 frames.pdf，检查断链与重复发布者</span>
+
+<span class="hljs-comment"># rosbag2 录制回放：录编队数据用于离线调参</span>
+ros2 bag record -a -o mycar_run1        <span class="hljs-comment"># -a 录全部话题；建议实战改为指定话题集</span>
+ros2 bag record /robot1/odom /robot2/odom /tf /tf_static -o odom_debug
+ros2 bag play mycar_run1 --clock -r 0.5 <span class="hljs-comment"># 0.5 倍速回放并发布 /clock</span>
+ros2 bag info mycar_run1                <span class="hljs-comment"># 查看话题清单、消息数、时长</span>
+
+<span class="hljs-comment"># rqt 系列：拓扑/曲线/日志三视角</span>
+ros2 run rqt_graph rqt_graph            <span class="hljs-comment"># 多节点关系 + 话题筛选</span>
+ros2 run rqt_plot rqt_plot /robot1/odom/pose/pose/position/x
+ros2 run rqt_console rqt_console        <span class="hljs-comment"># 过滤日志级别与节点</span>
+</code></pre>
+<h3 id="2046-rclcpp-对照：代码方式发布静态变换">20.4.6 rclcpp 对照：代码方式发布静态变换</h3>
+<pre><code class="lang-cpp"><span class="hljs-comment">// 代码方式发布 base_link -&gt; camera_link 静态变换（等价 static_transform_publisher）</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;memory&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"rclcpp/rclcpp.hpp"</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"tf2_ros/static_transform_broadcaster.h"</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"geometry_msgs/msg/transform_stamped.hpp"</span></span>
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> **argv)</span> </span>{
+  rclcpp::<span class="hljs-built_in">init</span>(argc, argv);
+  <span class="hljs-keyword">auto</span> node = rclcpp::Node::<span class="hljs-built_in">make_shared</span>(<span class="hljs-string">"camera_static_tf"</span>);
+  <span class="hljs-keyword">auto</span> broadcaster = std::<span class="hljs-built_in">make_shared</span>&lt;tf2_ros::StaticTransformBroadcaster&gt;(node);
+
+  geometry_msgs::msg::TransformStamped tf;
+  tf.header.stamp = node-&gt;<span class="hljs-built_in">now</span>();
+  tf.header.frame_id = <span class="hljs-string">"base_link"</span>;
+  tf.child_frame_id = <span class="hljs-string">"camera_link"</span>;
+  tf.transform.translation.x = <span class="hljs-number">0.20</span>;
+  tf.transform.translation.z = <span class="hljs-number">0.12</span>;
+  tf.transform.rotation.w = <span class="hljs-number">1.0</span>;
+  broadcaster-&gt;<span class="hljs-built_in">sendTransform</span>(tf);
+
+  rclcpp::<span class="hljs-built_in">spin</span>(node);
+  rclcpp::<span class="hljs-built_in">shutdown</span>();
+  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<h2 id="205-运行效果（实测）">20.5 运行效果（实测）</h2>
+<h3 id="2051-整车-bringup（实测）">20.5.1 整车 bringup（实测）</h3>
 <pre><code class="lang-bash">ros2 launch my_exer07_bringup car_bringup_launch.py
 </code></pre>
 <p>本机（Jazzy）实测：launch 正常拉起 robot_state_publisher / base_driver / lidar_driver；由于 base_driver、lidar_driver 为<strong>硬件占位实现</strong>（真车需要串口/网口雷达），且整车还需要 <code>usb_cam</code> 等传感器包，在无硬件环境会报 <code>package 'usb_cam' not found</code>——属预期现象，实车/仿真环境按课程视频效果运行。</p>
-<h2 id="202-多机器人多-tf-树">20.2 多机器人多 tf 树</h2>
-<h3 id="2021-案例以及案例分析">20.2.1 案例以及案例分析</h3>
+<h3 id="2052-多机器人多-tf-树（实测）">20.5.2 多机器人多 tf 树（实测）</h3>
 <p><strong>需求</strong>：同一颗 tf 树上挂载两台机器人（robot1/robot2），各自拥有独立的 odom 坐标系，再统一挂到 map 下：</p>
 <pre><code>map ── robot1_odom ── robot1_base
    └── robot2_odom ── robot2_base
-</code></pre><h3 id="2022-实现">20.2.2 实现</h3>
-<p><code>multi_tf_launch.py</code> 用两个 <code>static_transform_publisher</code> 分别发布 <code>map→robot1_odom</code>、<code>map→robot2_odom</code>：</p>
+</code></pre><p><code>multi_tf_launch.py</code> 用两个 <code>static_transform_publisher</code> 分别发布 <code>map→robot1_odom</code>、<code>map→robot2_odom</code>：</p>
 <pre><code class="lang-python">Node(package=<span class="hljs-string">"tf2_ros"</span>, executable=<span class="hljs-string">"static_transform_publisher"</span>,
      arguments=[<span class="hljs-string">"--x"</span>,<span class="hljs-string">"0"</span>,<span class="hljs-string">"--y"</span>,<span class="hljs-string">"0"</span>,<span class="hljs-string">"--z"</span>,<span class="hljs-string">"0"</span>,<span class="hljs-string">"--frame-id"</span>,<span class="hljs-string">"map"</span>,<span class="hljs-string">"--child-frame-id"</span>,<span class="hljs-string">"robot1_odom"</span>]),
 Node(package=<span class="hljs-string">"tf2_ros"</span>, executable=<span class="hljs-string">"static_transform_publisher"</span>,
      arguments=[<span class="hljs-string">"--x"</span>,<span class="hljs-string">"2"</span>,<span class="hljs-string">"--y"</span>,<span class="hljs-string">"0"</span>,<span class="hljs-string">"--z"</span>,<span class="hljs-string">"0"</span>,<span class="hljs-string">"--frame-id"</span>,<span class="hljs-string">"map"</span>,<span class="hljs-string">"--child-frame-id"</span>,<span class="hljs-string">"robot2_odom"</span>]),
 </code></pre>
-<h3 id="2023-运行效果（实测）">20.2.3 运行效果（实测）</h3>
 <pre><code class="lang-bash">ros2 launch my_exer09_multi_tf multi_tf_launch.py
 </code></pre>
 <pre><code class="lang-text">[INFO] [static_transform_publisher-1]: process started with pid [429415]
@@ -650,21 +915,47 @@ Node(package=<span class="hljs-string">"tf2_ros"</span>, executable=<span class=
     from 'map' to 'robot2_odom'
 </code></pre>
 <p>rviz2 中即可同时显示两台机器人的 tf 树。</p>
-<h2 id="203-航点跟随">20.3 航点跟随</h2>
-<h3 id="2031-案例以及案例分析">20.3.1 案例以及案例分析</h3>
+<h3 id="2053-航点跟随（实测）">20.5.3 航点跟随（实测）</h3>
 <p><strong>需求</strong>：目标位姿广播方（goal_broadcaster）按 <code>data/waypoints.csv</code> 中的航点序列循环发布目标 tf；跟随控制器（follow_controller）监听 <code>map→follow_goal</code> 变换并输出控制量，实现小车按航点巡航。</p>
-<h3 id="2032-运行效果（实测）">20.3.2 运行效果（实测）</h3>
 <pre><code class="lang-bash">ros2 launch my_exer08_follow follow_launch.py
 </code></pre>
 <pre><code class="lang-text">[INFO] [goal_broadcaster-1]: process started with pid [437527]
 [INFO] [follow_controller-2]: process started with pid [437528]
 </code></pre>
 <p>两个节点启动后按 1Hz 轮播航点、计算控制量；接入实车 <code>/cmd_vel</code> 即可巡航。</p>
-<h2 id="204-本章小结">20.4 本章小结</h2>
+<h2 id="206-与-ros2--机器人开发的关联">20.6 与 ROS2 / 机器人开发的关联</h2>
+<ol>
+<li><strong>多机通信与 DDS domain（ROS_DOMAIN_ID）</strong>：同一 domain 内自动发现、跨 domain 完全隔离。多机器人、多组实验、实车与仿真并存时，靠 domain 分组 + 命名空间 + <code>ROS_LOCALHOST_ONLY</code> 三层手段管理通信边界，这是 ROS2 分布式系统设计的必修课。</li>
+<li><strong>硬件节点抽象的系统化落地</strong>：把「底盘/雷达/摄像头 = 标准节点」的抽象写进 bringup launch：设备参数外置、udev 固定端口、respawn 自愈、仿真/实体条件切换。任何新传感器（IMU、深度相机）都按同一模板接入。</li>
+<li><strong>cmd_vel 速度控制的闭环升级</strong>：车辆跟随/编队把 TF 误差直接映射为 <code>/cmd_vel</code>，复用了第 19 周的速度控制接口与里程计反馈——同一话题接口，从「键盘遥控」升级为「多车协同控制」。</li>
+<li><strong>里程计话题与 TF 树的分工</strong>：<code>/odom</code> 提供速度与局部位姿，TF 提供全链路坐标关系；导航（map→odom→base_link→sensor）、SLAM、多车协同全部依赖这棵 TF 树的完整与连续。</li>
+<li><strong>机器人模型 URDF 应用</strong>：URDF + robot_state_publisher 是 rviz2、导航代价地图（footprint）、仿真（Gazebo/stage）共享的机器人描述；模型即「数字孪生骨架」，改一个安装位姿，全系统坐标自动一致。</li>
+<li><strong>数据驱动调试（rosbag2）</strong>：录包-回放-离线复现是机器人领域的标准排障流程，也是后续做算法回归测试、数据集采集的基础工具。</li>
+</ol>
+<h2 id="207-自测与练习">20.7 自测与练习</h2>
+<ol>
+<li><strong>概念题</strong>：<code>ROS_LOCALHOST_ONLY=1</code> 与 <code>ROS_DOMAIN_ID=5</code> 各自隔离了什么？两台机器人想既互通又与其他实验互不干扰，应如何组合配置？</li>
+<li><strong>动手任务</strong>：写一个 <code>robot.launch.py</code>，集成底盘、雷达、摄像头与三个静态 TF（laser、camera、base_footprint→base_link），支持 <code>use_sim</code> 参数切换仿真/实体。验收标准：一条命令启动后 <code>ros2 run tf2_tools view_frames</code> 显示完整 TF 树、<code>ros2 topic hz</code> 中 <code>/scan</code> <code>/odom</code> <code>/image_raw</code> 均有稳定频率。</li>
+<li><strong>动手任务</strong>：实现双车跟随仿真：robot1 用 <code>ros2 topic pub</code> 或键盘遥控做领航，robot2 用 20.4.3 的控制器保持 1 米距离。验收标准：robot1 转弯时 robot2 稳定跟随，误差在 0.2 米内波动且不发散。</li>
+</ol>
+<blockquote>
+<p>参考答案要点：1) <code>ROS_LOCALHOST_ONLY</code> 限制只走本机 loopback（与外界完全断开）；<code>ROS_DOMAIN_ID</code> 划分 DDS 发现域（同 ID 才互通）。组合：两车设相同 <code>ROS_DOMAIN_ID</code> 保持互通、各自 <code>ROS_NAMESPACE=robot1/robot2</code> 隔离话题节点、实验环境用不同于 0 的 domain 避免与其他组串台。2) 参数外置 + GroupAction 分组 + respawn；验收看 TF 树与话题频率。3) 用 TF lookup 取相对位姿做 P 控制 + 到位死区；先 rviz2 观察队形，再调 kp 与控制频率。</p>
+</blockquote>
+<h2 id="208-常见问题（faq）">20.8 常见问题（FAQ）</h2>
+<ul>
+<li><strong>Q：两台机器设了不同 <code>ROS_DOMAIN_ID</code> 还是能看到对方话题？</strong> A：检查是否残留桥接工具（如 ros1<em>bridge/zenoh bridge）、是否实际读到了旧环境变量（`env | grep ROS</em>` 确认），以及是否在同一台机器上开多终端时部分终端未重新 export。</li>
+<li><strong>Q：rviz2 里机器人模型显示正常，但雷达数据对不上模型位置？</strong> A：模型 link（URDF 里的 laser_link）与雷达消息 <code>frame_id</code>（如 <code>laser</code>）不一致，或静态 TF 的安装位姿与 URDF 数值不一致。统一 frame 命名，并让 URDF 的 joint origin 与静态 TF 参数保持同一份数据（推荐只由 URDF + robot_state_publisher 发布，不再手写静态 TF）。</li>
+<li><strong>Q：多车时 TF 报错「extrapolation into the past/future」？</strong> A：多机时钟不同步。车载板启用 NTP/chrony 对时（<code>sudo timedatectl set-ntp true</code>），或控制端查询 TF 时使用 <code>lookup_transform(..., timeout)</code> 等待变换就绪，并统一使用最新变换而非指定旧时刻。</li>
+<li><strong>Q：<code>ros2 bag play</code> 回放时 SLAM/导航不工作？</strong> A：未发布 <code>/clock</code> 或节点没开 <code>use_sim_time</code>。回放加 <code>--clock</code>，所有消费时间的节点设 <code>use_sim_time: true</code>（可在 launch 里统一设置）。</li>
+<li><strong>Q：rqt_graph 打开后节点图很大很乱怎么办？</strong> A：用话题筛选按命名空间过滤（如 <code>robot1</code>），或切换节点/话题视图；平时保持「一车一命名空间」的规范，图自然清晰。</li>
+<li><strong>Q：launch 集成后摄像头节点反复重启？</strong> A：设备名 <code>/dev/video0</code> 被占用或 USB 带宽不足。用 udev 固定设备名、降低分辨率/帧率，或把摄像头与雷达分到不同 USB 控制器；<code>respawn_delay</code> 给足间隔避免疯狂重启。</li>
+</ul>
+<h2 id="209-本章小结">20.9 本章小结</h2>
 <ul>
 <li>bringup 的意义是「一条命令拉起整车」，launch + yaml + xacro 是标准三件套；</li>
 <li>多机器人共处一个系统时，tf 树的<strong>根坐标系隔离</strong>（map 下多 odom）是关键；</li>
-<li>航点跟随 = 目标广播（数据驱动）+ 变换监听（控制驱动）的典型组合。</li>
+<li>航点跟随 = 目标广播（数据驱动）+ 变换监听（控制驱动）的典型组合；</li>
+<li>隔离（domain/命名空间）+ 编排（launch）+ 数据（rosbag2）+ 模型（URDF/TF），构成一台车「可交付」的全部工程底座。</li>
 </ul>
 
                                 
@@ -709,7 +1000,7 @@ Node(package=<span class="hljs-string">"tf2_ros"</span>, executable=<span class=
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第20章 Mycar 整车集成与多机协同","level":"7.2","depth":1,"next":{"title":"第21章 生命周期/进程内通信/组件/插件","level":"8.1","depth":1,"path":"第21周-高效通信与组件开发.md","ref":"第21周-高效通信与组件开发.md","articles":[]},"previous":{"title":"第19章 Mycar 自定义接口与运动控制","level":"7.1","depth":1,"path":"第19周-Mycar开发基础实战.md","ref":"第19周-Mycar开发基础实战.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第20周-Mycar开发进阶实践.md","mtime":"2026-10-16T02:43:09.753Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T02:43:11.108Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第20章 Mycar 整车集成与多机协同","level":"7.2","depth":1,"next":{"title":"第21章 生命周期/进程内通信/组件/插件","level":"8.1","depth":1,"path":"第21周-高效通信与组件开发.md","ref":"第21周-高效通信与组件开发.md","articles":[]},"previous":{"title":"第19章 Mycar 自定义接口与运动控制","level":"7.1","depth":1,"path":"第19周-Mycar开发基础实战.md","ref":"第19周-Mycar开发基础实战.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第20周-Mycar开发进阶实践.md","mtime":"2026-10-16T03:26:51.710Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T03:26:53.986Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

@@ -603,30 +603,287 @@
 <blockquote>
 <p>本章对应课程第 12 周：<code>&lt;algorithm&gt;</code> 算法族与仿函数/谓词、<code>&lt;chrono&gt;</code> 时间体系、<code>bind</code>/lambda、智能指针、CSV/多线程/状态机——这些技术在 ROS2 中无处不在。</p>
 </blockquote>
-<h2 id="121-案例以及案例分析">12.1 案例以及案例分析</h2>
-<p><strong>需求</strong>：用 <code>steady_clock</code> 测量耗时；用 lambda 捕获配置；多线程并发输出用互斥锁保护——分别对应 <code>rclcpp::Rate</code>、订阅回调绑定、多线程 executor 的底层形态。</p>
-<h2 id="122-知识点与实现">12.2 知识点与实现</h2>
-<h3 id="1221-算法族（algorithmnumeric）">12.2.1 算法族（<code>&lt;algorithm&gt;</code>/<code>&lt;numeric&gt;</code>）</h3>
+<h2 id="121-本周概览与课时结构">12.1 本周概览与课时结构</h2>
+<p>本周收尾 C++ 阶段，两大板块：一是 <code>&lt;algorithm&gt;</code> 与函数对象体系——仿函数、谓词、适配器、查找/排序/集合算法，让数据处理从「手写 for 循环」升级为「声明式一行算法」；二是工程实用技术——<code>&lt;chrono&gt;</code> 时间处理、<code>std::bind</code>/lambda、智能指针、CSV/XML/YAML 数据格式、多线程与有限状态机。这些技术在 ROS2 中无处不在：<code>rclcpp::Rate</code>、<code>tf2_ros::Buffer</code> 的时间戳、订阅回调绑定、参数 YAML、多线程 executor 全部落在本周知识点上。</p>
+<table>
+<thead>
+<tr>
+<th>课</th>
+<th>小节</th>
+<th>时长</th>
+<th>一句话导览</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第1课 C++ 常用算法原理与实践</td>
+<td>26 节</td>
+<td>约 3h30m</td>
+<td>仿函数/谓词/适配器 + 查找、排序、集合、算术生成算法全家桶</td>
+</tr>
+<tr>
+<td>第2课 时间处理方法详解与 C++ 技术补充</td>
+<td>2 组 21 节</td>
+<td>约 3h07m</td>
+<td>chrono 时间体系、bind/lambda、智能指针、CSV/XML/YAML、多线程、状态机</td>
+</tr>
+</tbody>
+</table>
+<h2 id="122-知识点梳理">12.2 知识点梳理</h2>
+<h3 id="1221-第1课：c-常用算法原理与实践">12.2.1 第1课：C++ 常用算法原理与实践</h3>
 <ul>
-<li>谓词定制行为：<code>count_if/find_if/sort/remove_if</code> + 仿函数或 lambda；</li>
-<li>内建函数对象：<code>std::greater&lt;&gt;{}</code> 降序；<code>std::not_fn</code> 取反（<code>not1/not2</code> 已弃用）；</li>
-<li>常用算法：<code>transform</code>（映射）、<code>accumulate</code>（折叠求和）、<code>copy_if + back_inserter</code>（过滤）、<code>binary_search/lower_bound</code>（有序二分）、<code>set_intersection</code>（集合运算，<strong>要求输入有序</strong>）、<code>std::shuffle + mt19937</code>（随机采样）；</li>
-<li><code>for_each</code> 返回仿函数副本，可携带累计状态。</li>
+<li><strong>核心概念</strong>：函数对象（仿函数，functor）= 重载了 <code>operator()</code> 的类对象；谓词（predicate）= 返回 <code>bool</code> 的仿函数/函数，是一元（一参）或二元（两参）判定条件。算法 + 仿函数 = 可复用的行为参数。</li>
+<li><strong>一元谓词与二元谓词</strong>：<code>find_if(v.begin(), v.end(), IsPositive{})</code>（一元）、<code>sort(v.begin(), v.end(), Less{})</code>（二元）。谓词让 <code>find_if/count_if/remove_if/sort</code> 的行为可定制。</li>
+<li><strong>内建函数对象</strong>：<code>&lt;functional&gt;</code> 提供 <code>std::plus&lt;T&gt;/minus&lt;T&gt;/multiplies&lt;T&gt;/equal_to&lt;T&gt;/less&lt;T&gt;/greater&lt;T&gt;</code> 等，可直接当谓词用：<code>sort(v.begin(), v.end(), std::greater&lt;int&gt;())</code> 降序。</li>
+<li><strong>函数对象适配器与函数适配器</strong>：C++11 前有 <code>bind1st/bind2nd/mem_fun</code> 等适配器（已弃用）；现代 C++ 用 <code>std::bind</code> 与 lambda 代替。理解适配器有助于读懂遗留代码。</li>
+<li><strong>取反匹配器（not1/取反谓词）</strong>：<code>not1</code> 取反一元谓词、<code>not2</code> 取反二元谓词（C++17 弃用）；现代写法是 <code>std::not_fn(pred)</code> 或 lambda <code>[](const T&amp; x){ return !pred(x); }</code>。</li>
+<li><strong>二元取反</strong>：同上，用于 <code>sort</code> 自定义比较器取反得到降序；优先直接传 <code>std::greater&lt;&gt;{}</code>。</li>
+<li><strong>成员函数匹配器（mem_fn）</strong>：<code>std::mem_fn(&amp;Robot::start)</code> 把成员函数变成可调用对象，配合 <code>for_each</code> 批量调用：<code>for_each(v.begin(), v.end(), std::mem_fn(&amp;Robot::start));</code>。</li>
+<li><strong>for_each 的返回值</strong>：<code>for_each</code> 返回它所使用的仿函数<strong>副本</strong>（F），可携带累计状态：累加器、计数器都可从返回值取出。</li>
+<li><strong>遍历和绑定（bind）</strong>：<code>std::bind</code> 固定函数部分参数生成新可调用对象，<code>std::placeholders::_1/_2</code> 表示占位参数；常用于把「两参回调」适配成「一参回调」。</li>
+<li><strong>transform 搬运</strong>：<code>transform(first, last, out, op)</code> 把输入区间映射到输出区间（如米→弧度、摄氏→华氏）；一元/二元两版本。</li>
+<li><strong>find 与 find_if</strong>：<code>find</code> 按值查找、<code>find_if</code> 按谓词查找，返回迭代器（找不到返回 <code>end()</code>）；O(n) 线性查找，有序容器用 <code>binary_search</code>。</li>
+<li><strong>adjacent_find</strong>：查找相邻重复元素（<code>adjacent_find(v.begin(), v.end())</code>），常用于去重前检测、轨迹连续点异常检测。</li>
+<li><strong>二分查找</strong>：有序序列上 <code>binary_search</code>（返回 bool）、<code>lower_bound</code>（首个 ≥ 值）、<code>upper_bound</code>（首个 &gt; 值）、<code>equal_range</code>（相等区间）；O(log n)。</li>
+<li><strong>count/count_if</strong>：统计等于值/满足谓词的元素个数（<code>count_if</code> 统计「正数个数」「超时帧数」）。</li>
+<li><strong>排序与 merge</strong>：<code>sort</code>（快排，不稳定）、<code>stable_sort</code>（稳定）、<code>partial_sort</code>（取前 k 大/小）、<code>nth_element</code>（找第 k 小）；<code>merge</code> 把两个有序区间合并为一个有序区间（输出区间需预先分配）。</li>
+<li><strong>随机算法</strong>：<code>std::shuffle(v.begin(), v.end(), std::mt19937(std::random_device{}()))</code>（C++11 起代替弃用的 <code>random_shuffle</code>）；蒙特卡洛定位、随机采样路径规划用它。</li>
+<li><strong>反转容器</strong>：<code>reverse(v.begin(), v.end())</code>；<code>reverse_copy</code> 保留原数据。</li>
+<li><strong>拷贝算法</strong>：<code>copy/copy_if/copy_n/copy_backward</code>，配合 <code>std::back_inserter</code> 向目标容器追加（避免预分配）。</li>
+<li><strong>替换</strong>：<code>replace/replace_if/replace_copy</code>，批量改写满足条件的元素（如把超限速度裁剪为上限）。</li>
+<li><strong>算术生成算法</strong>：<code>accumulate</code>（求和/自定义折叠）、<code>fill/fill_n</code>（填充）、<code>iota</code>（递增序列）、<code>inner_product</code>（点积/累加）。</li>
+<li><strong>交集/并集/差集</strong>：<code>set_intersection/set_union/set_difference</code>，要求输入有序；常用于多传感器数据融合、目标集合比较。</li>
 </ul>
-<h3 id="1222-时间（chrono）">12.2.2 时间（<code>&lt;chrono&gt;</code>）</h3>
+<pre><code class="lang-cpp">std::vector&lt;<span class="hljs-type">int</span>&gt; a{<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>}, b{<span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>}, out;
+std::<span class="hljs-built_in">set_intersection</span>(a.<span class="hljs-built_in">begin</span>(), a.<span class="hljs-built_in">end</span>(), b.<span class="hljs-built_in">begin</span>(), b.<span class="hljs-built_in">end</span>(),
+                      std::<span class="hljs-built_in">back_inserter</span>(out));   <span class="hljs-comment">// out = {3, 4}</span>
+</code></pre>
+<blockquote>
+<p><strong>注意：</strong> 集合算法要求<strong>输入区间已排序</strong>，且输出容器要有足够容量（推荐 <code>std::back_inserter</code>）。对未排序数据直接调用是逻辑错误，不报错但结果错。</p>
+</blockquote>
+<h3 id="1222-第2课：时间处理方法详解与-c-技术补充">12.2.2 第2课：时间处理方法详解与 C++ 技术补充</h3>
+<h4 id="时间体系（chrono）">时间体系（<code>&lt;chrono&gt;</code>）</h4>
 <ul>
-<li>三件套：duration/time_point/clock；<code>100ms/1s</code> 字面量需 <code>using namespace std::chrono_literals</code>；</li>
-<li><strong>测耗时用 <code>steady_clock</code></strong>（单调，不受 NTP 校时影响）；日历时间戳用 <code>system_clock</code>；</li>
-<li><code>sleep_for(时长)</code> 与 <code>sleep_until(时刻)</code>（无漂移定时）——<code>rclcpp::Rate/WallRate</code> 的底层。</li>
+<li><strong>时间基础用法</strong>：三件套——<code>duration</code>（时长，如 <code>std::chrono::milliseconds(100)</code>）、<code>time_point</code>（时间点）、<code>clock</code>（时钟）。<code>using namespace std::chrono_literals;</code> 后可写 <code>100ms / 1s / 5min</code> 字面量。</li>
+<li><strong>类型转换</strong>：<code>duration_cast&lt;milliseconds&gt;(sec)</code> 显式转换时长单位（截断小数）；<code>time_point_cast</code> 转换时间点精度；注意 <code>duration_cast</code> 是截断不是四舍五入。</li>
+<li><strong>自定义时间单位</strong>：<code>std::chrono::duration&lt;int, std::ratio&lt;1, 1000&gt;&gt;</code> 自定义 tick 单位；<code>std::chrono::hours/days</code> 等常用单位；机器人中「100Hz 控制周期」= <code>10ms</code>。</li>
+<li><strong>时间暂停方法</strong>：<code>std::this_thread::sleep_for(100ms)</code>（睡时长）、<code>sleep_until(tp)</code>（睡到时刻，无漂移）、条件变量 <code>cv.wait_for/wait_until</code>（可被唤醒，适合事件驱动）。</li>
+<li><strong>时间戳</strong>：<code>std::chrono::system_clock::now()</code> 是日历时间（受 NTP 调整，可回拨）；<code>to_time_t</code>/<code>from_time_t</code> 与 C 时间互转；<code>time_since_epoch().count()</code> 取自 epoch 的 tick 数。</li>
+<li><strong>稳定时钟（steady_clock）</strong>：单调递增、不受系统时间调整影响，适合测量<strong>耗时/超时/频率</strong>（<code>auto t0 = steady_clock::now(); ... auto dt = steady_clock::now() - t0;</code>）。</li>
+<li><strong>高精度单调时钟</strong>：<code>steady_clock</code> 的 <code>duration</code> 通常是纳秒级；<code>high_resolution_clock</code> 只是别名，不保证单调——测量性能一律用 <code>steady_clock</code>。</li>
 </ul>
-<h3 id="1223-bind、lambda-与多线程">12.2.3 bind、lambda 与多线程</h3>
+<h4 id="bind、lambda-与智能指针">bind、lambda 与智能指针</h4>
 <ul>
-<li><code>std::bind(&amp;Class::cb, this, _1)</code> 把成员函数适配成可调用对象；lambda 捕获 <code>[this]/[=]/[&amp;]</code> 更直观（注意对象生命周期）；</li>
-<li>智能指针：默认 <code>unique_ptr</code>，共享用 <code>make_shared</code>，<code>weak_ptr</code> 破循环引用；</li>
-<li>线程：<code>std::thread + join()</code>（勿随意 detach）；共享数据 <code>std::mutex + lock_guard</code>；无锁计数用 <code>std::atomic</code>；</li>
-<li>状态机：<code>enum class State</code> + 转移函数，机器人行为管理的基石（nav2 行为树是其扩展）。</li>
+<li><strong>bind 绑定函数的参数</strong>：<code>std::bind(&amp;Class::cb, this, _1, _2)</code> 固定对象与部分参数；<code>std::bind</code> + 成员函数 = 把「成员函数」变成自由可调用对象。</li>
+<li><strong>lambda 实现绑定参数</strong>：<code>[this](auto msg){ this-&gt;on_msg(msg); }</code> 捕获 <code>this</code> 与局部变量，比 <code>bind</code> 更直观；<code>[=]</code> 值捕获、<code>[&amp;]</code> 引用捕获、<code>[this]</code> 捕获成员。</li>
+<li><strong>智能指针</strong>：<code>unique_ptr</code>（独占、零开销、不可拷贝可移动）、<code>shared_ptr</code>（引用计数共享）、<code>weak_ptr</code>（打破循环引用）、<code>make_unique/make_shared</code> 优先。避免裸 <code>new/delete</code>。</li>
 </ul>
-<h2 id="123-运行效果（实测）">12.3 运行效果（实测）</h2>
+<h4 id="数据格式、多线程与状态机">数据格式、多线程与状态机</h4>
+<ul>
+<li><strong>逗号分割值（CSV）</strong>：<code>std::getline(ss, token, ',')</code> 或 <code>std::stringstream</code> 逐列解析；注意引号内含逗号、CRLF 行尾等边界；机器人常用于轨迹/标定数据交换。</li>
+<li><strong>XML 基础与语法</strong>：标签 <code>&lt;tag attr="v"&gt;text&lt;/tag&gt;</code>、属性、嵌套、注释 <code>&lt;!-- --&gt;</code>、文档声明 <code>&lt;?xml version="1.0"?&gt;</code>；URDF 机器人描述就是 XML 格式。</li>
+<li><strong>YAML 格式</strong>：缩进表层级、<code>key: value</code>、列表 <code>- item</code>、锚点 <code>&amp;a/*a</code> 复用；ROS2 参数文件（<code>params.yaml</code>）、导航配置全是 YAML。</li>
+<li><strong>多线程基础</strong>：<code>std::thread t(fn, args...)</code> 创建、<code>join()</code> 等待、<code>detach()</code> 分离（危险，慎用）；<code>std::mutex</code> + <code>std::lock_guard&lt;std::mutex&gt;</code> 保证互斥；<code>std::atomic</code> 无锁计数。</li>
+<li><strong>数据打印错乱问题</strong>：多线程同时 <code>std::cout</code> 输出会交错——用互斥锁保护打印、或统一「消息入队 + 单线程输出」；这是理解线程安全的第一课。</li>
+<li><strong>分离线程</strong>：<code>t.detach()</code> 后线程与主线程生命周期脱钩，主线程退出即强杀；必须保证线程不访问已析构对象。优先 <code>join</code> 或线程池。</li>
+<li><strong>有限状态机（FSM）</strong>：状态 + 事件 + 转移表；用 <code>enum class State { Idle, Running, Error }</code> + <code>switch</code> 或 <code>std::map&lt;State, std::function&lt;void()&gt;&gt;</code> 实现；机器人行为树/导航状态管理的基石。</li>
+</ul>
+<pre><code class="lang-cpp"><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std::chrono_literals;
+<span class="hljs-keyword">auto</span> t0 = std::chrono::steady_clock::<span class="hljs-built_in">now</span>();
+std::this_thread::<span class="hljs-built_in">sleep_for</span>(<span class="hljs-number">50</span>ms);
+<span class="hljs-keyword">auto</span> dt = std::chrono::<span class="hljs-built_in">duration_cast</span>&lt;std::chrono::milliseconds&gt;(
+              std::chrono::steady_clock::<span class="hljs-built_in">now</span>() - t0);
+std::cout &lt;&lt; dt.<span class="hljs-built_in">count</span>() &lt;&lt; <span class="hljs-string">" ms\n"</span>;
+</code></pre>
+<blockquote>
+<p><strong>注意：</strong> 测量耗时/超时用 <code>steady_clock</code>，日历时间/时间戳用 <code>system_clock</code>。用 <code>system_clock</code> 测量耗时会因 NTP 校时产生负值——这是真实工程事故高发点。</p>
+</blockquote>
+<h2 id="123-重点与难点">12.3 重点与难点</h2>
+<ol>
+<li><strong>仿函数 vs lambda vs <code>std::bind</code></strong>：优先 lambda（可读、可内联优化）；<code>std::bind</code> 适合兼容旧接口；仿函数适合携带复杂状态或复用比较规则。</li>
+<li><strong><code>accumulate</code>/<code>transform</code> 的声明式思维</strong>：把「循环 + 累加/变换」变成一行算法，减少下标越界与迭代器失效风险。</li>
+<li><strong>chrono 的 clock 选择</strong>：<code>steady_clock</code> 测量、<code>system_clock</code> 日历、<code>sleep_until</code> 无漂移定时——ROS2 <code>rclcpp::Rate</code>/<code>WallRate</code> 底层就是这套 API。</li>
+<li><strong>多线程安全</strong>：共享数据必加锁；<code>std::lock_guard</code> 保证异常安全；<code>detach</code> 慎用；理解「打印错乱」背后的内存可见性。</li>
+<li><strong>状态机建模</strong>：机器人系统天然是状态机（待机/运行/急停/错误），用 enum + 转移表而非散落的 bool 标志位。</li>
+</ol>
+<h2 id="124-代码与命令实战">12.4 代码与命令实战</h2>
+<p><strong>场景 1：仿函数、谓词与适配器（对应第1课）</strong></p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// functor.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;algorithm&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;cstdlib&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;functional&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;vector&gt;</span></span>
+
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">IsPositive</span> {                    <span class="hljs-comment">// 一元谓词</span>
+    <span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">operator</span><span class="hljs-params">()</span><span class="hljs-params">(<span class="hljs-type">int</span> v)</span> <span class="hljs-type">const</span> </span>{ <span class="hljs-keyword">return</span> v &gt; <span class="hljs-number">0</span>; }
+};
+
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">ByAbsLess</span> {                     <span class="hljs-comment">// 二元谓词：按绝对值比较</span>
+    <span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">operator</span><span class="hljs-params">()</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span> <span class="hljs-type">const</span> </span>{ <span class="hljs-keyword">return</span> std::<span class="hljs-built_in">abs</span>(a) &lt; std::<span class="hljs-built_in">abs</span>(b); }
+};
+
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">Accumulator</span> {                   <span class="hljs-comment">// 携带状态的仿函数</span>
+    <span class="hljs-type">int</span> sum = <span class="hljs-number">0</span>;
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">operator</span><span class="hljs-params">()</span><span class="hljs-params">(<span class="hljs-type">int</span> v)</span> </span>{ sum += v; }
+};
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    std::vector&lt;<span class="hljs-type">int</span>&gt; v{<span class="hljs-number">-3</span>, <span class="hljs-number">1</span>, <span class="hljs-number">-2</span>, <span class="hljs-number">5</span>, <span class="hljs-number">0</span>};
+    std::cout &lt;&lt; std::<span class="hljs-built_in">count_if</span>(v.<span class="hljs-built_in">begin</span>(), v.<span class="hljs-built_in">end</span>(), IsPositive{}) &lt;&lt; <span class="hljs-string">"\n"</span>;   <span class="hljs-comment">// 2</span>
+    std::<span class="hljs-built_in">sort</span>(v.<span class="hljs-built_in">begin</span>(), v.<span class="hljs-built_in">end</span>(), ByAbsLess{});                              <span class="hljs-comment">// 按绝对值排</span>
+    Accumulator acc = std::for_each(v.<span class="hljs-built_in">begin</span>(), v.<span class="hljs-built_in">end</span>(), Accumulator{});      <span class="hljs-comment">// 返回仿函数副本</span>
+    std::cout &lt;&lt; acc.sum &lt;&lt; <span class="hljs-string">"\n"</span>;                                            <span class="hljs-comment">// -1</span>
+    std::<span class="hljs-built_in">sort</span>(v.<span class="hljs-built_in">begin</span>(), v.<span class="hljs-built_in">end</span>(), std::greater&lt;&gt;{});                         <span class="hljs-comment">// 内建函数对象降序</span>
+}
+</code></pre>
+<pre><code class="lang-bash">g++ -std=c++17 -Wall -o functor functor.cpp &amp;&amp; ./functor
+</code></pre>
+<p><strong>场景 2：查找、排序、集合算法（对应第1课）</strong></p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// algo.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;algorithm&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;numeric&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;vector&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    std::vector&lt;<span class="hljs-type">int</span>&gt; a{<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">5</span>}, b{<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>};
+    std::cout &lt;&lt; std::<span class="hljs-built_in">binary_search</span>(a.<span class="hljs-built_in">begin</span>(), a.<span class="hljs-built_in">end</span>(), <span class="hljs-number">3</span>) &lt;&lt; <span class="hljs-string">"\n"</span>;         <span class="hljs-comment">// 1（须有序）</span>
+    std::cout &lt;&lt; *std::<span class="hljs-built_in">lower_bound</span>(a.<span class="hljs-built_in">begin</span>(), a.<span class="hljs-built_in">end</span>(), <span class="hljs-number">5</span>) &lt;&lt; <span class="hljs-string">"\n"</span>;          <span class="hljs-comment">// 5</span>
+    std::cout &lt;&lt; std::<span class="hljs-built_in">adjacent_find</span>(a.<span class="hljs-built_in">begin</span>(), a.<span class="hljs-built_in">end</span>()) - a.<span class="hljs-built_in">begin</span>() &lt;&lt; <span class="hljs-string">"\n"</span>;<span class="hljs-comment">// 4（相邻重复位置）</span>
+    std::cout &lt;&lt; std::<span class="hljs-built_in">accumulate</span>(a.<span class="hljs-built_in">begin</span>(), a.<span class="hljs-built_in">end</span>(), <span class="hljs-number">0</span>) &lt;&lt; <span class="hljs-string">"\n"</span>;            <span class="hljs-comment">// 20</span>
+
+    std::vector&lt;<span class="hljs-type">int</span>&gt; out;
+    std::<span class="hljs-built_in">set_intersection</span>(a.<span class="hljs-built_in">begin</span>(), a.<span class="hljs-built_in">end</span>(), b.<span class="hljs-built_in">begin</span>(), b.<span class="hljs-built_in">end</span>(),
+                          std::<span class="hljs-built_in">back_inserter</span>(out));                         <span class="hljs-comment">// 交集 {4,5}</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> x : out) std::cout &lt;&lt; x &lt;&lt; <span class="hljs-string">" "</span>;
+    std::cout &lt;&lt; <span class="hljs-string">"\n"</span>;
+    std::<span class="hljs-built_in">reverse</span>(out.<span class="hljs-built_in">begin</span>(), out.<span class="hljs-built_in">end</span>());                                   <span class="hljs-comment">// 反转</span>
+    std::<span class="hljs-built_in">replace_if</span>(out.<span class="hljs-built_in">begin</span>(), out.<span class="hljs-built_in">end</span>(), [](<span class="hljs-type">int</span> x){ <span class="hljs-keyword">return</span> x &gt; <span class="hljs-number">4</span>; }, <span class="hljs-number">4</span>); <span class="hljs-comment">// 替换</span>
+}
+</code></pre>
+<pre><code class="lang-bash">g++ -std=c++17 -Wall -o algo algo.cpp &amp;&amp; ./algo
+</code></pre>
+<p><strong>场景 3：chrono 时间与稳定时钟测量（对应第2课）</strong></p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// chrono_demo.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;chrono&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;thread&gt;</span></span>
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std::chrono_literals;
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">auto</span> t0 = std::chrono::steady_clock::<span class="hljs-built_in">now</span>();        <span class="hljs-comment">// 单调时钟：测耗时</span>
+    std::this_thread::<span class="hljs-built_in">sleep_for</span>(<span class="hljs-number">50</span>ms);
+    <span class="hljs-keyword">auto</span> dt = std::chrono::<span class="hljs-built_in">duration_cast</span>&lt;std::chrono::milliseconds&gt;(
+                  std::chrono::steady_clock::<span class="hljs-built_in">now</span>() - t0);
+    std::cout &lt;&lt; <span class="hljs-string">"elapsed "</span> &lt;&lt; dt.<span class="hljs-built_in">count</span>() &lt;&lt; <span class="hljs-string">" ms\n"</span>;
+
+    <span class="hljs-keyword">auto</span> tp = std::chrono::system_clock::<span class="hljs-built_in">now</span>();        <span class="hljs-comment">// 日历时间：时间戳</span>
+    std::<span class="hljs-type">time_t</span> ts = std::chrono::system_clock::<span class="hljs-built_in">to_time_t</span>(tp);
+    std::cout &lt;&lt; <span class="hljs-string">"timestamp "</span> &lt;&lt; ts &lt;&lt; <span class="hljs-string">"\n"</span>;
+
+    <span class="hljs-keyword">auto</span> wake = std::chrono::steady_clock::<span class="hljs-built_in">now</span>() + <span class="hljs-number">100</span>ms;   <span class="hljs-comment">// sleep_until 无漂移定时</span>
+    std::this_thread::<span class="hljs-built_in">sleep_until</span>(wake);
+}
+</code></pre>
+<pre><code class="lang-bash">g++ -std=c++17 -Wall -o chrono_demo chrono_demo.cpp &amp;&amp; ./chrono_demo
+</code></pre>
+<p><strong>场景 4：bind 与 lambda 绑定回调（对应第2课）</strong></p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// bind_lambda.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;functional&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">NodeLike</span> {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">on_msg</span><span class="hljs-params">(<span class="hljs-type">const</span> std::string&amp; topic, <span class="hljs-type">int</span> data)</span> </span>{
+        std::cout &lt;&lt; topic &lt;&lt; <span class="hljs-string">" -&gt; "</span> &lt;&lt; data &lt;&lt; <span class="hljs-string">"\n"</span>;
+    }
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">setup</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">auto</span> cb1 = std::<span class="hljs-built_in">bind</span>(&amp;NodeLike::on_msg, <span class="hljs-keyword">this</span>,
+                             std::placeholders::_1, std::placeholders::_2);
+        <span class="hljs-built_in">cb1</span>(<span class="hljs-string">"scan"</span>, <span class="hljs-number">1</span>);                                     <span class="hljs-comment">// bind 适配成员函数</span>
+
+        <span class="hljs-keyword">auto</span> cb2 = [<span class="hljs-keyword">this</span>](<span class="hljs-type">const</span> std::string&amp; t, <span class="hljs-type">int</span> d) {    <span class="hljs-comment">// lambda 捕获 this</span>
+            <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">on_msg</span>(t, d);
+        };
+        <span class="hljs-built_in">cb2</span>(<span class="hljs-string">"odom"</span>, <span class="hljs-number">2</span>);
+
+        <span class="hljs-type">int</span> scale = <span class="hljs-number">10</span>;                                     <span class="hljs-comment">// lambda 值捕获</span>
+        <span class="hljs-keyword">auto</span> cb3 = [scale](<span class="hljs-type">int</span> d) { std::cout &lt;&lt; d * scale &lt;&lt; <span class="hljs-string">"\n"</span>; };
+        <span class="hljs-built_in">cb3</span>(<span class="hljs-number">3</span>);
+    }
+};
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{ NodeLike n; n.<span class="hljs-built_in">setup</span>(); }
+</code></pre>
+<pre><code class="lang-bash">g++ -std=c++17 -Wall -o bind_lambda bind_lambda.cpp &amp;&amp; ./bind_lambda
+</code></pre>
+<p><strong>场景 5：多线程 + 互斥锁 + CSV 解析（对应第2课）</strong></p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// thread_csv.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;fstream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;mutex&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;sstream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;thread&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;vector&gt;</span></span>
+
+std::mutex g_mtx;                              <span class="hljs-comment">// 保护共享输出/数据</span>
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">worker</span><span class="hljs-params">(<span class="hljs-type">int</span> id)</span> </span>{
+    <span class="hljs-function">std::lock_guard&lt;std::mutex&gt; <span class="hljs-title">lk</span><span class="hljs-params">(g_mtx)</span></span>;     <span class="hljs-comment">// 作用域锁：异常安全</span>
+    std::cout &lt;&lt; <span class="hljs-string">"[worker "</span> &lt;&lt; id &lt;&lt; <span class="hljs-string">"] done\n"</span>;   <span class="hljs-comment">// 加锁避免打印错乱</span>
+}
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    std::vector&lt;std::thread&gt; pool;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">3</span>; ++i) pool.<span class="hljs-built_in">emplace_back</span>(worker, i);
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span>&amp; t : pool) t.<span class="hljs-built_in">join</span>();             <span class="hljs-comment">// 等待全部完成（勿 detach）</span>
+
+    <span class="hljs-function">std::ofstream <span class="hljs-title">ofs</span><span class="hljs-params">(<span class="hljs-string">"traj.csv"</span>)</span></span>;
+    ofs &lt;&lt; <span class="hljs-string">"1,0.5,0.25\n2,0.75,0.5\n"</span>;
+    ofs.<span class="hljs-built_in">close</span>();
+
+    <span class="hljs-function">std::ifstream <span class="hljs-title">ifs</span><span class="hljs-params">(<span class="hljs-string">"traj.csv"</span>)</span></span>;
+    std::string line;
+    <span class="hljs-keyword">while</span> (std::<span class="hljs-built_in">getline</span>(ifs, line)) {          <span class="hljs-comment">// CSV 逐行解析</span>
+        <span class="hljs-function">std::stringstream <span class="hljs-title">ss</span><span class="hljs-params">(line)</span></span>;
+        std::string cell;
+        std::vector&lt;<span class="hljs-type">double</span>&gt; row;
+        <span class="hljs-keyword">while</span> (std::<span class="hljs-built_in">getline</span>(ss, cell, <span class="hljs-string">','</span>)) row.<span class="hljs-built_in">push_back</span>(std::<span class="hljs-built_in">stod</span>(cell));
+        std::cout &lt;&lt; <span class="hljs-string">"row size="</span> &lt;&lt; row.<span class="hljs-built_in">size</span>() &lt;&lt; <span class="hljs-string">"\n"</span>;
+    }
+}
+</code></pre>
+<pre><code class="lang-bash">g++ -std=c++17 -Wall -pthread -o thread_csv thread_csv.cpp &amp;&amp; ./thread_csv
+<span class="hljs-comment"># -pthread 链接 POSIX 线程库</span>
+</code></pre>
+<p><strong>场景 6（补充）：有限状态机骨架（对应第2课）</strong></p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// fsm.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string&gt;</span></span>
+
+<span class="hljs-keyword">enum class</span> <span class="hljs-title class_">State</span> { Idle, Running, Error };     <span class="hljs-comment">// 强类型枚举</span>
+
+<span class="hljs-function">State <span class="hljs-title">on_event</span><span class="hljs-params">(State s, <span class="hljs-type">const</span> std::string&amp; ev)</span> </span>{
+    <span class="hljs-keyword">if</span> (s == State::Idle &amp;&amp; ev == <span class="hljs-string">"start"</span>) <span class="hljs-keyword">return</span> State::Running;
+    <span class="hljs-keyword">if</span> (s == State::Running &amp;&amp; ev == <span class="hljs-string">"fail"</span>) <span class="hljs-keyword">return</span> State::Error;
+    <span class="hljs-keyword">if</span> (s == State::Error &amp;&amp; ev == <span class="hljs-string">"reset"</span>) <span class="hljs-keyword">return</span> State::Idle;
+    <span class="hljs-keyword">return</span> s;                                  <span class="hljs-comment">// 未定义转移：保持原状态</span>
+}
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    State s = State::Idle;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">const</span> std::string&amp; ev : {<span class="hljs-string">"start"</span>, <span class="hljs-string">"fail"</span>, <span class="hljs-string">"reset"</span>})
+        s = <span class="hljs-built_in">on_event</span>(s, ev);
+    std::cout &lt;&lt; (s == State::Idle ? <span class="hljs-string">"back to idle\n"</span> : <span class="hljs-string">"other\n"</span>);
+}
+</code></pre>
+<pre><code class="lang-bash">g++ -std=c++17 -Wall -o fsm fsm.cpp &amp;&amp; ./fsm
+</code></pre>
+<h2 id="125-运行效果（实测）">12.5 运行效果（实测）</h2>
+<p>以下为 chrono 稳定时钟计时（场景 3 的 <code>elapsed</code>）、lambda 值捕获（场景 4 的 <code>cb3(3)</code> 输出 30）与多线程 worker 加锁输出（场景 5）的综合实测：</p>
 <pre><code class="lang-text">elapsed 50 ms
 30
 [worker 0] done
@@ -634,7 +891,7 @@
 [worker 2] done
 </code></pre>
 <p>编译命令：<code>g++ -std=c++17 -Wall -pthread w12_chrono.cpp -o w12 &amp;&amp; ./w12</code>。</p>
-<h2 id="124-端到端实战（实测）：速度序列算法流水线">12.4 端到端实战（实测）：速度序列算法流水线</h2>
+<h2 id="端到端实战（实测）：速度序列算法流水线">端到端实战（实测）：速度序列算法流水线</h2>
 <p>课程自测题的实现：只用算法（count_if/accumulate/transform）完成「超速帧数、平均速度、超速裁剪」，并用 chrono 测量处理耗时：</p>
 <pre><code class="lang-cpp"><span class="hljs-comment">// speed.cpp</span>
 std::vector&lt;<span class="hljs-type">double</span>&gt; speeds{<span class="hljs-number">0.8</span>, <span class="hljs-number">1.2</span>, <span class="hljs-number">0.6</span>, <span class="hljs-number">1.5</span>, <span class="hljs-number">0.9</span>, <span class="hljs-number">2.0</span>, <span class="hljs-number">1.1</span>};
@@ -655,12 +912,48 @@ std::this_thread::<span class="hljs-built_in">sleep_for</span>(<span class="hljs
 裁剪后: 0.8 1 0.6 1 0.9 1 1 
 控制周期耗时=50 ms
 </code></pre>
-<h2 id="125-本章小结">12.5 本章小结</h2>
+<p>要点解析：</p>
+<ul>
+<li>全程无手写 for 循环：<code>count_if</code> 数超速帧、<code>accumulate</code> 求均值、<code>transform</code> 就地裁剪——声明式一行算法替代三段循环；</li>
+<li>裁剪用 <code>std::min(v, 1.0)</code> 映射原序列，<code>transform</code> 的输入/输出迭代器指向同一容器即「就地变换」；</li>
+<li>计时用 <code>steady_clock</code> 单调时钟 + <code>duration_cast&lt;milliseconds&gt;</code>，与控制周期测量（<code>rclcpp::Rate</code>）同款思路；</li>
+<li>平均值 <code>1.15714</code> 为 <code>0.8+1.2+0.6+1.5+0.9+2.0+1.1 = 8.1 / 7</code> 的浮点输出。</li>
+</ul>
+<h2 id="126-与-ros2--机器人开发的关联">12.6 与 ROS2 / 机器人开发的关联</h2>
+<ol>
+<li><strong>时间 API 与 ROS2 时间</strong>：<code>rclcpp::Time</code>/<code>rclcpp::Duration</code> 与 <code>std::chrono</code> 语义对齐（<code>now() - last_time</code> 测量控制周期）；<code>rclcpp::WallRate</code> 用 <code>steady_clock</code> 避免仿真时间暂停影响；<code>sleep_until</code> 实现无漂移控制循环。时间戳（<code>msg-&gt;header.stamp</code>）默认 <code>system_clock</code> 语义，跨机同步依赖 NTP/PTP。</li>
+<li><strong>回调绑定</strong>：<code>create_subscription</code> 的回调常用 <code>std::bind(&amp;Node::cb, this, _1)</code> 或 lambda；理解 <code>std::placeholders</code> 才能读懂 rclcpp 内部 <code>AnySubscriptionCallback</code> 的分发。</li>
+<li><strong>STL 算法在机器人数据流</strong>：<code>transform</code> 做坐标/单位变换，<code>copy_if</code> 过滤离群点，<code>set_intersection</code> 做多传感器目标交集，<code>accumulate</code> 求航迹累计距离，<code>shuffle</code> 做蒙特卡洛粒子重采样。</li>
+<li><strong>多线程与 executor</strong>：<code>rclcpp::executors::MultiThreadedExecutor</code> + <code>callback_group::MutuallyExclusive/Reentrant</code> 本质是 <code>std::mutex</code> 与线程管理；理解「打印错乱」就理解了为什么回调里必须加锁或用互斥回调组。</li>
+<li><strong>配置与数据交换</strong>：ROS2 参数文件是 YAML、URDF/SDF 是 XML、轨迹/标定常以 CSV 存储；会解析这三种格式是调试机器人系统的日常技能。</li>
+<li><strong>状态机与行为管理</strong>：导航任务（待机/巡航/充电/急停）、机器人模式切换用 FSM 建模；nav2 的 behavior tree 可看作状态机的扩展形态。</li>
+</ol>
+<h2 id="127-自测与练习（含参考答案要点）">12.7 自测与练习（含参考答案要点）</h2>
+<ol>
+<li><strong>概念题</strong>：为什么测耗时必须用 <code>steady_clock</code> 而不是 <code>system_clock</code>？</li>
+<li><strong>概念题</strong>：<code>std::bind</code> 与 lambda 各自的适用场景？捕获 <code>this</code> 时要注意什么（对象生命周期）？</li>
+<li><strong>动手任务</strong>：用 <code>&lt;algorithm&gt;</code> 实现「找出速度序列中超速（&gt;1.0 m/s）的帧数、平均速度、并把超速值裁剪为 1.0」。验收：只用算法（count_if/accumulate/transform），不手写 for 循环。</li>
+<li><strong>动手任务</strong>：实现一个三状态 FSM（Idle/Running/Error），事件 start/fail/reset 驱动转移；再加一个「事件队列」（<code>std::queue</code>）逐个消费事件。验收：非法事件保持原状态且打印警告。</li>
+</ol>
+<blockquote>
+<p>参考答案要点：题 1——<code>system_clock</code> 受 NTP/用户改时间影响可能回拨，测耗时会出现负值；<code>steady_clock</code> 单调递增，专为测量设计。题 2——lambda 适合局部、短小、需要捕获局部变量的回调；<code>bind</code> 适合适配旧接口/固定成员函数；捕获 <code>this</code> 时要保证对象比回调活得久（否则悬垂）。题 3——<code>count_if(v.begin(), v.end(), [](double x){return x &gt; 1.0;})</code>、<code>accumulate</code> 求均值、<code>transform</code> 就地裁剪。题 4——<code>enum class State</code> + <code>on_event()</code> 转移函数 + <code>std::queue&lt;std::string&gt; events</code> 逐个 <code>pop</code> 调用。</p>
+</blockquote>
+<h2 id="128-常见问题（faq）">12.8 常见问题（FAQ）</h2>
+<ul>
+<li><strong>Q：<code>random_shuffle</code> 为什么不能用了？</strong> A：C++14 弃用、C++17 移除（依赖 <code>rand()</code> 且分布不均）；用 <code>std::shuffle</code> + <code>std::mt19937</code>。</li>
+<li><strong>Q：<code>set_intersection</code> 输出为什么是空的？</strong> A：输入区间未排序；集合算法要求两个输入区间都已按同一比较器排序。</li>
+<li><strong>Q：<code>std::bind</code> 和 lambda 哪个性能好？</strong> A：lambda 通常更好（编译器易内联、语义清晰）；性能差异在现代编译器下极小，选择以可读性为准。</li>
+<li><strong>Q：智能指针怎么选？</strong> A：默认 <code>unique_ptr</code>（独占）；需要共享所有权用 <code>shared_ptr</code> + <code>make_shared</code>；<code>weak_ptr</code> 打破循环引用（缓存、观察者）。</li>
+<li><strong>Q：<code>detach</code> 的线程有什么风险？</strong> A：主线程退出时被强杀、访问已析构对象导致 UB；除非有明确的线程池管理，否则用 <code>join</code>。</li>
+</ul>
+<h2 id="129-本章小结">12.9 本章小结</h2>
 <ul>
 <li>把「循环 + 累加/变换」写成一行算法（count_if/accumulate/transform），减少越界与迭代器失效风险；</li>
 <li><code>steady_clock</code> 测量、<code>system_clock</code> 日历——用错时钟测耗时会出现负值（真实事故高发点）；</li>
 <li>lambda 捕获 <code>this</code> 时保证对象比回调活得久；</li>
-<li>CSV/XML/YAML 三种数据格式的解析（stringstream/getline）是调试机器人系统的日常技能。</li>
+<li>CSV/XML/YAML 三种数据格式的解析（stringstream/getline）是调试机器人系统的日常技能；</li>
+<li>共享数据必加锁（<code>lock_guard</code> 作用域锁），线程用 <code>join</code> 而非随意 <code>detach</code>；</li>
+<li>机器人行为天然是状态机：<code>enum class</code> + 转移函数/转移表，nav2 行为树是其扩展形态。</li>
 </ul>
 
                                 
@@ -705,7 +998,7 @@ std::this_thread::<span class="hljs-built_in">sleep_for</span>(<span class="hljs
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第12章 常用算法与技术（algorithm/chrono/lambda/线程）","level":"4.5","depth":1,"next":{"title":"第13章 Linux 与 Shell 入门（操作系统地基）","level":"5.1","depth":1,"path":"第13周-Linux与Shell入门.md","ref":"第13周-Linux与Shell入门.md","articles":[]},"previous":{"title":"第11章 STL 标准模板库（容器选型与实践）","level":"4.4","depth":1,"path":"第11周-STL标准模板库.md","ref":"第11周-STL标准模板库.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第12周-常用算法与技术.md","mtime":"2026-10-16T02:43:09.753Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T02:43:11.108Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第12章 常用算法与技术（algorithm/chrono/lambda/线程）","level":"4.5","depth":1,"next":{"title":"第13章 Linux 与 Shell 入门（操作系统地基）","level":"5.1","depth":1,"path":"第13周-Linux与Shell入门.md","ref":"第13周-Linux与Shell入门.md","articles":[]},"previous":{"title":"第11章 STL 标准模板库（容器选型与实践）","level":"4.4","depth":1,"path":"第11周-STL标准模板库.md","ref":"第11周-STL标准模板库.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第12周-常用算法与技术.md","mtime":"2026-10-16T03:26:51.708Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T03:26:53.986Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

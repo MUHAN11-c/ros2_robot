@@ -603,17 +603,88 @@
 <blockquote>
 <p>本章对应课程第 11 周：容器 + 迭代器 + 算法三件套。string/vector 打底，deque/list/stack/queue/set/map 进阶，机器人开发中的消息缓存、路径序列、去重与查询全落在这些容器上。</p>
 </blockquote>
-<h2 id="111-案例以及案例分析">11.1 案例以及案例分析</h2>
-<p><strong>需求</strong>：传感器滑动窗口（保留最近 3 帧）、降序分数集合（去重）、按键查询表（map）——三种访问模式对应三种容器。</p>
-<h2 id="112-知识点与实现">11.2 知识点与实现</h2>
-<h3 id="1121-string-与-vector">11.2.1 string 与 vector</h3>
+<h2 id="111-本周概览与课时结构">11.1 本周概览与课时结构</h2>
+<p>STL（Standard Template Library，标准模板库）是 C++ 的「数据结构与算法军火库」：容器（container）、迭代器（iterator）、算法（algorithm）三件套。本周从 string 与 vector 打基础，到 deque/list/stack/queue，再到关联容器 set/map，完整走一遍容器的增删查改与选型逻辑。机器人开发中，消息缓存、路径点序列、传感器去重、坐标查询——全落在这些容器上；选错容器，实时性直接掉一个数量级。</p>
+<table>
+<thead>
+<tr>
+<th>课</th>
+<th>小节</th>
+<th>时长</th>
+<th>一句话导览</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第1课 STL 容器基础语法与操作</td>
+<td>20 节</td>
+<td>约 2h18m</td>
+<td>STL 三大件、遍历、string 全操作、vector 构造与容量</td>
+</tr>
+<tr>
+<td>第2课 STL 容器的进阶应用与实践</td>
+<td>27 节</td>
+<td>约 3h27m</td>
+<td>deque/list/stack/queue/set/map 实操与容器选型</td>
+</tr>
+</tbody>
+</table>
+<h2 id="112-知识点梳理">11.2 知识点梳理</h2>
+<h3 id="1121-第1课：stl-容器基础语法与操作">11.2.1 第1课：STL 容器基础语法与操作</h3>
 <ul>
-<li>string：<code>substr/find/append/replace/compare/c_str</code>；<code>find</code> 失败返回 <code>npos</code>；</li>
-<li>vector：<code>size()</code>（元素数）vs <code>capacity()</code>（已分配）；扩容策略是倍增、会使迭代器失效；</li>
-<li><code>reserve(n)</code> 预分配避免反复扩容；<code>shrink_to_fit</code> 或 swap 技巧收缩内存；</li>
-<li>遍历中删除必须 <code>it = c.erase(it)</code>。</li>
+<li><strong>核心概念</strong>：STL = 容器（存数据）+ 迭代器（遍历的统一指针抽象）+ 算法（<code>&lt;algorithm&gt;</code> 里的 sort/find/transform 等）+ 仿函数/适配器。三者通过迭代器解耦：算法不关心容器类型，只认迭代器区间 <code>[begin, end)</code>。</li>
+<li><strong>STL 基础语法</strong>：<code>#include &lt;vector&gt;</code> 等头文件、<code>std::</code> 命名空间、模板参数 <code>std::vector&lt;int&gt;</code>；所有容器提供统一接口：<code>begin/end/size/empty/clear/push_back</code> 等。</li>
+<li><strong>遍历容器</strong>：三种方式——下标（随机访问容器）、迭代器（<code>for (auto it = v.begin(); it != v.end(); ++it)</code>）、范围 for（<code>for (auto&amp; x : v)</code>）。范围 for 最简洁，需要修改元素用 <code>auto&amp;</code>。</li>
+<li><strong>遍历自定义数据类型</strong>：容器存对象或对象指针；遍历时注意拷贝开销（大对象用 <code>const auto&amp;</code>）。配合重载 <code>operator&lt;&lt;</code> 打印。</li>
+<li><strong>容器嵌套容器的遍历</strong>：<code>std::vector&lt;std::vector&lt;int&gt;&gt;</code>（如栅格地图）、<code>std::map&lt;std::string, std::vector&lt;double&gt;&gt;</code>（如关节轨迹）；用范围 for 或迭代器逐层遍历。</li>
+<li><strong>string 构造与赋值</strong>：<code>std::string s1("lidar"), s2 = s1, s3(10, 'x'), s4 = "scan";</code>；<code>assign()</code> 可一次性替换。</li>
+<li><strong>string 存取字符</strong>：<code>s[i]</code>（越界未定义）、<code>s.at(i)</code>（越界抛 <code>std::out_of_range</code>）、<code>s.front()/s.back()</code>、<code>s.push_back('c')</code>。</li>
+<li><strong>string 拼接</strong>：<code>operator+</code>、<code>append()</code>、<code>+=</code>；<code>reserve()</code> 预留避免多次扩容。</li>
+<li><strong>string 查找</strong>：<code>find()</code> 返回 <code>size_t</code>（<code>std::string::npos</code> 表示失败）、<code>rfind()</code> 反向、<code>find_first_of()</code> 字符集合查找。</li>
+<li><strong>string 插入和删除</strong>：<code>insert(pos, str)</code>、<code>erase(pos, len)</code>；频繁中间插入应改用 <code>std::list</code> 或先拼接。</li>
+<li><strong>string 替换</strong>：<code>replace(pos, len, str)</code>。</li>
+<li><strong>string 比较</strong>：<code>compare()</code> 返回负/零/正，或直接用 <code>==/!=/&lt;/&gt;</code>；大小写敏感，比较的是字典序。</li>
+<li><strong>string 转 C 字符串</strong>：<code>s.c_str()</code> 返回 <code>const char*</code>（含 <code>\0</code>），用于调 C 接口；<code>s.data()</code>（C++11 起保证 null 结尾）。</li>
+<li><strong>string 子串</strong>：<code>s.substr(pos, len)</code> 截取，用于解析 "frame_id:xxx" 这类键值串。</li>
+<li><strong>大小写转换</strong>：<code>std::transform(s.begin(), s.end(), s.begin(), ::toupper)</code>（注意 <code>::toupper</code> 要包 <code>&lt;cctype&gt;</code>，且要用 <code>unsigned char</code> 规避 UB）。</li>
+<li><strong>容器动态容量空间</strong>：<code>capacity()</code>（已分配）vs <code>size()</code>（元素个数）；vector 扩容策略是「倍增」，扩容会拷贝全部元素、迭代器失效。</li>
+<li><strong>vector 构造函数</strong>：<code>std::vector&lt;int&gt; v1(10);</code>（10 个 0）、<code>v2(10, 5)</code>（10 个 5）、<code>v3{1,2,3}</code>（初始化列表）、<code>v4(v3.begin(), v3.end())</code>（区间拷贝）。</li>
+<li><strong>vector 常用赋值</strong>：<code>assign(n, value)</code>、<code>assign(iter1, iter2)</code>、<code>swap(v2)</code>（交换内容与容量）。</li>
+<li><strong>容器大小</strong>：<code>size()/empty()/resize()/max_size()</code>；<code>resize(n)</code> 缩小会析构多余元素，<code>resize(n, val)</code> 扩大补默认值。</li>
 </ul>
-<h3 id="1122-容器选型速查">11.2.2 容器选型速查</h3>
+<pre><code class="lang-cpp">std::vector&lt;<span class="hljs-type">int</span>&gt; v{<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>};
+<span class="hljs-keyword">for</span> (<span class="hljs-type">const</span> <span class="hljs-keyword">auto</span>&amp; x : v) std::cout &lt;&lt; x &lt;&lt; <span class="hljs-string">" "</span>;
+std::cout &lt;&lt; <span class="hljs-string">"size="</span> &lt;&lt; v.<span class="hljs-built_in">size</span>() &lt;&lt; <span class="hljs-string">" cap="</span> &lt;&lt; v.<span class="hljs-built_in">capacity</span>() &lt;&lt; <span class="hljs-string">"\n"</span>;
+</code></pre>
+<h3 id="1122-第2课：stl-容器的进阶应用与实践">11.2.2 第2课：STL 容器的进阶应用与实践</h3>
+<ul>
+<li><strong>容器数据的存取</strong>：<code>front()/back()/at(i)/[]</code>；deque/list 不支持 <code>[]</code> 随机访问（list 只有迭代器），这是容器选型的第一约束。</li>
+<li><strong>容器插入和删除</strong>：<code>push_back/pop_back/insert(pos, val)/erase(pos)/erase(iter1, iter2)/clear</code>；<code>erase</code> 返回下一个有效迭代器（遍历中删除必须用 <code>it = v.erase(it)</code>）。</li>
+<li><strong>巧用 swap 收缩内存</strong>：<code>std::vector&lt;T&gt;(v).swap(v);</code> 或 C++11 <code>v.shrink_to_fit()</code> 释放多余容量——处理完大批量轨迹后省内存。</li>
+<li><strong>reserve 预留空间</strong>：<code>v.reserve(1000)</code> 预分配容量，避免循环 push_back 反复扩容；已知点云帧大小时必用。</li>
+<li><strong>deque 概念与容器</strong>：双端队列，头尾插入 O(1)，分段连续内存（迭代器可 <code>+n</code> 但不如 vector 缓存友好）；适合「滑动窗口」场景（<code>push_front/pop_front</code>）。</li>
+<li><strong>stack 栈容器</strong>：LIFO，<code>push/pop/top/empty/size</code>，底层默认 deque；不能遍历。用于撤销栈、括号匹配、DFS。</li>
+<li><strong>队列容器（queue）</strong>：FIFO，<code>push/pop/front/back</code>；<code>priority_queue</code>（默认大顶堆）按优先级出队——机器人任务调度、A* 开放列表常用。</li>
+<li><strong>list 简介与容器</strong>：双向链表，任意位置插入/删除 O(1)（迭代器指向元素时），不支持随机访问；<code>sort/remove/unique/reverse/merge</code> 是成员函数（因为 <code>std::sort</code> 需要随机访问迭代器）。</li>
+<li><strong>list 排序与删除自定义类型</strong>：<code>l.sort(cmp)</code> 传自定义比较器；<code>l.remove(value)</code>/<code>l.remove_if(pred)</code> 删除满足条件的元素（自定义类型需重载 <code>==</code> 或传谓词）。</li>
+<li><strong>set 基本概念</strong>：关联容器，元素唯一且自动按升序排序（红黑树，O(log n) 插入查找）；<code>insert</code> 返回 <code>pair&lt;iterator, bool&gt;</code> 判断是否重复。</li>
+<li><strong>set 容器操作</strong>：<code>insert/erase/find/count/lower_bound/upper_bound/equal_range</code>；<code>find</code> 找不到返回 <code>end()</code>。</li>
+<li><strong>pair 对组</strong>：<code>std::pair&lt;K, V&gt;</code>（<code>make_pair</code>），map 的元素类型就是 <code>pair&lt;const K, V&gt;</code>；<code>first/second</code> 访问。</li>
+<li><strong>set 插入验证</strong>：<code>auto [it, ok] = s.insert(v);</code>（C++17 结构化绑定）判断插入成功。</li>
+<li><strong>multiset</strong>：允许重复元素的有序集合；<code>count(v)</code> 返回重复个数，<code>equal_range</code> 一次取走所有相等元素。</li>
+<li><strong>set 设置降序</strong>：<code>std::set&lt;int, std::greater&lt;int&gt;&gt; s;</code>，传入函数对象改变排序准则。</li>
+<li><strong>自定义数据类型 set 排序</strong>：自定义类型需要提供 <code>operator&lt;</code> 或传入比较器仿函数（<code>set&lt;Person, CmpByName&gt;</code>）。</li>
+<li><strong>map 容器</strong>：键唯一、按键有序的键值对（<code>std::map&lt;K, V&gt;</code>）；<code>m[k]</code> 不存在会<strong>自动插入默认值</strong>（副作用），只读查找用 <code>m.find(k)</code> 或 <code>m.at(k)</code>（越界抛异常）。</li>
+<li><strong>map 进阶</strong>：<code>insert({k,v})</code> 不覆盖已有值、<code>m.count(k)</code>/<code>m.contains(k)</code>（C++20）判断存在、<code>erase(k)</code>、遍历 <code>for (const auto&amp; [k, v] : m)</code>。</li>
+<li><strong>unordered_map</strong>：哈希表实现，平均 O(1) 查找，无序；适合「ID → 数据」高频查询（如 TF 帧缓存）。</li>
+<li><strong>容器使用时机</strong>：快速随机访问→vector；头尾操作→deque；中间频繁插入删除→list；去重有序→set；键值查询→map；高频 O(1) 查询→unordered_map；LIFO→stack；FIFO→queue。</li>
+</ul>
+<pre><code class="lang-cpp">std::map&lt;std::string, std::vector&lt;<span class="hljs-type">double</span>&gt;&gt; traj;
+traj[<span class="hljs-string">"joint1"</span>] = {<span class="hljs-number">0.1</span>, <span class="hljs-number">0.2</span>, <span class="hljs-number">0.3</span>};
+<span class="hljs-keyword">for</span> (<span class="hljs-type">const</span> <span class="hljs-keyword">auto</span>&amp; [name, points] : traj)        <span class="hljs-comment">// C++17 结构化绑定</span>
+    std::cout &lt;&lt; name &lt;&lt; <span class="hljs-string">" has "</span> &lt;&lt; points.<span class="hljs-built_in">size</span>() &lt;&lt; <span class="hljs-string">" points\n"</span>;
+</code></pre>
+<h4 id="容器选型速查表">容器选型速查表</h4>
 <table>
 <thead>
 <tr>
@@ -660,18 +731,148 @@
 </tr>
 </tbody>
 </table>
-<ul>
-<li>自定义类型进 set/map 需提供 <code>operator&lt;</code> 或比较器；<code>insert</code> 去重可用 C++17 结构化绑定接收结果。</li>
-</ul>
-<h2 id="113-运行效果（实测）">11.3 运行效果（实测）</h2>
+<blockquote>
+<p><strong>注意：</strong> <code>std::map::operator[]</code> 在键不存在时插入默认值——在 const 场景或「只查不改」场景用 <code>find()</code>/<code>at()</code>，否则会悄悄把 map 撑大、改变排序结果。</p>
+</blockquote>
+<h2 id="113-重点与难点">11.3 重点与难点</h2>
+<ol>
+<li><strong>迭代器失效</strong>：vector 扩容使所有迭代器失效；<code>erase</code> 使被删位置之后迭代器失效；<code>insert</code> 可能触发扩容。循环删除用 <code>it = c.erase(it)</code>，插入前若要保迭代器需预留容量。</li>
+<li><strong>容量 vs 大小</strong>：<code>capacity()</code> 与 <code>size()</code> 的区别、<code>reserve</code> 与 <code>resize</code> 的区别——面试与性能优化双高频。</li>
+<li><strong>关联容器排序</strong>：set/map 依据「严格弱序」（<code>operator&lt;</code>）排序，自定义类型必须提供比较方式，否则编译失败。</li>
+<li><strong><code>map::[]</code> 的副作用</strong>：查询用 <code>find</code>，插入用 <code>insert</code>/<code>emplace</code>，别在只读路径上用 <code>[]</code>。</li>
+<li><strong>容器选型表</strong>：先问「访问模式」（随机/头尾/中间）再问「是否去重/有序/键值」，最后问「内存连续性要求」（缓存/与 C 接口互操作优先 vector）。</li>
+</ol>
+<h2 id="114-代码与命令实战">11.4 代码与命令实战</h2>
+<p><strong>场景 1：string 全套操作（对应第1课）</strong></p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// string_demo.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;algorithm&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;cctype&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    std::string topic = <span class="hljs-string">"robot/cmd_vel"</span>;
+    std::cout &lt;&lt; topic.<span class="hljs-built_in">substr</span>(<span class="hljs-number">0</span>, <span class="hljs-number">5</span>) &lt;&lt; <span class="hljs-string">"\n"</span>;                    <span class="hljs-comment">// robot</span>
+    std::<span class="hljs-type">size_t</span> pos = topic.<span class="hljs-built_in">find</span>(<span class="hljs-string">'/'</span>);
+    std::cout &lt;&lt; topic.<span class="hljs-built_in">substr</span>(pos + <span class="hljs-number">1</span>) &lt;&lt; <span class="hljs-string">"\n"</span>;                 <span class="hljs-comment">// cmd_vel</span>
+    topic.<span class="hljs-built_in">append</span>(<span class="hljs-string">"_x"</span>);
+    topic.<span class="hljs-built_in">replace</span>(topic.<span class="hljs-built_in">find</span>(<span class="hljs-string">"_x"</span>), <span class="hljs-number">2</span>, <span class="hljs-string">""</span>);
+    std::string up = topic;
+    std::<span class="hljs-built_in">transform</span>(up.<span class="hljs-built_in">begin</span>(), up.<span class="hljs-built_in">end</span>(), up.<span class="hljs-built_in">begin</span>(),
+                   [](<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> c) { <span class="hljs-keyword">return</span> std::<span class="hljs-built_in">toupper</span>(c); });
+    std::cout &lt;&lt; topic &lt;&lt; <span class="hljs-string">" -&gt; "</span> &lt;&lt; up &lt;&lt; <span class="hljs-string">"\n"</span>;
+    std::cout &lt;&lt; topic.<span class="hljs-built_in">compare</span>(<span class="hljs-string">"robot/cmd_vel"</span>) &lt;&lt; <span class="hljs-string">"\n"</span>;        <span class="hljs-comment">// 0 相等</span>
+}
+</code></pre>
+<pre><code class="lang-bash">g++ -std=c++17 -Wall -o string_demo string_demo.cpp &amp;&amp; ./string_demo
+</code></pre>
+<p><strong>场景 2：vector 容量管理与安全遍历删除（对应第1、2课）</strong></p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// vector_demo.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;vector&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    std::vector&lt;<span class="hljs-type">int</span>&gt; pts;
+    pts.<span class="hljs-built_in">reserve</span>(<span class="hljs-number">1000</span>);                       <span class="hljs-comment">// 预留：避免反复扩容</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">1000</span>; ++i) pts.<span class="hljs-built_in">push_back</span>(i);
+    std::cout &lt;&lt; <span class="hljs-string">"size="</span> &lt;&lt; pts.<span class="hljs-built_in">size</span>() &lt;&lt; <span class="hljs-string">" cap="</span> &lt;&lt; pts.<span class="hljs-built_in">capacity</span>() &lt;&lt; <span class="hljs-string">"\n"</span>;
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">auto</span> it = pts.<span class="hljs-built_in">begin</span>(); it != pts.<span class="hljs-built_in">end</span>();) {          <span class="hljs-comment">// 删除偶数</span>
+        <span class="hljs-keyword">if</span> (*it % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>) it = pts.<span class="hljs-built_in">erase</span>(it);                <span class="hljs-comment">// 返回下一迭代器</span>
+        <span class="hljs-keyword">else</span> ++it;
+    }
+    std::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-type">int</span>&gt;(pts).<span class="hljs-built_in">swap</span>(pts);         <span class="hljs-comment">// swap 收缩容量</span>
+    std::cout &lt;&lt; <span class="hljs-string">"after size="</span> &lt;&lt; pts.<span class="hljs-built_in">size</span>() &lt;&lt; <span class="hljs-string">" cap="</span> &lt;&lt; pts.<span class="hljs-built_in">capacity</span>() &lt;&lt; <span class="hljs-string">"\n"</span>;
+}
+</code></pre>
+<pre><code class="lang-bash">g++ -std=c++17 -Wall -o vector_demo vector_demo.cpp &amp;&amp; ./vector_demo
+</code></pre>
+<p><strong>场景 3：deque 滑动窗口 + stack/queue（对应第2课）</strong></p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// dq_sq.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;deque&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;queue&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stack&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    std::deque&lt;<span class="hljs-type">double</span>&gt; window;               <span class="hljs-comment">// 传感器滑动窗口：保留最近 3 帧</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">double</span> v : {<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>, <span class="hljs-number">3.0</span>, <span class="hljs-number">4.0</span>}) {
+        window.<span class="hljs-built_in">push_back</span>(v);
+        <span class="hljs-keyword">if</span> (window.<span class="hljs-built_in">size</span>() &gt; <span class="hljs-number">3</span>) window.<span class="hljs-built_in">pop_front</span>();
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">double</span> v : window) std::cout &lt;&lt; v &lt;&lt; <span class="hljs-string">" "</span>;           <span class="hljs-comment">// 2 3 4</span>
+    std::cout &lt;&lt; <span class="hljs-string">"\n"</span>;
+
+    std::stack&lt;<span class="hljs-type">int</span>&gt; st;                      <span class="hljs-comment">// 撤销栈</span>
+    st.<span class="hljs-built_in">push</span>(<span class="hljs-number">1</span>); st.<span class="hljs-built_in">push</span>(<span class="hljs-number">2</span>);
+    std::cout &lt;&lt; st.<span class="hljs-built_in">top</span>() &lt;&lt; <span class="hljs-string">" "</span>; st.<span class="hljs-built_in">pop</span>();                  <span class="hljs-comment">// 2</span>
+
+    std::queue&lt;<span class="hljs-type">int</span>&gt; q;                       <span class="hljs-comment">// 任务队列 FIFO</span>
+    q.<span class="hljs-built_in">push</span>(<span class="hljs-number">10</span>); q.<span class="hljs-built_in">push</span>(<span class="hljs-number">20</span>);
+    std::cout &lt;&lt; q.<span class="hljs-built_in">front</span>() &lt;&lt; <span class="hljs-string">" "</span> &lt;&lt; q.<span class="hljs-built_in">back</span>() &lt;&lt; <span class="hljs-string">"\n"</span>;       <span class="hljs-comment">// 10 20</span>
+}
+</code></pre>
+<pre><code class="lang-bash">g++ -std=c++17 -Wall -o dq_sq dq_sq.cpp &amp;&amp; ./dq_sq
+</code></pre>
+<p><strong>场景 4：set/map 与自定义排序（对应第2课）</strong></p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// set_map.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;map&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;set&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string&gt;</span></span>
+
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">Pose</span> { <span class="hljs-type">double</span> x, y; };
+
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">PoseLess</span> {
+    <span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">operator</span><span class="hljs-params">()</span><span class="hljs-params">(<span class="hljs-type">const</span> Pose&amp; a, <span class="hljs-type">const</span> Pose&amp; b)</span> <span class="hljs-type">const</span> </span>{
+        <span class="hljs-keyword">return</span> a.x &lt; b.x || (a.x == b.x &amp;&amp; a.y &lt; b.y);
+    }
+};
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    std::set&lt;<span class="hljs-type">int</span>, std::greater&lt;<span class="hljs-type">int</span>&gt;&gt; scores{<span class="hljs-number">70</span>, <span class="hljs-number">90</span>, <span class="hljs-number">80</span>};     <span class="hljs-comment">// 降序</span>
+    <span class="hljs-keyword">auto</span> [it, ok] = scores.<span class="hljs-built_in">insert</span>(<span class="hljs-number">90</span>);                       <span class="hljs-comment">// C++17 结构化绑定</span>
+    std::cout &lt;&lt; <span class="hljs-string">"insert dup: "</span> &lt;&lt; ok &lt;&lt; <span class="hljs-string">"\n"</span>;               <span class="hljs-comment">// 0</span>
+
+    std::set&lt;Pose, PoseLess&gt; path{ {<span class="hljs-number">1</span>, <span class="hljs-number">2</span>}, {<span class="hljs-number">0</span>, <span class="hljs-number">3</span>}, {<span class="hljs-number">1</span>, <span class="hljs-number">1</span>} };   <span class="hljs-comment">// 自定义类型排序</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">const</span> <span class="hljs-keyword">auto</span>&amp; p : path) std::cout &lt;&lt; <span class="hljs-string">"("</span> &lt;&lt; p.x &lt;&lt; <span class="hljs-string">","</span> &lt;&lt; p.y &lt;&lt; <span class="hljs-string">") "</span>;
+
+    std::map&lt;std::string, <span class="hljs-type">int</span>&gt; ids{ {<span class="hljs-string">"lidar"</span>, <span class="hljs-number">1</span>}, {<span class="hljs-string">"imu"</span>, <span class="hljs-number">2</span>} };
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">auto</span> f = ids.<span class="hljs-built_in">find</span>(<span class="hljs-string">"lidar"</span>); f != ids.<span class="hljs-built_in">end</span>()) std::cout &lt;&lt; <span class="hljs-string">"\n"</span> &lt;&lt; f-&gt;second;
+    std::cout &lt;&lt; <span class="hljs-string">" count="</span> &lt;&lt; ids.<span class="hljs-built_in">count</span>(<span class="hljs-string">"camera"</span>) &lt;&lt; <span class="hljs-string">"\n"</span>;   <span class="hljs-comment">// 0</span>
+}
+</code></pre>
+<pre><code class="lang-bash">g++ -std=c++17 -Wall -o set_map set_map.cpp &amp;&amp; ./set_map
+</code></pre>
+<p><strong>场景 5：容器嵌套——轨迹缓存（对应第1课嵌套遍历）</strong></p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// nested.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;map&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;vector&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    std::map&lt;std::string, std::vector&lt;<span class="hljs-type">double</span>&gt;&gt; traj;          <span class="hljs-comment">// 关节 → 角度序列</span>
+    traj[<span class="hljs-string">"shoulder"</span>] = {<span class="hljs-number">0.1</span>, <span class="hljs-number">0.2</span>};
+    traj[<span class="hljs-string">"elbow"</span>]    = {<span class="hljs-number">0.5</span>, <span class="hljs-number">0.6</span>, <span class="hljs-number">0.7</span>};
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">const</span> <span class="hljs-keyword">auto</span>&amp; [joint, angles] : traj) {
+        std::cout &lt;&lt; joint &lt;&lt; <span class="hljs-string">": "</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">double</span> a : angles) std::cout &lt;&lt; a &lt;&lt; <span class="hljs-string">" "</span>;
+        std::cout &lt;&lt; <span class="hljs-string">"\n"</span>;
+    }
+}
+</code></pre>
+<pre><code class="lang-bash">g++ -std=c++17 -Wall -o nested nested.cpp &amp;&amp; ./nested
+</code></pre>
+<h2 id="115-运行效果（实测）">11.5 运行效果（实测）</h2>
+<p>以下为滑动窗口（deque 保留最近 3 帧）、set 降序去重插入与 map 查找（<code>find</code> 命中 + <code>count</code> 未命中）的综合实测输出：</p>
 <pre><code class="lang-text">2 3 4 
 insert dup ok=0 top=90
 lidar=1
 0
 </code></pre>
 <p>编译命令：<code>g++ -std=c++17 -Wall w11_setmap.cpp -o w11 &amp;&amp; ./w11</code>（滑动窗口淘汰最旧帧；重复插入 <code>ok=0</code>；<code>count("camera")==0</code>）。</p>
-<h2 id="114-端到端实战（实测）：csv-点位分组统计">11.4 端到端实战（实测）：CSV 点位分组统计</h2>
-<p>传感器点位按名称分组（<code>map + stringstream</code> 解析、结构化绑定遍历）——轨迹/标定数据处理的标准形态：</p>
+<h2 id="端到端实战（实测）：csv-点位分组统计">端到端实战（实测）：CSV 点位分组统计</h2>
+<p><strong>需求</strong>：传感器点位按名称分组（<code>map + stringstream</code> 解析、结构化绑定遍历）——轨迹/标定数据处理的标准形态：</p>
 <pre><code class="lang-cpp"><span class="hljs-comment">// csv_group.cpp</span>
 std::map&lt;std::string, std::vector&lt;<span class="hljs-type">double</span>&gt;&gt; groups;      <span class="hljs-comment">// name -&gt; 坐标序列</span>
 <span class="hljs-function">std::istringstream <span class="hljs-title">in</span><span class="hljs-params">(csv)</span></span>;
@@ -695,12 +896,47 @@ std::string line;
 imu: 2 点 -&gt; 1 2 3 4 
 lidar: 2 点 -&gt; 10 20 30 40
 </code></pre>
-<h2 id="115-本章小结">11.5 本章小结</h2>
+<p>要点解析：</p>
+<ul>
+<li><code>map</code> 天然按 key 升序遍历，所以输出顺序是 camera → imu → lidar，无需额外排序；</li>
+<li><code>groups[name]</code> 首次访问自动创建空 vector——<code>operator[]</code> 的「隐式插入」副作用在这里是正向利用（分组写入）；</li>
+<li><code>coords.size()/2</code> 是因为每个点占 x、y 两列，打印点数需除以 2；</li>
+<li>逐行 <code>getline</code> + 逐列 <code>getline(ss, cell, ',')</code> 是 CSV 解析的最小可靠套路，可直接迁移到轨迹/标定文件处理。</li>
+</ul>
+<h2 id="116-与-ros2--机器人开发的关联">11.6 与 ROS2 / 机器人开发的关联</h2>
+<ol>
+<li><strong>消息缓存队列</strong>：订阅回调里把 <code>msg</code> 推入 <code>std::deque</code>（滑动窗口）或 <code>std::queue</code>（FIFO 任务队列），控制保留帧数、<code>pop_front</code> 淘汰旧帧——雷达/图像帧缓冲的标准做法。</li>
+<li><strong>路径规划</strong>：nav2 路径是 <code>nav_msgs::msg::Path</code>（<code>std::vector&lt;geometry_msgs::msg::PoseStamped&gt;</code>）；open/closed 列表用 <code>std::set</code>/<code>std::priority_queue</code>，坐标查询用 <code>unordered_map</code> 做 O(1) 查重。</li>
+<li><strong>TF 与参数表</strong>：<code>std::map&lt;std::string, rclcpp::Time&gt;</code> 管理各帧最新时间戳；<code>unordered_map</code> 做 frame_id → 位姿的快速查询。</li>
+<li><strong>去重与排序</strong>：传感器 ID 去重用 <code>std::set</code>；多传感器数据按时间戳合并用 <code>std::multiset</code> + 时间比较器。</li>
+<li><strong>性能细节</strong>：实时循环里 <code>reserve</code> 避免扩容、<code>shrink_to_fit</code> 释放内存、优先 <code>vector</code>（缓存友好、与 C 接口/DDS 序列化零拷贝兼容）。</li>
+</ol>
+<h2 id="117-自测与练习（含参考答案要点）">11.7 自测与练习（含参考答案要点）</h2>
+<ol>
+<li><strong>概念题</strong>：<code>vector</code> 的 <code>capacity()</code> 与 <code>size()</code>、<code>reserve()</code> 与 <code>resize()</code> 分别是什么关系？</li>
+<li><strong>概念题</strong>：为什么 <code>std::map</code> 的 <code>operator[]</code> 不能用在 const 对象上？它有什么副作用？</li>
+<li><strong>动手任务</strong>：实现一个「最近 N 帧点云数」滑动窗口统计器：底层 <code>std::deque</code>，提供 <code>add(count)</code>、<code>average()</code>、<code>size()</code>。验收：超过 N 自动淘汰最旧帧。</li>
+<li><strong>动手任务</strong>：读取一段 CSV（每行 "name,x,y"），用 <code>std::map&lt;std::string, std::vector&lt;double&gt;&gt;</code> 分组统计各 name 的点数并输出。验收：输出按 name 升序。</li>
+</ol>
+<blockquote>
+<p>参考答案要点：题 1——size 是元素个数，capacity 是已分配容量；reserve 只扩容量不增元素，resize 改变元素个数（多退少补）。题 2——<code>[]</code> 可能在键不存在时插入默认值，改变 map 内容，故 const 版本禁用；副作用是隐式插入。题 3——<code>if (dq.size() &gt; N) dq.pop_front();</code> 平均值遍历求和。题 4——<code>std::map</code> 天然按 key 升序；<code>getline</code> + <code>find(',')</code> 或 <code>std::stringstream</code> 分列。</p>
+</blockquote>
+<h2 id="118-常见问题（faq）">11.8 常见问题（FAQ）</h2>
+<ul>
+<li><strong>Q：<code>std::vector&lt;bool&gt;</code> 为什么是坑？</strong> A：它是按位存储的特化，<code>operator[]</code> 返回代理对象而非 <code>bool&amp;</code>，取地址/引用会出错；需要位集合用 <code>std::vector&lt;char&gt;</code> 或 <code>std::bitset</code>。</li>
+<li><strong>Q：<code>map</code> 和 <code>unordered_map</code> 怎么选？</strong> A：需要有序遍历/范围查询用 <code>map</code>（O(log n)）；只要快速点查用 <code>unordered_map</code>（平均 O(1)，最坏 O(n)，需要哈希函数）。</li>
+<li><strong>Q：遍历时删除元素为什么会崩溃？</strong> A：<code>erase</code> 使被删位置及其后的迭代器失效，继续用旧迭代器是 UB；正确写法 <code>it = c.erase(it)</code>。</li>
+<li><strong>Q：<code>list</code> 为什么不用 <code>std::sort</code>？</strong> A：<code>std::sort</code> 需要随机访问迭代器，list 是双向链表；用成员函数 <code>l.sort(cmp)</code>（归并排序，O(n log n)）。</li>
+<li><strong>Q：什么时候用 <code>emplace_back</code> 代替 <code>push_back</code>？</strong> A：构造复杂对象时可原地构造、省一次拷贝；C++11 起推荐，但简单类型两者差异不大。</li>
+</ul>
+<h2 id="119-本章小结">11.9 本章小结</h2>
 <ul>
 <li>迭代器失效是头号坑：扩容、erase 之后旧迭代器不可用；</li>
 <li><code>map::operator[]</code> 在键不存在时<strong>插入默认值</strong>——只查不改用 <code>find/at</code>；</li>
 <li>nav2 路径就是 <code>vector&lt;PoseStamped&gt;</code>；open/closed 列表用 <code>set/priority_queue</code>；TF 帧缓存用 <code>unordered_map</code>；</li>
-<li>实时循环里 <code>reserve</code> 优先 <code>vector</code>：缓存友好且与 DDS 序列化零拷贝兼容。</li>
+<li>实时循环里 <code>reserve</code> 优先 <code>vector</code>：缓存友好且与 DDS 序列化零拷贝兼容；</li>
+<li>先按「访问模式 → 去重/有序/键值 → 内存连续性」三问选容器，选错容器实时性掉一个数量级；</li>
+<li>自定义类型进 set/map 必须提供 <code>operator&lt;</code> 或比较器，插入验证用结构化绑定接 <code>pair&lt;it, bool&gt;</code>。</li>
 </ul>
 
                                 
@@ -745,7 +981,7 @@ lidar: 2 点 -&gt; 10 20 30 40
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第11章 STL 标准模板库（容器选型与实践）","level":"4.4","depth":1,"next":{"title":"第12章 常用算法与技术（algorithm/chrono/lambda/线程）","level":"4.5","depth":1,"path":"第12周-常用算法与技术.md","ref":"第12周-常用算法与技术.md","articles":[]},"previous":{"title":"第10章 高级特性与编程范式（继承多态/模板/异常/IO）","level":"4.3","depth":1,"path":"第10周-高级特性与编程范式.md","ref":"第10周-高级特性与编程范式.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第11周-STL标准模板库.md","mtime":"2026-10-16T02:43:09.752Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T02:43:11.108Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第11章 STL 标准模板库（容器选型与实践）","level":"4.4","depth":1,"next":{"title":"第12章 常用算法与技术（algorithm/chrono/lambda/线程）","level":"4.5","depth":1,"path":"第12周-常用算法与技术.md","ref":"第12周-常用算法与技术.md","articles":[]},"previous":{"title":"第10章 高级特性与编程范式（继承多态/模板/异常/IO）","level":"4.3","depth":1,"path":"第10周-高级特性与编程范式.md","ref":"第10周-高级特性与编程范式.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第11周-STL标准模板库.md","mtime":"2026-10-16T03:26:51.708Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T03:26:53.986Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

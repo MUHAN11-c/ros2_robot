@@ -603,39 +603,269 @@
 <blockquote>
 <p>本章对应课程第 9 周：构造/析构、拷贝控制与深浅拷贝、初始化列表、静态成员与单例、this/常函数、友元、运算符重载与智能指针雏形——整个 C++ 阶段最「值钱」的一周。</p>
 </blockquote>
-<h2 id="91-案例以及案例分析">9.1 案例以及案例分析</h2>
-<p><strong>需求</strong>：实现深拷贝的 <code>Buffer</code> 类（杜绝 double free）与 <code>Vec2</code> 类（<code>operator+</code>、<code>operator&lt;&lt;</code>、仿函数 <code>operator()</code>），体会三/五法则与运算符重载。</p>
-<h2 id="92-知识点与实现">9.2 知识点与实现</h2>
-<h3 id="921-构造、析构与拷贝控制">9.2.1 构造、析构与拷贝控制</h3>
+<h2 id="91-本周概览与课时结构">9.1 本周概览与课时结构</h2>
+<p>本周深入类的「生命周期与资源管理」：构造函数、析构函数、拷贝构造与深浅拷贝、初始化列表、new/delete 动态内存；再进入静态成员与单例模式、this 指针与常函数常对象、友元；最后用运算符重载把自定义类型写得像内置类型一样顺手。这是整个 C++ 阶段最「值钱」的一周——ROS2 中 <code>rclcpp::Node</code> 的构造、<code>shared_ptr</code> 管理的资源、<code>RCLCPP_INFO</code> 流式输出、链式配置接口，全部源于本章知识。</p>
+<table>
+<thead>
+<tr>
+<th>课</th>
+<th>小节</th>
+<th>时长</th>
+<th>一句话导览</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第1课 构造函数解析与初始化实现</td>
+<td>2 组 14 节</td>
+<td>约 2h05m</td>
+<td>构造/析构、拷贝控制、深浅拷贝、初始化列表、new/delete</td>
+</tr>
+<tr>
+<td>第2课 静态成员解析与指针应用</td>
+<td>2 组 14 节</td>
+<td>约 2h06m</td>
+<td>静态成员与单例模式、对象模型、this/常函数/常对象、友元</td>
+</tr>
+<tr>
+<td>第3课 运算重载符讲解</td>
+<td>16 节</td>
+<td>约 2h30m</td>
+<td>加号/左移/自增/赋值/关系/函数调用运算符重载与智能指针</td>
+</tr>
+</tbody>
+</table>
+<h2 id="92-知识点梳理">9.2 知识点梳理</h2>
+<h3 id="921-第1课：构造函数解析与初始化实现">9.2.1 第1课：构造函数解析与初始化实现</h3>
 <ul>
-<li>构造可重载、析构不可重载；对象销毁时自动析构——RAII 思想的基础；</li>
-<li>拷贝构造在值传参/值返回/用旧对象初始化新对象时调用（所以参数用 <code>const T&amp;</code>）；</li>
-<li>默认拷贝是<strong>浅拷贝</strong>：指针成员被两个对象共享 → 析构 double free。必须手写深拷贝（或 <code>= delete</code> / 用智能指针）；</li>
-<li>初始化列表 <code>: a_(1), b_(2)</code> 更高效且对引用/const/无默认构造成员<strong>必须</strong>使用；顺序按成员声明顺序；</li>
-<li><code>explicit</code> 禁止单参构造的隐式转换；<code>Person p();</code> 声明的是函数不是对象；</li>
-<li><code>new/delete</code>（调用构造/析构）与 <code>new[]/delete[]</code> 必须配对；现代 C++ 优先智能指针。</li>
+<li><strong>核心概念</strong>：构造函数（constructor）在对象创建时自动执行，负责「初始化 + 资源申请」；析构函数（destructor，<code>~类名()</code>）在对象销毁时自动执行，负责「资源释放」。二者构成 RAII（资源获取即初始化）思想的基础。</li>
+<li><strong>构造函数和析构函数</strong>：构造函数可重载、无返回值、名字与类名相同；析构函数不可重载、无参数。对象在栈上离开作用域、<code>delete</code> 堆对象、或容器销毁元素时自动调用析构。</li>
+<li><strong>构造函数分类</strong>：默认构造（无参）、有参构造、拷贝构造（<code>T(const T&amp;)</code>）、移动构造（C++11，<code>T(T&amp;&amp;)</code>）。编译器在未手写时会生成默认版本。</li>
+<li><strong>构造函数调用方式</strong>：括号法 <code>Person p(10);</code>、显示法 <code>Person p = Person(10);</code>、隐式转换法 <code>Person p = 10;</code>（单参构造会被隐式调用，通常用 <code>explicit</code> 禁止）。<strong>不要用 <code>Person p();</code></strong>——那是声明了一个返回 <code>Person</code> 的函数（最著名的「最烦解析」问题）。</li>
+<li><strong>构造函数调用细节与规则</strong>：若用户定义了任何构造函数，编译器不再生成默认构造；拷贝构造在<strong>值传递传参、值返回对象、用已有对象初始化新对象</strong>时被调用（传参会调拷贝构造，这正是性能热点，故参数常用 <code>const T&amp;</code>）。</li>
+<li><strong>浅拷贝的问题与深拷贝</strong>：编译器默认拷贝构造是逐成员复制（浅拷贝），对象持有 <code>new</code> 出来的指针时，两个对象指向同一块内存 → 析构时 double free。必须手写拷贝构造/拷贝赋值，为指针成员<strong>重新分配并复制内容</strong>（深拷贝，三/五法则）。C++11 起优先用 <code>std::unique_ptr/std::vector</code> 让编译器生成的拷贝控制正确。</li>
+<li><strong>初始化列表</strong>：<code>Class() : a_(1), b_(2) {}</code> 比在构造体内赋值更高效（少一次默认构造+赋值），且<strong>必须</strong>用于引用成员、const 成员、无默认构造的成员。初始化顺序按<strong>成员声明顺序</strong>，不是列表书写顺序。</li>
+<li><strong>类对象作为类成员（组合）</strong>：成员对象先于外层对象构造（按声明顺序），析构相反（先析构外层再析构成员）。rclcpp 节点类内含 publisher/subscription 成员正是这种组合关系。</li>
+<li><strong>explicit 关键字</strong>：禁止构造函数参与隐式转换，避免 <code>Widget w = 42;</code> 这类意外转换。单参构造几乎都应该 <code>explicit</code>。</li>
+<li><strong>new 和 delete</strong>：<code>new</code> 分配并调用构造，<code>delete</code> 调析构并释放；数组用 <code>new[]/delete[]</code> 必须配对。细节坑：<code>delete</code> 空指针安全、重复 delete 崩溃、<code>new</code> 抛 <code>std::bad_alloc</code>、对应 <code>malloc/free</code> 不可混用。现代 C++ 优先智能指针与容器。</li>
 </ul>
-<h3 id="922-静态成员、this-与友元">9.2.2 静态成员、this 与友元</h3>
+<pre><code class="lang-cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Joint</span> {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">explicit</span> <span class="hljs-title">Joint</span><span class="hljs-params">(<span class="hljs-type">double</span> rad = <span class="hljs-number">0.0</span>)</span> : rad_(rad) {</span>}
+    <span class="hljs-built_in">Joint</span>(<span class="hljs-type">const</span> Joint&amp; other) : <span class="hljs-built_in">rad_</span>(other.rad_) {}        <span class="hljs-comment">// 拷贝构造</span>
+    ~<span class="hljs-built_in">Joint</span>() = <span class="hljs-keyword">default</span>;
+<span class="hljs-keyword">private</span>:
+    <span class="hljs-type">double</span> rad_;
+};
+<span class="hljs-function">Joint <span class="hljs-title">j1</span><span class="hljs-params">(<span class="hljs-number">0.5</span>)</span></span>;
+Joint j2 = j1;        <span class="hljs-comment">// 调用拷贝构造</span>
+</code></pre>
+<blockquote>
+<p><strong>注意：</strong> 手写了析构函数，通常就要考虑手写/删除拷贝构造与拷贝赋值（三/五法则）。持有裸 <code>new</code> 资源又依赖默认拷贝 = 定时炸弹；用 <code>std::unique_ptr</code> 后让编译器替你做正确的事。</p>
+</blockquote>
+<h3 id="922-第2课：静态成员解析与指针应用">9.2.2 第2课：静态成员解析与指针应用</h3>
 <ul>
-<li>静态成员属于类本身；静态成员函数无 <code>this</code>，常作单例入口；</li>
-<li>单例（C++11 局部静态线程安全）+ <code>= delete</code> 禁拷贝赋值；ROS2 更推荐依赖注入而非全局单例；</li>
-<li><code>this</code> 返回 <code>*this</code> 引用实现<strong>链式编程</strong>（<code>NodeOptions().arguments(...).use_intra_process_comms(true)</code> 即此风格）；</li>
-<li>常函数 <code>void f() const</code>（只读接口）与 <code>mutable</code>；空指针调不访问成员的函数可能不崩——防御性设计要保证对象存在；</li>
-<li>友元单向、不可传递，仅用于 <code>operator&lt;&lt;</code> 这类必须访问私有的场景。</li>
+<li><strong>核心概念</strong>：静态成员（static member）属于<strong>类本身</strong>而非某个对象，所有对象共享一份；<code>this</code> 指针指向调用成员函数的当前对象。</li>
+<li><strong>静态成员变量</strong>：类内声明 <code>static int count_;</code>，类外（或 C++17 <code>inline static</code>）定义初始化；不占对象内存，通过 <code>类名::成员</code> 访问。常用于计数器、全局配置缓存。</li>
+<li><strong>静态成员函数</strong>：无 <code>this</code>，只能访问静态成员；可用类名直接调用。常作工厂函数/单例入口（如 <code>Node::make_shared</code>、<code>Instance()</code>）。</li>
+<li><strong>const 静态成员属性</strong>：<code>static const int</code> / <code>static constexpr</code> 可在类内初始化（编译期常量）；非 const 静态成员必须类外定义。</li>
+<li><strong>单例模式（Singleton）</strong>：保证一个类只有一个实例并提供全局访问点。C++11 起局部静态变量线程安全，实现最简：</li>
 </ul>
-<h3 id="923-运算符重载与智能指针雏形">9.2.3 运算符重载与智能指针雏形</h3>
+<pre><code class="lang-cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">RobotConfig</span> {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-type">static</span> RobotConfig&amp; <span class="hljs-title">instance</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-type">static</span> RobotConfig inst;     <span class="hljs-comment">// C++11 起线程安全的静态局部变量</span>
+        <span class="hljs-keyword">return</span> inst;
+    }
+    <span class="hljs-built_in">RobotConfig</span>(<span class="hljs-type">const</span> RobotConfig&amp;) = <span class="hljs-keyword">delete</span>;             <span class="hljs-comment">// 禁止拷贝</span>
+    RobotConfig&amp; <span class="hljs-keyword">operator</span>=(<span class="hljs-type">const</span> RobotConfig&amp;) = <span class="hljs-keyword">delete</span>;  <span class="hljs-comment">// 禁止赋值</span>
+    <span class="hljs-type">double</span> max_speed = <span class="hljs-number">1.5</span>;
+<span class="hljs-keyword">private</span>:
+    <span class="hljs-built_in">RobotConfig</span>() = <span class="hljs-keyword">default</span>;
+};
+</code></pre>
 <ul>
-<li><code>+</code> 成员/全局两版；<code>&lt;&lt;</code> 只能全局 <code>ostream&amp; operator&lt;&lt;(ostream&amp;, const T&amp;)</code> 返回 <code>os</code> 支持链式；</li>
-<li>前置 <code>++</code> 返回引用、后置 <code>++(int)</code> 返回副本；<code>operator=</code> 要自赋值检查 + 释放旧资源 + 深拷贝 + 返回 <code>*this</code>；</li>
-<li>仿函数 <code>operator()</code> 携带状态，是 lambda 与 STL 谓词的底层形态；</li>
-<li>智能指针靠 <code>operator-&gt;/operator*</code> 代理原生指针：<code>unique_ptr</code> 独占、<code>shared_ptr</code> 引用计数。</li>
+<li><strong>经典面试题</strong>：为什么单例要删掉拷贝构造/赋值？（否则能复制出第二个实例）；单例与全局变量的坏味道（隐藏依赖、难测试），ROS2 更推荐把配置放进节点参数而非全局单例。</li>
+<li><strong>对象模型基础</strong>：对象内存只含成员变量（不含成员函数，函数在代码区共享）；空类对象占 1 字节（保证地址唯一）。C++ 类布局是理解多态/虚表的前提。</li>
+<li><strong>this 指针的使用</strong>：<code>this</code> 是隐式传给非静态成员函数的指针，可用于区分同名形参与成员、返回对象自身引用（链式编程）、传 <code>this</code> 给需要对象指针的接口。</li>
+<li><strong>链式编程</strong>：成员函数返回 <code>*this</code> 的引用（<code>T&amp; setA(){...; return *this;}</code>），可连续调用 <code>obj.setX(1).setY(2).setZ(3)</code>。rclcpp 里 <code>rclcpp::NodeOptions().arguments(...).context(...)</code> 就是链式风格。</li>
+<li><strong>空指针访问成员函数的问题</strong>：<code>T* p = nullptr; p-&gt;show();</code> 若 <code>show</code> 不访问成员变量可能不崩（<code>this == nullptr</code>），一旦访问成员即段错误。防御写法：成员函数开头 <code>if (this == nullptr) return;</code> 或保证对象一定存在。</li>
+<li><strong>常函数与常对象</strong>：常函数 <code>void show() const;</code> 承诺不修改成员（<code>this</code> 为 <code>const T*</code>）；常对象只能调用常函数、只能访问 const 成员。这是「只读接口」的类型级保证——ROS2 中 <code>const</code> 成员函数是接口设计标配。</li>
+<li><strong>mutable</strong>：<code>mutable</code> 成员在常函数中仍可修改（常用于缓存、互斥锁）。</li>
+<li><strong>友元（friend）</strong>：让全局函数或另一个类访问本类私有成员。全局函数做友元、类做友元（单向、不可传递、不可继承）。友元破坏封装，应克制使用——只用于「确实需要双向协作」的场景（如运算符重载中 <code>operator&lt;&lt;</code>）。</li>
 </ul>
-<h2 id="93-运行效果（实测）">9.3 运行效果（实测）</h2>
+<h3 id="923-第3课：运算重载符讲解">9.2.3 第3课：运算重载符讲解</h3>
+<ul>
+<li><strong>核心概念</strong>：运算符重载 = 给自定义类型定义运算符行为，本质是调用 <code>operator运算符</code> 函数。规则：不能改变优先级/结合性/操作数个数、不能发明新运算符，部分运算符（<code>::</code>、<code>.</code>、<code>.*</code> 等）不能重载。</li>
+<li><strong>加号重载</strong>：成员函数版 <code>T operator+(const T&amp; other) const;</code> 或全局函数版 <code>T operator+(const T&amp; a, const T&amp; b);</code>。可实现「对象+对象」「对象+内置类型」的对称重载（全局版更对称）。</li>
+<li><strong>运算符重载可实现函数重载</strong>：同一 <code>operator+</code> 可按参数类型提供多个版本。</li>
+<li><strong>重载细节</strong>：成员版左侧必须是本类对象；全局版需要友元或公有接口；注意返回值是否应为引用（避免悬垂）。</li>
+<li><strong>左移运算符重载（<code>&lt;&lt;</code>）</strong>：让自定义类型可被 <code>std::cout</code> 输出。必须用<strong>全局函数</strong>（左操作数是 <code>ostream&amp;</code>），签名 <code>std::ostream&amp; operator&lt;&lt;(std::ostream&amp; os, const T&amp; obj);</code>，内部逐字段输出并返回 <code>os</code> 以支持链式。<code>RCLCPP_INFO</code> 风格日志、消息打印都依赖此模式。</li>
+<li><strong>自增运算符重载</strong>：前置 <code>T&amp; operator++()</code>（返回引用、先加后用）与后置 <code>T operator++(int)</code>（返回加前副本、带 int 占位区分）。</li>
+<li><strong>智能指针初步</strong>：<code>operator-&gt;</code> 与 <code>operator*</code> 重载让智能指针（<code>unique_ptr/shared_ptr</code>）像原生指针一样使用；自定义资源句柄类常重载它们实现代理语义。</li>
+<li><strong>赋值运算符重载（<code>operator=</code>）</strong>：默认浅拷贝；持有资源的类必须实现「自赋值检查 + 释放旧资源 + 深拷贝 + 返回 <code>*this</code>」。这是三/五法则的核心。C++11 起还应考虑移动赋值 <code>operator=(T&amp;&amp;)</code>。</li>
+<li><strong>重载关系运算符</strong>：<code>operator==/!=/&lt;</code> 等，让对象可比较、可放入 <code>std::set</code>/<code>std::map</code>（容器要求严格弱序）。C++20 可用 <code>operator&lt;=&gt;</code> 一次生成全部比较。</li>
+<li><strong>函数调用运算符重载（仿函数）</strong>：<code>operator()</code> 让对象像函数一样调用，可携带状态，是 lambda 的底层形态、STL 算法谓词的基础。</li>
+<li><strong>重载总结</strong>：单目运算符常用成员版、双目对称运算符用全局版、流运算符只能全局版、赋值类必须成员版；返回引用还是值决定能否链式。</li>
+</ul>
+<h2 id="93-重点与难点">9.3 重点与难点</h2>
+<ol>
+<li><strong>深浅拷贝与三/五法则</strong>：析构、拷贝构造、拷贝赋值（C++11 加移动构造、移动赋值）要么都写要么都禁（<code>= delete</code>），这是 C++ 内存安全的第一原则。</li>
+<li><strong>初始化列表</strong>：引用/const/无默认构造成员必须用；执行顺序按成员声明顺序，别依赖书写顺序。</li>
+<li><strong>this 与 const 正确性</strong>：<code>const</code> 成员函数 + <code>const T&amp;</code> 参数 + 常对象构成「只读接口」体系，编译器帮你挡 bug。</li>
+<li><strong>单例的度</strong>：单例解决「唯一实例」但也制造全局状态，机器人代码里优先用依赖注入（传引用/传指针）而不是全局单例。</li>
+<li><strong>运算符重载的取舍</strong>：让类型像内置类型一样自然，但滥用（把 <code>+</code> 重载成拼接日志）会毁掉可读性；重载 <code>==</code> 时必须同时考虑 <code>!=</code>（C++20 前）。</li>
+</ol>
+<h2 id="94-代码与命令实战">9.4 代码与命令实战</h2>
+<p><strong>场景 1：构造/析构与调用规则（对应第1课）</strong></p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// ctor.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string&gt;</span></span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Robot</span> {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">explicit</span> <span class="hljs-title">Robot</span><span class="hljs-params">(std::string name)</span> : name_(std::move(name)) {</span>
+        std::cout &lt;&lt; <span class="hljs-string">"ctor "</span> &lt;&lt; name_ &lt;&lt; <span class="hljs-string">"\n"</span>;
+    }
+    <span class="hljs-built_in">Robot</span>(<span class="hljs-type">const</span> Robot&amp; o) : <span class="hljs-built_in">name_</span>(o.name_) { std::cout &lt;&lt; <span class="hljs-string">"copy ctor "</span> &lt;&lt; name_ &lt;&lt; <span class="hljs-string">"\n"</span>; }
+    ~<span class="hljs-built_in">Robot</span>() { std::cout &lt;&lt; <span class="hljs-string">"dtor "</span> &lt;&lt; name_ &lt;&lt; <span class="hljs-string">"\n"</span>; }
+<span class="hljs-keyword">private</span>:
+    std::string name_;
+};
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">byValue</span><span class="hljs-params">(Robot r)</span> </span>{ (<span class="hljs-type">void</span>)r; }   <span class="hljs-comment">// 值传参 → 调用拷贝构造</span>
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-function">Robot <span class="hljs-title">a</span><span class="hljs-params">(<span class="hljs-string">"r1"</span>)</span></span>;       <span class="hljs-comment">// 括号法</span>
+    Robot b = <span class="hljs-built_in">Robot</span>(<span class="hljs-string">"r2"</span>);   <span class="hljs-comment">// 显式法</span>
+    Robot c = a;         <span class="hljs-comment">// 拷贝构造</span>
+    <span class="hljs-built_in">byValue</span>(a);          <span class="hljs-comment">// 传参拷贝</span>
+}
+</code></pre>
+<pre><code class="lang-bash">g++ -std=c++17 -Wall -o ctor ctor.cpp &amp;&amp; ./ctor
+<span class="hljs-comment"># 观察输出顺序：构造序 = 声明序，析构序相反（b、c、传参临时对象先析构）</span>
+</code></pre>
+<p><strong>场景 2：深拷贝解决 double free（对应第1课）</strong></p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// deep_copy.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;cstring&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Buffer</span> {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">explicit</span> <span class="hljs-title">Buffer</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span>* s)</span> : size_(std::strlen(s) + <span class="hljs-number">1</span>), data_(new char[size_]) {</span>
+        std::<span class="hljs-built_in">memcpy</span>(data_, s, size_);
+    }
+    <span class="hljs-built_in">Buffer</span>(<span class="hljs-type">const</span> Buffer&amp; o) : <span class="hljs-built_in">size_</span>(o.size_), <span class="hljs-built_in">data_</span>(<span class="hljs-keyword">new</span> <span class="hljs-type">char</span>[size_]) {  <span class="hljs-comment">// 深拷贝</span>
+        std::<span class="hljs-built_in">memcpy</span>(data_, o.data_, size_);
+    }
+    Buffer&amp; <span class="hljs-keyword">operator</span>=(<span class="hljs-type">const</span> Buffer&amp; o) {                                <span class="hljs-comment">// 深拷贝赋值</span>
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span> == &amp;o) <span class="hljs-keyword">return</span> *<span class="hljs-keyword">this</span>;          <span class="hljs-comment">// 自赋值检查</span>
+        <span class="hljs-keyword">delete</span>[] data_;
+        size_ = o.size_;
+        data_ = <span class="hljs-keyword">new</span> <span class="hljs-type">char</span>[size_];
+        std::<span class="hljs-built_in">memcpy</span>(data_, o.data_, size_);
+        <span class="hljs-keyword">return</span> *<span class="hljs-keyword">this</span>;
+    }
+    ~<span class="hljs-built_in">Buffer</span>() { <span class="hljs-keyword">delete</span>[] data_; }
+    <span class="hljs-function"><span class="hljs-type">const</span> <span class="hljs-type">char</span>* <span class="hljs-title">c_str</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>{ <span class="hljs-keyword">return</span> data_; }
+<span class="hljs-keyword">private</span>:
+    std::<span class="hljs-type">size_t</span> size_;
+    <span class="hljs-type">char</span>* data_;
+};
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-function">Buffer <span class="hljs-title">a</span><span class="hljs-params">(<span class="hljs-string">"lidar"</span>)</span>, b </span>= a, <span class="hljs-built_in">c</span>(<span class="hljs-string">"camera"</span>);
+    c = a;
+    std::cout &lt;&lt; a.<span class="hljs-built_in">c_str</span>() &lt;&lt; <span class="hljs-string">" "</span> &lt;&lt; b.<span class="hljs-built_in">c_str</span>() &lt;&lt; <span class="hljs-string">" "</span> &lt;&lt; c.<span class="hljs-built_in">c_str</span>() &lt;&lt; <span class="hljs-string">"\n"</span>;
+}
+</code></pre>
+<pre><code class="lang-bash">g++ -std=c++17 -Wall -fsanitize=address -o deep_copy deep_copy.cpp &amp;&amp; ./deep_copy
+<span class="hljs-comment"># -fsanitize=address 让内存错误当场暴露</span>
+</code></pre>
+<p><strong>场景 3：静态成员 + 单例 + 链式 this（对应第2课）</strong></p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// singleton_chain.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">JointTarget</span> {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-type">static</span> <span class="hljs-type">int</span> live_count;                       <span class="hljs-comment">// 静态成员：所有对象共享</span>
+    <span class="hljs-built_in">JointTarget</span>() { ++live_count; }
+    ~<span class="hljs-built_in">JointTarget</span>() { --live_count; }
+    <span class="hljs-function">JointTarget&amp; <span class="hljs-title">set_rad</span><span class="hljs-params">(<span class="hljs-type">double</span> v)</span> </span>{ rad_ = v; <span class="hljs-keyword">return</span> *<span class="hljs-keyword">this</span>; }   <span class="hljs-comment">// 返回 *this → 链式</span>
+    <span class="hljs-function">JointTarget&amp; <span class="hljs-title">set_name</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span>* n)</span> </span>{ name_ = n; <span class="hljs-keyword">return</span> *<span class="hljs-keyword">this</span>; }
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">show</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>{                          <span class="hljs-comment">// 常函数：不改成员</span>
+        std::cout &lt;&lt; name_ &lt;&lt; <span class="hljs-string">" = "</span> &lt;&lt; rad_ &lt;&lt; <span class="hljs-string">"\n"</span>;
+    }
+<span class="hljs-keyword">private</span>:
+    <span class="hljs-type">double</span> rad_ = <span class="hljs-number">0.0</span>;
+    <span class="hljs-type">const</span> <span class="hljs-type">char</span>* name_ = <span class="hljs-string">"joint"</span>;
+};
+
+<span class="hljs-type">int</span> JointTarget::live_count = <span class="hljs-number">0</span>;                 <span class="hljs-comment">// 类外定义</span>
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    JointTarget j;
+    j.<span class="hljs-built_in">set_rad</span>(<span class="hljs-number">1.2</span>).<span class="hljs-built_in">set_name</span>(<span class="hljs-string">"shoulder"</span>).<span class="hljs-built_in">show</span>();  <span class="hljs-comment">// 链式编程</span>
+    std::cout &lt;&lt; JointTarget::live_count &lt;&lt; <span class="hljs-string">"\n"</span>;
+}
+</code></pre>
+<pre><code class="lang-bash">g++ -std=c++17 -Wall -o singleton_chain singleton_chain.cpp &amp;&amp; ./singleton_chain
+</code></pre>
+<p><strong>场景 4：友元 + 流运算符 + 仿函数（对应第2、3课）</strong></p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// overload.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Vec2</span> {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-built_in">Vec2</span>(<span class="hljs-type">double</span> x = <span class="hljs-number">0</span>, <span class="hljs-type">double</span> y = <span class="hljs-number">0</span>) : <span class="hljs-built_in">x_</span>(x), <span class="hljs-built_in">y_</span>(y) {}
+    Vec2 <span class="hljs-keyword">operator</span>+(<span class="hljs-type">const</span> Vec2&amp; o) <span class="hljs-type">const</span> { <span class="hljs-keyword">return</span> <span class="hljs-built_in">Vec2</span>(x_ + o.x_, y_ + o.y_); }
+    <span class="hljs-type">bool</span> <span class="hljs-keyword">operator</span>==(<span class="hljs-type">const</span> Vec2&amp; o) <span class="hljs-type">const</span> { <span class="hljs-keyword">return</span> x_ == o.x_ &amp;&amp; y_ == o.y_; }
+    <span class="hljs-function"><span class="hljs-type">double</span> <span class="hljs-title">operator</span><span class="hljs-params">()</span><span class="hljs-params">(<span class="hljs-type">double</span> scale)</span> <span class="hljs-type">const</span> </span>{ <span class="hljs-keyword">return</span> scale * (x_ * x_ + y_ * y_); }  <span class="hljs-comment">// 仿函数</span>
+    <span class="hljs-keyword">friend</span> std::ostream&amp; <span class="hljs-keyword">operator</span>&lt;&lt;(std::ostream&amp; os, <span class="hljs-type">const</span> Vec2&amp; v);   <span class="hljs-comment">// 友元：访问私有</span>
+<span class="hljs-keyword">private</span>:
+    <span class="hljs-type">double</span> x_, y_;
+};
+
+std::ostream&amp; <span class="hljs-keyword">operator</span>&lt;&lt;(std::ostream&amp; os, <span class="hljs-type">const</span> Vec2&amp; v) {
+    <span class="hljs-keyword">return</span> os &lt;&lt; <span class="hljs-string">"("</span> &lt;&lt; v.x_ &lt;&lt; <span class="hljs-string">", "</span> &lt;&lt; v.y_ &lt;&lt; <span class="hljs-string">")"</span>;      <span class="hljs-comment">// 返回 os 支持 &lt;&lt; 链式</span>
+}
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-function">Vec2 <span class="hljs-title">a</span><span class="hljs-params">(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)</span>, <span class="hljs-title">b</span><span class="hljs-params">(<span class="hljs-number">3</span>, <span class="hljs-number">4</span>)</span></span>;
+    std::cout &lt;&lt; a + b &lt;&lt; <span class="hljs-string">" equal="</span> &lt;&lt; (a == b) &lt;&lt; <span class="hljs-string">"\n"</span>;  <span class="hljs-comment">// (4, 6) equal=0</span>
+    std::cout &lt;&lt; <span class="hljs-built_in">a</span>(<span class="hljs-number">2.0</span>) &lt;&lt; <span class="hljs-string">"\n"</span>;                          <span class="hljs-comment">// 仿函数：10</span>
+}
+</code></pre>
+<pre><code class="lang-bash">g++ -std=c++17 -Wall -o overload overload.cpp &amp;&amp; ./overload
+</code></pre>
+<p><strong>场景 5：智能指针与 operator-&gt; / operator*（对应第3课）</strong></p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// smart_ptr.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;memory&gt;</span></span>
+
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">Sensor</span> {
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">read</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>{ std::cout &lt;&lt; <span class="hljs-string">"sensor read\n"</span>; }
+};
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">auto</span> sp = std::<span class="hljs-built_in">make_shared</span>&lt;Sensor&gt;();   <span class="hljs-comment">// 引用计数智能指针</span>
+    sp-&gt;<span class="hljs-built_in">read</span>();                             <span class="hljs-comment">// 重载 operator-&gt;</span>
+    (*sp).<span class="hljs-built_in">read</span>();                           <span class="hljs-comment">// 重载 operator*</span>
+    <span class="hljs-function">std::unique_ptr&lt;Sensor&gt; <span class="hljs-title">up</span><span class="hljs-params">(<span class="hljs-keyword">new</span> Sensor)</span></span>; <span class="hljs-comment">// 独占所有权，禁止拷贝</span>
+    up-&gt;<span class="hljs-built_in">read</span>();
+    <span class="hljs-comment">// std::unique_ptr&lt;Sensor&gt; up2 = up;    // 编译错误：unique_ptr 不可拷贝</span>
+}
+</code></pre>
+<pre><code class="lang-bash">g++ -std=c++17 -Wall -o smart_ptr smart_ptr.cpp &amp;&amp; ./smart_ptr
+</code></pre>
+<h2 id="95-运行效果（实测）">9.5 运行效果（实测）</h2>
+<p>以下为深拷贝 <code>Buffer</code>（拷贝与赋值后三份内容一致）与 <code>Vec2</code> 运算符重载（加法、仿函数）的实测输出：</p>
 <pre><code class="lang-text">lidar lidar
 (4, 6) 10
 </code></pre>
 <p>编译命令：<code>g++ -std=c++17 -Wall w9_overload.cpp -o w9 &amp;&amp; ./w9</code>（深拷贝后两 Buffer 内容相同；Vec2 相加输出 <code>(4, 6)</code>，仿函数 <code>10</code>）。</p>
-<h2 id="94-端到端实战（实测）：深拷贝--单例--链式">9.4 端到端实战（实测）：深拷贝 + 单例 + 链式</h2>
+<h2 id="端到端实战（实测）：深拷贝--单例--链式">端到端实战（实测）：深拷贝 + 单例 + 链式</h2>
+<p><strong>需求</strong>：实现深拷贝的 <code>Buffer</code> 类（杜绝 double free）与 <code>Vec2</code> 类（<code>operator+</code>、<code>operator&lt;&lt;</code>、仿函数 <code>operator()</code>），体会三/五法则与运算符重载。</p>
 <p>三大主题合一：深拷贝 <code>Buffer</code>（三法则）、单例 <code>Logger</code>（禁拷贝 + 地址唯一）、<code>ConfigBuilder</code> 链式接口（返回 <code>*this</code>）。</p>
 <pre><code class="lang-cpp"><span class="hljs-comment">// logger.cpp（节选）</span>
 <span class="hljs-keyword">class</span> <span class="hljs-title class_">Buffer</span> {                        <span class="hljs-comment">// 深拷贝</span>
@@ -673,12 +903,47 @@
 mode=nav speed=2
 </code></pre>
 <p>三份深拷贝互不影响、两处取到的单例地址相同、链式配置生效。</p>
-<h2 id="95-本章小结">9.5 本章小结</h2>
+<p>要点解析：</p>
+<ul>
+<li><code>Buffer</code> 手写拷贝构造 + 深拷贝赋值（自赋值检查 → 释放旧资源 → 重新分配复制），三份对象各自持有独立内存，<code>-fsanitize=address</code> 下无 double free；</li>
+<li><code>Logger::instance()</code> 用 C++11 线程安全的静态局部变量，构造函数私有 + <code>= delete</code> 拷贝/赋值，保证全局唯一；</li>
+<li><code>ConfigBuilder</code> 每个设置函数返回 <code>*this</code> 引用，<code>set_mode("nav").set_speed(2)</code> 一行完成配置——与 <code>rclcpp::NodeOptions</code> 同款风格。</li>
+</ul>
+<h2 id="96-与-ros2--机器人开发的关联">9.6 与 ROS2 / 机器人开发的关联</h2>
+<ol>
+<li><strong>rclcpp 节点即类</strong>：<code>class MyNode : public rclcpp::Node</code> 在构造函数里创建 publisher/subscription/timer，析构时自动释放——全部是本周「构造/析构 + 组合」的知识。</li>
+<li><strong>消息缓存里的深浅拷贝</strong>：传感器回调若把消息裸指针存进队列，回调结束对象析构即悬垂；正确做法是存 <code>SharedPtr</code> 或按值深拷贝，这正是深拷贝问题的真实版本。</li>
+<li><strong>单例与全局状态</strong>：ROS2 参数、TF 缓存、设备句柄若做成全局单例会难以测试；推荐把它们作为节点类成员注入。</li>
+<li><strong><code>&lt;&lt;</code> 重载与日志</strong>：<code>RCLCPP_INFO_STREAM(node-&gt;get_logger(), "pose: " &lt;&lt; x)</code> 能拼接自定义类型，前提是你重载了 <code>operator&lt;&lt;</code>。</li>
+<li><strong>仿函数与回调</strong>：<code>operator()</code> 对象、<code>std::bind</code>、lambda 都可作为订阅回调；理解仿函数才能理解 <code>rclcpp::AnySubscriptionCallback</code> 的分发机制。</li>
+<li><strong>链式接口</strong>：<code>rclcpp::NodeOptions().arguments(...).use_intra_process_comms(true)</code> 的链式风格源自 <code>return *this</code> 模式。</li>
+</ol>
+<h2 id="97-自测与练习（含参考答案要点）">9.7 自测与练习（含参考答案要点）</h2>
+<ol>
+<li><strong>概念题</strong>：什么情况下必须用初始化列表？成员初始化顺序由什么决定？</li>
+<li><strong>概念题</strong>：解释浅拷贝 double free 的完整过程（两对象、一个指针成员、两次析构）。</li>
+<li><strong>动手任务</strong>：实现 <code>class LidarFrame</code>：持有 <code>std::vector&lt;float&gt;</code> 点云缓冲，支持拷贝/移动（或显式 <code>= delete</code> 并用 <code>std::unique_ptr</code>），提供 <code>operator&lt;&lt;</code> 打印点数与首尾点。验收：<code>-fsanitize=address</code> 下无内存错误。</li>
+<li><strong>动手任务</strong>：实现单例 <code>Logger</code>：禁止拷贝赋值、提供 <code>log(const std::string&amp;)</code>，并在两个独立函数中取到同一实例（地址相同）。</li>
+</ol>
+<blockquote>
+<p>参考答案要点：题 1——引用成员、const 成员、无默认构造的类成员必须用初始化列表；顺序按成员声明顺序。题 2——浅拷贝让两对象共享指针 → 第一个析构 <code>delete</code> 内存 → 第二个析构对已释放内存再次 <code>delete</code>（double free/UB）。题 3——移动构造 <code>Buffer(Buffer&amp;&amp;) noexcept</code> 转移指针并置空源对象；打印用全局 <code>operator&lt;&lt;</code>。题 4——<code>static Logger&amp; instance()</code> + <code>= delete</code> 拷贝/赋值；<code>&amp;instance()</code> 在两处取值相同。</p>
+</blockquote>
+<h2 id="98-常见问题（faq）">9.8 常见问题（FAQ）</h2>
+<ul>
+<li><strong>Q：构造函数里 <code>throw</code> 会怎样？</strong> A：对象尚未构造完成，已构造的成员会被析构、内存回收；不会泄漏，但调用方需捕获。</li>
+<li><strong>Q：为什么析构函数常写成 <code>virtual</code>？</strong> A：用基类指针 <code>delete</code> 派生类对象时，非虚析构只调基类析构 → 派生类资源泄漏。第10周详讲虚析构。</li>
+<li><strong>Q：<code>this</code> 到底是什么？</strong> A：隐式传入非静态成员函数的 <code>T*</code> 指针；常函数中是 <code>const T*</code>；静态成员函数没有 <code>this</code>。</li>
+<li><strong>Q：<code>delete</code> 与 <code>delete[]</code> 混用会怎样？</strong> A：未定义行为（数组元素析构可能不调用、堆损坏）。<code>new[]</code> 必须配 <code>delete[]</code>；用 <code>std::vector/std::unique_ptr&lt;T[]&gt;</code> 可彻底避免。</li>
+<li><strong>Q：什么时候重载 <code>operator=</code>，什么时候 <code>= default</code>？</strong> A：成员全是可以安全拷贝的类型（值类型/智能指针）时 <code>= default</code>；类直接持有裸 <code>new</code> 资源时必须手写深拷贝版本，或干脆删除拷贝只允许移动。</li>
+</ul>
+<h2 id="99-本章小结">9.9 本章小结</h2>
 <ul>
 <li>三/五法则：析构、拷贝构造、拷贝赋值（加移动）要么都写要么都 <code>= delete</code>——C++ 内存安全第一原则；</li>
 <li>初始化列表与成员声明顺序；引用/const 成员必须用列表初始化；</li>
 <li>传感器回调若存裸指针，回调结束对象析构即悬垂——存 <code>SharedPtr</code> 或深拷贝是本周问题的真实版本；</li>
-<li><code>RCLCPP_INFO_STREAM</code> 拼接自定义类型的前提是重载了 <code>operator&lt;&lt;</code>。</li>
+<li><code>RCLCPP_INFO_STREAM</code> 拼接自定义类型的前提是重载了 <code>operator&lt;&lt;</code>；</li>
+<li>单例要禁拷贝赋值，但机器人代码优先依赖注入而非全局状态；</li>
+<li>链式接口（返回 <code>*this</code>）是 <code>NodeOptions</code> 一类配置对象的通用写法。</li>
 </ul>
 
                                 
@@ -723,7 +988,7 @@ mode=nav speed=2
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第9章 类与对象进阶（构造析构/深浅拷贝/运算符重载）","level":"4.2","depth":1,"next":{"title":"第10章 高级特性与编程范式（继承多态/模板/异常/IO）","level":"4.3","depth":1,"path":"第10周-高级特性与编程范式.md","ref":"第10周-高级特性与编程范式.md","articles":[]},"previous":{"title":"第8章 C++ 基础特性入门（命名空间/引用/封装）","level":"4.1","depth":1,"path":"第8周-C++基础特性入门.md","ref":"第8周-C++基础特性入门.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第9周-类与对象进阶.md","mtime":"2026-10-16T02:43:09.754Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T02:43:11.108Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第9章 类与对象进阶（构造析构/深浅拷贝/运算符重载）","level":"4.2","depth":1,"next":{"title":"第10章 高级特性与编程范式（继承多态/模板/异常/IO）","level":"4.3","depth":1,"path":"第10周-高级特性与编程范式.md","ref":"第10周-高级特性与编程范式.md","articles":[]},"previous":{"title":"第8章 C++ 基础特性入门（命名空间/引用/封装）","level":"4.1","depth":1,"path":"第8周-C++基础特性入门.md","ref":"第8周-C++基础特性入门.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第9周-类与对象进阶.md","mtime":"2026-10-16T03:26:51.712Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T03:26:53.986Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

@@ -604,14 +604,293 @@
 <p>课程收官：Nav2 导航全栈、多机器人编队与语音控制小车。</p>
 <p>本章对应代码：<code>code/ws06_sim_nav/src/demo_nav2</code>、<code>demo_formation</code>、<code>demo_voice</code>。</p>
 </blockquote>
-<h2 id="251-nav2-导航">25.1 Nav2 导航</h2>
-<h3 id="2511-案例以及案例分析">25.1.1 案例以及案例分析</h3>
+<h2 id="251-概览与课时结构">25.1 概览与课时结构</h2>
+<h3 id="2511-本周概览">25.1.1 本周概览</h3>
+<p>本周是全课程的收官周，把「地图 → 定位 → 导航 → 群体 → 交互」最后一段链路补完：地图服务（保存/读取/接口）让 SLAM 成果持久化，AMCL 让机器人在已知地图中定位，导航服务器逐个实操（生命周期、行为树、路径规划、运动控制、恢复、路点跟踪、平滑、自主探索）打通 Nav2 全栈，多车编队展示多机器人协同，智能语音给机器人加上人机交互入口。学完本章，你具备完整的「机器人应用开发」能力闭环：从传感器驱动一路做到语音控制多车导航。</p>
+<h3 id="2512-课时结构">25.1.2 课时结构</h3>
+<p>课程信息：视频 81 个，总时长约 7h33m，难度：高阶。</p>
+<table>
+<thead>
+<tr>
+<th>课</th>
+<th>小节</th>
+<th>时长</th>
+<th>一句话导览</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第1课 SLAM地图服务与定位AMCL定位技术</td>
+<td>21 节</td>
+<td>1h44m</td>
+<td>地图保存/读取节点、地图接口与 pgm/yaml 格式、AMCL 节点使用与手动初始化</td>
+</tr>
+<tr>
+<td>第2课 导航服务器与多车编队实现</td>
+<td>42 节</td>
+<td>4h20m</td>
+<td>生命周期管理器、行为树、各 Nav2 服务器实操、多车定位/导航、编队静态坐标变换</td>
+</tr>
+<tr>
+<td>第3课 智能语音概念和语音控制机器人实现</td>
+<td>18 节</td>
+<td>1h27m</td>
+<td>智能语音概念、讯飞 SDK 使用、语音识别/合成 ROS2 集成、语音控制机器人实例</td>
+</tr>
+</tbody>
+</table>
+<h2 id="252-知识点梳理">25.2 知识点梳理</h2>
+<h3 id="2521-第1课-slam地图服务与定位amcl定位技术（1h44m-·-21-节）">25.2.1 第1课 SLAM地图服务与定位AMCL定位技术（1h44m · 21 节）</h3>
+<ul>
+<li><strong>核心概念</strong>：地图服务（Map Service）负责地图的保存、加载与提供；AMCL（Adaptive Monte Carlo Localization，自适应蒙特卡洛定位）是基于粒子滤波的 2D 激光定位算法，在已知地图中估计机器人位姿。</li>
+<li><p><strong>要点 1 · 地图保存</strong>：<code>nav2_map_server</code> 的 <code>map_saver_cli</code> 把 <code>/map</code> 话题上的 <code>nav_msgs/OccupancyGrid</code> 保存为磁盘文件：</p>
+<pre><code class="lang-bash">ros2 run nav2_map_server map_saver_cli -f ~/maps/office --ros-args -p save_map_timeout:=2000
+<span class="hljs-comment"># 产出 office.pgm（图像）+ office.yaml（元数据）</span>
+</code></pre>
+<p>保存基本流程：等 SLAM 稳定 → 触发保存 → 校验文件完整（地图闭合、无未探索黑洞）。</p>
+</li>
+<li><p><strong>要点 2 · ROS2 中的地图接口</strong>：</p>
+<p>| 消息/服务 | 作用 |
+|---|---|
+| <code>nav_msgs/OccupancyGrid</code> | 占据栅格地图：<code>header</code> + <code>MapMetaData info</code> + <code>int8[] data</code> |
+| <code>nav_msgs/MapMetaData</code> | <code>resolution</code>（m/格）、<code>width/height</code>（格数）、<code>origin</code>（地图原点位姿） |
+| <code>data[i]</code> | 取值 0（空闲 free）/ 100（占据 occupied）/ -1（未知 unknown） |
+| <code>nav2_msgs/srv/SaveMap</code> | 保存地图服务（带参数覆盖） |
+| <code>nav2_msgs/srv/LoadMap</code> | 按文件名加载地图服务 |</p>
+</li>
+<li><p><strong>要点 3 · 地图存储格式</strong>：<code>*.pgm</code> 是 8 位灰度图（白=空闲、黑=占据、灰=未知），<code>*.yaml</code> 记录 <code>image</code>、<code>resolution</code>、<code>origin: [x, y, yaw]</code>、<code>occupied_thresh</code>（默认 0.65）、<code>free_thresh</code>（默认 0.25）、<code>negate</code>。yaml 的 <code>origin</code> 决定地图左下角在 <code>map</code> 坐标系中的位姿，挪动它会整体平移地图。</p>
+</li>
+<li><strong>要点 4 · 地图读取</strong>：方式 1 终端读取——<code>ros2 launch nav2_map_server map_server_launch.py map:=/home/user/maps/office.yaml</code> 后 <code>ros2 topic echo /map --once</code>；方式 2 程序读取（三讲：基本实现 → 优化 → 补充）——订阅 <code>/map</code> 或调用 <code>LoadMap</code> 服务解析 <code>OccupancyGrid</code>，示例见 25.4。小结强调：地图文件是导航系统的持久化资产，应纳入版本管理。</li>
+<li><strong>要点 5 · AMCL 概述与定位节点</strong>：AMCL 用粒子滤波（MCL）维护机器人位姿的概率分布，观测模型匹配激光与地图、运动模型采样自里程计，粒子数自适应（KLD 采样）。节点 <code>amcl</code>（包 <code>nav2_amcl</code>）订阅 <code>/scan</code>、<code>/map</code>、<code>/tf</code>（里程计），发布 <code>map → odom</code> 变换与 <code>/amcl_pose</code>（<code>PoseWithCovarianceStamped</code>）、<code>particle_cloud</code>。</li>
+<li><strong>要点 6 · AMCL 使用六步</strong>：① 框架搭建（自建 bringup 包放 launch/yaml）→ ② 加载地图（<code>map_server</code> + <code>map:=...yaml</code>）→ ③ 核心实现（amcl 参数 + 雷达/里程计输入接线）→ ④ 运行（rviz2 中观察粒子云收敛）→ ⑤ <strong>手动初始化</strong>（rviz2 的「2D Pose Estimate」发布 <code>/initialpose</code>，粒子云骤然收缩到真值附近）→ ⑥ 优化（粒子数、<code>update_min_d</code>/<code>update_min_a</code>、激光模型 <code>likelihood_field</code> 参数）。</li>
+<li><p><strong>要点 7 · AMCL 关键参数</strong>：</p>
+<p>| 参数 | 含义 | 调参直觉 |
+|---|---|---|
+| <code>alpha1..alpha5</code> | 运动模型噪声 | 里程计越差调越大 |
+| <code>max_particles</code> / <code>min_particles</code> | 粒子数上下限 | 大地图/多歧义环境增大 |
+| <code>update_min_d</code> / <code>update_min_a</code> | 位移/转角更新阈值 | 调小提高定位频率、费 CPU |
+| <code>laser_model_type</code> | <code>likelihood_field</code> / <code>beam</code> | 默认 likelihood_field，快且稳 |
+| <code>recovery_alpha_slow/fast</code> | 全局重定位（绑架恢复） | 机器人被搬动后自动收敛 |</p>
+</li>
+</ul>
+<h3 id="2522-第2课-导航服务器与多车编队实现（4h20m-·-42-节）">25.2.2 第2课 导航服务器与多车编队实现（4h20m · 42 节）</h3>
+<ul>
+<li><strong>核心概念</strong>：导航服务器（Navigation Servers）指 Nav2 中各职责单一的生命周期节点；本课以「逐服务器实操」的方式把第24 章的架构图落地。</li>
+<li><strong>要点 1 · 准备与生命周期管理器</strong>：准备三讲完成 bringup 包骨架、参数文件与依赖；<code>lifecycle_manager</code>（<code>nav2_lifecycle_manager</code>）统一把所有服务器 configure → activate，任何一个 activate 失败都会导致导航「起不来」。调试手段：<code>ros2 lifecycle list /planner_server</code>、<code>ros2 lifecycle get /planner_server</code>。</li>
+<li><strong>要点 2 · 行为树（Behavior Tree）</strong>：<code>bt_navigator</code> 按 XML 行为树编排导航流程，节点分四类：Control（Sequence/ReactiveFallback）、Condition（如 <code>IsPathValid</code>）、Action（<code>ComputePathToPose</code>、<code>FollowPath</code>、<code>Spin</code>、<code>BackUp</code>）、Decorator（<code>RateController</code>）。默认 XML 在 <code>nav2_bt_navigator/behavior_trees/</code> 下，可替换自定义树实现「到点巡逻」「超时放弃」等策略。</li>
+<li><strong>要点 3 · 路径规划</strong>：<code>planner_server</code> 插件化全局规划器（<code>NavfnPlanner</code>、<code>SmacPlanner2D</code>、<code>ThetaStar</code>），输入 <code>ComputePathToPose</code> 动作 + costmap，输出 <code>/plan</code>；rviz2 的「Nav2 Goal」即触发整条链。验收：路径绕开膨胀层、走廊中走中线。</li>
+<li><strong>要点 4 · 运动控制器</strong>：<code>controller_server</code> 插件（<code>DWBController</code>、<code>MPPIController</code>、<code>RegulatedPurePursuit</code>）执行 <code>FollowPath</code>，输出 <code>/cmd_vel</code>；关键参数：<code>controller_frequency</code>、<code>max_vel_x</code>/<code>min_vel_x</code>、<code>xy_goal_tolerance</code>/<code>yaw_goal_tolerance</code>、costmap 膨胀半径。</li>
+<li><strong>要点 5 · 恢复服务器</strong>：<code>behavior_server</code> 提供 <code>Spin</code>（原地旋转清除局部代价地图盲区）、<code>BackUp</code>（倒车脱困）、<code>Wait</code>、<code>ClearCostmap</code>；由行为树在规划/跟踪失败时调用，是机器人「卡住自救」的机制。</li>
+<li><strong>要点 6 · 路点跟踪</strong>：<code>waypoint_follower</code> 执行 <code>FollowWaypoints</code> 动作，按序访问多个目标点，可配置路点任务插件（如每个路点拍照）。</li>
+<li><strong>要点 7 · 路径平滑与速度平滑</strong>：<code>smoother_server</code>（如 <code>SimpleSmoother</code>）优化全局路径曲率；<code>velocity_smoother</code>（<code>nav2_velocity_smoother</code>）限制加加速度（jerk），把控制器输出的「跳变速度」变成底盘可执行的平滑速度——实机上不加它，电机与轮胎都会「受苦」。</li>
+<li><strong>要点 8 · 自主探索 SLAM</strong>：把 Nav2 与 SLAM 组合（配合探索插件/<code>explore_lite</code> 类方案），机器人自主前往地图边界「未知区域」完成建图闭环；本质是「SLAM 建图 + 导航到 frontier（前沿）」循环。</li>
+<li><p><strong>要点 9 · 多车编队（20 节）</strong>：</p>
+<p>| 环节 | 内容 |
+|---|---|
+| 简介与案例分析 | 编队 = 多车保持期望相对位姿（头车 + 从车）；相对位姿用静态坐标变换表达 |
+| 多车仿真环境 | stage_ros2/Ignition 多机器人 world，每车独立命名空间 |
+| 多车定位 | 每车独立 AMCL/SLAM（<code>robot1/amcl</code>…），注意 tf 隔离：<code>frame_prefix</code> 或 tf_namespace，否则 <code>map → odom</code> 互相打架 |
+| 多车导航 | 头车按全局目标导航；从车目标点 = 头车位姿 ∘ 编队偏移；launch/配置按车参数化 |
+| 编队逻辑 | 用 <code>static_transform_publisher</code>（或 C++ <code>tf2_ros::StaticTransformBroadcaster</code>）把队形偏移（如 robot2 在头车后方 1 m）固化为 tf，从车控制器跟踪该变换点 |</p>
+</li>
+<li><p><strong>要点 10 · 多车的 ROS2 机制</strong>：命名空间隔离话题（<code>/robot1/cmd_vel</code>）、参数文件按车分套、tf 用 <code>frame_prefix</code>（<code>robot1/odom</code>）或独立 tf topic + relay；这是 ROS2 分布式多机系统（含多机 DDS 发现）的实战入口。</p>
+</li>
+</ul>
+<h3 id="2523-第3课-智能语音概念和语音控制机器人实现（1h27m-·-18-节）">25.2.3 第3课 智能语音概念和语音控制机器人实现（1h27m · 18 节）</h3>
+<ul>
+<li><strong>核心概念</strong>：智能语音（Intelligent Voice）= 语音识别（ASR，语音→文本）+ 语义理解（NLU）+ 语音合成（TTS，文本→语音）；与 ROS2 集成后即可「动口不动手」控制机器人。</li>
+<li><strong>要点 1 · 智能语音与 ROS2</strong>：典型架构——麦克风音频 → ASR 节点（识别文本，发布 <code>std_msgs/String</code> 话题）→ 指令解析节点（关键词/语义映射为动作）→ 发布 <code>/cmd_vel</code> 或导航目标 → TTS 节点播报执行结果。ROS2 的话题/服务天然适合把云端 SDK 封装成节点。</li>
+<li><strong>要点 2 · 讯飞 SDK 基本使用</strong>：官网下载 SDK（含 C/C++ 库与示例）→ 安装（解压、配置库路径/<code>APPID</code>）→ 构建测试示例 → 跑通离线/在线语音识别与合成 Demo。注意 SDK 的鉴权参数（APPID、APIKey）与线程/回调模型。</li>
+<li><strong>要点 3 · 讯飞 SDK 与 ROS2 集成</strong>：自建功能包（<code>voice_pkg</code>）封装 SDK：语音识别功能（录音 → ASR → 发布识别文本）、语音合成功能（订阅文本 → TTS → 播放/输出音频）。集成要点：SDK 是 C 接口，用 C++ 包装为 rclcpp 节点最自然；录音设备（ALSA/PortAudio）与音频线程别阻塞 executor。</li>
+<li><strong>要点 4 · 智能语音应用实例</strong>：需求分析（如语音说「前进/后退/左转/右转/停止」控制机器人，说「去客厅」触发导航）→ 实现五步：流程简介（ASR → 指令解析 → 执行 → TTS 反馈）→ 代码逻辑分析 → 代码框架（<code>asr_node</code> / <code>command_node</code> / <code>tts_node</code>）→ 代码实现（关键词匹配表 + <code>/cmd_vel</code> 发布）→ 执行测试。</li>
+</ul>
+<h2 id="253-重点与难点">25.3 重点与难点</h2>
+<ol>
+<li><strong>地图坐标系的 origin 语义</strong>：<code>yaml</code> 的 <code>origin: [x, y, yaw]</code> 是「地图图像左下角」在 <code>map</code> 坐标系的位姿。改分辨率或 origin 而不重新配准，AMCL 粒子会整体偏移。</li>
+<li><strong>AMCL 的收敛与绑架</strong>：初始位姿靠 <code>/initialpose</code> 或默认参数；机器人被搬动（绑架问题）后靠 <code>recovery_alpha_*</code> 重定位。粒子云长期发散 = 里程计噪声参数与实际不符或地图与环境不一致。</li>
+<li><strong>Nav2 生命周期</strong>：所有服务器是 lifecycle node，<code>configure</code>（加载参数/插件）→ <code>activate</code>（开始工作）。报「node not active」先查 <code>lifecycle_manager</code> 日志与参数文件里的插件名拼写。</li>
+<li><strong>行为树调试</strong>：导航失败时先看 <code>bt_navigator</code> 日志中的行为树 tick 路径，确认是规划失败、跟踪失败还是恢复行为循环；<code>view_frames</code> + <code>ros2 topic echo /plan</code> 是两大取证工具。</li>
+<li><strong>多车 tf 隔离</strong>：两车不加 <code>frame_prefix</code> 时，两个 <code>odom → base_link</code> 冲突，rviz2 中表现「两车互相抽搐」。每车独立 tf 树或统一带前缀，二选一并保持全局一致。</li>
+<li><strong>语音链路实时性</strong>：ASR 延迟（网络/推理）决定交互体验；控制指令解析用关键词精确匹配 + 置信度阈值，避免误触发（「停」误识别为「听」）造成安全问题。</li>
+</ol>
+<h2 id="254-代码与命令实战">25.4 代码与命令实战</h2>
+<h3 id="2541-场景-1：地图保存与读取（cli--rclpy-服务调用）">25.4.1 场景 1：地图保存与读取（CLI + rclpy 服务调用）</h3>
+<pre><code class="lang-bash"><span class="hljs-comment"># 保存：SLAM 建图完成后</span>
+ros2 run nav2_map_server map_saver_cli -f ~/maps/office
+<span class="hljs-built_in">ls</span> ~/maps/office.*            <span class="hljs-comment"># office.pgm + office.yaml</span>
+
+<span class="hljs-comment"># 方式1：终端加载地图</span>
+ros2 run nav2_map_server map_server --ros-args \
+  -p yaml_filename:=/home/user/maps/office.yaml -p topic_name:=map
+ros2 topic <span class="hljs-built_in">echo</span> /map --once --field info     <span class="hljs-comment"># 查看分辨率/宽高/原点</span>
+</code></pre>
+<pre><code class="lang-python"><span class="hljs-comment"># 方式2：程序读取地图（文件 map_reader.py，订阅 /map 并统计空闲/占据比例）</span>
+<span class="hljs-keyword">import</span> rclpy
+<span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
+<span class="hljs-keyword">from</span> nav_msgs.msg <span class="hljs-keyword">import</span> OccupancyGrid
+
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">MapReader</span>(<span class="hljs-title class_ inherited__">Node</span>):
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">'map_reader'</span>)
+        <span class="hljs-variable language_">self</span>.create_subscription(OccupancyGrid, <span class="hljs-string">'/map'</span>, <span class="hljs-variable language_">self</span>.on_map, <span class="hljs-number">1</span>)  <span class="hljs-comment"># 地图是 transient_local</span>
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">on_map</span>(<span class="hljs-params">self, msg: OccupancyGrid</span>):
+        total = msg.info.width * msg.info.height
+        free = <span class="hljs-built_in">sum</span>(<span class="hljs-number">1</span> <span class="hljs-keyword">for</span> v <span class="hljs-keyword">in</span> msg.data <span class="hljs-keyword">if</span> v == <span class="hljs-number">0</span>)
+        occ = <span class="hljs-built_in">sum</span>(<span class="hljs-number">1</span> <span class="hljs-keyword">for</span> v <span class="hljs-keyword">in</span> msg.data <span class="hljs-keyword">if</span> v == <span class="hljs-number">100</span>)
+        <span class="hljs-variable language_">self</span>.get_logger().info(
+            <span class="hljs-string">f'<span class="hljs-subst">{msg.info.width}</span>x<span class="hljs-subst">{msg.info.height}</span> res=<span class="hljs-subst">{msg.info.resolution}</span> '</span>
+            <span class="hljs-string">f'free=<span class="hljs-subst">{free/total:<span class="hljs-number">.1</span>%}</span> occ=<span class="hljs-subst">{occ/total:<span class="hljs-number">.1</span>%}</span> origin=(<span class="hljs-subst">{msg.info.origin.position.x}</span>, '</span>
+            <span class="hljs-string">f'<span class="hljs-subst">{msg.info.origin.position.y}</span>)'</span>)
+        <span class="hljs-variable language_">self</span>.destroy_subscription(<span class="hljs-variable language_">self</span>.subscriptions[<span class="hljs-number">0</span>])   <span class="hljs-comment"># 只看一次</span>
+
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():
+    rclpy.init()
+    rclpy.spin(MapReader())
+    rclpy.shutdown()
+</code></pre>
+<blockquote>
+<p><strong>注意：</strong> <code>/map</code> 用 transient_local（latched）QoS 发布，普通订阅者若用默认 QoS 可能收不到地图；rclpy 中把 QoS durability 设为 <code>ReliabilityPolicy.RELIABLE</code> + <code>DurabilityPolicy.TRANSIENT_LOCAL</code>。</p>
+</blockquote>
+<h3 id="2542-场景-2：amcl--mapserver-启动（launch-片段）">25.4.2 场景 2：AMCL + map_server 启动（launch 片段）</h3>
+<pre><code class="lang-python"><span class="hljs-comment"># launch/localization.launch.py（节选）</span>
+map_server = Node(
+    package=<span class="hljs-string">'nav2_map_server'</span>, executable=<span class="hljs-string">'map_server'</span>, name=<span class="hljs-string">'map_server'</span>,
+    parameters=[{<span class="hljs-string">'yaml_filename'</span>: <span class="hljs-string">'/home/user/maps/office.yaml'</span>,
+                 <span class="hljs-string">'topic_name'</span>: <span class="hljs-string">'map'</span>, <span class="hljs-string">'frame_id'</span>: <span class="hljs-string">'map'</span>}])
+amcl = Node(
+    package=<span class="hljs-string">'nav2_amcl'</span>, executable=<span class="hljs-string">'amcl'</span>, name=<span class="hljs-string">'amcl'</span>,
+    parameters=[{
+        <span class="hljs-string">'base_frame_id'</span>: <span class="hljs-string">'base_link'</span>, <span class="hljs-string">'odom_frame_id'</span>: <span class="hljs-string">'odom'</span>,
+        <span class="hljs-string">'global_frame_id'</span>: <span class="hljs-string">'map'</span>, <span class="hljs-string">'scan_topic'</span>: <span class="hljs-string">'scan'</span>,
+        <span class="hljs-string">'min_particles'</span>: <span class="hljs-number">500</span>, <span class="hljs-string">'max_particles'</span>: <span class="hljs-number">3000</span>,
+        <span class="hljs-string">'update_min_d'</span>: <span class="hljs-number">0.2</span>, <span class="hljs-string">'update_min_a'</span>: <span class="hljs-number">0.3</span>,
+        <span class="hljs-string">'laser_model_type'</span>: <span class="hljs-string">'likelihood_field'</span>,
+        <span class="hljs-string">'recovery_alpha_slow'</span>: <span class="hljs-number">0.001</span>, <span class="hljs-string">'recovery_alpha_fast'</span>: <span class="hljs-number">0.1</span>,
+    }])
+lifecycle = Node(
+    package=<span class="hljs-string">'nav2_lifecycle_manager'</span>, executable=<span class="hljs-string">'lifecycle_manager'</span>,
+    name=<span class="hljs-string">'lifecycle_manager_localization'</span>,
+    parameters=[{<span class="hljs-string">'autostart'</span>: <span class="hljs-literal">True</span>,
+                 <span class="hljs-string">'node_names'</span>: [<span class="hljs-string">'map_server'</span>, <span class="hljs-string">'amcl'</span>]}])
+</code></pre>
+<pre><code class="lang-bash">ros2 topic pub --once /initialpose geometry_msgs/msg/PoseWithCovarianceStamped \
+  <span class="hljs-string">"{header: {frame_id: map}, pose: {pose: {position: {x: 1.0, y: 2.0}, orientation: {w: 1.0}}}}"</span>
+<span class="hljs-comment"># rviz2 中更常用「2D Pose Estimate」按钮手动初始化</span>
+</code></pre>
+<h3 id="2543-场景-3：行为树导航目标发送（rclpy-动作客户端）">25.4.3 场景 3：行为树导航目标发送（rclpy 动作客户端）</h3>
+<pre><code class="lang-python"><span class="hljs-comment"># 通过 NavigateToPose 动作让 Nav2 导航到目标点（文件 send_goal.py）</span>
+<span class="hljs-keyword">import</span> rclpy
+<span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
+<span class="hljs-keyword">from</span> rclpy.action <span class="hljs-keyword">import</span> ActionClient
+<span class="hljs-keyword">from</span> geometry_msgs.msg <span class="hljs-keyword">import</span> PoseStamped
+<span class="hljs-keyword">from</span> nav2_msgs.action <span class="hljs-keyword">import</span> NavigateToPose
+
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">NavGoal</span>(<span class="hljs-title class_ inherited__">Node</span>):
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">'nav_goal'</span>)
+        <span class="hljs-variable language_">self</span>.client = ActionClient(<span class="hljs-variable language_">self</span>, NavigateToPose, <span class="hljs-string">'navigate_to_pose'</span>)
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">send</span>(<span class="hljs-params">self, x, y, yaw_w=<span class="hljs-number">1.0</span></span>):
+        <span class="hljs-variable language_">self</span>.client.wait_for_server()
+        goal = NavigateToPose.Goal()
+        goal.pose = PoseStamped()
+        goal.pose.header.frame_id = <span class="hljs-string">'map'</span>
+        goal.pose.header.stamp = <span class="hljs-variable language_">self</span>.get_clock().now().to_msg()
+        goal.pose.pose.position.x = x
+        goal.pose.pose.position.y = y
+        goal.pose.pose.orientation.w = yaw_w
+        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span>.client.send_goal_async(goal)
+
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():
+    rclpy.init()
+    node = NavGoal()
+    node.send(<span class="hljs-number">3.0</span>, <span class="hljs-number">1.5</span>)
+    rclpy.spin(node)
+    rclpy.shutdown()
+</code></pre>
+<h3 id="2544-场景-4：编队静态坐标变换（c，tf2rosstatictransformbroadcaster）">25.4.4 场景 4：编队静态坐标变换（C++，<code>tf2_ros::StaticTransformBroadcaster</code>）</h3>
+<pre><code class="lang-cpp"><span class="hljs-comment">// 把「从车相对头车的队形偏移」固化为 tf：leader_link -&gt; follower1_link</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"rclcpp/rclcpp.hpp"</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"tf2_ros/static_transform_broadcaster.h"</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"geometry_msgs/msg/transform_stamped.hpp"</span></span>
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> ** argv)</span> </span>{
+  rclcpp::<span class="hljs-built_in">init</span>(argc, argv);
+  <span class="hljs-keyword">auto</span> node = rclcpp::Node::<span class="hljs-built_in">make_shared</span>(<span class="hljs-string">"formation_tf"</span>);
+  <span class="hljs-function">tf2_ros::StaticTransformBroadcaster <span class="hljs-title">broadcaster</span><span class="hljs-params">(node)</span></span>;
+
+  geometry_msgs::msg::TransformStamped t;
+  t.header.stamp = node-&gt;<span class="hljs-built_in">now</span>();
+  t.header.frame_id = <span class="hljs-string">"leader_link"</span>;      <span class="hljs-comment">// 头车车体</span>
+  t.child_frame_id = <span class="hljs-string">"follower1_link"</span>;    <span class="hljs-comment">// 从车 1 目标位</span>
+  t.transform.translation.x = <span class="hljs-number">-1.5</span>;       <span class="hljs-comment">// 头车后方 1.5 m</span>
+  t.transform.translation.y = <span class="hljs-number">0.8</span>;        <span class="hljs-comment">// 右侧 0.8 m（三角队形）</span>
+  t.transform.rotation.w = <span class="hljs-number">1.0</span>;           <span class="hljs-comment">// 与头车同向</span>
+  broadcaster.<span class="hljs-built_in">sendTransform</span>(t);
+
+  rclcpp::<span class="hljs-built_in">spin</span>(node);
+  rclcpp::<span class="hljs-built_in">shutdown</span>();
+  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<h3 id="2545-场景-5：语音指令解析-→-速度控制（rclpy，文件-voicecmdnodepy）">25.4.5 场景 5：语音指令解析 → 速度控制（rclpy，文件 <code>voice_cmd_node.py</code>）</h3>
+<pre><code class="lang-python"><span class="hljs-keyword">import</span> rclpy
+<span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
+<span class="hljs-keyword">from</span> std_msgs.msg <span class="hljs-keyword">import</span> String
+<span class="hljs-keyword">from</span> geometry_msgs.msg <span class="hljs-keyword">import</span> Twist
+
+<span class="hljs-comment"># ASR 节点发布识别文本到 /asr/text，本节点映射为速度指令</span>
+CMD_TABLE = {
+    <span class="hljs-string">'前进'</span>: (<span class="hljs-number">0.3</span>, <span class="hljs-number">0.0</span>), <span class="hljs-string">'后退'</span>: (-<span class="hljs-number">0.3</span>, <span class="hljs-number">0.0</span>),
+    <span class="hljs-string">'左转'</span>: (<span class="hljs-number">0.0</span>, <span class="hljs-number">0.5</span>), <span class="hljs-string">'右转'</span>: (<span class="hljs-number">0.0</span>, -<span class="hljs-number">0.5</span>), <span class="hljs-string">'停止'</span>: (<span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>),
+}
+
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">VoiceCmd</span>(<span class="hljs-title class_ inherited__">Node</span>):
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">'voice_cmd'</span>)
+        <span class="hljs-variable language_">self</span>.pub = <span class="hljs-variable language_">self</span>.create_publisher(Twist, <span class="hljs-string">'/cmd_vel'</span>, <span class="hljs-number">10</span>)
+        <span class="hljs-variable language_">self</span>.create_subscription(String, <span class="hljs-string">'/asr/text'</span>, <span class="hljs-variable language_">self</span>.on_text, <span class="hljs-number">10</span>)
+        <span class="hljs-variable language_">self</span>.create_publisher(String, <span class="hljs-string">'/tts/text'</span>, <span class="hljs-number">10</span>)   <span class="hljs-comment"># 送给 TTS 播报</span>
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">on_text</span>(<span class="hljs-params">self, msg: String</span>):
+        text = msg.data.strip()
+        <span class="hljs-keyword">if</span> text <span class="hljs-keyword">in</span> CMD_TABLE:
+            vx, wz = CMD_TABLE[text]
+            cmd = Twist()
+            cmd.linear.x, cmd.angular.z = vx, wz
+            <span class="hljs-variable language_">self</span>.pub.publish(cmd)
+            <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">f'执行指令: <span class="hljs-subst">{text}</span>'</span>)
+        <span class="hljs-keyword">else</span>:
+            <span class="hljs-variable language_">self</span>.get_logger().warn(<span class="hljs-string">f'未识别指令: <span class="hljs-subst">{text}</span>'</span>)
+
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():
+    rclpy.init()
+    rclpy.spin(VoiceCmd())
+    rclpy.shutdown()
+</code></pre>
+<h3 id="2546-场景-6：导航与多车调试命令集">25.4.6 场景 6：导航与多车调试命令集</h3>
+<pre><code class="lang-bash">ros2 lifecycle list /planner_server        <span class="hljs-comment"># 查看生命周期状态</span>
+ros2 action list | grep -i nav             <span class="hljs-comment"># 应有 navigate_to_pose / follow_waypoints</span>
+ros2 topic <span class="hljs-built_in">echo</span> /plan --once --field poses  <span class="hljs-comment"># 查看全局路径点</span>
+ros2 run tf2_tools view_frames             <span class="hljs-comment"># 多车场景确认 tf 前缀隔离</span>
+ros2 topic list | grep robot1              <span class="hljs-comment"># 多车命名空间检查</span>
+ros2 param get /amcl max_particles         <span class="hljs-comment"># 运行期核对参数</span>
+ros2 bag record /asr/text /cmd_vel -o voice_test   <span class="hljs-comment"># 录制语音控制链路</span>
+</code></pre>
+<h2 id="255-运行效果（实测）">25.5 运行效果（实测）</h2>
+<h3 id="2551-nav2-导航全栈">25.5.1 Nav2 导航全栈</h3>
 <p><strong>需求</strong>：加载地图（map_server）→ 定位（AMCL）→ 全局/局部规划（planner/controller）→ 行为树导航（bt_navigator）→ 恢复行为（behavior_server），由 lifecycle_manager 统一拉起，<code>nav2_params.yaml</code> 集中配置。</p>
-<h3 id="2512-实现">25.1.2 实现</h3>
-<p><code>launch/bringup_launch.py</code> 装载 <code>maps/demo_map.pgm</code>（+ <code>demo_map.yaml</code> 元数据）、<code>behavior_trees/navigate_w_replanning.xml</code> 行为树与 <code>param/nav2_params.yaml</code>。</p>
-<h3 id="2513-运行效果（实测）">25.1.3 运行效果（实测）</h3>
+<p><code>launch/bringup_launch.py</code> 装载 <code>maps/demo_map.pgm</code>（+ <code>demo_map.yaml</code> 元数据）、<code>behavior_trees/navigate_w_replanning.xml</code> 行为树与 <code>param/nav2_params.yaml</code>：</p>
 <pre><code class="lang-bash">ros2 launch demo_nav2 bringup_launch.py
 </code></pre>
+<p>全栈进程清单（实测，存档 <code>out/verify/ws06_sim_nav/nav2_launch.log</code>）：</p>
 <pre><code class="lang-text">[INFO] [map_server-1]: process started with pid [441419]
 [INFO] [amcl-2]: process started with pid [441420]
 [INFO] [planner_server-3]: process started with pid [441426]
@@ -619,16 +898,15 @@
 [INFO] [bt_navigator-5]: process started with pid [441428]
 [INFO] [behavior_server-6]: process started with pid [441429]
 </code></pre>
-<p>全栈节点正常上线（配合 24 章仿真给出 <code>/odom</code>、<code>/scan</code> 与初始位姿后，rviz2 中点 Nav2 Goal 即可自主导航，课程视频展示完整导航过程）。</p>
-<h2 id="252-多机器人编队">25.2 多机器人编队</h2>
+<p>全栈节点正常上线（配合第24 章仿真给出 <code>/odom</code>、<code>/scan</code> 与初始位姿后，rviz2 中点 Nav2 Goal 即可自主导航，课程视频展示完整导航过程）。</p>
+<h3 id="2552-多机器人编队">25.5.2 多机器人编队</h3>
 <p><strong>需求</strong>：双机器人（robot1/robot2）以固定偏移量（2m）保持队形：follower 订阅双机 tf，计算期望速度发布本机 <code>/cmd_vel</code>。</p>
 <pre><code class="lang-bash">ros2 launch demo_formation formation_launch.py
 </code></pre>
 <blockquote>
-<p>受阻说明：编队 launch 依赖 stage_ros2（本机未安装且无 sudo，见 24.2）；follower 节点 <code>formation_follower</code> 已编译可用，接入 Gz/实车的双机 tf 后即可运行。</p>
+<p>受阻说明：编队 launch 依赖 stage_ros2（本机未安装且无 sudo，见 24.5.2）；follower 节点 <code>formation_follower</code> 已编译可用，接入 Gz/实车的双机 tf 后即可运行。</p>
 </blockquote>
-<h2 id="253-语音控制小车">25.3 语音控制小车</h2>
-<h3 id="2531-案例以及案例分析">25.3.1 案例以及案例分析</h3>
+<h3 id="2553-语音控制小车">25.5.3 语音控制小车</h3>
 <p><strong>需求</strong>：ASR 识别结果（中文文本）经 <code>/voice_cmd_text</code>（std_msgs/String）进入控制节点，映射为 <code>/cmd_vel</code> 速度指令：</p>
 <table>
 <thead>
@@ -666,7 +944,6 @@
 </tr>
 </tbody>
 </table>
-<h3 id="2532-实现要点">25.3.2 实现要点</h3>
 <p><code>voice_controller.py</code>（安全要点：<strong>凭据从环境变量读取</strong>，代码中不写入任何密钥字面量）：</p>
 <pre><code class="lang-python"><span class="hljs-variable language_">self</span>.iflytek_appid = os.environ.get(<span class="hljs-string">"IFLYTEK_APPID"</span>, <span class="hljs-string">""</span>)   <span class="hljs-comment"># 凭据只从环境读取</span>
 <span class="hljs-variable language_">self</span>.sub = <span class="hljs-variable language_">self</span>.create_subscription(String, <span class="hljs-string">"voice_cmd_text"</span>, <span class="hljs-variable language_">self</span>.on_text, <span class="hljs-number">10</span>)
@@ -676,7 +953,7 @@
 <blockquote>
 <p><strong>视频对照</strong>：课程 <code>讯飞SDK基本使用_测试02</code> 使用讯飞离线 SDK bin 包（<code>tts_online_record_sample</code>）做麦克风识别 Demo（15 秒监听、输出中文识别结果），识别结果按本节接口发布到 <code>/voice_cmd_text</code> 即可闭环；SDK 运行需讯飞 APPID（环境变量注入）与麦克风，本机以键盘注入实测控制器链路。</p>
 </blockquote>
-<h3 id="2533-运行效果（实测）">25.3.3 运行效果（实测）</h3>
+<p>实测：</p>
 <pre><code class="lang-bash">ros2 run demo_voice voice_controller
 ros2 topic pub --once /voice_cmd_text std_msgs/msg/String <span class="hljs-string">"{data: 前进}"</span>
 ros2 topic <span class="hljs-built_in">echo</span> /cmd_vel --once
@@ -690,11 +967,38 @@ angular:
   z: 0.0
 </code></pre>
 <p>发送「停止」后输出 <code>linear=0.00 angular=0.00</code>。</p>
-<h2 id="254-本章小结与课程回顾">25.4 本章小结与课程回顾</h2>
+<h2 id="256-与-ros2--机器人开发的关联">25.6 与 ROS2 / 机器人开发的关联</h2>
+<ol>
+<li><strong>nav2 全栈收口</strong>：本章把第24 章架构图中的每个服务器都实操了一遍——生命周期管理、行为树调度、planner/controller/behavior/waypoint/smoother 协同，就是工业级导航产品的标准骨架。</li>
+<li><strong>tf2 坐标树的最终形态</strong>：<code>map →(AMCL) odom →(EKF/轮式里程计) base_link →(URDF) 各传感器</code>，多车场景再叠加 <code>frame_prefix</code>。这张树是所有机器人项目的「排障第一图」。</li>
+<li><strong>地图与定位的持久化接口</strong>：<code>OccupancyGrid</code>、<code>SaveMap</code>/<code>LoadMap</code>、<code>/initialpose</code> 是导航产品的数据契约；换算法（AMCL ↔ 定位版 SLAM ↔ 视觉定位）只要保住这套接口就能替换。</li>
+<li><strong>多机器人系统的 ROS2 模式</strong>：命名空间 + tf 前缀 + 参数分套 + 多机 DDS 发现，这套模式可直接迁移到仓储多车、机群巡检等真实项目。</li>
+<li><strong>语音/上层交互的节点化封装</strong>：任何第三方 SDK（语音、视觉大模型、云平台）都可以按「订阅输入话题 → 处理 → 发布输出话题/动作」封装成节点，与 Nav2 的 <code>NavigateToPose</code> 动作组合即成完整产品交互链。</li>
+<li><strong>仿真 → 实机迁移收尾清单</strong>：地图分辨率与真实环境一致、AMCL 运动噪声按实测里程计调、速度平滑参数按底盘动力学调、语音指令加安全限速——这四项决定实机表现。</li>
+</ol>
+<h2 id="257-自测与练习">25.7 自测与练习</h2>
+<ol>
+<li><strong>概念题</strong>：<code>OccupancyGrid.data</code> 中 -1、0、100 分别代表什么？地图 <code>yaml</code> 的 <code>origin</code> 改了会发生什么？</li>
+<li><strong>动手任务</strong>：完成「建图 → 保存 → AMCL 定位 → 导航到目标点」全流程：第24 章的仿真环境中建图保存为 <code>office</code>，重启后加载地图用 AMCL 定位，发 <code>NavigateToPose</code> 目标点（3.0, 1.5）。验收标准：粒子云收敛后导航成功率 ≥ 8/10，<code>view_frames</code> 中 <code>map → odom</code> 由 amcl 发布。</li>
+<li><strong>动手任务</strong>：双车编队：两车在同一地图中，通过静态坐标变换令 robot2 跟随 robot1 右后方 1 m 位置。验收标准：robot1 移动时 robot2 稳定保持相对位姿（误差 &lt; 0.3 m），两车 tf 树互不冲突。</li>
+<li><strong>动手任务</strong>：语音控制闭环：用录音/文本模拟 ASR 输出「前进」「停止」，机器人 <code>/cmd_vel</code> 响应正确，并由 TTS 播报「已执行」。</li>
+</ol>
+<blockquote>
+<p>参考答案要点：1. -1 未知、0 空闲、100 占据；<code>origin</code> 是地图图像左下角在 map 系的位姿，改动会导致地图整体平移/旋转，AMCL 定位随之整体偏移。2. 定位发散优先查 <code>/initialpose</code> 是否给准、里程计与 AMCL 噪声参数是否匹配、激光 <code>frame_id</code> 是否正确。3. 编队的关键是 tf 前缀隔离与从车跟踪目标点由「头车位姿 ∘ 队形偏移」实时计算；静态偏移适合匀速平缓运动，高速时需动态队形控制。4. 指令解析用精确关键词匹配 + 未识别指令只播报不动作，避免误触发。</p>
+</blockquote>
+<h2 id="258-常见问题（faq）">25.8 常见问题（FAQ）</h2>
 <ul>
-<li>Nav2 = 定位 + 规划 + 控制 + 行为树的<strong>生命周期化</strong>组合，参数集中于一个 yaml；</li>
-<li>编队的本质是「以队友为参考系的速度控制」；</li>
-<li>语音控制 = ASR 文本 → 指令映射 → Twist，注意凭据只能走环境变量/密钥服务。</li>
+<li><strong>Q：<code>map_saver_cli</code> 保存的图全是灰色/空白？</strong> A：<code>/map</code> 尚无数据或 QoS 不匹配；先 <code>ros2 topic echo /map --once</code> 确认有地图，给订阅端配 <code>TRANSIENT_LOCAL</code> durability，或增大 <code>save_map_timeout</code>。</li>
+<li><strong>Q：AMCL 粒子云收敛但导航仍失败？</strong> A：定位正常 ≠ 导航可用。依次查：全局 costmap 是否加载静态层（<code>static_layer</code>）、目标点是否落在膨胀区/未知区、<code>controller_server</code> 是否 activate、<code>/cmd_vel</code> 是否被其他节点（如 teleop）抢占。</li>
+<li><strong>Q：两车在 rviz2 中「抽搐/瞬移」？</strong> A：tf 冲突。给每车配置 <code>frame_prefix</code>（如 <code>robot1/</code>）或在独立机器上分别运行再通过 relay 合并；检查是否有两个节点发布同一变换。</li>
+<li><strong>Q：语音识别节点跑起来卡顿？</strong> A：SDK 录音/网络回调阻塞了 executor 线程。把 SDK 放独立线程 + 线程安全队列，或用 <code>MultiThreadedExecutor</code> + <code>callback_group</code>；文本发布频率与指令解析解耦。</li>
+<li><strong>Q：<code>NavigateToPose</code> 发了没反应？</strong> A：<code>ros2 action list</code> 确认 <code>navigate_to_pose</code> 存在、<code>bt_navigator</code> 已 activate、goal 的 <code>frame_id</code> 是 <code>map</code> 且时间戳有效（用当前时间，不要用 0）。</li>
+</ul>
+<h2 id="259-本章小结与课程回顾">25.9 本章小结与课程回顾</h2>
+<ul>
+<li>Nav2 = 定位 + 规划 + 控制 + 行为树的<strong>生命周期化</strong>组合，参数集中于一个 yaml；地图（pgm/yaml）与 <code>/initialpose</code> 是导航产品的持久化数据契约；</li>
+<li>编队的本质是「以队友为参考系的速度控制」，多车隔离靠命名空间 + tf 前缀；</li>
+<li>语音控制 = ASR 文本 → 指令映射 → Twist，注意凭据只能走环境变量/密钥服务，未识别指令只播报不动作。</li>
 </ul>
 <p>至此 25 周全部实战内容完成：6 个工作空间、63 个功能包，所有案例在本机（ROS2 Jazzy）逐一编译、运行并与视频效果比对验证。</p>
 
@@ -740,7 +1044,7 @@ angular:
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第25章 多功能实践（编队与语音）","level":"9.4","depth":1,"next":{"title":"深度对照验证报告（视频帧 × 实测运行）","level":"10.1","depth":1,"path":"深度对照报告.md","ref":"深度对照报告.md","articles":[]},"previous":{"title":"第24章 仿真导航与 SLAM","level":"9.3","depth":1,"path":"第24周-仿真导航与SLAM.md","ref":"第24周-仿真导航与SLAM.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第25周-多功能实践开发.md","mtime":"2026-10-16T02:43:09.753Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T02:43:11.108Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第25章 多功能实践（编队与语音）","level":"9.4","depth":1,"next":{"title":"深度对照验证报告（视频帧 × 实测运行）","level":"10.1","depth":1,"path":"深度对照报告.md","ref":"深度对照报告.md","articles":[]},"previous":{"title":"第24章 仿真导航与 SLAM","level":"9.3","depth":1,"path":"第24周-仿真导航与SLAM.md","ref":"第24周-仿真导航与SLAM.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第25周-多功能实践开发.md","mtime":"2026-10-16T03:26:51.711Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T03:26:53.986Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

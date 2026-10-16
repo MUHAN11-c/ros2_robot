@@ -601,13 +601,140 @@
                                 
                                 <h1 id="第17章-工具应用实操（launch-与-rosbag2）">第17章 工具应用实操（launch 与 rosbag2）</h1>
 <blockquote>
-<p>launch 一次启动/管理一组节点；rosbag2 把话题数据录制到磁盘并可回放。本章完成两者的命令行与编程（C++/Python）实现。</p>
-<p>本章对应代码：<code>code/ws01_plumbing/src/cpp01_launch</code>、<code>py01_launch</code>、<code>cpp02_rosbag2</code>。</p>
+<p>所属阶段：阶段5 ROS2 核心架构解析 ｜ 视频 65 个 ｜ 时长约 10h01m ｜ 难度：进阶</p>
+<p>launch 一次启动/管理一组节点；rosbag2 把话题数据录制到磁盘并可回放；TF2 坐标变换广播与监听机器人各坐标系之间的关系。本章完成三者的命令行与编程（C++/Python）实现——静态/动态/监听的编码实测输出集中在第18章 18.5。</p>
+<p>本章对应代码：<code>code/ws01_plumbing/src/cpp01_launch</code>、<code>py01_launch</code>、<code>cpp02_rosbag2</code>、<code>cpp03_tf_broadcaster</code>、<code>py03_tf_broadcaster</code>、<code>cpp04_tf_listener</code>。</p>
 </blockquote>
-<h2 id="171-launch-之-python-实现">17.1 launch 之 Python 实现</h2>
-<h3 id="1711-案例以及案例分析">17.1.1 案例以及案例分析</h3>
-<p><strong>需求</strong>：用 Python 编写 launch 文件，一次启动<strong>两只乌龟</strong>（节点名分别为 t1/t2）；随后以 XML、YAML 两种格式重写同一需求，体会三种格式的等价性。</p>
-<h3 id="1712-实现">17.1.2 实现</h3>
+<h2 id="171-概览与课时结构">17.1 概览与课时结构</h2>
+<p>本周学"写完代码之后的一切"：<strong>launch 文件</strong>（用 Python/XML/YAML 一键组织多节点、传参数、做条件与事件响应）、<strong>rosbag2</strong>（把机器人数据录下来反复回放调试）、<strong>TF2 坐标变换</strong>（广播与监听机器人各坐标系之间的关系）。这三样是 ROS2 工程化的骨架——没有 launch，一个系统要开十几个终端；没有 rosbag，每次调试都要推着机器人跑；没有 TF2，传感器数据无法落到机器人本体上。学完本周，你能把任意多节点系统写成一条命令启动，并用 bag + TF 复现问题。</p>
+<table>
+<thead>
+<tr>
+<th>课</th>
+<th>小节</th>
+<th>时长</th>
+<th>一句话导览</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第1课 launch 文件方式实现与 ROSbag2</td>
+<td>28 节</td>
+<td>4h19m</td>
+<td>launch 三格式（Python/XML/YAML）全要素 + rosbag2 录制回放（命令 + C++ API）</td>
+</tr>
+<tr>
+<td>第2课 C++、Python 实现坐标变换广播</td>
+<td>13 节</td>
+<td>2h58m</td>
+<td>TF2 概念、相关消息、静态广播器（命令/C++/Python）、动态广播器</td>
+</tr>
+<tr>
+<td>第3课 C++、Python 实现坐标变换监听</td>
+<td>17 节</td>
+<td>2h43m</td>
+<td>坐标点发布、变换监听、坐标点消息过滤器、tf2 工具箱</td>
+</tr>
+</tbody>
+</table>
+<p><strong>学习目标</strong>：</p>
+<ol>
+<li>会用 Python/XML/YAML 三种格式编写 launch，掌握参数、文件包含、分组与事件响应；</li>
+<li>会用 <code>ros2 bag</code> 命令行与 <code>rosbag2_cpp</code> 编程接口录制/回放数据；</li>
+<li>理解 TF2 坐标树、<code>TransformStamped</code>/<code>PointStamped</code> 消息与四元数表示；</li>
+<li>会实现静态/动态广播器与监听器（含 <code>MessageFilter</code> 消息过滤器）；</li>
+<li>会用 <code>tf2_echo</code>、<code>view_frames</code> 等工具排查坐标树。</li>
+</ol>
+<h2 id="172-知识点梳理">17.2 知识点梳理</h2>
+<h3 id="1721-第1课-launch-文件方式实现与-rosbag2">17.2.1 第1课 launch 文件方式实现与 ROSbag2</h3>
+<p><strong>A. launch 实现流程与 Python 实现</strong></p>
+<ul>
+<li><strong>应用场景、概念、作用与准备工作</strong>：launch（启动文件）用一个文件描述"启动哪些节点、怎么传参、以什么顺序/条件启动"，作用是一键复现系统、参数集中管理、支持条件与组合。准备：功能包里建 <code>launch/</code> 目录，<code>CMakeLists.txt</code> 用 <code>install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})</code>（Python 包在 <code>setup.py</code> 的 <code>data_files</code> 装入），再 <code>ros2 launch &lt;pkg&gt; &lt;文件&gt;</code> 运行。</li>
+<li><strong>launch 基本使用流程（C++ 实现）</strong>：ament_cmake 包加 launch 文件 → install → <code>ros2 launch</code>；若需要给 C++ 节点传参，在 launch 的 <code>parameters</code> 里写字典或 YAML 文件，节点 <code>declare_parameter</code> 接收。</li>
+<li><strong>launch 基本使用流程（Python 实现）</strong>：ament_python 包的 <code>setup.py</code> <code>data_files</code> 增加 <code>('share/' + package_name + ['launch/xxx.launch.py'])</code>，否则 <code>ros2 launch</code> 找不到文件。</li>
+<li><strong>Python launch 简介</strong>：<code>.launch.py</code> 文件本质是 Python 模块，必须实现 <code>generate_launch_description() -&gt; LaunchDescription</code>；核心实体——<code>Node</code>（节点）、<code>ExecuteProcess</code>（执行指令）、<code>DeclareLaunchArgument</code> + <code>LaunchConfiguration</code>（参数）、<code>IncludeLaunchDescription</code>（文件包含）、<code>GroupAction</code> + <code>PushRosNamespace</code>（分组）、<code>RegisterEventHandler</code> + <code>OnProcessStart/OnProcessExit/OnStateChange</code>（事件）。</li>
+<li><strong>Python launch——node（上下）</strong>：<code>Node(package='pkg', executable='exe', name='节点名', namespace='ns', output='screen', emulate_tty=True, parameters=[...], remappings=[...], arguments=[...])</code>。要点：<code>package</code> 是功能包名、<code>executable</code> 是可执行名（entry_points 名）、<code>output='screen'</code> 让日志进终端、<code>emulate_tty</code> 让日志带颜色、<code>respawn=True</code> 可崩溃重启。</li>
+<li><strong>Python launch——执行指令</strong>：<code>ExecuteProcess(cmd=['ros2', 'run', 'turtlesim', 'turtlesim_node'], output='screen')</code> 或 <code>ExecuteProcess(cmd=['python3', 'script.py'])</code>，用于启动非 ROS 程序、脚本、<code>ros2 bag record</code> 等任意 shell 命令。</li>
+<li><strong>Python launch——参数设置</strong>：三种来源——内联字典 <code>parameters=[{'rate': 2.0}]</code>、YAML 文件 <code>parameters=[os.path.join(pkg_share, 'config', 'x.yaml')]</code>、launch 参数 <code>parameters=[{'name': LaunchConfiguration('name')}]</code>（配合 <code>DeclareLaunchArgument('name', default_value='x')</code> 与命令行 <code>ros2 launch pkg x.launch.py name:=y</code> 覆盖）。</li>
+<li><strong>Python launch——文件包含</strong>：<code>IncludeLaunchDescription(PythonLaunchDescriptionSource(path), launch_arguments={'arg': 'val'}.items())</code>，可把子系统 launch 组合成大系统；路径用 <code>get_package_share_directory('pkg')</code> 获取。</li>
+<li><strong>Python launch——分组设置</strong>：<code>GroupAction([PushRosNamespace('robot1'), DeclareLaunchArgument(...), Node(...)], condition=IfCondition(LaunchConfiguration('use_robot1')))</code>，作用：批量加命名空间、批量生效参数、按条件整组启停。</li>
+<li><strong>Python launch——事件设置</strong>：<code>RegisterEventHandler(OnProcessExit(target_action=node_a, on_exit=[LaunchDescription([...])]))</code>——A 退出后启动 B（如"乌龟生成完再启动控制节点"）；<code>OnProcessStart</code> 启动时触发；<code>OnStateChange</code> 监听生命周期状态。补充：还可用 <code>TimerAction(period=3.0, actions=[...])</code> 延时启动、<code>EmitEvent(Shutdown())</code> 主动收尾。</li>
+</ul>
+<p><strong>B. launch 文件之 xml、yaml 实现</strong></p>
+<ul>
+<li><strong>xml——node（上下）</strong>：<code>&lt;launch&gt;&lt;node pkg="pkg" exec="exe" name="n" namespace="ns" output="screen"&gt;&lt;param name="rate" value="2.0"/&gt;&lt;remap from="/a" to="/b"/&gt;&lt;/node&gt;&lt;/launch&gt;</code>；<code>&lt;param from="config/x.yaml"/&gt;</code> 导入参数文件；<code>&lt;arg name="x" default="1"/&gt;</code> + <code>$(var x)</code> 引用。</li>
+<li><strong>xml——执行指令</strong>：<code>&lt;executable cmd="python3 script.py"/&gt;</code>；<strong>xml——参数设置</strong>：<code>&lt;param&gt;</code>/<code>&lt;param from&gt;</code>/<code>&lt;rosparam command="load"&gt;</code>（视版本）；<strong>xml——分组设置</strong>：<code>&lt;group&gt;&lt;push-namespace ns="robot1"/&gt;...&lt;/group&gt;</code>（或 <code>ns</code> 属性）；<strong>xml——文件包含</strong>：<code>&lt;include file="$(find-pkg-share pkg)/launch/sub.launch.py"&gt;&lt;arg name="a" value="1"/&gt;&lt;/include&gt;</code>。</li>
+<li><strong>yaml 写法</strong>：YAML launch 用声明式结构 <code>launch:</code> 下 <code>node: {pkg, exec, name, param, remap}</code>、<code>include:</code>、<code>arg:</code> 等，适合纯配置场景（不写逻辑）；三种格式能力等价，<strong>Python 表达力最强</strong>（可写循环/条件/计算），XML/YAML 更简洁。</li>
+<li><strong>launch 小结</strong>：选型建议——有逻辑（条件、循环、组合）用 Python；纯节点编排用 XML/YAML；参数一律外置到 <code>config/*.yaml</code>。</li>
+</ul>
+<p><strong>C. rosbag2 案例实现</strong></p>
+<ul>
+<li><strong>rosbag2 场景、概念与作用</strong>：rosbag2 是 ROS2 的<strong>数据录制/回放</strong>工具，把话题消息按时间戳存进 SQLite3（默认）或 MCAP 文件。作用：离线复现 BUG、算法回归测试、训练数据采集、无机器人开发。与 ROS1 rosbag 的差异：存储插件化（sqlite3/mcap）、按 topic 可选存储插件与序列化格式。</li>
+<li><strong>rosbag2 命令工具 ros2bag</strong>：<code>ros2 bag record -a</code>（录全部）、<code>ros2 bag record /topic1 /topic2 -o my_bag</code>（指定话题，<code>-o</code> 指定目录）、<code>ros2 bag info my_bag</code>（看时长/消息数/类型）、<code>ros2 bag play my_bag</code>（回放，<code>--loop</code> 循环、<code>-r 2.0</code> 倍速、<code>--topics</code> 选择、<code>--clock</code> 发布仿真时间、<code>-s 10</code> 跳过前 10 秒）。</li>
+<li><strong>rosbag2 编码实现（C++）——案例源码分析</strong>：场景"程序内写 bag"（如记录控制器内部状态）。API 在 <code>rosbag2_cpp</code>（写：<code>rosbag2_cpp::Writer</code>；读：<code>rosbag2_cpp::Reader</code>）+ <code>rosbag2_storage</code>。</li>
+<li><strong>rosbag2 编码实现（C++）——框架搭建</strong>：<code>CMakeLists.txt</code> 依赖 <code>rosbag2_cpp</code> 与消息包；<code>Writer</code> 打开 <code>rosbag2_storage::StorageOptions</code>（uri + id）与 <code>ConverterOptions</code>（序列化格式 cdr）。</li>
+<li><strong>rosbag2 编码实现（C++）——录制数据</strong>：<code>writer-&gt;create_topic(topic_metadata)</code> 后循环 <code>writer-&gt;write(message, topic_name, time)</code>；时间戳用 <code>node-&gt;now().nanoseconds()</code>；注意所有消息走统一序列化（rclcpp 序列化器 <code>rclcpp::Serialization&lt;T&gt;</code>）。</li>
+<li><strong>rosbag2 编码实现（C++）——读取数据</strong>：<code>reader-&gt;open(storage_options)</code> → <code>while (reader-&gt;has_next()) { auto [topic, data, t] = reader-&gt;read_next(); ... }</code>，反序列化后还原消息；可用于离线批处理。</li>
+<li><strong>rosbag2 Python 实现说明</strong>：Humble 起提供 <code>rosbag2_py</code>（<code>SequentialWriter</code>/<code>SequentialReader</code>），API 与 C++ 对应；课程以 C++ 为主，Python 可照 <code>rosbag2_py</code> 示例改写。</li>
+<li><strong>launch 与 rosbag2 总结</strong>：常见组合——launch 里 <code>ExecuteProcess(cmd=['ros2', 'bag', 'record', '-a'])</code> 实现"启动即录制"；回放 bag + <code>--clock</code> + <code>use_sim_time</code> 实现时间对齐的离线调试。</li>
+</ul>
+<h3 id="1722-第2课-c、python-实现坐标变换广播">17.2.2 第2课 C++、Python 实现坐标变换广播</h3>
+<p><strong>A. 坐标变换基础</strong></p>
+<ul>
+<li><strong>场景</strong>：机器人上"雷达看到的障碍物"要转到"底盘坐标系"再转到"地图坐标系"才能用于导航；相机看到的目标要转到机械臂基座才能抓取。坐标变换（TF, Transform）就是维护这条坐标系树并随时查询。</li>
+<li><strong>概念与作用</strong>：TF2 用<strong>树状坐标系结构</strong>（一棵树、无环）管理 frame 之间的平移+旋转（6 自由度），随时间变化的叫<strong>动态变换</strong>（如轮子转动），不变的叫<strong>静态变换</strong>（如雷达装在底盘上的位置）。作用：统一多传感器数据、支持任意两坐标系互查（<code>lookupTransform</code>）、配合 rviz2 显示。</li>
+<li><strong>案例安装与运行</strong>：安装 <code>ros-humble-tf2-tools</code>、<code>ros-humble-tf-transformations</code>（或 <code>tf_transformations</code>）；<code>ros2 run tf2_ros static_transform_publisher ...</code> + <code>ros2 run tf2_tools view_frames</code> 生成坐标系树 PDF。</li>
+<li><strong>相关消息</strong>：<code>geometry_msgs/TransformStamped</code>（带 header 的变换：<code>header.frame_id</code> 父系、<code>child_frame_id</code> 子系、<code>transform.translation/rotation</code>，四元数表示旋转）与 <code>geometry_msgs/PointStamped</code>（带时间戳的坐标点）。广播/监听通过 <code>/tf_static</code>（静态，latched）与 <code>/tf</code>（动态）话题传输 <code>tf2_msgs/TFMessage</code>。</li>
+<li><strong>广播——引言与案例分析</strong>：广播（Broadcast）= 把"父系→子系"的变换发出去；监听（Lookup）= 查询任意两系间的变换。案例"雷达→底盘静态变换"：固定平移 <code>(0.2, 0, 0.3)</code>，广播一次即可。</li>
+</ul>
+<p><strong>B. 静态广播器</strong></p>
+<ul>
+<li><strong>命令实现（上下）</strong>：<code>ros2 run tf2_ros static_transform_publisher --x 0.2 --y 0 --z 0.3 --roll 0 --pitch 0 --yaw 0 --frame-id base_link --child-frame-id laser</code>；也可用 <code>--x ... --q</code> 传四元数；老式位置参数写法（<code>x y z yaw pitch roll frame child</code>）仍可用。静态变换发布到 <code>/tf_static</code>，<strong>QoS 为 transient_local（可靠 + 持久）</strong>，后启动的监听也能收到。</li>
+<li><strong>C++ 实现</strong>：<code>rclcpp::Node</code> 内创建 <code>std::make_shared&lt;tf2_ros::StaticTransformBroadcaster&gt;(node)</code>，填 <code>geometry_msgs::msg::TransformStamped</code>（四元数用 <code>tf2::Quaternion</code> 填 roll/pitch/yaw 或 <code>setRPY</code>），<code>sendTransform(ts)</code> 发送一次。</li>
+<li><strong>C++ 补充</strong>：四元数不能直接赋 roll/pitch/yaw 字段，必须经 <code>tf2::Quaternion q; q.setRPY(...); tf2::toMsg(q, ts.transform.rotation)</code>；父子 frame 名不要带 <code>/</code> 开头（tf2 约定）。</li>
+<li><strong>Python 实现</strong>：<code>from tf2_ros import StaticTransformBroadcaster</code>；<code>self.tf_broadcaster.sendTransform(t)</code>；四元数用 <code>tf_transformations.quaternion_from_euler(roll, pitch, yaw)</code> 填 <code>rotation.x/y/z/w</code>。</li>
+</ul>
+<p><strong>C. 动态广播器</strong></p>
+<ul>
+<li><strong>C++ 实现</strong>：<code>tf2_ros::TransformBroadcaster</code>（非 static），在定时器里随时间更新变换（如轮子角度、机器人位姿）并 <code>sendTransform</code>；<strong>必须持续发布</strong>（一般 10~100 Hz），监听端才能查到任意时刻的变换（tf2 内部有缓存，默认 10 秒）。</li>
+<li><strong>Python 实现</strong>：<code>from tf2_ros import TransformBroadcaster</code>，定时器回调里更新 <code>TransformStamped</code> 的时间戳（<code>self.get_clock().now().to_msg()</code>）后发送。要点：<code>header.stamp</code> 用当前时刻，写 0 或过期时间会导致监听端外推失败。</li>
+</ul>
+<h3 id="1723-第3课-c、python-实现坐标变换监听">17.2.3 第3课 C++、Python 实现坐标变换监听</h3>
+<p><strong>A. 坐标点发布</strong></p>
+<ul>
+<li><strong>案例以及分析</strong>：案例"雷达点坐标转到底盘"——发布 <code>geometry_msgs/PointStamped</code>（frame_id = <code>laser</code>），监听端把它转到 <code>base_link</code> 输出。先写点发布方作为数据源。</li>
+<li><strong>C++/Python 实现</strong>：定时器里 <code>point.header.frame_id = "laser"; point.header.stamp = node-&gt;now();</code> 发布到 <code>/point</code> 话题；注意 stamp 与 TF 时间要对得上。</li>
+<li><strong>坐标变换广播——小结</strong>：静态广播一次（<code>/tf_static</code>，transient_local），动态持续广播（<code>/tf</code>）；旋转用四元数；frame 命名全小写、无 <code>/</code>。</li>
+</ul>
+<p><strong>B. 坐标变换监听</strong></p>
+<ul>
+<li><strong>案例与案例分析</strong>：查询 <code>base_link ← laser</code> 的变换，把点/向量转过去。核心 API：<code>tf2_ros::Buffer</code>（变换缓存）+ <code>tf2_ros::TransformListener</code>（订阅 /tf、/tf_static 填充 Buffer）。</li>
+<li><strong>C++ 实现（上下）</strong>：<code>auto buffer = std::make_shared&lt;tf2_ros::Buffer&gt;(node-&gt;get_clock()); auto listener = std::make_shared&lt;tf2_ros::TransformListener&gt;(*buffer);</code> 然后 <code>buffer-&gt;lookupTransform("base_link", "laser", tf2::TimePointZero)</code>（取最新）或 <code>lookupTransform(target, source, rclcpp::Time)</code>（取指定时刻）；异常处理 <code>tf2::TransformException</code>（查不到时抛 <code>ExtrapolationException</code>/<code>LookupException</code>）。</li>
+<li><strong>Python 实现</strong>：<code>self.tf_buffer = Buffer(); self.tf_listener = TransformListener(self.tf_buffer, self)</code>；<code>self.tf_buffer.lookup_transform('base_link', 'laser', Time())</code>；<code>do_transform_point(point, transform)</code> 完成点变换。</li>
+</ul>
+<p><strong>C. 坐标点变换监听</strong></p>
+<ul>
+<li><strong>实现框架/框架搭建</strong>：把"订阅点话题 → 等对应 TF → 变换 → 发布"串起来；时间戳匹配是关键：点的 stamp 与 TF 缓存时间不对齐会抛外推异常。</li>
+<li><strong>监听器创建</strong>：<code>TransformListener</code> 需与 <code>Buffer</code> 同生命周期；多线程下用 <code>tf2_ros::CreateTimerROS</code> 或专用回调组，避免查 TF 阻塞执行器。</li>
+<li><strong>订阅坐标点</strong>：订阅 <code>/point</code>（<code>PointStamped</code>），回调中取 <code>msg-&gt;header</code> 的 frame 与 stamp 作为查询时刻。</li>
+<li><strong>过滤器创建</strong>：用 <code>tf2_ros::MessageFilter</code>（消息过滤器）让"TF 没到齐的消息先排队，TF 到齐再回调"——绑定目标 frame；避免手动 sleep 等 TF。</li>
+<li><strong>变换实现以及小结</strong>：<code>tf2::doTransform(point_in, point_out, transform)</code> 输出变换后坐标；小结：监听三件套 Buffer + Listener +（可选）MessageFilter；查询用 <code>canTransform</code> 先探再查更稳。</li>
+<li><strong>Python 实现</strong>：<code>tf2_geometry_msgs.do_transform_point(point, transform)</code>（Humble 中从 <code>tf2_geometry_msgs</code> 导入），或用 <code>tf2_ros.MessageFilter</code> 等价实现。</li>
+</ul>
+<p><strong>D. 坐标变换工具</strong></p>
+<ul>
+<li><code>ros2 run tf2_ros tf2_echo base_link laser</code>（打印实时变换）、<code>ros2 run tf2_tools view_frames</code>（生成 frames.pdf 坐标树）、<code>ros2 run tf2_ros static_transform_publisher --help</code>；rviz2 的 TF 插件可图形化查看坐标系与随时间回放。</li>
+</ul>
+<h2 id="173-重点与难点">17.3 重点与难点</h2>
+<ol>
+<li><strong>launch 资源必须 install</strong>：launch/config/urdf 目录不写进 <code>install(DIRECTORY ...)</code> 或 <code>setup.py</code> 的 <code>data_files</code>，<code>ros2 launch</code> 就报"文件不存在"——本周第一大坑。</li>
+<li><strong>launch 参数的三种来源与覆盖顺序</strong>：内联 &lt; YAML 文件 &lt; launch 参数（命令行 <code>arg:=val</code>）；<code>LaunchConfiguration</code> 只在 <code>generate_launch_description</code> 里解析，别在定义前引用。</li>
+<li><strong>TF 的时间语义</strong>：动态变换必须持续广播且 <code>header.stamp</code> 为当前时间；查询指定时刻要保证 tf2 缓存覆盖该时刻（默认缓存 10 秒），否则 <code>ExtrapolationException</code>。</li>
+<li><strong>四元数 vs 欧拉角</strong>：TF 内部一律四元数；欧拉角只在人机接口出现。手写 <code>rotation.x/y/z/w</code> 必须归一化，<code>setRPY</code>/<code>quaternion_from_euler</code> 才安全。</li>
+<li><strong>消息过滤器解决"TF 还没到"</strong>：点的 stamp 比 TF 新时 <code>lookupTransform</code> 必失败；<code>MessageFilter</code> 把消息暂存到 TF 就绪再回调，是传感器融合的标配。</li>
+</ol>
+<h2 id="174-代码与命令实战">17.4 代码与命令实战</h2>
+<h3 id="1741-实战-1：三格式-launch-双乌龟（入门）">17.4.1 实战 1：三格式 launch 双乌龟（入门）</h3>
 <p><code>cpp01_launch/launch/py/py01_helloworld_launch.py</code>：</p>
 <pre><code class="lang-python"><span class="hljs-keyword">from</span> launch <span class="hljs-keyword">import</span> LaunchDescription
 <span class="hljs-keyword">from</span> launch_ros.actions <span class="hljs-keyword">import</span> Node
@@ -638,25 +765,66 @@
 <blockquote>
 <p>注意：<code>ros2 launch &lt;包&gt; &lt;文件&gt;</code> 的第二个参数是<strong>文件名</strong>（launch 会递归搜索包的 share 目录），不要带子目录相对路径。</p>
 </blockquote>
-<h3 id="1713-运行效果（实测）">17.1.3 运行效果（实测）</h3>
-<pre><code class="lang-bash">ros2 launch cpp01_launch py01_helloworld_launch.py
+<h3 id="1742-实战-2：python-launch-全要素（一键启动小乌龟系统--参数--事件）">17.4.2 实战 2：Python launch 全要素（一键启动小乌龟系统 + 参数 + 事件）</h3>
+<pre><code class="lang-python"><span class="hljs-comment"># my_pkg/launch/turtle_system.launch.py</span>
+<span class="hljs-keyword">import</span> os
+<span class="hljs-keyword">from</span> ament_index_python.packages <span class="hljs-keyword">import</span> get_package_share_directory
+<span class="hljs-keyword">from</span> launch <span class="hljs-keyword">import</span> LaunchDescription
+<span class="hljs-keyword">from</span> launch.actions <span class="hljs-keyword">import</span> (DeclareLaunchArgument, ExecuteProcess,
+                            GroupAction, IncludeLaunchDescription, RegisterEventHandler)
+<span class="hljs-keyword">from</span> launch.event_handlers <span class="hljs-keyword">import</span> OnProcessExit
+<span class="hljs-keyword">from</span> launch.launch_description_sources <span class="hljs-keyword">import</span> PythonLaunchDescriptionSource
+<span class="hljs-keyword">from</span> launch.conditions <span class="hljs-keyword">import</span> IfCondition
+<span class="hljs-keyword">from</span> launch.substitutions <span class="hljs-keyword">import</span> LaunchConfiguration
+<span class="hljs-keyword">from</span> launch_ros.actions <span class="hljs-keyword">import</span> Node, PushRosNamespace
+
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">generate_launch_description</span>():
+    pkg_share = get_package_share_directory(<span class="hljs-string">'my_pkg'</span>)
+    use_sim = LaunchConfiguration(<span class="hljs-string">'use_sim'</span>)
+    <span class="hljs-keyword">return</span> LaunchDescription([
+        DeclareLaunchArgument(<span class="hljs-string">'use_sim'</span>, default_value=<span class="hljs-string">'true'</span>),
+        Node(package=<span class="hljs-string">'turtlesim'</span>, executable=<span class="hljs-string">'turtlesim_node'</span>, name=<span class="hljs-string">'sim'</span>,
+             parameters=[os.path.join(pkg_share, <span class="hljs-string">'config'</span>, <span class="hljs-string">'sim.yaml'</span>),
+                         {<span class="hljs-string">'use_sim_time'</span>: use_sim}],   <span class="hljs-comment"># YAML + 内联参数混用</span>
+             output=<span class="hljs-string">'screen'</span>, emulate_tty=<span class="hljs-literal">True</span>),
+        ExecuteProcess(cmd=[<span class="hljs-string">'ros2'</span>, <span class="hljs-string">'bag'</span>, <span class="hljs-string">'record'</span>, <span class="hljs-string">'-a'</span>, <span class="hljs-string">'-o'</span>, <span class="hljs-string">'run_bag'</span>],
+                       output=<span class="hljs-string">'screen'</span>),               <span class="hljs-comment"># 启动即录 bag</span>
+        GroupAction([PushRosNamespace(<span class="hljs-string">'robot1'</span>),        <span class="hljs-comment"># 分组 + 命名空间</span>
+                     Node(package=<span class="hljs-string">'my_pkg'</span>, executable=<span class="hljs-string">'follower'</span>, name=<span class="hljs-string">'follower'</span>)],
+                    condition=IfCondition(use_sim)),    <span class="hljs-comment"># 条件整组启停</span>
+        RegisterEventHandler(OnProcessExit(             <span class="hljs-comment"># 事件：sim 退出后回放 bag</span>
+            target_action=<span class="hljs-literal">None</span>, on_exit=[ExecuteProcess(cmd=[<span class="hljs-string">'echo'</span>, <span class="hljs-string">'sim exit'</span>])])),
+        IncludeLaunchDescription(                       <span class="hljs-comment"># 文件包含：组合子系统</span>
+            PythonLaunchDescriptionSource(
+                os.path.join(pkg_share, <span class="hljs-string">'launch'</span>, <span class="hljs-string">'sub.launch.py'</span>)),
+            launch_arguments={<span class="hljs-string">'use_sim'</span>: use_sim}.items()),
+    ])
 </code></pre>
-<pre><code class="lang-text">[INFO] [launch]: Default logging verbosity is set to INFO
-[INFO] [turtlesim_node-1]: process started with pid [467494]
-[INFO] [turtlesim_node-2]: process started with pid [467495]
-[turtlesim_node-2] [INFO] [...]: Starting turtlesim with node name /t2
-[turtlesim_node-1] [INFO] [...]: Starting turtlesim with node name /t1
+<pre><code class="lang-bash">ros2 launch my_pkg turtle_system.launch.py use_sim:=<span class="hljs-literal">false</span>   <span class="hljs-comment"># 命令行覆盖 launch 参数</span>
 </code></pre>
-<p>窗口弹出两只乌龟；<code>ros2 node list</code> 可见 <code>/t1</code>、<code>/t2</code>。XML 与 YAML 版输出相同。</p>
-<h2 id="172-rosbag2-之命令行与-c-编程实现">17.2 rosbag2 之命令行与 C++ 编程实现</h2>
-<h3 id="1721-案例以及案例分析">17.2.1 案例以及案例分析</h3>
-<p><strong>需求</strong>：</p>
-<ol>
-<li>命令行录制 <code>/turtle1/cmd_vel</code> 并回放；</li>
-<li>编程实现：C++ 节点订阅 <code>/turtle1/cmd_vel</code> 写入磁盘文件（录制），再从文件读出消息打印（回放）。</li>
-</ol>
-<h3 id="1722-c-实现要点">17.2.2 C++ 实现要点</h3>
-<p>录制（<code>cpp02_rosbag2/src/demo01_writer.cpp</code>）：</p>
+<h3 id="1743-实战-3：xml-launch（含参数文件与分组）">17.4.3 实战 3：XML launch（含参数文件与分组）</h3>
+<pre><code class="lang-xml"><span class="hljs-comment">&lt;!-- my_pkg/launch/turtle_system.launch.xml --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">launch</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">arg</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"ns"</span> <span class="hljs-attr">default</span>=<span class="hljs-string">"robot1"</span>/&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">node</span> <span class="hljs-attr">pkg</span>=<span class="hljs-string">"turtlesim"</span> <span class="hljs-attr">exec</span>=<span class="hljs-string">"turtlesim_node"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"sim"</span> <span class="hljs-attr">output</span>=<span class="hljs-string">"screen"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">param</span> <span class="hljs-attr">from</span>=<span class="hljs-string">"$(find-pkg-share my_pkg)/config/sim.yaml"</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">node</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">group</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">push-namespace</span> <span class="hljs-attr">ns</span>=<span class="hljs-string">"$(var ns)"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">node</span> <span class="hljs-attr">pkg</span>=<span class="hljs-string">"my_pkg"</span> <span class="hljs-attr">exec</span>=<span class="hljs-string">"follower"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"follower"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">remap</span> <span class="hljs-attr">from</span>=<span class="hljs-string">"cmd_vel"</span> <span class="hljs-attr">to</span>=<span class="hljs-string">"cmd_vel"</span>/&gt;</span>      <span class="hljs-comment">&lt;!-- 相对话题自动拼命名空间 --&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">node</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">group</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">launch</span>&gt;</span>
+</code></pre>
+<h3 id="1744-实战-4：rosbag2-录制回放与编程写-bag">17.4.4 实战 4：rosbag2 录制回放与编程写 bag</h3>
+<pre><code class="lang-bash">ros2 bag record /scan /odom /tf /tf_static -o my_bag   <span class="hljs-comment"># 只录需要的话题</span>
+ros2 bag info my_bag            <span class="hljs-comment"># 看消息数/时长/类型/大小</span>
+ros2 bag play my_bag --clock -r 0.5 --loop   <span class="hljs-comment"># 倍速0.5回放并发布 /clock</span>
+ros2 bag play my_bag --topics /scan          <span class="hljs-comment"># 只回放部分话题</span>
+</code></pre>
+<p>C++ 编程实现（<code>cpp02_rosbag2</code>）。录制（<code>src/demo01_writer.cpp</code>）：</p>
 <pre><code class="lang-cpp"><span class="hljs-comment">// 3-1.创建一个录制对象；</span>
 writer_ = std::<span class="hljs-built_in">make_unique</span>&lt;rosbag2_cpp::Writer&gt;();
 <span class="hljs-comment">// 3-2.设置被录制的文件；</span>
@@ -685,8 +853,90 @@ reader_-&gt;<span class="hljs-built_in">close</span>();
 <li>同名 bag 目录已存在时 <code>open()</code> 会抛异常，重跑前先删除 <code>ros2bag/demo01_bag</code>。</li>
 </ul>
 </blockquote>
-<h3 id="1723-运行效果（实测）">17.2.3 运行效果（实测）</h3>
-<p>发布速度 → 录制 → <code>ros2 bag info</code>：</p>
+<h3 id="1745-实战-5：静态变换广播（c-主力--python-对照）">17.4.5 实战 5：静态变换广播（C++ 主力 + Python 对照）</h3>
+<pre><code class="lang-cpp"><span class="hljs-comment">// static_tf/src/static_broadcaster.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"geometry_msgs/msg/transform_stamped.hpp"</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"rclcpp/rclcpp.hpp"</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"tf2/LinearMath/Quaternion.h"</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"tf2_ros/static_transform_broadcaster.h"</span></span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">StaticTF</span> : <span class="hljs-keyword">public</span> rclcpp::Node {
+<span class="hljs-keyword">public</span>:
+  <span class="hljs-built_in">StaticTF</span>() : <span class="hljs-built_in">Node</span>(<span class="hljs-string">"static_tf"</span>) {
+    tf_broadcaster_ = std::<span class="hljs-built_in">make_shared</span>&lt;tf2_ros::StaticTransformBroadcaster&gt;(<span class="hljs-keyword">this</span>);
+    geometry_msgs::msg::TransformStamped t;
+    t.header.stamp = <span class="hljs-built_in">now</span>();                    <span class="hljs-comment">// 静态变换用当前时刻即可</span>
+    t.header.frame_id = <span class="hljs-string">"base_link"</span>;           <span class="hljs-comment">// 父系</span>
+    t.child_frame_id = <span class="hljs-string">"laser"</span>;                <span class="hljs-comment">// 子系</span>
+    t.transform.translation.x = <span class="hljs-number">0.2</span>;           <span class="hljs-comment">// 雷达在底盘前 0.2m、高 0.3m</span>
+    t.transform.translation.z = <span class="hljs-number">0.3</span>;
+    tf2::Quaternion q; q.<span class="hljs-built_in">setRPY</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);      <span class="hljs-comment">// 欧拉角转四元数（勿手写 x/y/z/w）</span>
+    t.transform.rotation = tf2::<span class="hljs-built_in">toMsg</span>(q);
+    tf_broadcaster_-&gt;<span class="hljs-built_in">sendTransform</span>(t);         <span class="hljs-comment">// 只发一次：/tf_static (transient_local)</span>
+  }
+<span class="hljs-keyword">private</span>:
+  std::shared_ptr&lt;tf2_ros::StaticTransformBroadcaster&gt; tf_broadcaster_;
+};
+</code></pre>
+<pre><code class="lang-python"><span class="hljs-comment"># Python 对照（动态广播版：定时器里持续发布）</span>
+<span class="hljs-keyword">from</span> geometry_msgs.msg <span class="hljs-keyword">import</span> TransformStamped
+<span class="hljs-keyword">from</span> tf2_ros <span class="hljs-keyword">import</span> TransformBroadcaster
+<span class="hljs-keyword">from</span> tf_transformations <span class="hljs-keyword">import</span> quaternion_from_euler
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">DynamicTF</span>(<span class="hljs-title class_ inherited__">Node</span>):
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">'dynamic_tf'</span>)
+        <span class="hljs-variable language_">self</span>.br = TransformBroadcaster(<span class="hljs-variable language_">self</span>)
+        <span class="hljs-variable language_">self</span>.timer = <span class="hljs-variable language_">self</span>.create_timer(<span class="hljs-number">0.1</span>, <span class="hljs-variable language_">self</span>.on_timer)   <span class="hljs-comment"># 10 Hz</span>
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">on_timer</span>(<span class="hljs-params">self</span>):
+        t = TransformStamped()
+        t.header.stamp = <span class="hljs-variable language_">self</span>.get_clock().now().to_msg()     <span class="hljs-comment"># 必须是当前时刻</span>
+        t.header.frame_id = <span class="hljs-string">'odom'</span>
+        t.child_frame_id = <span class="hljs-string">'base_link'</span>
+        q = quaternion_from_euler(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-variable language_">self</span>.theta)          <span class="hljs-comment"># yaw</span>
+        t.transform.rotation.x, t.transform.rotation.y = q[<span class="hljs-number">0</span>], q[<span class="hljs-number">1</span>]
+        t.transform.rotation.z, t.transform.rotation.w = q[<span class="hljs-number">2</span>], q[<span class="hljs-number">3</span>]
+        <span class="hljs-variable language_">self</span>.br.sendTransform(t)
+</code></pre>
+<h3 id="1746-实战-6：变换监听--消息过滤器（python）">17.4.6 实战 6：变换监听 + 消息过滤器（Python）</h3>
+<pre><code class="lang-python"><span class="hljs-comment"># tf_listener/tf_listener/point_tf.py</span>
+<span class="hljs-keyword">from</span> geometry_msgs.msg <span class="hljs-keyword">import</span> PointStamped
+<span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
+<span class="hljs-keyword">from</span> tf2_ros <span class="hljs-keyword">import</span> Buffer, TransformListener, MessageFilter
+<span class="hljs-keyword">from</span> tf2_geometry_msgs <span class="hljs-keyword">import</span> do_transform_point
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">PointTF</span>(<span class="hljs-title class_ inherited__">Node</span>):
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">'point_tf'</span>)
+        <span class="hljs-variable language_">self</span>.buf = Buffer()
+        <span class="hljs-variable language_">self</span>.listener = TransformListener(<span class="hljs-variable language_">self</span>.buf, <span class="hljs-variable language_">self</span>)
+        <span class="hljs-variable language_">self</span>.pub = <span class="hljs-variable language_">self</span>.create_publisher(PointStamped, <span class="hljs-string">'point_in_base'</span>, <span class="hljs-number">10</span>)
+        <span class="hljs-variable language_">self</span>.sub = <span class="hljs-variable language_">self</span>.create_subscription(PointStamped, <span class="hljs-string">'point'</span>, <span class="hljs-variable language_">self</span>.raw_cb, <span class="hljs-number">10</span>)
+        <span class="hljs-comment"># 消息过滤器：目标 frame 的 TF 就绪后才回调 on_point</span>
+        <span class="hljs-variable language_">self</span>.<span class="hljs-built_in">filter</span> = MessageFilter(<span class="hljs-variable language_">self</span>.sub, <span class="hljs-variable language_">self</span>.buf, <span class="hljs-string">'base_link'</span>, <span class="hljs-number">10</span>, <span class="hljs-variable language_">self</span>)
+        <span class="hljs-variable language_">self</span>.<span class="hljs-built_in">filter</span>.register_callback(<span class="hljs-variable language_">self</span>.on_point)
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">on_point</span>(<span class="hljs-params">self, msg: PointStamped</span>):
+        tf = <span class="hljs-variable language_">self</span>.buf.lookup_transform(<span class="hljs-string">'base_link'</span>, msg.header.frame_id, msg.header.stamp)
+        <span class="hljs-variable language_">self</span>.pub.publish(do_transform_point(msg, tf))
+</code></pre>
+<pre><code class="lang-bash">ros2 run tf2_ros tf2_echo base_link laser    <span class="hljs-comment"># 终端验证：打印两系间实时变换</span>
+ros2 run tf2_tools view_frames               <span class="hljs-comment"># 生成 frames.pdf：检查坐标树是否有环</span>
+</code></pre>
+<h2 id="175-运行效果（实测）">17.5 运行效果（实测）</h2>
+<h3 id="1751-launch-双乌龟实测">17.5.1 launch 双乌龟实测</h3>
+<pre><code class="lang-bash">ros2 launch cpp01_launch py01_helloworld_launch.py
+</code></pre>
+<pre><code class="lang-text">[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [turtlesim_node-1]: process started with pid [467494]
+[INFO] [turtlesim_node-2]: process started with pid [467495]
+[turtlesim_node-2] [INFO] [...]: Starting turtlesim with node name /t2
+[turtlesim_node-1] [INFO] [...]: Starting turtlesim with node name /t1
+</code></pre>
+<p>窗口弹出两只乌龟；<code>ros2 node list</code> 可见 <code>/t1</code>、<code>/t2</code>。XML 与 YAML 版输出相同。</p>
+<h3 id="1752-rosbag2-录制与回放实测">17.5.2 rosbag2 录制与回放实测</h3>
+<p>需求：命令行录制 <code>/turtle1/cmd_vel</code> 并回放；编程实现 C++ 节点写入/读出（17.4.4）。发布速度 → 录制 → <code>ros2 bag info</code>：</p>
 <pre><code class="lang-text">Files:             demo01_bag_0.mcap
 Bag size:          4.0 KiB
 Storage id:        mcap
@@ -700,11 +950,39 @@ Topic information: Topic: /turtle1/cmd_vel | Type: geometry_msgs/msg/Twist | Cou
 [INFO] [...]: 读取消息:(1.50,0.50)
 [INFO] [...]: 读取消息:(1.50,0.50)
 </code></pre>
-<h2 id="173-本章小结">17.3 本章小结</h2>
+<h3 id="1753-tf-广播与监听实测">17.5.3 TF 广播与监听实测</h3>
+<p>静态广播（<code>/tf_static</code> 回显）、动态广播（<code>/tf</code> 回显）、变换监听与坐标点变换监听的实测输出集中在<strong>第18章 18.5.1–18.5.4</strong>（含端到端坐标点变换 <code>(0.5,0.5)→(1.5,2.5)</code> 验证），编码与实测一一对应。</p>
+<h2 id="176-与-ros2--机器人开发的关联">17.6 与 ROS2 / 机器人开发的关联</h2>
+<ol>
+<li><strong>launch 是多节点系统唯一入口</strong>：导航（Nav2）、建图（slam_toolbox）、MoveIt2 全靠 launch 组合；掌握 Python launch 的条件/分组/事件才能做复杂系统编排。</li>
+<li><strong>rosbag2 是算法开发的"数据资产"</strong>：视觉/激光算法离线迭代全靠录制数据；<code>--clock</code> + <code>use_sim_time</code> 让回放与在线行为一致；MCAP 格式正成为行业数据标准（本章实测 bag 即 mcap 存储）。</li>
+<li><strong>TF2 是机器人学的通用语言</strong>：雷达/相机/IMU/机械臂各 link 的空间关系都在 TF 树上；导航定位（map→odom→base_link）是 TF 树的直接应用。</li>
+<li><strong>为第19-20章 Mycar 做准备</strong>：智能车的 bringup、传感器 TF、数据录制都直取本周内容；本阶段打好基础，实战周只需关注业务逻辑。</li>
+</ol>
+<h2 id="177-自测与练习">17.7 自测与练习</h2>
+<ol>
+<li><strong>概念题</strong>：静态变换与动态变换的区别（话题、QoS、发布频率、时间语义）各是什么？为什么静态变换用 <code>/tf_static</code> + transient_local？</li>
+<li><strong>动手任务</strong>：写一个 Python launch，同时启动 <code>turtlesim_node</code> 与两个自定义节点（一个发布 <code>/cmd_vel</code>、一个打印位姿），并用 <code>ros2 bag record /turtle1/cmd_vel</code> 录制。<strong>验收标准</strong>：一条 <code>ros2 launch</code> 命令全部起来；<code>ros2 bag info</code> 能看到录制的话题。</li>
+<li><strong>动手任务</strong>：静态广播 <code>odom -&gt; base_link</code>（yaw=0）与 <code>base_link -&gt; laser</code>（x=0.2, z=0.3），再用监听节点把 <code>laser</code> 系下的点 <code>(1, 0, 0)</code> 转到 <code>odom</code> 系打印。<strong>验收标准</strong>：结果约为 <code>(1.2, 0, 0.3)</code>；<code>tf2_echo</code> 与 <code>view_frames</code> 验证树结构。</li>
+</ol>
+<blockquote>
+<p>参考答案要点：1) 静态：<code>/tf_static</code>、transient_local（后订阅者也能收到）、发布一次、无时间外推问题；动态：<code>/tf</code>、持续发布（10~100 Hz）、<code>header.stamp</code> 必须当前、查询指定时刻受 10s 缓存限制。2) launch 中 <code>Node(package='turtlesim', executable='turtlesim_node')</code> + 两个自定义 Node + <code>ExecuteProcess(cmd=['ros2','bag','record',...])</code>；记得 install launch 目录。3) 变换合成：laser→base 平移 (0.2,0,0.3)，base→odom 无旋转，故点 <code>(1,0,0)</code> → <code>(1.2,0,0.3)</code>；用 <code>lookup_transform('odom','laser', Time())</code> 直接查两级合成。</p>
+</blockquote>
+<h2 id="178-常见问题（faq）">17.8 常见问题（FAQ）</h2>
 <ul>
-<li>launch 三种格式等价，推荐 Python（可编程、可传参）；</li>
-<li>rosbag2 底层存储为 mcap，命令行 <code>ros2 bag record/play/info</code> 覆盖大多数场景；</li>
-<li>编程接口 <code>rosbag2_cpp::Writer/Reader</code> 与命令行行为一致，注意 <code>write(*msg)</code> 解引用与不同发行版 <code>read_next</code> 返回值差异。</li>
+<li><strong>Q：<code>ros2 launch</code> 报找不到 launch 文件？</strong> A：launch 目录没 install：C++ 包加 <code>install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})</code>；Python 包在 <code>setup.py</code> 的 <code>data_files</code> 加 <code>('share/' + package_name, ['launch/xxx.launch.py'])</code>，然后重新 <code>colcon build</code> 并 source。</li>
+<li><strong>Q：<code>lookupTransform</code> 抛 <code>ExtrapolationException</code>？</strong> A：查询时刻超出 tf2 缓存（默认 10s）或动态变换断流；确认广播端持续发布且 <code>header.stamp</code> 正确；查"最新变换"用 <code>TimePointZero</code>/<code>Time()</code> 而不是 <code>now()</code>。</li>
+<li><strong>Q：<code>ros2 bag play</code> 后订阅端没数据？</strong> A：默认按录制时间戳发布，订阅端若 <code>use_sim_time</code> 没开、或 QoS 不匹配（bag 默认 reliable，订阅 best_effort 也可能不兼容）；用 <code>ros2 topic echo</code> 与 <code>ros2 bag info</code> 对照话题名与类型。</li>
+<li><strong>Q：TF 树连不上（view_frames 断成几棵）？</strong> A：父子 frame 名拼写/前缀不一致（<code>robot1/base_link</code> 与 <code>base_link</code> 是不同 frame）；检查是否有环、是否有节点同时广播同一 child；rviz2 的 TF 插件可逐帧定位。</li>
+<li><strong>Q：launch 里参数传了但节点没收到？</strong> A：节点必须 <code>declare_parameter</code>；YAML 的顶层 key 要与节点名/命名空间匹配（<code>/**:</code> 或 <code>节点名:</code>）；<code>LaunchConfiguration</code> 的值是字符串，数值参数建议在节点侧转换或用 <code>ParameterValue(..., value_type=float)</code>。</li>
+</ul>
+<h2 id="179-本章小结">17.9 本章小结</h2>
+<ul>
+<li>launch 三种格式（Python/XML/YAML）能力等价，推荐 Python（可编程、可传参），参数/包含/分组/事件是四大核心要素，launch 目录必须 install；</li>
+<li>rosbag2 底层存储为 mcap（实测 <code>demo01_bag_0.mcap</code>），命令行 <code>ros2 bag record/play/info</code> 覆盖大多数场景，<code>--clock</code> 配合 <code>use_sim_time</code> 实现时间对齐的离线调试；</li>
+<li>编程接口 <code>rosbag2_cpp::Writer/Reader</code> 与命令行行为一致，注意 <code>write(*msg)</code> 解引用与不同发行版 <code>read_next</code> 返回值差异；</li>
+<li>TF2 广播分静态（<code>StaticTransformBroadcaster</code>，一次发送）与动态（<code>TransformBroadcaster</code>，持续发送），监听用 Buffer + Listener + lookupTransform，"TF 未到齐"用 MessageFilter 排队；</li>
+<li>乌龟跟随/护航（第18章）与 URDF/rviz2（第18章）是本章工具的综合应用与验收。</li>
 </ul>
 
                                 
@@ -749,7 +1027,7 @@ Topic information: Topic: /turtle1/cmd_vel | Type: geometry_msgs/msg/Twist | Cou
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第17章 工具应用实操（launch 与 rosbag2）","level":"6.4","depth":1,"next":{"title":"第18章 坐标变换与机器人建模","level":"6.5","depth":1,"path":"第18周-乌龟案例与可视化.md","ref":"第18周-乌龟案例与可视化.md","articles":[]},"previous":{"title":"第16章 通信机制拓展与时间 API","level":"6.3","depth":1,"path":"第16周-通信机制拓展与时间API.md","ref":"第16周-通信机制拓展与时间API.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第17周-工具应用实操.md","mtime":"2026-10-16T02:43:09.753Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T02:43:11.108Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第17章 工具应用实操（launch 与 rosbag2）","level":"6.4","depth":1,"next":{"title":"第18章 坐标变换与机器人建模","level":"6.5","depth":1,"path":"第18周-乌龟案例与可视化.md","ref":"第18周-乌龟案例与可视化.md","articles":[]},"previous":{"title":"第16章 通信机制拓展与时间 API","level":"6.3","depth":1,"path":"第16周-通信机制拓展与时间API.md","ref":"第16周-通信机制拓展与时间API.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第17周-工具应用实操.md","mtime":"2026-10-16T03:26:51.710Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T03:26:53.986Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

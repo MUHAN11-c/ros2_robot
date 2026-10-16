@@ -604,7 +604,212 @@
 <p>完成图像、惯导、卫星定位三类数据的仿真发布与订阅解析。</p>
 <p>本章对应代码：<code>code/ws05_sensor/src/demo/cpp03_camera_sim</code>、<code>py03_camera_sim</code>、<code>cpp04_imu_demo</code>、<code>py04_imu_demo</code>、<code>cpp05_gnss_demo</code>、<code>py05_gnss_demo</code>。</p>
 </blockquote>
-<h2 id="231-虚拟相机">23.1 虚拟相机</h2>
+<h2 id="231-概览与课时结构">23.1 概览与课时结构</h2>
+<h3 id="2311-本周概览">23.1.1 本周概览</h3>
+<p>本周是全阶段体量最大的一周（90 个视频），系统覆盖机器人感知层的核心传感器与数据处理链路：相机（单目/深度）与 IMU、GNSS，再到轮式里程计的标定与多传感器融合，最后是激光雷达工程工具（过滤、融合、点云互转）和相机进阶（远程图传、标定、多相机）。在 25 周体系中，本周是「感知」的完整收官：下周的 SLAM 与导航全部建立在这些传感器数据之上。学完本章，你应能为一台真实机器人补齐「看得见（相机）、测得准（雷达/IMU/GNSS）、算得稳（标定与融合）」三块能力，并掌握传感器数据从原始话题到可用状态的完整加工流水线。</p>
+<h3 id="2312-课时结构">23.1.2 课时结构</h3>
+<p>课程信息：视频 90 个，总时长约 11h15m，难度：进阶。</p>
+<table>
+<thead>
+<tr>
+<th>课</th>
+<th>小节</th>
+<th>时长</th>
+<th>一句话导览</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第1课 传感器之相机和IMU详解与仿真案例</td>
+<td>26 节</td>
+<td>3h15m</td>
+<td>相机概念分类、usb_cam 与深度相机、Image 消息、单目仿真案例（C++/Python）、IMU 概念/接口/案例</td>
+</tr>
+<tr>
+<td>第2课 GNSS详解与轮式里程计标定与融合</td>
+<td>33 节</td>
+<td>3h57m</td>
+<td>NavSatFix 消息、GNSS Path 案例（C++/Python）、轮式里程计线性/角速度标定、robot_localization EKF 融合</td>
+</tr>
+<tr>
+<td>第3课 激光雷达工具和相机使用进阶</td>
+<td>31 节</td>
+<td>4h01m</td>
+<td>laser_filters 过滤、ira_laser_tools 多雷达融合、点云↔激光扫描互转、远程图传、相机标定、多相机</td>
+</tr>
+</tbody>
+</table>
+<h2 id="232-知识点梳理">23.2 知识点梳理</h2>
+<h3 id="2321-第1课-传感器之相机和imu详解与仿真案例（3h15m-·-26-节）">23.2.1 第1课 传感器之相机和IMU详解与仿真案例（3h15m · 26 节）</h3>
+<ul>
+<li><strong>核心概念</strong>：相机（Camera）把三维世界投影为二维图像，提供颜色/纹理/语义信息；IMU（Inertial Measurement Unit，惯性测量单元）测量自身角速度与线加速度，提供高频的姿态与运动信息。二者常与雷达/里程计互补使用。</li>
+<li><strong>要点 1 · 相机概念、作用与特点</strong>：作用是目标识别、视觉 SLAM、远程监控；特点是信息量大（数据率高）、受光照影响、无直接深度（单目）、计算开销大。</li>
+<li><p><strong>要点 2 · 相机分类</strong>：</p>
+<p>| 类型 | 代表 | 输出 | 典型用途 |
+|---|---|---|---|
+| 单目（Monocular） | USB 摄像头 | <code>Image</code> | 视觉识别、监控 |
+| 双目（Stereo） | ZED、小觅 | 左右 <code>Image</code> + 视差/深度 | 稠密深度估计 |
+| 深度（Depth / RGB-D） | RealSense、Kinect、奥比中光 | <code>Image</code> + <code>PointCloud2</code> + <code>CameraInfo</code> | 避障、三维重建 |
+| 其他 | 鱼眼、全景、红外 | <code>Image</code> | 特殊场景 |</p>
+</li>
+<li><p><strong>要点 3 · 单目相机使用</strong>：硬件准备（USB 相机 + 权限：加入 <code>video</code> 组）、软件安装（<code>sudo apt install ros-humble-usb-cam</code>）；<code>usb_cam</code> 功能包发布 <code>/image_raw</code>（<code>sensor_msgs/Image</code>）与 <code>/camera_info</code>（<code>sensor_msgs/CameraInfo</code>）；自定义功能包封装驱动时注意：用 <code>image_transport</code> 而非裸 <code>Publisher&lt;Image&gt;</code>，才能获得压缩图传能力。</p>
+</li>
+<li><strong>要点 4 · 深度相机使用</strong>：除 RGB 图外输出对齐深度图与 <code>PointCloud2</code>；使用要点是配准（depth 与 color 对齐）、深度有效范围（如 0.3–5 m）、以及 <code>CameraInfo</code> 中内参的一致性。</li>
+<li><p><strong>要点 5 · Image 消息接口</strong>：<code>header</code> + <code>height/width</code> + <code>encoding</code>（<code>rgb8</code>/<code>bgr8</code>/<code>mono8</code>/<code>16UC1</code> 等）+ <code>is_bigendian</code> + <code>step</code>（每行字节数）+ <code>data[]</code>（行优先裸字节）。</p>
+<blockquote>
+<p><strong>注意：</strong> <code>encoding</code> 决定 <code>data</code> 的解析方式，<code>bgr8</code> 与 <code>rgb8</code> 通道顺序相反；OpenCV 的 <code>cv::Mat</code> 默认 BGR，与 <code>rgb8</code> 话题混用会出现「蓝蓝的图像」。</p>
+</blockquote>
+</li>
+<li><p><strong>要点 6 · 单目相机仿真案例（C++ 三讲 + Python 三讲）</strong>：在仿真中发布一幅自造图像，流程与雷达案例同构：案例分析（组织 Image 消息）→ 框架搭建（定时器 + 发布者）→ 组织图片基本参数（height/width/encoding/step）→ 填充 <code>data</code> 并发布 → 测试与小结。</p>
+</li>
+<li><strong>要点 7 · IMU 概念与接口</strong>：优点是高频（100–1000 Hz）、不受外界环境干扰、短期精度高；缺点是积分漂移（加速度二次积分误差随时间平方增长）、需要标定与温漂补偿。<code>sensor_msgs/Imu</code> 字段：<code>orientation</code>（四元数，来自姿态解算/磁力计融合）、<code>angular_velocity</code>（rad/s）、<code>linear_acceleration</code>（m/s²）及三者 3×3 协方差；无输出能力的轴用协方差 <code>[0] = -1</code> 标记。</li>
+<li><strong>要点 8 · IMU 案例（C++ 两讲 + Python 一讲）</strong>：订阅 <code>/imu</code>，解算并发布姿态可视化（如把 <code>orientation</code> 转欧拉角发布、或驱动 rviz2 中一个姿态箭头），理解四元数 → 欧拉角换算与 <code>tf2</code> 中 <code>getYaw</code> 的用法。</li>
+</ul>
+<h3 id="2322-第2课-gnss详解与轮式里程计标定与融合（3h57m-·-33-节）">23.2.2 第2课 GNSS详解与轮式里程计标定与融合（3h57m · 33 节）</h3>
+<ul>
+<li><strong>核心概念</strong>：GNSS（Global Navigation Satellite System，全球导航卫星系统，含 GPS/北斗/GLONASS/Galileo）提供绝对经纬度与海拔；轮式里程计标定（Odometry Calibration）是用实测修正轮径/轮距参数，让里程计推算逼近真实运动。</li>
+<li><strong>要点 1 · GNSS 特点与分类</strong>：提供绝对位置、无累积漂移，但更新率低（1–10 Hz）、精度受环境影响（城市峡谷、遮挡）、输出经纬度需投影到平面坐标；分类按精度：单点定位（米级）、差分 DGNSS/RTK（厘米级）。</li>
+<li><strong>要点 2 · GNSS 基本使用与消息接口</strong>：<code>sensor_msgs/NavSatFix</code>：<code>latitude</code>/<code>longitude</code>（度）/<code>altitude</code>（m）、<code>status</code>（<code>STATUS_NO_FIX</code>/<code>STATUS_FIX</code>/<code>STATUS_SBAS_FIX</code>/<code>STATUS_GBAS_FIX</code>，含 <code>service</code> 位标志）、<code>position_covariance</code>（3×3，单位 m²）与 <code>position_covariance_type</code>。配套 <code>sensor_msgs/NavSatStatus</code>、<code>sensor_msgs/TimeReference</code>。</li>
+<li><strong>要点 3 · GNSS 案例（C++ 六讲 + Python 三讲）</strong>：需求是「把 GNSS 历史定位点组织成可视化轨迹」，难点全在坐标系与投影：
+① 框架搭建 → ② Path 数据组织标头（<code>header.frame_id</code> 常用 <code>map</code> 或 <code>gps</code>）→ ③ 坐标系确定 → ④ 原点确定（首帧经纬度作为局部 ENU 原点）→ ⑤ 经纬度转平面坐标（等距圆柱近似：<code>x = (lon - lon0)·cos(lat0)·111320</code>，<code>y = (lat - lat0)·110540</code>；工程上更推荐 <code>robot_localization/navsat_transform_node</code> 或 <code>GeographicLib</code> 的 UTM 投影）→ ⑥ 数据组织完成与小结。</li>
+<li><strong>要点 4 · 轮式里程计标定</strong>：场景是里程计推算位姿与真实位姿存在系统性偏差；流程分两步——<strong>线性位移标定</strong>（让机器人直行标称距离如 10 m，实测偏差用于修正轮径系数 <code>scale_x</code>）与<strong>角速度标定</strong>（让机器人原地旋转标称角度如 360°，实测偏差用于修正轮距 <code>wheel_separation</code>）。标定实现即写脚本发布 <code>/cmd_vel</code>、订阅 <code>/odom</code> 统计累计位移/转角、输出修正系数。</li>
+<li><p><strong>要点 5 · 轮式里程计与 IMU 融合（robot_localization）</strong>：</p>
+<p>| 步骤 | 内容 |
+|---|---|
+| 1 简介安装 | <code>sudo apt install ros-humble-robot-localization</code> |
+| 2 包简介 | 提供 <code>ekf_node</code>（扩展卡尔曼滤波 EKF）与 <code>ukf_node</code>，支持多输入源融合 |
+| 3 融合准备 | 明确各传感器坐标系、话题、QoS；准备 EKF 参数 yaml |
+| 4 launch 框架 | 一个 launch 集成底盘驱动、IMU 静态变换、EKF 节点 |
+| 5 底盘实现 | 底盘节点发布 <code>/odom</code>（轮速积分）与 <code>odom → base_link</code> tf |
+| 6 IMU 坐标变换 | <code>static_transform_publisher</code> 或 URDF 定义 <code>base_link → imu_link</code> |
+| 7 EKF 融合 | <code>ekf_node</code> 订阅 <code>/odom</code> + <code>/imu</code>，发布 <code>/odometry/filtered</code> 与 <code>odom → base_link</code>（EKF 版） |
+| 8 执行验证 | rviz2 对比 <code>/odom</code> 与 <code>/odometry/filtered</code> 轨迹，融合后应更平滑、漂移更小 |</p>
+</li>
+<li><p>EKF 关键配置思想：每个传感器输入用 <code>odom0</code>/<code>imu0</code> 系列参数声明，布尔数组 <code>odom0_config</code> 指定融合哪些状态量（如 IMU 只融合 yaw 角速度与加速度、不融合其绝对姿态），并处理好「谁发布 <code>odom → base_link</code>」的唯一性（开启 EKF 的 <code>publish_tf</code> 后，底盘端要关掉自己的 tf 发布）。</p>
+</li>
+</ul>
+<h3 id="2323-第3课-激光雷达工具和相机使用进阶（4h01m-·-31-节）">23.2.3 第3课 激光雷达工具和相机使用进阶（4h01m · 31 节）</h3>
+<ul>
+<li><strong>核心概念</strong>：原始传感器数据要经过「过滤 → 融合 → 格式转换」的加工流水线才能喂给 SLAM/导航；相机进阶则解决远程传输、标定精度与多相机扩展。</li>
+<li><strong>要点 1 · 雷达过滤器（laser_filters）</strong>：功能包提供 <code>scan_to_scan_filter_chain</code> 节点，通过插件链（plugin chain）加工 <code>/scan</code>：<code>LaserScanRangeFilter</code>（裁剪量程外数据）、<code>LaserScanAngularBoundsFilter</code>（裁剪角度扇区，如屏蔽机器人自身结构遮挡）、<code>LaserScanSpeckleFilter</code>（滤孤立噪点/飞点）、<code>LaserScanShadowsFilter</code>（滤阴影伪影）。应用案例：① 过滤无效数据（inf/nan → 报错阈值剔除）；② 设置有效范围（仅保留 0.15–8 m，避免自遮挡回波）。</li>
+<li><strong>要点 2 · 雷达融合（ira_laser_tools）</strong>：场景是单雷达视野受限、需多雷达拼接 360°。<code>laserscan_multi_merger</code> 节点按各雷达的 tf 把多路 <code>/scan</code> 融合为一路。案例五步：需求分析 → <strong>雷达端口重映射</strong>（两台雷达 USB 端口号会漂移，用 udev 规则或 launch remap 固定话题）→ 启动两个雷达 → <strong>坐标系集成</strong>（为两雷达分别建 <code>laser_front_link</code>/<code>laser_rear_link</code> 静态 tf，并统一到 <code>base_link</code>）→ 融合实现（配置 <code>destination_frame</code>、<code>cloud_destination_topic</code>/<code>scan_destination_topic</code>）。扩展案例：融合后再过滤（merger 输出接 <code>scan_to_scan_filter_chain</code>）。</li>
+<li><p><strong>要点 3 · 点云与激光扫描互转</strong>：</p>
+<p>| 方向 | 工具 | 典型用途 |
+|---|---|---|
+| LaserScan → PointCloud2 | <code>laser_geometry::LaserProjection</code>（C++ API） | 2D 雷达数据并入三维处理管线、多传感器同视图显示 |
+| PointCloud2 → LaserScan | <code>pointcloud_to_laserscan</code> 节点 | 3D 雷达/深度相机「压扁」成 2D 扫描，喂给 2D SLAM 与导航 |</p>
+<p>转换时要指定 <code>target_frame</code>、高度裁剪区间（<code>min_height</code>/<code>max_height</code>，只取地面以上 0.1–1.0 m 的点做避障）与角度范围。</p>
+</li>
+<li><p><strong>要点 4 · 相机进阶 · 远程图传</strong>：机器人端跑相机节点、PC 端看图，原始图带宽大（640×480×3×30 ≈ 27 MB/s），需压缩：用 <code>image_transport</code> 的 <code>compressed</code> 传输插件发布 <code>/image_raw/compressed</code>，PC 端解压显示（<code>image_transport</code> 自动订阅压缩话题，或用 <code>rqt_image_view</code>）。本地解压缩两讲即讲解 <code>CompressedImage</code> 与 <code>cv_bridge</code> 解码。</p>
+</li>
+<li><strong>要点 5 · 相机进阶 · 标定</strong>：标定（Calibration）是求解内参（焦距 fx/fy、主点 cx/cy、畸变系数）与外参的过程。流程：打印棋盘格标定板 → <code>ros2 run camera_calibration cameracalibrator --size 8x6 --square 0.024 image:=/image_raw camera:=/camera</code> → 移动标定板采集多角度样本 → 得到 <code>camera_info</code>（YAML）→ 使用标定参数（发布 <code>/camera_info</code>、图像去畸变 <code>image_proc</code>）。</li>
+<li><strong>要点 6 · 相机进阶 · 多相机</strong>：多路 USB 相机设备号（<code>/dev/video0/2/...</code>）开机后会随机漂移，<strong>端口绑定</strong>用 udev 规则（按 USB 物理端口序列号固定 <code>video*</code> 别名）；再按需求添加前相机、后相机（各自命名空间 <code>/front_camera</code>、<code>/rear_camera</code>，独立 <code>CameraInfo</code> 与 tf 链杆）。</li>
+</ul>
+<h2 id="233-重点与难点">23.3 重点与难点</h2>
+<ol>
+<li><strong>Image 的 encoding 与内存布局</strong>：<code>step = width × 每像素字节数</code>（可能含行对齐 padding），<code>data.size() = step × height</code>。用 <code>cv_bridge</code> 转 <code>cv::Mat</code> 时选错编码会得到色彩错乱或直接异常。</li>
+<li><strong>GNSS 的坐标投影</strong>：经纬度不能直接当平面坐标用。统一做法：以首帧为原点做 ENU 投影（或交给 <code>navsat_transform_node</code>），并声明 <code>frame_id</code>；忘了投影，轨迹在 rviz2 中只是一个「远处的小点」。</li>
+<li><strong>IMU 漂移与协方差</strong>：IMU 短期准、长期漂。EKF 融合时必须为各传感器配置合理的协方差（不确定度），否则「谁嗓门大听谁的」，融合结果反而更差。</li>
+<li><strong>多雷达融合的坐标系前提</strong>：merger 依赖 tf 把各路扫描变换到 <code>destination_frame</code>；tf 缺失或时间戳不同步时，融合结果是「错位的拼图」。先 <code>tf2_echo</code> 验证每路雷达的静态变换再启动融合。</li>
+<li><strong>里程计标定的实验设计</strong>：直行距离要长（≥5 m）、旋转圈数要多（≥2 圈）、地面摩擦一致、电池电压稳定；单次实验误差大，取 3–5 次平均。</li>
+<li><strong>仿真 → 实机迁移要点</strong>：仿真中传感器无噪声、时间戳完美；实机上要考虑驱动延迟、时钟同步（<code>use_sim_time</code> 切换）、丢帧与抖动，代码里时间相关逻辑一律用消息自带的 <code>header.stamp</code> 而不是 <code>now()</code>。</li>
+</ol>
+<h2 id="234-代码与命令实战">23.4 代码与命令实战</h2>
+<h3 id="2341-场景-1：laserscan-过滤器配置（文件-configscanfilteryaml，包-laserfilters）">23.4.1 场景 1：LaserScan 过滤器配置（文件 <code>config/scan_filter.yaml</code>，包 <code>laser_filters</code>）</h3>
+<pre><code class="lang-yaml"><span class="hljs-attr">scan_to_scan_filter_chain:</span>
+  <span class="hljs-attr">ros__parameters:</span>
+    <span class="hljs-attr">filter1:</span>  <span class="hljs-comment"># 剔除量程外与无效值</span>
+      <span class="hljs-attr">name:</span> <span class="hljs-string">range</span>
+      <span class="hljs-attr">type:</span> <span class="hljs-string">laser_filters/LaserScanRangeFilter</span>
+      <span class="hljs-attr">params:</span>
+        <span class="hljs-attr">use_message_range_limits:</span> <span class="hljs-literal">false</span>
+        <span class="hljs-attr">lower_threshold:</span> <span class="hljs-number">0.15</span>     <span class="hljs-comment"># 米，屏蔽近处自遮挡</span>
+        <span class="hljs-attr">upper_threshold:</span> <span class="hljs-number">8.0</span>
+        <span class="hljs-attr">lower_replacement_value:</span> <span class="hljs-string">.nan</span>   <span class="hljs-comment"># 超范围点标记为无效</span>
+        <span class="hljs-attr">upper_replacement_value:</span> <span class="hljs-string">.nan</span>
+    <span class="hljs-attr">filter2:</span>  <span class="hljs-comment"># 裁掉机器人尾部支架遮挡扇区</span>
+      <span class="hljs-attr">name:</span> <span class="hljs-string">angle</span>
+      <span class="hljs-attr">type:</span> <span class="hljs-string">laser_filters/LaserScanAngularBoundsFilter</span>
+      <span class="hljs-attr">params:</span>
+        <span class="hljs-attr">lower_angle:</span> <span class="hljs-number">-2.9</span>
+        <span class="hljs-attr">upper_angle:</span> <span class="hljs-number">-2.2</span>
+</code></pre>
+<pre><code class="lang-bash">ros2 launch laser_filters scan_to_scan_filter.launch.py \  <span class="hljs-comment"># 加载上述 yaml</span>
+ros2 topic <span class="hljs-built_in">echo</span> /scan_filtered --field ranges | <span class="hljs-built_in">head</span> -5   <span class="hljs-comment"># 对比过滤前后</span>
+</code></pre>
+<h3 id="2342-场景-2：多雷达融合（launch-片段，iralasertools）">23.4.2 场景 2：多雷达融合（launch 片段，<code>ira_laser_tools</code>）</h3>
+<pre><code class="lang-python"><span class="hljs-comment"># launch/multi_lidar.launch.py（节选）</span>
+<span class="hljs-keyword">from</span> launch_ros.actions <span class="hljs-keyword">import</span> Node
+
+merger = Node(
+    package=<span class="hljs-string">'ira_laser_tools'</span>, executable=<span class="hljs-string">'laserscan_multi_merger'</span>,
+    parameters=[{
+        <span class="hljs-string">'destination_frame'</span>: <span class="hljs-string">'base_link'</span>,            <span class="hljs-comment"># 统一到车体坐标系</span>
+        <span class="hljs-string">'cloud_destination_topic'</span>: <span class="hljs-string">'/scan_cloud'</span>,
+        <span class="hljs-string">'scan_destination_topic'</span>: <span class="hljs-string">'/scan_multi'</span>,
+        <span class="hljs-string">'scan_source_topics'</span>: <span class="hljs-string">'/scan_front /scan_rear'</span>,  <span class="hljs-comment"># 两路输入</span>
+    }],
+    output=<span class="hljs-string">'screen'</span>)
+</code></pre>
+<h3 id="2343-场景-3：点云转激光扫描（深度相机3d-雷达接入-2d-导航）">23.4.3 场景 3：点云转激光扫描（深度相机/3D 雷达接入 2D 导航）</h3>
+<pre><code class="lang-bash">ros2 run pointcloud_to_laserscan pointcloud_to_laserscan_node --ros-args \
+  -p target_frame:=base_link \
+  -p transform_tolerance:=0.05 \
+  -p min_height:=0.10 -p max_height:=1.00 \   <span class="hljs-comment"># 只取该高度带的点</span>
+  -p angle_min:=-3.14 -p angle_max:=3.14 -p angle_increment:=0.0087 \
+  -p range_min:=0.2 -p range_max:=8.0 \
+  -r cloud_in:=/camera/depth/points -r scan:=/scan_from_cloud
+</code></pre>
+<h3 id="2344-场景-4：imu-订阅与欧拉角解算（rclpy，文件-imumonitorpy）">23.4.4 场景 4：IMU 订阅与欧拉角解算（rclpy，文件 <code>imu_monitor.py</code>）</h3>
+<pre><code class="lang-python"><span class="hljs-keyword">import</span> math
+<span class="hljs-keyword">import</span> rclpy
+<span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
+<span class="hljs-keyword">from</span> sensor_msgs.msg <span class="hljs-keyword">import</span> Imu
+<span class="hljs-keyword">from</span> tf_transformations <span class="hljs-keyword">import</span> euler_from_quaternion   <span class="hljs-comment"># 或手动换算</span>
+
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">ImuMonitor</span>(<span class="hljs-title class_ inherited__">Node</span>):
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">'imu_monitor'</span>)
+        <span class="hljs-variable language_">self</span>.create_subscription(Imu, <span class="hljs-string">'/imu'</span>, <span class="hljs-variable language_">self</span>.on_imu, <span class="hljs-number">50</span>)  <span class="hljs-comment"># IMU 高频，QoS 放宽</span>
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">on_imu</span>(<span class="hljs-params">self, msg: Imu</span>):
+        q = msg.orientation
+        roll, pitch, yaw = euler_from_quaternion([q.x, q.y, q.z, q.w])
+        gz = msg.linear_acceleration.z                     <span class="hljs-comment"># 静止时应约等于 9.8</span>
+        <span class="hljs-variable language_">self</span>.get_logger().info(
+            <span class="hljs-string">f'yaw=<span class="hljs-subst">{math.degrees(yaw):<span class="hljs-number">.1</span>f}</span>deg  az=<span class="hljs-subst">{gz:<span class="hljs-number">.2</span>f}</span>m/s^2'</span>,
+            throttle_duration_sec=<span class="hljs-number">1.0</span>)                     <span class="hljs-comment"># 限频打印</span>
+
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():
+    rclpy.init()
+    rclpy.spin(ImuMonitor())
+    rclpy.shutdown()
+</code></pre>
+<h3 id="2345-场景-5：轮式里程计角速度标定脚本骨架（rclpy）">23.4.5 场景 5：轮式里程计角速度标定脚本骨架（rclpy）</h3>
+<pre><code class="lang-python"><span class="hljs-comment"># 让机器人原地转 2*pi，比较 /odom 累计 yaw 与指令值，输出轮距修正系数</span>
+<span class="hljs-keyword">import</span> math, rclpy
+<span class="hljs-keyword">from</span> geometry_msgs.msg <span class="hljs-keyword">import</span> Twist
+<span class="hljs-keyword">from</span> nav_msgs.msg <span class="hljs-keyword">import</span> Odometry
+
+<span class="hljs-comment"># 1) 发布 angular.z = 0.5 rad/s 持续 t = 2*pi/0.5 秒后停车</span>
+<span class="hljs-comment"># 2) 订阅 /odom，用四元数换算累计 yaw：yaw_sum += delta_yaw</span>
+<span class="hljs-comment"># 3) 修正系数 = 指令转角(2*pi) / 实测转角；wheel_separation_new = wheel_separation_old * 系数</span>
+<span class="hljs-comment"># 4) 重复 3 次取平均，写回底盘驱动参数</span>
+</code></pre>
+<h3 id="2346-场景-6：gnss-调试与相机图传命令">23.4.6 场景 6：GNSS 调试与相机图传命令</h3>
+<pre><code class="lang-bash">ros2 topic <span class="hljs-built_in">echo</span> /fix --once            <span class="hljs-comment"># 查看 NavSatFix：纬度/经度/定位状态</span>
+ros2 topic hz /fix                     <span class="hljs-comment"># GNSS 更新率通常 1-10 Hz</span>
+ros2 run tf2_ros tf2_echo base_link imu_link   <span class="hljs-comment"># 验证 IMU 安装位姿</span>
+ros2 run image_view image_view --ros-args -r image:=/front_camera/image_raw/compressed \
+  -p image_transport:=compressed       <span class="hljs-comment"># 压缩图传显示，节省带宽</span>
+ros2 run camera_calibration cameracalibrator --size 8x6 --square 0.024 \
+  image:=/image_raw camera:=/camera    <span class="hljs-comment"># 棋盘格 8x6 内角点、格宽 24mm</span>
+</code></pre>
+<h2 id="235-运行效果（实测）">23.5 运行效果（实测）</h2>
+<p>以下输出均在本机（Ubuntu 24.04 + ROS2 Jazzy）实测，存档于 <code>out/verify/ws05_sensor/</code>。三个案例均提供 C++ 与 Python 双实现，实测输出与发布值一致。</p>
+<h3 id="2351-虚拟相机（mono8-320×240）">23.5.1 虚拟相机（mono8 320×240）</h3>
 <p><strong>需求</strong>：合成 320×240 灰度条纹图像（mono8）发布到 <code>/image_raw</code>（sensor_msgs/Image），验证图像链路（后续可接 rqt_image_view）。</p>
 <p>实测 <code>ros2 topic echo /image_raw --once --no-arr</code>：</p>
 <pre><code class="lang-text">header:
@@ -613,7 +818,7 @@ height: 240
 width: 320
 encoding: mono8
 </code></pre>
-<h2 id="232-imu-数据">23.2 IMU 数据</h2>
+<h3 id="2352-imu-数据解析">23.5.2 IMU 数据解析</h3>
 <p><strong>需求</strong>：订阅 <code>/imu</code>（sensor_msgs/Imu），解析并打印姿态四元数、角速度、线加速度——IMU 是融合定位与姿态估计的基础数据源。</p>
 <p>实测（以虚拟数据源驱动订阅方）：</p>
 <pre><code class="lang-bash">ros2 topic pub --rate 10 /imu sensor_msgs/msg/Imu <span class="hljs-string">"{orientation: {w: 1.0}, angular_velocity: {z: 0.1}, linear_acceleration: {x: 0.2}}"</span>
@@ -625,7 +830,10 @@ ros2 run cpp04_imu_demo imu_demo
 [INFO] [...]: 线加速度:(0.20,0.00,0.00) m/s^2
 </code></pre>
 <p>打印值与发布值逐项一致，解析无误。</p>
-<h2 id="233-gnss-数据">23.3 GNSS 数据</h2>
+<blockquote>
+<p><strong>视频对照</strong>：课程 <code>IMU案例(C++)_02核心实现以及小结</code>（512s）使用的是<strong>真实 IMU 硬件</strong>（Mycar 板载模块实拍），并在 rviz2 TF 中显示 world→mycar 随姿态变化；本机无硬件，以合成 <code>/imu</code> 数据驱动订阅方，四元数/角速度/线加速度逐字段打印。解析层与视频一致（字段与数值逐项对应），数据源不同（课程=真实硬件，本机=合成数据）与展示形态不同（课程=rviz TF，本机=日志）已如实标注。</p>
+</blockquote>
+<h3 id="2353-gnss-轨迹">23.5.3 GNSS 轨迹</h3>
 <p><strong>需求</strong>：订阅 <code>/fix</code>（sensor_msgs/NavSatFix），将经纬度转换为平面坐标并发布轨迹到 <code>/gnss_path</code>：</p>
 <ul>
 <li>以<strong>首个有效定位</strong>为原点；</li>
@@ -638,12 +846,39 @@ ros2 run cpp05_gnss_demo gnss_demo
 <pre><code class="lang-text">[INFO] [...]: 定位原点:(31.100000,121.300000)
 </code></pre>
 <p>之后每个 <code>/fix</code> 都被转换成相对原点的平面坐标追加进 <code>/gnss_path</code>，rviz2 中即可看到卫星轨迹。</p>
-<h2 id="234-本章小结">23.4 本章小结</h2>
+<h2 id="236-与-ros2--机器人开发的关联">23.6 与 ROS2 / 机器人开发的关联</h2>
+<ol>
+<li><strong>sensor_msgs 消息族全景成型</strong>：本章补全 <code>Image</code>/<code>CameraInfo</code>、<code>Imu</code>、<code>NavSatFix</code>，与上一章 <code>LaserScan</code>/<code>PointCloud2</code> 共同构成机器人感知接口层；<code>header.frame_id</code> + <code>header.stamp</code> 是它们接入 tf2 与消息滤波器（<code>message_filters</code> 时间同步）的钥匙。</li>
+<li><strong>tf2 坐标树的传感器挂载</strong>：每类传感器都需要 <code>base_link → &lt;sensor_link&gt;</code> 的静态变换（URDF 或 <code>static_transform_publisher</code>）；EKF 融合后还要理清谁发布 <code>odom → base_link</code>，这是导航场景 tf 冲突的头号来源。</li>
+<li><strong>nav2 的输入质量决定导航质量</strong>：Nav2 的代价地图（costmap）用 <code>/scan</code> 或 <code>/points</code>，AMCL 用 <code>/scan</code> + <code>/odom</code>，<code>controller_server</code> 用融合里程计。本章的过滤/融合/标定直接决定导航是否抖动、是否撞障。</li>
+<li><strong>robot_localization 是导航前的必修课</strong>：EKF 输出的 <code>/odometry/filtered</code> 建议作为 Nav2 的标准里程计输入；对 GNSS 机器人，<code>navsat_transform_node</code> + 双 EKF 是室外导航的标配架构。</li>
+<li><strong>仿真 → 实机迁移</strong>：标定参数（轮径、轮距、相机内参、IMU 零偏）是纯「实机量」，仿真里永远拿不到；建立标定流程意识，比记住某个系数更重要。</li>
+</ol>
+<h2 id="237-自测与练习">23.7 自测与练习</h2>
+<ol>
+<li><strong>概念题</strong>：<code>sensor_msgs/Image</code> 的 <code>encoding</code> 为 <code>bgr8</code> 时，<code>data</code> 中每个像素的三个字节分别是什么通道？与 <code>rgb8</code> 相比，直接用 numpy 按 <code>rgb</code> 显示会怎样？</li>
+<li><strong>动手任务</strong>：搭建双雷达融合环境（仿真中用两个 <code>laserscan</code> 插件分别朝前、朝后），经 <code>laserscan_multi_merger</code> 输出 360° 融合扫描。验收标准：rviz2 中两个雷达的障碍物点云无缝拼接，<code>tf2_echo base_link laser_front_link</code> 有稳定输出。</li>
+<li><strong>动手任务</strong>：完成轮式里程计线性标定：命令机器人直行 5 m（仿真或实机），记录 <code>/odom</code> 推算距离，计算修正系数并应用，复测 3 次误差 &lt; 5%。</li>
+</ol>
+<blockquote>
+<p>参考答案要点：1. <code>bgr8</code> 每像素依次为蓝、绿、红通道；按 <code>rgb</code> 解释会蓝红互换（天空变红）。2. 融合前必须有 <code>base_link → laser_*_link</code> 静态 tf 且两路 scan 时间戳有效；无缝拼接的关键是安装角与 tf 精确。3. 修正系数 = 目标距离 / 实测里程计距离，乘到底盘的轮径参数上；多次实验取平均以抑制地面打滑误差。</p>
+</blockquote>
+<h2 id="238-常见问题（faq）">23.8 常见问题（FAQ）</h2>
 <ul>
-<li>相机/IMU/GNSS 的消息规范（Image/Imu/NavSatFix）是接入真实驱动前最好的「接口演练」；</li>
-<li>GNSS → 平面坐标的转换是导航模块（如 robot_localization）内部的必备步骤；</li>
-<li>三个案例均提供 C++ 与 Python 双实现，实测输出与发布值一致。</li>
+<li><strong>Q：<code>/image_raw</code> 能收到但显示花屏？</strong> A：多为 <code>encoding</code> 与实际数据不符（如相机输出 YUYV 却声明 rgb8），或 <code>step</code> 计算错误（忽略行对齐）；用 <code>ros2 topic echo /image_raw --field encoding</code> 核对，<code>usb_cam</code> 中显式设置 <code>pixel_format</code>。</li>
+<li><strong>Q：EKF 启动后 tf 报 <code>odom → base_link</code> 冲突/跳变？</strong> A：底盘驱动与 <code>ekf_node</code> 同时发布了同一变换。二选一：底盘只发 <code>/odom</code> 话题不发 tf，由 EKF <code>publish_tf: true</code> 统一发布。</li>
+<li><strong>Q：GNSS 轨迹在 rviz2 中是个点？</strong> A：经纬度未投影，数值量级（116°、39°）远超地图尺度。按首帧做 ENU 投影或使用 <code>navsat_transform_node</code>。</li>
+<li><strong>Q：多相机时 <code>/dev/video*</code> 顺序随机？</strong> A：设备号按枚举顺序分配，插拔后会变。写 udev 规则按 USB 端口序列号固定符号链接（如 <code>/dev/camera_front</code>），launch 中用符号链接启动。</li>
+<li><strong>Q：雷达融合后 rviz2 中两圈扫描错位？</strong> A：检查各雷达静态 tf 的平移/旋转是否与实际安装一致、<code>destination_frame</code> 是否为共同祖先（<code>base_link</code>）、两雷达驱动的系统时间是否同步（NTP/chrony）。</li>
 </ul>
+<h2 id="239-本章小结">23.9 本章小结</h2>
+<ul>
+<li>相机/IMU/GNSS 的消息规范（Image/Imu/NavSatFix）是接入真实驱动前最好的「接口演练」：编码决定字节序、四元数携带姿态、经纬度必须投影；</li>
+<li>GNSS → 平面坐标的转换是导航模块（如 robot_localization）内部的必备步骤；</li>
+<li>IMU 短期准、长期漂，EKF 融合要靠协方差与「谁发 tf」的唯一性约束兜底；</li>
+<li>雷达工具链（过滤/融合/互转）与相机进阶（图传/标定/多相机）把原始数据加工成 SLAM 与导航可直接消费的状态。</li>
+</ul>
+<p>下一章进入仿真环境与 SLAM 建图。</p>
 
                                 
                                 </section>
@@ -687,7 +922,7 @@ ros2 run cpp05_gnss_demo gnss_demo
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第23章 传感器仿真开发","level":"9.2","depth":1,"next":{"title":"第24章 仿真导航与 SLAM","level":"9.3","depth":1,"path":"第24周-仿真导航与SLAM.md","ref":"第24周-仿真导航与SLAM.md","articles":[]},"previous":{"title":"第22章 里程计与虚拟传感器实践","level":"9.1","depth":1,"path":"第22周-ROS2功能实践.md","ref":"第22周-ROS2功能实践.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第23周-传感器实践开发.md","mtime":"2026-10-16T02:43:09.753Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T02:43:11.108Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第23章 传感器仿真开发","level":"9.2","depth":1,"next":{"title":"第24章 仿真导航与 SLAM","level":"9.3","depth":1,"path":"第24周-仿真导航与SLAM.md","ref":"第24周-仿真导航与SLAM.md","articles":[]},"previous":{"title":"第22章 里程计与虚拟传感器实践","level":"9.1","depth":1,"path":"第22周-ROS2功能实践.md","ref":"第22周-ROS2功能实践.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第23周-传感器实践开发.md","mtime":"2026-10-16T03:26:51.711Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T03:26:53.986Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

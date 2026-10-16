@@ -602,49 +602,286 @@
                                 <h1 id="第2章-python-进阶编程（函数类异常并发）">第2章 Python 进阶编程（函数/类/异常/并发）</h1>
 <blockquote>
 <p>本章对应课程第 2 周：把「会写脚本」升级为「会写工程代码」——函数封装、类与对象、异常处理、文件与 JSON、多进程/多线程。这些正是 rclpy 节点代码的骨架。</p>
+<p>所属阶段：阶段1 ROS2 开发必备基础之 Python 数据处理与计算机视觉 ｜ 视频 62 个 ｜ 时长约 7h12m ｜ 难度：进阶</p>
 </blockquote>
-<h2 id="21-案例以及案例分析">2.1 案例以及案例分析</h2>
-<p><strong>需求</strong>：为机器人编写可复用的代码单元——运动指令封装（多值传参）、传感器家族（类 + 继承 + 多态）、配置读写（异常 + JSON）、并发采集（线程）。</p>
-<h2 id="22-知识点与实现">2.2 知识点与实现</h2>
-<h3 id="221-函数与传参">2.2.1 函数与传参</h3>
+<h2 id="21-本周概览与课时结构">2.1 本周概览与课时结构</h2>
+<p>本周把「会写脚本」升级为「会写工程代码」：用函数（function）封装可复用逻辑、用类（class）组织数据与行为、用异常（exception）让程序健壮、用文件与 JSON 做持久化、用多进程/多线程做并发。这些正是 ROS2 节点代码的骨架——rclpy 节点是一个类，回调是方法，参数配置走 JSON/YAML，图像采集常跑在独立线程里。学完本周，你能把上周的成绩统计脚本重构成「类 + 配置文件 + 异常处理 + 并发录入」的完整小程序。</p>
+<p>读完本章，你应当达到四条验收线：</p>
+<ol>
+<li>会用函数（缺省参数、<code>*args</code>/<code>**kwargs</code>、<code>lambda</code>）封装可复用逻辑；</li>
+<li>会用类 + 封装/继承/多态描述「机器人、传感器」这类事物；</li>
+<li>会用 <code>try/except</code> 与 <code>raise</code> 让程序优雅降级，用 JSON 做配置持久化；</li>
+<li>会区分多进程与多线程的适用场景，并知道 <code>if __name__ == "__main__":</code> 为什么必写。</li>
+</ol>
+<p>本章课程共 5 课 / 62 个视频 / 约 7h12m，结构如下：</p>
+<table>
+<thead>
+<tr>
+<th>课</th>
+<th>小节</th>
+<th>时长</th>
+<th>一句话导览</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第1课 函数传参深度剖析与多值传参技巧</td>
+<td>1 节（13 个视频）</td>
+<td>1h18m</td>
+<td>函数定义与返回值、全局/局部变量、缺省参数、<code>*args</code>/<code>**kwargs</code> 与 lambda</td>
+</tr>
+<tr>
+<td>第2课 面向对象编程之"类"的详解与实战</td>
+<td>1 节（9 个视频）</td>
+<td>1h25m</td>
+<td>类与对象、初始化方法，跑步/家具摆放/吃鸡案例层层实战</td>
+</tr>
+<tr>
+<td>第3课 私有特性、继承机制与多态性全面解析</td>
+<td>2 节（14 个视频）</td>
+<td>1h32m</td>
+<td>私有属性方法、继承三特性（传递/覆盖/扩展）、多态、类属性与类方法</td>
+</tr>
+<tr>
+<td>第4课 异常处理策略与文件操作</td>
+<td>2 节（15 个视频）</td>
+<td>1h43m</td>
+<td>try-except 体系、主动抛出、模块导入、文件读写与 JSON 读写</td>
+</tr>
+<tr>
+<td>第5课 多任务、多进程与多线程</td>
+<td>2 节（11 个视频）</td>
+<td>1h12m</td>
+<td>多任务概念、multiprocessing 与 threading、传参与结束时机</td>
+</tr>
+</tbody>
+</table>
+<p>学习节奏建议：第 1 课的传参细节（可变对象、缺省参数）和第 5 课的 GIL/竞态是最容易「看懂但写错」的部分，务必对照 2.3 与 2.7 自测；第 2-3 课的类案例建议在 IDE 里完整敲一遍再继续。</p>
+<h2 id="22-知识点梳理">2.2 知识点梳理</h2>
+<h3 id="221-第1课-函数传参深度剖析与多值传参技巧">2.2.1 第1课 函数传参深度剖析与多值传参技巧</h3>
 <ul>
-<li><code>return x, y</code> 本质返回元组，可拆包接收；</li>
-<li>不可变对象「传值效果」、可变对象「传引用效果」——函数内 <code>append</code> 外部可见；</li>
-<li>缺省参数必须指向不可变对象（禁 <code>def f(lst=[])</code>）；</li>
-<li><code>*args</code> 收集位置参数成元组、<code>**kwargs</code> 收集关键字参数成字典；<code>lambda</code> 用于短小回调。</li>
+<li><strong>核心概念</strong>：函数（function）把一段有名字的代码打包，<code>def 函数名(参数):</code> 定义、<code>函数名(实参)</code> 调用。价值是<strong>提高效率与代码重用</strong>——写一次、到处调用，改一处、处处生效。</li>
+<li><strong>参数与返回值</strong>：形参（定义处）与实参（调用处）一一对应；<code>return</code> 返回结果并结束函数，<code>return</code> 后可跟多个值（本质是元组）：<code>return x, y</code> → <code>a, b = f()</code>；不写 <code>return</code> 或裸 <code>return</code> 则返回 <code>None</code>。</li>
+<li><strong>函数嵌套与作用域</strong>：函数内部可以调用其他函数；变量分全局（global，模块顶层）与局部（函数内），局部变量随函数调用创建、调用结束销毁，函数内默认只能读全局变量；要改全局用 <code>global 变量名</code> 声明。<strong>能不用 global 就不用</strong>，优先用参数和返回值传递数据。</li>
+<li><strong>传参细节</strong>：数字、字符串等不可变对象「传值效果」——函数内改了不影响外部；列表、字典等可变对象「传引用效果」——函数内 <code>append</code> 外部可见。这与第 1 周的可变/不可变呼应，是排查 bug 的关键直觉。</li>
+<li><strong>缺省参数（default arguments）</strong>：<code>def move(speed, dist=1.0):</code>，调用时可省略 <code>dist</code>。注意缺省值必须指向不可变对象（绝不要写 <code>def f(lst=[])</code>），且缺省参数必须放在非缺省参数之后。</li>
+<li><strong>多值传参</strong>：<code>*args</code> 收集位置参数成元组，<code>**kwargs</code> 收集关键字参数成字典；<code>def f(a, *args, **kwargs):</code>。调用侧可用 <code>f(*lst)</code>、<code>f(**dic)</code> 反向解包。这是阅读 ROS2/框架源码（大量 <code>*args, **kwargs</code> 透传）的必备能力。</li>
+<li><strong>匿名函数 lambda</strong>：<code>lambda 参数: 表达式</code>，适合做 <code>sorted(key=lambda x: x[1])</code>、<code>map</code>/<code>filter</code> 里的短小函数；复杂逻辑仍应写 <code>def</code>。</li>
 </ul>
-<h3 id="222-类与三大特性">2.2.2 类与三大特性</h3>
+<h3 id="222-第2课-面向对象编程之类的详解与实战">2.2.2 第2课 面向对象编程之"类"的详解与实战</h3>
 <ul>
-<li>类 = 属性 + 方法；<code>__init__</code> 初始化；实例方法首参 <code>self</code>；</li>
-<li>封装：<code>self.__x</code> 私有约定，公有方法控制访问；</li>
-<li>继承：<code>class 子类(父类)</code> + <code>super().__init__()</code>；传递性/覆盖性/扩展性；</li>
-<li>多态：鸭子类型——同名方法即可统一调用；</li>
-<li>类属性（共享）/类方法（<code>@classmethod</code> 工厂）/静态方法（<code>@staticmethod</code> 工具）。</li>
+<li><strong>核心概念</strong>：类（class）= 属性（数据）+ 方法（行为）的模板，对象（object/实例）是按模板造出来的具体事物。「万物皆对象」：一台机器人有 <code>name/speed</code> 属性与 <code>move/stop</code> 方法，就是 <code>Robot</code> 类的实例。</li>
+<li><strong>基本语法</strong>：<code>class Robot:</code> 下定义方法，所有实例方法第一个参数是 <code>self</code>（代表调用者自己）；创建实例 <code>r = Robot()</code>，调用方法 <code>r.move()</code>，访问属性 <code>r.name</code>。</li>
+<li><strong>初始化函数 <code>__init__</code></strong>：构造方法，创建实例时自动调用，用来初始化属性：<code>def __init__(self, name): self.name = name</code>。它是「每个对象出生时的登记表」。</li>
+<li><strong>类的练习主线</strong>（跑步、家具摆放、吃鸡案例）：从「给对象加属性、调方法」到「多个对象互相配合」（家具摆放：房间对象聚合多个家具对象；吃鸡案例：玩家、武器、背包的组合与状态变化）——本质是练习「用对象描述世界」的建模思维，也为后面阶段把「机器人、传感器、任务」建模成类打样。</li>
+<li><strong>建模三问</strong>：这个事物有哪些属性（名词）？有哪些行为（动词）？和其他事物是什么关系（组合/继承）？</li>
 </ul>
-<h3 id="223-异常、文件与-json">2.2.3 异常、文件与 JSON</h3>
+<h3 id="223-第3课-私有特性、继承机制与多态性全面解析">2.2.3 第3课 私有特性、继承机制与多态性全面解析</h3>
 <ul>
-<li><code>try/except 类型 as e/else/finally</code>；<code>raise ValueError("速度不能为负")</code> 主动抛出；</li>
-<li><code>with open(path, encoding="utf-8") as f:</code> 自动关文件；</li>
-<li><code>json.load/dump(ensure_ascii=False, indent=2)</code>——机器人配置存取的标准做法。</li>
+<li><strong>核心概念</strong>：封装（Encapsulation）、继承（Inheritance）、多态（Polymorphism）是面向对象三大特性。</li>
+<li><strong>私有属性与私有方法</strong>：名字以双下划线开头（<code>self.__score</code>、<code>def __check(self)</code>）约定为私有，类外不能直接访问（Python 通过名称改写 <code>_类名__score</code> 实现，是约定而非强约束）。公有方法内部调用私有方法，形成「外部只看接口、内部随意改」的封装。提供 getter/setter（或 <code>@property</code>）控制访问与校验。</li>
+<li><strong>继承</strong>：<code>class 子类(父类):</code> 获得父类属性方法，减少重复代码；<code>super().__init__()</code> 调父类初始化。三大特性：<ul>
+<li><strong>传递性</strong>：孙子类自动继承爷爷类的能力；</li>
+<li><strong>覆盖性（重写 override）</strong>：子类同名方法优先执行子类版本；</li>
+<li><strong>扩展性</strong>：子类在父类基础上新增属性与方法。</li>
 </ul>
-<h3 id="224-多进程与多线程">2.2.4 多进程与多线程</h3>
+</li>
+<li><strong>父类私有成员</strong>：子类不能直接访问父类的私有属性/方法，只能通过父类的公有方法间接使用。</li>
+<li><strong>多态</strong>：不同子类对同一方法名给出不同实现，调用方按统一接口使用（如 <code>def make_sound(animal): animal.speak()</code>，猫狗各有实现）。Python 的多态靠「鸭子类型（duck typing）」：只要有同名方法就能统一调用，无需显式声明接口。</li>
+<li><strong>类的补充</strong>：<ul>
+<li><strong>类属性</strong>：定义在类中、所有实例共享（<code>Robot.count = 0</code>），适合存「共性数据」；实例属性则每个对象一份。</li>
+<li><strong>类方法</strong>：<code>@classmethod</code> 修饰，第一个参数是 <code>cls</code>（类本身），用 <code>Robot.create_from_dict(d)</code> 这类「工厂方法」最合适。</li>
+<li><strong>记录实例化次数</strong>：在 <code>__init__</code> 里对类属性 <code>count</code> 累加，是类属性的经典用法。</li>
+<li><strong>静态方法</strong>：<code>@staticmethod</code> 修饰，不需要 <code>self</code>/<code>cls</code>，就是「放在类里的普通工具函数」（如单位换算）。</li>
+</ul>
+</li>
+</ul>
+<h3 id="224-第4课-异常处理策略与文件操作">2.2.4 第4课 异常处理策略与文件操作</h3>
 <ul>
-<li><code>multiprocessing.Process</code> 资源隔离（CPU 密集）；<code>threading.Thread</code> 共享内存（I/O 密集）；</li>
-<li>多进程代码必须放在 <code>if __name__ == "__main__":</code> 内；</li>
-<li>GIL：CPU 密集任务多线程不会更快；共享数据用 <code>Lock</code> 或 <code>queue.Queue</code>。</li>
+<li><strong>核心概念</strong>：异常（exception）是运行时错误；不处理就崩溃，处理了程序可以优雅降级。</li>
+<li><strong>try-except 体系</strong>：<code>try:</code> 放可能出错的代码，<code>except 错误类型 as e:</code> 捕获并处理，<code>else:</code> 无异常时执行，<code>finally:</code> 无论如何都执行（适合释放资源）。可以多个 <code>except</code> 分别处理 <code>ValueError</code>、<code>ZeroDivisionError</code>、<code>FileNotFoundError</code> 等；<code>except Exception</code> 兜底但不宜滥用。</li>
+<li><strong>异常的传递</strong>：函数内未捕获的异常会沿调用栈向上传递，直到被捕获或程序终止；因此「底层函数抛异常、上层统一处理」是常见分层策略。</li>
+<li><strong>主动抛出</strong>：<code>raise ValueError("速度不能为负")</code>，常用于参数校验；自定义异常继承 <code>Exception</code>。</li>
+<li><strong>模块与包</strong>：<code>import 模块</code>、<code>from 模块 import 名字</code>（部分导入）、<code>import 包.模块</code>；<code>as</code> 起别名（<code>import numpy as np</code> 是行业惯例）；<code>if __name__ == "__main__":</code> 保护「被导入时不执行测试代码」——多进程编程中更是必写。</li>
+<li><strong>文件读写</strong>：<ul>
+<li><code>f = open(path, "r"/"w"/"a")</code>，模式 r 读、w 覆写（文件不存在则创建）、a 追加；推荐 <code>with open(...) as f:</code> 自动关文件；</li>
+<li><code>f.read()</code> 全读、<code>f.readline()</code> 逐行、<code>f.readlines()</code> 读成行列表、<code>for line in f:</code> 逐行迭代（大文件首选）；</li>
+<li>写：<code>f.write(字符串)</code>、<code>f.writelines(列表)</code>，注意写入不含换行符需自己加 <code>\n</code>；</li>
+<li><code>encoding="utf-8"</code> 显式指定编码，避免中文乱码。</li>
 </ul>
-<h2 id="23-运行效果（实测）">2.3 运行效果（实测）</h2>
-<p>传感器家族综合案例（封装 + 继承 + 多态）：</p>
+</li>
+<li><strong>JSON 读写</strong>：<code>import json</code>；<code>json.load(f)</code> 读文件 / <code>json.loads(s)</code> 读字符串 / <code>json.dump(data, f, ensure_ascii=False, indent=2)</code> 写文件。JSON 只认 dict/list/str/int/float/bool/None，元组会被转成列表。机器人配置（速度上限、PID 参数、航点表）用 JSON 存取是标准做法。</li>
+</ul>
+<h3 id="225-第5课-多任务、多进程与多线程">2.2.5 第5课 多任务、多进程与多线程</h3>
+<ul>
+<li><strong>核心概念</strong>：多任务（multitasking）指同时推进多件事；并发的实现有进程（process）与线程（thread）两条路。</li>
+<li><strong><code>__name__</code> 属性</strong>：直接运行脚本时为 <code>"__main__"</code>，被导入时为模块名。多进程（Windows/macOS 上的 spawn 启动方式）要求创建子进程的代码必须放在 <code>if __name__ == "__main__":</code> 内，否则无限递归创建进程。</li>
+<li><strong>多进程</strong>：<code>from multiprocessing import Process</code>，<code>p = Process(target=函数, args=(参数,))</code>，<code>p.start()</code> 启动、<code>p.join()</code> 等待结束。进程有独立 PID（<code>os.getpid()</code>），资源隔离、稳定性好，但创建/切换开销大、进程间通信（IPC）要借助队列/管道。</li>
+<li><strong>多进程传参与结束时机</strong>：位置参数用 <code>args=(元组,)</code>，关键字参数用 <code>kwargs={字典}</code>；主进程默认等子进程结束才退出，<code>p.terminate()</code> 可强制结束；守护进程 <code>p.daemon = True</code> 随主进程退出。</li>
+<li><strong>多线程</strong>：<code>import threading</code>，<code>t = threading.Thread(target=函数, args=(...))</code>，同样有 <code>start()/join()/daemon</code>。线程共享进程内存、开销小，适合 I/O 密集任务（网络收发、读传感器、录视频）。</li>
+<li><strong>GIL 与执行顺序</strong>：CPython 有全局解释器锁（GIL），同一时刻只有一个线程执行字节码，<strong>CPU 密集任务多线程不会更快</strong>（用多进程或 NumPy 向量化替代）；线程启动顺序不保证、执行顺序无序，需要顺序性时用 <code>join()</code>、<code>Queue</code> 或锁（<code>threading.Lock()</code>）保护共享数据。</li>
+</ul>
+<p>两类并发模型的选型对照：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>multiprocessing（进程）</th>
+<th>threading（线程）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>内存</td>
+<td>隔离，通信靠队列/管道</td>
+<td>共享，需 Lock/Queue 保护</td>
+</tr>
+<tr>
+<td>开销</td>
+<td>创建/切换大</td>
+<td>小</td>
+</tr>
+<tr>
+<td>适用</td>
+<td>CPU 密集（大量计算）</td>
+<td>I/O 密集（网络、磁盘、摄像头读帧）</td>
+</tr>
+<tr>
+<td>必写</td>
+<td><code>if __name__ == "__main__":</code></td>
+<td>建议写（防导入副作用）</td>
+</tr>
+</tbody>
+</table>
+<h2 id="23-重点与难点">2.3 重点与难点</h2>
+<ol>
+<li><strong>可变对象作函数参数</strong>：函数内修改列表/字典会影响调用方；不想影响就先 <code>copy()</code>。缺省参数写 <code>def f(lst=[])</code> 会让默认列表「越用越长」，必须写 <code>def f(lst=None): lst = [] if lst is None else lst</code>。</li>
+<li><strong><code>self</code> 到底是什么</strong>：<code>r.move()</code> 等价于 <code>Robot.move(r)</code>，<code>self</code> 就是实例自己；初学者最常见的报错 <code>missing 1 required positional argument: 'self'</code> 就是用类名直接调用了实例方法。</li>
+<li><strong>私有是约定不是铁律</strong>：Python 的 <code>__xxx</code> 只做名称改写（<code>_类__xxx</code>），外部仍可强行访问；尊重约定是团队协作的基本素养。</li>
+<li><strong>except 要具体</strong>：捕获 <code>Exception</code> 会把 bug 也吞掉；先分类型捕获并记录 <code>str(e)</code>，最后才考虑兜底。</li>
+<li><strong>多线程的竞态条件（race condition）</strong>：两个线程同时 <code>count += 1</code> 会丢更新，需用 <code>Lock()</code> 或改用 <code>queue.Queue</code>（线程安全）传递数据。</li>
+</ol>
+<blockquote>
+<p><strong>注意：</strong> 多进程代码必须放在 <code>if __name__ == "__main__":</code> 里，Windows/macOS 用户漏写会得到「无限创建子进程直到死机」的经典事故。</p>
+</blockquote>
+<h2 id="24-代码与命令实战">2.4 代码与命令实战</h2>
+<pre><code class="lang-python"><span class="hljs-comment"># 示例1（场景：多值传参与缺省参数 —— 通用的机器人运动指令封装）</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">send_cmd</span>(<span class="hljs-params">linear=<span class="hljs-number">0.0</span>, angular=<span class="hljs-number">0.0</span>, *log_tags, **extra</span>):
+    <span class="hljs-string">"""linear: m/s, angular: rad/s; 额外标签与参数仅做演示打印。"""</span>
+    msg = <span class="hljs-string">f"cmd: linear=<span class="hljs-subst">{linear:<span class="hljs-number">.2</span>f}</span>, angular=<span class="hljs-subst">{angular:<span class="hljs-number">.2</span>f}</span>"</span>
+    <span class="hljs-keyword">if</span> log_tags:
+        msg += <span class="hljs-string">f" tags=<span class="hljs-subst">{log_tags}</span>"</span>            <span class="hljs-comment"># *args 是元组</span>
+    <span class="hljs-keyword">if</span> extra:
+        msg += <span class="hljs-string">f" extra=<span class="hljs-subst">{extra}</span>"</span>              <span class="hljs-comment"># **kwargs 是字典</span>
+    <span class="hljs-built_in">print</span>(msg)
+
+send_cmd(<span class="hljs-number">1.0</span>, <span class="hljs-number">0.5</span>)                            <span class="hljs-comment"># 用缺省值</span>
+send_cmd(<span class="hljs-number">0.5</span>, <span class="hljs-number">0.0</span>, <span class="hljs-string">"slow"</span>, <span class="hljs-string">"safe"</span>, level=<span class="hljs-number">3</span>)   <span class="hljs-comment"># 多值传参</span>
+opts = {<span class="hljs-string">"linear"</span>: <span class="hljs-number">0.2</span>, <span class="hljs-string">"angular"</span>: -<span class="hljs-number">0.1</span>}
+send_cmd(**opts)                              <span class="hljs-comment"># 字典解包</span>
+</code></pre>
+<pre><code class="lang-python"><span class="hljs-comment"># 示例2（场景：类与封装/继承/多态 —— 传感器家族）</span>
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Sensor</span>:
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, name, rate_hz</span>):
+        <span class="hljs-variable language_">self</span>.name = name
+        <span class="hljs-variable language_">self</span>.rate_hz = rate_hz
+        <span class="hljs-variable language_">self</span>.__calibrated = <span class="hljs-literal">False</span>            <span class="hljs-comment"># 私有属性</span>
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">calibrate</span>(<span class="hljs-params">self</span>):                     <span class="hljs-comment"># 公有方法操作私有属性</span>
+        <span class="hljs-variable language_">self</span>.__calibrated = <span class="hljs-literal">True</span>
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">f"<span class="hljs-subst">{self.name}</span> 校准完成"</span>)
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">read</span>(<span class="hljs-params">self</span>):                          <span class="hljs-comment"># 多态接口：子类各自实现</span>
+        <span class="hljs-keyword">raise</span> NotImplementedError
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Lidar</span>(<span class="hljs-title class_ inherited__">Sensor</span>):
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">read</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-keyword">return</span> [<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>, <span class="hljs-number">3.0</span>]
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Imu</span>(<span class="hljs-title class_ inherited__">Sensor</span>):
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">read</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-keyword">return</span> {<span class="hljs-string">"ax"</span>: <span class="hljs-number">0.0</span>, <span class="hljs-string">"ay"</span>: <span class="hljs-number">0.0</span>, <span class="hljs-string">"az"</span>: <span class="hljs-number">9.8</span>}
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">report</span>(<span class="hljs-params">sensor</span>):                          <span class="hljs-comment"># 统一接口，多态生效</span>
+    <span class="hljs-built_in">print</span>(sensor.name, sensor.read())
+
+<span class="hljs-keyword">for</span> s <span class="hljs-keyword">in</span> (Lidar(<span class="hljs-string">"lidar0"</span>, <span class="hljs-number">10</span>), Imu(<span class="hljs-string">"imu0"</span>, <span class="hljs-number">100</span>)):
+    s.calibrate()
+    report(s)
+</code></pre>
+<pre><code class="lang-python"><span class="hljs-comment"># 示例3（场景：类属性/类方法/静态方法 —— 记录实例化次数）</span>
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Robot</span>:
+    count = <span class="hljs-number">0</span>                                <span class="hljs-comment"># 类属性：所有实例共享</span>
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, name</span>):
+        Robot.count += <span class="hljs-number">1</span>
+        <span class="hljs-variable language_">self</span>.name = name
+
+<span class="hljs-meta">    @classmethod</span>
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">create_pair</span>(<span class="hljs-params">cls</span>):                    <span class="hljs-comment"># 工厂方法</span>
+        <span class="hljs-keyword">return</span> cls(<span class="hljs-string">"r1"</span>), cls(<span class="hljs-string">"r2"</span>)
+
+<span class="hljs-meta">    @staticmethod</span>
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">deg2rad</span>(<span class="hljs-params">deg</span>):                        <span class="hljs-comment"># 与实例无关的工具函数</span>
+        <span class="hljs-keyword">return</span> deg * <span class="hljs-number">3.14159265</span> / <span class="hljs-number">180.0</span>
+
+r1, r2 = Robot.create_pair()
+<span class="hljs-built_in">print</span>(Robot.count, Robot.deg2rad(<span class="hljs-number">90</span>))        <span class="hljs-comment"># 2 1.570796325</span>
+</code></pre>
+<pre><code class="lang-python"><span class="hljs-comment"># 示例4（场景：异常处理 + JSON 配置读写）</span>
+<span class="hljs-keyword">import</span> json
+
+DEFAULT = {<span class="hljs-string">"max_speed"</span>: <span class="hljs-number">1.5</span>, <span class="hljs-string">"rate_hz"</span>: <span class="hljs-number">20</span>}
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">load_config</span>(<span class="hljs-params">path</span>):
+    <span class="hljs-keyword">try</span>:
+        <span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(path, <span class="hljs-string">"r"</span>, encoding=<span class="hljs-string">"utf-8"</span>) <span class="hljs-keyword">as</span> f:
+            cfg = json.load(f)
+    <span class="hljs-keyword">except</span> FileNotFoundError:
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">"配置不存在，使用默认值"</span>)
+        cfg = DEFAULT.copy()
+    <span class="hljs-keyword">except</span> json.JSONDecodeError <span class="hljs-keyword">as</span> e:
+        <span class="hljs-keyword">raise</span> ValueError(<span class="hljs-string">f"配置文件损坏: <span class="hljs-subst">{e}</span>"</span>)
+    <span class="hljs-keyword">if</span> cfg.get(<span class="hljs-string">"max_speed"</span>, <span class="hljs-number">0</span>) &lt;= <span class="hljs-number">0</span>:
+        <span class="hljs-keyword">raise</span> ValueError(<span class="hljs-string">"max_speed 必须为正数"</span>)
+    <span class="hljs-keyword">return</span> cfg
+
+cfg = load_config(<span class="hljs-string">"robot_config.json"</span>)       <span class="hljs-comment"># 文件不存在也安全</span>
+<span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(<span class="hljs-string">"robot_config.json"</span>, <span class="hljs-string">"w"</span>, encoding=<span class="hljs-string">"utf-8"</span>) <span class="hljs-keyword">as</span> f:
+    json.dump(cfg, f, ensure_ascii=<span class="hljs-literal">False</span>, indent=<span class="hljs-number">2</span>)   <span class="hljs-comment"># 写回 JSON</span>
+<span class="hljs-built_in">print</span>(cfg)
+</code></pre>
+<pre><code class="lang-python"><span class="hljs-comment"># 示例5（场景：多线程并发采集 —— 必须放在 __main__ 保护下）</span>
+<span class="hljs-keyword">import</span> threading, time
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">collect</span>(<span class="hljs-params">name, n</span>):
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">f"[<span class="hljs-subst">{name}</span>] sample <span class="hljs-subst">{i}</span>"</span>)
+        time.sleep(<span class="hljs-number">0.1</span>)                      <span class="hljs-comment"># 模拟 I/O 等待</span>
+
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">"__main__"</span>:
+    ts = [threading.Thread(target=collect, args=(<span class="hljs-string">f"cam<span class="hljs-subst">{i}</span>"</span>, <span class="hljs-number">3</span>)) <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">2</span>)]
+    <span class="hljs-keyword">for</span> t <span class="hljs-keyword">in</span> ts:
+        t.start()                            <span class="hljs-comment"># 启动顺序不等于执行顺序</span>
+    <span class="hljs-keyword">for</span> t <span class="hljs-keyword">in</span> ts:
+        t.join()                             <span class="hljs-comment"># 等两个采集线程都结束</span>
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">"采集完成"</span>)
+</code></pre>
+<pre><code class="lang-bash"><span class="hljs-comment"># 示例6（场景：命令行验证脚本可运行）</span>
+$ python3 week2_demo.py
+$ python3 -c <span class="hljs-string">"import json; print(json.loads('{\"a\": 1}'))"</span>
+</code></pre>
+<h2 id="25-运行效果（实测）">2.5 运行效果（实测）</h2>
+<p>传感器家族综合案例实测（对应 2.4 示例2：封装 + 继承 + 多态）：</p>
 <pre><code class="lang-text">lidar0 校准完成
 lidar0 [1.0, 2.0, 3.0]
 imu0 校准完成
 imu0 {'ax': 0.0, 'ay': 0.0, 'az': 9.8}
 </code></pre>
-<h2 id="24-端到端实战（实测）：waypointmanager">2.4 端到端实战（实测）：WaypointManager</h2>
+<p>把函数、类、异常、JSON 串成完整程序的端到端实战——WaypointManager：类封装航点表，重复名/非法坐标抛异常，<code>dumps/loads</code> 演示 JSON 持久化语义（工程中把快照写入磁盘文件即可）。</p>
 <blockquote>
 <p><strong>视频对照</strong>：课程 <code>类综合练习</code> 的 Game 类（类属性 <code>top_score</code> + 类方法 + 实例方法）已按视频逐字复现，输出与课程终端一致（<code>帮助信息 / 0 / 小明开始了游戏。得分为120 / 当前最高分120</code>），见《端到端核对报告》基础篇表。</p>
 </blockquote>
-<p>把函数、类、异常、JSON 串成完整程序：类封装航点表，重复名/非法坐标抛异常，<code>dumps/loads</code> 演示 JSON 持久化语义（工程中把快照写入磁盘文件即可）。</p>
 <pre><code class="lang-python"><span class="hljs-comment"># manager.py（节选核心）</span>
 <span class="hljs-keyword">import</span> json
 
@@ -696,16 +933,44 @@ imu0 {'ax': 0.0, 'ay': 0.0, 'az': 9.8}
   w0: (0.00, 0.00)
   w1: (1.50, 0.00)
 </code></pre>
+<p>读输出要点：两条 <code>ValueError</code> 分别对应「重复名」与「非法坐标」校验；<code>快照字节 = 66</code> 即 <code>dumps()</code> 序列化后的 JSON 文本长度，<code>mgr2.loads(snapshot)</code> 在全新实例上完整恢复了 <code>w0/w1</code>——这就是 JSON 持久化「存 → 读」的最小闭环。</p>
 <blockquote>
 <p>提示：写入磁盘时把 <code>dumps()</code> 的结果用 <code>open(path, "w", encoding="utf-8")</code> 落盘即可；对外部传入的路径应先规范化并校验其落在允许目录内（防路径穿越），这是工程上的标准做法。</p>
 </blockquote>
-<h2 id="25-本章小结">2.5 本章小结</h2>
+<h2 id="26-与-ros2--机器人开发的关联">2.6 与 ROS2 / 机器人开发的关联</h2>
+<ol>
+<li><strong>rclpy 节点就是类</strong>：<code>class MinimalPublisher(Node)</code> 继承自 <code>rclpy.node.Node</code>，<code>super().__init__('node_name')</code>、实例属性存状态、方法作回调——本周的类与继承知识直接对口；自定义节点间的复用关系（如「巡检节点继承移动基类」）靠继承与多态扩展。</li>
+<li><strong>回调与多值传参</strong>：话题回调 <code>def listener_cb(self, msg)</code> 中的 <code>msg</code> 是消息类实例；写工具函数时常要 <code>*args, **kwargs</code> 透传 QoS 配置（<code>QoSProfile(depth=10, ...)</code>），看懂框架源码离不开多值传参。</li>
+<li><strong>异常保证节点不死</strong>：传感器读数失败、服务调用超时、参数非法都要 <code>try/except</code> 兜底并 <code>get_logger().error()</code> 记录，而不是让回调抛异常把整个 executor 带崩。</li>
+<li><strong>JSON/YAML 配置与参数</strong>：机器人的 PID 参数、航点、阈值常存 JSON/YAML，节点启动时加载、运行中更新保存——本周的 <code>json.load/dump</code> + 异常处理就是模板。<code>launch</code> 文件启动时传参也常用 JSON 文件。</li>
+<li><strong>多线程与图像采集</strong>：摄像头采集（17m06s 的「摄像头和视频」在第 3 周展开）常放独立线程，主线程跑 <code>rclpy.spin()</code>；注意 GIL 下图像处理交给 OpenCV/NumPy 的 C 实现，线程只做 I/O；共享变量用 <code>Lock</code> 或 <code>queue.Queue</code>，避免回调与采集线程抢数据。</li>
+</ol>
+<h2 id="27-自测与练习（含参考答案要点）">2.7 自测与练习（含参考答案要点）</h2>
+<ol>
+<li><strong>题目</strong>：写一个函数 <code>stats(*values, unit="m")</code>，返回 <code>(个数, 最大值, 最小值)</code>，并在无参数时返回 <code>(0, None, None)</code>；解释为什么 <code>return a, b, c</code> 可以被 <code>n, hi, lo = stats(1, 2, 3)</code> 拆包。</li>
+<li><strong>题目</strong>：<code>def add(item, bucket=[])</code> 有什么隐患？给出正确写法。</li>
+<li><strong>动手任务</strong>：把上周的「航点管理」升级为 <code>WaypointManager</code> 类：属性存字典，方法有 <code>add(name, x, y)</code>、<code>remove(name)</code>、<code>list_sorted()</code>，<code>name</code> 重复时 <code>raise ValueError</code>；再写一个 JSON 持久化 <code>save(path)/load(path)</code>。验收标准：非法输入被异常捕获并给出提示，<code>save</code> 后重启脚本能 <code>load</code> 回原数据。</li>
+<li><strong>题目</strong>：两个线程各对共享变量 <code>count</code> 做 10 万次 <code>count += 1</code>，为什么结果常常小于 20 万？如何修正？</li>
+</ol>
+<blockquote>
+<p>参考答案要点：1) <code>def stats(*values, unit="m")</code> 中 <code>*values</code> 是元组，空元组时返回 <code>(0, None, None)</code>；多值返回本质是元组，元组可直接拆包；2) 默认列表只在函数定义时创建一次，多次调用共享同一个列表，应写 <code>def add(item, bucket=None): bucket = [] if bucket is None else bucket</code>；3) 类中用 <code>self.waypoints</code> 字典 + <code>if name in self.waypoints: raise ValueError</code>，<code>json.dump/load</code> 存取，<code>try/except (ValueError, FileNotFoundError)</code> 处理；4) 竞态条件：<code>count += 1</code> 不是原子操作，需 <code>lock = threading.Lock()</code> 并在 <code>with lock:</code> 中累加，或用 <code>multiprocessing</code>/NumPy 向量化规避 GIL。</p>
+</blockquote>
+<h2 id="28-常见问题（faq）">2.8 常见问题（FAQ）</h2>
+<ul>
+<li><strong>Q：<code>*args</code> 和 `</strong>kwargs<code>到底怎么用？** A：定义时收集富余参数（元组/字典），调用时解包（</code>f(<em>lst)<code>、</code>f(*</em>dic)`）。记法：一个星号管位置参数，两个星号管关键字参数。</li>
+<li><strong>Q：<code>global</code> 声明是必须的吗？</strong> A：读全局变量不需要；在函数内<strong>重新绑定</strong>全局变量才需要 <code>global</code>。但更推荐用参数和返回值传数据，全局变量越少越好。</li>
+<li><strong>Q：<code>__init__</code> 和 <code>__str__</code> 有什么区别？</strong> A：<code>__init__</code> 是构造初始化，创建实例时自动调用；<code>__str__</code> 定义 <code>print(实例)</code> 的输出文本。二者都是「魔法方法」，由解释器在特定时机自动调用。</li>
+<li><strong>Q：多进程和多线程怎么选？</strong> A：CPU 密集（大量计算）→ 多进程；I/O 密集（网络、磁盘、摄像头读帧）→ 多线程。Python 里想榨干 CPU，首选 NumPy 向量化而不是开线程。</li>
+<li><strong>Q：为什么文件操作要用 <code>with</code>？</strong> A：<code>with open(...)</code> 在代码块结束（包括发生异常时）自动关闭文件，避免忘记 <code>f.close()</code> 导致句柄泄漏或数据没刷盘。</li>
+</ul>
+<h2 id="29-本章小结">2.9 本章小结</h2>
 <ul>
 <li>类与继承是 rclpy 节点的直接原型（<code>class MyNode(Node)</code>、<code>super().__init__()</code>）；</li>
 <li>异常保证节点不死：回调里 <code>try/except</code> 兜底并记日志，而不是把 executor 带崩；</li>
 <li>JSON/YAML 配置 + 异常处理是参数管理的模板；</li>
 <li>摄像头等 I/O 采集放独立线程、主线程跑 spin——本周并发知识在 ROS2 里的直接落点。</li>
 </ul>
+<p>下一章把 Python 用到真正的「数据」上：NumPy 数组与 OpenCV 图像，打开机器人感知层的大门。</p>
 
                                 
                                 </section>
@@ -749,7 +1014,7 @@ imu0 {'ax': 0.0, 'ay': 0.0, 'az': 9.8}
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第2章 Python 进阶编程（函数/类/异常/并发）","level":"2.2","depth":1,"next":{"title":"第3章 数据处理与计算机视觉（NumPy/OpenCV）","level":"2.3","depth":1,"path":"第3周-数据处理与计算机视觉.md","ref":"第3周-数据处理与计算机视觉.md","articles":[]},"previous":{"title":"第1章 列表与元组（Python 基础入门）","level":"2.1","depth":1,"path":"第1周-列表与元组.md","ref":"第1周-列表与元组.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第2周-Python进阶编程.md","mtime":"2026-10-16T02:43:09.754Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T02:43:11.108Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第2章 Python 进阶编程（函数/类/异常/并发）","level":"2.2","depth":1,"next":{"title":"第3章 数据处理与计算机视觉（NumPy/OpenCV）","level":"2.3","depth":1,"path":"第3周-数据处理与计算机视觉.md","ref":"第3周-数据处理与计算机视觉.md","articles":[]},"previous":{"title":"第1章 列表与元组（Python 基础入门）","level":"2.1","depth":1,"path":"第1周-列表与元组.md","ref":"第1周-列表与元组.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第2周-Python进阶编程.md","mtime":"2026-10-16T03:26:51.711Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T03:26:53.986Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

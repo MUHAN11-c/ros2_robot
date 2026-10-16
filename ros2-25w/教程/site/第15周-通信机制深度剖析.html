@@ -604,18 +604,188 @@
 <p>通信机制是 ROS2 的核心。本章依次完成<strong>话题、服务、动作、参数</strong>四种通信机制的案例实现（含自定义接口消息），每种机制都按「案例分析 → 接口消息 → C++ 实现 → Python 实现 → 运行效果」展开。</p>
 <p>本章对应代码：<code>code/ws01_plumbing/src/base_interfaces_demo</code>、<code>cpp01_topic</code>、<code>py01_topic</code>、<code>cpp02_service</code>、<code>py02_service</code>、<code>cpp03_action</code>、<code>py03_action</code>、<code>cpp04_param</code>、<code>py04_param</code>。</p>
 </blockquote>
-<h2 id="151-话题通信">15.1 话题通信</h2>
-<h3 id="1511-案例以及案例分析">15.1.1 案例以及案例分析</h3>
-<p><strong>需求</strong>：发布方以 1Hz 发布文本消息，订阅方接收并打印（原生消息 <code>std_msgs/String</code>）；随后改用自定义消息 <code>Student</code>（姓名/年龄/身高）重复该案例。</p>
-<p><strong>流程</strong>：</p>
+<h2 id="151-本周概览与课时结构">15.1 本周概览与课时结构</h2>
+<p>本周是全课程体量最大、最核心的一周（4 课 / 90 视频 / 12h39m）：系统拆解 ROS2 的四种通信模型——话题（Topic）、服务（Service）、动作（Action）、参数（Parameter）。每种模型都按"场景概念 → 接口定义 → 案例分析 → C++ 实现 → Python 实现"的节奏推进，并覆盖自定义 <code>.msg</code>/<code>.srv</code>/<code>.act</code> 接口的完整流程。学完本章，你应当能看懂任意 ROS2 节点之间的数据流，并独立实现节点间的四种协作方式——这是后面 launch、TF2、导航、机械臂一切内容的地基。</p>
+<table>
+<thead>
+<tr>
+<th>课</th>
+<th>小节</th>
+<th>时长</th>
+<th>一句话导览</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第1课 通信机制简介和话题通信详解与实现</td>
+<td>24 节</td>
+<td>4h08m</td>
+<td>通信模型总览 + 话题收发（原生/自定义消息，C++/Python）+ rqt 计算图</td>
+</tr>
+<tr>
+<td>第2课 服务通信详解与实现</td>
+<td>17 节</td>
+<td>2h23m</td>
+<td><code>.srv</code> 自定义接口 + 服务端/客户端双语言实现 + 连接时序 BUG</td>
+</tr>
+<tr>
+<td>第3课 动作通信详解与实现</td>
+<td>27 节</td>
+<td>3h29m</td>
+<td><code>.act</code> 三段式接口 + 目标/反馈/结果/取消全流程双语言实现</td>
+</tr>
+<tr>
+<td>第4课 参数服务详解与实现</td>
+<td>22 节</td>
+<td>2h38m</td>
+<td>参数类型与 API + 增删改查（C++/Python）+ 参数客户端</td>
+</tr>
+</tbody>
+</table>
+<h2 id="152-知识点梳理">15.2 知识点梳理</h2>
+<h3 id="1521-第1课-通信机制简介和话题通信详解与实现">15.2.1 第1课 通信机制简介和话题通信详解与实现</h3>
+<p><strong>A. 通信机制简介</strong></p>
+<ul>
+<li><strong>节点与话题</strong>：节点（Node）是执行计算的进程单元；话题（Topic）是节点间<strong>异步单向广播</strong>的数据通道，一个话题可有多个发布方（Publisher）与多个订阅方（Subscriber），彼此不感知对方存在（发布订阅解耦）。节点间还能通过服务、动作、参数交互，统称 ROS2 通信机制。</li>
+<li><strong>通信模型总览</strong>：ROS2 提供 4 种模型——话题（连续数据流）、服务（请求-响应）、动作（长任务 + 反馈 + 可取消）、参数（节点配置读写），底层都由 DDS 实现，但语义与 API 完全不同；运行时所有节点/话题/服务连成的拓扑称"计算图（Computation Graph）"，可用 rqt_graph 查看。</li>
+<li><strong>接口（Interface）</strong>：数据类型由 <code>.msg</code>/<code>.srv</code>/<code>.act</code> 文件定义，经 rosidl 生成 C++/Python 类型；内置接口包有 <code>std_msgs</code>（基础类型）、<code>geometry_msgs</code>（几何）、<code>sensor_msgs</code>（传感器）、<code>nav_msgs</code>（导航）等；字段名小写下划线，常量全大写。</li>
+<li><strong>准备工作</strong>：新建工作空间与功能包（<code>--build-type ament_cmake</code> 或 <code>ament_python</code>）；自定义接口时单独建<strong>接口功能包</strong>（只含 <code>msg/</code> <code>srv/</code> <code>action/</code> 与 <code>package.xml</code>/<code>CMakeLists.txt</code>），其他包 <code>depend</code> 它——避免 rosidl 生成与节点编译耦合。</li>
+</ul>
+<p><strong>B. 话题通信详解与实现</strong></p>
+<ul>
+<li><strong>场景、概念、作用与消息接口</strong>：话题用于<strong>连续、单向、多对多</strong>的数据广播（激光雷达扫描数据、速度指令流等），概念上是"发布/订阅 + 消息队列（QoS 决定深度、可靠性、历史策略）"；消息接口即 <code>.msg</code> 文件，每行 <code>类型 名称</code>。</li>
+<li><strong>案例以及案例分析</strong>：经典案例"学生话题"——发布方周期发布 <code>std_msgs/String</code> 或自定义 <code>Student</code>（姓名/年龄/身高），订阅方接收打印；分析要点：话题名、消息类型、发布频率、QoS 队列深度、发布/订阅各属哪个节点。</li>
+<li><strong>原生消息 C++ 实现——发布方</strong>：三步——继承 <code>rclcpp::Node</code> 建类 → <code>create_publisher&lt;std_msgs::msg::String&gt;("topic", 10)</code> → <code>create_wall_timer</code> 周期回调里 <code>publish</code>；要点：成员保存 publisher、计数器自增、<code>RCLCPP_INFO</code> 打日志、回调避免长阻塞。</li>
+<li><strong>原生消息 C++ 实现——订阅方</strong>：<code>create_subscription&lt;std_msgs::msg::String&gt;("topic", 10, std::bind(&amp;Class::cb, this, _1))</code>；回调形参 <code>std_msgs::msg::String::SharedPtr</code>，只做轻量处理；要点：回调签名、队列深度与丢包语义、<code>rclcpp::spin</code>。</li>
+<li><strong>原生消息 Python 实现——发布/订阅</strong>：<code>self.create_publisher(String, 'topic', 10)</code> + <code>self.create_timer(0.5, cb)</code>；订阅 <code>self.create_subscription(String, 'topic', self.cb, 10)</code>；注意 <code>entry_points</code> 注册与 <code>destroy_node</code>。</li>
+<li><strong>vscode 代码片段</strong>：把常用节点模板（类骨架、publisher/subscription、CMakeLists 模板）做成 vscode snippet（<code>File &gt; Preferences &gt; Configure User Snippets</code>），输入前缀自动展开，课程演示了 C++/Python 两套片段，可显著提速重复框架代码。</li>
+<li><strong>自定义接口消息（接口文件）</strong>：接口包 <code>msg/Student.msg</code> 写 <code>string name / int32 age / float64 height</code>；<code>package.xml</code> 需 <code>&lt;buildtool_depend&gt;rosidl_default_generators&lt;/buildtool_depend&gt;</code> + <code>&lt;member_of_group&gt;rosidl_interface_packages&lt;/member_of_group&gt;</code>；<code>CMakeLists.txt</code> 需 <code>rosidl_generate_interfaces(${PROJECT_NAME} "msg/Student.msg")</code>；生成后用 <code>ros2 interface show base_interfaces_demo/msg/Student</code> 验证。</li>
+<li><strong>自定义接口 C++ 实现</strong>：引用生成头文件 <code>base_interfaces_demo/msg/student.hpp</code>，类型写 <code>base_interfaces_demo::msg::Student</code>；<code>CMakeLists.txt</code> 增加 <code>find_package(base_interfaces_demo REQUIRED)</code> 与 <code>ament_target_dependencies(... base_interfaces_demo)</code>。常见坑：接口包没先编译、头文件路径错误。</li>
+<li><strong>自定义接口 Python 实现</strong>：<code>from base_interfaces_demo.msg import Student</code>，用 <code>msg.name = '张三'</code> 赋值；Python 包 <code>package.xml</code> 加 <code>&lt;exec_depend&gt;base_interfaces_demo&lt;/exec_depend&gt;</code>，<code>setup.py</code> 无需额外配置，但要 source 接口包的 install。</li>
+<li><strong>rqt 查看计算图</strong>：<code>ros2 run rqt_graph rqt_graph</code> 显示节点-话题拓扑，可快速验证"发布订阅是否连上、话题名是否一致"，配合 <code>ros2 topic list/info/echo</code> 排查。</li>
+<li><strong>小结</strong>：话题 = 异步单向广播；接口可自定义；C++ 与 Python API 几乎一一对应；QoS 队列深度是最先要理解的参数。</li>
+</ul>
+<h3 id="1522-第2课-服务通信详解与实现">15.2.2 第2课 服务通信详解与实现</h3>
+<ul>
+<li><strong>场景、概念与作用</strong>：服务（Service）是<strong>同步请求-响应</strong>模型：客户端（Client）发送请求（Request），服务端（Server）处理后返回响应（Response），一问一答、一次往返；适合"低频、需要结果"的场景：开关硬件、查询当前状态、切换模式。与话题的区别：话题是连续流、无人等待；服务是阻塞调用、有明确结果。</li>
+<li><strong>案例以及案例分析</strong>：经典案例"求和/学生信息查询"——客户端发两个数（或学号），服务端返回和（或学生信息）；分析要点：定接口（请求字段/响应字段）、谁做服务端谁做客户端、客户端何时调用（定时器？收到话题后？）、超时与失败处理。</li>
+<li><strong>自定义服务接口</strong>：<code>srv/AddInts.srv</code> 格式为 <code>---</code> 之上是请求、之下是响应（<code>int32 num1 / int32 num2 / --- / int32 sum</code>）；生成配置与 <code>.msg</code> 相同（<code>rosidl_generate_interfaces</code> 中列出 <code>.srv</code> 文件）。</li>
+<li><strong>C++ 实现——框架与服务端</strong>：两个可执行文件（服务端 <code>server</code>、客户端 <code>client</code>）分别 <code>add_executable</code> + <code>ament_target_dependencies</code>；服务端 <code>create_service&lt;自定义srv&gt;("服务名", std::bind(&amp;cb, this, _1, _2))</code>，回调签名 <code>void cb(const Req::SharedPtr req, Resp::SharedPtr resp)</code>，在回调里填 <code>resp-&gt;sum</code>——服务端是被动的，只有请求到来回调才触发。</li>
+<li><strong>C++ 实现——客户端（流程梳理）</strong>：三步——创建客户端 → 等待服务可用（<code>wait_for_service</code>）→ 发送请求并等待响应（<code>async_send_request</code> + <code>spin_until_future_complete</code>）。</li>
+<li><strong>C++ 实现——连接服务 BUG 说明</strong>：常见 BUG 是"服务端还没起来客户端就退出"或"用 <code>spin</code> 等待导致死锁"。正确姿势：<code>wait_for_service</code> 带超时 + 判断返回值；异步请求后用 <code>rclcpp::spin_until_future_complete(node, future)</code> 而不是再 <code>spin</code>；注意客户端节点与回调组（CallbackGroup）在多线程执行器下的互斥问题。</li>
+<li><strong>C++ 实现——发送请求处理响应</strong>：填 <code>request-&gt;num1/num2</code>，<code>auto future = client-&gt;async_send_request(request)</code>；<code>spin_until_future_complete</code> 返回后 <code>future.get()</code> 取响应并打印；处理超时（<code>future.wait_for</code>）与失败分支。</li>
+<li><strong>Python 实现——服务端/客户端</strong>：服务端 <code>self.create_service(AddInts, 'add_ints', self.cb)</code>，回调 <code>(req, resp)</code> 填 <code>resp</code> 并返回；客户端 <code>self.create_client(AddInts, 'add_ints')</code>、<code>cli.wait_for_service()</code>、<code>future = cli.call_async(req)</code>、<code>rclpy.spin_until_future_complete(node, future)</code>、<code>future.result()</code>。</li>
+<li><strong>小结</strong>：服务 = 同步一问一答；<code>.srv</code> 接口请求/响应用 <code>---</code> 分隔；客户端必须处理"服务未就绪/超时"；阻塞调用不适合长时间任务（那是动作的活）。</li>
+</ul>
+<h3 id="1523-第3课-动作通信详解与实现">15.2.3 第3课 动作通信详解与实现</h3>
+<ul>
+<li><strong>场景、概念与作用</strong>：动作（Action）= 服务 + 话题反馈 + 取消 + 结果，面向<strong>耗时长、需要进度反馈、可能中途取消</strong>的任务：导航到目标点、机械臂规划执行、相机长曝光。结构是"目标（Goal）→ 连续反馈（Feedback）→ 最终结果（Result）"三段式，底层由两个话题 + 一个服务组合而成。</li>
+<li><strong>案例以及案例分析</strong>：经典案例"累加求和/乌龟走目标点"——客户端发目标（数字 n/坐标），服务端周期反馈进度（百分比/已完成量），支持取消，最后返回成功与否；分析要点：Goal/Feedback/Result 字段、执行频率、取消语义。</li>
+<li><strong>自定义动作接口</strong>：<code>action/Progress.action</code> 三段用 <code>---</code> 分隔（课程约定：目标段 / 结果段 / 反馈段，如 <code>int64 num / --- / int64 sum / --- / float64 progress</code>）；生成配置与 <code>.msg/.srv</code> 相同，用 <code>ros2 interface show base_interfaces_demo/action/Progress</code> 验证。</li>
+<li><strong>C++ 实现——服务端三回调</strong>：<code>rclcpp_action::create_server&lt;NodeT&gt;(node, "动作名", handle_goal, handle_cancel, handle_accepted)</code>——<code>handle_goal</code> 检查目标合法性（如 <code>num &gt;= 1</code>）返回 <code>rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE</code> 或 <code>REJECT</code>（非法目标如越界/NaN 必须在此拒绝，避免执行线程崩溃）；<code>handle_cancel</code> 返回 <code>ACCEPT</code>/<code>REJECT</code>；<code>handle_accepted</code> 取 <code>GoalHandle</code> 启动执行线程跑主逻辑。</li>
+<li><strong>C++ 实现——主逻辑与取消处理</strong>：执行循环里推进状态：计算中间量 → <code>publish_feedback</code> 反馈进度 → <code>rclcpp::Rate</code> 控制频率 → 到达目标后 <code>goal_handle-&gt;succeed(result)</code>；每周期检查 <code>goal_handle-&gt;is_canceling()</code>，为真则填 <code>result</code>、<code>goal_handle-&gt;canceled(result)</code> 返回并退出线程。</li>
+<li><strong>C++ 实现——bug 修复</strong>：典型问题——执行线程生命周期（detach 的线程访问已销毁节点）、回调组未设 Reentrant 导致取消回调被阻塞、忘记判断 <code>is_canceling</code>、反馈频率过高阻塞执行器；修复：互斥锁保护共享状态、正确设置回调组、<code>Rate</code> 控频。</li>
+<li><strong>C++ 实现——客户端与三类响应</strong>：<code>rclcpp_action::create_client&lt;ActionT&gt;(node, "动作名")</code> → <code>async_send_goal</code>（带目标选项，注册 feedback/result 回调）→ <code>spin_until_future_complete</code> → <code>goal_handle</code>；<code>async_get_result</code> 等结果；取消用 <code>async_cancel_goal</code>。目标响应确认"被接受了吗"；反馈回调收 <code>FeedbackMessage</code>；最终响应取 <code>WrappedResult</code> 的 <code>code</code>（SUCCEEDED/CANCELED/ABORTED）与 <code>result</code>。</li>
+<li><strong>Python 实现——服务端/客户端</strong>：服务端 <code>rclpy.action.ActionServer(self, Progress, 'get_sum', self.execute_callback, goal_callback=..., cancel_callback=...)</code>，<code>execute_callback(goal_handle)</code> 里循环反馈，最后 <code>goal_handle.succeed()</code> 并 <code>return result</code>；客户端 <code>ActionClient</code> → <code>send_goal_async(goal, feedback_callback=fb)</code> → <code>spin_until_future_complete</code> → <code>get_result_async</code> 取结果，<code>cancel_goal_async</code> 取消。</li>
+<li><strong>小结</strong>：动作适合长任务；服务端三回调（goal/cancel/accepted）+ 主循环；客户端四步（建、连、发、收）；务必处理取消与异常退出。</li>
+</ul>
+<h3 id="1524-第4课-参数服务详解与实现">15.2.4 第4课 参数服务详解与实现</h3>
+<ul>
+<li><strong>场景、概念与作用</strong>：参数（Parameter）是<strong>节点内的键值配置</strong>，运行期可读写（含 <code>ros2 param set</code> 热改），用于 PID 增益、话题名、算法开关、限速值等。每个节点自带参数服务端，<code>ros2 param</code> 命令与 rqt_reconfigure 即参数客户端。</li>
+<li><strong>案例以及案例分析</strong>：服务端节点声明 <code>car_name=tiger</code>（string）、<code>width=1.55</code>（double）、<code>wheels=5</code>（int），演示增→查→改→查→删→查全流程；客户端节点远程读写服务端参数。分析要点：哪些量做成参数、默认值、类型、改动后是否需要回调生效。</li>
+<li><strong>参数简介</strong>：参数类型限定 6 种——bool、int64、double、string、byte_array、bool/int64/double/string 数组；参数名 = 节点名 + 参数名（如 <code>/node/param</code>）；生命周期：声明（declare）→ 读（get）→ 改（set，可触发回调）→ 可 undeclare。</li>
+<li><strong>参数简介——C++ API</strong>：<code>declare_parameter("k", 1.0)</code>、<code>get_parameter("k").as_double()</code>、<code>set_parameter(rclcpp::Parameter("k", 2.0))</code>、<code>add_on_set_parameters_callback</code> 监听修改做合法性校验。</li>
+<li><strong>参数简介——Python API</strong>：<code>self.declare_parameter('k', 1.0)</code>、<code>self.get_parameter('k').value</code>、<code>self.set_parameters([Parameter('k', Parameter.Type.DOUBLE, 2.0)])</code>、<code>self.add_on_set_parameters_callback(cb)</code>。</li>
+<li><strong>C++ 实现——服务端（增查改删）</strong>：增——<code>declare_parameter</code>（动态参数写法见 15.4.5 兼容提示）；查——<code>get_parameter</code>/<code>list_parameters</code>/<code>describe_parameters</code>；改——<code>set_parameter</code>（触发回调）；删——<code>undeclare_parameter</code>。要点：声明时给默认值避免 <code>NOT_DECLARED</code> 异常。</li>
+<li><strong>C++ 实现——客户端（查/改）</strong>：用参数客户端类 <code>rclcpp::AsyncParametersClient</code>（底层即 <code>rcl_interfaces::srv::GetParameters/SetParameters</code> 服务）——<code>get_parameters</code>/<code>set_parameters</code> 异步获取 future；<code>spin_until_future_complete</code> 取值；也可直接命令行 <code>ros2 param list/get/set/dump</code>。</li>
+<li><strong>Python 实现——服务端（增查改删）</strong>：<code>declare_parameter</code>（增）、<code>get_parameter</code>（查）、<code>set_parameters</code>（改）、<code>undeclare_parameter</code>（删）；<code>list_parameters</code> 列出全部；<code>add_on_set_parameters_callback</code> 回调里做范围校验（如颜色 0-255）。</li>
+<li><strong>小结</strong>：参数是节点配置层，不是数据通信层；适合低频、小数据、需要热改的场景；所有参数操作本质都是对节点内参数服务的调用。</li>
+</ul>
+<h3 id="1525-四种通信模型横向对比（本章总结）">15.2.5 四种通信模型横向对比（本章总结）</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>话题（Topic）</th>
+<th>服务（Service）</th>
+<th>动作（Action）</th>
+<th>参数（Parameter）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>交互模式</td>
+<td>发布/订阅，单向广播</td>
+<td>请求/响应，一问一答</td>
+<td>目标→反馈→结果</td>
+<td>键值读写</td>
+</tr>
+<tr>
+<td>同步性</td>
+<td><strong>异步</strong>，发布不等订阅</td>
+<td><strong>同步阻塞</strong>（客户端等响应）</td>
+<td><strong>异步</strong>（回调/状态机）</td>
+<td>同步调用（底层是服务）</td>
+</tr>
+<tr>
+<td>数据流向</td>
+<td>1→N，双向靠两个话题</td>
+<td>1→1 往返</td>
+<td>1→1 + 持续反馈流</td>
+<td>客户端↔节点参数服务</td>
+</tr>
+<tr>
+<td>时长语义</td>
+<td>持续流</td>
+<td>短暂（毫秒级）</td>
+<td>长任务（秒~分钟）</td>
+<td>瞬时</td>
+</tr>
+<tr>
+<td>可取消</td>
+<td>不适用</td>
+<td>不支持</td>
+<td><strong>支持</strong></td>
+<td>不适用</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td>传感器数据、速度指令、状态广播</td>
+<td>查询状态、开关、一次性变换</td>
+<td>导航、抓取、长时运动</td>
+<td>配置、PID 参数、开关量</td>
+</tr>
+<tr>
+<td>QoS 影响</td>
+<td><strong>关键</strong>：可靠性/历史/深度/截止期直接决定丢包与延迟</td>
+<td>QoS 由服务底层话题决定，通常可靠</td>
+<td>目标/反馈/结果走内置话题，QoS 固定策略</td>
+<td>内置服务，可靠调用</td>
+</tr>
+<tr>
+<td>典型失败</td>
+<td>QoS 不匹配（BEST_EFFORT vs RELIABLE）、队列溢出</td>
+<td>服务端未启动、阻塞死锁</td>
+<td>取消未处理、执行线程泄漏</td>
+<td>未声明就 get、类型不符</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>注意：</strong> 选型口诀——<strong>连续数据用话题、要结果的短调用用服务、长任务用动作、配置项用参数</strong>。QoS 不匹配是话题通信最常见的"看起来连上了就是没数据"原因，用 <code>ros2 topic info -v</code> 查看两端 QoS。</p>
+</blockquote>
+<h2 id="153-重点与难点">15.3 重点与难点</h2>
 <ol>
-<li>编写发布方；</li>
-<li>编写订阅方；</li>
-<li>编辑配置文件；</li>
-<li>编译；</li>
-<li>执行（先启动发布方，再启动订阅方）。</li>
+<li><strong>自定义接口包的独立性</strong>：接口必须放在独立功能包，<code>rosidl_generate_interfaces</code> + <code>&lt;member_of_group&gt;rosidl_interface_packages&lt;/member_of_group&gt;</code> 缺一不可；下游包 <code>find_package</code> 后才能用生成的 C++/Python 类型。</li>
+<li><strong>服务客户端的时序</strong>：服务端未就绪时 <code>async_send_request</code> 会失败或挂起；必须 <code>wait_for_service</code> + <code>spin_until_future_complete</code>，并处理超时（课程专门讲了连接 BUG）。</li>
+<li><strong>动作服务端的三回调 + 主循环</strong>：goal（准入校验）、cancel（接受取消）、accepted（起执行体）分工不能乱；执行循环必须检查 <code>is_canceling()</code>，否则取消请求会被忽略。</li>
+<li><strong>参数的声明语义</strong>：ROS2 参数"先声明后使用"，<code>get</code> 未声明参数会抛异常；<code>set</code> 触发的回调里要返回 <code>SetParametersResult</code>，用它做范围校验。</li>
+<li><strong>四种模型的选择</strong>：见 15.2.5 对比表；误用（如用服务传传感器流、用话题做长任务控制）会导致阻塞、丢数据或无法取消。</li>
 </ol>
-<h3 id="1512-c-实现（原生消息）">15.1.2 C++ 实现（原生消息）</h3>
+<h2 id="154-代码与命令实战">15.4 代码与命令实战</h2>
+<h3 id="1541-话题（原生消息）：案例与-c-实现">15.4.1 话题（原生消息）：案例与 C++ 实现</h3>
+<p><strong>需求</strong>：发布方以 1Hz 发布文本消息，订阅方接收并打印（原生消息 <code>std_msgs/String</code>）。
+<strong>流程</strong>：编写发布方 → 编写订阅方 → 编辑配置文件 → 编译 → 执行（先启动发布方，再启动订阅方）。</p>
 <p>发布方核心代码（<code>cpp01_topic/src/demo01_talker_str.cpp</code>）：</p>
 <pre><code class="lang-cpp"><span class="hljs-comment">// 3.自定义节点类；</span>
 <span class="hljs-keyword">class</span> <span class="hljs-title class_">Talker</span>: <span class="hljs-keyword">public</span> rclcpp::Node{
@@ -644,27 +814,7 @@
     <span class="hljs-built_in">RCLCPP_INFO</span>(<span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">get_logger</span>(),<span class="hljs-string">"订阅的消息：'%s'"</span>,msg-&gt;data.<span class="hljs-built_in">c_str</span>());
 }
 </code></pre>
-<h3 id="1513-运行效果（实测）">15.1.3 运行效果（实测）</h3>
-<p>终端 1（发布方）与终端 2（订阅方）：</p>
-<pre><code class="lang-text">[INFO] [1792039357.433360170] [talker_node_cpp]: 发布节点创建!
-[INFO] [1792039358.433839936] [talker_node_cpp]: 发布方发布的消息:hello world!0
-[INFO] [1792039359.433848878] [talker_node_cpp]: 发布方发布的消息:hello world!1
-
-[INFO] [1792039359.438759962] [listener_node_cpp]: 订阅方创建!
-[INFO] [1792039360.434139863] [listener_node_cpp]: 订阅的消息：'hello world!2'
-[INFO] [1792039361.434123176] [listener_node_cpp]: 订阅的消息：'hello world!3'
-</code></pre>
-<p>命令行验证（另开终端）：</p>
-<pre><code class="lang-bash">ros2 topic <span class="hljs-built_in">echo</span> /chatter --once
-</code></pre>
-<pre><code class="lang-text">data: hello world!0
----
-</code></pre>
-<p>Python 实现效果一致（<code>py01_topic</code>）：</p>
-<pre><code class="lang-text">[INFO] [1792040453.991093298] [listener_node_py]: 订阅方创建!(python)
-[INFO] [1792040454.983249872] [listener_node_py]: 订阅的消息：'hello world!2'
-</code></pre>
-<h3 id="1514-自定义接口消息">15.1.4 自定义接口消息</h3>
+<h3 id="1542-话题（自定义-student-消息）：接口包与双端实现">15.4.2 话题（自定义 Student 消息）：接口包与双端实现</h3>
 <p>接口包 <code>base_interfaces_demo</code> 下新建 <code>msg/Student.msg</code>：</p>
 <pre><code class="lang-text">string name
 int32 age
@@ -680,28 +830,33 @@ rosidl_generate_interfaces(<span class="hljs-variable">${PROJECT_NAME}</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">exec_depend</span>&gt;</span>rosidl_default_runtime<span class="hljs-tag">&lt;/<span class="hljs-name">exec_depend</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">member_of_group</span>&gt;</span>rosidl_interface_packages<span class="hljs-tag">&lt;/<span class="hljs-name">member_of_group</span>&gt;</span>
 </code></pre>
-<p>发布方发布 <code>Student</code>（姓名 huluwa、年龄自增；课程设定：话题 <code>chatter_stu</code>、周期 500ms、初始年龄 6）：</p>
-<pre><code class="lang-text">[INFO] [...]: [talkerstu_node_cpp]: 学生消息发布方创建!
-[INFO] [...]: [talkerstu_node_cpp]: 发布的消息:{huluwa,6,2.20}
-[INFO] [...]: [talkerstu_node_cpp]: 发布的消息:{huluwa,7,2.20}
+<p>发布方 C++ 与 15.4.1 的 Talker 同构（笔记版示例）：把消息类型换成 <code>base_interfaces_demo::msg::Student</code>、头文件 <code>base_interfaces_demo/msg/student.hpp</code>、话题 <code>student_info</code>，定时回调中为 <code>msg.name/age/height</code> 赋值后 <code>publish</code>。订阅方 Python（ament_python 包，含按年龄过滤）：</p>
+<pre><code class="lang-python"><span class="hljs-comment"># student_subscriber/student_subscriber/subscriber.py</span>
+<span class="hljs-keyword">import</span> rclpy
+<span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
+<span class="hljs-keyword">from</span> base_interfaces_demo.msg <span class="hljs-keyword">import</span> Student
 
-[INFO] [...]: [listenerstu_node_cpp]: 学生消息订阅方创建!
-[INFO] [...]: [listenerstu_node_cpp]: 订阅的消息:{huluwa,13,2.20}
-[INFO] [...]: [listenerstu_node_cpp]: 订阅的消息:{huluwa,14,2.20}
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">StudentSubscriber</span>(<span class="hljs-title class_ inherited__">Node</span>):
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">'student_subscriber'</span>)
+        <span class="hljs-comment"># 队列深度 10：最近 10 条缓存，超出丢最旧</span>
+        <span class="hljs-variable language_">self</span>.sub = <span class="hljs-variable language_">self</span>.create_subscription(Student, <span class="hljs-string">'student_info'</span>, <span class="hljs-variable language_">self</span>.cb, <span class="hljs-number">10</span>)
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">cb</span>(<span class="hljs-params">self, msg: Student</span>):
+        <span class="hljs-keyword">if</span> msg.age &gt; <span class="hljs-number">20</span>:
+            <span class="hljs-variable language_">self</span>.get_logger().warn(<span class="hljs-string">f'<span class="hljs-subst">{msg.name}</span> age=<span class="hljs-subst">{msg.age}</span> 超过 20'</span>)
+        <span class="hljs-keyword">else</span>:
+            <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">f'<span class="hljs-subst">{msg.name}</span> age=<span class="hljs-subst">{msg.age}</span> height=<span class="hljs-subst">{msg.height}</span>'</span>)
+<span class="hljs-comment"># main：rclpy.init → spin → finally 中 destroy_node + rclpy.shutdown</span>
 </code></pre>
-<p>命令行验证（视频同款）：<code>ros2 topic echo /chatter_stu</code> → <code>name: huluwa / age: … / height: 2.2</code>。</p>
-<blockquote>
-<p>兼容提示：接口文件名必须满足 <code>^[A-Z][A-Za-z0-9]*$</code>（首字母大写）。小写文件名（如 <code>cru.srv</code>）会在生成阶段报 <code>InvalidResourceName</code>。</p>
-</blockquote>
-<h2 id="152-服务通信">15.2 服务通信</h2>
-<h3 id="1521-案例以及案例分析">15.2.1 案例以及案例分析</h3>
+<h3 id="1543-服务（addints）：接口、服务端与客户端">15.4.3 服务（AddInts）：接口、服务端与客户端</h3>
 <p><strong>需求</strong>：客户端提交两个整型数据，服务端求和后响应。接口 <code>srv/AddInts.srv</code>：</p>
 <pre><code class="lang-text">int32 num1
 int32 num2
 ---
 int32 sum
 </code></pre>
-<h3 id="1522-c-实现">15.2.2 C++ 实现</h3>
 <p>服务端（<code>cpp02_service/src/demo01_server.cpp</code>）：</p>
 <pre><code class="lang-cpp"><span class="hljs-keyword">using</span> AddInts = base_interfaces_demo::srv::AddInts;
 <span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std::placeholders;
@@ -722,8 +877,138 @@ int32 sum
     rclcpp::Service&lt;AddInts&gt;::SharedPtr server_;
 };
 </code></pre>
-<p>客户端（<code>demo02_client.cpp</code>）通过命令行参数提交数据，<code>spin_until_future_complete</code> 等待响应。</p>
-<h3 id="1523-运行效果（实测）">15.2.3 运行效果（实测）</h3>
+<p>客户端（<code>demo02_client.cpp</code>）通过命令行参数提交数据，<code>spin_until_future_complete</code> 等待响应。规避"服务未就绪"BUG 的标准写法（笔记版示例）：</p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// add_client/src/client.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"rclcpp/rclcpp.hpp"</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"base_interfaces_demo/srv/add_ints.hpp"</span></span>
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> ** argv)</span> </span>{
+  rclcpp::<span class="hljs-built_in">init</span>(argc, argv);
+  <span class="hljs-keyword">auto</span> node = rclcpp::Node::<span class="hljs-built_in">make_shared</span>(<span class="hljs-string">"add_client"</span>);
+  <span class="hljs-keyword">auto</span> client = node-&gt;<span class="hljs-built_in">create_client</span>&lt;base_interfaces_demo::srv::AddInts&gt;(<span class="hljs-string">"add_ints"</span>);
+  <span class="hljs-keyword">while</span> (!client-&gt;<span class="hljs-built_in">wait_for_service</span>(std::chrono::<span class="hljs-built_in">seconds</span>(<span class="hljs-number">1</span>))) {   <span class="hljs-comment">// 关键：等待服务上线</span>
+    <span class="hljs-keyword">if</span> (!rclcpp::<span class="hljs-built_in">ok</span>()) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    <span class="hljs-built_in">RCLCPP_INFO</span>(node-&gt;<span class="hljs-built_in">get_logger</span>(), <span class="hljs-string">"waiting for service..."</span>);
+  }
+  <span class="hljs-keyword">auto</span> req = std::<span class="hljs-built_in">make_shared</span>&lt;base_interfaces_demo::srv::AddInts::Request&gt;();
+  req-&gt;num1 = <span class="hljs-number">3</span>; req-&gt;num2 = <span class="hljs-number">5</span>;
+  <span class="hljs-keyword">auto</span> future = client-&gt;<span class="hljs-built_in">async_send_request</span>(req);
+  <span class="hljs-keyword">if</span> (rclcpp::<span class="hljs-built_in">spin_until_future_complete</span>(node, future) == rclcpp::FutureReturnCode::SUCCESS) {
+    <span class="hljs-built_in">RCLCPP_INFO</span>(node-&gt;<span class="hljs-built_in">get_logger</span>(), <span class="hljs-string">"sum = %ld"</span>, future.<span class="hljs-built_in">get</span>()-&gt;sum);
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-built_in">RCLCPP_ERROR</span>(node-&gt;<span class="hljs-built_in">get_logger</span>(), <span class="hljs-string">"service call failed"</span>);
+  }
+  rclcpp::<span class="hljs-built_in">shutdown</span>();
+  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>Python 服务端（rclpy，求和服务）：</p>
+<pre><code class="lang-python"><span class="hljs-comment"># py02_service/py02_service/server.py</span>
+<span class="hljs-keyword">import</span> rclpy
+<span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
+<span class="hljs-keyword">from</span> base_interfaces_demo.srv <span class="hljs-keyword">import</span> AddInts
+
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">AddServer</span>(<span class="hljs-title class_ inherited__">Node</span>):
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">'add_server'</span>)
+        <span class="hljs-variable language_">self</span>.srv = <span class="hljs-variable language_">self</span>.create_service(AddInts, <span class="hljs-string">'add_ints'</span>, <span class="hljs-variable language_">self</span>.cb)
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">'add service ready'</span>)
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">cb</span>(<span class="hljs-params">self, request, response</span>):
+        response.<span class="hljs-built_in">sum</span> = request.num1 + request.num2
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">f'<span class="hljs-subst">{request.num1}</span>+<span class="hljs-subst">{request.num2}</span>=<span class="hljs-subst">{response.<span class="hljs-built_in">sum</span>}</span>'</span>)
+        <span class="hljs-keyword">return</span> response          <span class="hljs-comment"># 必须返回 response 对象</span>
+</code></pre>
+<h3 id="1544-动作（progress）：接口与实现要点">15.4.4 动作（Progress）：接口与实现要点</h3>
+<p><strong>需求</strong>：客户端提交一个整型数 n，服务端连续反馈求和进度（百分比），最终响应 1~n 的累加和。接口 <code>action/Progress.action</code>：</p>
+<pre><code class="lang-text">int64 num
+---
+int64 sum
+---
+float64 progress
+</code></pre>
+<p>服务端（<code>cpp03_action/src/demo01_action_server.cpp</code>）要点：目标处理 <code>num &gt;= 1</code> 才接受（<code>ACCEPT_AND_EXECUTE</code>），否则拒绝；执行体在<strong>子线程</strong>中运行（<code>std::thread{...}.detach()</code>），以 <code>Rate(1Hz)</code> 连续反馈 <code>progress</code>；执行体骨架为 <code>while + is_canceling() + publish_feedback + Rate + succeed/canceled</code>（取消时填结果并 <code>canceled(result)</code> 退出，完成后 <code>succeed(result)</code> 提交累加和）；客户端（<code>demo02_action_client.cpp</code>）注册目标响应/连续反馈/最终响应三个回调。</p>
+<blockquote>
+<p>兼容提示：Jazzy 起客户端「目标响应回调」直接接收 <code>GoalHandle::SharedPtr</code>；Humble 中为 <code>std::shared_future&lt;GoalHandle::SharedPtr&gt;</code>（需 <code>.get()</code>）。</p>
+</blockquote>
+<h3 id="1545-参数（增删改查）：服务端、客户端与命令行">15.4.5 参数（增删改查）：服务端、客户端与命令行</h3>
+<p><strong>需求</strong>：参数服务端节点实现参数的<strong>增、删、改、查</strong>；客户端节点远程读写服务端参数。演示参数 <code>car_name=tiger</code>、<code>width=1.55</code>、<code>wheels=5</code>。</p>
+<p>服务端（<code>cpp04_param/src/demo01_param_server.cpp</code>）：</p>
+<pre><code class="lang-cpp"><span class="hljs-built_in">ParamServer</span>():<span class="hljs-built_in">Node</span>(<span class="hljs-string">"param_server_node_cpp"</span>,rclcpp::<span class="hljs-built_in">NodeOptions</span>().<span class="hljs-built_in">allow_undeclared_parameters</span>(<span class="hljs-literal">true</span>)){
+    <span class="hljs-comment">// 增 → 查 → 改 → 查 → 删 → 查</span>
+}
+</code></pre>
+<blockquote>
+<p>兼容提示：Jazzy 中 <code>declare_parameter</code> 声明的是<strong>静态类型参数</strong>，无法被 <code>undeclare_parameter</code> 删除（Humble 中同理），会抛出
+<code>cannot undeclare a statically typed parameter</code>。需要删除的参数应以 <code>set_parameter</code> 创建（动态类型），并配合
+<code>allow_undeclared_parameters(true)</code>；查询已删除参数时使用 <code>get_parameter(name, param)</code> 布尔重载判断。</p>
+</blockquote>
+<p>客户端（<code>demo02_param_client.cpp</code>）通过 <code>rcl_interfaces::srv::GetParameters/SetParameters</code> 远程访问 <code>/param_server_node_cpp</code> 的参数服务。</p>
+<p>Python 服务端（带合法性校验回调，笔记版示例）：</p>
+<pre><code class="lang-python"><span class="hljs-comment"># param_demo/param_demo/param_node.py</span>
+<span class="hljs-keyword">import</span> rclpy
+<span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
+<span class="hljs-keyword">from</span> rcl_interfaces.msg <span class="hljs-keyword">import</span> SetParametersResult
+
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">ParamNode</span>(<span class="hljs-title class_ inherited__">Node</span>):
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">'param_node'</span>)
+        <span class="hljs-variable language_">self</span>.declare_parameter(<span class="hljs-string">'bg_r'</span>, <span class="hljs-number">255</span>)          <span class="hljs-comment"># 增：声明 + 默认值</span>
+        <span class="hljs-variable language_">self</span>.add_on_set_parameters_callback(<span class="hljs-variable language_">self</span>.on_set)
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">on_set</span>(<span class="hljs-params">self, params</span>):
+        <span class="hljs-keyword">for</span> p <span class="hljs-keyword">in</span> params:
+            <span class="hljs-keyword">if</span> p.name == <span class="hljs-string">'bg_r'</span> <span class="hljs-keyword">and</span> <span class="hljs-keyword">not</span> (<span class="hljs-number">0</span> &lt;= p.value &lt;= <span class="hljs-number">255</span>):   <span class="hljs-comment"># 改：合法性校验</span>
+                <span class="hljs-keyword">return</span> SetParametersResult(successful=<span class="hljs-literal">False</span>, reason=<span class="hljs-string">'0~255 only'</span>)
+        <span class="hljs-keyword">return</span> SetParametersResult(successful=<span class="hljs-literal">True</span>)
+</code></pre>
+<p>命令行调参工具箱：</p>
+<pre><code class="lang-bash">ros2 param list                          <span class="hljs-comment"># 查：列出所有节点参数</span>
+ros2 param get /param_node bg_r          <span class="hljs-comment"># 查：读取参数值</span>
+ros2 param <span class="hljs-built_in">set</span> /param_node bg_r 128      <span class="hljs-comment"># 改：热修改（触发 on_set 回调）</span>
+ros2 param dump /param_node              <span class="hljs-comment"># 导出全部参数到 YAML（可作 launch 入参）</span>
+</code></pre>
+<blockquote>
+<p><strong>打包要点：</strong> C++ 包 <code>CMakeLists.txt</code> 记得 <code>find_package(base_interfaces_demo REQUIRED)</code> + <code>ament_target_dependencies(talker base_interfaces_demo)</code> + <code>rosidl_generate_interfaces</code>（接口包）；Python 包 <code>package.xml</code> 加 <code>&lt;exec_depend&gt;base_interfaces_demo&lt;/exec_depend&gt;</code>，接口包先 <code>colcon build</code> 再编下游包，并 <code>source install/setup.bash</code>。</p>
+</blockquote>
+<h2 id="155-运行效果（实测）">15.5 运行效果（实测）</h2>
+<h3 id="1551-话题通信（原生消息）实测">15.5.1 话题通信（原生消息）实测</h3>
+<p>终端 1（发布方）与终端 2（订阅方）：</p>
+<pre><code class="lang-text">[INFO] [1792039357.433360170] [talker_node_cpp]: 发布节点创建!
+[INFO] [1792039358.433839936] [talker_node_cpp]: 发布方发布的消息:hello world!0
+[INFO] [1792039359.433848878] [talker_node_cpp]: 发布方发布的消息:hello world!1
+
+[INFO] [1792039359.438759962] [listener_node_cpp]: 订阅方创建!
+[INFO] [1792039360.434139863] [listener_node_cpp]: 订阅的消息：'hello world!2'
+[INFO] [1792039361.434123176] [listener_node_cpp]: 订阅的消息：'hello world!3'
+</code></pre>
+<p>命令行验证（另开终端）：</p>
+<pre><code class="lang-bash">ros2 topic <span class="hljs-built_in">echo</span> /chatter --once
+</code></pre>
+<pre><code class="lang-text">data: hello world!0
+---
+</code></pre>
+<p>Python 实现效果一致（<code>py01_topic</code>）：</p>
+<pre><code class="lang-text">[INFO] [1792040453.991093298] [listener_node_py]: 订阅方创建!(python)
+[INFO] [1792040454.983249872] [listener_node_py]: 订阅的消息：'hello world!2'
+</code></pre>
+<h3 id="1552-话题通信（自定义-student-消息）实测">15.5.2 话题通信（自定义 Student 消息）实测</h3>
+<p>发布方发布 <code>Student</code>（姓名 huluwa、年龄自增；课程设定：话题 <code>chatter_stu</code>、周期 500ms、初始年龄 6）：</p>
+<pre><code class="lang-text">[INFO] [...]: [talkerstu_node_cpp]: 学生消息发布方创建!
+[INFO] [...]: [talkerstu_node_cpp]: 发布的消息:{huluwa,6,2.20}
+[INFO] [...]: [talkerstu_node_cpp]: 发布的消息:{huluwa,7,2.20}
+
+[INFO] [...]: [listenerstu_node_cpp]: 学生消息订阅方创建!
+[INFO] [...]: [listenerstu_node_cpp]: 订阅的消息:{huluwa,13,2.20}
+[INFO] [...]: [listenerstu_node_cpp]: 订阅的消息:{huluwa,14,2.20}
+</code></pre>
+<p>命令行验证（视频同款）：<code>ros2 topic echo /chatter_stu</code> → <code>name: huluwa / age: … / height: 2.2</code>。</p>
+<blockquote>
+<p>兼容提示：接口文件名必须满足 <code>^[A-Z][A-Za-z0-9]*$</code>（首字母大写）。小写文件名（如 <code>cru.srv</code>）会在生成阶段报 <code>InvalidResourceName</code>。</p>
+</blockquote>
+<h3 id="1553-服务通信实测">15.5.3 服务通信实测</h3>
 <p>客户端程序（提交 3 和 5）：</p>
 <pre><code class="lang-text">[INFO] [...]: 客户端节点创建!
 [INFO] [...]: 发送请求: num1=3, num2=5
@@ -741,26 +1026,7 @@ base_interfaces_demo.srv.AddInts_Response(sum=8)
 <pre><code class="lang-text">[INFO] [...]: 发送请求: num1=4, num2=6
 [INFO] [...]: 收到响应: sum=10
 </code></pre>
-<h2 id="153-动作通信">15.3 动作通信</h2>
-<h3 id="1531-案例以及案例分析">15.3.1 案例以及案例分析</h3>
-<p><strong>需求</strong>：客户端提交一个整型数 n，服务端连续反馈求和进度（百分比），最终响应 1~n 的累加和。接口 <code>action/Progress.action</code>：</p>
-<pre><code class="lang-text">int64 num
----
-int64 sum
----
-float64 progress
-</code></pre>
-<h3 id="1532-c-实现要点">15.3.2 C++ 实现要点</h3>
-<p>服务端（<code>cpp03_action/src/demo01_action_server.cpp</code>）：</p>
-<ul>
-<li>目标处理：<code>num &gt;= 1</code> 才接受（<code>ACCEPT_AND_EXECUTE</code>），否则拒绝；</li>
-<li>执行体在<strong>子线程</strong>中运行（<code>std::thread{...}.detach()</code>），以 <code>Rate(1Hz)</code> 连续反馈 <code>progress</code>；</li>
-<li>客户端（<code>demo02_action_client.cpp</code>）注册目标响应/连续反馈/最终响应三个回调。</li>
-</ul>
-<blockquote>
-<p>兼容提示：Jazzy 起客户端「目标响应回调」直接接收 <code>GoalHandle::SharedPtr</code>；Humble 中为 <code>std::shared_future&lt;GoalHandle::SharedPtr&gt;</code>（需 <code>.get()</code>）。</p>
-</blockquote>
-<h3 id="1533-运行效果（实测）">15.3.3 运行效果（实测）</h3>
+<h3 id="1554-动作通信实测">15.5.4 动作通信实测</h3>
 <pre><code class="lang-bash">ros2 action send_goal /get_sum base_interfaces_demo/action/Progress <span class="hljs-string">"{num: 10}"</span> --feedback
 </code></pre>
 <pre><code class="lang-text">Waiting for an action server to become available...
@@ -786,22 +1052,7 @@ Result:
 Goal finished with status: SUCCEEDED
 </code></pre>
 <p>Python 版效果一致（<code>py03_action</code>）。</p>
-<h2 id="154-参数服务">15.4 参数服务</h2>
-<h3 id="1541-案例以及案例分析">15.4.1 案例以及案例分析</h3>
-<p><strong>需求</strong>：参数服务端节点实现参数的<strong>增、删、改、查</strong>；客户端节点远程读写服务端参数。演示参数 <code>car_name=tiger</code>、<code>width=1.55</code>、<code>wheels=5</code>。</p>
-<h3 id="1542-c-实现要点">15.4.2 C++ 实现要点</h3>
-<p>服务端（<code>cpp04_param/src/demo01_param_server.cpp</code>）：</p>
-<pre><code class="lang-cpp"><span class="hljs-built_in">ParamServer</span>():<span class="hljs-built_in">Node</span>(<span class="hljs-string">"param_server_node_cpp"</span>,rclcpp::<span class="hljs-built_in">NodeOptions</span>().<span class="hljs-built_in">allow_undeclared_parameters</span>(<span class="hljs-literal">true</span>)){
-    <span class="hljs-comment">// 增 → 查 → 改 → 查 → 删 → 查</span>
-}
-</code></pre>
-<blockquote>
-<p>兼容提示：Jazzy 中 <code>declare_parameter</code> 声明的是<strong>静态类型参数</strong>，无法被 <code>undeclare_parameter</code> 删除（Humble 中同理），会抛出
-<code>cannot undeclare a statically typed parameter</code>。需要删除的参数应以 <code>set_parameter</code> 创建（动态类型），并配合
-<code>allow_undeclared_parameters(true)</code>；查询已删除参数时使用 <code>get_parameter(name, param)</code> 布尔重载判断。</p>
-</blockquote>
-<p>客户端（<code>demo02_param_client.cpp</code>）通过 <code>rcl_interfaces::srv::GetParameters/SetParameters</code> 远程访问 <code>/param_server_node_cpp</code> 的参数服务。</p>
-<h3 id="1543-运行效果（实测）">15.4.3 运行效果（实测）</h3>
+<h3 id="1555-参数服务实测">15.5.5 参数服务实测</h3>
 <p>服务端（增 → 查 → 改 → 查 → 删 → 查）：</p>
 <pre><code class="lang-text">[INFO] [...]: 参数服务端创建了!
 [INFO] [...]: -------------增-------------
@@ -826,7 +1077,31 @@ ros2 param get /param_server_node_cpp width
 # get width
 Double value is: 1.65
 </code></pre>
-<h2 id="155-本章小结">15.5 本章小结</h2>
+<h2 id="156-与-ros2--机器人开发的关联">15.6 与 ROS2 / 机器人开发的关联</h2>
+<ol>
+<li><strong>传感器与控制全靠话题</strong>：激光雷达 <code>/scan</code>、相机 <code>/image_raw</code>、里程计 <code>/odom</code>、速度指令 <code>/cmd_vel</code> 全是话题；掌握 QoS 与队列语义才能写对订阅端。</li>
+<li><strong>导航与机械臂靠动作</strong>：Nav2 的 <code>NavigateToPose</code>、MoveIt2 的 <code>execute_trajectory</code> 都是动作接口；本章的三回调模型直接复用到工业项目。</li>
+<li><strong>服务用于系统管理</strong>：定位模式切换、保存地图（<code>/map_saver</code>）、硬件开关；参数用于在线调参（PID、限速），rqt_reconfigure 就是参数客户端 GUI。</li>
+<li><strong>自定义接口是团队协作契约</strong>：真实项目中接口包由系统架构师统一定义，各小组按接口开发再联调——本章训练的 <code>.msg/.srv/.act</code> 流程就是这份契约的落地方式。</li>
+</ol>
+<h2 id="157-自测与练习（含参考答案要点）">15.7 自测与练习（含参考答案要点）</h2>
+<ol>
+<li><strong>对比题</strong>：不看笔记，默写话题/服务/动作/参数四模型对比表（交互模式、同步性、时长、可取消、适用场景、QoS 影响至少 5 个维度）。</li>
+<li><strong>动手任务</strong>：建一个接口包定义 <code>srv/Circle.srv</code>（请求 <code>float32 radius</code>，响应 <code>float32 area</code>、<code>float32 perimeter</code>），再写服务端+客户端（C++ 或 Python 任一）。<strong>验收标准</strong>：<code>ros2 interface show</code> 能看到字段；客户端输入半径能打印面积与周长；服务端未启动时客户端提示等待而不是崩溃。</li>
+<li><strong>动手任务</strong>：写一个动作接口 <code>action/Count.action</code>（目标 <code>int32 target</code>、反馈 <code>int32 current</code>、结果 <code>bool ok</code>），实现服务端倒数/正数到目标值并可取消。<strong>验收标准</strong>：<code>ros2 action send_goal</code> 能收到反馈；执行中取消（CLI <code>Ctrl+C</code> 或客户端取消）能正确返回 CANCELED。</li>
+</ol>
+<blockquote>
+<p>参考答案要点：1) 对照 15.2.5"四种通信模型横向对比"表，重点是同步性（话题/动作异步、服务同步）与 QoS（只对话题有决定性影响）。2) <code>.srv</code> 的 <code>---</code> 上下分区别写错；<code>package.xml</code> 加 <code>rosidl_default_generators</code> 与 <code>member_of_group</code>；<code>CMakeLists.txt</code> 的 <code>rosidl_generate_interfaces(${PROJECT_NAME} "srv/Circle.srv")</code>；客户端 <code>wait_for_service</code> + <code>spin_until_future_complete</code>。3) 动作三段 <code>---</code> 两次分隔；服务端 <code>execute</code> 循环里 <code>is_canceling()</code> 判断 + <code>canceled(result)</code>；用 <code>ros2 action list/info</code> 与 <code>ros2 action send_goal --feedback</code> 验证。</p>
+</blockquote>
+<h2 id="158-常见问题（faq）">15.8 常见问题（FAQ）</h2>
+<ul>
+<li><strong>Q：订阅了话题却收不到数据？</strong> A：按序排查——节点是否在跑（<code>ros2 node list</code>）、话题名是否完全一致（含命名空间）、消息类型是否一致（<code>ros2 topic info</code>）、QoS 是否匹配（<code>ros2 topic info -v</code>，可靠发布 + 尽力订阅不兼容是常见原因）、<code>ros2 topic echo</code> 确认有数据。</li>
+<li><strong>Q：服务客户端卡住不动？</strong> A：多半是没 <code>wait_for_service</code> 或用错 spin 方式；也可能是服务端回调阻塞了执行器。用 <code>ros2 service list</code> 确认服务存在，<code>ros2 service call</code> 手动验证服务端。</li>
+<li><strong>Q：动作取消没反应？</strong> A：检查服务端执行循环是否轮询 <code>is_canceling()</code>、取消回调是否返回 <code>ACCEPT</code>、执行体是否跑在会阻塞执行器的线程里。</li>
+<li><strong>Q：<code>ros2 param set</code> 报 "Parameter not declared"？</strong> A：ROS2 要求参数先声明；在节点构造函数里 <code>declare_parameter</code>（带默认值）。另外参数名大小写敏感。</li>
+<li><strong>Q：自定义接口改了字段，编译没生效？</strong> A：接口包要重新 <code>colcon build</code>（rosidl 重新生成），下游包也要重编；极端情况删 <code>build/</code> <code>install/</code> 重新编译。</li>
+</ul>
+<h2 id="159-本章小结">15.9 本章小结</h2>
 <table>
 <thead>
 <tr>
@@ -866,6 +1141,7 @@ Double value is: 1.65
 <ul>
 <li>自定义接口统一放在独立的接口功能包中（<code>base_interfaces_demo</code>），通过 <code>rosidl_generate_interfaces</code> 生成 C++/Python 代码；</li>
 <li>接口文件名首字母必须大写；</li>
+<li>四种机制的选型口诀：连续数据用话题、要结果的短调用用服务、长任务用动作、配置项用参数；</li>
 <li>四种机制的 C++ 与 Python 实现已全部在本机（Jazzy）实测通过，输出与课程视频一致。</li>
 </ul>
 
@@ -911,7 +1187,7 @@ Double value is: 1.65
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第15章 通信机制深度剖析","level":"6.2","depth":1,"next":{"title":"第16章 通信机制拓展与时间 API","level":"6.3","depth":1,"path":"第16周-通信机制拓展与时间API.md","ref":"第16周-通信机制拓展与时间API.md","articles":[]},"previous":{"title":"第14章 ROS2 概述与环境搭建","level":"6.1","depth":1,"path":"第14周-ROS2概述与环境搭建.md","ref":"第14周-ROS2概述与环境搭建.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第15周-通信机制深度剖析.md","mtime":"2026-10-16T02:43:09.753Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T02:43:11.108Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第15章 通信机制深度剖析","level":"6.2","depth":1,"next":{"title":"第16章 通信机制拓展与时间 API","level":"6.3","depth":1,"path":"第16周-通信机制拓展与时间API.md","ref":"第16周-通信机制拓展与时间API.md","articles":[]},"previous":{"title":"第14章 ROS2 概述与环境搭建","level":"6.1","depth":1,"path":"第14周-ROS2概述与环境搭建.md","ref":"第14周-ROS2概述与环境搭建.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第15周-通信机制深度剖析.md","mtime":"2026-10-16T03:26:51.708Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T03:26:53.986Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

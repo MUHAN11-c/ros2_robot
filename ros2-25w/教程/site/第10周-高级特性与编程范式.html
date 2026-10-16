@@ -603,41 +603,308 @@
 <blockquote>
 <p>本章对应课程第 10 周：继承与多态（虚函数/抽象类/虚析构）、函数模板与类模板、四种类型转换、异常体系与文件 I/O——读懂 rclcpp 继承体系与插件式架构的地基。</p>
 </blockquote>
-<h2 id="101-案例以及案例分析">10.1 案例以及案例分析</h2>
-<p><strong>需求</strong>：用抽象类 <code>Controller</code>（纯虚 <code>compute</code>）统一 PID 与 BangBang 两种控制器，放入多态容器轮询调用；再用函数模板 <code>clamp</code> 体会泛型；用异常做参数校验。</p>
-<h2 id="102-知识点与实现">10.2 知识点与实现</h2>
-<h3 id="1021-继承">10.2.1 继承</h3>
+<h2 id="101-本周概览与课时结构">10.1 本周概览与课时结构</h2>
+<p>本周是 C++ 的「抽象能力周」：继承与多态让你用统一接口管理不同设备，虚函数与抽象类是插件式架构的地基；函数模板与类模板把「同一套逻辑」推广到所有类型，是 STL 的实现方式；类型转换、异常处理、文件与 I/O 则保证代码在真实工程中可维护、可排错、可读写数据。学完本周，你将能读懂 rclcpp 的继承体系（<code>Node</code>、<code>LifecycleNode</code>、各种 <code>SensorDataQoS</code>），并理解模板元编程的入门语法。</p>
+<table>
+<thead>
+<tr>
+<th>课</th>
+<th>小节</th>
+<th>时长</th>
+<th>一句话导览</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第1课 继承机制深度解析与应用实践</td>
+<td>9 节</td>
+<td>约 1h41m</td>
+<td>继承语法、访问权限、对象模型、构造析构、多继承与虚继承</td>
+</tr>
+<tr>
+<td>第2课 虚函数与抽象类原理及使用</td>
+<td>6 节</td>
+<td>约 1h03m</td>
+<td>静态/动态联编、纯虚函数、虚析构、类型转换、重写</td>
+</tr>
+<tr>
+<td>第3课 函数模板特性详解与实战运用</td>
+<td>15 节</td>
+<td>约 2h25m</td>
+<td>函数模板、模板实例化、特化、类模板、模板继承与友元</td>
+</tr>
+<tr>
+<td>第4课 类型转换、异常处理及输入输出操作</td>
+<td>3 组 25 节</td>
+<td>约 2h52m</td>
+<td>四种转换、异常体系、标准 I/O 与文件读写</td>
+</tr>
+</tbody>
+</table>
+<h2 id="102-知识点梳理">10.2 知识点梳理</h2>
+<h3 id="1021-第1课：继承机制深度解析与应用实践">10.2.1 第1课：继承机制深度解析与应用实践</h3>
 <ul>
-<li><code>class Derived : public Base</code>；public 继承保持访问级别，private 成员对派生类不可见；</li>
-<li>派生类对象 = 基类子对象 + 新增成员；构造先基类后派生（初始化列表调用指定基类构造），析构相反；</li>
-<li>同名成员遮蔽（<code>Base::f()</code> 显式访问）；多继承慎用，菱形继承用虚继承解决。</li>
+<li><strong>核心概念</strong>：继承（Inheritance）让派生类（derived class）复用基类（base class）的成员并扩展新能力，表达 is-a 关系。ROS2 中 <code>rclcpp::Node</code> 是基类，你的节点类继承它就自动获得 create_publisher 等接口。</li>
+<li><strong>继承基础语法</strong>：<code>class Dog : public Animal { ... };</code>。三种继承方式 <code>public/protected/private</code> 决定基类成员在派生类中的访问级别：public 继承保持原有级别，protected 继承把 public 降级为 protected，private 继承把所有成员降级为 private（is-a 变 has-a-like）。</li>
+<li><strong>派生类访问权限</strong>：private 成员在派生类不可直接访问（需通过基类的 public/protected 接口）；protected 成员对派生类可见、对外不可见。设计原则：基类对外 public、对子类 protected、内部实现 private。</li>
+<li><strong>继承的对象模型</strong>：派生类对象内存 = 基类子对象 + 新增成员（可看成「大对象里嵌小对象」）。这决定了指针/引用的向上转换安全性。</li>
+<li><strong>继承中的构造和析构</strong>：派生类构造前基类构造先执行（按继承声明顺序），析构相反。派生类构造函数可通过初始化列表调用指定基类构造函数。</li>
+<li><strong>用初始化列表调用父类构造</strong>：<code>Derived(...) : Base(...), member_(...)</code>。基类无默认构造时必须显式调用，否则编译错误。</li>
+<li><strong>继承中同名成员处理</strong>：派生类成员遮蔽（shadow）基类同名成员；用 <code>Base::name</code> 显式访问被遮蔽者。同名成员函数也会遮蔽（除非用 <code>using Base::f;</code> 或 <code>Base::f()</code>）。</li>
+<li><strong>继承中同名的静态成员处理</strong>：静态成员属于类，派生类通过 <code>派生类::成员</code> 或 <code>基类::成员</code> 访问同一份；遮蔽规则同普通成员，可用 <code>Base::</code> 解决。</li>
+<li><strong>多继承</strong>：<code>class C : public A, public B</code>。注意成员名冲突需限定（<code>A::x</code> vs <code>B::x</code>），且易产生菱形继承问题，工程中慎用（优先组合）。</li>
+<li><strong>菱形继承与虚继承</strong>：两个中间类继承同一基类，最底层类重复持有基类成员 → 二义性。用虚继承（<code>class B : virtual public A</code>）让共同基类只保留一份。代价：对象布局复杂、构造责任上移、性能略降。Qt 等框架用虚继承管理 QObject 树。</li>
 </ul>
-<h3 id="1022-虚函数与抽象类">10.2.2 虚函数与抽象类</h3>
+<h3 id="1022-第2课：虚函数与抽象类原理及使用">10.2.2 第2课：虚函数与抽象类原理及使用</h3>
 <ul>
-<li>通过<strong>指针/引用</strong>调用 <code>virtual</code> 函数才触发动态联编（vtable）；按值传参会<strong>切片</strong>；</li>
-<li>纯虚函数 <code>virtual void f() = 0;</code> 使类成为抽象类（接口契约）；派生类全部实现才能实例化；</li>
-<li><strong>基类析构必须 virtual</strong>，否则 <code>delete Base*</code> 泄漏；C++11 加 <code>override</code> 让编译器检查重写；</li>
-<li>向上转换安全隐式；向下转换用 <code>dynamic_cast</code>（运行期检查，失败得 nullptr）。</li>
+<li><strong>核心概念</strong>：多态（Polymorphism）= 同一接口、不同实现。静态联编（编译期绑定）效率高，动态联编（运行期绑定，通过虚函数表 vtable）灵活。</li>
+<li><strong>静态联编和动态联编</strong>：普通函数调用、重载决议是静态联编；通过基类指针/引用调用虚函数时按对象实际类型分派（动态联编），前提是函数声明 <code>virtual</code> 且签名一致。</li>
+<li><strong>计算器案例</strong>：用抽象类 <code>Operation</code> + 派生 <code>Add/Sub/Mul</code>，在客户端用 <code>Operation* op = new Add;</code> 执行 <code>op-&gt;calculate(a,b)</code>——新增乘除只需加类，不改客户端（开闭原则）。</li>
+<li><strong>纯虚函数和抽象类</strong>：<code>virtual void f() = 0;</code> 为纯虚函数；含纯虚函数的类是抽象类，不能实例化，只能作接口。派生类必须实现全部纯虚函数才能实例化。</li>
+<li><strong>虚析构和纯虚析构</strong>：基类析构必须 <code>virtual</code>，否则 <code>delete Base*</code> 只调基类析构导致资源泄漏。纯虚析构 <code>virtual ~Base() = 0;</code> 需类外给出定义（<code>Base::~Base() {}</code>），用于强制抽象。</li>
+<li><strong>向上、向下类型转换</strong>：向上（派生→基类指针/引用）安全隐式；向下（基类→派生）需 <code>dynamic_cast</code> 做运行期检查（基类必须有虚函数），失败返回 nullptr/抛 <code>bad_cast</code>。</li>
+<li><strong>重载、重定义、重写</strong>：重载（同一作用域，参数不同）、重定义（派生类同名遮蔽基类，无 virtual）、重写（override，派生类实现基类虚函数、签名完全一致）。C++11 建议加 <code>override</code> 关键字让编译器检查。</li>
 </ul>
-<h3 id="1023-模板">10.2.3 模板</h3>
+<pre><code class="lang-cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Device</span> {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">void</span> <span class="hljs-title">start</span><span class="hljs-params">()</span> </span>= <span class="hljs-number">0</span>;                <span class="hljs-comment">// 纯虚 → 抽象接口</span>
+    <span class="hljs-keyword">virtual</span> ~<span class="hljs-built_in">Device</span>() = <span class="hljs-keyword">default</span>;             <span class="hljs-comment">// 虚析构，防止 delete 基类指针泄漏</span>
+};
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Lidar</span> : <span class="hljs-keyword">public</span> Device {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">start</span><span class="hljs-params">()</span> <span class="hljs-keyword">override</span> </span>{ <span class="hljs-comment">/* ... */</span> }      <span class="hljs-comment">// override 强制检查签名</span>
+};
+</code></pre>
+<blockquote>
+<p><strong>注意：</strong> 只有通过<strong>指针或引用</strong>调用虚函数才有多态；按值传参对象会被「切片（slicing）」成基类对象，动态类型信息丢失。</p>
+</blockquote>
+<h3 id="1023-第3课：函数模板特性详解与实战运用">10.2.3 第3课：函数模板特性详解与实战运用</h3>
 <ul>
-<li>函数模板自动推导/显式指定；显式特化为特定类型定制；优先级：非模板 &gt; 特化 &gt; 通用模板；</li>
-<li>类模板 <code>template&lt;typename T&gt; class Box</code>；成员函数懒实例化；<strong>模板实现必须放头文件</strong>（实例化发生在使用处）。</li>
+<li><strong>核心概念</strong>：模板（Template）= 泛型编程的工具，把类型参数化。函数模板让「同一逻辑」适用于所有支持相应运算的类型。</li>
+<li><strong>自动推导与显式指定</strong>：<code>T max_of(T a, T b)</code> 由编译器按实参推导 <code>T</code>；类型不一致时可显式 <code>max_of&lt;int&gt;(1, 2.5)</code> 或提供默认模板参数。</li>
+<li><strong>模板练习</strong>：实现 <code>swap_t</code>、<code>print_arr</code>、<code>sort_desc</code> 等通用函数，体会「一次编写、到处实例化」。</li>
+<li><strong>模板函数与普通函数的区别</strong>：模板是编译期按需生成的蓝图；普通函数是已编译实体。模板调用可能产生多份代码（代码膨胀），但换来类型通用。</li>
+<li><strong>调用规则</strong>：优先普通函数（精确匹配）；模板只在普通函数不匹配或显式指定时使用；可重载模板、可特化。</li>
+<li><strong>模板实现机制</strong>：编译器做两次检查——语法检查 + 实例化检查（不使用不实例化，所以未调用的模板里写错类型可能不报错）。</li>
+<li><strong>模板的局限性</strong>：模板不知道某类型支持哪些运算（如 <code>a + b</code> 对自定义类型可能无定义），解决办法是「实例化时报错 + 提供特化」。</li>
+<li><strong>具体化（特化）提供特殊模板</strong>：<code>template&lt;&gt; T max_of(Person a, Person b) { ... }</code> 为特定类型定制实现。优先级：非模板 &gt; 显式特化 &gt; 普通模板。</li>
+<li><strong>类模板基本语法</strong>：<code>template &lt;typename T&gt; class Box { T data_; };</code> 使用 <code>Box&lt;int&gt; b;</code> 或 C++17 推导 <code>Box b(42);</code>（CTAD）。</li>
+<li><strong>类模板成员函数的调用时机</strong>：成员函数在调用时才实例化，未调用的成员不参与类型检查（懒实例化）。</li>
+<li><strong>类模板做函数参数</strong>：函数可声明 <code>void f(Box&lt;int&gt;&amp;)</code>（具体化）、<code>template&lt;typename T&gt; void f(Box&lt;T&gt;&amp;)</code>（泛型），或用基类指针/接口解耦。</li>
+<li><strong>类模板和继承</strong>：基类是模板时，派生类必须指定具体类型 <code>class D : public Base&lt;int&gt;</code>，或把派生类也声明为模板 <code>template&lt;typename T&gt; class D : public Base&lt;T&gt;</code>。</li>
+<li><strong>类模板的成员函数在类外实现</strong>：需要 <code>template&lt;typename T&gt; void Box&lt;T&gt;::show() { ... }</code> 完整前缀。</li>
+<li><strong>分文件编写</strong>：模板不能只在 .cpp 定义（链接期看不到实例化）。惯例：声明 + 实现都放 .h/.hpp，或 .cpp 中显式实例化 <code>template class Box&lt;int&gt;;</code>。</li>
+<li><strong>友元和类模板</strong>：类模板的友元需 <code>template&lt;typename&gt; friend class X;</code> 或全局友元函数，语法繁琐，慎用。</li>
 </ul>
-<h3 id="1024-类型转换、异常与-io">10.2.4 类型转换、异常与 I/O</h3>
+<h3 id="1024-第4课：类型转换、异常处理及输入输出操作">10.2.4 第4课：类型转换、异常处理及输入输出操作</h3>
 <ul>
-<li><code>static_cast</code>（编译期）/<code>dynamic_cast</code>（运行期）/<code>const_cast</code>/<code>reinterpret_cast</code>（危险，仅底层）；</li>
-<li><code>throw</code> → 栈解旋（RAII 对象自动析构）→ <code>catch (const std::exception&amp; e)</code> 按引用捕获；ROS2 回调未捕获异常会终止 executor；</li>
-<li><code>ofstream/ifstream + getline + &lt;iomanip&gt;</code> 完成配置与 CSV 读写。</li>
+<li><strong>核心概念</strong>：C++ 强制使用显式转换（<code>static_cast/dynamic_cast/const_cast/reinterpret_cast</code>）替代 C 风格强转，转换意图写在代码里；异常提供错误传播机制；I/O 流统一了终端与文件操作。</li>
+<li><strong>静态转换（static_cast）</strong>：编译期转换，用于有明确关系的类型（数值互转、void* ↔ 具体指针、上行转换）。不做运行期检查，性能零开销。</li>
+<li><strong>动态转换（dynamic_cast）</strong>：运行期安全转换（下行/交叉转换），依赖 RTTI 与虚函数；失败返回 <code>nullptr</code>（指针）或抛 <code>std::bad_cast</code>（引用）。</li>
+<li><strong>const_cast</strong>：去掉或添加 <code>const</code>，用于调用遗留 C 接口；若对象本身是 const 却去掉 const 并修改，属未定义行为。</li>
+<li><strong>reinterpret_cast（重新解释转换）</strong>：按位重新解释（指针↔整数、不同类型指针互转），危险，仅在驱动/序列化等底层场景使用。</li>
+<li><strong>异常基本语法</strong>：<code>throw 表达式;</code> → 沿调用栈找 <code>try/catch</code>；<code>catch (类型&amp; e)</code> 按类型匹配，可用 <code>catch (...)</code> 兜底。异常对象按值抛出、按引用捕获。</li>
+<li><strong>异常的传递</strong>：沿调用链向上传播，若无人捕获则调用 <code>std::terminate</code> 终止程序。ROS2 回调中必须自己捕获，否则整个 executor 崩溃。</li>
+<li><strong>自己抛出异常</strong>：<code>throw std::invalid_argument("...")</code>；抛出后栈解旋（stack unwinding）自动析构已构造对象。</li>
+<li><strong>栈解旋</strong>：抛出异常时，从 try 到 throw 之间的栈上对象全部析构（RAII 保证资源释放），这是 <code>unique_ptr</code>、<code>std::lock_guard</code> 安全的底层机制。</li>
+<li><strong>异常变量的生命周期</strong>：按值抛出会复制异常对象；按引用捕获 <code>catch (const std::exception&amp; e)</code> 避免切片与二次拷贝；捕获 <code>e</code> 的引用在 catch 块内有效。</li>
+<li><strong>异常的多态</strong>：基类 <code>std::exception</code> 的 <code>what()</code> 是虚函数，可用一个 <code>catch (const std::exception&amp;)</code> 捕获所有标准异常并打印具体信息。</li>
+<li><strong>系统标准异常</strong>：<code>std::exception</code>、<code>std::runtime_error</code>、<code>std::logic_error</code>、<code>std::out_of_range</code>、<code>std::bad_alloc</code> 等；<code>what()</code> 返回错误描述。</li>
+<li><strong>自己写的异常类</strong>：继承 <code>std::runtime_error</code>，添加错误码/上下文信息，便于分层捕获。</li>
+<li><strong>标准输入（cin 系列 7 小节）</strong>：<code>operator&gt;&gt;</code> 格式化提取、<code>getline</code> 读整行（含空格）、<code>cin.ignore/cin.get/cin.clear/cin.fail</code> 处理缓冲区残留与错误状态、<code>std::ws</code> 跳过空白；输入案例演示「循环读取直到 EOF/非法输入」。</li>
+<li><strong>字符输出与格式化输出</strong>：<code>put/printf</code> 风格 <code>std::cout.put('A')</code>、<code>std::setw/std::setfill/std::setprecision/std::fixed</code>（<code>&lt;iomanip&gt;</code>）控制宽度、填充、精度；<code>std::boolalpha</code> 让 bool 打印 true/false。</li>
+<li><strong>文件写入与读取</strong>：<code>std::ofstream</code> 写、<code>std::ifstream</code> 读，<code>is_open()</code> 判断，<code>&lt;&lt;</code>/<code>getline</code> 读写，<code>std::fstream</code> 读写混合；文本模式与二进制模式（<code>std::ios::binary</code>）区别。</li>
 </ul>
-<h2 id="103-运行效果（实测）">10.3 运行效果（实测）</h2>
+<h2 id="103-重点与难点">10.3 重点与难点</h2>
+<ol>
+<li><strong>虚函数表与动态联编</strong>：有虚函数的类首部有 vptr 指向 vtable；按值传参的切片问题会让多态失效——用指针/引用。</li>
+<li><strong>纯虚函数与接口设计</strong>：抽象类定契约、派生类给实现，是 ROS2 插件（pluginlib）、导航控制器接口的通用范式。</li>
+<li><strong>虚析构必要性</strong>：基类析构非 virtual + <code>delete Base*</code> = 泄漏；写基类第一行就该写 <code>virtual ~Base() = default;</code>。</li>
+<li><strong>模板的分文件陷阱</strong>：模板实现在 .cpp 会链接失败；模板头文件需含实现（<code>.hpp</code> 或 <code>#include "xx.tpp"</code>）。</li>
+<li><strong>异常安全</strong>：异常抛出时栈解旋保证 RAII 对象析构；不要在析构函数中抛异常（会导致 terminate）；ROS2 实时回调里更常用错误码/<code>std::optional</code> 而非异常。</li>
+</ol>
+<h2 id="104-代码与命令实战">10.4 代码与命令实战</h2>
+<p><strong>场景 1：继承、构造顺序、同名成员（对应第1课）</strong></p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// inherit.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string&gt;</span></span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Base</span> {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">explicit</span> <span class="hljs-title">Base</span><span class="hljs-params">(std::string id)</span> : id_(std::move(id)) {</span> std::cout &lt;&lt; <span class="hljs-string">"Base ctor\n"</span>; }
+    <span class="hljs-keyword">virtual</span> ~<span class="hljs-built_in">Base</span>() { std::cout &lt;&lt; <span class="hljs-string">"Base dtor\n"</span>; }
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">show</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>{ std::cout &lt;&lt; <span class="hljs-string">"Base::show "</span> &lt;&lt; id_ &lt;&lt; <span class="hljs-string">"\n"</span>; }
+<span class="hljs-keyword">protected</span>:
+    std::string id_;
+};
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Derived</span> : <span class="hljs-keyword">public</span> Base {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-built_in">Derived</span>(std::string id, <span class="hljs-type">int</span> extra) : <span class="hljs-built_in">Base</span>(std::<span class="hljs-built_in">move</span>(id)), <span class="hljs-built_in">extra_</span>(extra) {
+        std::cout &lt;&lt; <span class="hljs-string">"Derived ctor\n"</span>;
+    }
+    ~<span class="hljs-built_in">Derived</span>() <span class="hljs-keyword">override</span> { std::cout &lt;&lt; <span class="hljs-string">"Derived dtor\n"</span>; }
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">show</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>{ std::cout &lt;&lt; <span class="hljs-string">"Derived::show "</span> &lt;&lt; id_ &lt;&lt; <span class="hljs-string">" "</span> &lt;&lt; extra_ &lt;&lt; <span class="hljs-string">"\n"</span>; }  <span class="hljs-comment">// 重定义</span>
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">callBase</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>{ Base::<span class="hljs-built_in">show</span>(); }                    <span class="hljs-comment">// 显式调用基类版本</span>
+<span class="hljs-keyword">private</span>:
+    <span class="hljs-type">int</span> extra_;
+};
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-function">Derived <span class="hljs-title">d</span><span class="hljs-params">(<span class="hljs-string">"robot1"</span>, <span class="hljs-number">7</span>)</span></span>;
+    d.<span class="hljs-built_in">show</span>();
+    d.<span class="hljs-built_in">callBase</span>();
+    Base* p = &amp;d;          <span class="hljs-comment">// 向上转换（安全）</span>
+    p-&gt;<span class="hljs-built_in">show</span>();             <span class="hljs-comment">// 静态联编：调 Base::show（无 virtual 时）</span>
+}
+</code></pre>
+<pre><code class="lang-bash">g++ -std=c++17 -Wall -o inherit inherit.cpp &amp;&amp; ./inherit
+</code></pre>
+<p><strong>场景 2：虚函数多态 + 抽象类 + 虚析构（对应第2课）</strong></p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// poly.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;memory&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;vector&gt;</span></span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Controller</span> {                       <span class="hljs-comment">// 抽象类：接口契约</span>
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-type">double</span> <span class="hljs-title">compute</span><span class="hljs-params">(<span class="hljs-type">double</span> err)</span> </span>= <span class="hljs-number">0</span>;      <span class="hljs-comment">// 纯虚函数</span>
+    <span class="hljs-keyword">virtual</span> ~<span class="hljs-built_in">Controller</span>() = <span class="hljs-keyword">default</span>;             <span class="hljs-comment">// 虚析构</span>
+};
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Pid</span> : <span class="hljs-keyword">public</span> Controller {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-built_in">Pid</span>(<span class="hljs-type">double</span> kp, <span class="hljs-type">double</span> ki, <span class="hljs-type">double</span> kd) : <span class="hljs-built_in">kp_</span>(kp), <span class="hljs-built_in">ki_</span>(ki), <span class="hljs-built_in">kd_</span>(kd) {}
+    <span class="hljs-function"><span class="hljs-type">double</span> <span class="hljs-title">compute</span><span class="hljs-params">(<span class="hljs-type">double</span> err)</span> <span class="hljs-keyword">override</span> </span>{
+        integral_ += err;
+        <span class="hljs-type">double</span> out = kp_ * err + ki_ * integral_ + kd_ * (err - prev_);
+        prev_ = err;
+        <span class="hljs-keyword">return</span> out;
+    }
+<span class="hljs-keyword">private</span>:
+    <span class="hljs-type">double</span> kp_, ki_, kd_, integral_ = <span class="hljs-number">0</span>, prev_ = <span class="hljs-number">0</span>;
+};
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">BangBang</span> : <span class="hljs-keyword">public</span> Controller {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-type">double</span> <span class="hljs-title">compute</span><span class="hljs-params">(<span class="hljs-type">double</span> err)</span> <span class="hljs-keyword">override</span> </span>{ <span class="hljs-keyword">return</span> err &gt; <span class="hljs-number">0</span> ? <span class="hljs-number">1.0</span> : <span class="hljs-number">-1.0</span>; }
+};
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    std::vector&lt;std::unique_ptr&lt;Controller&gt;&gt; ctrls;   <span class="hljs-comment">// 多态容器</span>
+    ctrls.<span class="hljs-built_in">push_back</span>(std::<span class="hljs-built_in">make_unique</span>&lt;Pid&gt;(<span class="hljs-number">1.0</span>, <span class="hljs-number">0.1</span>, <span class="hljs-number">0.05</span>));
+    ctrls.<span class="hljs-built_in">push_back</span>(std::<span class="hljs-built_in">make_unique</span>&lt;BangBang&gt;());
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">const</span> <span class="hljs-keyword">auto</span>&amp; c : ctrls) std::cout &lt;&lt; c-&gt;<span class="hljs-built_in">compute</span>(<span class="hljs-number">0.5</span>) &lt;&lt; <span class="hljs-string">"\n"</span>;   <span class="hljs-comment">// 动态联编</span>
+}
+</code></pre>
+<pre><code class="lang-bash">g++ -std=c++17 -Wall -o poly poly.cpp &amp;&amp; ./poly
+</code></pre>
+<p><strong>场景 3：函数模板、特化与类模板（对应第3课）</strong></p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// template_demo.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;vector&gt;</span></span>
+
+<span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> T&gt;
+<span class="hljs-function">T <span class="hljs-title">max_of</span><span class="hljs-params">(T a, T b)</span> </span>{ <span class="hljs-keyword">return</span> a &gt; b ? a : b; }
+
+<span class="hljs-keyword">template</span> &lt;&gt;                                    <span class="hljs-comment">// 显式特化：针对 const char*</span>
+<span class="hljs-function"><span class="hljs-type">const</span> <span class="hljs-type">char</span>* <span class="hljs-title">max_of</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span>* a, <span class="hljs-type">const</span> <span class="hljs-type">char</span>* b)</span> </span>{
+    <span class="hljs-keyword">return</span> std::<span class="hljs-built_in">string</span>(a) &gt; std::<span class="hljs-built_in">string</span>(b) ? a : b;
+}
+
+<span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> T&gt;
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">RingBuffer</span> {                             <span class="hljs-comment">// 类模板</span>
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-function"><span class="hljs-keyword">explicit</span> <span class="hljs-title">RingBuffer</span><span class="hljs-params">(std::<span class="hljs-type">size_t</span> cap)</span> : cap_(cap) {</span>}
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">push</span><span class="hljs-params">(<span class="hljs-type">const</span> T&amp; v)</span> </span>{
+        <span class="hljs-keyword">if</span> (buf_.<span class="hljs-built_in">size</span>() == cap_) buf_.<span class="hljs-built_in">erase</span>(buf_.<span class="hljs-built_in">begin</span>());
+        buf_.<span class="hljs-built_in">push_back</span>(v);
+    }
+    <span class="hljs-function">std::<span class="hljs-type">size_t</span> <span class="hljs-title">size</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>{ <span class="hljs-keyword">return</span> buf_.<span class="hljs-built_in">size</span>(); }
+<span class="hljs-keyword">private</span>:
+    std::<span class="hljs-type">size_t</span> cap_;
+    std::vector&lt;T&gt; buf_;
+};
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    std::cout &lt;&lt; <span class="hljs-built_in">max_of</span>(<span class="hljs-number">3</span>, <span class="hljs-number">5</span>) &lt;&lt; <span class="hljs-string">" "</span> &lt;&lt; <span class="hljs-built_in">max_of</span>(<span class="hljs-number">2.5</span>, <span class="hljs-number">1.5</span>) &lt;&lt; <span class="hljs-string">"\n"</span>;
+    std::cout &lt;&lt; <span class="hljs-built_in">max_of</span>(<span class="hljs-string">"apple"</span>, <span class="hljs-string">"banana"</span>) &lt;&lt; <span class="hljs-string">"\n"</span>;     <span class="hljs-comment">// 使用特化</span>
+    <span class="hljs-function">RingBuffer&lt;<span class="hljs-type">int</span>&gt; <span class="hljs-title">rb</span><span class="hljs-params">(<span class="hljs-number">3</span>)</span></span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt;= <span class="hljs-number">4</span>; ++i) rb.<span class="hljs-built_in">push</span>(i);
+    std::cout &lt;&lt; rb.<span class="hljs-built_in">size</span>() &lt;&lt; <span class="hljs-string">"\n"</span>;                     <span class="hljs-comment">// 3</span>
+}
+</code></pre>
+<pre><code class="lang-bash">g++ -std=c++17 -Wall -o template_demo template_demo.cpp &amp;&amp; ./template_demo
+</code></pre>
+<p><strong>场景 4：类型转换 + 异常处理（对应第4课）</strong></p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// cast_throw.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;memory&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdexcept&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string&gt;</span></span>
+
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">Shape</span> { <span class="hljs-keyword">virtual</span> ~<span class="hljs-built_in">Shape</span>() = <span class="hljs-keyword">default</span>; };
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">Circle</span> : Shape { <span class="hljs-type">double</span> r = <span class="hljs-number">1.0</span>; };
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">Square</span> : Shape { <span class="hljs-type">double</span> a = <span class="hljs-number">2.0</span>; };
+
+<span class="hljs-function"><span class="hljs-type">double</span> <span class="hljs-title">parse_positive</span><span class="hljs-params">(<span class="hljs-type">const</span> std::string&amp; s)</span> </span>{
+    <span class="hljs-type">double</span> v = std::<span class="hljs-built_in">stod</span>(s);
+    <span class="hljs-keyword">if</span> (v &lt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">throw</span> std::<span class="hljs-built_in">invalid_argument</span>(<span class="hljs-string">"must be positive: "</span> + s);
+    <span class="hljs-keyword">return</span> v;
+}
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">try</span> {
+        Shape* p = <span class="hljs-keyword">new</span> Circle;
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">auto</span>* c = <span class="hljs-keyword">dynamic_cast</span>&lt;Circle*&gt;(p))            <span class="hljs-comment">// 向下转换：运行期检查</span>
+            std::cout &lt;&lt; <span class="hljs-string">"circle r="</span> &lt;&lt; c-&gt;r &lt;&lt; <span class="hljs-string">"\n"</span>;
+        std::cout &lt;&lt; <span class="hljs-built_in">parse_positive</span>(<span class="hljs-string">"3.14"</span>) &lt;&lt; <span class="hljs-string">"\n"</span>;
+        std::cout &lt;&lt; <span class="hljs-built_in">parse_positive</span>(<span class="hljs-string">"-1"</span>) &lt;&lt; <span class="hljs-string">"\n"</span>;          <span class="hljs-comment">// 抛出异常</span>
+    } <span class="hljs-keyword">catch</span> (<span class="hljs-type">const</span> std::invalid_argument&amp; e) {
+        std::cerr &lt;&lt; <span class="hljs-string">"[caught] "</span> &lt;&lt; e.<span class="hljs-built_in">what</span>() &lt;&lt; <span class="hljs-string">"\n"</span>;       <span class="hljs-comment">// 按引用捕获，避免切片</span>
+    } <span class="hljs-keyword">catch</span> (<span class="hljs-type">const</span> std::exception&amp; e) {
+        std::cerr &lt;&lt; <span class="hljs-string">"[std] "</span> &lt;&lt; e.<span class="hljs-built_in">what</span>() &lt;&lt; <span class="hljs-string">"\n"</span>;
+    } <span class="hljs-keyword">catch</span> (...) {
+        std::cerr &lt;&lt; <span class="hljs-string">"[unknown]\n"</span>;
+    }
+}
+</code></pre>
+<pre><code class="lang-bash">g++ -std=c++17 -Wall -o cast_throw cast_throw.cpp &amp;&amp; ./cast_throw
+</code></pre>
+<p><strong>场景 5：文件 I/O 与格式化输出（对应第4课）</strong></p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// file_io.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;fstream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iomanip&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    {
+        <span class="hljs-function">std::ofstream <span class="hljs-title">ofs</span><span class="hljs-params">(<span class="hljs-string">"waypoints.csv"</span>)</span></span>;               <span class="hljs-comment">// 写入</span>
+        <span class="hljs-keyword">if</span> (!ofs.<span class="hljs-built_in">is_open</span>()) { std::cerr &lt;&lt; <span class="hljs-string">"open failed\n"</span>; <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+        ofs &lt;&lt; <span class="hljs-string">"id,x,y\n"</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">3</span>; ++i)
+            ofs &lt;&lt; i &lt;&lt; <span class="hljs-string">","</span> &lt;&lt; std::fixed &lt;&lt; std::<span class="hljs-built_in">setprecision</span>(<span class="hljs-number">3</span>) &lt;&lt; i * <span class="hljs-number">0.5</span> &lt;&lt; <span class="hljs-string">","</span> &lt;&lt; i * <span class="hljs-number">0.25</span> &lt;&lt; <span class="hljs-string">"\n"</span>;
+    }
+    <span class="hljs-function">std::ifstream <span class="hljs-title">ifs</span><span class="hljs-params">(<span class="hljs-string">"waypoints.csv"</span>)</span></span>;                   <span class="hljs-comment">// 读取</span>
+    std::string line;
+    <span class="hljs-keyword">while</span> (std::<span class="hljs-built_in">getline</span>(ifs, line)) std::cout &lt;&lt; line &lt;&lt; <span class="hljs-string">"\n"</span>;
+    std::cout &lt;&lt; std::<span class="hljs-built_in">setw</span>(<span class="hljs-number">10</span>) &lt;&lt; std::<span class="hljs-built_in">setfill</span>(<span class="hljs-string">'*'</span>) &lt;&lt; <span class="hljs-number">42</span> &lt;&lt; <span class="hljs-string">"\n"</span>;   <span class="hljs-comment">// 格式化输出</span>
+}
+</code></pre>
+<pre><code class="lang-bash">g++ -std=c++17 -Wall -o file_io file_io.cpp &amp;&amp; ./file_io &amp;&amp; <span class="hljs-built_in">cat</span> waypoints.csv
+</code></pre>
+<h2 id="105-运行效果（实测）">10.5 运行效果（实测）</h2>
+<p>综合实测覆盖课程三件事：抽象类 <code>Controller</code>（纯虚 <code>compute</code>）统一 PID 与 BangBang 两种控制器放入多态容器轮询调用、函数模板 <code>clamp</code> 体会泛型、异常做参数校验。输出（PID 输出 0.575、BangBang 输出 1、clamp 得 3、异常被捕获）：</p>
 <pre><code class="lang-text">0.575
 1
 3
 caught demo
 </code></pre>
 <p>编译命令：<code>g++ -std=c++17 -Wall w10_poly.cpp -o w10 &amp;&amp; ./w10</code>（PID 输出 0.575、BangBang 输出 1、clamp 得 3、异常被捕获）。</p>
-<h2 id="104-端到端实战（实测）：多态传感器容器--dynamiccast">10.4 端到端实战（实测）：多态传感器容器 + dynamic_cast</h2>
+<h2 id="端到端实战（实测）：多态传感器容器--dynamiccast">端到端实战（实测）：多态传感器容器 + dynamic_cast</h2>
 <p>抽象类定契约、多态容器管理异构设备、向下转换识别具体类型——ROS2 传感器插件架构的浓缩版：</p>
 <pre><code class="lang-cpp"><span class="hljs-comment">// sensor.cpp</span>
 <span class="hljs-keyword">class</span> <span class="hljs-title class_">Sensor</span> {                                   <span class="hljs-comment">// 抽象类</span>
@@ -674,12 +941,47 @@ found camera width=640
 <blockquote>
 <p>编写时恰好踩到本章知识点：在类外直接访问私有成员 <code>cam-&gt;width_</code> 被编译器拦截——改为经公有接口 <code>width()</code> 暴露。封装不是教条，是编译器帮你挡 bug。</p>
 </blockquote>
-<h2 id="105-本章小结">10.5 本章小结</h2>
+<p>要点解析：</p>
+<ul>
+<li><code>Sensor</code> 声明纯虚 <code>read()</code> 即成抽象类，<code>Lidar/Camera</code> 各自 <code>override</code> 实现——新增第三种传感器（如 IMU）只加派生类，主循环零改动（开闭原则）；</li>
+<li><code>dynamic_cast&lt;const Camera*&gt;</code> 运行期识别具体类型，失败得 <code>nullptr</code>，基类含虚析构才保证 RTTI 可用；</li>
+<li><code>unique_ptr</code> 管理多态对象生命周期，容器销毁时经虚析构逐个正确释放。</li>
+</ul>
+<h2 id="106-与-ros2--机器人开发的关联">10.6 与 ROS2 / 机器人开发的关联</h2>
+<ol>
+<li><strong>继承是 ROS2 节点架构</strong>：<code>class MyNode : public rclcpp::Node</code>、<code>LifecycleNode</code>、导航插件（<code>nav2_core::Controller</code>）都是「抽象基类 + 派生实现」；<code>override</code> 关键字从今天开始养成习惯。</li>
+<li><strong>多态管理异构设备</strong>：相机/雷达/IMU 统一 <code>Sensor</code> 抽象接口，节点内用 <code>std::vector&lt;std::unique_ptr&lt;Sensor&gt;&gt;</code> 轮询采集，新增设备不改主流程。</li>
+<li><strong>模板与 rclcpp API</strong>：<code>create_subscription&lt;T&gt;(...)</code>、<code>rclcpp::Subscription&lt;MsgT&gt;</code> 是类模板；理解实例化机制才看得懂编译错误。</li>
+<li><strong>类型转换与消息指针</strong>：<code>dynamic_cast</code> 用于把 <code>rclcpp::Node*</code> 转回具体节点类；<code>std::static_pointer_cast</code> 用于消息智能指针转换。</li>
+<li><strong>异常与回调安全</strong>：ROS2 回调中未捕获异常会终止 executor；日志记录用 <code>try/catch</code> 包住解析/文件/网络调用，兜底 <code>std::exception</code>。</li>
+<li><strong>文件 I/O 与配置</strong>：参数文件、轨迹 CSV、标定 YAML 的读写都用 <code>fstream</code>/<code>&lt;iomanip&gt;</code>；为后面 nav2 参数调试打底。</li>
+</ol>
+<h2 id="107-自测与练习（含参考答案要点）">10.7 自测与练习（含参考答案要点）</h2>
+<ol>
+<li><strong>概念题</strong>：静态联编与动态联编的区别是什么？什么条件下才会触发动态联编？</li>
+<li><strong>概念题</strong>：为什么基类析构函数必须是 virtual？纯虚析构和普通虚析构有何不同？</li>
+<li><strong>动手任务</strong>：设计 <code>Sensor</code> 抽象基类 + <code>Lidar/Camera</code> 两个派生类，用 <code>std::vector&lt;std::unique_ptr&lt;Sensor&gt;&gt;</code> 统一调用 <code>read()</code> 并打印各自数据。验收：新增第三种传感器不修改主循环代码。</li>
+<li><strong>动手任务</strong>：写模板函数 <code>template&lt;typename T&gt; double sum(const std::vector&lt;T&gt;&amp; v)</code>，并为 <code>std::vector&lt;std::string&gt;</code> 提供特化（返回总字符数）。验收：显式特化优先于通用模板生效。</li>
+</ol>
+<blockquote>
+<p>参考答案要点：题 1——静态联编在编译期绑定（普通函数/重载），动态联编在运行期按对象实际类型分派，条件是「通过指针/引用调用 + 函数声明 virtual + 签名一致」。题 2——否则 <code>delete Base*</code> 只调基类析构，派生类资源泄漏；纯虚析构 <code>virtual ~B() = 0;</code> 强制抽象但必须类外定义。题 3——容器持有 <code>unique_ptr&lt;Sensor&gt;</code>，<code>read()</code> 声明纯虚，派生类 <code>override</code>。题 4——通用模板用 <code>T</code> 累加，特化版本遍历 <code>size()</code>。</p>
+</blockquote>
+<h2 id="108-常见问题（faq）">10.8 常见问题（FAQ）</h2>
+<ul>
+<li><strong>Q：<code>override</code> 关键字有什么用？</strong> A：强制编译器检查是否真的重写了基类虚函数，签名不一致时报错，防止「以为重写其实重定义」的 bug。</li>
+<li><strong>Q：<code>dynamic_cast</code> 什么时候返回 nullptr？</strong> A：基类指针指向的对象实际类型不包含目标类型时（下行转换失败）；要求基类至少有一个虚函数（保证 RTTI）。</li>
+<li><strong>Q：模板为什么不能分文件写？</strong> A：模板实例化发生在使用处，编译 .cpp 时编译器看不到模板实现，链接期找不到符号。惯例是实现放头文件。</li>
+<li><strong>Q：什么时候用异常，什么时候用返回码？</strong> A：异常适合「罕见、不可局部处理」的错误（配置解析、文件缺失）；实时控制回路里更适合错误码/<code>std::optional</code>，避免栈解旋开销。</li>
+<li><strong>Q：<code>catch</code> 应该捕获值还是引用？</strong> A：捕获引用（<code>const std::exception&amp;</code>），避免对象切片和多余拷贝。</li>
+</ul>
+<h2 id="109-本章小结">10.9 本章小结</h2>
 <ul>
 <li>「抽象基类 + 派生实现」是 rclcpp 节点、<code>LifecycleNode</code>、nav2 插件的通用范式；</li>
 <li>多态容器 <code>std::vector&lt;std::unique_ptr&lt;Sensor&gt;&gt;</code> 让新增设备不改主流程（开闭原则）；</li>
 <li><code>create_subscription&lt;T&gt;</code> 是类模板——理解实例化机制才看得懂模板编译错误；</li>
-<li>实时控制回路里更常用错误码/<code>std::optional</code>，异常留给「罕见且不可局部处理」的错误。</li>
+<li>实时控制回路里更常用错误码/<code>std::optional</code>，异常留给「罕见且不可局部处理」的错误；</li>
+<li>基类析构必写 <code>virtual</code>，派生类重写必标 <code>override</code>；</li>
+<li>模板实现放头文件（<code>.hpp</code>），分文件是模板最常见的新手陷阱。</li>
 </ul>
 
                                 
@@ -724,7 +1026,7 @@ found camera width=640
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第10章 高级特性与编程范式（继承多态/模板/异常/IO）","level":"4.3","depth":1,"next":{"title":"第11章 STL 标准模板库（容器选型与实践）","level":"4.4","depth":1,"path":"第11周-STL标准模板库.md","ref":"第11周-STL标准模板库.md","articles":[]},"previous":{"title":"第9章 类与对象进阶（构造析构/深浅拷贝/运算符重载）","level":"4.2","depth":1,"path":"第9周-类与对象进阶.md","ref":"第9周-类与对象进阶.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第10周-高级特性与编程范式.md","mtime":"2026-10-16T02:43:09.752Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T02:43:11.108Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第10章 高级特性与编程范式（继承多态/模板/异常/IO）","level":"4.3","depth":1,"next":{"title":"第11章 STL 标准模板库（容器选型与实践）","level":"4.4","depth":1,"path":"第11周-STL标准模板库.md","ref":"第11周-STL标准模板库.md","articles":[]},"previous":{"title":"第9章 类与对象进阶（构造析构/深浅拷贝/运算符重载）","level":"4.2","depth":1,"path":"第9周-类与对象进阶.md","ref":"第9周-类与对象进阶.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第10周-高级特性与编程范式.md","mtime":"2026-10-16T03:26:51.708Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T03:26:53.986Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

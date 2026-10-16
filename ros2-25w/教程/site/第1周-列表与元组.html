@@ -602,32 +602,111 @@
                                 <h1 id="第1章-列表与元组（python-基础入门）">第1章 列表与元组（Python 基础入门）</h1>
 <blockquote>
 <p>第一篇（基础篇）从这里开始。本章对应课程第 1 周：Python 环境与变量、格式化输出、运算符、分支与循环，以及字符串/列表/元组/字典四种容器。它是整个 25 周体系的起点——后面写 rclpy 节点、解析传感器消息，本质上都是「拿到数据 → 用数据结构组织 → 用流程控制加工」。</p>
+<p>所属阶段：阶段1 ROS2 开发必备基础之 Python 数据处理与计算机视觉 ｜ 视频 69 个 ｜ 时长约 7h37m ｜ 难度：入门</p>
 </blockquote>
-<h2 id="11-案例以及案例分析">1.1 案例以及案例分析</h2>
-<p><strong>需求</strong>：管理机器人航点序列——用元组表示坐标 <code>(x, y)</code>，计算相邻航点总路程、筛选近处航点、按坐标排序。</p>
-<p><strong>流程</strong>：变量与类型 → 分支循环 → 字符串/列表/元组/字典 → 综合案例。</p>
-<h2 id="12-知识点与实现">1.2 知识点与实现</h2>
-<h3 id="121-变量、类型与格式化输出">1.2.1 变量、类型与格式化输出</h3>
+<h2 id="11-本周概览与课时结构">1.1 本周概览与课时结构</h2>
+<p>本周从零起步认识 Python：先通过开学典礼了解课程体系与学习方式，再系统学习变量与数据类型、格式化输出与输入、运算符、分支与循环等流程控制，最后集中攻克 Python 最常用的四种数据容器——字符串（str）、列表（list）、元组（tuple）与字典（dict）。这是整个 25 周体系的起点：后面写 rclpy 节点、解析传感器消息、做图像处理，本质上都是「拿到数据 → 用数据结构组织 → 用流程控制加工」。学完本周，你应当能独立写出 100 行左右、包含输入输出与分支循环的小脚本。</p>
+<p>读完本章，你应当达到三条验收线：</p>
+<ol>
+<li>会用变量、类型转换与 f-string 组织输入输出；</li>
+<li>会用分支与循环写出完整控制流（含 <code>break</code> / <code>continue</code> / <code>for-else</code>）；</li>
+<li>会用字符串/列表/元组/字典完成「组织 → 筛选 → 统计」的数据处理，并能写出本章 N.5 的航点管理器。</li>
+</ol>
+<p>本章课程共 5 课 / 69 个视频 / 约 7h37m，结构如下：</p>
+<table>
+<thead>
+<tr>
+<th>课</th>
+<th>小节</th>
+<th>时长</th>
+<th>一句话导览</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第1课 ROS2机器人应用开发工程师课程开学典礼</td>
+<td>1 节（6 个视频）</td>
+<td>28m42s</td>
+<td>课程导学、师资团队、就业服务、课程福利、答疑方式与课前督导</td>
+</tr>
+<tr>
+<td>第2课 Python 介绍与基础入门</td>
+<td>1 节（21 个视频）</td>
+<td>2h33m</td>
+<td>从安装环境到变量、数据类型、类型转换、格式化输出、输入与四类运算符</td>
+</tr>
+<tr>
+<td>第3课 分支语句与嵌套结构详解</td>
+<td>2 节（14 个视频）</td>
+<td>1h09m</td>
+<td>单/双/多分支实战（奇偶、正负、登录、成绩）+ if 嵌套与随机数、猜拳游戏</td>
+</tr>
+<tr>
+<td>第4课 循环类型全面讲解</td>
+<td>1 节（9 个视频）</td>
+<td>1h09m</td>
+<td>while 与 for 两大循环、break/continue、for-else 与 range 生成</td>
+</tr>
+<tr>
+<td>第5课 字符串、列表与元组详解与应用</td>
+<td>3 节（19 个视频）</td>
+<td>2h17m</td>
+<td>字符串方法、列表增删改查与推导式、元组/字典/拆包的综合应用</td>
+</tr>
+</tbody>
+</table>
+<p>学习节奏建议：第 2–4 课每看完一段就动手敲一遍；第 5 课知识点密度最高，建议拆成 2–3 次学完，每部分配合 1.7 的自测题巩固。</p>
+<p>环境准备：本机装有 Python 3.x 即可完成本章全部示例（无需第三方库）；推荐用 <code>python3 --version</code> 先确认版本，遇到安装类问题按 1.2.1 的「三要素」格式提问。</p>
+<h2 id="12-知识点梳理">1.2 知识点梳理</h2>
+<h3 id="121-第1课-ros2机器人应用开发工程师课程开学典礼">1.2.1 第1课 ROS2机器人应用开发工程师课程开学典礼</h3>
 <ul>
-<li>常用类型：<code>int / float / bool / str</code>；<code>type()</code> 查看、<code>int()/float()/str()</code> 转换；</li>
-<li><code>input()</code> 一律返回字符串，数值运算前必须转换；</li>
-<li>推荐 f-string：<code>print(f"x={x:.2f}")</code>；</li>
-<li>运算符：<code>/</code> 得浮点、<code>//</code> 整除、<code>**</code> 幂；逻辑运算符有短路求值。</li>
+<li><strong>核心概念</strong>：这一课不涉及技术，但决定了后面 25 周的学习效率。</li>
+<li><strong>课程导学</strong>：体系是「8 阶段 / 25 周 / 85 课 / 1613 个视频」，本阶段（Python 数据处理与计算机视觉）是第 1 阶段，之后依次是 C/C++、Linux 与 Shell、ROS2 核心架构、智能车实战、ARM 平台与应用实训。建议按周推进，每周看视频 + 敲代码 + 完成自测题。</li>
+<li><strong>师资与就业服务</strong>：了解授课分工、就业指导流程（简历、模拟面试、内推），把「学完的目标」想清楚，动力更持久。</li>
+<li><strong>课程福利与答疑方式</strong>：善用答疑渠道（社群、答疑老师、班主任督导），遇到环境安装类问题先给出「系统版本 + Python 版本 + 报错全文」，效率最高。</li>
 </ul>
-<h3 id="122-分支与循环">1.2.2 分支与循环</h3>
-<pre><code class="lang-python">scores = [<span class="hljs-number">92</span>, <span class="hljs-number">78</span>, <span class="hljs-number">65</span>, <span class="hljs-number">88</span>, <span class="hljs-number">54</span>, <span class="hljs-number">100</span>, <span class="hljs-number">73</span>, <span class="hljs-number">81</span>]
-grade = {<span class="hljs-string">"A"</span>: <span class="hljs-number">0</span>, <span class="hljs-string">"B"</span>: <span class="hljs-number">0</span>, <span class="hljs-string">"C"</span>: <span class="hljs-number">0</span>, <span class="hljs-string">"D"</span>: <span class="hljs-number">0</span>}
-<span class="hljs-keyword">for</span> s <span class="hljs-keyword">in</span> scores:
-    <span class="hljs-keyword">if</span> s &gt;= <span class="hljs-number">90</span>:   grade[<span class="hljs-string">"A"</span>] += <span class="hljs-number">1</span>
-    <span class="hljs-keyword">elif</span> s &gt;= <span class="hljs-number">80</span>: grade[<span class="hljs-string">"B"</span>] += <span class="hljs-number">1</span>
-    <span class="hljs-keyword">elif</span> s &gt;= <span class="hljs-number">60</span>: grade[<span class="hljs-string">"C"</span>] += <span class="hljs-number">1</span>
-    <span class="hljs-keyword">else</span>:         grade[<span class="hljs-string">"D"</span>] += <span class="hljs-number">1</span>
-</code></pre>
+<h3 id="122-第2课-python-介绍与基础入门">1.2.2 第2课 Python 介绍与基础入门</h3>
 <ul>
-<li><code>break</code> 跳出整个循环、<code>continue</code> 跳过当次；<code>for ... else</code> 的 <code>else</code> 在<strong>未被 break</strong> 时执行；</li>
-<li><code>range(start, stop, step)</code> 左闭右开，是惰性对象。</li>
+<li><strong>核心概念</strong>：Python 是解释型、动态类型的高级语言，语法简洁、生态丰富（NumPy/OpenCV/ROS2 rclpy 都有 Python 接口），是机器人领域做原型验证的首选语言。</li>
+<li><strong>安装与第一个程序</strong>：安装 Python 3.x 并配置 PATH；用 <code>python hello.py</code> 或交互式解释器运行 <code>print("hello world")</code>。注释用 <code>#</code>，多行注释可用多行字符串（<code>"""..."""</code>）。</li>
+<li><strong>变量与命名习惯</strong>：变量是「名字 → 对象」的引用，无需声明类型；命名遵循 PEP 8：小写字母加下划线（<code>robot_speed</code>），见名知意。交换两个变量用 Python 特有的元组拆包语法 <code>a, b = b, a</code>（「三杯水交换」是其直观解释）。</li>
+<li><strong>数据类型与转换</strong>：常用类型有 <code>int</code>、<code>float</code>、<code>bool</code>、<code>str</code>；<code>type()</code> 查看类型，<code>int()</code> / <code>float()</code> / <code>str()</code> 做转换。转换失败会抛异常（如 <code>int("abc")</code> → <code>ValueError</code>），这是第 2 周异常处理的伏笔。</li>
+<li><strong>格式化输出</strong>：推荐 f-string（Python 3.6+）：<code>print(f"x={x:.2f}")</code>；也了解 <code>%d/%f/%s</code> 与 <code>str.format()</code> 两种旧写法。<code>print(..., end="")</code> 可让多个输出显示在一行。</li>
+<li><strong>输入</strong>：<code>input()</code> 一律返回字符串，参与数值运算前必须转换：<code>age = int(input("请输入年龄："))</code>。</li>
+<li><strong>运算符</strong>：算数（<code>+ - * / // % **</code>，注意 <code>/</code> 得浮点、<code>//</code> 是整除、<code>**</code> 是幂）、比较（<code>== != &gt; &gt;= &lt; &lt;=</code>，结果是 bool）、逻辑（<code>and or not</code>，存在短路求值）、赋值（<code>+= -= *= /= //= %= **=</code>）以及优先级（算数 &gt; 比较 &gt; 逻辑 &gt; 赋值，拿不准就加括号）。</li>
 </ul>
-<h3 id="123-四种容器">1.2.3 四种容器</h3>
+<h3 id="123-第3课-分支语句与嵌套结构详解">1.2.3 第3课 分支语句与嵌套结构详解</h3>
+<ul>
+<li><strong>核心概念</strong>：分支语句（if statement）让程序按条件走不同路径；Python 用缩进（推荐 4 空格）划分代码块，没有花括号。</li>
+<li><strong>单 / 双 / 多分支</strong>：<code>if 条件:</code>、<code>if ... else ...</code>、<code>if ... elif ... else ...</code>。条件可以是比较表达式或布尔变量，<code>elif</code> 可有多个，<code>else</code> 最多一个且放最后。</li>
+<li><strong>典型练习</strong>：奇偶数判断（<code>n % 2 == 0</code>）、正负数判断（注意 0 的归属）、登录判断（用户名密码与预设值比较）、成绩判断（分数段映射等级）、判断是否为员工（<code>in</code> 成员运算符查列表）。多分支练习强调「边界值」——比如 90 分算 A，89.5 分算什么。</li>
+<li><strong>if 嵌套</strong>：外层条件成立才判断内层，如「已登录 且 是管理员才能进后台」。嵌套不超过 3 层，太深就拆函数。</li>
+<li><strong>随机数基础</strong>：<code>import random</code>，<code>random.randint(a, b)</code> 生成 [a, b] 闭区间整数，<code>random.random()</code> 生成 [0,1) 浮点数，<code>random.choice(seq)</code> 从序列随机取一个。用在随机点名、猜拳游戏里。</li>
+<li><strong>猜拳游戏综合案例</strong>：玩家输入 vs <code>random.choice(["石头","剪刀","布"])</code>，用多分支判断胜负，循环多局并统计胜率——把输入、类型、分支、循环串成完整小项目。</li>
+</ul>
+<h3 id="124-第4课-循环类型全面讲解">1.2.4 第4课 循环类型全面讲解</h3>
+<ul>
+<li><strong>核心概念</strong>：循环（loop）让重复工作交给计算机；Python 有 while 与 for 两种主要循环。</li>
+<li><strong>while 循环</strong>：<code>while 条件:</code>，条件为真就反复执行，务必在循环体内更新条件变量，否则是死循环。死循环并非一无是处（服务器主循环就是 <code>while rclpy.ok()</code>），但初学阶段要警惕意外死循环（Ctrl+C 中断）。</li>
+<li><strong>break 与 continue</strong>：<code>break</code> 立即跳出整个循环；<code>continue</code> 跳过本次剩余语句进入下一轮。常见用法：循环中「输入 quit 就 break」「数据非法就 continue 重来」。</li>
+<li><strong>for 循环</strong>：<code>for 元素 in 序列:</code> 逐个取出元素，天然适合遍历字符串、列表、元组、字典。遍历中修改被遍历的列表是经典坑，应先构造新列表。</li>
+<li><strong>for 与 else 组合</strong>：<code>for ... else ...</code> 中的 <code>else</code> 在循环<strong>没有被 break 中断</strong>时执行，常用于「查找失败」的兜底处理。</li>
+<li><strong>range 生成</strong>：<code>range(stop)</code>、<code>range(start, stop)</code>、<code>range(start, stop, step)</code>，生成整数序列，左闭右开；<code>range</code> 是惰性对象，<code>list(range(3))</code> 才得到 <code>[0, 1, 2]</code>。配合 <code>for i in range(len(seq))</code> 是「下标遍历」，更 Pythonic 的写法是 <code>for item in seq</code> 或 <code>for i, item in enumerate(seq)</code>。</li>
+</ul>
+<h3 id="125-第5课-字符串、列表与元组详解与应用">1.2.5 第5课 字符串、列表与元组详解与应用</h3>
+<ul>
+<li><strong>核心概念</strong>：字符串是不可变（immutable）的字符序列；列表是可变的有序容器；元组是不可变的有序容器；字典是键值对（key-value）映射。</li>
+<li><strong>字符串表示</strong>：单引号、双引号等价，三引号可跨行；转义符号 <code>\n \t \\ \' \"</code>，<code>r"raw\path"</code> 原始字符串不转义（写文件路径很方便）。</li>
+<li><strong>索引与切片</strong>：下标从 0 开始，支持负索引（<code>s[-1]</code> 是最后一个字符）；切片 <code>s[start:end:step]</code> 左闭右开、可省略、步长为负即反转。切片得到新字符串，原串不变。</li>
+<li><strong>查找 / 替换 / 分割</strong>：<code>find()</code> 找不到返回 -1（<code>index()</code> 找不到抛 <code>ValueError</code>）、<code>count()</code> 计数、<code>replace(old, new)</code> 返回新串、<code>split(sep)</code> 拆成列表、<code>"sep".join(list)</code> 把列表拼回字符串。</li>
+<li><strong>大小写与空白处理</strong>：<code>upper()</code> / <code>lower()</code> / <code>title()</code>、<code>strip()</code>（去掉首尾空白，另有 <code>lstrip</code> / <code>rstrip</code>），处理用户输入前先 <code>strip()</code> 是好习惯。</li>
+<li><strong>列表操作</strong>：新增 <code>append</code> / <code>extend</code> / <code>insert</code>；修改用下标赋值；删除 <code>del</code> / <code>remove(值)</code> / <code>pop(下标)</code>；查找 <code>in</code>、<code>index</code>、<code>count</code>；排序 <code>sort()</code>（原地）与 <code>sorted()</code>（返回新列表），<code>reverse=True</code> 降序；复制注意 <code>copy()</code> 或切片 <code>[:]</code> 是浅拷贝；嵌套列表可表达二维表格（如多台机器人的多组传感器读数）。</li>
+<li><strong>遍历与推导式</strong>：<code>for item in list</code>、<code>for i, item in enumerate(list)</code>（带下标）、<code>for a, b in zip(list1, list2)</code>（并行遍历）。列表推导式 <code>[表达式 for x in 序列 if 条件]</code> 一行生成新列表，简洁高效，但复杂逻辑仍应写普通循环。</li>
+<li><strong>元组</strong>：用小括号定义，不可增删改，适合存放「成组的、不该被改动的数据」，如坐标 <code>(x, y)</code>、位姿 <code>(x, y, theta)</code>；元组比列表更省内存、可作字典的键。<code>max()</code> / <code>min()</code> / <code>len()</code> 等通用函数对列表和元组都适用。</li>
+<li><strong>字典</strong>：<code>{key: value}</code>，键唯一且必须是不可变类型（字符串/数字/元组），值随意。新增/修改 <code>d[key] = v</code>、删除 <code>del d[key]</code>、安全取值 <code>d.get(key, 默认)</code>。遍历：<code>for k in d</code>、<code>for k, v in d.items()</code>、<code>for v in d.values()</code>。字典是「配置」「参数」「结构化记录」的天然载体——ROS2 参数服务器读出来的就是类似结构。</li>
+<li><strong>拆包（unpacking）</strong>：<code>a, b, c = [1, 2, 3]</code>、<code>x, y = (3.0, 4.0)</code>、<code>first, *rest = lst</code>（星号收集剩余元素）、<code>a, b = b, a</code>（交换）。拆包让函数多返回值、坐标处理变得优雅。</li>
+</ul>
+<p>四种容器的速查对照：</p>
 <table>
 <thead>
 <tr>
@@ -659,17 +738,84 @@ grade = {<span class="hljs-string">"A"</span>: <span class="hljs-number">0</span
 </tr>
 </tbody>
 </table>
-<ul>
-<li>拆包：<code>x, y = (3.0, 4.0)</code>、<code>a, b = b, a</code>、<code>first, *rest = lst</code>；</li>
-<li>浅拷贝 <code>lst[:]</code>/<code>copy()</code> 只复制第一层，嵌套结构要 <code>copy.deepcopy()</code>。</li>
-</ul>
-<h2 id="13-运行效果（实测）">1.3 运行效果（实测）</h2>
-<p>航点管理综合案例（元组列表 + <code>zip</code> 相邻距离 + 推导式 + <code>sorted</code>）：</p>
+<h2 id="13-重点与难点">1.3 重点与难点</h2>
+<ol>
+<li><strong>可变与不可变（immutable）</strong>：列表可变、字符串和元组不可变。<code>str.replace()</code> 返回新串而非改原串；把列表传进函数并在函数里 <code>append</code>，外部列表也会变——这是「引用传递」的直觉来源，也是第 2 周讲传参细节的基础。</li>
+<li><strong>切片的左闭右开</strong>：<code>s[2:5]</code> 取下标 2、3、4；配合负步长 <code>[::-1]</code> 反转。NumPy 的数组切片沿用同一套语法，本周务必练熟。</li>
+<li><strong>浅拷贝与深拷贝</strong>：<code>list.copy()</code> / <code>lst[:]</code> 只复制第一层，嵌套列表里层仍是同一份引用；需要完全独立的副本用 <code>copy.deepcopy()</code>（第 3 周在 OpenCV 图像上会再次遇到）。</li>
+<li><strong>字典键的唯一与不可变</strong>：重复赋值同名键会覆盖旧值；列表不能作键，元组可以。</li>
+<li><strong>列表推导式的边界</strong>：它只是「生成新列表」的语法糖，不要塞进多层嵌套和副作用（如打印、写文件），否则可读性反而下降。</li>
+</ol>
+<blockquote>
+<p><strong>注意：</strong> <code>input()</code> 永远返回字符串。忘了 <code>int()</code> 转换会让 <code>+</code> 变成字符串拼接（"5" + "3" == "53"），这是初学第一周最常见的 bug。</p>
+</blockquote>
+<h2 id="14-代码与命令实战">1.4 代码与命令实战</h2>
+<pre><code class="lang-python"><span class="hljs-comment"># 示例1（场景：变量、类型转换与格式化输出）—— 机器人参数打印</span>
+robot_name = <span class="hljs-string">"mycar"</span>
+max_speed = <span class="hljs-number">1.5</span>          <span class="hljs-comment"># m/s</span>
+battery = <span class="hljs-number">87</span>
+<span class="hljs-built_in">print</span>(<span class="hljs-string">f"机器人 <span class="hljs-subst">{robot_name}</span> 最高线速度 <span class="hljs-subst">{max_speed:<span class="hljs-number">.2</span>f}</span> m/s，电量 <span class="hljs-subst">{battery}</span>%"</span>)
+<span class="hljs-comment"># 输出：机器人 mycar 最高线速度 1.50 m/s，电量 87%</span>
+<span class="hljs-comment"># 交换两个变量：Python 用元组拆包一步完成</span>
+a, b = <span class="hljs-number">10</span>, <span class="hljs-number">20</span>
+a, b = b, a
+<span class="hljs-built_in">print</span>(a, b)              <span class="hljs-comment"># 20 10</span>
+</code></pre>
+<pre><code class="lang-python"><span class="hljs-comment"># 示例2（场景：分支与循环综合 —— 成绩等级统计）</span>
+scores = [<span class="hljs-number">92</span>, <span class="hljs-number">78</span>, <span class="hljs-number">65</span>, <span class="hljs-number">88</span>, <span class="hljs-number">54</span>, <span class="hljs-number">100</span>, <span class="hljs-number">73</span>, <span class="hljs-number">81</span>]
+grade_count = {<span class="hljs-string">"A"</span>: <span class="hljs-number">0</span>, <span class="hljs-string">"B"</span>: <span class="hljs-number">0</span>, <span class="hljs-string">"C"</span>: <span class="hljs-number">0</span>, <span class="hljs-string">"D"</span>: <span class="hljs-number">0</span>}
+<span class="hljs-keyword">for</span> s <span class="hljs-keyword">in</span> scores:
+    <span class="hljs-keyword">if</span> s &gt;= <span class="hljs-number">90</span>:
+        grade_count[<span class="hljs-string">"A"</span>] += <span class="hljs-number">1</span>
+    <span class="hljs-keyword">elif</span> s &gt;= <span class="hljs-number">80</span>:
+        grade_count[<span class="hljs-string">"B"</span>] += <span class="hljs-number">1</span>
+    <span class="hljs-keyword">elif</span> s &gt;= <span class="hljs-number">60</span>:
+        grade_count[<span class="hljs-string">"C"</span>] += <span class="hljs-number">1</span>
+    <span class="hljs-keyword">else</span>:
+        grade_count[<span class="hljs-string">"D"</span>] += <span class="hljs-number">1</span>
+<span class="hljs-built_in">print</span>(grade_count)                      <span class="hljs-comment"># {'A': 2, 'B': 3, 'C': 2, 'D': 1}</span>
+<span class="hljs-comment"># for-else：没有 break 时执行 else</span>
+<span class="hljs-keyword">for</span> s <span class="hljs-keyword">in</span> scores:
+    <span class="hljs-keyword">if</span> s &lt; <span class="hljs-number">0</span>:
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">"发现非法分数"</span>)
+        <span class="hljs-keyword">break</span>
+<span class="hljs-keyword">else</span>:
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">"所有分数合法"</span>)
+</code></pre>
+<pre><code class="lang-python"><span class="hljs-comment"># 示例3（场景：字符串处理 —— 解析一行激光雷达日志）</span>
+line = <span class="hljs-string">"  frame_id=laser; ranges=1.2,2.4,3.0; angle_min=-1.57  "</span>
+line = line.strip()                      <span class="hljs-comment"># 去掉首尾空白</span>
+fields = line.split(<span class="hljs-string">";"</span>)                 <span class="hljs-comment"># 按分号拆分</span>
+record = {}
+<span class="hljs-keyword">for</span> f <span class="hljs-keyword">in</span> fields:
+    k, v = f.strip().split(<span class="hljs-string">"="</span>)          <span class="hljs-comment"># 拆包成键值</span>
+    record[k] = v
+ranges = [<span class="hljs-built_in">float</span>(x) <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> record[<span class="hljs-string">"ranges"</span>].split(<span class="hljs-string">","</span>)]   <span class="hljs-comment"># 列表推导式</span>
+<span class="hljs-built_in">print</span>(record[<span class="hljs-string">"frame_id"</span>], ranges, <span class="hljs-built_in">max</span>(ranges))             <span class="hljs-comment"># laser [1.2, 2.4, 3.0] 3.0</span>
+</code></pre>
+<pre><code class="lang-python"><span class="hljs-comment"># 示例4（场景：列表/元组/字典 —— 管理机器人航点，即本章综合案例）</span>
+waypoints = [(<span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>), (<span class="hljs-number">1.5</span>, <span class="hljs-number">0.0</span>), (<span class="hljs-number">1.5</span>, <span class="hljs-number">2.0</span>)]   <span class="hljs-comment"># 元组列表表示 (x, y)</span>
+waypoints.append((<span class="hljs-number">0.0</span>, <span class="hljs-number">2.0</span>))
+total = <span class="hljs-number">0.0</span>
+<span class="hljs-keyword">for</span> (x1, y1), (x2, y2) <span class="hljs-keyword">in</span> <span class="hljs-built_in">zip</span>(waypoints, waypoints[<span class="hljs-number">1</span>:]):   <span class="hljs-comment"># 相邻两点</span>
+    total += ((x2 - x1) ** <span class="hljs-number">2</span> + (y2 - y1) ** <span class="hljs-number">2</span>) ** <span class="hljs-number">0.5</span>
+<span class="hljs-built_in">print</span>(<span class="hljs-string">f"总路程 <span class="hljs-subst">{total:<span class="hljs-number">.2</span>f}</span> m"</span>)
+<span class="hljs-comment"># 推导式筛选 + sorted 排序</span>
+near = [(x, y) <span class="hljs-keyword">for</span> x, y <span class="hljs-keyword">in</span> waypoints <span class="hljs-keyword">if</span> x ** <span class="hljs-number">2</span> + y ** <span class="hljs-number">2</span> &lt; <span class="hljs-number">5.0</span>]
+by_x = <span class="hljs-built_in">sorted</span>(waypoints, key=<span class="hljs-keyword">lambda</span> p: p[<span class="hljs-number">0</span>])       <span class="hljs-comment"># 按 x 排序（lambda 见第2周）</span>
+<span class="hljs-built_in">print</span>(near, by_x)
+</code></pre>
+<pre><code class="lang-bash"><span class="hljs-comment"># 示例5（场景：命令行运行与多输出一行显示）</span>
+$ python3 -c <span class="hljs-string">"print('speed', 1.2, 'rpm', 300, end='\n')"</span>
+speed 1.2 rpm 300
+$ python3 week1_demo.py     <span class="hljs-comment"># 运行本周任意脚本</span>
+</code></pre>
+<h2 id="15-运行效果（实测）">1.5 运行效果（实测）</h2>
+<p>综合案例实测（对应 1.4 示例4：元组列表 + <code>zip</code> 相邻距离 + 推导式 + <code>sorted</code>）：</p>
 <pre><code class="lang-text">总路程 5.00 m
 [(0.0, 0.0), (1.5, 0.0), (0.0, 2.0)] [(0.0, 0.0), (0.0, 2.0), (1.5, 0.0), (1.5, 2.0)]
 </code></pre>
-<h2 id="14-端到端实战（实测）：航点管理器">1.4 端到端实战（实测）：航点管理器</h2>
-<p>把本章知识串成一个完整程序：字典存航点、<code>while</code> 逐行读命令、分支分发、<code>sorted</code> 按 x 排序输出。</p>
+<p>把本章知识串成一个完整程序的端到端实战——航点管理器：字典存航点、<code>while</code> 逐行读命令、分支分发、<code>sorted</code> 按 x 排序输出。</p>
 <pre><code class="lang-python"><span class="hljs-comment"># waypoints.py —— 标准输入逐行接收命令：add 名称 x y / list / quit</span>
 waypoints = {<span class="hljs-string">"w0"</span>: (<span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>), <span class="hljs-string">"w1"</span>: (<span class="hljs-number">1.5</span>, <span class="hljs-number">0.0</span>)}
 <span class="hljs-keyword">import</span> sys
@@ -699,13 +845,41 @@ waypoints = {<span class="hljs-string">"w0"</span>: (<span class="hljs-number">0
   w2: (3.00, 1.00)
 共 3 个航点，退出
 </code></pre>
-<h2 id="15-本章小结">1.5 本章小结</h2>
+<p>读输出要点：<code>list</code> 命令按 x 坐标升序输出（<code>sorted(key=lambda kv: kv[1][0])</code>），<code>quit</code> 打印航点数后干净退出；这条命令行管道就是 1.7 动手任务的验收形态。本节两条实测只依赖 Python 标准库，可在任意装有 Python 3 的机器上原样复现。</p>
+<h2 id="16-与-ros2--机器人开发的关联">1.6 与 ROS2 / 机器人开发的关联</h2>
+<ol>
+<li><strong>rclpy 节点的日常写法</strong>：一个 rclpy 节点就是一个 Python 类（<code>class MyNode(Node)</code>），构造函数、方法、属性全靠第 1-2 周的 Python 基础；<code>self.declare_parameter('max_speed', 1.5)</code> 的缺省参数思想与本周变量初始化一脉相承。</li>
+<li><strong>消息（Message）字段就是数据结构</strong>：<code>geometry_msgs/Point</code> 对应 <code>(x, y, z)</code> 三元组，用元组/拆包处理位姿最顺手；<code>nav_msgs/Path</code> 的 <code>poses</code> 列表、传感器消息里的数组字段，都对应列表的遍历、切片与推导式。</li>
+<li><strong>话题（Topic）数据的解析与过滤</strong>：回调里常写「遍历 ranges，过滤掉 inf/NaN，取最小值」这类代码，正是 <code>for</code> + <code>if</code> + 列表推导式的组合，例如 <code>valid = [r for r in msg.ranges if 0.05 &lt; r &lt; 12.0]</code>。</li>
+<li><strong>参数与配置</strong>：ROS2 参数（Parameters）常以字典形式读写；launch 文件里的参数也常被解析成 dict——字典增删改查、<code>get(key, default)</code> 是必备技能。</li>
+<li><strong>日志与终端输出</strong>：<code>f"{value:.3f}"</code> 这样的格式化在 <code>self.get_logger().info()</code> 里天天用，控制小数位数能让日志可读性大幅提升。</li>
+</ol>
+<h2 id="17-自测与练习（含参考答案要点）">1.7 自测与练习（含参考答案要点）</h2>
+<ol>
+<li><strong>题目</strong>：写一个程序，输入一个整数，输出它是奇数还是偶数；如果是 0 单独提示「零」。</li>
+<li><strong>题目</strong>：给定列表 <code>distances = [0.8, 12.5, float('inf'), 3.2, -1.0, 2.0]</code>，用列表推导式过滤出「大于 0 且小于 10」的有效距离，并输出其个数与最小值。</li>
+<li><strong>动手任务</strong>：写一个「航点管理」脚本：用字典存 <code>{"name": (x, y)}</code> 形式的航点，支持循环输入 <code>add 名称 x y</code> / <code>list</code> / <code>quit</code> 三个命令；<code>list</code> 时按 x 坐标升序打印。验收标准：能正确增删查、非法命令有提示、<code>quit</code> 干净退出。</li>
+<li><strong>题目</strong>：解释 <code>a = [1, 2, 3]; b = a; b.append(4); print(a)</code> 的输出，并说明如何让 <code>b</code> 不影响 <code>a</code>。</li>
+</ol>
+<blockquote>
+<p>参考答案要点：1) 用 <code>n % 2</code> 与 <code>n == 0</code> 分支，注意 0 既是偶数，需优先判断；2) <code>[d for d in distances if 0 &lt; d &lt; 10]</code>，配合 <code>len()</code> 与 <code>min()</code>，注意 <code>-1.0</code> 与 <code>inf</code> 都被过滤；3) 核心是 <code>while True</code> + <code>cmd = input().split()</code> + 多分支 + <code>dict.items()</code> 遍历与 <code>sorted(key=lambda kv: kv[1][0])</code>；4) <code>a</code> 也变成 <code>[1, 2, 3, 4]</code>，因为 <code>b = a</code> 只是同一个列表的另一个名字；隔离需 <code>b = a.copy()</code> 或 <code>b = a[:]</code>（浅拷贝），嵌套结构用 <code>copy.deepcopy()</code>。</p>
+</blockquote>
+<h2 id="18-常见问题（faq）">1.8 常见问题（FAQ）</h2>
+<ul>
+<li><strong>Q：<code>/</code> 和 <code>//</code> 有什么区别？</strong> A：<code>7 / 2</code> 结果是 <code>3.5</code>（真除，得到浮点数），<code>7 // 2</code> 结果是 <code>3</code>（整除/地板除，丢掉小数部分）。求余数用 <code>%</code>。</li>
+<li><strong>Q：什么时候用列表、什么时候用元组？</strong> A：数据需要增删改 → 列表；数据成组且不应被改动（坐标、颜色 RGB、函数多返回值）→ 元组。元组还可作字典的键，列表不行。</li>
+<li><strong>Q：<code>find()</code> 和 <code>index()</code> 有什么区别？</strong> A：都返回首次出现的下标；找不到时 <code>find()</code> 返回 <code>-1</code>，<code>index()</code> 抛出 <code>ValueError</code>。想「找不到也不崩」用 <code>find()</code> 或 <code>in</code> 先判断。</li>
+<li><strong>Q：为什么我的 <code>if x = 1:</code> 报语法错误？</strong> A：条件判断用 <code>==</code> 比较运算符，<code>=</code> 是赋值。Python 没有「条件里赋值」的写法（3.8+ 可用海象运算符 <code>:=</code>，本阶段不必掌握）。</li>
+<li><strong>Q：列表推导式和普通 for 循环怎么选？</strong> A：一行能写清楚的「筛选/转换」用推导式；含多步逻辑、嵌套循环或副作用时用普通循环，可读性优先。</li>
+</ul>
+<h2 id="19-本章小结">1.9 本章小结</h2>
 <ul>
 <li>分支/循环是「控制流」，四种容器是「数据组织」——二者组合即可写出完整小脚本；</li>
 <li>列表可变、字符串与元组不可变；<code>str.replace()</code> 返回新串而非改原串；</li>
 <li>推导式适合一行能写清的筛选/转换，复杂逻辑仍用普通循环；</li>
 <li>与 ROS2 的关联：消息字段就是数据结构（<code>Point</code> ↔ 三元组、<code>Path.poses</code> ↔ 列表），参数读写形如字典操作。</li>
 </ul>
+<p>下一章把这些「脚本零件」升级为工程代码：函数、类、异常、文件与并发。</p>
 
                                 
                                 </section>
@@ -749,7 +923,7 @@ waypoints = {<span class="hljs-string">"w0"</span>: (<span class="hljs-number">0
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第1章 列表与元组（Python 基础入门）","level":"2.1","depth":1,"next":{"title":"第2章 Python 进阶编程（函数/类/异常/并发）","level":"2.2","depth":1,"path":"第2周-Python进阶编程.md","ref":"第2周-Python进阶编程.md","articles":[]},"previous":{"title":"导读","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第1周-列表与元组.md","mtime":"2026-10-16T02:43:09.753Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T02:43:11.108Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第1章 列表与元组（Python 基础入门）","level":"2.1","depth":1,"next":{"title":"第2章 Python 进阶编程（函数/类/异常/并发）","level":"2.2","depth":1,"path":"第2周-Python进阶编程.md","ref":"第2周-Python进阶编程.md","articles":[]},"previous":{"title":"导读","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第1周-列表与元组.md","mtime":"2026-10-16T03:26:51.710Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T03:26:53.986Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

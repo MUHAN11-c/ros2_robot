@@ -602,35 +602,297 @@
                                 <h1 id="第6章-c-语言高级特性（函数指针字符串内存）">第6章 C 语言高级特性（函数/指针/字符串/内存）</h1>
 <blockquote>
 <p>本章对应课程第 6 周：函数与多文件编程、指针原理与运算、字符串处理函数族、内存四分区与 malloc/free。本周建立阅读 rclcpp 源码所需的内存直觉。</p>
+<p>所属阶段：阶段2 ROS2 开发必备基础之 C 语言核心编程进阶 ｜ 视频 78 个 ｜ 时长约 10h48m ｜ 难度：进阶</p>
 </blockquote>
-<h2 id="61-案例以及案例分析">6.1 案例以及案例分析</h2>
-<p><strong>需求</strong>：解析一行机器人配置 <code>wheel, 0.05, 30</code>——去掉首尾空格、<code>sscanf</code> 拆字段、<code>strtok</code> 切词求和；并用指针遍历数组、二级指针理解地址传递。</p>
-<h2 id="62-知识点与实现">6.2 知识点与实现</h2>
-<h3 id="621-函数与多文件编程">6.2.1 函数与多文件编程</h3>
+<h2 id="61-本周概览与课时结构">6.1 本周概览与课时结构</h2>
+<p>本周是整个阶段的分水岭：函数与多文件编程让代码工程化，指针揭开 C「直接操作内存」的能力，字符串处理函数把散乱的字符数组变成可用的文本工具，内存管理（作用域、static、四分区、malloc/free）则决定你的程序是否正确、是否泄漏。学完本周，你具备阅读 rclcpp 源码与编写嵌入式驱动所需的内存直觉。</p>
+<table>
+<thead>
+<tr>
+<th>课</th>
+<th>小节</th>
+<th>时长</th>
+<th>一句话导览</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第1课 函数的综合应用与多文件编程</td>
+<td>15 节</td>
+<td>2h01m</td>
+<td>fgets/puts/strlen 等 IO 与字符串入门、函数定义/声明/执行流程、exit、多文件与头文件保护</td>
+</tr>
+<tr>
+<td>第2课 指针原理与操作</td>
+<td>27 节</td>
+<td>3h43m</td>
+<td>指针与解引用、野/空/万能指针、const 与指针、指针与数组运算、指针数组与多级指针、值传递与地址传递</td>
+</tr>
+<tr>
+<td>第3课 字符串处理函数应用</td>
+<td>25 节</td>
+<td>3h38m</td>
+<td>指针与字符串、自制 strcpy/trim、main 参数、strstr/strtok/sprintf/sscanf/atoi 等标准函数族</td>
+</tr>
+<tr>
+<td>第4课 内存管理</td>
+<td>11 节</td>
+<td>1h25m</td>
+<td>作用域与生命周期、static 三种用法、内存四分区、malloc/calloc/free、二级指针申请堆空间</td>
+</tr>
+</tbody>
+</table>
+<h2 id="62-知识点梳理">6.2 知识点梳理</h2>
+<h3 id="621-第1课-函数的综合应用与多文件编程">6.2.1 第1课 函数的综合应用与多文件编程</h3>
 <ul>
-<li>声明放 <code>xxx.h</code>（加 <code>#ifndef</code> 守卫或 <code>#pragma once</code>）、实现放 <code>xxx.c</code>、<code>gcc main.c xxx.c -o app</code> 多文件编译——ROS2 包 <code>include/ + src/</code> 结构的原型；</li>
-<li>安全读行用 <code>fgets(buf, size, stdin)</code>（<code>gets</code> 已被标准删除）；</li>
-<li><code>exit(非0)</code> 任意函数处终止进程；递归要有终止条件。</li>
+<li><strong>核心概念</strong>：函数（function）= 命名的代码块，把「做什么」封装成可复用单元；C 程序 = 若干函数，<code>main</code> 是入口。</li>
+<li><strong>scanf 获取带空格的字符</strong>：<code>scanf("%[^\n]", buf)</code>（正则风格扫描集）可读入含空格的一行，记得配合 <code>getchar()</code> 清掉换行；或直接用 <code>fgets</code>。</li>
+<li><strong>gets 输入</strong>：<code>gets(buf)</code> 能读带空格的整行但<strong>不做长度检查</strong>，C11 已从标准库删除，禁止使用。</li>
+<li><strong>fgets 函数</strong>：<code>fgets(buf, size, stdin)</code> 读入至多 <code>size-1</code> 个字符并保留换行符 <code>\n</code>、自动补 <code>\0</code>，是安全读行的标准答案。注意返回的字符串末尾可能带 <code>\n</code>，常用 <code>strcspn</code>/手工去掉。</li>
+<li><strong>puts 函数 / fputs 函数</strong>：<code>puts(s)</code> 输出字符串并自动追加换行；<code>fputs(s, stdout)</code> 不加换行、可指定输出流。二者都比 <code>printf("%s")</code> 轻量。</li>
+<li><strong>strlen 函数</strong>：<code>strlen(s)</code> 返回到 <code>\0</code> 之前的字符数（不含 <code>\0</code>），类型 <code>size_t</code>；与 <code>sizeof</code> 语义完全不同（见第5周）。</li>
+<li><strong>字符串拼接</strong>：手工实现 <code>dest</code> 末尾接 <code>src</code>——先用指针/下标找到 <code>dest</code> 的 <code>\0</code>，再逐字符拷贝 <code>src</code>（含 <code>\0</code>）。这是 <code>strcat</code> 的原理，注意目标缓冲区必须足够大。</li>
+<li><strong>函数的作用和分类</strong>：库函数（<code>printf/strlen</code> 等标准库提供）与自定义函数；有返回值函数与 <code>void</code> 函数；无参函数 <code>void f(void)</code>。函数的价值：复用、模块化、隐藏细节、便于测试。</li>
+<li><strong>系统函数调用的总结</strong>：<code>system()</code> 调 shell、<code>exit()</code> 退出进程、库函数最终可能陷入内核（如 <code>write</code>）。C 的「系统调用」语境下这些封装函数是上层入口。</li>
+<li><strong>函数的定义 / 执行流程</strong>：<code>返回类型 函数名(参数列表) { 函数体 }</code>。调用时实参值拷贝给形参（值传递），遇 <code>return</code> 返回调用点；函数内变量在栈上，返回后销毁。递归（函数调用自己）也在此建立：要有终止条件。</li>
+<li><strong>函数声明</strong>：函数先使用后定义时，需在前面写原型声明（如 <code>int add(int a, int b);</code>），通常放进 <code>.h</code> 头文件。声明不分配内存，定义才分配。</li>
+<li><strong>exit 函数</strong>：<code>exit(0)</code> 正常终止整个进程，<code>exit(非0)</code> 表示异常；<code>atexit()</code> 可注册退出回调。与 <code>return</code> 不同，<code>exit</code> 可在任意函数中终止程序。子进程中 <code>_exit</code> / <code>exit</code> 的缓冲区差异在第7周文件缓冲区展开。</li>
+<li><strong>多文件编程</strong>：把声明放 <code>xxx.h</code>、实现放 <code>xxx.c</code>，主程序 <code>main.c</code> 通过 <code>#include "xxx.h"</code> 使用；编译：<code>gcc main.c xxx.c -o app</code>（多 <code>.c</code> 同时编译链接）。这是 ROS2 包 <code>include/ + src/</code> 结构的原型。</li>
+<li><strong>防止头文件重复包含</strong>：<code>#ifndef _XXX_H_ / #define _XXX_H_ ... #endif</code>（守卫宏）或 <code>#pragma once</code>。否则重复包含会报重定义错误。</li>
 </ul>
-<h3 id="622-指针">6.2.2 指针</h3>
+<h3 id="622-第2课-指针原理与操作">6.2.2 第2课 指针原理与操作</h3>
 <ul>
-<li><code>int *p = &amp;a;</code>，<code>*p</code> 解引用读写 <code>a</code>；64 位指针一律 8 字节，类型决定 <code>p+1</code> 步长；</li>
-<li>野指针三来源：未初始化、释放后使用、返回局部变量地址——声明即置 <code>NULL</code>、free 后置 <code>NULL</code>；</li>
-<li><code>p[i] == *(p+i)</code>；同类型指针相减得<strong>元素个数</strong>；<code>const int *p</code>（值不可改）/<code>int * const p</code>（指向不可改）；</li>
-<li><code>void *</code> 万能指针不能解引用；二级指针 <code>int **</code> 用于「函数内修改外部指针」（malloc 封装的标准范式）。</li>
+<li><strong>核心概念</strong>：指针（pointer）= 存放<strong>内存地址</strong>的变量。<code>int *p = &amp;a;</code> 中 <code>p</code> 存 <code>a</code> 的地址，<code>*p</code> 读写 <code>a</code> 本身——「间接访问」是 C 的核心能力。</li>
+<li><strong>指针和指针变量 / 解引用、间接引用</strong>：<code>&amp;</code> 取地址、<code>*</code> 解引用。<code>*p = 100;</code> 直接改写 <code>a</code> 的值。指针变量自身也有地址（<code>&amp;p</code>），为多级指针铺垫。</li>
+<li><strong>间接修改变量</strong>：函数想修改调用方的变量，必须传地址（<code>void set(int *p) { *p = 5; }</code>），这叫地址传递——ROS2/C++ 的引用参数同一原理。</li>
+<li><strong>指针类型占用空间</strong>：64 位系统指针一律 8 字节（与指向类型无关），32 位系统 4 字节；指针类型决定 <code>p+1</code> 跳多少字节、解引用读多少字节。</li>
+<li><strong>野指针</strong>：未初始化或已释放后仍使用的指针，指向随机地址，解引用常导致段错误或静默踩内存。对策：声明即初始化为 <code>NULL</code>，释放后置 <code>NULL</code>。</li>
+<li><strong>空指针</strong>：<code>NULL</code>（(void*)0）表示「不指向任何对象」，解引用 <code>NULL</code> 必然崩溃；使用前判 <code>if (p != NULL)</code>。ROS2 中 <code>nullptr</code> 检查同理。</li>
+<li><strong>万能指针、泛型指针</strong>：<code>void *p</code> 可接收任意类型指针，但不能直接解引用/算术（不知步长），使用前需强转回具体类型。<code>malloc</code> 返回 <code>void *</code>、<code>memcpy</code> 参数都是 <code>void *</code>。</li>
+<li><strong>const 修饰变量</strong>：<code>const int a = 1;</code> 不可直接改值。</li>
+<li><strong>const 修改指针变量</strong>：三种形态——<code>const int *p</code>（不能通过 p 改值，p 可改指向）、<code>int * const p</code>（p 不可改指向，可改值）、<code>const int * const p</code>（都不可）。口诀：<code>const</code> 修饰其后最近的成分。</li>
+<li><strong>数组名不允许修改</strong>：<code>a</code> 是常量地址（<code>a = a + 1</code> 非法），但 <code>a[i]</code> 可改；把数组传参时退化为普通指针后可移动。</li>
+<li><strong>指针取数组元素 / 指针加法 / 指针循环遍历数组</strong>：<code>p[i] == *(p+i)</code>；<code>p+1</code> 跳过一个元素（<code>sizeof(*p)</code> 字节）；遍历常用 <code>for (int *p = a; p &lt; a + n; p++) sum += *p;</code>。</li>
+<li><strong>指针写入和读取数组练习</strong>：用指针向数组写入 0..n-1 再读出打印，熟悉 <code>*p</code> 与 <code>p[i]</code> 互换。</li>
+<li><strong>指针减法 / 数组名的地址加一 / 指针与指针的运算 / 数组指针之间的运算</strong>：同类型指针相减得<strong>元素个数</strong>（<code>p2 - p1</code>，不是字节数），如 <code>int *p = &amp;a[2]; p - a == 2</code>；<code>&amp;a + 1</code> 跳过整个数组（类型是数组指针 <code>int (*)[N]</code>）。</li>
+<li><strong>利用数组指针获取元素个数</strong>：<code>(int)(end - begin)</code> 求元素数，是 C++ 迭代器区间 <code>[begin, end)</code> 的雏形。</li>
+<li><strong>mystrlen 函数 / 指针实现 mystrlen 函数</strong>：<code>while (*p != '\0') { p++; len++; }</code> 或 <code>while (*p++) len++;</code>——字符串遍历的标准手势，也是理解 C 字符串以 <code>\0</code> 结尾的最佳练习。</li>
+<li><strong>指针的比较运算</strong>：指向同一数组的指针可 <code>&lt;、&gt;、==</code> 比较（比较地址顺序）；指向不同对象的指针比较无意义。<code>p != NULL</code> 最常用。</li>
+<li><strong>指针数组</strong>：<code>int *arr[5]</code> 是「数组，元素为指针」，如 <code>char *names[] = {"ros2", "rcl"};</code>（存字符串字面量地址）；与「数组指针」<code>int (*p)[5]</code> 类型完全不同，注意括号优先级。</li>
+<li><strong>多级指针</strong>：<code>int **pp = &amp;p;</code>，<code>**pp</code> 是 <code>a</code>。二级指针用于「函数内修改外部指针变量」（如 malloc 分配后返回）——<code>char **argv</code> 就是多级指针。</li>
+<li><strong>指针值传递 01 / 02</strong>：<code>void f(int *p)</code> 把指针<strong>本身</strong>的值复制给形参，形参指向改了不影响实参指向（<code>p = NULL</code> 不影响外部）。</li>
+<li><strong>指针地址传递</strong>：传 <code>&amp;p</code>（<code>int **</code>）才能让函数修改外部指针的指向；这是「申请堆内存并在函数内返回」的标准范式。</li>
 </ul>
-<h3 id="623-字符串函数族">6.2.3 字符串函数族</h3>
+<h3 id="623-第3课-字符串处理函数应用">6.2.3 第3课 字符串处理函数应用</h3>
 <ul>
-<li><code>strlen</code>（到 <code>\0</code> 为止）≠ <code>sizeof</code>（容量）；<code>strcpy/strcat</code> 不查长度、<code>strncpy</code> 不保证补 <code>\0</code>、<code>strcmp</code> 为 0 即相等；</li>
-<li><code>strstr</code> 找子串、<code>strtok</code> 切词（不可重入，多线程用 <code>strtok_r</code>）、<code>sprintf/sscanf</code> 格式化互转、<code>atoi</code>（失败返回 0，严肃场景用 <code>strtol</code>）；</li>
-<li><code>int main(int argc, char *argv[])</code> 就是 <code>ros2 run pkg node --ros-args</code> 的入口签名。</li>
+<li><strong>核心概念</strong>：C 字符串 = <code>char *</code> 指向的以 <code>\0</code> 结尾的字节序列；<code>&lt;string.h&gt;</code> 提供一整套字符串函数，配合指针使用。</li>
+<li><strong>数组名当参数传递细节</strong>：数组传参退化为 <code>char *</code>，函数内 <code>sizeof</code> 得到的是指针大小；长度必须另传参数（<code>void f(char *s, size_t len)</code>）。</li>
+<li><strong>指针作为函数返回值</strong>：可返回指向静态区/堆/调用方缓冲区的指针，<strong>不可返回局部变量地址</strong>（函数返回后栈帧销毁）——经典悬垂指针 bug。</li>
+<li><strong>指针字符串</strong>：<code>char *s = "hello";</code> 指向只读字面量（改它会段错误），<code>char s[] = "hello";</code> 是可改的栈上副本；要修改字符串用数组或堆内存。</li>
+<li><strong>自制复制字符串函数 01 / 02</strong>：<code>mystrcpy(dest, src)</code>：<code>while ((*d++ = *s++) != '\0');</code> 或显式循环，注意 dest 容量与 <code>'\0'</code> 收尾。</li>
+<li><strong>自制去除空格函数 01 / 02</strong>：<code>trim</code> 逻辑——跳过开头空格、拷贝中间内容、截掉尾部空格；可用双指针原地完成（读指针与写指针分离），用于解析配置行。</li>
+<li><strong>main 函数的参数</strong>：<code>int main(int argc, char *argv[])</code>，<code>argc</code> 是参数个数、<code>argv[i]</code> 是第 i 个参数字符串（<code>argv[0]</code> 为程序名）。<code>./app --input a.txt</code> 的解析就靠它——对应 <code>ros2 run pkg node --ros-args</code>。</li>
+<li><strong>strstr 函数</strong>：<code>strstr(hay, needle)</code> 返回子串首次出现的地址，找不到返回 <code>NULL</code>；<code>strstr(p+1, ...)</code> 可继续找下一个。</li>
+<li><strong>统计字符串中子串出现的次数</strong>：循环 <code>p = strstr(p, sub)</code> 命中后 <code>count++; p += strlen(sub);</code>（或 <code>p++</code> 计重叠）。</li>
+<li><strong>字符串反转 / 判断回文字符串</strong>：反转用首尾双指针交换；回文判断反转后与原串 <code>strcmp</code> 相等或双指针向中间扫描比较。</li>
+<li><strong>strcpy / strncpy</strong>：<code>strcpy(dest, src)</code> 含 <code>\0</code> 全拷贝、不检查容量；<code>strncpy(dest, src, n)</code> 最多 n 字符，<strong>src 超长时不补 <code>\0</code></strong>，需手工补。</li>
+<li><strong>strcat / strncat</strong>：末尾追加；<code>strncat(dest, src, n)</code> 追加后保证 <code>\0</code>。务必保证 dest 有足够空间。</li>
+<li><strong>strcmp / strncmp</strong>：逐字符比较 ASCII，返回 0 相等、&lt;0 前小、&gt;0 后小；<code>strncmp</code> 只比前 n 个。比较字符串<strong>不能用 <code>==</code></strong>（那是地址比较）。</li>
+<li><strong>sprintf / sscanf</strong>：<code>sprintf(buf, "x=%.2f", x)</code> 格式化写入字符串；<code>sscanf(line, "%d,%f", &amp;i, &amp;f)</code> 从字符串解析——解析 CSV/配置行的利器（比 scanf 更常用于解析传感器文本协议）。</li>
+<li><strong>strchr / strrchr</strong>：找字符首次/最后出现位置，返回 <code>char *</code> 或 <code>NULL</code>；常用于拆路径、找分隔符。</li>
+<li><strong>strtok / strtok 练习</strong>：<code>strtok(buf, ",")</code> 按分隔符切词，首次传 buf、后续传 <code>NULL</code>，内部静态状态不可重入（多线程用 <code>strtok_r</code>）。切 CSV、解析命令行参数常用。</li>
+<li><strong>atoi、atof、atol</strong>：字符串转 <code>int/double/long</code>，不检查合法性（失败返回 0），严肃场景用 <code>strtol/strtod</code>（可检测溢出与剩余字符）。</li>
+<li><strong>求字符串中非空格的元素个数</strong>：遍历统计 <code>c != ' '</code> 的个数，配合 <code>isspace</code>（<code>&lt;ctype.h&gt;</code>）处理 \t \n。</li>
 </ul>
-<h3 id="624-内存管理">6.2.4 内存管理</h3>
+<h3 id="624-第4课-内存管理">6.2.4 第4课 内存管理</h3>
 <ul>
-<li>内存四分区：代码段/数据段/栈/堆；<code>static</code> 局部变量只初始化一次、<code>static</code> 全局/函数限定本文件可见；</li>
-<li><code>malloc/calloc/realloc</code> 必须判 <code>NULL</code>；<code>free</code> 后置空；谁申请谁释放；<code>valgrind --leak-check=full</code> 查泄漏。</li>
+<li><strong>核心概念</strong>：变量的可见范围（作用域）、存活时间（生命周期）、所处内存区域（四分区），三者共同决定内存安全。</li>
+<li><strong>作用域</strong>：局部变量只在 <code>{}</code> 内有效；块作用域、函数原型作用域、文件作用域（全局）三层。</li>
+<li><strong>全局变量 / 静态全局变量</strong>：全局变量在整个文件（跨文件需 <code>extern</code> 声明）可用、程序启动到结束都活着；<code>static</code> 修饰全局变量把作用域限制在本文件（模块私有），避免命名冲突——多文件工程必备。</li>
+<li><strong>static 静态局部变量</strong>：函数内 <code>static int cnt = 0;</code> 只初始化一次、函数退出后值保留、生命周期与程序一致（存放在数据段而非栈）；适合计数器、缓存。注意它不是线程安全的。</li>
+<li><strong>静态函数</strong>：<code>static void helper(void)</code> 限定函数只在本文件可见，是 C 实现「私有函数」的唯一手段；头文件里只放对外接口。</li>
+<li><strong>内存四分区</strong>：① 代码段（text，只读指令与字面量）② 数据段（全局/static 变量、<code>static</code> 初始化）③ 栈（stack，局部变量、函数调用，自动管理、空间有限约 MB 级）④ 堆（heap，<code>malloc</code> 手动管理，空间大、速度稍慢）。理解四分区才能解释「返回局部变量地址」为什么错。</li>
+<li><strong>生命周期</strong>：栈变量随函数返回销毁；全局/static 从程序开始到结束；堆块从 <code>malloc</code> 到 <code>free</code>（不 free 就泄漏）。</li>
+<li><strong>申请堆空间</strong>：<code>malloc(n)</code> 分配 n 字节不初始化、<code>calloc(n, size)</code> 分配并清零、<code>realloc</code> 调整大小；返回 <code>void *</code>，失败返回 <code>NULL</code>——<strong>必须检查</strong>。典型用法 <code>int *p = (int *)malloc(n * sizeof(int)); if (p == NULL) ...</code>。</li>
+<li><strong>free 细节</strong>：<code>free(p)</code> 释放后 <code>p</code> 成野指针，应立即 <code>p = NULL</code>；重复 free 是灾难；<code>free(NULL)</code> 是安全空操作；谁申请谁释放。</li>
+<li><strong>堆空间操作字符串</strong>：<code>malloc(strlen(src)+1)</code> 分配后 <code>strcpy</code>——比固定数组灵活，是 C 里动态字符串的标准做法。</li>
+<li><strong>二级指针 malloc 空间</strong>：<code>char **pp = (char **)malloc(n * sizeof(char *));</code> 再为每行 <code>pp[i] = malloc(...)</code> 分配，得到「可变长字符串数组」，释放时逐行 <code>free</code> 再 <code>free(pp)</code>。</li>
 </ul>
-<h2 id="63-运行效果（实测）">6.3 运行效果（实测）</h2>
+<h2 id="63-重点与难点">6.3 重点与难点</h2>
+<ol>
+<li><strong>指针的值传递 vs 地址传递</strong>：<code>int *p</code> 形参改不了实参的指向，<code>int **pp</code> 才能。这是 malloc 封装函数、双缓冲区管理的根基。</li>
+<li><strong>悬垂/野指针</strong>：返回局部变量地址、free 后继续使用、未初始化就解引用——三类错误的共同点是「指针指向的内存已不属于你」。</li>
+<li><strong>字符串函数的容量陷阱</strong>：<code>strcpy/strcat</code> 不检查长度、<code>strncpy</code> 不保证补 <code>\0</code>、<code>strtok</code> 不可重入。工程上应封装带长度的版本。</li>
+<li><strong>内存四分区与生命周期</strong>：背下来不如画出来：每道指针题画栈/堆/数据段草图再写代码。</li>
+<li><strong>const 修饰指针的三种形态</strong>：<code>const int *</code> / <code>int * const</code> / <code>const int * const</code>，接口设计中大量使用（如 <code>const char *</code> 参数表「我只读不改」）。</li>
+</ol>
+<blockquote>
+<p><strong>注意：</strong> <code>free(p)</code> 后把 <code>p = NULL</code> 是纪律不是可选项；<code>malloc</code> 返回值不检查、释放后不置空、忘记释放，是 C 程序崩溃与内存泄漏的三大来源。工具 <code>valgrind ./app</code> 可以直接检测泄漏。</p>
+</blockquote>
+<h2 id="64-代码与命令实战">6.4 代码与命令实战</h2>
+<p><strong>场景 1：多文件编程（头文件 + 实现 + 主程序）</strong>（对应第1课）</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* strutil.h —— 头文件守卫防止重复包含 */</span>
+<span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> STRUTIL_H</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> STRUTIL_H</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stddef.h&gt;</span></span>
+
+<span class="hljs-type">size_t</span> <span class="hljs-title function_">mystrlen</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *s)</span>;        <span class="hljs-comment">/* 函数声明（原型） */</span>
+<span class="hljs-type">void</span>   <span class="hljs-title function_">mystrcpy</span><span class="hljs-params">(<span class="hljs-type">char</span> *dest, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *src)</span>;
+
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+</code></pre>
+<pre><code class="lang-c"><span class="hljs-comment">/* strutil.c —— 函数实现 */</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"strutil.h"</span></span>
+
+<span class="hljs-type">size_t</span> <span class="hljs-title function_">mystrlen</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *s)</span>
+{
+    <span class="hljs-type">const</span> <span class="hljs-type">char</span> *p = s;
+    <span class="hljs-keyword">while</span> (*p != <span class="hljs-string">'\0'</span>) p++;     <span class="hljs-comment">/* 指针遍历到结尾 */</span>
+    <span class="hljs-keyword">return</span> (<span class="hljs-type">size_t</span>)(p - s);     <span class="hljs-comment">/* 指针相减得字符数 */</span>
+}
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">mystrcpy</span><span class="hljs-params">(<span class="hljs-type">char</span> *dest, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *src)</span>
+{
+    <span class="hljs-keyword">while</span> ((*dest++ = *src++) != <span class="hljs-string">'\0'</span>)   <span class="hljs-comment">/* 拷含 '\0' */</span>
+        ;
+}
+</code></pre>
+<pre><code class="lang-c"><span class="hljs-comment">/* main.c —— 调用多文件接口 */</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"strutil.h"</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> *argv[])</span>
+{
+    <span class="hljs-type">char</span> buf[<span class="hljs-number">64</span>];
+    <span class="hljs-type">const</span> <span class="hljs-type">char</span> *msg = (argc &gt; <span class="hljs-number">1</span>) ? argv[<span class="hljs-number">1</span>] : <span class="hljs-string">"ros2 humble"</span>;
+    mystrcpy(buf, msg);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"buf = %s, len = %zu\n"</span>, buf, mystrlen(buf));
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<pre><code class="lang-bash">gcc -Wall main.c strutil.c -o app   <span class="hljs-comment"># 多个 .c 一起编译链接</span>
+./app hello
+</code></pre>
+<p><strong>场景 2：指针遍历数组 + 指针相减求元素数</strong>（对应第2课）</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* ptr.c —— 指针算术与数组遍历 */</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>
+{
+    <span class="hljs-type">int</span> a[<span class="hljs-number">5</span>] = {<span class="hljs-number">10</span>, <span class="hljs-number">20</span>, <span class="hljs-number">30</span>, <span class="hljs-number">40</span>, <span class="hljs-number">50</span>};
+    <span class="hljs-type">int</span> *begin = a;            <span class="hljs-comment">/* 数组名即首元素地址 */</span>
+    <span class="hljs-type">int</span> *end   = a + <span class="hljs-number">5</span>;        <span class="hljs-comment">/* 指向最后一个元素的下一位置 */</span>
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> *p = begin; p &lt; end; p++)
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d "</span>, *p);     <span class="hljs-comment">/* 解引用取值 */</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"\n元素个数 = %ld\n"</span>, (<span class="hljs-type">long</span>)(end - begin));   <span class="hljs-comment">/* 指针相减 */</span>
+
+    <span class="hljs-type">int</span> **pp = &amp;begin;         <span class="hljs-comment">/* 二级指针：指向指针的指针 */</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"通过二级指针取 a[0] = %d\n"</span>, **pp);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<pre><code class="lang-bash">gcc -Wall ptr.c -o ptr &amp;&amp; ./ptr
+</code></pre>
+<p><strong>场景 3：const 修饰指针 + 函数地址传递</strong>（对应第2课「指针地址传递」）</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* constptr.c —— const 三种形态与地址传递 */</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">fill</span><span class="hljs-params">(<span class="hljs-type">int</span> **out, <span class="hljs-type">int</span> n)</span>        <span class="hljs-comment">/* 二级指针：函数内改变外部指针 */</span>
+{
+    *out = (<span class="hljs-type">int</span> *)<span class="hljs-built_in">malloc</span>(n * <span class="hljs-keyword">sizeof</span>(<span class="hljs-type">int</span>));   <span class="hljs-comment">/* 分配堆空间 */</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) (*out)[i] = i * <span class="hljs-number">10</span>;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>
+{
+    <span class="hljs-type">const</span> <span class="hljs-type">int</span> *p1;           <span class="hljs-comment">/* 不能通过 p1 改值，可改指向 */</span>
+    <span class="hljs-type">int</span> * <span class="hljs-type">const</span> p2 = <span class="hljs-literal">NULL</span>;   <span class="hljs-comment">/* p2 指向不可改（const 靠近 p2） */</span>
+    (<span class="hljs-type">void</span>)p1; (<span class="hljs-type">void</span>)p2;
+
+    <span class="hljs-type">int</span> *arr = <span class="hljs-literal">NULL</span>;
+    fill(&amp;arr, <span class="hljs-number">4</span>);           <span class="hljs-comment">/* 地址传递，arr 被填上堆指针 */</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">4</span>; i++) <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d "</span>, arr[i]);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"\n"</span>);
+    <span class="hljs-built_in">free</span>(arr);               <span class="hljs-comment">/* 用完释放 */</span>
+    arr = <span class="hljs-literal">NULL</span>;              <span class="hljs-comment">/* 释放后置空，防野指针 */</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<pre><code class="lang-bash">gcc -Wall constptr.c -o constptr &amp;&amp; ./constptr
+</code></pre>
+<p><strong>场景 4：自制 trim + strtok + sscanf 解析 CSV 行</strong>（对应第3课）</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* parse.c —— 去空格、切词、解析一行配置 "wheel, 0.05, 30" */</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">trim</span><span class="hljs-params">(<span class="hljs-type">char</span> *s)</span>
+{
+    <span class="hljs-type">char</span> *p = s, *q = s;
+    <span class="hljs-keyword">while</span> (*p == <span class="hljs-string">' '</span>) p++;                <span class="hljs-comment">/* 跳过前导空格 */</span>
+    <span class="hljs-keyword">while</span> (*p) *q++ = *p++;               <span class="hljs-comment">/* 前移拷贝 */</span>
+    *q = <span class="hljs-string">'\0'</span>;
+    <span class="hljs-type">size_t</span> len = <span class="hljs-built_in">strlen</span>(s);               <span class="hljs-comment">/* 去尾部空格 */</span>
+    <span class="hljs-keyword">while</span> (len &gt; <span class="hljs-number">0</span> &amp;&amp; s[len - <span class="hljs-number">1</span>] == <span class="hljs-string">' '</span>) s[--len] = <span class="hljs-string">'\0'</span>;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>
+{
+    <span class="hljs-type">char</span> line[<span class="hljs-number">128</span>] = <span class="hljs-string">"  wheel, 0.05, 30   "</span>;
+    trim(line);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"trim 后: [%s]\n"</span>, line);
+
+    <span class="hljs-type">char</span> name[<span class="hljs-number">32</span>];
+    <span class="hljs-type">double</span> radius;
+    <span class="hljs-type">int</span> rpm;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">sscanf</span>(line, <span class="hljs-string">"%31[^,], %lf, %d"</span>, name, &amp;radius, &amp;rpm) == <span class="hljs-number">3</span>)
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"解析结果: name=%s radius=%.2f rpm=%d\n"</span>, name, radius, rpm);
+
+    <span class="hljs-type">char</span> buf[<span class="hljs-number">128</span>] = <span class="hljs-string">"10,20,30"</span>;
+    <span class="hljs-type">int</span> sum = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">char</span> *tok = strtok(buf, <span class="hljs-string">","</span>); tok != <span class="hljs-literal">NULL</span>; tok = strtok(<span class="hljs-literal">NULL</span>, <span class="hljs-string">","</span>))
+        sum += atoi(tok);                 <span class="hljs-comment">/* 字符串转整数 */</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"strtok 求和 = %d\n"</span>, sum);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<pre><code class="lang-bash">gcc -Wall parse.c -o parse &amp;&amp; ./parse
+</code></pre>
+<p><strong>场景 5：堆上二维空间（二级指针 malloc）与释放</strong>（对应第4课）</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* heap2d.c —— 二级指针申请 n 行 m 列，逐行释放 */</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>
+{
+    <span class="hljs-type">int</span> n = <span class="hljs-number">3</span>, m = <span class="hljs-number">4</span>;
+    <span class="hljs-type">int</span> **grid = (<span class="hljs-type">int</span> **)<span class="hljs-built_in">malloc</span>(n * <span class="hljs-keyword">sizeof</span>(<span class="hljs-type">int</span> *));   <span class="hljs-comment">/* 行指针数组 */</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++)
+        grid[i] = (<span class="hljs-type">int</span> *)<span class="hljs-built_in">calloc</span>(m, <span class="hljs-keyword">sizeof</span>(<span class="hljs-type">int</span>));      <span class="hljs-comment">/* 每行 m 列，清零 */</span>
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++)                        <span class="hljs-comment">/* 写入 */</span>
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; m; j++)
+            grid[i][j] = i * <span class="hljs-number">10</span> + j;
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) {                      <span class="hljs-comment">/* 读出 */</span>
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; m; j++) <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%2d "</span>, grid[i][j]);
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"\n"</span>);
+    }
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) <span class="hljs-built_in">free</span>(grid[i]);  <span class="hljs-comment">/* 先释放每行 */</span>
+    <span class="hljs-built_in">free</span>(grid);                                 <span class="hljs-comment">/* 再释放行指针数组 */</span>
+    grid = <span class="hljs-literal">NULL</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<pre><code class="lang-bash">gcc -Wall heap2d.c -o heap2d &amp;&amp; ./heap2d
+valgrind --leak-check=full ./heap2d   <span class="hljs-comment"># 可选：检查内存泄漏</span>
+</code></pre>
+<h2 id="65-运行效果（实测）">6.5 运行效果（实测）</h2>
+<p>本章实测案例：解析一行机器人配置 <code>wheel, 0.05, 30</code>——去掉首尾空格、<code>sscanf</code> 拆字段、<code>strtok</code> 切词求和；并用指针遍历数组、二级指针理解地址传递。</p>
 <pre><code class="lang-text">10 20 30 40 50 
 元素个数 = 5
 trim 后: [wheel, 0.05, 30]
@@ -638,7 +900,7 @@ trim 后: [wheel, 0.05, 30]
 strtok 求和 = 60
 </code></pre>
 <p>编译命令：<code>gcc -Wall w6_parse.c -o w6 &amp;&amp; ./w6</code>。</p>
-<h2 id="64-端到端实战（实测）：多文件编程--trim--堆字符串">6.4 端到端实战（实测）：多文件编程 + trim + 堆字符串</h2>
+<h2 id="66-端到端实战（实测）：多文件编程--trim--堆字符串">6.6 端到端实战（实测）：多文件编程 + trim + 堆字符串</h2>
 <p>三个源文件构成的小工程：<code>strutil.h</code>（接口声明 + 头文件守卫）、<code>strutil.c</code>（指针遍历实现 mystrlen/mystrcpy/trim/heap_strdup）、<code>main6.c</code>（命令行参数 + trim + 堆复制 + 释放）。</p>
 <pre><code class="lang-c"><span class="hljs-comment">/* strutil.h（节选） */</span>
 <span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> STRUTIL_H</span>
@@ -678,12 +940,39 @@ $ ./app <span class="hljs-string">"  ros2 humble  "</span>
 trim 后: [ros2 humble] 长度=11
 heap: [ros2 humble]
 </code></pre>
-<h2 id="65-本章小结">6.5 本章小结</h2>
+<h2 id="67-与-ros2--机器人开发的关联">6.7 与 ROS2 / 机器人开发的关联</h2>
+<ol>
+<li><strong>指针与内存模型直接对应 rclcpp</strong>：rclcpp 的 <code>shared_ptr&lt;Message&gt;</code>、<code>unique_ptr</code>、回调里的 <code>const msg::SharedPtr &amp;msg</code> 都建立在「指针 + 堆 + 生命周期」之上；理解了 <code>malloc/free</code> 与悬垂指针，才能理解智能指针为什么存在、为什么 <code>get()</code> 要小心。</li>
+<li><strong>多文件编程 = ROS2 包的组织方式</strong>：ROS2 包的 <code>include/&lt;pkg&gt;/xxx.hpp</code>（声明）+ <code>src/xxx.cpp</code>（实现）+ CMake 目标链接，就是本周 <code>.h/.c</code> 模式 + <code>gcc 多文件编译</code> 的工程化版本；头文件守卫对应 <code>#pragma once</code>。</li>
+<li><strong>字符串函数贯穿 ROS2 CLI 与协议解析</strong>：解析串口 GPS 的 NMEA 语句（<code>strtok</code>/<code>sscanf</code>）、拼接 topic 名与 frame_id（<code>snprintf</code> 更安全）、从参数字符串取子串（<code>strstr</code>），全是本周函数族的直接应用。</li>
+<li><strong>main 参数 = 节点启动参数</strong>：<code>int main(int argc, char **argv)</code> 正是 ROS2 节点入口签名，<code>rclcpp::init(argc, argv)</code> 就是对 argv 的解析；理解 argv 才能理解 <code>--ros-args -p</code>。</li>
+<li><strong>堆与生命周期决定机器人程序稳定性</strong>：点云、图像缓冲都在堆上分配；二级指针申请二维栅格（代价地图）是导航开发的常见操作；内存泄漏在长时间运行的 SLAM/导航节点中会累积成 OOM 崩溃，<code>valgrind</code>/ASan 是标准排障工具。</li>
+<li><strong>static 与作用域</strong>：模块内共享状态（如标定参数缓存）用 <code>static</code> 文件内全局 + 接口函数封装，对应 C++ 类的静态成员与单例节点设计。</li>
+</ol>
+<h2 id="68-自测与练习（含参考答案要点）">6.8 自测与练习（含参考答案要点）</h2>
+<ol>
+<li>用自己的话解释：为什么 <code>int *p</code> 形参无法改变外部指针的指向，而 <code>int **pp</code> 可以？画栈/堆草图说明。</li>
+<li>编程题：实现 <code>size_t mystrlen(const char *s)</code> 与 <code>char *mystrchr(char *s, char c)</code>（返回字符首次出现地址或 NULL），并写测试（验收：<code>mystrlen("ros2")==4</code>）。</li>
+<li>编程题：实现 <code>trim(char *s)</code> 并处理 <code>"  abc  "</code> → <code>"abc"</code>（验收：前导与尾随空格都去掉，中间空格保留）。</li>
+<li>动手任务：用 <code>malloc</code> 生成 n 个整数的数组填入斐波那契数列，打印后 <code>free</code>，用 <code>valgrind --leak-check=full ./app</code> 验证 0 泄漏（验收：valgrind 输出 "All heap blocks were freed"）。</li>
+</ol>
+<blockquote>
+<p>参考答案要点：① 值传递复制的是指针本身的值，形参 <code>p</code> 是新副本，改它不影响实参；传 <code>&amp;p</code> 得 <code>int **</code>，<code>*pp = ...</code> 才写回实参所在内存；② <code>while (*s) { s++; len++; } return len;</code>，mystrchr 用 <code>while (*s) { if (*s == c) return s; s++; } return NULL;</code>；③ 用读写双指针或先 <code>memmove</code> 去前导、再从 <code>\0</code> 向前删尾空格；④ <code>malloc(n*sizeof(int))</code> 后必须判 <code>NULL</code>，<code>free(p); p = NULL;</code>，valgrind 确认无 "definitely lost"。</p>
+</blockquote>
+<h2 id="69-常见问题（faq）">6.9 常见问题（FAQ）</h2>
+<ul>
+<li><strong>Q：<code>char *s = "hello";</code> 和 <code>char s[] = "hello";</code> 到底差在哪？</strong> A：前者指针指向只读字面量区，<code>s[0]='H'</code> 会段错误；后者是栈上可写副本。要改字符串内容用数组或堆内存。</li>
+<li><strong>Q：<code>malloc</code> 后要不要强转 <code>(int *)</code>？</strong> A：C 中 <code>void *</code> 隐式转任意指针，可不转（C++ 必须转）。显式转换有助于表达意图，两种风格在工程中都常见。</li>
+<li><strong>Q：<code>strncpy</code> 就一定安全吗？</strong> A：不一定。src 长度 ≥ n 时 dest 不会被补 <code>\0</code>，之后用 <code>%s</code> 打印会越界读。复制后必须 <code>dest[n-1] = '\0'</code> 或用 <code>snprintf</code>。</li>
+<li><strong>Q：函数里 <code>malloc</code> 的内存，调用者怎么拿到？</strong> A：返回该指针（<code>return p;</code>），或通过二级指针参数写回（<code>void make(int **out)</code>），并约定好由谁 free。</li>
+</ul>
+<h2 id="610-本章小结">6.10 本章小结</h2>
 <ul>
 <li>指针 + 堆 + 生命周期是理解 rclcpp 智能指针（<code>SharedPtr</code>）的前提；</li>
+<li><code>int *p</code> 形参改不了外部指针指向，<code>int **pp</code> 才能——malloc 封装函数的标准范式；</li>
 <li>字符串函数族贯穿 ROS2 命令行与协议解析（NMEA 语句、topic 名拼接）；</li>
 <li>多文件 <code>.h/.c</code> + 头文件守卫 = ROS2 包组织的原型；</li>
-<li>堆上二维数组（二级指针 malloc）就是导航代价地图的内存形态。</li>
+<li>堆上二维数组（二级指针 malloc）就是导航代价地图的内存形态；<code>free</code> 后置空、<code>valgrind</code> 查泄漏是工程纪律。</li>
 </ul>
 
                                 
@@ -728,7 +1017,7 @@ heap: [ros2 humble]
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第6章 C 语言高级特性（函数/指针/字符串/内存）","level":"3.3","depth":1,"next":{"title":"第7章 C 语言数据结构与文件操作","level":"3.4","depth":1,"path":"第7周-C语言数据结构与文件操作.md","ref":"第7周-C语言数据结构与文件操作.md","articles":[]},"previous":{"title":"第5章 C 语言进阶编程（运算符/控制流/数组）","level":"3.2","depth":1,"path":"第5周-C语言进阶编程.md","ref":"第5周-C语言进阶编程.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第6周-C语言高级特性.md","mtime":"2026-10-16T02:43:09.754Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T02:43:11.108Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第6章 C 语言高级特性（函数/指针/字符串/内存）","level":"3.3","depth":1,"next":{"title":"第7章 C 语言数据结构与文件操作","level":"3.4","depth":1,"path":"第7周-C语言数据结构与文件操作.md","ref":"第7周-C语言数据结构与文件操作.md","articles":[]},"previous":{"title":"第5章 C 语言进阶编程（运算符/控制流/数组）","level":"3.2","depth":1,"path":"第5周-C语言进阶编程.md","ref":"第5周-C语言进阶编程.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第6周-C语言高级特性.md","mtime":"2026-10-16T03:26:51.712Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T03:26:53.986Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

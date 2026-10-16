@@ -602,37 +602,259 @@
                                 <h1 id="第5章-c-语言进阶编程（运算符控制流数组）">第5章 C 语言进阶编程（运算符/控制流/数组）</h1>
 <blockquote>
 <p>本章对应课程第 5 周：运算符与类型转换、分支与循环（含 switch 状态机雏形）、一维/二维数组与经典算法（翻转、冒泡、最值、频次统计）——机器人状态机、控制循环、传感器缓冲区的雏形。</p>
+<p>所属阶段：阶段2 ROS2 开发必备基础之 C 语言核心编程进阶 ｜ 视频 48 个 ｜ 时长约 6h45m ｜ 难度：入门/进阶</p>
 </blockquote>
-<h2 id="51-案例以及案例分析">5.1 案例以及案例分析</h2>
-<p><strong>需求</strong>：对一组传感器采样值完成「翻转 → 冒泡排序 → 找最大值」，综合运算符、循环与数组下标控制。</p>
-<h2 id="52-知识点与实现">5.2 知识点与实现</h2>
-<h3 id="521-运算符与类型转换">5.2.1 运算符与类型转换</h3>
+<h2 id="51-本周概览与课时结构">5.1 本周概览与课时结构</h2>
+<p>本周把「能存数据」升级为「能算、能判断、能重复」：运算符与类型转换决定计算的正确性，分支与循环构成程序的控制流，数组则是一批同类型数据的连续存储。学完你能写出冒泡排序、数组翻转、二维成绩统计、字符频次统计等经典小程序——这些正是机器人程序里状态机、控制循环、传感器缓冲区的雏形。</p>
+<table>
+<thead>
+<tr>
+<th>课</th>
+<th>小节</th>
+<th>时长</th>
+<th>一句话导览</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第1课 运算符与类型转换深度解析</td>
+<td>11 节（逻辑运算符 9 节 + 类型转换 2 节）</td>
+<td>1h19m</td>
+<td>算术/自增自减/赋值/比较/逻辑/三目/逗号运算符与优先级，隐式与强制类型转换</td>
+</tr>
+<tr>
+<td>第2课 分支语句与循环结构精讲</td>
+<td>14 节（分支语句 3 节 + 循环结构 11 节）</td>
+<td>2h17m</td>
+<td>if/else if/switch，while/do-while/for 与嵌套，break/continue/goto，水仙花数与猜数字</td>
+</tr>
+<tr>
+<td>第3课 数组及多维数组全面详解</td>
+<td>23 节</td>
+<td>3h08m</td>
+<td>一维/二维数组与内存布局、初始化、翻转、冒泡排序、最值、成绩统计、字符数组与字符串</td>
+</tr>
+</tbody>
+</table>
+<h2 id="52-知识点梳理">5.2 知识点梳理</h2>
+<h3 id="521-第1课-运算符与类型转换深度解析">5.2.1 第1课 运算符与类型转换深度解析</h3>
 <ul>
-<li>整数除法截断（<code>5/2==2</code>），均值要写 <code>(double)sum / n</code>；</li>
-<li><code>&amp;&amp;</code>/<code>||</code> 短路求值：<code>if (p != NULL &amp;&amp; p-&gt;x &gt; 0)</code> 防空指针；</li>
-<li><code>==</code> 写成 <code>=</code> 是最高频 bug；混合有符号/无符号比较被转为无符号（<code>-1 &lt; 1u</code> 为假）；</li>
-<li>优先级拿不准就加括号；<code>i++</code> 与 <code>++i</code> 别混用在同一表达式。</li>
+<li><strong>核心概念</strong>：运算符（operator）+ 操作数 = 表达式，表达式有值和类型；类型转换决定不同类型的数如何一起运算。</li>
+<li><strong>数学运算符</strong>：<code>+ - * / %</code>。整数除法截断（<code>5/2 == 2</code>），<code>%</code> 取模仅用于整数（<code>-7 % 2</code> 结果随实现，实际为 -1）。想要小数结果必须让操作数是浮点：<code>5.0 / 2</code>。</li>
+<li><strong>除数不能为 0</strong>：整数除以 0 会崩溃（浮点除 0 得 <code>inf/nan</code>）。运行时变量作除数前先判 <code>if (b != 0)</code>——机器人中里程计轮径、时间差都可能为 0。</li>
+<li><strong>自增和自减</strong>：<code>i++</code> 先用后加、<code>++i</code> 先加后用；<code>a = i++ - ++i</code> 这类「一个表达式多次修改同一变量」是未定义行为，禁止出现在工程代码里。</li>
+<li><strong>赋值运算</strong>：<code>= += -= *= /= %=</code>。<code>a = b = c</code> 右结合；赋值表达式本身也有值（<code>while ((c = getchar()) != EOF)</code> 是常见用法）。</li>
+<li><strong>比较运算符</strong>：<code>== != &gt; &lt; &gt;= &lt;=</code>，结果为 <code>1</code>（真）或 <code>0</code>（假）。<code>==</code> 写成 <code>=</code> 是最高频 bug，建议把常量写左边（<code>if (0 == ret)</code>）或开 <code>-Wall</code>。</li>
+<li><strong>逻辑运算符</strong>：<code>&amp;&amp;</code> 与、<code>||</code> 或、<code>!</code> 非。关键性质：<strong>短路求值</strong>——<code>a &amp;&amp; b</code> 中 <code>a</code> 为假则 <code>b</code> 不执行，<code>a || b</code> 中 <code>a</code> 为真则 <code>b</code> 不执行；<code>if (p &amp;&amp; p-&gt;x)</code> 能防野指针解引用。</li>
+<li><strong>运算符优先级</strong>：记「单目 &gt; 算术 &gt; 移位 &gt; 关系 &gt; 位 &gt; 逻辑 &gt; 三目 &gt; 赋值 &gt; 逗号」，拿不准就加括号。工程上靠括号表达意图，不靠背优先级表。</li>
+<li><strong>三元、三目运算符</strong>：<code>条件 ? 值1 : 值2</code>。例如 <code>int max = a &gt; b ? a : b;</code>，适合简单二选一；复杂逻辑用 if/else 保证可读性。</li>
+<li><strong>了解逗号运算符</strong>：<code>表达式1, 表达式2</code> 从左到右求值，整体取最后表达式的值，如 <code>for (i = 0, j = n - 1; i &lt; j; i++, j--)</code>（快排/翻转常用）。</li>
+<li><strong>隐式类型转换</strong>：运算时小类型自动提升（<code>char/short → int → unsigned → long → double</code>）；赋值时向左值类型收窄（<code>double d = 5 / 2;</code> 得 2.0，因为先整数除）。混合有符号/无符号比较会被转成无符号，<code>-1 &lt; 1u</code> 为假——经典坑。</li>
+<li><strong>强制类型转换</strong>：<code>(类型)表达式</code>，如 <code>double avg = (double)sum / n;</code>（避免整数除法）。指针转换（第6周）也用这个语法。原则：转换要显式写出意图，避免编译器默默收窄。</li>
 </ul>
-<h3 id="522-分支与循环">5.2.2 分支与循环</h3>
+<h3 id="522-第2课-分支语句与循环结构精讲">5.2.2 第2课 分支语句与循环结构精讲</h3>
 <ul>
-<li><code>if/else if/else</code> 范围判断；<code>switch(整型)+case 常量+break</code> 适合状态机；</li>
-<li><code>while</code> 先判后执行、<code>do-while</code> 至少一次；<code>for(初始化;条件;步进)</code> 适合已知次数；</li>
-<li><code>break/continue</code> 只影响最内层循环；水仙花数练习 = 数字拆位（<code>n%10</code>、<code>n/10%10</code>）。</li>
+<li><strong>核心概念</strong>：分支（selection）解决「做什么」，循环（iteration）解决「做几次」。控制流是机器人状态机与控制周期循环的基础形态。</li>
+<li><strong>单分支和双分支语句</strong>：<code>if (cond) {...}</code> 与 <code>if (cond) {...} else {...}</code>。注意 <code>if (cond);</code> 的空语句陷阱与悬垂 <code>else</code>（就近配对），养成加大括号的习惯。</li>
+<li><strong>多分支语句</strong>：<code>else if (cond) {...} else {...}</code> 链，条件从上到下判断，命中即停；<code>else</code> 可省略。适合范围判断（如速度分档）。</li>
+<li><strong>switch 语句</strong>：<code>switch (整型/字符表达式)</code> + <code>case 常量:</code> + <code>break</code> + <code>default</code>。<code>case</code> 后必须是整型常量；漏写 <code>break</code> 会「贯穿」（fall-through）到下一个 case。适合枚举状态机（如机器人模式切换）。</li>
+<li><strong>while 循环基础语法 / while 练习</strong>：<code>while (cond) {...}</code>，先判断后执行，可能一次都不执行。练习常做累加、阶乘、数字逐位拆解。警惕死循环与「差一错误」（off-by-one）。</li>
+<li><strong>do-while 循环基础语法</strong>：<code>do {...} while (cond);</code> 先执行后判断，至少执行一次；适合「菜单先显示再判断」类交互。注意结尾分号。</li>
+<li><strong>水仙花数</strong>：三位数中各位立方和等于自身的数（153、370、371、404）。算法：取个位 <code>n % 10</code>、取百位 <code>n / 100</code>、取十位 <code>n / 10 % 10</code>——数字拆解在编码器数值解析中常用。</li>
+<li><strong>for 循环基础</strong>：<code>for (初始化; 条件; 步进) {...}</code>，三段都可省略但分号不能省；<code>for</code> 适合已知次数的遍历。</li>
+<li><strong>猜数字实现</strong>：<code>rand() % 范围</code> 生成随机数、<code>srand((unsigned)time(NULL))</code> 播种、循环读取输入比较大小并提示「大了/小了」——综合 scanf、分支、while 的第一个完整小程序。</li>
+<li><strong>for 循环嵌套 / 九九乘法表实现</strong>：外层控制行、内层控制列，<code>printf("%d*%d=%-4d", ...)</code> 对齐输出。嵌套循环复杂度是 O(n²)，是后面理解算法效率的起点。</li>
+<li><strong>break 跳出循环 / continue 跳出当次循环</strong>：<code>break</code> 终止本层循环，<code>continue</code> 跳过本次进入下一轮；只影响最内层循环。嵌套时可用标志位或 goto 语义跳出多层。</li>
+<li><strong>了解 goto</strong>：<code>goto 标签;</code> 可无条件跳转，破坏结构化，仅在「深层嵌套统一错误清理」（C 语言内核风格）中使用，业务逻辑禁止。</li>
 </ul>
-<h3 id="523-数组">5.2.3 数组</h3>
+<h3 id="523-第3课-数组及多维数组全面详解">5.2.3 第3课 数组及多维数组全面详解</h3>
 <ul>
-<li>连续内存、下标从 0 起、<code>a[i] == *(a+i)</code>；<strong>越界不报错直接踩内存</strong>；</li>
-<li>元素个数 <code>sizeof(a)/sizeof(a[0])</code> 只在定义作用域有效，传参后退化为指针；</li>
-<li>初始化列表未写全的元素补 0；二维数组按行优先存储，<code>m[i][j]</code> 背后是线性换算；</li>
-<li>经典算法：翻转（首尾双指针）、冒泡（每轮冒出最大值，可提前结束）、打擂台找最值、桶计数统计字母频次。</li>
+<li><strong>核心概念</strong>：数组（array）是<strong>连续内存</strong>中同类型元素的集合，下标从 0 开始；<code>数组名</code> 即首元素地址（常量指针语义）。</li>
+<li><strong>数组数据是连续的 / 一维数组</strong>：<code>int a[5]</code> 占 <code>5 * sizeof(int)</code> = 20 字节，<code>a[i]</code> 等价 <code>*(a + i)</code>。越界访问不报错、直接踩内存，是最危险的 bug 之一。</li>
+<li><strong>数组地址等于数组第零个地址</strong>：<code>a == &amp;a[0]</code>，数值相同但类型不同（<code>int*</code> vs <code>int(*)[]</code>，第6周展开）。<code>&amp;a + 1</code> 跳过整个数组。</li>
+<li><strong>数组元素的个数</strong>：<code>sizeof(a) / sizeof(a[0])</code> 求元素数（仅在定义所在作用域有效）；数组传参后退化为指针，<code>sizeof</code> 就失效了——常封装成 <code>#define N (sizeof(a)/sizeof(a[0]))</code> 并显式传长度。</li>
+<li><strong>数组初始化语法总结</strong>：<code>int a[5] = {1,2,3};</code>（余下补 0）、<code>int a[] = {1,2,3};</code>（编译器定长）、<code>int a[5] = {0};</code>（全清零）、<code>char s[8] = "hi";</code>。部分初始化后未显式初始化的元素为 0（局部数组同理，因为整体初始化了）。</li>
+<li><strong>数组翻转</strong>：首尾双指针交换——<code>for (i = 0, j = n-1; i &lt; j; i++, j--) 交换 a[i], a[j];</code>，时间 O(n/2)，是原地算法的入门范例。</li>
+<li><strong>冒泡排序思路 / 代码实现</strong>：相邻元素两两比较，大的后移，每轮「冒」出一个最大值到末尾；外层 n-1 轮，内层 n-1-i 次；可加 <code>swapped</code> 标志提前结束。时间复杂度 O(n²)，稳定排序。</li>
+<li><strong>找数组最大值</strong>：打擂台法——取首元素为 <code>max</code>，遍历更新；同时可记录下标。求最值、均值是传感器数据处理的第一步。</li>
+<li><strong>二维数据基础 / 初始化方法 / 初始化补充</strong>：<code>int m[3][4]</code> 是 3 行 4 列，按行优先连续存储；初始化可整体 <code>{ {1,2,3,4}, {5,6,7,8} }</code>、逐行省略内层括号、或部分初始化（剩余补 0）。</li>
+<li><strong>二维数组大小的计算 / 二维数组地址</strong>：<code>sizeof(m) = 行*列*元素大小</code>；<code>m</code>、<code>m+1</code> 跳过一整行；<code>m[i][j] == *(*(m+i)+j)</code>。行指针概念是理解图像缓冲区布局的关键。</li>
+<li><strong>二维数据练习 / 求每个学生总成绩 / 求每门课总成绩</strong>：典型遍历方向不同——按行累加得每个学生总分（内层循环扫列），按列累加得每门课总分（内层循环扫行）。</li>
+<li><strong>快捷导入代码</strong>：IDE 代码片段（snippet）与多文件复用技巧；工程上真正该复用的是函数与头文件（第6周）。</li>
+<li><strong>了解多维数组</strong>：三维及以上（如 <code>img[h][w][3]</code> 表示 RGB 图像），本质仍是一段连续内存 + 多重下标换算。</li>
+<li><strong>字符数组和字符串 / 练习 01 / 练习 02</strong>：<code>char s[] = {'h','i','\0'}</code> 与 <code>char s[] = "hi"</code> 等价；<code>%s</code> 读写、字符串拷贝、长度统计等练习，注意预留 <code>'\0'</code> 位置。</li>
+<li><strong>统计字母出现次数</strong>：用 26 元素的计数数组（桶思想）——<code>cnt[c - 'a']++</code>，遍历字符串一次完成统计。这是哈希/频次统计的最简形态，也是解析传感器字符协议的常用手法。</li>
 </ul>
-<h2 id="53-运行效果（实测）">5.3 运行效果（实测）</h2>
+<h2 id="53-重点与难点">5.3 重点与难点</h2>
+<ol>
+<li><strong>短路求值与优先级</strong>：<code>&amp;&amp;</code>/<code>||</code> 的副作用控制（防止空指针解引用）、<code>==</code> 与 <code>=</code> 混淆、混合有符号/无符号比较——这三类 bug 在 C 里隐蔽且高频。</li>
+<li><strong>数组越界与「数组名即首地址」</strong>：C 不做边界检查；<code>sizeof(数组)/sizeof(元素)</code> 只在数组本体作用域有效。写任何数组代码前先想清楚长度从哪来。</li>
+<li><strong>冒泡排序必须能默写</strong>：它综合了循环嵌套、交换、下标控制，是本周能力的验收点；理解 O(n²) 与「为什么每轮少比一次」。</li>
+<li><strong>二维数组的内存视角</strong>：<code>m[i][j]</code> 背后是 <code>*(m + i*列数 + j)</code> 的线性换算；图像、点云、栅格地图都是这个模型。</li>
+</ol>
+<blockquote>
+<p><strong>注意：</strong> <code>for (int i = 0; i &lt;= n; i++)</code> 遍历长度为 n 的数组会越界访问 <code>a[n]</code>；C 编译器和运行时都不会报错，只会悄悄踩坏相邻内存。统一写 <code>i &lt; n</code>。</p>
+</blockquote>
+<h2 id="54-代码与命令实战">5.4 代码与命令实战</h2>
+<p><strong>场景 1：运算符与类型转换陷阱演示</strong>（对应第1课）</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* ops.c —— 整数除法、短路求值、类型转换 */</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>
+{
+    <span class="hljs-type">int</span> a = <span class="hljs-number">5</span>, b = <span class="hljs-number">2</span>;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"整数除法: %d / %d = %d\n"</span>, a, b, a / b);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"浮点除法: %.1f\n"</span>, (<span class="hljs-type">double</span>)a / b);      <span class="hljs-comment">/* 强制转换后才出小数 */</span>
+
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> u = <span class="hljs-number">1</span>;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"-1 &lt; 1u ? %d  (混合比较被转为无符号)\n"</span>, <span class="hljs-number">-1</span> &lt; u);
+
+    <span class="hljs-type">int</span> x = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">if</span> (x != <span class="hljs-number">0</span> &amp;&amp; <span class="hljs-number">10</span> / x &gt; <span class="hljs-number">1</span>)        <span class="hljs-comment">/* 短路：x==0 时右侧不执行，不崩 */</span>
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"never\n"</span>);
+    <span class="hljs-keyword">else</span>
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"短路保护生效\n"</span>);
+
+    <span class="hljs-type">int</span> max = a &gt; b ? a : b;          <span class="hljs-comment">/* 三目运算符 */</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"max = %d\n"</span>, max);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<pre><code class="lang-bash">gcc -Wall ops.c -o ops &amp;&amp; ./ops
+</code></pre>
+<p><strong>场景 2：分支 + 循环综合——猜数字</strong>（对应第2课）</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* guess.c —— while + if/else + 随机数 */</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;time.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>
+{
+    srand((<span class="hljs-type">unsigned</span>)time(<span class="hljs-literal">NULL</span>));
+    <span class="hljs-type">int</span> target = rand() % <span class="hljs-number">100</span> + <span class="hljs-number">1</span>;    <span class="hljs-comment">/* 1 ~ 100 */</span>
+    <span class="hljs-type">int</span> guess = <span class="hljs-number">0</span>, times = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>) {
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"请猜一个 1~100 的数: "</span>);
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d"</span>, &amp;guess) != <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;   <span class="hljs-comment">/* 输入非数字则退出 */</span>
+        times++;
+        <span class="hljs-keyword">if</span> (guess &gt; target)      <span class="hljs-built_in">printf</span>(<span class="hljs-string">"大了!\n"</span>);
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (guess &lt; target) <span class="hljs-built_in">printf</span>(<span class="hljs-string">"小了!\n"</span>);
+        <span class="hljs-keyword">else</span> { <span class="hljs-built_in">printf</span>(<span class="hljs-string">"猜对了! 共用 %d 次\n"</span>, times); <span class="hljs-keyword">break</span>; }
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<pre><code class="lang-bash">gcc -Wall guess.c -o guess &amp;&amp; ./guess
+</code></pre>
+<p><strong>场景 3：数组翻转 + 冒泡排序 + 求最值</strong>（对应第3课）</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* sort.c —— 翻转与冒泡排序，体现下标与交换 */</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> N 6</span>
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">print_arr</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">int</span> a[], <span class="hljs-type">int</span> n)</span>
+{
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++)
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d "</span>, a[i]);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"\n"</span>);
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>
+{
+    <span class="hljs-type">int</span> a[N] = {<span class="hljs-number">42</span>, <span class="hljs-number">7</span>, <span class="hljs-number">19</span>, <span class="hljs-number">3</span>, <span class="hljs-number">88</span>, <span class="hljs-number">25</span>};
+
+    <span class="hljs-comment">/* 数组翻转：首尾双指针 */</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>, j = N - <span class="hljs-number">1</span>; i &lt; j; i++, j--) {
+        <span class="hljs-type">int</span> t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"翻转后: "</span>); print_arr(a, N);
+
+    <span class="hljs-comment">/* 冒泡排序：每轮把最大值顶到末尾 */</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; N - <span class="hljs-number">1</span>; i++) {
+        <span class="hljs-type">int</span> swapped = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; N - <span class="hljs-number">1</span> - i; j++) {
+            <span class="hljs-keyword">if</span> (a[j] &gt; a[j + <span class="hljs-number">1</span>]) {
+                <span class="hljs-type">int</span> t = a[j]; a[j] = a[j + <span class="hljs-number">1</span>]; a[j + <span class="hljs-number">1</span>] = t;
+                swapped = <span class="hljs-number">1</span>;
+            }
+        }
+        <span class="hljs-keyword">if</span> (!swapped) <span class="hljs-keyword">break</span>;          <span class="hljs-comment">/* 已有序，提前结束 */</span>
+    }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"排序后: "</span>); print_arr(a, N);
+
+    <span class="hljs-comment">/* 找最大值 */</span>
+    <span class="hljs-type">int</span> max = a[<span class="hljs-number">0</span>], idx = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">1</span>; i &lt; N; i++)
+        <span class="hljs-keyword">if</span> (a[i] &gt; max) { max = a[i]; idx = i; }
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"最大值 %d，下标 %d\n"</span>, max, idx);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<pre><code class="lang-bash">gcc -Wall sort.c -o <span class="hljs-built_in">sort</span> &amp;&amp; ./sort
+</code></pre>
+<p><strong>场景 4：二维数组成绩统计</strong>（对应第3课「求每个学生总成绩 / 求每门课总成绩」）</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* score.c —— 按行求每人总分，按列求每科总分 */</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> STUDENTS 3</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> COURSES  4</span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>
+{
+    <span class="hljs-type">int</span> score[STUDENTS][COURSES] = {
+        {<span class="hljs-number">80</span>, <span class="hljs-number">92</span>, <span class="hljs-number">77</span>, <span class="hljs-number">65</span>},
+        {<span class="hljs-number">95</span>, <span class="hljs-number">88</span>, <span class="hljs-number">90</span>, <span class="hljs-number">84</span>},
+        {<span class="hljs-number">70</span>, <span class="hljs-number">66</span>, <span class="hljs-number">75</span>, <span class="hljs-number">80</span>}
+    };
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; STUDENTS; i++) {          <span class="hljs-comment">/* 每个学生：行求和 */</span>
+        <span class="hljs-type">int</span> sum = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; COURSES; j++) sum += score[i][j];
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"学生%d 总分=%d 平均=%.1f\n"</span>, i, sum, (<span class="hljs-type">double</span>)sum / COURSES);
+    }
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; COURSES; j++) {           <span class="hljs-comment">/* 每门课：列求和 */</span>
+        <span class="hljs-type">int</span> sum = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; STUDENTS; i++) sum += score[i][j];
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"课程%d 总分=%d\n"</span>, j, sum);
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<pre><code class="lang-bash">gcc -Wall score.c -o score &amp;&amp; ./score
+</code></pre>
+<p><strong>场景 5：字符数组与字母频次统计</strong>（对应第3课「字符数组和字符串 / 统计字母出现次数」）</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* count.c —— 桶计数统计 a-z 出现次数 */</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>
+{
+    <span class="hljs-type">char</span> text[] = <span class="hljs-string">"ros2 robot uses c language"</span>;
+    <span class="hljs-type">int</span> cnt[<span class="hljs-number">26</span>] = {<span class="hljs-number">0</span>};
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; text[i] != <span class="hljs-string">'\0'</span>; i++) {       <span class="hljs-comment">/* 遇 \0 结束 */</span>
+        <span class="hljs-type">char</span> c = text[i];
+        <span class="hljs-keyword">if</span> (c &gt;= <span class="hljs-string">'a'</span> &amp;&amp; c &lt;= <span class="hljs-string">'z'</span>) cnt[c - <span class="hljs-string">'a'</span>]++; <span class="hljs-comment">/* 桶下标映射 */</span>
+    }
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">26</span>; i++)
+        <span class="hljs-keyword">if</span> (cnt[i] &gt; <span class="hljs-number">0</span>)
+            <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%c: %d\n"</span>, <span class="hljs-string">'a'</span> + i, cnt[i]);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"字符串长度 = %zu\n"</span>, <span class="hljs-built_in">strlen</span>(text));   <span class="hljs-comment">/* strlen 统计到 \0 */</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<pre><code class="lang-bash">gcc -Wall count.c -o count &amp;&amp; ./count
+</code></pre>
+<h2 id="55-运行效果（实测）">5.5 运行效果（实测）</h2>
+<p>本章实测案例：对一组传感器采样值完成「翻转 → 冒泡排序 → 找最大值」，综合运算符、循环与数组下标控制。</p>
 <pre><code class="lang-text">翻转后: 25 88 3 19 7 42 
 排序后: 3 7 19 25 42 88 
 最大值 88，下标 5
 </code></pre>
 <p>编译命令：<code>gcc -Wall w5_sort.c -o w5 &amp;&amp; ./w5</code>。</p>
-<h2 id="54-端到端实战（实测）：成绩统计--字母频次">5.4 端到端实战（实测）：成绩统计 + 字母频次</h2>
+<h2 id="56-端到端实战（实测）：成绩统计--字母频次">5.6 端到端实战（实测）：成绩统计 + 字母频次</h2>
 <blockquote>
 <p><strong>视频对照</strong>：课程 <code>冒泡排序代码实现</code> 的输出格式 <code>结果为：%d</code> 已用同款数组（降序输入 57,26,22,11,6,0）逐字复现：<code>结果为：0结果为：6结果为：11结果为：22结果为：26结果为：57</code>，见《端到端核对报告》基础篇表。</p>
 </blockquote>
@@ -684,11 +906,37 @@
 a:2 b:1 c:1 e:2 g:2 l:1 n:1 o:3 r:2 s:3 t:1 u:2 
 长度=26
 </code></pre>
-<h2 id="55-本章小结">5.5 本章小结</h2>
+<h2 id="57-与-ros2--机器人开发的关联">5.7 与 ROS2 / 机器人开发的关联</h2>
+<ol>
+<li><strong>分支与循环 = 状态机与控制周期</strong>：机器人主循环 <code>while (rclcpp::ok()) { 采集 → 决策 → 控制; rate.sleep(); }</code> 就是本周 while 的形态；<code>switch</code> 对机器人模式（待机/巡航/避障/回充）的枚举分派，与 ROS2 里 <code>switch(state)</code> 完全一致。</li>
+<li><strong>数组是传感器数据的载体</strong>：激光雷达 <code>LaserScan.ranges[]</code>、IMU 的 <code>orientation[4]</code>、图像的像素缓冲、导航代价地图的栅格，都是「连续内存 + 下标」的数组模型；二维数组视角直接对应图像行优先布局。</li>
+<li><strong>排序与最值进入感知处理</strong>：对 <code>ranges[]</code> 取最小值做最近障碍判断、对帧窗口做中值滤波，就是冒泡/选择排序与打擂台思想的直接应用。</li>
+<li><strong>类型转换与数值安全</strong>：机器人中 <code>(double)sum / n</code> 求均值、角度弧度换算、有符号/无符号混用导致的 <code>-1 &lt; 1u</code> 陷阱，在里程计与时间戳计算中会造成真实事故。</li>
+<li><strong>字符频次统计是解析的起点</strong>：解析串口 ASCII 协议、GPS NMEA 语句、日志关键词计数，用的都是 <code>cnt[c - 'a']++</code> 这类桶数组思路。</li>
+</ol>
+<h2 id="58-自测与练习（含参考答案要点）">5.8 自测与练习（含参考答案要点）</h2>
+<ol>
+<li>写出 <code>5/2</code>、<code>5.0/2</code>、<code>5%2</code> 的值与类型，并说明 <code>(double)a / b</code> 为什么比 <code>a / b</code> 更常用于均值计算。</li>
+<li>编程题：打印 100~999 中所有「水仙花数」（验收输出：153 370 371 404）。</li>
+<li>编程题：实现九九乘法表，要求用 <code>%-4d</code> 对齐（验收：9 行，第 i 行 i 个式子）。</li>
+<li>动手任务：把场景 3 的冒泡排序改造成「选择排序」，并用 <code>sizeof(a)/sizeof(a[0])</code> 计算元素个数传入函数（验收：乱序数组输出有序结果）。</li>
+</ol>
+<blockquote>
+<p>参考答案要点：① <code>5/2</code> 得 <code>int 2</code>（截断），<code>5.0/2</code> 得 <code>double 2.5</code>，<code>5%2</code> 得 <code>int 1</code>；均值计算要先转浮点否则精度丢失；② 用 <code>n/100</code>、<code>n/10%10</code>、<code>n%10</code> 拆位立方求和比较；③ 外层 <code>for (i = 1; i &lt;= 9; i++)</code>，内层 <code>for (j = 1; j &lt;= i; j++)</code> 打印 <code>j*i=积</code>；④ 选择排序每轮找最小值下标后一次性交换，元素个数 <code>sizeof(a)/sizeof(a[0])</code> 只在定义处有效，函数内必须用传入的长度参数。</p>
+</blockquote>
+<h2 id="59-常见问题（faq）">5.9 常见问题（FAQ）</h2>
+<ul>
+<li><strong>Q：<code>a[i]</code> 和 <code>*(a+i)</code> 有什么区别？</strong> A：完全等价，编译后生成相同代码；<code>a[i]</code> 更可读，<code>*(a+i)</code> 在指针运算（第6周）中更常用。</li>
+<li><strong>Q：数组初始化没写全，剩下的元素是什么？</strong> A：只要用了初始化列表（哪怕只有 <code>{0}</code>），剩余元素全部补 0；完全不初始化的局部数组内容是随机脏数据。</li>
+<li><strong>Q：<code>switch</code> 的 <code>case</code> 能写变量吗？</strong> A：不能，<code>case</code> 后必须是整型常量表达式；范围判断请用 <code>if/else if</code>。</li>
+<li><strong>Q：为什么 <code>while (scanf("%d", &amp;a) != 1)</code> 要判断返回值？</strong> A：<code>scanf</code> 返回成功赋值的项数；用户输入字母时返回 0，不判断就会死循环。健壮输入永远检查返回值。</li>
+</ul>
+<h2 id="510-本章小结">5.10 本章小结</h2>
 <ul>
 <li>分支/循环 = 状态机与控制周期（<code>while (rclcpp::ok())</code> 就是 while 的形态）；</li>
 <li><code>LaserScan.ranges[]</code>、图像缓冲、代价地图都是「连续内存 + 下标」的数组模型；</li>
 <li>对 ranges 取最小值做最近障碍判断，就是打擂台思想的直接应用；</li>
+<li>均值计算先转浮点（<code>(double)sum / n</code>）、<code>==</code> 与 <code>=</code> 别混淆、混合有符号/无符号比较警惕 <code>-1 &lt; 1u</code> 陷阱；</li>
 <li>统一写 <code>i &lt; n</code> 防 off-by-one 越界——C 不替你做边界检查。</li>
 </ul>
 
@@ -734,7 +982,7 @@ a:2 b:1 c:1 e:2 g:2 l:1 n:1 o:3 r:2 s:3 t:1 u:2
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第5章 C 语言进阶编程（运算符/控制流/数组）","level":"3.2","depth":1,"next":{"title":"第6章 C 语言高级特性（函数/指针/字符串/内存）","level":"3.3","depth":1,"path":"第6周-C语言高级特性.md","ref":"第6周-C语言高级特性.md","articles":[]},"previous":{"title":"第4章 C 语言基础入门（编译/类型/输入输出）","level":"3.1","depth":1,"path":"第4周-C语言基础入门.md","ref":"第4周-C语言基础入门.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第5周-C语言进阶编程.md","mtime":"2026-10-16T02:43:09.754Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T02:43:11.108Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第5章 C 语言进阶编程（运算符/控制流/数组）","level":"3.2","depth":1,"next":{"title":"第6章 C 语言高级特性（函数/指针/字符串/内存）","level":"3.3","depth":1,"path":"第6周-C语言高级特性.md","ref":"第6周-C语言高级特性.md","articles":[]},"previous":{"title":"第4章 C 语言基础入门（编译/类型/输入输出）","level":"3.1","depth":1,"path":"第4周-C语言基础入门.md","ref":"第4周-C语言基础入门.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第5周-C语言进阶编程.md","mtime":"2026-10-16T03:26:51.712Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T03:26:53.986Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

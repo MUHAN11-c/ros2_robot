@@ -602,38 +602,289 @@
                                 <h1 id="第7章-c-语言数据结构与文件操作（结构体联合体枚举文件）">第7章 C 语言数据结构与文件操作（结构体/联合体/枚举/文件）</h1>
 <blockquote>
 <p>本章对应课程第 7 周：内存函数（memset/memcpy）、结构体（ROS2 消息类型的 C 原型）、联合体与枚举、文件读写——完成「读文件 → 结构体数组 → 排序 → 写文件」的完整数据流水线。</p>
+<p>所属阶段：阶段2 ROS2 开发必备基础之 C 语言核心编程进阶 ｜ 视频 45 个 ｜ 时长约 6h54m ｜ 难度：进阶</p>
 </blockquote>
-<h2 id="71-案例以及案例分析">7.1 案例以及案例分析</h2>
-<p><strong>需求</strong>：把结构体记录写入二进制文件，再<strong>随机读取</strong>第 2 条——rosbag 索引「按记录号定位」的朴素原理。</p>
-<h2 id="72-知识点与实现">7.2 知识点与实现</h2>
-<h3 id="721-内存函数与结构体">7.2.1 内存函数与结构体</h3>
+<h2 id="71-本周概览与课时结构">7.1 本周概览与课时结构</h2>
+<p>本周把前几周的零件装配成「能承载真实数据的程序」：memset/memcpy 等内存函数是底层工具，结构体（struct）把多个字段聚合成一个类型——它是 ROS2 消息类型的 C 原型，联合体（union）与枚举（enum）解决空间复用与状态表达，文件操作则让程序能把数据持久化到磁盘。学完你能用 C 完成「读文件 → 结构体数组 → 排序 → 写文件」的完整数据流水线。</p>
+<table>
+<thead>
+<tr>
+<th>课</th>
+<th>小节</th>
+<th>时长</th>
+<th>一句话导览</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第1课 结构体深度剖析与应用</td>
+<td>17 节</td>
+<td>3h15m</td>
+<td>memset/memcpy/memmove/memcmp、结构体定义赋值与嵌套、内存对齐、结构体数组与指针、堆上结构体与排序</td>
+</tr>
+<tr>
+<td>第2课 联合体特性及实际应用</td>
+<td>5 节</td>
+<td>39m04s</td>
+<td>结构体数组做函数参数、const 修饰结构体指针、联合体、枚举、标准输入输出与关闭</td>
+</tr>
+<tr>
+<td>第3课 文件操作原理与实战</td>
+<td>23 节</td>
+<td>3h00m</td>
+<td>FILE* 打开关闭、字符/行/格式化/块读写、文件拷贝、随机读取、文本差异、stat、重命名删除、文件缓冲区</td>
+</tr>
+</tbody>
+</table>
+<h2 id="72-知识点梳理">7.2 知识点梳理</h2>
+<h3 id="721-第1课-结构体深度剖析与应用">7.2.1 第1课 结构体深度剖析与应用</h3>
 <ul>
-<li><code>memset</code> 清零、<code>memcpy</code>（不重叠）/<code>memmove</code>（可重叠）拷贝、<code>memcmp</code> 按字节比较；</li>
-<li>结构体聚合字段，同类型可整体赋值；嵌套结构体链式访问 <code>r.bat.voltage</code>；</li>
-<li><code>sizeof(struct)</code> ≠ 成员之和——<strong>内存对齐</strong>产生填充；<code>#pragma pack(1)</code> 用于通信协议（牺牲性能）；</li>
-<li>结构体数组 + 冒泡排序 = 小型数据库；传参用指针 <code>const struct S *</code> 只读不拷贝；</li>
-<li>堆上结构体数组：<code>malloc(n * sizeof(struct S))</code>，数量运行时才定的场景。</li>
+<li><strong>核心概念</strong>：结构体（structure）用 <code>struct 名字 { 成员; };</code> 把一组相关字段聚合成自定义类型，每个成员各占自己的内存。</li>
+<li><strong>memset 函数</strong>：<code>memset(p, c, n)</code> 把 n 字节填充为字节值 <code>c</code>，常用于 <code>memset(&amp;s, 0, sizeof(s))</code> 清零结构体/数组。<strong>注意</strong>：<code>memset(&amp;d, 0, sizeof(d))</code> 对 double 清零恰好成立（全 0 位就是 0.0），但 <code>memset(&amp;d, 1, ...)</code> 不等于把 double 设为 1。</li>
+<li><strong>memcpy 函数</strong>：<code>memcpy(dest, src, n)</code> 拷贝 n 字节，要求源与目标<strong>不重叠</strong>；用于结构体/数组整体复制，比逐成员赋值快。</li>
+<li><strong>memmove 函数</strong>：同 memcpy 但<strong>允许内存重叠</strong>（内部有方向处理），同一缓冲区内搬移数据（如环形缓冲、数组左移）必须用 memmove。</li>
+<li><strong>memcmp 函数</strong>：按字节比较 n 字节，返回 0 相等、&lt;0/&gt;0 表大小序；可比较结构体字节（前提是没有 padding 未初始化问题，建议先 memset 清零）。</li>
+<li><strong>结构体定义和赋值 01 / 02</strong>：定义后可用 <code>s.x = 1;</code> 逐成员赋值，或用初始化列表 <code>struct Point p = {1, 2};</code>（C99 支持指定初始化 <code>.x = 1</code>）；同类型结构体可整体赋值 <code>a = b;</code>（逐字节拷贝）。</li>
+<li><strong>结构体嵌套</strong>：成员可以是另一个结构体（如 <code>struct Robot { struct Pose pose; struct Battery bat; };</code>），访问链式 <code>r.bat.voltage</code>。嵌套是把简单类型组装成复杂数据模型的基本手段。</li>
+<li><strong>了解结构体空间大小</strong>：成员大小之和 ≠ <code>sizeof(struct)</code>，因为<strong>内存对齐</strong>（alignment）：成员按自身大小对齐，尾部可能有填充字节。可 <code>#pragma pack(1)</code> 或 <code>__attribute__((packed))</code> 取消对齐（通信协议用），但会牺牲访问性能。</li>
+<li><strong>结构体数组</strong>：<code>struct Student stu[3]</code> 即同类型记录的集合，遍历 <code>stu[i].score</code>；配合排序就是小型数据库。</li>
+<li><strong>结构体变量交换</strong>：用临时结构体整体交换（<code>tmp = a; a = b; b = tmp;</code>）或 <code>memcpy</code>，比逐成员交换简洁；冒泡排序中交换的就是结构体。</li>
+<li><strong>结构体成员为指针</strong>：如 <code>struct { char *name; int *buf; }</code>，指针成员指向的内存需单独分配/释放——结构体整体 <code>free</code> 不会释放成员指针，这是内存泄漏高发点。</li>
+<li><strong>结构体为指针</strong>：<code>struct Student *p = &amp;s;</code> 访问成员用 <code>p-&gt;score</code>（等价 <code>(*p).score</code>）；传结构体指针而非整个结构体，可避免大对象拷贝。</li>
+<li><strong>堆空间创建结构体 / 方式改写排序案例</strong>：<code>struct Student *p = (struct Student *)malloc(n * sizeof(struct Student));</code> 动态数组；排序时交换的指针或用 <code>p[i]</code> 下标访问。适合数量运行时才确定的场景（如读文件得到记录数）。</li>
+<li><strong>结构体赋值</strong>：同类型整体赋值是浅拷贝——若成员含指针，两个结构体共享同一块指针内存，free 一个会影响另一个。</li>
+<li><strong>值传递，形参不影响实参的值</strong>：<code>void f(struct Student s)</code> 传的是副本，修改不影响外部，且大结构体拷贝开销大。</li>
+<li><strong>地址传递，修改同一块内存空间</strong>：<code>void f(struct Student *s)</code> 传指针，<code>s-&gt;score = 100</code> 直接改原对象，效率高，是工程默认做法；只读参数加 <code>const</code>。</li>
 </ul>
-<h3 id="722-联合体与枚举">7.2.2 联合体与枚举</h3>
+<h3 id="722-第2课-联合体特性及实际应用">7.2.2 第2课 联合体特性及实际应用</h3>
 <ul>
-<li><code>union</code> 所有成员共享内存，<code>sizeof</code> 取最大成员；同一时刻只有一个成员有效；</li>
-<li>枚举替代魔法数字表达状态（<code>enum State { IDLE, RUN, ERROR }</code>）；</li>
-<li>经典组合是 tagged union：<code>type 枚举 + union</code>，用枚举标记当前有效成员（协议解析常用）。</li>
+<li><strong>核心概念</strong>：联合体（union，共用体）所有成员<strong>共享同一块内存</strong>，<code>sizeof</code> 取最大成员大小；同一时刻只有一个成员有效。</li>
+<li><strong>结构体数组做函数参数</strong>：<code>void sort(struct Student a[], int n)</code>（退化为指针）或 <code>void f(struct Student *a, int n)</code>，配合 <code>const</code> 表示只读遍历。</li>
+<li><strong>const 修饰结构体指针</strong>：<code>void print(const struct Student *s)</code>——保证函数不修改数据，同时传指针避免拷贝；这是只读接口的标准声明。</li>
+<li><strong>联合体共用体</strong>：典型用途① 节省内存的互斥字段；② 类型双关（type punning）查看字节表示，如把 <code>float</code> 的 4 字节按 <code>unsigned char[4]</code> 读出；③ 变体记录（tagged union）：结构体里放 <code>type 枚举 + union</code>，用枚举标记当前有效成员——协议解析常用。</li>
+<li><strong>枚举</strong>：<code>enum Color { RED, GREEN, BLUE };</code> 默认从 0 递增（可显式赋值），本质是整型常量；用枚举替代魔法数字表达状态（<code>enum State { IDLE, RUN, ERROR }</code>），可读且便于 switch。</li>
+<li><strong>标准输入、输出和关闭</strong>：<code>stdin / stdout / stderr</code> 是三个预定义 <code>FILE *</code>；<code>fprintf(stderr, ...)</code> 输出错误信息，<code>fclose</code> 关闭自己 <code>fopen</code> 的流；进程退出时标准流自动关闭，但自己打开的文件必须显式 <code>fclose</code>。</li>
 </ul>
-<h3 id="723-文件操作">7.2.3 文件操作</h3>
+<h3 id="723-第3课-文件操作原理与实战">7.2.3 第3课 文件操作原理与实战</h3>
 <ul>
-<li><code>fopen(模式 r/w/a/rb/wb)</code> 必须判 <code>NULL</code>，<code>perror</code> 打原因；用完 <code>fclose</code>（落盘）；</li>
-<li>逐字符 <code>fgetc/fputc</code>、按行 <code>fgets/fputs</code>、格式化 <code>fprintf/fscanf</code>、块读写 <code>fread/fwrite</code>（返回<strong>块数</strong>）；</li>
-<li><code>feof</code> 正确姿势是<strong>先读后判</strong>；<code>while (!feof(fp))</code> 是经典错误；</li>
-<li>随机读取：<code>fseek(fp, N*sizeof(Rec), SEEK_SET)</code>；文件大小 <code>fseek(END)+ftell</code> 或 <code>stat</code>；</li>
-<li>读写混合时需 <code>fseek/fflush</code> 切换方向；stdio 带缓冲，崩溃/断电丢数据多源于没 <code>fclose/fflush</code>。</li>
+<li><strong>核心概念</strong>：文件 = 字节序列；按内容分<strong>文本文件</strong>（人可读，行结束符 <code>\n</code>）与<strong>二进制文件</strong>（内存原样，如图像、点云、结构体转储）。所有文件 IO 通过 <code>FILE *</code> 流（stream）+ 缓冲区完成。</li>
+<li><strong>文件分类 / 文件指针和普通指针区别</strong>：<code>FILE *fp</code> 是指向「文件结构体」的不透明指针，内部带缓冲区、文件位置指针、错误标志；不能像普通指针那样解引用取内容。</li>
+<li><strong>文件打开和关闭 / 实现</strong>：<code>fopen("data.txt", "r")</code> 成功返回 <code>FILE *</code>、失败返回 <code>NULL</code>（必须检查）；常用模式 <code>"r" 读、"w" 写（清空重建）、"a" 追加、"rb/wb/ab" 二进制、"r+" 读写</code>。用完 <code>fclose(fp)</code>，返回 0 成功。</li>
+<li><strong>相对路径</strong>：相对当前工作目录（<code>./a.txt</code>、<code>../data/a.txt</code>），绝对路径以 <code>/</code> 开头（Linux）。ROS2 节点的工作目录由启动方式决定，工程上优先用包路径拼接（ament_index）而非裸相对路径。</li>
+<li><strong>fputc 函数 / fputc 练习</strong>：<code>fputc(ch, fp)</code> 写一个字符，返回写入字符或 EOF；练习常做「写 a-z 到文件」「文件加密（每个字符 +1）」。</li>
+<li><strong>fgetc 函数</strong>：<code>fgetc(fp)</code> 读一个字符，返回 <code>int</code>（0-255 或 EOF）；循环读到 EOF 为止是逐字符处理的标准写法。</li>
+<li><strong>feof 函数</strong>：<code>feof(fp)</code> 判断<strong>是否已读到文件末尾标志</strong>；正确用法是「先读后判」——只有读操作返回 EOF 后 feof 才为真，不能用它作读取前的循环条件，否则多处理一次。</li>
+<li><strong>按行写入 / 按行读取</strong>：<code>fputs(str, fp)</code> 写字符串（不含 <code>\n</code> 需自行补），<code>fgets(buf, size, fp)</code> 读一行（保留 <code>\n</code>，遇 EOF 返回 NULL）——按行处理文本配置/CSV 的标准组合。</li>
+<li><strong>fprintf 函数 / fscanf 函数</strong>：格式化写/读，语法与 printf/scanf 一致但多了 <code>FILE *</code>：<code>fprintf(fp, "%d %s\n", id, name)</code>、<code>fscanf(fp, "%d,%f", &amp;id, &amp;v)</code>。适合生成与解析 CSV/文本配置。</li>
+<li><strong>fwrite 函数 / fread 函数</strong>：块读写——<code>fwrite(ptr, size, count, fp)</code>、<code>fread(ptr, size, count, fp)</code>，返回成功读写的<strong>块数</strong>；可直接把结构体数组写成二进制文件（注意字节序与对齐，跨平台有风险）。存取点云、地图、模型权重都用这对函数。</li>
+<li><strong>文件拷贝案例</strong>：源文件 <code>fread</code> 读块 → 目标文件 <code>fwrite</code> 写块，循环直到读到 0 块；二进制模式 <code>"rb"/"wb"</code> 可拷贝任意文件（图像、可执行文件）。</li>
+<li><strong>随机读取</strong>：<code>fseek(fp, 偏移, 起点)</code>（起点 <code>SEEK_SET/SEEK_CUR/SEEK_END</code>）、<code>ftell(fp)</code> 返回当前位置、<code>rewind(fp)</code> 回到开头；可实现「按记录号随机访问」——第 N 条记录偏移 = <code>N * sizeof(struct)</code>。</li>
+<li><strong>文件总大小</strong>：<code>fseek(fp, 0, SEEK_END); long size = ftell(fp);</code>，或 <code>stat</code>（见下）。</li>
+<li><strong>同一个文件读取和写入</strong>：读写混合时，<code>fread/fwrite</code> 之间必须插入 <code>fseek</code> 或 <code>fflush</code> 切换方向（C 标准要求），否则缓冲区状态混乱导致数据错位。</li>
+<li><strong>了解 Windows 和 Linux 文本区别</strong>：Windows 行结束 <code>\r\n</code>（CR+LF），Linux <code>\n</code>（LF）；用 <code>"rb"</code> 读 Windows 文本会多出 <code>\r</code>，处理时需剔除。git 的 autocrlf 设置与此相关。</li>
+<li><strong>stat 方式获取文件大小</strong>：<code>#include &lt;sys/stat.h&gt;</code>，<code>struct stat st; stat("a.txt", &amp;st); st.st_size;</code> 不用打开文件即可得大小与修改时间。</li>
+<li><strong>重命名和删除</strong>：<code>rename("old.txt", "new.txt")</code>、<code>remove("a.txt")</code>（<code>&lt;stdio.h&gt;</code>），返回 0 成功、非 0 失败（可用 <code>perror</code> 打原因）。</li>
+<li><strong>文件缓冲区</strong>：C 的 stdio 是带缓冲的（全缓冲/行缓冲/无缓冲）；<code>fprintf</code> 先写进用户缓冲，<code>fflush(fp)</code> 或 <code>fclose</code> 时才真正落盘。<code>stderr</code> 无缓冲保证错误信息即时；断电丢数据问题通常源于「没 fclose/fflush」。子进程 fork 后 <code>_exit</code> 会丢缓冲（exit 会刷新）。</li>
 </ul>
-<h2 id="73-运行效果（实测）">7.3 运行效果（实测）</h2>
+<h2 id="73-重点与难点">7.3 重点与难点</h2>
+<ol>
+<li><strong>结构体内存对齐</strong>：<code>sizeof(struct)</code> 不等于成员之和；通信协议、二进制文件、与硬件共享内存时，对齐/packing 不一致会导致数据错位。用 <code>offsetof</code>（<code>&lt;stddef.h&gt;</code>）可查成员偏移。</li>
+<li><strong>浅拷贝与指针成员</strong>：结构体整体赋值/<code>memcpy</code> 只复制指针值不复制指向内容；两个结构体共享指针成员时 free 有 double-free 风险。</li>
+<li><strong>feof 的正确姿势</strong>：先 <code>fgets/fread</code> 返回失败再查 <code>feof(fp)</code>；用 <code>while (!feof(fp))</code> 作读循环是经典错误（最后一次记录被重复处理）。</li>
+<li><strong>缓冲区与数据落盘</strong>：写完不 <code>fclose/fflush</code>，崩溃/断电就丢数据；随机读写时读写方向切换要 <code>fseek/fflush</code>。</li>
+<li><strong>联合体的「当前有效成员」纪律</strong>：union 读出的是最后写入的成员，必须用枚举标记当前状态（tagged union），否则必然读脏数据。</li>
+</ol>
+<blockquote>
+<p><strong>注意：</strong> <code>fread</code>/<code>fwrite</code> 的返回值是<strong>块数</strong>而不是字节数；<code>fopen</code> 返回值一定要判 <code>NULL</code>；写二进制结构体文件要考虑字节序（x86 小端）与对齐，跨机器交换数据建议序列化为文本或显式字节序。</p>
+</blockquote>
+<h2 id="74-代码与命令实战">7.4 代码与命令实战</h2>
+<p><strong>场景 1：结构体数组排序（冒泡 + 整体交换 + 内存对齐观察）</strong>（对应第1课）</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* student.c —— 结构体数组按成绩排序，观察 sizeof 与对齐 */</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Student</span> {</span>
+    <span class="hljs-type">int</span> id;
+    <span class="hljs-type">char</span> name[<span class="hljs-number">16</span>];
+    <span class="hljs-type">double</span> score;      <span class="hljs-comment">/* double 按 8 字节对齐，前面会出现填充 */</span>
+};
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>
+{
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Student</span> <span class="hljs-title">s</span>[3] =</span> {
+        {<span class="hljs-number">1</span>, <span class="hljs-string">"alice"</span>, <span class="hljs-number">88.5</span>},
+        {<span class="hljs-number">2</span>, <span class="hljs-string">"bob"</span>,   <span class="hljs-number">95.0</span>},
+        {<span class="hljs-number">3</span>, <span class="hljs-string">"carol"</span>, <span class="hljs-number">72.5</span>}
+    };
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"sizeof(struct Student) = %zu\n"</span>, <span class="hljs-keyword">sizeof</span>(s[<span class="hljs-number">0</span>]));  <span class="hljs-comment">/* 含填充字节 */</span>
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">2</span>; i++)                    <span class="hljs-comment">/* 冒泡排序 */</span>
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>; j &lt; <span class="hljs-number">2</span> - i; j++)
+            <span class="hljs-keyword">if</span> (s[j].score &lt; s[j + <span class="hljs-number">1</span>].score) {     <span class="hljs-comment">/* 降序 */</span>
+                <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Student</span> <span class="hljs-title">tmp</span> =</span> s[j];         <span class="hljs-comment">/* 结构体整体交换 */</span>
+                s[j] = s[j + <span class="hljs-number">1</span>];
+                s[j + <span class="hljs-number">1</span>] = tmp;
+            }
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">3</span>; i++)
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d %-8s %.1f\n"</span>, s[i].id, s[i].name, s[i].score);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<pre><code class="lang-bash">gcc -Wall student.c -o student &amp;&amp; ./student
+</code></pre>
+<p><strong>场景 2：结构体指针 + const 只读接口 + 堆上结构体数组</strong>（对应第1课「堆空间创建结构体」）</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* robot.c —— 堆上结构体数组、地址传递、const 保护 */</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Pose</span> {</span> <span class="hljs-type">double</span> x, y, yaw; };
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">print_pose</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-keyword">struct</span> Pose *p)</span>     <span class="hljs-comment">/* const：承诺不修改 */</span>
+{
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"x=%.2f y=%.2f yaw=%.2f\n"</span>, p-&gt;x, p-&gt;y, p-&gt;yaw);
+}
+
+<span class="hljs-type">void</span> <span class="hljs-title function_">move</span><span class="hljs-params">(<span class="hljs-keyword">struct</span> Pose *p, <span class="hljs-type">double</span> dx, <span class="hljs-type">double</span> dy)</span>   <span class="hljs-comment">/* 地址传递：改原对象 */</span>
+{
+    p-&gt;x += dx;
+    p-&gt;y += dy;
+}
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>
+{
+    <span class="hljs-type">int</span> n = <span class="hljs-number">2</span>;
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Pose</span> *<span class="hljs-title">path</span> =</span> (<span class="hljs-keyword">struct</span> Pose *)<span class="hljs-built_in">malloc</span>(n * <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">struct</span> Pose));
+    <span class="hljs-keyword">if</span> (path == <span class="hljs-literal">NULL</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    path[<span class="hljs-number">0</span>] = (<span class="hljs-keyword">struct</span> Pose){<span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>};   <span class="hljs-comment">/* C99 指定初始化 */</span>
+    path[<span class="hljs-number">1</span>] = (<span class="hljs-keyword">struct</span> Pose){<span class="hljs-number">1.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">1.57</span>};
+
+    move(&amp;path[<span class="hljs-number">0</span>], <span class="hljs-number">0.5</span>, <span class="hljs-number">0.25</span>);
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) print_pose(&amp;path[i]);
+    <span class="hljs-built_in">free</span>(path);
+    path = <span class="hljs-literal">NULL</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<pre><code class="lang-bash">gcc -Wall robot.c -o robot &amp;&amp; ./robot
+</code></pre>
+<p><strong>场景 3：联合体 + 枚举的 tagged union</strong>（对应第2课）</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* sensor.c —— 枚举标记 + 联合体存互斥数据，模拟传感器读数 */</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">Kind</span> {</span> LIDAR, IMU };          <span class="hljs-comment">/* 枚举表达状态/类型 */</span>
+
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Reading</span> {</span>
+    <span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">Kind</span> <span class="hljs-title">kind</span>;</span>                <span class="hljs-comment">/* 标记当前有效成员 */</span>
+    <span class="hljs-class"><span class="hljs-keyword">union</span> {</span>
+        <span class="hljs-type">double</span> range;              <span class="hljs-comment">/* 激光：距离 */</span>
+        <span class="hljs-type">double</span> accel[<span class="hljs-number">3</span>];           <span class="hljs-comment">/* IMU：三轴加速度 */</span>
+    } data;                        <span class="hljs-comment">/* 共享同一块内存 */</span>
+};
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>
+{
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Reading</span> <span class="hljs-title">r</span>;</span>
+    r.kind = LIDAR;
+    r.data.range = <span class="hljs-number">3.25</span>;
+
+    <span class="hljs-keyword">if</span> (r.kind == LIDAR)
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"lidar range = %.2f m\n"</span>, r.data.range);
+    <span class="hljs-keyword">else</span>
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"imu accel = %.2f\n"</span>, r.data.accel[<span class="hljs-number">0</span>]);
+
+    r.kind = IMU;                  <span class="hljs-comment">/* 切换有效成员后再写 */</span>
+    r.data.accel[<span class="hljs-number">0</span>] = <span class="hljs-number">0.0</span>;
+    r.data.accel[<span class="hljs-number">1</span>] = <span class="hljs-number">9.81</span>;
+    r.data.accel[<span class="hljs-number">2</span>] = <span class="hljs-number">0.0</span>;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"imu ay = %.2f, union 大小 = %zu\n"</span>, r.data.accel[<span class="hljs-number">1</span>], <span class="hljs-keyword">sizeof</span>(r.data));
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<pre><code class="lang-bash">gcc -Wall sensor.c -o sensor &amp;&amp; ./sensor
+</code></pre>
+<p><strong>场景 4：文本文件读写 + feof 正确用法</strong>（对应第3课「按行读取 / fprintf / fscanf」）</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* logio.c —— 写配置、逐行读回，演示先读后判 EOF */</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>
+{
+    <span class="hljs-comment">/* 写：fprintf 格式化输出 */</span>
+    FILE *fp = fopen(<span class="hljs-string">"config.txt"</span>, <span class="hljs-string">"w"</span>);
+    <span class="hljs-keyword">if</span> (fp == <span class="hljs-literal">NULL</span>) { perror(<span class="hljs-string">"fopen"</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }   <span class="hljs-comment">/* 打印失败原因 */</span>
+    <span class="hljs-built_in">fprintf</span>(fp, <span class="hljs-string">"wheel_radius,%.3f\n"</span>, <span class="hljs-number">0.050</span>);
+    <span class="hljs-built_in">fprintf</span>(fp, <span class="hljs-string">"max_speed,%d\n"</span>, <span class="hljs-number">30</span>);
+    fclose(fp);                       <span class="hljs-comment">/* 关闭即落盘 */</span>
+
+    <span class="hljs-comment">/* 读：fgets 逐行，读失败后再判 feof */</span>
+    fp = fopen(<span class="hljs-string">"config.txt"</span>, <span class="hljs-string">"r"</span>);
+    <span class="hljs-keyword">if</span> (fp == <span class="hljs-literal">NULL</span>) { perror(<span class="hljs-string">"fopen"</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+    <span class="hljs-type">char</span> line[<span class="hljs-number">128</span>];
+    <span class="hljs-keyword">while</span> (fgets(line, <span class="hljs-keyword">sizeof</span>(line), fp) != <span class="hljs-literal">NULL</span>) {   <span class="hljs-comment">/* 先读 */</span>
+        line[<span class="hljs-built_in">strcspn</span>(line, <span class="hljs-string">"\n"</span>)] = <span class="hljs-string">'\0'</span>;             <span class="hljs-comment">/* 去行尾换行 */</span>
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"读到: [%s]\n"</span>, line);
+    }
+    <span class="hljs-keyword">if</span> (feof(fp))  <span class="hljs-built_in">puts</span>(<span class="hljs-string">"-- 到达文件末尾 --"</span>);          <span class="hljs-comment">/* 后判 */</span>
+    fclose(fp);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<pre><code class="lang-bash">gcc -Wall logio.c -o logio &amp;&amp; ./logio
+</code></pre>
+<p><strong>场景 5：二进制读写 + 文件拷贝 + 随机读取</strong>（对应第3课「fwrite/fread/文件拷贝/随机读取」）</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* binfile.c —— 结构体数组写二进制文件，随机读第 k 条，并拷贝文件 */</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span></span>
+
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Rec</span> {</span> <span class="hljs-type">int</span> id; <span class="hljs-type">double</span> value; };
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>
+{
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Rec</span> <span class="hljs-title">out</span>[3] =</span> { {<span class="hljs-number">1</span>, <span class="hljs-number">1.5</span>}, {<span class="hljs-number">2</span>, <span class="hljs-number">2.5</span>}, {<span class="hljs-number">3</span>, <span class="hljs-number">3.5</span>} };
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Rec</span> <span class="hljs-title">in</span>;</span>
+
+    FILE *fp = fopen(<span class="hljs-string">"data.bin"</span>, <span class="hljs-string">"wb"</span>);           <span class="hljs-comment">/* 二进制写 */</span>
+    <span class="hljs-keyword">if</span> (fp == <span class="hljs-literal">NULL</span>) { perror(<span class="hljs-string">"fopen"</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+    fwrite(out, <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">struct</span> Rec), <span class="hljs-number">3</span>, fp);       <span class="hljs-comment">/* 块写：块数=3 */</span>
+    fclose(fp);
+
+    fp = fopen(<span class="hljs-string">"data.bin"</span>, <span class="hljs-string">"rb"</span>);
+    <span class="hljs-keyword">if</span> (fp == <span class="hljs-literal">NULL</span>) { perror(<span class="hljs-string">"fopen"</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+
+    <span class="hljs-comment">/* 随机读取：定位到第 2 条（下标 1） */</span>
+    fseek(fp, <span class="hljs-number">1L</span> * <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">struct</span> Rec), SEEK_SET);
+    <span class="hljs-keyword">if</span> (fread(&amp;in, <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">struct</span> Rec), <span class="hljs-number">1</span>, fp) == <span class="hljs-number">1</span>)   <span class="hljs-comment">/* 块读返回块数 */</span>
+        <span class="hljs-built_in">printf</span>(<span class="hljs-string">"随机读第2条: id=%d value=%.1f\n"</span>, in.id, in.value);
+
+    <span class="hljs-comment">/* 文件总大小 */</span>
+    fseek(fp, <span class="hljs-number">0</span>, SEEK_END);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"data.bin 总大小 = %ld 字节\n"</span>, ftell(fp));
+    fclose(fp);
+
+    <span class="hljs-comment">/* 通用文件拷贝（二进制块搬运） */</span>
+    FILE *src = fopen(<span class="hljs-string">"data.bin"</span>, <span class="hljs-string">"rb"</span>);
+    FILE *dst = fopen(<span class="hljs-string">"copy.bin"</span>, <span class="hljs-string">"wb"</span>);
+    <span class="hljs-keyword">if</span> (src == <span class="hljs-literal">NULL</span> || dst == <span class="hljs-literal">NULL</span>) { perror(<span class="hljs-string">"fopen"</span>); <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>; }
+    <span class="hljs-type">char</span> buf[<span class="hljs-number">1024</span>];
+    <span class="hljs-type">size_t</span> n;
+    <span class="hljs-keyword">while</span> ((n = fread(buf, <span class="hljs-number">1</span>, <span class="hljs-keyword">sizeof</span>(buf), src)) &gt; <span class="hljs-number">0</span>)  <span class="hljs-comment">/* 读到 0 块结束 */</span>
+        fwrite(buf, <span class="hljs-number">1</span>, n, dst);
+    fclose(src);
+    fclose(dst);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"拷贝完成\n"</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<pre><code class="lang-bash">gcc -Wall binfile.c -o binfile &amp;&amp; ./binfile
+</code></pre>
+<h2 id="75-运行效果（实测）">7.5 运行效果（实测）</h2>
+<p>本章实测案例：把结构体记录写入二进制文件，再<strong>随机读取</strong>第 2 条——rosbag 索引「按记录号定位」的朴素原理。</p>
 <pre><code class="lang-text">随机读第2条: id=2 value=2.5
 data.bin 总大小 = 48 字节
 </code></pre>
 <p>编译命令：<code>gcc -Wall w7_binfile.c -o w7 &amp;&amp; ./w7</code>（3 条 <code>struct Rec</code> 每条 16 字节）。</p>
-<h2 id="74-端到端实战（实测）：成绩文件流水线">7.4 端到端实战（实测）：成绩文件流水线</h2>
+<h2 id="76-端到端实战（实测）：成绩文件流水线">7.6 端到端实战（实测）：成绩文件流水线</h2>
 <p>完整闭环：<strong>生成源文件 → fgets+sscanf 读入结构体数组 → 冒泡降序 → 写回 sorted.txt</strong>。</p>
 <pre><code class="lang-c"><span class="hljs-comment">/* sort_scores.c（节选） */</span>
 <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Student</span> {</span> <span class="hljs-type">char</span> name[<span class="hljs-number">32</span>]; <span class="hljs-type">double</span> score; };
@@ -665,10 +916,38 @@ alice,88.5
 dave,81.0
 carol,72.5
 </code></pre>
-<h2 id="75-本章小结">7.5 本章小结</h2>
+<h2 id="77-与-ros2--机器人开发的关联">7.7 与 ROS2 / 机器人开发的关联</h2>
+<ol>
+<li><strong>结构体 = 消息类型（msg）的 C 原型</strong>：<code>geometry_msgs/Pose</code>、<code>sensor_msgs/LaserScan</code> 等消息生成到 C/C++ 就是结构体（C 中 <code>geometry_msgs__msg__Pose</code>）。理解成员布局、内存对齐、指针成员，才能理解 DDS 序列化、消息数组为何要预分配，以及为什么传消息用 <code>SharedPtr</code> 而不是值拷贝。</li>
+<li><strong>联合体/枚举 ↔ 机器人状态与变体数据</strong>：传感器多模式（激光/超声互斥数据）、导航状态机（<code>IDLE/NAVIGATING/CHARGING</code>）、协议中「类型 + 载荷」的 tagged union 模式，都直接使用本周的 enum/union 手法。</li>
+<li><strong>文件 I/O ↔ rosbag 与配置读写</strong>：rosbag 本质是二进制记录文件；YAML 参数文件的加载、导航地图（PGM/二进制栅格）、标定结果、日志落盘，全是 <code>fopen + fread/fwrite/fprintf</code> 的应用形态；<code>stat</code> 获取文件大小对应地图加载前的完整性检查。</li>
+<li><strong>随机读取 ↔ 大数据文件索引</strong>：对点云包、轨迹文件按 <code>sizeof(Record)</code> 定位第 N 条，是 rosbag 索引（index）的朴素原理；<code>fseek/ftell</code> 用于「先读头部取数量、再定位数据段」。</li>
+<li><strong>缓冲区与可靠性</strong>：机器人长时间运行时，日志/数据记录若不 <code>fflush</code>，崩溃会丢最后一段数据；理解 stdio 缓冲机制才能设计可靠的记录器（logger），这也是 <code>rcutils</code> 日志要显式 flush 的原因。</li>
+<li><strong>memset/memcpy ↔ 消息与传感器缓冲</strong>：清零 <code>LaserScan.ranges</code> 数组、拷贝图像帧缓冲、重置 IMU 数据结构，用的都是这四个内存函数；注意 <code>memmove</code> 处理重叠与 packed 结构体的字节序。</li>
+</ol>
+<h2 id="78-自测与练习（含参考答案要点）">7.8 自测与练习（含参考答案要点）</h2>
+<ol>
+<li>解释 <code>struct { int a; char b; double c; }</code> 在 64 位 Linux 下为什么 <code>sizeof</code> 大于 13 字节，并说明 <code>#pragma pack(1)</code> 的利弊。</li>
+<li>编程题：定义 <code>struct Point { double x, y; }</code>，实现 <code>double dist(const struct Point *a, const struct Point *b)</code>（只读参数用 const），计算两点距离（验收：<code>(0,0)</code> 与 <code>(3,4)</code> 得 5.0）。</li>
+<li>编程题：把结构体数组写入二进制文件，再随机读取第 k 条打印（验收：写 3 条读第 2 条，内容一致）。</li>
+<li>动手任务：写一个程序把成绩文本文件（每行 <code>姓名,分数</code>）读入结构体数组，按分数降序排序后写回 <code>sorted.txt</code>（验收：输出文件有序、<code>fclose</code> 前后对比内容不丢）。</li>
+</ol>
+<blockquote>
+<p>参考答案要点：① 成员按对齐规则排布（int 4 + char 1 + 填充 3 + double 8 = 16 字节），pack(1) 消除填充省内存但访问变慢、跨平台协议才有必要；② <code>sqrt((a-&gt;x-b-&gt;x)*(a-&gt;x-b-&gt;x) + (a-&gt;y-b-&gt;y)*(a-&gt;y-b-&gt;y))</code>，记得 <code>#include &lt;math.h&gt;</code> 并 <code>-lm</code> 链接；③ <code>fwrite(arr, sizeof(struct), n, fp)</code> 写，<code>fseek(fp, k*sizeof(struct), SEEK_SET)</code> + <code>fread</code> 读，检查返回块数；④ <code>fgets</code> 读行 → <code>sscanf(line, "%[^,],%lf", name, &amp;score)</code> 解析 → 冒泡排序 → <code>fprintf</code> 写回；注意先 <code>fclose</code> 或 <code>fflush</code> 再验证文件内容。</p>
+</blockquote>
+<h2 id="79-常见问题（faq）">7.9 常见问题（FAQ）</h2>
+<ul>
+<li><strong>Q：<code>memcpy</code> 和 <code>memmove</code> 该用哪个？</strong> A：能确定不重叠用 <code>memcpy</code>（可能更快），同一缓冲区内部搬移（<code>dst</code> 在 <code>src</code> 范围内）必须 <code>memmove</code>，用错是未定义行为。</li>
+<li><strong>Q：<code>struct</code> 能直接比较 <code>==</code> 吗？</strong> A：C 不支持结构体整体 <code>==</code>/<code>!=</code>（C++ 可重载运算符），需逐成员比较或用 <code>memcmp</code>（注意 padding 未初始化内容会造成误判，先 memset 清零）。</li>
+<li><strong>Q：<code>fopen</code> 失败怎么排查？</strong> A：返回 <code>NULL</code> 时用 <code>perror("fopen")</code> 或 <code>strerror(errno)</code> 打印原因，常见是路径不对（相对路径相对「当前工作目录」）或权限不足。</li>
+<li><strong>Q：二进制文件能跨机器读吗？</strong> A：风险较高——字节序（大端/小端）、结构体对齐、<code>sizeof(long)</code> 平台差异都会导致不兼容；跨平台交换建议用文本格式（JSON/CSV/YAML）或显式序列化协议。</li>
+<li><strong>Q：union 里存完 A 再读 B 会怎样？</strong> A：读到的是同一块内存按 B 的类型解释的脏数据；必须用枚举/标志记录「当前写入的是哪个成员」（tagged union）。</li>
+</ul>
+<h2 id="710-本章小结">7.10 本章小结</h2>
 <ul>
 <li>结构体 = <code>.msg</code> 消息的 C 原型；理解对齐与指针成员才能理解 DDS 序列化与消息 <code>SharedPtr</code>；</li>
 <li>tagged union（枚举 + 联合体）是机器人状态与变体数据的通用手法；</li>
+<li><code>feof</code> 先读后判、<code>fread/fwrite</code> 返回块数、<code>fopen</code> 判 <code>NULL</code>——文件三纪律；</li>
 <li>rosbag 二进制记录、YAML/地图/日志落盘全是 <code>fopen + fread/fwrite/fprintf</code> 的应用形态；</li>
 <li>长时间运行的节点若日志不 <code>fflush</code>，崩溃会丢最后一段数据——缓冲区机制决定记录器设计。</li>
 </ul>
@@ -715,7 +994,7 @@ carol,72.5
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第7章 C 语言数据结构与文件操作","level":"3.4","depth":1,"next":{"title":"第8章 C++ 基础特性入门（命名空间/引用/封装）","level":"4.1","depth":1,"path":"第8周-C++基础特性入门.md","ref":"第8周-C++基础特性入门.md","articles":[]},"previous":{"title":"第6章 C 语言高级特性（函数/指针/字符串/内存）","level":"3.3","depth":1,"path":"第6周-C语言高级特性.md","ref":"第6周-C语言高级特性.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第7周-C语言数据结构与文件操作.md","mtime":"2026-10-16T02:43:09.754Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T02:43:11.108Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第7章 C 语言数据结构与文件操作","level":"3.4","depth":1,"next":{"title":"第8章 C++ 基础特性入门（命名空间/引用/封装）","level":"4.1","depth":1,"path":"第8周-C++基础特性入门.md","ref":"第8周-C++基础特性入门.md","articles":[]},"previous":{"title":"第6章 C 语言高级特性（函数/指针/字符串/内存）","level":"3.3","depth":1,"path":"第6周-C语言高级特性.md","ref":"第6周-C语言高级特性.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第7周-C语言数据结构与文件操作.md","mtime":"2026-10-16T03:26:51.712Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T03:26:53.986Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

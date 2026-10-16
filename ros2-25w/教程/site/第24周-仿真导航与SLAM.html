@@ -604,13 +604,238 @@
 <p>本章搭建两类仿真环境（Gazebo 与 Stage），并以 slam_toolbox 为例完成 SLAM 建图链路。</p>
 <p>本章对应代码：<code>code/ws06_sim_nav/src/demo_ign_sim</code>、<code>demo_stage_sim</code>、<code>demo_slam</code>。</p>
 </blockquote>
-<h2 id="241-gazebo（ignitiongz）仿真">24.1 Gazebo（Ignition/Gz）仿真</h2>
-<h3 id="2411-案例以及案例分析">24.1.1 案例以及案例分析</h3>
+<h2 id="241-概览与课时结构">24.1 概览与课时结构</h2>
+<h3 id="2411-本周概览">24.1.1 本周概览</h3>
+<p>本周进入「仿真 → 建图」核心环节，三大板块递进：先用 stage_ros2 建立轻量 2D 仿真直觉，再用 Ignition Gazebo 搭建物理级 3D 仿真环境（含 URDF 插件、运动控制、雷达/相机/深度相机），最后打开导航大门——理解 Nav2 架构并用 slam_toolbox / cartographer 完成 SLAM 建图。在 25 周体系中，本周是「从传感器数据到地图产出」的转折点：前两周的 <code>/scan</code>、<code>/odom</code> 在这里成为建图输入，下周的定位与导航在此产出的地图上运行。学完本章，你能独立搭建可复用的仿真工程，并完成机器人边走边建图。</p>
+<h3 id="2412-课时结构">24.1.2 课时结构</h3>
+<p>课程信息：视频 85 个，总时长约 10h34m，难度：高阶。</p>
+<table>
+<thead>
+<tr>
+<th>课</th>
+<th>小节</th>
+<th>时长</th>
+<th>一句话导览</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第1课 ROS2仿真与仿真器stage_ros2</td>
+<td>20 节</td>
+<td>2h12m</td>
+<td>仿真概念与优劣、stage_ros2 world/窗体/模型/地图/机器人（底盘/摄像头/雷达）与多车环境</td>
+</tr>
+<tr>
+<td>第2课 仿真器之ignition gazebo</td>
+<td>35 节</td>
+<td>5h02m</td>
+<td>安装与界面、ros_gz_bridge 集成与 launch 工程化、仿真环境创建、模型/机器人添加、运动控制与传感器仿真</td>
+</tr>
+<tr>
+<td>第3课 ROS2机器人导航概述与SLAM导航详解</td>
+<td>30 节</td>
+<td>3h19m</td>
+<td>导航概念与 Nav2 架构、导航条件、slam_toolbox 在线同步/异步建图、cartographer 建图</td>
+</tr>
+</tbody>
+</table>
+<h2 id="242-知识点梳理">24.2 知识点梳理</h2>
+<h3 id="2421-第1课-ros2仿真与仿真器stageros2（2h12m-·-20-节）">24.2.1 第1课 ROS2仿真与仿真器stage_ros2（2h12m · 20 节）</h3>
+<ul>
+<li><strong>核心概念</strong>：仿真（Simulation）是在计算机中构建机器人的数字模型与物理环境，替代部分实机开发；stage_ros2 是 Stage 2D 仿真器的 ROS2 封装，轻量、专注 2D 移动机器人（差速底盘 + 2D 雷达 + 低分辨率相机）。</li>
+<li><strong>要点 1 · 仿真概述</strong>：实体机器人开发的缺陷——硬件贵、易损坏、实验不可复现、危险场景难测试；仿真的优势是低成本、可重复、可加速、安全，不足是「仿真到实机的鸿沟（sim-to-real gap）」：物理参数、传感器噪声、延迟在仿真中都被简化。</li>
+<li><strong>要点 2 · stage_ros2 框架搭建</strong>：基本流程 = 编写 <code>.world</code> 文件 → <code>ros2 run stage_ros2 stageros &lt;world文件&gt;</code> → 话题通信。<code>.world</code> 的全局参数：<code>interval</code>（仿真步长）、<code>gui</code>（是否开窗口）等。</li>
+<li><p><strong>要点 3 · 窗体与模型</strong>：仿真环境组成 = 窗体（window，视口/缩放/跟随）+ 地图（floorplan，基于位图的二维占据栅格）+ 模型（model）。基本模型三件套：</p>
+<p>| 模型块 | 作用 | 关键参数 |
+|---|---|---|
+| <code>positionmodel</code> | 差速/全向/阿克曼运动底盘 | <code>odom</code>、<code>localization</code>、<code>size</code> |
+| <code>ranger</code> | 2D 激光雷达/声呐 | <code>scans</code>、<code>fov</code>、<code>range</code> |
+| <code>camera</code> | 低分辨率相机 | <code>resolution</code>、<code>range</code> |</p>
+</li>
+<li><p><strong>要点 4 · 添加地图与机器人</strong>：地图用 PGM/BMP 位图 + 分辨率；机器人代码框架中逐块配置底盘（轮径/轮距/最大速度）、摄像头、雷达，并通过 <code>stage_ros2</code> 自动桥接的 <code>/cmd_vel</code>、<code>/odom</code>、<code>/scan</code>、<code>/camera/image_raw</code> 与 ROS2 通信；多车环境通过在 <code>.world</code> 中定义多个 <code>positionmodel</code> 并配 <code>tf_prefix</code>/命名空间实现。</p>
+</li>
+<li><strong>要点 5 · stage_ros2 的定位</strong>：适合快速验证导航/编队算法逻辑（如第25 章多车编队即用它），不适合传感器算法（相机物理、点云、惯导）——那要交给 Ignition Gazebo。</li>
+</ul>
+<h3 id="2422-第2课-仿真器之ignition-gazebo（5h02m-·-35-节）">24.2.2 第2课 仿真器之ignition gazebo（5h02m · 35 节）</h3>
+<ul>
+<li><strong>核心概念</strong>：Ignition Gazebo（现更名为 Gazebo，即 "New Gazebo" / gz-sim）是物理级 3D 仿真器，支持刚体动力学、接触、光照与高保真传感器（GPU 雷达、相机、深度相机、IMU）。</li>
+<li><strong>要点 1 · 安装运行与界面</strong>：<code>sudo apt install ros-humble-ros-gz</code>（含 <code>ros_gz_sim</code>、<code>ros_gz_bridge</code>）；界面含场景（Scene）、实体树（Entity Tree）、组件/ECM 检查器、资源浏览器、时间控制（暂停/单步/加速比）。</li>
+<li><p><strong>要点 2 · 与 ROS2 集成（桥接）</strong>：Gazebo 用 Transport（gz topic）通信，ROS2 用 DDS，二者靠 <code>ros_gz_bridge</code> 的 <code>parameter_bridge</code> 节点按「桥接描述符」双向转发：</p>
+<pre><code class="lang-bash">ros2 run ros_gz_bridge parameter_bridge /cmd_vel@geometry_msgs/msg/Twist]gz.msgs.Twist \
+  /odom@nav_msgs/msg/Odometry[gz.msgs.Odometry \
+  /scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan
+<span class="hljs-comment"># 语法：&lt;ros_topic&gt;@&lt;ros_type&gt;[|]&lt;gz_type&gt;：| 双向、[ 单向 gz→ros、] 单向 ros→gz</span>
+</code></pre>
+<p>集成优化环节把桥接配置迁移到 YAML（<code>config/bridge.yaml</code>），由 launch 统一加载，避免命令行爆炸。</p>
+</li>
+<li><strong>要点 3 · 集成工程化</strong>：一个 launch 完成「启动仿真环境（<code>ros_gz_sim launch</code>）→ 启动 rviz2（加载统一配置）→ 启动桥接节点」；测试中记录的 BUG（如话题名不匹配、QoS 不兼容、<code>use_sim_time</code> 未统一）与修复方法是实机迁移的预演。</li>
+<li><strong>要点 4 · 仿真环境创建</strong>：SDF（Simulation Description Format）文件定义世界：框架搭建 → 墙体轮廓（<code>&lt;model&gt;</code> + <code>&lt;link&gt;</code> + <code>&lt;collision&gt;</code>/<code>&lt;visual&gt;</code> 的 <code>&lt;box&gt;</code> 几何）→ 墙体尺寸设置（pose 定位 + scale 尺寸）；添加模型（Fuel 资源库下载 桌椅/货架 等模型并配置 <code>~/.gz/fuel</code> 资源路径）。</li>
+<li><p><strong>要点 5 · 添加机器人与运动控制</strong>：把 URDF/xacro 机器人模型经 <code>ros_gz_sim create</code>（或 spawn launch）放入世界；运动控制靠 URDF <code>&lt;gazebo&gt;</code> 标签加载 gz 系统插件，典型是差速驱动插件：</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">gazebo</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">plugin</span> <span class="hljs-attr">filename</span>=<span class="hljs-string">"gz-sim-diff-drive-system"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"gz::sim::systems::DiffDrive"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">left_joint</span>&gt;</span>left_wheel_joint<span class="hljs-tag">&lt;/<span class="hljs-name">left_joint</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">right_joint</span>&gt;</span>right_wheel_joint<span class="hljs-tag">&lt;/<span class="hljs-name">right_joint</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">topic</span>&gt;</span>cmd_vel<span class="hljs-tag">&lt;/<span class="hljs-name">topic</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">odom_topic</span>&gt;</span>odom<span class="hljs-tag">&lt;/<span class="hljs-name">odom_topic</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">frame_id</span>&gt;</span>odom<span class="hljs-tag">&lt;/<span class="hljs-name">frame_id</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">child_frame_id</span>&gt;</span>base_link<span class="hljs-tag">&lt;/<span class="hljs-name">child_frame_id</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">plugin</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">gazebo</span>&gt;</span>
+</code></pre>
+</li>
+<li><p><strong>要点 6 · 传感器仿真</strong>：URDF/xacro 中用 <code>&lt;sensor&gt;</code> 声明并由 <code>gz-sim-sensors-system</code>（含 <code>gz::sim::systems::Sensors</code> 渲染）加载：</p>
+<p>| 传感器 | SDF sensor type | 桥接到 ROS2 |
+|---|---|---|
+| 单线雷达 | <code>gpu_lidar</code> | <code>sensor_msgs/LaserScan</code>（2D 时）或 <code>PointCloud2</code> |
+| 单目相机 | <code>camera</code> | <code>sensor_msgs/Image</code> + <code>CameraInfo</code> |
+| 深度相机 | <code>depth_camera</code> | <code>Image</code>（深度）+ <code>PointCloud2</code> |</p>
+<p>每类都分「添加」与「参数」两讲：采样率（<code>update_rate</code>）、分辨率/线数、视场角（hfov/vfov）、噪声（<code>&lt;noise&gt;&lt;type&gt;gaussian</code>）需按真实传感器填写；深度相机点云还需配置 <code>gz.msgs.PointCloudPacked</code> 到 <code>sensor_msgs/PointCloud2</code> 的桥接；最后「整体集成」把全部桥接与显示收口到统一 launch。</p>
+</li>
+<li><p><strong>要点 7 · 工程习惯</strong>：世界文件（SDF）、机器人描述（URDF/xacro）、桥接配置（YAML）、launch、rviz2 配置五类文件分目录管理（<code>worlds/</code>、<code>urdf/</code>、<code>config/</code>、<code>launch/</code>、<code>rviz/</code>），是本阶段所有仿真作业的推荐骨架。</p>
+</li>
+</ul>
+<h3 id="2423-第3课-ros2机器人导航概述与slam导航详解（3h19m-·-30-节）">24.2.3 第3课 ROS2机器人导航概述与SLAM导航详解（3h19m · 30 节）</h3>
+<ul>
+<li><strong>核心概念</strong>：导航（Navigation）= 在地图中定位自身 + 规划全局路径 + 局部避障跟踪到目标点；Nav2（Navigation2）是 ROS2 官方导航框架，由一组生命周期管理的服务端（server）节点 + 行为树（Behavior Tree）协调器组成。</li>
+<li><strong>要点 1 · Nav2 在导航中的作用</strong>：提供感知→决策→控制的完整栈：代价地图（costmap）、全局/局部规划器、控制器、恢复行为、路点跟踪，支持插件化替换算法（如 planner：NavFn / Smac / Theta*；controller：DWB / MPPI / RPP）。</li>
+<li><p><strong>要点 2 · 导航架构（30 分钟大课，务必精读）</strong>：</p>
+<p>| 组件 | 职责 | 关键话题/接口 |
+|---|---|---|
+| <code>map_server</code> | 提供静态地图 | <code>/map</code>（OccupancyGrid） |
+| <code>amcl</code> / SLAM | 定位，发布 <code>map → odom</code> | <code>/amcl_pose</code>、tf |
+| <code>planner_server</code> | 全局路径规划 | <code>/plan</code>（Path）、<code>ComputePathToPose</code> 动作 |
+| <code>controller_server</code> | 局部路径跟踪，输出速度 | <code>/cmd_vel</code>、<code>FollowPath</code> 动作 |
+| <code>bt_navigator</code> | 行为树调度整条导航流程 | <code>NavigateToPose</code> 动作入口 |
+| <code>behavior_server</code> | 恢复行为（spin/backup/wait/clear costmap） | <code>Spin</code>/<code>BackUp</code>/<code>Wait</code> 动作 |
+| <code>waypoint_follower</code> | 路点依次巡航 | <code>FollowWaypoints</code> 动作 |
+| <code>smoother_server</code> / <code>velocity_smoother</code> | 路径平滑 / 速度平滑 | <code>/smoothed_plan</code>、平滑后 <code>/cmd_vel</code> |
+| <code>lifecycle_manager</code> | 统一管理各节点 configure/activate | 生命周期（Lifecycle）服务 |</p>
+<p>数据流：<code>NavigateToPose(goal)</code> → <code>bt_navigator</code> 拉起行为树 → <code>planner_server</code> 规划 <code>/plan</code> → <code>controller_server</code> 跟踪生成 <code>/cmd_vel</code> → 底盘执行；受阻时 <code>behavior_server</code> 执行恢复行为后重规划。</p>
+</li>
+<li><p><strong>要点 3 · 导航安装与条件</strong>：<code>sudo apt install ros-humble-navigation2 ros-humble-nav2-bringup</code>；导航前提条件：① 完整 tf 树（<code>map → odom → base_link → &lt;sensors&gt;</code>）；② 里程计（<code>/odom</code> 或融合里程计）；③ 激光/点云障碍数据；④ 静态地图（导航模式）或 SLAM；⑤ 速度控制接口 <code>/cmd_vel</code>。条件准备课即逐项验收这些输入。</p>
+</li>
+<li><strong>要点 4 · SLAM 概念与作用</strong>：SLAM（Simultaneous Localization and Mapping，同时定位与地图构建）让机器人在未知环境中边走边估计自身位姿并构建地图；输出 2D 占据栅格地图 + <code>map → odom</code> 变换。</li>
+<li><strong>要点 5 · slam_toolbox</strong>：ROS2 默认 2D SLAM 方案，基于图优化（pose graph），支持在线/离线、同步/异步建图与纯定位模式，可序列化地图（<code>.posegraph</code> + <code>.data</code>）继续建图。关键节点：<code>async_slam_toolbox_node</code>（在线异步）、<code>sync_slam_toolbox_node</code>（在线同步）、<code>localization_slam_toolbox_node</code>（纯定位）、<code>map_saver_cli</code>（地图保存）。核心参数：<code>odom_frame</code>/<code>base_frame</code>/<code>map_frame</code>、<code>scan_topic</code>、<code>mode</code>（mapping/localization）、<code>resolution</code>（默认 0.05 m）、<code>max_laser_range</code>、<code>minimum_travel_distance</code>/<code>minimum_travel_heading</code>。</li>
+<li><strong>要点 6 · slam_toolbox 基本使用（九讲）</strong>：流程简介 → 自建功能包（放 launch/yaml，勿改动官方包）→ <strong>在线同步建图</strong>：launch + yaml 编写（18 分钟重点课，逐参数讲解）→ 构建与运行 → <strong>在线异步建图</strong>（<code>async</code> 节点，实时性更好，适合边走边建）→ <code>rqt_graph</code> 查看节点关系（验证 <code>/scan</code>、<code>/odom</code>、tf 输入）→ launch 移植优化（参数化、兼容仿真/实机）→ 小结。</li>
+<li><strong>要点 7 · cartographer</strong>：Google 开源的图优化 SLAM，支持 2D/3D、激光+IMU 融合建图，精度高但配置复杂（Lua 配置文件）。组成：<code>cartographer_node</code>（建图核心，输出 <code>.pbstream</code> 位姿图）+ <code>cartographer_occupancy_grid_node</code>（把位姿图渲染为占据栅格地图）。基本使用：安装 → 节点说明 → 功能包框架 → launch 文件（加载 <code>*.lua</code> 配置 + URDF + 启动两节点）→ 执行 → launch 优化。</li>
+<li><strong>要点 8 · 选型建议</strong>：纯 2D 激光、求稳用 slam_toolbox（工程化好、与 Nav2 无缝）；需要激光+IMU 融合、追求建图质量、可接受 Lua 调参成本时用 cartographer。</li>
+</ul>
+<h2 id="243-重点与难点">24.3 重点与难点</h2>
+<ol>
+<li><strong>tf 链路是导航的命脉</strong>：<code>map → odom</code>（SLAM/AMCL）+ <code>odom → base_link</code>（里程计/EKF）+ <code>base_link → &lt;sensor&gt;</code>（URDF）缺一环即瘫痪。每换一个仿真器/实机，第一件事是 <code>ros2 run tf2_tools view_frames</code> 查图。</li>
+<li><strong><code>use_sim_time</code> 全局一致性</strong>：仿真中所有节点（含 rviz2、Nav2、SLAM）都必须设 <code>use_sim_time: true</code>，否则消息时间戳与 tf 时间错位，报 <code>extrapolation into the past/future</code>。</li>
+<li><strong>ros_gz_bridge 桥接描述符语法</strong>：<code>[</code> / <code>]</code> / <code>|</code> 决定方向，写反会出现「有话题无数据」；桥接 YAML 化后要用 <code>ros2 topic info -v</code> 确认 publisher/subscriber 数量符合预期。</li>
+<li><strong>SLAM 建图质量控制</strong>：行走速度慢而匀、转弯缓、回环闭合走回起点、<code>max_laser_range</code> 与实际雷达一致、里程计标定（第23 章）先行——里程计烂，地图就重影。</li>
+<li><strong>同步 vs 异步建图</strong>：sync 每帧处理保证一致性、CPU 压力大；async 允许丢帧、实时性好。探索式建图用 async，精细建图用 sync。</li>
+<li><strong>仿真 → 实机迁移要点</strong>：仿真插件话题名（<code>/scan</code>、<code>/cmd_vel</code>）尽量与实机驱动保持一致；传感器噪声参数在仿真中模拟出来，才能提前暴露导航鲁棒性问题。</li>
+</ol>
+<h2 id="244-代码与命令实战">24.4 代码与命令实战</h2>
+<h3 id="2441-场景-1：stageros2-世界文件骨架（文件-worldsmyrobotworld）">24.4.1 场景 1：stage_ros2 世界文件骨架（文件 <code>worlds/my_robot.world</code>）</h3>
+<pre><code class="lang-lisp"># Stage world 文件（简化示意）
+size [<span class="hljs-number">24</span> <span class="hljs-number">24</span>]            # 世界尺寸（米）
+interval <span class="hljs-number">100</span>            # 仿真步长（毫秒）
+
+window
+( <span class="hljs-name">center</span> [<span class="hljs-number">0</span> <span class="hljs-number">0</span>] scale <span class="hljs-number">20</span> show_data <span class="hljs-number">1</span> )
+
+floorplan
+( <span class="hljs-name">name</span> <span class="hljs-string">"map"</span> bitmap <span class="hljs-string">"map.png"</span> size [<span class="hljs-number">24</span> <span class="hljs-number">24</span> <span class="hljs-number">0.5</span>] pose [<span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span>] )
+
+define differential_robot position
+( <span class="hljs-name">size</span> [<span class="hljs-number">0.4</span> <span class="hljs-number">0.3</span>] origin [<span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span>] odom <span class="hljs-string">"odom"</span> localization <span class="hljs-string">"gps"</span> )
+  # 底盘
+  power
+  ( <span class="hljs-name">velocity</span> [<span class="hljs-number">0.5</span> <span class="hljs-number">0</span> <span class="hljs-number">1.0</span>] )         # 最大线速度/角速度
+
+define lidar ranger
+( <span class="hljs-name">scount</span> <span class="hljs-number">360</span> spose [<span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span>] ssize [<span class="hljs-number">0.02</span>] sview [<span class="hljs-number">0</span> <span class="hljs-number">360</span>] srange [<span class="hljs-number">0.05</span> <span class="hljs-number">8.0</span>] )
+
+differential_robot( <span class="hljs-name">name</span> <span class="hljs-string">"robot1"</span> pose [<span class="hljs-number">2</span> <span class="hljs-number">2</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span>] color <span class="hljs-string">"blue"</span>
+  power.unit( <span class="hljs-name">actuator</span> )
+  lidar( <span class="hljs-name">scount</span> <span class="hljs-number">360</span> )
+  camera( <span class="hljs-name">resolution</span> [<span class="hljs-number">64</span> <span class="hljs-number">48</span>] range [<span class="hljs-number">0.2</span> <span class="hljs-number">8</span>] )
+)
+</code></pre>
+<pre><code class="lang-bash">ros2 run stage_ros2 stageros worlds/my_robot.world   <span class="hljs-comment"># 启动仿真</span>
+ros2 topic list        <span class="hljs-comment"># 应出现 /robot1/cmd_vel /robot1/odom /robot1/scan 等</span>
+</code></pre>
+<h3 id="2442-场景-2：ignition-gazebo-桥接-yaml（文件-configbridgeyaml）">24.4.2 场景 2：Ignition Gazebo 桥接 YAML（文件 <code>config/bridge.yaml</code>）</h3>
+<pre><code class="lang-yaml"><span class="hljs-bullet">-</span> <span class="hljs-attr">ros_topic_name:</span> <span class="hljs-string">"/cmd_vel"</span>
+  <span class="hljs-attr">gz_topic_name:</span> <span class="hljs-string">"/model/robot/cmd_vel"</span>
+  <span class="hljs-attr">ros_type_name:</span> <span class="hljs-string">"geometry_msgs/msg/Twist"</span>
+  <span class="hljs-attr">gz_type_name:</span> <span class="hljs-string">"gz.msgs.Twist"</span>
+  <span class="hljs-attr">direction:</span> <span class="hljs-string">ROS_TO_GZ</span>          <span class="hljs-comment"># 控制指令：ROS → 仿真</span>
+<span class="hljs-bullet">-</span> <span class="hljs-attr">ros_topic_name:</span> <span class="hljs-string">"/odom"</span>
+  <span class="hljs-attr">gz_topic_name:</span> <span class="hljs-string">"/model/robot/odometry"</span>
+  <span class="hljs-attr">ros_type_name:</span> <span class="hljs-string">"nav_msgs/msg/Odometry"</span>
+  <span class="hljs-attr">gz_type_name:</span> <span class="hljs-string">"gz.msgs.Odometry"</span>
+  <span class="hljs-attr">direction:</span> <span class="hljs-string">GZ_TO_ROS</span>
+<span class="hljs-bullet">-</span> <span class="hljs-attr">ros_topic_name:</span> <span class="hljs-string">"/scan"</span>
+  <span class="hljs-attr">gz_topic_name:</span> <span class="hljs-string">"/world/demo/model/robot/link/lidar_link/sensor/lidar/scan"</span>
+  <span class="hljs-attr">ros_type_name:</span> <span class="hljs-string">"sensor_msgs/msg/LaserScan"</span>
+  <span class="hljs-attr">gz_type_name:</span> <span class="hljs-string">"gz.msgs.LaserScan"</span>
+  <span class="hljs-attr">direction:</span> <span class="hljs-string">GZ_TO_ROS</span>
+</code></pre>
+<pre><code class="lang-bash">ros2 run ros_gz_bridge parameter_bridge --ros-args -p config_file:=config/bridge.yaml
+ros2 topic hz /scan        <span class="hljs-comment"># 验证桥接后话题频率</span>
+</code></pre>
+<h3 id="2443-场景-3：urdf-中的雷达传感器插件（xacro-片段）">24.4.3 场景 3：URDF 中的雷达传感器插件（xacro 片段）</h3>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">gazebo</span> <span class="hljs-attr">reference</span>=<span class="hljs-string">"lidar_link"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">sensor</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"lidar"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"gpu_lidar"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">topic</span>&gt;</span>scan<span class="hljs-tag">&lt;/<span class="hljs-name">topic</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">update_rate</span>&gt;</span>10<span class="hljs-tag">&lt;/<span class="hljs-name">update_rate</span>&gt;</span>            <span class="hljs-comment">&lt;!-- 10 Hz --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">ray</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">scan</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">horizontal</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">samples</span>&gt;</span>360<span class="hljs-tag">&lt;/<span class="hljs-name">samples</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">min_angle</span>&gt;</span>-3.14159<span class="hljs-tag">&lt;/<span class="hljs-name">min_angle</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">max_angle</span>&gt;</span>3.14159<span class="hljs-tag">&lt;/<span class="hljs-name">max_angle</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">horizontal</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">scan</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">range</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">min</span>&gt;</span>0.05<span class="hljs-tag">&lt;/<span class="hljs-name">min</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">max</span>&gt;</span>8.0<span class="hljs-tag">&lt;/<span class="hljs-name">max</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">resolution</span>&gt;</span>0.01<span class="hljs-tag">&lt;/<span class="hljs-name">resolution</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">range</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">noise</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">type</span>&gt;</span>gaussian<span class="hljs-tag">&lt;/<span class="hljs-name">type</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">mean</span>&gt;</span>0.0<span class="hljs-tag">&lt;/<span class="hljs-name">mean</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">stddev</span>&gt;</span>0.01<span class="hljs-tag">&lt;/<span class="hljs-name">stddev</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">noise</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">ray</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">sensor</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">gazebo</span>&gt;</span>
+</code></pre>
+<h3 id="2444-场景-4：slamtoolbox-在线同步建图-launch（文件-launchsyncslamlaunchpy）">24.4.4 场景 4：slam_toolbox 在线同步建图 launch（文件 <code>launch/sync_slam.launch.py</code>）</h3>
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> launch <span class="hljs-keyword">import</span> LaunchDescription
+<span class="hljs-keyword">from</span> launch_ros.actions <span class="hljs-keyword">import</span> Node
+<span class="hljs-keyword">from</span> ament_index_python.packages <span class="hljs-keyword">import</span> get_package_share_directory
+<span class="hljs-keyword">import</span> os
+
+pkg = get_package_share_directory(<span class="hljs-string">'my_slam_pkg'</span>)
+params = os.path.join(pkg, <span class="hljs-string">'config'</span>, <span class="hljs-string">'slam_toolbox.yaml'</span>)
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">generate_launch_description</span>():
+    <span class="hljs-keyword">return</span> LaunchDescription([
+        Node(package=<span class="hljs-string">'slam_toolbox'</span>, executable=<span class="hljs-string">'sync_slam_toolbox_node'</span>,
+             name=<span class="hljs-string">'slam_toolbox'</span>, output=<span class="hljs-string">'screen'</span>,
+             parameters=[params, {<span class="hljs-string">'use_sim_time'</span>: <span class="hljs-literal">True</span>}]),
+    ])
+</code></pre>
+<pre><code class="lang-yaml"><span class="hljs-comment"># config/slam_toolbox.yaml 核心参数</span>
+<span class="hljs-attr">slam_toolbox:</span>
+  <span class="hljs-attr">ros__parameters:</span>
+    <span class="hljs-attr">odom_frame:</span> <span class="hljs-string">odom</span>
+    <span class="hljs-attr">map_frame:</span> <span class="hljs-string">map</span>
+    <span class="hljs-attr">base_frame:</span> <span class="hljs-string">base_link</span>
+    <span class="hljs-attr">scan_topic:</span> <span class="hljs-string">/scan</span>
+    <span class="hljs-attr">mode:</span> <span class="hljs-string">mapping</span>                 <span class="hljs-comment"># mapping / localization</span>
+    <span class="hljs-attr">resolution:</span> <span class="hljs-number">0.05</span>              <span class="hljs-comment"># 栅格 5cm</span>
+    <span class="hljs-attr">max_laser_range:</span> <span class="hljs-number">8.0</span>
+    <span class="hljs-attr">minimum_travel_distance:</span> <span class="hljs-number">0.2</span>  <span class="hljs-comment"># 走 20cm 才更新一次节点</span>
+    <span class="hljs-attr">minimum_travel_heading:</span> <span class="hljs-number">0.2</span>
+</code></pre>
+<h3 id="2445-场景-5：slam-调试命令集">24.4.5 场景 5：SLAM 调试命令集</h3>
+<pre><code class="lang-bash">ros2 launch my_slam_pkg sync_slam.launch.py        <span class="hljs-comment"># 启动建图</span>
+ros2 run teleop_twist_keyboard teleop_twist_keyboard_node   <span class="hljs-comment"># 慢速遥控走图</span>
+ros2 run rqt_graph rqt_graph                        <span class="hljs-comment"># 检查 /scan /odom 是否接入</span>
+ros2 run tf2_tools view_frames                      <span class="hljs-comment"># 确认 map-&gt;odom-&gt;base_link 齐全</span>
+ros2 run nav2_map_server map_saver_cli -f ~/maps/my_map   <span class="hljs-comment"># 保存地图（pgm+yaml）</span>
+ros2 bag record /scan /odom /tf /tf_static -o slam_raw     <span class="hljs-comment"># 录数据离线复现建图</span>
+</code></pre>
+<h2 id="245-运行效果（实测）">24.5 运行效果（实测）</h2>
+<h3 id="2451-gz（ignitiongz）仿真一键启动">24.5.1 Gz（Ignition/Gz）仿真一键启动</h3>
 <p><strong>需求</strong>：编写 SDF 世界（四面墙 + 差速小车 + GPU 激光雷达 + diff_drive 插件），launch 一键启动「仿真器 + ros_gz 桥接 + rviz2」。</p>
 <blockquote>
 <p>兼容提示：课程环境为 Humble + Ignition Fortress，启动命令 <code>ign gazebo -r</code>；Jazzy 配套 <strong>Gz Harmonic</strong>，命令为 <code>gz sim -r</code>。Harmonic 下 <code>&lt;plugin name&gt;</code> 需写<strong>完整插件类名</strong>（如 <code>gz::sim::systems::DiffDrive</code>），短名会报 <code>library does not contain requested plugin</code>。</p>
 </blockquote>
-<h3 id="2412-运行效果（实测）">24.1.2 运行效果（实测）</h3>
 <pre><code class="lang-bash">ros2 launch demo_ign_sim sim_launch.py
 </code></pre>
 <p>桥接节点自动建立三条通道：</p>
@@ -622,7 +847,7 @@ Creating GZ-&gt;ROS Bridge: [/model/robot1/odometry (ignition.msgs.Odometry) -&g
 <blockquote>
 <p><strong>视频对照</strong>：课程 <code>ignition_gazebo仿真之传感器_02雷达仿真基本流程</code>（727s）中 gpu_lidar SDF 参数为 topic <code>scan</code>、update_rate 30、水平 640 线 ±π、垂直 16 线 ±0.2618、量程 0.08~10.0，rviz 中 Add LaserScan 后可见点云——本仓库 demo.sdf 同构（360 线/量程 0.15~12.0），差异仅在采样密度与量程。</p>
 </blockquote>
-<h2 id="242-stage-仿真">24.2 Stage 仿真</h2>
+<h3 id="2452-stage-仿真">24.5.2 Stage 仿真</h3>
 <p><code>demo_stage_sim</code> 提供 Stage 版本的世界（<code>worlds/stage.world</code>，Stage 专有语法）与 launch：</p>
 <pre><code class="lang-bash"><span class="hljs-built_in">sudo</span> apt install ros-jazzy-stage-ros2
 ros2 launch demo_stage_sim sim.launch.py
@@ -630,10 +855,8 @@ ros2 launch demo_stage_sim sim.launch.py
 <blockquote>
 <p>受阻说明：本教程实测环境无 stage_ros2 且无 sudo 权限，未做运行验证；Stage 语法要点（<code>resolution 0.05</code>、<code>define robot position (drive "diff" ...)</code>）保留在 world 文件中，安装后可直接运行，效果以课程视频为准。</p>
 </blockquote>
-<h2 id="243-slam-建图">24.3 SLAM 建图</h2>
-<h3 id="2431-案例以及案例分析">24.3.1 案例以及案例分析</h3>
+<h3 id="2453-slam-建图">24.5.3 SLAM 建图</h3>
 <p><strong>需求</strong>：以 slam_toolbox 的<strong>同步模式</strong>（online_sync）为例建图；输入 <code>/scan</code> + <code>/odom</code> + <code>/tf</code>，输出 <code>/map</code>；另附 cartographer 的 lua 配置作对照。</p>
-<h3 id="2432-实现">24.3.2 实现</h3>
 <p><code>config/mapper_params_online_sync.yaml</code> 关键参数：</p>
 <pre><code class="lang-yaml"><span class="hljs-attr">slam_toolbox:</span>
   <span class="hljs-attr">ros__parameters:</span>
@@ -642,20 +865,45 @@ ros2 launch demo_stage_sim sim.launch.py
     <span class="hljs-attr">base_frame:</span> <span class="hljs-string">base_footprint</span>
     <span class="hljs-attr">mode:</span> <span class="hljs-string">mapping</span>
 </code></pre>
-<p><code>launch/online_sync_launch.py</code> 启动 <code>sync_slam_toolbox_node</code> + rviz2。</p>
-<h3 id="2433-运行效果（实测）">24.3.3 运行效果（实测）</h3>
+<p><code>launch/online_sync_launch.py</code> 启动 <code>sync_slam_toolbox_node</code> + rviz2：</p>
 <pre><code class="lang-bash">ros2 launch demo_slam online_sync_launch.py
 </code></pre>
 <pre><code class="lang-text">[INFO] [sync_slam_toolbox_node-1]: process started with pid [441135]
 [sync_slam_toolbox_node-1] [INFO] [...]: Node using stack size 40000000
 [INFO] [rviz2-2]: process started with pid [441136]
 </code></pre>
-<p>节点正常上线并等待 <code>/scan</code>；配合 24.1 的仿真（遥控小车）即可完成建图（课程视频展示完整建图过程）。cartographer 版本提供 <code>config/cartographer.lua</code> 与 <code>cartographer_launch.py</code>，输入话题一致。</p>
-<h2 id="244-本章小结">24.4 本章小结</h2>
+<p>节点正常上线并等待 <code>/scan</code>；配合 24.5.1 的仿真（遥控小车）即可完成建图（课程视频展示完整建图过程）。cartographer 版本提供 <code>config/cartographer.lua</code> 与 <code>cartographer_launch.py</code>，输入话题一致。</p>
+<h2 id="246-与-ros2--机器人开发的关联">24.6 与 ROS2 / 机器人开发的关联</h2>
+<ol>
+<li><strong>tf2 坐标树的收口</strong>：SLAM 补上最后一环 <code>map → odom</code>。导航场景完整 tf 链：<code>map →(SLAM/AMCL) odom →(里程计/EKF) base_link →(URDF) laser_link/camera_link/imu_link</code>，这条链贯穿第22–25 章全部内容。</li>
+<li><strong>nav2 架构的全景认知</strong>：本章的导航架构表是第25 章「导航服务器」逐个实操的总纲——先懂 <code>bt_navigator</code> 如何调度 planner/controller/behavior，下一章写配置才有的放矢。</li>
+<li><strong>传感器接口即插即用</strong>：仿真中的 <code>LaserScan</code>/<code>Image</code>/<code>PointCloud2</code> 话题与实机驱动完全同构，这正是 ROS2「传感器抽象层」的价值：SLAM、Nav2 代码不改一行即可迁移。</li>
+<li><strong>launch/参数工程化</strong>：仿真环境（SDF/URDF）、桥接（YAML）、SLAM（yaml）分离管理的思路，直接迁移为实机 bringup 包的标准结构；<code>use_sim_time</code>、命名空间、话题 remap 是 bringup 的三个开关。</li>
+<li><strong>为多车与实机铺路</strong>：stage_ros2 的多车环境与 Ignition 的命名空间隔离，是第25 章多车编队的仿真基础；本章沉淀的「仿真先验证、实机再调参」流程是机器人团队的通用工作法。</li>
+</ol>
+<h2 id="247-自测与练习">24.7 自测与练习</h2>
+<ol>
+<li><strong>概念题</strong>：Nav2 中 <code>bt_navigator</code>、<code>planner_server</code>、<code>controller_server</code>、<code>behavior_server</code> 各自的职责是什么？机器人在目标点附近反复绕圈时，你先查哪个组件？</li>
+<li><strong>动手任务</strong>：在 Ignition Gazebo 中搭建「带单线雷达的差速底盘机器人 + 简单房间地图」，经 <code>ros_gz_bridge</code> 输出 <code>/scan</code>、<code>/odom</code>、<code>/tf</code>，rviz2 中显示雷达扫描。验收标准：<code>ros2 topic hz /scan</code> 稳定在 10 Hz 左右，遥控 <code>/cmd_vel</code> 时 rviz2 中扫描随机器人移动。</li>
+<li><strong>动手任务</strong>：用 slam_toolbox 在上题仿真环境中建图并保存。验收标准：地图中墙体闭合无重影，<code>map_saver_cli</code> 产出 <code>my_map.pgm</code> 与 <code>my_map.yaml</code>，再次启动 <code>localization</code> 模式加载该地图能正常定位。</li>
+</ol>
+<blockquote>
+<p>参考答案要点：1. <code>bt_navigator</code> 行为树调度整条导航；<code>planner_server</code> 全局规划；<code>controller_server</code> 局部跟踪出 <code>/cmd_vel</code>；<code>behavior_server</code> 恢复行为。反复绕圈先查局部 costmap 膨胀半径与 controller 参数（如 goal checker 容差），再查全局路径是否频繁重规划。2. 桥接方向写反是「有话题无数据」的最常见原因；<code>use_sim_time</code> 需全局一致。3. 建图重影优先怀疑里程计标定与 <code>max_laser_range</code> 配置；闭合墙体依赖回环（走回起点）。</p>
+</blockquote>
+<h2 id="248-常见问题（faq）">24.8 常见问题（FAQ）</h2>
 <ul>
-<li>Gazebo 世界 = 模型 + 系统插件（physics/sensors/diff_drive），桥接由 <code>ros_gz_bridge</code> 按 yaml 配置建立；</li>
-<li>SLAM 输入的三件套：<code>/scan</code>、<code>/odom</code>、tf 树（odom→base）；</li>
-<li>slam_toolbox 与 cartographer 可互换，重点是 tf 帧名与话题名对齐。</li>
+<li><strong>Q：Ignition Gazebo 启动黑屏或卡死？</strong> A：多为 GPU 渲染问题；核显机器可试 <code>LIBGL_ALWAYS_SOFTWARE=1</code>，并确认显卡驱动与 <code>gz-sim</code> 版本匹配；服务器无显示器时用 <code>-s</code>（server only）模式。</li>
+<li><strong>Q：桥接后 <code>/scan</code> 有消息但 rviz2 不显示？</strong> A：先查 <code>frame_id</code> 是否在 tf 树中（<code>ros2 topic echo /scan --field header.frame_id</code>）；再查 rviz2 Fixed Frame 与 QoS（LaserScan 显示的 Reliability 设为 Best Effort）。</li>
+<li><strong>Q：slam_toolbox 建图时地图错位/拉花？</strong> A：按顺序排查——里程计是否标定、雷达安装 tf 是否准确、行走是否过快导致扫描畸变、<code>use_sim_time</code> 是否统一、<code>max_laser_range</code> 是否大于实际量程。</li>
+<li><strong>Q：<code>map → odom</code> 一直不发布？</strong> A：确认 SLAM 节点已收到 <code>/scan</code>（<code>ros2 node info /slam_toolbox</code>）且 tf 中 <code>odom → base_link</code> 存在；SLAM 输入缺失时它会静默等待不报错。</li>
+<li><strong>Q：stage_ros2 与 Ignition Gazebo 怎么选？</strong> A：验证 2D 导航/编队逻辑、机器资源有限 → stage_ros2；需要 3D 物理、相机/深度/点云、精细传感器模型 → Ignition Gazebo。课程路线是「stage 建直觉、Ignition 做正菜」。</li>
+</ul>
+<h2 id="249-本章小结">24.9 本章小结</h2>
+<ul>
+<li>Gazebo 世界 = 模型 + 系统插件（physics/sensors/diff_drive），桥接由 <code>ros_gz_bridge</code> 按 yaml 配置建立，<code>[</code>/<code>]</code>/<code>|</code> 三个方向符是「有话题无数据」的头号嫌疑；</li>
+<li>Stage 适合 2D 导航/编队逻辑的轻量验证，Ignition Gazebo 承担 3D 物理与高保真传感器仿真，二者互补；</li>
+<li>SLAM 输入的三件套：<code>/scan</code>、<code>/odom</code>、tf 树（odom→base）；slam_toolbox 与 cartographer 可互换，重点是 tf 帧名与话题名对齐；</li>
+<li><code>use_sim_time</code> 全局一致、tf 链路完整、里程计先行标定，是本章三个一票否决项。</li>
 </ul>
 
                                 
@@ -700,7 +948,7 @@ ros2 launch demo_stage_sim sim.launch.py
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第24章 仿真导航与 SLAM","level":"9.3","depth":1,"next":{"title":"第25章 多功能实践（编队与语音）","level":"9.4","depth":1,"path":"第25周-多功能实践开发.md","ref":"第25周-多功能实践开发.md","articles":[]},"previous":{"title":"第23章 传感器仿真开发","level":"9.2","depth":1,"path":"第23周-传感器实践开发.md","ref":"第23周-传感器实践开发.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第24周-仿真导航与SLAM.md","mtime":"2026-10-16T02:43:09.753Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T02:43:11.108Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第24章 仿真导航与 SLAM","level":"9.3","depth":1,"next":{"title":"第25章 多功能实践（编队与语音）","level":"9.4","depth":1,"path":"第25周-多功能实践开发.md","ref":"第25周-多功能实践开发.md","articles":[]},"previous":{"title":"第23章 传感器仿真开发","level":"9.2","depth":1,"path":"第23周-传感器实践开发.md","ref":"第23周-传感器实践开发.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第24周-仿真导航与SLAM.md","mtime":"2026-10-16T03:26:51.711Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T03:26:53.986Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

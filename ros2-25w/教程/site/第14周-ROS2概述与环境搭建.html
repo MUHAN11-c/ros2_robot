@@ -604,130 +604,224 @@
 <p>本篇开始进入 ROS2 开发实战。本章先补齐工作空间、功能包与构建工具链的概念，再以课程第一个案例 Hello World（C++/Python 双实现）贯穿「创建功能包 → 编写源码 → 编辑配置 → 编译 → 执行」的完整开发流程。</p>
 <p>本章对应代码：<code>code/ws01_plumbing/src/cpp00_hello_world</code>、<code>py00_hello_world</code>。</p>
 </blockquote>
-<h2 id="141-ros2-简介">14.1 ROS2 简介</h2>
-<p>ROS2（Robot Operating System 2）是面向机器人的<strong>开源元操作系统</strong>，它并不是传统意义上的操作系统，而是构建在操作系统之上的<strong>机器人软件框架</strong>，核心解决的是机器人系统中<strong>节点间通信</strong>与<strong>工具链</strong>问题。</p>
-<ul>
-<li><strong>组成体系</strong>：ROS2 由 <strong>DDS 通信层 + rcl（ROS Client Library）+ 上层客户端库（rclcpp/rclpy）+ 工具（colcon、rviz2、rosbag2、launch 等）</strong> 组成；</li>
-<li><strong>优势</strong>：分布式（无 Master）、实时性更好、支持多平台、工业级 license 与安全性；</li>
-<li><strong>版本</strong>：课程基于 <strong>Humble（Ubuntu 22.04）</strong>；本教程实测环境为 <strong>Jazzy（Ubuntu 24.04）</strong>，两者 API 基本一致，差异处均以「兼容提示」标注。</li>
-</ul>
-<blockquote>
-<p>兼容提示：本教程全部代码已在 Jazzy 上实际编译运行通过。Humble → Jazzy 的主要差异（如动作目标响应回调签名、rosbag2 读取 API 返回值等）会在对应章节标注。</p>
-</blockquote>
-<h2 id="142-环境搭建与测试">14.2 环境搭建与测试</h2>
-<p>安装 ROS2 后，终端执行命令验证：</p>
-<pre><code class="lang-bash"><span class="hljs-built_in">source</span> /opt/ros/jazzy/setup.bash
-ros2 --<span class="hljs-built_in">help</span>          <span class="hljs-comment"># 版本与命令帮助</span>
-</code></pre>
-<p>再运行官方小海龟示例验证图形环境：</p>
-<pre><code class="lang-bash">ros2 run turtlesim turtlesim_node    <span class="hljs-comment"># 终端1：仿真器窗口</span>
-ros2 run turtlesim turtle_teleop_key <span class="hljs-comment"># 终端2：键盘控制</span>
-</code></pre>
-<p>运行效果：弹出小海龟窗口，键盘方向键可控制乌龟运动。</p>
-<h2 id="143-工作空间与功能包">14.3 工作空间与功能包</h2>
-<p><strong>工作空间（workspace）</strong>是存放 ROS2 工程源码的目录，典型结构如下（本教程共 6 个，对应第 14-25 周全部实战代码）：</p>
-<pre><code>ws01_plumbing/
-├── build/      # 编译中间产物
-├── install/    # 安装空间（source 它来使用工作空间）
-├── log/        # 构建日志
-└── src/        # 源码空间：一个功能包一个子目录
-</code></pre><p><strong>功能包（package）</strong>分两类：</p>
+<h2 id="141-本周概览与课时结构">14.1 本周概览与课时结构</h2>
+<p>本周是 ROS2 世界的"进门第一课"：先从 ROS 的诞生背景讲清 ROS2 为什么出现、由什么组成、比 ROS1 和其他中间件好在哪；然后在 Ubuntu 上把 ROS2 + colcon 环境一次搭好，用 C++ 和 Python 各跑通一个 HelloWorld；最后深入工作空间/功能包的文件系统、编码规范与核心模块划分。本周内容不难，但决定了你后面 11 周写代码的"地基姿势"——代码放哪、包怎么建、环境变量怎么配，全都在这里定型。</p>
 <table>
 <thead>
 <tr>
-<th>类型</th>
-<th>构建体系</th>
-<th>关键文件</th>
+<th>课</th>
+<th>小节</th>
+<th>时长</th>
+<th>一句话导览</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>C++（ament_cmake）</td>
-<td>CMakeLists.txt</td>
-<td>package.xml、src/*.cpp</td>
+<td>第1课 ROS2 简介与优势特点</td>
+<td>8 节</td>
+<td>1h21m</td>
+<td>从 ROS 诞生背景一路讲到 ROS2 组成体系与横向/纵向优势</td>
 </tr>
 <tr>
-<td>Python（ament_python）</td>
-<td>setup.py</td>
-<td>package.xml、setup.cfg、资源文件 resource/&lt;包名&gt;</td>
+<td>第2课 ROS2 安装与快速体验</td>
+<td>15 节</td>
+<td>1h23m</td>
+<td>按五步装好 ROS2 与 colcon，C++/Python 双版本 HelloWorld 跑通</td>
+</tr>
+<tr>
+<td>第3课 ROS2 环境搭建与体系框架详解</td>
+<td>10 节</td>
+<td>1h49m</td>
+<td>吃透文件系统、编码风格、配置文件、常用命令与核心模块分工</td>
 </tr>
 </tbody>
 </table>
-<p>编译统一使用 colcon：</p>
-<pre><code class="lang-bash"><span class="hljs-built_in">cd</span> ws01_plumbing
-colcon build                       <span class="hljs-comment"># 编译全部功能包</span>
-<span class="hljs-built_in">source</span> install/setup.bash          <span class="hljs-comment"># 叠加工作空间环境</span>
-</code></pre>
-<p>实测编译输出（第 14 周工作空间，21 个功能包全部通过）：</p>
-<pre><code>Summary: 21 packages finished [1min]
-</code></pre><h2 id="144-hello-world（c-实现）">14.4 Hello World（C++ 实现）</h2>
-<h3 id="1441-案例以及案例分析">14.4.1 案例以及案例分析</h3>
-<p><strong>需求</strong>：编写一个 C++ 节点，运行时输出日志 <code>Hello World!(C++)</code>。
-<strong>流程</strong>：</p>
-<ol>
-<li>创建功能包；</li>
-<li>编写节点源文件；</li>
-<li>编辑 CMakeLists.txt 与 package.xml；</li>
-<li>编译；</li>
-<li>执行。</li>
+<h2 id="142-知识点梳理">14.2 知识点梳理</h2>
+<h3 id="1421-第1课-ros2-简介与优势特点">14.2.1 第1课 ROS2 简介与优势特点</h3>
+<ul>
+<li><strong>核心概念</strong>：ROS2（Robot Operating System 2，机器人操作系统 2）不是传统意义的操作系统，而是构建在操作系统（Linux）之上的<strong>机器人软件开发框架</strong>（开源元操作系统）：提供进程间通信机制、常用算法库、开发调试工具与社区生态，核心解决机器人系统中<strong>节点间通信</strong>与<strong>工具链</strong>问题。</li>
+<li><strong>ROS 诞生背景</strong>：2007 年前后，斯坦福 AI 实验室与 Willow Garage 面对"每个实验室都在重复造机器人软件轮子"的问题，提出用统一的通信中间件把感知、决策、控制模块解耦复用，STAIR 项目是起点，2009 年 ROS 正式发布。核心诉求是<strong>代码复用</strong>与<strong>模块解耦</strong>。</li>
+<li><strong>ROS 概念与作用</strong>：ROS 的三大作用——(1) 提供<strong>进程间通信</strong>（话题/服务/参数），让算法模块可以独立开发、独立部署；(2) 提供<strong>工具生态</strong>（rviz、rqt、rosbag、tf）；(3) 提供<strong>社区生态</strong>（navigation、moveit、PCL 相关包等开源算法）。它把机器人软件从"一个大程序"变成"一群协作的小程序"。</li>
+<li><strong>ROS2 发展历程</strong>：ROS1 基于 TCP/UDP 自研协议，存在单点 Master、无实时性、无安全机制、强依赖 Ubuntu 等问题；2014 年起 OSRF 启动 ROS2 项目（代号 ROS-TNG），核心是<strong>用 DDS（数据分发服务）作为通信底层</strong>，2017 年发布 Ardent，之后按年发布发行版（Foxy → Galactic → Humble → Iron → Jazzy …），Humble（2022，LTS 到 2027）是目前教学与工业主流。</li>
+<li><strong>ROS2 组成体系</strong>（自底向上四层）：<ol>
+<li><strong>DDS/RMW 层</strong>：通信真正落地的地方，RMW（ROS Middleware Interface）抽象接口下可插拔 Fast DDS、Cyclone DDS、Connext 等实现；</li>
+<li><strong>rcl 核心层</strong>：与语言无关的 C 实现（rcl + rcutils + rmw），负责节点、话题、服务等核心逻辑；</li>
+<li><strong>客户端库层</strong>：rclcpp（C++）、rclpy（Python）、rcljava、rclrs 等，把 rcl 包装成各语言 API；</li>
+<li><strong>工具与生态层</strong>：ros2 CLI、launch、rqt、rviz2、rosbag2、tf2、navigation2、MoveIt2 等。</li>
 </ol>
-<h3 id="1442-实现">14.4.2 实现</h3>
-<p>创建功能包：</p>
-<pre><code class="lang-bash"><span class="hljs-built_in">cd</span> ws01_plumbing/src
+</li>
+<li><strong>ROS2 优势（横向比较）</strong>——与其他机器人中间件/自研方案对比：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>对比维度</th>
+<th>ROS2</th>
+<th>ROS1</th>
+<th>自研 TCP/共享内存</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>通信底层</td>
+<td>DDS，去中心化</td>
+<td>自研 TCPROS/UDPROS + Master</td>
+<td>自行实现</td>
+</tr>
+<tr>
+<td>实时性</td>
+<td>支持实时调度与零拷贝</td>
+<td>无保证</td>
+<td>取决于实现</td>
+</tr>
+<tr>
+<td>安全机制</td>
+<td>DDS-Security 加密鉴权</td>
+<td>无</td>
+<td>自行实现</td>
+</tr>
+<tr>
+<td>跨平台</td>
+<td>Linux/Windows/macOS/RTOS</td>
+<td>基本限 Ubuntu</td>
+<td>自行实现</td>
+</tr>
+<tr>
+<td>多语言</td>
+<td>C++/Python/Rust/Java…</td>
+<td>C++/Python</td>
+<td>自定</td>
+</tr>
+<tr>
+<td>产品质量</td>
+<td>面向产品部署</td>
+<td>面向研究原型</td>
+<td>需长期维护</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>ROS2 优势（纵向比较）</strong>——相对 ROS1 的关键改进：去掉 Master（无单点故障，支持多机与动态发现）、DDS 带来 QoS（服务质量）策略、支持实时性与嵌入式、内建安全、支持生命周期节点（Lifecycle Node）、支持动作（Action）与参数服务原生化、多语言与跨平台、linter 与测试工具链完善。</li>
+<li><strong>小结</strong>：ROS2 = DDS 通信底座 + 分层客户端库 + 工具链 + 生态，目标从"科研原型"升级为"可落地产品"。</li>
+<li><strong>版本选择</strong>：课程基于 <strong>Humble（Ubuntu 22.04）</strong>；本教程实测环境为 <strong>Jazzy（Ubuntu 24.04）</strong>，两者 API 基本一致，差异处均以「兼容提示」标注。</li>
+</ul>
+<blockquote>
+<p>兼容提示：本教程全部代码已在 Jazzy 上实际编译运行通过。Humble → Jazzy 的主要差异（如动作目标响应回调签名、rosbag2 读取 API 返回值等）会在对应章节标注。</p>
+</blockquote>
+<h3 id="1422-第2课-ros2-安装与快速体验">14.2.2 第2课 ROS2 安装与快速体验</h3>
+<ul>
+<li><strong>安装流程（五步，Ubuntu 22.04 + ROS2 Humble）</strong>：<ol>
+<li><strong>设置编码</strong>：<code>sudo locale-gen en_US en_US.UTF-8 &amp;&amp; sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8</code>（避免构建时编码报错）；</li>
+<li><strong>启用 universe 存储库</strong>：<code>sudo add-apt-repository universe</code>；</li>
+<li><strong>设置软件源</strong>：添加 ROS2 GPG 密钥与 apt 源（国内可换清华/中科大镜像），<code>sudo apt update</code>；</li>
+<li><strong>安装</strong>：<code>sudo apt install ros-humble-desktop</code>（桌面完整版，含 rviz2/turtlesim/examples）；</li>
+<li><strong>配置环境</strong>：把 <code>source /opt/ros/humble/setup.bash</code> 写入 <code>~/.bashrc</code>，<code>source ~/.bashrc</code> 立即生效。</li>
+</ol>
+</li>
+<li><strong>安装后验证</strong>：终端执行 <code>source /opt/ros/&lt;发行版&gt;/setup.bash</code> 后运行 <code>ros2 --help</code> 能看到版本与命令帮助即为安装成功（本教程 Jazzy 对应 <code>source /opt/ros/jazzy/setup.bash</code>）。</li>
+<li><strong>卸载方式</strong>：<code>sudo apt purge ros-humble-* &amp;&amp; sudo apt autoremove</code>；若只想换发行版，先删掉旧的 <code>setup.bash</code> 行再装新的。</li>
+<li><strong>测试 ROS2</strong>：<code>ros2 run demo_nodes_cpp talker</code> 与 <code>ros2 run demo_nodes_py listener</code>，两个终端互发消息即为成功；也可运行官方小海龟示例验证图形环境（见 14.5.1）；<code>ros2 doctor</code> 可做环境体检。</li>
+<li><strong>安装 colcon 构建工具</strong>：<code>sudo apt install python3-colcon-common-extensions</code>。colcon 是 ROS2 的官方构建工具（区别于 ROS1 的 catkin），支持同时构建 C++/Python 包。</li>
+<li><strong>快速体验——案例简介</strong>：目标是写一对最小节点：Talker 发布字符串话题，Listener 订阅打印。分别用 C++（ament_cmake）和 Python（ament_python）两种构建类型实现，体会两者差异。</li>
+<li><strong>HelloWorld(C++) 基本流程</strong>：<code>ros2 pkg create --build-type ament_cmake helloworld_cpp --dependencies rclcpp</code> 创建包 → 在 <code>src/</code> 写节点源文件 → <code>CMakeLists.txt</code> 里 <code>add_executable</code> + <code>ament_target_dependencies</code> + <code>install(TARGETS ...)</code> → 回到工作空间根目录 <code>colcon build</code> → <code>source install/setup.bash</code> → <code>ros2 run &lt;包名&gt; &lt;可执行文件名&gt;</code>。</li>
+<li><strong>HelloWorld(C++) 源码要点</strong>：节点 = 继承 <code>rclcpp::Node</code> 的类（或裸用 <code>rclcpp::Node::make_shared</code>）；发布用 <code>create_publisher&lt;std_msgs::msg::String&gt;("topic", 10)</code>；定时器 <code>create_wall_timer</code> 周期发布；入口 <code>rclcpp::init → spin → shutdown</code>。</li>
+<li><strong>HelloWorld(Python) 基本流程</strong>：<code>ros2 pkg create --build-type ament_python helloworld_py --dependencies rclpy</code> → 在包目录写节点 <code>.py</code> → <code>setup.py</code> 的 <code>entry_points</code> 注册可执行文件 → <code>colcon build</code> → <code>ros2 run &lt;包名&gt; &lt;可执行文件名&gt;</code>。</li>
+<li><strong>HelloWorld(Python) 源码要点</strong>：继承 <code>rclpy.node.Node</code>，<code>create_publisher</code> / <code>create_subscription</code> / <code>create_timer</code>，入口 <code>rclpy.init → node → spin → destroy_node + shutdown</code>。</li>
+<li><strong>ROS2 运行优化</strong>：<code>colcon build --symlink-install</code>（Python 改码免重编）、<code>--packages-select &lt;pkg&gt;</code>（只编指定包）、<code>source ~/.bashrc</code> 自动加载、把常用命令写别名、<code>--cmake-args -DCMAKE_BUILD_TYPE=Release</code>。</li>
+</ul>
+<h3 id="1423-第3课-ros2-环境搭建与体系框架详解">14.2.3 第3课 ROS2 环境搭建与体系框架详解</h3>
+<ul>
+<li><strong>文件系统——概览</strong>：一个<strong>工作空间（workspace）</strong>下 <code>src/</code> 放功能包源码；<code>colcon build</code> 后生成 <code>build/</code>（编译中间产物）、<code>install/</code>（安装产物，含各包的 <code>setup.bash</code>）、<code>log/</code>（构建日志）。<strong>功能包（package）</strong>是 ROS2 的最小组织单元，含 <code>package.xml</code>（元信息与依赖）+ 构建文件（<code>CMakeLists.txt</code> 或 <code>setup.py</code>）+ 源码 + <code>launch/</code> <code>urdf/</code> <code>config/</code> 等资源目录。</li>
+<li><strong>文件系统——编码风格说明</strong>：C++ 遵循 Google C++ Style（课程风格），Python 遵循 PEP8；节点逻辑建议封装成类；命名小写下划线（包名、话题名），类名大驼峰，常量全大写；一个可执行文件对应一个"主节点"，公共接口放 <code>include/&lt;pkg&gt;/</code> 或包内模块。</li>
+<li><strong>文件系统——编码之初始化与资源释放</strong>：C++ 中 <code>rclcpp::init(argc, argv)</code> 开头、<code>rclcpp::shutdown()</code> 结尾，保证回调结束、上下文（Context）释放；Python 中 <code>rclpy.init()</code> / <code>rclpy.shutdown()</code>，并在 <code>finally</code> 里 <code>destroy_node()</code>。<strong>资源释放不到位会导致进程无法优雅退出、rosbag 写入不完整、DDS 实体泄漏</strong>。</li>
+<li><strong>文件系统——配置文件</strong>：<code>package.xml</code> 声明 <code>&lt;depend&gt;</code>（构建+运行）、<code>&lt;build_depend&gt;</code>、<code>&lt;exec_depend&gt;</code>，C++ 包还要有 <code>&lt;export&gt;&lt;build_type&gt;ament_cmake&lt;/build_type&gt;&lt;/export&gt;</code>；<code>CMakeLists.txt</code> 用 <code>find_package</code> + <code>ament_target_dependencies</code> + <code>install(DIRECTORY launch urdf config ...)</code> 安装资源；Python 包 <code>setup.py</code> 里 <code>data_files</code> 要把 <code>package.xml</code>、<code>launch/</code>、<code>resource/</code> 装进去，<code>entry_points</code> 注册 <code>console_scripts</code>。</li>
+<li><strong>文件系统——常用命令</strong>：<code>colcon build</code>、<code>colcon list</code>、<code>ros2 pkg list/create/executables/prefix</code>、<code>ros2 run</code>、<code>ros2 node/topic/service/param/interface</code>、<code>ros2 doctor</code>。记住规律：<code>ros2 &lt;名词&gt; &lt;动词&gt;</code>，如 <code>ros2 topic list</code>。</li>
+<li><strong>核心模块——通信相关</strong>：话题（Topic）、服务（Service）、动作（Action）、参数（Parameter）四种通信模型 + 接口定义（rosidl：<code>.msg</code>/<code>.srv</code>/<code>.act</code>）+ RMW/DDS 底层。这一块是第 15、16 周的主角。</li>
+<li><strong>核心模块——工具相关</strong>：ros2 CLI、launch 系统、rqt 工具箱、rviz2 可视化、rosbag2 数据录制回放、tf2 坐标变换、urdf/xacro 建模。这一块是第 17、18 周的主角。</li>
+<li><strong>ROS2 体系框架——技术支持</strong>：通信由 OMG 标准 DDS 支撑（可选实现 Fast DDS / Cyclone DDS / RTI Connext）；构建由 colcon + ament 支撑；接口由 rosidl 代码生成；社区由 ROS Discourse、GitHub ros2 组织、ROS Index（docs.ros.org）支撑。</li>
+<li><strong>ROS2 体系框架——应用方向</strong>：移动机器人（差速/全向底盘 + 导航）、机械臂（MoveIt2）、自动驾驶（Autoware）、无人机（PX4 + ROS2 桥）、复合机器人与教育科研。后续课程的智能车（Mycar）就是"差速底盘 + 传感器 + 导航"的缩影。</li>
+<li><strong>本周小结</strong>：先懂"ROS2 是四层体系"，再懂"代码按工作空间/功能包组织"，最后把环境与常用命令变成肌肉记忆，本周就算达标。</li>
+</ul>
+<h2 id="143-重点与难点">14.3 重点与难点</h2>
+<ol>
+<li><strong>工作空间与功能包的层级关系</strong>：工作空间是"仓库"，功能包是"项目"，节点是"进程"。<code>colcon build</code> 必须在工作空间根目录执行，<code>source install/setup.bash</code> 后 <code>ros2 run</code> 才能找到可执行文件——这是新手最常见的"找不到包"根因。</li>
+<li><strong>ament_cmake 与 ament_python 的差异</strong>：C++ 包靠 <code>CMakeLists.txt</code> 编译出可执行文件并 <code>install(TARGETS)</code>；Python 包靠 <code>setup.py</code> 的 <code>entry_points</code> 注册脚本。两者 <code>package.xml</code> 的 <code>&lt;build_type&gt;</code> 不同，混用必报错。</li>
+<li><strong>环境变量的加载顺序</strong>：<code>/opt/ros/&lt;distro&gt;/setup.bash</code> 是系统层，<code>工作空间/install/setup.bash</code> 是覆盖层；多个工作空间叠加时后 source 的覆盖先 source 的（详见第 16 章"工作空间覆盖"）。</li>
+<li><strong>初始化与资源释放的配对</strong>：<code>init</code>/<code>shutdown</code>、<code>spin</code> 的退出条件、Python 的 <code>destroy_node</code>，决定节点能否被 Ctrl+C 干净结束。</li>
+<li><strong>配置文件的"安装"概念</strong>：源码里的 <code>launch/</code> <code>urdf/</code> 不 <code>install</code> 就不会出现在 <code>install/</code> 里，<code>ros2 launch</code> 就找不到——这是 launch 阶段高频 BUG。</li>
+</ol>
+<h2 id="144-代码与命令实战">14.4 代码与命令实战</h2>
+<p><strong>实战 1：创建工作空间与功能包</strong>（场景：本章两个 Hello World 包；<code>--dependencies</code> 会同步写入 package.xml）</p>
+<pre><code class="lang-bash"><span class="hljs-built_in">mkdir</span> -p ws01_plumbing/src &amp;&amp; <span class="hljs-built_in">cd</span> ws01_plumbing/src
+<span class="hljs-comment"># C++ 包（ament_cmake）</span>
 ros2 pkg create cpp00_hello_world --build-type ament_cmake --dependencies rclcpp
+<span class="hljs-comment"># Python 包（ament_python）</span>
+ros2 pkg create py00_hello_world --build-type ament_python --dependencies rclpy
 </code></pre>
-<p>源文件 <code>src/demo01_hello_world.cpp</code>：</p>
-<pre><code class="lang-cpp"><span class="hljs-comment">// 1.包含头文件；</span>
+<p><strong>实战 2：Hello World（C++）——源文件与 CMakeLists.txt</strong>（文件 <code>cpp00_hello_world/src/demo01_hello_world.cpp</code>）</p>
+<pre><code class="lang-cpp"><span class="hljs-comment">/*
+    需求：ROS2 快速体验 —— HelloWorld(C++)。
+    流程：
+        1.包含头文件；
+        2.初始化 ROS2 客户端；
+        3.自定义节点类；
+        4.调用spin函数，并传入节点对象指针；
+        5.释放资源。
+*/</span>
+<span class="hljs-comment">// 1.包含头文件；</span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"rclcpp/rclcpp.hpp"</span></span>
+
+<span class="hljs-comment">// 3.自定义节点类；</span>
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">HelloWorld</span>: <span class="hljs-keyword">public</span> rclcpp::Node{
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-built_in">HelloWorld</span>():<span class="hljs-built_in">Node</span>(<span class="hljs-string">"hello_world_node_cpp"</span>){
+        <span class="hljs-built_in">RCLCPP_INFO</span>(<span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">get_logger</span>(),<span class="hljs-string">"Hello World!(C++)"</span>);
+    }
+};
 
 <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> ** argv)</span>
 </span>{
     <span class="hljs-comment">// 2.初始化 ROS2 客户端；</span>
-    rclcpp::<span class="hljs-built_in">init</span>(argc, argv);
-    <span class="hljs-comment">// 3.创建节点并 spin；</span>
-    rclcpp::<span class="hljs-built_in">spin</span>(std::<span class="hljs-built_in">make_shared</span>&lt;rclcpp::Node&gt;(<span class="hljs-string">"hello_world_node_cpp"</span>));
-    <span class="hljs-comment">// 4.释放资源；</span>
+    rclcpp::<span class="hljs-built_in">init</span>(argc,argv);
+    <span class="hljs-comment">// 4.调用spin函数，并传入节点对象指针；</span>
+    rclcpp::<span class="hljs-built_in">spin</span>(std::<span class="hljs-built_in">make_shared</span>&lt;HelloWorld&gt;());
+    <span class="hljs-comment">// 5.释放资源；</span>
     rclcpp::<span class="hljs-built_in">shutdown</span>();
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 </code></pre>
-<p>CMakeLists.txt 关键内容：</p>
+<p>CMakeLists.txt 关键内容（其余为 ament_cmake 模板默认内容）：</p>
 <pre><code class="lang-cmake"><span class="hljs-keyword">find_package</span>(rclcpp REQUIRED)
 <span class="hljs-keyword">add_executable</span>(demo01_hello_world src/demo01_hello_world.cpp)
 ament_target_dependencies(demo01_hello_world rclcpp)
-<span class="hljs-keyword">install</span>(TARGETS demo01_hello_world DESTINATION lib/<span class="hljs-variable">${PROJECT_NAME}</span>)
+<span class="hljs-keyword">install</span>(TARGETS demo01_hello_world DESTINATION lib/<span class="hljs-variable">${PROJECT_NAME}</span>)  <span class="hljs-comment"># 装到 lib/&lt;包名&gt; 才能 ros2 run</span>
 </code></pre>
-<h3 id="1443-编译与执行">14.4.3 编译与执行</h3>
-<pre><code class="lang-bash"><span class="hljs-built_in">cd</span> ws01_plumbing &amp;&amp; colcon build --packages-select cpp00_hello_world
-<span class="hljs-built_in">source</span> install/setup.bash
-ros2 run cpp00_hello_world demo01_hello_world
-</code></pre>
-<h3 id="1444-运行效果（实测）">14.4.4 运行效果（实测）</h3>
-<pre><code class="lang-text">[INFO] [1792040409.248314370] [hello_world_node_cpp]: Hello World!(C++)
-[INFO] [1792040414.099408944] [rclcpp]: signal_handler(SIGINT/SIGTERM)
-</code></pre>
-<p>Ctrl+C 结束时 rclcpp 打出 <code>signal_handler(SIGINT/SIGTERM)</code>，节点正常退出。</p>
-<h2 id="145-hello-world（python-实现）">14.5 Hello World（Python 实现）</h2>
-<h3 id="1451-案例以及案例分析">14.5.1 案例以及案例分析</h3>
-<p><strong>需求</strong>：与 14.4 相同，改用 Python（ament_python）实现，体会两种客户端库的工程组织差异。</p>
-<h3 id="1452-实现">14.5.2 实现</h3>
-<pre><code class="lang-bash">ros2 pkg create py00_hello_world --build-type ament_python --dependencies rclpy
-</code></pre>
-<p>源文件 <code>py00_hello_world/demo01_hello_world_py.py</code>：</p>
-<pre><code class="lang-python"><span class="hljs-comment"># 1.导包；</span>
+<p><strong>实战 3：Hello World（Python）——源文件与 setup.py</strong>（文件 <code>py00_hello_world/demo01_hello_world_py.py</code>）</p>
+<pre><code class="lang-python"><span class="hljs-comment"># -*- coding: utf-8 -*-</span>
+<span class="hljs-string">"""
+    需求：ROS2 快速体验 —— HelloWorld(Python)。
+"""</span>
 <span class="hljs-keyword">import</span> rclpy
 <span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
 
 
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">HelloWorld</span>(<span class="hljs-title class_ inherited__">Node</span>):
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">"hello_world_node_py"</span>)
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">"Hello World!(python)"</span>)
+
+
 <span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():
-    <span class="hljs-comment"># 2.初始化 ROS2 客户端；</span>
     rclpy.init()
-    <span class="hljs-comment"># 3.创建节点并 spin；</span>
-    rclpy.spin(Node(<span class="hljs-string">"hello_world_node_py"</span>))
-    <span class="hljs-comment"># 4.释放资源；</span>
+    rclpy.spin(HelloWorld())
     rclpy.shutdown()
+
+
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:
+    main()
 </code></pre>
-<p><code>setup.py</code> 中注册入口：</p>
+<p><code>setup.py</code> 中注册入口（可执行文件名 = <code>ros2 run</code> 的第二个参数）：</p>
 <pre><code class="lang-python">entry_points={
     <span class="hljs-string">'console_scripts'</span>: [
         <span class="hljs-string">'demo01_hello_world_py = py00_hello_world.demo01_hello_world_py:main'</span>,
@@ -742,15 +836,71 @@ ros2 run cpp00_hello_world demo01_hello_world
 <span class="hljs-attr">install_scripts</span>=<span class="hljs-variable">$base</span>/lib/py00_hello_world
 </code></pre>
 </blockquote>
-<h3 id="1453-编译与执行">14.5.3 编译与执行</h3>
-<pre><code class="lang-bash">colcon build --packages-select py00_hello_world
-<span class="hljs-built_in">source</span> install/setup.bash
-ros2 run py00_hello_world demo01_hello_world_py
+<p><strong>实战 4：编译、运行与优化</strong>（场景：日常开发循环）</p>
+<pre><code class="lang-bash"><span class="hljs-built_in">cd</span> ws01_plumbing
+colcon build                                                <span class="hljs-comment"># 编译全部功能包</span>
+colcon build --packages-select cpp00_hello_world            <span class="hljs-comment"># 只编指定包</span>
+<span class="hljs-built_in">source</span> install/setup.bash                                   <span class="hljs-comment"># 每个新终端都要 source</span>
+ros2 run cpp00_hello_world demo01_hello_world               <span class="hljs-comment"># 运行 C++ 版</span>
+ros2 run py00_hello_world demo01_hello_world_py             <span class="hljs-comment"># 运行 Python 版</span>
+ros2 node list                                              <span class="hljs-comment"># 确认节点已注册</span>
 </code></pre>
-<h3 id="1454-运行效果（实测）">14.5.4 运行效果（实测）</h3>
+<p>常用构建选项：<code>--symlink-install</code>（Python 改码免重编）、<code>--cmake-args -DCMAKE_BUILD_TYPE=Release</code>（C++ 优化构建）。</p>
+<p><strong>实战 5：package.xml 依赖声明要点</strong>（场景：编译报"找不到 rclcpp"或运行报缺包）</p>
+<pre><code class="lang-xml"><span class="hljs-comment">&lt;!-- package.xml 节选：依赖分构建期与运行期，写全才能被 colcon 排序构建 --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">depend</span>&gt;</span>rclcpp<span class="hljs-tag">&lt;/<span class="hljs-name">depend</span>&gt;</span>          <span class="hljs-comment">&lt;!-- 构建 + 运行都需要 --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">exec_depend</span>&gt;</span>ros2launch<span class="hljs-tag">&lt;/<span class="hljs-name">exec_depend</span>&gt;</span>   <span class="hljs-comment">&lt;!-- 仅运行期需要，如 launch --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">export</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">build_type</span>&gt;</span>ament_cmake<span class="hljs-tag">&lt;/<span class="hljs-name">build_type</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">export</span>&gt;</span>   <span class="hljs-comment">&lt;!-- Python 包写 ament_python --&gt;</span>
+</code></pre>
+<h2 id="145-运行效果（实测）">14.5 运行效果（实测）</h2>
+<h3 id="1451-环境验证与小海龟测试">14.5.1 环境验证与小海龟测试</h3>
+<pre><code class="lang-bash"><span class="hljs-built_in">source</span> /opt/ros/jazzy/setup.bash
+ros2 --<span class="hljs-built_in">help</span>          <span class="hljs-comment"># 版本与命令帮助</span>
+</code></pre>
+<p>再运行官方小海龟示例验证图形环境：</p>
+<pre><code class="lang-bash">ros2 run turtlesim turtlesim_node    <span class="hljs-comment"># 终端1：仿真器窗口</span>
+ros2 run turtlesim turtle_teleop_key <span class="hljs-comment"># 终端2：键盘控制</span>
+</code></pre>
+<p>运行效果：弹出小海龟窗口，键盘方向键可控制乌龟运动。</p>
+<h3 id="1452-工作空间编译（实测）">14.5.2 工作空间编译（实测）</h3>
+<p>实测编译输出（第 14 周工作空间，21 个功能包全部通过）：</p>
+<pre><code>Summary: 21 packages finished [1min]
+</code></pre><h3 id="1453-hello-world（c）实测">14.5.3 Hello World（C++）实测</h3>
+<pre><code class="lang-bash">ros2 run cpp00_hello_world demo01_hello_world
+</code></pre>
+<pre><code class="lang-text">[INFO] [1792040409.248314370] [hello_world_node_cpp]: Hello World!(C++)
+[INFO] [1792040414.099408944] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+</code></pre>
+<p>Ctrl+C 结束时 rclcpp 打出 <code>signal_handler(SIGINT/SIGTERM)</code>，节点正常退出。</p>
+<h3 id="1454-hello-world（python）实测">14.5.4 Hello World（Python）实测</h3>
+<pre><code class="lang-bash">ros2 run py00_hello_world demo01_hello_world_py
+</code></pre>
 <pre><code class="lang-text">[INFO] [1792040414.541185411] [hello_world_node_py]: Hello World!(python)
 </code></pre>
-<h2 id="146-本章小结">14.6 本章小结</h2>
+<h2 id="146-与-ros2--机器人开发的关联">14.6 与 ROS2 / 机器人开发的关联</h2>
+<ol>
+<li><strong>一切开发从建包开始</strong>：第 15 章开始的每个通信案例、第 18 章的 URDF 描述包、第 19 章起的 Mycar 全部遵循本章的包结构与构建流程，本章的"建包模板"可以直接复制使用。</li>
+<li><strong>文件系统规范决定可维护性</strong>：真实机器人项目往往是几十个包、上百个节点，<code>launch/</code>、<code>config/</code>、<code>urdf/</code> 的规范放置让团队协作与 CI 构建成为可能。</li>
+<li><strong>环境变量与多工作空间</strong>：真机部署时机器人端与 PC 端常有不同工作空间叠加，理解 <code>setup.bash</code> 覆盖顺序能避免"改了代码不生效"的经典问题。</li>
+<li><strong>C++/Python 双语言能力</strong>：工业界常用 C++ 写控制/驱动等性能敏感节点，用 Python 写上层调度与算法原型，本章 Hello World 就是两种模板的种子代码。</li>
+</ol>
+<h2 id="147-自测与练习（含参考答案要点）">14.7 自测与练习（含参考答案要点）</h2>
+<ol>
+<li><strong>概念题</strong>：画出 ROS2 体系四层结构图（DDS/RMW → rcl → rclcpp/rclpy → 工具生态），并各举一个例子。说明 ROS2 相对 ROS1 的至少 4 个优势。</li>
+<li><strong>动手任务</strong>：新建工作空间 <code>ws_week14</code>，分别创建 <code>helloworld_cpp</code>（ament_cmake）与 <code>helloworld_py</code>（ament_python）两个包，实现 Hello World 节点各一个。<strong>验收标准</strong>：<code>colcon build</code> 零警告以上级别通过；两个终端分别 <code>ros2 run</code> 后均能输出日志；<code>ros2 node list</code> 能看到两个节点。</li>
+<li><strong>思考题</strong>：把 <code>install(TARGETS ...)</code> 的目标路径写错（如 <code>DESTINATION bin</code>），<code>ros2 run</code> 会怎样？如何排查？</li>
+</ol>
+<blockquote>
+<p>参考答案要点：1) 四层——DDS/RMW（Fast DDS/Cyclone DDS）、rcl/rcutils、rclcpp/rclpy、ros2 CLI/rviz2/rosbag2/tf2；优势——去中心化无 Master、DDS QoS、实时性、安全性、跨平台、多语言、生命周期节点。2) 按实战 1~4 逐步完成，注意 Python 包 <code>entry_points</code> 的 <code>main</code> 函数名要与源码一致。3) 报"找不到可执行文件"或 <code>ros2 run</code> 无输出；用 <code>ros2 pkg executables cpp00_hello_world</code> 与 <code>ros2 pkg prefix</code> 检查安装位置，看 <code>log/latest_build</code> 的 install 日志。</p>
+</blockquote>
+<h2 id="148-常见问题（faq）">14.8 常见问题（FAQ）</h2>
+<ul>
+<li><strong>Q：<code>ros2 run</code> 提示 "No executable found"？</strong> A：九成是三件事之一——没 <code>source install/setup.bash</code>、可执行文件没 <code>install</code> 到 <code>lib/&lt;包名&gt;</code>（C++）或 <code>entry_points</code> 没注册（Python）、包名/可执行名拼写错误。依次用 <code>ros2 pkg list</code>、<code>ros2 pkg executables &lt;pkg&gt;</code> 验证。</li>
+<li><strong>Q：<code>colcon build</code> 报 <code>Package 'xxx' not found in root</code> 或依赖找不到？</strong> A：确认在工作空间根目录执行、包目录在 <code>src/</code> 下、<code>package.xml</code> 的 <code>&lt;depend&gt;</code> 写全；C++ 包还要在 <code>CMakeLists.txt</code> 里 <code>find_package</code>。</li>
+<li><strong>Q：装了多个 ROS2 发行版会冲突吗？</strong> A：会。同一终端只应 source 一个发行版；<code>echo $ROS_DISTRO</code> 检查当前生效版本，<code>~/.bashrc</code> 中保留一行 <code>source /opt/ros/&lt;distro&gt;/setup.bash</code>。</li>
+<li><strong>Q：C++ 包改了源码为什么 <code>ros2 run</code> 还是旧行为？</strong> A：C++ 需要重新 <code>colcon build</code>；Python 包若用了 <code>--symlink-install</code>，改完源码直接重启节点即可。另外确认运行的终端 source 的是同一个工作空间。</li>
+</ul>
+<h2 id="149-本章小结">14.9 本章小结</h2>
 <ul>
 <li>ROS2 是构建在 DDS 之上的机器人软件框架，节点是基本执行单元；</li>
 <li>工作空间 = src + build + install + log，<code>source install/setup.bash</code> 后才能使用；</li>
@@ -801,7 +951,7 @@ ros2 run py00_hello_world demo01_hello_world_py
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第14章 ROS2 概述与环境搭建","level":"6.1","depth":1,"next":{"title":"第15章 通信机制深度剖析","level":"6.2","depth":1,"path":"第15周-通信机制深度剖析.md","ref":"第15周-通信机制深度剖析.md","articles":[]},"previous":{"title":"第13章 Linux 与 Shell 入门（操作系统地基）","level":"5.1","depth":1,"path":"第13周-Linux与Shell入门.md","ref":"第13周-Linux与Shell入门.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第14周-ROS2概述与环境搭建.md","mtime":"2026-10-16T02:43:09.753Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T02:43:11.108Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第14章 ROS2 概述与环境搭建","level":"6.1","depth":1,"next":{"title":"第15章 通信机制深度剖析","level":"6.2","depth":1,"path":"第15周-通信机制深度剖析.md","ref":"第15周-通信机制深度剖析.md","articles":[]},"previous":{"title":"第13章 Linux 与 Shell 入门（操作系统地基）","level":"5.1","depth":1,"path":"第13周-Linux与Shell入门.md","ref":"第13周-Linux与Shell入门.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第14周-ROS2概述与环境搭建.md","mtime":"2026-10-16T03:26:51.708Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T03:26:53.986Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

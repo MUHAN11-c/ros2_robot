@@ -602,35 +602,228 @@
                                 <h1 id="第4章-c-语言基础入门（编译类型输入输出）">第4章 C 语言基础入门（编译/类型/输入输出）</h1>
 <blockquote>
 <p>本章对应课程第 4 周：建立「源码 → gcc 四步 → 可执行 → gdb 调试」的完整闭环，打牢常量变量、整型/字符/浮点、进制与补码、printf/scanf 的地基。<code>colcon build</code> 底层就是 CMake 调用 gcc 做这四步。</p>
+<p>所属阶段：阶段2 ROS2 开发必备基础之 C 语言核心编程进阶 ｜ 视频 56 个 ｜ 时长约 7h04m ｜ 难度：入门</p>
 </blockquote>
-<h2 id="41-案例以及案例分析">4.1 案例以及案例分析</h2>
-<p><strong>需求</strong>：验证各整型占用空间与格式符匹配，并观察无符号/有符号数的溢出回绕——这是理解嵌入式里程计计数器翻转的第一课。</p>
-<h2 id="42-知识点与实现">4.2 知识点与实现</h2>
-<h3 id="421-gcc-四步流程">4.2.1 gcc 四步流程</h3>
-<pre><code class="lang-bash">gcc -E hello.c -o hello.i   <span class="hljs-comment"># 预处理：展开头文件与宏</span>
-gcc -S hello.i -o hello.s   <span class="hljs-comment"># 编译：生成汇编</span>
-gcc -c hello.s -o hello.o   <span class="hljs-comment"># 汇编：生成目标文件</span>
-gcc hello.o -o hello        <span class="hljs-comment"># 链接：合成可执行文件</span>
-ldd hello                   <span class="hljs-comment"># 查询动态库依赖</span>
-</code></pre>
-<p>常用参数：<code>-Wall</code>（警告）、<code>-g</code>（调试信息）、<code>-std=c11</code>、<code>-O2</code>。gdb 基本功：<code>break/run/n/s/p/bt</code>。</p>
-<h3 id="422-常量、变量与类型">4.2.2 常量、变量与类型</h3>
+<h2 id="41-本周概览与课时结构">4.1 本周概览与课时结构</h2>
+<p>本周从零开始建立 C 语言的完整闭环：写出源码 → 用 gcc 分四步变成可执行文件 → 用 gdb 调试。随后打牢数据表示的地基：常量变量、整型/字符/浮点类型、进制与补码、以及 printf/scanf 格式化输入输出。这是 25 周体系中第一次深入「机器怎么存数据」，学完你能独立编译调试任何小型 C 程序，并为下周的运算符与数组扫清障碍。</p>
+<table>
+<thead>
+<tr>
+<th>课</th>
+<th>小节</th>
+<th>时长</th>
+<th>一句话导览</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第1课 C 语言基础概念与编译工具操作</td>
+<td>15 节</td>
+<td>2h15m</td>
+<td>从计算机组成与 C 语言特点讲到 gcc 四步流程、system 函数、寄存器与汇编初识</td>
+</tr>
+<tr>
+<td>第2课 常量、变量与整型数据类型详解</td>
+<td>15 节（常量与变量 9 节 + 整型数据类型 6 节）</td>
+<td>1h39m</td>
+<td>常量三种写法、变量命名与声明定义、调试功能、整型占用空间与标准输出格式</td>
+</tr>
+<tr>
+<td>第3课 字符数据类型相关知识精讲</td>
+<td>9 节</td>
+<td>59m22s</td>
+<td>有符号/无符号与 size_t、字符型与大小写转换、转义字符、浮点数与科学计数法</td>
+</tr>
+<tr>
+<td>第4课 字符串深度剖析与应用</td>
+<td>17 节</td>
+<td>2h09m</td>
+<td>二/八/十六进制转换、原反补码与溢出、字符串初识、printf/scanf/getchar/putchar 全细节</td>
+</tr>
+</tbody>
+</table>
+<h2 id="42-知识点梳理">4.2 知识点梳理</h2>
+<h3 id="421-第1课-c-语言基础概念与编译工具操作">4.2.1 第1课 C 语言基础概念与编译工具操作</h3>
 <ul>
-<li>常量优先 <code>const double PI = 3.14;</code>（有类型有作用域），<code>#define</code> 只做文本替换；</li>
-<li>64 位 Linux（LP64）：<code>char</code>=1、<code>short</code>=2、<code>int</code>=4、<code>long</code>=8 字节，用 <code>sizeof</code> 验证；</li>
-<li>格式符匹配：<code>%d/%ld/%lld/%u/%zu/%f/%c/%s</code> 与类型一一对应，错配是未定义行为；</li>
-<li><code>char</code> 是 1 字节小整型（<code>'A'</code>=65），小写 = 大写 + 32；</li>
-<li>补码：负数补码 = 反码 + 1；<code>unsigned char</code> 255+1 回绕为 0、<code>signed char</code> 127+1 变 -128；</li>
-<li><code>scanf("%d", &amp;a)</code> 必须传地址；<code>%c</code> 前的残留换行用 <code>getchar()</code> 清理；<code>%31s</code> 限宽防溢出。</li>
+<li><strong>核心概念</strong>：C 是编译型、贴近硬件的中级语言。源码（<code>.c</code>）经 gcc 四步——预处理（preprocess）、编译（compile）、汇编（assemble）、链接（link）——变成可执行文件，这一点直接对应 ROS2 中 CMake 调用编译器构建包的过程。</li>
+<li><strong>c 语言概述和计算机组成部分</strong>：程序 = 指令 + 数据；硬件上分 CPU（运算与控制，内部有寄存器 register）、内存（存数据与指令，掉电丢失）、外存（硬盘，持久化）、输入输出设备。CPU 只与寄存器直接打交道，内存数据需先载入寄存器。</li>
+<li><strong>c 语言特点</strong>：高效（生成机器码、可精细控制内存）、贴近硬件（指针可直接操作地址，适合驱动）、可移植性好、语法简洁但坑多（无边界检查）。缺点是无 GC、无异常安全，内存要自己管。</li>
+<li><strong>c 语言关键字简介</strong>：C99 共 32 个关键字，如 <code>int char float double if else while for return sizeof struct union enum static const void</code> 等。关键字不能作变量名；本周先混个脸熟，后续课程逐一展开。</li>
+<li><strong>常见困惑</strong>：编译报错看不懂、<code>main</code> 到底写 <code>int main(void)</code> 还是 <code>int main()</code>、分号与花括号配对、<code>%d</code> 与类型不匹配。对策：见错误先读第一行，用最小示例复现。</li>
+<li><strong>第一个程序</strong>：标准骨架是 <code>#include &lt;stdio.h&gt;</code> + <code>int main(void) { ... return 0; }</code>。<code>printf</code> 来自标准库，<code>return 0</code> 表示正常退出。</li>
+<li><strong>gcc 操作 01 / 02</strong>：<code>gcc hello.c -o hello</code> 一步到位；常用参数 <code>-o</code> 指定输出名、<code>-Wall</code> 打开常用警告、<code>-g</code> 生成调试信息、<code>-std=c11</code> 指定标准、<code>-O2</code> 优化、<code>-D</code> 定义宏、<code>-I</code> 添加头文件路径。</li>
+<li><strong>system 函数</strong>：<code>system("命令")</code> 让 C 程序调用 shell 命令，定义在 <code>&lt;stdlib.h&gt;</code>，返回值是命令退出码。例如 <code>system("ls -l");</code>。ROS2 里 <code>ros2 bag record</code> 等命令行工具常被脚本化调用，原理相通。</li>
+<li><strong>gcc 预处理</strong>：<code>gcc -E hello.c -o hello.i</code> 只做预处理——展开 <code>#include</code>、替换宏、去掉注释、处理条件编译（<code>#ifdef</code>）。看 <code>.i</code> 文件能理解「头文件只是文本拷贝」。</li>
+<li><strong>gcc 编译</strong>：<code>gcc -S hello.i -o hello.s</code> 把预处理结果翻译成汇编。读懂 <code>.s</code> 中 <code>mov/add/call</code> 有助理解函数调用与寄存器。</li>
+<li><strong>汇编和链接</strong>：<code>gcc -c hello.s -o hello.o</code> 生成二进制目标文件（符号未完全解析）；再 <code>gcc hello.o -o hello</code> 完成链接，把多个 <code>.o</code> 与标准库（如 glibc 的 <code>printf</code>）合成可执行文件。分静态链接（库代码拷入）与动态链接（运行时加载 <code>.so</code>）。</li>
+<li><strong>查询程序依赖库工具</strong>：<code>ldd ./hello</code> 查看动态库依赖（如 <code>libc.so.6</code>）；<code>nm</code> 可看符号表。调试 ROS2 节点「找不到 so」时第一反应就是 <code>ldd</code>。</li>
+<li><strong>c 语言寄存器 / c 语言汇编</strong>：常见寄存器有通用寄存器、程序计数器 PC、栈指针 SP。gcc <code>-S</code> 输出里能看到变量被放进寄存器或栈。这为后面理解「指针 = 地址」和嵌入式驱动里的寄存器映射埋伏笔。</li>
+<li><strong>vs 常用快捷键</strong>：VS Code 等价对照——<code>F5</code> 启动调试、<code>F10</code> 单步跳过（step over）、<code>F11</code> 单步进入（step into）、<code>Ctrl+Shift+B</code> 构建、<code>Ctrl+/</code> 注释、<code>Ctrl+K Ctrl+F</code> 格式化。本仓库学习路径以 gcc 命令行为准，IDE 只是加速器。</li>
 </ul>
-<h2 id="43-运行效果（实测）">4.3 运行效果（实测）</h2>
+<h3 id="422-第2课-常量、变量与整型数据类型详解">4.2.2 第2课 常量、变量与整型数据类型详解</h3>
+<ul>
+<li><strong>核心概念</strong>：常量（constant）在程序运行期间值不变；变量（variable）是内存中命名的可读写存储单元，「先声明（类型 + 名字）后使用」。</li>
+<li><strong>常量概念 / 常量的语法</strong>：三类写法——① 字面量：<code>100</code>、<code>3.14</code>、<code>'A'</code>、<code>"hello"</code>；② 宏常量：<code>#define PI 3.14</code>（预处理阶段纯文本替换，无类型、无作用域保护）；③ <code>const</code> 常量：<code>const double pi = 3.14;</code>（有类型、有作用域，编译器可检查）。</li>
+<li><strong>const 定义常量</strong>：推荐 <code>const</code> 修饰，例如 <code>const int MAX_SPEED = 30;</code>。<code>const</code> 修饰后不可再赋值；习惯上常量名全大写。注意 <code>const</code> 在 C 中是「只读变量」，可用指针绕过，与 C++ 语义略有差别。</li>
+<li><strong>调试功能</strong>：<code>gcc -g</code> 编译后 <code>gdb ./a.out</code>，常用 <code>break main</code>（下断点）、<code>run</code>（运行）、<code>n</code>（下一行）、<code>s</code>（进入函数）、<code>p 变量</code>（打印）、<code>c</code>（继续）、<code>bt</code>（调用栈）。VS Code 中对应 F9 断点 + F5 调试。</li>
+<li><strong>变量概念 / 变量命名规则</strong>：命名由字母、数字、下划线组成，不能以数字开头，不能用关键字；区分大小写；见名知意（<code>wheel_radius</code> 优于 <code>wr</code>）；风格上常用小写下划线（Linux 风格）。</li>
+<li><strong>声明和定义 / 声明示例</strong>：定义（definition）分配内存，如 <code>int a = 5;</code>；声明（declaration）只告知类型，如 <code>extern int a;</code>（定义在别处）。一个变量只能定义一次，声明可多次，多文件编程会用到。</li>
+<li><strong>常量和变量实例</strong>：把「圆的周长计算」里的 <code>π</code> 用 <code>const</code> 固定、半径用变量，是最典型的组合。</li>
+<li><strong>数据类型简介</strong>：基本类型分整型（<code>int</code> 等）、字符型（<code>char</code>）、实型/浮点型（<code>float/double</code>）、构造类型（数组、结构体等，后续展开）、指针类型、空类型 <code>void</code>。</li>
+<li><strong>计算机常用单位</strong>：1 byte = 8 bit；1 KB = 1024 B，1 MB = 1024 KB，1 GB = 1024 MB。一个 <code>char</code> 恰好 1 字节，可表示 256 种状态。</li>
+<li><strong>整型概念</strong>：<code>signed/unsigned</code> × <code>short/int/long/long long</code>。有符号数最高位是符号位（原反补码见第4课），无符号数全表示数值，范围翻倍但不能为负。</li>
+<li><strong>禁用警告波浪线</strong>：IDE 的红色/绿色波浪线来自 IntelliSense 误报（如安全函数警告）。可用 <code>-Wall</code> 但不加 <code>-Werror</code>，或在 VS Code 设置中调整 <code>C_Cpp.errorSquiggles</code>；不要用「关掉警告」代替「修好代码」。</li>
+<li><strong>整型占用空间</strong>：64 位 Linux（LP64）下 <code>char</code>=1、<code>short</code>=2、<code>int</code>=4、<code>long</code>=8、<code>long long</code>=8 字节。用 <code>sizeof(int)</code> 在代码里验证，不靠背。</li>
+<li><strong>输出整型的标准写法</strong>：<code>int → %d</code>、<code>long → %ld</code>、<code>long long → %lld</code>、<code>unsigned → %u</code>、<code>size_t → %zu</code>。格式与类型不匹配是未定义行为，编译时加 <code>-Wformat</code>（含在 <code>-Wall</code> 里）可拦截。</li>
+</ul>
+<h3 id="423-第3课-字符数据类型相关知识精讲">4.2.3 第3课 字符数据类型相关知识精讲</h3>
+<ul>
+<li><strong>核心概念</strong>：<code>char</code> 本质是 1 字节的小整型，ASCII 码把字符映射为数值（<code>'A'</code>=65、<code>'a'</code>=97、<code>'0'</code>=48）。</li>
+<li><strong>有符号和无符号概念</strong>：<code>signed char</code> 范围 -128~127，<code>unsigned char</code> 0~255。图像像素、字节流常用 <code>unsigned char</code>；判断大小写、存 ASCII 用普通 <code>char</code> 即可。</li>
+<li><strong>无符号占用空间与格式匹配</strong>：<code>unsigned</code> 系列仍按 <code>short/int/long</code> 占 2/4/8 字节，输出用 <code>%u / %lu / %llu</code>。把 <code>unsigned</code> 与 <code>%d</code> 混用会打印出负数幻觉。</li>
+<li><strong>了解 size_t</strong>：<code>size_t</code> 是 <code>sizeof</code> 与许多库函数（<code>strlen</code>、<code>fread</code>）返回的无符号整型，64 位下等价 <code>unsigned long</code>，格式用 <code>%zu</code>。它表示「大小/下标」，永远不会为负——用 <code>int i</code> 与 <code>size_t</code> 比较时要警惕 <code>-Wall</code> 的符号比较警告。</li>
+<li><strong>字符型详解</strong>：<code>char c = 'A';</code> 存的是 65；<code>printf("%c", c)</code> 打 <code>A</code>，<code>printf("%d", c)</code> 打 65。字符与整型可互相赋值（隐式转换），<code>'A' + 1</code> 得 <code>'B'</code>。</li>
+<li><strong>大小写转换</strong>：小写比对应大写大 32（<code>'a'-'A'</code>=32），<code>c = c - 32</code> 或 <code>c = c + 32</code> 互转；标准库 <code>tolower/toupper</code>（<code>&lt;ctype.h&gt;</code>）更安全。</li>
+<li><strong>转义字符</strong>：<code>\n</code> 换行、<code>\t</code> 制表、<code>\\</code> 反斜杠、<code>\'</code> 单引号、<code>\"</code> 双引号、<code>\0</code> 空字符（字符串结束标志）、<code>\r</code> 回车、<code>\x41</code> 十六进制 ASCII。<code>"\0"</code> 是字符串的隐形结尾。</li>
+<li><strong>浮点数基础语法</strong>：<code>float</code>（4 字节，约 6-7 位有效数字）、<code>double</code>（8 字节，约 15-16 位）、<code>long double</code>。默认小数字面量是 <code>double</code>，加 <code>f</code> 后缀得 <code>float</code>，如 <code>1.5f</code>。</li>
+<li><strong>实型细节</strong>：浮点数存在精度误差（<code>0.1+0.2 != 0.3</code>），比较时用 <code>fabs(a-b) &lt; 1e-6</code>；输出 <code>%f</code> 默认 6 位小数，<code>%.2f</code> 控制精度。机器人中的角度、速度、坐标都是浮点数，精度误差在长时间积分中会累积。</li>
+<li><strong>了解科学计数法</strong>：<code>1.5e3</code> = 1500，<code>2.5e-4</code> = 0.00025，<code>e</code> 前后都可带小数。传感器量程（如 <code>9.8e-3</code>）常这样写。</li>
+</ul>
+<h3 id="424-第4课-字符串深度剖析与应用">4.2.4 第4课 字符串深度剖析与应用</h3>
+<ul>
+<li><strong>核心概念</strong>：C 没有字符串类型，字符串 = 以 <code>\0</code> 结尾的字符数组。十进制之外，二/八/十六进制是描述同一数值的不同视角。</li>
+<li><strong>二进制和转换 / 八进制和转换 / 十六进制和转换</strong>：十进制转二进制用「除 2 取余、逆序排列」；二进制转十进制用「按权展开求和」。每 3 位二进制 = 1 位八进制，每 4 位 = 1 位十六进制（<code>1111 1111</code> = 0xFF = 255）。printf 支持 <code>%o</code>（八进制）、<code>%x</code>（十六进制）、<code>%#x</code>（带 <code>0x</code> 前缀）。</li>
+<li><strong>格式化语法</strong>：<code>printf("格式串", 表达式)</code> 中 <code>%d %c %f %s %p</code> 对应整型/字符/浮点/字符串/指针地址；<code>%%</code> 输出百分号本身。</li>
+<li><strong>原码反码补码</strong>：正数的原码=反码=补码；负数反码 = 原码符号位不变其余取反，补码 = 反码 + 1。计算机用补码做加减法，使 <code>+0/-0</code> 表示统一，且多表示一个最小值（如 8 位的 -128）。</li>
+<li><strong>补码练习 / 数值溢出</strong>：<code>unsigned char</code> 255 + 1 回绕到 0；<code>signed char</code> 127 + 1 变 -128。溢出不报错但结果错误——机器人里里程计计数器、PWM 占空比常用无符号类型防回绕误判。</li>
+<li><strong>限定符</strong>：<code>short long unsigned signed</code> 修饰整型，<code>long</code> 还可修饰 <code>double</code>；<code>const</code> 表只读，<code>volatile</code> 告诉编译器「值可能被硬件/中断改变，别优化掉读取」——驱动开发必备。</li>
+<li><strong>字符串基本使用</strong>：<code>char s[16] = "hello";</code> 实际存 6 个字节（含 <code>\0</code>）；<code>%s</code> 输出遇 <code>\0</code> 停止；<code>sizeof(s)</code> 是数组容量，字符串长度要数到 <code>\0</code> 为止。</li>
+<li><strong>printf 格式字符细节 / 附加格式</strong>：<code>%5d</code> 右对齐宽 5、<code>%-5d</code> 左对齐、<code>%05d</code> 补零、<code>%.3f</code> 三位小数、<code>%8.2f</code> 总宽 8 保留 2 位；<code>%ld %lu %zu %lld</code> 匹配长整型。</li>
+<li><strong>putchar / getchar</strong>：<code>putchar(c)</code> 输出单字符，<code>getchar()</code> 读一个字符（返回 <code>int</code>，遇文件结束返回 EOF）。二者常用于逐字符处理与「清空输入缓冲区」。</li>
+<li><strong>scanf 基础 / 接收整数 / 字符 / 字符串</strong>：<code>scanf("%d", &amp;a)</code> 必须传地址（<code>&amp;</code>）；<code>scanf("%c", &amp;c)</code> 会读走上次残留的换行或空格，需用 <code>getchar()</code> 或 <code>" %c"</code>（前导空格跳过空白）清理；<code>scanf("%s", buf)</code> 遇空格即停、且不检查长度，安全做法是 <code>%127s</code> 限宽。</li>
+<li><strong>常见陷阱汇总</strong>：<code>scanf</code> 传值不传地址会段错误；字符串漏 <code>\0</code>；有符号/无符号混用；格式符与类型不匹配；浮点数直接 <code>==</code> 比较。</li>
+</ul>
+<h2 id="43-重点与难点">4.3 重点与难点</h2>
+<ol>
+<li><strong>gcc 四步流程</strong>：预处理→编译→汇编→链接，每步的输入输出（<code>.c → .i → .s → .o → 可执行</code>）要能手写命令复现。这是理解 CMake/colcon 构建 ROS2 包的前提。</li>
+<li><strong>补码与溢出</strong>：为什么 -1 的补码是全 1、为什么 <code>255+1=0</code>。理解它才能解释嵌入式里「计数器回绕」与「有符号/无符号比较」的诡异 bug。</li>
+<li><strong>格式化匹配</strong>：<code>%d/%u/%ld/%zu/%f/%c/%s</code> 与类型一一对应；<code>scanf</code> 传地址、<code>%c</code> 残留换行、<code>%s</code> 无边界检查，是本周最高频的段错误来源。</li>
+<li><strong>字符串即「以 \0 结尾的字符数组」</strong>：<code>sizeof</code> ≠ <code>strlen</code>，这一概念贯穿第5-7周，务必本周就建立直觉。</li>
+</ol>
+<blockquote>
+<p><strong>注意：</strong> <code>scanf("%d", &amp;a)</code> 中的 <code>&amp;</code> 不能忘；<code>scanf</code> 的返回值是成功读取的项数，做健壮输入时应检查返回值，而不是假设用户一定输入了数字。</p>
+</blockquote>
+<h2 id="44-代码与命令实战">4.4 代码与命令实战</h2>
+<p><strong>场景 1：第一个程序 + system 函数</strong>（对应第1课）</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* hello.c —— 第一个程序：打印问候并调用 shell 命令 */</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdlib.h&gt;</span>   <span class="hljs-comment">/* system 函数所在头文件 */</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>
+{
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"Hello, ROS2 developer!\n"</span>);
+    <span class="hljs-type">int</span> ret = system(<span class="hljs-string">"date"</span>);     <span class="hljs-comment">/* 调用 shell 命令，返回退出码 */</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"system exit code = %d\n"</span>, ret);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<pre><code class="lang-bash">gcc -Wall hello.c -o hello   <span class="hljs-comment"># -Wall 打开常用警告</span>
+./hello
+</code></pre>
+<p><strong>场景 2：gcc 四步流程与依赖查询</strong>（对应 gcc 预处理/编译/汇编和链接）</p>
+<pre><code class="lang-bash">gcc -E hello.c -o hello.i    <span class="hljs-comment"># 1 预处理：展开头文件与宏</span>
+gcc -S hello.i -o hello.s    <span class="hljs-comment"># 2 编译：生成汇编</span>
+gcc -c hello.s -o hello.o    <span class="hljs-comment"># 3 汇编：生成目标文件</span>
+gcc hello.o -o hello         <span class="hljs-comment"># 4 链接：合成可执行文件</span>
+ldd hello                    <span class="hljs-comment"># 查询动态库依赖（libc.so.6 等）</span>
+</code></pre>
+<p><strong>场景 3：sizeof 与整型格式匹配</strong>（对应第2课）</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* types.c —— 各整型占用空间与正确格式符 */</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>
+{
+    <span class="hljs-type">int</span> a = <span class="hljs-number">42</span>;
+    <span class="hljs-type">long</span> b = <span class="hljs-number">100000L</span>;
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> c = <span class="hljs-number">4000000000u</span>;   <span class="hljs-comment">/* 无符号可存更大正数 */</span>
+    <span class="hljs-type">size_t</span> n = <span class="hljs-keyword">sizeof</span>(<span class="hljs-type">double</span>);      <span class="hljs-comment">/* sizeof 返回 size_t */</span>
+
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"sizeof(char)=%zu sizeof(int)=%zu sizeof(long)=%zu\n"</span>,
+           <span class="hljs-keyword">sizeof</span>(<span class="hljs-type">char</span>), <span class="hljs-keyword">sizeof</span>(<span class="hljs-type">int</span>), <span class="hljs-keyword">sizeof</span>(<span class="hljs-type">long</span>));
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"a=%d b=%ld c=%u sizeof(double)=%zu\n"</span>, a, b, c, n);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<pre><code class="lang-bash">gcc -Wall types.c -o types &amp;&amp; ./types
+</code></pre>
+<p><strong>场景 4：字符大小写转换与转义字符</strong>（对应第3课）</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* case.c —— ASCII 运算实现大小写转换 */</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>
+{
+    <span class="hljs-type">char</span> c = <span class="hljs-string">'r'</span>;
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"原字符: %c  ASCII=%d\n"</span>, c, c);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"转大写: %c  ASCII=%d\n"</span>, c - <span class="hljs-number">32</span>, c - <span class="hljs-number">32</span>);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"转小写: %c\n"</span>, (<span class="hljs-type">char</span>)(c - <span class="hljs-number">32</span> + <span class="hljs-number">32</span>));
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"转义演示: A\tB\\C \"quoted\"\n"</span>);   <span class="hljs-comment">/* \t 制表 \\ 反斜杠 */</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<pre><code class="lang-bash">gcc -Wall case.c -o <span class="hljs-keyword">case</span> &amp;&amp; ./case
+</code></pre>
+<p><strong>场景 5：补码与数值溢出</strong>（对应第4课）</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* overflow.c —— 无符号回绕与补码现象 */</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>
+{
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> u = <span class="hljs-number">255</span>;
+    <span class="hljs-type">signed</span> <span class="hljs-type">char</span> s = <span class="hljs-number">127</span>;
+    u = (<span class="hljs-type">unsigned</span> <span class="hljs-type">char</span>)(u + <span class="hljs-number">1</span>);     <span class="hljs-comment">/* 255 + 1 回绕为 0 */</span>
+    s = (<span class="hljs-type">signed</span> <span class="hljs-type">char</span>)(s + <span class="hljs-number">1</span>);       <span class="hljs-comment">/* 127 + 1 回绕为 -128 */</span>
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"unsigned 255+1 = %u\n"</span>, u);
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"signed   127+1 = %d\n"</span>, s);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<pre><code class="lang-bash">gcc -Wall overflow.c -o overflow &amp;&amp; ./overflow
+</code></pre>
+<p><strong>场景 6：scanf 整数/字符/字符串与 getchar 清缓冲</strong>（对应第4课）</p>
+<pre><code class="lang-c"><span class="hljs-comment">/* input.c —— 安全的格式化输入写法 */</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span>
+{
+    <span class="hljs-type">int</span> age = <span class="hljs-number">0</span>;
+    <span class="hljs-type">char</span> ch = <span class="hljs-number">0</span>;
+    <span class="hljs-type">char</span> name[<span class="hljs-number">32</span>] = {<span class="hljs-number">0</span>};
+
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"请输入年龄: "</span>);
+    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d"</span>, &amp;age);          <span class="hljs-comment">/* 整数：必须传地址 &amp;age */</span>
+    getchar();                  <span class="hljs-comment">/* 吃掉行尾残留的 '\n' */</span>
+
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"请输入一个字符: "</span>);
+    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%c"</span>, &amp;ch);           <span class="hljs-comment">/* 若无上面的 getchar，会读到换行 */</span>
+
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"请输入名字(无空格): "</span>);
+    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%31s"</span>, name);        <span class="hljs-comment">/* %31s 限宽，防溢出 */</span>
+
+    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"age=%d ch=%c name=%s\n"</span>, age, ch, name);
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<pre><code class="lang-bash">gcc -Wall input.c -o input &amp;&amp; ./input
+</code></pre>
+<h2 id="45-运行效果（实测）">4.5 运行效果（实测）</h2>
+<p>本章实测案例：验证各整型占用空间与格式符匹配，并观察无符号/有符号数的溢出回绕——这是理解嵌入式里程计计数器翻转的第一课。</p>
 <pre><code class="lang-text">sizeof(char)=1 sizeof(int)=4 sizeof(long)=8
 a=42 b=100000 c=4000000000 sizeof(double)=8
 unsigned 255+1 = 0
 signed   127+1 = -128
 </code></pre>
 <p>编译命令：<code>gcc -Wall w4_types.c -o w4 &amp;&amp; ./w4</code>（gcc 13.3.0，Ubuntu 24.04）。</p>
-<h2 id="44-端到端实战（实测）：gcc-四步流水线">4.4 端到端实战（实测）：gcc 四步流水线</h2>
+<h2 id="46-端到端实战（实测）：gcc-四步流水线">4.6 端到端实战（实测）：gcc 四步流水线</h2>
 <p>从源码到可执行文件完整走一遍四步流程，再运行并检查动态库依赖——这条链就是 <code>colcon build</code> 的底层。</p>
 <p>源码 <code>hello.c</code>：</p>
 <pre><code class="lang-c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
@@ -656,10 +849,36 @@ $ ldd hello
     libc.so.6 =&gt; /lib/x86_64-linux-gnu/libc.so.6 (0x00007044f3c00000)
 </code></pre>
 <p><code>libc.so.6</code> 就是 <code>printf</code> 的提供者；ROS2 节点报「找不到 librcl.so」时第一反应同样是 <code>ldd</code>。</p>
-<h2 id="45-本章小结">4.5 本章小结</h2>
+<h2 id="47-与-ros2--机器人开发的关联">4.7 与 ROS2 / 机器人开发的关联</h2>
+<ol>
+<li><strong>gcc 四步流程 = ROS2 构建链的底层</strong>：<code>colcon build</code> 本质是 CMake 调用 gcc/g++ 对每个包做预处理→编译→汇编→链接。看懂 <code>-I / -L / -l</code> 与 <code>ldd</code>，才能定位 ROS2 包「找不到头文件 / 找不到 librcl.so」类编译链接错误。</li>
+<li><strong>固定宽度类型与消息定义</strong>：ROS2 消息（<code>.msg</code>）里的 <code>int8/int32/uint64/float32</code> 对应 C 的 <code>&lt;stdint.h&gt;</code> 定宽类型。机器人跨机通信（x86 与 ARM）时字节宽度、字节序不一致会直接数据错乱，本周的「类型占用空间」是第一道防线。</li>
+<li><strong>补码、溢出与嵌入式驱动</strong>：编码器计数、PWM、传感器寄存器读数常是无符号或补码有符号数；理解 8/16/32 位回绕，才能正确处理里程计计数器翻转与 IMU 原始值符号扩展。</li>
+<li><strong>printf/scanf ↔ 日志与参数</strong>：<code>RCLCPP_INFO</code> 的格式串语法与 <code>printf</code> 完全一致（<code>%d/%f/%s/%zu</code>）；调试机器人时按格式打印里程计、角度、距离是基本功。</li>
+<li><strong>gdb 调试能力可直接迁移</strong>：后面调试 rclcpp 节点的段错误、用 core dump + <code>bt</code> 定位崩溃栈，用的都是本周的 <code>break/run/print/bt</code>。</li>
+</ol>
+<h2 id="48-自测与练习（含参考答案要点）">4.8 自测与练习（含参考答案要点）</h2>
+<ol>
+<li>不看笔记，写出 gcc 从 <code>.c</code> 到可执行文件的四条分步命令，并说明每步产物。</li>
+<li>编程题：输入一个大写字母，输出对应小写字母及其 ASCII 码值（验收：输入 <code>G</code> 输出 <code>g</code> 与 103）。</li>
+<li>编程题：定义 <code>unsigned char</code> 变量从 254 开始连加 3 次并打印每次结果，解释回绕现象。</li>
+<li>动手任务：用 <code>gdb</code> 调试场景 6 的程序，设置断点观察 <code>age</code>、<code>name</code> 的内存内容（<code>p age</code>、<code>x/8c name</code>）（验收：能说清 <code>name</code> 末尾为什么有 <code>\0</code>）。</li>
+</ol>
+<blockquote>
+<p>参考答案要点：① <code>gcc -E a.c -o a.i</code> → <code>gcc -S a.i -o a.s</code> → <code>gcc -c a.s -o a.o</code> → <code>gcc a.o -o a</code>，产物依次是预处理文本、汇编文本、目标文件、可执行文件；② 用 <code>c + 32</code> 或 <code>tolower</code>，<code>printf("%c %d\n", c+32, c+32)</code>；③ 255、0、1、2，因为 1 字节无符号数模 256 回绕；④ 字符串以 <code>\0</code> 结尾，<code>sizeof(name)</code>=32 而实际有效长度看 <code>\0</code> 位置。</p>
+</blockquote>
+<h2 id="49-常见问题（faq）">4.9 常见问题（FAQ）</h2>
+<ul>
+<li><strong>Q：<code>gcc hello.c</code> 为什么生成的是 <code>a.out</code>？</strong> A：默认输出名是 <code>a.out</code>，用 <code>-o 名字</code> 指定即可。写 ROS2 时每个可执行目标都应明确命名。</li>
+<li><strong>Q：<code>#define PI 3.14</code> 和 <code>const double PI = 3.14</code> 该用哪个？</strong> A：优先 <code>const</code>：有类型检查、有作用域、可调试查看。<code>#define</code> 适合条件编译开关与字符串化等预处理场景。</li>
+<li><strong>Q：为什么 <code>scanf</code> 后面要写 <code>&amp;a</code>？</strong> A：<code>scanf</code> 要把读到的值写进变量的内存地址，<code>&amp;a</code> 取地址。漏写 <code>&amp;</code> 会把值当成地址去写，通常直接段错误。</li>
+<li><strong>Q：<code>int</code> 到底几个字节？</strong> A：与平台相关，64 位 Linux 下 <code>int</code> 是 4 字节。不要写死假设，用 <code>sizeof</code> 验证；需要精确宽度时用 <code>&lt;stdint.h&gt;</code> 的 <code>int32_t</code> 等。</li>
+</ul>
+<h2 id="410-本章小结">4.10 本章小结</h2>
 <ul>
 <li>gcc 四步 = ROS2 构建链的底层，<code>-I/-L/-l</code> 与 <code>ldd</code> 是定位「找不到头文件/so」的第一反应；</li>
 <li><code>.msg</code> 里的 <code>int32/float32</code> 对应 <code>&lt;stdint.h&gt;</code> 定宽类型，跨机通信先对齐字节宽度；</li>
+<li>补码与回绕是嵌入式计数器 bug 的根源，<code>unsigned char</code> 255+1=0、<code>signed char</code> 127+1=-128 要能脱口而出；</li>
 <li><code>RCLCPP_INFO</code> 的格式串语法与 <code>printf</code> 完全一致；</li>
 <li>gdb 的 <code>break/run/print/bt</code> 直接迁移到 rclcpp 节点的段错误调试。</li>
 </ul>
@@ -706,7 +925,7 @@ $ ldd hello
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第4章 C 语言基础入门（编译/类型/输入输出）","level":"3.1","depth":1,"next":{"title":"第5章 C 语言进阶编程（运算符/控制流/数组）","level":"3.2","depth":1,"path":"第5周-C语言进阶编程.md","ref":"第5周-C语言进阶编程.md","articles":[]},"previous":{"title":"第3章 数据处理与计算机视觉（NumPy/OpenCV）","level":"2.3","depth":1,"path":"第3周-数据处理与计算机视觉.md","ref":"第3周-数据处理与计算机视觉.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第4周-C语言基础入门.md","mtime":"2026-10-16T02:43:09.754Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T02:43:11.108Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第4章 C 语言基础入门（编译/类型/输入输出）","level":"3.1","depth":1,"next":{"title":"第5章 C 语言进阶编程（运算符/控制流/数组）","level":"3.2","depth":1,"path":"第5周-C语言进阶编程.md","ref":"第5周-C语言进阶编程.md","articles":[]},"previous":{"title":"第3章 数据处理与计算机视觉（NumPy/OpenCV）","level":"2.3","depth":1,"path":"第3周-数据处理与计算机视觉.md","ref":"第3周-数据处理与计算机视觉.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第4周-C语言基础入门.md","mtime":"2026-10-16T03:26:51.712Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T03:26:53.986Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

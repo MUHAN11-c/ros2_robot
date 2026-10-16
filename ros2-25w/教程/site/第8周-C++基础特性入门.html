@@ -603,38 +603,292 @@
 <blockquote>
 <p>本章对应课程第 8 周：C++ 相对 C 的增强（类型检查、bool、const、引用）、命名空间与 <code>::</code>、内联函数与函数重载、类与封装入门——后续 rclcpp 节点类设计的第一块基石。</p>
 </blockquote>
-<h2 id="81-案例以及案例分析">8.1 案例以及案例分析</h2>
-<p><strong>需求</strong>：设计带访问权限的 <code>Cube</code> 类——成员私有、构造校验尺寸为正、提供体积与「点是否在立方体内」判断，体验封装与接口设计。</p>
-<h2 id="82-知识点与实现">8.2 知识点与实现</h2>
-<h3 id="821-命名空间与作用域">8.2.1 命名空间与作用域</h3>
+<h2 id="81-本周概览与课时结构">8.1 本周概览与课时结构</h2>
+<p>本周是 C++ 的「破冰周」：先认识 C++ 语言与第一个程序，再系统对比 C++ 相对 C 的增强点（更强的类型检查、bool、const、引用、三元表达式），最后进入内联函数与类和对象的初步封装。学完本周，你能解释 C++ 为什么不是「带类的 C」，能用引用写出高效的参数传递，能设计带访问权限的简单类——这是后续 rclcpp 节点类设计的第一块基石。</p>
+<table>
+<thead>
+<tr>
+<th>课</th>
+<th>小节</th>
+<th>时长</th>
+<th>一句话导览</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第1课 C++ 语言概述与基础概念</td>
+<td>7 节</td>
+<td>58m26s</td>
+<td>从 hello world 到命名空间与 <code>::</code> 作用域解析</td>
+</tr>
+<tr>
+<td>第2课 C++ 相较于 C 语言的优势特性解析</td>
+<td>18 节</td>
+<td>约 2h14m</td>
+<td>类型检查、bool、const、引用：C++ 相对 C 的全面增强</td>
+</tr>
+<tr>
+<td>第3课 内联函数与类和对象</td>
+<td>13 节</td>
+<td>约 2h22m</td>
+<td>内联函数替代宏、函数重载、封装与访问权限、立方体综合案例</td>
+</tr>
+</tbody>
+</table>
+<h2 id="82-知识点梳理">8.2 知识点梳理</h2>
+<h3 id="821-第1课：c-语言概述与基础概念">8.2.1 第1课：C++ 语言概述与基础概念</h3>
 <ul>
-<li><code>::</code> 作用域解析：<code>::value</code> 强制取全局版本；</li>
-<li><code>namespace</code> 只能写在全局、可嵌套、同名空间可分散声明（rclcpp 就是这么组织的）、支持匿名空间与别名；</li>
-<li><code>using 名字;</code>（细粒度）优先于 <code>using namespace 空间;</code>（易冲突）；<strong>头文件中禁止 using namespace</strong>。</li>
+<li><strong>核心概念</strong>：C++ 是在 C 基础上面向对象（OOP）扩展而来的静态类型编译型语言，兼容 C 的同时增加了类、模板、异常、命名空间、STL 等设施。编译模型仍是「预处理 → 编译 → 链接」。</li>
+<li><strong>C++ 概述与第一个程序</strong>：最小可运行程序由头文件、<code>main</code> 函数和输出流组成。C++ 用 <code>&lt;iostream&gt;</code> 的 <code>std::cout</code> 取代 <code>printf</code>，用 <code>std::cin</code> 取代 <code>scanf</code>，类型安全（不会出现 <code>printf("%d", x)</code> 格式串写错的隐患）。</li>
 </ul>
-<h3 id="822-c-相对-c-的增强">8.2.2 C++ 相对 C 的增强</h3>
+<pre><code class="lang-cpp"><span class="hljs-comment">// hello.cpp —— C++17 第一个程序</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    std::cout &lt;&lt; <span class="hljs-string">"Hello, ROS2 C++!"</span> &lt;&lt; std::endl;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<pre><code class="lang-bash">g++ -std=c++17 -Wall -o hello hello.cpp &amp;&amp; ./hello
+<span class="hljs-comment"># -std=c++17 指定语言标准；-Wall 打开常用警告</span>
+</code></pre>
 <ul>
-<li>严格检查：全局变量重定义、实参类型/个数、<code>void*</code> 必须显式转换；</li>
-<li><code>struct</code> 可有成员函数与访问权限（默认 public 的 class）；</li>
-<li><code>const</code> 是编译期常量（可作数组长度）、内部链接；取地址后退化为只读变量；用 <code>const/constexpr</code> 代替 <code>#define</code>；</li>
-<li><strong>引用</strong>：<code>T&amp; 别名</code> 是必须初始化、不可改指向的别名（底层 <code>T* const</code>）；<code>const T&amp;</code> 只读传参避免拷贝；<code>T*&amp;</code> 可在函数内改变外部指针指向。</li>
+<li><strong>快捷生成 main 函数</strong>：IDE/编辑器中可用代码片段一键生成主函数（VS Code 输入 <code>main</code> + Tab；Vim + snippets 插件同理）。重点不是快捷键本身，而是统一工程模板：固定包含顺序、固定 <code>int main(int argc, char** argv)</code> 签名——后面写 ROS2 节点时 <code>main</code> 必须带命令行参数。</li>
+<li><strong>双冒号全局作用域（<code>::</code>）</strong>：<code>::</code> 是作用域解析运算符（scope resolution）。前面什么都不写表示全局作用域，用于当局部变量/成员与全局名字冲突时强制取全局版本。</li>
 </ul>
-<h3 id="823-内联、重载与封装">8.2.3 内联、重载与封装</h3>
+<pre><code class="lang-cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-type">int</span> value = <span class="hljs-number">42</span>;              <span class="hljs-comment">// 全局变量</span>
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-type">int</span> value = <span class="hljs-number">7</span>;           <span class="hljs-comment">// 局部变量遮蔽（shadow）全局变量</span>
+    std::cout &lt;&lt; <span class="hljs-string">"local  = "</span> &lt;&lt; value &lt;&lt; <span class="hljs-string">"\n"</span>;      <span class="hljs-comment">// 7</span>
+    std::cout &lt;&lt; <span class="hljs-string">"global = "</span> &lt;&lt; ::value &lt;&lt; <span class="hljs-string">"\n"</span>;    <span class="hljs-comment">// 42，:: 强制走全局</span>
+}
+</code></pre>
 <ul>
-<li><code>inline</code> 替代宏函数（有类型检查）；<code>constexpr</code> 编译期计算；</li>
-<li>函数重载：参数列表不同即可，仅返回类型不同不算；<code>extern "C"</code> 按 C 规则链接以调用硬件 SDK；</li>
-<li>封装：成员 <code>private</code>、<code>public</code> 接口受控（setter 里做校验）；<code>class</code> 默认 private、<code>struct</code> 默认 public。</li>
+<li><strong>命名空间解决命名冲突（namespace）</strong>：大型工程中不同库可能都有 <code>init()</code>、<code>Timer</code>，命名空间把名字划入独立作用域，从根上消除冲突。访问方式：<code>空间名::成员</code>。</li>
 </ul>
-<h2 id="83-运行效果（实测）">8.3 运行效果（实测）</h2>
+<pre><code class="lang-cpp"><span class="hljs-keyword">namespace</span> lidar { <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">init</span><span class="hljs-params">()</span> </span>{ <span class="hljs-comment">/* ... */</span> } }
+<span class="hljs-keyword">namespace</span> camera { <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">init</span><span class="hljs-params">()</span> </span>{ <span class="hljs-comment">/* ... */</span> } }
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    lidar::<span class="hljs-built_in">init</span>();
+    camera::<span class="hljs-built_in">init</span>();
+}
+</code></pre>
+<ul>
+<li><strong>命名空间的特性</strong>：<ul>
+<li>命名空间<strong>只能写在全局作用域</strong>，内部还可以嵌套命名空间（C++17 可写 <code>namespace a::b { }</code>）。</li>
+<li>同名命名空间可以<strong>分散在多个文件/多次声明</strong>，编译器会把它们合并（这正是 ROS2 头文件的组织方式：<code>rclcpp</code> 命名空间散布在成百上千个头文件里）。</li>
+<li>支持<strong>匿名命名空间</strong>（<code>namespace { ... }</code>），其中的名字仅本翻译单元可见，等价于 <code>static</code>，用于隐藏实现细节。</li>
+<li>支持<strong>别名</strong>：<code>namespace rt = robot_tools::sensors::detail;</code>。</li>
+</ul>
+</li>
+<li><strong>using 声明与编译指令</strong>：<code>using 名字;</code> 是「把一个名字引入当前作用域」（粒度细、可控）；<code>using namespace 空间名;</code> 是「把整个空间的名字全部倒进来」（方便但易冲突）。头文件中<strong>绝对不要</strong>写 <code>using namespace</code>，否则会污染所有包含该头文件的翻译单元。</li>
+</ul>
+<pre><code class="lang-cpp"><span class="hljs-keyword">namespace</span> robot { <span class="hljs-keyword">constexpr</span> <span class="hljs-type">double</span> PI = <span class="hljs-number">3.1415926</span>; <span class="hljs-type">int</span> id = <span class="hljs-number">1</span>; }
+
+<span class="hljs-keyword">using</span> robot::PI;          <span class="hljs-comment">// using 声明：只引入 PI</span>
+<span class="hljs-comment">// using namespace robot; // using 编译指令：整个空间可见，慎用</span>
+</code></pre>
+<blockquote>
+<p><strong>注意：</strong> ROS2 代码里 <code>using namespace std;</code> 是常见反模式。rclcpp 自身大量使用 <code>std::</code> 前缀，一旦你全局 using，<code>rclcpp::Timer</code>、<code>std::chrono</code> 等与自定义名字冲突时编译错误会非常难懂。</p>
+</blockquote>
+<h3 id="822-第2课：c-相较于-c-语言的优势特性解析">8.2.2 第2课：C++ 相较于 C 语言的优势特性解析</h3>
+<h4 id="编译期检查的全面增强">编译期检查的全面增强</h4>
+<ul>
+<li><strong>核心概念</strong>：C++ 在<strong>编译期检查</strong>上全面强于 C，同时提供 const、引用等零开销抽象。这些增强不是语法糖，而是后续类、模板、泛型算法的地基。</li>
+<li><strong>全局变量检测增强</strong>：C 语言中重复声明同名全局变量可能蒙混过关；C++ 会报「重定义」错误。C++ 要求全局变量声明与定义严格区分（<code>extern int x;</code> 只是声明）。</li>
+<li><strong>函数检测增强</strong>：C 不检查实参类型与个数，也不要求声明返回值；C++ 严格检查参数类型、个数、返回值，且调用未声明函数直接报错。</li>
+<li><strong>类型转换检测增强</strong>：C 允许 <code>void*</code> 与任意指针隐式互转、<code>malloc</code> 返回值直接赋给具体指针；C++ 必须显式转换（<code>static_cast</code> 等），<code>void*</code> → 具体指针也需强转。这把大量「运行期崩溃」提前到「编译期报错」。</li>
+<li><strong>结构体增强</strong>：C 的 struct 只能放数据；C++ 的 struct 可以有成员函数、构造函数、访问权限（<code>public/private</code>），本质是默认 public 的 class。ROS2 生成的消息类型 <code>std_msgs::msg::Header</code> 等就是带成员函数的结构体/类。</li>
+<li><strong>bool 类型增强</strong>：C++ 有真正的 <code>bool</code>（<code>true/false</code> 是关键字），<code>bool</code> 变量非 0 值赋值都会被归一化为 1，可与整数互相转换但更安全。</li>
+<li><strong>三元表达式增强</strong>：C 的 <code>a ? b : c</code> 只能得到值；C++ 中若 b、c 是<strong>同类型左值</strong>，结果是左值（可被赋值），常用于链式条件赋值。</li>
+</ul>
+<h4 id="const-增强与内存分配">const 增强与内存分配</h4>
+<ul>
+<li>C++ 中 <code>const</code> 修饰的是<strong>编译期常量</strong>，可以直接作数组长度（C 中不行）；</li>
+<li><code>const</code> 全局变量是<strong>内部链接</strong>（各编译单元私有，不像 C 那样默认外部链接），头文件里定义 const 常量不会重定义；</li>
+<li>但对 const 变量<strong>取地址</strong>、或用 <code>extern</code> 修饰时，编译器会为其分配内存——此时它是「只读变量」而非纯常量；</li>
+<li>用 <code>const</code>/<code>constexpr</code> 代替 <code>#define</code>：有类型检查、有作用域、可调试。</li>
+</ul>
+<pre><code class="lang-cpp"><span class="hljs-keyword">constexpr</span> <span class="hljs-type">int</span> kMaxJoints = <span class="hljs-number">6</span>;         <span class="hljs-comment">// 编译期常量，可作数组长度</span>
+<span class="hljs-type">double</span> offsets[kMaxJoints] = {<span class="hljs-number">0</span>};
+
+<span class="hljs-type">const</span> <span class="hljs-type">int</span> kBufSize = <span class="hljs-number">256</span>;             <span class="hljs-comment">// const 常量：有类型、有作用域</span>
+<span class="hljs-type">const</span> <span class="hljs-type">int</span>* p = &amp;kBufSize;             <span class="hljs-comment">// 取地址后，编译器为其分配内存</span>
+</code></pre>
+<h4 id="引用体系：别名、传参与常量引用">引用体系：别名、传参与常量引用</h4>
+<ul>
+<li><strong>引用（reference）基本语法</strong>：<code>类型&amp; 别名 = 原名;</code> 引用是变量的<strong>别名</strong>，必须初始化、不能改指向、不能为空。</li>
+<li><strong>引用的细节与底层原理</strong>：<ul>
+<li>引用必须初始化，且初始化后不能再改为引用其他变量（区别于指针）；</li>
+<li>底层实现是指针常量 <code>T* const</code>，由编译器完成解引用，所以「引用即别名」是语言层面的语义保证；</li>
+<li>可以对引用再取引用（本质还是同一变量）；</li>
+<li>数组不能直接整体引用，需要用指针或 <code>std::array</code>/<code>std::vector</code>。</li>
+</ul>
+</li>
+<li><strong>引用实现参数传递</strong>：按引用传参（<code>void f(T&amp; x)</code>）避免拷贝大对象，且可被调用方修改实参；只读场景用 <code>const T&amp;</code>。这是 C++ 代码里最常见的函数签名，也是 ROS2 回调常用 <code>const std_msgs::msg::X::SharedPtr msg</code> 的理论背景。</li>
+<li><strong>指针引用（<code>T*&amp;</code>）</strong>：引用可以作为指针的别名，常用于「函数内改变外部指针指向」的场景（如工厂函数返回对象指针、链表头插）。</li>
+<li><strong>常量引用（<code>const T&amp;</code>）</strong>：可绑定字面量/临时量并延长其生命周期；用作只读参数既避免拷贝又防止误改。</li>
+</ul>
+<pre><code class="lang-cpp"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">scale</span><span class="hljs-params">(<span class="hljs-type">double</span> k, <span class="hljs-type">const</span> std::vector&lt;<span class="hljs-type">double</span>&gt;&amp; in, std::vector&lt;<span class="hljs-type">double</span>&gt;&amp; out)</span></span>;
+<span class="hljs-comment">// in 只读、out 可写、k 传值：意图一目了然</span>
+</code></pre>
+<blockquote>
+<p><strong>注意：</strong> 不要返回局部变量的引用（悬垂引用）；函数需要返回新对象时返回值（编译器有 RVO 优化，不亏），需要返回成员时可返回引用。</p>
+</blockquote>
+<h3 id="823-第3课：内联函数与类和对象">8.2.3 第3课：内联函数与类和对象</h3>
+<ul>
+<li><strong>核心概念</strong>：宏函数没有类型检查、易因优先级出错、无法调试；内联函数（<code>inline</code>）以「建议编译器展开」的方式替代宏，保留类型安全与调试能力。</li>
+<li><strong>宏函数缺陷与内联函数</strong>：<code>#define MAX(a,b) ((a)&gt;(b)?(a):(b))</code> 会多次求值且无类型检查；改写为 <code>inline</code> 函数即可避免。现代 C++ 中简单小函数直接在类内定义，编译器通常自动内联，<code>inline</code> 更多用于<strong>头文件中定义函数避免重定义</strong>（如 STL 风格）。</li>
+<li><strong>函数默认值</strong>：参数可从右向左给默认值；声明与定义<strong>只能一处</strong>给默认值（一般放头文件声明处）。rclcpp 接口常靠默认值减少样板代码。</li>
+<li><strong>占位参数（unnamed parameter）</strong>：函数声明中只写类型不写名字 <code>void f(int, int b)</code>，用于占位兼容接口或预留扩展点。</li>
+<li><strong>函数重载（overload）</strong>：同一作用域内函数名相同、<strong>参数列表不同</strong>（类型/个数/顺序）即可重载；仅返回类型不同不算重载。编译器按「重载决议」选最佳匹配。</li>
+<li><strong>函数重载细节</strong>：注意隐式转换带来的二义性（如 <code>f(int)</code> 与 <code>f(double)</code> 调 <code>f(1.5f)</code> 可能二义）、默认参数与重载的组合坑。重载是 <code>std::cout &lt;&lt;</code> 与 ROS2 参数模板接口的实现基础。</li>
+<li><strong>extern "C"</strong>：C++ 支持函数重载靠名字修饰（name mangling）；用 <code>extern "C"</code> 包裹声明可让函数按 C 规则链接，便于调用 C 库（如驱动 SDK、C 语言编写的传感器接口）。</li>
+</ul>
+<pre><code class="lang-cpp"><span class="hljs-keyword">extern</span> <span class="hljs-string">"C"</span> {
+    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">lidar_open</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span>* dev)</span></span>;   <span class="hljs-comment">// 按 C 符号链接，无名字修饰</span>
+}
+</code></pre>
+<ul>
+<li><strong>封装与访问权限</strong>：封装 = 数据 + 操作数据的函数绑在一起，并用访问权限控制接口。<code>public</code>（对外接口）/ <code>protected</code>（子类可见）/ <code>private</code>（仅类内可见），<code>class</code> 默认 private，<code>struct</code> 默认 public。</li>
+<li><strong>尽量设置成员为私有</strong>：成员一律 <code>private</code>，通过 getter/setter 暴露受控接口——可在 setter 中做合法性校验、加锁、发通知，日后改内部实现不破坏使用者。rclcpp 的参数接口 <code>declare_parameter/get_parameter</code> 就是这种设计。</li>
+<li><strong>立方体案例</strong>：设计 <code>Point3D</code> 与 <code>Cube</code> 两个类——成员私有、getter/setter 校验尺寸为正、提供求面积/体积、判断两个立方体是否相等、判断点是否在立方体内（分别用成员函数与全局函数 + 友元两种方式）。这是「类设计 + 封装 + 接口划分」的入门级综合练习。</li>
+</ul>
+<h2 id="83-重点与难点">8.3 重点与难点</h2>
+<ol>
+<li><strong>引用 vs 指针</strong>：引用是必须初始化、不可改指向的别名，底层是常量指针；优先用引用表达「必填的可写/只读出参」，需要「可能为空 / 需要改指向」才用指针。</li>
+<li><strong>const 的三重身份</strong>：编译期常量、内部链接、只读变量（取地址后有内存）。<code>constexpr</code> 与 <code>const</code> 的区别（前者要求编译期可求值）是面试常考点。</li>
+<li><strong>命名空间卫生</strong>：头文件中禁止 <code>using namespace</code>；实现文件中局部 using 声明优先于编译指令。</li>
+<li><strong>封装的度</strong>：成员一律私有不是教条，而是给「变化」留缓冲层——这与 ROS2 节点把 publisher/subscription 收进类成员、只暴露 spin 接口是同一思想。</li>
+<li><strong>重载决议与二义性</strong>：默认参数、隐式转换、<code>const</code> 修饰的重载（<code>f(T&amp;)</code> vs <code>f(const T&amp;)</code>）共同决定匹配结果，出错信息很长，要学会从「候选函数列表」里定位原因。</li>
+</ol>
+<h2 id="84-代码与命令实战">8.4 代码与命令实战</h2>
+<p><strong>场景 1：命名空间与作用域解析（对应第1课）</strong></p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// ns_demo.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-keyword">namespace</span> robot {
+    <span class="hljs-type">int</span> id = <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">namespace</span> drive { <span class="hljs-type">int</span> id = <span class="hljs-number">2</span>; }
+}
+<span class="hljs-keyword">namespace</span> robot { <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">show</span><span class="hljs-params">()</span> </span>{ std::cout &lt;&lt; <span class="hljs-string">"robot::show\n"</span>; } }  <span class="hljs-comment">// 同名空间可分散声明</span>
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    std::cout &lt;&lt; robot::id &lt;&lt; <span class="hljs-string">" "</span> &lt;&lt; robot::drive::id &lt;&lt; <span class="hljs-string">"\n"</span>;      <span class="hljs-comment">// 1 2</span>
+    <span class="hljs-keyword">namespace</span> rd = robot::drive;                                    <span class="hljs-comment">// 空间别名</span>
+    std::cout &lt;&lt; rd::id &lt;&lt; <span class="hljs-string">"\n"</span>;
+    robot::<span class="hljs-built_in">show</span>();
+}
+</code></pre>
+<pre><code class="lang-bash">g++ -std=c++17 -Wall -o ns_demo ns_demo.cpp &amp;&amp; ./ns_demo
+</code></pre>
+<p><strong>场景 2：const 与 constexpr（对应第2课）</strong></p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// const_demo.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;type_traits&gt;</span></span>
+
+<span class="hljs-type">const</span> <span class="hljs-type">int</span> kMax = <span class="hljs-number">8</span>;                 <span class="hljs-comment">// 内部链接常量</span>
+<span class="hljs-keyword">constexpr</span> <span class="hljs-type">int</span> kMin = <span class="hljs-number">1</span>;             <span class="hljs-comment">// 编译期常量</span>
+<span class="hljs-keyword">static_assert</span>(kMin == <span class="hljs-number">1</span>, <span class="hljs-string">"kMin must be 1"</span>);
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-type">int</span> arr[kMax] = {<span class="hljs-number">0</span>};            <span class="hljs-comment">// const 常量可作数组长度</span>
+    <span class="hljs-type">const</span> <span class="hljs-type">int</span>* p = &amp;kMax;           <span class="hljs-comment">// 取地址 → 分配内存，成为只读变量</span>
+    std::cout &lt;&lt; std::is_const_v&lt;<span class="hljs-keyword">decltype</span>(kMax)&gt; &lt;&lt; <span class="hljs-string">" "</span> &lt;&lt; arr[<span class="hljs-number">0</span>] &lt;&lt; <span class="hljs-string">" "</span> &lt;&lt; *p &lt;&lt; <span class="hljs-string">"\n"</span>;
+}
+</code></pre>
+<pre><code class="lang-bash">g++ -std=c++17 -Wall -o const_demo const_demo.cpp &amp;&amp; ./const_demo
+</code></pre>
+<p><strong>场景 3：引用传参与常量引用（对应第2课）</strong></p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// ref_demo.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;vector&gt;</span></span>
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">add_bias</span><span class="hljs-params">(<span class="hljs-type">const</span> std::vector&lt;<span class="hljs-type">double</span>&gt;&amp; in,   <span class="hljs-comment">// 只读：不拷贝、不修改</span>
+              std::vector&lt;<span class="hljs-type">double</span>&gt;&amp; out,        <span class="hljs-comment">// 可写出参</span>
+              <span class="hljs-type">double</span>*&amp; cursor)</span> </span>{               <span class="hljs-comment">// 指针引用：可改变外部指针</span>
+    out.<span class="hljs-built_in">clear</span>();
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">double</span> v : in) out.<span class="hljs-built_in">push_back</span>(v + <span class="hljs-number">0.1</span>);
+    cursor = out.<span class="hljs-built_in">data</span>();            <span class="hljs-comment">// 影响调用方的指针</span>
+}
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    std::vector&lt;<span class="hljs-type">double</span>&gt; src{<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>, <span class="hljs-number">3.0</span>}, dst;
+    <span class="hljs-type">double</span>* p = <span class="hljs-literal">nullptr</span>;
+    <span class="hljs-built_in">add_bias</span>(src, dst, p);
+    std::cout &lt;&lt; dst.<span class="hljs-built_in">size</span>() &lt;&lt; <span class="hljs-string">" "</span> &lt;&lt; (p == dst.<span class="hljs-built_in">data</span>()) &lt;&lt; <span class="hljs-string">"\n"</span>;   <span class="hljs-comment">// 3 1</span>
+}
+</code></pre>
+<pre><code class="lang-bash">g++ -std=c++17 -Wall -o ref_demo ref_demo.cpp &amp;&amp; ./ref_demo
+</code></pre>
+<p><strong>场景 4：内联函数替代宏 + 函数重载（对应第3课）</strong></p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// inline_overload.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string&gt;</span></span>
+
+<span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> T&gt;
+<span class="hljs-function"><span class="hljs-keyword">inline</span> T <span class="hljs-title">clamp</span><span class="hljs-params">(T v, T lo, T hi)</span> </span>{ <span class="hljs-keyword">return</span> v &lt; lo ? lo : (v &gt; hi ? hi : v); }
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">log</span><span class="hljs-params">(<span class="hljs-type">int</span> v)</span>    </span>{ std::cout &lt;&lt; <span class="hljs-string">"[int] "</span> &lt;&lt; v &lt;&lt; <span class="hljs-string">"\n"</span>; }
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">log</span><span class="hljs-params">(<span class="hljs-type">double</span> v)</span> </span>{ std::cout &lt;&lt; <span class="hljs-string">"[dbl] "</span> &lt;&lt; v &lt;&lt; <span class="hljs-string">"\n"</span>; }
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">log</span><span class="hljs-params">(<span class="hljs-type">const</span> std::string&amp; s)</span> </span>{ std::cout &lt;&lt; <span class="hljs-string">"[str] "</span> &lt;&lt; s &lt;&lt; <span class="hljs-string">"\n"</span>; }
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    std::cout &lt;&lt; <span class="hljs-built_in">clamp</span>(<span class="hljs-number">5</span>, <span class="hljs-number">0</span>, <span class="hljs-number">3</span>) &lt;&lt; <span class="hljs-string">"\n"</span>;       <span class="hljs-comment">// 3</span>
+    <span class="hljs-built_in">log</span>(<span class="hljs-number">1</span>); <span class="hljs-built_in">log</span>(<span class="hljs-number">1.5</span>); <span class="hljs-built_in">log</span>(std::<span class="hljs-built_in">string</span>(<span class="hljs-string">"ok"</span>));  <span class="hljs-comment">// 重载决议按实参类型</span>
+}
+</code></pre>
+<pre><code class="lang-bash">g++ -std=c++17 -Wall -o inline_overload inline_overload.cpp &amp;&amp; ./inline_overload
+</code></pre>
+<p><strong>场景 5：封装与访问权限（立方体案例，对应第3课）</strong></p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// cube.cpp</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdexcept&gt;</span></span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Point3D</span> {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-built_in">Point3D</span>(<span class="hljs-type">double</span> x = <span class="hljs-number">0</span>, <span class="hljs-type">double</span> y = <span class="hljs-number">0</span>, <span class="hljs-type">double</span> z = <span class="hljs-number">0</span>) : <span class="hljs-built_in">x_</span>(x), <span class="hljs-built_in">y_</span>(y), <span class="hljs-built_in">z_</span>(z) {}
+    <span class="hljs-function"><span class="hljs-type">double</span> <span class="hljs-title">x</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>{ <span class="hljs-keyword">return</span> x_; }
+    <span class="hljs-function"><span class="hljs-type">double</span> <span class="hljs-title">y</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>{ <span class="hljs-keyword">return</span> y_; }
+    <span class="hljs-function"><span class="hljs-type">double</span> <span class="hljs-title">z</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>{ <span class="hljs-keyword">return</span> z_; }
+<span class="hljs-keyword">private</span>:
+    <span class="hljs-type">double</span> x_, y_, z_;                 <span class="hljs-comment">// 成员私有，只暴露只读接口</span>
+};
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Cube</span> {
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-built_in">Cube</span>(<span class="hljs-type">double</span> l, <span class="hljs-type">double</span> w, <span class="hljs-type">double</span> h) : <span class="hljs-built_in">l_</span>(l), <span class="hljs-built_in">w_</span>(w), <span class="hljs-built_in">h_</span>(h) {
+        <span class="hljs-keyword">if</span> (l &lt;= <span class="hljs-number">0</span> || w &lt;= <span class="hljs-number">0</span> || h &lt;= <span class="hljs-number">0</span>) <span class="hljs-keyword">throw</span> std::<span class="hljs-built_in">invalid_argument</span>(<span class="hljs-string">"size must be &gt; 0"</span>);
+    }
+    <span class="hljs-function"><span class="hljs-type">double</span> <span class="hljs-title">volume</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>{ <span class="hljs-keyword">return</span> l_ * w_ * h_; }
+    <span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">contains</span><span class="hljs-params">(<span class="hljs-type">const</span> Point3D&amp; p)</span> <span class="hljs-type">const</span> </span>{
+        <span class="hljs-keyword">return</span> p.<span class="hljs-built_in">x</span>() &gt;= <span class="hljs-number">0</span> &amp;&amp; p.<span class="hljs-built_in">x</span>() &lt;= l_ &amp;&amp; p.<span class="hljs-built_in">y</span>() &gt;= <span class="hljs-number">0</span> &amp;&amp; p.<span class="hljs-built_in">y</span>() &lt;= w_ &amp;&amp; p.<span class="hljs-built_in">z</span>() &gt;= <span class="hljs-number">0</span> &amp;&amp; p.<span class="hljs-built_in">z</span>() &lt;= h_;
+    }
+    <span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">same_size</span><span class="hljs-params">(<span class="hljs-type">const</span> Cube&amp; other)</span> <span class="hljs-type">const</span> </span>{
+        <span class="hljs-keyword">return</span> l_ == other.l_ &amp;&amp; w_ == other.w_ &amp;&amp; h_ == other.h_;
+    }
+<span class="hljs-keyword">private</span>:
+    <span class="hljs-type">double</span> l_, w_, h_;
+};
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-function">Cube <span class="hljs-title">box</span><span class="hljs-params">(<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>)</span></span>;
+    std::cout &lt;&lt; box.<span class="hljs-built_in">volume</span>() &lt;&lt; <span class="hljs-string">" "</span> &lt;&lt; box.<span class="hljs-built_in">contains</span>({<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>}) &lt;&lt; <span class="hljs-string">"\n"</span>;   <span class="hljs-comment">// 24 1</span>
+    std::cout &lt;&lt; box.<span class="hljs-built_in">same_size</span>(<span class="hljs-built_in">Cube</span>(<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>)) &lt;&lt; <span class="hljs-string">"\n"</span>;                     <span class="hljs-comment">// 1</span>
+}
+</code></pre>
+<pre><code class="lang-bash">g++ -std=c++17 -Wall -o cube cube.cpp &amp;&amp; ./cube
+</code></pre>
+<h2 id="85-运行效果（实测）">8.5 运行效果（实测）</h2>
+<p>以下为立方体综合案例（封装 + 尺寸校验 + 「点是否在立方体内」判断）编译运行的真实输出——体积 24、点 (1,1,1) 判在内部，非法尺寸在构造时抛出异常并被捕获：</p>
 <pre><code class="lang-text">24 1
 caught: size must be &gt; 0
 </code></pre>
 <p>编译命令：<code>g++ -std=c++17 -Wall w8_cube.cpp -o w8 &amp;&amp; ./w8</code>（体积 24、点 (1,1,1) 在内部、非法尺寸被异常拦截）。</p>
-<h2 id="84-端到端实战（实测）：rectangle-类">8.4 端到端实战（实测）：Rectangle 类</h2>
-<blockquote>
-<p><strong>视频对照</strong>：课程 <code>立方体案例</code> 的全局函数 <code>com_cube(Cube &amp;c1, Cube &amp;c2)</code>（引用参数 + getter 比较）与 <code>c1.set_l(10)</code> 系列调用已逐字复现：<code>体积=1000 相等=1</code>，见《端到端核对报告》基础篇表。</p>
-</blockquote>
-<p>封装 + 构造校验异常 + 全局协作函数的综合案例（与课程立方体案例同型）：</p>
+<h2 id="端到端实战（实测）：rectangle-类">端到端实战（实测）：Rectangle 类</h2>
+<p><strong>需求</strong>：实现 <code>Rectangle</code>（成员私有、构造校验为正、<code>area()</code>/<code>perimeter()</code>），并实现判断两矩形能否拼成正方形的全局函数——封装 + 构造校验异常 + 全局协作函数的综合案例（与课程立方体案例同型）：</p>
 <pre><code class="lang-cpp"><span class="hljs-comment">// rect.cpp</span>
 <span class="hljs-keyword">class</span> <span class="hljs-title class_">Rectangle</span> {
 <span class="hljs-keyword">public</span>:
@@ -654,17 +908,54 @@ caught: size must be &gt; 0
            std::<span class="hljs-built_in">fabs</span>(a.<span class="hljs-built_in">height</span>() - b.<span class="hljs-built_in">width</span>()) &lt; <span class="hljs-number">1e-9</span>;   <span class="hljs-comment">// 旋转后可拼成正方形</span>
 }
 </code></pre>
+<blockquote>
+<p><strong>视频对照</strong>：课程 <code>立方体案例</code> 的全局函数 <code>com_cube(Cube &amp;c1, Cube &amp;c2)</code>（引用参数 + getter 比较）与 <code>c1.set_l(10)</code> 系列调用已逐字复现：<code>体积=1000 相等=1</code>，见《端到端核对报告》基础篇表。</p>
+</blockquote>
 <p>实测（g++ -std=c++17 -Wall）：</p>
 <pre><code class="lang-text">r1 面积=12 周长=14
 可组正方形=1
 caught: 尺寸必须为正
 </code></pre>
-<h2 id="85-本章小结">8.5 本章小结</h2>
+<p>要点解析：</p>
+<ul>
+<li>非法尺寸在<strong>对象创建阶段</strong>即被构造函数抛出的 <code>std::invalid_argument</code> 拦截（fail fast，坏数据进不了系统）；</li>
+<li>全局函数 <code>can_form_square</code> 只通过公有 getter 读长宽，不触碰私有成员——封装与全局协作函数并存；</li>
+<li>浮点等值比较用 <code>std::fabs(...) &lt; 1e-9</code> 容差判断，避免浮点「看似相等实则不等」的陷阱。</li>
+</ul>
+<h2 id="86-与-ros2--机器人开发的关联">8.6 与 ROS2 / 机器人开发的关联</h2>
+<ol>
+<li><strong>命名空间即库边界</strong>：<code>rclcpp</code>、<code>sensor_msgs::msg</code>、<code>nav_msgs::msg</code> 全靠命名空间避免冲突；写自己的功能包（如 <code>my_robot::planner</code>）也应从第一天起建命名空间。</li>
+<li><strong>引用与 const 引用 = 回调函数标准签名</strong>：<code>void topic_cb(const std_msgs::msg::String::SharedPtr msg)</code> 用智能指针 + const 语义表达「只读消息」，避免每条消息拷贝，直接决定实时性。</li>
+<li><strong>封装 = 节点类设计</strong>：把 publisher/subscription/timer 收进类私有成员，对外只留 <code>spin()</code> 或几个业务方法，是 rclcpp 官方示例的统一写法。</li>
+<li><strong><code>extern "C"</code> 打通硬件 SDK</strong>：机器人相机、雷达、运动控制卡的 SDK 多为 C 接口，需要在 C++ 项目中用 <code>extern "C"</code> 包裹头文件。</li>
+<li><strong>内联与 constexpr 提升实时性能</strong>：控制循环中的小工具函数（限幅、角度归一化）用 <code>constexpr/inline</code> 写在头文件，零开销且可编译期计算。</li>
+</ol>
+<h2 id="87-自测与练习（含参考答案要点）">8.7 自测与练习（含参考答案要点）</h2>
+<ol>
+<li><strong>概念题</strong>：解释 <code>using robot::init;</code> 与 <code>using namespace robot;</code> 的区别，并说明为什么头文件里不能写后者。</li>
+<li><strong>判断题</strong>：<code>const int* p = &amp;x;</code> 与 <code>int* const p = &amp;x;</code> 分别限制了什么？引用和 <code>int* const</code> 的对应关系是什么？</li>
+<li><strong>动手任务</strong>：实现 <code>class Rectangle</code>：成员私有（长宽）、构造时校验为正、提供 <code>area()</code>/<code>perimeter()</code>，并实现判断两矩形是否可组成正方形的全局函数。验收标准：<code>g++ -std=c++17 -Wall</code> 编译零警告，非法尺寸抛出异常。</li>
+<li><strong>动手任务</strong>：把场景 5 的 <code>Cube</code> 改造为「立方体类 + 点类」判断两立方体是否相交（成员函数版 + 友元全局函数版各写一次），对比两种接口的可读性。</li>
+</ol>
+<blockquote>
+<p>参考答案要点：题 1——声明只引入 <code>init</code> 一个名字、冲突面小；编译指令引入整个空间，头文件会污染所有包含者。题 2——前者限制「不可通过 p 改值」（底层指针指向 const），后者限制「指针不可改指向」（const 指针）；引用语义等价 <code>T* const</code> 且自动解引用。题 3——setter/构造里校验 <code>w &gt; 0</code> 并 <code>throw std::invalid_argument</code>。题 4——相交判断用区间重叠（<code>a.min &lt; b.max &amp;&amp; b.min &lt; a.max</code> 三轴同时成立）。</p>
+</blockquote>
+<h2 id="88-常见问题（faq）">8.8 常见问题（FAQ）</h2>
+<ul>
+<li><strong>Q：<code>struct</code> 和 <code>class</code> 到底怎么选？</strong> A：语义上只有默认访问权限的差别。习惯上「纯数据聚合、无不变式」用 struct（如消息类型、点云点），「有不变式、需封装」用 class。</li>
+<li><strong>Q：<code>inline</code> 函数必须写 inline 才会被展开吗？</strong> A：不是。类内定义的函数默认隐式 inline；编译器是否真展开取决于优化等级。<code>inline</code> 现在更重要的作用是允许函数在多个翻译单元定义而不报链接错误。</li>
+<li><strong>Q：<code>const</code> 变量到底分配不分配内存？</strong> A：能被编译器折叠为常量的就不分配；一旦取地址或 <code>extern</code> 声明就会分配，此时它退化为「只读变量」。</li>
+<li><strong>Q：引用能为空吗？能改指向吗？</strong> A：都不能。需要「可能为空」或「需要改指向」的语义时用指针（或 <code>std::optional</code>/智能指针）。</li>
+<li><strong>Q：为什么 ROS2 回调参数多是智能指针而不是引用？</strong> A：消息由中间件持有，生命周期跨回调，用 <code>SharedPtr</code> 共享所有权最安全；<code>const ... SharedPtr</code> 表达只读意图。</li>
+</ul>
+<h2 id="89-本章小结">8.9 本章小结</h2>
 <ul>
 <li>命名空间即库边界（<code>rclcpp</code>、<code>sensor_msgs::msg</code>）——自己的功能包从第一天起建命名空间；</li>
 <li>引用与 <code>const T&amp;</code> 是回调函数标准签名的理论基础；</li>
 <li>封装 = 节点类设计：publisher/subscription 收进私有成员、只暴露必要接口；</li>
-<li><code>extern "C"</code> 打通 C 语言编写的传感器 SDK。</li>
+<li><code>extern "C"</code> 打通 C 语言编写的传感器 SDK；</li>
+<li>用 <code>const</code>/<code>constexpr</code> 代替 <code>#define</code>：有类型、有作用域、可调试；</li>
+<li>内联与函数重载是 <code>std::cout &lt;&lt;</code> 与 ROS2 模板参数接口的实现基础。</li>
 </ul>
 
                                 
@@ -709,7 +1000,7 @@ caught: 尺寸必须为正
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第8章 C++ 基础特性入门（命名空间/引用/封装）","level":"4.1","depth":1,"next":{"title":"第9章 类与对象进阶（构造析构/深浅拷贝/运算符重载）","level":"4.2","depth":1,"path":"第9周-类与对象进阶.md","ref":"第9周-类与对象进阶.md","articles":[]},"previous":{"title":"第7章 C 语言数据结构与文件操作","level":"3.4","depth":1,"path":"第7周-C语言数据结构与文件操作.md","ref":"第7周-C语言数据结构与文件操作.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第8周-C++基础特性入门.md","mtime":"2026-10-16T02:43:09.754Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T02:43:11.108Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第8章 C++ 基础特性入门（命名空间/引用/封装）","level":"4.1","depth":1,"next":{"title":"第9章 类与对象进阶（构造析构/深浅拷贝/运算符重载）","level":"4.2","depth":1,"path":"第9周-类与对象进阶.md","ref":"第9周-类与对象进阶.md","articles":[]},"previous":{"title":"第7章 C 语言数据结构与文件操作","level":"3.4","depth":1,"path":"第7周-C语言数据结构与文件操作.md","ref":"第7周-C语言数据结构与文件操作.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第8周-C++基础特性入门.md","mtime":"2026-10-16T03:26:51.712Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T03:26:53.986Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

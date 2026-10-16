@@ -601,17 +601,120 @@
                                 
                                 <h1 id="第18章-坐标变换与机器人建模（tf2urdfxacro）">第18章 坐标变换与机器人建模（tf2/URDF/Xacro）</h1>
 <blockquote>
-<p>本章完成 tf2 的静态/动态坐标广播、坐标监听与两个经典实操（乌龟跟随、乌龟护航），以及 URDF 建模与 Xacro 优化。</p>
+<p>所属阶段：阶段5 ROS2 核心架构解析 ｜ 视频 56 个 ｜ 时长约 9h06m ｜ 难度：高阶</p>
+<p>本章用两个综合案例把 TF2 串成完整应用——<strong>乌龟跟随</strong>（第二只乌龟持续追第一只）与<strong>乌龟护航</strong>（多乌龟编队，launch 组织多实例），随后进入机器人"外形描述"的世界：rviz2 可视化工具、URDF 机器人建模语法、xacro 宏优化。TF2 静态/动态/监听的编码实测也集中于本章。</p>
 <p>本章对应代码：<code>code/ws01_plumbing/src/cpp03_tf_broadcaster</code>、<code>py03_tf_broadcaster</code>、<code>cpp04_tf_listener</code>、<code>cpp05_exercise</code>、<code>py05_exercise</code>、<code>cpp06_urdf</code>、<code>cpp07_xacro</code>。</p>
 </blockquote>
-<h2 id="181-静态坐标变换">18.1 静态坐标变换</h2>
-<h3 id="1811-案例以及案例分析">18.1.1 案例以及案例分析</h3>
-<p><strong>需求</strong>：广播两个坐标系间的<strong>静态</strong>相对关系（camera ← laser，偏移 x=1 y=2 z=3）。命令行与编码两种方式。</p>
-<h3 id="1812-实现">18.1.2 实现</h3>
-<p>命令行：</p>
-<pre><code class="lang-bash">ros2 run tf2_ros static_transform_publisher --x 1 --y 2 --z 3 --frame-id camera --child-frame-id laser
-</code></pre>
-<p>C++ 编码（<code>cpp03_tf_broadcaster/src/demo01_static_tf_broadcaster.cpp</code>，参数从命令行依次传入 x y z roll pitch yaw 父坐标系 子坐标系）：</p>
+<h2 id="181-概览与课时结构">18.1 概览与课时结构</h2>
+<p>产出物是能在 rviz2 中显示、带雷达与摄像头的两轮差速小车模型——这正是第19-20章 Mycar 智能车的起点。学完本章，你具备"描述一个机器人 + 可视化 + 多节点协同控制"的完整能力。TF2 广播/监听的理论与编码要点见第17章 17.2.2/17.2.3，本章给出实测与综合案例。</p>
+<table>
+<thead>
+<tr>
+<th>课</th>
+<th>小节</th>
+<th>时长</th>
+<th>一句话导览</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第1课 乌龟案例坐标变换实战</td>
+<td>19 节</td>
+<td>3h51m</td>
+<td>乌龟跟随（生成/广播/监听，C++/Python）+ 乌龟护航 launch 组织</td>
+</tr>
+<tr>
+<td>第2课 可视化简介、rviz2 集成 URDF</td>
+<td>12 节</td>
+<td>1h29m</td>
+<td>rviz2 安装与配置、URDF 集成 launch 核心实现与优化</td>
+</tr>
+<tr>
+<td>第3课 URDF 使用语法详解与实现</td>
+<td>13 节</td>
+<td>2h20m</td>
+<td>robot/link/joint 语法、joint_state_publisher、小车建模练习</td>
+</tr>
+<tr>
+<td>第4课 URDF 优化 xacro 实现</td>
+<td>12 节</td>
+<td>1h25m</td>
+<td>xacro 变量/宏/文件包含 + 小车加摄像头雷达综合练习</td>
+</tr>
+</tbody>
+</table>
+<p><strong>学习目标</strong>：</p>
+<ol>
+<li>会用服务生成乌龟、用话题订阅位姿、用 TF 广播/监听组织"跟随"控制回路，并用 launch + 命名空间 + 参数组织多实例（护航编队）；</li>
+<li>掌握 rviz2 的 Displays/插件与 <code>.rviz</code> 配置共享，掌握 URDF 的 robot/link/joint 语法与 base_footprint 惯例；</li>
+<li>会用 xacro 的 property/macro/include/arg 优化模型，产出可在 rviz2 显示的两轮差速小车。</li>
+</ol>
+<h2 id="182-知识点梳理">18.2 知识点梳理</h2>
+<h3 id="1821-第1课-乌龟案例坐标变换实战">18.2.1 第1课 乌龟案例坐标变换实战</h3>
+<p><strong>A. 乌龟跟随案例（C++）</strong></p>
+<ul>
+<li><strong>案例分析</strong>：turtlesim 中启动后生成第二只乌龟（turtle2），实时广播两龟的坐标变换（<code>world -&gt; turtle1</code>、<code>world -&gt; turtle2</code>），监听端查询 <code>turtle2 -&gt; turtle1</code> 的相对位姿，计算速度指令让 turtle2 追踪 turtle1。涉及：服务调用（<code>/spawn</code> 生成乌龟）、话题（<code>/turtle1/pose</code> 订阅位姿、<code>/turtle2/cmd_vel</code> 发指令）、TF2（广播 + 监听）、launch（组合）。分析时先画"节点-话题-TF 树"图再动手。</li>
+<li><strong>示例浏览</strong>：课程示例包含 <code>turtle_spawn</code>（生成）、<code>turtle_tf_broadcaster</code>（广播）、<code>turtle_tf_listener</code>（跟随控制）三个节点；先跑通官方 demo <code>ros2 launch learning_tf2 turtle_following.launch.py</code> 感受效果。</li>
+<li><strong>生成乌龟（上/中/下）</strong>：调用 turtlesim 的 <code>/spawn</code> 服务（<code>turtlesim/srv/Spawn</code>，请求 x/y/theta/name）生成 turtle2；<code>/kill</code> 可删除。要点——服务端存在性判断（<code>wait_for_service</code>）、名字参数化（用参数指定第二只乌龟名）、生成后才能订阅其 pose 话题。</li>
+<li><strong>坐标变换广播</strong>：订阅 <code>/turtle1/pose</code>（<code>turtlesim/msg/Pose</code>，含 x/y/theta），转换成 <code>geometry_msgs/TransformStamped</code>（<code>world</code> 为父系、<code>turtle1</code> 为子系；theta 是绕 z 轴 yaw，四元数 <code>q.setRPY(0,0,theta)</code>），用 <code>TransformBroadcaster</code> 持续广播（10 Hz 级别）；turtle2 同理。</li>
+<li><strong>坐标变换监听（上/下）</strong>：监听节点建 Buffer + TransformListener，定时器里查 <code>lookupTransform("turtle2", "turtle1", TimePointZero)</code> 得到"turtle1 在 turtle2 系下的位姿"，用角度差算转向、距离算线速度（简单 P 控制：<code>linear = k1 * distance</code>、<code>angular = k2 * atan2(y, x)</code>），发布 <code>/turtle2/cmd_vel</code>。要点：查询失败要 try/catch，初启动时 TF 未就绪属正常。</li>
+<li><strong>小结以及优化</strong>：优化点——控制频率与 TF 查询频率匹配；限幅（防止线速度过大冲过头）；把 P 增益做成参数（<code>k1</code>/<code>k2</code> 可 <code>ros2 param set</code> 调）；把乌龟名做成参数以支持多实例。</li>
+</ul>
+<p><strong>B. 乌龟跟随案例（Python）</strong></p>
+<ul>
+<li><strong>生成乌龟（上/下）</strong>：<code>self.create_client(Spawn, '/spawn')</code> + <code>call_async</code>；<code>rclpy.spin_until_future_complete</code>；注意 Python 客户端在回调里嵌套 spin 的死锁风险，推荐在主流程或独立线程调用。</li>
+<li><strong>坐标变换广播</strong>：<code>TransformBroadcaster(self)</code>，定时器回调里把 pose 转 <code>TransformStamped</code>，<code>quaternion_from_euler(0, 0, pose.theta)</code> 填四元数；<code>header.stamp = self.get_clock().now().to_msg()</code>。</li>
+<li><strong>坐标变换监听</strong>：<code>Buffer()</code> + <code>TransformListener</code>；<code>lookup_transform('turtle2', 'turtle1', Time())</code>；从 <code>transform.transform.translation.x/y</code> 算距离、<code>atan2(y, x)</code> 算航向差；<code>Twist</code> 发速度指令。常见问题：两龟名字参数化、TF 未就绪的异常处理。</li>
+</ul>
+<p><strong>C. 乌龟护航（多实例 + launch 组织）</strong></p>
+<ul>
+<li><strong>案例分析</strong>：多只乌龟围绕/护送领头乌龟——本质是<strong>多实例的广播/监听</strong>：每只乌龟一个命名空间、一份参数（相对领队的编队偏移），用 launch 统一编排。这是多机器人编队的最小原型。</li>
+<li><strong>护航 launch（Python，上/中/下）</strong>：用 <code>GroupAction</code> + <code>PushRosNamespace</code> + <code>For 循环/列表推导</code> 生成 N 个 follower 节点，每个节点传参数 <code>leader</code>、<code>offset_x</code>、<code>offset_y</code>、<code>turtle_name</code>；用 <code>DeclareLaunchArgument</code> 暴露"乌龟数量、领队名"；用 <code>RegisterEventHandler(OnProcessExit)</code> 保证生成节点退出后启动控制节点；<code>TimerAction</code> 延时错峰启动避免 <code>/spawn</code> 并发冲突。</li>
+<li><strong>护航 launch（XML 实现）</strong>：<code>&lt;group&gt;</code> + <code>&lt;push-namespace&gt;</code> + 多个 <code>&lt;node&gt;</code>，参数用 <code>&lt;param name="leader" value="turtle1"/&gt;</code>；XML 版更短但无法循环生成，多实例要手写重复段。</li>
+<li><strong>本章小结</strong>：案例串起了"服务（生成）→ 话题（pose/cmd_vel）→ TF（广播/监听）→ launch（编排）→ 参数（增益/偏移）"全部机制，是本阶段的收官之作。</li>
+</ul>
+<h3 id="1822-第2课-可视化简介、rviz2-集成-urdf">18.2.2 第2课 可视化简介、rviz2 集成 URDF</h3>
+<ul>
+<li><strong>可视化简介——场景、概念与作用</strong>：机器人开发中需要"看见"传感器点云、TF 树、机器人模型、规划路径。rviz2 是 ROS2 官方 3D 可视化工具：以一个 <strong>Fixed Frame</strong> 为基准，把话题数据（点云、图像、标记、TF、机器人模型）渲染到同一 3D 场景。作用：调试感知、验证 TF、展示机器人状态、做 HMI 演示。</li>
+<li><strong>rviz2 基本使用——安装、启动与界面布局</strong>：<code>sudo apt install ros-humble-rviz2</code>（desktop 版自带）；<code>ros2 run rviz2 rviz2</code>；界面布局——中央 3D 视图、左侧 Displays（显示项列表）、右侧 Views（视角）、下方 Time（回放控制）；鼠标左键旋转、中键平移、滚轮缩放；Add 可添加显示项。</li>
+<li><strong>rviz2 基本使用——插件与配置文件</strong>：Displays 常用插件——Grid（地面）、RobotModel（机器人模型，读 <code>/robot_description</code> 话题）、TF（坐标系）、PointCloud2/LaserScan（传感器）、Image、Marker/MarkerArray、Path、Map；配置可保存为 <code>.rviz</code> 文件（YAML 格式），launch 中 <code>Node(package='rviz2', executable='rviz2', arguments=['-d', cfg])</code> 自动加载，团队共享配置文件是工程惯例。</li>
+<li><strong>rviz2 集成 URDF——基本流程与案例分析</strong>：目标"在 rviz2 显示自己的机器人模型"。流程：写 URDF/xacro → 用 <code>robot_state_publisher</code>（发布 <code>/robot_description</code> 与 TF）+ <code>joint_state_publisher(_gui)</code>（发布关节角）→ launch 一起启动 → rviz2 加 RobotModel 显示。案例：两轮差速小车（车体 + 两轮 + 万向轮）。</li>
+<li><strong>rviz2 集成 URDF——实现（框架搭建 / urdf 文件 / xacro 工具）</strong>：建功能包 <code>mycar_description</code>，含 <code>urdf/</code>（模型）、<code>launch/</code>（display.launch）、<code>rviz2/</code>（配置）；urdf 文件先写纯 URDF 再引 xacro；xacro 工具 <code>xacro model.xacro &gt; model.urdf</code> 用于验证与兼容老工具；<code>robot_state_publisher</code> 参数 <code>robot_description</code> 读 xacro 处理后的内容。</li>
+<li><strong>rviz2 集成 URDF——launch 核心实现</strong>：核心三行——<code>robot_state_publisher</code>（参数 <code>robot_description: Command(['xacro ', xacro_file])</code>）、<code>joint_state_publisher_gui</code>、<code>rviz2</code>（<code>-d</code> 加载配置）。参数化模型路径、Fixed Frame（一般 <code>base_footprint</code> 或 <code>base_link</code>）。</li>
+<li><strong>rviz2 集成 URDF——launch 优化（说明 + 实现）</strong>：优化点——用 <code>get_package_share_directory</code> 拼路径而非硬编码；<code>Command(['xacro ', LaunchConfiguration('model')])</code> 支持命令行换模型；用 <code>DeclareLaunchArgument('use_gui', ...)</code> + <code>IfCondition</code> 选择 <code>joint_state_publisher</code> 或 <code>joint_state_publisher_gui</code>；把 rviz 配置放 <code>rviz2/urdf.rviz</code> 并 install；launch 中统一 <code>use_sim_time</code>。</li>
+<li><strong>小结</strong>：URDF 描述"长什么样"，robot_state_publisher 把模型与 TF 广播出去，rviz2 负责显示——三者分工清晰。</li>
+</ul>
+<h3 id="1823-第3课-urdf-使用语法详解与实现">18.2.3 第3课 URDF 使用语法详解与实现</h3>
+<ul>
+<li><strong>URDF 语法——robot</strong>：URDF（Unified Robot Description Format）是 XML 格式机器人描述；根元素 <code>&lt;robot name="mycar"&gt;</code>，内部只有 <code>&lt;link&gt;</code> 与 <code>&lt;joint&gt;</code> 两类主体元素（外加 <code>&lt;material&gt;</code> 等辅助）。规则：link 与 joint 名在机器人内唯一；树状结构、一个根 link。</li>
+<li><strong>URDF 语法——link（简介 + 使用 + 补充）</strong>：<code>&lt;link name="..."&gt;</code> 下三类属性——<code>&lt;visual&gt;</code>（外观：<code>&lt;geometry&gt;</code> 盒/圆柱/球/网格 + <code>&lt;origin&gt;</code> 位姿 + <code>&lt;material&gt;</code> 颜色）、<code>&lt;collision&gt;</code>（碰撞体，结构同 visual，常简化几何）、<code>&lt;inertial&gt;</code>（惯性：<code>&lt;mass&gt;</code> + <code>&lt;inertia&gt;</code> 6 元素 + <code>&lt;origin&gt;</code>）。补充要点：<code>&lt;geometry&gt;&lt;box size="0.5 0.3 0.2"/&gt;</code>、<code>&lt;cylinder radius length&gt;</code>、<code>&lt;sphere radius&gt;</code>、<code>&lt;mesh filename="package://pkg/meshes/x.stl" scale="..."/&gt;</code>；颜色用 <code>&lt;material name="blue"&gt;&lt;color rgba="0 0 0.8 1"/&gt;&lt;/material&gt;</code>；惯性矩阵可不精确但不能缺失（Gazebo 必需）。</li>
+<li><strong>URDF 语法——joint（简介 + 练习）</strong>：<code>&lt;joint name="..." type="fixed|revolute|continuous|prismatic|floating|planar"&gt;</code>，内含 <code>&lt;parent link="..."/&gt;</code>、<code>&lt;child link="..."/&gt;</code>、<code>&lt;origin xyz rpy/&gt;</code>（子系相对父系的位姿）、<code>&lt;axis xyz/&gt;</code>（转动/移动轴）、<code>&lt;limit lower upper effort velocity/&gt;</code>（revolute/prismatic 必需）、<code>&lt;dynamics damping friction/&gt;</code>。练习：给小车装"轮子"关节（continuous）。</li>
+<li><strong>URDF 语法——joint_state_publisher 作用</strong>：<code>joint_state_publisher</code> 发布所有非 fixed 关节的当前角度到 <code>/joint_states</code>，<code>robot_state_publisher</code> 据此算出各 link 的 TF 并广播。没有它，rviz2 中轮子不会动、TF 树缺分支。带 GUI 版 <code>joint_state_publisher_gui</code> 可拖滑块调关节角，方便调试。</li>
+<li><strong>URDF 语法——base_footprint</strong>：惯例在 <code>base_link</code> 下再加一个 <code>base_footprint</code>（贴地投影）作为根：<code>base_footprint --fixed--&gt; base_link</code>。作用：让机器人"接触地面"的点成为 TF 树根，导航/SLAM 约定（map→odom→base_footprint→base_link→传感器）更规范。</li>
+<li><strong>URDF 练习（车体 / 车轮上 / 车轮下）</strong>：完整小车——<code>base_footprint</code> → <code>base_link</code>（盒体 0.5×0.3×0.2）→ 左右轮（圆柱 r=0.05，continuous 关节，轴 y 方向）→ 万向轮（球体，fixed）→ 天线/支架。车轮练习重点：圆柱默认轴向是 z，要旋转 <code>rpy="-1.57 0 0"</code> 让轴沿 y；左右轮 <code>origin</code> 对称（y=±0.15）。</li>
+<li><strong>URDF 工具</strong>：<code>check_urdf model.urdf</code>（语法与树结构校验）、<code>urdf_to_graphiz model.urdf</code>（生成结构图）、<code>joint_state_publisher_gui</code>（交互调关节）、<code>ros2 run robot_state_publisher robot_state_publisher</code>（单独起）、<code>xacro</code> 命令（预处理）；rviz2 的 TF/RobotModel 插件也常当"可视化校验器"用。</li>
+</ul>
+<h3 id="1824-第4课-urdf-优化-xacro-实现">18.2.4 第4课 URDF 优化 xacro 实现</h3>
+<ul>
+<li><strong>xacro 场景、概念与作用</strong>：纯 URDF 写复杂机器人（多轮、多传感器）时大量重复、无法参数化。xacro（XML macro）是 URDF 的<strong>宏预处理器</strong>：支持变量、宏（macro）、数学表达式、文件包含，编译后仍是标准 URDF。作用：减少重复、支持"同一款车不同配置"、按部件模块化组织模型。</li>
+<li><strong>xacro 快速体验</strong>：文件头 <code>&lt;robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="mycar"&gt;</code>；<code>xacro model.xacro -o model.urdf</code> 生成 URDF；<code>check_urdf</code> 校验。launch 中可直接用 <code>Command(['xacro ', path])</code> 动态展开，无需手动生成。</li>
+<li><strong>xacro 语法——变量</strong>：<code>&lt;xacro:property name="wheel_radius" value="0.05"/&gt;</code>，引用 <code>${wheel_radius}</code>；支持数学运算 <code>${wheel_radius * 2}</code>；命令行传参用 <code>&lt;xacro:arg name="prefix" default=""/&gt;</code> + <code>$(arg prefix)</code>，实现"多机器人同模型不同前缀"。</li>
+<li><strong>xacro 语法——宏</strong>：<code>&lt;xacro:macro name="wheel" params="name reflect"&gt; ... &lt;/xacro:macro&gt;</code>，调用 <code>&lt;xacro:wheel name="left_wheel" reflect="1"/&gt;</code>；宏可嵌套、可带默认参数（<code>params="reflect:=1"</code>）；惯用技巧——用宏生成"一个轮子"（含 link + joint），左右轮各调一次。</li>
+<li><strong>xacro 语法——文件包含</strong>：<code>&lt;xacro:include filename="$(find mycar_description)/urdf/wheel.xacro"/&gt;</code>，把轮子、雷达、摄像头拆成独立 xacro 文件，主文件按需组合——这是 MoveIt2/Nav2 生态的标准组织方式。</li>
+<li><strong>xacro 练习（框架搭建 / 车体上 / 车体下 / 添加摄像头 / 添加雷达）</strong>：完整流程——先拆 <code>base.xacro</code>（车体）、<code>wheel.xacro</code>（宏）、<code>camera.xacro</code>、<code>laser.xacro</code>，主文件 <code>mycar.xacro</code> include 并实例化；摄像头/雷达用 <code>xacro:macro</code> + <code>xacro:arg</code> 控制是否安装（<code>if</code> 条件：<code>&lt;xacro:if value="$(arg with_camera)"&gt;</code>）；雷达 link 通过 fixed joint 挂在 <code>base_link</code> 上方 0.3m。</li>
+<li><strong>本章小结</strong>：URDF 定义"几何与关节"，xacro 让它可维护、可配置；配合 robot_state_publisher 与 rviz2 形成机器人描述的标准三件套。</li>
+</ul>
+<h2 id="183-重点与难点">18.3 重点与难点</h2>
+<ol>
+<li><strong>TF 树设计</strong>：乌龟案例的 <code>world → turtle1/turtle2</code> 与真车的 <code>map → odom → base_footprint → base_link → laser</code> 同构；理解"广播谁、监听谁、查询哪两个系"是案例核心。</li>
+<li><strong>多实例命名空间</strong>：乌龟护航要求每只乌龟独立命名空间 + 参数化，否则话题互相踩踏；<code>PushRosNamespace</code> + 相对话题是标准解。</li>
+<li><strong>URDF 的 visual/collision/inertial 分工</strong>：rviz2 只看 visual；Gazebo 仿真看 collision + inertial；缺 inertial 仿真会飞。</li>
+<li><strong>关节轴与圆柱默认方向</strong>：圆柱默认沿 z 轴，轮子需旋转关节 origin；<code>continuous</code> 关节无 limit 但需 <code>axis</code>。</li>
+<li><strong>xacro 宏参数化思维</strong>：把"重复结构"抽象成宏、把"可变量"上提为 property/arg，是机器人模型工程化的第一步。</li>
+</ol>
+<h2 id="184-代码与命令实战">18.4 代码与命令实战</h2>
+<h3 id="1841-实战-1：tf-广播器与监听器编码要点">18.4.1 实战 1：TF 广播器与监听器编码要点</h3>
+<p>静态广播器 C++ 核心（<code>cpp03_tf_broadcaster/src/demo01_static_tf_broadcaster.cpp</code>，参数从命令行依次传入 x y z roll pitch yaw 父坐标系 子坐标系）：</p>
 <pre><code class="lang-cpp"><span class="hljs-comment">// 3-1.创建静态广播器；</span>
 tf_broadcaster_ = std::<span class="hljs-built_in">make_shared</span>&lt;tf2_ros::StaticTransformBroadcaster&gt;(<span class="hljs-keyword">this</span>);
 <span class="hljs-comment">// 3-2.组织 TransformStamped 消息；</span>
@@ -627,7 +730,194 @@ ts.transform.rotation.x = qtn.<span class="hljs-built_in">x</span>();
 <span class="hljs-comment">// 3-3.发布；</span>
 tf_broadcaster_-&gt;<span class="hljs-built_in">sendTransform</span>(ts);
 </code></pre>
-<h3 id="1813-运行效果（实测）">18.1.3 运行效果（实测）</h3>
+<p>坐标点变换监听 C++ 核心（<code>cpp04_tf_listener/src/demo02_point_listener.cpp</code>）：</p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// 订阅 /turtle1/point (PointStamped)，回调中经 tf 缓存变换到 world</span>
+geometry_msgs::msg::PointStamped out;
+tf2::doTransform(*point, out,
+    buffer_-&gt;<span class="hljs-built_in">lookupTransform</span>(<span class="hljs-string">"world"</span>, point-&gt;header.frame_id, tf2::TimePointZero));
+</code></pre>
+<p>tf2 工具：<code>ros2 run tf2_ros tf2_echo base_link laser</code> 打印两系间实时变换；<code>ros2 run tf2_tools view_frames</code> 生成 frames.pdf 坐标树（用法同 17.4.6）。</p>
+<h3 id="1842-实战-2：乌龟跟随——广播--监听--控制（python）">18.4.2 实战 2：乌龟跟随——广播 + 监听 + 控制（Python）</h3>
+<pre><code class="lang-python"><span class="hljs-comment"># turtle_follow/turtle_follow/follower.py</span>
+<span class="hljs-keyword">import</span> math
+<span class="hljs-keyword">import</span> rclpy
+<span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
+<span class="hljs-keyword">from</span> geometry_msgs.msg <span class="hljs-keyword">import</span> TransformStamped, Twist
+<span class="hljs-keyword">from</span> tf2_ros <span class="hljs-keyword">import</span> Buffer, TransformListener, TransformBroadcaster
+<span class="hljs-keyword">from</span> tf_transformations <span class="hljs-keyword">import</span> quaternion_from_euler
+<span class="hljs-keyword">from</span> turtlesim.msg <span class="hljs-keyword">import</span> Pose
+
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">TurtleFollower</span>(<span class="hljs-title class_ inherited__">Node</span>):
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">'turtle_follower'</span>)
+        <span class="hljs-variable language_">self</span>.declare_parameter(<span class="hljs-string">'leader'</span>, <span class="hljs-string">'turtle1'</span>)
+        <span class="hljs-variable language_">self</span>.declare_parameter(<span class="hljs-string">'follower'</span>, <span class="hljs-string">'turtle2'</span>)
+        <span class="hljs-variable language_">self</span>.declare_parameter(<span class="hljs-string">'k_linear'</span>, <span class="hljs-number">1.0</span>)
+        <span class="hljs-variable language_">self</span>.declare_parameter(<span class="hljs-string">'k_angular'</span>, <span class="hljs-number">4.0</span>)
+        <span class="hljs-variable language_">self</span>.buf = Buffer()
+        <span class="hljs-variable language_">self</span>.listener = TransformListener(<span class="hljs-variable language_">self</span>.buf, <span class="hljs-variable language_">self</span>)
+        <span class="hljs-variable language_">self</span>.br = TransformBroadcaster(<span class="hljs-variable language_">self</span>)
+        <span class="hljs-variable language_">self</span>.pub = <span class="hljs-variable language_">self</span>.create_publisher(Twist, <span class="hljs-string">'turtle2/cmd_vel'</span>, <span class="hljs-number">10</span>)
+        <span class="hljs-variable language_">self</span>.create_subscription(Pose, <span class="hljs-string">'turtle1/pose'</span>, <span class="hljs-variable language_">self</span>.on_pose, <span class="hljs-number">10</span>)
+        <span class="hljs-variable language_">self</span>.create_timer(<span class="hljs-number">0.1</span>, <span class="hljs-variable language_">self</span>.on_timer)          <span class="hljs-comment"># 10 Hz 广播 + 控制</span>
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">on_pose</span>(<span class="hljs-params">self, msg: Pose</span>):
+        t = TransformStamped()
+        t.header.stamp = <span class="hljs-variable language_">self</span>.get_clock().now().to_msg()
+        t.header.frame_id = <span class="hljs-string">'world'</span>
+        t.child_frame_id = <span class="hljs-variable language_">self</span>.get_parameter(<span class="hljs-string">'leader'</span>).value
+        t.transform.translation.x = msg.x
+        t.transform.translation.y = msg.y
+        q = quaternion_from_euler(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, msg.theta)     <span class="hljs-comment"># yaw → 四元数</span>
+        t.transform.rotation.z, t.transform.rotation.w = q[<span class="hljs-number">2</span>], q[<span class="hljs-number">3</span>]
+        <span class="hljs-variable language_">self</span>.br.sendTransform(t)                       <span class="hljs-comment"># 持续广播</span>
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">on_timer</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-keyword">try</span>:                                           <span class="hljs-comment"># TF 未就绪时抛异常，必须捕获</span>
+            tf = <span class="hljs-variable language_">self</span>.buf.lookup_transform(<span class="hljs-string">'turtle2'</span>, <span class="hljs-string">'turtle1'</span>, rclpy.time.Time())
+        <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:
+            <span class="hljs-variable language_">self</span>.get_logger().warn(<span class="hljs-string">f'tf not ready: <span class="hljs-subst">{e}</span>'</span>)
+            <span class="hljs-keyword">return</span>
+        x = tf.transform.translation.x
+        y = tf.transform.translation.y
+        dist = math.hypot(x, y)                        <span class="hljs-comment"># 距离 → 线速度</span>
+        angle = math.atan2(y, x)                       <span class="hljs-comment"># 航向差 → 角速度</span>
+        cmd = Twist()
+        cmd.linear.x = <span class="hljs-variable language_">self</span>.get_parameter(<span class="hljs-string">'k_linear'</span>).value * dist
+        cmd.angular.z = <span class="hljs-variable language_">self</span>.get_parameter(<span class="hljs-string">'k_angular'</span>).value * angle
+        <span class="hljs-variable language_">self</span>.pub.publish(cmd)                          <span class="hljs-comment"># 简单 P 控制跟踪</span>
+</code></pre>
+<h3 id="1843-实战-3：乌龟护航-launch（python，多实例--命名空间--参数）">18.4.3 实战 3：乌龟护航 launch（Python，多实例 + 命名空间 + 参数）</h3>
+<pre><code class="lang-python"><span class="hljs-comment"># turtle_escort/launch/escort.launch.py</span>
+<span class="hljs-keyword">from</span> launch <span class="hljs-keyword">import</span> LaunchDescription
+<span class="hljs-keyword">from</span> launch.actions <span class="hljs-keyword">import</span> DeclareLaunchArgument, GroupAction, TimerAction
+<span class="hljs-keyword">from</span> launch.substitutions <span class="hljs-keyword">import</span> LaunchConfiguration
+<span class="hljs-keyword">from</span> launch_ros.actions <span class="hljs-keyword">import</span> Node, PushRosNamespace
+
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">generate_launch_description</span>():
+    ld = LaunchDescription()
+    ld.add_action(DeclareLaunchArgument(<span class="hljs-string">'leader'</span>, default_value=<span class="hljs-string">'turtle1'</span>))
+    leader = LaunchConfiguration(<span class="hljs-string">'leader'</span>)
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-number">4</span>):                      <span class="hljs-comment"># 3 只护航乌龟</span>
+        follower = <span class="hljs-string">f'turtle<span class="hljs-subst">{i + <span class="hljs-number">1</span>}</span>'</span>
+        ld.add_action(TimerAction(              <span class="hljs-comment"># 错峰启动，避免 /spawn 并发</span>
+            period=<span class="hljs-built_in">float</span>(i), actions=[GroupAction([
+                PushRosNamespace(<span class="hljs-string">f'escort<span class="hljs-subst">{i}</span>'</span>),
+                Node(package=<span class="hljs-string">'turtle_escort'</span>, executable=<span class="hljs-string">'escortor'</span>,
+                     name=<span class="hljs-string">'escortor'</span>, output=<span class="hljs-string">'screen'</span>,
+                     parameters=[{<span class="hljs-string">'leader'</span>: leader, <span class="hljs-string">'follower'</span>: follower,
+                                  <span class="hljs-string">'offset_x'</span>: -<span class="hljs-number">1.0</span> * i, <span class="hljs-string">'offset_y'</span>: <span class="hljs-number">0.5</span> * i}]),
+            ])]))
+    <span class="hljs-keyword">return</span> ld
+</code></pre>
+<h3 id="1844-实战-4：两轮差速小车-urdf（完整小例子）">18.4.4 实战 4：两轮差速小车 URDF（完整小例子）</h3>
+<pre><code class="lang-xml"><span class="hljs-comment">&lt;!-- mycar_description/urdf/mycar.urdf --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">robot</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"mycar"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"base_footprint"</span>/&gt;</span>                <span class="hljs-comment">&lt;!-- 惯例：贴地投影为根 --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"base_link"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">visual</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">origin</span> <span class="hljs-attr">xyz</span>=<span class="hljs-string">"0 0 0.1"</span> <span class="hljs-attr">rpy</span>=<span class="hljs-string">"0 0 0"</span>/&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">geometry</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">box</span> <span class="hljs-attr">size</span>=<span class="hljs-string">"0.5 0.3 0.2"</span>/&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">geometry</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">material</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"blue"</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">color</span> <span class="hljs-attr">rgba</span>=<span class="hljs-string">"0 0 0.8 1"</span>/&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">material</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">visual</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">collision</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">origin</span> <span class="hljs-attr">xyz</span>=<span class="hljs-string">"0 0 0.1"</span>/&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">geometry</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">box</span> <span class="hljs-attr">size</span>=<span class="hljs-string">"0.5 0.3 0.2"</span>/&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">geometry</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">collision</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">inertial</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">mass</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"5.0"</span>/&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">inertia</span> <span class="hljs-attr">ixx</span>=<span class="hljs-string">"0.05"</span> <span class="hljs-attr">ixy</span>=<span class="hljs-string">"0"</span> <span class="hljs-attr">ixz</span>=<span class="hljs-string">"0"</span> <span class="hljs-attr">iyy</span>=<span class="hljs-string">"0.1"</span> <span class="hljs-attr">iyz</span>=<span class="hljs-string">"0"</span> <span class="hljs-attr">izz</span>=<span class="hljs-string">"0.1"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">inertial</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">link</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-name">joint</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"footprint_joint"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"fixed"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">parent</span> <span class="hljs-attr">link</span>=<span class="hljs-string">"base_footprint"</span>/&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">child</span> <span class="hljs-attr">link</span>=<span class="hljs-string">"base_link"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">origin</span> <span class="hljs-attr">xyz</span>=<span class="hljs-string">"0 0 0"</span> <span class="hljs-attr">rpy</span>=<span class="hljs-string">"0 0 0"</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">joint</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"left_wheel"</span>&gt;</span>                     <span class="hljs-comment">&lt;!-- 圆柱默认沿 z，需旋转 --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">visual</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">origin</span> <span class="hljs-attr">rpy</span>=<span class="hljs-string">"-1.5708 0 0"</span>/&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">geometry</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">cylinder</span> <span class="hljs-attr">radius</span>=<span class="hljs-string">"0.05"</span> <span class="hljs-attr">length</span>=<span class="hljs-string">"0.04"</span>/&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">geometry</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">material</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"black"</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">color</span> <span class="hljs-attr">rgba</span>=<span class="hljs-string">"0 0 0 1"</span>/&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">material</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">visual</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">inertial</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">mass</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"1.0"</span>/&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">inertia</span> <span class="hljs-attr">ixx</span>=<span class="hljs-string">"0.001"</span> <span class="hljs-attr">ixy</span>=<span class="hljs-string">"0"</span> <span class="hljs-attr">ixz</span>=<span class="hljs-string">"0"</span> <span class="hljs-attr">iyy</span>=<span class="hljs-string">"0.001"</span> <span class="hljs-attr">iyz</span>=<span class="hljs-string">"0"</span> <span class="hljs-attr">izz</span>=<span class="hljs-string">"0.001"</span>/&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">inertial</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">link</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">joint</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"left_wheel_joint"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"continuous"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">parent</span> <span class="hljs-attr">link</span>=<span class="hljs-string">"base_link"</span>/&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">child</span> <span class="hljs-attr">link</span>=<span class="hljs-string">"left_wheel"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">origin</span> <span class="hljs-attr">xyz</span>=<span class="hljs-string">"0 0.15 0.05"</span>/&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">axis</span> <span class="hljs-attr">xyz</span>=<span class="hljs-string">"0 1 0"</span>/&gt;</span>   <span class="hljs-comment">&lt;!-- 绕 y 轴转动 --&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">joint</span>&gt;</span>
+  <span class="hljs-comment">&lt;!-- 右轮同理：origin y=-0.15，name 加 _right --&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">robot</span>&gt;</span>
+</code></pre>
+<h3 id="1845-实战-5：xacro-优化——轮子宏--文件包含--条件安装">18.4.5 实战 5：xacro 优化——轮子宏 + 文件包含 + 条件安装</h3>
+<pre><code class="lang-xml"><span class="hljs-comment">&lt;!-- mycar_description/urdf/wheel.xacro：轮子宏 --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">robot</span> <span class="hljs-attr">xmlns:xacro</span>=<span class="hljs-string">"http://www.ros.org/wiki/xacro"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">xacro:macro</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"wheel"</span> <span class="hljs-attr">params</span>=<span class="hljs-string">"name reflect"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"${name}_wheel"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">visual</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">origin</span> <span class="hljs-attr">rpy</span>=<span class="hljs-string">"-1.5708 0 0"</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">geometry</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">cylinder</span> <span class="hljs-attr">radius</span>=<span class="hljs-string">"${wheel_radius}"</span> <span class="hljs-attr">length</span>=<span class="hljs-string">"0.04"</span>/&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">geometry</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">material</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"black"</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">color</span> <span class="hljs-attr">rgba</span>=<span class="hljs-string">"0 0 0 1"</span>/&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">material</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">visual</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">inertial</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">mass</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"1.0"</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">inertia</span> <span class="hljs-attr">ixx</span>=<span class="hljs-string">"0.001"</span> <span class="hljs-attr">ixy</span>=<span class="hljs-string">"0"</span> <span class="hljs-attr">ixz</span>=<span class="hljs-string">"0"</span> <span class="hljs-attr">iyy</span>=<span class="hljs-string">"0.001"</span> <span class="hljs-attr">iyz</span>=<span class="hljs-string">"0"</span> <span class="hljs-attr">izz</span>=<span class="hljs-string">"0.001"</span>/&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">inertial</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">link</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">joint</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"${name}_wheel_joint"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"continuous"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">parent</span> <span class="hljs-attr">link</span>=<span class="hljs-string">"base_link"</span>/&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">child</span> <span class="hljs-attr">link</span>=<span class="hljs-string">"${name}_wheel"</span>/&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">origin</span> <span class="hljs-attr">xyz</span>=<span class="hljs-string">"0 ${reflect * wheel_y} ${wheel_radius}"</span>/&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">axis</span> <span class="hljs-attr">xyz</span>=<span class="hljs-string">"0 1 0"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">joint</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">xacro:macro</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">robot</span>&gt;</span>
+</code></pre>
+<pre><code class="lang-xml"><span class="hljs-comment">&lt;!-- mycar_description/urdf/mycar.xacro：主文件 --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">robot</span> <span class="hljs-attr">xmlns:xacro</span>=<span class="hljs-string">"http://www.ros.org/wiki/xacro"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"mycar"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">xacro:arg</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"with_laser"</span> <span class="hljs-attr">default</span>=<span class="hljs-string">"true"</span>/&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">xacro:property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"wheel_radius"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"0.05"</span>/&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">xacro:property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"wheel_y"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"0.15"</span>/&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">xacro:include</span> <span class="hljs-attr">filename</span>=<span class="hljs-string">"$(find mycar_description)/urdf/wheel.xacro"</span>/&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">xacro:include</span> <span class="hljs-attr">filename</span>=<span class="hljs-string">"$(find mycar_description)/urdf/base.xacro"</span>/&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">xacro:wheel</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"left"</span>  <span class="hljs-attr">reflect</span>=<span class="hljs-string">"1"</span>/&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">xacro:wheel</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"right"</span> <span class="hljs-attr">reflect</span>=<span class="hljs-string">"-1"</span>/&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">xacro:if</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"$(arg with_laser)"</span>&gt;</span>          <span class="hljs-comment">&lt;!-- 条件安装雷达 --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">xacro:include</span> <span class="hljs-attr">filename</span>=<span class="hljs-string">"$(find mycar_description)/urdf/laser.xacro"</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">xacro:if</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">robot</span>&gt;</span>
+</code></pre>
+<pre><code class="lang-bash">xacro mycar.xacro with_laser:=<span class="hljs-literal">true</span> -o mycar.urdf   <span class="hljs-comment"># 展开并检查</span>
+check_urdf mycar.urdf                              <span class="hljs-comment"># 校验树结构</span>
+</code></pre>
+<h3 id="1846-实战-6：rviz2-集成-launch（robotstatepublisher--jointstatepublishergui--rviz2）">18.4.6 实战 6：rviz2 集成 launch（robot_state_publisher + joint_state_publisher_gui + rviz2）</h3>
+<pre><code class="lang-python"><span class="hljs-comment"># mycar_description/launch/display.launch.py</span>
+<span class="hljs-keyword">import</span> os
+<span class="hljs-keyword">from</span> ament_index_python.packages <span class="hljs-keyword">import</span> get_package_share_directory
+<span class="hljs-keyword">from</span> launch <span class="hljs-keyword">import</span> LaunchDescription
+<span class="hljs-keyword">from</span> launch.actions <span class="hljs-keyword">import</span> DeclareLaunchArgument
+<span class="hljs-keyword">from</span> launch.conditions <span class="hljs-keyword">import</span> IfCondition
+<span class="hljs-keyword">from</span> launch.substitutions <span class="hljs-keyword">import</span> Command, LaunchConfiguration
+<span class="hljs-keyword">from</span> launch_ros.actions <span class="hljs-keyword">import</span> Node
+<span class="hljs-keyword">from</span> launch_ros.parameter_descriptions <span class="hljs-keyword">import</span> ParameterValue
+
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">generate_launch_description</span>():
+    pkg = get_package_share_directory(<span class="hljs-string">'mycar_description'</span>)
+    xacro_file = os.path.join(pkg, <span class="hljs-string">'urdf'</span>, <span class="hljs-string">'mycar.xacro'</span>)
+    robot_description = ParameterValue(       <span class="hljs-comment"># 关键：xacro 展开结果作为字符串参数</span>
+        Command([<span class="hljs-string">'xacro '</span>, xacro_file]), value_type=<span class="hljs-built_in">str</span>)
+    <span class="hljs-keyword">return</span> LaunchDescription([
+        DeclareLaunchArgument(<span class="hljs-string">'use_gui'</span>, default_value=<span class="hljs-string">'true'</span>),
+        Node(package=<span class="hljs-string">'robot_state_publisher'</span>, executable=<span class="hljs-string">'robot_state_publisher'</span>,
+             parameters=[{<span class="hljs-string">'robot_description'</span>: robot_description}]),
+        Node(package=<span class="hljs-string">'joint_state_publisher_gui'</span>, executable=<span class="hljs-string">'joint_state_publisher_gui'</span>,
+             condition=IfCondition(LaunchConfiguration(<span class="hljs-string">'use_gui'</span>))),
+        Node(package=<span class="hljs-string">'rviz2'</span>, executable=<span class="hljs-string">'rviz2'</span>,
+             arguments=[<span class="hljs-string">'-d'</span>, os.path.join(pkg, <span class="hljs-string">'rviz2'</span>, <span class="hljs-string">'urdf.rviz'</span>)]),
+    ])
+</code></pre>
+<h2 id="185-运行效果（实测）">18.5 运行效果（实测）</h2>
+<h3 id="1851-静态坐标变换实测">18.5.1 静态坐标变换实测</h3>
+<p><strong>需求</strong>：广播两个坐标系间的<strong>静态</strong>相对关系（camera ← laser，偏移 x=1 y=2 z=3）。命令行与编码两种方式（编码见 18.4.1）。</p>
 <pre><code class="lang-bash">ros2 run cpp03_tf_broadcaster demo01_static_tf_broadcaster 1 2 3 0 0 0 camera laser
 ros2 topic <span class="hljs-built_in">echo</span> /tf_static --once
 </code></pre>
@@ -649,10 +939,8 @@ ros2 topic <span class="hljs-built_in">echo</span> /tf_static --once
       w: 1.0
 </code></pre>
 <p>Python 版（<code>py03_tf_broadcaster</code>）输出一致。</p>
-<h2 id="182-动态坐标变换">18.2 动态坐标变换</h2>
-<h3 id="1821-案例以及案例分析">18.2.1 案例以及案例分析</h3>
+<h3 id="1852-动态坐标变换实测">18.5.2 动态坐标变换实测</h3>
 <p><strong>需求</strong>：订阅乌龟位姿 <code>/turtle1/pose</code>，将<strong>世界坐标系 world 相对乌龟 turtle1</strong> 的动态关系实时发布（<code>TransformBroadcaster</code>）。</p>
-<h3 id="1822-运行效果（实测）">18.2.2 运行效果（实测）</h3>
 <p>启动乌龟后运行动态广播器，<code>ros2 topic echo /tf --once</code>：</p>
 <pre><code class="lang-text">transforms:
 - header:
@@ -664,25 +952,18 @@ ros2 topic <span class="hljs-built_in">echo</span> /tf_static --once
       y: 5.544444561004639
 </code></pre>
 <p>乌龟运动时 <code>translation</code> 以约 60Hz 实时更新——这就是「动态」的含义。</p>
-<h2 id="183-坐标监听与实操案例">18.3 坐标监听与实操案例</h2>
-<h3 id="1831-坐标系变换（监听）">18.3.1 坐标系变换（监听）</h3>
+<h3 id="1853-坐标系变换监听实测">18.5.3 坐标系变换监听实测</h3>
 <p><strong>需求</strong>：监听 camera 与 laser 间的变换，将「laser 下的坐标点」变换到 camera 坐标系，或打印两坐标系关系。</p>
-<p>实测（<code>cpp04_tf_listener</code>，配合 18.1 的静态广播）：</p>
+<p>实测（<code>cpp04_tf_listener</code>，配合 18.5.1 的静态广播）：</p>
 <pre><code class="lang-text">[INFO] [...]: -----------转换完成的坐标帧信息-----------
 [INFO] [...]: 新坐标帧:父坐标系:camera,子坐标系:laser,偏移量(1.00,2.00,3.00)
 </code></pre>
 <blockquote>
 <p>兼容提示：<code>lookupTransform("camera","laser",tf2::TimePointZero)</code> 中第三个参数在 rclcpp 中使用 <code>tf2::TimePointZero</code>（0 代表最新可用变换）。</p>
 </blockquote>
-<h3 id="1832-坐标点变换监听（补充实测）">18.3.2 坐标点变换监听（补充实测）</h3>
+<h3 id="1854-坐标点变换监听实测（含-python-兼容提示）">18.5.4 坐标点变换监听实测（含 Python 兼容提示）</h3>
 <p><strong>需求</strong>：订阅 <code>turtle1</code> 坐标系下的坐标点，利用 tf 缓存把它变换到 <code>world</code> 坐标系输出——「坐标系变换」之外的第二种监听形态。</p>
-<p>C++ 实现（<code>cpp04_tf_listener/src/demo02_point_listener.cpp</code>）核心：</p>
-<pre><code class="lang-cpp"><span class="hljs-comment">// 订阅 /turtle1/point (PointStamped)，回调中经 tf 缓存变换到 world</span>
-geometry_msgs::msg::PointStamped out;
-tf2::doTransform(*point, out,
-    buffer_-&gt;<span class="hljs-built_in">lookupTransform</span>(<span class="hljs-string">"world"</span>, point-&gt;header.frame_id, tf2::TimePointZero));
-</code></pre>
-<p>Python 实现（<code>py03_tf_broadcaster/demo02_point_listener_py.py</code>）：</p>
+<p>C++ 实现（<code>cpp04_tf_listener/src/demo02_point_listener.cpp</code>）核心见 18.4.1；Python 实现（<code>py03_tf_broadcaster/demo02_point_listener_py.py</code>）：</p>
 <pre><code class="lang-python"><span class="hljs-variable language_">self</span>.buffer = Buffer()
 <span class="hljs-variable language_">self</span>.listener = TransformListener(<span class="hljs-variable language_">self</span>.buffer, <span class="hljs-variable language_">self</span>)   <span class="hljs-comment"># Jazzy 需传入节点对象</span>
 out = <span class="hljs-variable language_">self</span>.buffer.transform(point, <span class="hljs-string">"world"</span>, timeout=rclpy.duration.Duration(seconds=<span class="hljs-number">1.0</span>))
@@ -699,7 +980,7 @@ ros2 topic pub --once /turtle1/point geometry_msgs/msg/PointStamped <span class=
 [INFO] [...]: [point_listener_node_cpp]: 坐标点(1.00,1.00) 变换到 world 系下: (2.00,3.00)
 </code></pre>
 <p>Python 版输出相同（(0.5,0.5)→(1.5,2.5)）。数学自检：world 系偏移 (1,2) + turtle1 系点坐标 = (1.5,2.5) ✓。</p>
-<h3 id="1833-乌龟跟随（实操）">18.3.3 乌龟跟随（实操）</h3>
+<h3 id="1855-乌龟跟随与护航实测">18.5.5 乌龟跟随与护航实测</h3>
 <p><strong>需求</strong>：生成两只乌龟，乌龟 t2 始终跟随 turtle1（保持距离 2m）。</p>
 <p>实现分三部分：</p>
 <ol>
@@ -710,8 +991,7 @@ ros2 topic pub --once /turtle1/point geometry_msgs/msg/PointStamped <span class=
 </ol>
 <p>实测 <code>ros2 launch cpp05_exercise follow_launch.py</code> 可见 t2 生成且全程跟随第一只乌龟（键盘控制 turtle1 时 t2 自动跟随，视频效果一致）。</p>
 <p><strong>乌龟护航</strong>（escort_launch.xml）：监听器在两龟之间再加一层目标点偏移（保持固定方位跟随），XML 版 launch 组织节点。</p>
-<h2 id="184-urdf-建模与-xacro-优化">18.4 URDF 建模与 Xacro 优化</h2>
-<h3 id="1841-urdf-集成-rviz2">18.4.1 URDF 集成 rviz2</h3>
+<h3 id="1856-urdf-集成-rviz2-实测">18.5.6 URDF 集成 rviz2 实测</h3>
 <p><strong>需求</strong>：用 URDF 描述两轮差速小车（base_footprint → base_link → 左右驱动轮 + 前万向轮），经 robot_state_publisher 发布 <code>/robot_description</code> 与 <code>/tf</code>，rviz2 可视化。</p>
 <p>实测 <code>ros2 launch cpp06_urdf display_urdf_launch.py</code>，三个进程正常拉起：</p>
 <pre><code class="lang-text">[INFO] [robot_state_publisher-1]: process started with pid [408700]
@@ -722,7 +1002,7 @@ ros2 topic pub --once /turtle1/point geometry_msgs/msg/PointStamped <span class=
 <pre><code class="lang-text">[INFO] [...]: [robot_state_publisher]: Robot initialized
 </code></pre>
 <p>URDF 非法时会直接解析报错，可用于语法校验。</p>
-<h3 id="1842-xacro-优化">18.4.2 Xacro 优化</h3>
+<h3 id="1857-xacro-展开实测">18.5.7 Xacro 展开实测</h3>
 <p>用 <strong>property（属性）+ macro（宏）</strong> 消除 URDF 中左右轮的重复定义：</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">xacro:property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"wheel_radius"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"0.05"</span>/&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">xacro:macro</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"wheel_macro"</span> <span class="hljs-attr">params</span>=<span class="hljs-string">"wheel_name lr yaw"</span>&gt;</span>
@@ -734,12 +1014,37 @@ ros2 topic pub --once /turtle1/point geometry_msgs/msg/PointStamped <span class=
 <pre><code class="lang-bash">xacro xacro/xacro_car.xacro
 </code></pre>
 <p>输出为展开后的标准 URDF XML（<code>out/verify/ws01/c_xacro_expand.log</code>），可经 robot_state_publisher 正常加载。</p>
-<h2 id="185-本章小结">18.5 本章小结</h2>
+<h2 id="186-与-ros2--机器人开发的关联">18.6 与 ROS2 / 机器人开发的关联</h2>
+<ol>
+<li><strong>TF 是导航/SLAM 的骨架</strong>：<code>map → odom → base_link → laser</code> 就是乌龟案例 <code>world → turtle1/turtle2</code> 的工业版；第24章建图导航、机械臂抓取都以此为基础。</li>
+<li><strong>URDF/xacro 是机器人产品的"数字名片"</strong>：MoveIt2 Setup Assistant、Gazebo 仿真、Nav2 的 footprint 全部吃 URDF/xacro；建模规范（base_footprint、命名、宏拆分）直接影响后续自动化工具链。</li>
+<li><strong>rviz2 是调试与交付界面</strong>：感知算法调试看 PointCloud2/Image，导航看 Path/Map，交付演示也用它；<code>.rviz</code> 配置文件应随包入库。</li>
+<li><strong>乌龟案例 = Mycar 的缩影</strong>：第19-20章的智能车 bringup 就是"生成/启动 + 多节点 + TF + 参数 + launch"的放大版，本章案例可直接迁移。</li>
+</ol>
+<h2 id="187-自测与练习">18.7 自测与练习</h2>
+<ol>
+<li><strong>概念题</strong>：解释 robot_state_publisher、joint_state_publisher、rviz2 三者在"显示机器人模型"流程中的分工；<code>base_footprint</code> 为什么通常作为 TF 树根？</li>
+<li><strong>动手任务</strong>：实现乌龟跟随（Python）：turtle2 追 turtle1，用 TF 监听求相对位姿。<strong>验收标准</strong>：turtle2 持续逼近并跟随 turtle1；TF 树中有 <code>world → turtle1</code> 与 <code>world → turtle2</code>（<code>view_frames</code> 验证）。</li>
+<li><strong>动手任务</strong>：写一个 xacro 两轮小车（含轮子宏 + 摄像头可选参数），在 rviz2 中显示。<strong>验收标准</strong>：<code>xacro</code> 展开无错、<code>check_urdf</code> 通过、rviz2 中 Fixed Frame 为 <code>base_footprint</code> 时模型完整、拖动 joint_state_publisher_gui 滑块轮子转动。</li>
+</ol>
+<blockquote>
+<p>参考答案要点：1) joint_state_publisher 发布 <code>/joint_states</code>（非 fixed 关节角）→ robot_state_publisher 结合 URDF 算各 link TF 并发布 <code>/robot_description</code> → rviz2 的 RobotModel/TF 插件渲染；base_footprint 是地面投影点，导航栈约定 map→odom→base_footprint，使"机器人触地点"有明确语义。2) 订阅 <code>/turtle1/pose</code> 广播 TF，监听 <code>turtle2→turtle1</code>，P 控制发 <code>/turtle2/cmd_vel</code>；注意 TF 未就绪异常处理与速度限幅。3) 宏参数 <code>name/reflect</code>；<code>&lt;xacro:if value="$(arg with_camera)"&gt;</code> 条件包含；launch 用 <code>ParameterValue(Command(['xacro ', path]), value_type=str)</code>。</p>
+</blockquote>
+<h2 id="188-常见问题（faq）">18.8 常见问题（FAQ）</h2>
 <ul>
-<li>静态/动态广播分别使用 <code>StaticTransformBroadcaster</code> 与 <code>TransformBroadcaster</code>；</li>
-<li>监听端 <code>Buffer + TransformListener + lookupTransform</code>，时间参数传 <code>tf2::TimePointZero</code>；</li>
-<li>跟随/护航实操 = 广播器 × 2 + 监听器（速度公式线性化）+ launch 集成；</li>
-<li>URDF 描述结构，Xacro 消除重复；<code>xacro</code> 命令可离线展开验证。</li>
+<li><strong>Q：rviz2 中 RobotModel 不显示/报 No transform？</strong> A：检查 Fixed Frame 是否是 TF 树中存在的 frame（如 <code>base_footprint</code>）；robot_state_publisher 是否在跑、<code>/robot_description</code> 有无数据（<code>ros2 topic echo /robot_description --once</code>）；模型 joint/link 是否有孤立分支。</li>
+<li><strong>Q：<code>xacro:include</code> 报找不到文件？</strong> A：用 <code>$(find &lt;pkg&gt;)/urdf/x.xacro</code> 而非相对/绝对路径；确认该包已编译安装、<code>share</code> 目录含 urdf（install 规则没写全）。</li>
+<li><strong>Q：轮子显示成"躺倒"的圆柱？</strong> A：圆柱默认轴向为 z，需在 <code>&lt;visual&gt;</code> 的 <code>&lt;origin rpy="-1.5708 0 0"/&gt;</code> 旋转；关节 <code>&lt;axis&gt;</code> 决定转动轴，两者要一致。</li>
+<li><strong>Q：joint_state_publisher_gui 打不开/没窗口？</strong> A：确认装了 <code>ros-humble-joint-state-publisher-gui</code>；WSL/远程桌面注意 DISPLAY 环境变量；无 GUI 环境改用 <code>joint_state_publisher</code> 并自行发布 <code>/joint_states</code>。</li>
+<li><strong>Q：乌龟护航启动报 <code>/spawn</code> 服务调用失败？</strong> A：多只乌龟同时 spawn 会竞争；用 <code>TimerAction</code> 错峰启动；确认 <code>turtlesim_node</code> 已起来、<code>wait_for_service</code> 后再调用。</li>
+</ul>
+<h2 id="189-本章小结">18.9 本章小结</h2>
+<ul>
+<li>静态/动态广播分别使用 <code>StaticTransformBroadcaster</code> 与 <code>TransformBroadcaster</code>；静态走 <code>/tf_static</code>（transient_local，发一次），动态走 <code>/tf</code>（持续发布、约 60Hz 实测更新）；</li>
+<li>监听端 <code>Buffer + TransformListener + lookupTransform</code>，时间参数传 <code>tf2::TimePointZero</code>；坐标点变换实测 <code>(0.5,0.5)→(1.5,2.5)</code>、<code>(1,1)→(2,3)</code> 端到端验证通过（含 Python 两处兼容提示）；</li>
+<li>跟随/护航实操 = 广播器 × 2 + 监听器（速度公式线性化：<code>linear.x = 0.5*sqrt(dx²+dy²)</code>、<code>angular.z = 1.0*atan2(dy,dx) - father_theta</code>）+ launch 集成，实测与课程视频效果一致；</li>
+<li>URDF 描述结构（robot/link/joint、visual/collision/inertial、base_footprint），Xacro 消除重复（property/macro/include/if）；<code>xacro</code> 命令可离线展开验证；</li>
+<li>rviz2 集成三件套 = robot_state_publisher + joint_state_publisher(_gui) + rviz2，一条 launch 命令即可显示机器人模型（三进程实测通过）。</li>
 </ul>
 
                                 
@@ -784,7 +1089,7 @@ ros2 topic pub --once /turtle1/point geometry_msgs/msg/PointStamped <span class=
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第18章 坐标变换与机器人建模","level":"6.5","depth":1,"next":{"title":"第19章 Mycar 自定义接口与运动控制","level":"7.1","depth":1,"path":"第19周-Mycar开发基础实战.md","ref":"第19周-Mycar开发基础实战.md","articles":[]},"previous":{"title":"第17章 工具应用实操（launch 与 rosbag2）","level":"6.4","depth":1,"path":"第17周-工具应用实操.md","ref":"第17周-工具应用实操.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第18周-乌龟案例与可视化.md","mtime":"2026-10-16T02:43:09.753Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T02:43:11.108Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第18章 坐标变换与机器人建模","level":"6.5","depth":1,"next":{"title":"第19章 Mycar 自定义接口与运动控制","level":"7.1","depth":1,"path":"第19周-Mycar开发基础实战.md","ref":"第19周-Mycar开发基础实战.md","articles":[]},"previous":{"title":"第17章 工具应用实操（launch 与 rosbag2）","level":"6.4","depth":1,"path":"第17周-工具应用实操.md","ref":"第17周-工具应用实操.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第18周-乌龟案例与可视化.md","mtime":"2026-10-16T03:26:51.710Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T03:26:53.986Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

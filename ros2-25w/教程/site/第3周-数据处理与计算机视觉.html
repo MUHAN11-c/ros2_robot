@@ -602,40 +602,305 @@
                                 <h1 id="第3章-数据处理与计算机视觉（numpyopencv）">第3章 数据处理与计算机视觉（NumPy/OpenCV）</h1>
 <blockquote>
 <p>本章对应课程第 3 周：NumPy 多维数组与向量化运算，OpenCV 图像读写、色彩空间、绘图与「滤波 → 边缘 → 阈值」视觉流水线。机器人感知层的通用手艺——激光/IMU 数据是 NumPy 数组，相机图像是 OpenCV Mat。</p>
+<p>所属阶段：阶段1 ROS2 开发必备基础之 Python 数据处理与计算机视觉 ｜ 视频 76 个 ｜ 时长约 10h41m ｜ 难度：进阶</p>
 </blockquote>
-<h2 id="31-案例以及案例分析">3.1 案例以及案例分析</h2>
-<p><strong>需求</strong>：对一批带噪图像完成「高斯滤波 → Canny 边缘 → Otsu 阈值分割」，并用 NumPy 完成传感器数据的去均值与统计。</p>
-<h2 id="32-知识点与实现">3.2 知识点与实现</h2>
-<h3 id="321-numpy-核心操作">3.2.1 NumPy 核心操作</h3>
+<h2 id="31-本周概览与课时结构">3.1 本周概览与课时结构</h2>
+<p>本周进入数据处理与计算机视觉实战：先用 Anaconda / Jupyter 搭建交互式数据分析环境，随后系统掌握 NumPy 的 ndarray（创建、属性、索引切片、变形、级联拆分、聚合统计、矩阵运算、广播、排序、读写），最后学习 OpenCV 的图像读写与摄像头采集、交互（鼠标/滑块）、色彩空间、绘图与几何变换，以及卷积、滤波、边缘检测与阈值分割。这些是机器人感知层的通用手艺：激光/IMU 数据是 NumPy 数组，相机图像是 OpenCV Mat，学完本周你就具备了「把传感器数据变成有用信息」的底座能力。</p>
+<p>读完本章，你应当达到四条验收线：</p>
+<ol>
+<li>会搭 Anaconda 环境、玩转 Jupyter 快捷键与魔法命令（<code>%timeit</code> 对比性能）；</li>
+<li>会用 NumPy 完成「创建 → 切片 → 变形 → 聚合 → 广播 → 读写」全流程，理解视图与副本；</li>
+<li>会用 OpenCV 读图/读摄像头、转 HSV、绘图标注、几何变换；</li>
+<li>会搭建并调参「滤波 → 边缘 → 阈值」视觉流水线（本章 3.5 的端到端实战就是验收标准）。</li>
+</ol>
+<p>本章课程共 6 课 / 76 个视频 / 约 10h41m，结构如下：</p>
+<table>
+<thead>
+<tr>
+<th>课</th>
+<th>小节</th>
+<th>时长</th>
+<th>一句话导览</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第1课 Anaconda 安装与基础使用</td>
+<td>1 节（9 个视频）</td>
+<td>1h04m</td>
+<td>NumPy/Anaconda 简介、安装配置、Jupyter 快捷键、魔法命令与 Matplotlib 绘图</td>
+</tr>
+<tr>
+<td>第2课 NumPy 数组深入讲解与操作</td>
+<td>1 节（16 个视频）</td>
+<td>1h59m</td>
+<td>ndarray 创建与属性、索引切片、反转图片、形状变换、级联合并与拆分</td>
+</tr>
+<tr>
+<td>第3课 数据统计分析与读写操作</td>
+<td>1 节（11 个视频）</td>
+<td>1h15m</td>
+<td>拷贝与视图、聚合统计、矩阵运算、广播机制、排序、数组持久化读写</td>
+</tr>
+<tr>
+<td>第4课 OpenCV 安装与数据传递</td>
+<td>1 节（15 个视频）</td>
+<td>2h39m</td>
+<td>安装与窗口、图片/视频/摄像头读写、鼠标与滑块交互、色彩空间与拷贝</td>
+</tr>
+<tr>
+<td>第5课 OpenCV 图像绘制与基础处理</td>
+<td>1 节（13 个视频）</td>
+<td>1h55m</td>
+<td>Mat 属性、通道分离合并、绘图（线/矩形/圆/椭圆/多边形/文本/中文）、算术、融合与几何变换</td>
+</tr>
+<tr>
+<td>第6课 图像卷积、滤波处理与边缘检测</td>
+<td>3 节（12 个视频）</td>
+<td>1h47m</td>
+<td>卷积原理与计算、均值/高斯/中值/双边滤波、Sobel/Scharr/Laplacian/Canny、阈值与自适应阈值</td>
+</tr>
+</tbody>
+</table>
+<p>学习节奏建议：本周是前 3 周里信息量最大的一周，建议第 1-3 课（NumPy 篇）与第 4-6 课（OpenCV 篇）分两天学；卷积原理（第 6 课开头）务必在纸上手算一个 3×3 例子再往下走。</p>
+<h2 id="32-知识点梳理">3.2 知识点梳理</h2>
+<h3 id="321-第1课-anaconda-安装与基础使用">3.2.1 第1课 Anaconda 安装与基础使用</h3>
 <ul>
-<li>创建：<code>np.array/zeros/ones/arange/linspace/eye</code>；拿到数组先看 <code>shape</code> 与 <code>dtype</code>；</li>
-<li>索引切片：多维 <code>a[行, 列]</code>、布尔索引 <code>a[a &gt; 0]</code>；切片是<strong>视图</strong>，<code>copy()</code> 才独立；</li>
-<li>形状：<code>reshape(-1, 3)</code> 的 -1 自动推算、<code>ravel/flatten/T</code>；</li>
-<li>聚合与广播：<code>sum/mean/max/min/std</code> 带 <code>axis</code>；<code>argmin</code> 找最近障碍；<code>a - a.mean(axis=0)</code> 即逐列去均值；</li>
-<li>矩阵：<code>a @ b</code> 矩阵乘、<code>np.linalg.solve</code> 解方程；排序 <code>np.sort/argsort</code>；持久化 <code>np.save/load</code>。</li>
+<li><strong>核心概念</strong>：NumPy（Numerical Python）提供高性能多维数组 ndarray 与向量化运算，是科学计算与机器人数据处理的基石；Anaconda 是「Python + 常用科学计算包 + conda 环境管理 + Jupyter」的一站式发行版。</li>
+<li><strong>安装配置</strong>：安装 Anaconda 后用 <code>conda create -n ros2cv python=3.10</code> 建环境、<code>conda activate ros2cv</code> 激活；<code>conda install numpy matplotlib</code>、<code>pip install opencv-python</code>。conda 的价值是<strong>每个项目一个独立环境</strong>，避免 ROS2 系统 Python 被污染（ROS2 环境下尤其不要往系统 Python 里乱 <code>pip install</code>）。</li>
+<li><strong>Jupyter 常用快捷键</strong>：<code>Shift+Enter</code> 运行当前单元并跳下一格、<code>Ctrl+Enter</code> 运行不跳、<code>Esc</code> 进命令模式、<code>A/B</code> 上下插单元、<code>DD</code> 删单元、<code>M</code> 转 Markdown、<code>Y</code> 转代码、<code>L</code> 显示行号。边跑边看结果，非常适合调 NumPy/OpenCV 代码。</li>
+<li><strong>魔法命令（magic commands）</strong>：<code>%run script.py</code> 运行脚本并把变量带进当前命名空间；<code>%time stmt</code> 测单次耗时、<code>%%time</code> 测整块、<code>%timeit stmt</code> 多次重复取均值（对比向量化 vs for 循环的性能差距非常直观）；其它常用：<code>%whos</code> 看变量、<code>%matplotlib inline</code> 内嵌绘图、<code>%load_ext autoreload</code> + <code>%autoreload 2</code> 自动重载模块。</li>
+<li><strong>绘图模块</strong>：<code>import matplotlib.pyplot as plt</code>，<code>plt.plot(x, y)</code>、<code>plt.scatter</code>、<code>plt.imshow(img)</code>（注意 OpenCV 图像通道是 BGR，显示真彩色需先转 RGB 或 <code>plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))</code>）、<code>plt.title/legend/show</code>。Jupyter 中画图调试数据分布，是机器人算法实验的日常。</li>
 </ul>
-<h3 id="322-opencv-基础">3.2.2 OpenCV 基础</h3>
+<h3 id="322-第2课-numpy-数组深入讲解与操作">3.2.2 第2课 NumPy 数组深入讲解与操作</h3>
 <ul>
-<li>图像即 ndarray（BGR、uint8）；<code>cv2.imread</code> 失败返回 <code>None</code>（务必检查）；</li>
-<li>色彩空间：<code>cv2.cvtColor(img, cv2.COLOR_BGR2HSV/GRAY/RGB)</code>；HSV 解耦颜色与亮度，颜色识别首选；</li>
-<li>绘图：<code>line/rectangle/circle/polylines/putText</code>（坐标是 (x, y)，原点左上角）；</li>
-<li>算术：<code>cv2.add</code> <strong>饱和截断</strong>到 255，NumPy 的 <code>img + 10</code> 会<strong>回绕</strong>（250+10=4）——亮度调整用前者；</li>
-<li>滤波：均值 <code>blur</code>、高斯 <code>GaussianBlur</code>、中值 <code>medianBlur</code>（抗椒盐）、双边 <code>bilateralFilter</code>（保边）；</li>
-<li>边缘与阈值：<code>Sobel/Laplacian/Canny(50,150)</code>；<code>threshold + THRESH_OTSU</code> 自动阈值；光照不均用 <code>adaptiveThreshold</code>。</li>
+<li><strong>核心概念</strong>：ndarray（N-dimensional array）= 连续内存 + 数据类型（dtype）+ 形状（shape）+ 步长（strides）的多维数组，同构、支持向量化运算，比 Python 列表快一个数量级。</li>
+<li><strong>创建数组</strong>：<code>np.array([1,2,3])</code>、<code>np.zeros((2,3))</code>、<code>np.ones</code>、<code>np.full((2,2), 7)</code>、<code>np.arange(0, 10, 2)</code>、<code>np.linspace(0, 1, 5)</code>、<code>np.random.rand(2,3)</code> / <code>np.random.randint(0, 10, (2,3))</code>、<code>np.eye(3)</code> 单位矩阵；注意 <code>np.array([1,2])</code> 默认 <code>int64</code>，混合类型会被提升为 <code>float64</code>。</li>
+<li><strong>常用属性</strong>：<code>a.shape</code> 形状（元组）、<code>a.ndim</code> 维数、<code>a.dtype</code> 元素类型、<code>a.size</code> 元素总数、<code>a.itemsize</code> 单元素字节数、<code>a.nbytes</code> 总字节。拿到传感器数组先看 <code>shape</code> 和 <code>dtype</code>，能避免一大半 bug。</li>
+<li><strong>索引与切片</strong>：与列表同语法，多维用 <code>a[行, 列]</code>，如 <code>a[1, 2]</code>、<code>a[:, 0]</code> 取第一列、<code>a[0:2, 1:3]</code> 子矩阵；切片得到<strong>视图（view）</strong>，改切片会改原数组，需 <code>copy()</code> 才独立。布尔索引 <code>a[a &gt; 0]</code>、花式索引 <code>a[[0, 2]]</code> 是数据筛选利器。</li>
+<li><strong>切片实战 - 反转图片</strong>：图像就是 <code>uint8</code> 的三维数组 <code>（H, W, 3）</code>。<code>img[:, ::-1]</code> 左右翻转、<code>img[::-1, :]</code> 上下翻转、<code>img[::-1, ::-1]</code> 中心翻转——纯切片零拷贝完成图像翻转。</li>
+<li><strong>形状变换</strong>：<code>a.reshape(3, 4)</code>（元素总数不变）、<code>a.resize</code>（可改原数组）、<code>a.ravel()</code>/<code>a.flatten()</code> 拍平（flatten 返回副本）、<code>a.T</code> 转置、<code>a[np.newaxis, :]</code> 加维度。<code>reshape(-1, 3)</code> 中的 <code>-1</code> 表示自动推算，把 N 个 3 维点整理成 N×3 矩阵常用。</li>
+<li><strong>级联合并</strong>：<code>np.concatenate((a, b), axis=0/1)</code>、<code>np.vstack</code>（垂直堆叠）、<code>np.hstack</code>（水平堆叠）、<code>np.stack</code>（沿新轴堆叠）、<code>np.append</code>。要求非拼接维度一致，否则报 <code>ValueError</code>。</li>
+<li><strong>数组拆分</strong>：<code>np.split(a, 3, axis=0)</code>、<code>np.hsplit</code>、<code>np.vsplit</code>；切分点数量必须能整除对应维度长度。四宫格切图、把彩色图三通道拆开处理都用得上。</li>
 </ul>
-<h2 id="33-运行效果（实测）">3.3 运行效果（实测）</h2>
-<p>NumPy 去均值 + 带噪图像视觉流水线（合成图，无需外部素材）：</p>
+<h3 id="323-第3课-数据统计分析与读写操作">3.2.3 第3课 数据统计分析与读写操作</h3>
+<ul>
+<li><strong>核心概念</strong>：拷贝语义、聚合（aggregation）、矩阵运算、广播（broadcasting）、排序与持久化。</li>
+<li><strong>拷贝</strong>：<code>b = a</code> 是别名（同一块内存）；<code>b = a.copy()</code> 深拷贝数据；<code>b = a.view()</code> 是视图（共享内存但 shape 可不同）。判断 <code>b.base is a</code> 或 <code>np.shares_memory(a, b)</code> 可分辨。</li>
+<li><strong>聚合统计</strong>：<code>sum()/mean()/max()/min()/std()/var()/median()</code>，带 <code>axis</code> 参数（<code>axis=0</code> 沿列压缩、<code>axis=1</code> 沿行压缩、不写则全局）；<code>argmax()/argmin()</code> 返回最值下标（找最近障碍物就是 <code>argmin</code>）；<code>np.percentile(a, 95)</code> 求分位数（剔除激光野值常用）。</li>
+<li><strong>矩阵运算</strong>：算数运算符作用于数组是<strong>逐元素</strong>运算（<code>a * b</code> 对应位置相乘）；矩阵乘法用 <code>a @ b</code> 或 <code>np.dot(a, b)</code>；转置 <code>a.T</code>；求逆 <code>np.linalg.inv(a)</code>、解线性方程组 <code>np.linalg.solve(A, b)</code>、特征值 <code>np.linalg.eig(a)</code>——运动学/标定计算的常用件。</li>
+<li><strong>广播机制</strong>：形状兼容时，较小数组沿长度为 1 的维度扩展，无需显式复制。规则：从尾部维度对齐，相等或为 1 即可广播；典型应用 <code>a - a.mean(axis=0)</code>（每列去均值）、<code>img / 255.0</code> 归一化、给图像加常量偏置。</li>
+<li><strong>排序</strong>：<code>np.sort(a)</code>（返回副本）/<code>a.sort()</code>（原地）、<code>np.argsort(a)</code> 返回排序下标（据此取 Top-K 或同步重排多个数组）、<code>np.argmax</code>；<code>axis</code> 指定排序维度。</li>
+<li><strong>读写</strong>：<code>np.save("a.npy", a)</code> / <code>np.load("a.npy")</code>（二进制、保 dtype、快）；<code>np.savez("a.npz", x=a, y=b)</code> 存多个；<code>np.savetxt("a.csv", a, delimiter=",")</code> / <code>np.loadtxt</code>（文本格式，便于人工查看）；数据集/日志实验建议存 <code>.npy</code>，跨语言交换用 CSV。</li>
+</ul>
+<h3 id="324-第4课-opencv-安装与数据传递">3.2.4 第4课 OpenCV 安装与数据传递</h3>
+<ul>
+<li><strong>核心概念</strong>：OpenCV（Open Source Computer Vision Library）是工业级计算机视觉库，<code>cv2</code> 模块的图像即 ndarray（BGR 顺序、<code>uint8</code>）。</li>
+<li><strong>安装与窗口</strong>：<code>pip install opencv-python</code>；<code>cv2.namedWindow("win")</code> 建窗口，<code>cv2.imshow("win", img)</code> 显示，<code>cv2.waitKey(0)</code> 等按键（括号内是毫秒数，0 表示永久等待），<code>cv2.destroyAllWindows()</code> 收尾。headless 环境（服务器/无显示器）改用 <code>opencv-python-headless</code> 并用文件读写代替窗口。</li>
+<li><strong>读写图片</strong>：<code>img = cv2.imread(path, cv2.IMREAD_COLOR)</code>（读失败返回 <code>None</code>，务必检查！）、<code>cv2.imwrite(path, img)</code>。三种读取模式：<code>IMREAD_COLOR</code> 彩色（BGR 三通道）、<code>IMREAD_GRAYSCALE</code> 灰度（单通道）、<code>IMREAD_UNCHANGED</code> 保留 alpha 通道。</li>
+<li><strong>摄像头与视频</strong>：<code>cap = cv2.VideoCapture(0)</code> 打开摄像头（参数是设备号或视频文件路径），<code>cap.isOpened()</code> 检查、<code>ret, frame = cap.read()</code> 逐帧读、<code>cap.get(cv2.CAP_PROP_FPS)</code> 查帧率、<code>cap.release()</code> 释放。循环读帧 + <code>waitKey(1)</code> 就是最小视频流程序。</li>
+<li><strong>视频录制</strong>：<code>fourcc = cv2.VideoWriter_fourcc(*"mp4v")</code>，<code>out = cv2.VideoWriter(path, fourcc, fps, (width, height))</code>，逐帧 <code>out.write(frame)</code>，最后 <code>out.release()</code>；注意尺寸要与帧的 <code>shape[1], shape[0]</code> 一致。</li>
+<li><strong>鼠标控制</strong>：<code>cv2.setMouseCallback("win", on_mouse)</code> 注册回调，回调签名 <code>on_mouse(event, x, y, flags, param)</code>，用 <code>event == cv2.EVENT_LBUTTONDOWN</code> 等事件实现点击取点、画框选 ROI（区域）。</li>
+<li><strong>滑块（trackbar）</strong>：<code>cv2.createTrackbar("H_min", "win", 0, 179, callback)</code> + <code>cv2.getTrackbarPos("H_min", "win")</code>，实时调 HSV 阈值找颜色时必备，比改代码重跑高效得多。</li>
+<li><strong>色彩空间</strong>：BGR（OpenCV 默认显示存储顺序）、RGB、GRAY（灰度）、HSV（H 色调 0-179、S 饱和度 0-255、V 明度 0-255）；HSV 把「颜色」与「亮度」解耦，抗光照变化好，颜色识别首选。</li>
+<li><strong>颜色空间转换</strong>：<code>cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)</code>、<code>cv2.COLOR_BGR2HSV</code> / <code>cv2.COLOR_HSV2BGR</code>、<code>cv2.COLOR_BGR2RGB</code>。</li>
+<li><strong>深拷贝浅拷贝</strong>：<code>img2 = img</code> 是别名；<code>img2 = img.copy()</code> 深拷贝；切片 <code>img[0:10, 0:10]</code> 是视图。图像处理里「原图被改花」几乎都是忘了 <code>copy()</code>。</li>
+</ul>
+<h3 id="325-第5课-opencv-图像绘制与基础处理">3.2.5 第5课 OpenCV 图像绘制与基础处理</h3>
+<ul>
+<li><strong>核心概念</strong>：图像本质是 Mat（在 Python 里就是 ndarray），绘图函数直接在数组上改像素；常用于在图像上标注检测结果。</li>
+<li><strong>mat 属性</strong>：<code>img.shape</code> → <code>(H, W, C)</code>（灰度图为 <code>(H, W)</code>）、<code>img.dtype</code>（通常 <code>uint8</code>）、<code>img.size</code>；OpenCV 的坐标系是 <strong>(x, y)</strong>，x 是列、y 是行，原点在左上角。</li>
+<li><strong>分离合并通道</strong>：<code>b, g, r = cv2.split(img)</code>、<code>cv2.merge([b, g, r])</code>；只处理某一通道（如提取蓝色掩膜）时先 split，改完再 merge。</li>
+<li><strong>绘图 API</strong>（颜色都是 BGR 元组，<code>thickness=-1</code> 表示填充）：<ul>
+<li><code>cv2.line(img, (x1,y1), (x2,y2), (0,255,0), 2)</code> 画直线；</li>
+<li><code>cv2.rectangle(img, (x1,y1), (x2,y2), color, 2)</code>、<code>cv2.circle(img, center, r, color, 2)</code>；</li>
+<li><code>cv2.ellipse(img, center, (a,b), angle, startAngle, endAngle, color, 2)</code>；</li>
+<li><code>cv2.polylines(img, [pts], True, color, 2)</code> 画多边形（pts 是 <code>np.int32</code> 的点集），<code>cv2.fillPoly</code> 填充；</li>
+<li><code>cv2.putText(img, text, org, font, scale, color, thickness)</code> 画文本。</li>
+</ul>
+</li>
+<li><strong>绘制中文</strong>：<code>cv2.putText</code> 不支持中文（会显示 <code>???</code>），需借助 PIL：<code>Image.fromarray(...)</code> + <code>ImageDraw.text(...</code> 再 <code>np.array(...)</code> 转回 ndarray，或用 <code>cv2.freetype</code> 模块加载中文字体文件。</li>
+<li><strong>算术运算</strong>：加减乘除是<strong>饱和运算</strong>（<code>uint8</code> 超过 255 截断为 255）：<code>cv2.add(img1, img2)</code>、<code>cv2.subtract</code>、<code>cv2.addWeighted(img1, 0.7, img2, 0.3, 0)</code>；用 NumPy 直接 <code>img + 10</code> 则会<strong>回绕</strong>（250+10=4），这是两种加法的关键差异。</li>
+<li><strong>图像融合</strong>：<code>cv2.addWeighted(src1, alpha, src2, beta, gamma)</code> 实现两张等尺寸图像的加权混合，是水印、曝光合成的基础。</li>
+<li><strong>几何变换</strong>：缩放 <code>cv2.resize(img, (w, h))</code> 或按比例 <code>fx=, fy=</code>，插值方式 <code>cv2.INTER_LINEAR/INTER_AREA（缩小）/INTER_CUBIC（放大）</code>；翻转 <code>cv2.flip(img, 1)</code>（1 左右、0 上下、-1 中心）；旋转 <code>cv2.getRotationMatrix2D(center, angle, scale)</code> 得 2×3 矩阵再 <code>cv2.warpAffine(img, M, (w, h))</code>。</li>
+</ul>
+<h3 id="326-第6课-图像卷积、滤波处理与边缘检测">3.2.6 第6课 图像卷积、滤波处理与边缘检测</h3>
+<ul>
+<li><strong>核心概念</strong>：卷积（convolution）是「用一个小矩阵（卷积核/滤波器 kernel）在图像上滑动，对应元素相乘再求和」，输出每个像素是其邻域的加权和。图像的模糊、锐化、边缘提取都可归结为选不同的核。</li>
+<li><strong>卷积计算</strong>：3×3 核与 3×3 邻域逐元素相乘后求和得到一个输出像素；边缘处需要 padding（补零 <code>cv2.BORDER_CONSTANT</code> 或复制 <code>cv2.BORDER_REPLICATE</code>）以保持尺寸。核顺时针旋转 180° 再滑动求和才是严格卷积，图像处理里核对称时卷积与相关（correlation）等价，OpenCV 的 <code>filter2D</code> 实际做的是相关。</li>
+<li><strong>滤波处理</strong>：<ul>
+<li><code>cv2.filter2D(img, -1, kernel)</code> 通用卷积，<code>-1</code> 表示输出与原图同深度；</li>
+<li><code>cv2.blur(img, (5,5))</code> 均值滤波（盒式），简单但易糊；</li>
+<li><code>cv2.GaussianBlur(img, (5,5), sigmaX)</code> 高斯滤波，按高斯权重加权，保边效果好于均值，去高斯噪声首选；</li>
+<li><code>cv2.medianBlur(img, 5)</code> 中值滤波，取邻域中位数，对<strong>椒盐噪声</strong>特效，且比高斯更保边；</li>
+<li><code>cv2.bilateralFilter(img, d, sigmaColor, sigmaSpace)</code> 双边滤波，同时考虑空间距离与灰度相似度，<strong>磨皮美颜</strong>效果（保边平滑），但计算量大。</li>
+</ul>
+</li>
+<li><strong>边缘检测</strong>：<ul>
+<li><strong>索贝尔算子（Sobel）</strong>：<code>cv2.Sobel(img, cv2.CV_64F, dx, dy, ksize=3)</code> 分别求 x/y 方向梯度，<code>cv2.convertScaleAbs</code> 取绝对值回 <code>uint8</code>，<code>cv2.addWeighted</code> 合并；对噪声有一定抑制；</li>
+<li><strong>沙尔算子（Scharr）</strong>：<code>cv2.Scharr</code>，比 Sobel 更精确的小核梯度算子，常用于精细边缘；</li>
+<li><strong>拉普拉斯算子（Laplacian）</strong>：<code>cv2.Laplacian(img, cv2.CV_64F)</code> 二阶导，边缘响应强但对噪声敏感，一般先高斯滤波再拉普拉斯（LoG 思想）；</li>
+<li><strong>Canny 边缘检测</strong>：<code>cv2.Canny(img, threshold1, threshold2)</code>，流程是高斯平滑 → 求梯度 → 非极大值抑制 → 双阈值 + 滞后连接，效果干净，是边缘检测默认选择。</li>
+</ul>
+</li>
+<li><strong>阈值处理</strong>：<code>cv2.threshold(gray, thresh, maxval, cv2.THRESH_BINARY)</code> 二值化（还有 <code>THRESH_BINARY_INV</code>、<code>THRESH_TRUNC</code>、<code>THRESH_TOZERO</code>、<code>THRESH_OTSU</code> 大津法自动找阈值）；<code>ret, binary = ...</code> 中 <code>ret</code> 是实际使用的阈值。阈值分割是「把前景从背景里抠出来」的第一板斧。</li>
+<li><strong>自适应阈值</strong>：<code>cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C/ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, blockSize, C)</code>，逐邻域计算阈值，应对<strong>光照不均</strong>（阴影、逆光）场景；<code>blockSize</code> 取奇数邻域边长，<code>C</code> 是常数偏置。</li>
+</ul>
+<p>四种滤波的选型速查：</p>
+<table>
+<thead>
+<tr>
+<th>滤波</th>
+<th>API</th>
+<th>擅长</th>
+<th>代价</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>均值</td>
+<td><code>cv2.blur</code></td>
+<td>快速简单平滑</td>
+<td>边缘最糊</td>
+</tr>
+<tr>
+<td>高斯</td>
+<td><code>cv2.GaussianBlur</code></td>
+<td>高斯噪声、通用预处理</td>
+<td>边缘略糊</td>
+</tr>
+<tr>
+<td>中值</td>
+<td><code>cv2.medianBlur</code></td>
+<td>椒盐噪声、更保边</td>
+<td>稍慢</td>
+</tr>
+<tr>
+<td>双边</td>
+<td><code>cv2.bilateralFilter</code></td>
+<td>保边平滑（美颜、深度图）</td>
+<td>最慢</td>
+</tr>
+</tbody>
+</table>
+<h2 id="33-重点与难点">3.3 重点与难点</h2>
+<ol>
+<li><strong>视图 vs 副本</strong>：NumPy 切片是视图、<code>copy()</code> 是副本；OpenCV 图像同理，<code>img2 = img</code> 只是别名。裁剪 ROI 后直接改像素会影响原图——想要独立数据必须 <code>copy()</code>。</li>
+<li><strong>广播的对齐规则</strong>：从尾部维度向前对齐，维度相等或其中之一为 1。<code>shape=(3,1)</code> 与 <code>(4,)</code> 能广播成 <code>(3,4)</code>；<code>(2,3)</code> 与 <code>(3,2)</code> 不能。</li>
+<li><strong>BGR 不是 RGB</strong>：OpenCV 读图默认 BGR；用 Matplotlib 显示或与 PyTorch/ROS 里的 RGB 数据交互时必须转换，否则红蓝颠倒。</li>
+<li><strong><code>uint8</code> 的饱和与回绕</strong>：<code>cv2.add</code> 饱和截断到 255，NumPy 的 <code>img + 10</code> 会回绕。做亮度调整推荐 <code>cv2.add</code> 或先转 <code>float32</code> 运算再 <code>clip</code> 回 0-255。</li>
+<li><strong>边缘检测参数</strong>：Canny 双阈值「低阈值 2 倍左右是高阈值」的经验起点（如 50/150）；阈值太高边断、太低噪声多。实际项目里用滑块实时调是最有效的方法。</li>
+<li><strong>核尺寸（kernel size）的取舍</strong>：滤波核越大越模糊、越抗噪；Sobel/Laplacian 的 ksize 必须是奇数（1, 3, 5, 7）。</li>
+</ol>
+<blockquote>
+<p><strong>注意：</strong> <code>cv2.imread</code> 读不到文件时返回 <code>None</code> 而不是抛异常，后面所有操作都会报 <code>'NoneType' object has no attribute ...'</code>。养成 <code>if img is None: raise FileNotFoundError(path)</code> 的习惯。</p>
+</blockquote>
+<h2 id="34-代码与命令实战">3.4 代码与命令实战</h2>
+<pre><code class="lang-python"><span class="hljs-comment"># 示例1（场景：NumPy 数组创建、属性、索引切片 —— 一批激光点的整理）</span>
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+
+points = np.random.rand(<span class="hljs-number">6</span>, <span class="hljs-number">3</span>) * <span class="hljs-number">5.0</span>        <span class="hljs-comment"># 6 个点的 (x, y, z)</span>
+<span class="hljs-built_in">print</span>(points.shape, points.ndim, points.dtype)   <span class="hljs-comment"># (6, 3) 2 float64</span>
+xs = points[:, <span class="hljs-number">0</span>]                          <span class="hljs-comment"># 取所有点的 x 列（视图）</span>
+mask = xs &gt; <span class="hljs-number">2.0</span>                            <span class="hljs-comment"># 布尔索引筛选</span>
+<span class="hljs-built_in">print</span>(points[mask])
+reshaped = points.reshape(-<span class="hljs-number">1</span>, <span class="hljs-number">3</span>)           <span class="hljs-comment"># -1 自动推算行数</span>
+flipped = points[::-<span class="hljs-number">1</span>]                     <span class="hljs-comment"># 翻转行序，零拷贝</span>
+<span class="hljs-built_in">print</span>(reshaped.shape, flipped.shape)
+</code></pre>
+<pre><code class="lang-python"><span class="hljs-comment"># 示例2（场景：级联拆分、聚合统计、广播 —— 传感器数据批处理）</span>
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+
+a = np.arange(<span class="hljs-number">12</span>, dtype=np.float64).reshape(<span class="hljs-number">3</span>, <span class="hljs-number">4</span>)
+b = np.vstack([a, a[:<span class="hljs-number">1</span>]])                  <span class="hljs-comment"># 垂直堆叠成 (4, 4)</span>
+col_means = a.mean(axis=<span class="hljs-number">0</span>)                 <span class="hljs-comment"># 每列均值 → shape (4,)</span>
+centered = a - col_means                   <span class="hljs-comment"># 广播：(3,4) - (4,)</span>
+<span class="hljs-built_in">print</span>(np.<span class="hljs-built_in">round</span>(centered.mean(axis=<span class="hljs-number">0</span>), <span class="hljs-number">12</span>)) <span class="hljs-comment"># 全 0，说明去均值成功</span>
+<span class="hljs-built_in">print</span>(a.<span class="hljs-built_in">max</span>(), a.<span class="hljs-built_in">min</span>(), a.argmax(), np.median(a), np.percentile(a, <span class="hljs-number">95</span>))
+top2 = np.argsort(a[:, <span class="hljs-number">0</span>])[::-<span class="hljs-number">1</span>][:<span class="hljs-number">2</span>]       <span class="hljs-comment"># x 列最大的两个行号</span>
+<span class="hljs-built_in">print</span>(top2)
+np.save(<span class="hljs-string">"points.npy"</span>, a)                   <span class="hljs-comment"># 二进制持久化</span>
+np.savetxt(<span class="hljs-string">"points.csv"</span>, a, delimiter=<span class="hljs-string">","</span>)
+<span class="hljs-built_in">print</span>(np.load(<span class="hljs-string">"points.npy"</span>).shape, np.loadtxt(<span class="hljs-string">"points.csv"</span>, delimiter=<span class="hljs-string">","</span>).shape)
+</code></pre>
+<pre><code class="lang-python"><span class="hljs-comment"># 示例3（场景：图像切片翻转 + 通道分离合并 + 几何变换，无需外部图片即可运行）</span>
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-keyword">import</span> cv2
+
+img = np.zeros((<span class="hljs-number">120</span>, <span class="hljs-number">160</span>, <span class="hljs-number">3</span>), dtype=np.uint8)
+img[:, :<span class="hljs-number">80</span>] = (<span class="hljs-number">255</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>)                  <span class="hljs-comment"># 左半边蓝色（BGR）</span>
+img[:, <span class="hljs-number">80</span>:] = (<span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0</span>)                  <span class="hljs-comment"># 右半边绿色</span>
+
+flip_lr = img[:, ::-<span class="hljs-number">1</span>]                     <span class="hljs-comment"># 切片左右翻转</span>
+flip_cv = cv2.flip(img, -<span class="hljs-number">1</span>)                <span class="hljs-comment"># OpenCV 中心翻转</span>
+b, g, r = cv2.split(img)                   <span class="hljs-comment"># 通道分离</span>
+merged = cv2.merge([r, g, b])              <span class="hljs-comment"># BGR → RGB 交换</span>
+small = cv2.resize(img, (<span class="hljs-number">80</span>, <span class="hljs-number">60</span>), interpolation=cv2.INTER_AREA)
+M = cv2.getRotationMatrix2D((<span class="hljs-number">80</span>, <span class="hljs-number">60</span>), <span class="hljs-number">45</span>, <span class="hljs-number">1.0</span>)   <span class="hljs-comment"># 旋转 45°</span>
+rot = cv2.warpAffine(img, M, (<span class="hljs-number">160</span>, <span class="hljs-number">120</span>))
+<span class="hljs-built_in">print</span>(img.shape, small.shape, rot.shape, merged[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>])   <span class="hljs-comment"># ... [0 0 255]</span>
+cv2.imwrite(<span class="hljs-string">"out_demo.jpg"</span>, rot)           <span class="hljs-comment"># 保存结果</span>
+</code></pre>
+<pre><code class="lang-python"><span class="hljs-comment"># 示例4（场景：绘图标注 + 图像融合与算术，模拟检测框标注）</span>
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-keyword">import</span> cv2
+
+canvas = np.full((<span class="hljs-number">240</span>, <span class="hljs-number">320</span>, <span class="hljs-number">3</span>), <span class="hljs-number">30</span>, dtype=np.uint8)
+cv2.line(canvas, (<span class="hljs-number">0</span>, <span class="hljs-number">0</span>), (<span class="hljs-number">320</span>, <span class="hljs-number">240</span>), (<span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0</span>), <span class="hljs-number">2</span>)
+cv2.rectangle(canvas, (<span class="hljs-number">40</span>, <span class="hljs-number">40</span>), (<span class="hljs-number">140</span>, <span class="hljs-number">120</span>), (<span class="hljs-number">255</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>), <span class="hljs-number">2</span>)      <span class="hljs-comment"># 检测框</span>
+cv2.circle(canvas, (<span class="hljs-number">240</span>, <span class="hljs-number">80</span>), <span class="hljs-number">30</span>, (<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">255</span>), -<span class="hljs-number">1</span>)               <span class="hljs-comment"># -1 填充</span>
+cv2.ellipse(canvas, (<span class="hljs-number">160</span>, <span class="hljs-number">180</span>), (<span class="hljs-number">60</span>, <span class="hljs-number">25</span>), <span class="hljs-number">30</span>, <span class="hljs-number">0</span>, <span class="hljs-number">360</span>, (<span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0</span>), <span class="hljs-number">2</span>)
+pts = np.array([[<span class="hljs-number">260</span>, <span class="hljs-number">150</span>], [<span class="hljs-number">300</span>, <span class="hljs-number">150</span>], [<span class="hljs-number">280</span>, <span class="hljs-number">210</span>]], np.int32)
+cv2.polylines(canvas, [pts], <span class="hljs-literal">True</span>, (<span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>), <span class="hljs-number">2</span>)
+cv2.putText(canvas, <span class="hljs-string">"robot_01"</span>, (<span class="hljs-number">45</span>, <span class="hljs-number">35</span>), cv2.FONT_HERSHEY_SIMPLEX, <span class="hljs-number">0.7</span>, (<span class="hljs-number">255</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>), <span class="hljs-number">2</span>)
+bright = cv2.add(canvas, (<span class="hljs-number">50</span>, <span class="hljs-number">50</span>, <span class="hljs-number">50</span>, <span class="hljs-number">0</span>))        <span class="hljs-comment"># 饱和加法提亮</span>
+blended = cv2.addWeighted(canvas, <span class="hljs-number">0.6</span>, bright, <span class="hljs-number">0.4</span>, <span class="hljs-number">0</span>)   <span class="hljs-comment"># 融合</span>
+<span class="hljs-built_in">print</span>(canvas.shape, blended.dtype)
+cv2.imwrite(<span class="hljs-string">"out_annotated.png"</span>, canvas)
+</code></pre>
+<pre><code class="lang-python"><span class="hljs-comment"># 示例5（场景：滤波 → 边缘检测 → 阈值分割的完整视觉流水线）</span>
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-keyword">import</span> cv2
+
+<span class="hljs-comment"># 造一张带噪的测试图：亮色矩形 + 噪声，无需外部素材即可运行</span>
+img = np.full((<span class="hljs-number">200</span>, <span class="hljs-number">300</span>), <span class="hljs-number">40</span>, dtype=np.uint8)
+img[<span class="hljs-number">60</span>:<span class="hljs-number">140</span>, <span class="hljs-number">80</span>:<span class="hljs-number">220</span>] = <span class="hljs-number">200</span>
+noise = np.random.randint(<span class="hljs-number">0</span>, <span class="hljs-number">40</span>, img.shape, dtype=np.uint8)
+img = cv2.add(img, noise)
+
+blur = cv2.GaussianBlur(img, (<span class="hljs-number">5</span>, <span class="hljs-number">5</span>), <span class="hljs-number">0</span>)              <span class="hljs-comment"># 高斯滤波</span>
+med = cv2.medianBlur(img, <span class="hljs-number">5</span>)                         <span class="hljs-comment"># 中值滤波（抗椒盐噪声）</span>
+bilateral = cv2.bilateralFilter(img, <span class="hljs-number">9</span>, <span class="hljs-number">75</span>, <span class="hljs-number">75</span>)      <span class="hljs-comment"># 双边滤波（美颜级保边）</span>
+
+sobelx = cv2.convertScaleAbs(cv2.Sobel(blur, cv2.CV_64F, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, ksize=<span class="hljs-number">3</span>))
+sobely = cv2.convertScaleAbs(cv2.Sobel(blur, cv2.CV_64F, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, ksize=<span class="hljs-number">3</span>))
+sobel = cv2.addWeighted(sobelx, <span class="hljs-number">0.5</span>, sobely, <span class="hljs-number">0.5</span>, <span class="hljs-number">0</span>)  <span class="hljs-comment"># 合并两方向梯度</span>
+lap = cv2.convertScaleAbs(cv2.Laplacian(blur, cv2.CV_64F))
+edges = cv2.Canny(blur, <span class="hljs-number">50</span>, <span class="hljs-number">150</span>)                     <span class="hljs-comment"># Canny 边缘</span>
+
+ret, binary = cv2.threshold(blur, <span class="hljs-number">0</span>, <span class="hljs-number">255</span>, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+adaptive = cv2.adaptiveThreshold(blur, <span class="hljs-number">255</span>, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                                 cv2.THRESH_BINARY, <span class="hljs-number">11</span>, <span class="hljs-number">2</span>)   <span class="hljs-comment"># 光照不均时用</span>
+<span class="hljs-built_in">print</span>(<span class="hljs-string">"otsu threshold ="</span>, ret, <span class="hljs-string">"edges px ="</span>, <span class="hljs-built_in">int</span>(np.count_nonzero(edges) / <span class="hljs-number">255</span>))
+</code></pre>
+<pre><code class="lang-bash"><span class="hljs-comment"># 示例6（场景：环境安装与验证）</span>
+$ conda create -n ros2cv python=3.10 -y
+$ conda activate ros2cv
+$ pip install opencv-python numpy matplotlib
+$ python -c <span class="hljs-string">"import cv2, numpy as np; print(cv2.__version__, np.__version__)"</span>
+</code></pre>
+<h2 id="35-运行效果（实测）">3.5 运行效果（实测）</h2>
+<p>NumPy 去均值 + 带噪图像视觉流水线实测（对应 3.4 示例2 / 示例5，合成图，无需外部素材）：</p>
 <pre><code class="lang-text">去均值后列均值: [0. 0. 0. 0.]
 argmax: 11 median: 5.5
 otsu threshold = 136.0 edges px = 1
 blur shape: (200, 300) median dtype: uint8
 </code></pre>
 <p>环境：<code>python3 -c "import cv2, numpy"</code>（本机 cv2 4.6.0 / numpy 1.26.4）。</p>
-<h2 id="34-端到端实战（实测）：合成图像视觉流水线">3.4 端到端实战（实测）：合成图像视觉流水线</h2>
+<p>端到端实战——合成图像视觉流水线的完整闭环：合成带噪场景 → 高斯滤波 → Canny 边缘 + Otsu 阈值 → 三个结果落盘 → <strong>读回复核</strong>。</p>
 <blockquote>
 <p><strong>视频对照</strong>：课程 <code>双边滤波美颜效果</code> 使用 <code>cv2.bilateralFilter(img, d=7, sigmaColor=50, sigmaSpace=30)</code>，已用课程同款参数复现（合成图上验证保边特性：均值 186.6 保持不变、高频噪声被抑制），见《端到端核对报告》基础篇表。</p>
 </blockquote>
-<p>无需外部素材的完整闭环：合成带噪场景 → 高斯滤波 → Canny 边缘 + Otsu 阈值 → 三个结果落盘 → <strong>读回复核</strong>。</p>
 <pre><code class="lang-python"><span class="hljs-comment"># pipeline.py</span>
 <span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
 <span class="hljs-keyword">import</span> cv2
@@ -666,13 +931,42 @@ scene_binary.png: shape=(200, 300) mean=47.6
 otsu=133/133 边缘像素=1
 </code></pre>
 <p>两次 Otsu 阈值一致（133）说明流水线确定性；边缘图均值 1.9 说明只有矩形轮廓处有响应——合成场景行为符合预期。</p>
-<h2 id="35-本章小结">3.5 本章小结</h2>
+<h2 id="36-与-ros2--机器人开发的关联">3.6 与 ROS2 / 机器人开发的关联</h2>
+<ol>
+<li><strong>cv_bridge：图像消息与 ndarray 的桥</strong>：<code>sensor_msgs/Image</code> 订阅后用 <code>CvBridge().imgmsg_to_cv2(msg, "bgr8")</code> 转成 OpenCV 图像处理，再 <code>cv2_to_imgmsg()</code> 发回话题——本周所有 OpenCV 操作都直接跑在这条链路上（颜色识别找球、巡线、二维码识别都是这么做的）。</li>
+<li><strong>NumPy 处理 LaserScan / IMU / JointState</strong>：<code>np.array(msg.ranges)</code> 后可用 <code>np.isinf</code> 过滤野值、<code>argmin</code> 找最近障碍、<code>np.median</code> 平滑；IMU 的加速度/角速度序列做零偏校正与滑动平均，用的全是本周的聚合与广播。点云 <code>sensor_msgs/PointCloud2</code> 也常转成 N×3 的 ndarray 处理。</li>
+<li><strong>滤波与边缘检测的落点</strong>：导航前的地面分割、车道线/边缘线检测（Sobel + Canny + 阈值）、AprilTag 前的图像预处理（高斯/双边去噪），都是「滤波 → 边缘 → 阈值」流水线的变体；双边滤波的保边平滑也用于深度图去噪。</li>
+<li><strong>HSV 阈值 + 滑块调参</strong>：机器人比赛里「找指定颜色的色块/锥桶」流程就是 HSV 转换 + <code>cv2.inRange</code> 阈值 + 轮廓提取；用滑块确定 H/S/V 范围后写死到参数文件，是标准调参姿势。</li>
+<li><strong>可视化与调试</strong>：节点调试时把检测结果绘框、写文字后发布到 <code>image</code> 话题，用 <code>rqt_image_view</code> 或 Foxglove 查看；Matplotlib/Jupyter 则用于离线分析 rosbag 导出的数据（<code>np.load</code> 回放实验结果）。</li>
+<li><strong>性能意识</strong>：图像帧 640×480×3 ≈ 900KB，逐像素 Python 循环会拖垮实时性——一律用 NumPy 向量化和 OpenCV 的 C 实现；采集放线程、处理放回调，正是上周多线程知识的用武之地。</li>
+</ol>
+<h2 id="37-自测与练习（含参考答案要点）">3.7 自测与练习（含参考答案要点）</h2>
+<ol>
+<li><strong>题目</strong>：解释 <code>a = np.zeros((3, 4)); b = a[:, :2]; b[:] = 1</code> 之后 <code>a</code> 的值，并说明如何让修改不影响 <code>a</code>。</li>
+<li><strong>题目</strong>：给定 <code>ranges = np.array([1.2, np.inf, 0.5, 3.0, np.nan, 2.2])</code>，用 NumPy 一步得到「非 inf 非 nan 且小于 10」的有效距离数组，并求最近距离的下标。</li>
+<li><strong>动手任务</strong>：写一个「颜色块检测」脚本：用摄像头（或一张合成图）转 HSV，用 <code>cv2.inRange</code> 提取红色区域，用 <code>cv2.findContours</code> 找最大轮廓并画外接矩形；验收标准：能输出矩形中心坐标，且手遮光源时检测依然稳定（提示：结合 V 通道或自适应阈值）。</li>
+<li><strong>题目</strong>：<code>img + 10</code> 与 <code>cv2.add(img, 10)</code> 的结果为什么不同？哪种适合做亮度增强？</li>
+<li><strong>题目</strong>：对一张光照不均的文档图片做二值化，为什么 Otsu 全局阈值效果差？应改用什么？</li>
+</ol>
+<blockquote>
+<p>参考答案要点：1) <code>a</code> 变成第一、二列全 1，因为切片是视图；隔离用 <code>b = a[:, :2].copy()</code>；2) <code>valid = ranges[np.isfinite(ranges) &amp; (ranges &lt; 10)]</code>，<code>idx = np.nanargmin(np.where(np.isfinite(ranges), ranges, np.inf))</code>，注意 NaN 会污染比较结果；3) <code>cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)</code> + <code>cv2.inRange</code> + <code>cv2.findContours</code> + <code>cv2.boundingRect</code>，取 <code>max(contours, key=cv2.contourArea)</code>；4) NumPy 的 <code>+</code> 在 <code>uint8</code> 上回绕（250+10=4），<code>cv2.add</code> 饱和截断到 255，亮度增强应用 <code>cv2.add</code> 或转 <code>float32</code> 后 <code>clip</code>；5) 全局阈值对整幅图只用一个阈值，光照不均时背景和前景灰度重叠；改用 <code>cv2.adaptiveThreshold</code> 按邻域计算阈值（MEAN_C 或 GAUSSIAN_C），或先做光照校正（除以形态学顶帽/背景估计）再全局二值化。</p>
+</blockquote>
+<h2 id="38-常见问题（faq）">3.8 常见问题（FAQ）</h2>
+<ul>
+<li><strong>Q：<code>cv2.imread</code> 返回 None 怎么排查？</strong> A：常见原因是路径不对（相对路径取决于当前工作目录）、文件名含中文/特殊字符、文件损坏。用绝对路径验证，读失败立刻 <code>raise</code> 并打印路径。</li>
+<li><strong>Q：shape 是 (480, 640, 3)，哪个是宽哪个是高？</strong> A：NumPy 约定是 (行, 列, 通道) = (高 H, 宽 W, 通道 C)；而 OpenCV 的 <code>resize</code> 参数是 (宽, 高)，<code>img.shape[1], img.shape[0]</code> 才对——这是高频笔误点。</li>
+<li><strong>Q：高斯滤波、中值滤波、双边滤波怎么选？</strong> A：高斯噪声/一般平滑 → 高斯；椒盐噪声 → 中值；既要平滑又要保边（美颜、深度图）→ 双边（但慢）。</li>
+<li><strong>Q：Canny 的两个阈值怎么定？</strong> A：经验起点是低:高 = 1:2 ~ 1:3（如 50/150），再配合滑块微调；图像先高斯滤波能显著减少伪边缘。</li>
+<li><strong>Q：Jupyter 里 imshow 图像发白/颜色怪？</strong> A：Matplotlib 期望 RGB 而 OpenCV 是 BGR，先 <code>img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)</code>；若用 <code>plt.imshow</code> 显示灰度图，加 <code>cmap="gray"</code>。</li>
+</ul>
+<h2 id="39-本章小结">3.9 本章小结</h2>
 <ul>
 <li>视图 vs 副本：切片改像素会影响原图，独立数据必须 <code>copy()</code>；</li>
 <li>BGR 不是 RGB：与 Matplotlib/ROS RGB 数据交互前先转换；</li>
 <li><code>uint8</code> 饱和与回绕是两类加法的本质差异；</li>
 <li>与 ROS2 的关联：<code>cv_bridge</code> 把 <code>sensor_msgs/Image</code> 转成 ndarray 后，本章全部操作原样可用；激光数据 <code>np.array(msg.ranges)</code> 后过滤野值、<code>argmin</code> 找最近障碍，是同一套 NumPy 手法。</li>
 </ul>
+<p>至此基础篇（第 1-3 章）的 Python 部分收官：数据结构 → 工程代码 → 数据处理与视觉，三块拼齐后即可进入 C 语言阶段。</p>
 
                                 
                                 </section>
@@ -716,7 +1010,7 @@ otsu=133/133 边缘像素=1
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第3章 数据处理与计算机视觉（NumPy/OpenCV）","level":"2.3","depth":1,"next":{"title":"第4章 C 语言基础入门（编译/类型/输入输出）","level":"3.1","depth":1,"path":"第4周-C语言基础入门.md","ref":"第4周-C语言基础入门.md","articles":[]},"previous":{"title":"第2章 Python 进阶编程（函数/类/异常/并发）","level":"2.2","depth":1,"path":"第2周-Python进阶编程.md","ref":"第2周-Python进阶编程.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第3周-数据处理与计算机视觉.md","mtime":"2026-10-16T02:43:09.754Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T02:43:11.108Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第3章 数据处理与计算机视觉（NumPy/OpenCV）","level":"2.3","depth":1,"next":{"title":"第4章 C 语言基础入门（编译/类型/输入输出）","level":"3.1","depth":1,"path":"第4周-C语言基础入门.md","ref":"第4周-C语言基础入门.md","articles":[]},"previous":{"title":"第2章 Python 进阶编程（函数/类/异常/并发）","level":"2.2","depth":1,"path":"第2周-Python进阶编程.md","ref":"第2周-Python进阶编程.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第3周-数据处理与计算机视觉.md","mtime":"2026-10-16T03:26:51.711Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T03:26:53.986Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

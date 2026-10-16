@@ -601,43 +601,106 @@
                                 
                                 <h1 id="第16章-通信机制拓展与时间-api">第16章 通信机制拓展与时间 API</h1>
 <blockquote>
-<p>本章包含两部分：ROS2 时间相关 API（Time/Duration/Rate 及运算）与<strong>期中大作业</strong>——在 turtlesim 上综合运用话题、服务、动作、参数四种机制。</p>
-<p>本章对应代码：<code>code/ws01_plumbing/src/cpp01_time</code>、<code>code/ws02_middle/src/cpp02_homework</code>、<code>py02_homework</code>。</p>
+<p>所属阶段：阶段5 ROS2 核心架构解析 ｜ 视频 63 个 ｜ 时长约 10h17m ｜ 难度：进阶</p>
+<p>本章包含两部分：ROS2 时间相关 API（Time/Duration/Rate 及运算）与<strong>期中大作业</strong>——在 turtlesim 上综合运用话题、服务、动作、参数四种机制；随后给出分布式、工作空间覆盖、元功能包、节点/话题重映射四个工程化主题的可运行验证。</p>
+<p>本章对应代码：<code>code/ws01_plumbing/src/cpp01_time</code>、<code>code/ws02_middle/src/cpp02_homework</code>、<code>py02_homework</code>、<code>code/examples/overlay_demo/cpp00_hello_world</code>、<code>cobot_metapackage</code>。</p>
 </blockquote>
-<h2 id="161-时间相关-api">16.1 时间相关 API</h2>
-<h3 id="1611-案例以及案例分析">16.1.1 案例以及案例分析</h3>
-<p><strong>需求</strong>：演示 <code>rclcpp::Time</code>、<code>rclcpp::Duration</code>、<code>rclcpp::Rate</code> 的创建与运算（时刻加减时段、时段比较等）。</p>
-<h3 id="1612-c-实现要点">16.1.2 C++ 实现要点</h3>
-<pre><code class="lang-cpp"><span class="hljs-comment">// Time：now() 获取当前时刻；</span>
-rclcpp::Time t1 = <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">now</span>();
-<span class="hljs-comment">// Duration：两种构造方式；</span>
-rclcpp::Duration d1 = <span class="hljs-number">3</span>s;
-<span class="hljs-function">rclcpp::Duration <span class="hljs-title">d2</span><span class="hljs-params">(<span class="hljs-number">2</span>,<span class="hljs-number">0</span>)</span></span>;
-<span class="hljs-comment">// 运算；</span>
-rclcpp::Time t2 = t1 + d1;      <span class="hljs-comment">// 时刻 + 时段 = 时刻</span>
-rclcpp::Duration d3 = d1 - d2;  <span class="hljs-comment">// 时段 - 时段 = 时段</span>
-<span class="hljs-type">bool</span> flag = d1 &gt; d2;            <span class="hljs-comment">// 时段可比较</span>
-<span class="hljs-comment">// Rate：固定周期休眠；</span>
-<span class="hljs-function">rclcpp::Rate <span class="hljs-title">rate</span><span class="hljs-params">(<span class="hljs-number">1.0</span>)</span></span>;          <span class="hljs-comment">// 1Hz</span>
-rate.<span class="hljs-built_in">sleep</span>();
-</code></pre>
-<h3 id="1613-运行效果（实测）">16.1.3 运行效果（实测）</h3>
-<pre><code class="lang-bash">ros2 run cpp01_time demo01_time_api
-</code></pre>
-<pre><code class="lang-text">[INFO] [...]: 当前时刻:1792040770.29603
-[INFO] [...]: t2:1.50
-[INFO] [...]: d1 = 3.00 s, d2 = 2.00 s
-[INFO] [...]: t1 + 3s = 1792040773.29603
-[INFO] [...]: d1 - d2 = 1.00 s
-[INFO] [...]: d1 &gt; d2 ? true
-[INFO] [...]: Rate 循环 0
-</code></pre>
-<blockquote>
-<p>兼容提示：<code>rclpy</code> 中对应 <code>self.get_clock().now()</code>、<code>Duration(seconds=3)</code>、<code>Rate(self, 1.0)</code>，语义一致。</p>
-</blockquote>
-<h2 id="162-期中大作业">16.2 期中大作业</h2>
-<h3 id="1621-案例以及案例分析">16.2.1 案例以及案例分析</h3>
-<p><strong>需求</strong>：综合运用四种通信机制控制乌龟：</p>
+<h2 id="161-概览与课时结构">16.1 概览与课时结构</h2>
+<p>本周把第15章的四种通信放进<strong>真实工程语境</strong>：多机分布式（域 ID 隔离）、工作空间覆盖与元功能包、节点/话题重名与命名空间治理——这些是"demo 能跑、上机器人就翻车"的典型坑。随后补齐时间相关 API（Rate / Time / Duration / Timer / 时钟与仿真时间），这是控制周期、超时判断、bag 回放与仿真的基础。再用一周末的篇幅系统过一遍 <code>ros2</code> 命令行与 rqt 工具箱，最后以<strong>期中大作业</strong>（话题/服务/动作/参数四通信综合实现）完成本阶段中检。</p>
+<table>
+<thead>
+<tr>
+<th>课</th>
+<th>小节</th>
+<th>时长</th>
+<th>一句话导览</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第1课 ROS2 通信机制扩展</td>
+<td>20 节</td>
+<td>2h50m</td>
+<td>分布式/域 ID、工作空间覆盖、元功能包、节点重名、话题重名与命名规则</td>
+</tr>
+<tr>
+<td>第2课 ROS2 时间相关 API 与通信机制工具</td>
+<td>14 节</td>
+<td>2h17m</td>
+<td>Rate/Time/Duration/运算/Timer/仿真时间 + ros2 CLI 全家桶 + rqt</td>
+</tr>
+<tr>
+<td>第3课 作业：话题、服务、动作通信及参数服务实现</td>
+<td>29 节</td>
+<td>5h08m</td>
+<td>期中大作业：四通信综合实现与 BUG 复盘</td>
+</tr>
+</tbody>
+</table>
+<p><strong>学习目标</strong>：</p>
+<ol>
+<li>理解 DDS 域隔离机制，会用 <code>ROS_DOMAIN_ID</code> 组织/隔离多机通信；</li>
+<li>掌握工作空间叠加（overlay/underlay）规则，能独立排查"改码不生效"；</li>
+<li>会用重映射、命名空间与编码参数化三层方案解决节点/话题重名；</li>
+<li>掌握 Rate/Time/Duration 的创建、运算法则与时钟语义，理解仿真时间 <code>use_sim_time</code>；</li>
+<li>独立完成期中大作业：一只乌龟上的四通信综合系统，并整理个人错题本。</li>
+</ol>
+<h2 id="162-知识点梳理">16.2 知识点梳理</h2>
+<h3 id="1621-第1课-ros2-通信机制扩展">16.2.1 第1课 ROS2 通信机制扩展</h3>
+<p><strong>A. 分布式概念与应用</strong></p>
+<ul>
+<li><strong>场景、概念与作用</strong>：机器人系统常由多台计算单元组成（工控机跑决策、Jetson 跑视觉、STM32 跑电机），ROS2 <strong>天然支持跨机通信</strong>：同一 DDS 域（Domain）内的节点通过网络自动发现彼此，话题/服务/动作可直接跨机使用，无需改代码。作用是把计算负载分布到多机，也支持"机器人 ↔ 工控台"远程调试。</li>
+<li><strong>实现</strong>：两端安装同一 ROS2 发行版、处于同一网段（或可路由网络）、设置<strong>相同的 <code>ROS_DOMAIN_ID</code></strong>；防火墙放行 DDS 端口（默认 UDP 7400-7500 与 SPDS 单播 7412/7413 等，视 DDS 实现）；用 <code>ros2 node list</code> 互见即成功。也可用 <code>ROS_LOCALHOST_ONLY=1</code> 限制仅本机。</li>
+<li><strong>域 ID 计算规则</strong>：域 ID 取值 0~232（0~101 留给自动分配），同一域 ID 的节点才能互通。课程给出的推荐规则：<strong>域 ID = 系统内编号（如机器人编号）+ 应用编号</strong>，并按 <code>域ID = 用户ID % 101</code>（或网络 IP 尾段取模）之类规则生成，目的是"不同小组/不同机器人/不同用户自动隔离，避免同域串线"。多用户共用一台机器时尤其要用 <code>echo $UID % 101</code> 之类规则区分。</li>
+<li><strong>小结</strong>：分布式 = 同域 ID + 网络可达 + 防火墙放行；域 ID 是隔离手段，不是加密手段。</li>
+</ul>
+<p><strong>B. 工作空间覆盖与元功能包</strong></p>
+<ul>
+<li><strong>工作空间覆盖（Overlay/Underlay）</strong>：ROS2 支持工作空间叠加——<code>source /opt/ros/humble/setup.bash</code> 是最底层（underlay），在其上 <code>source ~/ws/install/setup.bash</code> 是覆盖层（overlay）。同名功能包/可执行文件时<strong>后 source 的覆盖先 source 的</strong>。</li>
+<li><strong>演示</strong>：两个工作空间都有 <code>talker</code> 可执行文件，先 source A 再 source B，<code>ros2 run pkg talker</code> 实际运行 B 的版本；<code>ros2 pkg prefix pkg</code> 显示当前生效包的安装路径，可用来确认"我到底在跑哪个"。</li>
+<li><strong>原因以及隐患</strong>：colcon 生成的 <code>install/setup.bash</code> 会把自身路径前置到 <code>AMENT_PREFIX_PATH</code>/<code>PYTHONPATH</code>/<code>PATH</code>。隐患——改了 A 空间的代码却跑着 B 的旧版本（"改码不生效"）、第三方包遮蔽系统包、团队成员环境不一致。规避：单终端只 source 一层、用 <code>ros2 pkg prefix</code> 核对、CI 里清空环境重建、工作空间命名清晰。</li>
+<li><strong>元功能包（metapackage）</strong>：场景——把一组相关功能包"打包成一个"，方便一键安装依赖（如 <code>ros-humble-navigation2</code> 聚合 Nav2 全家桶）。实现——建一个只有 <code>package.xml</code> 的空包：<code>&lt;buildtool_depend&gt;ament_cmake&lt;/buildtool_depend&gt;</code>、<code>&lt;exec_depend&gt;</code> 逐个列出成员包、<code>&lt;export&gt;&lt;metapackage/&gt;&lt;/export&gt;</code>（ament 下用 <code>ament_cmake</code> + 空 <code>CMakeLists.txt</code> 仅 <code>ament_package()</code>）。<code>ros2 pkg list</code> 里可见，安装它即拉齐全部成员。</li>
+</ul>
+<p><strong>C. 节点重名解决方法</strong></p>
+<ul>
+<li><strong>问题、解决思路与解决方案</strong>：同名节点在同一域内会相互覆盖（<code>ros2 node list</code> 显示一个，参数/服务归属混乱）。解决思路是<strong>改名或加命名空间</strong>。三层方案：(1) <code>ros2 run</code> 命令行重映射；(2) launch 文件统一配置；(3) 编码时参数化节点名。</li>
+<li><strong>ros2run 解决重名</strong>：<code>ros2 run pkg node --ros-args -r __node:=new_name</code>，还可用 <code>-r __ns:=/robot1</code> 加命名空间。</li>
+<li><strong>launch 解决重名（简介 + 实现）</strong>：launch 可一次起多个节点并对每个节点设 <code>name=</code> 与 <code>namespace=</code>；Python launch 里 <code>Node(package=..., executable=..., name='talker1', namespace='robot1')</code>；同一 launch 文件中重复 <code>Node</code> 声明即实现多实例。launch 的优势是<strong>集中配置、可复现、可参数化</strong>（配合 <code>LaunchConfiguration</code>）。</li>
+<li><strong>编码解决重名</strong>：节点名从参数/环境变量读取——<code>rclcpp::NodeOptions().arguments({"--ros-args", "-r", "__node:=my_node"})</code> 或 Python <code>Node('my_node')</code> 处传变量；也可在构造节点时用 <code>allow_undeclared_parameters</code> + 启动参数动态指定；多机器人常结合 <code>PushRosNamespace</code>。</li>
+</ul>
+<p><strong>D. 话题重名解决方法</strong></p>
+<ul>
+<li><strong>问题、解决思路与解决方案</strong>：话题重名会导致数据"串台"（两个发布者混进同一话题）或订阅错源。解决靠<strong>命名空间 + 名称解析规则 + 重映射（remap）</strong>。</li>
+<li><strong>ros2run 实现</strong>：<code>ros2 run pkg node --ros-args -r /topic:=/robot1/topic</code>；也可给节点加命名空间让其下所有相对话题自动前缀化。</li>
+<li><strong>launch 实现</strong>：<code>Node(..., remappings=[('/topic', '/robot1/topic')])</code> 或 XML 的 <code>&lt;remap from="/topic" to="/robot1/topic"/&gt;</code>；配合 <code>PushRosNamespace('robot1')</code> 实现整组节点的话题隔离，是多机器人（如乌龟护航）的标准做法。</li>
+<li><strong>话题类型（名称解析规则）</strong>：三种写法——<strong>全局话题</strong>（<code>/topic</code>，绝对名，不受命名空间影响）、<strong>相对话题</strong>（<code>topic</code>，拼上当前命名空间，最常用）、<strong>私有话题</strong>（<code>~/topic</code>，拼上节点私有命名空间 <code>/节点名/topic</code>，多用于节点内部状态）。举例：节点 <code>/robot1/cam</code> 写 <code>image</code> 得 <code>/robot1/image</code>，写 <code>~/image</code> 得 <code>/robot1/cam/image</code>。</li>
+<li><strong>话题设置</strong>：话题名可用 launch 的 remap 在不改代码的前提下调整；<code>ros2 topic list</code> 与 <code>ros2 node info</code> 可核对最终解析结果；编码中建议把话题名做成<strong>参数</strong>（如 <code>~/topic_name</code>），部署时按机器人改参数而非改代码。</li>
+</ul>
+<h3 id="1622-第2课-ros2-时间相关-api-与通信机制工具">16.2.2 第2课 ROS2 时间相关 API 与通信机制工具</h3>
+<p><strong>A. ROS2 时间相关 API</strong></p>
+<ul>
+<li><strong>概述</strong>：机器人算法离不开"时间"——控制周期、超时判断、时间戳对齐、轨迹插值。ROS2 提供 <code>Rate</code>（频率控制）、<code>Time</code>（时刻）、<code>Duration</code>（时长）三大类与 <code>Timer</code>（定时器）；关键设计是<strong>时间源（Clock）可切换系统时钟或仿真时钟</strong>（<code>use_sim_time</code>），保证仿真与真机代码一致。</li>
+<li><strong>Rate</strong>：按目标频率循环（<code>rclcpp::Rate</code> / <code>rclpy.rate.Rate</code>），内部按"上次睡眠时刻 + 周期"补偿，比裸 <code>sleep</code> 稳。用法：<code>while (rclcpp::ok()) { ... rate.sleep(); }</code>。注意：回调耗时超过周期会掉频；<code>Rate</code> 默认用系统时钟，仿真下应改用基于 ROS 时钟的 <code>rclcpp::Rate(node-&gt;get_clock(), ...)</code> 或 <code>create_wall_timer</code> 的对应版本。</li>
+<li><strong>Time</strong>：表示时刻，含<strong>秒 + 纳秒</strong>两段（<code>rclcpp::Time</code> / <code>rclpy.time.Time</code>），绑定具体 Clock（SYSTEM_TIME 或 ROS_TIME）。用法：<code>auto t0 = node-&gt;now();</code>、<code>msg.header.stamp = node-&gt;now();</code>。跨节点比较时间前必须确认同源（都用仿真时钟或都用系统时钟）。</li>
+<li><strong>Duration</strong>：表示时长（<code>rclcpp::Duration</code> / <code>rclpy.duration.Duration</code>），可由 <code>Time - Time</code> 得到。用法：<code>auto dt = node-&gt;now() - t0;</code>、<code>dt.seconds()</code>。典型场景：计算回调耗时、判断超时（<code>if (dt &gt; rclcpp::Duration::from_seconds(1.0))</code>）。</li>
+<li><strong>运算</strong>：<code>Time + Duration = Time</code>、<code>Time - Duration = Time</code>、<code>Time - Time = Duration</code>、<code>Duration ± Duration = Duration</code>，支持比较运算（<code>&lt;</code>、<code>==</code>）；Python 版方法为 <code>from_seconds</code>/<code>nanoseconds</code>/<code>to_msg</code>/<code>from_msg</code>。注意：不同 Clock 的 <code>Time</code> 相减会抛异常（"can't subtract times with different time sources"）。</li>
+<li><strong>Timer 与时钟补充</strong>：<code>create_wall_timer</code>（墙钟，仿真不减速）与 <code>create_timer</code>（ROS 时钟，跟随仿真）要分清——控制类逻辑在仿真里应随仿真时间走。<strong>仿真时间</strong>：launch 里设 <code>use_sim_time=True</code> 参数后，节点 <code>now()</code> 返回 <code>/clock</code> 话题的时间，Gazebo/回放 bag 时算法行为与真实时间解耦。</li>
+</ul>
+<p><strong>B. ROS2 通信机制工具</strong></p>
+<ul>
+<li><strong>场景、概念与作用</strong>：节点跑起来后如何"看见"系统状态？ros2 CLI + rqt 是两大手段：CLI 用于快速查看/操作（脚本化、远程 SSH 友好），rqt 用于图形化持续观察。调试顺序：节点 → 接口 → 话题/服务/动作/参数。</li>
+<li><strong>ros2node</strong>：<code>ros2 node list</code>（列出节点）、<code>ros2 node info /n</code>（查看订阅/发布/服务/参数）；配合 <code>--no-daemon</code> 可避免守护进程缓存旧信息。</li>
+<li><strong>ros2interface</strong>：<code>ros2 interface list</code>、<code>ros2 interface show &lt;pkg&gt;/msg/X</code>（看字段）、<code>ros2 interface proto &lt;pkg&gt;/srv/Y</code>（生成调用模板，直接粘给 <code>ros2 service call</code> 用）。</li>
+<li><strong>ros2topic</strong>：<code>list</code>、<code>info -v</code>（含 QoS 详情，排查 QoS 不匹配必备）、<code>echo</code>（订阅打印，<code>--field</code> 看单字段）、<code>hz</code>（测发布频率）、<code>bw</code>（带宽）、<code>pub</code>（手动发布，<code>-1</code> 发一次、<code>-r 10</code> 周期发）、<code>delay</code>、<code>find</code>。</li>
+<li><strong>ros2service</strong>：<code>list</code>、<code>info</code>、<code>type</code>、<code>call &lt;srv&gt; &lt;pkg&gt;/srv/X "{a: 1, b: 2}"</code>（YAML 填请求，配合 <code>interface proto</code> 生成模板）。</li>
+<li><strong>ros2action</strong>：<code>list</code>、<code>info</code>、<code>send_goal &lt;action&gt; &lt;pkg&gt;/act/X "{target: 1.0}" --feedback</code>（带反馈打印）。</li>
+<li><strong>ros2param</strong>：<code>list</code>、<code>get/set</code>、<code>dump/load</code>（导出/加载 YAML，常配合 launch 参数文件）、<code>describe</code>（看描述与只读属性）。</li>
+<li><strong>rqt 工具箱</strong>：rqt_graph（计算图）、rqt_topic（话题监控与手动发布）、rqt_service_caller、rqt_console/rqt_logger_level（日志）、rqt_reconfigure（参数动态调）、rqt_plot（波形）、rqt_image_view（图像）、rqt_bag（bag 图形化）。统一入口 <code>rqt</code> 可插拔加载。</li>
+</ul>
+<h3 id="1623-第3课-期中大作业：话题、服务、动作通信及参数服务实现">16.2.3 第3课 期中大作业：话题、服务、动作通信及参数服务实现</h3>
+<ul>
+<li><strong>作业概述</strong>：综合运用四种通信机制实现一个多节点协作小系统——本仓库以 turtlesim 为载体落地：话题控制乌龟运动、服务生成乌龟、动作驱动乌龟前进、参数修改背景色。目标是把第15章的碎片实现整合成<strong>多节点协作小系统</strong>。</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -669,15 +732,138 @@ rate.<span class="hljs-built_in">sleep</span>();
 </tr>
 </tbody>
 </table>
-<h3 id="1622-c-实现要点">16.2.2 C++ 实现要点</h3>
 <ul>
+<li><strong>分项训练重点</strong>：话题部分练框架搭建与"发布没数据"的排查全过程；服务部分练 <code>.srv</code> 设计与客户端时序（<code>wait_for_service</code>/<code>spin_until_future_complete</code>）；动作部分练三回调与执行循环（课程服务端讲解近 1 小时，是最难部分）；参数部分练参数声明、校验回调与业务逻辑联动（热生效）。</li>
+<li><strong>C++ 实现要点</strong>（<code>cpp02_homework</code>）：<ul>
 <li><code>homework_topic_pub.cpp</code>：参数 <code>linear_x</code>/<code>angular_z</code> → 10Hz 发布 <code>Twist</code>；</li>
 <li><code>homework_param_client.cpp</code>：远程调用 <code>/turtlesim/set_parameters</code> 修改 <code>background_r/g/b</code>，成功后再调用 <code>std_srvs/srv/Empty</code> 类型的 <code>/turtlesim/clear</code> 刷新背景。</li>
+</ul>
+</li>
 </ul>
 <blockquote>
 <p>兼容提示：<code>/turtlesim/clear</code> 是 <strong>std_srvs/Empty</strong> 类型（初学常见错误是误用 rcl_interfaces 的 Empty）。</p>
 </blockquote>
-<h3 id="1623-运行效果（实测）">16.2.3 运行效果（实测）</h3>
+<ul>
+<li><strong>Python 实现</strong>（<code>py02_homework</code>）提供四个节点：<code>homework_topic_pub</code>、<code>homework_service_client</code>（生成乌龟）、<code>homework_action_server</code>（动作名 <code>turtle_forward</code>，复用 <code>Progress</code> 接口，周期发布 <code>/t1/cmd_vel</code> 直到前进量达标）、<code>homework_param_client</code>。实测输出见 16.5.2。</li>
+<li><strong>复盘</strong>：作业暴露的典型问题——接口包依赖顺序、服务客户端阻塞、动作取消无效、参数未声明——都已在前文"重点与难点"覆盖，建议整理成个人错题本。</li>
+</ul>
+<h2 id="163-重点与难点">16.3 重点与难点</h2>
+<ol>
+<li><strong>域 ID 与分布式排错</strong>：互不可见先查 <code>ROS_DOMAIN_ID</code> 是否一致、网络是否互通（<code>ping</code>）、防火墙/DDS 端口、<code>ROS_LOCALHOST_ONLY</code> 是否误设为 1。</li>
+<li><strong>工作空间覆盖的"改码不生效"</strong>：这是本周最隐蔽的坑。每次开终端 <code>echo $ROS_DISTRO</code>、<code>ros2 pkg prefix &lt;pkg&gt;</code> 确认生效路径；理解 <code>setup.bash</code> 是"叠加"而不是"替换"。</li>
+<li><strong>话题名称解析三种规则</strong>：<code>/x</code>（全局）、<code>x</code>（相对）、<code>~/x</code>（私有）决定 remap 与命名空间能否生效；多机器人务必用相对话题 + 命名空间，避免全局话题写死。</li>
+<li><strong>Time/Duration 的时钟一致性</strong>：系统时钟与 ROS（仿真）时钟混用会抛异常或得到负 dt；控制循环在仿真下用 ROS 时钟 Timer。</li>
+<li><strong>大作业的整合</strong>：单个通信会写不难，难的是<strong>在一个节点里组合多种通信</strong>（如"动作执行中改参数、用服务查询、用话题广播状态"），注意回调阻塞与线程安全。</li>
+</ol>
+<h2 id="164-代码与命令实战">16.4 代码与命令实战</h2>
+<h3 id="1641-实战-1：多机分布式与域-id（场景：两台机器人两台电脑互联）">16.4.1 实战 1：多机分布式与域 ID（场景：两台机器人/两台电脑互联）</h3>
+<pre><code class="lang-bash"><span class="hljs-comment"># 两端都要执行：同一域 ID 才能互通（0~232；建议按用户/机器人编号取模生成）</span>
+<span class="hljs-built_in">export</span> ROS_DOMAIN_ID=42
+<span class="hljs-built_in">export</span> ROS_LOCALHOST_ONLY=0          <span class="hljs-comment"># 0 = 允许跨机；调试本机时设 1 隔离</span>
+ros2 multicast receive &amp;             <span class="hljs-comment"># 一端监听组播，验证 DDS 发现</span>
+ros2 multicast send                  <span class="hljs-comment"># 另一端发送；能收到即网络/域配置正确</span>
+ros2 node list                       <span class="hljs-comment"># 两端应能看到彼此的节点</span>
+</code></pre>
+<h3 id="1642-实战-2：工作空间覆盖验证与隐患排查（场景：改了代码不生效）">16.4.2 实战 2：工作空间覆盖验证与隐患排查（场景："改了代码不生效"）</h3>
+<pre><code class="lang-bash"><span class="hljs-built_in">source</span> /opt/ros/humble/setup.bash    <span class="hljs-comment"># underlay</span>
+<span class="hljs-built_in">source</span> ~/wsA/install/setup.bash      <span class="hljs-comment"># overlay A</span>
+<span class="hljs-built_in">source</span> ~/wsB/install/setup.bash      <span class="hljs-comment"># overlay B（后 source，生效）</span>
+ros2 pkg prefix my_pkg               <span class="hljs-comment"># 打印生效包的安装路径——一眼看出跑的是 A 还是 B</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-variable">$AMENT_PREFIX_PATH</span>              <span class="hljs-comment"># 空间叠加顺序在这里体现</span>
+</code></pre>
+<h3 id="1643-实战-3：节点话题重名——ros2run-与-launch-双方案（场景：一台机器跑两个同款节点）">16.4.3 实战 3：节点/话题重名——ros2run 与 launch 双方案（场景：一台机器跑两个同款节点）</h3>
+<pre><code class="lang-bash"><span class="hljs-comment"># 方案一：命令行重映射（临时）</span>
+ros2 run my_pkg talker --ros-args -r __node:=talker2 -r __ns:=/robot2 -r /topic:=/robot2/topic
+</code></pre>
+<pre><code class="lang-python"><span class="hljs-comment"># 方案二：launch 统一配置（工程推荐）——talkers.launch.py</span>
+<span class="hljs-keyword">from</span> launch <span class="hljs-keyword">import</span> LaunchDescription
+<span class="hljs-keyword">from</span> launch_ros.actions <span class="hljs-keyword">import</span> Node, PushRosNamespace
+<span class="hljs-keyword">from</span> launch.actions <span class="hljs-keyword">import</span> GroupAction
+
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">generate_launch_description</span>():
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">make_talker</span>(<span class="hljs-params">ns, name</span>):
+        <span class="hljs-keyword">return</span> GroupAction([
+            PushRosNamespace(ns),                 <span class="hljs-comment"># 组内节点统一加命名空间</span>
+            Node(package=<span class="hljs-string">'my_pkg'</span>, executable=<span class="hljs-string">'talker'</span>, name=name,
+                 remappings=[(<span class="hljs-string">'topic'</span>, <span class="hljs-string">'topic'</span>)],  <span class="hljs-comment"># 相对话题自动拼上命名空间</span>
+                 parameters=[{<span class="hljs-string">'rate'</span>: <span class="hljs-number">2.0</span>}]),
+        ])
+    <span class="hljs-keyword">return</span> LaunchDescription([
+        make_talker(<span class="hljs-string">'robot1'</span>, <span class="hljs-string">'talker'</span>),
+        make_talker(<span class="hljs-string">'robot2'</span>, <span class="hljs-string">'talker'</span>),          <span class="hljs-comment"># 名字相同也不冲突：命名空间隔离</span>
+    ])
+</code></pre>
+<h3 id="1644-实战-4：time--duration--rate（c-要点--python-节点）">16.4.4 实战 4：Time / Duration / Rate（C++ 要点 + Python 节点）</h3>
+<pre><code class="lang-cpp"><span class="hljs-comment">// Time：now() 获取当前时刻；</span>
+rclcpp::Time t1 = <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">now</span>();
+<span class="hljs-comment">// Duration：两种构造方式；</span>
+rclcpp::Duration d1 = <span class="hljs-number">3</span>s;
+<span class="hljs-function">rclcpp::Duration <span class="hljs-title">d2</span><span class="hljs-params">(<span class="hljs-number">2</span>,<span class="hljs-number">0</span>)</span></span>;
+<span class="hljs-comment">// 运算；</span>
+rclcpp::Time t2 = t1 + d1;      <span class="hljs-comment">// 时刻 + 时段 = 时刻</span>
+rclcpp::Duration d3 = d1 - d2;  <span class="hljs-comment">// 时段 - 时段 = 时段</span>
+<span class="hljs-type">bool</span> flag = d1 &gt; d2;            <span class="hljs-comment">// 时段可比较</span>
+<span class="hljs-comment">// Rate：固定周期休眠；</span>
+<span class="hljs-function">rclcpp::Rate <span class="hljs-title">rate</span><span class="hljs-params">(<span class="hljs-number">1.0</span>)</span></span>;          <span class="hljs-comment">// 1Hz</span>
+rate.<span class="hljs-built_in">sleep</span>();
+<span class="hljs-comment">// 定时器区分：create_wall_timer（墙钟）vs create_timer(node-&gt;get_clock(), ...)（随仿真）</span>
+</code></pre>
+<pre><code class="lang-python"><span class="hljs-comment"># time_demo/time_demo/time_node.py —— Python 主力写法</span>
+<span class="hljs-keyword">import</span> rclpy
+<span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
+<span class="hljs-keyword">from</span> rclpy.duration <span class="hljs-keyword">import</span> Duration
+
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">TimeNode</span>(<span class="hljs-title class_ inherited__">Node</span>):
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">'time_node'</span>)
+        <span class="hljs-variable language_">self</span>.t0 = <span class="hljs-variable language_">self</span>.now()                       <span class="hljs-comment"># 时刻：绑定本节点时钟</span>
+        <span class="hljs-variable language_">self</span>.rate = <span class="hljs-variable language_">self</span>.create_rate(<span class="hljs-number">10.0</span>)         <span class="hljs-comment"># 10 Hz 频率控制器</span>
+        <span class="hljs-comment"># 仿真下让时间跟随 /clock：launch 中 parameters=[{'use_sim_time': True}]</span>
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">step</span>(<span class="hljs-params">self</span>):
+        dt = <span class="hljs-variable language_">self</span>.now() - <span class="hljs-variable language_">self</span>.t0                  <span class="hljs-comment"># Duration = Time - Time</span>
+        <span class="hljs-keyword">if</span> dt &gt; Duration(seconds=<span class="hljs-number">1.0</span>):             <span class="hljs-comment"># 超时判断</span>
+            <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">f'elapsed <span class="hljs-subst">{dt.nanoseconds / <span class="hljs-number">1e9</span>:<span class="hljs-number">.2</span>f}</span>s'</span>)
+            <span class="hljs-variable language_">self</span>.t0 = <span class="hljs-variable language_">self</span>.now()
+        <span class="hljs-variable language_">self</span>.rate.sleep()                          <span class="hljs-comment"># 频率稳定的关键</span>
+</code></pre>
+<h3 id="1645-实战-5：ros2-cli-调试全家桶（场景：接手陌生系统的-5-分钟摸底）">16.4.5 实战 5：ros2 CLI 调试全家桶（场景：接手陌生系统的 5 分钟摸底）</h3>
+<pre><code class="lang-bash">ros2 node list &amp;&amp; ros2 node info /talker          <span class="hljs-comment"># 节点连了什么</span>
+ros2 interface show std_msgs/msg/String           <span class="hljs-comment"># 消息字段</span>
+ros2 interface proto example_interfaces/srv/AddTwoInts   <span class="hljs-comment"># 生成 service call 模板</span>
+ros2 topic hz /topic -w 20                        <span class="hljs-comment"># 测频率（滑窗 20 帧）</span>
+ros2 topic info /topic -v                         <span class="hljs-comment"># 看 QoS（排查不匹配）</span>
+ros2 topic pub -1 /topic std_msgs/msg/String <span class="hljs-string">"{data: hi}"</span>   <span class="hljs-comment"># 手动注入一条</span>
+ros2 service call /add_two_ints example_interfaces/srv/AddTwoInts <span class="hljs-string">"{a: 1, b: 2}"</span>
+ros2 action send_goal /navigate my_pkg/act/Navigate <span class="hljs-string">"{target_x: 1.0}"</span> --feedback
+ros2 param dump /time_node &gt; params.yaml          <span class="hljs-comment"># 导出参数，供 launch 复用</span>
+</code></pre>
+<h3 id="1646-实战-6：仿真时间-usesimtime（场景：bag-回放gazebo-仿真时算法随仿真时钟走）">16.4.6 实战 6：仿真时间 use_sim_time（场景：bag 回放/Gazebo 仿真时算法随仿真时钟走）</h3>
+<pre><code class="lang-python"><span class="hljs-comment"># launch 中为所有节点统一开仿真时间（launch 细节见第17章）</span>
+Node(package=<span class="hljs-string">'my_pkg'</span>, executable=<span class="hljs-string">'time_node'</span>,
+     parameters=[{<span class="hljs-string">'use_sim_time'</span>: <span class="hljs-literal">True</span>}])
+</code></pre>
+<pre><code class="lang-bash">ros2 bag play my_bag --clock      <span class="hljs-comment"># 回放时发布 /clock，供 use_sim_time 节点取用</span>
+ros2 param get /time_node use_sim_time   <span class="hljs-comment"># 确认 True；此时 node.now() 跟随 bag 时间</span>
+</code></pre>
+<h2 id="165-运行效果（实测）">16.5 运行效果（实测）</h2>
+<h3 id="1651-时间-api-演示（cpp01time）">16.5.1 时间 API 演示（cpp01_time）</h3>
+<pre><code class="lang-bash">ros2 run cpp01_time demo01_time_api
+</code></pre>
+<pre><code class="lang-text">[INFO] [...]: 当前时刻:1792040770.29603
+[INFO] [...]: t2:1.50
+[INFO] [...]: d1 = 3.00 s, d2 = 2.00 s
+[INFO] [...]: t1 + 3s = 1792040773.29603
+[INFO] [...]: d1 - d2 = 1.00 s
+[INFO] [...]: d1 &gt; d2 ? true
+[INFO] [...]: Rate 循环 0
+</code></pre>
+<blockquote>
+<p>兼容提示：<code>rclpy</code> 中对应 <code>self.get_clock().now()</code>、<code>Duration(seconds=3)</code>、<code>Rate(self, 1.0)</code>，语义一致。</p>
+</blockquote>
+<h3 id="1652-期中大作业实测">16.5.2 期中大作业实测</h3>
 <p>先启动乌龟（<code>ros2 run turtlesim turtlesim_node</code>），再运行参数客户端：</p>
 <pre><code class="lang-text">[INFO] [...]: 期中大作业-参数服务客户端(C++)
 [INFO] [...]: 修改背景色:成功
@@ -695,9 +881,7 @@ angular:
   z: 0.2
 ---
 </code></pre>
-<h3 id="1624-python-实现">16.2.4 Python 实现</h3>
-<p><code>py02_homework</code> 提供四个节点：<code>homework_topic_pub</code>、<code>homework_service_client</code>（生成乌龟）、<code>homework_action_server</code>（动作名 <code>turtle_forward</code>，复用 <code>Progress</code> 接口，周期发布 <code>/t1/cmd_vel</code> 直到前进量达标）、<code>homework_param_client</code>。</p>
-<p>实测生成乌龟：</p>
+<p>Python 版实测生成乌龟：</p>
 <pre><code class="lang-text">[INFO] [...]: 期中大作业-服务通信客户端(python)
 [INFO] [...]: 已生成乌龟:t1
 </code></pre>
@@ -707,15 +891,15 @@ angular:
 <blockquote>
 <p><strong>视频对照</strong>：课程大作业实现于 <code>cpp07_exercise</code> 包（exer01_pub_sub / exer02_server / exer03_client / exer04_action_server / exer05_action_client / exer06_param，各配 <code>*_launch.py</code>）。其中 exer06 参数客户端的<strong>背景色循环渐变</strong>逻辑已按视频还原并升级进本仓库 <code>cpp02_homework</code>：计数在 [0,511] 循环（步进 5），[0,255] 区间 red 递增、[256,511] 递减，<code>set_parameters</code> + 5Hz Rate。实测采样 background_r：<code>130 → 200 → 235 → 145</code>（三角波，见 hw_cycle.log）。</p>
 </blockquote>
-<h2 id="163-通信机制拓展（分布式工作空间覆盖元功能包重映射）">16.3 通信机制拓展（分布式/工作空间覆盖/元功能包/重映射）</h2>
-<p>课程第 16 周第 1 课还包括四个工程化主题，本节逐一给出可运行的最小验证：</p>
-<h3 id="1631-分布式">16.3.1 分布式</h3>
-<p>同一 DDS 域内的两台机器自动互相发现，无需任何中心节点。用 <code>ROS_DOMAIN_ID</code> 隔离/互通：</p>
-<pre><code class="lang-bash"><span class="hljs-comment"># 两台机器（或两个终端）设置相同 Domain 即互通，不同即隔离</span>
+<h3 id="1653-分布式：域隔离实测（域-42--域-0）">16.5.3 分布式：域隔离实测（域 42 / 域 0）</h3>
+<pre><code class="lang-bash"><span class="hljs-comment"># 域 42（与发布端同域）</span>
 <span class="hljs-built_in">export</span> ROS_DOMAIN_ID=42
-ros2 topic list    <span class="hljs-comment"># 只能看到同域的设备</span>
+ros2 topic list    <span class="hljs-comment"># 可见 chatter（1 个）</span>
+<span class="hljs-comment"># 不设置（默认域 0）</span>
+ros2 topic list    <span class="hljs-comment"># chatter 不可见（0 个）</span>
 </code></pre>
-<h3 id="1632-工作空间覆盖">16.3.2 工作空间覆盖</h3>
+<p>分布式实测：同域 42 的 <code>ros2 topic list</code> 可见 chatter（1 个）；默认域 0 不可见（0 个）——DDS 域隔离生效。</p>
+<h3 id="1654-工作空间覆盖实测（overlay）">16.5.4 工作空间覆盖实测（OVERLAY）</h3>
 <p>后 source 的工作空间<strong>覆盖</strong>先 source 的同名包——这是「不改上游包、只改自己扩展」的标准做法。本仓库提供了同名的覆盖演示包（<code>code/examples/overlay_demo/cpp00_hello_world</code>）：</p>
 <pre><code class="lang-bash"><span class="hljs-comment"># 1.先 source 底层工作空间（underlay）</span>
 <span class="hljs-built_in">source</span> ws01_plumbing/install/setup.bash
@@ -727,13 +911,13 @@ ros2 run cpp00_hello_world demo01_hello_world
 <p>实测（本机 Jazzy）：</p>
 <pre><code class="lang-text">[INFO] [...]: [hello_world_node_cpp]: Hello from OVERLAY workspace!（覆盖层版本）
 </code></pre>
-<h3 id="1633-元功能包">16.3.3 元功能包</h3>
+<h3 id="1655-元功能包实测（cobotmetapackage）">16.5.5 元功能包实测（cobot_metapackage）</h3>
 <p>元功能包（metapackage）本身没有源码，只通过 <code>exec_depend</code> 聚合一组包，实现「一键安装」。本仓库新增 <code>cobot_metapackage</code>（聚合课程通信篇的功能包），<code>colcon build</code> 即可验证依赖解析：</p>
 <pre><code class="lang-bash"><span class="hljs-built_in">cd</span> ws02_middle &amp;&amp; colcon build --packages-select cobot_metapackage
 ros2 pkg xml cobot_metapackage    <span class="hljs-comment"># 查看聚合清单</span>
 ros2 pkg executables cpp01_topic  <span class="hljs-comment"># 被聚合包可直接使用</span>
 </code></pre>
-<h3 id="1634-节点话题重名（重映射）">16.3.4 节点/话题重名（重映射）</h3>
+<h3 id="1656-节点话题重映射实测（remaplog）">16.5.6 节点/话题重映射实测（remap.log）</h3>
 <p>不修改源码即可解决重名——启动时用 <code>--ros-args -r</code> 重映射：</p>
 <pre><code class="lang-bash"><span class="hljs-comment"># 节点重名：把 talker 重命名为 talker2</span>
 ros2 run cpp01_topic demo01_talker_str --ros-args -r __node:=talker2
@@ -753,12 +937,38 @@ ros2 run cpp01_topic demo01_talker_str --ros-args -r /chatter:=/chatter2
 data: hello world!7
 ---
 </code></pre>
-<p>分布式（16.3.1）实测：同域 42 的 <code>ros2 topic list</code> 可见 chatter（1 个）；默认域 0 不可见（0 个）——DDS 域隔离生效。</p>
-<h2 id="164-本章小结">16.4 本章小结</h2>
+<h2 id="166-与-ros2--机器人开发的关联">16.6 与 ROS2 / 机器人开发的关联</h2>
+<ol>
+<li><strong>多机是机器人系统常态</strong>：Jetson 视觉 + 工控机决策 + 单片机驱动的架构全靠同域 ID + 命名空间组织；课程后段的 ARM 平台部署就是分布式实践。</li>
+<li><strong>命名空间是多机器人基础</strong>：乌龟护航（第18章）、多车编队都用 <code>PushRosNamespace</code> + 相对话题隔离；写话题名时避免全局名是工程素养。</li>
+<li><strong>时间 API 直通控制与仿真</strong>：控制周期（Rate）、时间戳对齐（Time）、超时保护（Duration）是导航与滤波算法标配；<code>use_sim_time</code> 让同一套代码跑真机与仿真。</li>
+<li><strong>调试工具决定开发效率</strong>：真实项目 70% 时间在排查运行时问题，<code>ros2 topic info -v</code>、<code>ros2 node info</code>、rqt_graph/rqt_console 是定位问题的最快路径。</li>
+<li><strong>期中大作业 = 阶段验收</strong>：第19-20章 Mycar 项目会要求把感知、决策、控制多节点整合，正是大作业的放大版。</li>
+</ol>
+<h2 id="167-自测与练习">16.7 自测与练习</h2>
+<ol>
+<li><strong>概念题</strong>：解释 <code>/cmd_vel</code>、<code>cmd_vel</code>、<code>~/cmd_vel</code> 三种写法在节点 <code>/robot1/base</code> 下的最终话题名。说明工作空间覆盖为什么会"改码不生效"，给出两种排查命令。</li>
+<li><strong>动手任务</strong>：写一个节点用 <code>Rate</code> 以 10 Hz 发布 <code>std_msgs/Float64</code>（值为 <code>now()</code> 的秒数），订阅端用 <code>Duration</code> 计算并打印每条消息的到达间隔。<strong>验收标准</strong>：<code>ros2 topic hz</code> 显示约 10 Hz；打印的间隔约 0.1s 且抖动小于 20ms。</li>
+<li><strong>综合任务（期中自测）</strong>：在两个命名空间 <code>robot1</code>、<code>robot2</code> 下各起一个同款 talker 节点，要求 <code>ros2 topic list</code> 中话题互不重叠、<code>ros2 node list</code> 节点名互不冲突。<strong>验收标准</strong>：不改源码，仅用 launch 配置实现。</li>
+</ol>
+<blockquote>
+<p>参考答案要点：1) 分别得 <code>/cmd_vel</code>（全局原样）、<code>/robot1/cmd_vel</code>（相对拼命名空间）、<code>/robot1/base/cmd_vel</code>（私有拼节点名）；排查用 <code>ros2 pkg prefix</code> 与 <code>echo $AMENT_PREFIX_PATH</code>。2) 发布端 <code>create_rate</code>/<code>rclcpp::Rate</code>；注意 Python 的 <code>create_rate</code> 依赖节点时钟，仿真下挂 use_sim_time；用 <code>now() - last_time</code> 算间隔。3) 用 <code>GroupAction([PushRosNamespace('robot1'), Node(...)])</code> 两组，节点 <code>name</code> 相同、话题用相对名，即自动隔离。</p>
+</blockquote>
+<h2 id="168-常见问题（faq）">16.8 常见问题（FAQ）</h2>
 <ul>
-<li>Time/Duration/Rate 是周期任务与超时控制的基础，时刻与时段的运算法则要区分；</li>
-<li>期中大作业把四种通信机制落在同一只乌龟上，是通信篇的验收案例；</li>
-<li>远程修改 turtlesim 参数后必须调用 <code>/clear</code> 才会刷新显示。</li>
+<li><strong>Q：两台机器 <code>ros2 node list</code> 互相看不到？</strong> A：依次确认 <code>ROS_DOMAIN_ID</code> 相同、<code>ROS_LOCALHOST_ONLY=0</code>、<code>ping</code> 通、防火墙放行 DDS 端口（或临时 <code>sudo ufw disable</code> 验证）、两端 ROS2 版本兼容。</li>
+<li><strong>Q：<code>use_sim_time</code> 开了但节点时间不动？</strong> A：确认有 <code>/clock</code> 话题在发布（<code>ros2 bag play --clock</code> 或仿真器），且参数确实设置成功（<code>ros2 param get</code>）；启动顺序上 <code>/clock</code> 需在节点运行期间持续发布。</li>
+<li><strong>Q：remap 了话题名但没生效？</strong> A：检查话题名是全局还是相对——对全局话题（<code>/x</code>）remap 必须写全名；对相对话题，remap 的 <code>from</code> 应写解析前的名字。<code>ros2 node info</code> 看最终连接的话题名。</li>
+<li><strong>Q：<code>ros2 node list</code> 显示旧节点？</strong> A：ros2 CLI 有守护进程缓存，用 <code>ros2 daemon stop &amp;&amp; ros2 daemon start</code> 刷新，或命令加 <code>--no-daemon</code>。</li>
+<li><strong>Q：元功能包编译报错？</strong> A：ament 的元包只需空 <code>CMakeLists.txt</code>（<code>cmake_minimum_required</code> + <code>find_package(ament_cmake)</code> + <code>ament_package()</code>）+ <code>package.xml</code> 里 <code>&lt;export&gt;&lt;metapackage/&gt;&lt;/export&gt;</code> 与成员包的 <code>&lt;exec_depend&gt;</code>，不要写源码目标。</li>
+</ul>
+<h2 id="169-本章小结">16.9 本章小结</h2>
+<ul>
+<li>Time/Duration/Rate 是周期任务与超时控制的基础，时刻与时段的运算法则要区分；系统时钟与 ROS 时钟不能混用，仿真下统一挂 <code>use_sim_time</code>；</li>
+<li>分布式 = 同域 ID + 网络可达 + 防火墙放行，<code>ROS_DOMAIN_ID</code> 域 42/域 0 的隔离实测已验证；</li>
+<li>工作空间覆盖遵循"后 source 覆盖先 source"，<code>ros2 pkg prefix</code> 是排查"改码不生效"的第一命令；元功能包用 <code>exec_depend</code> 聚合成员包实现一键安装；</li>
+<li>节点/话题重名用 <code>--ros-args -r</code> 重映射即可不改源码解决（talker2 / chatter2 实测通过）；</li>
+<li>期中大作业把四种通信机制落在同一只乌龟上，是通信篇的验收案例；远程修改 turtlesim 参数后必须调用 <code>/clear</code> 才会刷新显示。</li>
 </ul>
 
                                 
@@ -803,7 +1013,7 @@ data: hello world!7
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第16章 通信机制拓展与时间 API","level":"6.3","depth":1,"next":{"title":"第17章 工具应用实操（launch 与 rosbag2）","level":"6.4","depth":1,"path":"第17周-工具应用实操.md","ref":"第17周-工具应用实操.md","articles":[]},"previous":{"title":"第15章 通信机制深度剖析","level":"6.2","depth":1,"path":"第15周-通信机制深度剖析.md","ref":"第15周-通信机制深度剖析.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第16周-通信机制拓展与时间API.md","mtime":"2026-10-16T02:43:09.753Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T02:43:11.108Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第16章 通信机制拓展与时间 API","level":"6.3","depth":1,"next":{"title":"第17章 工具应用实操（launch 与 rosbag2）","level":"6.4","depth":1,"path":"第17周-工具应用实操.md","ref":"第17周-工具应用实操.md","articles":[]},"previous":{"title":"第15章 通信机制深度剖析","level":"6.2","depth":1,"path":"第15周-通信机制深度剖析.md","ref":"第15周-通信机制深度剖析.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第16周-通信机制拓展与时间API.md","mtime":"2026-10-16T03:26:51.710Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T03:26:53.986Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

@@ -603,28 +603,296 @@
 <blockquote>
 <p>本章对应课程第 13 周：Linux 常用命令、权限模型、进程与端口管理、SSH 远程，以及带判断/循环/函数的 Shell 脚本。ROS2 的编译、环境加载（<code>source setup.bash</code>）、远程调试全部发生在 bash 里——这是 ROS2 核心架构之前的最后一章。</p>
 </blockquote>
-<h2 id="131-案例以及案例分析">13.1 案例以及案例分析</h2>
-<p><strong>需求</strong>：写一个自检脚本——变量与命令替换、函数 + if 多分支判断文件/目录、case 分支、数组统计；运行方式与传参遵循 <code>$0/$1/$#/$?</code> 约定。</p>
-<h2 id="132-知识点与实现">13.2 知识点与实现</h2>
-<h3 id="1321-linux-常用命令">13.2.1 Linux 常用命令</h3>
+<h2 id="131-本周概览与课时结构">13.1 本周概览与课时结构</h2>
+<p>本周是 ROS2 开发的"操作系统地基"：先用第 1 课（2h51m）把 Linux 装起来、把常用命令练成肌肉记忆，再用第 2 课（2h55m）学会用 Shell 脚本把重复劳动自动化。它位于语言阶段（Python/C/C++）之后、ROS2 核心架构之前，因为 ROS2 的编译、环境加载、远程调试全部发生在 bash 里。学完本周，你应当能自如地在 Ubuntu 终端中管理文件与权限、SSH 连接远程机器人，并独立写出带判断、循环、函数的可调试 Shell 脚本。</p>
+<table>
+<thead>
+<tr>
+<th>课</th>
+<th>小节</th>
+<th>时长</th>
+<th>一句话导览</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第1课 Linux 操作系统操作入门</td>
+<td>4 组 33 节</td>
+<td>2h51m</td>
+<td>从安装与操作系统概念，到目录/文件/打包压缩命令，再到权限、用户、进程管理与 SSH 远程连接</td>
+</tr>
+<tr>
+<td>第2课 Shell 编程实践基础</td>
+<td>3 组 32 节</td>
+<td>2h55m</td>
+<td>从第一个脚本与变量、传参、输入，到运算符与判断，再到函数、if/case/for/while、重定向与数组</td>
+</tr>
+</tbody>
+</table>
+<p>第 1 课细分：</p>
+<table>
+<thead>
+<tr>
+<th>分组</th>
+<th>小节数</th>
+<th>时长</th>
+<th>覆盖内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Linux操作系统安装与概述</td>
+<td>2</td>
+<td>约 14m</td>
+<td>安装 Linux、操作系统简介</td>
+</tr>
+<tr>
+<td>Linux常用命令</td>
+<td>19</td>
+<td>约 1h34m</td>
+<td>复制粘贴、cd/ls、增删移、查看内容、分屏、grep、重定向、管道、find、软硬链接、打包压缩、"一句搞定"综合案例</td>
+</tr>
+<tr>
+<td>Linux用户权限</td>
+<td>11</td>
+<td>约 54m</td>
+<td>权限基础、chmod 字母法/数字法、which、exit、sudo/su、关机重启、杀进程、端口占用、top 监控、系统信息</td>
+</tr>
+<tr>
+<td>Linux远程连接</td>
+<td>2</td>
+<td>约 8m</td>
+<td>PuTTY（SSH）远程连接、WinSCP（SFTP）文件传输</td>
+</tr>
+</tbody>
+</table>
+<p>第 2 课细分：</p>
+<table>
+<thead>
+<tr>
+<th>分组</th>
+<th>小节数</th>
+<th>时长</th>
+<th>覆盖内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Shell 编程基础入门</td>
+<td>8</td>
+<td>约 42m</td>
+<td>shell 简介、第一个程序、注释、变量基础与细节、传参、读取用户输入</td>
+</tr>
+<tr>
+<td>Shell 编程进阶操作</td>
+<td>8</td>
+<td>约 40m</td>
+<td>命令变量（命令替换）、案例、算术/比较/逻辑运算符、字符串判断、文件判断</td>
+</tr>
+<tr>
+<td>Shell 编程流程控制与函数</td>
+<td>16</td>
+<td>约 1h33m</td>
+<td>函数及传参/返回值、面积周长案例、if 单双分支与多分支、账号密码判断、文件目录判断、case、for、while、重定向、数组</td>
+</tr>
+</tbody>
+</table>
+<h2 id="132-知识点梳理">13.2 知识点梳理</h2>
+<h3 id="1321-第1课-linux-操作系统操作入门">13.2.1 第1课 Linux 操作系统操作入门</h3>
 <ul>
-<li>目录导航：<code>cd/pwd/ls -lah</code>；增删移：<code>mkdir -p/touch/rm -r/cp -r/mv</code>；</li>
-<li>查看与搜索：<code>cat/head/tail -f（实时日志）/less</code>；<code>grep -rn</code> 内容搜索、<code>find -name "*.py"</code> 文件查找；</li>
-<li>重定向与管道：<code>&gt;</code> 覆盖、<code>&gt;&gt;</code> 追加、<code>2&gt;</code> 错误、<code>2&gt;&amp;1</code> 合并；<code>|</code> 管道（<code>ps aux | grep ros | grep -v grep</code>）；</li>
-<li>权限：<code>ls -l</code> 首列三组 rwx（421）；<code>chmod 755 脚本</code>、<code>chmod 644 普通文件</code>；<code>sudo/su/exit</code>；</li>
-<li>进程与端口：<code>ps aux</code>、<code>top</code>、<code>kill -9</code>；<code>ss -tlnp | grep 端口</code> / <code>lsof -i:端口</code> 排查占用；</li>
-<li>远程：<code>ssh 用户@IP</code>、<code>scp -r</code>、<code>rsync -av</code>——机器人无显示器时的标准运维组合。</li>
+<li><p><strong>核心概念</strong>：操作系统（Operating System）是管理硬件（CPU、内存、磁盘、网卡）与软件资源的系统软件；Linux 内核（Kernel）由 Linus Torvalds 于 1991 年发起，常说的"Linux 系统"准确说是"Linux 内核 + GNU 工具 + 发行版（Distribution）"，如 Ubuntu、Debian、CentOS；Shell 是用户与内核之间的命令解释器，Ubuntu 默认 bash（Bourne Again Shell）。</p>
+</li>
+<li><p><strong>要点 1（安装 Linux）</strong>：三条主流路线——实体机安装、虚拟机（VMware/VirtualBox）安装、Windows 下的 WSL2。ROS2 开发推荐 Ubuntu 22.04（配 Humble）或 24.04（配 Jazzy）；虚拟机安装时内存建议 8 GB+、磁盘 60 GB+，安装完成后先换国内源并 <code>sudo apt update</code>。</p>
+</li>
+<li><p><strong>要点 2（目录结构与路径）</strong>：Linux 一切皆文件，根目录 <code>/</code> 是树根；常见目录：<code>/home/用户</code>（家目录，<code>~</code>）、<code>/etc</code>（配置）、<code>/usr</code>（用户程序）、<code>/var</code>（日志）、<code>/tmp</code>（临时）。路径分绝对路径（以 <code>/</code> 开头）与相对路径（相对当前目录）。</p>
+</li>
+<li><p><strong>要点 3（cd / ls 与目录导航）</strong>：<code>cd</code> 切换目录，<code>pwd</code> 显示当前路径，<code>ls</code> 列出内容。<code>cd -</code> 回到上一次目录，<code>cd ~</code> 回家目录；<code>ls -l</code> 长格式（含权限与时间）、<code>-a</code> 显示隐藏文件（<code>.</code> 开头）、<code>-h</code> 人类可读大小、<code>-R</code> 递归。</p>
+</li>
+<li><p><strong>要点 4（新建、删除、复制、移动）</strong>：<code>mkdir</code>/<code>rmdir</code> 管目录，<code>touch</code> 建空文件，<code>rm</code> 删文件（<code>-r</code> 递归目录、<code>-f</code> 强制），<code>cp</code> 复制（<code>-r</code> 复制目录、<code>-i</code> 覆盖前确认、<code>-v</code> 显示过程），<code>mv</code> 移动/重命名（同目录下 <code>mv a.txt b.txt</code> 即改名）。</p>
+</li>
+<li><p><strong>要点 5（查看文件内容与分屏）</strong>：<code>cat</code>（小文件全显、<code>-n</code> 带行号）、<code>tac</code>（倒序）、<code>head</code>/<code>tail</code>（默认前后 10 行，<code>-n 20</code> 指定行数，<code>tail -f</code> 实时跟踪日志）、<code>more</code>/<code>less</code>（分屏翻页，<code>less</code> 支持 <code>/关键字</code> 搜索、<code>q</code> 退出）、<code>nl</code> 带行号查看。</p>
+</li>
+<li><p><strong>要点 6（查找内容、查找文件）</strong>：<code>grep</code> 在文件内容里搜索（<code>-n</code> 行号、<code>-i</code> 忽略大小写、<code>-r</code> 递归目录、<code>-v</code> 反选）；<code>find</code> 按文件名/类型/时间查找（<code>find /path -name "*.py"</code>、<code>-type f|d</code>、<code>-size +10M</code>）；<code>which</code>/<code>whereis</code> 查命令位置（见权限一节）。</p>
+</li>
+<li><p><strong>要点 7（重定向与管道）</strong>：<code>&gt;</code> 覆盖写、<code>&gt;&gt;</code> 追加写、<code>&lt;</code> 输入重定向、<code>2&gt;</code> 错误重定向、<code>&amp;&gt;</code> 一起重定向；管道 <code>|</code> 把前一条命令的输出当下一条的输入，如 <code>ps aux | grep ros | grep -v grep</code>、<code>ls -l | wc -l</code>、<code>dmesg | tail</code>。</p>
+</li>
+<li><p><strong>要点 8（软链接与硬链接）</strong>：软链接（符号链接，Symbolic Link）像 Windows 快捷方式，<code>ln -s 目标 链接名</code>，目标删除后链接失效；硬链接（Hard Link）是同一个 inode（索引节点）的另一个文件名，<code>ln 目标 链接名</code>，删除任一名字文件内容仍在。<code>ls -i</code> 可查看 inode。</p>
+</li>
+<li><p><strong>要点 9（打包压缩）</strong>：<code>tar</code> 负责打包（归档），<code>gzip/bzip2/xz</code> 负责压缩。<code>tar -cvf a.tar 目录/</code> 打包、<code>-xvf</code> 解包、<code>-tvf</code> 查看包内容；一步到位：<code>tar -czvf a.tar.gz 目录/</code>（z 用 gzip）、<code>tar -xzvf a.tar.gz</code> 解压。zip 对应 <code>zip -r a.zip 目录/</code>、<code>unzip a.zip</code>。</p>
+</li>
+<li><p><strong>要点 10（"一句搞定"综合案例）</strong>：用管道与重定向把多步操作合成一条命令——统计代码行数、批量改名前先备份、把构建日志同时显示并落盘等，这是把命令行用出效率的关键。</p>
+</li>
+<li><p><strong>要点 11（权限基础与 chmod）</strong>：<code>ls -l</code> 首列如 <code>-rwxr-xr--</code>：第 1 位文件类型（<code>-</code> 文件、<code>d</code> 目录、<code>l</code> 链接），后 9 位分三组（所有者 owner / 所属组 group / 其他人 others），每组 r（读 4）w（写 2）x（执行 1）。字母法：<code>chmod u+x,g-w,o=r file</code>；数字法：<code>chmod 755 file</code>（rwxr-xr-x）、<code>chmod 644 file</code>（rw-r--r--）。目录的 x 表示"可进入"。</p>
+</li>
+<li><p><strong>要点 12（用户与身份切换）</strong>：<code>whoami</code> 看当前用户，<code>exit</code> 退出当前 shell/登录/远程会话，<code>su 用户名</code> 切换用户（<code>su -</code> 连环境一起切），<code>sudo 命令</code> 以 root 权限执行单条命令，<code>useradd</code>/<code>passwd</code> 建用户改密码。普通用户在 sudo 组才有 sudo 权限。</p>
+</li>
+<li><p><strong>要点 13（进程、端口与监控）</strong>：<code>ps aux</code> 查进程、<code>top</code>/<code>htop</code> 实时监控（CPU/内存，<code>q</code> 退出）、<code>kill PID</code>（默认 SIGTERM，<code>kill -9</code> 强杀）、<code>killall/pkill 进程名</code> 批量结束；端口占用用 <code>ss -tlnp | grep 端口</code> 或 <code>lsof -i:端口</code>、<code>fuser -k 端口/tcp</code> 释放端口。关机重启：<code>shutdown -h now</code>、<code>reboot</code>（或 <code>shutdown -r now</code>）。</p>
+</li>
+<li><p><strong>要点 14（系统信息）</strong>：<code>uname -a</code> 内核信息、<code>lsb_release -a</code> 发行版、<code>free -h</code> 内存、<code>df -h</code> 磁盘分区、<code>du -sh 目录</code> 目录占用、<code>hostname</code> 主机名、<code>top</code> 综合监控。</p>
+</li>
+<li><p><strong>要点 15（远程连接）</strong>：SSH（Secure Shell）加密远程登录：Windows 用 PuTTY（或 PowerShell 自带 <code>ssh 用户名@IP -p 22</code>）连接机器人/工控机；WinSCP 用 SFTP 协议图形化拖拽上传下载文件；Linux/macOS 间直接 <code>scp -r 本地 目标机:/路径</code> 传目录、<code>rsync -av</code> 增量同步。</p>
+</li>
 </ul>
-<h3 id="1322-shell-脚本">13.2.2 Shell 脚本</h3>
+<blockquote>
+<p><strong>注意：</strong> <code>rm -rf</code> 是不可逆操作，尤其 <code>rm -rf /</code> 或 <code>rm -rf *</code> 在错误目录下会毁掉系统。建议养成习惯：先 <code>pwd</code> 确认当前位置，再 <code>ls</code> 看清目标，最后才执行删除；或给 <code>rm</code> 加 <code>-i</code> 别名。</p>
+</blockquote>
+<h3 id="1322-第2课-shell-编程实践基础">13.2.2 第2课 Shell 编程实践基础</h3>
 <ul>
-<li>首行 <code>#!/bin/bash</code>；三种运行方式：<code>bash s.sh</code> / <code>./s.sh</code>（需 +x）/ <code>source s.sh</code>（当前会话生效——<code>setup.bash</code> 必须用 source 的原因）；</li>
-<li>变量 <code>name=value</code>（等号两侧<strong>不能有空格</strong>）、<code>${name}</code> 引用、<code>$(命令替换)</code>；</li>
-<li>传参：<code>$0/$1/$#/$@/$?/$$</code>；<code>read -p "提示" 变量</code> 读取输入；</li>
-<li>判断：数值 <code>-eq/-gt/-lt</code>、字符串 <code>=/-z</code>、文件 <code>-f/-d/-x</code>；<code>[ ]</code> 内侧必须留空格、变量加双引号；</li>
-<li>流程：<code>if/elif/else/fi</code>、<code>case ... esac</code>（<code>;;</code> 结尾）、<code>for/while ... do/done</code>、数组 <code>arr=(a b c)</code>、<code>${#arr[@]}</code>；</li>
-<li>调试：<code>bash -x</code> 逐行跟踪、<code>set -e</code> 出错即停、<code>shellcheck</code> 静态检查。</li>
+<li><p><strong>核心概念</strong>：Shell 既是命令解释器（交互式执行命令），也是脚本编程语言（批量执行命令 + 逻辑控制）。脚本首行 <code>#!/bin/bash</code>（Shebang）指定解释器；运行方式有三种：<code>bash script.sh</code>（子 shell 执行）、<code>./script.sh</code>（需先 <code>chmod +x</code>）、<code>source script.sh</code>（在当前 shell 执行，环境变量留在当前会话）。</p>
+</li>
+<li><p><strong>要点 1（第一个程序与注释）</strong>：脚本第一行写 Shebang，<code>#</code> 后是单行注释，多行注释可用多个 <code>#</code> 或 <code>: &lt;&lt;'EOF' ... EOF</code>；<code>echo</code> 输出内容（<code>-e</code> 开启转义，如 <code>\n</code> 换行；<code>-n</code> 不换行）。</p>
+</li>
+<li><p><strong>要点 2（变量）</strong>：定义 <code>name=value</code>（等号两边<strong>不能有空格</strong>），使用 <code>$name</code> 或 <code>${name}</code>；只读 <code>readonly name</code>，删除 <code>unset name</code>；变量默认是字符串，<code>local</code> 用于函数内局部变量；双引号内 <code>$</code> 会被求值，单引号原样输出（<code>echo '结果: $name'</code> 输出字面量）。</p>
+</li>
+<li><p><strong>要点 3（变量细节）</strong>：<code>""</code> 双引号保留变量含义、<code>''</code> 单引号原样、反引号/<code>$()</code> 执行命令（推荐 <code>$()</code>）；<code>\</code> 转义特殊字符；<code>${#name}</code> 取字符串长度、<code>${name:起始:长度}</code> 截取。</p>
+</li>
+<li><p><strong>要点 4（传参与用户输入）</strong>：脚本参数：<code>$0</code> 脚本名、<code>$1..$9</code> 第 n 个参数、<code>$#</code> 参数个数、<code>$@</code>/<code>$*</code> 全部参数（<code>"$@"</code> 加引号更安全）、<code>$?</code> 上条命令退出码、<code>$$</code> 当前进程 PID；<code>read 变量名</code> 读键盘输入，<code>-p "提示"</code> 显示提示，<code>-s</code> 静默（适合密码），<code>-t 5</code> 超时 5 秒。</p>
+</li>
+<li><p><strong>要点 5（命令变量/命令替换）</strong>：<code>result=$(命令)</code> 把命令输出存入变量，反引号 <code>`命令` </code> 是旧写法、内部不能再嵌套反引号；常与 <code>date +%F</code>、<code>whoami</code>、<code>pwd</code>、<code>find</code> 等组合，这是自动化脚本的核心技巧。</p>
+</li>
+<li><p><strong>要点 6（运算符）</strong>：算术用 <code>$(( ))</code>（<code>+ - * / %</code>，<code>**</code> 乘方）或 <code>expr</code>（运算符两侧要空格、<code>*</code> 需转义 <code>\*</code>）；数值比较：<code>test $a -eq $b</code> 或 <code>[ $a -eq $b ]</code>，运算符 <code>-eq -ne -gt -lt -ge -le</code>；逻辑运算符 <code>-a</code>（与）、<code>-o</code>（或）、<code>!</code>（非），也可用 <code>&amp;&amp;</code>、<code>||</code>、<code>!</code> 组合命令；字符串判断：<code>-z</code> 空串、<code>-n</code> 非空、<code>=</code>/<code>==</code> 相等、<code>!=</code> 不等（比较符两侧留空格）。</p>
+</li>
+<li><p><strong>要点 7（文件判断）</strong>：<code>[ -e 文件 ]</code> 存在、<code>-f</code> 是普通文件、<code>-d</code> 是目录、<code>-r/-w/-x</code> 可读/写/执行、<code>-s</code> 文件非空、<code>-L</code> 是软链接；两个文件比较用 <code>-nt</code>（更新）/<code>-ot</code>（更旧）/<code>-ef</code>（同一文件）。</p>
+</li>
+<li><p><strong>要点 8（函数）</strong>：<code>function 名字 { ... }</code> 或 <code>名字() { ... }</code> 定义；函数内用 <code>$1</code>、<code>$2</code> 接收<strong>函数参数</strong>（不是脚本参数）；返回值用 <code>return 数字</code>（0-255，表示状态），取值 <code>$?</code>，返回数据用 <code>echo</code> 输出再由调用方 <code>$(...)</code> 捕获。</p>
+</li>
+<li><p><strong>要点 9（流程控制）</strong>：<code>if [ 条件 ]; then ... elif [ 条件 ]; then ... else ... fi</code>（条件两侧留空格、结尾 <code>fi</code>）；<code>case 变量 in 模式1) ...;; 模式2) ...;; *) 默认;; esac</code>，模式可用 <code>|</code> 并列、<code>*</code> 通配；<code>for 变量 in 列表; do ... done</code>（列表可为 <code>1 2 3</code>、<code>$(seq 1 5)</code>、<code>{1..5}</code>、通配符 <code>*.txt</code>）；<code>while [ 条件 ]; do ... done</code>，常与 <code>read</code> 配合逐行读文件，<code>break</code>/<code>continue</code> 控制循环。</p>
+</li>
+<li><p><strong>要点 10（重定向与数组）</strong>：<code>&gt;</code> <code>&gt;&gt;</code> 输出、<code>&lt;</code> 输入、<code>2&gt;</code> 错误、<code>&amp;&gt;</code> 全部、<code>&lt;&lt;EOF</code> Here Document（脚本内嵌多行输入）；数组：<code>arr=(a b c)</code>、<code>arr[0]=x</code>、<code>${arr[0]}</code> 取元素、<code>${arr[@]}</code> 全部元素、<code>${#arr[@]}</code> 个数、<code>unset arr[1]</code> 删除元素。</p>
+</li>
+<li><p><strong>要点 11（脚本调试）</strong>：<code>bash -n script.sh</code> 只查语法、<code>bash -x script.sh</code> 逐行打印执行过程、脚本内 <code>set -e</code>（出错即停）、<code>set -u</code>（未定义变量报错）、<code>set -x</code>（开启跟踪）；<code>shellcheck script.sh</code> 静态检查脚本质量问题。</p>
+</li>
 </ul>
-<h2 id="133-运行效果（实测）">13.3 运行效果（实测）</h2>
+<blockquote>
+<p><strong>注意：</strong> Shell 脚本三大经典坑：① <code>[ $a = $b ]</code> 中 <code>[</code>、变量、<code>]</code> 之间<strong>必须有空格</strong>；② 变量赋值 <code>a=1</code> 不能写成 <code>a = 1</code>；③ <code>$?</code> 只反映上一条命令，中间夹了别的命令就取不到了——要用临时变量接住。</p>
+</blockquote>
+<h2 id="133-重点与难点">13.3 重点与难点</h2>
+<ol>
+<li><strong>权限模型与 chmod 数字法</strong>：把 rwx 与 421 对应起来是重点；难点是理解"目录必须有 x 才能 cd 进去、有 w 才能在其中新建文件"，以及 <code>755</code>（脚本常用）与 <code>644</code>（普通文件常用）的典型取值。</li>
+<li><strong>重定向与管道的组合</strong>：理解"每个进程有 stdin/stdout/stderr 三个流"，才能看懂 <code>2&gt;&amp;1</code>、<code>&gt; log 2&gt;&amp;1</code>、<code>ps aux | grep ros | grep -v grep</code> 这类组合；这是从"会用命令"到"会写自动化"的分水岭。</li>
+<li><strong>变量引用与引号规则</strong>：单引号不求值、双引号求值、<code>$()</code> 执行命令替换，三者嵌套时容易混乱；建议用 <code>echo "$var"</code> 养成"引用变量必加双引号"的习惯（防含空格的路径出错）。</li>
+<li><strong>test/[] 条件表达式</strong>：数值比较用 <code>-eq</code> 而不是 <code>==</code>，字符串用 <code>=</code>，文件用 <code>-f/-d</code>；<code>[[ ]]</code>（bash 增强）支持 <code>&amp;&amp;</code>、<code>||</code> 与模式匹配，比 <code>[ ]</code> 更不容易踩空格坑。</li>
+<li><strong>流程控制语法细节</strong>：<code>then</code>/<code>do</code> 与 <code>fi</code>/<code>esac</code>/<code>done</code> 的配对、<code>;;</code> 结尾、<code>for</code> 遍历带空格文件名要 <code>"$@"</code> 或 <code>while read</code>，这些是初学写脚本最常见的语法错误来源。</li>
+<li><strong>调试能力</strong>：<code>bash -x</code> 看清每步实际执行的命令，<code>set -e</code> 防止错误被吞掉，是脚本可维护性的关键，也直接对应将来 launch/构建脚本的排错。</li>
+</ol>
+<h2 id="134-代码与命令实战">13.4 代码与命令实战</h2>
+<p><strong>场景 1：日常目录与文件管理（第 1 课命令综合）</strong></p>
+<pre><code class="lang-bash"><span class="hljs-comment"># 创建练习目录并进入（-p 递归创建，目录已存在不报错）</span>
+<span class="hljs-built_in">mkdir</span> -p ~/ros2_ws/notes_playground &amp;&amp; <span class="hljs-built_in">cd</span> ~/ros2_ws/notes_playground
+
+<span class="hljs-comment"># 建文件、复制、改名、查看</span>
+<span class="hljs-built_in">touch</span> hello.txt                     <span class="hljs-comment"># 新建空文件</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"ROS2 humble"</span> &gt; hello.txt      <span class="hljs-comment"># 覆盖写入内容</span>
+<span class="hljs-built_in">cp</span> hello.txt hello_bak.txt          <span class="hljs-comment"># 复制为备份</span>
+<span class="hljs-built_in">mv</span> hello_bak.txt backup/            <span class="hljs-comment"># 移动到 backup 目录（不存在则先 mkdir backup）</span>
+<span class="hljs-built_in">ls</span> -lh                              <span class="hljs-comment"># 长格式 + 人类可读大小查看</span>
+</code></pre>
+<p><strong>场景 2：管道 + 重定向 + grep："一句话搞定"</strong></p>
+<pre><code class="lang-bash"><span class="hljs-comment"># 从进程表里找 ROS 相关进程，并把结果同时写入日志文件</span>
+ps aux | grep ros | grep -v grep | <span class="hljs-built_in">tee</span> ros_procs.log   <span class="hljs-comment"># tee：边显示边存盘</span>
+
+<span class="hljs-comment"># 统计当前目录下 python 文件的总行数（-r 递归、-n 行号、wc -l 计行）</span>
+grep -rn <span class="hljs-string">""</span> --include=<span class="hljs-string">"*.py"</span> . | <span class="hljs-built_in">wc</span> -l
+
+<span class="hljs-comment"># 追加错误与标准输出都进 build.log（2&gt;&amp;1 表示把 stderr 并到 stdout）</span>
+./build.sh &gt; build.log 2&gt;&amp;1
+</code></pre>
+<p><strong>场景 3：权限设置与脚本赋执行权</strong></p>
+<pre><code class="lang-bash"><span class="hljs-comment"># 字母法：给所有者加执行权、去掉组写权、其他人只读</span>
+<span class="hljs-built_in">chmod</span> u+x,g-w,o=r my_script.sh
+
+<span class="hljs-comment"># 数字法：755 = rwxr-xr-x，脚本常用；644 = rw-r--r--，普通文件常用</span>
+<span class="hljs-built_in">chmod</span> 755 deploy_robot.sh
+<span class="hljs-built_in">chmod</span> 644 config.yaml
+
+<span class="hljs-comment"># 查看命令位置（区分 which 查 PATH、whereis 还查 man 源码路径）</span>
+<span class="hljs-built_in">which</span> colcon
+whereis bash
+</code></pre>
+<p><strong>场景 4：第一个 Shell 脚本 —— 传参、变量、命令替换</strong></p>
+<pre><code class="lang-bash"><span class="hljs-meta">#!/bin/bash</span>
+<span class="hljs-comment"># 文件: hello_shell.sh —— 演示 Shebang、变量、命令替换、传参</span>
+name=<span class="hljs-string">"<span class="hljs-variable">${1:-world}</span>"</span>                  <span class="hljs-comment"># 取第 1 个参数，缺省用 world</span>
+now=$(<span class="hljs-built_in">date</span> +%F\ %T)                 <span class="hljs-comment"># $(命令替换) 把命令输出存入变量</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"你好, <span class="hljs-variable">${name}</span>！现在是 <span class="hljs-variable">${now}</span>"</span>  <span class="hljs-comment"># 引用变量加 ${} 更清晰</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"脚本名: <span class="hljs-variable">$0</span>, 参数个数: <span class="hljs-variable">$#</span>"</span>
+<span class="hljs-built_in">exit</span> 0                              <span class="hljs-comment"># 返回退出码 0 表示成功</span>
+</code></pre>
+<p><strong>场景 5：函数 + if 多分支 —— 判断文件/目录（含返回值）</strong></p>
+<pre><code class="lang-bash"><span class="hljs-meta">#!/bin/bash</span>
+<span class="hljs-comment"># 文件: check_path.sh —— 函数传参、return 返回状态、if 多分支</span>
+<span class="hljs-function"><span class="hljs-title">check</span></span>() {                            <span class="hljs-comment"># $1 是函数参数，不是脚本参数</span>
+    <span class="hljs-keyword">if</span> [ -d <span class="hljs-string">"<span class="hljs-variable">$1</span>"</span> ]; <span class="hljs-keyword">then</span>
+        <span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">$1</span> 是目录"</span>
+        <span class="hljs-built_in">return</span> 0                     <span class="hljs-comment"># 0 表示成功/成立</span>
+    <span class="hljs-keyword">elif</span> [ -f <span class="hljs-string">"<span class="hljs-variable">$1</span>"</span> ]; <span class="hljs-keyword">then</span>
+        <span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">$1</span> 是普通文件"</span>
+        <span class="hljs-built_in">return</span> 0
+    <span class="hljs-keyword">else</span>
+        <span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">$1</span> 不存在"</span>
+        <span class="hljs-built_in">return</span> 1                     <span class="hljs-comment"># 非 0 表示不成立</span>
+    <span class="hljs-keyword">fi</span>
+}
+
+check /etc/hosts                     <span class="hljs-comment"># 调用函数</span>
+<span class="hljs-keyword">if</span> [ $? -eq 0 ]; <span class="hljs-keyword">then</span>                <span class="hljs-comment"># $? 取函数返回值</span>
+    <span class="hljs-built_in">echo</span> <span class="hljs-string">"检查通过"</span>
+<span class="hljs-keyword">fi</span>
+</code></pre>
+<p><strong>场景 6：case + for + while + 数组 —— 批量操作与统计</strong></p>
+<pre><code class="lang-bash"><span class="hljs-meta">#!/bin/bash</span>
+<span class="hljs-comment"># 文件: batch_ops.sh —— case 分支、for/while 循环、数组、Here Document</span>
+hosts=(192.168.1.10 192.168.1.11)    <span class="hljs-comment"># 数组定义</span>
+<span class="hljs-keyword">for</span> ip <span class="hljs-keyword">in</span> <span class="hljs-string">"<span class="hljs-variable">${hosts[@]}</span>"</span>; <span class="hljs-keyword">do</span>          <span class="hljs-comment"># 遍历数组全部元素</span>
+    ping -c 1 -W 1 <span class="hljs-string">"<span class="hljs-variable">$ip</span>"</span> &gt;/dev/null 2&gt;&amp;1 &amp;&amp; <span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">$ip</span> 在线"</span> || <span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">$ip</span> 不可达"</span>
+<span class="hljs-keyword">done</span>
+
+action=<span class="hljs-string">"<span class="hljs-variable">${1:-status}</span>"</span>                <span class="hljs-comment"># 脚本第 1 个参数决定行为</span>
+<span class="hljs-keyword">case</span> <span class="hljs-string">"<span class="hljs-variable">$action</span>"</span> <span class="hljs-keyword">in</span>                    <span class="hljs-comment"># case 匹配分支</span>
+    start)   <span class="hljs-built_in">echo</span> <span class="hljs-string">"启动机器人节点..."</span> ;;
+    stop)    <span class="hljs-built_in">echo</span> <span class="hljs-string">"停止机器人节点..."</span> ;;
+    status|info) <span class="hljs-built_in">echo</span> <span class="hljs-string">"查询状态"</span> ;;  <span class="hljs-comment"># | 表示或</span>
+    *)       <span class="hljs-built_in">echo</span> <span class="hljs-string">"用法: <span class="hljs-variable">$0</span> {start|stop|status}"</span> ;;
+<span class="hljs-keyword">esac</span>
+
+i=0
+<span class="hljs-keyword">while</span> <span class="hljs-built_in">read</span> -r line; <span class="hljs-keyword">do</span>               <span class="hljs-comment"># while + read 逐行读文件</span>
+    i=$((i+<span class="hljs-number">1</span>))                       <span class="hljs-comment"># $(( )) 算术运算</span>
+<span class="hljs-keyword">done</span> &lt; /etc/hosts                    <span class="hljs-comment"># &lt; 输入重定向</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"共读取 <span class="hljs-variable">$i</span> 行"</span>
+</code></pre>
+<p><strong>场景 7：本章综合自检脚本 w13.sh</strong>（融合场景 4~6 的全部要素：变量与命令替换、函数 + if 多分支、case 分支、数组统计；运行方式与传参遵循 <code>$0/$1/$#/$?</code> 约定）</p>
+<pre><code class="lang-bash"><span class="hljs-meta">#!/bin/bash</span>
+<span class="hljs-comment"># 文件: w13.sh —— 第13章综合自检脚本</span>
+name=<span class="hljs-string">"<span class="hljs-variable">${1:-world}</span>"</span>                       <span class="hljs-comment"># 传参 + 缺省值</span>
+now=$(<span class="hljs-built_in">date</span> +%F\ %T)                      <span class="hljs-comment"># 命令替换</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"你好, <span class="hljs-variable">${name}</span>！现在是 <span class="hljs-variable">${now}</span>"</span>
+
+<span class="hljs-function"><span class="hljs-title">check</span></span>() {                                <span class="hljs-comment"># 函数 + if 多分支</span>
+    <span class="hljs-keyword">if</span> [ -d <span class="hljs-string">"<span class="hljs-variable">$1</span>"</span> ]; <span class="hljs-keyword">then</span>
+        <span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">$1</span> 是目录"</span>
+    <span class="hljs-keyword">elif</span> [ -f <span class="hljs-string">"<span class="hljs-variable">$1</span>"</span> ]; <span class="hljs-keyword">then</span>
+        <span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">$1</span> 是普通文件"</span>
+    <span class="hljs-keyword">else</span>
+        <span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">$1</span> 不存在"</span>
+    <span class="hljs-keyword">fi</span>
+}
+check /etc/hosts
+check /no/such/path
+
+action=<span class="hljs-string">"<span class="hljs-variable">${2:-status}</span>"</span>                    <span class="hljs-comment"># case 分支（缺省 status）</span>
+<span class="hljs-keyword">case</span> <span class="hljs-string">"<span class="hljs-variable">$action</span>"</span> <span class="hljs-keyword">in</span>
+    start)   <span class="hljs-built_in">echo</span> <span class="hljs-string">"启动机器人节点..."</span> ;;
+    stop)    <span class="hljs-built_in">echo</span> <span class="hljs-string">"停止机器人节点..."</span> ;;
+    status|info) <span class="hljs-built_in">echo</span> <span class="hljs-string">"查询状态"</span> ;;
+    *)       <span class="hljs-built_in">echo</span> <span class="hljs-string">"用法: <span class="hljs-variable">$0</span> [名字] {start|stop|status}"</span> ;;
+<span class="hljs-keyword">esac</span>
+
+hosts=(192.168.1.10 192.168.1.11)        <span class="hljs-comment"># 数组统计</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"主机数: <span class="hljs-variable">${#hosts[@]}</span>"</span>
+</code></pre>
+<h2 id="135-运行效果（实测）">13.5 运行效果（实测）</h2>
+<h3 id="1351-综合自检脚本（实测）">13.5.1 综合自检脚本（实测）</h3>
 <pre><code class="lang-text">你好, zcode！现在是 2026-10-15 15:46:27
 /etc/hosts 是普通文件
 /no/such/path 不存在
@@ -632,7 +900,7 @@
 主机数: 2
 </code></pre>
 <p>运行命令：<code>bash w13.sh zcode</code>（Ubuntu 24.04 / bash 实测）。</p>
-<h2 id="134-端到端实战（实测）：日志清理脚本">13.4 端到端实战（实测）：日志清理脚本</h2>
+<h3 id="1352-端到端实战（实测）：日志清理脚本-cleanlogsh">13.5.2 端到端实战（实测）：日志清理脚本 clean_log.sh</h3>
 <p>课程动手任务的实现：删除指定目录下 7 天前的 <code>.log</code> 文件，执行前列出待删文件并确认，参数缺失时给出用法并以非 0 码退出。</p>
 <pre><code class="lang-bash"><span class="hljs-comment"># clean_log.sh</span>
 DIR=<span class="hljs-string">"<span class="hljs-variable">${1:-}</span>"</span>
@@ -660,14 +928,46 @@ $ ls logs/
 new.log
 </code></pre>
 <p>旧日志被清理、新日志保留，确认机制生效。</p>
-<h2 id="135-本章小结">13.5 本章小结</h2>
+<h2 id="136-与-ros2--机器人开发的关联">13.6 与 ROS2 / 机器人开发的关联</h2>
+<ol>
+<li><strong>bashrc 与 ROS2 环境变量</strong>：ROS2 安装后必须 <code>source /opt/ros/humble/setup.bash</code>，工作空间还需 <code>source install/setup.bash</code>；把它们写进 <code>~/.bashrc</code>，每次开终端自动生效。变量、别名、PATH 修改同理，本周的"变量 + 脚本"技能直接用于配置开发环境：</li>
+</ol>
+<pre><code class="lang-bash"><span class="hljs-comment"># 追加到 ~/.bashrc：ROS2 环境与常用别名（写完 source ~/.bashrc 生效）</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">'source /opt/ros/humble/setup.bash'</span> &gt;&gt; ~/.bashrc
+<span class="hljs-built_in">echo</span> <span class="hljs-string">'alias cb="colcon build --symlink-install"'</span> &gt;&gt; ~/.bashrc
+</code></pre>
+<ol>
+<li><strong>colcon 构建脚本</strong>：把"进入工作空间 → source 环境 → colcon build → source 新产物 → 运行测试"固化成 <code>build_ros2_ws.sh</code>，配合 <code>$1</code> 传参（如 <code>--packages-select</code>）、<code>$?</code> 判断构建是否失败、<code>set -e</code> 出错即停，就是本周脚本技能的直接落地。</li>
+<li><strong>systemd / launch 启动脚本</strong>：机器人开机自启节点，需要写 systemd service 文件（本质是带 <code>ExecStart=bash -c 'source ...; ros2 run ...'</code> 的文本配置）或 ROS2 launch 启动脚本，其中的路径拼接、条件判断、循环启动多节点，用的全是 if/for/函数。</li>
+<li><strong>SSH 远程调试机器人</strong>：机器人（树莓派/Jetson/工控机）通常无显示器，用 PuTTY/<code>ssh</code> 登录、WinSCP/<code>scp</code> 拷代码与日志、<code>tail -f log.txt</code> 看节点输出、<code>top</code> 看 CPU、<code>kill</code> 停失控节点、<code>ss -tlnp</code> 排查 DDS/话题端口占用——本周第 1 课后半部分几乎就是"机器人运维手册"。</li>
+<li><strong>日志与排错方法论</strong>：ROS2 的 <code>~/.ros/log</code>、<code>colcon</code> 构建日志都要靠 <code>grep</code>/<code>tail</code>/重定向分析；<code>bash -x</code>、<code>set -e</code> 的调试思路同样适用于定位 launch 文件与参数配置错误。</li>
+</ol>
+<h2 id="137-自测与练习（含参考答案要点）">13.7 自测与练习（含参考答案要点）</h2>
+<ol>
+<li><strong>概念题</strong>：解释软链接与硬链接的区别；<code>chmod 755</code> 给三类用户分别赋予了什么权限；<code>$?</code>、<code>$#</code>、<code>$@</code> 分别表示什么？</li>
+<li><strong>动手任务</strong>：写一个 <code>clean_log.sh</code>，功能：删除指定目录下 7 天前的 <code>.log</code> 文件（<code>find ... -mtime +7 -name "*.log" -delete</code>），执行前显示将删除的文件列表并让用户 <code>read</code> 确认（输入 <code>y</code> 才执行）。验收标准：传入目录参数时行为正确，不传参数时给出用法提示并以非 0 码退出。</li>
+<li><strong>动手任务</strong>：写一个 <code>robot_check.sh</code>，用函数封装"检查 IP 是否在线、检查端口是否监听、检查磁盘剩余空间是否大于 20%"，用 <code>if</code> 多分支输出 ✅/❌，全部通过则 <code>return 0</code>。验收标准：用 <code>bash -x</code> 运行能看到每一步判断过程。</li>
+</ol>
+<blockquote>
+<p>参考答案要点：1）软链接是独立的路径指向（可跨分区、目标删除即失效），硬链接是同一 inode 的别名（不能跨分区、链接数 +1）；<code>755</code> = 所有者 rwx、组 r-x、其他人 r-x；<code>$?</code> 上条命令退出码、<code>$#</code> 参数个数、<code>$@</code> 全部参数。2）注意 <code>read -p</code> 确认、<code>"$1"</code> 加引号防空格路径、<code>exit 1</code> 表示用法错误。3）<code>ping -c 1</code>、<code>ss -tln | grep</code>、<code>df -h</code> 配合 <code>awk</code> 取百分比，函数用 <code>return</code> 汇总状态。</p>
+</blockquote>
+<h2 id="138-常见问题（faq）">13.8 常见问题（FAQ）</h2>
+<ul>
+<li><strong>Q：<code>source script.sh</code>、<code>bash script.sh</code>、<code>./script.sh</code> 有什么区别？</strong> A：<code>bash</code>/<code>./script.sh</code> 都在<strong>子 shell</strong> 中执行，脚本里的 <code>cd</code>、变量不影响当前终端；<code>source</code> 在<strong>当前 shell</strong> 执行，<code>export</code> 的变量、<code>cd</code> 的结果会留在当前会话——所以 ROS2 的 <code>setup.bash</code> 必须用 <code>source</code>。<code>./script.sh</code> 额外要求文件有 <code>x</code> 执行权限和正确的 Shebang。</li>
+<li><strong>Q：为什么 <code>[ -d $dir ]</code> 报错 "unary operator expected"？</strong> A：变量为空或含空格导致条件表达式结构被破坏，应写成 <code>[ -d "$dir" ]</code>（变量加引号），或改用 bash 的 <code>[[ -d $dir ]]</code>。</li>
+<li><strong>Q：<code>kill PID</code> 杀不掉进程怎么办？</strong> A：先 <code>ps aux | grep 进程名</code> 确认 PID；<code>kill</code>（SIGTERM）可被捕获，顽固进程用 <code>kill -9 PID</code>（SIGKILL，强制但可能丢数据）；批量结束用 <code>killall 进程名</code>。机器人上杀 ROS 节点前先确认没有正在进行的电机控制。</li>
+<li><strong>Q：端口被占用（如 ROS2 调试端口、Web 端口）怎么排查？</strong> A：<code>ss -tlnp | grep 端口号</code> 或 <code>lsof -i:端口号</code> 找到占用进程的 PID，再 <code>kill</code> 它；<code>fuser -k 端口/tcp</code> 可直接释放端口。</li>
+<li><strong>Q：脚本在 Windows 上写好，Linux 上运行报 <code>bad interpreter: /bin/bash^M</code>？</strong> A：Windows 换行符 <code>\r\n</code> 里的 <code>\r</code> 被当成文件名的一部分。用 <code>sed -i 's/\r$//' script.sh</code> 转换，或在 Windows 编辑器里把换行格式改为 LF。</li>
+<li><strong>Q：<code>&gt;</code> 和 <code>&gt;&gt;</code>、<code>2&gt;&amp;1</code> 分别什么时候用？</strong> A：<code>&gt;</code> 覆盖写、<code>&gt;&gt;</code> 追加写；<code>2&gt;&amp;1</code> 把标准错误并到标准输出（配合 <code>&gt;</code> 一起落盘），<code>&amp;&gt; file</code> 是两者的快捷写法。写构建日志建议 <code>colcon build 2&gt;&amp;1 | tee build.log</code>。</li>
+</ul>
+<h2 id="139-本章小结">13.9 本章小结</h2>
 <ul>
 <li><code>source</code> 与 <code>bash</code> 执行的区别决定了 ROS2 环境为什么必须 <code>source setup.bash</code>；</li>
 <li>把「进入工作空间 → colcon build → source 产物」固化成脚本，用 <code>$?</code> 判失败、<code>set -e</code> 出错即停，是本周技能的直接落地；</li>
 <li>SSH + <code>scp</code> + <code>tail -f</code> + <code>top</code> + <code>ss -tlnp</code> 是远程调试无显示器机器人的标准工具链；</li>
 <li>三大经典坑：<code>[ ]</code> 内侧空格、赋值两侧不能有空格、<code>$?</code> 只反映上一条命令。</li>
 </ul>
-<h2 id="136-基础篇总结（第-113-周）">13.6 基础篇总结（第 1~13 周）</h2>
+<h2 id="1310-基础篇总结（第-113-周）">13.10 基础篇总结（第 1~13 周）</h2>
 <table>
 <thead>
 <tr>
@@ -748,7 +1048,7 @@ new.log
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第13章 Linux 与 Shell 入门（操作系统地基）","level":"5.1","depth":1,"next":{"title":"第14章 ROS2 概述与环境搭建","level":"6.1","depth":1,"path":"第14周-ROS2概述与环境搭建.md","ref":"第14周-ROS2概述与环境搭建.md","articles":[]},"previous":{"title":"第12章 常用算法与技术（algorithm/chrono/lambda/线程）","level":"4.5","depth":1,"path":"第12周-常用算法与技术.md","ref":"第12周-常用算法与技术.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第13周-Linux与Shell入门.md","mtime":"2026-10-16T02:43:09.753Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T02:43:11.108Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第13章 Linux 与 Shell 入门（操作系统地基）","level":"5.1","depth":1,"next":{"title":"第14章 ROS2 概述与环境搭建","level":"6.1","depth":1,"path":"第14周-ROS2概述与环境搭建.md","ref":"第14周-ROS2概述与环境搭建.md","articles":[]},"previous":{"title":"第12章 常用算法与技术（algorithm/chrono/lambda/线程）","level":"4.5","depth":1,"path":"第12周-常用算法与技术.md","ref":"第12周-常用算法与技术.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第13周-Linux与Shell入门.md","mtime":"2026-10-16T03:26:51.708Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T03:26:53.986Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
