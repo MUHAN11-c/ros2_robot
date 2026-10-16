@@ -17,10 +17,10 @@ ament_target_dependencies(listener_component rclcpp rclcpp_components std_msgs)
 
 # 2.注册组件(同时生成独立的可执行程序便于测试)；
 rclcpp_components_register_nodes(talker_component
-  "TalkerComponent"
+  "my_component::TalkerComponent"
 )
 rclcpp_components_register_nodes(listener_component
-  "ListenerComponent"
+  "my_component::ListenerComponent"
 )
 
 # 3.安装组件库；

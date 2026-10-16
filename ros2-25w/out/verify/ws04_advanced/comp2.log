@@ -1,0 +1,37 @@
+--- ros2 run rclcpp_components component_container (bg 24s)
+--- ros2 component load /ComponentManager demo_component my_component::TalkerComponent
+[INFO] [1792112693.284467108] [ComponentManager]: Load Library: /home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws04_advanced/install/demo_component/lib/libtalker_component.so
+[INFO] [1792112693.285059390] [ComponentManager]: Found class: rclcpp_components::NodeFactoryTemplate<my_component::TalkerComponent>
+[INFO] [1792112693.285067483] [ComponentManager]: Instantiate class: rclcpp_components::NodeFactoryTemplate<my_component::TalkerComponent>
+[INFO] [1792112693.289790065] [talker_component_node_cpp]: talker组件被创建了
+Loaded component 1 into '/ComponentManager' container node as '/talker_component_node_cpp'
+--- ros2 component load /ComponentManager demo_component my_component::ListenerComponent
+[INFO] [1792112694.291758524] [talker_component_node_cpp]: 发布:hello component!
+[INFO] [1792112694.298269556] [ComponentManager]: Load Library: /home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws04_advanced/install/demo_component/lib/liblistener_component.so
+[INFO] [1792112694.299428200] [ComponentManager]: Found class: rclcpp_components::NodeFactoryTemplate<my_component::ListenerComponent>
+[INFO] [1792112694.299446526] [ComponentManager]: Instantiate class: rclcpp_components::NodeFactoryTemplate<my_component::ListenerComponent>
+[INFO] [1792112694.304748514] [listener_component_node_cpp]: listener组件被创建了
+Loaded component 2 into '/ComponentManager' container node as '/listener_component_node_cpp'
+--- ros2 component list
+[INFO] [1792112695.291533268] [talker_component_node_cpp]: 发布:hello component!
+[INFO] [1792112695.291760659] [listener_component_node_cpp]: 订阅的消息：'hello component!'
+/ComponentManager
+  1  /talker_component_node_cpp
+  2  /listener_component_node_cpp
+--- 节点日志（前 8 行）
+[INFO] [1792112694.291758524] [talker_component_node_cpp]: 发布:hello component!
+[INFO] [1792112695.291533268] [talker_component_node_cpp]: 发布:hello component!
+[INFO] [1792112695.291760659] [listener_component_node_cpp]: 订阅的消息：'hello component!'
+[INFO] [1792112696.292275478] [talker_component_node_cpp]: 发布:hello component!
+[INFO] [1792112696.292426361] [listener_component_node_cpp]: 订阅的消息：'hello component!'
+[INFO] [1792112697.291321478] [talker_component_node_cpp]: 发布:hello component!
+[INFO] [1792112697.291443538] [listener_component_node_cpp]: 订阅的消息：'hello component!'
+[INFO] [1792112698.292585943] [talker_component_node_cpp]: 发布:hello component!
+[INFO] [1792112698.292688544] [listener_component_node_cpp]: 订阅的消息：'hello component!'
+[INFO] [1792112699.294442531] [talker_component_node_cpp]: 发布:hello component!
+[INFO] [1792112699.294590298] [listener_component_node_cpp]: 订阅的消息：'hello component!'
+[INFO] [1792112700.291337933] [talker_component_node_cpp]: 发布:hello component!
+[INFO] [1792112700.291515489] [listener_component_node_cpp]: 订阅的消息：'hello component!'
+[INFO] [1792112701.291391786] [talker_component_node_cpp]: 发布:hello component!
+[INFO] [1792112701.291527231] [listener_component_node_cpp]: 订阅的消息：'hello component!'
+[INFO] [1792112701.591158445] [rclcpp]: signal_handler(SIGINT/SIGTERM)
