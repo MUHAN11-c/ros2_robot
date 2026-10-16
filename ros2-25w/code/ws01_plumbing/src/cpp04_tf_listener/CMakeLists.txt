@@ -15,8 +15,12 @@ find_package(geometry_msgs REQUIRED)
 add_executable(demo01_tf_listener src/demo01_tf_listener.cpp)
 ament_target_dependencies(demo01_tf_listener rclcpp tf2 tf2_ros tf2_geometry_msgs geometry_msgs)
 
+add_executable(demo02_point_listener src/demo02_point_listener.cpp)
+ament_target_dependencies(demo02_point_listener rclcpp tf2 tf2_ros tf2_geometry_msgs geometry_msgs)
+
 install(TARGETS
   demo01_tf_listener
+  demo02_point_listener
   DESTINATION lib/${PROJECT_NAME}
 )
 

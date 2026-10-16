@@ -107,7 +107,61 @@ angular:
 ros2 action send_goal /turtle_forward base_interfaces_demo/action/Progress "{num: 3}" --feedback
 ```
 
-## 16.3 本章小结
+## 16.3 通信机制拓展（分布式/工作空间覆盖/元功能包/重映射）
+
+课程第 16 周第 1 课还包括四个工程化主题，本节逐一给出可运行的最小验证：
+
+### 16.3.1 分布式
+
+同一 DDS 域内的两台机器自动互相发现，无需任何中心节点。用 `ROS_DOMAIN_ID` 隔离/互通：
+
+```bash
+# 两台机器（或两个终端）设置相同 Domain 即互通，不同即隔离
+export ROS_DOMAIN_ID=42
+ros2 topic list    # 只能看到同域的设备
+```
+
+### 16.3.2 工作空间覆盖
+
+后 source 的工作空间**覆盖**先 source 的同名包——这是「不改上游包、只改自己扩展」的标准做法。本仓库提供了同名的覆盖演示包（`code/examples/overlay_demo/cpp00_hello_world`）：
+
+```bash
+# 1.先 source 底层工作空间（underlay）
+source ws01_plumbing/install/setup.bash
+# 2.再构建并 source 覆盖层（overlay）
+cd /tmp/overlay_ws && colcon build && source install/setup.bash
+# 3.运行同名包：执行的是覆盖层版本
+ros2 run cpp00_hello_world demo01_hello_world
+```
+
+实测（本机 Jazzy）：
+
+```text
+[INFO] [...]: [hello_world_node_cpp]: Hello from OVERLAY workspace!（覆盖层版本）
+```
+
+### 16.3.3 元功能包
+
+元功能包（metapackage）本身没有源码，只通过 `exec_depend` 聚合一组包，实现「一键安装」。本仓库新增 `cobot_metapackage`（聚合课程通信篇的功能包），`colcon build` 即可验证依赖解析：
+
+```bash
+cd ws02_middle && colcon build --packages-select cobot_metapackage
+ros2 pkg xml cobot_metapackage    # 查看聚合清单
+ros2 pkg executables cpp01_topic  # 被聚合包可直接使用
+```
+
+### 16.3.4 节点/话题重名（重映射）
+
+不修改源码即可解决重名——启动时用 `--ros-args -r` 重映射：
+
+```bash
+# 节点重名：把 talker 重命名为 talker2
+ros2 run cpp01_topic demo01_talker_str --ros-args -r __node:=talker2
+# 话题重名：把 /chatter 重映射为 /chatter2
+ros2 run cpp01_topic demo01_talker_str --ros-args -r /chatter:=/chatter2
+```
+
+## 16.4 本章小结
 
 - Time/Duration/Rate 是周期任务与超时控制的基础，时刻与时段的运算法则要区分；
 - 期中大作业把四种通信机制落在同一只乌龟上，是通信篇的验收案例；

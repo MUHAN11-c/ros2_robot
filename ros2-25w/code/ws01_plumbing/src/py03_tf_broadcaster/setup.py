@@ -22,6 +22,7 @@ setup(
         'console_scripts': [
             'demo01_static_tf_broadcaster_py = py03_tf_broadcaster.demo01_static_tf_broadcaster_py:main',
             'demo02_dynamic_tf_broadcaster_py = py03_tf_broadcaster.demo02_dynamic_tf_broadcaster_py:main',
+            'demo02_point_listener_py = py03_tf_broadcaster.demo02_point_listener_py:main',
         ],
     },
 )

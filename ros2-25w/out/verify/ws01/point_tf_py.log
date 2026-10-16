@@ -1,0 +1,22 @@
+===== demo02_point_listener_py (Python) =====
+[INFO] [1792117188.838094644] [point_listener_node_py]: 坐标点(0.50,0.50) 变换到 world 系下: (1.50,2.50)
+[INFO] [1792117191.864096891] [point_listener_node_py]: 坐标点(1.00,1.00) 变换到 world 系下: (2.00,3.00)
+Traceback (most recent call last):
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws01_plumbing/install/py03_tf_broadcaster/lib/py03_tf_broadcaster/demo02_point_listener_py", line 33, in <module>
+    sys.exit(load_entry_point('py03-tf-broadcaster==0.0.0', 'console_scripts', 'demo02_point_listener_py')())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws01_plumbing/install/py03_tf_broadcaster/lib/python3.12/site-packages/py03_tf_broadcaster/demo02_point_listener_py.py", line 49, in main
+    rclpy.spin(PointListenerPy())
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
+    executor.spin_once()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 926, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 907, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 877, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 785, in _wait_for_ready_callbacks
+    raise ExternalShutdownException()
+rclpy.executors.ExternalShutdownException

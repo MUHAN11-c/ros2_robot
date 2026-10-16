@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>cobot_metapackage</name>
+  <version>0.0.0</version>
+  <description>第16周 元功能包（metapackage）：聚合课程依赖的功能包，一键安装</description>
+  <maintainer email="ros2@todo.todo">ros2</maintainer>
+  <license>TODO: License declaration</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- 元功能包不包含源码，仅通过 exec_depend 聚合其余功能包 -->
+  <exec_depend>base_interfaces_demo</exec_depend>
+  <exec_depend>cpp01_topic</exec_depend>
+  <exec_depend>py01_topic</exec_depend>
+  <exec_depend>cpp02_service</exec_depend>
+  <exec_depend>py02_service</exec_depend>
+  <exec_depend>cpp03_action</exec_depend>
+  <exec_depend>py03_action</exec_depend>
+  <exec_depend>cpp04_param</exec_depend>
+  <exec_depend>py04_param</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+    <metapackage/>
+  </export>
+</package>

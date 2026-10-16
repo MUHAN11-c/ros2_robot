@@ -704,7 +704,40 @@ angular:
 <p>实测动作目标（需同时 source 接口包所在工作空间 ws01）：</p>
 <pre><code class="lang-bash">ros2 action send_goal /turtle_forward base_interfaces_demo/action/Progress <span class="hljs-string">"{num: 3}"</span> --feedback
 </code></pre>
-<h2 id="163-本章小结">16.3 本章小结</h2>
+<h2 id="163-通信机制拓展（分布式工作空间覆盖元功能包重映射）">16.3 通信机制拓展（分布式/工作空间覆盖/元功能包/重映射）</h2>
+<p>课程第 16 周第 1 课还包括四个工程化主题，本节逐一给出可运行的最小验证：</p>
+<h3 id="1631-分布式">16.3.1 分布式</h3>
+<p>同一 DDS 域内的两台机器自动互相发现，无需任何中心节点。用 <code>ROS_DOMAIN_ID</code> 隔离/互通：</p>
+<pre><code class="lang-bash"><span class="hljs-comment"># 两台机器（或两个终端）设置相同 Domain 即互通，不同即隔离</span>
+<span class="hljs-built_in">export</span> ROS_DOMAIN_ID=42
+ros2 topic list    <span class="hljs-comment"># 只能看到同域的设备</span>
+</code></pre>
+<h3 id="1632-工作空间覆盖">16.3.2 工作空间覆盖</h3>
+<p>后 source 的工作空间<strong>覆盖</strong>先 source 的同名包——这是「不改上游包、只改自己扩展」的标准做法。本仓库提供了同名的覆盖演示包（<code>code/examples/overlay_demo/cpp00_hello_world</code>）：</p>
+<pre><code class="lang-bash"><span class="hljs-comment"># 1.先 source 底层工作空间（underlay）</span>
+<span class="hljs-built_in">source</span> ws01_plumbing/install/setup.bash
+<span class="hljs-comment"># 2.再构建并 source 覆盖层（overlay）</span>
+<span class="hljs-built_in">cd</span> /tmp/overlay_ws &amp;&amp; colcon build &amp;&amp; <span class="hljs-built_in">source</span> install/setup.bash
+<span class="hljs-comment"># 3.运行同名包：执行的是覆盖层版本</span>
+ros2 run cpp00_hello_world demo01_hello_world
+</code></pre>
+<p>实测（本机 Jazzy）：</p>
+<pre><code class="lang-text">[INFO] [...]: [hello_world_node_cpp]: Hello from OVERLAY workspace!（覆盖层版本）
+</code></pre>
+<h3 id="1633-元功能包">16.3.3 元功能包</h3>
+<p>元功能包（metapackage）本身没有源码，只通过 <code>exec_depend</code> 聚合一组包，实现「一键安装」。本仓库新增 <code>cobot_metapackage</code>（聚合课程通信篇的功能包），<code>colcon build</code> 即可验证依赖解析：</p>
+<pre><code class="lang-bash"><span class="hljs-built_in">cd</span> ws02_middle &amp;&amp; colcon build --packages-select cobot_metapackage
+ros2 pkg xml cobot_metapackage    <span class="hljs-comment"># 查看聚合清单</span>
+ros2 pkg executables cpp01_topic  <span class="hljs-comment"># 被聚合包可直接使用</span>
+</code></pre>
+<h3 id="1634-节点话题重名（重映射）">16.3.4 节点/话题重名（重映射）</h3>
+<p>不修改源码即可解决重名——启动时用 <code>--ros-args -r</code> 重映射：</p>
+<pre><code class="lang-bash"><span class="hljs-comment"># 节点重名：把 talker 重命名为 talker2</span>
+ros2 run cpp01_topic demo01_talker_str --ros-args -r __node:=talker2
+<span class="hljs-comment"># 话题重名：把 /chatter 重映射为 /chatter2</span>
+ros2 run cpp01_topic demo01_talker_str --ros-args -r /chatter:=/chatter2
+</code></pre>
+<h2 id="164-本章小结">16.4 本章小结</h2>
 <ul>
 <li>Time/Duration/Rate 是周期任务与超时控制的基础，时刻与时段的运算法则要区分；</li>
 <li>期中大作业把四种通信机制落在同一只乌龟上，是通信篇的验收案例；</li>
@@ -753,7 +786,7 @@ angular:
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第16章 通信机制拓展与时间 API","level":"6.3","depth":1,"next":{"title":"第17章 工具应用实操（launch 与 rosbag2）","level":"6.4","depth":1,"path":"第17周-工具应用实操.md","ref":"第17周-工具应用实操.md","articles":[]},"previous":{"title":"第15章 通信机制深度剖析","level":"6.2","depth":1,"path":"第15周-通信机制深度剖析.md","ref":"第15周-通信机制深度剖析.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第16周-通信机制拓展与时间API.md","mtime":"2026-10-16T01:45:03.184Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T01:45:04.121Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第16章 通信机制拓展与时间 API","level":"6.3","depth":1,"next":{"title":"第17章 工具应用实操（launch 与 rosbag2）","level":"6.4","depth":1,"path":"第17周-工具应用实操.md","ref":"第17周-工具应用实操.md","articles":[]},"previous":{"title":"第15章 通信机制深度剖析","level":"6.2","depth":1,"path":"第15周-通信机制深度剖析.md","ref":"第15周-通信机制深度剖析.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第16周-通信机制拓展与时间API.md","mtime":"2026-10-16T02:22:57.355Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T02:22:58.395Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

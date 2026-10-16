@@ -1,0 +1,7 @@
+===== demo02_point_listener (C++) =====
+[INFO] [1792116872.772986347] [point_listener_node_cpp]: 坐标点(0.50,0.50) 变换到 world 系下: (1.50,2.50)
+[INFO] [1792116873.252172110] [point_listener_node_cpp]: 坐标点(1.00,1.00) 变换到 world 系下: (2.00,3.00)
+[INFO] [1792116873.283646847] [point_listener_node_cpp]: 坐标点(1.00,1.00) 变换到 world 系下: (2.00,3.00)
+[INFO] [1792116875.836262919] [point_listener_node_cpp]: 坐标点(1.00,1.00) 变换到 world 系下: (2.00,3.00)
+[INFO] [1792116876.451594437] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [1792116876.452345179] [rclcpp]: signal_handler(SIGINT/SIGTERM)

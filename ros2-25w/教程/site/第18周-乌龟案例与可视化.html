@@ -674,7 +674,32 @@ ros2 topic <span class="hljs-built_in">echo</span> /tf_static --once
 <blockquote>
 <p>兼容提示：<code>lookupTransform("camera","laser",tf2::TimePointZero)</code> 中第三个参数在 rclcpp 中使用 <code>tf2::TimePointZero</code>（0 代表最新可用变换）。</p>
 </blockquote>
-<h3 id="1832-乌龟跟随（实操）">18.3.2 乌龟跟随（实操）</h3>
+<h3 id="1832-坐标点变换监听（补充实测）">18.3.2 坐标点变换监听（补充实测）</h3>
+<p><strong>需求</strong>：订阅 <code>turtle1</code> 坐标系下的坐标点，利用 tf 缓存把它变换到 <code>world</code> 坐标系输出——「坐标系变换」之外的第二种监听形态。</p>
+<p>C++ 实现（<code>cpp04_tf_listener/src/demo02_point_listener.cpp</code>）核心：</p>
+<pre><code class="lang-cpp"><span class="hljs-comment">// 订阅 /turtle1/point (PointStamped)，回调中经 tf 缓存变换到 world</span>
+geometry_msgs::msg::PointStamped out;
+tf2::doTransform(*point, out,
+    buffer_-&gt;<span class="hljs-built_in">lookupTransform</span>(<span class="hljs-string">"world"</span>, point-&gt;header.frame_id, tf2::TimePointZero));
+</code></pre>
+<p>Python 实现（<code>py03_tf_broadcaster/demo02_point_listener_py.py</code>）：</p>
+<pre><code class="lang-python"><span class="hljs-variable language_">self</span>.buffer = Buffer()
+<span class="hljs-variable language_">self</span>.listener = TransformListener(<span class="hljs-variable language_">self</span>.buffer, <span class="hljs-variable language_">self</span>)   <span class="hljs-comment"># Jazzy 需传入节点对象</span>
+out = <span class="hljs-variable language_">self</span>.buffer.transform(point, <span class="hljs-string">"world"</span>, timeout=rclpy.duration.Duration(seconds=<span class="hljs-number">1.0</span>))
+</code></pre>
+<blockquote>
+<p>兼容提示（Python 两处易错点）：① <code>TransformListener(buffer)</code> 单参数写法在 Jazzy 下订阅不生效，必须传节点对象；② 必须显式 <code>import tf2_geometry_msgs</code>，否则 <code>buffer.transform()</code> 报 <code>Type ... is not loaded or supported</code>（转换器靠该模块注册）。</p>
+</blockquote>
+<p>端到端实测（静态广播 world→turtle1 平移 (1,2,0)，注入 turtle1 系下的点）：</p>
+<pre><code class="lang-bash">ros2 run tf2_ros static_transform_publisher --x 1 --y 2 --z 0 --frame-id world --child-frame-id turtle1
+ros2 run cpp04_tf_listener demo02_point_listener
+ros2 topic pub --once /turtle1/point geometry_msgs/msg/PointStamped <span class="hljs-string">"{header: {frame_id: turtle1}, point: {x: 0.5, y: 0.5, z: 0}}"</span>
+</code></pre>
+<pre><code class="lang-text">[INFO] [...]: [point_listener_node_cpp]: 坐标点(0.50,0.50) 变换到 world 系下: (1.50,2.50)
+[INFO] [...]: [point_listener_node_cpp]: 坐标点(1.00,1.00) 变换到 world 系下: (2.00,3.00)
+</code></pre>
+<p>Python 版输出相同（(0.5,0.5)→(1.5,2.5)）。数学自检：world 系偏移 (1,2) + turtle1 系点坐标 = (1.5,2.5) ✓。</p>
+<h3 id="1833-乌龟跟随（实操）">18.3.3 乌龟跟随（实操）</h3>
 <p><strong>需求</strong>：生成两只乌龟，乌龟 t2 始终跟随 turtle1（保持距离 2m）。</p>
 <p>实现分三部分：</p>
 <ol>
@@ -759,7 +784,7 @@ ros2 topic <span class="hljs-built_in">echo</span> /tf_static --once
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第18章 坐标变换与机器人建模","level":"6.5","depth":1,"next":{"title":"第19章 Mycar 自定义接口与运动控制","level":"7.1","depth":1,"path":"第19周-Mycar开发基础实战.md","ref":"第19周-Mycar开发基础实战.md","articles":[]},"previous":{"title":"第17章 工具应用实操（launch 与 rosbag2）","level":"6.4","depth":1,"path":"第17周-工具应用实操.md","ref":"第17周-工具应用实操.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第18周-乌龟案例与可视化.md","mtime":"2026-10-16T01:45:03.184Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T01:45:04.121Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第18章 坐标变换与机器人建模","level":"6.5","depth":1,"next":{"title":"第19章 Mycar 自定义接口与运动控制","level":"7.1","depth":1,"path":"第19周-Mycar开发基础实战.md","ref":"第19周-Mycar开发基础实战.md","articles":[]},"previous":{"title":"第17章 工具应用实操（launch 与 rosbag2）","level":"6.4","depth":1,"path":"第17周-工具应用实操.md","ref":"第17周-工具应用实操.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第18周-乌龟案例与可视化.md","mtime":"2026-10-16T02:22:57.355Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T02:22:58.395Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
