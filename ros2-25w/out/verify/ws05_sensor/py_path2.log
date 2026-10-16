@@ -1,0 +1,27 @@
+===== odom2path_py（0.5m 阈值，Python）=====
+--- 发布 x=0.0,0.3,...,1.8（步进 0.3m；阈值 0.5m → 入轨点距应约 0.6m）
+[INFO] [1792125540.892956860] [odom2path_node_py]: odom2path 节点创建!(python)
+[INFO] [1792125544.593055234] [odom2path_node_py]: 轨迹点入轨(0.00,2.00)，累计 1 个点
+[INFO] [1792125549.308581034] [odom2path_node_py]: 轨迹点入轨(0.60,2.00)，累计 2 个点
+[INFO] [1792125552.105138381] [odom2path_node_py]: 轨迹点入轨(1.20,2.00)，累计 3 个点
+[INFO] [1792125554.919479969] [odom2path_node_py]: 轨迹点入轨(1.80,2.00)，累计 4 个点
+Traceback (most recent call last):
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws05_sensor/install/py00_odom/lib/py00_odom/odom2path_py", line 33, in <module>
+    sys.exit(load_entry_point('py00-odom==0.0.0', 'console_scripts', 'odom2path_py')())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mu/Downloads/慕课网体系课-ROS2机器人应用开发工程师（前25周）/code/ws05_sensor/install/py00_odom/lib/python3.12/site-packages/py00_odom/odom2path_py.py", line 53, in main
+    rclpy.spin(Odom2PathPy())
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
+    executor.spin_once()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 926, in spin_once
+    self._spin_once_impl(timeout_sec)
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 907, in _spin_once_impl
+    handler, entity, node = self.wait_for_ready_callbacks(
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 877, in wait_for_ready_callbacks
+    return next(self._cb_iter)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 781, in _wait_for_ready_callbacks
+    wait_set.wait(timeout_nsec)
+KeyboardInterrupt
+[ros2run]: Interrupt

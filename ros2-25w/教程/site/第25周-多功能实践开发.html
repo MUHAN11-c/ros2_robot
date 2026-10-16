@@ -601,8 +601,8 @@
                                 
                                 <h1 id="第25章-多功能实践（nav2-导航编队语音）">第25章 多功能实践（Nav2 导航/编队/语音）</h1>
 <blockquote>
-<p>课程收官：Nav2 导航全栈、多机器人编队与语音控制小车。</p>
-<p>本章对应代码：<code>code/ws06_sim_nav/src/demo_nav2</code>、<code>demo_formation</code>、<code>demo_voice</code>。</p>
+<p>课程收官：地图服务与 AMCL、Nav2 导航全栈、多机器人编队与语音控制机器人。</p>
+<p>本章对应代码：<code>code/ws06_sim_nav/src/demo_nav2</code>、<code>demo_formation</code>、<code>demo_voice</code>（工作空间内另有 <code>demo_ign_sim</code>、<code>demo_stage_sim</code>、<code>demo_slam</code> 三个仿真/建图配套包）。</p>
 </blockquote>
 <h2 id="251-概览与课时结构">25.1 概览与课时结构</h2>
 <h3 id="2511-本周概览">25.1.1 本周概览</h3>
@@ -639,17 +639,235 @@
 </tr>
 </tbody>
 </table>
+<h3 id="2513-逐视频主题总表">25.1.3 逐视频主题总表</h3>
+<p>81 个视频按文件名归为五个系列：第1课 = 地图服务 + 定位AMCL（12+9=21 节）；第2课 = 导航服务器 + 多车编队（22+20=42 节）；第3课 = 智能语音（18 节）。</p>
+<p><strong>系列一 · 地图服务（12 讲）</strong></p>
+<table>
+<thead>
+<tr>
+<th>讲</th>
+<th>主题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>地图服务简介</td>
+</tr>
+<tr>
+<td>2</td>
+<td>地图保存节点说明（map_saver）</td>
+</tr>
+<tr>
+<td>3</td>
+<td>地图保存基本流程</td>
+</tr>
+<tr>
+<td>4</td>
+<td>ROS2 中的地图接口（OccupancyGrid 等）</td>
+</tr>
+<tr>
+<td>5-6</td>
+<td>地图存储格式 01/02（pgm 灰度图 + yaml 元数据）</td>
+</tr>
+<tr>
+<td>7</td>
+<td>地图读取节点说明（map_server）</td>
+</tr>
+<tr>
+<td>8</td>
+<td>地图读取方式 1：终端读取</td>
+</tr>
+<tr>
+<td>9-11</td>
+<td>地图读取方式 2：程序读取（基本实现 → 优化 → 补充）</td>
+</tr>
+<tr>
+<td>12</td>
+<td>地图服务小结</td>
+</tr>
+</tbody>
+</table>
+<p><strong>系列二 · 定位 AMCL（9 讲）</strong></p>
+<table>
+<thead>
+<tr>
+<th>讲</th>
+<th>主题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>AMCL 概述（蒙特卡洛定位原理）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>定位节点说明（amcl 接口）</td>
+</tr>
+<tr>
+<td>3-8</td>
+<td>定位节点使用 01-06：框架搭建 → 加载地图 → 核心实现 → 运行 → 手动初始化 → 优化</td>
+</tr>
+<tr>
+<td>9</td>
+<td>AMCL 小结</td>
+</tr>
+</tbody>
+</table>
+<p><strong>系列三 · 导航服务器（22 讲）</strong></p>
+<table>
+<thead>
+<tr>
+<th>讲</th>
+<th>主题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>00</td>
+<td>导航服务器简介（Nav2 总体架构）</td>
+</tr>
+<tr>
+<td>01-03</td>
+<td>准备上/中/下（bringup 包骨架、参数文件、依赖）</td>
+</tr>
+<tr>
+<td>04</td>
+<td>生命周期管理器节点（lifecycle_manager）</td>
+</tr>
+<tr>
+<td>05-06</td>
+<td>行为树 01 上 / 02 下（bt_navigator 与 XML）</td>
+</tr>
+<tr>
+<td>07-09</td>
+<td>路径规划 01 基本实现 / 02 运行 / 03 rviz2 集成</td>
+</tr>
+<tr>
+<td>10-11</td>
+<td>运动控制器 01 基本实现 / 02 执行</td>
+</tr>
+<tr>
+<td>12-13</td>
+<td>恢复服务器 01 基本实现 / 02 执行</td>
+</tr>
+<tr>
+<td>14-15</td>
+<td>路点跟踪 01 基本实现 / 02 执行</td>
+</tr>
+<tr>
+<td>16-17</td>
+<td>路径平滑 01 基本实现 / 02 执行</td>
+</tr>
+<tr>
+<td>18-19</td>
+<td>速度平滑 01 基本实现 / 02 执行</td>
+</tr>
+<tr>
+<td>20-21</td>
+<td>自主探索 SLAM 01 基本实现 / 02 执行</td>
+</tr>
+</tbody>
+</table>
+<p><strong>系列四 · 多车编队（20 讲）</strong></p>
+<table>
+<thead>
+<tr>
+<th>讲</th>
+<th>主题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>多车编队简介</td>
+</tr>
+<tr>
+<td>2</td>
+<td>案例以及案例分析</td>
+</tr>
+<tr>
+<td>3</td>
+<td>多车仿真环境准备（stage 双车 world）</td>
+</tr>
+<tr>
+<td>4-8</td>
+<td>多车定位 01-05：实现思路 → launch 文件编写 → BUG 以及修复 → 多车定位 → 小结</td>
+</tr>
+<tr>
+<td>9-15</td>
+<td>多车导航 01-07：框架搭建 → launch 文件修改 → 配置文件修改 → 头车导航实现 → 从车配置文件 → 从车导航实现 → 小结</td>
+</tr>
+<tr>
+<td>16-20</td>
+<td>编队逻辑 01-05：简介以及准备 → C++ 实现静态坐标变换 → 静态坐标变换补充 → 静态坐标变换 launch 文件编写 → launch 文件测试</td>
+</tr>
+</tbody>
+</table>
+<p><strong>系列五 · 智能语音（18 讲）</strong></p>
+<table>
+<thead>
+<tr>
+<th>讲</th>
+<th>主题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>智能语音相关概念（ASR/NLU/TTS）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>智能语音与 ROS2</td>
+</tr>
+<tr>
+<td>3-5</td>
+<td>讯飞 SDK 基本使用：简介 → 下载 → 安装</td>
+</tr>
+<tr>
+<td>6-8</td>
+<td>讯飞 SDK 测试 01 构建 / 02 测试 / 03 测试</td>
+</tr>
+<tr>
+<td>9</td>
+<td>讯飞语音 SDK 与 ROS2 集成：概述</td>
+</tr>
+<tr>
+<td>10</td>
+<td>功能包安装与构建</td>
+</tr>
+<tr>
+<td>11</td>
+<td>语音识别功能（听写发布）</td>
+</tr>
+<tr>
+<td>12</td>
+<td>语音合成功能（在线合成播报）</td>
+</tr>
+<tr>
+<td>13</td>
+<td>智能语音应用实例：需求分析</td>
+</tr>
+<tr>
+<td>14-18</td>
+<td>实现 01-05：流程简介 → 代码逻辑分析 → 代码框架 → 代码实现 → 执行</td>
+</tr>
+</tbody>
+</table>
 <h2 id="252-知识点梳理">25.2 知识点梳理</h2>
-<h3 id="2521-第1课-slam地图服务与定位amcl定位技术（1h44m-·-21-节）">25.2.1 第1课 SLAM地图服务与定位AMCL定位技术（1h44m · 21 节）</h3>
+<h3 id="2521-地图服务（第1课上半，12-讲）">25.2.1 地图服务（第1课上半，12 讲）</h3>
 <ul>
-<li><strong>核心概念</strong>：地图服务（Map Service）负责地图的保存、加载与提供；AMCL（Adaptive Monte Carlo Localization，自适应蒙特卡洛定位）是基于粒子滤波的 2D 激光定位算法，在已知地图中估计机器人位姿。</li>
-<li><p><strong>要点 1 · 地图保存</strong>：<code>nav2_map_server</code> 的 <code>map_saver_cli</code> 把 <code>/map</code> 话题上的 <code>nav_msgs/OccupancyGrid</code> 保存为磁盘文件：</p>
+<li><strong>核心概念</strong>：地图服务（Map Service）负责地图的保存、加载与提供；SLAM 建出的 <code>/map</code> 是内存中的 <code>OccupancyGrid</code>，只有落盘成 pgm+yaml 才是可复用的导航资产。</li>
+<li><p><strong>要点 1 · 地图保存节点</strong>：<code>nav2_map_server</code> 的 <code>map_saver_cli</code> 把 <code>/map</code> 话题上的 <code>nav_msgs/OccupancyGrid</code> 保存为磁盘文件：</p>
 <pre><code class="lang-bash">ros2 run nav2_map_server map_saver_cli -f ~/maps/office --ros-args -p save_map_timeout:=2000
 <span class="hljs-comment"># 产出 office.pgm（图像）+ office.yaml（元数据）</span>
 </code></pre>
-<p>保存基本流程：等 SLAM 稳定 → 触发保存 → 校验文件完整（地图闭合、无未探索黑洞）。</p>
 </li>
-<li><p><strong>要点 2 · ROS2 中的地图接口</strong>：</p>
+<li><p><strong>要点 2 · 地图保存基本流程</strong>：等 SLAM 稳定（回环闭合、无未探索黑洞）→ 触发保存 → 校验文件完整（pgm 与 yaml 同目录同名、分辨率合理）。保存过早会把「未知区」永久固化进地图。</p>
+</li>
+<li><p><strong>要点 3 · ROS2 中的地图接口</strong>：</p>
 <p>| 消息/服务 | 作用 |
 |---|---|
 | <code>nav_msgs/OccupancyGrid</code> | 占据栅格地图：<code>header</code> + <code>MapMetaData info</code> + <code>int8[] data</code> |
@@ -658,63 +876,316 @@
 | <code>nav2_msgs/srv/SaveMap</code> | 保存地图服务（带参数覆盖） |
 | <code>nav2_msgs/srv/LoadMap</code> | 按文件名加载地图服务 |</p>
 </li>
-<li><p><strong>要点 3 · 地图存储格式</strong>：<code>*.pgm</code> 是 8 位灰度图（白=空闲、黑=占据、灰=未知），<code>*.yaml</code> 记录 <code>image</code>、<code>resolution</code>、<code>origin: [x, y, yaw]</code>、<code>occupied_thresh</code>（默认 0.65）、<code>free_thresh</code>（默认 0.25）、<code>negate</code>。yaml 的 <code>origin</code> 决定地图左下角在 <code>map</code> 坐标系中的位姿，挪动它会整体平移地图。</p>
+<li><p><strong>要点 4 · 地图存储格式（两讲展开）</strong>：<code>*.pgm</code> 是 8 位灰度图（白=空闲、黑=占据、灰=未知）；<code>*.yaml</code> 记录 <code>image</code>、<code>mode: trinary</code>、<code>resolution</code>、<code>origin: [x, y, yaw]</code>、<code>negate</code>、<code>occupied_thresh</code>（默认 0.65）、<code>free_thresh</code>（默认 0.25）。yaml 的 <code>origin</code> 是「地图图像左下角」在 <code>map</code> 坐标系的位姿，挪动它会整体平移地图。本章仓库的 <code>demo_nav2/maps/demo_map.yaml</code> 就是标准样例（见 25.4.3）。</p>
 </li>
-<li><strong>要点 4 · 地图读取</strong>：方式 1 终端读取——<code>ros2 launch nav2_map_server map_server_launch.py map:=/home/user/maps/office.yaml</code> 后 <code>ros2 topic echo /map --once</code>；方式 2 程序读取（三讲：基本实现 → 优化 → 补充）——订阅 <code>/map</code> 或调用 <code>LoadMap</code> 服务解析 <code>OccupancyGrid</code>，示例见 25.4。小结强调：地图文件是导航系统的持久化资产，应纳入版本管理。</li>
-<li><strong>要点 5 · AMCL 概述与定位节点</strong>：AMCL 用粒子滤波（MCL）维护机器人位姿的概率分布，观测模型匹配激光与地图、运动模型采样自里程计，粒子数自适应（KLD 采样）。节点 <code>amcl</code>（包 <code>nav2_amcl</code>）订阅 <code>/scan</code>、<code>/map</code>、<code>/tf</code>（里程计），发布 <code>map → odom</code> 变换与 <code>/amcl_pose</code>（<code>PoseWithCovarianceStamped</code>）、<code>particle_cloud</code>。</li>
-<li><strong>要点 6 · AMCL 使用六步</strong>：① 框架搭建（自建 bringup 包放 launch/yaml）→ ② 加载地图（<code>map_server</code> + <code>map:=...yaml</code>）→ ③ 核心实现（amcl 参数 + 雷达/里程计输入接线）→ ④ 运行（rviz2 中观察粒子云收敛）→ ⑤ <strong>手动初始化</strong>（rviz2 的「2D Pose Estimate」发布 <code>/initialpose</code>，粒子云骤然收缩到真值附近）→ ⑥ 优化（粒子数、<code>update_min_d</code>/<code>update_min_a</code>、激光模型 <code>likelihood_field</code> 参数）。</li>
-<li><p><strong>要点 7 · AMCL 关键参数</strong>：</p>
+<li><strong>要点 5 · 地图读取节点</strong>：<code>map_server</code>（包 <code>nav2_map_server</code>）configure 时按 <code>yaml_filename</code> 读盘，向 <code>/map</code> 以 transient_local QoS 发布 OccupancyGrid，供 AMCL 与全局代价地图消费。</li>
+<li><strong>要点 6 · 读取方式 1（终端读取）</strong>：<code>ros2 run nav2_map_server map_server --ros-args -p yaml_filename:=...</code>（或 launch 传 <code>map:=</code>），再 <code>ros2 topic echo /map --once --field info</code> 查看分辨率/宽高/原点。</li>
+<li><strong>要点 7 · 读取方式 2（程序读取，三讲递进）</strong>：① 基本实现——订阅 <code>/map</code> 解析 OccupancyGrid（注意 transient_local QoS）；② 优化——只处理一帧、异常兜底、日志规范化；③ 补充——改用 <code>LoadMap</code> 服务按需加载、统计空闲/占据比例等业务逻辑。示例代码见 25.4.3。</li>
+<li><strong>要点 8 · 小结</strong>：地图文件是导航系统的持久化资产，应纳入版本管理；pgm/yaml 成对出现，改名要同步改 yaml 的 <code>image</code> 字段。</li>
+</ul>
+<h3 id="2522-定位-amcl（第1课下半，9-讲）">25.2.2 定位 AMCL（第1课下半，9 讲）</h3>
+<ul>
+<li><strong>要点 1 · 概述</strong>：AMCL（Adaptive Monte Carlo Localization，自适应蒙特卡洛定位）用粒子滤波维护机器人位姿的概率分布：观测模型匹配激光与地图、运动模型采样自里程计，粒子数自适应（KLD 采样）。节点 <code>amcl</code>（包 <code>nav2_amcl</code>）订阅 <code>/scan</code>、<code>/map</code>、<code>/tf</code>（里程计），发布 <code>map → odom</code> 变换、<code>/amcl_pose</code>（<code>PoseWithCovarianceStamped</code>）与 <code>particle_cloud</code>。</li>
+<li><strong>要点 2 · 定位节点使用六步（视频 3-8 讲）</strong>：① 框架搭建（自建 bringup 包放 launch/yaml）→ ② 加载地图（<code>map_server</code> + <code>map:=...yaml</code>）→ ③ 核心实现（amcl 参数 + 雷达/里程计接线）→ ④ 运行（rviz2 中观察粒子云收敛）→ ⑤ <strong>手动初始化</strong>（rviz2 的「2D Pose Estimate」发布 <code>/initialpose</code>，粒子云骤然收缩到真值附近）→ ⑥ 优化（粒子数、<code>update_min_d</code>/<code>update_min_a</code>、激光模型 <code>likelihood_field</code> 参数）。</li>
+<li><strong>要点 3 · BUG 与修复（对应「多车定位 03」同类坑）</strong>：常见三类——<code>/scan</code> 的 <code>frame_id</code> 与 tf 树不一致（改雷达 frame 或 <code>scan_topic</code>）；<code>map → odom</code> 没人发布（amcl 未 activate）；两套定位同时发布同一变换（互相打架，见编队节）。</li>
+<li><p><strong>要点 4 · 关键参数</strong>：</p>
 <p>| 参数 | 含义 | 调参直觉 |
 |---|---|---|
 | <code>alpha1..alpha5</code> | 运动模型噪声 | 里程计越差调越大 |
 | <code>max_particles</code> / <code>min_particles</code> | 粒子数上下限 | 大地图/多歧义环境增大 |
 | <code>update_min_d</code> / <code>update_min_a</code> | 位移/转角更新阈值 | 调小提高定位频率、费 CPU |
+| <code>max_beams</code> | 每帧激光采样光束数 | 越大越稳越慢（本章 demo 取 60） |
 | <code>laser_model_type</code> | <code>likelihood_field</code> / <code>beam</code> | 默认 likelihood_field，快且稳 |
+| <code>set_initial_pose</code> + <code>initial_pose</code> | 参数方式给初值 | 仿真固定起点时可免手动初始化 |
 | <code>recovery_alpha_slow/fast</code> | 全局重定位（绑架恢复） | 机器人被搬动后自动收敛 |</p>
 </li>
 </ul>
-<h3 id="2522-第2课-导航服务器与多车编队实现（4h20m-·-42-节）">25.2.2 第2课 导航服务器与多车编队实现（4h20m · 42 节）</h3>
+<h3 id="2523-导航服务器（第2课上半，22-讲）">25.2.3 导航服务器（第2课上半，22 讲）</h3>
 <ul>
-<li><strong>核心概念</strong>：导航服务器（Navigation Servers）指 Nav2 中各职责单一的生命周期节点；本课以「逐服务器实操」的方式把第24 章的架构图落地。</li>
-<li><strong>要点 1 · 准备与生命周期管理器</strong>：准备三讲完成 bringup 包骨架、参数文件与依赖；<code>lifecycle_manager</code>（<code>nav2_lifecycle_manager</code>）统一把所有服务器 configure → activate，任何一个 activate 失败都会导致导航「起不来」。调试手段：<code>ros2 lifecycle list /planner_server</code>、<code>ros2 lifecycle get /planner_server</code>。</li>
-<li><strong>要点 2 · 行为树（Behavior Tree）</strong>：<code>bt_navigator</code> 按 XML 行为树编排导航流程，节点分四类：Control（Sequence/ReactiveFallback）、Condition（如 <code>IsPathValid</code>）、Action（<code>ComputePathToPose</code>、<code>FollowPath</code>、<code>Spin</code>、<code>BackUp</code>）、Decorator（<code>RateController</code>）。默认 XML 在 <code>nav2_bt_navigator/behavior_trees/</code> 下，可替换自定义树实现「到点巡逻」「超时放弃」等策略。</li>
-<li><strong>要点 3 · 路径规划</strong>：<code>planner_server</code> 插件化全局规划器（<code>NavfnPlanner</code>、<code>SmacPlanner2D</code>、<code>ThetaStar</code>），输入 <code>ComputePathToPose</code> 动作 + costmap，输出 <code>/plan</code>；rviz2 的「Nav2 Goal」即触发整条链。验收：路径绕开膨胀层、走廊中走中线。</li>
-<li><strong>要点 4 · 运动控制器</strong>：<code>controller_server</code> 插件（<code>DWBController</code>、<code>MPPIController</code>、<code>RegulatedPurePursuit</code>）执行 <code>FollowPath</code>，输出 <code>/cmd_vel</code>；关键参数：<code>controller_frequency</code>、<code>max_vel_x</code>/<code>min_vel_x</code>、<code>xy_goal_tolerance</code>/<code>yaw_goal_tolerance</code>、costmap 膨胀半径。</li>
-<li><strong>要点 5 · 恢复服务器</strong>：<code>behavior_server</code> 提供 <code>Spin</code>（原地旋转清除局部代价地图盲区）、<code>BackUp</code>（倒车脱困）、<code>Wait</code>、<code>ClearCostmap</code>；由行为树在规划/跟踪失败时调用，是机器人「卡住自救」的机制。</li>
-<li><strong>要点 6 · 路点跟踪</strong>：<code>waypoint_follower</code> 执行 <code>FollowWaypoints</code> 动作，按序访问多个目标点，可配置路点任务插件（如每个路点拍照）。</li>
-<li><strong>要点 7 · 路径平滑与速度平滑</strong>：<code>smoother_server</code>（如 <code>SimpleSmoother</code>）优化全局路径曲率；<code>velocity_smoother</code>（<code>nav2_velocity_smoother</code>）限制加加速度（jerk），把控制器输出的「跳变速度」变成底盘可执行的平滑速度——实机上不加它，电机与轮胎都会「受苦」。</li>
-<li><strong>要点 8 · 自主探索 SLAM</strong>：把 Nav2 与 SLAM 组合（配合探索插件/<code>explore_lite</code> 类方案），机器人自主前往地图边界「未知区域」完成建图闭环；本质是「SLAM 建图 + 导航到 frontier（前沿）」循环。</li>
-<li><p><strong>要点 9 · 多车编队（20 节）</strong>：</p>
-<p>| 环节 | 内容 |
-|---|---|
-| 简介与案例分析 | 编队 = 多车保持期望相对位姿（头车 + 从车）；相对位姿用静态坐标变换表达 |
-| 多车仿真环境 | stage_ros2/Ignition 多机器人 world，每车独立命名空间 |
-| 多车定位 | 每车独立 AMCL/SLAM（<code>robot1/amcl</code>…），注意 tf 隔离：<code>frame_prefix</code> 或 tf_namespace，否则 <code>map → odom</code> 互相打架 |
-| 多车导航 | 头车按全局目标导航；从车目标点 = 头车位姿 ∘ 编队偏移；launch/配置按车参数化 |
-| 编队逻辑 | 用 <code>static_transform_publisher</code>（或 C++ <code>tf2_ros::StaticTransformBroadcaster</code>）把队形偏移（如 robot2 在头车后方 1 m）固化为 tf，从车控制器跟踪该变换点 |</p>
+<li><p><strong>核心概念</strong>：导航服务器（Navigation Servers）指 Nav2 中各职责单一的生命周期节点；本课以「逐服务器实操」把第24 章的架构图落地。本章 <code>demo_nav2/launch/bringup_launch.py</code> 实际拉起 6 个服务器 + 1 个生命周期管理器 + rviz2（见 25.4.1）。</p>
 </li>
-<li><p><strong>要点 10 · 多车的 ROS2 机制</strong>：命名空间隔离话题（<code>/robot1/cmd_vel</code>）、参数文件按车分套、tf 用 <code>frame_prefix</code>（<code>robot1/odom</code>）或独立 tf topic + relay；这是 ROS2 分布式多机系统（含多机 DDS 发现）的实战入口。</p>
+<li><p><strong>服务器 1 · map_server（地图服务）</strong>：configure 时读 yaml/pgm → 向 <code>/map</code> 发布 OccupancyGrid（transient_local）。参数要点：<code>yaml_filename</code>（launch 可用 <code>map:=</code> 覆盖）、<code>topic_name</code>、<code>frame_id</code>。失效表现：后续节点等不到地图、全局代价地图空白。</p>
+</li>
+<li><p><strong>服务器 2 · amcl（定位）</strong>：见 25.2.2。本章参数段要点：<code>base_frame_id: base_footprint</code>、<code>global_frame_id: map</code>、<code>scan_topic: scan</code>、<code>set_initial_pose: true</code> + <code>initial_pose</code> 全零、<code>max_beams: 60</code>、粒子 500~2000。</p>
+</li>
+<li><p><strong>服务器 3 · planner_server（路径规划，3 讲）</strong>：插件化全局规划器（<code>NavfnPlanner</code>、<code>SmacPlanner2D</code>、<code>ThetaStar</code>），执行 <code>ComputePathToPose</code> 动作，输入全局代价地图，输出 <code>/plan</code>。本章用 <code>nav2_navfn_planner/NavfnPlanner</code>：<code>use_astar: false</code>（Dijkstra）、<code>tolerance: 0.5</code>、<code>allow_unknown: true</code>、<code>expected_planner_frequency: 1.0</code>。第 3 讲 rviz2 集成：全局代价地图 + <code>/plan</code> 显示 + 「Nav2 Goal」触发整条链；验收标准是路径绕开膨胀层、走廊中走中线。</p>
+</li>
+<li><p><strong>服务器 4 · controller_server（运动控制器，2 讲）</strong>：执行 <code>FollowPath</code> 动作，按 <code>controller_frequency</code> 周期输出 <code>/cmd_vel</code>。本章用 <code>dwb_core::DWBLocalPlanner</code>：<code>min_vel_x: 0.0</code>、<code>max_vel_x: 0.5</code>、<code>min/max_vel_theta: ±1.0</code>、<code>xy_goal_tolerance: 0.15</code>、<code>yaw_goal_tolerance: 0.25</code>，goal_checker 用 <code>SimpleGoalChecker</code>（容差同上）。备选插件：<code>MPPIController</code>、<code>RegulatedPurePursuit</code>。</p>
+</li>
+<li><p><strong>服务器 5 · behavior_server（恢复服务器，2 讲）</strong>：提供 <code>Spin</code>（原地旋转 1.57 rad 清局部盲区）、<code>BackUp</code>（倒车 0.30 m 脱困，速度 0.05 m/s）、<code>Wait</code>（等 5 s）、<code>ClearCostmap</code>（清全局/局部代价地图），由行为树在规划/跟踪失败时调用，<code>cycle_frequency: 10.0</code>。这是机器人「卡住自救」的机制。</p>
+</li>
+<li><p><strong>服务器 6 · bt_navigator（行为树导航器，2 讲）</strong>：按 XML 行为树编排整个导航流程，对外提供 <code>NavigateToPose</code> 动作。节点分四类：Control（<code>PipelineSequence</code>/<code>ReactiveFallback</code>/<code>RoundRobin</code>/<code>RecoveryNode</code>）、Condition（<code>GoalUpdated</code>）、Action（<code>ComputePathToPose</code>、<code>FollowPath</code>、<code>Spin</code>、<code>BackUp</code>、<code>Wait</code>、<code>ClearEntireCostmap</code>）、Decorator（<code>RateController</code>）。参数要点：<code>global_frame: map</code>、<code>robot_base_frame: base_footprint</code>、<code>bt_loop_duration: 10</code>、<code>default_server_timeout: 20</code>、<code>default_bt_xml_filename: navigate_w_replanning.xml</code>。逐节点解析见 25.4.2。</p>
+</li>
+<li><p><strong>服务器 7 · waypoint_follower（路点跟踪，2 讲）</strong>：执行 <code>FollowWaypoints</code> 动作，按序访问多个目标点，可配置路点任务插件（如每个路点拍照）。本章 <code>demo_formation/data/waypoints.csv</code>（id,x,y 三列）就是路点表的雏形，头车可按 CSV 逐点导航。</p>
+</li>
+<li><p><strong>平滑双件套（4 讲）</strong>：<code>smoother_server</code>（<code>SimpleSmoother</code>）优化全局路径曲率，减少急转；<code>velocity_smoother</code>（<code>nav2_velocity_smoother</code>）限制加速度/加加速度（jerk），把控制器输出的「跳变速度」变成底盘可执行的平滑速度——实机上不加它，电机与轮胎都会「受苦」。本章参数文件未包含这两项，属扩展项（课程视频单独演示）。</p>
+</li>
+<li><p><strong>自主探索 SLAM（2 讲）</strong>：把 Nav2 与 SLAM 组合（配合探索插件/<code>explore_lite</code> 类方案），机器人自主前往地图边界「未知区域」完成建图闭环；本质是「SLAM 建图 + 导航到 frontier（前沿）」循环。验收：全程无人工干预、最终地图覆盖率满足设定阈值。</p>
+</li>
+<li><p><strong>生命周期管理器（1 讲）</strong>：<code>lifecycle_manager</code>（<code>nav2_lifecycle_manager</code>）按 <code>node_names</code> 顺序把所有服务器 configure → activate，任何一个失败都会导致导航「起不来」；<code>autostart: true</code> 表示 launch 后自动激活。调试手段：<code>ros2 lifecycle list /planner_server</code>、<code>ros2 lifecycle get /planner_server</code>。<strong>参数文件的键必须与节点名精确匹配</strong>（本章实测踩坑，见 25.5.1）。</p>
 </li>
 </ul>
-<h3 id="2523-第3课-智能语音概念和语音控制机器人实现（1h27m-·-18-节）">25.2.3 第3课 智能语音概念和语音控制机器人实现（1h27m · 18 节）</h3>
+<h3 id="2524-多车编队（第2课下半，20-讲）">25.2.4 多车编队（第2课下半，20 讲）</h3>
 <ul>
-<li><strong>核心概念</strong>：智能语音（Intelligent Voice）= 语音识别（ASR，语音→文本）+ 语义理解（NLU）+ 语音合成（TTS，文本→语音）；与 ROS2 集成后即可「动口不动手」控制机器人。</li>
-<li><strong>要点 1 · 智能语音与 ROS2</strong>：典型架构——麦克风音频 → ASR 节点（识别文本，发布 <code>std_msgs/String</code> 话题）→ 指令解析节点（关键词/语义映射为动作）→ 发布 <code>/cmd_vel</code> 或导航目标 → TTS 节点播报执行结果。ROS2 的话题/服务天然适合把云端 SDK 封装成节点。</li>
-<li><strong>要点 2 · 讯飞 SDK 基本使用</strong>：官网下载 SDK（含 C/C++ 库与示例）→ 安装（解压、配置库路径/<code>APPID</code>）→ 构建测试示例 → 跑通离线/在线语音识别与合成 Demo。注意 SDK 的鉴权参数（APPID、APIKey）与线程/回调模型。</li>
-<li><strong>要点 3 · 讯飞 SDK 与 ROS2 集成</strong>：自建功能包（<code>voice_pkg</code>）封装 SDK：语音识别功能（录音 → ASR → 发布识别文本）、语音合成功能（订阅文本 → TTS → 播放/输出音频）。集成要点：SDK 是 C 接口，用 C++ 包装为 rclcpp 节点最自然；录音设备（ALSA/PortAudio）与音频线程别阻塞 executor。</li>
-<li><strong>要点 4 · 智能语音应用实例</strong>：需求分析（如语音说「前进/后退/左转/右转/停止」控制机器人，说「去客厅」触发导航）→ 实现五步：流程简介（ASR → 指令解析 → 执行 → TTS 反馈）→ 代码逻辑分析 → 代码框架（<code>asr_node</code> / <code>command_node</code> / <code>tts_node</code>）→ 代码实现（关键词匹配表 + <code>/cmd_vel</code> 发布）→ 执行测试。</li>
+<li><strong>要点 1 · 简介与案例分析（2 讲）</strong>：编队 = 多车保持期望相对位姿（头车 leader + 从车 follower）；相对位姿用坐标变换表达。案例拆解：头车按全局目标导航，从车以「头车位姿 ∘ 编队偏移」为目标实时跟随。</li>
+<li><strong>要点 2 · 仿真环境准备（1 讲）</strong>：stage_ros2 双车 world——本章 <code>demo_formation/worlds/formation.world</code>：10m×10m 四面围墙（±5 m，厚 0.2 m），每车差速驱动（<code>drive "diff"</code>，0.35 m 车身）+ 360° 雷达（range 0.15~12.0 m、samples 360），robot1（蓝，pose [0 1 0 0]）为领航、robot2（红，pose [0 -1 0 0]）为跟随，<code>odom_err</code> 注入里程计误差。</li>
+<li><strong>要点 3 · 多车定位五步（5 讲）</strong>：① 实现思路——每车独立 AMCL，<code>map → robotN/odom</code> 各自隔离；② launch 文件编写——按车命名空间批量起节点；③ BUG 以及修复——两车 tf 不隔离时 <code>odom → base_link</code> 互相覆盖，rviz2 表现为「两车互相抽搐」，解法是 <code>frame_prefix</code>（<code>robot1/odom</code>）或独立 tf；④ 多车定位——两车同时收敛、互不干扰；⑤ 小结。</li>
+<li><strong>要点 4 · 多车导航七步（7 讲）</strong>：① 框架搭建——复制单车 bringup 为双车；② launch 文件修改——<code>namespace</code>/<code>frame_prefix</code> 参数化；③ 配置文件修改——两套 nav 参数（话题、frame 全部带前缀）；④ 头车导航实现——头车就是普通单车 Nav2，发 <code>NavigateToPose</code> 即可；⑤ 从车配置文件——注意 <code>robot_base_frame</code>、costmap frame 与 tf 前缀一致；⑥ 从车导航实现——从车目标点 = 头车当前位姿经队形偏移变换后的点（或直接跟踪静态 tf 给出的队形位）；⑦ 小结。</li>
+<li><strong>要点 5 · 编队逻辑五步（5 讲）</strong>：① 简介以及准备——用静态坐标变换固化「队形偏移」；②③ C++ 实现静态坐标变换（+补充）——<code>tf2_ros::StaticTransformBroadcaster</code> 把 <code>leader → formation_slot</code> 固化为例如 (-1.5, 0.8)（后方 1.5 m 右侧 0.8 m 的三角队形）；④ launch 文件编写——静态变换节点并入编队 launch；⑤ launch 文件测试——rviz2 中确认 tf 树与队形帧。本章 Python 实现 <code>follower.py</code> 把「查询双车 tf → 间距误差 → 速度」做成 5 Hz 控制环（见 25.4.5）。</li>
+<li><strong>要点 6 · 多车的 ROS2 机制</strong>：命名空间隔离话题（<code>/robot2/cmd_vel</code>）、参数文件按车分套、tf 用 <code>frame_prefix</code>；这是 ROS2 分布式多机系统（含多机 DDS 发现）的实战入口。</li>
+</ul>
+<h3 id="2525-智能语音（第3课，18-讲）">25.2.5 智能语音（第3课，18 讲）</h3>
+<ul>
+<li><strong>要点 1 · 相关概念（1 讲）</strong>：智能语音 = 语音识别（ASR，语音→文本）+ 语义理解（NLU）+ 语音合成（TTS，文本→语音）；与 ROS2 集成后即可「动口不动手」控制机器人。</li>
+<li><strong>要点 2 · 智能语音与 ROS2（1 讲）</strong>：典型架构——麦克风音频 → ASR 节点（识别文本，发布 <code>std_msgs/String</code>）→ 指令解析节点（关键词/语义映射为动作）→ 发布 <code>/cmd_vel</code> 或导航目标 → TTS 节点播报执行结果。ROS2 的话题/服务天然适合把云端 SDK 封装成节点。</li>
+<li><strong>要点 3 · 讯飞 SDK 基本使用（简介/下载/安装，3 讲）</strong>：官网按 APPID 下载对应平台的 Linux SDK（含 C/C++ 库与示例）→ 解压安装、配置库路径与鉴权。本章视频帧存档（<code>out/stills/e2e_voice_85s/115s/140s.png</code>）可见 SDK 包名 <code>Linux_aitalk_exp1227_iat1227_tts_online1227_62f2e34a</code>，其 <code>bin</code> 目录含：<code>iat_online_record_sample</code>（在线听写-麦克风录音示例）、<code>iat_sample</code>（音频文件听写）、<code>tts_online_sample</code>（在线语音合成）、<code>ise_cn/ise_en</code>（中英文语音评测）、<code>gm_continuous</code>（语法连续识别，配 <code>call.bnf</code> 语法文件）、<code>wav</code>（样例音频）、<code>msc</code>（引擎配置与鉴权数据）。即 SDK 覆盖「听写、在线合成、评测/语法识别、音频文件上传识别」四类能力。</li>
+<li><strong>要点 4 · SDK 测试（构建/测试/测试，3 讲）</strong>：构建示例（make 出可执行）→ 麦克风听写测试（15 秒监听、终端输出中文识别结果）→ 在线合成测试（文本转语音播放/落盘 wav）。运行依赖：讯飞 APPID 鉴权 + 可用录音设备。</li>
+<li><strong>要点 5 · SDK 与 ROS2 集成（4 讲）</strong>：概述——自建功能包封装 SDK，节点化对外只暴露话题；功能包安装与构建（SDK 头文件/库并入 ament 包）；语音识别功能——录音 → 听写 → 识别文本发布；语音合成功能——订阅文本 → 在线合成 → 播放/输出音频。集成要点：SDK 是 C 接口，用 C++ 包装为 rclcpp 节点最自然；录音（ALSA）与网络回调放独立线程，别阻塞 executor。</li>
+<li><strong>要点 6 · 应用实例（6 讲）</strong>：需求分析——语音说「前进/后退/左转/右转/停止」控制机器人（扩展：「去客厅」触发导航）；实现五步：流程简介（ASR → 指令解析 → 执行 → TTS 反馈）→ 代码逻辑分析 → 代码框架（<code>voice_input/asr</code> 节点 + <code>voice_controller</code> 指令映射节点）→ 代码实现（关键词匹配表 + <code>/cmd_vel</code> 发布）→ 执行测试。本章 <code>demo_voice</code> 就是这条链路的可运行骨架（见 25.4.6）。</li>
 </ul>
 <h2 id="253-重点与难点">25.3 重点与难点</h2>
 <ol>
 <li><strong>地图坐标系的 origin 语义</strong>：<code>yaml</code> 的 <code>origin: [x, y, yaw]</code> 是「地图图像左下角」在 <code>map</code> 坐标系的位姿。改分辨率或 origin 而不重新配准，AMCL 粒子会整体偏移。</li>
-<li><strong>AMCL 的收敛与绑架</strong>：初始位姿靠 <code>/initialpose</code> 或默认参数；机器人被搬动（绑架问题）后靠 <code>recovery_alpha_*</code> 重定位。粒子云长期发散 = 里程计噪声参数与实际不符或地图与环境不一致。</li>
-<li><strong>Nav2 生命周期</strong>：所有服务器是 lifecycle node，<code>configure</code>（加载参数/插件）→ <code>activate</code>（开始工作）。报「node not active」先查 <code>lifecycle_manager</code> 日志与参数文件里的插件名拼写。</li>
+<li><strong>AMCL 的收敛与绑架</strong>：初始位姿靠 <code>/initialpose</code> 或 <code>set_initial_pose</code>；机器人被搬动（绑架问题）后靠 <code>recovery_alpha_*</code> 重定位。粒子云长期发散 = 里程计噪声参数与实际不符或地图与环境不一致。</li>
+<li><strong>Nav2 生命周期与参数匹配</strong>：所有服务器是 lifecycle node，<code>configure</code>（加载参数/插件）→ <code>activate</code>（开始工作）。报「node not active」先查 <code>lifecycle_manager</code> 日志与参数文件里的插件名拼写；<strong>参数 yaml 的顶层键必须等于节点名</strong>，多套一层嵌套会变成「找命名空间下的同名节点」，参数注入失败直接抛 <code>ParameterUninitializedException</code>（本章实测复现，见 25.5.1）。</li>
 <li><strong>行为树调试</strong>：导航失败时先看 <code>bt_navigator</code> 日志中的行为树 tick 路径，确认是规划失败、跟踪失败还是恢复行为循环；<code>view_frames</code> + <code>ros2 topic echo /plan</code> 是两大取证工具。</li>
 <li><strong>多车 tf 隔离</strong>：两车不加 <code>frame_prefix</code> 时，两个 <code>odom → base_link</code> 冲突，rviz2 中表现「两车互相抽搐」。每车独立 tf 树或统一带前缀，二选一并保持全局一致。</li>
-<li><strong>语音链路实时性</strong>：ASR 延迟（网络/推理）决定交互体验；控制指令解析用关键词精确匹配 + 置信度阈值，避免误触发（「停」误识别为「听」）造成安全问题。</li>
+<li><strong>编队控制律的边界</strong>：<code>follower.py</code> 的「间距误差 + 朝向头车」是跟驰式控制，稳态会正对头车；严格的几何编队（保持方位角）需要把目标点改为「头车位姿 ∘ 固定偏移」再求误差。静态 tf 表达队形偏移适合匀速平缓运动，高速/变队形需动态队形控制。</li>
+<li><strong>语音链路实时性与安全</strong>：ASR 延迟（网络/推理）决定交互体验；指令解析用关键词匹配 + 未识别只播报不动作，避免误触发（「停」误识别为「听」）造成安全问题；SDK 凭据只能走环境变量/密钥服务，绝不写进源码。</li>
 </ol>
 <h2 id="254-代码与命令实战">25.4 代码与命令实战</h2>
-<h3 id="2541-场景-1：地图保存与读取（cli--rclpy-服务调用）">25.4.1 场景 1：地图保存与读取（CLI + rclpy 服务调用）</h3>
+<h3 id="2541-demonav2：bringuplaunchpy-与-nav2paramsyaml-逐段">25.4.1 demo_nav2：bringup_launch.py 与 nav2_params.yaml 逐段</h3>
+<p><code>launch/bringup_launch.py</code> 全文结构（仓库 <code>code/ws06_sim_nav/src/demo_nav2/launch/bringup_launch.py</code>）：</p>
+<pre><code class="lang-python"><span class="hljs-comment"># 导航服务器 launch：加载地图 + 各导航节点 + 生命周期管理器 + rviz2</span>
+<span class="hljs-comment"># 用法：ros2 launch demo_nav2 bringup_launch.py map:=&lt;地图yaml绝对路径&gt;</span>
+declare_use_sim_time = DeclareLaunchArgument(<span class="hljs-string">"use_sim_time"</span>, default_value=<span class="hljs-string">"true"</span>)
+declare_map = DeclareLaunchArgument(
+    <span class="hljs-string">"map"</span>,
+    default_value=os.path.join(get_package_share_directory(<span class="hljs-string">"demo_nav2"</span>), <span class="hljs-string">"maps"</span>, <span class="hljs-string">"demo_map.yaml"</span>))
+
+<span class="hljs-comment"># 1.地图服务(map_server)；</span>
+map_server = Node(package=<span class="hljs-string">"nav2_map_server"</span>, executable=<span class="hljs-string">"map_server"</span>, name=<span class="hljs-string">"map_server"</span>,
+    output=<span class="hljs-string">"screen"</span>,
+    parameters=[params_file, {<span class="hljs-string">"use_sim_time"</span>: use_sim_time}, {<span class="hljs-string">"yaml_filename"</span>: map_file}])
+<span class="hljs-comment"># 2.AMCL 定位；</span>
+amcl = Node(package=<span class="hljs-string">"nav2_amcl"</span>, executable=<span class="hljs-string">"amcl"</span>, name=<span class="hljs-string">"amcl"</span>, output=<span class="hljs-string">"screen"</span>,
+    parameters=[params_file, {<span class="hljs-string">"use_sim_time"</span>: use_sim_time}])
+<span class="hljs-comment"># 3.规划、控制、行为树、恢复行为；</span>
+planner_server = Node(package=<span class="hljs-string">"nav2_planner"</span>, executable=<span class="hljs-string">"planner_server"</span>, ...)
+controller_server = Node(package=<span class="hljs-string">"nav2_controller"</span>, executable=<span class="hljs-string">"controller_server"</span>, ...)
+bt_navigator = Node(package=<span class="hljs-string">"nav2_bt_navigator"</span>, executable=<span class="hljs-string">"bt_navigator"</span>, ...)
+behavior_server = Node(package=<span class="hljs-string">"nav2_behaviors"</span>, executable=<span class="hljs-string">"behavior_server"</span>, ...)
+<span class="hljs-comment"># 4.生命周期管理器(统一激活以上节点)；</span>
+lifecycle_manager = Node(package=<span class="hljs-string">"nav2_lifecycle_manager"</span>, executable=<span class="hljs-string">"lifecycle_manager"</span>,
+    name=<span class="hljs-string">"lifecycle_manager_navigation"</span>, ...)
+<span class="hljs-comment"># 5.rviz2(Navigation2 面板下发目标点)；</span>
+rviz2 = Node(package=<span class="hljs-string">"rviz2"</span>, executable=<span class="hljs-string">"rviz2"</span>, ...)
+</code></pre>
+<p>要点：所有节点共享 <code>param/nav2_params.yaml</code>；<code>map:=</code> 可在命令行换地图（覆盖 map_server 的 <code>yaml_filename</code>）；rviz2 用 Nav2 Goal 工具发目标。CMakeLists 仅安装 <code>maps param behavior_trees launch</code> 四个目录（纯配置包，无自编译节点）。</p>
+<p><code>param/nav2_params.yaml</code> 关键段逐段讲解：</p>
+<pre><code class="lang-yaml"><span class="hljs-attr">amcl:</span>
+  <span class="hljs-attr">ros__parameters:</span>
+    <span class="hljs-attr">use_sim_time:</span> <span class="hljs-literal">true</span>
+    <span class="hljs-attr">odom_frame:</span> <span class="hljs-string">odom</span>            <span class="hljs-comment"># 注意：Jazzy 正式参数名为 odom_frame_id，此处键名会被忽略</span>
+    <span class="hljs-attr">base_frame_id:</span> <span class="hljs-string">base_footprint</span>
+    <span class="hljs-attr">global_frame_id:</span> <span class="hljs-string">map</span>
+    <span class="hljs-attr">scan_topic:</span> <span class="hljs-string">scan</span>
+    <span class="hljs-attr">set_initial_pose:</span> <span class="hljs-literal">true</span>      <span class="hljs-comment"># 参数方式给初值(0,0,0)，仿真免手动初始化</span>
+    <span class="hljs-attr">initial_pose:</span> {<span class="hljs-attr">x:</span> <span class="hljs-number">0.0</span>, <span class="hljs-attr">y:</span> <span class="hljs-number">0.0</span>, <span class="hljs-attr">z:</span> <span class="hljs-number">0.0</span>, <span class="hljs-attr">yaw:</span> <span class="hljs-number">0.0</span>}
+    <span class="hljs-attr">max_beams:</span> <span class="hljs-number">60</span>               <span class="hljs-comment"># 每帧采样 60 条光束</span>
+    <span class="hljs-attr">min_particles:</span> <span class="hljs-number">500</span>
+    <span class="hljs-attr">max_particles:</span> <span class="hljs-number">2000</span>
+</code></pre>
+<p><code>odom_frame</code> 一键与发行版参数名（<code>odom_frame_id</code>）不符会被静默忽略，回落默认值 <code>odom</code>，恰好与期望一致所以不影响运行——这是读参数文件时值得警惕的「哑参数」陷阱。</p>
+<pre><code class="lang-yaml"><span class="hljs-attr">map_server:</span>
+  <span class="hljs-attr">ros__parameters:</span>
+    <span class="hljs-attr">use_sim_time:</span> <span class="hljs-literal">true</span>
+    <span class="hljs-attr">yaml_filename:</span> <span class="hljs-string">"demo_map.yaml"</span>   <span class="hljs-comment"># 相对路径；launch 会以 map:= 的绝对默认值覆盖</span>
+
+<span class="hljs-attr">planner_server:</span>
+  <span class="hljs-attr">ros__parameters:</span>
+    <span class="hljs-attr">expected_planner_frequency:</span> <span class="hljs-number">1.0</span>
+    <span class="hljs-attr">planner_plugins:</span> [<span class="hljs-string">GridBased</span>]     <span class="hljs-comment"># 插件列表：GridBased 是自定义实例名</span>
+    <span class="hljs-attr">GridBased:</span>
+      <span class="hljs-attr">plugin:</span> <span class="hljs-string">"nav2_navfn_planner/NavfnPlanner"</span>
+      <span class="hljs-attr">tolerance:</span> <span class="hljs-number">0.5</span>                 <span class="hljs-comment"># 目标不可达时允许的松弛半径</span>
+      <span class="hljs-attr">use_astar:</span> <span class="hljs-literal">false</span>               <span class="hljs-comment"># false = Dijkstra</span>
+      <span class="hljs-attr">allow_unknown:</span> <span class="hljs-literal">true</span>            <span class="hljs-comment"># 允许穿越未知区</span>
+</code></pre>
+<pre><code class="lang-yaml"><span class="hljs-attr">controller_server:</span>
+  <span class="hljs-attr">ros__parameters:</span>
+    <span class="hljs-attr">controller_frequency:</span> <span class="hljs-number">5.0</span>        <span class="hljs-comment"># 5 Hz 控制周期</span>
+    <span class="hljs-attr">controller_plugins:</span> [<span class="hljs-string">FollowPath</span>]
+    <span class="hljs-attr">FollowPath:</span>
+      <span class="hljs-attr">plugin:</span> <span class="hljs-string">"dwb_core::DWBLocalPlanner"</span>
+      <span class="hljs-attr">min_vel_x:</span> <span class="hljs-number">0.0</span>
+      <span class="hljs-attr">max_vel_x:</span> <span class="hljs-number">0.5</span>
+      <span class="hljs-attr">min_vel_theta:</span> <span class="hljs-number">-1.0</span>
+      <span class="hljs-attr">max_vel_theta:</span> <span class="hljs-number">1.0</span>
+      <span class="hljs-attr">xy_goal_tolerance:</span> <span class="hljs-number">0.15</span>        <span class="hljs-comment"># 到点容差 15 cm</span>
+      <span class="hljs-attr">yaw_goal_tolerance:</span> <span class="hljs-number">0.25</span>       <span class="hljs-comment"># 朝向容差 ~14°</span>
+    <span class="hljs-attr">goal_checker_plugins:</span> [<span class="hljs-string">"goal_checker"</span>]
+    <span class="hljs-attr">goal_checker:</span>
+      <span class="hljs-attr">plugin:</span> <span class="hljs-string">"nav2_controller::SimpleGoalChecker"</span>
+</code></pre>
+<pre><code class="lang-yaml"><span class="hljs-attr">bt_navigator:</span>
+  <span class="hljs-attr">ros__parameters:</span>
+    <span class="hljs-attr">global_frame:</span> <span class="hljs-string">map</span>
+    <span class="hljs-attr">robot_base_frame:</span> <span class="hljs-string">base_footprint</span>
+    <span class="hljs-attr">bt_loop_duration:</span> <span class="hljs-number">10</span>             <span class="hljs-comment"># 单次 tick 预算 ms</span>
+    <span class="hljs-attr">default_server_timeout:</span> <span class="hljs-number">20</span>
+    <span class="hljs-attr">default_bt_xml_filename:</span> <span class="hljs-string">"navigate_w_replanning.xml"</span>
+
+<span class="hljs-attr">behavior_server:</span>
+  <span class="hljs-attr">ros__parameters:</span>
+    <span class="hljs-attr">cycle_frequency:</span> <span class="hljs-number">10.0</span>            <span class="hljs-comment"># 恢复行为内部频率</span>
+
+<span class="hljs-attr">local_costmap:</span>
+  <span class="hljs-attr">local_costmap:</span>
+    <span class="hljs-attr">ros__parameters:</span>
+      <span class="hljs-attr">global_frame:</span> <span class="hljs-string">odom</span>             <span class="hljs-comment"># 局部图用 odom：机器人-centric，无定位跳变</span>
+      <span class="hljs-attr">robot_base_frame:</span> <span class="hljs-string">base_footprint</span>
+      <span class="hljs-attr">update_frequency:</span> <span class="hljs-number">5.0</span>
+      <span class="hljs-attr">publish_frequency:</span> <span class="hljs-number">2.0</span>
+      <span class="hljs-attr">width:</span> <span class="hljs-number">3</span>                       <span class="hljs-comment"># 3m x 3m 滚动窗口</span>
+      <span class="hljs-attr">height:</span> <span class="hljs-number">3</span>
+      <span class="hljs-attr">resolution:</span> <span class="hljs-number">0.05</span>
+
+<span class="hljs-attr">global_costmap:</span>
+  <span class="hljs-attr">global_costmap:</span>
+    <span class="hljs-attr">ros__parameters:</span>
+      <span class="hljs-attr">global_frame:</span> <span class="hljs-string">map</span>              <span class="hljs-comment"># 全局图用 map：与静态地图对齐</span>
+      <span class="hljs-attr">robot_base_frame:</span> <span class="hljs-string">base_footprint</span>
+      <span class="hljs-attr">update_frequency:</span> <span class="hljs-number">1.0</span>
+      <span class="hljs-attr">publish_frequency:</span> <span class="hljs-number">1.0</span>
+      <span class="hljs-attr">resolution:</span> <span class="hljs-number">0.05</span>
+</code></pre>
+<pre><code class="lang-yaml"><span class="hljs-attr">lifecycle_manager:</span>
+  <span class="hljs-attr">lifecycle_manager_navigation:</span>
+    <span class="hljs-attr">ros__parameters:</span>
+      <span class="hljs-attr">use_sim_time:</span> <span class="hljs-literal">true</span>
+      <span class="hljs-attr">autostart:</span> <span class="hljs-literal">true</span>
+      <span class="hljs-attr">node_names:</span> [<span class="hljs-string">map_server</span>, <span class="hljs-string">amcl</span>, <span class="hljs-string">planner_server</span>, <span class="hljs-string">controller_server</span>, <span class="hljs-string">bt_navigator</span>, <span class="hljs-string">behavior_server</span>]
+</code></pre>
+<p>这段是本章实测翻车点：顶层键写成 <code>lifecycle_manager: lifecycle_manager_navigation:</code> 两层嵌套，ROS2 会按「命名空间 <code>lifecycle_manager_navigation</code> 下的节点 <code>lifecycle_manager</code>」解析，而真实节点名是 <code>lifecycle_manager_navigation</code>，于是 <code>node_names</code> 注入失败。正确写法是顶层键直接用节点名 <code>lifecycle_manager_navigation: ros__parameters:</code>（或 <code>/**:</code> 通配）。</p>
+<h3 id="2542-行为树-xml-逐节点（behaviortreesnavigatewreplanningxml）">25.4.2 行为树 XML 逐节点（behavior_trees/navigate_w_replanning.xml）</h3>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-name">root</span> <span class="hljs-attr">main_tree_to_execute</span>=<span class="hljs-string">"MainTree"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">BehaviorTree</span> <span class="hljs-attr">ID</span>=<span class="hljs-string">"MainTree"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">RecoveryNode</span> <span class="hljs-attr">number_of_retries</span>=<span class="hljs-string">"6"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"NavigateRecovery"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">PipelineSequence</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"NavigateWithReplanning"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">RateController</span> <span class="hljs-attr">hz</span>=<span class="hljs-string">"1.0"</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">RecoveryNode</span> <span class="hljs-attr">number_of_retries</span>=<span class="hljs-string">"1"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"ComputePathToPose"</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">ComputePathToPose</span> <span class="hljs-attr">goal</span>=<span class="hljs-string">"{goal}"</span> <span class="hljs-attr">path</span>=<span class="hljs-string">"{path}"</span> <span class="hljs-attr">planner_id</span>=<span class="hljs-string">"GridBased"</span>/&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">ClearEntireCostmap</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"ClearGlobalCostmap"</span>
+              <span class="hljs-attr">service_name</span>=<span class="hljs-string">"global_costmap/clear_entirely_global_costmap"</span>/&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-name">RecoveryNode</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">RateController</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">RecoveryNode</span> <span class="hljs-attr">number_of_retries</span>=<span class="hljs-string">"1"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"FollowPath"</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">FollowPath</span> <span class="hljs-attr">path</span>=<span class="hljs-string">"{path}"</span> <span class="hljs-attr">controller_id</span>=<span class="hljs-string">"FollowPath"</span>/&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">ClearEntireCostmap</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"ClearLocalCostmap"</span>
+            <span class="hljs-attr">service_name</span>=<span class="hljs-string">"local_costmap/clear_entirely_local_costmap"</span>/&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">RecoveryNode</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">PipelineSequence</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">ReactiveFallback</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"RecoveryFallback"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">GoalUpdated</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">RoundRobin</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"RecoveryActions"</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">Spin</span> <span class="hljs-attr">spin_dist</span>=<span class="hljs-string">"1.57"</span>/&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">Wait</span> <span class="hljs-attr">wait_duration</span>=<span class="hljs-string">"5"</span>/&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">BackUp</span> <span class="hljs-attr">backup_dist</span>=<span class="hljs-string">"0.30"</span> <span class="hljs-attr">backup_speed</span>=<span class="hljs-string">"0.05"</span>/&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">RoundRobin</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">ReactiveFallback</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">RecoveryNode</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">BehaviorTree</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">root</span>&gt;</span>
+</code></pre>
+<p>逐节点语义：</p>
+<table>
+<thead>
+<tr>
+<th>节点</th>
+<th>类型</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RecoveryNode(6)</code></td>
+<td>Control</td>
+<td>主循环：失败先执行第二分支（恢复），再重试第一分支，最多 6 次</td>
+</tr>
+<tr>
+<td><code>PipelineSequence</code></td>
+<td>Control</td>
+<td>顺序 tick 且每轮从头重估——「边走边重规划」的来源</td>
+</tr>
+<tr>
+<td><code>RateController hz=1.0</code></td>
+<td>Decorator</td>
+<td>把全局规划限频到 1 Hz，避免每 tick 都算路径</td>
+</tr>
+<tr>
+<td><code>RecoveryNode(1) ComputePathToPose</code></td>
+<td>Control</td>
+<td>规划失败 1 次就触发第二分支</td>
+</tr>
+<tr>
+<td><code>ComputePathToPose</code></td>
+<td>Action</td>
+<td>调 planner_server，<code>{goal}/{path}</code> 是黑板变量，<code>planner_id</code> 对应参数里的 <code>GridBased</code> 实例</td>
+</tr>
+<tr>
+<td><code>ClearEntireCostmap</code></td>
+<td>Action</td>
+<td>清全局/局部代价地图（服务名固定）</td>
+</tr>
+<tr>
+<td><code>FollowPath</code></td>
+<td>Action</td>
+<td>调 controller_server 跟踪路径，<code>controller_id</code> 对应 <code>FollowPath</code> 实例</td>
+</tr>
+<tr>
+<td><code>ReactiveFallback</code></td>
+<td>Control</td>
+<td>恢复分支入口：每 tick 先查 <code>GoalUpdated</code>，新目标来了立即放弃恢复去导航</td>
+</tr>
+<tr>
+<td><code>GoalUpdated</code></td>
+<td>Condition</td>
+<td>黑板 goal 是否被刷新</td>
+</tr>
+<tr>
+<td><code>RoundRobin</code></td>
+<td>Control</td>
+<td>轮流执行子节点：第一次失败转 Spin，再失败 Wait，再 BackUp，循环</td>
+</tr>
+<tr>
+<td><code>Spin 1.57</code></td>
+<td>Action</td>
+<td>原地转 90° 清扫局部盲区</td>
+</tr>
+<tr>
+<td><code>Wait 5</code></td>
+<td>Action</td>
+<td>原地等 5 s（等动态障碍离开）</td>
+</tr>
+<tr>
+<td><code>BackUp 0.30/0.05</code></td>
+<td>Action</td>
+<td>以 0.05 m/s 倒 0.30 m 脱困</td>
+</tr>
+</tbody>
+</table>
+<h3 id="2543-地图资产与读取实战">25.4.3 地图资产与读取实战</h3>
+<p><code>maps/demo_map.yaml</code>（仓库原件，7 行）：</p>
+<pre><code class="lang-yaml"><span class="hljs-attr">image:</span> <span class="hljs-string">demo_map.pgm</span>
+<span class="hljs-attr">mode:</span> <span class="hljs-string">trinary</span>
+<span class="hljs-attr">resolution:</span> <span class="hljs-number">0.05</span>
+<span class="hljs-attr">origin:</span> [<span class="hljs-number">-10</span>, <span class="hljs-number">-10</span>, <span class="hljs-number">0</span>]
+<span class="hljs-attr">negate:</span> <span class="hljs-number">0</span>
+<span class="hljs-attr">occupied_thresh:</span> <span class="hljs-number">0.65</span>
+<span class="hljs-attr">free_thresh:</span> <span class="hljs-number">0.25</span>
+</code></pre>
+<p>含义：5 cm/格；图像左下角位于 map 系 (-10, -10)；trinary 三态模式按 0.65/0.25 阈值二值化。</p>
 <pre><code class="lang-bash"><span class="hljs-comment"># 保存：SLAM 建图完成后</span>
 ros2 run nav2_map_server map_saver_cli -f ~/maps/office
 <span class="hljs-built_in">ls</span> ~/maps/office.*            <span class="hljs-comment"># office.pgm + office.yaml</span>
@@ -754,33 +1225,7 @@ ros2 topic <span class="hljs-built_in">echo</span> /map --once --field info     
 <blockquote>
 <p><strong>注意：</strong> <code>/map</code> 用 transient_local（latched）QoS 发布，普通订阅者若用默认 QoS 可能收不到地图；rclpy 中把 QoS durability 设为 <code>ReliabilityPolicy.RELIABLE</code> + <code>DurabilityPolicy.TRANSIENT_LOCAL</code>。</p>
 </blockquote>
-<h3 id="2542-场景-2：amcl--mapserver-启动（launch-片段）">25.4.2 场景 2：AMCL + map_server 启动（launch 片段）</h3>
-<pre><code class="lang-python"><span class="hljs-comment"># launch/localization.launch.py（节选）</span>
-map_server = Node(
-    package=<span class="hljs-string">'nav2_map_server'</span>, executable=<span class="hljs-string">'map_server'</span>, name=<span class="hljs-string">'map_server'</span>,
-    parameters=[{<span class="hljs-string">'yaml_filename'</span>: <span class="hljs-string">'/home/user/maps/office.yaml'</span>,
-                 <span class="hljs-string">'topic_name'</span>: <span class="hljs-string">'map'</span>, <span class="hljs-string">'frame_id'</span>: <span class="hljs-string">'map'</span>}])
-amcl = Node(
-    package=<span class="hljs-string">'nav2_amcl'</span>, executable=<span class="hljs-string">'amcl'</span>, name=<span class="hljs-string">'amcl'</span>,
-    parameters=[{
-        <span class="hljs-string">'base_frame_id'</span>: <span class="hljs-string">'base_link'</span>, <span class="hljs-string">'odom_frame_id'</span>: <span class="hljs-string">'odom'</span>,
-        <span class="hljs-string">'global_frame_id'</span>: <span class="hljs-string">'map'</span>, <span class="hljs-string">'scan_topic'</span>: <span class="hljs-string">'scan'</span>,
-        <span class="hljs-string">'min_particles'</span>: <span class="hljs-number">500</span>, <span class="hljs-string">'max_particles'</span>: <span class="hljs-number">3000</span>,
-        <span class="hljs-string">'update_min_d'</span>: <span class="hljs-number">0.2</span>, <span class="hljs-string">'update_min_a'</span>: <span class="hljs-number">0.3</span>,
-        <span class="hljs-string">'laser_model_type'</span>: <span class="hljs-string">'likelihood_field'</span>,
-        <span class="hljs-string">'recovery_alpha_slow'</span>: <span class="hljs-number">0.001</span>, <span class="hljs-string">'recovery_alpha_fast'</span>: <span class="hljs-number">0.1</span>,
-    }])
-lifecycle = Node(
-    package=<span class="hljs-string">'nav2_lifecycle_manager'</span>, executable=<span class="hljs-string">'lifecycle_manager'</span>,
-    name=<span class="hljs-string">'lifecycle_manager_localization'</span>,
-    parameters=[{<span class="hljs-string">'autostart'</span>: <span class="hljs-literal">True</span>,
-                 <span class="hljs-string">'node_names'</span>: [<span class="hljs-string">'map_server'</span>, <span class="hljs-string">'amcl'</span>]}])
-</code></pre>
-<pre><code class="lang-bash">ros2 topic pub --once /initialpose geometry_msgs/msg/PoseWithCovarianceStamped \
-  <span class="hljs-string">"{header: {frame_id: map}, pose: {pose: {position: {x: 1.0, y: 2.0}, orientation: {w: 1.0}}}}"</span>
-<span class="hljs-comment"># rviz2 中更常用「2D Pose Estimate」按钮手动初始化</span>
-</code></pre>
-<h3 id="2543-场景-3：行为树导航目标发送（rclpy-动作客户端）">25.4.3 场景 3：行为树导航目标发送（rclpy 动作客户端）</h3>
+<h3 id="2544-navigatetopose-动作客户端（发导航目标）">25.4.4 NavigateToPose 动作客户端（发导航目标）</h3>
 <pre><code class="lang-python"><span class="hljs-comment"># 通过 NavigateToPose 动作让 Nav2 导航到目标点（文件 send_goal.py）</span>
 <span class="hljs-keyword">import</span> rclpy
 <span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
@@ -813,76 +1258,203 @@ lifecycle = Node(
     rclpy.spin(node)
     rclpy.shutdown()
 </code></pre>
-<h3 id="2544-场景-4：编队静态坐标变换（c，tf2rosstatictransformbroadcaster）">25.4.4 场景 4：编队静态坐标变换（C++，<code>tf2_ros::StaticTransformBroadcaster</code>）</h3>
-<pre><code class="lang-cpp"><span class="hljs-comment">// 把「从车相对头车的队形偏移」固化为 tf：leader_link -&gt; follower1_link</span>
-<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"rclcpp/rclcpp.hpp"</span></span>
-<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"tf2_ros/static_transform_broadcaster.h"</span></span>
-<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"geometry_msgs/msg/transform_stamped.hpp"</span></span>
-
-<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> ** argv)</span> </span>{
-  rclcpp::<span class="hljs-built_in">init</span>(argc, argv);
-  <span class="hljs-keyword">auto</span> node = rclcpp::Node::<span class="hljs-built_in">make_shared</span>(<span class="hljs-string">"formation_tf"</span>);
-  <span class="hljs-function">tf2_ros::StaticTransformBroadcaster <span class="hljs-title">broadcaster</span><span class="hljs-params">(node)</span></span>;
-
-  geometry_msgs::msg::TransformStamped t;
-  t.header.stamp = node-&gt;<span class="hljs-built_in">now</span>();
-  t.header.frame_id = <span class="hljs-string">"leader_link"</span>;      <span class="hljs-comment">// 头车车体</span>
-  t.child_frame_id = <span class="hljs-string">"follower1_link"</span>;    <span class="hljs-comment">// 从车 1 目标位</span>
-  t.transform.translation.x = <span class="hljs-number">-1.5</span>;       <span class="hljs-comment">// 头车后方 1.5 m</span>
-  t.transform.translation.y = <span class="hljs-number">0.8</span>;        <span class="hljs-comment">// 右侧 0.8 m（三角队形）</span>
-  t.transform.rotation.w = <span class="hljs-number">1.0</span>;           <span class="hljs-comment">// 与头车同向</span>
-  broadcaster.<span class="hljs-built_in">sendTransform</span>(t);
-
-  rclcpp::<span class="hljs-built_in">spin</span>(node);
-  rclcpp::<span class="hljs-built_in">shutdown</span>();
-  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
-}
+<p>三个易错点：goal 的 <code>frame_id</code> 必须是 <code>map</code>；时间戳用当前时间（不要用 0，tf 外插会拒绝）；发目标前确认 <code>navigate_to_pose</code> 动作已在 <code>ros2 action list</code> 中（bt_navigator 已 activate）。</p>
+<blockquote>
+<p>视频帧存档：<code>out/stills/navact_240s_crop.png</code>、<code>navact2_430s_crop.png</code> 为课程「Mycar 导航接口」演示帧（编辑器中编写导航动作客户端），与本节 <code>send_goal.py</code> 同一接口。</p>
+</blockquote>
+<h3 id="2545-demoformation：world--launch--waypoints--followerpy-全文">25.4.5 demo_formation：world / launch / waypoints / follower.py 全文</h3>
+<p><code>worlds/formation.world</code> 关键段（stage 方言）：</p>
+<pre><code class="lang-text">define laser ranger ( sensor ( range [0.15 12.0] fov 360.0 samples 360 ) )
+define robot position
+(
+  drive "diff"                    # 差速底盘
+  size [0.35 0.35 0.25]
+  odom_err [0.0 0.0 999999 0.0 0.0 999999]   # 注入里程计误差(漂移)
+  laser ( pose [0.08 0 0 0] )
+)
+wall ( pose [5 0 0 90] size [10 0.2 0.5] name "wall_north" )   # 四面围墙 ±5m
+...
+robot ( pose [0 1 0 0] name "robot1" color "blue" )            # 领航车
+robot ( pose [0 -1 0 0] name "robot2" color "red" )            # 跟随车
 </code></pre>
-<h3 id="2545-场景-5：语音指令解析-→-速度控制（rclpy，文件-voicecmdnodepy）">25.4.5 场景 5：语音指令解析 → 速度控制（rclpy，文件 <code>voice_cmd_node.py</code>）</h3>
-<pre><code class="lang-python"><span class="hljs-keyword">import</span> rclpy
-<span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
-<span class="hljs-keyword">from</span> std_msgs.msg <span class="hljs-keyword">import</span> String
+<p><code>launch/formation_launch.py</code>：起 <code>stage_ros2</code>（参数传 world 路径）→ 起 <code>demo_formation/formation_follower</code>（参数 <code>leader_frame=robot1</code>、<code>follower_frame=robot2</code>、<code>formation_offset=2.0</code>）→ 起 rviz2。</p>
+<p><code>data/waypoints.csv</code>（头车路点表，3 个点）：</p>
+<pre><code class="lang-text">id,x,y
+0,0.000,0.000
+1,0.500,0.250
+2,1.000,0.500
+</code></pre>
+<p><code>demo_formation/follower.py</code> 全文（跟随车控制节点，5 Hz 控制环）：</p>
+<pre><code class="lang-python"><span class="hljs-comment"># -*- coding: utf-8 -*-</span>
+<span class="hljs-string">"""
+    需求：多车编队 —— 跟随车控制节点(robot2)。
+    说明：领航车(robot1) 广播 map→robot1 的位姿；本节点查询 robot2→robot1 的相对位姿，
+          生成速度指令保持编队队形(间距 formation_offset)。
+"""</span>
+<span class="hljs-keyword">import</span> math
+
+<span class="hljs-keyword">import</span> rclpy
 <span class="hljs-keyword">from</span> geometry_msgs.msg <span class="hljs-keyword">import</span> Twist
-
-<span class="hljs-comment"># ASR 节点发布识别文本到 /asr/text，本节点映射为速度指令</span>
-CMD_TABLE = {
-    <span class="hljs-string">'前进'</span>: (<span class="hljs-number">0.3</span>, <span class="hljs-number">0.0</span>), <span class="hljs-string">'后退'</span>: (-<span class="hljs-number">0.3</span>, <span class="hljs-number">0.0</span>),
-    <span class="hljs-string">'左转'</span>: (<span class="hljs-number">0.0</span>, <span class="hljs-number">0.5</span>), <span class="hljs-string">'右转'</span>: (<span class="hljs-number">0.0</span>, -<span class="hljs-number">0.5</span>), <span class="hljs-string">'停止'</span>: (<span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>),
-}
+<span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
+<span class="hljs-keyword">import</span> tf2_ros
 
 
-<span class="hljs-keyword">class</span> <span class="hljs-title class_">VoiceCmd</span>(<span class="hljs-title class_ inherited__">Node</span>):
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Follower</span>(<span class="hljs-title class_ inherited__">Node</span>):
+
     <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
-        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">'voice_cmd'</span>)
-        <span class="hljs-variable language_">self</span>.pub = <span class="hljs-variable language_">self</span>.create_publisher(Twist, <span class="hljs-string">'/cmd_vel'</span>, <span class="hljs-number">10</span>)
-        <span class="hljs-variable language_">self</span>.create_subscription(String, <span class="hljs-string">'/asr/text'</span>, <span class="hljs-variable language_">self</span>.on_text, <span class="hljs-number">10</span>)
-        <span class="hljs-variable language_">self</span>.create_publisher(String, <span class="hljs-string">'/tts/text'</span>, <span class="hljs-number">10</span>)   <span class="hljs-comment"># 送给 TTS 播报</span>
+        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">"formation_follower_node_py"</span>)
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">"多车编队-跟随车控制方(python)"</span>)
+        <span class="hljs-comment"># 1.编队参数；</span>
+        <span class="hljs-variable language_">self</span>.declare_parameter(<span class="hljs-string">"leader_frame"</span>, <span class="hljs-string">"robot1"</span>)
+        <span class="hljs-variable language_">self</span>.declare_parameter(<span class="hljs-string">"follower_frame"</span>, <span class="hljs-string">"robot2"</span>)
+        <span class="hljs-variable language_">self</span>.declare_parameter(<span class="hljs-string">"formation_offset"</span>, <span class="hljs-number">2.0</span>)
+        <span class="hljs-variable language_">self</span>.leader_frame = <span class="hljs-variable language_">self</span>.get_parameter(<span class="hljs-string">"leader_frame"</span>).value
+        <span class="hljs-variable language_">self</span>.follower_frame = <span class="hljs-variable language_">self</span>.get_parameter(<span class="hljs-string">"follower_frame"</span>).value
+        <span class="hljs-variable language_">self</span>.offset = <span class="hljs-variable language_">self</span>.get_parameter(<span class="hljs-string">"formation_offset"</span>).value
+        <span class="hljs-comment"># 2.tf 缓存与监听器；</span>
+        <span class="hljs-variable language_">self</span>.buffer = tf2_ros.Buffer()
+        <span class="hljs-variable language_">self</span>.listener = tf2_ros.TransformListener(<span class="hljs-variable language_">self</span>.buffer, <span class="hljs-variable language_">self</span>)
+        <span class="hljs-comment"># 3.跟随车速度发布方(命名空间下)；</span>
+        <span class="hljs-variable language_">self</span>.pub = <span class="hljs-variable language_">self</span>.create_publisher(Twist, <span class="hljs-string">"/robot2/cmd_vel"</span>, <span class="hljs-number">10</span>)
+        <span class="hljs-comment"># 4.定时器；</span>
+        <span class="hljs-variable language_">self</span>.create_timer(<span class="hljs-number">0.2</span>, <span class="hljs-variable language_">self</span>.on_timer)
 
-    <span class="hljs-keyword">def</span> <span class="hljs-title function_">on_text</span>(<span class="hljs-params">self, msg: String</span>):
-        text = msg.data.strip()
-        <span class="hljs-keyword">if</span> text <span class="hljs-keyword">in</span> CMD_TABLE:
-            vx, wz = CMD_TABLE[text]
-            cmd = Twist()
-            cmd.linear.x, cmd.angular.z = vx, wz
-            <span class="hljs-variable language_">self</span>.pub.publish(cmd)
-            <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">f'执行指令: <span class="hljs-subst">{text}</span>'</span>)
-        <span class="hljs-keyword">else</span>:
-            <span class="hljs-variable language_">self</span>.get_logger().warn(<span class="hljs-string">f'未识别指令: <span class="hljs-subst">{text}</span>'</span>)
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">on_timer</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-keyword">try</span>:
+            ts = <span class="hljs-variable language_">self</span>.buffer.lookup_transform(
+                <span class="hljs-variable language_">self</span>.follower_frame, <span class="hljs-variable language_">self</span>.leader_frame, rclpy.time.Time())
+            dx = ts.transform.translation.x
+            dy = ts.transform.translation.y
+            dist = math.sqrt(dx * dx + dy * dy)
+            twist = Twist()
+            <span class="hljs-comment"># 与领航车的实际间距 = dist；期望间距 = offset；</span>
+            err = dist - <span class="hljs-variable language_">self</span>.offset
+            <span class="hljs-keyword">if</span> <span class="hljs-built_in">abs</span>(err) &gt; <span class="hljs-number">0.2</span>:
+                twist.linear.x = <span class="hljs-number">0.5</span> * <span class="hljs-built_in">max</span>(<span class="hljs-built_in">min</span>(err, <span class="hljs-number">1.0</span>), -<span class="hljs-number">1.0</span>)
+                twist.angular.z = <span class="hljs-number">1.0</span> * math.atan2(dy, dx)
+            <span class="hljs-variable language_">self</span>.pub.publish(twist)
+        <span class="hljs-keyword">except</span> (tf2_ros.LookupException, tf2_ros.ConnectivityException,
+                tf2_ros.ExtrapolationException) <span class="hljs-keyword">as</span> e:
+            <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">"异常提示:%s"</span> % <span class="hljs-built_in">str</span>(e), throttle_duration_sec=<span class="hljs-number">2.0</span>)
 
 
 <span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():
     rclpy.init()
-    rclpy.spin(VoiceCmd())
+    rclpy.spin(Follower())
+    rclpy.shutdown()
+
+
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:
+    main()
+</code></pre>
+<p>控制律逐行讲解：<code>lookup_transform(follower, leader, Time())</code> 取「头车在跟随车坐标系中的位姿」，<code>Time()</code> 表示用最新可用变换；<code>dist</code> 为两车间距，<code>err = dist - 2.0</code> 是间距误差；<code>abs(err) &gt; 0.2</code> 是 0.2 m 死区（带内不发速度，防抖振）；<code>linear.x = 0.5 * clamp(err, ±1.0)</code> 是比例控制 + 限幅（0.5 是增益，±1.0 限速）；<code>angular.z = atan2(dy, dx)</code> 让车头指向头车。tf 三类异常（尚未有变换/树不通/时间外插）都做节流日志而不是崩溃。参数化设计使同一节点可用于任意 leader/follower 组合。setup.py 入口名 <code>formation_follower</code>。</p>
+<h3 id="2546-demovoice：voicecontrollerpy-全文与-voiceinputpy">25.4.6 demo_voice：voice_controller.py 全文与 voice_input.py</h3>
+<p><code>demo_voice/voice_controller.py</code> 全文（指令映射节点）：</p>
+<pre><code class="lang-python"><span class="hljs-comment"># -*- coding: utf-8 -*-</span>
+<span class="hljs-string">"""
+    需求：智能语音 —— 语音识别(ASR)与 ROS2 集成骨架。
+    说明：课程使用讯飞语音 SDK(需要 APPID/AK/SK 密钥，务必通过环境变量注入，
+          不要写入源码)；本节点封装"文本指令 → ROS2 控制指令"链路：
+          1. ASR 结果以 std_msgs/String 发布到 voice_cmd_text 话题；
+          2. 控制指令映射: "前进/后退/左转/右转/停止" → cmd_vel。
+"""</span>
+<span class="hljs-keyword">import</span> os
+
+<span class="hljs-keyword">import</span> rclpy
+<span class="hljs-keyword">from</span> geometry_msgs.msg <span class="hljs-keyword">import</span> Twist
+<span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
+<span class="hljs-keyword">from</span> std_msgs.msg <span class="hljs-keyword">import</span> String
+
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">VoiceController</span>(<span class="hljs-title class_ inherited__">Node</span>):
+
+    <span class="hljs-comment"># 语音指令 → 速度指令映射；</span>
+    COMMANDS = {
+        <span class="hljs-string">"前进"</span>: (<span class="hljs-number">0.3</span>, <span class="hljs-number">0.0</span>),
+        <span class="hljs-string">"后退"</span>: (-<span class="hljs-number">0.3</span>, <span class="hljs-number">0.0</span>),
+        <span class="hljs-string">"左转"</span>: (<span class="hljs-number">0.0</span>, <span class="hljs-number">1.0</span>),
+        <span class="hljs-string">"右转"</span>: (<span class="hljs-number">0.0</span>, -<span class="hljs-number">1.0</span>),
+        <span class="hljs-string">"停止"</span>: (<span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>),
+    }
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">"voice_controller_node_py"</span>)
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">"语音控制节点创建!"</span>)
+        <span class="hljs-comment"># 讯飞 SDK 密钥只从环境变量读取；</span>
+        <span class="hljs-variable language_">self</span>.iflytek_appid = os.environ.get(<span class="hljs-string">"IFLYTEK_APPID"</span>, <span class="hljs-string">""</span>)
+        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-variable language_">self</span>.iflytek_appid:
+            <span class="hljs-variable language_">self</span>.get_logger().warn(<span class="hljs-string">"未设置 IFLYTEK_APPID 环境变量，仅支持文本指令模拟"</span>)
+        <span class="hljs-comment"># 控制指令发布方；</span>
+        <span class="hljs-variable language_">self</span>.pub = <span class="hljs-variable language_">self</span>.create_publisher(Twist, <span class="hljs-string">"cmd_vel"</span>, <span class="hljs-number">10</span>)
+        <span class="hljs-comment"># 指令订阅方(由 ASR 节点/键盘模拟节点发布 String 文本)；</span>
+        <span class="hljs-variable language_">self</span>.sub = <span class="hljs-variable language_">self</span>.create_subscription(String, <span class="hljs-string">"voice_cmd_text"</span>, <span class="hljs-variable language_">self</span>.on_text, <span class="hljs-number">10</span>)
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">on_text</span>(<span class="hljs-params">self, msg</span>):
+        <span class="hljs-variable language_">self</span>.asr_callback(msg.data)
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">asr_callback</span>(<span class="hljs-params">self, text</span>):
+        <span class="hljs-string">"""由语音识别结果驱动的控制回调。"""</span>
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">"收到语音指令:%s"</span> % text)
+        twist = Twist()
+        <span class="hljs-keyword">for</span> key, (lx, az) <span class="hljs-keyword">in</span> <span class="hljs-variable language_">self</span>.COMMANDS.items():
+            <span class="hljs-keyword">if</span> key <span class="hljs-keyword">in</span> text:
+                twist.linear.x = lx
+                twist.angular.z = az
+                <span class="hljs-variable language_">self</span>.pub.publish(twist)
+                <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">"执行: linear=%.2f angular=%.2f"</span> % (lx, az))
+                <span class="hljs-keyword">return</span>
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">"未知指令，已忽略"</span>)
+
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():
+    rclpy.init()
+    rclpy.spin(VoiceController())
+    rclpy.shutdown()
+
+
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:
+    main()
+</code></pre>
+<p>COMMANDS 表逐条（<code>格式：(linear.x, angular.z)</code>）：前进 (0.3, 0) 线速 0.3 m/s；后退 (-0.3, 0)；左转 (0, 1.0) 逆时针角速 1 rad/s；右转 (0, -1.0)；停止 (0, 0) 全零急停。匹配策略是「关键词子串命中即执行、命中即返回」——ASR 整句（如「请前进」）也能命中；未命中任何关键词只记日志不动作（安全默认）。<code>asr_callback</code> 与 <code>on_text</code> 分离，便于把订阅回调替换成 SDK 内部回调直驱。入口名 <code>voice_controller</code>。</p>
+<p><code>demo_voice/voice_input.py</code>（键盘模拟 ASR，联调用）：</p>
+<pre><code class="lang-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">VoiceInput</span>(<span class="hljs-title class_ inherited__">Node</span>):
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">"voice_input_node_py"</span>)
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">"语音指令输入(模拟)创建! 输入: 前进/后退/左转/右转/停止 + 回车"</span>)
+        <span class="hljs-variable language_">self</span>.pub = <span class="hljs-variable language_">self</span>.create_publisher(String, <span class="hljs-string">"voice_cmd_text"</span>, <span class="hljs-number">10</span>)
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">spin_input</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-keyword">while</span> rclpy.ok():
+            <span class="hljs-keyword">try</span>:
+                text = <span class="hljs-built_in">input</span>()
+            <span class="hljs-keyword">except</span> EOFError:
+                <span class="hljs-keyword">break</span>
+            msg = String()
+            msg.data = text.strip()
+            <span class="hljs-variable language_">self</span>.pub.publish(msg)
+
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():
+    rclpy.init()
+    node = VoiceInput()
+    <span class="hljs-keyword">import</span> threading
+    thread = threading.Thread(target=node.spin_input, daemon=<span class="hljs-literal">True</span>)
+    thread.start()
+    rclpy.spin(node)
     rclpy.shutdown()
 </code></pre>
-<h3 id="2546-场景-6：导航与多车调试命令集">25.4.6 场景 6：导航与多车调试命令集</h3>
+<p>关键点：<code>input()</code> 是阻塞调用，必须放进 daemon 线程，否则会卡死 executor——这正是「SDK 阻塞回调不得进主线程」的最小演示；正式使用时把本节点替换为讯飞 SDK 识别结果发布方即可，<code>voice_controller</code> 不用改一行。</p>
+<h3 id="2547-导航与多车调试命令集">25.4.7 导航与多车调试命令集</h3>
 <pre><code class="lang-bash">ros2 lifecycle list /planner_server        <span class="hljs-comment"># 查看生命周期状态</span>
+ros2 lifecycle get /planner_server         <span class="hljs-comment"># 当前处于 unconfigured/inactive/active 哪一态</span>
 ros2 action list | grep -i nav             <span class="hljs-comment"># 应有 navigate_to_pose / follow_waypoints</span>
-ros2 topic <span class="hljs-built_in">echo</span> /plan --once --field poses  <span class="hljs-comment"># 查看全局路径点</span>
+ros2 topic <span class="hljs-built_in">echo</span> /plan --once --field poses <span class="hljs-comment"># 查看全局路径点</span>
 ros2 run tf2_tools view_frames             <span class="hljs-comment"># 多车场景确认 tf 前缀隔离</span>
-ros2 topic list | grep robot1              <span class="hljs-comment"># 多车命名空间检查</span>
+ros2 topic list | grep robot               <span class="hljs-comment"># 多车命名空间检查</span>
 ros2 param get /amcl max_particles         <span class="hljs-comment"># 运行期核对参数</span>
-ros2 bag record /asr/text /cmd_vel -o voice_test   <span class="hljs-comment"># 录制语音控制链路</span>
+ros2 param get /lifecycle_manager_navigation node_names   <span class="hljs-comment"># 核对管理器是否拿到节点表</span>
+ros2 bag record /voice_cmd_text /cmd_vel -o voice_test    <span class="hljs-comment"># 录制语音控制链路</span>
 </code></pre>
 <h2 id="255-运行效果（实测）">25.5 运行效果（实测）</h2>
 <h3 id="2551-nav2-导航全栈">25.5.1 Nav2 导航全栈</h3>
@@ -898,7 +1470,19 @@ ros2 bag record /asr/text /cmd_vel -o voice_test   <span class="hljs-comment"># 
 [INFO] [bt_navigator-5]: process started with pid [441428]
 [INFO] [behavior_server-6]: process started with pid [441429]
 </code></pre>
-<p>全栈节点正常上线（配合第24 章仿真给出 <code>/odom</code>、<code>/scan</code> 与初始位姿后，rviz2 中点 Nav2 Goal 即可自主导航，课程视频展示完整导航过程）。</p>
+<p>各服务器均以生命周期节点启动并等待外部迁移（实测日志摘录）：</p>
+<pre><code class="lang-text">[amcl-2]     amcl lifecycle node launched. 
+[amcl-2]     Waiting on external lifecycle transitions to activate
+[map_server-1] [INFO] ... [map_server]: Creating
+[planner_server-3] [INFO] ... [global_costmap.global_costmap]: Creating Costmap
+[controller_server-4] [INFO] ... [local_costmap.local_costmap]: Creating Costmap
+</code></pre>
+<p>但 <code>lifecycle_manager</code> 进程随后异常退出（真实日志，原因见 25.4.1 参数嵌套分析）：</p>
+<pre><code class="lang-text">[lifecycle_manager-7] terminate called after throwing an instance of 'rclcpp::exceptions::ParameterUninitializedException'
+[lifecycle_manager-7]   what():  parameter 'node_names' is not initialized
+[ERROR] [lifecycle_manager-7]: process has died [pid 441430, exit code -6, cmd '/opt/ros/jazzy/lib/nav2_lifecycle_manager/lifecycle_manager --ros-args -r __node:=lifecycle_manager_navigation --params-file .../nav2_params.yaml ...']
+</code></pre>
+<p>修复方式：把 <code>nav2_params.yaml</code> 中 <code>lifecycle_manager: lifecycle_manager_navigation: ros__parameters:</code> 的两层嵌套改为顶层键即节点名 <code>lifecycle_manager_navigation: ros__parameters:</code>（或用 <code>/**:</code> 通配），重新 <code>colcon build</code> 后六个服务器即可被 autostart 逐个 configure→activate。Ctrl-C 关闭时日志可见各节点「Destroying bond to lifecycle manager」的正常析构序列（bond 心跳机制，防节点半死时管理器仍认为其在线）。配合第24 章仿真给出 <code>/odom</code>、<code>/scan</code> 与初始位姿后，rviz2 中点 Nav2 Goal 即可自主导航（课程视频展示完整导航过程）。</p>
 <h3 id="2552-多机器人编队">25.5.2 多机器人编队</h3>
 <p><strong>需求</strong>：双机器人（robot1/robot2）以固定偏移量（2m）保持队形：follower 订阅双机 tf，计算期望速度发布本机 <code>/cmd_vel</code>。</p>
 <pre><code class="lang-bash">ros2 launch demo_formation formation_launch.py
@@ -906,44 +1490,13 @@ ros2 bag record /asr/text /cmd_vel -o voice_test   <span class="hljs-comment"># 
 <blockquote>
 <p>受阻说明：编队 launch 依赖 stage_ros2（本机未安装且无 sudo，见 24.5.2）；follower 节点 <code>formation_follower</code> 已编译可用，接入 Gz/实车的双机 tf 后即可运行。</p>
 </blockquote>
+<p>实测 launch 报错摘录（存档 <code>out/verify/ws06_sim_nav/formation_launch.log</code>，路径列表节略）：</p>
+<pre><code class="lang-text">[ERROR] [launch]: Caught exception in launch (see debug for traceback): "package 'stage_ros2' not found,
+searching: ['/tmp/rosidl_utf8', '…(各工作空间 install 目录与 /opt/ros/jazzy 的 AMENT_PREFIX_PATH 列表)…']"
+</code></pre>
+<p>即环境内确实没有 stage_ros2 包。可用替代路径：复用第24 章 <code>demo_ign_sim</code>（Ignition/Gz 仿真 + ros_gz_bridge 提供 <code>/odom</code>、<code>/scan</code>、tf），或双机实车；只要 <code>/robot1</code>、<code>/robot2</code> 的 tf 可查，<code>formation_follower</code> 无需改动。</p>
 <h3 id="2553-语音控制小车">25.5.3 语音控制小车</h3>
-<p><strong>需求</strong>：ASR 识别结果（中文文本）经 <code>/voice_cmd_text</code>（std_msgs/String）进入控制节点，映射为 <code>/cmd_vel</code> 速度指令：</p>
-<table>
-<thead>
-<tr>
-<th>指令</th>
-<th>linear.x</th>
-<th>angular.z</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>前进</td>
-<td>0.30</td>
-<td>0.0</td>
-</tr>
-<tr>
-<td>后退</td>
-<td>-0.30</td>
-<td>0.0</td>
-</tr>
-<tr>
-<td>左转</td>
-<td>0.0</td>
-<td>0.30</td>
-</tr>
-<tr>
-<td>右转</td>
-<td>0.0</td>
-<td>-0.30</td>
-</tr>
-<tr>
-<td>停止</td>
-<td>0.0</td>
-<td>0.0</td>
-</tr>
-</tbody>
-</table>
+<p><strong>需求</strong>：ASR 识别结果（中文文本）经 <code>/voice_cmd_text</code>（std_msgs/String）进入控制节点，映射为 <code>/cmd_vel</code> 速度指令（取值与 25.4.6 的 COMMANDS 表一致：前进/后退 ±0.30，左/右转角速 ±1.0，停止全零）。</p>
 <p><code>voice_controller.py</code>（安全要点：<strong>凭据从环境变量读取</strong>，代码中不写入任何密钥字面量）：</p>
 <pre><code class="lang-python"><span class="hljs-variable language_">self</span>.iflytek_appid = os.environ.get(<span class="hljs-string">"IFLYTEK_APPID"</span>, <span class="hljs-string">""</span>)   <span class="hljs-comment"># 凭据只从环境读取</span>
 <span class="hljs-variable language_">self</span>.sub = <span class="hljs-variable language_">self</span>.create_subscription(String, <span class="hljs-string">"voice_cmd_text"</span>, <span class="hljs-variable language_">self</span>.on_text, <span class="hljs-number">10</span>)
@@ -952,6 +1505,7 @@ ros2 bag record /asr/text /cmd_vel -o voice_test   <span class="hljs-comment"># 
 <p><code>voice_input.py</code> 为键盘模拟 ASR 输入（正式使用时替换为讯飞 SDK 的识别结果发布）。</p>
 <blockquote>
 <p><strong>视频对照</strong>：课程 <code>讯飞SDK基本使用_测试02</code> 使用讯飞离线 SDK bin 包（<code>tts_online_record_sample</code>）做麦克风识别 Demo（15 秒监听、输出中文识别结果），识别结果按本节接口发布到 <code>/voice_cmd_text</code> 即可闭环；SDK 运行需讯飞 APPID（环境变量注入）与麦克风，本机以键盘注入实测控制器链路。</p>
+<p>帧存档补充（<code>out/stills/e2e_voice_85s/115s/140s.png</code>）：视频中的 SDK 目录实为 <code>Linux_aitalk_exp1227_iat1227_tts_online1227_62f2e34a/bin</code>，帧内可见 <code>iat_online_record_sample</code>（在线听写-录音示例）、<code>iat_sample</code>（音频文件听写）、<code>tts_online_sample</code>（在线合成）等可执行与 <code>ise_cn/ise_en</code>（评测）、<code>gm_continuous</code>（语法识别）、<code>wav</code>、<code>msc</code>、<code>call.bnf</code> 等条目——即听写与在线合成示例都在同一 bin 目录下，按 25.2.5 的能力对照取用即可。</p>
 </blockquote>
 <p>实测：</p>
 <pre><code class="lang-bash">ros2 run demo_voice voice_controller
@@ -967,40 +1521,57 @@ angular:
   z: 0.0
 </code></pre>
 <p>发送「停止」后输出 <code>linear=0.00 angular=0.00</code>。</p>
+<p>完整时序日志（存档 <code>out/verify/ws06_sim_nav/voice.log</code>，含环境变量缺失告警）：</p>
+<pre><code class="lang-text">[INFO] [1792044174.742972372] [voice_controller_node_py]: 语音控制节点创建!
+[WARN] [1792044174.743174479] [voice_controller_node_py]: 未设置 IFLYTEK_APPID 环境变量，仅支持文本指令模拟
+[INFO] [1792044177.569673169] [voice_controller_node_py]: 收到语音指令:前进
+[INFO] [1792044177.569888143] [voice_controller_node_py]: 执行: linear=0.30 angular=0.00
+[INFO] [1792044186.612650906] [voice_controller_node_py]: 收到语音指令:停止
+[INFO] [1792044186.612922321] [voice_controller_node_py]: 执行: linear=0.00 angular=0.00
+</code></pre>
+<p>（末尾的 KeyboardInterrupt 堆栈是 Ctrl-C 结束后台进程的正常中断痕迹；<code>voice_echo_fwd.log</code>、<code>voice_echo_stop.log</code>、<code>voice_pub_fwd.log</code>、<code>voice_pub_stop.log</code> 分别存档了发布端与 echo 端的对应输出。）</p>
 <h2 id="256-与-ros2--机器人开发的关联">25.6 与 ROS2 / 机器人开发的关联</h2>
 <ol>
 <li><strong>nav2 全栈收口</strong>：本章把第24 章架构图中的每个服务器都实操了一遍——生命周期管理、行为树调度、planner/controller/behavior/waypoint/smoother 协同，就是工业级导航产品的标准骨架。</li>
-<li><strong>tf2 坐标树的最终形态</strong>：<code>map →(AMCL) odom →(EKF/轮式里程计) base_link →(URDF) 各传感器</code>，多车场景再叠加 <code>frame_prefix</code>。这张树是所有机器人项目的「排障第一图」。</li>
+<li><strong>tf2 坐标树的最终形态</strong>：<code>map →(AMCL) odom →(EKF/轮式里程计) base_link →(URDF) 各传感器</code>，多车场景再叠加 <code>frame_prefix</code>。这张树是所有机器人项目的「排障第一图」；编队 follower 本质上就是一个纯 tf 消费者。</li>
 <li><strong>地图与定位的持久化接口</strong>：<code>OccupancyGrid</code>、<code>SaveMap</code>/<code>LoadMap</code>、<code>/initialpose</code> 是导航产品的数据契约；换算法（AMCL ↔ 定位版 SLAM ↔ 视觉定位）只要保住这套接口就能替换。</li>
 <li><strong>多机器人系统的 ROS2 模式</strong>：命名空间 + tf 前缀 + 参数分套 + 多机 DDS 发现，这套模式可直接迁移到仓储多车、机群巡检等真实项目。</li>
-<li><strong>语音/上层交互的节点化封装</strong>：任何第三方 SDK（语音、视觉大模型、云平台）都可以按「订阅输入话题 → 处理 → 发布输出话题/动作」封装成节点，与 Nav2 的 <code>NavigateToPose</code> 动作组合即成完整产品交互链。</li>
+<li><strong>语音/上层交互的节点化封装</strong>：任何第三方 SDK（语音、视觉大模型、云平台）都可以按「订阅输入话题 → 处理 → 发布输出话题/动作」封装成节点，与 Nav2 的 <code>NavigateToPose</code> 动作组合即成完整产品交互链；阻塞式 SDK 调用放独立线程是通用守则。</li>
 <li><strong>仿真 → 实机迁移收尾清单</strong>：地图分辨率与真实环境一致、AMCL 运动噪声按实测里程计调、速度平滑参数按底盘动力学调、语音指令加安全限速——这四项决定实机表现。</li>
 </ol>
 <h2 id="257-自测与练习">25.7 自测与练习</h2>
 <ol>
 <li><strong>概念题</strong>：<code>OccupancyGrid.data</code> 中 -1、0、100 分别代表什么？地图 <code>yaml</code> 的 <code>origin</code> 改了会发生什么？</li>
+<li><strong>概念题</strong>：行为树 XML 中 <code>RateController hz="1.0"</code>、<code>RoundRobin</code>、<code>GoalUpdated</code> 各自的作用是什么？去掉 <code>RateController</code> 会发生什么？</li>
 <li><strong>动手任务</strong>：完成「建图 → 保存 → AMCL 定位 → 导航到目标点」全流程：第24 章的仿真环境中建图保存为 <code>office</code>，重启后加载地图用 AMCL 定位，发 <code>NavigateToPose</code> 目标点（3.0, 1.5）。验收标准：粒子云收敛后导航成功率 ≥ 8/10，<code>view_frames</code> 中 <code>map → odom</code> 由 amcl 发布。</li>
+<li><strong>动手任务</strong>：修复 25.5.1 的 lifecycle_manager 崩溃：把 <code>nav2_params.yaml</code> 的键嵌套改为节点名直挂，重新构建后验证 <code>ros2 lifecycle get /map_server</code> 输出 <code>active</code>，且 <code>ros2 action list</code> 出现 <code>navigate_to_pose</code>。</li>
 <li><strong>动手任务</strong>：双车编队：两车在同一地图中，通过静态坐标变换令 robot2 跟随 robot1 右后方 1 m 位置。验收标准：robot1 移动时 robot2 稳定保持相对位姿（误差 &lt; 0.3 m），两车 tf 树互不冲突。</li>
-<li><strong>动手任务</strong>：语音控制闭环：用录音/文本模拟 ASR 输出「前进」「停止」，机器人 <code>/cmd_vel</code> 响应正确，并由 TTS 播报「已执行」。</li>
+<li><strong>动手任务</strong>：语音控制闭环：用录音/文本模拟 ASR 输出「前进」「停止」，机器人 <code>/cmd_vel</code> 响应正确，并由 TTS 播报「已执行」。扩展：给 COMMANDS 表新增「加速」并把「前进」改为长按语义（持续指令超时自动置零）。</li>
 </ol>
 <blockquote>
-<p>参考答案要点：1. -1 未知、0 空闲、100 占据；<code>origin</code> 是地图图像左下角在 map 系的位姿，改动会导致地图整体平移/旋转，AMCL 定位随之整体偏移。2. 定位发散优先查 <code>/initialpose</code> 是否给准、里程计与 AMCL 噪声参数是否匹配、激光 <code>frame_id</code> 是否正确。3. 编队的关键是 tf 前缀隔离与从车跟踪目标点由「头车位姿 ∘ 队形偏移」实时计算；静态偏移适合匀速平缓运动，高速时需动态队形控制。4. 指令解析用精确关键词匹配 + 未识别指令只播报不动作，避免误触发。</p>
+<p>参考答案要点：1. -1 未知、0 空闲、100 占据；<code>origin</code> 是地图图像左下角在 map 系的位姿，改动会导致地图整体平移/旋转，AMCL 定位随之整体偏移。2. RateController 把子节点限频到 1 Hz（全局规划每秒至多一次）；RoundRobin 让 Spin/Wait/BackUp 轮流上阵；GoalUpdated 在恢复过程中发现新目标立即返回去导航。去掉 RateController 则每个 tick 都调 planner_server，CPU 占用飙升且路径频繁重算。3. 定位发散优先查 <code>/initialpose</code> 是否给准、里程计与 AMCL 噪声参数是否匹配、激光 <code>frame_id</code> 是否正确。4. 参数 yaml 顶层键=节点名是硬规则；用 <code>/**</code> 通配虽省事但会波及所有节点，推荐显式节点名。5. 编队的关键是 tf 前缀隔离与从车跟踪目标点由「头车位姿 ∘ 队形偏移」实时计算；静态偏移适合匀速平缓运动，高速时需动态队形控制。6. 指令解析用精确关键词匹配 + 未识别指令只播报不动作，避免误触发；持续指令加看门狗定时器，超时发零速。</p>
 </blockquote>
 <h2 id="258-常见问题（faq）">25.8 常见问题（FAQ）</h2>
 <ul>
 <li><strong>Q：<code>map_saver_cli</code> 保存的图全是灰色/空白？</strong> A：<code>/map</code> 尚无数据或 QoS 不匹配；先 <code>ros2 topic echo /map --once</code> 确认有地图，给订阅端配 <code>TRANSIENT_LOCAL</code> durability，或增大 <code>save_map_timeout</code>。</li>
 <li><strong>Q：AMCL 粒子云收敛但导航仍失败？</strong> A：定位正常 ≠ 导航可用。依次查：全局 costmap 是否加载静态层（<code>static_layer</code>）、目标点是否落在膨胀区/未知区、<code>controller_server</code> 是否 activate、<code>/cmd_vel</code> 是否被其他节点（如 teleop）抢占。</li>
-<li><strong>Q：两车在 rviz2 中「抽搐/瞬移」？</strong> A：tf 冲突。给每车配置 <code>frame_prefix</code>（如 <code>robot1/</code>）或在独立机器上分别运行再通过 relay 合并；检查是否有两个节点发布同一变换。</li>
-<li><strong>Q：语音识别节点跑起来卡顿？</strong> A：SDK 录音/网络回调阻塞了 executor 线程。把 SDK 放独立线程 + 线程安全队列，或用 <code>MultiThreadedExecutor</code> + <code>callback_group</code>；文本发布频率与指令解析解耦。</li>
+<li><strong>Q：lifecycle_manager 一启动就 <code>ParameterUninitializedException: node_names</code>？</strong> A：参数文件顶层键与节点名不匹配（常见是多层嵌套或拼错节点名）。核对 launch 里 <code>name:=</code> 与 yaml 顶层键一字不差；用 <code>ros2 param list /lifecycle_manager_navigation</code> 验证参数已注入。</li>
 <li><strong>Q：<code>NavigateToPose</code> 发了没反应？</strong> A：<code>ros2 action list</code> 确认 <code>navigate_to_pose</code> 存在、<code>bt_navigator</code> 已 activate、goal 的 <code>frame_id</code> 是 <code>map</code> 且时间戳有效（用当前时间，不要用 0）。</li>
+<li><strong>Q：两车在 rviz2 中「抽搐/瞬移」？</strong> A：tf 冲突。给每车配置 <code>frame_prefix</code>（如 <code>robot1/</code>）或在独立机器上分别运行再通过 relay 合并；检查是否有两个节点发布同一变换。</li>
+<li><strong>Q：编队 launch 直接报 <code>package 'stage_ros2' not found</code>？</strong> A：环境未装 stage_ros2。安装它，或改用 Ignition/Gz 仿真（第24 章 <code>demo_ign_sim</code> + bridge）提供双车 tf；<code>formation_follower</code> 节点本身不依赖 stage。</li>
+<li><strong>Q：语音识别节点跑起来卡顿？</strong> A：SDK 录音/网络回调阻塞了 executor 线程。把 SDK 放独立线程 + 线程安全队列，或用 <code>MultiThreadedExecutor</code> + <code>callback_group</code>；文本发布频率与指令解析解耦（参考 <code>voice_input.py</code> 的 daemon 线程写法）。</li>
+<li><strong>Q：讯飞 SDK 示例能跑，接进 ROS2 后报鉴权失败？</strong> A：多数是 APPID 与 SDK 包不配套（SDK 按 APPID 下载绑定），或把密钥写进源码后被改动。坚持 <code>IFLYTEK_APPID</code> 等凭据走环境变量/密钥服务，与 <code>voice_controller.py</code> 的做法保持一致。</li>
 </ul>
 <h2 id="259-本章小结与课程回顾">25.9 本章小结与课程回顾</h2>
 <ul>
-<li>Nav2 = 定位 + 规划 + 控制 + 行为树的<strong>生命周期化</strong>组合，参数集中于一个 yaml；地图（pgm/yaml）与 <code>/initialpose</code> 是导航产品的持久化数据契约；</li>
-<li>编队的本质是「以队友为参考系的速度控制」，多车隔离靠命名空间 + tf 前缀；</li>
-<li>语音控制 = ASR 文本 → 指令映射 → Twist，注意凭据只能走环境变量/密钥服务，未识别指令只播报不动作。</li>
+<li><strong>地图服务</strong>：pgm+yaml 是导航的持久化资产；<code>map_saver_cli</code> 保存、<code>map_server</code> 加载、程序端注意 transient_local QoS 与 <code>origin</code> 语义。</li>
+<li><strong>AMCL</strong>：粒子滤波定位，六步落地（框架→地图→接线→运行→手动初始化→优化）；初值给准、噪声匹配、tf 正确是收敛三要素。</li>
+<li><strong>Nav2 = 定位 + 规划 + 控制 + 行为树的生命周期化组合</strong>：参数集中于一个 yaml（顶层键必须等于节点名），行为树 XML 决定「失败怎么办」的策略；恢复服务器是自助兜底。</li>
+<li><strong>编队的本质是「以队友为参考系的速度控制」</strong>：多车隔离靠命名空间 + tf 前缀；队形偏移用静态坐标变换表达，跟随控制是「间距误差 P 控制 + 朝向头车」。</li>
+<li><strong>语音控制 = ASR 文本 → 指令映射 → Twist</strong>：SDK 能力（听写/在线合成/评测/语法识别）封装成节点；凭据只能走环境变量/密钥服务，未识别指令只播报不动作。</li>
 </ul>
 <p>至此 25 周全部实战内容完成：6 个工作空间、63 个功能包，所有案例在本机（ROS2 Jazzy）逐一编译、运行并与视频效果比对验证。</p>
+<p>回顾整段课程的主线：第 1-10 周打地基（Linux/C++/Python、话题/服务/动作/参数/launch、URDF/TF/雷达/里程计），第 11-18 周进系统层（ROS2 通信机制源码、组件化、生命周期、行为树、仿真与SLAM），第 19-25 周进入应用层（Nav2 全栈、多车协同、语音交互）。你在最后一周把「感知—定位—决策—执行—交互」整条链路亲手接通——这套工程方法比任何一个单独的 API 都更有长期价值。祝部署顺利，机器人常在 map 系里不再迷路。</p>
 
                                 
                                 </section>
@@ -1044,7 +1615,7 @@ angular:
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第25章 多功能实践（编队与语音）","level":"9.4","depth":1,"next":{"title":"深度对照验证报告（视频帧 × 实测运行）","level":"10.1","depth":1,"path":"深度对照报告.md","ref":"深度对照报告.md","articles":[]},"previous":{"title":"第24章 仿真导航与 SLAM","level":"9.3","depth":1,"path":"第24周-仿真导航与SLAM.md","ref":"第24周-仿真导航与SLAM.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第25周-多功能实践开发.md","mtime":"2026-10-16T03:26:51.711Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T03:26:53.986Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第25章 多功能实践（编队与语音）","level":"9.4","depth":1,"next":{"title":"深度对照验证报告（视频帧 × 实测运行）","level":"10.1","depth":1,"path":"深度对照报告.md","ref":"深度对照报告.md","articles":[]},"previous":{"title":"第24章 仿真导航与 SLAM","level":"9.3","depth":1,"path":"第24周-仿真导航与SLAM.md","ref":"第24周-仿真导航与SLAM.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第25周-多功能实践开发.md","mtime":"2026-10-16T04:41:10.808Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T04:41:12.230Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

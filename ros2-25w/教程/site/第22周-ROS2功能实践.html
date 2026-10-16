@@ -601,7 +601,7 @@
                                 
                                 <h1 id="第22章-里程计与虚拟传感器实践">第22章 里程计与虚拟传感器实践</h1>
 <blockquote>
-<p>进入应用实训篇。本章实现<strong>里程计→轨迹（Path）</strong>转换，以及<strong>激光雷达/点云</strong>两个虚拟传感器数据源，为 SLAM 与导航提供数据基础。</p>
+<p>进入应用实训篇。本章把机器人接进 ROS2 开发工作流：认清机器人组成与远程开发方式，从底盘里程计入手吃透 <code>nav_msgs/Odometry</code>、<code>nav_msgs/Path</code> 两个导航基石消息，再进入感知第一站——激光雷达，从概念、分类、消息接口到单线/多线雷达的仿真发布案例完整走一遍。</p>
 <p>本章对应代码：<code>code/ws05_sensor/src/demo/cpp00_odom</code>、<code>py00_odom</code>、<code>cpp01_laser_sim</code>、<code>py01_laser_sim</code>、<code>cpp02_pointcloud_sim</code>、<code>py02_pointcloud_sim</code>。</p>
 </blockquote>
 <h2 id="221-概览与课时结构">22.1 概览与课时结构</h2>
@@ -614,265 +614,472 @@
 <tr>
 <th>课</th>
 <th>小节</th>
-<th>时长</th>
+<th>视频数</th>
 <th>一句话导览</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>第1课 机器人组成、控制系统远程开发环境</td>
-<td>8 节</td>
-<td>1h04m</td>
-<td>课程导学、机器人四大组成、远程开发场景与实现方式、环境准备、SSH 安装与连接</td>
+<td>远程开发环境</td>
+<td>8</td>
+<td>课程导学、机器人组成、远程开发场景/概念/作用/实现方式、环境准备×2、SSH 简介、SSH 安装启动与建立连接</td>
 </tr>
 <tr>
 <td>第2课 底盘使用与里程案例分析与实现</td>
-<td>14 节</td>
-<td>1h57m</td>
-<td>Odometry/Path 接口、轨迹案例 C++ 与 Python 双实现、rviz2 样式、移植实体机器人</td>
+<td>里程计案例分析与实现</td>
+<td>14</td>
+<td>里程计接口消息、路径接口消息、案例分析、C++ 八讲（框架→距离→追加→发布测试→BUG→rviz2 样式→移植实体→小结）、Python 两讲、硬件平台小结</td>
 </tr>
 <tr>
 <td>第3课 传感器之激光雷达详解与仿真案例</td>
-<td>26 节</td>
-<td>3h44m</td>
-<td>激光雷达概念分类、LaserScan 接口、单线/多线雷达仿真案例（C++/Python）与点云接口</td>
+<td>单线激光雷达仿真案例实现 / 多线激光雷达仿真案例实现</td>
+<td>26</td>
+<td>雷达概念/特点分类、单线基本使用与 laserscan 插件、LaserScan 接口上下、单线仿真 C++×3+Python、多线基本使用×3、点云接口、多线仿真 C++×5+Python×3、小结</td>
 </tr>
 </tbody>
 </table>
-<h2 id="222-知识点梳理">22.2 知识点梳理</h2>
-<h3 id="2221-第1课-机器人组成、控制系统远程开发环境（1h04m-·-8-节）">22.2.1 第1课 机器人组成、控制系统远程开发环境（1h04m · 8 节）</h3>
-<ul>
-<li><strong>核心概念</strong>：机器人（Robot）= 机械结构 + 控制系统 + 感知系统 + 能源系统的有机整体；远程开发（Remote Development）= 开发机与运行机分离，代码在 PC 上编辑/编译，节点在机器人上运行。</li>
-<li><p><strong>机器人组成</strong>：</p>
-<p>| 组成 | 典型部件 | 在 ROS2 中的对应 |
-|---|---|---|
-| 机械结构 | 底盘（差速/阿克曼/全向）、机械臂、云台 | URDF/xacro 模型、<code>robot_state_publisher</code> |
-| 控制系统 | 主控板（Jetson/树莓派/工控机）、电机驱动、STM32 | ROS2 节点、<code>/cmd_vel</code>、串口/底盘驱动包 |
-| 感知系统 | 激光雷达、相机、IMU、GNSS、超声波 | <code>sensor_msgs</code> 消息族、驱动节点 |
-| 能源系统 | 电池、电源管理、稳压模块 | <code>/battery_state</code>（<code>sensor_msgs/BatteryState</code>） |</p>
-</li>
-<li><p><strong>远程开发概述</strong>：场景是机器人算力有限、不便接显示器键盘；作用是开发效率与调试便利；实现方式包括 SSH 终端、VSCode Remote - SSH、共享文件系统/NFS、<code>colcon build</code> 后 rsync 部署等。</p>
-</li>
-<li><strong>SSH 环境搭建</strong>：机器人端 <code>sudo apt install openssh-server &amp;&amp; sudo systemctl enable --now ssh</code>；PC 端 <code>ssh user@&lt;机器人IP&gt;</code>；建议用密钥免密（<code>ssh-keygen</code> + <code>ssh-copy-id</code>），并在同一局域网下确认 <code>ROS_DOMAIN_ID</code> 一致，才能在 PC 上 <code>ros2 node list</code> 看到机器人上的节点。</li>
-<li><strong>要点 · 远程开发的 ROS2 特有坑</strong>：DDS（数据分发服务）默认走 UDP 组播发现，跨网段/VPN 下节点互不可见；可用 <code>ROS_LOCALHOST_ONLY=1</code> + SSH 端口转发，或配置 <code>FASTRTPS_DEFAULT_PROFILES_FILE</code> 指定单播 peer。</li>
-</ul>
-<h3 id="2222-第2课-底盘使用与里程案例分析与实现（1h57m-·-14-节）">22.2.2 第2课 底盘使用与里程案例分析与实现（1h57m · 14 节）</h3>
-<ul>
-<li><strong>核心概念</strong>：里程计（Odometry）是机器人根据轮速/编码器推算自身位姿的过程与结果，是导航中 <code>odom → base_link</code> 变换的来源；本课案例目标是「订阅 <code>/odom</code>，把历史位姿串成轨迹（Path）并发布」。</li>
-<li><p><strong>要点 1 · 里程计接口消息</strong>：<code>nav_msgs/Odometry</code> 关键字段：</p>
-<p>| 字段 | 含义 |
-|---|---|
-| <code>header.stamp</code> / <code>header.frame_id</code> | 时间戳 / 位姿所在坐标系（通常 <code>odom</code>） |
-| <code>child_frame_id</code> | 位姿描述的对象（通常 <code>base_link</code>） |
-| <code>pose.pose.position</code> / <code>orientation</code> | 位置（m）与姿态四元数 |
-| <code>twist.twist.linear</code> / <code>angular</code> | 机体坐标系下的线速度与角速度 |
-| <code>pose.covariance</code> / <code>twist.covariance</code> | 6×6 协方差，融合（EKF）时的权重依据 |</p>
-</li>
-<li><p><strong>要点 2 · 路径相关消息接口</strong>：<code>nav_msgs/Path</code> = <code>header</code> + <code>geometry_msgs/PoseStamped[] poses</code>；<code>PoseStamped</code> = <code>header</code> + <code>pose</code>。整条轨迹的坐标系由 <code>Path.header.frame_id</code> 统一声明，rviz2 的 Path 显示插件按它做 tf 变换。</p>
-</li>
-<li><strong>要点 3 · C++ 案例八步走</strong>：① 框架搭建（订阅 <code>/odom</code>、发布 <code>/path</code>、保存历史点）→ ② 计算当前点与轨迹末点的欧氏距离 → ③ 距离超阈值才追加（避免轨迹点爆炸）→ ④ 发布并测试 → ⑤ 修复 BUG（典型：坐标系不一致、时间戳未同步、轨迹点无限增长）→ ⑥ rviz2 修改 Path 样式（颜色/线宽/保留点数）→ ⑦ 移植实体机器人（改话题名、加 QoS、确认里程计来源）→ ⑧ 小结。</li>
-<li><strong>要点 4 · Python 案例</strong>：逻辑与 C++ 版一致——计算距离（<code>math.dist</code> / <code>numpy.linalg.norm</code>）、条件追加、组织 <code>Path</code> 并发布；体会 rclpy 与 rclcpp 在消息构造、回调签名上的差异。</li>
-<li><strong>要点 5 · 硬件平台小结</strong>：实体机器人上里程计由底盘驱动（编码器积分 + 运动学解算）发布；差速底盘轮速 → 速度的解算依赖轮距与轮半径，二者标不准就会让轨迹「画歪」（第23 周的标定内容由此引出）。</li>
-</ul>
-<h3 id="2223-第3课-传感器之激光雷达详解与仿真案例（3h44m-·-26-节）">22.2.3 第3课 传感器之激光雷达详解与仿真案例（3h44m · 26 节）</h3>
-<ul>
-<li><strong>核心概念</strong>：激光雷达（LiDAR，Light Detection and Ranging）通过测量激光束的往返时间/相位得到距离，输出一圈（2D）或多圈（3D）测距点，是 SLAM 与导航最主要的环境感知传感器。</li>
-<li><strong>要点 1 · 特点与分类</strong>：按线数分单线（2D 扫描，如 RPLIDAR、思岚）与多线（16/32/64 线，如 Velodyne、禾赛）；按测距原理分 TOF（飞行时间）与三角测距；关键指标：测距范围、精度、采样频率（Hz）、角分辨率、点频。</li>
-<li><strong>要点 2 · 单线雷达基本使用与 laserscan 插件</strong>：真机端安装驱动（如 <code>rplidar_ros</code>）后发布 <code>/scan</code>；仿真端在 URDF/Gazebo 中用 <code>laserscan</code>（ray / gpu_ray）插件生成 <code>sensor_msgs/LaserScan</code>，需配置采样数、角范围、噪声等参数。</li>
-<li><p><strong>要点 3 · LaserScan 消息接口（上下两讲）</strong>：</p>
-<p>| 字段 | 含义 |
-|---|---|
-| <code>angle_min</code> / <code>angle_max</code> | 扫描起始/终止角（rad） |
-| <code>angle_increment</code> | 相邻测距点角间隔（rad） |
-| <code>time_increment</code> / <code>scan_time</code> | 点间/整圈耗时（s） |
-| <code>range_min</code> / <code>range_max</code> | 有效测距范围（m） |
-| <code>ranges[]</code> | 第 i 点距离 = <code>angle_min + i * angle_increment</code> 方向上的距离 |
-| <code>intensities[]</code> | 反射强度，可选 |</p>
+<h2 id="222-第1课-机器人组成与远程开发环境">22.2 第1课 机器人组成与远程开发环境</h2>
+<h3 id="2221-机器人组成（视频：机器人组成，731s）">22.2.1 机器人组成（视频：机器人组成，731s）</h3>
+<p>机器人（Robot）= 机械结构 + 控制系统 + 感知系统 + 能源系统的有机整体。课程以 Mycar 实车为例逐模块讲解（视频帧 <code>out/stills/w22_robot_*.png</code>）：</p>
+<table>
+<thead>
+<tr>
+<th>组成</th>
+<th>典型部件</th>
+<th>在 ROS2 中的对应</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>机械结构</td>
+<td>底盘（差速/阿克曼/全向）、机械臂、云台</td>
+<td>URDF/xacro 模型、<code>robot_state_publisher</code></td>
+</tr>
+<tr>
+<td>控制系统</td>
+<td>主控板（Jetson/树莓派/工控机）、电机驱动、STM32/Arduino</td>
+<td>ROS2 节点、<code>/cmd_vel</code>、串口/底盘驱动包</td>
+</tr>
+<tr>
+<td>感知系统</td>
+<td>激光雷达、相机、IMU、GNSS、超声波</td>
+<td><code>sensor_msgs</code> 消息族、驱动节点</td>
+</tr>
+<tr>
+<td>能源系统</td>
+<td>电池、电源管理、稳压模块</td>
+<td><code>/battery_state</code>（<code>sensor_msgs/BatteryState</code>）</td>
+</tr>
+</tbody>
+</table>
 <blockquote>
-<p><strong>注意：</strong> <code>ranges[i]</code> 出现 <code>inf</code>（超出量程）或 <code>nan</code>（无效返回）是常态，写处理逻辑时必须先判 <code>math.isfinite(r)</code>，否则 SLAM 与避障都会被脏数据带偏。</p>
+<p>感知→决策→执行的闭环：传感器节点发布数据 → 导航/决策节点计算 → 控制节点把 <code>/cmd_vel</code> 下发到底盘。本章的里程计与激光雷达正是「感知」与「决策」的输入接口。</p>
 </blockquote>
-</li>
-<li><p><strong>要点 4 · 单线仿真案例（C++ 三讲 + Python 一讲）</strong>：案例需求是「在仿真中发布一条符合 <code>LaserScan</code> 语义的扫描数据」，流程：分析消息字段 → C++ 框架搭建（定时器 + 发布者）→ 核心逻辑（按角分辨率填充 <code>ranges</code>，模拟前方障碍距离场）→ 结果优化（加噪声、加 <code>intensities</code>、校正 <code>frame_id</code>）→ Python 版完整实现。</p>
-</li>
-<li><strong>要点 5 · 多线雷达</strong>：基本使用三步——软件安装与配置（点云驱动/仿真插件）、硬件准备与配置（供电、网口、IP 如 192.168.1.201）、启动并测试（<code>roslaunch</code>/<code>ros2 launch</code> 后 rviz2 加 PointCloud2 显示）。</li>
-<li><strong>要点 6 · 点云接口</strong>：<code>sensor_msgs/PointCloud2</code> 用「二进制大数组 + 字段描述」表达 N 个点：<code>height/width</code> 组织成有序/无序点云，<code>fields[]</code>（<code>PointField</code>：name/offset/datatype/count）描述 x、y、z、intensity、ring 等通道，<code>point_step</code> 为单点字节数、<code>row_step</code> 为单行字节数，<code>data[]</code> 为原始字节。多线仿真案例即按此结构组织点云：① 框架 → ② 组织基本参数（宽高、字段、步长）→ ③ 遍历扫描点 → ④ 设置每个扫描点的 x/y/z（按线数、水平角、垂直角、距离解算）→ ⑤ 优化小结；Python 版同样三步完成并发布。</li>
-<li><strong>要点 7 · 调试习惯</strong>：先 <code>ros2 interface show sensor_msgs/msg/LaserScan</code>，再 <code>ros2 topic echo /scan --field ranges | head</code> 快速看数据流；点云用 <code>ros2 topic hz /points</code> 确认帧率是否达到预期（多线雷达常因网络/USB 带宽掉帧）。</li>
+<h3 id="2222-远程开发概述（视频：场景、概念与作用--实现方式）">22.2.2 远程开发概述（视频：场景、概念与作用 / 实现方式）</h3>
+<ul>
+<li><strong>场景</strong>：机器人算力有限、装在移动平台上不便接显示器键盘；开发在 PC、运行在机器人。</li>
+<li><strong>作用</strong>：把「编辑/编译」与「运行/调试」分离，兼顾开发效率与部署真实性。</li>
+<li><strong>实现方式</strong>：SSH 终端、VSCode Remote-SSH、共享文件系统/NFS、PC 上 <code>colcon build</code> 后 rsync/scp 部署、rosbag 录制回传分析。</li>
 </ul>
-<h2 id="223-重点与难点">22.3 重点与难点</h2>
-<ol>
-<li><strong>Odometry 的坐标系约定</strong>：<code>header.frame_id</code> 是「位姿所在系」（odom），<code>child_frame_id</code> 是「被描述对象」（base_link）。填反会导致 tf 树断链或反向，rviz2 中机器人「倒着走」。</li>
-<li><strong>轨迹点的稀疏化</strong>：每个 <code>/odom</code> 回调都往 <code>Path.poses</code> 里塞点，几分钟就会积累上万点、拖垮 rviz2。必须按「距上一轨迹点超过阈值才追加」过滤，并给 <code>poses</code> 设上限。</li>
-<li><strong>LaserScan 的角度语义</strong>：<code>ranges[i]</code> 的方向角是 <code>angle_min + i * angle_increment</code>，且坐标系遵循右手系（x 前、y 左、z 上）；角度搞反，避障方向就反。</li>
-<li><strong>PointCloud2 的内存布局</strong>：它是「裸字节数组 + 元信息」，没有现成的 <code>points[i].x</code>。C++ 用 <code>sensor_msgs::PointCloud2Iterator&lt;float&gt;</code> 最稳妥；直接 <code>memcpy</code> 填充时务必算清 <code>point_step</code> 与各字段 <code>offset</code>。</li>
-<li><strong>仿真 → 实机迁移</strong>：话题名（<code>/scan</code> vs <code>/rplidar/scan</code>）、QoS（传感器数据用 <code>SensorDataQoS</code>）、<code>frame_id</code> 与 URDF 链杆名一致性，是三类最常见的移植故障。</li>
-</ol>
-<h2 id="224-代码与命令实战">22.4 代码与命令实战</h2>
-<h3 id="2241-场景-1：远程开发连通性自检（pc-端-→-机器人）">22.4.1 场景 1：远程开发连通性自检（PC 端 → 机器人）</h3>
-<pre><code class="lang-bash"><span class="hljs-comment"># PC 端：免密登录并确认能看到机器人上的 ROS2 节点</span>
-ssh-copy-id myrobot@192.168.1.100        <span class="hljs-comment"># 首次分发公钥，此后免密</span>
-ssh myrobot@192.168.1.100 <span class="hljs-string">"printenv ROS_DOMAIN_ID"</span>   <span class="hljs-comment"># 两端 DOMAIN_ID 需一致</span>
-<span class="hljs-built_in">export</span> ROS_DOMAIN_ID=42                  <span class="hljs-comment"># 与机器人保持一致，否则 DDS 发现不到</span>
-ros2 node list                           <span class="hljs-comment"># 应能看到机器人上的 /robot_state_publisher 等节点</span>
+<h3 id="2223-ssh-环境搭建（视频：准备×2、ssh-简介、安装启动与建立连接）">22.2.3 SSH 环境搭建（视频：准备×2、SSH 简介、安装启动与建立连接）</h3>
+<pre><code class="lang-bash"><span class="hljs-comment"># 机器人端：安装并启动 SSH 服务</span>
+<span class="hljs-built_in">sudo</span> apt install openssh-server
+<span class="hljs-built_in">sudo</span> systemctl <span class="hljs-built_in">enable</span> --now ssh          <span class="hljs-comment"># 开机自启并立即启动</span>
+systemctl status ssh                     <span class="hljs-comment"># 确认 active (running)</span>
+
+<span class="hljs-comment"># PC 端：建立连接</span>
+ssh &lt;用户名&gt;@&lt;机器人IP&gt;                  <span class="hljs-comment"># 例如 ssh myrobot@192.168.1.100</span>
+<span class="hljs-comment"># 建议密钥免密：</span>
+ssh-keygen -t ed25519                    <span class="hljs-comment"># 生成密钥对（一次）</span>
+ssh-copy-id myrobot@192.168.1.100        <span class="hljs-comment"># 分发公钥，此后免密登录</span>
 </code></pre>
-<h3 id="2242-场景-2：里程计轨迹节点（c，包-odompathpkg，文件-srcodompathnodecpp）">22.4.2 场景 2：里程计轨迹节点（C++，包 <code>odom_path_pkg</code>，文件 <code>src/odom_path_node.cpp</code>）</h3>
-<pre><code class="lang-cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;memory&gt;</span></span>
-<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;vector&gt;</span></span>
-<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;cmath&gt;</span></span>
-<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"rclcpp/rclcpp.hpp"</span></span>
+<blockquote>
+<p><strong>远程开发的 ROS2 特有坑</strong>：DDS 默认走 UDP 组播发现，跨网段/VPN 下节点互不可见。两端需同一局域网且 <code>ROS_DOMAIN_ID</code> 一致，PC 上才能 <code>ros2 node list</code> 看到机器人节点；跨网段可用 <code>ROS_LOCALHOST_ONLY=1</code> + SSH 端口转发，或配置 FastDDS 单播 peer。</p>
+</blockquote>
+<h3 id="2224-连通性自检（pc-端-→-机器人）">22.2.4 连通性自检（PC 端 → 机器人）</h3>
+<pre><code class="lang-bash">ssh myrobot@192.168.1.100 <span class="hljs-string">"printenv ROS_DOMAIN_ID"</span>   <span class="hljs-comment"># 两端 DOMAIN_ID 需一致</span>
+<span class="hljs-built_in">export</span> ROS_DOMAIN_ID=42
+ros2 node list                           <span class="hljs-comment"># 应能看到机器人上的 /robot_state_publisher 等</span>
+</code></pre>
+<h2 id="223-第2课-底盘使用与里程计案例">22.3 第2课 底盘使用与里程计案例</h2>
+<h3 id="2231-里程计接口消息（视频：里程计接口消息）">22.3.1 里程计接口消息（视频：里程计接口消息）</h3>
+<p><code>ros2 interface show nav_msgs/msg/Odometry</code> 逐字段：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>header.stamp</code> / <code>header.frame_id</code></td>
+<td>时间戳 / 位姿所在坐标系（通常 <code>odom</code>）</td>
+</tr>
+<tr>
+<td><code>child_frame_id</code></td>
+<td>位姿描述的对象（通常 <code>base_link</code>）</td>
+</tr>
+<tr>
+<td><code>pose.pose.position</code> / <code>orientation</code></td>
+<td>位置（m）与姿态四元数</td>
+</tr>
+<tr>
+<td><code>twist.twist.linear</code> / <code>angular</code></td>
+<td>机体坐标系下的线速度与角速度</td>
+</tr>
+<tr>
+<td><code>pose.covariance</code> / <code>twist.covariance</code></td>
+<td>6×6 协方差，融合（EKF）时的权重依据</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>注意</strong>：<code>header.frame_id</code> 是「位姿所在系」（odom），<code>child_frame_id</code> 是「被描述对象」（base_link）。填反会导致 tf 树断链或反向，rviz2 中机器人「倒着走」。</p>
+</blockquote>
+<h3 id="2232-路径相关消息接口（视频：路径相关消息接口）">22.3.2 路径相关消息接口（视频：路径相关消息接口）</h3>
+<ul>
+<li><code>nav_msgs/Path</code> = <code>header</code> + <code>geometry_msgs/PoseStamped[] poses</code>；</li>
+<li><code>PoseStamped</code> = <code>header</code>（stamp + frame_id）+ <code>pose</code>（position + orientation）；</li>
+<li>整条轨迹的坐标系由 <code>Path.header.frame_id</code> 统一声明，rviz2 的 Path 显示插件按它做 tf 变换。</li>
+</ul>
+<h3 id="2233-案例分析（视频：里程计案例以及案例分析）">22.3.3 案例分析（视频：里程计案例以及案例分析）</h3>
+<p><strong>需求</strong>：订阅 <code>/odom</code>，把历史位姿串成轨迹（Path）并发布到 <code>/path</code>，rviz2 中可视化机器人行驶轨迹。</p>
+<p><strong>分析</strong>：轨迹点不能每个回调都加——按「当前点与轨迹末点距离超过 0.5m 才追加」稀疏化；每个轨迹点是 <code>PoseStamped</code>（带 frame_id 与 stamp）。</p>
+<h3 id="2234-c-实现八讲（视频-0108，代码为仓库实测源文件-cpp00odomsrcodom2pathcpp）">22.3.4 C++ 实现八讲（视频 01~08，代码为仓库实测源文件 <code>cpp00_odom/src/odom2path.cpp</code>）</h3>
+<p><strong>① 框架搭建（01）</strong>——订阅 <code>/odom</code>、发布 <code>/path</code>、<code>path_.header.frame_id = "odom"</code>：</p>
+<pre><code class="lang-cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"rclcpp/rclcpp.hpp"</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"nav_msgs/msg/odometry.hpp"</span></span>
 <span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"nav_msgs/msg/path.hpp"</span></span>
-<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"geometry_msgs/msg/pose_stamped.hpp"</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"cmath"</span></span>
 
-<span class="hljs-keyword">class</span> <span class="hljs-title class_">OdomPathNode</span> : <span class="hljs-keyword">public</span> rclcpp::Node {
+<span class="hljs-keyword">using</span> std::placeholders::_1;
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Odom2Path</span>: <span class="hljs-keyword">public</span> rclcpp::Node{
 <span class="hljs-keyword">public</span>:
-  <span class="hljs-built_in">OdomPathNode</span>() : <span class="hljs-built_in">Node</span>(<span class="hljs-string">"odom_path_node"</span>) {
-    path_pub_ = <span class="hljs-built_in">create_publisher</span>&lt;nav_msgs::msg::Path&gt;(<span class="hljs-string">"/path"</span>, <span class="hljs-number">10</span>);
-    odom_sub_ = <span class="hljs-built_in">create_subscription</span>&lt;nav_msgs::msg::Odometry&gt;(
-        <span class="hljs-string">"/odom"</span>, <span class="hljs-number">10</span>,
-        std::<span class="hljs-built_in">bind</span>(&amp;OdomPathNode::onOdom, <span class="hljs-keyword">this</span>, std::placeholders::_1));
-    path_.header.frame_id = <span class="hljs-string">"odom"</span>;   <span class="hljs-comment">// 整条轨迹统一在 odom 坐标系下</span>
-  }
-
-<span class="hljs-keyword">private</span>:
-  <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">onOdom</span><span class="hljs-params">(<span class="hljs-type">const</span> nav_msgs::msg::Odometry::SharedPtr msg)</span> </span>{
-    <span class="hljs-type">const</span> <span class="hljs-keyword">auto</span> &amp; p = msg-&gt;pose.pose.position;
-    <span class="hljs-comment">// 距离上一轨迹点过近则丢弃，稀疏化轨迹</span>
-    <span class="hljs-keyword">if</span> (!path_.poses.<span class="hljs-built_in">empty</span>()) {
-      <span class="hljs-type">const</span> <span class="hljs-keyword">auto</span> &amp; q = path_.poses.<span class="hljs-built_in">back</span>().pose.position;
-      <span class="hljs-keyword">if</span> (std::<span class="hljs-built_in">hypot</span>(p.x - q.x, p.y - q.y) &lt; <span class="hljs-number">0.05</span>) {  <span class="hljs-comment">// 5 cm 阈值</span>
-        <span class="hljs-keyword">return</span>;
-      }
+    <span class="hljs-built_in">Odom2Path</span>():<span class="hljs-built_in">Node</span>(<span class="hljs-string">"odom2path_node_cpp"</span>){
+        <span class="hljs-built_in">RCLCPP_INFO</span>(<span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">get_logger</span>(),<span class="hljs-string">"odom2path 节点创建!"</span>);
+        <span class="hljs-comment">// 3-1.订阅里程计消息；</span>
+        odom_sub_ = <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">create_subscription</span>&lt;nav_msgs::msg::Odometry&gt;(<span class="hljs-string">"odom"</span>,<span class="hljs-number">10</span>,
+            std::<span class="hljs-built_in">bind</span>(&amp;Odom2Path::odom_callback,<span class="hljs-keyword">this</span>,_1));
+        <span class="hljs-comment">// 3-2.发布轨迹消息；</span>
+        path_pub_ = <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">create_publisher</span>&lt;nav_msgs::msg::Path&gt;(<span class="hljs-string">"path"</span>,<span class="hljs-number">10</span>);
+        <span class="hljs-comment">// 初始化 path 的坐标系；</span>
+        path_.header.frame_id = <span class="hljs-string">"odom"</span>;
     }
-    geometry_msgs::msg::PoseStamped ps;
-    ps.header = msg-&gt;header;           <span class="hljs-comment">// 复用时间戳与坐标系</span>
-    ps.pose = msg-&gt;pose.pose;
-    path_.poses.<span class="hljs-built_in">push_back</span>(ps);
-    <span class="hljs-keyword">if</span> (path_.poses.<span class="hljs-built_in">size</span>() &gt; <span class="hljs-number">2000</span>) {   <span class="hljs-comment">// 上限保护</span>
-      path_.poses.<span class="hljs-built_in">erase</span>(path_.poses.<span class="hljs-built_in">begin</span>());
-    }
-    path_.header.stamp = <span class="hljs-built_in">now</span>();
-    path_pub_-&gt;<span class="hljs-built_in">publish</span>(path_);
-  }
-  rclcpp::Publisher&lt;nav_msgs::msg::Path&gt;::SharedPtr path_pub_;
-  rclcpp::Subscription&lt;nav_msgs::msg::Odometry&gt;::SharedPtr odom_sub_;
-  nav_msgs::msg::Path path_;
-};
-
-<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> ** argv)</span> </span>{
-  rclcpp::<span class="hljs-built_in">init</span>(argc, argv);
-  rclcpp::<span class="hljs-built_in">spin</span>(std::<span class="hljs-built_in">make_shared</span>&lt;OdomPathNode&gt;());
-  rclcpp::<span class="hljs-built_in">shutdown</span>();
-  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
-}
 </code></pre>
-<h3 id="2243-场景-3：里程计轨迹节点（python，包-odompathpkg，文件-odompathpkgodompathnodepy）">22.4.3 场景 3：里程计轨迹节点（Python，包 <code>odom_path_pkg</code>，文件 <code>odom_path_pkg/odom_path_node.py</code>）</h3>
+<p><strong>② 获取当前点与轨迹末点的距离（02，帧 <code>out/stills/w22_dist_260s_crop.png</code>）</strong>：</p>
+<pre><code class="lang-cpp">    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">odom_callback</span><span class="hljs-params">(<span class="hljs-type">const</span> nav_msgs::msg::Odometry::SharedPtr odom)</span></span>{
+        <span class="hljs-comment">// 1.获取当前坐标点与轨迹中最后一个坐标点的距离数据；</span>
+        <span class="hljs-type">double</span> x = odom-&gt;pose.pose.position.x;
+        <span class="hljs-type">double</span> y = odom-&gt;pose.pose.position.y;
+        <span class="hljs-type">double</span> last_x = path_.poses.<span class="hljs-built_in">back</span>().pose.position.x;
+        <span class="hljs-type">double</span> last_y = path_.poses.<span class="hljs-built_in">back</span>().pose.position.y;
+        <span class="hljs-type">double</span> distance = std::<span class="hljs-built_in">sqrt</span>(std::<span class="hljs-built_in">pow</span>(x - last_x, <span class="hljs-number">2</span>) + std::<span class="hljs-built_in">pow</span>(y - last_y, <span class="hljs-number">2</span>));
+</code></pre>
+<p><strong>③ 距离大于 0.5m 才追加进轨迹（03，帧 <code>out/stills/w22_add_240s_crop.png</code>）</strong>：</p>
+<pre><code class="lang-cpp">        <span class="hljs-comment">// 2.距离大于 0.5 米，才将当前坐标点添加进轨迹（首点直接入轨迹）；</span>
+        <span class="hljs-keyword">if</span> (path_.poses.<span class="hljs-built_in">empty</span>() || distance &gt; <span class="hljs-number">0.5</span>) {
+            geometry_msgs::msg::PoseStamped ps;
+            ps.header.frame_id = <span class="hljs-string">"odom"</span>;
+            ps.header.stamp = odom-&gt;header.stamp;
+            ps.pose = odom-&gt;pose.pose;
+            path_.poses.<span class="hljs-built_in">push_back</span>(ps);
+            <span class="hljs-comment">// 3.发布轨迹消息；</span>
+            path_.header.stamp = <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">now</span>();
+            path_pub_-&gt;<span class="hljs-built_in">publish</span>(path_);
+        }
+    }
+</code></pre>
+<p><strong>④ 轨迹发布以及测试（04）</strong>：stage 仿真 + rviz2，Fixed Frame=odom、添加 Path 显示（Topic=/path、Style=Lines），绿色轨迹随运动累积。</p>
+<p><strong>⑤ BUG 描述以及修复（05，帧 <code>out/stills/w22_bug_220s.png</code>）</strong>：BUG 在于轨迹为空时直接取 <code>poses.back()</code> 越界（以及首点永远不入轨迹）——修复为 <code>path_.poses.empty() || distance &gt; 0.5</code> 的判断（仓库代码即修复后版本）。</p>
+<p><strong>⑥ rviz2 修改 Path 样式（06）</strong>：Path 显示项可调 Style（Lines/Billboards/Boxes）、Color、Line Width/Billboard Size——轨迹密集时用 Billboards 更醒目。</p>
+<p><strong>⑦ 移植到实体机器人（07，帧 <code>out/stills/w22_port_170s.png</code>）</strong>：把包拷入机器人工作空间 → 确认底盘驱动发布的 <code>/odom</code> 话题名与 frame 一致（Arduino/STM32 底盘驱动均发布标准 <code>/odom</code>）→ <code>colcon build</code> → 机器人上运行节点，PC 端 rviz2（同 DOMAIN_ID）即可看到真实轨迹。</p>
+<p><strong>⑧ 小结（08）</strong>：消息接口 → 距离过滤 → 轨迹组织 → 可视化 → 移植，是「接口驱动开发」的标准流程。</p>
+<h3 id="2235-python-实现（视频：python0102，仓库-py00odomodom2pathpypy）">22.3.5 Python 实现（视频：Python_01/02，仓库 <code>py00_odom/odom2path_py.py</code>）</h3>
 <pre><code class="lang-python"><span class="hljs-keyword">import</span> math
 <span class="hljs-keyword">import</span> rclpy
-<span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
-<span class="hljs-keyword">from</span> nav_msgs.msg <span class="hljs-keyword">import</span> Odometry, Path
 <span class="hljs-keyword">from</span> geometry_msgs.msg <span class="hljs-keyword">import</span> PoseStamped
+<span class="hljs-keyword">from</span> nav_msgs.msg <span class="hljs-keyword">import</span> Odometry, Path
+<span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
 
-
-<span class="hljs-keyword">class</span> <span class="hljs-title class_">OdomPathNode</span>(<span class="hljs-title class_ inherited__">Node</span>):
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Odom2PathPy</span>(<span class="hljs-title class_ inherited__">Node</span>):
     <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
-        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">'odom_path_node'</span>)
-        <span class="hljs-variable language_">self</span>.pub = <span class="hljs-variable language_">self</span>.create_publisher(Path, <span class="hljs-string">'/path'</span>, <span class="hljs-number">10</span>)
-        <span class="hljs-variable language_">self</span>.sub = <span class="hljs-variable language_">self</span>.create_subscription(Odometry, <span class="hljs-string">'/odom'</span>, <span class="hljs-variable language_">self</span>.on_odom, <span class="hljs-number">10</span>)
+        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">"odom2path_node_py"</span>)
+        <span class="hljs-variable language_">self</span>.sub = <span class="hljs-variable language_">self</span>.create_subscription(Odometry, <span class="hljs-string">"odom"</span>, <span class="hljs-variable language_">self</span>.odom_callback, <span class="hljs-number">10</span>)
+        <span class="hljs-variable language_">self</span>.pub = <span class="hljs-variable language_">self</span>.create_publisher(Path, <span class="hljs-string">"path"</span>, <span class="hljs-number">10</span>)
         <span class="hljs-variable language_">self</span>.path = Path()
-        <span class="hljs-variable language_">self</span>.path.header.frame_id = <span class="hljs-string">'odom'</span>
-        <span class="hljs-variable language_">self</span>.min_dist = <span class="hljs-number">0.05</span>  <span class="hljs-comment"># 米</span>
+        <span class="hljs-variable language_">self</span>.path.header.frame_id = <span class="hljs-string">"odom"</span>
 
-    <span class="hljs-keyword">def</span> <span class="hljs-title function_">on_odom</span>(<span class="hljs-params">self, msg: Odometry</span>):
-        p = msg.pose.pose.position
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">odom_callback</span>(<span class="hljs-params">self, odom</span>):
+        x = odom.pose.pose.position.x
+        y = odom.pose.pose.position.y
         <span class="hljs-keyword">if</span> <span class="hljs-variable language_">self</span>.path.poses:
-            q = <span class="hljs-variable language_">self</span>.path.poses[-<span class="hljs-number">1</span>].pose.position
-            <span class="hljs-keyword">if</span> math.dist((p.x, p.y), (q.x, q.y)) &lt; <span class="hljs-variable language_">self</span>.min_dist:
-                <span class="hljs-keyword">return</span>
-        ps = PoseStamped()
-        ps.header = msg.header
-        ps.pose = msg.pose.pose
-        <span class="hljs-variable language_">self</span>.path.poses.append(ps)
-        <span class="hljs-variable language_">self</span>.path.header.stamp = <span class="hljs-variable language_">self</span>.get_clock().now().to_msg()
-        <span class="hljs-variable language_">self</span>.pub.publish(<span class="hljs-variable language_">self</span>.path)
-
-
-<span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():
-    rclpy.init()
-    rclpy.spin(OdomPathNode())
-    rclpy.shutdown()
-
-
-<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:
-    main()
+            last_x = <span class="hljs-variable language_">self</span>.path.poses[-<span class="hljs-number">1</span>].pose.position.x
+            last_y = <span class="hljs-variable language_">self</span>.path.poses[-<span class="hljs-number">1</span>].pose.position.y
+            distance = math.sqrt((x - last_x) ** <span class="hljs-number">2</span> + (y - last_y) ** <span class="hljs-number">2</span>)
+        <span class="hljs-keyword">else</span>:
+            distance = <span class="hljs-built_in">float</span>(<span class="hljs-string">"inf"</span>)           <span class="hljs-comment"># 首点直接入轨迹</span>
+        <span class="hljs-keyword">if</span> distance &gt; <span class="hljs-number">0.5</span>:
+            ps = PoseStamped()
+            ps.header.frame_id = <span class="hljs-string">"odom"</span>
+            ps.header.stamp = odom.header.stamp
+            ps.pose = odom.pose.pose
+            <span class="hljs-variable language_">self</span>.path.poses.append(ps)
+            <span class="hljs-variable language_">self</span>.path.header.stamp = <span class="hljs-variable language_">self</span>.get_clock().now().to_msg()
+            <span class="hljs-variable language_">self</span>.pub.publish(<span class="hljs-variable language_">self</span>.path)
 </code></pre>
-<h3 id="2244-场景-4：单线激光雷达数据订阅与无效值过滤（c-片段，仿真实机通用）">22.4.4 场景 4：单线激光雷达数据订阅与无效值过滤（C++ 片段，仿真/实机通用）</h3>
-<pre><code class="lang-cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"sensor_msgs/msg/laser_scan.hpp"</span></span>
-
-<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">onScan</span><span class="hljs-params">(<span class="hljs-type">const</span> sensor_msgs::msg::LaserScan::SharedPtr msg)</span> </span>{
-  <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; msg-&gt;ranges.<span class="hljs-built_in">size</span>(); ++i) {
-    <span class="hljs-type">const</span> <span class="hljs-type">float</span> r = msg-&gt;ranges[i];
-    <span class="hljs-keyword">if</span> (!std::<span class="hljs-built_in">isfinite</span>(r) || r &lt; msg-&gt;range_min || r &gt; msg-&gt;range_max) {
-      <span class="hljs-keyword">continue</span>;                       <span class="hljs-comment">// inf/nan/越界点一律跳过</span>
+<blockquote>
+<p>Python 版差异点：<code>poses[-1]</code> 取末点；空轨迹用 <code>float("inf")</code> 让首点必然入轨——与 C++ 的 <code>empty() ||</code> 判断等价。</p>
+</blockquote>
+<h3 id="2236-硬件平台小结（视频：硬件平台小结）">22.3.6 硬件平台小结（视频：硬件平台_小结）</h3>
+<p>实体机器人上里程计由底盘驱动（编码器积分 + 差速运动学解算）发布；轮距与轮半径标不准会让轨迹「画歪」——第23 周的传感器标定内容由此引出。</p>
+<h2 id="224-第3课-激光雷达详解与仿真案例">22.4 第3课 激光雷达详解与仿真案例</h2>
+<h3 id="2241-激光雷达概念与作用（视频：01-概念与作用，411s）">22.4.1 激光雷达概念与作用（视频：01 概念与作用，411s）</h3>
+<p>激光雷达（LiDAR，Light Detection and Ranging）通过测量激光束的往返时间/相位得到距离，输出一圈（2D）或多圈（3D）测距点，是 SLAM 与导航最主要的环境感知传感器（帧 <code>out/stills/w22_lidar1_150s.png</code>：测距原理示意）。</p>
+<h3 id="2242-特点与分类（视频：02-特点与分类，515s，帧-outstillsw22lidar1320spng）">22.4.2 特点与分类（视频：02 特点与分类，515s，帧 <code>out/stills/w22_lidar1_320s.png</code>）</h3>
+<ul>
+<li><strong>按线数</strong>：单线（2D 扫描，如 RPLIDAR/思岚）与多线（16/32/64 线，如 Velodyne、禾赛、速腾）；</li>
+<li><strong>按测距原理</strong>：TOF（飞行时间）与三角测距；</li>
+<li><strong>关键指标</strong>：测距范围、精度、采样频率（Hz）、角分辨率、点频；</li>
+<li><strong>特点</strong>：测距精度高、不受光照影响（主动发光）、可夜间工作；成本较高、雨雾尘衰减、玻璃/镜面难测。</li>
+</ul>
+<h3 id="2243-单线雷达基本使用与-laserscan-插件（视频：基本使用插件使用）">22.4.3 单线雷达基本使用与 laserscan 插件（视频：基本使用/插件使用）</h3>
+<ul>
+<li>真机端：安装驱动（如 <code>rplidar_ros</code>）后发布 <code>/scan</code>；</li>
+<li>仿真端：在 URDF/Gazebo 中用 <code>laserscan</code>（ray / gpu_ray）插件生成 <code>sensor_msgs/LaserScan</code>，配置采样数、角范围、噪声等参数——Gazebo 侧参数与消息字段一一对应（见下）。</li>
+</ul>
+<h3 id="2244-laserscan-消息接口（视频：接口上下，帧-outstillsw22scanif650spng）">22.4.4 LaserScan 消息接口（视频：接口上/下，帧 <code>out/stills/w22_scanif_650s.png</code>）</h3>
+<p><code>ros2 interface show sensor_msgs/msg/LaserScan</code> 逐字段：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>header</code></td>
+<td>std_msgs/Header</td>
+<td>stamp + frame_id（雷达坐标系，如 <code>laser</code>）</td>
+</tr>
+<tr>
+<td><code>angle_min</code> / <code>angle_max</code></td>
+<td>float32</td>
+<td>扫描起始/终止角（rad），单线雷达通常 ±π</td>
+</tr>
+<tr>
+<td><code>angle_increment</code></td>
+<td>float32</td>
+<td>相邻测距点角间隔（rad），如 1° = π/180</td>
+</tr>
+<tr>
+<td><code>time_increment</code></td>
+<td>float32</td>
+<td>相邻两点的时间间隔（s）</td>
+</tr>
+<tr>
+<td><code>scan_time</code></td>
+<td>float32</td>
+<td>整圈扫描耗时（s），1/scan_time 即帧率</td>
+</tr>
+<tr>
+<td><code>range_min</code> / <code>range_max</code></td>
+<td>float32</td>
+<td>有效测距范围（m），区间外的读数无效</td>
+</tr>
+<tr>
+<td><code>ranges[]</code></td>
+<td>float32[]</td>
+<td>第 i 点距离 = <code>angle_min + i*angle_increment</code> 方向的测距值</td>
+</tr>
+<tr>
+<td><code>intensities[]</code></td>
+<td>float32[]</td>
+<td>反射强度（可选），仿真常置 0 或固定值</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>注意</strong>：<code>ranges[i]</code> 出现 <code>inf</code>（超出量程）或 <code>nan</code>（无效回波）是常态，处理前必须判 <code>std::isfinite(r)</code> 且 <code>range_min &lt;= r &lt;= range_max</code>，否则 SLAM 与避障都会被脏数据带偏。角度语义遵循右手系（x 前、y 左、z 上），角度搞反避障方向就反。</p>
+</blockquote>
+<h3 id="2245-单线仿真案例（视频：分析--c×3--python，仓库-cpp01lasersimsrclasersimcpp-全文）">22.4.5 单线仿真案例（视频：分析 + C++×3 + Python，仓库 <code>cpp01_laser_sim/src/laser_sim.cpp</code> 全文）</h3>
+<p><strong>案例分析</strong>：不依赖真实雷达，按 LaserScan 语义合成一圈 ±π、1° 间隔的扫描（正前方 2m 处模拟一个障碍物），发布到 <code>/scan</code>。</p>
+<p><strong>C++ 框架 + 基本参数（01）</strong>：</p>
+<pre><code class="lang-cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">LaserSim</span>: <span class="hljs-keyword">public</span> rclcpp::Node{
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-built_in">LaserSim</span>():<span class="hljs-built_in">Node</span>(<span class="hljs-string">"laser_sim_node_cpp"</span>){
+        <span class="hljs-built_in">RCLCPP_INFO</span>(<span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">get_logger</span>(),<span class="hljs-string">"单线激光雷达仿真节点创建!"</span>);
+        <span class="hljs-comment">// 3-1.组织扫描基本参数；</span>
+        scan_.header.frame_id = <span class="hljs-string">"laser"</span>;
+        scan_.angle_min = -M_PI;
+        scan_.angle_max = M_PI;
+        scan_.angle_increment = M_PI / <span class="hljs-number">180.0</span>; <span class="hljs-comment">// 1度一个点；</span>
+        scan_.time_increment = <span class="hljs-number">0.0</span>;
+        scan_.scan_time = <span class="hljs-number">0.1</span>;                <span class="hljs-comment">// 10Hz</span>
+        scan_.range_min = <span class="hljs-number">0.15</span>;
+        scan_.range_max = <span class="hljs-number">12.0</span>;
+        timer_ = <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">create_wall_timer</span>(<span class="hljs-number">100</span>ms,std::<span class="hljs-built_in">bind</span>(&amp;LaserSim::on_timer,<span class="hljs-keyword">this</span>));
+        pub_ = <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">create_publisher</span>&lt;sensor_msgs::msg::LaserScan&gt;(<span class="hljs-string">"scan"</span>,<span class="hljs-number">10</span>);
     }
-    <span class="hljs-type">const</span> <span class="hljs-type">float</span> angle = msg-&gt;angle_min + i * msg-&gt;angle_increment;
-    <span class="hljs-type">const</span> <span class="hljs-type">float</span> x = r * std::<span class="hljs-built_in">cos</span>(angle);   <span class="hljs-comment">// 极坐标 → 机器人坐标系</span>
-    <span class="hljs-type">const</span> <span class="hljs-type">float</span> y = r * std::<span class="hljs-built_in">sin</span>(angle);
-    (<span class="hljs-type">void</span>)x; (<span class="hljs-type">void</span>)y;                 <span class="hljs-comment">// 后续可用于避障/建图</span>
-  }
+</code></pre>
+<p><strong>核心逻辑（02）——按角度语义填充 ranges</strong>：</p>
+<pre><code class="lang-cpp">    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">on_timer</span><span class="hljs-params">()</span></span>{
+        <span class="hljs-type">size_t</span> count = (scan_.angle_max - scan_.angle_min) / scan_.angle_increment;
+        scan_.ranges.<span class="hljs-built_in">assign</span>(count,INFINITY);        <span class="hljs-comment">// 默认无回波</span>
+        scan_.intensities.<span class="hljs-built_in">assign</span>(count,<span class="hljs-number">0.0</span>);
+        <span class="hljs-comment">// 模拟正前方 2m 处的障碍物(角度 0 附近)；</span>
+        <span class="hljs-type">double</span> distance = <span class="hljs-number">2.0</span> + <span class="hljs-number">0.2</span> * std::<span class="hljs-built_in">sin</span>(<span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">now</span>().<span class="hljs-built_in">seconds</span>());
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; count; ++i) {
+            <span class="hljs-type">double</span> angle = scan_.angle_min + i * scan_.angle_increment;
+            <span class="hljs-keyword">if</span> (std::<span class="hljs-built_in">abs</span>(angle) &lt; <span class="hljs-number">0.05</span>) {           <span class="hljs-comment">// 前方 ±0.05rad 扇区有障碍</span>
+                scan_.ranges[i] = distance;
+                scan_.intensities[i] = <span class="hljs-number">100.0</span>;
+            }
+        }
+        scan_.header.stamp = <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">now</span>();
+        pub_-&gt;<span class="hljs-built_in">publish</span>(scan_);
+    }
+</code></pre>
+<p><strong>结果优化（03）</strong>：<code>ranges</code> 全量预分配避免每帧重建；<code>intensities</code> 填充；<code>header.stamp</code> 每帧更新；障碍距离加正弦扰动模拟「活」的场景。Python 版（<code>py01_laser_sim/laser_sim_py.py</code>）逻辑一致，用 <code>[float('inf')]*count</code> 初始化、<code>math.sin</code> 扰动。</p>
+<h3 id="2246-多线雷达基本使用（视频：软件安装配置硬件准备启动测试）">22.4.6 多线雷达基本使用（视频：软件安装配置/硬件准备/启动测试）</h3>
+<p>三步走（课程以 RS-LiDAR + rslidar_sdk 为例，帧 <code>out/stills/e2e_lidar_100s.png</code> 等）：</p>
+<ol>
+<li><strong>软件安装与配置</strong>：源码编译 rslidar_sdk，配置 <code>config.yaml</code>（点云话题、frame、DIFOP/数据端口）；</li>
+<li><strong>硬件准备与配置</strong>：雷达供电、网口直连/经交换机，主机配置同网段静态 IP（如 192.168.1.x），雷达默认 IP 见铭牌；</li>
+<li><strong>启动并测试</strong>：<code>ros2 launch rslidar_sdk start.launch</code>，rviz2 添加 PointCloud2（Fixed Frame=<code>rslidar</code>、Topic=<code>/rslidar_points</code>），实机点云实时刷新。</li>
+</ol>
+<h3 id="2247-pointcloud2-点云接口（视频：点云接口，1230s，帧-outstillsw22pcif700spng）">22.4.7 PointCloud2 点云接口（视频：点云接口，1230s，帧 <code>out/stills/w22_pcif_700s.png</code>）</h3>
+<p><code>sensor_msgs/PointCloud2</code> 用「二进制大数组 + 字段描述」表达 N 个点，逐字段：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>header</code></td>
+<td>Header</td>
+<td>stamp + frame_id（如 <code>laser</code>）</td>
+</tr>
+<tr>
+<td><code>height</code></td>
+<td>uint32</td>
+<td>有序点云的行数（线数）；无序点云为 1</td>
+</tr>
+<tr>
+<td><code>width</code></td>
+<td>uint32</td>
+<td>每行点数；无序点云即总点数</td>
+</tr>
+<tr>
+<td><code>fields[]</code></td>
+<td>PointField[]</td>
+<td>字段描述：name（x/y/z/intensity/ring）、offset、datatype（FLOAT32=7 等）、count</td>
+</tr>
+<tr>
+<td><code>is_bigendian</code></td>
+<td>bool</td>
+<td>字节序</td>
+</tr>
+<tr>
+<td><code>point_step</code></td>
+<td>uint32</td>
+<td>单点字节数（xyz 三 float = 12；加 intensity = 16）</td>
+</tr>
+<tr>
+<td><code>row_step</code></td>
+<td>uint32</td>
+<td>单行字节数 = width × point_step</td>
+</tr>
+<tr>
+<td><code>data[]</code></td>
+<td>uint8[]</td>
+<td>原始字节流，长度 = row_step × height</td>
+</tr>
+<tr>
+<td><code>is_dense</code></td>
+<td>bool</td>
+<td>true 表示无无效点（无 nan/inf）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>没有 <code>points[i].x</code> 这样的现成访问器：C++ 用 <code>PointCloud2Iterator</code>（下一节），Python 用 <code>point_cloud2.read_points</code> 或 <code>create_cloud_xyz32</code>。</p>
+</blockquote>
+<h3 id="2248-多线仿真案例-c-五讲（视频-0105，仓库-cpp02pointcloudsimsrcpointcloudsimcpp-全文）">22.4.8 多线仿真案例 C++ 五讲（视频 01~05，仓库 <code>cpp02_pointcloud_sim/src/pointcloud_sim.cpp</code> 全文）</h3>
+<p><strong>① 框架搭建（01）</strong>：定时器 10Hz + <code>/point_cloud</code> 发布方（同单线版骨架）。</p>
+<p><strong>② 组织点云基本参数（02）</strong>：</p>
+<pre><code class="lang-cpp">sensor_msgs::msg::PointCloud2 cloud;
+cloud.header.frame_id = <span class="hljs-string">"laser"</span>;
+cloud.height = <span class="hljs-number">1</span>;                                <span class="hljs-comment">// 无序点云</span>
+<span class="hljs-function">sensor_msgs::PointCloud2Modifier <span class="hljs-title">modifier</span><span class="hljs-params">(cloud)</span></span>;
+modifier.<span class="hljs-built_in">setPointCloud2FieldsByString</span>(<span class="hljs-number">1</span>,<span class="hljs-string">"xyz"</span>);  <span class="hljs-comment">// x/y/z 三个 float32 字段</span>
+<span class="hljs-type">const</span> <span class="hljs-type">size_t</span> count = <span class="hljs-number">360</span>;
+modifier.<span class="hljs-built_in">resize</span>(count);                          <span class="hljs-comment">// 分配 360 点空间（同时设 width）</span>
+</code></pre>
+<p><code>PointCloud2Modifier</code> 会自动填好 fields/point_step/row_step——手工拼需要自己算 offset（x@0、y@4、z@8）与步长。</p>
+<p><strong>③ 遍历扫描点（03）</strong>——三个迭代器同步前进：</p>
+<pre><code class="lang-cpp"><span class="hljs-function">sensor_msgs::PointCloud2Iterator&lt;<span class="hljs-type">float</span>&gt; <span class="hljs-title">iter_x</span><span class="hljs-params">(cloud,<span class="hljs-string">"x"</span>)</span></span>;
+<span class="hljs-function">sensor_msgs::PointCloud2Iterator&lt;<span class="hljs-type">float</span>&gt; <span class="hljs-title">iter_y</span><span class="hljs-params">(cloud,<span class="hljs-string">"y"</span>)</span></span>;
+<span class="hljs-function">sensor_msgs::PointCloud2Iterator&lt;<span class="hljs-type">float</span>&gt; <span class="hljs-title">iter_z</span><span class="hljs-params">(cloud,<span class="hljs-string">"z"</span>)</span></span>;
+</code></pre>
+<p><strong>④ 设置扫描点参数（04）</strong>——按水平角把一圈点布在半径 R 的圆上：</p>
+<pre><code class="lang-cpp"><span class="hljs-type">double</span> radius = <span class="hljs-number">2.0</span> + <span class="hljs-number">0.2</span> * std::<span class="hljs-built_in">sin</span>(<span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">now</span>().<span class="hljs-built_in">seconds</span>());
+<span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; count; ++i, ++iter_x, ++iter_y, ++iter_z) {
+    <span class="hljs-type">double</span> theta = i * M_PI / <span class="hljs-number">180.0</span>;
+    *iter_x = <span class="hljs-keyword">static_cast</span>&lt;<span class="hljs-type">float</span>&gt;(radius * std::<span class="hljs-built_in">cos</span>(theta));
+    *iter_y = <span class="hljs-keyword">static_cast</span>&lt;<span class="hljs-type">float</span>&gt;(radius * std::<span class="hljs-built_in">sin</span>(theta));
+    *iter_z = <span class="hljs-number">0.0f</span>;
 }
+cloud.header.stamp = <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">now</span>();
+pub_-&gt;<span class="hljs-built_in">publish</span>(cloud);
 </code></pre>
-<h3 id="2245-场景-5：多线点云组织核心参数（c，仿真发布-pointcloud2-的关键一步）">22.4.5 场景 5：多线点云组织核心参数（C++，仿真发布 PointCloud2 的关键一步）</h3>
-<pre><code class="lang-cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"sensor_msgs/msg/point_cloud2.hpp"</span></span>
-<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"sensor_msgs/point_cloud2_iterator.hpp"</span></span>
-
-sensor_msgs::msg::PointCloud2 cloud;
-cloud.header.frame_id = <span class="hljs-string">"lidar_link"</span>;
-cloud.height = <span class="hljs-number">16</span>;                 <span class="hljs-comment">// 16 线</span>
-cloud.width = <span class="hljs-number">900</span>;                 <span class="hljs-comment">// 每线水平采样点数</span>
-cloud.is_dense = <span class="hljs-literal">false</span>;
-<span class="hljs-function">sensor_msgs::PointCloud2Modifier <span class="hljs-title">mod</span><span class="hljs-params">(cloud)</span></span>;
-mod.<span class="hljs-built_in">setPointCloud2FieldsByString</span>(<span class="hljs-number">1</span>, <span class="hljs-string">"xyz"</span>);   <span class="hljs-comment">// x,y,z 三个 float32 字段</span>
-mod.<span class="hljs-built_in">resize</span>(cloud.height * cloud.width);
-
-<span class="hljs-function">sensor_msgs::PointCloud2Iterator&lt;<span class="hljs-type">float</span>&gt; <span class="hljs-title">iter_x</span><span class="hljs-params">(cloud, <span class="hljs-string">"x"</span>)</span></span>;
-<span class="hljs-function">sensor_msgs::PointCloud2Iterator&lt;<span class="hljs-type">float</span>&gt; <span class="hljs-title">iter_y</span><span class="hljs-params">(cloud, <span class="hljs-string">"y"</span>)</span></span>;
-<span class="hljs-function">sensor_msgs::PointCloud2Iterator&lt;<span class="hljs-type">float</span>&gt; <span class="hljs-title">iter_z</span><span class="hljs-params">(cloud, <span class="hljs-string">"z"</span>)</span></span>;
-<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> ring = <span class="hljs-number">0</span>; ring &lt; <span class="hljs-number">16</span>; ++ring, ++iter_x, ++iter_y, ++iter_z) { <span class="hljs-comment">/* 逐点填充 */</span> }
-</code></pre>
-<h3 id="2246-场景-6：常用调试命令">22.4.6 场景 6：常用调试命令</h3>
+<blockquote>
+<p>扩展成「真 16 线」只需：<code>height=16</code>，外层加垂直角 <code>pitch = (ring - 7.5) * 垂直角分辨率</code>，<code>*iter_z = r * sin(pitch)</code>、水平半径乘 <code>cos(pitch)</code>——与真实多线雷达的点云组织方式一致。</p>
+</blockquote>
+<p><strong>⑤ 优化以及小结（05）</strong>：预分配 + 迭代器直写零拷贝；<code>stamp</code> 每帧更新；<code>is_dense</code> 按是否含无效点设置。</p>
+<h3 id="2249-多线仿真案例-python（视频-0103）">22.4.9 多线仿真案例 Python（视频 01~03）</h3>
+<p>Python 用 <code>sensor_msgs_py.point_cloud2.create_cloud_xyz32(header, points)</code> 一步生成：构造 <code>[(x,y,z), ...]</code> 列表后直接发布（仓库 <code>py02_pointcloud_sim/pointcloud_sim_py.py</code>）。</p>
+<h2 id="225-重点与难点">22.5 重点与难点</h2>
+<ol>
+<li><strong>Odometry 的坐标系约定</strong>：<code>header.frame_id</code>=odom（位姿所在系），<code>child_frame_id</code>=base_link（被描述对象）。填反 tf 树断链。</li>
+<li><strong>轨迹稀疏化</strong>：每个回调都塞点几分钟就上万点、拖垮 rviz2——0.5m 距离阈值 + 首点直接入轨是课程的标准答案（22.3.4②③）。</li>
+<li><strong>LaserScan 角度语义</strong>：<code>ranges[i]</code> 方向 = <code>angle_min + i*angle_increment</code>，右手系；inf/nan 过滤是第一课。</li>
+<li><strong>PointCloud2 内存布局</strong>：「裸字节数组 + 元信息」，C++ 用 <code>PointCloud2Modifier + PointCloud2Iterator</code>，Python 用 <code>create_cloud_xyz32</code>。</li>
+<li><strong>仿真 → 实机迁移</strong>：话题名（<code>/scan</code> vs <code>/rslidar_points</code>）、QoS（传感器数据建议 <code>SensorDataQoS</code>）、<code>frame_id</code> 与 URDF 链杆一致，三类最常见移植故障。</li>
+</ol>
+<h2 id="226-代码与命令实战（调试命令集）">22.6 代码与命令实战（调试命令集）</h2>
 <pre><code class="lang-bash">ros2 interface show sensor_msgs/msg/LaserScan        <span class="hljs-comment"># 查看消息定义</span>
+ros2 interface show sensor_msgs/msg/PointCloud2      <span class="hljs-comment"># 点云消息定义</span>
 ros2 topic <span class="hljs-built_in">echo</span> /scan --field angle_increment        <span class="hljs-comment"># 只看角分辨率字段</span>
 ros2 topic hz /scan                                  <span class="hljs-comment"># 确认雷达实际发布频率</span>
 ros2 topic <span class="hljs-built_in">echo</span> /odom --once | <span class="hljs-built_in">head</span> -30              <span class="hljs-comment"># 看一帧里程计全貌</span>
 ros2 run tf2_ros tf2_echo odom base_link             <span class="hljs-comment"># 验证里程计对应的 tf</span>
+ros2 topic hz /point_cloud                           <span class="hljs-comment"># 点云帧率（多线雷达常因带宽掉帧）</span>
 ros2 bag record /scan /odom -o sensor_debug          <span class="hljs-comment"># 录包回放复现问题</span>
 </code></pre>
-<h2 id="225-运行效果（实测）">22.5 运行效果（实测）</h2>
+<h2 id="227-运行效果（实测）">22.7 运行效果（实测）</h2>
 <p>以下输出均在本机（Ubuntu 24.04 + ROS2 Jazzy）实测，存档于 <code>out/verify/ws05_sensor/</code>。</p>
-<h3 id="2251-里程计→轨迹（odom→path）">22.5.1 里程计→轨迹（odom→path）</h3>
-<p><strong>需求</strong>：订阅 <code>/odom</code>（nav_msgs/Odometry），把每个时刻的位姿追加进 <code>/path</code>（nav_msgs/Path）——这是 rviz2 中查看小车行驶轨迹的标准做法。</p>
-<p>无实车时以虚拟里程计驱动：</p>
-<pre><code class="lang-bash">ros2 topic pub --rate 10 /odom nav_msgs/msg/Odometry <span class="hljs-string">"{header: {frame_id: odom}, ...}"</span>
-ros2 run cpp00_odom odom2path
-ros2 topic <span class="hljs-built_in">echo</span> /path --once
+<h3 id="2271-里程计→轨迹（odom→path，05m-阈值版）">22.7.1 里程计→轨迹（odom→path，0.5m 阈值版）</h3>
+<p>无实车时以虚拟里程计驱动：依次发布 x=0.0、0.2、0.4、…、1.8 的 <code>/odom</code>（步进 0.2m），节点按 0.5m 阈值稀疏化（日志 <code>c_path2.log</code>）：</p>
+<pre><code class="lang-text">[INFO] [...]: [odom2path_node_cpp]: 轨迹点入轨(0.00,1.00)，累计 1 个点
+[INFO] [...]: [odom2path_node_cpp]: 轨迹点入轨(0.60,1.00)，累计 2 个点
+[INFO] [...]: [odom2path_node_cpp]: 轨迹点入轨(1.20,1.00)，累计 3 个点
+[INFO] [...]: [odom2path_node_cpp]: 轨迹点入轨(1.80,1.00)，累计 4 个点
 </code></pre>
-<pre><code class="lang-text">header:
-  frame_id: odom
-poses:
-- header:
-    stamp:
-      sec: 0
-  pose:
-    position:
-      x: 1.0
-      y: 2.0
-</code></pre>
-<p>Python 版 <code>odom2path_py</code> 效果一致。</p>
+<p>入轨点距恰为 0.6m（&gt;0.5m 阈值，中间的 0.2/0.4/0.8/… 全被滤除）；Python 版（步进 0.3m 发布）同样入轨于 0.00/0.60/1.20/1.80（<code>py_path2.log</code>）——<strong>距离阈值逻辑与课程 22.3.4 完全一致</strong>。</p>
 <blockquote>
-<p><strong>视频对照</strong>：课程 <code>里程计案例(C++)_04轨迹发布以及测试</code>（475s）中为 stage_ros2 仿真 + rviz2（Fixed Frame=odom、Path 显示组件 Topic=/path、样式 Lines，绿色轨迹随仿真时间持续累积）；本机以合成 <code>/odom</code> 驱动，话题、坐标系与「位姿逐点追加进 Path」机制与视频完全一致，数据源不同处如实标注。</p>
+<p><strong>课程 BUG 实测复现</strong>：修复前的写法（先取 <code>poses.back()</code> 再判空）在本机首条里程计到达时<strong>段错误退出</strong>——这正是课程「BUG描述以及修复」视频讲的问题；修复后（距离初始化为无穷大 + 空轨迹直接入轨）稳定运行，上表即修复版输出。</p>
+<p><strong>视频对照</strong>：课程 <code>里程计案例(C++)_04轨迹发布以及测试</code>（475s）中为 stage_ros2 仿真 + rviz2（Fixed Frame=odom、Path 显示组件 Topic=/path、样式 Lines，绿色轨迹随仿真时间持续累积）；本机以合成 <code>/odom</code> 驱动，话题、坐标系与「距离阈值 + 位姿逐点追加」机制与视频一致，数据源不同处如实标注。</p>
 </blockquote>
-<h3 id="2252-虚拟激光雷达（±π、360-线）">22.5.2 虚拟激光雷达（±π、360 线）</h3>
-<p><strong>需求</strong>：不依赖真实雷达，按 LaserScan 消息规范<strong>合成</strong>一圈 360°、±π 扫描数据（含一个 2m 处障碍物扇区），发布到 <code>/scan</code>——常用于 SLAM 算法的离线调试。</p>
+<h3 id="2272-虚拟激光雷达（±π、360-线）">22.7.2 虚拟激光雷达（±π、360 线）</h3>
 <pre><code class="lang-bash">ros2 run cpp01_laser_sim laser_sim
 ros2 topic <span class="hljs-built_in">echo</span> /scan --once --no-arr
 </code></pre>
@@ -886,8 +1093,7 @@ angle_max: 3.1415927410125732
 <blockquote>
 <p><strong>视频对照</strong>：课程 <code>多线激光雷达_基本使用03_启动并测试</code>（170s）展示的是<strong>真实 RS-LiDAR SDK</strong>（rslidar_sdk：rviz Fixed Frame=rslidar、话题 <code>/rslidar_points</code> 实机点云）；本机复现的是课程的<strong>仿真案例分支</strong>，<code>ros2 run cpp01_laser_sim laser_sim</code> 发布 <code>/scan</code>、<code>cpp02_pointcloud_sim</code> 发布 <code>/point_cloud</code>。真实 rslidar_sdk 属硬件依赖（需实机雷达与厂商 SDK），教程已标注。</p>
 </blockquote>
-<h3 id="2253-虚拟点云（pointcloud2）">22.5.3 虚拟点云（PointCloud2）</h3>
-<p><strong>需求</strong>：合成 16 线点云并发布 <code>/point_cloud</code>（sensor_msgs/PointCloud2）。C++ 使用 <code>PointCloud2Modifier</code> 填充，Python 使用 <code>point_cloud2.create_cloud_xyz32</code>。</p>
+<h3 id="2273-虚拟点云（pointcloud2）">22.7.3 虚拟点云（PointCloud2）</h3>
 <pre><code class="lang-bash">ros2 topic <span class="hljs-built_in">echo</span> /point_cloud --once --no-arr
 </code></pre>
 <pre><code class="lang-text">header:
@@ -900,7 +1106,7 @@ fields:
 - name: z
 </code></pre>
 <p>Python 版 <code>py02_pointcloud_sim</code> 输出一致。</p>
-<h3 id="2254-传感器数据加工衔接（第3章-cannyotsu-实测回看）">22.5.4 传感器数据加工衔接（第3章 Canny+Otsu 实测回看）</h3>
+<h3 id="2274-传感器数据加工衔接（第3章-cannyotsu-实测回看）">22.7.4 传感器数据加工衔接（第3章 Canny+Otsu 实测回看）</h3>
 <p>虚拟传感器数据发布出去之后，接收端就是第3章那套 NumPy/OpenCV 加工工具箱：<code>sensor_msgs/Image</code> 经 <code>cv_bridge</code> 转 ndarray 后可直接走「高斯滤波 → Canny 边缘 → Otsu 阈值」流水线（第3章端到端实测，cv2 4.6.0 / numpy 1.26.4）：</p>
 <pre><code class="lang-text">去均值后列均值: [0. 0. 0. 0.]
 argmax: 11 median: 5.5
@@ -913,37 +1119,38 @@ scene_edges.png: shape=(200, 300) mean=1.9
 scene_binary.png: shape=(200, 300) mean=47.6
 otsu=133/133 边缘像素=1
 </code></pre>
-<p>两次 Otsu 阈值一致（133）说明流水线确定性；边缘图均值 1.9 说明只有矩形轮廓处有响应。这套「数组加工」手法同样适用于本章的传感器数组：激光 <code>np.array(msg.ranges)</code> 过滤野值、<code>argmin</code> 找最近障碍，与 Canny+Otsu 是同一套 NumPy 范式（实测存档见第3章）。</p>
-<h2 id="226-与-ros2--机器人开发的关联">22.6 与 ROS2 / 机器人开发的关联</h2>
+<p>这套「数组加工」手法同样适用于本章的传感器数组：激光 <code>np.array(msg.ranges)</code> 过滤野值、<code>argmin</code> 找最近障碍，与 Canny+Otsu 是同一套 NumPy 范式（实测存档见第3章）。</p>
+<h2 id="228-与-ros2--机器人开发的关联">22.8 与 ROS2 / 机器人开发的关联</h2>
 <ol>
 <li><strong>sensor_msgs 消息族的地基</strong>：本章的 <code>LaserScan</code>、<code>PointCloud2</code> 与第23 章的 <code>Image</code>、<code>Imu</code>、<code>NavSatFix</code> 同属 <code>sensor_msgs</code>，字段设计哲学一致（header + 数据体 + 元信息）。吃透一个，其余接口阅读成本减半。</li>
-<li><strong>tf2 坐标树的第一块拼图</strong>：里程计案例产出的 <code>odom → base_link</code> 动态变换，加上激光雷达的 <code>base_link → laser_link</code> 静态变换，就是 SLAM（<code>map → odom</code>）与导航所需的完整 tf 链路的下半段。</li>
+<li><strong>tf2 坐标树的第一块拼图</strong>：里程计案例产出的 <code>odom → base_link</code> 动态变换，加上激光雷达的 <code>base_link → laser_link</code> 静态变换，就是 SLAM（<code>map → odom</code>）与导航所需完整 tf 链路的下半段。</li>
 <li><strong>nav2 的输入契约</strong>：Nav2 的 <code>controller_server</code> 依赖 <code>/odom</code>（或 EKF 融合后的 <code>/odometry/filtered</code>）做速度反馈，<code>costmap</code> 依赖 <code>/scan</code> 或 <code>/points</code> 做障碍层。消息组织不规范，Nav2 直接报「transform timeout」或代价地图全黑。</li>
-<li><strong>仿真 → 实机迁移范式</strong>：本章案例「先仿真跑通、再移植实体」的流程，会在第24 章（Ignition Gazebo）与第25 章（导航）反复复用；frame_id、话题名、QoS 三件套检查清单建议直接沉淀成脚本。</li>
+<li><strong>仿真 → 实机迁移范式</strong>：本章案例「先仿真跑通、再移植实体」的流程，会在第24 章（Ignition Gazebo）与第25 章（导航）反复复用。</li>
 </ol>
-<h2 id="227-自测与练习">22.7 自测与练习</h2>
+<h2 id="229-自测与练习">22.9 自测与练习</h2>
 <ol>
 <li><strong>概念题</strong>：<code>nav_msgs/Odometry</code> 的 <code>header.frame_id</code> 与 <code>child_frame_id</code> 分别应该填什么？如果两者都填 <code>base_link</code>，tf2 会有什么表现？</li>
-<li><strong>动手任务</strong>：在本章 C++ 轨迹节点基础上增加一个「轨迹长度」字段（发布 <code>std_msgs/Float32</code> 或打印日志），要求：机器人绕仿真环境走一圈后，轨迹长度误差与真实周长之比 &lt; 10%（用 rviz2 的 Measure 工具估算周长）。</li>
-<li><strong>动手任务</strong>：写一个节点订阅 <code>/scan</code>，实时发布「前方 30° 扇区内的最小距离」，并在 rviz2 中验证：靠近障碍物时数值应单调减小。</li>
+<li><strong>概念题</strong>：LaserScan 中第 i 个测距值的方向角如何计算？<code>ranges[i] = inf</code> 与 <code>nan</code> 分别代表什么？</li>
+<li><strong>动手任务</strong>：把本章轨迹节点的阈值从 0.5m 改为 0.2m，在仿真中走同一路线，对比两条 <code>/path</code> 的点数与平滑度；再用 rviz2 的 Measure 工具估算轨迹总长，验证「阈值越小轨迹越贴近真实路径、点数越多」。</li>
+<li><strong>动手任务</strong>：写一个节点订阅 <code>/scan</code>，实时发布「前方 30° 扇区内的最小距离」（<code>std_msgs/Float32</code>），在 rviz2 中验证：靠近障碍物时数值单调减小。</li>
 </ol>
 <blockquote>
-<p>参考答案要点：1. <code>header.frame_id</code> 填 <code>odom</code>（位姿所在系），<code>child_frame_id</code> 填 <code>base_link</code>（被描述对象）；都填 <code>base_link</code> 会让 tf 树中 odom→base_link 缺失，rviz2 报 "No transform from [base_link] to [odom]"。2. 轨迹长度 = 相邻稀疏化后轨迹点欧氏距离累加；注意稀疏化阈值会造成正偏差，阈值越小越准。3. 最小距离 = 对 <code>ranges[i]</code> 中 <code>|angle| &lt;= 15°</code> 且值有效的点取 min；务必过滤 <code>inf/nan</code>。</p>
+<p>参考答案要点：1. <code>header.frame_id</code> 填 <code>odom</code>（位姿所在系），<code>child_frame_id</code> 填 <code>base_link</code>（被描述对象）；都填 <code>base_link</code> 会让 tf 树中 odom→base_link 缺失，rviz2 报 "No transform from [base_link] to [odom]"。2. 方向角 = <code>angle_min + i * angle_increment</code>；<code>inf</code>=超出量程无回波，<code>nan</code>=无效测量。3. 阈值 0.2m 点数约为 0.5m 的 2.5 倍，总长更接近真值（正偏差更小）。4. 对 <code>|angle| &lt;= 15°</code> 且 <code>isfinite(r)</code> 的点取 min；务必过滤 inf/nan。</p>
 </blockquote>
-<h2 id="228-常见问题（faq）">22.8 常见问题（FAQ）</h2>
+<h2 id="2210-常见问题（faq）">22.10 常见问题（FAQ）</h2>
 <ul>
 <li><strong>Q：<code>ros2 node list</code> 在 PC 上看不到机器人节点？</strong> A：按顺序排查：① 两端 <code>ROS_DOMAIN_ID</code> 是否一致；② 是否同一局域网/有无 AP 隔离；③ 防火墙是否放行 DDS 端口（7400 起的 UDP 段）；④ 多网卡机器可设 <code>ROS_AUTOMATIC_DISCOVERY_RANGE=SUBNET</code> 或配置 FastDDS 单播。</li>
 <li><strong>Q：rviz2 中 Path 什么都不显示？</strong> A：先查 <code>ros2 topic echo /path --once</code> 是否有数据；再查 rviz2 的 Fixed Frame 是否与 <code>Path.header.frame_id</code>（如 <code>odom</code>）在同一 tf 树；最后查 Path 显示项的 Topic 是否填对。</li>
+<li><strong>Q：轨迹节点启动即崩溃/首个点不显示？</strong> A：空轨迹时取 <code>poses.back()</code> 越界——课程 BUG 修复（22.3.4⑤）正是此问题，用 <code>poses.empty() || distance &gt; 0.5</code> 判断解决。</li>
 <li><strong>Q：<code>ranges</code> 里全是 <code>inf</code>？</strong> A：说明该方向无回波（超出量程或吸光），属正常现象；若<strong>全部</strong>为 <code>inf</code>，查雷达供电、驱动话题名是否匹配、仿真插件的 <code>range_max</code> 是否配置过小。</li>
-<li><strong>Q：Python 版轨迹节点跑一会儿 rviz2 就卡？</strong> A：<code>Path.poses</code> 无上限增长导致消息体积膨胀；按示例加稀疏化与上限，或改用 <code>nav_msgs/Path</code> 的环形缓冲策略。</li>
-<li><strong>Q：仿真里正常的 <code>/scan</code> 换到实机角度全反？</strong> A：多为雷达安装方向与 URDF 中 <code>laser_link</code> 的 rpy 定义不一致；用 <code>ros2 run tf2_ros tf2_echo base_link laser_link</code> 核对静态变换，必要时在 URDF 中调整安装角或加 <code>yaw</code> 修正。</li>
+<li><strong>Q：仿真里正常的 <code>/scan</code> 换到实机角度全反？</strong> A：多为雷达安装方向与 URDF 中 <code>laser_link</code> 的 rpy 定义不一致；用 <code>ros2 run tf2_ros tf2_echo base_link laser_link</code> 核对静态变换，必要时在 URDF 中调整安装角。</li>
 </ul>
-<h2 id="229-本章小结">22.9 本章小结</h2>
+<h2 id="2211-本章小结">22.11 本章小结</h2>
 <ul>
-<li>里程计位姿 → Path 的关键是为每个 PoseStamped 填 <code>frame_id</code> 与 <code>stamp</code>，并做稀疏化与点数上限保护；</li>
-<li>虚拟激光雷达按 <code>angle_min + i * angle_increment</code> 的角度语义合成 ±π 360 线扫描；虚拟点云用「宽高 + 字段 + 步长」组织 PointCloud2——虚拟传感器数据源让我们在<strong>无硬件</strong>条件下完成 SLAM/导航算法调试；</li>
-<li>C++ 的 PointCloud2Modifier 与 Python 的 point_cloud2 工具是构造点云的两个标准姿势；</li>
-<li>传感器数组落回 NumPy/OpenCV（Canny+Otsu 流水线）即可做边缘、阈值类加工——虚拟数据源 + 通用加工工具箱 = 完整的离线算法调试环境。</li>
+<li>机器人 = 机械/控制/感知/能源四系统；SSH + 同 DOMAIN_ID 是远程开发的最小闭环；</li>
+<li>里程计→轨迹的关键：PoseStamped 带 frame_id 与 stamp、<strong>0.5m 距离阈值稀疏化</strong>、首点直接入轨（课程 BUG 修复点）；</li>
+<li>LaserScan 按 <code>angle_min + i*angle_increment</code> 的角度语义合成 ±π 360 线扫描；PointCloud2 用「宽高 + 字段 + 步长 + 字节流」组织，C++ 三件套 Modifier/Iterator 是标准姿势；</li>
+<li>虚拟传感器数据源让我们在无硬件条件下完成 SLAM/导航算法调试，接收端落回 NumPy/OpenCV 加工工具箱。</li>
 </ul>
 <p>下一章继续相机、IMU、GNSS 三类传感器。</p>
 
@@ -989,7 +1196,7 @@ otsu=133/133 边缘像素=1
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第22章 里程计与虚拟传感器实践","level":"9.1","depth":1,"next":{"title":"第23章 传感器仿真开发","level":"9.2","depth":1,"path":"第23周-传感器实践开发.md","ref":"第23周-传感器实践开发.md","articles":[]},"previous":{"title":"第21章 生命周期/进程内通信/组件/插件","level":"8.1","depth":1,"path":"第21周-高效通信与组件开发.md","ref":"第21周-高效通信与组件开发.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第22周-ROS2功能实践.md","mtime":"2026-10-16T03:26:51.711Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T03:26:53.986Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第22章 里程计与虚拟传感器实践","level":"9.1","depth":1,"next":{"title":"第23章 传感器仿真开发","level":"9.2","depth":1,"path":"第23周-传感器实践开发.md","ref":"第23周-传感器实践开发.md","articles":[]},"previous":{"title":"第21章 生命周期/进程内通信/组件/插件","level":"8.1","depth":1,"path":"第21周-高效通信与组件开发.md","ref":"第21周-高效通信与组件开发.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第22周-ROS2功能实践.md","mtime":"2026-10-16T04:41:10.808Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T04:41:12.230Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

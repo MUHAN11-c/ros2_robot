@@ -601,13 +601,46 @@
                                 
                                 <h1 id="第23章-传感器仿真开发（相机imugnss）">第23章 传感器仿真开发（相机/IMU/GNSS）</h1>
 <blockquote>
-<p>完成图像、惯导、卫星定位三类数据的仿真发布与订阅解析。</p>
+<p>完成图像、惯导、卫星定位三类数据的仿真发布与订阅解析，并延伸覆盖轮式里程计标定、robot_localization EKF 融合、激光雷达工具链与相机进阶主题。</p>
 <p>本章对应代码：<code>code/ws05_sensor/src/demo/cpp03_camera_sim</code>、<code>py03_camera_sim</code>、<code>cpp04_imu_demo</code>、<code>py04_imu_demo</code>、<code>cpp05_gnss_demo</code>、<code>py05_gnss_demo</code>。</p>
+<p>本章实测环境：Ubuntu 24.04 + ROS2 Jazzy。课程演示基于 Humble 生态，文中 apt 安装（如 <code>ros-humble-usb-cam</code>、<code>ros-humble-robot-localization</code>）请按本机发行版替换前缀（如 <code>ros-jazzy-…</code>）；软件源缺失的包改用源码编译，功能接口在两个发行版间一致。</p>
 </blockquote>
 <h2 id="231-概览与课时结构">23.1 概览与课时结构</h2>
 <h3 id="2311-本周概览">23.1.1 本周概览</h3>
 <p>本周是全阶段体量最大的一周（90 个视频），系统覆盖机器人感知层的核心传感器与数据处理链路：相机（单目/深度）与 IMU、GNSS，再到轮式里程计的标定与多传感器融合，最后是激光雷达工程工具（过滤、融合、点云互转）和相机进阶（远程图传、标定、多相机）。在 25 周体系中，本周是「感知」的完整收官：下周的 SLAM 与导航全部建立在这些传感器数据之上。学完本章，你应能为一台真实机器人补齐「看得见（相机）、测得准（雷达/IMU/GNSS）、算得稳（标定与融合）」三块能力，并掌握传感器数据从原始话题到可用状态的完整加工流水线。</p>
-<h3 id="2312-课时结构">23.1.2 课时结构</h3>
+<p>本章代码实战聚焦三个可离线复现的仿真案例（仓库 <code>ws05_sensor</code> 工作区）：</p>
+<table>
+<thead>
+<tr>
+<th>案例</th>
+<th>包（C++ / Python）</th>
+<th>消息类型</th>
+<th>方向</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>单目相机仿真</td>
+<td>cpp03_camera_sim / py03_camera_sim</td>
+<td>sensor_msgs/Image</td>
+<td>发布</td>
+</tr>
+<tr>
+<td>IMU 数据解析</td>
+<td>cpp04_imu_demo / py04_imu_demo</td>
+<td>sensor_msgs/Imu</td>
+<td>订阅</td>
+</tr>
+<tr>
+<td>GNSS 轨迹组织</td>
+<td>cpp05_gnss_demo / py05_gnss_demo</td>
+<td>NavSatFix 订阅 → nav_msgs/Path 发布</td>
+<td>订阅 + 发布</td>
+</tr>
+</tbody>
+</table>
+<p>第 2 课的里程计标定/融合与第 3 课的雷达工具、相机进阶属于实机/多包工程主题，本章在知识梳理中全覆盖，实战部分给出可迁移的配置骨架。</p>
+<h3 id="2312-课时总表">23.1.2 课时总表</h3>
 <p>课程信息：视频 90 个，总时长约 11h15m，难度：进阶。</p>
 <table>
 <thead>
@@ -639,72 +672,786 @@
 </tr>
 </tbody>
 </table>
+<h3 id="2313-第1课分节视频表（26-节）">23.1.3 第1课分节视频表（26 节）</h3>
+<p>小节 1「单目相机仿真案例实现」（17 节）：</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>视频主题</th>
+<th>要点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>传感器之相机_01概念、作用与特点</td>
+<td>二维投影、颜色纹理语义、信息量大/受光照影响</td>
+</tr>
+<tr>
+<td>2</td>
+<td>传感器之相机_02分类</td>
+<td>单目/双目/深度/鱼眼全景红外</td>
+</tr>
+<tr>
+<td>3</td>
+<td>单目相机使用_01硬件准备与软件安装</td>
+<td>USB 相机、video 组权限、usb_cam 安装</td>
+</tr>
+<tr>
+<td>4</td>
+<td>单目相机使用_02usb_cam功能包简介</td>
+<td>/image_raw 与 /camera_info 话题、参数与 launch</td>
+</tr>
+<tr>
+<td>5</td>
+<td>单目相机使用_03自定义功能包框架搭建</td>
+<td>封装驱动的包结构</td>
+</tr>
+<tr>
+<td>6</td>
+<td>单目相机使用_04代码结构简介</td>
+<td>订阅-处理-转发骨架</td>
+</tr>
+<tr>
+<td>7</td>
+<td>单目相机使用_05代码修正</td>
+<td>常见编码/时间戳修正点</td>
+</tr>
+<tr>
+<td>8</td>
+<td>深度相机使用</td>
+<td>RGB-D 输出深度图与点云、对齐与有效范围</td>
+</tr>
+<tr>
+<td>9</td>
+<td>单目相机消息_Image简介</td>
+<td>Image 逐字段：尺寸/编码/step/data</td>
+</tr>
+<tr>
+<td>10</td>
+<td>单目相机_仿真案例分析</td>
+<td>组织 Image 消息发布黑白条纹图</td>
+</tr>
+<tr>
+<td>11-13</td>
+<td>仿真案例(C++)三讲：01框架搭建 / 02组织图片基本参数 / 03图片数据组织以及小结</td>
+<td>发布者+定时器 → 元数据字段 → data 填充发布</td>
+</tr>
+<tr>
+<td>14-16</td>
+<td>仿真案例(Python)三讲：01框架搭建 / 02组织图片基本参数 / 03图片数据组织以及小结</td>
+<td>rclpy 同流程实现</td>
+</tr>
+<tr>
+<td>17</td>
+<td>传感器之相机_小结</td>
+<td>概念→使用→消息→案例串联</td>
+</tr>
+</tbody>
+</table>
+<p>小节 2「IMU案例详解」（9 节）：</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>视频主题</th>
+<th>要点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>传感器之IMU_01概念与作用</td>
+<td>惯性测量单元：角速度 + 线加速度</td>
+</tr>
+<tr>
+<td>2</td>
+<td>传感器之IMU_02优点与缺点</td>
+<td>高频/无外部依赖 vs 积分漂移</td>
+</tr>
+<tr>
+<td>3</td>
+<td>IMU基本使用</td>
+<td>驱动节点、话题与坐标系</td>
+</tr>
+<tr>
+<td>4</td>
+<td>IMU消息接口</td>
+<td>Imu 逐字段与协方差约定</td>
+</tr>
+<tr>
+<td>5</td>
+<td>IMU案例_案例分析</td>
+<td>订阅 /imu 并解析三组数据</td>
+</tr>
+<tr>
+<td>6-7</td>
+<td>IMU案例(C++)两讲：01框架搭建 / 02核心实现以及小结</td>
+<td>订阅者骨架；回调打印三组数据（真实硬件演示）</td>
+</tr>
+<tr>
+<td>8</td>
+<td>IMU案例(Python)_完整实现</td>
+<td>rclpy 一讲完成</td>
+</tr>
+<tr>
+<td>9</td>
+<td>传感器之IMU_小结</td>
+<td>漂移与融合定位铺垫</td>
+</tr>
+</tbody>
+</table>
+<h3 id="2314-第2课分节视频表（33-节）">23.1.4 第2课分节视频表（33 节）</h3>
+<p>小节 1「GNSS案例分析与实现」（17 节）：</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>视频主题</th>
+<th>要点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>传感器之GNSS_01概念与作用</td>
+<td>卫星定位：绝对经纬度与海拔</td>
+</tr>
+<tr>
+<td>2</td>
+<td>传感器之GNSS_02特点和分类</td>
+<td>单点/差分/RTK；更新率与环境敏感性</td>
+</tr>
+<tr>
+<td>3</td>
+<td>GNSS基本使用</td>
+<td>驱动节点与 /fix 话题</td>
+</tr>
+<tr>
+<td>4</td>
+<td>GNSS消息接口</td>
+<td>NavSatFix 逐字段与状态枚举</td>
+</tr>
+<tr>
+<td>5-6</td>
+<td>GNSS案例以及案例分析01/02</td>
+<td>需求：历史定位点组织成轨迹；难点：坐标系与投影</td>
+</tr>
+<tr>
+<td>7</td>
+<td>GNSS案例(C++)_01框架搭建</td>
+<td>订阅 /fix + 发布 Path</td>
+</tr>
+<tr>
+<td>8-9</td>
+<td>(C++)_02Path数据组织标头 / _03坐标系</td>
+<td>header.frame_id = map；局部平面 ENU 约定</td>
+</tr>
+<tr>
+<td>10-11</td>
+<td>(C++)_04Path数据组织原点确定 / _05经纬度</td>
+<td>首个有效定位为原点；等距圆柱近似换算米制</td>
+</tr>
+<tr>
+<td>12</td>
+<td>(C++)_06Path数据组织完成以及小结</td>
+<td>追加 PoseStamped 并发布</td>
+</tr>
+<tr>
+<td>13-15</td>
+<td>(Python)三讲：01框架搭建 / 02Path数据部分字段设置 / 03数据组织以及小结</td>
+<td>rclpy 同流程实现</td>
+</tr>
+<tr>
+<td>16-17</td>
+<td>传感器之GNSS_小结 / 总结</td>
+<td>投影是核心；本课知识串联</td>
+</tr>
+</tbody>
+</table>
+<p>小节 2「轮式里程计标定实现」（6 节）：</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>视频主题</th>
+<th>要点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>场景、概念与作用</td>
+<td>里程计推算与真实位姿的系统性偏差</td>
+</tr>
+<tr>
+<td>2</td>
+<td>流程简介</td>
+<td>标定两步走总览</td>
+</tr>
+<tr>
+<td>3-4</td>
+<td>线性位移标定流程 / 实现</td>
+<td>直行标称距离比对；发 /cmd_vel、统计 /odom、修正轮径系数</td>
+</tr>
+<tr>
+<td>5-6</td>
+<td>角速度标定流程 / 实现</td>
+<td>原地旋转标称角度比对；累计 yaw 修正轮距</td>
+</tr>
+</tbody>
+</table>
+<p>小节 3「轮式里程计与IMU融合」（10 节）：</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>视频主题</th>
+<th>要点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>简介</td>
+<td>里程计漂移与 IMU 漂移互补</td>
+</tr>
+<tr>
+<td>1-2</td>
+<td>robot<em>localization</em>简介与安装 / 包简介</td>
+<td>apt 安装；ekf_node / ukf_node 能力</td>
+</tr>
+<tr>
+<td>3</td>
+<td>融合流程以及准备</td>
+<td>坐标系、话题、参数 yaml</td>
+</tr>
+<tr>
+<td>4</td>
+<td>融合01_launch框架</td>
+<td>集成底盘、IMU、EKF</td>
+</tr>
+<tr>
+<td>5</td>
+<td>融合02_底盘实现</td>
+<td>/odom 发布与 tf</td>
+</tr>
+<tr>
+<td>6</td>
+<td>融合03_imu坐标变换</td>
+<td>base_link → imu_link 静态变换</td>
+</tr>
+<tr>
+<td>7</td>
+<td>融合04_ekf融合</td>
+<td>odom0/imu0 配置与 publish_tf</td>
+</tr>
+<tr>
+<td>8</td>
+<td>融合05_执行</td>
+<td>rviz2 对比 /odom 与 /odometry/filtered</td>
+</tr>
+<tr>
+<td>9</td>
+<td>小结</td>
+<td>融合配置思想回顾</td>
+</tr>
+</tbody>
+</table>
+<h3 id="2315-第3课分节视频表（31-节）">23.1.5 第3课分节视频表（31 节）</h3>
+<p>小节 1「激光雷达工具应用」（21 节）：</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>视频主题</th>
+<th>要点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>激光雷达工具_简介</td>
+<td>过滤/融合/互转三件套总览</td>
+</tr>
+<tr>
+<td>2-3</td>
+<td>雷达过滤器简介：01功能包和节点说明 / 02使用示例与内置插件</td>
+<td>laser_filters 的 scan_to_scan_filter_chain 与插件族</td>
+</tr>
+<tr>
+<td>4-6</td>
+<td>雷达过滤器应用：01准备工作 / 02案例1过滤无效数据 / 03案例2设置有效范围</td>
+<td>inf/nan 剔除；0.15–8 m 保留区间</td>
+</tr>
+<tr>
+<td>7-9</td>
+<td>雷达融合简介：01应用场景 / 02功能包简介 / 03节点简介</td>
+<td>单雷达视野受限拼 360°；ira_laser_tools 的 laserscan_multi_merger</td>
+</tr>
+<tr>
+<td>10</td>
+<td>雷达融合应用_01准备工作</td>
+<td>两台雷达与线材</td>
+</tr>
+<tr>
+<td>11-15</td>
+<td>融合案例五讲：01需求 / 02端口重映射 / 03启动两个雷达 / 04坐标系集成 / 05融合实现</td>
+<td>udev 固定设备号；命名空间；静态 tf；merger 参数</td>
+</tr>
+<tr>
+<td>16</td>
+<td>融合再过滤案例_实现</td>
+<td>merger 输出接过滤器链</td>
+</tr>
+<tr>
+<td>17-18</td>
+<td>互转：简介 / 01准备工作</td>
+<td>两个方向的价值；laser_geometry 与 pointcloud_to_laserscan</td>
+</tr>
+<tr>
+<td>19-20</td>
+<td>互转：02激光扫描转点云 / 03点云转激光扫描</td>
+<td>LaserProjection；高度带裁剪压扁</td>
+</tr>
+<tr>
+<td>21</td>
+<td>激光雷达工具_总结</td>
+<td>工具链串讲</td>
+</tr>
+</tbody>
+</table>
+<p>小节 2「相机进阶实现」（10 节）：</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>视频主题</th>
+<th>要点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>相机进阶_概述</td>
+<td>图传/标定/多相机三大主题</td>
+</tr>
+<tr>
+<td>2-3</td>
+<td>远程图传：01启动相机 / 02本地解压缩</td>
+<td>机器人端相机节点；compressed 传输与解码显示</td>
+</tr>
+<tr>
+<td>4-7</td>
+<td>相机标定四讲：01简介 / 02准备工作 / 03标定过程 / 04标定参数使用</td>
+<td>内外参与畸变；棋盘格与 cameracalibrator；camera_info 使用</td>
+</tr>
+<tr>
+<td>8</td>
+<td>多相机01_端口绑定</td>
+<td>udev 固定 /dev/video*</td>
+</tr>
+<tr>
+<td>9-10</td>
+<td>多相机02添加前相机 / 03添加后相机</td>
+<td>命名空间、独立 CameraInfo 与 tf</td>
+</tr>
+</tbody>
+</table>
 <h2 id="232-知识点梳理">23.2 知识点梳理</h2>
 <h3 id="2321-第1课-传感器之相机和imu详解与仿真案例（3h15m-·-26-节）">23.2.1 第1课 传感器之相机和IMU详解与仿真案例（3h15m · 26 节）</h3>
 <ul>
 <li><strong>核心概念</strong>：相机（Camera）把三维世界投影为二维图像，提供颜色/纹理/语义信息；IMU（Inertial Measurement Unit，惯性测量单元）测量自身角速度与线加速度，提供高频的姿态与运动信息。二者常与雷达/里程计互补使用。</li>
-<li><strong>要点 1 · 相机概念、作用与特点</strong>：作用是目标识别、视觉 SLAM、远程监控；特点是信息量大（数据率高）、受光照影响、无直接深度（单目）、计算开销大。</li>
-<li><p><strong>要点 2 · 相机分类</strong>：</p>
-<p>| 类型 | 代表 | 输出 | 典型用途 |
-|---|---|---|---|
-| 单目（Monocular） | USB 摄像头 | <code>Image</code> | 视觉识别、监控 |
-| 双目（Stereo） | ZED、小觅 | 左右 <code>Image</code> + 视差/深度 | 稠密深度估计 |
-| 深度（Depth / RGB-D） | RealSense、Kinect、奥比中光 | <code>Image</code> + <code>PointCloud2</code> + <code>CameraInfo</code> | 避障、三维重建 |
-| 其他 | 鱼眼、全景、红外 | <code>Image</code> | 特殊场景 |</p>
-</li>
-<li><p><strong>要点 3 · 单目相机使用</strong>：硬件准备（USB 相机 + 权限：加入 <code>video</code> 组）、软件安装（<code>sudo apt install ros-humble-usb-cam</code>）；<code>usb_cam</code> 功能包发布 <code>/image_raw</code>（<code>sensor_msgs/Image</code>）与 <code>/camera_info</code>（<code>sensor_msgs/CameraInfo</code>）；自定义功能包封装驱动时注意：用 <code>image_transport</code> 而非裸 <code>Publisher&lt;Image&gt;</code>，才能获得压缩图传能力。</p>
-</li>
-<li><strong>要点 4 · 深度相机使用</strong>：除 RGB 图外输出对齐深度图与 <code>PointCloud2</code>；使用要点是配准（depth 与 color 对齐）、深度有效范围（如 0.3–5 m）、以及 <code>CameraInfo</code> 中内参的一致性。</li>
-<li><p><strong>要点 5 · Image 消息接口</strong>：<code>header</code> + <code>height/width</code> + <code>encoding</code>（<code>rgb8</code>/<code>bgr8</code>/<code>mono8</code>/<code>16UC1</code> 等）+ <code>is_bigendian</code> + <code>step</code>（每行字节数）+ <code>data[]</code>（行优先裸字节）。</p>
-<blockquote>
-<p><strong>注意：</strong> <code>encoding</code> 决定 <code>data</code> 的解析方式，<code>bgr8</code> 与 <code>rgb8</code> 通道顺序相反；OpenCV 的 <code>cv::Mat</code> 默认 BGR，与 <code>rgb8</code> 话题混用会出现「蓝蓝的图像」。</p>
-</blockquote>
-</li>
-<li><p><strong>要点 6 · 单目相机仿真案例（C++ 三讲 + Python 三讲）</strong>：在仿真中发布一幅自造图像，流程与雷达案例同构：案例分析（组织 Image 消息）→ 框架搭建（定时器 + 发布者）→ 组织图片基本参数（height/width/encoding/step）→ 填充 <code>data</code> 并发布 → 测试与小结。</p>
-</li>
-<li><strong>要点 7 · IMU 概念与接口</strong>：优点是高频（100–1000 Hz）、不受外界环境干扰、短期精度高；缺点是积分漂移（加速度二次积分误差随时间平方增长）、需要标定与温漂补偿。<code>sensor_msgs/Imu</code> 字段：<code>orientation</code>（四元数，来自姿态解算/磁力计融合）、<code>angular_velocity</code>（rad/s）、<code>linear_acceleration</code>（m/s²）及三者 3×3 协方差；无输出能力的轴用协方差 <code>[0] = -1</code> 标记。</li>
-<li><strong>要点 8 · IMU 案例（C++ 两讲 + Python 一讲）</strong>：订阅 <code>/imu</code>，解算并发布姿态可视化（如把 <code>orientation</code> 转欧拉角发布、或驱动 rviz2 中一个姿态箭头），理解四元数 → 欧拉角换算与 <code>tf2</code> 中 <code>getYaw</code> 的用法。</li>
 </ul>
+<h4 id="相机概念、作用与特点（视频-1-1）">相机概念、作用与特点（视频 1-1）</h4>
+<p>作用：目标识别与跟踪、视觉 SLAM、远程监控图传。特点：信息量最大（颜色+纹理+语义）；数据率高、计算开销大；受光照/遮挡影响；单目无直接深度信息。</p>
+<h4 id="相机分类（视频-1-2）">相机分类（视频 1-2）</h4>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>代表</th>
+<th>输出</th>
+<th>典型用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>单目（Monocular）</td>
+<td>USB 摄像头</td>
+<td><code>Image</code></td>
+<td>视觉识别、监控</td>
+</tr>
+<tr>
+<td>双目（Stereo）</td>
+<td>ZED、小觅</td>
+<td>左右 <code>Image</code> + 视差/深度</td>
+<td>稠密深度估计</td>
+</tr>
+<tr>
+<td>深度（Depth / RGB-D）</td>
+<td>RealSense、Kinect、奥比中光</td>
+<td><code>Image</code> + <code>PointCloud2</code> + <code>CameraInfo</code></td>
+<td>避障、三维重建</td>
+</tr>
+<tr>
+<td>其他</td>
+<td>鱼眼、全景、红外</td>
+<td><code>Image</code></td>
+<td>特殊场景</td>
+</tr>
+</tbody>
+</table>
+<h4 id="单目相机使用（视频-1-3--1-7）">单目相机使用（视频 1-3 ~ 1-7）</h4>
+<ul>
+<li><strong>硬件准备与软件安装</strong>：USB 相机插入后先确认识别与权限：</li>
+</ul>
+<pre><code class="lang-bash"><span class="hljs-built_in">ls</span> /dev/video*                      <span class="hljs-comment"># 一颗摄像头常占用 video0/video1 两个节点</span>
+<span class="hljs-built_in">groups</span> | grep video                 <span class="hljs-comment"># 无输出则 sudo usermod -aG video $USER 后重新登录</span>
+<span class="hljs-built_in">sudo</span> apt install ros-humble-usb-cam <span class="hljs-comment"># 课程写法；Jazzy 换 ros-jazzy-usb-cam 或源码编译</span>
+</code></pre>
+<ul>
+<li><strong>usb_cam 功能包</strong>（1-4）：发布 <code>/image_raw</code>（<code>sensor_msgs/Image</code>）与 <code>/camera_info</code>（<code>sensor_msgs/CameraInfo</code>）。关键参数：<code>video_device</code>、<code>pixel_format</code>（YUYV/MJPEG）、<code>image_width</code>/<code>image_height</code>、<code>framerate</code>、<code>frame_id</code>。</li>
+<li><strong>自定义功能包封装</strong>（1-5 ~ 1-7，框架搭建/代码结构/代码修正三讲）：订阅原始图像 → 处理 → 统一话题名转发；要点是用 <code>image_transport</code> 而非裸 <code>Publisher&lt;Image&gt;</code>，才能免费获得 <code>compressed</code> 等传输插件；修正点集中在 encoding 声明与时间戳（用消息自带 <code>header.stamp</code> 而非 <code>now()</code>）。</li>
+</ul>
+<h4 id="深度相机使用（视频-1-8）">深度相机使用（视频 1-8）</h4>
+<p>除 RGB 图外输出对齐深度图与 <code>PointCloud2</code>；使用要点：depth 与 color 的配准（对齐模式）、深度有效范围（典型 0.3–5 m，过近/过远为无效值）、<code>CameraInfo</code> 内参一致性。</p>
+<h4 id="image-消息逐字段（视频-1-9）">Image 消息逐字段（视频 1-9）</h4>
+<p><code>sensor_msgs/Image</code> 字段表：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>含义</th>
+<th>本案例取值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>header</code></td>
+<td>std_msgs/Header</td>
+<td><code>stamp</code>（采集时刻）+ <code>frame_id</code>（相机坐标系名，供 tf2/rviz2 关联）</td>
+<td>frame_id = camera</td>
+</tr>
+<tr>
+<td><code>height</code></td>
+<td>uint32</td>
+<td>图像高（像素行数）</td>
+<td>240</td>
+</tr>
+<tr>
+<td><code>width</code></td>
+<td>uint32</td>
+<td>图像宽（像素列数）</td>
+<td>320</td>
+</tr>
+<tr>
+<td><code>encoding</code></td>
+<td>string</td>
+<td>像素编码，决定 <code>data</code> 的字节解释：<code>mono8</code>/<code>rgb8</code>/<code>bgr8</code>/<code>rgba8</code>/<code>16UC1</code>（深度毫米）/<code>32FC1</code>（深度米）等</td>
+<td>mono8（每像素 1 字节灰度）</td>
+</tr>
+<tr>
+<td><code>is_bigendian</code></td>
+<td>uint8</td>
+<td>字节序标志；x86/ARM 小端机为 0</td>
+<td>0</td>
+</tr>
+<tr>
+<td><code>step</code></td>
+<td>uint32</td>
+<td>每行字节数 = width × 每像素字节数（个别驱动含行对齐 padding）</td>
+<td>320（= 320×1）</td>
+</tr>
+<tr>
+<td><code>data[]</code></td>
+<td>uint8[]</td>
+<td>行优先（row-major）裸字节，长度 = step × height</td>
+<td>76800（= 320×240）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>注意：</strong> <code>encoding</code> 决定 <code>data</code> 的解析方式，<code>bgr8</code> 与 <code>rgb8</code> 通道顺序相反；OpenCV 的 <code>cv::Mat</code> 默认 BGR，与 <code>rgb8</code> 话题混用会出现「蓝蓝的图像」。深度图按 float/uint16 解析前务必核对 encoding。</p>
+</blockquote>
+<p>配套 <code>sensor_msgs/CameraInfo</code>（usb_cam 与标定都会发布）：<code>distortion_model</code>（<code>plumb_bob</code> 等）、内参 <code>k</code>（3×3：fx/0/cx，0/fy/cy，0/0/1）、矫正矩阵 <code>r</code>、投影矩阵 <code>p</code>、<code>roi</code> 与 <code>binning_x/y</code>。</p>
+<h4 id="单目相机仿真案例（视频-1-10--1-17）">单目相机仿真案例（视频 1-10 ~ 1-17）</h4>
+<p>需求：不接真实相机，周期性组织并发布一幅自造黑白条纹 <code>Image</code> 验证图像链路。流程（与雷达/点云仿真同构）：案例分析（定话题/消息/频率）→ 框架搭建（发布者+定时器）→ 组织图片基本参数（height/width/encoding/is_bigendian/step）→ 图片数据组织（<code>data.resize(height*width)</code>，每 20 列交替黑白，逐帧整体翻转形成闪烁条纹）→ 打时间戳发布 → 测试与小结。C++/Python 各三讲按此拆分，真实代码分步讲解见 23.4.1/23.4.2。</p>
+<h4 id="imu-概念与作用、优缺点（视频-2-1--2-2）">IMU 概念与作用、优缺点（视频 2-1 ~ 2-2）</h4>
+<p>IMU = 陀螺仪（角速度）+ 加速度计（线加速度），高档型号集成磁力计可输出绝对航向。作用：为姿态估计与融合定位提供高频运动观测，是 EKF/互补滤波的核心输入。</p>
+<table>
+<thead>
+<tr>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>采样率高（100–1000 Hz）</td>
+<td>加速度二次积分误差随时间平方增长（漂移）</td>
+</tr>
+<tr>
+<td>不依赖外部环境（无遮挡问题）</td>
+<td>陀螺零偏与温漂需标定补偿</td>
+</tr>
+<tr>
+<td>短期精度高、延迟低</td>
+<td>磁力计受磁场干扰；廉价 MEMS 噪声大</td>
+</tr>
+</tbody>
+</table>
+<p>结论：IMU 短期准、长期漂，必须与里程计/GNSS 等绝对源融合使用。</p>
+<h4 id="imu-基本使用与消息接口逐字段（视频-2-3--2-4）">IMU 基本使用与消息接口逐字段（视频 2-3 ~ 2-4）</h4>
+<p>基本使用：<code>ros2 topic hz /imu</code> 确认采样率、<code>ros2 run tf2_ros tf2_echo base_link imu_link</code> 确认安装外参；rviz2 中可加 Imu 显示件或用 TF 观察姿态变化。</p>
+<p><code>sensor_msgs/Imu</code> 字段表：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>单位/含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>header</code></td>
+<td>std_msgs/Header</td>
+<td>frame_id 一般为 imu_link</td>
+</tr>
+<tr>
+<td><code>orientation</code></td>
+<td>geometry_msgs/Quaternion（x, y, z, w）</td>
+<td>姿态四元数（姿态解算/磁力计融合结果）</td>
+</tr>
+<tr>
+<td><code>orientation_covariance</code></td>
+<td>float64[9]</td>
+<td>3×3 姿态协方差；首元素 [0] = -1 表示该传感器无姿态输出</td>
+</tr>
+<tr>
+<td><code>angular_velocity</code></td>
+<td>geometry_msgs/Vector3（x, y, z）</td>
+<td>角速度，单位 rad/s</td>
+</tr>
+<tr>
+<td><code>angular_velocity_covariance</code></td>
+<td>float64[9]</td>
+<td>角速度协方差；无输出轴 [0] = -1</td>
+</tr>
+<tr>
+<td><code>linear_acceleration</code></td>
+<td>geometry_msgs/Vector3（x, y, z）</td>
+<td>线加速度，单位 m/s²；静止水平放置时 z 轴约 +9.81（含重力）</td>
+</tr>
+<tr>
+<td><code>linear_acceleration_covariance</code></td>
+<td>float64[9]</td>
+<td>线加速度协方差；无输出轴 [0] = -1</td>
+</tr>
+</tbody>
+</table>
+<p>四元数与欧拉角互换：Python 用 <code>tf_transformations</code>，C++ 用 <code>tf2/utils.h</code> 的 <code>getYaw</code>，避免手写公式出错。</p>
+<h4 id="imu-案例（视频-2-5--2-9）">IMU 案例（视频 2-5 ~ 2-9）</h4>
+<p>需求：订阅 <code>/imu</code>，回调中解析并打印姿态四元数、角速度、线加速度三组数据。C++ 两讲 = 框架搭建 + 核心实现（课程此讲使用真实 Mycar 板载 IMU 实拍，并在 rviz2 中以 TF 显示 world→mycar 随姿态变化）；Python 一讲完整实现。代码见 23.4.3/23.4.4。</p>
 <h3 id="2322-第2课-gnss详解与轮式里程计标定与融合（3h57m-·-33-节）">23.2.2 第2课 GNSS详解与轮式里程计标定与融合（3h57m · 33 节）</h3>
 <ul>
 <li><strong>核心概念</strong>：GNSS（Global Navigation Satellite System，全球导航卫星系统，含 GPS/北斗/GLONASS/Galileo）提供绝对经纬度与海拔；轮式里程计标定（Odometry Calibration）是用实测修正轮径/轮距参数，让里程计推算逼近真实运动。</li>
-<li><strong>要点 1 · GNSS 特点与分类</strong>：提供绝对位置、无累积漂移，但更新率低（1–10 Hz）、精度受环境影响（城市峡谷、遮挡）、输出经纬度需投影到平面坐标；分类按精度：单点定位（米级）、差分 DGNSS/RTK（厘米级）。</li>
-<li><strong>要点 2 · GNSS 基本使用与消息接口</strong>：<code>sensor_msgs/NavSatFix</code>：<code>latitude</code>/<code>longitude</code>（度）/<code>altitude</code>（m）、<code>status</code>（<code>STATUS_NO_FIX</code>/<code>STATUS_FIX</code>/<code>STATUS_SBAS_FIX</code>/<code>STATUS_GBAS_FIX</code>，含 <code>service</code> 位标志）、<code>position_covariance</code>（3×3，单位 m²）与 <code>position_covariance_type</code>。配套 <code>sensor_msgs/NavSatStatus</code>、<code>sensor_msgs/TimeReference</code>。</li>
-<li><strong>要点 3 · GNSS 案例（C++ 六讲 + Python 三讲）</strong>：需求是「把 GNSS 历史定位点组织成可视化轨迹」，难点全在坐标系与投影：
-① 框架搭建 → ② Path 数据组织标头（<code>header.frame_id</code> 常用 <code>map</code> 或 <code>gps</code>）→ ③ 坐标系确定 → ④ 原点确定（首帧经纬度作为局部 ENU 原点）→ ⑤ 经纬度转平面坐标（等距圆柱近似：<code>x = (lon - lon0)·cos(lat0)·111320</code>，<code>y = (lat - lat0)·110540</code>；工程上更推荐 <code>robot_localization/navsat_transform_node</code> 或 <code>GeographicLib</code> 的 UTM 投影）→ ⑥ 数据组织完成与小结。</li>
-<li><strong>要点 4 · 轮式里程计标定</strong>：场景是里程计推算位姿与真实位姿存在系统性偏差；流程分两步——<strong>线性位移标定</strong>（让机器人直行标称距离如 10 m，实测偏差用于修正轮径系数 <code>scale_x</code>）与<strong>角速度标定</strong>（让机器人原地旋转标称角度如 360°，实测偏差用于修正轮距 <code>wheel_separation</code>）。标定实现即写脚本发布 <code>/cmd_vel</code>、订阅 <code>/odom</code> 统计累计位移/转角、输出修正系数。</li>
-<li><p><strong>要点 5 · 轮式里程计与 IMU 融合（robot_localization）</strong>：</p>
-<p>| 步骤 | 内容 |
-|---|---|
-| 1 简介安装 | <code>sudo apt install ros-humble-robot-localization</code> |
-| 2 包简介 | 提供 <code>ekf_node</code>（扩展卡尔曼滤波 EKF）与 <code>ukf_node</code>，支持多输入源融合 |
-| 3 融合准备 | 明确各传感器坐标系、话题、QoS；准备 EKF 参数 yaml |
-| 4 launch 框架 | 一个 launch 集成底盘驱动、IMU 静态变换、EKF 节点 |
-| 5 底盘实现 | 底盘节点发布 <code>/odom</code>（轮速积分）与 <code>odom → base_link</code> tf |
-| 6 IMU 坐标变换 | <code>static_transform_publisher</code> 或 URDF 定义 <code>base_link → imu_link</code> |
-| 7 EKF 融合 | <code>ekf_node</code> 订阅 <code>/odom</code> + <code>/imu</code>，发布 <code>/odometry/filtered</code> 与 <code>odom → base_link</code>（EKF 版） |
-| 8 执行验证 | rviz2 对比 <code>/odom</code> 与 <code>/odometry/filtered</code> 轨迹，融合后应更平滑、漂移更小 |</p>
-</li>
-<li><p>EKF 关键配置思想：每个传感器输入用 <code>odom0</code>/<code>imu0</code> 系列参数声明，布尔数组 <code>odom0_config</code> 指定融合哪些状态量（如 IMU 只融合 yaw 角速度与加速度、不融合其绝对姿态），并处理好「谁发布 <code>odom → base_link</code>」的唯一性（开启 EKF 的 <code>publish_tf</code> 后，底盘端要关掉自己的 tf 发布）。</p>
-</li>
 </ul>
+<h4 id="gnss-概念、特点与分类（视频-1-1--1-2）">GNSS 概念、特点与分类（视频 1-1 ~ 1-2）</h4>
+<p>作用：全局绝对定位，无累积漂移，与里程计/IMU 互补。特点：更新率低（1–10 Hz）；精度受环境影响（城市峡谷、树荫遮挡、多径）；输出是球面坐标，必须投影到平面才能与局部建图/导航融合。分类（按精度与改正方式）：单点定位（米级）、差分 DGNSS（亚米级）、RTK 载波相位差分（厘米级，需基站/网络服务）。</p>
+<h4 id="gnss-基本使用与消息接口逐字段（视频-1-3--1-4）">GNSS 基本使用与消息接口逐字段（视频 1-3 ~ 1-4）</h4>
+<p>驱动节点发布 <code>/fix</code>；调试：<code>ros2 topic echo /fix --once</code>、<code>ros2 topic hz /fix</code>。<code>sensor_msgs/NavSatFix</code> 字段表：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>header</code></td>
+<td>std_msgs/Header</td>
+<td>frame_id 常用 gps 或 map</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>sensor_msgs/NavSatStatus</td>
+<td>定位状态与所用卫星系统（见下）</td>
+</tr>
+<tr>
+<td><code>latitude</code></td>
+<td>float64</td>
+<td>纬度，单位度，北正南负</td>
+</tr>
+<tr>
+<td><code>longitude</code></td>
+<td>float64</td>
+<td>经度，单位度，东正西负</td>
+</tr>
+<tr>
+<td><code>altitude</code></td>
+<td>float64</td>
+<td>海拔，单位米（相对椭球面，与海拔高有差异）</td>
+</tr>
+<tr>
+<td><code>position_covariance</code></td>
+<td>float64[9]</td>
+<td>3×3 位置协方差，单位 m²，ENU（东北天）顺序</td>
+</tr>
+<tr>
+<td><code>position_covariance_type</code></td>
+<td>uint8</td>
+<td>0=未知 / 1=近似 / 2=对角已知 / 3=已知</td>
+</tr>
+</tbody>
+</table>
+<p><code>sensor_msgs/NavSatStatus</code>：<code>status</code> 枚举 <code>-1 STATUS_NO_FIX</code>（未定位）、<code>0 STATUS_FIX</code>（常规定位）、<code>1 STATUS_SBAS_FIX</code>、<code>2 STATUS_GBAS_FIX</code>；<code>service</code> 位标志 <code>SERVICE_GPS/GLONASS/GALILEO/BEIDOU/…</code> 指示参与解算的星座。<strong>消费逻辑必须先判 status 再用坐标</strong>——未定位时 lat/lon 可能为 0 或 NaN。</p>
+<h4 id="gnss-案例（视频-1-5--1-17）">GNSS 案例（视频 1-5 ~ 1-17）</h4>
+<p>需求（案例分析 01/02）：把 GNSS 历史定位点组织成 rviz2 可视化轨迹（<code>nav_msgs/Path</code>）；难点全在坐标系与投影——经纬度是角度量，直接当米用毫无意义。C++ 六讲对应实现步骤（与 23.4.5 代码注释一一对应）：</p>
+<ol>
+<li>框架搭建：订阅 <code>/fix</code> + 发布 <code>/gnss_path</code>；</li>
+<li>Path 数据组织之标头：构造函数中 <code>path_.header.frame_id = "map"</code>（rviz2 固定坐标系）；</li>
+<li>坐标系确定：以原点为中心的平面直角坐标（ENU 思想：x 向东、y 向北）；</li>
+<li>原点确定：以<strong>首个有效定位</strong>为原点（<code>status &gt;= 0</code> 且纬度非零才采纳），打印原点经纬度；</li>
+<li>经纬度换算：等距圆柱近似——<code>x = (lon-lon0)·111319.49079327358·cos(lat0·π/180)</code>，<code>y = (lat-lat0)·111319.49079327358</code>（111319.49 m 为赤道 1° 弧长；工程上更推荐 <code>robot_localization/navsat_transform_node</code> 或 <code>GeographicLib</code> 的 UTM 投影）；</li>
+<li>数据组织完成：每个有效 <code>/fix</code> 转成 <code>PoseStamped</code> 追加进 <code>path_.poses</code>，刷新 Path 标头后整体重发。</li>
+</ol>
+<p>Python 三讲（框架搭建 / 部分字段设置 / 数据组织）覆盖同样步骤，见 23.4.6。<code>nav_msgs/Path</code> = <code>header</code> + <code>poses[]</code>（每项 <code>geometry_msgs/PoseStamped</code> = <code>header + pose</code>，本案例只填 position.x/y）。</p>
+<h4 id="轮式里程计标定（小节-2，视频-1-6）">轮式里程计标定（小节 2，视频 1-6）</h4>
+<p>场景：里程计由轮速积分推算位姿，轮径磨损、轮距装配误差造成系统性偏差（走 10 m 报 9.3 m、转 360° 报 350°）。标定两步：</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>标定流程</th>
+<th>实现</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>线性位移标定</td>
+<td>直行标称距离（5–10 m），对比 <code>/odom</code> 累计位移与实测值</td>
+<td>脚本发布 <code>/cmd_vel</code> 线速度、积分 <code>/odom</code>；修正系数 = 目标距离 / 实测距离，乘到轮径参数</td>
+</tr>
+<tr>
+<td>角速度标定</td>
+<td>原地旋转标称角度（≥2 圈），对比 <code>/odom</code> 累计 yaw</td>
+<td>发布角速度、四元数换算累计 yaw；轮距新值 = 轮距旧值 ×（实测转角 / 指令转角）</td>
+</tr>
+</tbody>
+</table>
+<p>实验设计要点：直线够长、圈数够多、地面摩擦一致、多次实验取平均（3–5 次）。</p>
+<h4 id="轮式里程计与-imu-融合-·-robotlocalization（小节-3，视频-0-9-讲）">轮式里程计与 IMU 融合 · robot_localization（小节 3，视频 0-9 讲）</h4>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 简介安装</td>
+<td><code>sudo apt install ros-humble-robot-localization</code>（Jazzy 换前缀）</td>
+</tr>
+<tr>
+<td>2 包简介</td>
+<td>提供 <code>ekf_node</code>（扩展卡尔曼滤波）与 <code>ukf_node</code>（无迹卡尔曼），支持 odom/imu/twist/gps 多源输入</td>
+</tr>
+<tr>
+<td>3 融合准备</td>
+<td>明确各传感器坐标系、话题、QoS；准备 EKF 参数 yaml</td>
+</tr>
+<tr>
+<td>4 launch 框架</td>
+<td>一个 launch 集成底盘驱动、IMU 静态变换、EKF 节点</td>
+</tr>
+<tr>
+<td>5 底盘实现</td>
+<td>底盘节点发布 <code>/odom</code>（轮速积分）与 <code>odom → base_link</code> tf</td>
+</tr>
+<tr>
+<td>6 IMU 坐标变换</td>
+<td><code>static_transform_publisher</code> 或 URDF 定义 <code>base_link → imu_link</code></td>
+</tr>
+<tr>
+<td>7 EKF 融合</td>
+<td><code>ekf_node</code> 订阅 <code>/odom</code> + <code>/imu</code>，发布 <code>/odometry/filtered</code> 与 <code>odom → base_link</code>（EKF 版）</td>
+</tr>
+<tr>
+<td>8 执行验证</td>
+<td>rviz2 对比 <code>/odom</code> 与 <code>/odometry/filtered</code> 轨迹，融合后应更平滑、漂移更小</td>
+</tr>
+</tbody>
+</table>
+<p>EKF 关键配置思想：每个输入源用 <code>odom0</code>/<code>imu0</code> 系列参数声明话题，布尔矩阵 <code>odom0_config</code> 指定融合哪些状态量（如 IMU 只融合 yaw 角速度与加速度、不融合其绝对姿态）；处理好「谁发布 <code>odom → base_link</code>」的唯一性——开启 EKF 的 <code>publish_tf</code> 后，底盘端要关掉自己的 tf 发布。</p>
 <h3 id="2323-第3课-激光雷达工具和相机使用进阶（4h01m-·-31-节）">23.2.3 第3课 激光雷达工具和相机使用进阶（4h01m · 31 节）</h3>
 <ul>
 <li><strong>核心概念</strong>：原始传感器数据要经过「过滤 → 融合 → 格式转换」的加工流水线才能喂给 SLAM/导航；相机进阶则解决远程传输、标定精度与多相机扩展。</li>
-<li><strong>要点 1 · 雷达过滤器（laser_filters）</strong>：功能包提供 <code>scan_to_scan_filter_chain</code> 节点，通过插件链（plugin chain）加工 <code>/scan</code>：<code>LaserScanRangeFilter</code>（裁剪量程外数据）、<code>LaserScanAngularBoundsFilter</code>（裁剪角度扇区，如屏蔽机器人自身结构遮挡）、<code>LaserScanSpeckleFilter</code>（滤孤立噪点/飞点）、<code>LaserScanShadowsFilter</code>（滤阴影伪影）。应用案例：① 过滤无效数据（inf/nan → 报错阈值剔除）；② 设置有效范围（仅保留 0.15–8 m，避免自遮挡回波）。</li>
-<li><strong>要点 2 · 雷达融合（ira_laser_tools）</strong>：场景是单雷达视野受限、需多雷达拼接 360°。<code>laserscan_multi_merger</code> 节点按各雷达的 tf 把多路 <code>/scan</code> 融合为一路。案例五步：需求分析 → <strong>雷达端口重映射</strong>（两台雷达 USB 端口号会漂移，用 udev 规则或 launch remap 固定话题）→ 启动两个雷达 → <strong>坐标系集成</strong>（为两雷达分别建 <code>laser_front_link</code>/<code>laser_rear_link</code> 静态 tf，并统一到 <code>base_link</code>）→ 融合实现（配置 <code>destination_frame</code>、<code>cloud_destination_topic</code>/<code>scan_destination_topic</code>）。扩展案例：融合后再过滤（merger 输出接 <code>scan_to_scan_filter_chain</code>）。</li>
-<li><p><strong>要点 3 · 点云与激光扫描互转</strong>：</p>
-<p>| 方向 | 工具 | 典型用途 |
-|---|---|---|
-| LaserScan → PointCloud2 | <code>laser_geometry::LaserProjection</code>（C++ API） | 2D 雷达数据并入三维处理管线、多传感器同视图显示 |
-| PointCloud2 → LaserScan | <code>pointcloud_to_laserscan</code> 节点 | 3D 雷达/深度相机「压扁」成 2D 扫描，喂给 2D SLAM 与导航 |</p>
-<p>转换时要指定 <code>target_frame</code>、高度裁剪区间（<code>min_height</code>/<code>max_height</code>，只取地面以上 0.1–1.0 m 的点做避障）与角度范围。</p>
-</li>
-<li><p><strong>要点 4 · 相机进阶 · 远程图传</strong>：机器人端跑相机节点、PC 端看图，原始图带宽大（640×480×3×30 ≈ 27 MB/s），需压缩：用 <code>image_transport</code> 的 <code>compressed</code> 传输插件发布 <code>/image_raw/compressed</code>，PC 端解压显示（<code>image_transport</code> 自动订阅压缩话题，或用 <code>rqt_image_view</code>）。本地解压缩两讲即讲解 <code>CompressedImage</code> 与 <code>cv_bridge</code> 解码。</p>
-</li>
-<li><strong>要点 5 · 相机进阶 · 标定</strong>：标定（Calibration）是求解内参（焦距 fx/fy、主点 cx/cy、畸变系数）与外参的过程。流程：打印棋盘格标定板 → <code>ros2 run camera_calibration cameracalibrator --size 8x6 --square 0.024 image:=/image_raw camera:=/camera</code> → 移动标定板采集多角度样本 → 得到 <code>camera_info</code>（YAML）→ 使用标定参数（发布 <code>/camera_info</code>、图像去畸变 <code>image_proc</code>）。</li>
-<li><strong>要点 6 · 相机进阶 · 多相机</strong>：多路 USB 相机设备号（<code>/dev/video0/2/...</code>）开机后会随机漂移，<strong>端口绑定</strong>用 udev 规则（按 USB 物理端口序列号固定 <code>video*</code> 别名）；再按需求添加前相机、后相机（各自命名空间 <code>/front_camera</code>、<code>/rear_camera</code>，独立 <code>CameraInfo</code> 与 tf 链杆）。</li>
 </ul>
+<h4 id="雷达过滤器-laserfilters（视频-1-1--1-6）">雷达过滤器 laser_filters（视频 1-1 ~ 1-6）</h4>
+<p>功能包提供 <code>scan_to_scan_filter_chain</code> 节点，以插件链加工 <code>/scan</code>：</p>
+<table>
+<thead>
+<tr>
+<th>插件</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LaserScanRangeFilter</code></td>
+<td>裁剪量程外/无效测距（inf/nan 置为替换值）</td>
+</tr>
+<tr>
+<td><code>LaserScanAngularBoundsFilter</code></td>
+<td>裁剪角度扇区（屏蔽机器人自身结构遮挡）</td>
+</tr>
+<tr>
+<td><code>LaserScanSpeckleFilter</code></td>
+<td>滤孤立噪点/飞点</td>
+</tr>
+<tr>
+<td><code>LaserScanShadowsFilter</code></td>
+<td>滤阴影/多次反射伪影</td>
+</tr>
+</tbody>
+</table>
+<p>应用案例：① 过滤无效数据（把 inf/nan 替换为 <code>.nan</code> 统一标记后由下游剔除）；② 设置有效范围（仅保留 0.15–8 m，避免近处自遮挡回波与远端噪声）。</p>
+<h4 id="雷达融合-iralasertools（视频-1-7--1-16）">雷达融合 ira_laser_tools（视频 1-7 ~ 1-16）</h4>
+<p>场景：单雷达视野受限（如 240°），需前后双雷达拼接 360°。<code>laserscan_multi_merger</code> 节点按各雷达 tf 把多路 <code>/scan</code> 融合为一路。案例五步：需求分析 → <strong>雷达端口重映射</strong>（USB 端口号会漂移，用 udev 规则按序列号固定符号链接）→ 启动两个雷达（各自命名空间 <code>/scan_front</code>、<code>/scan_rear</code>）→ <strong>坐标系集成</strong>（分别建 <code>laser_front_link</code>/<code>laser_rear_link</code> 静态 tf 并统一到 <code>base_link</code>）→ 融合实现（配置 <code>destination_frame</code>、<code>cloud_destination_topic</code>/<code>scan_destination_topic</code>、<code>scan_source_topics</code>）。扩展案例：融合后再过滤（merger 输出接 <code>scan_to_scan_filter_chain</code>）。</p>
+<h4 id="点云与激光扫描互转（视频-1-17--1-21）">点云与激光扫描互转（视频 1-17 ~ 1-21）</h4>
+<table>
+<thead>
+<tr>
+<th>方向</th>
+<th>工具</th>
+<th>典型用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LaserScan → PointCloud2</td>
+<td><code>laser_geometry::LaserProjection</code>（C++ API）</td>
+<td>2D 雷达数据并入三维处理管线、多传感器同视图显示</td>
+</tr>
+<tr>
+<td>PointCloud2 → LaserScan</td>
+<td><code>pointcloud_to_laserscan</code> 节点</td>
+<td>3D 雷达/深度相机「压扁」成 2D 扫描，喂给 2D SLAM 与导航</td>
+</tr>
+</tbody>
+</table>
+<p>转换时要指定 <code>target_frame</code>、高度裁剪区间（<code>min_height</code>/<code>max_height</code>，只取地面以上 0.1–1.0 m 的点做避障）与角度/量程范围。</p>
+<h4 id="相机进阶-·-远程图传（视频-2-1--2-3）">相机进阶 · 远程图传（视频 2-1 ~ 2-3）</h4>
+<p>机器人端跑相机节点、PC 端看图，原始图带宽大（640×480×3×30 ≈ 27 MB/s），需压缩：用 <code>image_transport</code> 的 <code>compressed</code> 传输插件发布 <code>/image_raw/compressed</code>（<code>sensor_msgs/CompressedImage</code>，JPEG/PNG 载荷），PC 端解压显示（<code>image_transport</code> 订阅方自动回退压缩话题，或 <code>rqt_image_view</code> 直接选压缩话题）；本地解压缩一讲讲解 <code>CompressedImage.format</code> 与 <code>cv_bridge</code> 解码为 <code>cv::Mat</code>。</p>
+<h4 id="相机进阶-·-标定与多相机（视频-2-4--2-10）">相机进阶 · 标定与多相机（视频 2-4 ~ 2-10）</h4>
+<p>标定求解内参（焦距 fx/fy、主点 cx/cy、畸变系数）与外参。流程：打印棋盘格标定板 → <code>ros2 run camera_calibration cameracalibrator --size 8x6 --square 0.024 image:=/image_raw camera:=/camera</code> → 移动标定板采集多角度样本（X/Y/Size/Skew 进度条收敛）→ 保存得到 <code>camera_info</code> YAML → 使用标定参数（发布 <code>/camera_info</code>、<code>image_proc</code> 去畸变）。多相机：设备号 <code>/dev/video*</code> 开机后随机漂移，<strong>端口绑定</strong>用 udev 规则（按 USB 序列号固定别名如 <code>/dev/camera_front</code>）；再添加前/后相机（各自命名空间 <code>/front_camera</code>、<code>/rear_camera</code>，独立 <code>CameraInfo</code> 与 tf 链杆）。</p>
 <h2 id="233-重点与难点">23.3 重点与难点</h2>
 <ol>
 <li><strong>Image 的 encoding 与内存布局</strong>：<code>step = width × 每像素字节数</code>（可能含行对齐 padding），<code>data.size() = step × height</code>。用 <code>cv_bridge</code> 转 <code>cv::Mat</code> 时选错编码会得到色彩错乱或直接异常。</li>
@@ -713,99 +1460,384 @@
 <li><strong>多雷达融合的坐标系前提</strong>：merger 依赖 tf 把各路扫描变换到 <code>destination_frame</code>；tf 缺失或时间戳不同步时，融合结果是「错位的拼图」。先 <code>tf2_echo</code> 验证每路雷达的静态变换再启动融合。</li>
 <li><strong>里程计标定的实验设计</strong>：直行距离要长（≥5 m）、旋转圈数要多（≥2 圈）、地面摩擦一致、电池电压稳定；单次实验误差大，取 3–5 次平均。</li>
 <li><strong>仿真 → 实机迁移要点</strong>：仿真中传感器无噪声、时间戳完美；实机上要考虑驱动延迟、时钟同步（<code>use_sim_time</code> 切换）、丢帧与抖动，代码里时间相关逻辑一律用消息自带的 <code>header.stamp</code> 而不是 <code>now()</code>。</li>
+<li><strong>传感器消息的「有效性判别」</strong>：NavSatFix 先看 <code>status</code>，Imu 无输出轴协方差首元素为 -1，LaserScan 无效点为 inf/nan——不判别就会把垃圾数据当真值积分。</li>
 </ol>
 <h2 id="234-代码与命令实战">23.4 代码与命令实战</h2>
-<h3 id="2341-场景-1：laserscan-过滤器配置（文件-configscanfilteryaml，包-laserfilters）">23.4.1 场景 1：LaserScan 过滤器配置（文件 <code>config/scan_filter.yaml</code>，包 <code>laser_filters</code>）</h3>
-<pre><code class="lang-yaml"><span class="hljs-attr">scan_to_scan_filter_chain:</span>
-  <span class="hljs-attr">ros__parameters:</span>
-    <span class="hljs-attr">filter1:</span>  <span class="hljs-comment"># 剔除量程外与无效值</span>
-      <span class="hljs-attr">name:</span> <span class="hljs-string">range</span>
-      <span class="hljs-attr">type:</span> <span class="hljs-string">laser_filters/LaserScanRangeFilter</span>
-      <span class="hljs-attr">params:</span>
-        <span class="hljs-attr">use_message_range_limits:</span> <span class="hljs-literal">false</span>
-        <span class="hljs-attr">lower_threshold:</span> <span class="hljs-number">0.15</span>     <span class="hljs-comment"># 米，屏蔽近处自遮挡</span>
-        <span class="hljs-attr">upper_threshold:</span> <span class="hljs-number">8.0</span>
-        <span class="hljs-attr">lower_replacement_value:</span> <span class="hljs-string">.nan</span>   <span class="hljs-comment"># 超范围点标记为无效</span>
-        <span class="hljs-attr">upper_replacement_value:</span> <span class="hljs-string">.nan</span>
-    <span class="hljs-attr">filter2:</span>  <span class="hljs-comment"># 裁掉机器人尾部支架遮挡扇区</span>
-      <span class="hljs-attr">name:</span> <span class="hljs-string">angle</span>
-      <span class="hljs-attr">type:</span> <span class="hljs-string">laser_filters/LaserScanAngularBoundsFilter</span>
-      <span class="hljs-attr">params:</span>
-        <span class="hljs-attr">lower_angle:</span> <span class="hljs-number">-2.9</span>
-        <span class="hljs-attr">upper_angle:</span> <span class="hljs-number">-2.2</span>
+<p>以下代码均为仓库 <code>code/ws05_sensor/src/demo/</code> 下的真实源文件（逐字摘录），与视频讲解步骤一一对应。工作区构建：</p>
+<pre><code class="lang-bash"><span class="hljs-built_in">cd</span> code/ws05_sensor
+colcon build --packages-select cpp03_camera_sim py03_camera_sim cpp04_imu_demo py04_imu_demo cpp05_gnss_demo py05_gnss_demo
+<span class="hljs-built_in">source</span> install/setup.bash
 </code></pre>
-<pre><code class="lang-bash">ros2 launch laser_filters scan_to_scan_filter.launch.py \  <span class="hljs-comment"># 加载上述 yaml</span>
-ros2 topic <span class="hljs-built_in">echo</span> /scan_filtered --field ranges | <span class="hljs-built_in">head</span> -5   <span class="hljs-comment"># 对比过滤前后</span>
-</code></pre>
-<h3 id="2342-场景-2：多雷达融合（launch-片段，iralasertools）">23.4.2 场景 2：多雷达融合（launch 片段，<code>ira_laser_tools</code>）</h3>
-<pre><code class="lang-python"><span class="hljs-comment"># launch/multi_lidar.launch.py（节选）</span>
-<span class="hljs-keyword">from</span> launch_ros.actions <span class="hljs-keyword">import</span> Node
+<h3 id="2341-单目相机仿真-·-c（cpp03camerasim）">23.4.1 单目相机仿真 · C++（cpp03_camera_sim）</h3>
+<p>完整源码 <code>src/camera_sim.cpp</code>：</p>
+<pre><code class="lang-cpp"><span class="hljs-comment">/*
+    需求：单目相机仿真 —— 周期性组织并发布 Image 消息(模拟黑白条纹图)。
+*/</span>
+<span class="hljs-comment">// 1.包含头文件；</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"rclcpp/rclcpp.hpp"</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"sensor_msgs/msg/image.hpp"</span></span>
 
-merger = Node(
-    package=<span class="hljs-string">'ira_laser_tools'</span>, executable=<span class="hljs-string">'laserscan_multi_merger'</span>,
-    parameters=[{
-        <span class="hljs-string">'destination_frame'</span>: <span class="hljs-string">'base_link'</span>,            <span class="hljs-comment"># 统一到车体坐标系</span>
-        <span class="hljs-string">'cloud_destination_topic'</span>: <span class="hljs-string">'/scan_cloud'</span>,
-        <span class="hljs-string">'scan_destination_topic'</span>: <span class="hljs-string">'/scan_multi'</span>,
-        <span class="hljs-string">'scan_source_topics'</span>: <span class="hljs-string">'/scan_front /scan_rear'</span>,  <span class="hljs-comment"># 两路输入</span>
-    }],
-    output=<span class="hljs-string">'screen'</span>)
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std::chrono_literals;
+
+<span class="hljs-comment">// 3.自定义节点类；</span>
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">CameraSim</span>: <span class="hljs-keyword">public</span> rclcpp::Node{
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-built_in">CameraSim</span>():<span class="hljs-built_in">Node</span>(<span class="hljs-string">"camera_sim_node_cpp"</span>){
+        <span class="hljs-built_in">RCLCPP_INFO</span>(<span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">get_logger</span>(),<span class="hljs-string">"单目相机仿真节点创建!"</span>);
+        pub_ = <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">create_publisher</span>&lt;sensor_msgs::msg::Image&gt;(<span class="hljs-string">"image_raw"</span>,<span class="hljs-number">10</span>);
+        timer_ = <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">create_wall_timer</span>(<span class="hljs-number">100</span>ms,std::<span class="hljs-built_in">bind</span>(&amp;CameraSim::on_timer,<span class="hljs-keyword">this</span>));
+    }
+<span class="hljs-keyword">private</span>:
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">on_timer</span><span class="hljs-params">()</span></span>{
+        <span class="hljs-comment">// 1.组织图片基本参数；</span>
+        sensor_msgs::msg::Image image;
+        image.header.frame_id = <span class="hljs-string">"camera"</span>;
+        image.height = <span class="hljs-number">240</span>;
+        image.width = <span class="hljs-number">320</span>;
+        image.encoding = <span class="hljs-string">"mono8"</span>;
+        image.is_bigendian = <span class="hljs-number">0</span>;
+        image.step = image.width;
+        <span class="hljs-comment">// 2.组织图片数据：黑白条纹；</span>
+        image.data.<span class="hljs-built_in">resize</span>(image.height * image.width);
+        <span class="hljs-type">static</span> <span class="hljs-type">bool</span> flip = <span class="hljs-literal">false</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">uint32_t</span> r = <span class="hljs-number">0</span>; r &lt; image.height; ++r) {
+            <span class="hljs-keyword">for</span> (<span class="hljs-type">uint32_t</span> c = <span class="hljs-number">0</span>; c &lt; image.width; ++c) {
+                <span class="hljs-type">bool</span> band = ((c / <span class="hljs-number">20</span>) % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>) ^ flip;
+                image.data[r * image.width + c] = band ? <span class="hljs-number">255</span> : <span class="hljs-number">0</span>;
+            }
+        }
+        flip = !flip;
+        image.header.stamp = <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">now</span>();
+        pub_-&gt;<span class="hljs-built_in">publish</span>(image);
+    }
+    rclcpp::Publisher&lt;sensor_msgs::msg::Image&gt;::SharedPtr pub_;
+    rclcpp::TimerBase::SharedPtr timer_;
+};
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> ** argv)</span>
+</span>{
+    rclcpp::<span class="hljs-built_in">init</span>(argc,argv);
+    rclcpp::<span class="hljs-built_in">spin</span>(std::<span class="hljs-built_in">make_shared</span>&lt;CameraSim&gt;());
+    rclcpp::<span class="hljs-built_in">shutdown</span>();
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
 </code></pre>
-<h3 id="2343-场景-3：点云转激光扫描（深度相机3d-雷达接入-2d-导航）">23.4.3 场景 3：点云转激光扫描（深度相机/3D 雷达接入 2D 导航）</h3>
-<pre><code class="lang-bash">ros2 run pointcloud_to_laserscan pointcloud_to_laserscan_node --ros-args \
-  -p target_frame:=base_link \
-  -p transform_tolerance:=0.05 \
-  -p min_height:=0.10 -p max_height:=1.00 \   <span class="hljs-comment"># 只取该高度带的点</span>
-  -p angle_min:=-3.14 -p angle_max:=3.14 -p angle_increment:=0.0087 \
-  -p range_min:=0.2 -p range_max:=8.0 \
-  -r cloud_in:=/camera/depth/points -r scan:=/scan_from_cloud
-</code></pre>
-<h3 id="2344-场景-4：imu-订阅与欧拉角解算（rclpy，文件-imumonitorpy）">23.4.4 场景 4：IMU 订阅与欧拉角解算（rclpy，文件 <code>imu_monitor.py</code>）</h3>
-<pre><code class="lang-python"><span class="hljs-keyword">import</span> math
+<p>分步讲解（对照视频三讲）：</p>
+<ul>
+<li><strong>01 框架搭建</strong>：构造函数创建 <code>image_raw</code> 发布者（队列 10）与 100ms 周期定时器（10 Hz，接近真实 USB 相机帧率）；<code>main</code> 三段式 init/spin/shutdown。</li>
+<li><strong>02 组织图片基本参数</strong>：回调内先填五个「元数据」字段——<code>frame_id = "camera"</code>（rviz2 中 Fixed Frame 需能解析该坐标系）、<code>height/width = 240/320</code>（QVGA）、<code>encoding = "mono8"</code>（每像素 1 字节灰度，数据量最小、链路验证最稳）、<code>is_bigendian = 0</code>（小端机）、<code>step = width</code>（mono8 每行字节数恰为宽度）。若改 rgb8，则 <code>step = width * 3</code>、<code>data</code> 长度变为 3 倍。</li>
+<li><strong>03 图片数据组织以及小结</strong>：<code>data.resize(height*width)</code>（= 76800 字节）先分配再写入；双层循环按行优先寻址 <code>data[r*width + c]</code>，<code>(c/20)%2</code> 让每 20 列组成一条竖向色带，<code>^ flip</code> 让黑白逐帧整体翻转（10 Hz 闪烁便于肉眼确认「图在动」）；<code>static bool flip</code> 跨回调保留状态；数据就绪后补 <code>header.stamp</code> 再发布。</li>
+</ul>
+<p><code>CMakeLists.txt</code> 关键行（包内实际内容）：<code>find_package(rclcpp/sensor_msgs REQUIRED)</code> → <code>add_executable(camera_sim src/camera_sim.cpp)</code> → <code>ament_target_dependencies(camera_sim rclcpp sensor_msgs)</code> → <code>install(TARGETS camera_sim DESTINATION lib/${PROJECT_NAME})</code>；<code>package.xml</code> 依赖 <code>rclcpp + sensor_msgs</code>（ament_cmake）。</p>
+<h3 id="2342-单目相机仿真-·-python（py03camerasim）">23.4.2 单目相机仿真 · Python（py03_camera_sim）</h3>
+<p>完整源码 <code>py03_camera_sim/camera_sim_py.py</code>：</p>
+<pre><code class="lang-python"><span class="hljs-comment"># -*- coding: utf-8 -*-</span>
+<span class="hljs-string">"""
+    需求：单目相机仿真（Python实现）—— 周期性组织并发布 Image 消息(黑白条纹)。
+"""</span>
 <span class="hljs-keyword">import</span> rclpy
 <span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
-<span class="hljs-keyword">from</span> sensor_msgs.msg <span class="hljs-keyword">import</span> Imu
-<span class="hljs-keyword">from</span> tf_transformations <span class="hljs-keyword">import</span> euler_from_quaternion   <span class="hljs-comment"># 或手动换算</span>
+<span class="hljs-keyword">from</span> sensor_msgs.msg <span class="hljs-keyword">import</span> Image
 
 
-<span class="hljs-keyword">class</span> <span class="hljs-title class_">ImuMonitor</span>(<span class="hljs-title class_ inherited__">Node</span>):
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">CameraSimPy</span>(<span class="hljs-title class_ inherited__">Node</span>):
+
     <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
-        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">'imu_monitor'</span>)
-        <span class="hljs-variable language_">self</span>.create_subscription(Imu, <span class="hljs-string">'/imu'</span>, <span class="hljs-variable language_">self</span>.on_imu, <span class="hljs-number">50</span>)  <span class="hljs-comment"># IMU 高频，QoS 放宽</span>
+        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">"camera_sim_node_py"</span>)
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">"单目相机仿真节点创建!(python)"</span>)
+        <span class="hljs-variable language_">self</span>.pub = <span class="hljs-variable language_">self</span>.create_publisher(Image, <span class="hljs-string">"image_raw"</span>, <span class="hljs-number">10</span>)
+        <span class="hljs-variable language_">self</span>.timer = <span class="hljs-variable language_">self</span>.create_timer(<span class="hljs-number">0.1</span>, <span class="hljs-variable language_">self</span>.on_timer)
+        <span class="hljs-variable language_">self</span>.flip = <span class="hljs-literal">False</span>
 
-    <span class="hljs-keyword">def</span> <span class="hljs-title function_">on_imu</span>(<span class="hljs-params">self, msg: Imu</span>):
-        q = msg.orientation
-        roll, pitch, yaw = euler_from_quaternion([q.x, q.y, q.z, q.w])
-        gz = msg.linear_acceleration.z                     <span class="hljs-comment"># 静止时应约等于 9.8</span>
-        <span class="hljs-variable language_">self</span>.get_logger().info(
-            <span class="hljs-string">f'yaw=<span class="hljs-subst">{math.degrees(yaw):<span class="hljs-number">.1</span>f}</span>deg  az=<span class="hljs-subst">{gz:<span class="hljs-number">.2</span>f}</span>m/s^2'</span>,
-            throttle_duration_sec=<span class="hljs-number">1.0</span>)                     <span class="hljs-comment"># 限频打印</span>
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">on_timer</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-comment"># 组织图片基本参数；</span>
+        image = Image()
+        image.header.frame_id = <span class="hljs-string">"camera"</span>
+        image.header.stamp = <span class="hljs-variable language_">self</span>.get_clock().now().to_msg()
+        image.height = <span class="hljs-number">240</span>
+        image.width = <span class="hljs-number">320</span>
+        image.encoding = <span class="hljs-string">"mono8"</span>
+        image.is_bigendian = <span class="hljs-number">0</span>
+        image.step = image.width
+        <span class="hljs-comment"># 组织图片数据：黑白条纹；</span>
+        data = <span class="hljs-built_in">bytearray</span>(image.height * image.width)
+        <span class="hljs-keyword">for</span> r <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(image.height):
+            <span class="hljs-keyword">for</span> c <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(image.width):
+                band = ((c // <span class="hljs-number">20</span>) % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>) ^ <span class="hljs-variable language_">self</span>.flip
+                data[r * image.width + c] = <span class="hljs-number">255</span> <span class="hljs-keyword">if</span> band <span class="hljs-keyword">else</span> <span class="hljs-number">0</span>
+        image.data = <span class="hljs-built_in">bytes</span>(data)
+        <span class="hljs-variable language_">self</span>.flip = <span class="hljs-keyword">not</span> <span class="hljs-variable language_">self</span>.flip
+        <span class="hljs-variable language_">self</span>.pub.publish(image)
 
 
 <span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():
     rclpy.init()
-    rclpy.spin(ImuMonitor())
+    rclpy.spin(CameraSimPy())
     rclpy.shutdown()
-</code></pre>
-<h3 id="2345-场景-5：轮式里程计角速度标定脚本骨架（rclpy）">23.4.5 场景 5：轮式里程计角速度标定脚本骨架（rclpy）</h3>
-<pre><code class="lang-python"><span class="hljs-comment"># 让机器人原地转 2*pi，比较 /odom 累计 yaw 与指令值，输出轮距修正系数</span>
-<span class="hljs-keyword">import</span> math, rclpy
-<span class="hljs-keyword">from</span> geometry_msgs.msg <span class="hljs-keyword">import</span> Twist
-<span class="hljs-keyword">from</span> nav_msgs.msg <span class="hljs-keyword">import</span> Odometry
 
-<span class="hljs-comment"># 1) 发布 angular.z = 0.5 rad/s 持续 t = 2*pi/0.5 秒后停车</span>
-<span class="hljs-comment"># 2) 订阅 /odom，用四元数换算累计 yaw：yaw_sum += delta_yaw</span>
-<span class="hljs-comment"># 3) 修正系数 = 指令转角(2*pi) / 实测转角；wheel_separation_new = wheel_separation_old * 系数</span>
-<span class="hljs-comment"># 4) 重复 3 次取平均，写回底盘驱动参数</span>
+
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:
+    main()
 </code></pre>
-<h3 id="2346-场景-6：gnss-调试与相机图传命令">23.4.6 场景 6：GNSS 调试与相机图传命令</h3>
-<pre><code class="lang-bash">ros2 topic <span class="hljs-built_in">echo</span> /fix --once            <span class="hljs-comment"># 查看 NavSatFix：纬度/经度/定位状态</span>
-ros2 topic hz /fix                     <span class="hljs-comment"># GNSS 更新率通常 1-10 Hz</span>
-ros2 run tf2_ros tf2_echo base_link imu_link   <span class="hljs-comment"># 验证 IMU 安装位姿</span>
-ros2 run image_view image_view --ros-args -r image:=/front_camera/image_raw/compressed \
-  -p image_transport:=compressed       <span class="hljs-comment"># 压缩图传显示，节省带宽</span>
-ros2 run camera_calibration cameracalibrator --size 8x6 --square 0.024 \
-  image:=/image_raw camera:=/camera    <span class="hljs-comment"># 棋盘格 8x6 内角点、格宽 24mm</span>
+<p>与 C++ 的三处差异（视频 Python 三讲强调点）：</p>
+<ol>
+<li><code>flip</code> 是实例属性 <code>self.flip</code>（Python 无 static 局部变量）；<code>create_timer(0.1, …)</code> 以秒为单位，C++ 用 <code>100ms</code> 字面量。</li>
+<li><code>data</code> 用 <code>bytearray</code> 可变缓冲逐字节填充，最后 <code>bytes(data)</code> 一次性赋给 <code>image.data</code>。</li>
+<li>时间戳用 <code>self.get_clock().now().to_msg()</code>，在组织数据<strong>前</strong>打好——顺序与 C++ 相反但同样有效，工程上建议统一「填完数据再打戳」。</li>
+</ol>
+<p>入口注册（<code>setup.py</code> 实际内容节选）：<code>'camera_sim_py = py03_camera_sim.camera_sim_py:main'</code>；依赖 <code>rclpy + sensor_msgs</code>（ament_python）。</p>
+<h3 id="2343-imu-案例-·-c（cpp04imudemo）">23.4.3 IMU 案例 · C++（cpp04_imu_demo）</h3>
+<p>完整源码 <code>src/imu_demo.cpp</code>：</p>
+<pre><code class="lang-cpp"><span class="hljs-comment">/*
+    需求：IMU 案例 —— 订阅 IMU 数据，输出四元数姿态、角速度与线加速度。
+*/</span>
+<span class="hljs-comment">// 1.包含头文件；</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"rclcpp/rclcpp.hpp"</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"sensor_msgs/msg/imu.hpp"</span></span>
+
+<span class="hljs-keyword">using</span> std::placeholders::_1;
+
+<span class="hljs-comment">// 3.自定义节点类；</span>
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">ImuDemo</span>: <span class="hljs-keyword">public</span> rclcpp::Node{
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-built_in">ImuDemo</span>():<span class="hljs-built_in">Node</span>(<span class="hljs-string">"imu_node_cpp"</span>){
+        <span class="hljs-built_in">RCLCPP_INFO</span>(<span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">get_logger</span>(),<span class="hljs-string">"IMU 案例节点创建!"</span>);
+        <span class="hljs-comment">// 3-1.订阅 IMU 数据；</span>
+        imu_sub_ = <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">create_subscription</span>&lt;sensor_msgs::msg::Imu&gt;(<span class="hljs-string">"imu"</span>,<span class="hljs-number">10</span>,
+            std::<span class="hljs-built_in">bind</span>(&amp;ImuDemo::imu_callback,<span class="hljs-keyword">this</span>,_1));
+    }
+<span class="hljs-keyword">private</span>:
+    <span class="hljs-comment">// 3-2.处理并输出 IMU 数据；</span>
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">imu_callback</span><span class="hljs-params">(<span class="hljs-type">const</span> sensor_msgs::msg::Imu::SharedPtr imu)</span></span>{
+        <span class="hljs-built_in">RCLCPP_INFO</span>(<span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">get_logger</span>(),<span class="hljs-string">"---------IMU 数据---------"</span>);
+        <span class="hljs-built_in">RCLCPP_INFO</span>(<span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">get_logger</span>(),<span class="hljs-string">"姿态四元数:(%.2f,%.2f,%.2f,%.2f)"</span>,
+            imu-&gt;orientation.w,imu-&gt;orientation.x,imu-&gt;orientation.y,imu-&gt;orientation.z);
+        <span class="hljs-built_in">RCLCPP_INFO</span>(<span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">get_logger</span>(),<span class="hljs-string">"角速度:(%.2f,%.2f,%.2f) rad/s"</span>,
+            imu-&gt;angular_velocity.x,imu-&gt;angular_velocity.y,imu-&gt;angular_velocity.z);
+        <span class="hljs-built_in">RCLCPP_INFO</span>(<span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">get_logger</span>(),<span class="hljs-string">"线加速度:(%.2f,%.2f,%.2f) m/s^2"</span>,
+            imu-&gt;linear_acceleration.x,imu-&gt;linear_acceleration.y,imu-&gt;linear_acceleration.z);
+    }
+    rclcpp::Subscription&lt;sensor_msgs::msg::Imu&gt;::SharedPtr imu_sub_;
+};
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> ** argv)</span>
+</span>{
+    rclcpp::<span class="hljs-built_in">init</span>(argc,argv);
+    rclcpp::<span class="hljs-built_in">spin</span>(std::<span class="hljs-built_in">make_shared</span>&lt;ImuDemo&gt;());
+    rclcpp::<span class="hljs-built_in">shutdown</span>();
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>分步讲解（对照视频两讲）：</p>
+<ul>
+<li><strong>01 框架搭建</strong>：订阅 <code>imu</code> 话题（队列 10），<code>std::bind + _1</code> 占位符绑定成员回调；spin 阻塞等待数据。</li>
+<li><strong>02 核心实现以及小结</strong>：回调按 Imu 三组核心字段逐项打印——<code>orientation</code>（打印顺序 w,x,y,z，模长应为 1）、<code>angular_velocity</code>（rad/s）、<code>linear_acceleration</code>（m/s²）。生产环境 IMU 100 Hz+，逐条 INFO 会刷屏拖慢回调，应加 throttle 限频（见 FAQ）；本案例为教学全量输出。</li>
+</ul>
+<p><code>CMakeLists.txt</code> 与相机包同构（可执行名 <code>imu_demo</code>），依赖 <code>rclcpp + sensor_msgs</code>。</p>
+<h3 id="2344-imu-案例-·-python（py04imudemo）">23.4.4 IMU 案例 · Python（py04_imu_demo）</h3>
+<p>完整源码 <code>py04_imu_demo/imu_demo_py.py</code>：</p>
+<pre><code class="lang-python"><span class="hljs-comment"># -*- coding: utf-8 -*-</span>
+<span class="hljs-string">"""
+    需求：IMU 案例（Python实现）—— 订阅 IMU 数据，输出姿态、角速度与线加速度。
+"""</span>
+<span class="hljs-keyword">import</span> rclpy
+<span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
+<span class="hljs-keyword">from</span> sensor_msgs.msg <span class="hljs-keyword">import</span> Imu
+
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">ImuDemoPy</span>(<span class="hljs-title class_ inherited__">Node</span>):
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">"imu_node_py"</span>)
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">"IMU 案例节点创建!(python)"</span>)
+        <span class="hljs-variable language_">self</span>.sub = <span class="hljs-variable language_">self</span>.create_subscription(Imu, <span class="hljs-string">"imu"</span>, <span class="hljs-variable language_">self</span>.imu_callback, <span class="hljs-number">10</span>)
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">imu_callback</span>(<span class="hljs-params">self, imu</span>):
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">"---------IMU 数据---------"</span>)
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">"姿态四元数:(%.2f,%.2f,%.2f,%.2f)"</span> % (
+            imu.orientation.w, imu.orientation.x, imu.orientation.y, imu.orientation.z))
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">"角速度:(%.2f,%.2f,%.2f) rad/s"</span> % (
+            imu.angular_velocity.x, imu.angular_velocity.y, imu.angular_velocity.z))
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">"线加速度:(%.2f,%.2f,%.2f) m/s^2"</span> % (
+            imu.linear_acceleration.x, imu.linear_acceleration.y, imu.linear_acceleration.z))
+
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():
+    rclpy.init()
+    rclpy.spin(ImuDemoPy())
+    rclpy.shutdown()
+
+
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:
+    main()
+</code></pre>
+<p>Python 版一讲完成：直接传方法引用 <code>self.imu_callback</code>（无需占位符）；格式化用 <code>%</code> 元组保持与 C++ printf 一致的两位小数，便于两侧日志逐字段比对。入口 <code>imu_demo_py</code>。</p>
+<h3 id="2345-gnss-案例-·-c（cpp05gnssdemo）">23.4.5 GNSS 案例 · C++（cpp05_gnss_demo）</h3>
+<p>完整源码 <code>src/gnss_demo.cpp</code>：</p>
+<pre><code class="lang-cpp"><span class="hljs-comment">/*
+    需求：GNSS 案例 —— 订阅 NavSatFix(经纬度) 数据，以首个坐标为原点，
+          组织成 Path 并发布(便于在 rviz2 中查看轨迹)。
+    流程：
+        1.包含头文件；
+        2.初始化 ROS2 客户端；
+        3.自定义节点类；
+            3-1.Path 数据组织之标头；
+            3-2.Path 数据组织之坐标系；
+            3-3.Path 数据组织之原点确定；
+            3-4.Path 数据组织之经纬度。
+        4.调用spin函数，并传入节点对象指针；
+        5.释放资源。
+*/</span>
+<span class="hljs-comment">// 1.包含头文件；</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"rclcpp/rclcpp.hpp"</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"sensor_msgs/msg/nav_sat_fix.hpp"</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"nav_msgs/msg/path.hpp"</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">"cmath"</span></span>
+
+<span class="hljs-keyword">using</span> std::placeholders::_1;
+
+<span class="hljs-comment">// 3.自定义节点类；</span>
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Gnss2Path</span>: <span class="hljs-keyword">public</span> rclcpp::Node{
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-built_in">Gnss2Path</span>():<span class="hljs-built_in">Node</span>(<span class="hljs-string">"gnss_node_cpp"</span>){
+        <span class="hljs-built_in">RCLCPP_INFO</span>(<span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">get_logger</span>(),<span class="hljs-string">"GNSS 案例节点创建!"</span>);
+        <span class="hljs-comment">// 3-1.订阅 GNSS 数据；</span>
+        gnss_sub_ = <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">create_subscription</span>&lt;sensor_msgs::msg::NavSatFix&gt;(<span class="hljs-string">"fix"</span>,<span class="hljs-number">10</span>,
+            std::<span class="hljs-built_in">bind</span>(&amp;Gnss2Path::gnss_callback,<span class="hljs-keyword">this</span>,_1));
+        <span class="hljs-comment">// 3-2.发布轨迹；</span>
+        path_pub_ = <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">create_publisher</span>&lt;nav_msgs::msg::Path&gt;(<span class="hljs-string">"gnss_path"</span>,<span class="hljs-number">10</span>);
+        path_.header.frame_id = <span class="hljs-string">"map"</span>;
+        has_origin_ = <span class="hljs-literal">false</span>;
+    }
+<span class="hljs-keyword">private</span>:
+    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">gnss_callback</span><span class="hljs-params">(<span class="hljs-type">const</span> sensor_msgs::msg::NavSatFix::SharedPtr fix)</span></span>{
+        <span class="hljs-comment">// 3-3.原点确定(以首个有效坐标为原点)；</span>
+        <span class="hljs-keyword">if</span> (!has_origin_) {
+            <span class="hljs-keyword">if</span> (fix-&gt;status.status &lt; <span class="hljs-number">0</span> || std::<span class="hljs-built_in">abs</span>(fix-&gt;latitude) &lt; <span class="hljs-number">1e-9</span>) {
+                <span class="hljs-keyword">return</span>;
+            }
+            origin_lat_ = fix-&gt;latitude;
+            origin_lon_ = fix-&gt;longitude;
+            has_origin_ = <span class="hljs-literal">true</span>;
+            <span class="hljs-built_in">RCLCPP_INFO</span>(<span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">get_logger</span>(),<span class="hljs-string">"定位原点:(%.6f,%.6f)"</span>,origin_lat_,origin_lon_);
+        }
+        <span class="hljs-comment">// 3-4.经纬度 -&gt; 平面坐标(米)，等距圆柱近似；</span>
+        <span class="hljs-type">double</span> dlat = fix-&gt;latitude - origin_lat_;
+        <span class="hljs-type">double</span> dlon = fix-&gt;longitude - origin_lon_;
+        <span class="hljs-type">double</span> x = dlon * <span class="hljs-number">111319.49079327358</span> * std::<span class="hljs-built_in">cos</span>(origin_lat_ * M_PI / <span class="hljs-number">180.0</span>);
+        <span class="hljs-type">double</span> y = dlat * <span class="hljs-number">111319.49079327358</span>;
+
+        geometry_msgs::msg::PoseStamped pose;
+        pose.header.frame_id = <span class="hljs-string">"map"</span>;
+        pose.header.stamp = <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">now</span>();
+        pose.pose.position.x = x;
+        pose.pose.position.y = y;
+        path_.poses.<span class="hljs-built_in">push_back</span>(pose);
+        path_.header.stamp = <span class="hljs-keyword">this</span>-&gt;<span class="hljs-built_in">now</span>();
+        path_pub_-&gt;<span class="hljs-built_in">publish</span>(path_);
+    }
+    rclcpp::Subscription&lt;sensor_msgs::msg::NavSatFix&gt;::SharedPtr gnss_sub_;
+    rclcpp::Publisher&lt;nav_msgs::msg::Path&gt;::SharedPtr path_pub_;
+    nav_msgs::msg::Path path_;
+    <span class="hljs-type">bool</span> has_origin_;
+    <span class="hljs-type">double</span> origin_lat_ = <span class="hljs-number">0.0</span>;
+    <span class="hljs-type">double</span> origin_lon_ = <span class="hljs-number">0.0</span>;
+};
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-type">int</span> argc, <span class="hljs-type">char</span> ** argv)</span>
+</span>{
+    rclcpp::<span class="hljs-built_in">init</span>(argc,argv);
+    rclcpp::<span class="hljs-built_in">spin</span>(std::<span class="hljs-built_in">make_shared</span>&lt;Gnss2Path&gt;());
+    rclcpp::<span class="hljs-built_in">shutdown</span>();
+    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>分步讲解（对照视频 C++ 六讲）：</p>
+<ul>
+<li><strong>01 框架搭建</strong>：订阅 <code>fix</code>、发布 <code>gnss_path</code>；成员变量持有 <code>path_</code>（轨迹累加器）、<code>has_origin_</code> 与原点经纬度。</li>
+<li><strong>02 标头</strong>：构造函数里 <code>path_.header.frame_id = "map"</code>——rviz2 的 Fixed Frame 设为 map 即可显示；Path 的 header 只需设置一次。</li>
+<li><strong>03 坐标系</strong>：目标平面系取「x 向东、y 向北」的局部 ENU 约定，与 rviz2 右手系显示一致。</li>
+<li><strong>04 原点确定</strong>：仅当 <code>status &gt;= 0</code>（已定位）且纬度非零才把首帧采纳为原点，避免把 NO_FIX 状态下的 (0,0) 钉成原点；成功后打印原点经纬度。</li>
+<li><strong>05 经纬度换算</strong>：纬度差 × 111319.49079327358 m 得 y（南北向）；经度差 × 同系数 × cos(原点纬度) 得 x（东西向，纬度越高每度经线越短）。等距圆柱近似在数公里内误差可忽略。</li>
+<li><strong>06 完成与小结</strong>：每个有效 <code>/fix</code> 生成 <code>PoseStamped</code>（只填 position.x/y）追加进 <code>path_.poses</code>，刷新标头时间戳后整体重发——Path 是「全量轨迹」语义，订阅方每次收到累计折线。</li>
+</ul>
+<p><code>CMakeLists.txt</code> 在相机包基础上增加 <code>find_package(nav_msgs REQUIRED)</code>、<code>find_package(geometry_msgs REQUIRED)</code>，并 <code>ament_target_dependencies(gnss_demo rclcpp sensor_msgs nav_msgs geometry_msgs)</code>；<code>package.xml</code> 对应声明三个 <code>&lt;depend&gt;</code>。</p>
+<h3 id="2346-gnss-案例-·-python（py05gnssdemo）">23.4.6 GNSS 案例 · Python（py05_gnss_demo）</h3>
+<p>完整源码 <code>py05_gnss_demo/gnss_demo_py.py</code>：</p>
+<pre><code class="lang-python"><span class="hljs-comment"># -*- coding: utf-8 -*-</span>
+<span class="hljs-string">"""
+    需求：GNSS 案例（Python实现）—— 订阅 NavSatFix，以首个有效坐标为原点组织 Path 发布。
+"""</span>
+<span class="hljs-keyword">import</span> math
+
+<span class="hljs-keyword">import</span> rclpy
+<span class="hljs-keyword">from</span> geometry_msgs.msg <span class="hljs-keyword">import</span> PoseStamped
+<span class="hljs-keyword">from</span> nav_msgs.msg <span class="hljs-keyword">import</span> Path
+<span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
+<span class="hljs-keyword">from</span> sensor_msgs.msg <span class="hljs-keyword">import</span> NavSatFix
+
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Gnss2PathPy</span>(<span class="hljs-title class_ inherited__">Node</span>):
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">"gnss_node_py"</span>)
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">"GNSS 案例节点创建!(python)"</span>)
+        <span class="hljs-variable language_">self</span>.sub = <span class="hljs-variable language_">self</span>.create_subscription(NavSatFix, <span class="hljs-string">"fix"</span>, <span class="hljs-variable language_">self</span>.gnss_callback, <span class="hljs-number">10</span>)
+        <span class="hljs-variable language_">self</span>.pub = <span class="hljs-variable language_">self</span>.create_publisher(Path, <span class="hljs-string">"gnss_path"</span>, <span class="hljs-number">10</span>)
+        <span class="hljs-variable language_">self</span>.path = Path()
+        <span class="hljs-variable language_">self</span>.path.header.frame_id = <span class="hljs-string">"map"</span>
+        <span class="hljs-variable language_">self</span>.has_origin = <span class="hljs-literal">False</span>
+        <span class="hljs-variable language_">self</span>.origin_lat = <span class="hljs-number">0.0</span>
+        <span class="hljs-variable language_">self</span>.origin_lon = <span class="hljs-number">0.0</span>
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">gnss_callback</span>(<span class="hljs-params">self, fix</span>):
+        <span class="hljs-comment"># 原点确定(以首个有效坐标为原点)；</span>
+        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-variable language_">self</span>.has_origin:
+            <span class="hljs-keyword">if</span> fix.status.status &lt; <span class="hljs-number">0</span> <span class="hljs-keyword">or</span> <span class="hljs-built_in">abs</span>(fix.latitude) &lt; <span class="hljs-number">1e-9</span>:
+                <span class="hljs-keyword">return</span>
+            <span class="hljs-variable language_">self</span>.origin_lat = fix.latitude
+            <span class="hljs-variable language_">self</span>.origin_lon = fix.longitude
+            <span class="hljs-variable language_">self</span>.has_origin = <span class="hljs-literal">True</span>
+            <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">"定位原点:(%.6f,%.6f)"</span> % (<span class="hljs-variable language_">self</span>.origin_lat, <span class="hljs-variable language_">self</span>.origin_lon))
+        <span class="hljs-comment"># 经纬度 -&gt; 平面坐标(米)，等距圆柱近似；</span>
+        dlat = fix.latitude - <span class="hljs-variable language_">self</span>.origin_lat
+        dlon = fix.longitude - <span class="hljs-variable language_">self</span>.origin_lon
+        x = dlon * <span class="hljs-number">111319.49079327358</span> * math.cos(math.radians(<span class="hljs-variable language_">self</span>.origin_lat))
+        y = dlat * <span class="hljs-number">111319.49079327358</span>
+        pose = PoseStamped()
+        pose.header.frame_id = <span class="hljs-string">"map"</span>
+        pose.header.stamp = <span class="hljs-variable language_">self</span>.get_clock().now().to_msg()
+        pose.pose.position.x = x
+        pose.pose.position.y = y
+        <span class="hljs-variable language_">self</span>.path.poses.append(pose)
+        <span class="hljs-variable language_">self</span>.path.header.stamp = <span class="hljs-variable language_">self</span>.get_clock().now().to_msg()
+        <span class="hljs-variable language_">self</span>.pub.publish(<span class="hljs-variable language_">self</span>.path)
+
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>():
+    rclpy.init()
+    rclpy.spin(Gnss2PathPy())
+    rclpy.shutdown()
+
+
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:
+    main()
+</code></pre>
+<p>Python 三讲对照：01 框架搭建（订阅/发布/成员状态）→ 02 部分字段设置（<code>path.header.frame_id = "map"</code> 与原点状态量）→ 03 数据组织（有效性判别、<code>math.radians</code> 等价于 C++ 的 <code>* M_PI / 180.0</code>，追加发布）。入口 <code>gnss_demo_py</code>；依赖 <code>rclpy + sensor_msgs + nav_msgs + geometry_msgs</code>。</p>
+<h3 id="2347-配套命令速查">23.4.7 配套命令速查</h3>
+<pre><code class="lang-bash"><span class="hljs-comment"># 虚拟数据源驱动三个案例（无硬件复现）</span>
+ros2 run cpp03_camera_sim camera_sim                     <span class="hljs-comment"># 或 py03_camera_sim camera_sim_py</span>
+ros2 topic <span class="hljs-built_in">echo</span> /image_raw --once --no-arr               <span class="hljs-comment"># 核对 Image 元数据</span>
+ros2 run rqt_image_view rqt_image_view                   <span class="hljs-comment"># 可视化条纹（Fixed Frame: camera）</span>
+
+ros2 topic pub --rate 10 /imu sensor_msgs/msg/Imu \
+  <span class="hljs-string">"{orientation: {w: 1.0}, angular_velocity: {z: 0.1}, linear_acceleration: {x: 0.2} }"</span>
+ros2 run cpp04_imu_demo imu_demo                         <span class="hljs-comment"># 或 py04_imu_demo imu_demo_py</span>
+
+ros2 topic pub --rate 2 /fix sensor_msgs/msg/NavSatFix \
+  <span class="hljs-string">"{status: {status: 0}, latitude: 31.1, longitude: 121.3, altitude: 10.0}"</span>
+ros2 run cpp05_gnss_demo gnss_demo                       <span class="hljs-comment"># 或 py05_gnss_demo gnss_demo_py</span>
+rviz2                                                    <span class="hljs-comment"># Add → Path → /gnss_path，Fixed Frame: map</span>
 </code></pre>
 <h2 id="235-运行效果（实测）">23.5 运行效果（实测）</h2>
 <p>以下输出均在本机（Ubuntu 24.04 + ROS2 Jazzy）实测，存档于 <code>out/verify/ws05_sensor/</code>。三个案例均提供 C++ 与 Python 双实现，实测输出与发布值一致。</p>
@@ -818,10 +1850,24 @@ height: 240
 width: 320
 encoding: mono8
 </code></pre>
+<p>C++ 节点完整 echo（存档 <code>cpp03_camera_sim_echo.log</code>，逐字）：</p>
+<pre><code class="lang-text">header:
+  stamp:
+    sec: 1792042382
+    nanosec: 335674543
+  frame_id: camera
+height: 240
+width: 320
+encoding: mono8
+is_bigendian: 0
+step: 320
+data: '&lt;sequence type: uint8, length: 76800&gt;'
+</code></pre>
+<p>Python 节点 echo（存档 <code>py03_camera_sim_echo.log</code>）字段与 C++ 完全一致：<code>height: 240 / width: 320 / encoding: mono8 / is_bigendian: 0 / step: 320 / data 长度 76800</code>。<code>step=320</code> 与 <code>76800 = 320×240</code> 两处数值直接验证了 mono8 的内存布局公式。</p>
 <h3 id="2352-imu-数据解析">23.5.2 IMU 数据解析</h3>
 <p><strong>需求</strong>：订阅 <code>/imu</code>（sensor_msgs/Imu），解析并打印姿态四元数、角速度、线加速度——IMU 是融合定位与姿态估计的基础数据源。</p>
 <p>实测（以虚拟数据源驱动订阅方）：</p>
-<pre><code class="lang-bash">ros2 topic pub --rate 10 /imu sensor_msgs/msg/Imu <span class="hljs-string">"{orientation: {w: 1.0}, angular_velocity: {z: 0.1}, linear_acceleration: {x: 0.2}}"</span>
+<pre><code class="lang-bash">ros2 topic pub --rate 10 /imu sensor_msgs/msg/Imu <span class="hljs-string">"{orientation: {w: 1.0}, angular_velocity: {z: 0.1}, linear_acceleration: {x: 0.2} }"</span>
 ros2 run cpp04_imu_demo imu_demo
 </code></pre>
 <pre><code class="lang-text">[INFO] [...]: ---------IMU 数据---------
@@ -833,6 +1879,16 @@ ros2 run cpp04_imu_demo imu_demo
 <blockquote>
 <p><strong>视频对照</strong>：课程 <code>IMU案例(C++)_02核心实现以及小结</code>（512s）使用的是<strong>真实 IMU 硬件</strong>（Mycar 板载模块实拍），并在 rviz2 TF 中显示 world→mycar 随姿态变化；本机无硬件，以合成 <code>/imu</code> 数据驱动订阅方，四元数/角速度/线加速度逐字段打印。解析层与视频一致（字段与数值逐项对应），数据源不同（课程=真实硬件，本机=合成数据）与展示形态不同（课程=rviz TF，本机=日志）已如实标注。</p>
 </blockquote>
+<p>补充实测（原始日志 <code>imu_node_run.log</code> 逐字摘录，相邻两组时间戳间隔约 0.1 s，可见 10 Hz 发布节奏）：</p>
+<pre><code class="lang-text">[INFO] [1792044198.395448600] [imu_node_cpp]: ---------IMU 数据---------
+[INFO] [1792044198.395494139] [imu_node_cpp]: 姿态四元数:(1.00,0.00,0.00,0.00)
+[INFO] [1792044198.395501678] [imu_node_cpp]: 角速度:(0.00,0.00,0.10) rad/s
+[INFO] [1792044198.395504332] [imu_node_cpp]: 线加速度:(0.20,0.00,0.00) m/s^2
+[INFO] [1792044198.489626749] [imu_node_cpp]: ---------IMU 数据---------
+[INFO] [1792044198.587574759] [imu_node_cpp]: ---------IMU 数据---------
+[INFO] [1792044198.687419737] [imu_node_cpp]: ---------IMU 数据---------
+</code></pre>
+<p>视频帧取证（<code>out/stills/e2e_imu_445s.png</code>、<code>e2e_imu_480s.png</code>、<code>e2e_imu_500s.png</code>）已存档，对应课程真实硬件演示与 rviz2 TF 姿态变化画面，与上述「视频对照」描述一致。</p>
 <h3 id="2353-gnss-轨迹">23.5.3 GNSS 轨迹</h3>
 <p><strong>需求</strong>：订阅 <code>/fix</code>（sensor_msgs/NavSatFix），将经纬度转换为平面坐标并发布轨迹到 <code>/gnss_path</code>：</p>
 <ul>
@@ -846,26 +1902,44 @@ ros2 run cpp05_gnss_demo gnss_demo
 <pre><code class="lang-text">[INFO] [...]: 定位原点:(31.100000,121.300000)
 </code></pre>
 <p>之后每个 <code>/fix</code> 都被转换成相对原点的平面坐标追加进 <code>/gnss_path</code>，rviz2 中即可看到卫星轨迹。</p>
+<p>补充实测（原始日志逐字）：</p>
+<pre><code class="lang-text"># gnss_node_run.log
+[INFO] [1792044210.745861942] [gnss_node_cpp]: GNSS 案例节点创建!
+[INFO] [1792044212.474761969] [gnss_node_cpp]: 定位原点:(31.100000,121.300000)
+
+# gnss_path_echo.log（在发布节点未运行时单独 echo 的真实输出）
+WARNING: topic [/gnss_path] does not appear to be published yet
+Could not determine the type for the passed topic
+</code></pre>
+<p>第二条日志是常见坑的真实复现：<code>ros2 topic echo /gnss_path</code> 必须在轨迹节点运行期间执行，否则 DDS 发现不到发布者。正确姿势是先起 <code>gnss_demo</code>（配合 <code>/fix</code> 数据源），另开终端再 echo。Python 版 <code>gnss_demo_py</code> 日志格式与 C++ 一致（存档 <code>py05_gnss_demo.log</code>）。</p>
 <h2 id="236-与-ros2--机器人开发的关联">23.6 与 ROS2 / 机器人开发的关联</h2>
 <ol>
 <li><strong>sensor_msgs 消息族全景成型</strong>：本章补全 <code>Image</code>/<code>CameraInfo</code>、<code>Imu</code>、<code>NavSatFix</code>，与上一章 <code>LaserScan</code>/<code>PointCloud2</code> 共同构成机器人感知接口层；<code>header.frame_id</code> + <code>header.stamp</code> 是它们接入 tf2 与消息滤波器（<code>message_filters</code> 时间同步）的钥匙。</li>
 <li><strong>tf2 坐标树的传感器挂载</strong>：每类传感器都需要 <code>base_link → &lt;sensor_link&gt;</code> 的静态变换（URDF 或 <code>static_transform_publisher</code>）；EKF 融合后还要理清谁发布 <code>odom → base_link</code>，这是导航场景 tf 冲突的头号来源。</li>
 <li><strong>nav2 的输入质量决定导航质量</strong>：Nav2 的代价地图（costmap）用 <code>/scan</code> 或 <code>/points</code>，AMCL 用 <code>/scan</code> + <code>/odom</code>，<code>controller_server</code> 用融合里程计。本章的过滤/融合/标定直接决定导航是否抖动、是否撞障。</li>
 <li><strong>robot_localization 是导航前的必修课</strong>：EKF 输出的 <code>/odometry/filtered</code> 建议作为 Nav2 的标准里程计输入；对 GNSS 机器人，<code>navsat_transform_node</code> + 双 EKF 是室外导航的标配架构。</li>
+<li><strong>image_transport / cv_bridge 生态</strong>：<code>Image</code> 只是裸字节，压缩图传、去畸变、相机标定全部围绕 <code>image_transport</code> 插件体系与 <code>CameraInfo</code> 展开；本章相机仿真发布的 <code>/image_raw</code> 可直接接入这套生态（rqt_image_view 可显示、<code>compressed</code> 插件可订阅）。</li>
 <li><strong>仿真 → 实机迁移</strong>：标定参数（轮径、轮距、相机内参、IMU 零偏）是纯「实机量」，仿真里永远拿不到；建立标定流程意识，比记住某个系数更重要。</li>
 </ol>
 <h2 id="237-自测与练习">23.7 自测与练习</h2>
 <ol>
 <li><strong>概念题</strong>：<code>sensor_msgs/Image</code> 的 <code>encoding</code> 为 <code>bgr8</code> 时，<code>data</code> 中每个像素的三个字节分别是什么通道？与 <code>rgb8</code> 相比，直接用 numpy 按 <code>rgb</code> 显示会怎样？</li>
+<li><strong>计算题</strong>：一个 rgb8 编码、640×480 的 Image，<code>step</code> 与 <code>data</code> 长度各是多少？若改为 mono8 又各是多少？</li>
+<li><strong>概念题</strong>：<code>sensor_msgs/Imu</code> 中 <code>orientation_covariance[0] = -1</code> 表示什么？<code>linear_acceleration.z</code> 在传感器静止水平放置时应约为多少？</li>
+<li><strong>概念题</strong>：<code>NavSatFix.status.status = -1</code> 时回调应如何处理？本仓库 gnss_demo 的判别条件是哪两个？</li>
+<li><strong>动手任务</strong>：把 cpp03_camera_sim 的 encoding 改为 <code>rgb8</code> 并让条纹变成红蓝交替（data 每 3 字节一组），重编后用 <code>--no-arr</code> echo 验证 step 与 data 长度的变化。</li>
 <li><strong>动手任务</strong>：搭建双雷达融合环境（仿真中用两个 <code>laserscan</code> 插件分别朝前、朝后），经 <code>laserscan_multi_merger</code> 输出 360° 融合扫描。验收标准：rviz2 中两个雷达的障碍物点云无缝拼接，<code>tf2_echo base_link laser_front_link</code> 有稳定输出。</li>
 <li><strong>动手任务</strong>：完成轮式里程计线性标定：命令机器人直行 5 m（仿真或实机），记录 <code>/odom</code> 推算距离，计算修正系数并应用，复测 3 次误差 &lt; 5%。</li>
 </ol>
 <blockquote>
-<p>参考答案要点：1. <code>bgr8</code> 每像素依次为蓝、绿、红通道；按 <code>rgb</code> 解释会蓝红互换（天空变红）。2. 融合前必须有 <code>base_link → laser_*_link</code> 静态 tf 且两路 scan 时间戳有效；无缝拼接的关键是安装角与 tf 精确。3. 修正系数 = 目标距离 / 实测里程计距离，乘到底盘的轮径参数上；多次实验取平均以抑制地面打滑误差。</p>
+<p>参考答案要点：1. 依次为蓝、绿、红通道；按 <code>rgb</code> 解释会蓝红互换（天空变红）。2. rgb8：step = 640×3 = 1920，data 长 = 1920×480 = 921600；mono8：step = 640，data 长 = 307200。3. 表示该 IMU 无姿态输出能力，融合时不能使用其绝对姿态；z 轴约 +9.81 m/s²（测到的是比力，含重力）。4. 视为无效直接丢弃（return）；条件是 <code>status.status &lt; 0 || abs(latitude) &lt; 1e-9</code>。5. step = 960、data 长 = 230400；注意 <code>step = width * 3</code> 且 <code>(c/20)%2</code> 控制的是像素列而非字节列。6. 融合前必须有 <code>base_link → laser_*_link</code> 静态 tf 且两路 scan 时间戳有效；无缝拼接的关键是安装角与 tf 精确。7. 修正系数 = 目标距离 / 实测里程计距离，乘到底盘轮径参数上；多次实验取平均以抑制打滑误差。</p>
 </blockquote>
 <h2 id="238-常见问题（faq）">23.8 常见问题（FAQ）</h2>
 <ul>
 <li><strong>Q：<code>/image_raw</code> 能收到但显示花屏？</strong> A：多为 <code>encoding</code> 与实际数据不符（如相机输出 YUYV 却声明 rgb8），或 <code>step</code> 计算错误（忽略行对齐）；用 <code>ros2 topic echo /image_raw --field encoding</code> 核对，<code>usb_cam</code> 中显式设置 <code>pixel_format</code>。</li>
+<li><strong>Q：<code>ros2 topic echo /gnss_path</code> 报 does not appear to be published yet？</strong> A：echo 时轨迹节点没在运行，DDS 发现不到发布者（本章实测日志 <code>gnss_path_echo.log</code> 复现了该现象）。先启动 <code>gnss_demo</code> 与 <code>/fix</code> 数据源，再另开终端 echo。</li>
+<li><strong>Q：Python 版节点被 Ctrl+C 或 timeout 结束时打印 <code>ExternalShutdownException</code> / <code>KeyboardInterrupt</code> 堆栈？</strong> A：这是 rclpy 在外部信号打断 spin 时的已知表现（本章 <code>py03/py04/py05</code> 实测日志均有记录），不影响功能；想优雅退出可在 main 里 try/except 捕获后再 <code>rclpy.shutdown()</code>。</li>
+<li><strong>Q：IMU 日志刷屏太快怎么限频？</strong> A：真实 IMU 常见 100–200 Hz，教学代码逐条打印会刷屏；C++ 用 <code>RCLCPP_INFO_THROTTLE(*get_logger(), *get_clock(), 1000, ...)</code>，Python 用 <code>get_logger().info(..., throttle_duration_sec=1.0)</code>。</li>
 <li><strong>Q：EKF 启动后 tf 报 <code>odom → base_link</code> 冲突/跳变？</strong> A：底盘驱动与 <code>ekf_node</code> 同时发布了同一变换。二选一：底盘只发 <code>/odom</code> 话题不发 tf，由 EKF <code>publish_tf: true</code> 统一发布。</li>
 <li><strong>Q：GNSS 轨迹在 rviz2 中是个点？</strong> A：经纬度未投影，数值量级（116°、39°）远超地图尺度。按首帧做 ENU 投影或使用 <code>navsat_transform_node</code>。</li>
 <li><strong>Q：多相机时 <code>/dev/video*</code> 顺序随机？</strong> A：设备号按枚举顺序分配，插拔后会变。写 udev 规则按 USB 端口序列号固定符号链接（如 <code>/dev/camera_front</code>），launch 中用符号链接启动。</li>
@@ -873,10 +1947,10 @@ ros2 run cpp05_gnss_demo gnss_demo
 </ul>
 <h2 id="239-本章小结">23.9 本章小结</h2>
 <ul>
-<li>相机/IMU/GNSS 的消息规范（Image/Imu/NavSatFix）是接入真实驱动前最好的「接口演练」：编码决定字节序、四元数携带姿态、经纬度必须投影；</li>
-<li>GNSS → 平面坐标的转换是导航模块（如 robot_localization）内部的必备步骤；</li>
-<li>IMU 短期准、长期漂，EKF 融合要靠协方差与「谁发 tf」的唯一性约束兜底；</li>
-<li>雷达工具链（过滤/融合/互转）与相机进阶（图传/标定/多相机）把原始数据加工成 SLAM 与导航可直接消费的状态。</li>
+<li>相机/IMU/GNSS 的消息规范（Image/Imu/NavSatFix）是接入真实驱动前最好的「接口演练」：编码决定字节序与 step、四元数携带姿态、经纬度必须投影、状态位决定数据可用性；</li>
+<li>单目相机仿真（发布方）与 IMU 解析（订阅方）合成一对最小闭环，GNSS→Path 演示「订阅 + 变换 + 发布」的完整加工范式，三者 C++/Python 双实现可在无硬件环境逐一复现；</li>
+<li>轮式里程计标定（线性/角速度两步）与 robot_localization EKF 融合解决「算得稳」：修正系数来自实验，融合质量来自协方差配置与 tf 唯一性；</li>
+<li>雷达工具链（laser_filters 过滤、ira_laser_tools 融合、laser_geometry/pointcloud_to_laserscan 互转）与相机进阶（远程图传、棋盘格标定、udev 多相机）把原始数据加工成 SLAM 与导航可直接消费的状态。</li>
 </ul>
 <p>下一章进入仿真环境与 SLAM 建图。</p>
 
@@ -922,7 +1996,7 @@ ros2 run cpp05_gnss_demo gnss_demo
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第23章 传感器仿真开发","level":"9.2","depth":1,"next":{"title":"第24章 仿真导航与 SLAM","level":"9.3","depth":1,"path":"第24周-仿真导航与SLAM.md","ref":"第24周-仿真导航与SLAM.md","articles":[]},"previous":{"title":"第22章 里程计与虚拟传感器实践","level":"9.1","depth":1,"path":"第22周-ROS2功能实践.md","ref":"第22周-ROS2功能实践.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第23周-传感器实践开发.md","mtime":"2026-10-16T03:26:51.711Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T03:26:53.986Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第23章 传感器仿真开发","level":"9.2","depth":1,"next":{"title":"第24章 仿真导航与 SLAM","level":"9.3","depth":1,"path":"第24周-仿真导航与SLAM.md","ref":"第24周-仿真导航与SLAM.md","articles":[]},"previous":{"title":"第22章 里程计与虚拟传感器实践","level":"9.1","depth":1,"path":"第22周-ROS2功能实践.md","ref":"第22周-ROS2功能实践.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第23周-传感器实践开发.md","mtime":"2026-10-16T04:41:10.808Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T04:41:12.230Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

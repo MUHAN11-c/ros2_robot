@@ -13,6 +13,8 @@
 #include "rclcpp/rclcpp.hpp"
 #include "nav_msgs/msg/odometry.hpp"
 #include "nav_msgs/msg/path.hpp"
+#include "cmath"
+#include "limits"
 
 using std::placeholders::_1;
 
@@ -31,15 +33,29 @@ public:
     }
 private:
     void odom_callback(const nav_msgs::msg::Odometry::SharedPtr odom){
-        // 将当前位姿追加到轨迹(Path 中元素为 PoseStamped，需附带坐标系与时间戳)；
-        geometry_msgs::msg::PoseStamped ps;
-        ps.header.frame_id = "odom";
-        ps.header.stamp = odom->header.stamp;
-        ps.pose = odom->pose.pose;
-        path_.poses.push_back(ps);
-        // 发布轨迹消息；
-        path_.header.stamp = this->now();
-        path_pub_->publish(path_);
+        // 1.获取当前坐标点与轨迹中最后一个坐标点的距离数据
+        //   （轨迹为空时距离取无穷大，首点直接入轨迹——即课程 BUG 修复后的写法）；
+        double distance = std::numeric_limits<double>::infinity();
+        if (!path_.poses.empty()) {
+            double x = odom->pose.pose.position.x;
+            double y = odom->pose.pose.position.y;
+            double last_x = path_.poses.back().pose.position.x;
+            double last_y = path_.poses.back().pose.position.y;
+            distance = std::sqrt(std::pow(x - last_x, 2) + std::pow(y - last_y, 2));
+        }
+        // 2.距离大于 0.5 米，才将当前坐标点添加进轨迹；
+        if (distance > 0.5) {
+            geometry_msgs::msg::PoseStamped ps;
+            ps.header.frame_id = "odom";
+            ps.header.stamp = odom->header.stamp;
+            ps.pose = odom->pose.pose;
+            path_.poses.push_back(ps);
+            RCLCPP_INFO(this->get_logger(),"轨迹点入轨(%.2f,%.2f)，累计 %zu 个点",
+                ps.pose.position.x, ps.pose.position.y, path_.poses.size());
+            // 3.发布轨迹消息；
+            path_.header.stamp = this->now();
+            path_pub_->publish(path_);
+        }
     }
     rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_sub_;
     rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr path_pub_;
