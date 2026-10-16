@@ -738,7 +738,15 @@ Loaded component 1 into '/ComponentManager' container node as '/talker_component
 <li><strong>本机复现</strong>：ROS 侧控制器逻辑已实测（voice.log：<code>收到语音指令:前进 → 执行: linear=0.30</code>）；识别结果注入接口与课程一致（<code>/voice_cmd_text</code>），SDK Demo 需要讯飞 APPID（仅经环境变量注入）与麦克风</li>
 <li><strong>判定</strong>：✅ 控制器与话题接口一致；SDK Demo 运行依赖外部凭据与硬件，已在教程标注</li>
 </ul>
-<h3 id="⑧-此前已完成端到端比对的系列（汇总引用）">⑧ 此前已完成端到端比对的系列（汇总引用）</h3>
+<h3 id="⑧-补充核对（重映射域隔离乌龟跟随大作业ignition）">⑧ 补充核对（重映射/域隔离/乌龟跟随/大作业/ignition）</h3>
+<ul>
+<li><strong>16.3.4 重映射（实测）</strong>：<code>-r __node:=talker2</code> 后 node list 出现 <code>/talker2</code>；<code>-r /chatter:=/chatter2</code> 后 echo <code>/chatter2</code> 收到 <code>data: hello world!7</code>（remap.log）</li>
+<li><strong>16.3.1 ROS_DOMAIN_ID（实测）</strong>：域 42 的 topic list 可见 chatter（1 个），默认域 0 不可见（0 个）——DDS 域隔离生效（remap.log）</li>
+<li><strong>第18周乌龟跟随</strong>：<code>乌龟跟随(C++)_00示例浏览</code> 等帧显示课程 wiki 的 follow 控制公式（scaleForwardSpeed=0.5、scaleRotationRate=1.0、atan2/sqrt）与 spawn 客户端（x/y/theta/name），与还原的 exer01/exer03 逐字一致</li>
+<li><strong>第16周期中大作业</strong>：<code>期中大作业_参数服务_实现_03背景色修改逻辑</code>（626s）显示课程包 <code>cpp07_exercise</code>（exer01~exer06）与背景色循环逻辑（count [0,511] 步进 5、[0,255] 增/[256,511] 减、5Hz）；已还原进 cpp02_homework 并实测 background_r 三角波采样 130→200→235→145（hw_cycle.log）</li>
+<li><strong>第24周 ignition 雷达</strong>：<code>雷达仿真基本流程</code>（727s）帧显示课程 gpu_lidar SDF（640 线 ±π、量程 0.08~10、update_rate 30）与 rviz LaserScan 添加流程；本仓库 demo.sdf 同构（参数略异）</li>
+</ul>
+<h3 id="⑨-此前已完成端到端比对的系列（汇总引用）">⑨ 此前已完成端到端比对的系列（汇总引用）</h3>
 <p>下列演示的「视频命令/输出 × 本机实测」逐条比对已在《深度对照报告》完成，此处汇总：</p>
 <table>
 <thead>
@@ -870,7 +878,7 @@ Loaded component 1 into '/ComponentManager' container node as '/talker_component
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"端到端核对验证报告（课程视频 × 本机复现）","level":"10.2","depth":1,"next":{"title":"代码项目导览（code/）","level":"10.3","depth":1,"path":"学习笔记附录/代码项目导览.md","ref":"学习笔记附录/代码项目导览.md","articles":[]},"previous":{"title":"深度对照验证报告（视频帧 × 实测运行）","level":"10.1","depth":1,"path":"深度对照报告.md","ref":"深度对照报告.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"端到端核对报告.md","mtime":"2026-10-16T02:22:57.355Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T02:22:58.395Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"端到端核对验证报告（课程视频 × 本机复现）","level":"10.2","depth":1,"next":{"title":"代码项目导览（code/）","level":"10.3","depth":1,"path":"学习笔记附录/代码项目导览.md","ref":"学习笔记附录/代码项目导览.md","articles":[]},"previous":{"title":"深度对照验证报告（视频帧 × 实测运行）","level":"10.1","depth":1,"path":"深度对照报告.md","ref":"深度对照报告.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"端到端核对报告.md","mtime":"2026-10-16T02:43:09.752Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T02:43:11.108Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

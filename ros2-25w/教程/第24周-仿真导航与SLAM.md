@@ -28,6 +28,8 @@ Creating GZ->ROS Bridge: [/model/robot1/odometry (ignition.msgs.Odometry) -> /od
 
 系统插件加载失败数为 0；此时用 `teleop_twist_keyboard` 发布 `/cmd_vel` 即可在 rviz2 中看到 `/scan`、`/odom`、`/tf` 实时更新。
 
+> **视频对照**：课程 `ignition_gazebo仿真之传感器_02雷达仿真基本流程`（727s）中 gpu_lidar SDF 参数为 topic `scan`、update_rate 30、水平 640 线 ±π、垂直 16 线 ±0.2618、量程 0.08~10.0，rviz 中 Add LaserScan 后可见点云——本仓库 demo.sdf 同构（360 线/量程 0.15~12.0），差异仅在采样密度与量程。
+
 ## 24.2 Stage 仿真
 
 `demo_stage_sim` 提供 Stage 版本的世界（`worlds/stage.world`，Stage 专有语法）与 launch：

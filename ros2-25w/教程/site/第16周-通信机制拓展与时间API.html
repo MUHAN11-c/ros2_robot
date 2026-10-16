@@ -704,6 +704,9 @@ angular:
 <p>实测动作目标（需同时 source 接口包所在工作空间 ws01）：</p>
 <pre><code class="lang-bash">ros2 action send_goal /turtle_forward base_interfaces_demo/action/Progress <span class="hljs-string">"{num: 3}"</span> --feedback
 </code></pre>
+<blockquote>
+<p><strong>视频对照</strong>：课程大作业实现于 <code>cpp07_exercise</code> 包（exer01_pub_sub / exer02_server / exer03_client / exer04_action_server / exer05_action_client / exer06_param，各配 <code>*_launch.py</code>）。其中 exer06 参数客户端的<strong>背景色循环渐变</strong>逻辑已按视频还原并升级进本仓库 <code>cpp02_homework</code>：计数在 [0,511] 循环（步进 5），[0,255] 区间 red 递增、[256,511] 递减，<code>set_parameters</code> + 5Hz Rate。实测采样 background_r：<code>130 → 200 → 235 → 145</code>（三角波，见 hw_cycle.log）。</p>
+</blockquote>
 <h2 id="163-通信机制拓展（分布式工作空间覆盖元功能包重映射）">16.3 通信机制拓展（分布式/工作空间覆盖/元功能包/重映射）</h2>
 <p>课程第 16 周第 1 课还包括四个工程化主题，本节逐一给出可运行的最小验证：</p>
 <h3 id="1631-分布式">16.3.1 分布式</h3>
@@ -737,6 +740,20 @@ ros2 run cpp01_topic demo01_talker_str --ros-args -r __node:=talker2
 <span class="hljs-comment"># 话题重名：把 /chatter 重映射为 /chatter2</span>
 ros2 run cpp01_topic demo01_talker_str --ros-args -r /chatter:=/chatter2
 </code></pre>
+<p>实测（remap.log）：</p>
+<pre><code class="lang-text">[INFO] [...]: [talker2]: 发布节点创建!
+[INFO] [...]: [talker2]: 发布方发布的消息:hello world!0
+--- ros2 node list ---
+/force_web
+/serial_force
+/talker2                ← 重映射后的节点名
+--- 话题重映射 ---
+/chatter2               ← 重映射后的话题名
+--- ros2 topic echo /chatter2 --once
+data: hello world!7
+---
+</code></pre>
+<p>分布式（16.3.1）实测：同域 42 的 <code>ros2 topic list</code> 可见 chatter（1 个）；默认域 0 不可见（0 个）——DDS 域隔离生效。</p>
 <h2 id="164-本章小结">16.4 本章小结</h2>
 <ul>
 <li>Time/Duration/Rate 是周期任务与超时控制的基础，时刻与时段的运算法则要区分；</li>
@@ -786,7 +803,7 @@ ros2 run cpp01_topic demo01_talker_str --ros-args -r /chatter:=/chatter2
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第16章 通信机制拓展与时间 API","level":"6.3","depth":1,"next":{"title":"第17章 工具应用实操（launch 与 rosbag2）","level":"6.4","depth":1,"path":"第17周-工具应用实操.md","ref":"第17周-工具应用实操.md","articles":[]},"previous":{"title":"第15章 通信机制深度剖析","level":"6.2","depth":1,"path":"第15周-通信机制深度剖析.md","ref":"第15周-通信机制深度剖析.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第16周-通信机制拓展与时间API.md","mtime":"2026-10-16T02:22:57.355Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T02:22:58.395Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第16章 通信机制拓展与时间 API","level":"6.3","depth":1,"next":{"title":"第17章 工具应用实操（launch 与 rosbag2）","level":"6.4","depth":1,"path":"第17周-工具应用实操.md","ref":"第17周-工具应用实操.md","articles":[]},"previous":{"title":"第15章 通信机制深度剖析","level":"6.2","depth":1,"path":"第15周-通信机制深度剖析.md","ref":"第15周-通信机制深度剖析.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第16周-通信机制拓展与时间API.md","mtime":"2026-10-16T02:43:09.753Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T02:43:11.108Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

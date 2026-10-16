@@ -107,6 +107,8 @@ angular:
 ros2 action send_goal /turtle_forward base_interfaces_demo/action/Progress "{num: 3}" --feedback
 ```
 
+> **视频对照**：课程大作业实现于 `cpp07_exercise` 包（exer01_pub_sub / exer02_server / exer03_client / exer04_action_server / exer05_action_client / exer06_param，各配 `*_launch.py`）。其中 exer06 参数客户端的**背景色循环渐变**逻辑已按视频还原并升级进本仓库 `cpp02_homework`：计数在 [0,511] 循环（步进 5），[0,255] 区间 red 递增、[256,511] 递减，`set_parameters` + 5Hz Rate。实测采样 background_r：`130 → 200 → 235 → 145`（三角波，见 hw_cycle.log）。
+
 ## 16.3 通信机制拓展（分布式/工作空间覆盖/元功能包/重映射）
 
 课程第 16 周第 1 课还包括四个工程化主题，本节逐一给出可运行的最小验证：
@@ -160,6 +162,24 @@ ros2 run cpp01_topic demo01_talker_str --ros-args -r __node:=talker2
 # 话题重名：把 /chatter 重映射为 /chatter2
 ros2 run cpp01_topic demo01_talker_str --ros-args -r /chatter:=/chatter2
 ```
+
+实测（remap.log）：
+
+```text
+[INFO] [...]: [talker2]: 发布节点创建!
+[INFO] [...]: [talker2]: 发布方发布的消息:hello world!0
+--- ros2 node list ---
+/force_web
+/serial_force
+/talker2                ← 重映射后的节点名
+--- 话题重映射 ---
+/chatter2               ← 重映射后的话题名
+--- ros2 topic echo /chatter2 --once
+data: hello world!7
+---
+```
+
+分布式（16.3.1）实测：同域 42 的 `ros2 topic list` 可见 chatter（1 个）；默认域 0 不可见（0 个）——DDS 域隔离生效。
 
 ## 16.4 本章小结
 
