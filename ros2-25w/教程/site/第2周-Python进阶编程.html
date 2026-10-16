@@ -641,6 +641,9 @@ imu0 校准完成
 imu0 {'ax': 0.0, 'ay': 0.0, 'az': 9.8}
 </code></pre>
 <h2 id="24-端到端实战（实测）：waypointmanager">2.4 端到端实战（实测）：WaypointManager</h2>
+<blockquote>
+<p><strong>视频对照</strong>：课程 <code>类综合练习</code> 的 Game 类（类属性 <code>top_score</code> + 类方法 + 实例方法）已按视频逐字复现，输出与课程终端一致（<code>帮助信息 / 0 / 小明开始了游戏。得分为120 / 当前最高分120</code>），见《端到端核对报告》基础篇表。</p>
+</blockquote>
 <p>把函数、类、异常、JSON 串成完整程序：类封装航点表，重复名/非法坐标抛异常，<code>dumps/loads</code> 演示 JSON 持久化语义（工程中把快照写入磁盘文件即可）。</p>
 <pre><code class="lang-python"><span class="hljs-comment"># manager.py（节选核心）</span>
 <span class="hljs-keyword">import</span> json
@@ -746,7 +749,7 @@ imu0 {'ax': 0.0, 'ay': 0.0, 'az': 9.8}
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第2章 Python 进阶编程（函数/类/异常/并发）","level":"2.2","depth":1,"next":{"title":"第3章 数据处理与计算机视觉（NumPy/OpenCV）","level":"2.3","depth":1,"path":"第3周-数据处理与计算机视觉.md","ref":"第3周-数据处理与计算机视觉.md","articles":[]},"previous":{"title":"第1章 列表与元组（Python 基础入门）","level":"2.1","depth":1,"path":"第1周-列表与元组.md","ref":"第1周-列表与元组.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第2周-Python进阶编程.md","mtime":"2026-10-16T01:25:57.811Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T01:25:58.966Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第2章 Python 进阶编程（函数/类/异常/并发）","level":"2.2","depth":1,"next":{"title":"第3章 数据处理与计算机视觉（NumPy/OpenCV）","level":"2.3","depth":1,"path":"第3周-数据处理与计算机视觉.md","ref":"第3周-数据处理与计算机视觉.md","articles":[]},"previous":{"title":"第1章 列表与元组（Python 基础入门）","level":"2.1","depth":1,"path":"第1周-列表与元组.md","ref":"第1周-列表与元组.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"第2周-Python进阶编程.md","mtime":"2026-10-16T01:45:03.184Z","type":"markdown"},"gitbook":{"version":"6.2.2","time":"2026-10-16T01:45:04.121Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
