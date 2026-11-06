@@ -1,0 +1,22 @@
+launch:
+  - arg:
+      name: robot_ns
+      default: robot1
+  - node:
+      pkg: demo_nodes_cpp
+      exec: talker
+      name: source
+      namespace: "$(var robot_ns)"
+      output: screen
+      remap:
+        - from: chatter
+          to: telemetry
+  - node:
+      pkg: demo_nodes_py
+      exec: listener
+      name: sink
+      namespace: "$(var robot_ns)"
+      output: screen
+      remap:
+        - from: chatter
+          to: telemetry

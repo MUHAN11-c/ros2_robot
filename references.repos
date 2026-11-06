@@ -1,0 +1,33 @@
+repositories:
+  ros2_control_demos:
+    type: git
+    url: https://github.com/ros-controls/ros2_control_demos.git
+    version: fbab026e147824971c97996f3789f97c2ee9e9ac
+  ros2_control:
+    type: git
+    url: https://github.com/ros-controls/ros2_control.git
+    version: f9e24287fc1d6996e5ba1656a9ee24e5f33adef7
+  ros2_controllers:
+    type: git
+    url: https://github.com/ros-controls/ros2_controllers.git
+    version: bee185cbb98815116af9cfb00ff595b0b800e91a
+  AgroSenseBot:
+    type: git
+    url: https://github.com/AIRLab-POLIMI/AgroSenseBot.git
+    version: 4ad700b090b9f3ddb8513c7519938bd7f0974709
+  bunker_ros2:
+    type: git
+    url: https://github.com/agilexrobotics/bunker_ros2.git
+    version: f24f722b245eb1d2572c47d091fc847d9fd68cf4
+  ugv_sdk:
+    type: git
+    url: https://github.com/agilexrobotics/ugv_sdk.git
+    version: f2704eacdc90357078cd93ec60aae08bb4baab35
+  linorobot2:
+    type: git
+    url: https://github.com/linorobot/linorobot2.git
+    version: f6b0bd0350c4a9d6b815ef4bb5c701a1e5129711
+  linorobot2_hardware:
+    type: git
+    url: https://github.com/linorobot/linorobot2_hardware.git
+    version: fbbbb922f4bd778e23268210b7bd7a6ac4c75d83

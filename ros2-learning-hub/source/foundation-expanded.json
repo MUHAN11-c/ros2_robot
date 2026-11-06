@@ -1,0 +1,1801 @@
+{
+  "chapters": [
+    {
+      "id": "architecture",
+      "sections": [
+        {
+          "title": "1. 先把机器人问题拆成可验证的数据流",
+          "paragraphs": [
+            "假设你要让一台巡检车看见障碍物并停下。摄像头驱动负责取得图像，感知程序负责判断前方是否有人，任务程序决定继续或停车，底盘程序把速度要求转换成电机动作。若把它们写成一个不断增长的循环，修改摄像头可能影响控制周期，回放数据也需要模拟所有硬件。ROS 2 提供的价值，是让这些功能通过明确接口协作，从而可以独立替换和验证。",
+            "ROS 2 不是替代 Linux 的操作系统，也不会自动给机器人提供导航能力。Linux 仍负责进程、驱动、文件和网络；ROS 2 提供通信机制、客户端库、构建组织和调试工具；Nav2、MoveIt、ros2_control 等项目再在这些机制上解决具体机器人问题。学习时应先认识这些层之间的连接，避免一遇到机器人问题就寻找一个所谓的万能 ROS 节点。",
+            "设计的起点是接口契约：谁产生什么数据，单位和坐标系是什么，允许多久没有新数据，失败时由谁处理。机器人能启动只是第一层结果；输入停止、通信延迟和节点退出时能否保持可解释的行为，才说明接口边界划分得合理。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "2. 包、可执行程序、进程和节点是四个概念",
+          "paragraphs": [
+            "包是发布与依赖管理的单位。一个包可以包含源码、模型、参数、启动文件，也可以只有消息定义。可执行程序是安装后能够启动的程序入口；同一个包可以安装多个入口。进程是操作系统创建的运行实例，具有自己的地址空间；同一可执行程序启动两次，会形成两个进程。节点则是 ROS 图中的逻辑实体，拥有名称、接口和参数。",
+            "最初的教程通常让一个程序创建一个节点，所以四个名字容易被混为一谈。实际上，一个包可生成发布者和订阅者两个可执行程序；一个组件容器进程可容纳多个节点；同一类节点也可创建多个实例，并分别放在不同命名空间下。由此可见，看到两个 ROS 节点不能推断一定有两个操作系统进程。",
+            "执行 ros2 run demo_nodes_cpp talker 时，前一个参数指定包，后一个参数指定安装入口。运行后再用 ros2 node list 看节点名称。程序入口名和节点名可以一样，也可以不同；重命名节点不会修改磁盘上的程序文件，更不会改动包名。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "认识三个查询层级",
+              "language": "bash",
+              "type": "commands",
+              "code": "source /opt/ros/jazzy/setup.bash\nros2 pkg prefix demo_nodes_cpp\nros2 pkg executables demo_nodes_cpp\nros2 node list",
+              "explanation": "前两条检查已安装的软件包，最后一条查询当前运行的计算图；没有节点运行时，列表为空并不代表没有安装软件。"
+            }
+          ]
+        },
+        {
+          "title": "3. 从应用一路到网络，中间发生了什么",
+          "paragraphs": [
+            "应用使用 rclcpp 或 rclpy 创建节点及发布者。客户端库把语言层对象转换成 ROS 核心层可操作的实体，再经过 RMW 适配层交给具体中间件。RMW 的作用是隔离中间件差异，使应用通常不需要直接操作 DDS 的参与者和发现协议。Jazzy 的常见实现有基于 Fast DDS 或 Cyclone DDS 的 RMW，选择时要安装对应实现并保持配置一致。",
+            "消息定义负责双方共享的数据结构。发布端将内存中的消息交给通信层，接收端再恢复成自己的语言对象。C++ 的结构类型和 Python 的消息类来自同一接口定义，因此它们可以通信；双方源程序采用不同编程语言并不要求额外桥接。反过来，名字碰巧相同却结构不同的接口，不能视为兼容。",
+            "发现机制让端点知道彼此存在，传输机制负责实际数据到达，执行器负责何时运行你的回调。这是三个不同环节。节点列表里看得到对方，只证明图信息已经被发现；消息类型、QoS、网络路径和回调调度仍可能阻止你的程序获得可用数据。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "通信分层示意",
+              "language": "text",
+              "type": "concept",
+              "code": "应用逻辑：巡检、规划、控制\n        ↓\nrclcpp / rclpy：节点、发布订阅、服务、动作\n        ↓\nrcl / RMW：核心机制和中间件适配\n        ↓\n具体中间件：发现、序列化、传输、QoS\n        ↓\n操作系统、网络接口、计算与存储资源",
+              "explanation": "这是理解职责的示意图，不表示每条消息都必须跨机器，也不是运行命令。"
+            }
+          ]
+        },
+        {
+          "title": "4. Topic、Service、Action 怎样选",
+          "paragraphs": [
+            "话题适合连续或事件式数据流，例如图像、里程计和速度要求。发布者不需要知道订阅者数量；记录器、可视化和算法都能消费同一数据。发布动作不会返回订阅者业务处理成功的结果，因此不能仅凭 publish 调用成功，就认为电机已经达到目标速度。需要确认真实状态时，应由状态反馈接口表达。",
+            "服务包含一个请求和一个响应，适合短时查询、重置计数器或触发一次配置操作。它使调用者能把响应与请求对应起来，却不自带连续进度和完整任务取消语义。如果服务响应迟迟不到，客户端必须设计等待上限；客户端超时也不表示服务端一定没有执行，涉及状态修改时应考虑重复调用是否安全。",
+            "动作将长任务表达成目标、反馈和最终结果，并具有目标接受与取消过程。导航到某个位置适合动作，因为用户需要知道走到哪里、能否取消以及是否到达。动作接口比单一话题复杂，是因为它把任务协议标准化；不应为图像流使用动作，也不应把所有长期任务都塞进一个阻塞服务。"
+          ],
+          "bullets": [
+            "连续感知：Topic；短查询或配置操作：Service；需要进度与取消的长期任务：Action。",
+            "参数用于配置节点的行为，不适合替代高速传感器或控制数据通道。"
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "5. 名字、命名空间和类型共同定义接口",
+          "paragraphs": [
+            "把相机接口命名成 image，表示它是相对名称，最终路径会受到节点命名空间影响。处于 /robot1 的节点使用相对话题 telemetry，得到的是 /robot1/telemetry；以斜杠开头的 /telemetry 是绝对名称，不随命名空间移动。这种规则允许同一套软件分别部署到多台机器人，而不需要在源码里写死机器人编号。",
+            "重映射是在启动时改变名称解析的配置方式。一个节点在源码里发布 chatter，启动时可以把它重映射成 telemetry。重映射不改变消息类型，也不会转换数值单位。若两个系统都叫 cmd_vel，却一个使用 Twist、另一个使用 TwistStamped，仅修改名称仍无法通信，必须明确适配接口。",
+            "接口契约还应写出类型之外的含义。float64 velocity 没有告诉读者它是米每秒还是弧度每秒；Header 中有时间戳和 frame_id，也仍然需要约定采样时间和坐标关系。把这些约定写进接口说明，能避免程序编译通过但机器人运动含义相反的错误。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "6. 第一次跨语言实验：从输出推断系统结构",
+          "paragraphs": [
+            "先选择系统自带的演示节点，这样可以将通信问题与自己写代码的问题分开。打开三个终端，每个终端独立加载 Jazzy 环境。终端 A 启动 C++ talker，终端 B 启动 Python listener；终端 C 不承担业务逻辑，只负责观察。这里没有摄像头、机器人模型或电机依赖，实验目的仅是证明一个图中的跨语言通信链能够建立。",
+            "发布者输出周期性日志，订阅者输出接收到的文本。两边计数可能从不同位置开始，因为订阅者启动前的 volatile 消息不必补发给它。停止订阅者并不会让发布者自动停止；再次启动订阅者后，应看到新的消息。这个现象说明话题耦合较弱，同时提醒你：业务若要求消费者确认，必须另行设计确认机制。",
+            "观察完把两端语言交换：使用 demo_nodes_py talker 和 demo_nodes_cpp listener。若行为仍相同，说明接口语义不依赖某一种语言。最后一次只改变一个条件，例如重映射话题，让实验能清楚指出哪项配置导致收不到消息。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "终端 A / B / C 各自运行对应命令",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 每个终端先执行\nsource /opt/ros/jazzy/setup.bash\n# 终端 A\nros2 run demo_nodes_cpp talker\n# 终端 B\nros2 run demo_nodes_py listener\n# 终端 C\nros2 node info /talker\nros2 topic info /chatter --verbose\nros2 topic echo /chatter",
+              "explanation": "命令按终端分组执行，持续运行的 ros2 run 不会返回到下一行；请不要把所有组顺序粘贴到同一个终端。"
+            }
+          ]
+        },
+        {
+          "title": "7. 将演示映射回真实机器人",
+          "paragraphs": [
+            "在移动机器人中，底盘驱动报告轮速，状态估计输出里程计，规划模块产生路线，控制模块产生速度要求。可以把每条接口画为箭头，但还要标明箭头负责的是测量值、估计值还是命令值。命令与反馈具有不同用途，把它们混在一个未经说明的话题里，会使故障定位和录包回放变得困难。",
+            "进程拆分需要结合故障与性能，而非越多越好。将相机和任务逻辑分开有助于隔离故障；把某些高带宽处理节点组合在一起可能减少开销，但需要考虑共享进程崩溃的影响。先确定接口，再测量部署布局，能避免过早让进程结构反过来决定业务结构。",
+            "本章的验收不是背诵缩写，而是拿到一个启动命令后，说出它属于哪个包、创建几个节点、通过什么接口协作，并指出一个节点退出后其他部分应怎样表现。只有这些关系清楚，后续的 QoS、执行器、组件、生命周期和导航框架才有具体落点。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "为巡检车建立第一版接口说明",
+        "scenario": "同一台机器人要持续接收激光、接受巡检目标，并允许操作者随时取消任务。",
+        "steps": [
+          "将激光观测定义为 sensor_msgs/msg/LaserScan 话题，并记录采样坐标系与时间戳含义。",
+          "把巡检目标定义为 Action，反馈当前航点，结果说明成功或失败原因。",
+          "将最大速度作为可校验参数；实际速度要求使用控制话题，测量速度由状态话题反馈。",
+          "启动最小演示验证跨语言通信，然后分别替换发布者和消费者。"
+        ],
+        "result": "接口表同时描述数据、时间、单位、任务生命周期和故障行为，后续可以逐模块实现。"
+      },
+      "exercises": [
+        {
+          "question": "一个包安装三个程序，其中一个程序创建两个节点。运行这个程序一次，会有几个包、进程和节点？",
+          "answer": "安装组织上仍涉及一个包；本次启动创建一个进程，程序内部创建两个 ROS 节点。其他未运行入口不因此生成进程。"
+        },
+        {
+          "question": "把 chatter 重映射成 telemetry，能否让 String 发布者与 Float64 订阅者通信？",
+          "answer": "不能。重映射只改变名称解析，不改变接口类型和序列化结构；应修改两端接口或实现明确的转换节点。"
+        },
+        {
+          "question": "服务客户端超时后立即重试“扣减库存”，可能发生什么？",
+          "answer": "第一次请求可能已经被执行，只是响应迟到；重试可能重复修改状态。应设计请求 ID、幂等处理或可查询的任务状态，不能把网络超时等同于未执行。"
+        }
+      ]
+    },
+    {
+      "id": "installation",
+      "sections": [
+        {
+          "title": "1. 安装前先固定目标平台和联网边界",
+          "paragraphs": [
+            "本教材选择 ROS 2 Jazzy 与 Ubuntu 24.04 Noble 作为统一环境。选择一个明确版本，是为了让软件包名、Python 解释器、依赖库和示例分支能相互对应。Jazzy 支持周期较长，但截至本次核对日期并非最新发行版；学习时不必不断追逐更新版本，应先把一个版本上的完整工作链建立起来。",
+            "首先读取操作系统和架构，不要只根据桌面外观判断版本。Ubuntu 22.04 的 Humble 软件包不能通过改几个包名就当作 Jazzy 使用；若电脑不符合目标环境，可使用单独的虚拟机或容器，但图形显示、USB 和网络发现还需要额外配置。本章直接描述原生 Ubuntu 24.04 的 deb 安装路线。",
+            "教材正文、命令解释和代码可离线阅读；apt 安装、GitHub 发布查询和依赖下载通常仍需联网。真正的离线部署需要提前准备对应架构的软件包及其依赖、仓库索引或完整镜像。只保存网页或几个 deb 文件，不代表已经备齐可离线安装的一整套系统。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "只读检查平台",
+              "language": "bash",
+              "type": "commands",
+              "code": "cat /etc/os-release\nuname -m\nlocale",
+              "explanation": "预期系统信息包含 Ubuntu 24.04 / noble；架构与所选二进制包应匹配，locale 输出应包含可用 UTF-8 环境。"
+            }
+          ]
+        },
+        {
+          "title": "2. 配置 UTF-8 环境并理解 locale 的作用",
+          "paragraphs": [
+            "locale 影响程序处理字符、数字格式和终端输出的方式。精简镜像可能只有 POSIX 环境，而教程中的 Python 工具、包元数据和文件路径可能包含非 ASCII 字符。ROS 并不要求桌面界面必须使用英语，但学习环境应有完整的 UTF-8 编码支持。已正常使用中文 UTF-8 环境的机器通常不需要为了教程强制切换所有桌面语言。",
+            "下方步骤生成一个明确可用的 en_US.UTF-8 locale，并在当前 shell 中设置 LANG。系统默认设置与当前 shell 环境不是同一件事：update-locale 写入系统配置，export 则立即影响当前终端及其子进程。修改完成后重新运行 locale 检查，不要因为命令没有报错就假定所有环境已经更新。",
+            "如果 apt update 出现网络或软件源错误，应先修复仓库访问，再继续安装。系统安装过程中应阅读 apt 给出的变更清单，尤其是已有复杂开发环境的机器。这里的命令是供你在自己的系统上执行的安装步骤，网站阅读本身不会执行这些命令。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "需要时创建 UTF-8 locale",
+              "language": "bash",
+              "type": "commands",
+              "code": "sudo apt update\nsudo apt install locales\nsudo locale-gen en_US en_US.UTF-8\nsudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8\nexport LANG=en_US.UTF-8\nlocale",
+              "explanation": "若当前环境已完整支持 UTF-8，可保留原有语言设置；本组展示官方安装路线使用的一种可验证配置。"
+            }
+          ]
+        },
+        {
+          "title": "3. 启用 Universe，并由 ros2-apt-source 管理 ROS 软件源",
+          "paragraphs": [
+            "Ubuntu 自带软件源并不包含所有 ROS 发布包，因此需要加入 ROS 软件仓库。当前官方 Jazzy 安装流程使用 ros2-apt-source 软件包提供仓库地址和签名密钥；这样仓库配置的后续更新也能通过软件包管理完成。不要同时叠加多份旧教程里的手工源配置，否则 apt 可能出现重复条目或签名设置冲突。",
+            "先启用 Universe 并安装下载工具。随后从 ros-apt-source 的 GitHub 最新发布信息读取标签，把它放入下载文件名。这里“最新”指软件源配置包的发布版本，不是把 ROS 发行版切换到 Rolling 或其他版本。Ubuntu 代号必须仍为 noble；下载路径里使用该代号是为了匹配本机的软件源配置。",
+            "下面先查询并打印版本，让你能在继续前确认得到的是非空发布标签。若 GitHub API 请求失败、被限流或返回错误对象，应停止并解决访问问题，不要把空变量拼入下载地址。curl 的失败返回应被注意；只有文件完整下载后，才交给 dpkg 安装。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "启用 Ubuntu 仓库与工具",
+              "language": "bash",
+              "type": "commands",
+              "code": "sudo apt install software-properties-common curl python3\nsudo add-apt-repository universe\nsudo apt update",
+              "explanation": "Universe 提供 ROS 开发链需要的一部分 Ubuntu 依赖。"
+            },
+            {
+              "label": "查询 ROS 软件源配置包版本",
+              "language": "bash",
+              "type": "commands",
+              "code": "ROS_APT_SOURCE_VERSION=$(curl -fsSL https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | python3 -c 'import json, sys; print(json.load(sys.stdin)[\"tag_name\"])')\nprintf '%s\n' \"$ROS_APT_SOURCE_VERSION\"",
+              "explanation": "应输出实际发布标签。此处使用 Python 解析 JSON，与官方流程读取 tag_name 的目的相同；请求失败时不要继续下一组。"
+            },
+            {
+              "label": "下载并安装源配置包",
+              "language": "bash",
+              "type": "commands",
+              "code": ". /etc/os-release\nROS_UBUNTU_CODENAME=${UBUNTU_CODENAME:-$VERSION_CODENAME}\ncurl -fL -o /tmp/ros2-apt-source.deb \"https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.${ROS_UBUNTU_CODENAME}_all.deb\"\nsudo dpkg -i /tmp/ros2-apt-source.deb\nsudo apt update",
+              "explanation": "以上两组命令在同一终端连续进行，以保留变量。安装前应确认代号为 noble；配置包负责添加 ROS 仓库及密钥。"
+            }
+          ]
+        },
+        {
+          "title": "4. 选择 desktop 或 ros-base，而不是混装发行版",
+          "paragraphs": [
+            "desktop 面向学习和桌面开发，包含 ROS 基础、RViz 及常用示例，是本教材的默认选择。ros-base 更适合无图形的板载电脑，只提供较精简的运行与通信基础；采用它以后，需要按章节补装图形工具和示例。两者是同一发行版里的不同软件包集合，不是两个不兼容的 ROS 系统。",
+            "开发还需要编译、构建和依赖工具，ros-dev-tools 用于安装常用开发链。安装前更新系统软件包索引并检查待升级项；需要升级时按本机维护要求执行。Ubuntu 的 noble-updates 和 noble-backports 配置不完整可能导致开发依赖无法满足，此时应检查 /etc/apt/sources.list.d/ubuntu.sources 的 Suites 设置，而不是强制忽略依赖。",
+            "apt 软件包名通常采用短横线，例如 ros-jazzy-demo-nodes-cpp；ROS 包名采用下划线，例如 demo_nodes_cpp。安装成功后运行时仍使用 ROS 包名。不要把这两种命名方式机械替换到所有命令中；apt 查询的是系统包，ros2 pkg 查询的是 ROS 安装索引。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "默认桌面学习环境",
+              "language": "bash",
+              "type": "commands",
+              "code": "sudo apt update\nsudo apt install ros-jazzy-desktop ros-dev-tools\napt policy ros-jazzy-desktop",
+              "explanation": "本组是 desktop 路线。若明确选择无图形路线，可将第一项替换为 ros-jazzy-ros-base，再按需安装其他包。"
+            }
+          ]
+        },
+        {
+          "title": "5. source 环境到底改变了什么",
+          "paragraphs": [
+            "安装完成后，程序仍需要知道到哪里找 ROS 命令、库和包。source /opt/ros/jazzy/setup.bash 会在当前 shell 中设置相应环境变量，使随后启动的程序继承这些路径。source 不创建后台 ROS 主服务器，也不启动任何机器人节点；它只是准备进程的运行环境。",
+            "每个新终端都有自己的环境，A 终端执行 source 不会自动改变 B 终端。确认使用 Bash 后才使用 setup.bash；Zsh 应使用对应脚本。刚开始学习时建议显式加载环境，并用 printenv ROS_DISTRO 验证，等理解后再决定是否放进 shell 启动文件，避免长期自动混入多个发行版或工作空间。",
+            "后面自己构建的 install/setup.bash 是 overlay，需要在基础安装之后加载。若装过 Humble、源码版 ROS 或多个工作空间，路径优先级可能影响实际加载的包。遇到奇怪行为时，先用一个干净终端仅加载 Jazzy，再逐层加入自建工作空间，比删除系统安装更容易定位问题。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "当前终端加载并确认",
+              "language": "bash",
+              "type": "commands",
+              "code": "source /opt/ros/jazzy/setup.bash\nprintenv ROS_DISTRO\ncommand -v ros2\nros2 pkg prefix demo_nodes_cpp",
+              "explanation": "ROS_DISTRO 应为 jazzy，ros2 命令与演示包路径应落在预期安装中；具体路径可能因安装方式不同而变化。"
+            }
+          ]
+        },
+        {
+          "title": "6. 三步验收：可发现、可收发、可诊断",
+          "paragraphs": [
+            "安装验收应使用最小闭环。终端 A 运行 C++ 发布者，终端 B 运行 Python 订阅者，终端 C 查看节点和话题。这样既覆盖两种客户端库，也检查接口定义和通信环境。只执行 ros2 --help 能证明命令行入口可运行，不能证明消息链已经通畅。",
+            "预期发布者持续显示发布日志，订阅者显示收到的字符串；计数通常递增。若发布者工作而订阅者没有输出，先比较两边的 ROS_DOMAIN_ID、RMW_IMPLEMENTATION 以及是否加载同一发行版，再检查话题信息。若节点名称出现但没有数据，继续查看类型和 QoS，避免反复重新安装。",
+            "ros2 doctor --report 会给出平台、网络和软件相关信息，适合作为实验记录。报告中的警告需要结合上下文判断，不应把所有 warning 一概解释成无法使用。完成验收后记录操作系统、架构、发行版、安装方式和验证日期；以后排查另一台机器的差异时，这份记录比一句“我装过 ROS”有用。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "两个终端分别运行",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 终端 A，先 source Jazzy\nros2 run demo_nodes_cpp talker\n# 终端 B，先 source Jazzy\nros2 run demo_nodes_py listener\n# 终端 C，先 source Jazzy\nros2 topic info /chatter --verbose\nros2 doctor --report",
+              "explanation": "各组位于独立终端。终止示例可按 Ctrl+C；示例不会控制实际底盘。"
+            }
+          ]
+        },
+        {
+          "title": "7. 常见安装错误怎样逐步定位",
+          "paragraphs": [
+            "找不到 ros2 命令时，先确认安装是否成功，再确认当前 shell 是否加载正确脚本。找到命令但找不到某个 ROS 包时，用 apt policy 检查系统包、用 ros2 pkg prefix 检查 ROS 索引；如果采用 ros-base，缺少 RViz 或演示包可能只是安装集合不同，不是环境整体损坏。",
+            "apt 提示找不到软件包时，检查更新索引是否成功、Ubuntu 代号是否正确，以及 ROS 源配置包是否安装。签名或 TLS 错误应针对软件源、系统时间或网络访问处理，不应通过随意关闭签名验证来让命令表面成功。下载脚本依赖互联网，离线读者应先准备完整依赖再安装。",
+            "Python import rclpy 失败时，检查当前 python3 是否属于系统环境，以及是否被 Conda 或另一个虚拟环境替代。Jazzy 的 deb 包针对目标 Ubuntu 的 Python ABI 构建，任意替换解释器可能破坏二进制扩展加载。先在系统 Python 与干净 shell 中复现，再决定如何隔离额外 Python 依赖。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "为一台新 Ubuntu 工作站建立安装记录",
+        "scenario": "工作站运行 Ubuntu 24.04，需要跟随本教材开发 C++ 和 Python 节点。",
+        "steps": [
+          "读取系统版本、架构和 locale，记录输出。",
+          "启用 Universe，安装当前 ros2-apt-source 配置包，确认 apt update 成功。",
+          "安装 desktop 和开发工具，在两个新终端加载 Jazzy。",
+          "运行 C++ talker 与 Python listener，并保存 doctor 报告。"
+        ],
+        "result": "验收证据包含真实环境输出和消息收发结果；网站中的示例输出不能替代本机验证。"
+      },
+      "exercises": [
+        {
+          "question": "教材可以离线打开，为什么 apt install 仍可能失败？",
+          "answer": "离线阅读只表示网页、正文和示例文件已在本地。apt 仍需要软件包、依赖和仓库索引；真正离线安装必须预先准备完整的软件供应链或镜像。"
+        },
+        {
+          "question": "A 终端能执行 ros2，B 终端提示 command not found，应首先检查什么？",
+          "answer": "检查 B 终端是否加载了对应 shell 的 Jazzy setup 脚本，以及它的 PATH。每个终端环境独立，不能因为 A 已 source 就推断 B 已配置。"
+        },
+        {
+          "question": "ros2-apt-source 的“最新版本”是否表示安装了最新 ROS 发行版？",
+          "answer": "不是。它管理仓库地址和密钥；安装 ros-jazzy-desktop 仍选择 Jazzy。软件源配置包的版本与 ROS 发行版名称属于不同层级。"
+        }
+      ]
+    },
+    {
+      "id": "workspace",
+      "sections": [
+        {
+          "title": "1. 一个工作空间保存什么，哪些东西由构建产生",
+          "paragraphs": [
+            "工作空间是组织一组相互依赖 ROS 包的开发目录。推荐结构是在根目录下创建 src，所有手写包放进 src；构建后出现 build、install 和 log。build 是编译中间数据，install 是安装后的可运行布局，log 记录构建与测试信息。日常编辑源码时进入 src，运行程序时实际依赖 install 中注册的结果。",
+            "包与目录并不是任意嵌套关系。一个包由自己的 package.xml 声明边界，同一工作空间里不应出现重复包名，也不应把一个完整包塞进另一个包内部。把学习示例与实机工程分成独立工作空间，能减少同名包覆盖和依赖混杂；本章使用 ~/ros2_learning_ws，与网站源码目录没有绑定。",
+            "下面创建的是教材中的独立 learning_* 示例。它们需要读者按文中的路径保存文件，不代表已经包含在网站原有 atlas_* 下载工程里。所有路径、包名、入口名都给出明确值，后续查找“程序不存在”时才能逐一对应。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "创建独立工作空间",
+              "language": "bash",
+              "type": "commands",
+              "code": "source /opt/ros/jazzy/setup.bash\nmkdir -p ~/ros2_learning_ws/src\ncd ~/ros2_learning_ws/src\nros2 pkg create --build-type ament_cmake --license Apache-2.0 learning_boot_cpp --dependencies rclcpp\nros2 pkg create --build-type ament_python --license Apache-2.0 learning_boot_py --dependencies rclpy",
+              "explanation": "两条 create 命令只执行一次。若目录已经存在，先检查内容，不要重新覆盖已有学习代码。"
+            }
+          ]
+        },
+        {
+          "title": "2. package.xml 是依赖声明，不是编译器脚本",
+          "paragraphs": [
+            "package.xml 描述包名、版本、维护者、许可证、构建类型与依赖。colcon 需要根据这些声明确定包之间的顺序，rosdep 根据依赖键查找系统软件包。CMake 中的 find_package 能让当前编译找到库，但如果 package.xml 漏掉依赖，别人或持续集成环境仍可能无法按正确顺序准备环境。",
+            "依赖有不同阶段：构建工具用于构建机制，构建依赖用于编译，运行依赖用于程序执行。对于同时参与 C++ 编译和运行的库，depend 可以表达合并关系；纯 Python 节点通常把导入的 ROS 库列为 exec_depend。声明许可证只是填写元信息，并不会自动给外部复制代码授予新许可。",
+            "本章的两个包只依赖各自客户端库，因此清单很短。文件中的名字必须与目录和构建配置保持一致。示例维护者地址只是教学占位元信息，发布自己的包时应替换成真实可维护信息；学习阶段无需向外发布任何仓库。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "src/learning_boot_cpp/package.xml",
+              "language": "xml",
+              "type": "complete",
+              "code": "<?xml version=\"1.0\"?>\n<package format=\"3\">\n  <name>learning_boot_cpp</name>\n  <version>0.0.1</version>\n  <description>Minimal C++ learning node</description>\n  <maintainer email=\"learner@example.com\">Learner</maintainer>\n  <license>Apache-2.0</license>\n  <buildtool_depend>ament_cmake</buildtool_depend>\n  <depend>rclcpp</depend>\n  <export><build_type>ament_cmake</build_type></export>\n</package>",
+              "explanation": "完整清单，覆盖 create 生成的同名文件即可。"
+            },
+            {
+              "label": "src/learning_boot_py/package.xml",
+              "language": "xml",
+              "type": "complete",
+              "code": "<?xml version=\"1.0\"?>\n<package format=\"3\">\n  <name>learning_boot_py</name>\n  <version>0.0.1</version>\n  <description>Minimal Python learning node</description>\n  <maintainer email=\"learner@example.com\">Learner</maintainer>\n  <license>Apache-2.0</license>\n  <buildtool_depend>ament_python</buildtool_depend>\n  <exec_depend>rclpy</exec_depend>\n  <export><build_type>ament_python</build_type></export>\n</package>",
+              "explanation": "Python 包通过 setuptools 安装，客户端库是运行依赖。"
+            }
+          ]
+        },
+        {
+          "title": "3. C++：从源码文件到安装入口",
+          "paragraphs": [
+            "C++ 程序需要先编译，再链接客户端库，最后安装到 ROS 工具能找到的位置。本例 main 初始化 ROS 上下文，创建一个节点，输出日志，然后进入 spin 等待事件。没有订阅或定时器时，节点仍可以存在于图中；按 Ctrl+C 后退出等待并释放上下文。",
+            "CMake 的 project 名应与包名一致，add_executable 的目标名 hello 是稍后 ros2 run 使用的入口。ament_target_dependencies 配置目标需要的 ROS 依赖；install 的 lib/${PROJECT_NAME} 是 ROS 可执行查找约定。即使二进制已经在 build 里生成，漏掉安装步骤仍可能使 ros2 run 找不到它。",
+            "构建文件只需描述包自身如何构建，整个工作空间由 colcon 编排。不要在包内额外启动另一个 colcon 构建，也不需要把系统 rclcpp 源码复制进自己的包。依赖应通过声明和链接获得。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "src/learning_boot_cpp/src/hello.cpp",
+              "language": "cpp",
+              "type": "complete",
+              "code": "#include <memory>\n#include \"rclcpp/rclcpp.hpp\"\n\nint main(int argc, char ** argv)\n{\n  rclcpp::init(argc, argv);\n  auto node = std::make_shared<rclcpp::Node>(\"learning_hello_cpp\");\n  RCLCPP_INFO(node->get_logger(), \"C++ node is ready\");\n  rclcpp::spin(node);\n  rclcpp::shutdown();\n  return 0;\n}",
+              "explanation": "完整源码。节点会保持运行，直到收到退出请求。"
+            },
+            {
+              "label": "src/learning_boot_cpp/CMakeLists.txt",
+              "language": "cmake",
+              "type": "complete",
+              "code": "cmake_minimum_required(VERSION 3.8)\nproject(learning_boot_cpp)\nset(CMAKE_CXX_STANDARD 17)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nfind_package(ament_cmake REQUIRED)\nfind_package(rclcpp REQUIRED)\nadd_executable(hello src/hello.cpp)\nament_target_dependencies(hello rclcpp)\ninstall(TARGETS hello DESTINATION lib/${PROJECT_NAME})\nament_package()",
+              "explanation": "完整构建文件；ament_package 放在末尾完成包的安装索引和导出处理。"
+            }
+          ]
+        },
+        {
+          "title": "4. Python：模块、main 与 console_scripts 的对应",
+          "paragraphs": [
+            "Python 不需要把源文件编译成 C++ 二进制，但仍需要安装模块和创建可执行入口。目录 learning_boot_py/learning_boot_py 中的 hello.py 是模块，main 是该模块里的入口函数。setup.py 的 console_scripts 将用户看到的命令 hello 映射到 learning_boot_py.hello:main。",
+            "包内的 __init__.py 使目录成为 Python 包；resource/learning_boot_py 是 ament 索引标记；setup.cfg 指定可执行脚本安装位置。ros2 pkg create 已生成前两项，保留它们即可。若手工创建整个包，也必须创建这些文件，不能只有一个 hello.py 就期望包查找自动工作。",
+            "Python 示例捕获 KeyboardInterrupt，并在 finally 中销毁节点和关闭上下文。代码逻辑与 C++ main 的生命周期对应，但语法和入口注册方式不同。直接用 python3 执行文件与用 ros2 run 启动已安装入口是两条不同路径，调试时应明确自己正在用哪一种。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "src/learning_boot_py/learning_boot_py/hello.py",
+              "language": "python",
+              "type": "complete",
+              "code": "import rclpy\nfrom rclpy.node import Node\n\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = Node('learning_hello_py')\n    node.get_logger().info('Python node is ready')\n    try:\n        rclpy.spin(node)\n    except KeyboardInterrupt:\n        pass\n    finally:\n        node.destroy_node()\n        if rclpy.ok():\n            rclpy.shutdown()\n\n\nif __name__ == '__main__':\n    main()",
+              "explanation": "完整模块，既能作为 Python 文件执行，也能被 console_scripts 调用。"
+            },
+            {
+              "label": "src/learning_boot_py/setup.py",
+              "language": "python",
+              "type": "complete",
+              "code": "from setuptools import setup\n\npackage_name = 'learning_boot_py'\nsetup(\n    name=package_name,\n    version='0.0.1',\n    packages=[package_name],\n    data_files=[\n        ('share/ament_index/resource_index/packages', ['resource/' + package_name]),\n        ('share/' + package_name, ['package.xml']),\n    ],\n    install_requires=['setuptools'],\n    zip_safe=True,\n    maintainer='Learner',\n    maintainer_email='learner@example.com',\n    description='Minimal Python learning node',\n    license='Apache-2.0',\n    entry_points={'console_scripts': ['hello = learning_boot_py.hello:main']},\n)",
+              "explanation": "完整安装文件，entry_points 中的三部分分别是入口名、模块路径和函数名。"
+            },
+            {
+              "label": "src/learning_boot_py/setup.cfg",
+              "language": "ini",
+              "type": "complete",
+              "code": "[develop]\nscript_dir=$base/lib/learning_boot_py\n[install]\ninstall_scripts=$base/lib/learning_boot_py",
+              "explanation": "完整配置。它使 ros2 run 能在约定位置找到安装后的 Python 入口。"
+            }
+          ]
+        },
+        {
+          "title": "5. 依赖先解决，再构建所需包",
+          "paragraphs": [
+            "rosdep 读取源码包的依赖声明，把依赖键转换成当前平台可安装的软件包。第一次使用时，需要管理员执行一次 rosdep init，然后普通用户执行 rosdep update；已经初始化的机器不要反复初始化。update 需要联网获取索引，install 也可能需要下载软件包，所以离线阅读不意味着依赖安装已经离线可用。",
+            "构建应从工作空间根目录执行。--packages-select 只选指定包，假设其依赖已经可用；--packages-up-to 会把工作空间内需要的依赖也纳入构建。--symlink-install 使适合链接的安装文件指向源码，方便开发，但改 C++ 代码仍需编译，改 Python 入口或安装规则也仍需重新构建。",
+            "观察 colcon 的包汇总和首个失败错误。一个下游包 aborted 可能是上游依赖失败的结果，而不是它自身源码有错。不要只复制最后一行摘要；应该进入失败包的日志，找出最早的编译或配置诊断。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "首次 rosdep 初始化，已做过则跳过 init",
+              "language": "bash",
+              "type": "commands",
+              "code": "sudo rosdep init\nrosdep update",
+              "explanation": "init 使用管理员权限写系统配置，update 用普通用户更新自己的索引。"
+            },
+            {
+              "label": "工作空间根目录构建",
+              "language": "bash",
+              "type": "commands",
+              "code": "cd ~/ros2_learning_ws\nrosdep install --from-paths src --ignore-src --rosdistro jazzy -y\ncolcon list\ncolcon build --symlink-install --packages-select learning_boot_cpp learning_boot_py",
+              "explanation": "执行前已加载 Jazzy，且两个包的完整文件已保存。--ignore-src 避免把工作空间里的源码包当作需要另装的依赖。"
+            }
+          ]
+        },
+        {
+          "title": "6. underlay 与 overlay：运行时到底找到哪一份包",
+          "paragraphs": [
+            "/opt/ros/jazzy 是本章的基础 underlay，自建工作空间是 overlay。运行前先加载基础环境，再加载自己的 install/setup.bash。overlay 中同名包可能遮盖 underlay 中的包，因此包名冲突会直接改变实际运行的软件版本。环境顺序属于程序可重复性的一部分。",
+            "用新终端运行，能减少旧构建环境残留的干扰。source 以后检查 ros2 pkg prefix learning_boot_cpp，结果应指向当前学习工作空间。再用 ros2 pkg executables 查看 hello 是否已注册，最后启动程序；这样能将查找失败定位到包索引、安装入口或程序运行三个阶段。",
+            "不要直接编辑 install 中的生成副本来修复问题，因为下一次构建可能覆盖它。修改源码或安装规则，再构建并重新加载环境，才是可持续的修复方式。多个工作空间叠加时，还应记录每层来自哪个提交。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "新终端 A：验证 C++ 包",
+              "language": "bash",
+              "type": "commands",
+              "code": "source /opt/ros/jazzy/setup.bash\nsource ~/ros2_learning_ws/install/setup.bash\nros2 pkg prefix learning_boot_cpp\nros2 pkg executables learning_boot_cpp\nros2 run learning_boot_cpp hello",
+              "explanation": "应看到 C++ node is ready，节点继续运行。"
+            },
+            {
+              "label": "新终端 B：验证 Python 包",
+              "language": "bash",
+              "type": "commands",
+              "code": "source /opt/ros/jazzy/setup.bash\nsource ~/ros2_learning_ws/install/setup.bash\nros2 run learning_boot_py hello",
+              "explanation": "应看到 Python node is ready。第三个同样加载环境的终端可用 ros2 node list 同时看到两个节点。"
+            }
+          ]
+        },
+        {
+          "title": "7. 四种常见错误的定位路径",
+          "paragraphs": [
+            "Package not found 通常先检查 source 和 package.xml，而不是立即修改节点代码。包能找到但 No executable found，优先检查 CMake install 或 Python console_scripts 与 setup.cfg。程序入口能找到但 import 失败，再检查模块路径、__init__.py、依赖和正在使用的 Python 解释器。",
+            "构建报找不到依赖时，检查依赖是否同时在清单和构建脚本中声明，并确认 rosdep 是否成功。只有某个旧终端行为不同，则可能是 overlay 顺序不同。逐层检查比删除整个 build/install 后盲目重试更有效；只有明确需要清理缓存时才清理相关构建产物。",
+            "最后要保留一个完整工程观念：源码文件负责行为，包清单负责依赖，构建或安装文件负责生成入口，环境脚本负责让入口被发现。任何一层缺失，都可能表现为“节点跑不起来”，但修复位置完全不同。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "同一工作空间运行两种语言的节点",
+        "scenario": "你已经按本章创建 learning_boot_cpp 和 learning_boot_py，希望确认它们确实来自自己的源码。",
+        "steps": [
+          "检查两个包的 package.xml、源码和安装配置。",
+          "在根目录安装依赖并只构建这两个包。",
+          "使用新终端加载 Jazzy 与 overlay，查询包前缀。",
+          "分别运行 hello，并在第三个终端查看两个节点名称。"
+        ],
+        "result": "两个节点同时出现；修改各自日志后重建，应看到新输出，证明源码、构建、安装和运行链已闭合。"
+      },
+      "exercises": [
+        {
+          "question": "C++ 程序在 build 中能直接运行，但 ros2 run 找不到它，优先检查哪里？",
+          "answer": "检查 CMakeLists.txt 是否有 install(TARGETS hello DESTINATION lib/${PROJECT_NAME})，是否完成 colcon 安装，以及运行终端是否加载了对应 install/setup.bash。"
+        },
+        {
+          "question": "使用 --symlink-install 后修改了 Python console_scripts，还需要构建吗？",
+          "answer": "需要。入口注册和安装元信息由构建安装阶段生成，符号链接不能替你重新生成新的命令入口。"
+        },
+        {
+          "question": "两个工作空间都有 learning_boot_cpp，怎样知道正在运行哪一个？",
+          "answer": "在实际运行的同一终端查询 ros2 pkg prefix learning_boot_cpp，并检查 source 顺序。不要仅凭当前所在目录判断，因为包查找依赖环境路径。"
+        }
+      ]
+    },
+    {
+      "id": "graph-cli",
+      "sections": [
+        {
+          "title": "1. 把终端当作逐层测量工具",
+          "paragraphs": [
+            "调试运行中的 ROS 系统，应先确定你要验证的事实。包是否安装、节点是否运行、端点是否匹配、消息是否到达、业务是否处理正确，是五个不同问题。ros2 pkg 回答安装问题，node 回答计算图问题，topic/service/action 回答接口问题，日志和业务输出才帮助判断算法行为。一次只验证一层，才能让证据指向具体原因。",
+            "命令行工具本身也可能创建临时节点、订阅者或服务客户端，所以观察行为不是绝对无影响。例如 topic echo 会成为一个消费者，topic hz 的测量结果受到观察进程调度和通信负载影响。初学时不必担心所有测量扰动，但应避免把一条终端输出当成对整个系统的最终证明。",
+            "本章使用 turtlesim 作为纯软件实验对象。它提供位置反馈、速度输入、生成海龟服务、参数和旋转动作，足以覆盖主要接口。所有速度命令都发给 /turtle1/cmd_vel，不涉及真实底盘；以后调试实机时必须先辨认同名接口究竟连接到哪个执行对象。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "2. 建立三个终端和稳定的观察顺序",
+          "paragraphs": [
+            "终端 A 运行模拟器，终端 B 运行键盘控制，终端 C 查询系统。每个终端先加载 Jazzy 环境。GUI 中看见海龟只说明模拟器启动成功；把键盘焦点放到 B 终端并按方向键，才能产生控制输入。如果焦点在其他窗口，即使所有通信配置正确，也不会有新的按键消息。",
+            "先在 C 中执行 node list，通常能看见 /turtlesim 和 /teleop_turtle。随后使用 node info 查看单个节点声明的发布、订阅、服务等接口。系统还可能有参数、日志和临时工具节点，因此不要死记总数量；应确认你关心的节点及其接口是否存在。",
+            "再执行 topic list -t，将每个话题和具体接口类型关联起来。看到 /turtle1/cmd_vel 为 geometry_msgs/msg/Twist 后，才知道下一步该查看什么字段。查询顺序从“有哪些对象”到“对象用什么接口”，可以避免直接猜 YAML 字段名。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "启动实验对象",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 终端 A\nsource /opt/ros/jazzy/setup.bash\nros2 run turtlesim turtlesim_node\n# 终端 B\nsource /opt/ros/jazzy/setup.bash\nros2 run turtlesim turtle_teleop_key",
+              "explanation": "持续运行命令分属两个终端，键盘控制需要 B 终端获得焦点。"
+            },
+            {
+              "label": "终端 C：由节点到接口",
+              "language": "bash",
+              "type": "commands",
+              "code": "source /opt/ros/jazzy/setup.bash\nros2 node list\nros2 node info /turtlesim\nros2 topic list -t\nros2 interface show geometry_msgs/msg/Twist",
+              "explanation": "Twist 的 linear 和 angular 都是 Vector3；它们不是一个标量字符串。"
+            }
+          ]
+        },
+        {
+          "title": "3. 话题的五种观察方式分别说明什么",
+          "paragraphs": [
+            "list 告诉你有哪些话题，type 给出数据类型，info --verbose 列出端点和 QoS，echo 展示消息内容，hz 估计观察到的接收频率。它们不能相互替代：名称存在不等于有数据，有数据不等于频率正确，频率正确也不等于时间戳和坐标系正确。",
+            "当键盘节点只有按键时才发布时，echo 暂时没有输出是正常的。按方向键后应看到 linear.x 或 angular.z 改变。查看 /turtle1/pose 可看到模拟器连续提供状态。cmd_vel 表示要求海龟怎样运动，pose 表示模拟后的状态；二者分别对应控制输入和状态反馈。",
+            "如果一个话题被多个发布者同时使用，echo 输出可能交错。info --verbose 可以帮助你确认是谁在发布，而不是误把两个来源混成同一条时间序列。录制数据或调试控制时，先确认发布者数量和来源十分重要。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "分别运行各个观察命令，按 Ctrl+C 结束持续观察",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 topic type /turtle1/cmd_vel\nros2 topic info /turtle1/cmd_vel --verbose\nros2 topic echo /turtle1/cmd_vel\n# 结束 echo 后再执行\nros2 topic hz /turtle1/pose",
+              "explanation": "频率命令需要一段采样时间；输出是本观察端测得的统计，不是发行版承诺的固定频率。"
+            }
+          ]
+        },
+        {
+          "title": "4. 主动发送消息与调用服务",
+          "paragraphs": [
+            "除了观察，CLI 还能充当临时发布者或服务客户端。发布之前先用 interface show 确认结构。Twist 的 angular.z 表达绕 z 轴的角速度，turtlesim 只使用平面运动相关分量。下面只发送一次小的速度命令，用来验证订阅端确实接受该接口；持续控制通常由一个明确频率的节点负责。",
+            "服务采用请求与响应协议。/spawn 的请求包含位置、朝向和名字，响应给出实际生成的名称。调用前先用 service type 或 service list -t 确认类型，再构造请求；服务名称和服务类型是两项独立信息。空服务请求也应传入有效的空 YAML 对象，而不是把类型名当请求内容。",
+            "终端中的 requester 和 response 行表示 CLI 发出请求并收到了返回值。若服务不存在，工具可能等待发现；若请求已经到达但业务处理未完成，则等待发生在另一阶段。排查时不要把所有“没有返回”都解释为服务名称拼错。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "一次话题发布",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 topic pub --once /turtle1/cmd_vel geometry_msgs/msg/Twist \"{linear: {x: 0.5}, angular: {z: 0.2}}\"",
+              "explanation": "这是 turtlesim 实验命令，未给出的 Vector3 分量使用默认值。"
+            },
+            {
+              "label": "查询并调用生成服务",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 service list -t\nros2 service type /spawn\nros2 interface show turtlesim/srv/Spawn\nros2 service call /spawn turtlesim/srv/Spawn \"{x: 2.0, y: 2.0, theta: 0.0, name: 'second'}\"",
+              "explanation": "成功后应出现名为 second 的海龟及其相关接口；重复使用同名可能被拒绝，应阅读响应而非只看进程退出。"
+            }
+          ]
+        },
+        {
+          "title": "5. 参数和动作是另外两种观察入口",
+          "paragraphs": [
+            "参数描述节点配置。param list 只查询某个节点拥有的参数，get 查看当前值，set 请求修改。turtlesim 的背景色参数适合练习整数类型和范围；把参数改成字符串并不等同于同一个数值，服务端有权拒绝类型或范围不合法的变更。dump 可以把当前配置输出为可保存的 YAML。",
+            "动作与服务不同，发送目标后先有接受或拒绝，再有反馈和最终结果。turtlesim 的 RotateAbsolute 可让海龟旋转到指定角度；--feedback 让 CLI 显示执行过程。目标的 theta 单位是弧度，不能直接把九十度写成 90 而不换算。",
+            "这些工具给出了一个实用区分：参数修改观察配置是否接受，服务调用观察请求结果，动作发送观察任务生命周期。即使它们底层都通过 ROS 通信实现，应用层含义仍然不同，学习时应保留这种区别。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "配置查询与修改",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 param list /turtlesim\nros2 param get /turtlesim background_r\nros2 param set /turtlesim background_r 160\nros2 service call /clear std_srvs/srv/Empty \"{}\"\nros2 param dump /turtlesim",
+              "explanation": "clear 清除画面轨迹并重新绘制，便于观察背景变化；dump 输出可重用配置。"
+            },
+            {
+              "label": "动作查询与发送",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 action list -t\nros2 action info /turtle1/rotate_absolute\nros2 action send_goal /turtle1/rotate_absolute turtlesim/action/RotateAbsolute \"{theta: 1.57}\" --feedback",
+              "explanation": "旋转过程中会出现反馈，最终结果与目标接受消息分开显示。"
+            }
+          ]
+        },
+        {
+          "title": "6. 用命名空间复用同一套程序",
+          "paragraphs": [
+            "命名空间给一组相对名称增加共同前缀。假如同时运行两套 turtlesim，直接使用默认节点名会使日志和查询难以区分；给第二套加 /robot2 前缀，再把节点重命名为 sim2，能让它的相对话题落到独立路径。源码无需修改，只调整启动配置。",
+            "键盘控制节点也必须处于对应命名空间，才能将其相对 turtle1/cmd_vel 解析到第二套模拟器的接口。如果只移动模拟器而没移动控制端，控制端仍可能向第一套发布。遇到这种情况应看最终全限定话题名，而不是只看源码中的短名字。",
+            "命名空间用于组织和避免名称碰撞，不提供网络安全隔离。ROS_DOMAIN_ID 才影响发现分组，而安全权限需要其他机制。不要把在命名空间里隐藏得较深的控制接口当作不可被其他节点访问。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "第二套 turtlesim，分别使用两个新终端",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 终端 D\nros2 run turtlesim turtlesim_node --ros-args -r __ns:=/robot2 -r __node:=sim2\n# 终端 E\nros2 run turtlesim turtle_teleop_key --ros-args -r __ns:=/robot2 -r __node:=keys2\n# 观察终端\nros2 node info /robot2/sim2\nros2 topic info /robot2/turtle1/cmd_vel --verbose",
+              "explanation": "各终端仍需先加载 Jazzy。预期控制与反馈接口都在 /robot2 下。"
+            }
+          ]
+        },
+        {
+          "title": "7. 形成能复现的排错记录",
+          "paragraphs": [
+            "当出现收不到消息，先记录启动命令和环境，再查询两端节点信息、完整话题名、接口类型及 QoS。随后观察发送端是否真的产生数据，最后再研究接收回调是否阻塞。这个顺序能防止你在没有输入的情况下反复修改订阅代码。",
+            "环境改变后，CLI daemon 可能仍保留旧环境下启动的图查询进程。比如切换 RMW 或域之后，可以停止旧 daemon，让后续查询按当前环境重新启动。daemon 只服务 CLI 查询，并不是所有节点通信依赖的中心服务器；停止它不能被当作重启整个 ROS 系统。",
+            "提交问题时附上包版本、最小启动命令、实际接口输出和预期行为。截图可以展示现象，但可复制的命令与文本输出更利于复现。若你能把复杂机器人问题缩减成两个节点和一条接口，往往已经完成了最关键的一半诊断工作。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "保存可解释的环境线索",
+              "language": "bash",
+              "type": "commands",
+              "code": "printenv ROS_DISTRO\nprintenv ROS_DOMAIN_ID\nprintenv RMW_IMPLEMENTATION\nros2 doctor --report\n# 仅在确实切换环境或怀疑旧 daemon 时执行\nros2 daemon stop",
+              "explanation": "环境变量未设置可能表示采用默认值；不要把空输出直接解释为配置错误。"
+            }
+          ]
+        }
+      ],
+      "workedExample": {
+        "title": "海龟不动，但模拟器窗口正常",
+        "scenario": "键盘节点已启动，按方向键后海龟仍不移动。",
+        "steps": [
+          "确认按键焦点在控制终端，并用 echo 检查是否有 cmd_vel 消息。",
+          "用 node info 查看控制端的实际发布话题。",
+          "比较模拟器订阅的话题是否处于同一命名空间。",
+          "检查类型和端点 QoS；用一次 CLI 发布验证模拟器自身可接收。"
+        ],
+        "result": "每个步骤排除一个具体层面，能区分输入没产生、名称不匹配和订阅处理异常。"
+      },
+      "exercises": [
+        {
+          "question": "topic list 中出现 /scan，但 echo 没有输出，至少列出三种可能。",
+          "answer": "发布者当前未产生数据；订阅 QoS 与发布者不兼容；观察端与数据端的类型或环境有问题；回调或网络资源拥塞也可能造成延迟。应进一步查看 info --verbose 和发布端日志。"
+        },
+        {
+          "question": "为什么给模拟器加 /robot2 后，原来的键盘节点可能控制不到它？",
+          "answer": "相对话题名解析到了不同前缀。键盘端仍向原路径发布，应给它相同命名空间或显式重映射到 /robot2/turtle1/cmd_vel。"
+        },
+        {
+          "question": "停止 ros2 daemon 是否会停止正在运行的 talker 与 listener？",
+          "answer": "不会。daemon 为命令行图查询提供辅助，不是 ROS 1 式中央通信主节点。已经运行的业务节点仍按自己的进程生命周期工作。"
+        }
+      ]
+    },
+    {
+      "id": "pubsub",
+      "sections": [
+        {
+          "title": "1. 先确定消息契约和节点生命周期",
+          "paragraphs": [
+            "本章实现两个角色：发布者每半秒在 telemetry 上发送一个带序号的字符串，订阅者收到后输出日志。四个完整节点分别使用 C++ 和 Python，所以可以交叉组合验证。这里使用 std_msgs/String 是为了把注意力放在通信机制；实际传感器数据应使用有明确单位、时间和结构的专用接口。",
+            "发布订阅不需要把接收者地址写进发布者代码。端点通过名称、类型、发现条件和 QoS 建立联系。发布者可以在没有订阅者时工作，订阅者也可以先启动再等待发布者。这个低耦合特性使记录器和可视化工具能随时加入，但它不提供业务处理完成确认。",
+            "一个最小节点仍然具有完整生命周期：初始化 ROS，创建节点及通信对象，spin 处理事件，退出时销毁资源。timer 回调也是执行器调度的事件，不是创建 timer 后自动生成一个永不阻塞的独立线程。把这些阶段分清，有助于解释为什么“代码创建了发布者，却没有周期输出”。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "2. 建立两个独立的示例包",
+          "paragraphs": [
+            "本章的路径位于 ~/ros2_learning_ws/src，包名为 learning_topic_cpp 与 learning_topic_py。两者都依赖 std_msgs，但分别使用 rclcpp 和 rclpy。创建包后将下面完整文件保存到指定路径；示例不会自动出现在网站已有 atlas 下载包中。",
+            "C++ 的两个源码文件分别编译为 talker 与 listener。Python 的两个模块分别暴露同名入口。用户看到的入口名相同不意味着源码组织相同，关键是安装配置把入口映射正确。包清单、构建文件和代码共同构成可运行示例，单独复制一个类无法替代全部工程文件。",
+            "为避免实验日志混淆，四个节点使用不同节点名；它们仍共享相对话题 telemetry。默认命名空间下解析为 /telemetry。每次先运行一个发布者和一个订阅者，确认基本行为后再增加更多端点，这样可以清楚解释每条日志来自哪个节点。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "创建包骨架",
+              "language": "bash",
+              "type": "commands",
+              "code": "source /opt/ros/jazzy/setup.bash\nmkdir -p ~/ros2_learning_ws/src\ncd ~/ros2_learning_ws/src\nros2 pkg create --build-type ament_cmake --license Apache-2.0 learning_topic_cpp --dependencies rclcpp std_msgs\nros2 pkg create --build-type ament_python --license Apache-2.0 learning_topic_py --dependencies rclpy std_msgs",
+              "explanation": "若包已存在，检查已有文件后再继续；保留 Python 骨架中的 __init__.py 和 resource/learning_topic_py。"
+            }
+          ]
+        },
+        {
+          "title": "3. C++ 发布者：模板类型、成员对象和定时器",
+          "paragraphs": [
+            "create_publisher 的模板参数指定消息类型，字符串 telemetry 指定话题名称，整数 10 指定 KeepLast 历史深度。这里没有任何参数表示十赫兹；发送周期由 create_wall_timer 的 500ms 决定。wall timer 适合本章简单实验，涉及仿真时间时需进一步区分时钟语义。",
+            "publisher_ 与 timer_ 保存为成员，是为了使它们在节点运行期间始终存在。定时器 lambda 捕获 this 来读取计数器和发布者，因此节点对象必须保持有效。main 通过 shared_ptr 持有节点并交给 spin，直到退出后才结束其生命周期。",
+            "回调内部创建一个消息，填写 data，再 publish；日志只是辅助观察。序号在发布端递增，使订阅端能察觉间断和多来源交错。下面代码是完整文件，没有省略 main，但仍需配套包清单和 CMake 才能由 ros2 run 启动。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "src/learning_topic_cpp/src/talker.cpp",
+              "language": "cpp",
+              "type": "complete",
+              "code": "#include <chrono>\n#include <cstdint>\n#include <memory>\n#include <string>\n#include \"rclcpp/rclcpp.hpp\"\n#include \"std_msgs/msg/string.hpp\"\nusing namespace std::chrono_literals;\n\nclass LearningTalker : public rclcpp::Node\n{\npublic:\n  LearningTalker() : Node(\"learning_talker_cpp\")\n  {\n    publisher_ = create_publisher<std_msgs::msg::String>(\"telemetry\", 10);\n    timer_ = create_wall_timer(500ms, [this]() {\n      std_msgs::msg::String message;\n      message.data = \"cpp sample=\" + std::to_string(sequence_++);\n      publisher_->publish(message);\n      RCLCPP_INFO(get_logger(), \"%s\", message.data.c_str());\n    });\n  }\nprivate:\n  std::uint64_t sequence_{0};\n  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;\n  rclcpp::TimerBase::SharedPtr timer_;\n};\n\nint main(int argc, char ** argv)\n{\n  rclcpp::init(argc, argv);\n  rclcpp::spin(std::make_shared<LearningTalker>());\n  rclcpp::shutdown();\n  return 0;\n}",
+              "explanation": "完整 C++ 文件。序号在一个默认单线程执行器的定时回调内更新。"
+            }
+          ]
+        },
+        {
+          "title": "4. C++ 订阅者：lambda 与成员函数如何对应",
+          "paragraphs": [
+            "订阅者没有主动轮询话题，而是注册消息到达后的回调。create_subscription 同样指定消息类型、名称和 QoS。ConstSharedPtr 表示回调持有只读消息的共享引用，本例只读取 data，不修改收到的消息。回调被执行的时间取决于执行器调度，不应假定与发布瞬间完全相同。",
+            "短逻辑可以直接写在 lambda 中；逻辑较长时可写成具名成员方法，再用 std::bind 或一个简单 lambda 转发。写法改变的是代码组织，不改变话题协议。下面完整文件使用成员方法配合 lambda 转发，既能看清回调签名，也避免初学时被绑定占位符分散注意。",
+            "订阅对象同样必须保持存活。只在构造函数局部变量里创建 subscription 然后不保留，可能在构造函数结束时失去所需对象。订阅回调应尽量短；大计算和阻塞 I/O 会影响同一执行器中的其他回调，这属于后续并发设计问题。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "src/learning_topic_cpp/src/listener.cpp",
+              "language": "cpp",
+              "type": "complete",
+              "code": "#include <memory>\n#include \"rclcpp/rclcpp.hpp\"\n#include \"std_msgs/msg/string.hpp\"\n\nclass LearningListener : public rclcpp::Node\n{\npublic:\n  LearningListener() : Node(\"learning_listener_cpp\")\n  {\n    subscription_ = create_subscription<std_msgs::msg::String>(\n      \"telemetry\", 10,\n      [this](std_msgs::msg::String::ConstSharedPtr message) {\n        on_message(message);\n      });\n  }\nprivate:\n  void on_message(std_msgs::msg::String::ConstSharedPtr message)\n  {\n    RCLCPP_INFO(get_logger(), \"received: %s\", message->data.c_str());\n  }\n  rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;\n};\n\nint main(int argc, char ** argv)\n{\n  rclcpp::init(argc, argv);\n  rclcpp::spin(std::make_shared<LearningListener>());\n  rclcpp::shutdown();\n  return 0;\n}",
+              "explanation": "完整订阅者文件。对应 std::bind 写法需要 functional 头文件，但不是通信机制的另一种实现。"
+            },
+            {
+              "label": "src/learning_topic_cpp/CMakeLists.txt",
+              "language": "cmake",
+              "type": "complete",
+              "code": "cmake_minimum_required(VERSION 3.8)\nproject(learning_topic_cpp)\nset(CMAKE_CXX_STANDARD 17)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nfind_package(ament_cmake REQUIRED)\nfind_package(rclcpp REQUIRED)\nfind_package(std_msgs REQUIRED)\nforeach(target talker listener)\n  add_executable(${target} src/${target}.cpp)\n  ament_target_dependencies(${target} rclcpp std_msgs)\nendforeach()\ninstall(TARGETS talker listener DESTINATION lib/${PROJECT_NAME})\nament_package()",
+              "explanation": "完整构建文件，分别生成并安装两个可执行入口。"
+            },
+            {
+              "label": "src/learning_topic_cpp/package.xml",
+              "language": "xml",
+              "type": "complete",
+              "code": "<?xml version=\"1.0\"?>\n<package format=\"3\">\n  <name>learning_topic_cpp</name>\n  <version>0.0.1</version>\n  <description>C++ publisher and subscriber lesson</description>\n  <maintainer email=\"learner@example.com\">Learner</maintainer>\n  <license>Apache-2.0</license>\n  <buildtool_depend>ament_cmake</buildtool_depend>\n  <depend>rclcpp</depend>\n  <depend>std_msgs</depend>\n  <export><build_type>ament_cmake</build_type></export>\n</package>",
+              "explanation": "完整包清单，与构建脚本里的依赖一致。"
+            }
+          ]
+        },
+        {
+          "title": "5. Python 用相同接口表达相同行为",
+          "paragraphs": [
+            "Python 将模板消息类型改为普通函数参数 String，成员对象通过 self 保存。create_timer 接收以秒为单位的浮点周期，所以 0.5 对应 C++ 的 500ms。回调方法无需手工传入 self，访问 self.on_tick 得到的绑定方法已经包含对象引用。",
+            "发布者每次创建新的 String 对象，并把计数器组合成文本。订阅者收到生成的消息类实例，通过 message.data 读取字段。你不能直接 publish 一个普通 Python 字符串；发布者声明的类型是 String 消息类，需要把文本填入它的 data 字段。",
+            "Python 版本保留与 C++ 一致的初始化、spin 和清理流程。两种语言代码都采用单线程的简单执行方式，足以展示通信；如果稍后添加耗时操作，应重新评估回调调度，不能因使用 Python 就忽略节点生命周期。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "src/learning_topic_py/learning_topic_py/talker.py",
+              "language": "python",
+              "type": "complete",
+              "code": "import rclpy\nfrom rclpy.node import Node\nfrom std_msgs.msg import String\n\n\nclass LearningTalker(Node):\n    def __init__(self):\n        super().__init__('learning_talker_py')\n        self.publisher = self.create_publisher(String, 'telemetry', 10)\n        self.sequence = 0\n        self.timer = self.create_timer(0.5, self.on_tick)\n\n    def on_tick(self):\n        message = String()\n        message.data = f'py sample={self.sequence}'\n        self.sequence += 1\n        self.publisher.publish(message)\n        self.get_logger().info(message.data)\n\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = LearningTalker()\n    try:\n        rclpy.spin(node)\n    except KeyboardInterrupt:\n        pass\n    finally:\n        node.destroy_node()\n        if rclpy.ok():\n            rclpy.shutdown()\n\n\nif __name__ == '__main__':\n    main()",
+              "explanation": "完整 Python 发布者模块。"
+            },
+            {
+              "label": "src/learning_topic_py/learning_topic_py/listener.py",
+              "language": "python",
+              "type": "complete",
+              "code": "import rclpy\nfrom rclpy.node import Node\nfrom std_msgs.msg import String\n\n\nclass LearningListener(Node):\n    def __init__(self):\n        super().__init__('learning_listener_py')\n        self.subscription = self.create_subscription(\n            String, 'telemetry', self.on_message, 10)\n\n    def on_message(self, message):\n        self.get_logger().info(f'received: {message.data}')\n\n\ndef main(args=None):\n    rclpy.init(args=args)\n    node = LearningListener()\n    try:\n        rclpy.spin(node)\n    except KeyboardInterrupt:\n        pass\n    finally:\n        node.destroy_node()\n        if rclpy.ok():\n            rclpy.shutdown()\n\n\nif __name__ == '__main__':\n    main()",
+              "explanation": "完整 Python 订阅者模块；其协议与 C++ 版本相同。"
+            }
+          ]
+        },
+        {
+          "title": "6. 完成 Python 入口安装并构建",
+          "paragraphs": [
+            "setup.py 中的两个 console_scripts 将 talker 和 listener 分别映射到两个模块的 main。文件路径、模块路径和入口字符串必须彼此一致：源码文件叫 talker.py，模块部分才是 learning_topic_py.talker。省略包名或把冒号写成点，都可能导致安装后入口无法正确导入。",
+            "构建前确认两个包同时声明了 std_msgs；仅在 Python 文件里 import 不能替代依赖声明。学习时机器可能碰巧已经安装依赖，但清单不完整会让别人在干净环境中失败。rosdep 的意义正是从声明恢复所需依赖，而不是依赖作者电脑的偶然状态。",
+            "--symlink-install 有助于 Python 源码编辑后快速验证，不过更改 setup.py 的入口仍应重建。完成构建后在每个运行终端加载 install/setup.bash。不要在源码目录里执行一个同名旧脚本后，以为 ros2 run 的安装入口也已经更新。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "src/learning_topic_py/setup.py",
+              "language": "python",
+              "type": "complete",
+              "code": "from setuptools import setup\n\npackage_name = 'learning_topic_py'\nsetup(\n    name=package_name,\n    version='0.0.1',\n    packages=[package_name],\n    data_files=[\n        ('share/ament_index/resource_index/packages', ['resource/' + package_name]),\n        ('share/' + package_name, ['package.xml']),\n    ],\n    install_requires=['setuptools'],\n    zip_safe=True,\n    maintainer='Learner',\n    maintainer_email='learner@example.com',\n    description='Python publisher and subscriber lesson',\n    license='Apache-2.0',\n    entry_points={'console_scripts': [\n        'talker = learning_topic_py.talker:main',\n        'listener = learning_topic_py.listener:main',\n    ]},\n)",
+              "explanation": "完整安装文件。"
+            },
+            {
+              "label": "src/learning_topic_py/setup.cfg",
+              "language": "ini",
+              "type": "complete",
+              "code": "[develop]\nscript_dir=$base/lib/learning_topic_py\n[install]\ninstall_scripts=$base/lib/learning_topic_py",
+              "explanation": "完整入口安装位置配置。"
+            },
+            {
+              "label": "src/learning_topic_py/package.xml",
+              "language": "xml",
+              "type": "complete",
+              "code": "<?xml version=\"1.0\"?>\n<package format=\"3\">\n  <name>learning_topic_py</name>\n  <version>0.0.1</version>\n  <description>Python publisher and subscriber lesson</description>\n  <maintainer email=\"learner@example.com\">Learner</maintainer>\n  <license>Apache-2.0</license>\n  <buildtool_depend>ament_python</buildtool_depend>\n  <exec_depend>rclpy</exec_depend>\n  <exec_depend>std_msgs</exec_depend>\n  <export><build_type>ament_python</build_type></export>\n</package>",
+              "explanation": "完整清单。"
+            },
+            {
+              "label": "构建两个包",
+              "language": "bash",
+              "type": "commands",
+              "code": "cd ~/ros2_learning_ws\nrosdep install --from-paths src --ignore-src --rosdistro jazzy -y\ncolcon build --symlink-install --packages-select learning_topic_cpp learning_topic_py\nsource install/setup.bash",
+              "explanation": "需要先完成所有源码与安装文件；依赖安装可能联网。"
+            }
+          ]
+        },
+        {
+          "title": "7. 交叉运行，理解输出与失败模式",
+          "paragraphs": [
+            "先运行 C++ talker 与 Python listener，预期订阅端显示 received: cpp sample=0 及后续序号。计数从哪一个数字开始取决于订阅建立的时机；不要求一定从零收到。停止两个进程后再运行 Python talker 与 C++ listener，文本前缀应变为 py。两组实验说明共享接口而非共享源语言才是互通条件。",
+            "如果一个订阅者同时面对两个发布者，输出会交错出现 cpp 与 py 的序列。此时不应把两个独立计数器误认为一个计数器倒退。实际系统通常还需要消息来源标识、时间戳和明确的发布者职责，避免控制通道出现互相争抢的命令来源。",
+            "若没有消息，按顺序检查节点是否运行、topic info 的类型与端点、话题重映射和 QoS、回调是否被耗时操作阻塞。只提高队列深度不一定解决问题；若消费者长期比生产者慢，堆积会增加延迟。本章先保证可解释的最小链路，再进入 QoS 和执行器章节。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "组合 A：C++ 发布，Python 接收",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 两个终端都先 source Jazzy 和学习工作空间\n# 终端 A\nros2 run learning_topic_cpp talker\n# 终端 B\nros2 run learning_topic_py listener\n# 观察终端\nros2 topic info /telemetry --verbose\nros2 topic hz /telemetry",
+              "explanation": "大约两次每秒是由 0.5 秒定时周期产生；测得频率还会受运行环境影响。"
+            },
+            {
+              "label": "组合 B：先停止组合 A，再交换语言",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 终端 A\nros2 run learning_topic_py talker\n# 终端 B\nros2 run learning_topic_cpp listener",
+              "explanation": "本章两种语言包已在本机 Jazzy 下构建通过；发布订阅的运行组合仍应按本节命令在你的环境验收。"
+            }
+          ]
+        }
+      ],
+      "workedExample": {
+        "title": "同一接口下互换发布者实现",
+        "scenario": "你先用 Python 快速实现数据源，后来希望替换为 C++，但不改下游接收者。",
+        "steps": [
+          "固定接口为 /telemetry 与 std_msgs/msg/String，并记录定时周期和 QoS。",
+          "运行 Python 发布者配 C++ 订阅者，记录正常输出。",
+          "仅停掉发布者，改运行 C++ 发布者，保持订阅者不变。",
+          "观察发现过程和新序列，确认下游不需要知道发布者源码语言。"
+        ],
+        "result": "节点实现可被替换，但协议、名称、QoS 和数据语义仍必须保持兼容。"
+      },
+      "exercises": [
+        {
+          "question": "将 create_publisher 的 10 改成 100，会把发送频率改成多少？",
+          "answer": "不会直接改变发送频率。该数值是 KeepLast 历史深度；频率仍由定时器的 0.5 秒周期决定。"
+        },
+        {
+          "question": "Python 发布者能否执行 self.publisher.publish(\"hello\")？",
+          "answer": "不能把普通 str 当作 std_msgs.msg.String 消息。应创建 String 对象并设置 data，然后 publish 该对象。"
+        },
+        {
+          "question": "为什么构造函数中创建订阅后要保存 self.subscription 或 subscription_？",
+          "answer": "要使订阅实体在节点生命周期中保持存在。只创建临时对象后丢失引用可能使其被销毁，导致节点虽然运行却没有持续订阅。"
+        },
+        {
+          "question": "两个发布者各从零计数，订阅输出出现 0、0、1、1，是否一定是重传重复？",
+          "answer": "不是。它可能来自两个独立发布者。应先检查端点数量和消息来源，再分析传输层重复或应用逻辑。"
+        }
+      ]
+    },
+    {
+      "id": "interfaces",
+      "sections": [
+        {
+          "title": "1. 接口首先是双方共享的语义契约",
+          "paragraphs": [
+            "自定义接口不是把几个变量写进文件就结束。发布者和消费者必须同意字段代表什么、单位是什么、时间戳对应采样还是发送、无效数据如何表示。以左右轮反馈为例，两端都使用浮点数仍可能一个采用转每分钟、另一个采用弧度每秒；这种错误不会被类型检查发现，却会直接影响里程计。",
+            "先搜索系统已有标准接口。几何速度、图像、激光和关节状态通常有成熟类型，复用它们能与工具和生态组件直接连接。只有标准接口无法准确表达业务，或者需要独立定义任务协议时，再创建自定义消息。不要为了少写几个字段，把所有数据塞进一个 String 再让每个节点自行解析。",
+            "本章建立 learning_interfaces 包，包含 Telemetry.msg、Scale.srv 和 Count.action。它们分别展示数据流、短请求响应和长期任务的结构。接口包自身不创建运行节点；编译完成后只是生成各语言可导入的类型，由其他包使用这些类型建立通信端点。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "2. 三种定义文件的组成与字段规则",
+          "paragraphs": [
+            ".msg 的每一行描述一个字段类型和字段名；.srv 用一条三个短横线的分隔线区分请求和响应；.action 用两条分隔线区分目标、结果和反馈。分隔线属于定义语法，不是可有可无的视觉装饰。修改区域位置会改变生成的类型和协议含义。",
+            "字段名使用清晰的小写与下划线。内置整数类型有固定范围，float64 是双精度浮点；数组需要说明每个元素代表什么，并考虑无界数组造成的内存增长。可以引用其他包的消息类型，例如 std_msgs/Header，但相应依赖必须写入包清单与生成配置。",
+            "Telemetry 中的轮速明确以 rad/s 表示，header.stamp 约定为采样时间，valid 表示本次双轮数据是否有效。若左右轮可能分别失效，实际设计应使用两个有效标记或更详细状态。Count 的目标是总步数，反馈是当前进度，结果是最终完成步数；同一种 uint32 在不同区域承担不同职责。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "src/learning_interfaces/msg/Telemetry.msg",
+              "language": "text",
+              "type": "complete",
+              "code": "# Sample time and the frame convention for this measurement.\nstd_msgs/Header header\n# Positive velocity means forward rolling; unit: rad/s.\nfloat64 left_velocity_rad_s\nfloat64 right_velocity_rad_s\nbool valid",
+              "explanation": "完整消息定义。单位与正方向属于接口约定，不能仅依赖 float64 类型推断。"
+            },
+            {
+              "label": "src/learning_interfaces/srv/Scale.srv",
+              "language": "text",
+              "type": "complete",
+              "code": "float64 value\nfloat64 gain\n---\nfloat64 scaled",
+              "explanation": "完整服务定义，请求包含输入与系数，响应包含计算结果。"
+            },
+            {
+              "label": "src/learning_interfaces/action/Count.action",
+              "language": "text",
+              "type": "complete",
+              "code": "uint32 target\n---\nuint32 completed\n---\nuint32 current",
+              "explanation": "完整动作定义，后面的动作章节使用该接口实现可取消计数任务。"
+            }
+          ]
+        },
+        {
+          "title": "3. 为什么 Python 项目也使用 CMake 接口包",
+          "paragraphs": [
+            "接口生成不等同于普通 Python 模块安装。rosidl 根据定义文件生成 C/C++ 类型支持、Python 消息类及通信所需元信息。Jazzy 的这条标准生成路线由 ament_cmake 组织，所以纯 Python 应用也可以依赖一个单独的 CMake 接口包；这不意味着应用逻辑必须改写成 C++。",
+            "把接口与节点分包还有架构上的好处。客户端和服务端都可以依赖轻量接口包，而不用互相依赖对方实现。若接口定义藏在某个大型驱动包里，另一个只想读取消息的项目也可能被迫引入不相关的设备依赖。清晰分包能降低构建耦合，并方便多个语言消费者共享。",
+            "创建包后建立 msg、srv、action 三个子目录，再保存上一节文件。学习目录中的包名必须保持唯一；如果已经创建过 learning_interfaces，应合并新增文件并检查定义，不能再次创建同名包或无意覆盖已经使用的接口。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "创建接口包与目录",
+              "language": "bash",
+              "type": "commands",
+              "code": "source /opt/ros/jazzy/setup.bash\nmkdir -p ~/ros2_learning_ws/src\ncd ~/ros2_learning_ws/src\nros2 pkg create --build-type ament_cmake --license Apache-2.0 learning_interfaces\nmkdir -p learning_interfaces/msg learning_interfaces/srv learning_interfaces/action",
+              "explanation": "只创建目录与骨架；下一步仍需保存三个定义文件和两个完整构建文件。"
+            }
+          ]
+        },
+        {
+          "title": "4. 生成依赖与运行依赖要配套声明",
+          "paragraphs": [
+            "rosidl_default_generators 在构建阶段把定义转成代码；rosidl_default_runtime 表示运行时需要的生成类型支持。member_of_group 将包归入接口包组，供构建与发布工具识别。std_msgs 是 Header 所在包；action_msgs 支持动作通信所需的通用消息。",
+            "rosidl_generate_interfaces 的文件列表是显式清单。目录里新增文件不会自动证明它已经参与生成，必须将相对路径列入该调用。DEPENDENCIES 写出引用的外部接口包，使生成器能解析字段和类型支持依赖。CMake 末尾的 ament_export_dependencies 让下游包获得运行依赖信息。",
+            "错误信息应按生成流程阅读。若提示找不到定义文件，检查路径与大小写；若提示未知类型，检查字段引用和依赖；若 Python 导入失败但构建成功，先检查终端是否加载了最新 install 环境。不要把所有失败都归因于 Python 包安装。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "src/learning_interfaces/CMakeLists.txt",
+              "language": "cmake",
+              "type": "complete",
+              "code": "cmake_minimum_required(VERSION 3.8)\nproject(learning_interfaces)\nfind_package(ament_cmake REQUIRED)\nfind_package(rosidl_default_generators REQUIRED)\nfind_package(std_msgs REQUIRED)\nfind_package(action_msgs REQUIRED)\nrosidl_generate_interfaces(${PROJECT_NAME}\n  \"msg/Telemetry.msg\"\n  \"srv/Scale.srv\"\n  \"action/Count.action\"\n  DEPENDENCIES std_msgs action_msgs\n)\nament_export_dependencies(rosidl_default_runtime)\nament_package()",
+              "explanation": "完整构建文件，明确生成三个接口。"
+            },
+            {
+              "label": "src/learning_interfaces/package.xml",
+              "language": "xml",
+              "type": "complete",
+              "code": "<?xml version=\"1.0\"?>\n<package format=\"3\">\n  <name>learning_interfaces</name>\n  <version>0.0.1</version>\n  <description>Shared interfaces for learning examples</description>\n  <maintainer email=\"learner@example.com\">Learner</maintainer>\n  <license>Apache-2.0</license>\n  <buildtool_depend>ament_cmake</buildtool_depend>\n  <buildtool_depend>rosidl_default_generators</buildtool_depend>\n  <depend>std_msgs</depend>\n  <depend>action_msgs</depend>\n  <exec_depend>rosidl_default_runtime</exec_depend>\n  <member_of_group>rosidl_interface_packages</member_of_group>\n  <export><build_type>ament_cmake</build_type></export>\n</package>",
+              "explanation": "完整接口包清单，构建类型仍是 ament_cmake。"
+            }
+          ]
+        },
+        {
+          "title": "5. 构建以后观察生成类型，而不是猜名字",
+          "paragraphs": [
+            "从工作空间根目录先解决依赖，再只构建接口包。构建成功后 source install/setup.bash，将生成类型加入运行环境。ros2 interface show 可以显示定义，Python 的导入测试可以进一步证明当前解释器找到了生成模块。只在源码目录看见 .msg 文件还不能说明类型可被运行程序使用。",
+            "C++ 头文件名会按生成规则转为小写下划线风格，例如 Telemetry.msg 对应 learning_interfaces/msg/telemetry.hpp，类型则是 learning_interfaces::msg::Telemetry。Python 使用 from learning_interfaces.msg import Telemetry。服务和动作分别位于 srv 与 action 命名空间，不能全部从 msg 导入。",
+            "接口包构建后，消费者还需要把 learning_interfaces 写入自己的依赖。C++ 要 find_package 并关联目标依赖；Python 包需运行依赖，并在启动终端加载包含接口的 overlay。生成代码属于构建产物，不应手工修改它来“修复字段”，应修改原始定义再重新生成。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "构建与查询",
+              "language": "bash",
+              "type": "commands",
+              "code": "cd ~/ros2_learning_ws\nrosdep install --from-paths src --ignore-src --rosdistro jazzy -y\ncolcon build --packages-select learning_interfaces\nsource install/setup.bash\nros2 interface show learning_interfaces/msg/Telemetry\nros2 interface show learning_interfaces/srv/Scale\nros2 interface show learning_interfaces/action/Count\npython3 -c 'from learning_interfaces.msg import Telemetry; print(Telemetry())'",
+              "explanation": "预期能显示三个区域明确的接口定义；Python 输出字段的默认值。"
+            },
+            {
+              "label": "C++ 类型使用位置",
+              "language": "cpp",
+              "type": "snippet",
+              "code": "#include \"learning_interfaces/msg/telemetry.hpp\"\n// 在已创建的 rclcpp::Node 方法中：\nauto publisher = create_publisher<learning_interfaces::msg::Telemetry>(\n    \"wheel_feedback\", 10);",
+              "explanation": "局部片段，展示生成头文件与类型写法；它不是可独立编译的完整节点，实际 publisher 应持久保存。"
+            }
+          ]
+        },
+        {
+          "title": "6. 用一个完整 Python 文件验证自定义消息",
+          "paragraphs": [
+            "为了让接口实验不被另一套安装入口分散注意，本节将发布节点保存为独立 Python 文件，直接用 python3 运行。它仍是 ROS 节点，只是没有注册 ros2 run 入口。前提是系统安装了 rclpy，并且当前终端已加载刚构建的 learning_interfaces。",
+            "节点每秒填写一次采样时间、坐标系、左右轮速和有效状态，再发布 wheel_feedback。数值是固定的教学模拟数据，并不是来自编码器。时间戳使用节点时钟，便于后续接入仿真时间；frame_id 的具体含义应与机器人接口约定一致，不能因为字段存在就随意填一个看起来合理的名字。",
+            "另一个终端用 echo 查询自定义类型。若字段可正常显示，就证明定义、生成、导入与通信链已闭合。接着可以修改 valid 或一个轮速观察输出，但修改字段结构本身必须重建接口和相关消费者，不是热修改普通配置。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "创建独立脚本目录",
+              "language": "bash",
+              "type": "commands",
+              "code": "mkdir -p ~/ros2_learning_ws/lessons/interfaces",
+              "explanation": "将下一份完整源码保存到该目录；本节不创建额外 Python 包。"
+            },
+            {
+              "label": "lessons/interfaces/send_feedback.py",
+              "language": "python",
+              "type": "complete",
+              "code": "import rclpy\nfrom rclpy.node import Node\nfrom learning_interfaces.msg import Telemetry\n\n\nclass FeedbackSource(Node):\n    def __init__(self):\n        super().__init__('learning_feedback_source')\n        self.publisher = self.create_publisher(Telemetry, 'wheel_feedback', 10)\n        self.timer = self.create_timer(1.0, self.publish_sample)\n\n    def publish_sample(self):\n        message = Telemetry()\n        message.header.stamp = self.get_clock().now().to_msg()\n        message.header.frame_id = 'base_link'\n        message.left_velocity_rad_s = 0.7\n        message.right_velocity_rad_s = 0.5\n        message.valid = True\n        self.publisher.publish(message)\n\n\ndef main():\n    rclpy.init()\n    node = FeedbackSource()\n    try:\n        rclpy.spin(node)\n    except KeyboardInterrupt:\n        pass\n    finally:\n        node.destroy_node()\n        if rclpy.ok():\n            rclpy.shutdown()\n\n\nif __name__ == '__main__':\n    main()",
+              "explanation": "完整文件，模拟左右轮反馈；没有读取真实硬件。"
+            },
+            {
+              "label": "两个终端验证",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 终端 A\nsource /opt/ros/jazzy/setup.bash\nsource ~/ros2_learning_ws/install/setup.bash\npython3 ~/ros2_learning_ws/lessons/interfaces/send_feedback.py\n# 终端 B 同样加载两个环境后\nros2 topic echo /wheel_feedback",
+              "explanation": "消息应包含 header、左右轮速和 valid；这些预期结果仍需由实际运行确认。"
+            }
+          ]
+        },
+        {
+          "title": "7. 接口演进和跨机器一致性",
+          "paragraphs": [
+            "修改接口字段会影响生成代码与通信类型信息。即使包名和话题名保持不变，两台机器使用不同版本的定义也不能被视为兼容。接口变更应作为系统级变更管理，重建所有消费者并记录版本，尤其是同时涉及上位机、下位机和离线分析脚本时。",
+            "对外发布接口时，尽量保持字段含义稳定。将单位从转每分钟改成弧度每秒却不改说明，比显式增加一个新字段更难发现。可以使用清楚的字段名、版本说明和迁移测试帮助团队识别变化；不要把接口注释当成无关紧要的装饰。",
+            "无效数据的设计也影响算法。若编码器断线时仍发布零速度，消费者可能把故障误认为机器人静止；明确 valid 或状态码能保留这种区别。类型设计的目的不是让消息尽可能短，而是让上下游在正常和异常情况下都能正确解释数据。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "为左右轮反馈建立跨语言接口",
+        "scenario": "C++ 驱动将来负责采样，Python 记录器负责保存，你希望先用模拟数据验证协议。",
+        "steps": [
+          "明确轮速单位、正方向、采样时间和无效状态。",
+          "创建并构建 learning_interfaces，确认三种语言可见名称。",
+          "运行完整 Python 模拟发布脚本，通过 CLI 查看字段。",
+          "在未来 C++ 驱动中复用同一 Telemetry 类型，保持下游接口不变。"
+        ],
+        "result": "接口与硬件实现分离，记录器可以先完成开发，后续替换数据源无需更换协议。"
+      },
+      "exercises": [
+        {
+          "question": "纯 Python 应用为什么仍可依赖 ament_cmake 接口包？",
+          "answer": "接口包负责 rosidl 多语言代码生成，不负责决定应用语言。生成后的 Python 消息类可以被 ament_python 包或独立 Python 节点导入。"
+        },
+        {
+          "question": "向 msg 目录增加 NewState.msg 后，为什么 interface show 可能仍找不到？",
+          "answer": "需要在 rosidl_generate_interfaces 中列出该文件，重新构建接口包，并在查询终端加载更新后的 install 环境。"
+        },
+        {
+          "question": "断线时轮速填零和 valid=false 有什么区别？",
+          "answer": "零是一个可能有效的物理测量，表示静止；valid=false 表示本次测量不能信任。混淆两者会让状态估计和故障判断失去信息。"
+        },
+        {
+          "question": "两台机器使用同名接口包但字段版本不同，只重映射话题能解决吗？",
+          "answer": "不能。应统一接口定义和生成版本，重建消费者。名称重映射不能转换不同消息结构。"
+        }
+      ]
+    },
+    {
+      "id": "services",
+      "sections": [
+        {
+          "title": "1. 将一次请求与一次响应关联起来",
+          "paragraphs": [
+            "话题适合数据流，服务适合调用者需要得到明确回应的短操作。本章用两个整数相加展示协议：客户端提交 a 和 b，服务端返回 sum。服务名设为 sum，类型为 example_interfaces/srv/AddTwoInts；类型定义由系统示例接口包提供，不需要为这个实验重新创建接口。",
+            "服务端注册回调后等待请求，客户端先等待服务被发现，再发送请求。发现等待与响应等待是两个不同阶段：前者说明是否存在可联系的服务端，后者说明某次请求是否得到回应。日志应把两者区分，否则“服务没响应”会掩盖名称错误和业务阻塞这两类完全不同的原因。",
+            "本章只使用小整数进行计算，以集中解释调用流程。接口的 int64 范围有限，真实业务若允许任意输入，需要定义越界处理。AddTwoInts 没有成功标记或错误字段，说明接口能力本身也会限制业务如何报告失败；不能把一个简化教学接口当作所有生产场景的通用协议。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "2. C++ 服务端的回调参数与生存期",
+          "paragraphs": [
+            "create_service 的模板参数指定服务类型，回调接收请求和响应对象。请求字段已经由通信层解码，服务端将计算值写入响应，回调结束后框架发送回应。本例不需要自己创建网络连接、序列号或套接字，但仍需保证服务对象在节点运行期间存在。",
+            "把服务保存为成员 service_，main 持有节点并进入 spin。回调中的计算非常短，适合放在默认执行器里。若把数秒甚至数分钟的操作塞进这里，其他回调可能被拖住，客户端也难以获得进度；需要取消和反馈的长期任务应使用动作协议。",
+            "同一个实验一次只启动一个名为 sum 的服务端。多个同名服务端并不能自然构成你想要的负载均衡，也会使“究竟哪个实现回应了请求”变得难以判断。跨语言对照时先停止一个版本再启动另一个版本，保持其他条件相同。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "创建 C++ 服务示例包",
+              "language": "bash",
+              "type": "commands",
+              "code": "cd ~/ros2_learning_ws/src\nros2 pkg create --build-type ament_cmake --license Apache-2.0 learning_service_cpp --dependencies rclcpp example_interfaces",
+              "explanation": "保存下面三个完整文件，包名与目录保持一致。"
+            },
+            {
+              "label": "src/learning_service_cpp/src/server.cpp",
+              "language": "cpp",
+              "type": "complete",
+              "code": "#include <memory>\n#include \"rclcpp/rclcpp.hpp\"\n#include \"example_interfaces/srv/add_two_ints.hpp\"\nusing Add = example_interfaces::srv::AddTwoInts;\n\nclass SumServer : public rclcpp::Node\n{\npublic:\n  SumServer() : Node(\"learning_sum_cpp\")\n  {\n    service_ = create_service<Add>(\"sum\",\n      [this](std::shared_ptr<Add::Request> request,\n             std::shared_ptr<Add::Response> response) {\n        response->sum = request->a + request->b;\n        RCLCPP_INFO(get_logger(), \"request handled\");\n      });\n  }\nprivate:\n  rclcpp::Service<Add>::SharedPtr service_;\n};\n\nint main(int argc, char ** argv)\n{\n  rclcpp::init(argc, argv);\n  rclcpp::spin(std::make_shared<SumServer>());\n  rclcpp::shutdown();\n  return 0;\n}",
+              "explanation": "完整服务端；实验输入限制为本章给出的小整数，未加入生产级数值越界协议。"
+            }
+          ]
+        },
+        {
+          "title": "3. C++ 客户端：异步发送，主函数有界等待",
+          "paragraphs": [
+            "客户端先创建与服务端同类型、同名的 client，再用 wait_for_service 等待发现。async_send_request 返回 future，表示“将来可能得到响应”；它不保证此刻结果已经到达。客户端的执行器仍需运行，才能处理返回的数据并完成 future。",
+            "本例是一次性命令行客户端，因此在 main 中调用 spin_until_future_complete，并设置两秒上限。这是在顶层驱动执行器等待，而不是在一个已运行的节点回调里嵌套 spin。两者外观看起来都像等待结果，但并发条件完全不同；将本段代码直接搬进定时回调可能导致死锁或执行器使用错误。",
+            "等待超时后客户端返回非零退出码，供脚本判断失败。超时不会自动撤销服务端已经执行的操作；这里只做无副作用的加法，重试较容易。若服务用于扣款、写入设备或修改状态，应增加幂等请求标识或状态查询，而不能假设“没有收到响应就是没有执行”。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "src/learning_service_cpp/src/client.cpp",
+              "language": "cpp",
+              "type": "complete",
+              "code": "#include <chrono>\n#include <memory>\n#include <string>\n#include \"rclcpp/rclcpp.hpp\"\n#include \"example_interfaces/srv/add_two_ints.hpp\"\nusing namespace std::chrono_literals;\nusing Add = example_interfaces::srv::AddTwoInts;\n\nint main(int argc, char ** argv)\n{\n  rclcpp::init(argc, argv);\n  auto node = std::make_shared<rclcpp::Node>(\"learning_sum_client_cpp\");\n  auto client = node->create_client<Add>(\"sum\");\n  int exit_code = 1;\n  if (!client->wait_for_service(2s)) {\n    RCLCPP_ERROR(node->get_logger(), \"sum service was not discovered\");\n  } else {\n    auto request = std::make_shared<Add::Request>();\n    request->a = 4;\n    request->b = 8;\n    auto future = client->async_send_request(request);\n    auto status = rclcpp::spin_until_future_complete(node, future, 2s);\n    if (status == rclcpp::FutureReturnCode::SUCCESS) {\n      auto text = std::to_string(future.get()->sum);\n      RCLCPP_INFO(node->get_logger(), \"sum=%s\", text.c_str());\n      exit_code = 0;\n    } else {\n      RCLCPP_ERROR(node->get_logger(), \"sum response timed out or was interrupted\");\n    }\n  }\n  rclcpp::shutdown();\n  return exit_code;\n}",
+              "explanation": "完整一次性客户端。它在 main 中等待，不能原封不动嵌入正在被 spin 的回调。"
+            },
+            {
+              "label": "src/learning_service_cpp/CMakeLists.txt",
+              "language": "cmake",
+              "type": "complete",
+              "code": "cmake_minimum_required(VERSION 3.8)\nproject(learning_service_cpp)\nset(CMAKE_CXX_STANDARD 17)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nfind_package(ament_cmake REQUIRED)\nfind_package(rclcpp REQUIRED)\nfind_package(example_interfaces REQUIRED)\nforeach(target server client)\n  add_executable(${target} src/${target}.cpp)\n  ament_target_dependencies(${target} rclcpp example_interfaces)\nendforeach()\ninstall(TARGETS server client DESTINATION lib/${PROJECT_NAME})\nament_package()",
+              "explanation": "完整构建文件。"
+            },
+            {
+              "label": "src/learning_service_cpp/package.xml",
+              "language": "xml",
+              "type": "complete",
+              "code": "<?xml version=\"1.0\"?>\n<package format=\"3\">\n  <name>learning_service_cpp</name>\n  <version>0.0.1</version>\n  <description>C++ service lesson</description>\n  <maintainer email=\"learner@example.com\">Learner</maintainer>\n  <license>Apache-2.0</license>\n  <buildtool_depend>ament_cmake</buildtool_depend>\n  <depend>rclcpp</depend>\n  <depend>example_interfaces</depend>\n  <export><build_type>ament_cmake</build_type></export>\n</package>",
+              "explanation": "完整依赖清单；服务接口来自 example_interfaces。"
+            }
+          ]
+        },
+        {
+          "title": "4. Python 服务端和客户端的对应关系",
+          "paragraphs": [
+            "Python 用 AddTwoInts 类作为 create_service 的参数，回调接收 request 和 response，并返回填好的 response。C++ 则通过共享指针写入响应；这属于客户端库的调用形式差异，传输的请求响应协议相同。服务名都为 sum 时，可用 Python 服务端回应 C++ 客户端，反过来也一样。",
+            "为减少重复安装配置，本节给出两个独立 Python 文件，保存在 lessons/services，通过 python3 启动。它们不是 ros2 run 的已安装入口；若希望打包，可采用工作空间章节的 ament_python 和 console_scripts 方式。本章已经提供完整源码，所以不需要跳转其他站点获得缺失的执行逻辑。",
+            "Python 客户端同样使用 call_async，并在顶层运行 spin_until_future_complete 处理响应。完成后检查 future 是否就绪，再读取结果；异常与超时应有可见日志。finally 负责清理节点，即使请求失败也应释放资源，避免一次性工具以不明确状态退出。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "准备 Python 脚本目录",
+              "language": "bash",
+              "type": "commands",
+              "code": "mkdir -p ~/ros2_learning_ws/lessons/services",
+              "explanation": "两个完整文件保存到此目录；系统需安装 rclpy 与 example_interfaces。"
+            },
+            {
+              "label": "lessons/services/server.py",
+              "language": "python",
+              "type": "complete",
+              "code": "import rclpy\nfrom rclpy.node import Node\nfrom example_interfaces.srv import AddTwoInts\n\n\nclass SumServer(Node):\n    def __init__(self):\n        super().__init__('learning_sum_py')\n        self.service = self.create_service(AddTwoInts, 'sum', self.on_request)\n\n    def on_request(self, request, response):\n        response.sum = request.a + request.b\n        self.get_logger().info('request handled')\n        return response\n\n\ndef main():\n    rclpy.init()\n    node = SumServer()\n    try:\n        rclpy.spin(node)\n    except KeyboardInterrupt:\n        pass\n    finally:\n        node.destroy_node()\n        if rclpy.ok():\n            rclpy.shutdown()\n\n\nif __name__ == '__main__':\n    main()",
+              "explanation": "完整 Python 服务端，与 C++ 版本共用相同服务名和接口。"
+            },
+            {
+              "label": "lessons/services/client.py",
+              "language": "python",
+              "type": "complete",
+              "code": "import sys\nimport rclpy\nfrom rclpy.node import Node\nfrom example_interfaces.srv import AddTwoInts\n\n\ndef main():\n    rclpy.init()\n    node = Node('learning_sum_client_py')\n    client = node.create_client(AddTwoInts, 'sum')\n    exit_code = 1\n    try:\n        if not client.wait_for_service(timeout_sec=2.0):\n            node.get_logger().error('sum service was not discovered')\n        else:\n            request = AddTwoInts.Request()\n            request.a, request.b = 4, 8\n            future = client.call_async(request)\n            rclpy.spin_until_future_complete(node, future, timeout_sec=2.0)\n            if future.done():\n                response = future.result()\n                node.get_logger().info(f'sum={response.sum}')\n                exit_code = 0\n            else:\n                node.get_logger().error('sum response timed out')\n    except Exception as error:\n        node.get_logger().error(f'request failed: {error}')\n    finally:\n        node.destroy_node()\n        if rclpy.ok():\n            rclpy.shutdown()\n    return exit_code\n\n\nif __name__ == '__main__':\n    sys.exit(main())",
+              "explanation": "完整一次性客户端；失败返回 1，成功返回 0，便于脚本验收。"
+            }
+          ]
+        },
+        {
+          "title": "5. 构建、交叉调用与终端结果解释",
+          "paragraphs": [
+            "先构建 C++ 包并加载环境，再启动一个服务端。用 service list -t 确认 /sum 和 AddTwoInts 的对应关系，用 CLI 发出一组已知输入。得到 sum=12 只验证这次请求的计算结果；服务发现、接口类型和客户端退出码仍是另外的验收信息。",
+            "接着运行 Python 客户端调用 C++ 服务端。停止 C++ 服务端后启动 Python 服务端，再运行 C++ 客户端。如果两种组合都能输出十二，说明服务接口的跨语言兼容链工作正常。测试时不要让两个同名服务端同时运行，否则结果来源不明确。",
+            "最后执行一次故障路径：不启动任何服务端，只运行客户端。它应在设定的发现等待上限之后输出明确错误并以非零码结束，而不是无期限等待。这是本章比“能算出十二”更重要的工程练习，因为实际系统必须能区分正常结果与依赖不可用。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "构建 C++ 包",
+              "language": "bash",
+              "type": "commands",
+              "code": "cd ~/ros2_learning_ws\nrosdep install --from-paths src --ignore-src --rosdistro jazzy -y\ncolcon build --packages-select learning_service_cpp\nsource install/setup.bash",
+              "explanation": "所有运行终端都需加载 Jazzy；使用自建 C++ 包的终端还需加载 overlay。"
+            },
+            {
+              "label": "组合 A：C++ 服务端，Python 客户端",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 终端 A\nros2 run learning_service_cpp server\n# 终端 B\npython3 ~/ros2_learning_ws/lessons/services/client.py\n# 观察或额外测试终端\nros2 service list -t\nros2 service call /sum example_interfaces/srv/AddTwoInts \"{a: 4, b: 8}\"",
+              "explanation": "客户端和 CLI 都应得到 12。"
+            },
+            {
+              "label": "组合 B：停止旧服务端后交换语言",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 终端 A\npython3 ~/ros2_learning_ws/lessons/services/server.py\n# 终端 B\nros2 run learning_service_cpp client",
+              "explanation": "已在仅本机发现的独立域中实测 C++/Python 双向调用，结果均为 sum=12；其他网络与故障条件仍需按环境测试。"
+            }
+          ]
+        },
+        {
+          "title": "6. 将一次性客户端放进长期节点时要改变等待方式",
+          "paragraphs": [
+            "长期节点通常已有执行器在运行，服务请求可能由定时器或订阅回调触发。此时推荐发出异步请求后立即返回，再通过完成回调处理结果，而不是在原回调里等待。这样执行器才有机会处理服务响应和其他事件。异步 API 与程序是否阻塞是两件事：调用 call_async 后再忙等，仍然会阻塞当前线程。",
+            "默认回调组是互斥的。若当前回调占着该组同步等待，而完成 future 所需的回调也属于同一组，就会形成互相等待。单纯换成多线程执行器不一定解决，因为同组互斥规则仍然存在。应先设计事件流程，再配置回调组和共享数据保护。",
+            "生产客户端还应管理未完成请求数量、超时和迟到结果。若定时器每次都提交新请求而服务端很慢，未完成 future 可能不断积累。可限制同一时刻只存在一个请求，超时后标记它失效，并避免迟到响应覆盖更新状态。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "Python 长期节点中的异步模式",
+              "language": "python",
+              "type": "snippet",
+              "code": "# 已在 Node 中创建 self.client，并定义 self.on_response。\nrequest = AddTwoInts.Request()\nrequest.a, request.b = 4, 8\nself.pending = self.client.call_async(request)\nself.pending.add_done_callback(self.on_response)\n# 当前回调在这里返回，完成回调之后再读取结果。",
+              "explanation": "局部模式片段，不是完整文件；必须另外设计异常、超时、并发请求限制及 on_response。"
+            }
+          ]
+        },
+        {
+          "title": "7. 选择服务还是动作，以及错误信息如何设计",
+          "paragraphs": [
+            "如果操作只需要一个短回应，服务通常足够；如果用户要看到进度、取消操作或区分多个目标，动作更合适。用服务执行长期设备校准并不是语法错误，但调用者可能只能等待最终响应，无法标准化地观察中间状态。接口选择应来自用户和系统需要的交互语义。",
+            "自定义业务服务可以在响应中加入 success 和 message，或者用明确的状态枚举，帮助客户端区分通信成功与业务失败。收到响应说明网络交互完成，不代表请求一定被业务接受。输入校验失败、资源忙碌和设备故障都应有可区分的结果，避免全部打印到服务端日志后让客户端猜测。",
+            "接口设计还需要考虑重试。只读查询通常容易重试，带副作用的操作需要识别重复请求。对无法保证幂等的动作，客户端超时后可以先查询状态，再决定是否再次执行，而不是无限循环地发送相同命令。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "服务可用与不可用都能得到明确结论",
+        "scenario": "你要写一个自动化脚本，调用服务计算结果，失败时停止后续步骤。",
+        "steps": [
+          "先启动 C++ 服务端，运行 Python 客户端，确认输出十二且退出码为零。",
+          "停止服务端，再运行同一客户端，确认发现等待后返回非零码。",
+          "改用 Python 服务端重复成功路径，验证语言可替换。",
+          "把服务名故意写错一次，观察失败发生在发现阶段，而不是响应计算阶段。"
+        ],
+        "result": "脚本能够依据结果与退出码区分成功、依赖不存在和响应超时，而不是仅依赖某一条日志文字。"
+      },
+      "exercises": [
+        {
+          "question": "async_send_request 返回后能否立刻认为计算完成？",
+          "answer": "不能。它返回的是未来结果的句柄；执行器还需要处理响应。应等待 future 就绪或通过完成回调读取结果。"
+        },
+        {
+          "question": "为何 main 中使用 spin_until_future_complete 与回调内使用它不是同一条件？",
+          "answer": "main 中尚未由另一个执行器驱动该节点，可以有界运行执行器等待；回调内往往已经处于执行器和互斥组中，嵌套等待可能阻塞完成响应所需的回调。"
+        },
+        {
+          "question": "客户端两秒超时后，能否断定服务端没有执行？",
+          "answer": "不能。请求可能已经执行，响应只是延迟或丢失。带副作用的操作需要幂等设计、请求 ID 或状态查询。"
+        },
+        {
+          "question": "返回 success=false 的响应，与服务不可达有什么区别？",
+          "answer": "前者表示通信成功且业务明确拒绝或失败；后者连业务响应都没有得到。客户端应分别处理，不要把两者统一叫作网络错误。"
+        }
+      ]
+    },
+    {
+      "id": "actions",
+      "sections": [
+        {
+          "title": "1. 动作把长期任务表达成可观察的状态机",
+          "paragraphs": [
+            "一个导航目标可能需要几十秒才完成。调用者通常希望知道目标是否被接受、当前进度、能否取消，以及最终为何成功或失败。普通话题不自带这些任务语义，短服务又只有最后一个响应。Action 将这些需求统一为目标、反馈和结果，并为每个目标维护独立状态与身份。",
+            "客户端发送目标以后，首先得到目标是否被接受的回应。接受不代表任务已经完成；之后可以收到多次反馈，最终才获得结果。取消同样是一个过程：客户端提交取消请求，服务端决定是否接受，然后执行代码在合适位置停止并设置 canceled。收到取消请求被接受的回应，也不能直接替代等待最终取消结果。",
+            "本章任务是每半秒完成一个计数步骤，总数由 target 指定。只允许一个活动目标，范围为一到二十。它足够简单，却能完整展示成功、拒绝、反馈和取消四条路径；后续可把每一步替换成巡检航点或设备操作，而保留相同任务协议。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "2. 创建本章独立接口包，避免隐藏前置文件",
+          "paragraphs": [
+            "为了允许直接从本章动手，使用独立 learning_count_interfaces 包，仅包含 Count.action。目标区域是 uint32 target，结果区域是 uint32 completed，反馈区域是 uint32 current。字段顺序由两条分隔线确定，目标和反馈虽然都是整数，含义却不能互换。",
+            "接口包使用 ament_cmake 与 rosidl_default_generators 生成代码，运行阶段依赖 rosidl_default_runtime。动作还会使用 action_msgs 提供的通用状态与协议消息。这个包没有业务节点，C++ 服务端和 Python 客户端都依赖它；只要二者加载同一份生成类型，就能跨语言交互。",
+            "请按路径保存三份完整文件，再构建。若以前已经完成自定义接口章节，那里的 Count 可以用作理解参照，但本章使用了不同包名，避免直接覆盖旧接口或让示例依赖未展示的文件。包名改变后，所有导入、头文件和 CLI 类型字符串都必须同步改变。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "创建接口与服务端包",
+              "language": "bash",
+              "type": "commands",
+              "code": "source /opt/ros/jazzy/setup.bash\nmkdir -p ~/ros2_learning_ws/src\ncd ~/ros2_learning_ws/src\nros2 pkg create --build-type ament_cmake --license Apache-2.0 learning_count_interfaces\nmkdir -p learning_count_interfaces/action\nros2 pkg create --build-type ament_cmake --license Apache-2.0 learning_action_cpp --dependencies rclcpp rclcpp_action learning_count_interfaces\nmkdir -p ~/ros2_learning_ws/lessons/actions",
+              "explanation": "保存本章完整文件后再构建。"
+            },
+            {
+              "label": "src/learning_count_interfaces/action/Count.action",
+              "language": "text",
+              "type": "complete",
+              "code": "uint32 target\n---\nuint32 completed\n---\nuint32 current",
+              "explanation": "完整动作接口，分别定义目标、结果和反馈。"
+            },
+            {
+              "label": "src/learning_count_interfaces/CMakeLists.txt",
+              "language": "cmake",
+              "type": "complete",
+              "code": "cmake_minimum_required(VERSION 3.8)\nproject(learning_count_interfaces)\nfind_package(ament_cmake REQUIRED)\nfind_package(rosidl_default_generators REQUIRED)\nfind_package(action_msgs REQUIRED)\nrosidl_generate_interfaces(${PROJECT_NAME}\n  \"action/Count.action\"\n  DEPENDENCIES action_msgs\n)\nament_export_dependencies(rosidl_default_runtime)\nament_package()",
+              "explanation": "完整生成配置。"
+            },
+            {
+              "label": "src/learning_count_interfaces/package.xml",
+              "language": "xml",
+              "type": "complete",
+              "code": "<?xml version=\"1.0\"?>\n<package format=\"3\">\n  <name>learning_count_interfaces</name>\n  <version>0.0.1</version>\n  <description>Count action interface</description>\n  <maintainer email=\"learner@example.com\">Learner</maintainer>\n  <license>Apache-2.0</license>\n  <buildtool_depend>ament_cmake</buildtool_depend>\n  <buildtool_depend>rosidl_default_generators</buildtool_depend>\n  <depend>action_msgs</depend>\n  <exec_depend>rosidl_default_runtime</exec_depend>\n  <member_of_group>rosidl_interface_packages</member_of_group>\n  <export><build_type>ament_cmake</build_type></export>\n</package>",
+              "explanation": "完整清单，接口包可被两种语言共用。"
+            }
+          ]
+        },
+        {
+          "title": "3. C++ 服务端：用短定时回调推进任务",
+          "paragraphs": [
+            "create_server 注册三个关键回调：收到目标时决定接受或拒绝，收到取消请求时决定是否允许取消，目标接受后保存 GoalHandle。这里把实际工作放进每半秒执行的定时回调，避免在目标接受回调里长时间阻塞。默认单线程执行器下，这些回调按次运行，便于理解状态变化。",
+            "busy_ 在接受目标时置位，使第二个目标被拒绝；active_ 保存当前目标句柄；completed_ 记录已完成步骤。每次 tick 首先检查取消状态，再执行一个步骤并发布反馈，到达目标后调用 succeed。取消时调用 canceled，结果中的 completed 保留已经完成的工作，而不是一律清零。",
+            "此写法不创建后台工作线程，所以每个步骤必须很短。若真实步骤要等待设备数秒，应改成异步设备接口或专门工作线程，并补充线程同步和关闭处理。动作协议不会自动把耗时操作变成非阻塞；是否能及时处理取消，仍由执行结构决定。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "src/learning_action_cpp/src/server.cpp",
+              "language": "cpp",
+              "type": "complete",
+              "code": "#include <chrono>\n#include <cstdint>\n#include <memory>\n#include \"rclcpp/rclcpp.hpp\"\n#include \"rclcpp_action/rclcpp_action.hpp\"\n#include \"learning_count_interfaces/action/count.hpp\"\nusing namespace std::chrono_literals;\nusing Count = learning_count_interfaces::action::Count;\nusing GoalHandle = rclcpp_action::ServerGoalHandle<Count>;\n\nclass CountServer : public rclcpp::Node\n{\npublic:\n  CountServer() : Node(\"learning_count_cpp\")\n  {\n    server_ = rclcpp_action::create_server<Count>(this, \"count\",\n      [this](const rclcpp_action::GoalUUID &, std::shared_ptr<const Count::Goal> goal) {\n        if (busy_ || goal->target == 0 || goal->target > 20) {\n          return rclcpp_action::GoalResponse::REJECT;\n        }\n        busy_ = true;\n        return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;\n      },\n      [](const std::shared_ptr<GoalHandle>) {\n        return rclcpp_action::CancelResponse::ACCEPT;\n      },\n      [this](const std::shared_ptr<GoalHandle> handle) {\n        active_ = handle;\n        completed_ = 0;\n      });\n    timer_ = create_wall_timer(500ms, [this]() { tick(); });\n  }\nprivate:\n  void tick()\n  {\n    if (!active_) {return;}\n    if (active_->is_canceling()) {\n      auto result = std::make_shared<Count::Result>();\n      result->completed = completed_;\n      active_->canceled(result);\n      active_.reset();\n      busy_ = false;\n      return;\n    }\n    ++completed_;\n    auto feedback = std::make_shared<Count::Feedback>();\n    feedback->current = completed_;\n    active_->publish_feedback(feedback);\n    if (completed_ >= active_->get_goal()->target) {\n      auto result = std::make_shared<Count::Result>();\n      result->completed = completed_;\n      active_->succeed(result);\n      active_.reset();\n      busy_ = false;\n    }\n  }\n  bool busy_{false};\n  std::uint32_t completed_{0};\n  std::shared_ptr<GoalHandle> active_;\n  rclcpp_action::Server<Count>::SharedPtr server_;\n  rclcpp::TimerBase::SharedPtr timer_;\n};\n\nint main(int argc, char ** argv)\n{\n  rclcpp::init(argc, argv);\n  rclcpp::spin(std::make_shared<CountServer>());\n  rclcpp::shutdown();\n  return 0;\n}",
+              "explanation": "完整 C++ 服务端。共享状态由默认单线程执行器串行访问，不能不加分析就换成并发回调。"
+            },
+            {
+              "label": "src/learning_action_cpp/CMakeLists.txt",
+              "language": "cmake",
+              "type": "complete",
+              "code": "cmake_minimum_required(VERSION 3.8)\nproject(learning_action_cpp)\nset(CMAKE_CXX_STANDARD 17)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nfind_package(ament_cmake REQUIRED)\nfind_package(rclcpp REQUIRED)\nfind_package(rclcpp_action REQUIRED)\nfind_package(learning_count_interfaces REQUIRED)\nadd_executable(server src/server.cpp)\nament_target_dependencies(server rclcpp rclcpp_action learning_count_interfaces)\ninstall(TARGETS server DESTINATION lib/${PROJECT_NAME})\nament_package()",
+              "explanation": "完整构建文件。"
+            },
+            {
+              "label": "src/learning_action_cpp/package.xml",
+              "language": "xml",
+              "type": "complete",
+              "code": "<?xml version=\"1.0\"?>\n<package format=\"3\">\n  <name>learning_action_cpp</name>\n  <version>0.0.1</version>\n  <description>C++ count action server</description>\n  <maintainer email=\"learner@example.com\">Learner</maintainer>\n  <license>Apache-2.0</license>\n  <buildtool_depend>ament_cmake</buildtool_depend>\n  <depend>rclcpp</depend>\n  <depend>rclcpp_action</depend>\n  <depend>learning_count_interfaces</depend>\n  <export><build_type>ament_cmake</build_type></export>\n</package>",
+              "explanation": "完整依赖声明。"
+            }
+          ]
+        },
+        {
+          "title": "4. Python 服务端：执行回调与取消回调并存",
+          "paragraphs": [
+            "Python ActionServer 使用 execute_callback 执行目标，goal_callback 和 cancel_callback 分别决定接受策略。本例执行回调在每个步骤之间 sleep 半秒，因此使用两个工作线程和 ReentrantCallbackGroup，让取消请求能在任务等待期间被处理。锁只保护 busy 状态的检查与更新，不把整个任务循环锁住。",
+            "这与 C++ 定时推进的内部结构不同，但外部协议相同：一次只接受一个有效目标，定期发 current，成功返回 completed，取消后保留进度。对照重点是任务语义，而不是把每一个 API 调用强行做成逐行翻译。若采用单线程加阻塞 execute 回调，取消可能无法及时得到处理。",
+            "finally 清除 busy，避免异常后永久拒绝新目标。执行代码还必须在取消被请求时调用 canceled，而不是只从函数返回；正常结束则先 succeed 再返回结果。完整示例的异常关闭行为仍需在具体部署中测试，本章不声称它已连接硬件或完成生产级任务恢复。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "lessons/actions/server.py",
+              "language": "python",
+              "type": "complete",
+              "code": "import threading\nimport time\nimport rclpy\nfrom rclpy.node import Node\nfrom rclpy.action import ActionServer, GoalResponse, CancelResponse\nfrom rclpy.callback_groups import ReentrantCallbackGroup\nfrom rclpy.executors import MultiThreadedExecutor\nfrom learning_count_interfaces.action import Count\n\n\nclass CountServer(Node):\n    def __init__(self):\n        super().__init__('learning_count_py')\n        self.lock = threading.Lock()\n        self.busy = False\n        self.group = ReentrantCallbackGroup()\n        self.server = ActionServer(\n            self, Count, 'count', self.execute,\n            goal_callback=self.on_goal,\n            cancel_callback=self.on_cancel,\n            callback_group=self.group)\n\n    def on_goal(self, goal):\n        with self.lock:\n            if self.busy or not 1 <= goal.target <= 20:\n                return GoalResponse.REJECT\n            self.busy = True\n        return GoalResponse.ACCEPT\n\n    def on_cancel(self, goal_handle):\n        return CancelResponse.ACCEPT\n\n    def execute(self, goal_handle):\n        result = Count.Result()\n        try:\n            for current in range(1, goal_handle.request.target + 1):\n                if not rclpy.ok():\n                    return result\n                time.sleep(0.5)\n                if goal_handle.is_cancel_requested:\n                    goal_handle.canceled()\n                    return result\n                result.completed = current\n                feedback = Count.Feedback()\n                feedback.current = current\n                goal_handle.publish_feedback(feedback)\n            goal_handle.succeed()\n            return result\n        finally:\n            with self.lock:\n                self.busy = False\n\n\ndef main():\n    rclpy.init()\n    node = CountServer()\n    executor = MultiThreadedExecutor(num_threads=2)\n    executor.add_node(node)\n    try:\n        executor.spin()\n    except KeyboardInterrupt:\n        pass\n    finally:\n        executor.shutdown()\n        node.destroy_node()\n        if rclpy.ok():\n            rclpy.shutdown()\n\n\nif __name__ == '__main__':\n    main()",
+              "explanation": "完整 Python 服务端，通过 python3 运行。sleep 只用于模拟任务耗时；真实设备步骤应有自身的超时与失败处理。"
+            }
+          ]
+        },
+        {
+          "title": "5. 完整客户端：分别等待接受、取消确认和最终结果",
+          "paragraphs": [
+            "客户端先等待动作服务端可发现，再调用 send_goal_async。这个 future 的结果是 GoalHandle，不是最终 Count.Result。检查 accepted 以后，才通过 get_result_async 请求任务结果；反馈经独立回调到达。把这几个阶段命名清楚，比仅用一个变量 result 存放所有 future 更容易避免逻辑错误。",
+            "下面客户端默认请求五步任务；加 --cancel 时请求十步，并在两秒后发出取消请求。取消定时器在第一次触发后立即停用，避免重复请求。日志中的 cancel accepted 只说明服务端允许取消，程序仍继续等待最终状态 CANCELED 和完成步数。",
+            "动作结果还带有通用状态码，用于区分 SUCCEEDED、CANCELED 和 ABORTED。业务 result 则表达任务自身的数据。本例分别打印二者；未来导航任务也应同时检查状态与业务结果，而不是只看目标是否曾经被接受。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "lessons/actions/client.py",
+              "language": "python",
+              "type": "complete",
+              "code": "import argparse\nimport sys\nimport rclpy\nfrom rclpy.node import Node\nfrom rclpy.action import ActionClient\nfrom action_msgs.msg import GoalStatus\nfrom learning_count_interfaces.action import Count\n\n\ndef main():\n    parser = argparse.ArgumentParser()\n    parser.add_argument('--cancel', action='store_true')\n    options, ros_args = parser.parse_known_args()\n    rclpy.init(args=ros_args)\n    node = Node('learning_count_client')\n    client = ActionClient(node, Count, 'count')\n    cancel_timer = None\n    try:\n        if not client.wait_for_server(timeout_sec=2.0):\n            node.get_logger().error('count action server was not discovered')\n            return 1\n        goal = Count.Goal()\n        goal.target = 10 if options.cancel else 5\n\n        def on_feedback(message):\n            node.get_logger().info(f'current={message.feedback.current}')\n\n        accepted_future = client.send_goal_async(goal, feedback_callback=on_feedback)\n        rclpy.spin_until_future_complete(node, accepted_future, timeout_sec=2.0)\n        if not accepted_future.done():\n            node.get_logger().error('goal response timed out')\n            return 1\n        handle = accepted_future.result()\n        if not handle.accepted:\n            node.get_logger().error('goal rejected')\n            return 1\n        result_future = handle.get_result_async()\n\n        def on_cancel_response(future):\n            response = future.result()\n            node.get_logger().info(f'cancel accepted={bool(response.goals_canceling)}')\n\n        def request_cancel():\n            cancel_timer.cancel()\n            future = handle.cancel_goal_async()\n            future.add_done_callback(on_cancel_response)\n\n        if options.cancel:\n            cancel_timer = node.create_timer(2.0, request_cancel)\n        rclpy.spin_until_future_complete(node, result_future, timeout_sec=15.0)\n        if not result_future.done():\n            node.get_logger().error('result timed out')\n            return 1\n        wrapped = result_future.result()\n        labels = {\n            GoalStatus.STATUS_SUCCEEDED: 'SUCCEEDED',\n            GoalStatus.STATUS_CANCELED: 'CANCELED',\n            GoalStatus.STATUS_ABORTED: 'ABORTED',\n        }\n        status = labels.get(wrapped.status, str(wrapped.status))\n        node.get_logger().info(f'status={status}, completed={wrapped.result.completed}')\n        expected = GoalStatus.STATUS_CANCELED if options.cancel else GoalStatus.STATUS_SUCCEEDED\n        return 0 if wrapped.status == expected else 1\n    except Exception as error:\n        node.get_logger().error(f'action failed: {error}')\n        return 1\n    finally:\n        if cancel_timer is not None:\n            cancel_timer.cancel()\n        client.destroy()\n        node.destroy_node()\n        if rclpy.ok():\n            rclpy.shutdown()\n\n\nif __name__ == '__main__':\n    sys.exit(main())",
+              "explanation": "完整客户端可连接本章 C++ 或 Python 服务端；超时后的任务回收策略在真实项目中仍需进一步设计。"
+            }
+          ]
+        },
+        {
+          "title": "6. 依次验证成功、拒绝和取消",
+          "paragraphs": [
+            "构建时 --packages-up-to learning_action_cpp 会包含工作空间内的接口依赖，确保类型先生成再编译服务端。运行 Python 文件的终端也必须加载 install 环境，否则导入 learning_count_interfaces 会失败，即使它没有使用 ros2 run。",
+            "第一次只运行 C++ 服务端，用 CLI 发送五步目标并显示反馈；应先看到目标接受，再看到递增进度和成功结果。随后发送 target=0，服务端应拒绝，不进入执行。最后运行带 --cancel 的完整客户端，预期获得 CANCELED，完成步数小于十，但不要求固定为某一个数字，因为计时和调度存在边界差异。",
+            "停止 C++ 服务端，换成 Python 服务端重复同样测试。一次只替换一个实现，可以清楚识别协议一致性；若同时运行两个同名动作服务端，测试结果来源会不明确。本章接口与 C++ 包已在本机 Jazzy 构建通过，两种服务端均在仅本机发现的独立域中完成成功与取消测试；你的实际部署环境仍应保留自己的验收记录。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "构建并加载",
+              "language": "bash",
+              "type": "commands",
+              "code": "cd ~/ros2_learning_ws\nrosdep install --from-paths src --ignore-src --rosdistro jazzy -y\ncolcon build --packages-up-to learning_action_cpp\nsource install/setup.bash\nros2 interface show learning_count_interfaces/action/Count",
+              "explanation": "生成接口和 C++ 服务端；所有运行终端先加载 Jazzy 与 overlay。"
+            },
+            {
+              "label": "终端 A 与测试终端",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 终端 A\nros2 run learning_action_cpp server\n# 终端 B，逐个测试，等待上一目标结束\nros2 action send_goal /count learning_count_interfaces/action/Count \"{target: 5}\" --feedback\nros2 action send_goal /count learning_count_interfaces/action/Count \"{target: 0}\" --feedback\npython3 ~/ros2_learning_ws/lessons/actions/client.py --cancel",
+              "explanation": "最后一条明确执行取消测试；Ctrl+C 关闭 CLI 不应被当作标准化的取消测试。"
+            },
+            {
+              "label": "替换服务端后测试相同客户端",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 停止旧 C++ 服务端后，在终端 A\npython3 ~/ros2_learning_ws/lessons/actions/server.py\n# 终端 B\npython3 ~/ros2_learning_ws/lessons/actions/client.py\npython3 ~/ros2_learning_ws/lessons/actions/client.py --cancel",
+              "explanation": "成功和取消是两种预期路径，客户端根据命令选项检查对应终态。"
+            }
+          ]
+        },
+        {
+          "title": "7. 动作接口之外仍需应用负责的部分",
+          "paragraphs": [
+            "动作提供目标协议，但不会替你决定抢占策略。本例新目标到来时直接拒绝；其他应用可能先取消旧目标、排队等待或同时执行多个目标。每一种策略都应明确说明，并保证目标之间的资源不会互相覆盖。不能仅因为 ActionServer 支持多个目标句柄，就推断你的设备可以并行执行多个任务。",
+            "取消应检查在能保持状态一致的位置。对于不可立即中断的设备动作，可以先确认取消请求，然后在安全的步骤边界退出；但需要向用户说明延迟，并保持反馈或诊断可见。取消不是简单杀死线程，更不等于终止客户端进程。",
+            "故障路径同样需要结果。真实任务若遇到设备错误，应设置 abort 并在自定义结果中包含可解释原因；如果客户端断开，服务端是否继续执行也要有策略。最终验收应覆盖成功、非法目标、忙碌拒绝、取消和故障，而不止观察一次正常反馈。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "同一客户端对照两种动作服务端",
+        "scenario": "你希望证明服务端的内部调度方式可以变化，而任务协议保持一致。",
+        "steps": [
+          "构建独立 Count 接口和 C++ 服务端。",
+          "使用完整 Python 客户端验证五步成功和十步中途取消。",
+          "停止 C++ 服务端，启动 Python 服务端，重复相同输入。",
+          "比较终态与完成步数，允许反馈时间存在调度差异。"
+        ],
+        "result": "客户端只依赖目标、反馈、结果和取消协议，不依赖服务端采用定时推进还是工作线程执行。"
+      },
+      "exercises": [
+        {
+          "question": "目标 accepted=true 是否代表任务成功？",
+          "answer": "不是。它只表示服务端接受了目标；还需等待最终结果，并检查通用状态是否 SUCCEEDED。"
+        },
+        {
+          "question": "客户端收到取消请求被接受的回应后，为什么还要等待结果？",
+          "answer": "取消接受是协议过程的一步，任务可能需要到下一个执行边界才真正停止。最终 CANCELED 状态和结果才说明任务已经结束。"
+        },
+        {
+          "question": "Python 示例为什么使用 ReentrantCallbackGroup 和两个执行线程？",
+          "answer": "执行回调中的 sleep 会占用一个线程；另一个线程需要处理取消等回调。回调组还必须允许并发，单纯增加线程数而保持同组互斥不一定有效。"
+        },
+        {
+          "question": "若把 C++ 示例切换成并发执行器，busy_ 是否仍可不加保护？",
+          "answer": "不能直接假定。原示例依赖单线程串行访问；若回调可能并发，应增加适当的互斥或原子状态，并重新分析目标接受和任务结束的竞争。"
+        }
+      ]
+    },
+    {
+      "id": "parameters",
+      "sections": [
+        {
+          "title": "1. 参数描述配置，而不是实时数据流",
+          "paragraphs": [
+            "参数属于某个具体节点，用于设置行为，例如增益、阈值、设备路径和是否启用某功能。它不是 ROS 1 式的全局参数服务器，也不适合用来代替高频图像、轮速和遥控消息。每个节点可以有同名参数，查询时必须说明目标节点，才能确定你在读哪一份配置。",
+            "一个参数具有名称、类型和值。Python 的 1 与 1.0 看起来都表示一，但在 ROS 参数类型里分别对应整数与双精度浮点；声明为 double 的参数不能被随意改成字符串。参数还可有描述、范围和只读约束，这些信息让配置工具和用户能理解有效取值，而不仅是猜测。",
+            "启动覆盖与运行时修改是两个阶段。节点可以用代码提供默认值，由命令行或 YAML 在启动时覆盖；运行后再通过参数服务提出变更。参数服务接受新值，只意味着配置存储更新，算法是否真正采用新值还取决于实现，尤其是缓存参数或已经创建定时器的节点。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "2. 一个可观察的配置节点：gain 与 enabled",
+          "paragraphs": [
+            "本章节点名为 learning_config，声明 gain 为零到二范围内的有限 double，默认一；enabled 是布尔值，默认 true。每秒计算一次固定输入 0.2 乘以 gain，并发布到 configured_value。enabled 为 false 时发布零。这个数值只是教学数据，没有连接任何执行器。",
+            "定时回调每次都读取当前参数，因此成功设置 gain 后，下一次输出就会改变。这样能同时验证参数服务的结果和业务行为，避免只看到 param get 更新却不知道内部算法是否仍用旧值。由于输入固定，gain=1.5 时预期输出为 0.3，便于检查。",
+            "自定义校验分两处：声明完成后检查启动覆盖值，运行时用 on-set 回调检查变更请求。校验回调只决定接受或拒绝，不应在其中执行有副作用的硬件操作，因为同一次变更可能还会被其他校验者拒绝。将“检查合法性”和“应用配置”分开，是参数实现的关键。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "创建 C++ 包和脚本目录",
+              "language": "bash",
+              "type": "commands",
+              "code": "cd ~/ros2_learning_ws/src\nros2 pkg create --build-type ament_cmake --license Apache-2.0 learning_params_cpp --dependencies rclcpp rcl_interfaces std_msgs\nmkdir -p ~/ros2_learning_ws/lessons/parameters",
+              "explanation": "本章两种实现使用同一节点名，因此一次只运行一个版本。"
+            }
+          ]
+        },
+        {
+          "title": "3. C++ 完整实现与回调句柄",
+          "paragraphs": [
+            "C++ 用 declare_parameter<double> 明确类型，用 get_parameter(...).as_double() 读取当前值。add_on_set_parameters_callback 返回的句柄保存在成员里，使校验持续生效。回调返回 SetParametersResult，其中 successful 表示是否接受，reason 给用户说明拒绝原因。",
+            "本例检查 gain 必须是有限 double 且位于零到二之间。只有检查通过才让框架保存新值；定时回调随后读取新配置。启动时参数覆盖可能在注册校验回调之前发生，所以构造函数也检查初始值，避免运行时约束严格而启动 YAML 却能绕过范围限制。",
+            "默认单线程执行器使参数服务和定时回调串行处理，适合本例。如果未来把参数缓存到多个工作线程，仍需定义配置快照与同步方式；参数 API 不会自动让任意应用成员变成线程安全。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "src/learning_params_cpp/src/config_node.cpp",
+              "language": "cpp",
+              "type": "complete",
+              "code": "#include <chrono>\n#include <cmath>\n#include <memory>\n#include <stdexcept>\n#include <vector>\n#include \"rclcpp/rclcpp.hpp\"\n#include \"rcl_interfaces/msg/set_parameters_result.hpp\"\n#include \"std_msgs/msg/float64.hpp\"\nusing namespace std::chrono_literals;\n\nclass ConfigNode : public rclcpp::Node\n{\npublic:\n  ConfigNode() : Node(\"learning_config\")\n  {\n    const double initial_gain = declare_parameter<double>(\"gain\", 1.0);\n    declare_parameter<bool>(\"enabled\", true);\n    if (!valid_gain(initial_gain)) {\n      throw std::invalid_argument(\"gain must be finite and within [0, 2]\");\n    }\n    callback_ = add_on_set_parameters_callback(\n      [](const std::vector<rclcpp::Parameter> & parameters) {\n        rcl_interfaces::msg::SetParametersResult result;\n        result.successful = true;\n        for (const auto & parameter : parameters) {\n          if (parameter.get_name() == \"gain\" &&\n              (parameter.get_type() != rclcpp::ParameterType::PARAMETER_DOUBLE ||\n               !valid_gain(parameter.as_double()))) {\n            result.successful = false;\n            result.reason = \"gain must be a finite double within [0, 2]\";\n            break;\n          }\n        }\n        return result;\n      });\n    publisher_ = create_publisher<std_msgs::msg::Float64>(\"configured_value\", 10);\n    timer_ = create_wall_timer(1s, [this]() {\n      std_msgs::msg::Float64 message;\n      message.data = get_parameter(\"enabled\").as_bool()\n        ? 0.2 * get_parameter(\"gain\").as_double() : 0.0;\n      publisher_->publish(message);\n      RCLCPP_INFO(get_logger(), \"value=%.3f\", message.data);\n    });\n  }\nprivate:\n  static bool valid_gain(double value)\n  {\n    return std::isfinite(value) && value >= 0.0 && value <= 2.0;\n  }\n  rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr callback_;\n  rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr publisher_;\n  rclcpp::TimerBase::SharedPtr timer_;\n};\n\nint main(int argc, char ** argv)\n{\n  rclcpp::init(argc, argv);\n  int exit_code = 0;\n  try {\n    rclcpp::spin(std::make_shared<ConfigNode>());\n  } catch (const std::exception & error) {\n    RCLCPP_ERROR(rclcpp::get_logger(\"config_startup\"), \"%s\", error.what());\n    exit_code = 1;\n  }\n  rclcpp::shutdown();\n  return exit_code;\n}",
+              "explanation": "完整 C++ 节点，启动与动态更新均检查范围。"
+            },
+            {
+              "label": "src/learning_params_cpp/CMakeLists.txt",
+              "language": "cmake",
+              "type": "complete",
+              "code": "cmake_minimum_required(VERSION 3.8)\nproject(learning_params_cpp)\nset(CMAKE_CXX_STANDARD 17)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\nfind_package(ament_cmake REQUIRED)\nfind_package(rclcpp REQUIRED)\nfind_package(rcl_interfaces REQUIRED)\nfind_package(std_msgs REQUIRED)\nadd_executable(config_node src/config_node.cpp)\nament_target_dependencies(config_node rclcpp rcl_interfaces std_msgs)\ninstall(TARGETS config_node DESTINATION lib/${PROJECT_NAME})\nament_package()",
+              "explanation": "完整构建文件。"
+            },
+            {
+              "label": "src/learning_params_cpp/package.xml",
+              "language": "xml",
+              "type": "complete",
+              "code": "<?xml version=\"1.0\"?>\n<package format=\"3\">\n  <name>learning_params_cpp</name>\n  <version>0.0.1</version>\n  <description>Validated parameter lesson</description>\n  <maintainer email=\"learner@example.com\">Learner</maintainer>\n  <license>Apache-2.0</license>\n  <buildtool_depend>ament_cmake</buildtool_depend>\n  <depend>rclcpp</depend>\n  <depend>rcl_interfaces</depend>\n  <depend>std_msgs</depend>\n  <export><build_type>ament_cmake</build_type></export>\n</package>",
+              "explanation": "完整依赖清单。"
+            }
+          ]
+        },
+        {
+          "title": "4. Python 对应实现与类型校验",
+          "paragraphs": [
+            "Python 的 declare_parameter 返回 Parameter，默认值 1.0 使 gain 的类型明确为 double。运行时校验通过 Parameter.Type.DOUBLE 检查类型，再检查数值是否有限及范围。特别处理 NaN 和无穷大很有必要，因为仅用大于或小于比较可能不能表达完整的数值约束。",
+            "Python 回调返回同样的 SetParametersResult 消息。这里没有在校验函数里直接改 self.gain，而是让框架保存参数，定时器读取正式状态。这样被拒绝的请求不会提前改变算法成员。对于需要一次更新多个相关字段的项目，可以将参数合成不可变配置快照，再在接受后切换。",
+            "本节使用独立 Python 文件启动，避免再次重复打包细节。它与 C++ 版本的外部节点名、参数名和发布类型完全相同，便于执行相同 CLI 测试。切换实现前停止旧节点，否则同名节点会使参数服务查询来源不清楚。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "lessons/parameters/config_node.py",
+              "language": "python",
+              "type": "complete",
+              "code": "import math\nimport sys\nimport rclpy\nfrom rclpy.node import Node\nfrom rclpy.parameter import Parameter\nfrom rcl_interfaces.msg import SetParametersResult\nfrom std_msgs.msg import Float64\n\n\nclass ConfigNode(Node):\n    def __init__(self):\n        super().__init__('learning_config')\n        initial = self.declare_parameter('gain', 1.0)\n        initial_gain = initial.value\n        self.declare_parameter('enabled', True)\n        if initial.type_ != Parameter.Type.DOUBLE or not self.valid_gain(initial_gain):\n            raise ValueError('gain must be finite and within [0, 2]')\n        self.add_on_set_parameters_callback(self.validate)\n        self.publisher = self.create_publisher(Float64, 'configured_value', 10)\n        self.timer = self.create_timer(1.0, self.tick)\n\n    @staticmethod\n    def valid_gain(value):\n        return math.isfinite(value) and 0.0 <= value <= 2.0\n\n    def validate(self, parameters):\n        for parameter in parameters:\n            if parameter.name == 'gain':\n                if parameter.type_ != Parameter.Type.DOUBLE or not self.valid_gain(parameter.value):\n                    return SetParametersResult(\n                        successful=False,\n                        reason='gain must be a finite double within [0, 2]')\n        return SetParametersResult(successful=True)\n\n    def tick(self):\n        message = Float64()\n        enabled = self.get_parameter('enabled').value\n        message.data = 0.2 * self.get_parameter('gain').value if enabled else 0.0\n        self.publisher.publish(message)\n        self.get_logger().info(f'value={message.data:.3f}')\n\n\ndef main():\n    rclpy.init()\n    node = None\n    exit_code = 0\n    try:\n        node = ConfigNode()\n        rclpy.spin(node)\n    except KeyboardInterrupt:\n        pass\n    except Exception as error:\n        print(f'configuration failed: {error}', file=sys.stderr)\n        exit_code = 1\n    finally:\n        if node is not None:\n            node.destroy_node()\n        if rclpy.ok():\n            rclpy.shutdown()\n    return exit_code\n\n\nif __name__ == '__main__':\n    sys.exit(main())",
+              "explanation": "完整 Python 文件，参数行为与 C++ 示例对应。"
+            }
+          ]
+        },
+        {
+          "title": "5. CLI 与 YAML 都能配置同一节点",
+          "paragraphs": [
+            "命令行覆盖写在 --ros-args 后，例如 -p gain:=1.5。参数 YAML 则以节点名为第一层，ros__parameters 下列出参数。使用 /learning_config 明确匹配完整节点名；如果启动时改了节点名或命名空间，文件中的键也要相应变化，否则程序可能正常启动却一直使用默认值。",
+            "YAML 里的数值类型同样重要。gain: 1.0 与 gain: 1 的解析类型不同；enabled 应写 true 或 false，而不是把所有值都加引号变成字符串。保存参数时用可读文件管理配置，比把许多 -p 选项散落在 shell 历史里更方便复现。",
+            "启动后用 param get 确认最终值，用 topic echo 确认业务输出。再尝试 gain=3.0，应该收到拒绝原因并保留旧值。参数接口的验收应同时包含合法修改、非法修改和启动覆盖，不能只测试默认启动一次。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "lessons/parameters/config.yaml",
+              "language": "yaml",
+              "type": "complete",
+              "code": "/learning_config:\n  ros__parameters:\n    gain: 1.5\n    enabled: true",
+              "explanation": "完整参数文件，不是 launch YAML；它没有 launch 动作。"
+            },
+            {
+              "label": "构建和带参数启动",
+              "language": "bash",
+              "type": "commands",
+              "code": "cd ~/ros2_learning_ws\nrosdep install --from-paths src --ignore-src --rosdistro jazzy -y\ncolcon build --packages-select learning_params_cpp\nsource install/setup.bash\nros2 run learning_params_cpp config_node --ros-args --params-file ~/ros2_learning_ws/lessons/parameters/config.yaml",
+              "explanation": "预期每秒输出约 0.300。Python 文件可使用同样的 --ros-args --params-file 参数。"
+            },
+            {
+              "label": "另一个已加载环境的终端验证",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 param get /learning_config gain\nros2 param set /learning_config gain 1.2\nros2 param set /learning_config gain 3.0\nros2 param get /learning_config gain\nros2 param set /learning_config enabled false\nros2 topic echo /configured_value",
+              "explanation": "1.2 被接受，3.0 被拒绝；enabled=false 后业务输出应为零。"
+            }
+          ]
+        },
+        {
+          "title": "6. 参数一致性、原子更新与动态生效",
+          "paragraphs": [
+            "多个参数可能共同组成约束，例如最小速度必须小于最大速度。逐项设置时，中间状态可能暂时违反约束；set_parameters_atomically 表达一组参数要么整体接受，要么整体拒绝。验证函数应针对候选的新配置整体检查，不能只分别检查每个字段范围。",
+            "即使参数原子地存入节点，应用层若把它们逐个复制到不同线程，也可能看见不一致快照。需要并发读取时，考虑构建一份完整的新配置对象，在受控位置一次替换。参数协议负责存储和通知，应用仍负责算法内部的一致性。",
+            "改变频率参数不会自动改变已经创建的定时器。若节点启动时按频率创建 timer，动态更新后需要取消并重建或重新配置相关资源。本章故意让 tick 每次读取 gain，避免隐藏这一步；以后设计相机分辨率、硬件模式或控制周期时，必须明确哪些参数支持运行时生效，哪些只能重新配置或重启。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "7. 排查“参数改了但行为没变”",
+          "paragraphs": [
+            "先确认操作的是正确节点，包括命名空间和是否存在同名实例；接着读取参数服务的返回结果，不能只看命令被执行。若返回成功，再 get 最终值；如果值已经改变但输出不变，问题通常位于算法缓存、未重建资源或另一个实际工作节点。",
+            "启动参数未生效时，检查 YAML 节点匹配、缩进、参数类型和实际传入路径。可以先用单个 CLI -p 覆盖做最小实验，排除文件解析与匹配问题，再恢复完整文件。对于复杂 launch，最终参数经过多层组合时应记录来源和优先级，不要只看其中一个默认值。",
+            "最后保留配置快照。param dump 能帮助记录运行时值，但它不能保存设备固件、外部文件内容或所有隐含默认行为。可重复实验还应同时记录代码版本、地图和标定文件、发行版及启动命令。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "保存当前参数快照",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 param dump /learning_config > ~/ros2_learning_ws/lessons/parameters/runtime.yaml",
+              "explanation": "这是运行时参数输出，不应被误认为完整系统备份；修改文件路径前确认不会覆盖需要保留的记录。"
+            }
+          ]
+        }
+      ],
+      "workedExample": {
+        "title": "证明参数变更确实进入算法",
+        "scenario": "操作者把 gain 从一改成一点五，希望输出从零点二变成零点三。",
+        "steps": [
+          "用默认值启动一个实现，观察输出约 0.200。",
+          "设置 gain=1.5，读取参数并观察下一次输出约 0.300。",
+          "尝试 gain=3.0，确认被拒绝且输出保持不变。",
+          "设置 enabled=false，确认输出归零；再用 YAML 重启验证启动覆盖。"
+        ],
+        "result": "配置接口、范围校验和业务生效三个环节都获得可观察证据。"
+      },
+      "exercises": [
+        {
+          "question": "gain 声明为 double，为什么 YAML 中写 gain: 1 可能被拒绝？",
+          "answer": "YAML 将 1 解析为整数，而 1.0 才是浮点。ROS 参数具有类型，不能假定它会自动按业务意图转换。"
+        },
+        {
+          "question": "为什么参数校验回调不应该立即写入硬件？",
+          "answer": "校验阶段的变更仍可能被其他检查拒绝。提前执行副作用会造成参数存储未更新而设备状态已改变，破坏一致性。"
+        },
+        {
+          "question": "param get 显示频率已经变化，定时器却仍按旧周期运行，原因是什么？",
+          "answer": "定时器是按旧参数创建的资源，参数存储改变不会自动重建它。实现需要明确更新定时器或规定该参数只能在重新配置时生效。"
+        },
+        {
+          "question": "min_limit 和 max_limit 有联合约束时，怎样避免逐个修改产生非法中间状态？",
+          "answer": "使用原子参数更新，基于旧配置和全部候选新值构造完整配置后校验；应用层也应以一致快照更新。"
+        }
+      ]
+    },
+    {
+      "id": "launch",
+      "sections": [
+        {
+          "title": "1. 启动文件负责组织系统，不代替节点业务逻辑",
+          "paragraphs": [
+            "当一个系统需要多个节点时，手工打开终端并重复输入参数容易产生遗漏。launch 将这些启动动作、名称、命名空间、参数和重映射写成可保存的系统入口。节点仍然负责处理消息和运行算法，启动文件不应该变成另一个难以测试的业务处理程序。",
+            "Python launch 可以启动 C++ 节点，XML 和 YAML 也可以启动 Python 节点；文件格式与节点源码语言没有绑定关系。三种格式最终都描述启动动作。Python 能使用语言本身组织更复杂的逻辑，但简单系统用声明式格式可能更容易评审，选择应取决于团队需求而非认为某一种格式天然更高级。",
+            "本章用官方 demo_nodes_cpp talker 与 demo_nodes_py listener 组成同一系统：二者放在可配置命名空间中，把 chatter 重映射为 telemetry。三种完整文件应产生相同节点名与话题路径，从而让你通过运行结果理解等价关系，而不只是比较外观。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "2. 创建只安装配置的 bringup 包",
+          "paragraphs": [
+            "启动文件应随包安装到 share 目录，才能通过 ros2 launch 包名 文件名 找到。源码目录里有文件，不意味着已经被安装。一个 bringup 包可以没有 C++ 或 Python业务源码，只负责组织 launch 和 config；它仍需 package.xml 描述运行时需要哪些节点包和启动库。",
+            "本章创建 learning_bringup，下面有 launch 和 config 两个目录。CMake 将这两个目录安装到 share/learning_bringup；包清单声明三种 launch 前端、演示节点和 turtlesim。这样即使在干净环境中安装依赖，工具也知道这些配置需要哪些软件。",
+            "如果只用绝对文件路径执行 ros2 launch，也可以做临时实验，但包安装方式更适合分享和部署，因为它不依赖开发者个人目录。保存完整文件后再构建；修改安装规则或新增配置文件时应重新构建，以确保安装布局包含新内容。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "创建配置包与目录",
+              "language": "bash",
+              "type": "commands",
+              "code": "cd ~/ros2_learning_ws/src\nros2 pkg create --build-type ament_cmake --license Apache-2.0 learning_bringup\nmkdir -p learning_bringup/launch learning_bringup/config",
+              "explanation": "此包只组织启动配置，不生成节点二进制。"
+            },
+            {
+              "label": "src/learning_bringup/CMakeLists.txt",
+              "language": "cmake",
+              "type": "complete",
+              "code": "cmake_minimum_required(VERSION 3.8)\nproject(learning_bringup)\nfind_package(ament_cmake REQUIRED)\ninstall(DIRECTORY launch config DESTINATION share/${PROJECT_NAME})\nament_package()",
+              "explanation": "完整安装文件，将 launch 和 config 目录一起安装。"
+            },
+            {
+              "label": "src/learning_bringup/package.xml",
+              "language": "xml",
+              "type": "complete",
+              "code": "<?xml version=\"1.0\"?>\n<package format=\"3\">\n  <name>learning_bringup</name>\n  <version>0.0.1</version>\n  <description>Equivalent ROS 2 launch formats</description>\n  <maintainer email=\"learner@example.com\">Learner</maintainer>\n  <license>Apache-2.0</license>\n  <buildtool_depend>ament_cmake</buildtool_depend>\n  <exec_depend>launch</exec_depend>\n  <exec_depend>launch_ros</exec_depend>\n  <exec_depend>launch_xml</exec_depend>\n  <exec_depend>launch_yaml</exec_depend>\n  <exec_depend>demo_nodes_cpp</exec_depend>\n  <exec_depend>demo_nodes_py</exec_depend>\n  <exec_depend>turtlesim</exec_depend>\n  <export><build_type>ament_cmake</build_type></export>\n</package>",
+              "explanation": "完整依赖清单，三种格式的解析前端也明确列出。"
+            }
+          ]
+        },
+        {
+          "title": "3. Python：LaunchDescription、Node 与延迟求值",
+          "paragraphs": [
+            "Python 文件提供 generate_launch_description 函数，返回 LaunchDescription，其中包含按配置执行的动作。Node 的 package 指定包，executable 指定安装入口，name 改变 ROS 节点名，namespace 影响相对接口名称，remappings 则指定旧名称到新名称的映射。output=screen 让进程输出出现在启动终端。",
+            "DeclareLaunchArgument 声明可由命令行传入的启动参数，LaunchConfiguration 表示运行启动描述时再解析的值。它不是已经求出的普通字符串，因此不能随意对它执行普通 Python 字符串比较来决定条件。需要条件控制时应使用 launch 的条件与替换机制，或在明确的上下文中求值。",
+            "两个 Node 都使用相同 robot_ns 和相同重映射，因此发布和订阅解析到同一条 /robot1/telemetry。修改命名空间参数会同时移动两端，不需要修改任何节点源码。name 分别是 source 与 sink，避免继承默认节点名后难以区分系统实例。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "src/learning_bringup/launch/telemetry.launch.py",
+              "language": "python",
+              "type": "complete",
+              "code": "from launch import LaunchDescription\nfrom launch.actions import DeclareLaunchArgument\nfrom launch.substitutions import LaunchConfiguration\nfrom launch_ros.actions import Node\n\n\ndef generate_launch_description():\n    robot_ns = LaunchConfiguration('robot_ns')\n    return LaunchDescription([\n        DeclareLaunchArgument('robot_ns', default_value='robot1'),\n        Node(\n            package='demo_nodes_cpp', executable='talker',\n            name='source', namespace=robot_ns, output='screen',\n            remappings=[('chatter', 'telemetry')]),\n        Node(\n            package='demo_nodes_py', executable='listener',\n            name='sink', namespace=robot_ns, output='screen',\n            remappings=[('chatter', 'telemetry')]),\n    ])",
+              "explanation": "完整 Python launch 文件。启动参数只是启动系统的输入，不会自动成为节点的 ROS 参数。"
+            }
+          ]
+        },
+        {
+          "title": "4. XML 与 YAML：同一配置的两种声明式表达",
+          "paragraphs": [
+            "XML 中 arg 对应启动参数声明，node 对应 ROS 节点动作，remap 对应名称映射。ROS 2 的节点入口属性是 exec，不应直接照搬 ROS 1 的 type。$(var robot_ns) 是启动时替换表达式，对应 Python 的 LaunchConfiguration。",
+            "YAML 的最外层是 launch，下面是动作列表；每个 node 包含 pkg、exec、namespace 等字段，remap 是映射列表。它与参数 YAML 的结构完全不同：参数文件以节点名和 ros__parameters 组织。看到扩展名都是 yaml，不能据此判断文件可被同一个工具解析。",
+            "三份文件在本例语义等价，但不代表所有高级 Python 能力都能逐字翻译成 XML 或 YAML。复杂动态生成和自定义动作可能需要 Python。先把公共概念对应清楚，再按需要使用扩展能力，能减少把特定语法误当成 ROS 原理的情况。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "src/learning_bringup/launch/telemetry.launch.xml",
+              "language": "xml",
+              "type": "complete",
+              "code": "<launch>\n  <arg name=\"robot_ns\" default=\"robot1\"/>\n  <node pkg=\"demo_nodes_cpp\" exec=\"talker\" name=\"source\"\n        namespace=\"$(var robot_ns)\" output=\"screen\">\n    <remap from=\"chatter\" to=\"telemetry\"/>\n  </node>\n  <node pkg=\"demo_nodes_py\" exec=\"listener\" name=\"sink\"\n        namespace=\"$(var robot_ns)\" output=\"screen\">\n    <remap from=\"chatter\" to=\"telemetry\"/>\n  </node>\n</launch>",
+              "explanation": "完整 XML launch，节点配置与 Python 版本对应。"
+            },
+            {
+              "label": "src/learning_bringup/launch/telemetry.launch.yaml",
+              "language": "yaml",
+              "type": "complete",
+              "code": "launch:\n  - arg:\n      name: robot_ns\n      default: robot1\n  - node:\n      pkg: demo_nodes_cpp\n      exec: talker\n      name: source\n      namespace: \"$(var robot_ns)\"\n      output: screen\n      remap:\n        - from: chatter\n          to: telemetry\n  - node:\n      pkg: demo_nodes_py\n      exec: listener\n      name: sink\n      namespace: \"$(var robot_ns)\"\n      output: screen\n      remap:\n        - from: chatter\n          to: telemetry",
+              "explanation": "完整 launch YAML。缩进表达层级，列表前的短横线不可随意省略。"
+            }
+          ]
+        },
+        {
+          "title": "5. 启动参数如何变成节点参数",
+          "paragraphs": [
+            "启动参数与 ROS 参数属于不同层。robot_ns 只是 launch 的输入；只有显式放进 Node 的 namespace 才影响节点命名空间。同样，声明一个 red 启动参数并不会自动给 turtlesim 设置 background_r，必须在 parameters 配置里进行映射。",
+            "下面完整示例先读取 config/sim.yaml，再用启动参数覆盖 background_r。FindPackageShare 在已安装包索引中查找目录，PathJoinSubstitution 组合路径，不把用户主目录写死在代码里。ParameterValue 将延迟得到的 red 明确转换为整数，避免字符串解析和参数类型不一致。",
+            "文件中的 /config_sim 要与最终节点名对应。若再加命名空间，必须调整匹配规则或配置组织。参数列表的后续值可覆盖前面同名参数，适合保留一份基础配置，再针对当前运行覆盖少量字段；团队应明确这种优先级，避免多个文件相互覆盖却无人知道最终值。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "src/learning_bringup/config/sim.yaml",
+              "language": "yaml",
+              "type": "complete",
+              "code": "/config_sim:\n  ros__parameters:\n    background_r: 100\n    background_g: 80\n    background_b: 40",
+              "explanation": "完整参数 YAML，注意它没有 launch 顶层。"
+            },
+            {
+              "label": "src/learning_bringup/launch/with_parameters.launch.py",
+              "language": "python",
+              "type": "complete",
+              "code": "from launch import LaunchDescription\nfrom launch.actions import DeclareLaunchArgument\nfrom launch.substitutions import LaunchConfiguration, PathJoinSubstitution\nfrom launch_ros.actions import Node\nfrom launch_ros.parameter_descriptions import ParameterValue\nfrom launch_ros.substitutions import FindPackageShare\n\n\ndef generate_launch_description():\n    config_file = PathJoinSubstitution([\n        FindPackageShare('learning_bringup'), 'config', 'sim.yaml'])\n    red = ParameterValue(LaunchConfiguration('red'), value_type=int)\n    return LaunchDescription([\n        DeclareLaunchArgument('red', default_value='160'),\n        Node(\n            package='turtlesim', executable='turtlesim_node',\n            name='config_sim', output='screen',\n            parameters=[config_file, {'background_r': red}]),\n    ])",
+              "explanation": "完整文件，包含参数文件定位、启动参数声明和显式类型转换；运行需要图形环境。"
+            }
+          ]
+        },
+        {
+          "title": "6. 构建后以实际图验证三种格式等价",
+          "paragraphs": [
+            "安装依赖并构建 learning_bringup 后，在新终端加载 Jazzy 和 overlay。先运行 Python 版本，确认 source、sink 节点都位于 robot1 下，且订阅日志持续出现。观察终端使用 topic info 检查 /robot1/telemetry 的发布与订阅端点。",
+            "停止本次 launch，再分别运行 XML 与 YAML 版本。不要同时启动三份相同配置，否则会产生重复节点名和多个发布者，破坏对照条件。比较的重点是节点全名、话题类型、重映射和数据流，而不是要求进程 ID 或日志时间戳相同。",
+            "最后传入 robot_ns:=robot2，确认完整接口移动到 /robot2。若想同时运行两套实例，分别使用 robot1 和 robot2 即可。只要节点内部使用相对接口名，启动配置就能复用软件；写死的绝对名称则可能逃出命名空间，需要单独检查。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "构建启动包",
+              "language": "bash",
+              "type": "commands",
+              "code": "cd ~/ros2_learning_ws\nrosdep install --from-paths src --ignore-src --rosdistro jazzy -y\ncolcon build --symlink-install --packages-select learning_bringup\nsource install/setup.bash\nros2 launch learning_bringup telemetry.launch.py robot_ns:=robot1",
+              "explanation": "最后一条持续运行，其他检查放到新终端。"
+            },
+            {
+              "label": "逐个替换格式或命名空间",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 停止上一组后分别运行\nros2 launch learning_bringup telemetry.launch.xml robot_ns:=robot1\nros2 launch learning_bringup telemetry.launch.yaml robot_ns:=robot1\nros2 launch learning_bringup telemetry.launch.py robot_ns:=robot2",
+              "explanation": "这是三个独立实验，不是要求一口气顺序执行。"
+            },
+            {
+              "label": "观察终端",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 node list\nros2 topic info /robot1/telemetry --verbose\nros2 topic echo /robot1/telemetry",
+              "explanation": "运行 robot2 实验时相应改为 /robot2/telemetry。"
+            }
+          ]
+        },
+        {
+          "title": "7. 大型系统的 include、分组和就绪条件",
+          "paragraphs": [
+            "大型机器人通常把模型、传感器、控制和导航分成子启动文件，再由顶层入口组合。IncludeLaunchDescription 复用子系统，GroupAction 可以为一组动作设置作用域，PushROSNamespace 为其增加共同命名空间。划分应沿着可独立配置和验证的子系统，而不是按文件长度机械切分。",
+            "启动顺序与业务就绪不是一回事。某进程已经创建，不代表设备初始化完成；延迟几秒的 TimerAction 也只是时间延后，不是可靠的就绪检测。对于需要严格依赖的系统，应使用生命周期状态、服务可用、明确事件或健康检查来决定后续步骤。",
+            "进程退出事件可以触发其他启动动作，但也要区分正常退出与失败退出。复位一个相机驱动时是否需要同时重启感知和导航，应由系统策略决定。launch 提供组织工具，不能替代你对故障传播和恢复边界的设计。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "8. 常见报错的定位顺序",
+          "paragraphs": [
+            "提示 launch 文件找不到时，先用 ros2 pkg prefix 确认实际包位置，再检查 share/learning_bringup/launch 是否安装了文件。提示 Unknown substitution 或解析错误时，检查所用前端、格式、缩进与 ROS 1/ROS 2 语法差异。启动 Python 文件报 ImportError，则检查 launch 相关依赖和系统 Python 环境。",
+            "节点启动了却互相不通信，应检查最终解析名称和重映射是否两端都应用。参数没有生效，则读取目标节点的最终参数，而不是只看 launch 源码里的字面值。with_parameters 示例可用 red:=200 启动，再查询 /config_sim 的 background_r，验证覆盖链。",
+            "将复杂问题缩减到本章两个演示节点的配置，能帮助区分启动系统错误与业务节点错误。保留一份已验证的最小启动文件，逐项增加参数和子系统，比同时修改所有文件更容易看清是哪一步改变了行为。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "检查参数覆盖链",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 终端 A\nros2 launch learning_bringup with_parameters.launch.py red:=200\n# 终端 B\nros2 param get /config_sim background_r\nros2 param get /config_sim background_g",
+              "explanation": "预期 red 来自命令行覆盖值 200，green 来自参数文件的 80；实际结果仍需本机验证。"
+            }
+          ]
+        }
+      ],
+      "workedExample": {
+        "title": "为两个独立机器人复用同一套通信入口",
+        "scenario": "你希望同一台开发机同时运行两套演示系统，接口互不混淆。",
+        "steps": [
+          "构建 learning_bringup 并运行 robot_ns:=robot1。",
+          "在另一终端运行相同 launch 文件但传入 robot_ns:=robot2。",
+          "查询两套 source/sink 节点和 telemetry 话题。",
+          "停止其中一组，确认另一组仍继续工作，再检查绝对名称是否意外跨组共享。"
+        ],
+        "result": "同一源码通过配置形成两个命名空间实例；配置复用并不等于安全隔离。"
+      },
+      "exercises": [
+        {
+          "question": "Python launch 是否只能启动 Python 节点？",
+          "answer": "不是。launch 文件语言与业务节点语言独立，Node 根据 package 和 executable 启动已安装程序。"
+        },
+        {
+          "question": "声明 red 启动参数后，turtlesim 的 background_r 为什么不会自动改变？",
+          "answer": "启动参数只存在于 launch 上下文，必须显式通过 Node(parameters=...) 映射成对应 ROS 参数，并处理正确类型。"
+        },
+        {
+          "question": "为什么同样是 YAML，参数文件不能直接当本章 launch YAML 使用？",
+          "answer": "两者有不同模式。参数文件按节点名和 ros__parameters 组织；launch YAML 包含 launch 动作列表。扩展名相同不代表语法语义相同。"
+        },
+        {
+          "question": "TimerAction 延迟五秒启动导航，是否证明传感器已就绪？",
+          "answer": "不能。延迟只说明时间经过，无法证明初始化成功。应依据生命周期状态、服务可用或明确健康检查决定后续启动。"
+        }
+      ]
+    }
+  ]
+}

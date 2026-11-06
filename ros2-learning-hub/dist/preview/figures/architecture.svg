@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 480" width="880" height="480" role="img" aria-labelledby="architecture-title architecture-desc" xml:lang="zh-CN">
+  <title id="architecture-title">ROS 2：从应用到通信实现</title>
+  <desc id="architecture-desc">应用通过并列的 rclcpp 或 rclpy 客户端库调用共同的 rcl 核心，再经过 RMW 适配层进入常见 DDS 实现。此图只展开常见 DDS 路径，不表示所有 RMW 都基于 DDS。</desc>
+  <defs>
+    <marker id="architecture-arrow-green" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="9" markerHeight="9" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M 1 1 L 9 5 L 1 9 Z" fill="#257457" />
+    </marker>
+    <marker id="architecture-arrow-orange" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="9" markerHeight="9" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M 1 1 L 9 5 L 1 9 Z" fill="#bf722d" />
+    </marker>
+  </defs>
+  <style>text{font-family:"Noto Sans CJK SC","Microsoft YaHei","PingFang SC",sans-serif;} </style>
+  <rect x="0.75" y="0.75" width="878.5" height="478.5" rx="18" fill="#fbfcfa" stroke="#d8e3da" stroke-width="1.4" />
+  <rect x="28" y="25" width="5" height="28" rx="2" fill="#257457" stroke="#257457" stroke-width="1.4" />
+  <text x="46" y="45" font-size="24" fill="#20382c" font-weight="700" text-anchor="start">ROS 2：从应用到通信实现</text>
+  <text x="46" y="69" font-size="16" fill="#5e7166" font-weight="400" text-anchor="start">纵向看接口层次；并列的语言客户端共享同一核心。</text>
+  <path d="M 183 134 V 158" fill="none" stroke="#257457" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#architecture-arrow-green)" />
+  <path d="M 183 206 V 230" fill="none" stroke="#257457" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#architecture-arrow-green)" />
+  <path d="M 481 134 V 158" fill="none" stroke="#257457" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#architecture-arrow-green)" />
+  <path d="M 481 206 V 230" fill="none" stroke="#257457" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#architecture-arrow-green)" />
+  <path d="M 332 278 V 302" fill="none" stroke="#257457" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#architecture-arrow-green)" />
+  <path d="M 332 350 V 374" fill="none" stroke="#257457" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#architecture-arrow-green)" />
+  <rect x="48" y="86" width="568" height="48" rx="12" fill="#257457" stroke="#257457" stroke-width="1.4" />
+  <text x="72" y="117" font-size="21" fill="white" font-weight="700" text-anchor="start">应用节点</text>
+  <text x="596" y="117" font-size="18" fill="white" font-weight="400" text-anchor="end">感知 · 规划 · 控制</text>
+  <rect x="48" y="158" width="270" height="48" rx="12" fill="#edf5ef" stroke="#d8e3da" stroke-width="1.4" />
+  <text x="68" y="189" font-size="21" fill="#257457" font-weight="700" text-anchor="start">rclcpp</text>
+  <text x="299" y="189" font-size="16" fill="#5e7166" font-weight="400" text-anchor="end">C++ 客户端库</text>
+  <rect x="346" y="158" width="270" height="48" rx="12" fill="#edf5ef" stroke="#d8e3da" stroke-width="1.4" />
+  <text x="366" y="189" font-size="21" fill="#257457" font-weight="700" text-anchor="start">rclpy</text>
+  <text x="597" y="189" font-size="16" fill="#5e7166" font-weight="400" text-anchor="end">Python 客户端库</text>
+  <rect x="48" y="230" width="568" height="48" rx="12" fill="white" stroke="#d8e3da" stroke-width="1.4" />
+  <text x="72" y="261" font-size="21" fill="#20382c" font-weight="700" text-anchor="start">rcl</text>
+  <text x="596" y="261" font-size="17" fill="#5e7166" font-weight="400" text-anchor="end">通用 ROS 核心接口</text>
+  <rect x="48" y="302" width="568" height="48" rx="12" fill="white" stroke="#d8e3da" stroke-width="1.4" />
+  <text x="72" y="333" font-size="21" fill="#20382c" font-weight="700" text-anchor="start">RMW</text>
+  <text x="596" y="333" font-size="17" fill="#5e7166" font-weight="400" text-anchor="end">隔离具体中间件实现</text>
+  <rect x="48" y="374" width="568" height="48" rx="12" fill="white" stroke="#d8e3da" stroke-width="1.4" />
+  <text x="72" y="405" font-size="21" fill="#20382c" font-weight="700" text-anchor="start">DDS 实现</text>
+  <text x="596" y="405" font-size="17" fill="#5e7166" font-weight="400" text-anchor="end">Fast DDS / Cyclone DDS</text>
+  <rect x="648" y="86" width="184" height="336" rx="12" fill="#f3f6f2" stroke="#d8e3da" stroke-width="1.4" />
+  <text x="668" y="117" font-size="18" fill="#257457" font-weight="700" text-anchor="start">读图提示</text>
+  <text x="668" y="157" font-size="17" fill="#20382c" font-weight="600" text-anchor="start">同一接口定义</text>
+  <text x="668" y="183" font-size="16" fill="#5e7166" font-weight="400" text-anchor="start">
+    <tspan x="668" dy="0">C++ 与 Python</tspan>
+    <tspan x="668" dy="25">可以跨语言通信。</tspan>
+  </text>
+  <line x1="668" y1="223" x2="812" y2="223" stroke="#d8e3da" />
+  <text x="668" y="256" font-size="17" fill="#20382c" font-weight="600" text-anchor="start">RMW 可以替换</text>
+  <text x="668" y="283" font-size="16" fill="#5e7166" font-weight="400" text-anchor="start">
+    <tspan x="668" dy="0">DDS 是常见路径，</tspan>
+    <tspan x="668" dy="25">并非唯一选择。</tspan>
+  </text>
+  <line x1="668" y1="322" x2="812" y2="322" stroke="#d8e3da" />
+  <text x="668" y="353" font-size="16" fill="#bf722d" font-weight="600" text-anchor="start">发现 ≠ 回调执行</text>
+  <text x="668" y="380" font-size="16" fill="#5e7166" font-weight="400" text-anchor="start">
+    <tspan x="668" dy="0">执行器负责调度</tspan>
+    <tspan x="668" dy="25">应用中的回调。</tspan>
+  </text>
+  <text x="48" y="453" font-size="16" fill="#5e7166" font-weight="400" text-anchor="start">简化范围：未展开类型支持、执行器内部与操作系统。</text>
+</svg>

@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 480" width="880" height="480" role="img" aria-labelledby="control-title control-desc" xml:lang="zh-CN">
+  <title id="control-title">ros2_control：状态与命令组成反馈闭环</title>
+  <desc id="control-desc">controller_manager 在每个典型周期依次调度 read、update、write。硬件读取将设备测量或估计状态交给状态接口；控制器结合参考计算命令接口；硬件写入把命令交给设备。设备反馈返回下一轮读取。图中绿色表示状态，橙色表示命令。</desc>
+  <defs>
+    <marker id="control-arrow-green" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="9" markerHeight="9" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M 1 1 L 9 5 L 1 9 Z" fill="#257457" />
+    </marker>
+    <marker id="control-arrow-orange" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="9" markerHeight="9" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M 1 1 L 9 5 L 1 9 Z" fill="#bf722d" />
+    </marker>
+  </defs>
+  <style>text{font-family:"Noto Sans CJK SC","Microsoft YaHei","PingFang SC",sans-serif;} </style>
+  <rect x="0.75" y="0.75" width="878.5" height="478.5" rx="18" fill="#fbfcfa" stroke="#d8e3da" stroke-width="1.4" />
+  <rect x="28" y="25" width="5" height="28" rx="2" fill="#257457" stroke="#257457" stroke-width="1.4" />
+  <text x="46" y="45" font-size="24" fill="#20382c" font-weight="700" text-anchor="start">ros2_control：状态与命令组成反馈闭环</text>
+  <text x="46" y="69" font-size="16" fill="#5e7166" font-weight="400" text-anchor="start">按周期读取反馈、计算命令、写入设备；状态值与命令值不是同一个量。</text>
+  <rect x="42" y="132" width="796" height="182" rx="12" fill="#f2f5f0" stroke="#d8e3da" stroke-width="1.4" />
+  <text x="62" y="160" font-size="19" fill="#20382c" font-weight="700" text-anchor="start">controller_manager 调度周期</text>
+  <rect x="360" y="85" width="160" height="36" rx="10" fill="#fff4e5" stroke="#ead4b9" stroke-width="1.4" />
+  <text x="440" y="109" font-size="17" fill="#bf722d" font-weight="600" text-anchor="middle">目标 / 参考值</text>
+  <path d="M 440 121 V 183" fill="none" stroke="#bf722d" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#control-arrow-orange)" />
+  <rect x="80" y="183" width="184" height="94" rx="12" fill="white" stroke="#d8e3da" stroke-width="1.4" />
+  <text x="96" y="207" font-size="14" fill="#5e7166" font-weight="600" text-anchor="start">01</text>
+  <text x="172" y="222" font-size="23" fill="#20382c" font-weight="700" text-anchor="middle">read()</text>
+  <text x="172" y="253" font-size="17" fill="#5e7166" font-weight="400" text-anchor="middle">硬件读取状态</text>
+  <rect x="348" y="183" width="184" height="94" rx="12" fill="white" stroke="#d8e3da" stroke-width="1.4" />
+  <text x="364" y="207" font-size="14" fill="#5e7166" font-weight="600" text-anchor="start">02</text>
+  <text x="440" y="222" font-size="23" fill="#20382c" font-weight="700" text-anchor="middle">update()</text>
+  <text x="440" y="253" font-size="17" fill="#5e7166" font-weight="400" text-anchor="middle">控制器计算</text>
+  <rect x="616" y="183" width="184" height="94" rx="12" fill="white" stroke="#d8e3da" stroke-width="1.4" />
+  <text x="632" y="207" font-size="14" fill="#5e7166" font-weight="600" text-anchor="start">03</text>
+  <text x="708" y="222" font-size="23" fill="#20382c" font-weight="700" text-anchor="middle">write()</text>
+  <text x="708" y="253" font-size="17" fill="#5e7166" font-weight="400" text-anchor="middle">硬件写入命令</text>
+  <path d="M 264 232 H 348" fill="none" stroke="#257457" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#control-arrow-green)" />
+  <text x="306" y="217" font-size="15" fill="#257457" font-weight="600" text-anchor="middle">状态接口</text>
+  <path d="M 532 232 H 616" fill="none" stroke="#bf722d" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#control-arrow-orange)" />
+  <text x="574" y="217" font-size="15" fill="#bf722d" font-weight="600" text-anchor="middle">命令接口</text>
+  <rect x="244" y="366" width="392" height="64" rx="12" fill="#edf5ef" stroke="#d8e3da" stroke-width="1.4" />
+  <text x="440" y="394" font-size="21" fill="#257457" font-weight="700" text-anchor="middle">设备 / 仿真后端</text>
+  <text x="440" y="418" font-size="16" fill="#5e7166" font-weight="400" text-anchor="middle">编码器 · 电机 · 模拟器</text>
+  <path d="M 332 366 V 337 H 172 V 277" fill="none" stroke="#257457" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#control-arrow-green)" />
+  <text x="190" y="326" font-size="17" fill="#257457" font-weight="600" text-anchor="start">状态反馈</text>
+  <path d="M 708 277 V 398 H 636" fill="none" stroke="#bf722d" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#control-arrow-orange)" />
+  <text x="727" y="343" font-size="17" fill="#bf722d" font-weight="600" text-anchor="start">命令下发</text>
+  <text x="46" y="462" font-size="15" fill="#5e7166" font-weight="400" text-anchor="start">简化：展示典型同步循环；线程、异步硬件、级联控制与故障处理未展开。</text>
+</svg>

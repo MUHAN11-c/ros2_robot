@@ -1,0 +1,2185 @@
+{
+  "meta": {
+    "title": "ROS 2 Jazzy 基础与工程学习研究",
+    "checkedAt": "2026-11-06",
+    "baseline": "ROS 2 Jazzy / Ubuntu 24.04",
+    "language": "zh-CN",
+    "coverage": "官方基础、通信、构建、配置、并发、组件、时间、测试、网络、安全与性能；不声称收录互联网全部教程",
+    "method": "联网读取官方 Jazzy 源码文档，独立中文归纳。docs.ros.org 页面受到 Anubis 阻挡时使用官方 GitHub jazzy 分支；未编译或运行 ROS 示例。",
+    "versionNotes": [
+      "Jazzy 官方推荐 Ubuntu 24.04 deb 安装；截至核对日不是最新 ROS 2 发行版。",
+      "只使用 jazzy 分支/文档验证 API；Rolling 的新增行为不能自动套用。",
+      "Humble 教程需核对 Ubuntu、Gazebo、controller 参数、消息类型和 launch/API 差异。"
+    ],
+    "rights": "中文说明为原创归纳；来源保留直接链接，不整站复制第三方课程。"
+  },
+  "sources": [
+    {
+      "id": "core-tutorials",
+      "title": "ROS 2 Jazzy 官方教程总目录",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials.rst",
+      "category": "入门",
+      "version": "Jazzy",
+      "description": "按 CLI、客户端库、中级和高级循序学习。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-concepts",
+      "title": "ROS 2 Jazzy 概念目录",
+      "url": "https://docs.ros.org/en/jazzy/Concepts.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Concepts.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Concepts.rst",
+      "category": "架构",
+      "version": "Jazzy",
+      "description": "补足节点、接口、发现、执行器、DDS 等原理。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-howtos",
+      "title": "ROS 2 Jazzy 操作指南",
+      "url": "https://docs.ros.org/en/jazzy/How-To-Guides.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/How-To-Guides.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/How-To-Guides.rst",
+      "category": "工程化",
+      "version": "Jazzy",
+      "description": "适合查找已经明确的工程问题及配置方法。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-install",
+      "title": "Ubuntu 24.04 上安装 Jazzy",
+      "url": "https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Installation/Ubuntu-Install-Debs.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Installation/Ubuntu-Install-Debs.rst",
+      "category": "环境",
+      "version": "Jazzy",
+      "description": "官方软件源、desktop/ros-base 安装、环境加载及双语言验收。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-cli",
+      "title": "CLI 工具学习路线",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Beginner-CLI-Tools.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Beginner-CLI-Tools.rst",
+      "category": "入门",
+      "version": "Jazzy",
+      "description": "turtlesim、节点、话题、服务、参数、动作与 bag 入门。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-client-libraries",
+      "title": "C++ / Python 客户端库教程",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Beginner-Client-Libraries.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Beginner-Client-Libraries.rst",
+      "category": "通信",
+      "version": "Jazzy",
+      "description": "从包构建到跨语言通信的官方示例入口。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-intermediate",
+      "title": "中级教程",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Intermediate.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Intermediate.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Intermediate.rst",
+      "category": "工程化",
+      "version": "Jazzy",
+      "description": "动作、组件、launch、tf2、测试、URDF 与 RViz。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-advanced",
+      "title": "高级教程",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Advanced.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Advanced.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Advanced.rst",
+      "category": "工程化",
+      "version": "Jazzy",
+      "description": "发现、tracing、DDS、录包、安全及 RMW 扩展。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-workspace",
+      "title": "工作空间与 overlay",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Creating-A-Workspace/Creating-A-Workspace.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Beginner-Client-Libraries/Creating-A-Workspace/Creating-A-Workspace.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Beginner-Client-Libraries/Creating-A-Workspace/Creating-A-Workspace.rst",
+      "category": "构建",
+      "version": "Jazzy",
+      "description": "掌握 underlay、overlay、依赖安装与环境加载顺序。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-package",
+      "title": "创建 CMake 或 Python 包",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Creating-Your-First-ROS2-Package.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Beginner-Client-Libraries/Creating-Your-First-ROS2-Package.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Beginner-Client-Libraries/Creating-Your-First-ROS2-Package.rst",
+      "category": "构建",
+      "version": "Jazzy",
+      "description": "两种构建类型的目录、安装与可执行入口差异。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-topics-cli",
+      "title": "话题检查与调试",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Topics/Understanding-ROS2-Topics.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Topics/Understanding-ROS2-Topics.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Topics/Understanding-ROS2-Topics.rst",
+      "category": "通信",
+      "version": "Jazzy",
+      "description": "通过 list、info、echo、hz 与 rqt_graph 检查数据流。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-cpp-topic",
+      "title": "C++ 发布者与订阅者",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Cpp-Publisher-And-Subscriber.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Cpp-Publisher-And-Subscriber.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Cpp-Publisher-And-Subscriber.rst",
+      "category": "通信",
+      "version": "Jazzy",
+      "description": "rclcpp 发布、订阅、定时器与 CMake 接入。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-py-topic",
+      "title": "Python 发布者与订阅者",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Py-Publisher-And-Subscriber.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Py-Publisher-And-Subscriber.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Py-Publisher-And-Subscriber.rst",
+      "category": "通信",
+      "version": "Jazzy",
+      "description": "rclpy 节点类、回调和 setuptools 可执行入口。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-cpp-service",
+      "title": "C++ 服务与客户端",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Cpp-Service-And-Client.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Cpp-Service-And-Client.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Cpp-Service-And-Client.rst",
+      "category": "通信",
+      "version": "Jazzy",
+      "description": "请求响应类型、服务回调及异步请求。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-py-service",
+      "title": "Python 服务与客户端",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Py-Service-And-Client.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Py-Service-And-Client.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Py-Service-And-Client.rst",
+      "category": "通信",
+      "version": "Jazzy",
+      "description": "create_service、create_client 与 Future。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-interfaces",
+      "title": "自定义 msg 和 srv",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Custom-ROS2-Interfaces.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Beginner-Client-Libraries/Custom-ROS2-Interfaces.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Beginner-Client-Libraries/Custom-ROS2-Interfaces.rst",
+      "category": "接口",
+      "version": "Jazzy",
+      "description": "独立 ament_cmake 接口包供 C++ 和 Python 共用。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-cpp-param",
+      "title": "C++ 参数节点",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Using-Parameters-In-A-Class-CPP.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Beginner-Client-Libraries/Using-Parameters-In-A-Class-CPP.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Beginner-Client-Libraries/Using-Parameters-In-A-Class-CPP.rst",
+      "category": "配置",
+      "version": "Jazzy",
+      "description": "声明、读取参数及从 launch 传入覆盖值。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-py-param",
+      "title": "Python 参数节点",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Using-Parameters-In-A-Class-Python.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Beginner-Client-Libraries/Using-Parameters-In-A-Class-Python.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Beginner-Client-Libraries/Using-Parameters-In-A-Class-Python.rst",
+      "category": "配置",
+      "version": "Jazzy",
+      "description": "参数声明、默认值、类型与 launch 配置。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-action-interface",
+      "title": "创建 action 接口",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Intermediate/Creating-an-Action.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Intermediate/Creating-an-Action.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Intermediate/Creating-an-Action.rst",
+      "category": "接口",
+      "version": "Jazzy",
+      "description": "goal、result、feedback 三部分定义及构建依赖。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-cpp-action",
+      "title": "C++ 动作服务端与客户端",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Intermediate/Writing-an-Action-Server-Client/Cpp.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Intermediate/Writing-an-Action-Server-Client/Cpp.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Intermediate/Writing-an-Action-Server-Client/Cpp.rst",
+      "category": "通信",
+      "version": "Jazzy",
+      "description": "rclcpp_action 目标处理、反馈、结果与取消。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-py-action",
+      "title": "Python 动作服务端与客户端",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Intermediate/Writing-an-Action-Server-Client/Py.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Intermediate/Writing-an-Action-Server-Client/Py.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Intermediate/Writing-an-Action-Server-Client/Py.rst",
+      "category": "通信",
+      "version": "Jazzy",
+      "description": "ActionServer、ActionClient 及目标执行过程。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-qos",
+      "title": "QoS 策略与兼容性",
+      "url": "https://docs.ros.org/en/jazzy/Concepts/Intermediate/About-Quality-of-Service-Settings.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Concepts/Intermediate/About-Quality-of-Service-Settings.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Concepts/Intermediate/About-Quality-of-Service-Settings.rst",
+      "category": "通信",
+      "version": "Jazzy",
+      "description": "reliability、durability、history、deadline 及 requested/offered。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-executors",
+      "title": "执行器概念",
+      "url": "https://docs.ros.org/en/jazzy/Concepts/Intermediate/About-Executors.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Concepts/Intermediate/About-Executors.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Concepts/Intermediate/About-Executors.rst",
+      "category": "并发",
+      "version": "Jazzy",
+      "description": "spin、回调调度、单线程与多线程执行器。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-callback-groups",
+      "title": "回调组及死锁规避",
+      "url": "https://docs.ros.org/en/jazzy/How-To-Guides/Using-callback-groups.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/How-To-Guides/Using-callback-groups.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/How-To-Guides/Using-callback-groups.rst",
+      "category": "并发",
+      "version": "Jazzy",
+      "description": "MutuallyExclusive/Reentrant、默认组、生命周期与同步等待问题。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-sync-async",
+      "title": "同步与异步服务调用",
+      "url": "https://docs.ros.org/en/jazzy/How-To-Guides/Sync-Vs-Async.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/How-To-Guides/Sync-Vs-Async.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/How-To-Guides/Sync-Vs-Async.rst",
+      "category": "并发",
+      "version": "Jazzy",
+      "description": "Python call 的死锁风险及 call_async 推荐路径。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-composition",
+      "title": "在一个进程里组合节点",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Intermediate/Composition.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Intermediate/Composition.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Intermediate/Composition.rst",
+      "category": "组件",
+      "version": "Jazzy",
+      "description": "容器、注册组件、运行时加载及卸载。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-composable",
+      "title": "把 C++ 节点写成组件",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Intermediate/Writing-a-Composable-Node.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Intermediate/Writing-a-Composable-Node.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Intermediate/Writing-a-Composable-Node.rst",
+      "category": "组件",
+      "version": "Jazzy",
+      "description": "NodeOptions、注册宏、共享库与容器执行器。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-launch-formats",
+      "title": "Python / XML / YAML launch 对照",
+      "url": "https://docs.ros.org/en/jazzy/How-To-Guides/Launch-file-different-formats.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/How-To-Guides/Launch-file-different-formats.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/How-To-Guides/Launch-file-different-formats.rst",
+      "category": "配置",
+      "version": "Jazzy",
+      "description": "相同系统在三种 launch 格式中的表达及能力差别。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-rosdep",
+      "title": "rosdep 依赖管理",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Intermediate/Rosdep.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Intermediate/Rosdep.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Intermediate/Rosdep.rst",
+      "category": "构建",
+      "version": "Jazzy",
+      "description": "package.xml 依赖键到平台软件包的映射。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-ament",
+      "title": "ament_cmake 用户指南",
+      "url": "https://docs.ros.org/en/jazzy/How-To-Guides/Ament-CMake-Documentation.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/How-To-Guides/Ament-CMake-Documentation.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/How-To-Guides/Ament-CMake-Documentation.rst",
+      "category": "构建",
+      "version": "Jazzy",
+      "description": "目标、依赖、安装、导出与测试。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-tf2",
+      "title": "tf2 C++ / Python 教程路线",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Intermediate/Tf2/Tf2-Main.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Intermediate/Tf2/Tf2-Main.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Intermediate/Tf2/Tf2-Main.rst",
+      "category": "空间与时间",
+      "version": "Jazzy",
+      "description": "广播、监听、时间缓存、四元数和坐标变换调试。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-static-tf",
+      "title": "静态 TF 与命令行广播器",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Intermediate/Tf2/Writing-A-Tf2-Static-Broadcaster-Py.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Intermediate/Tf2/Writing-A-Tf2-Static-Broadcaster-Py.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Intermediate/Tf2/Writing-A-Tf2-Static-Broadcaster-Py.rst",
+      "category": "空间与时间",
+      "version": "Jazzy",
+      "description": "固定传感器外参与 static_transform_publisher。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-testing",
+      "title": "ROS 2 自动化测试",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Intermediate/Testing/Testing-Main.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Intermediate/Testing/Testing-Main.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Intermediate/Testing/Testing-Main.rst",
+      "category": "测试",
+      "version": "Jazzy",
+      "description": "组织单元测试与节点级集成验证的入门。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-security-index",
+      "title": "SROS2 安全教程目录",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Advanced/Security/Security-Main.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Advanced/Security/Security-Main.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Advanced/Security/Security-Main.rst",
+      "category": "安全",
+      "version": "Jazzy",
+      "description": "证书库、跨主机安全、访问控制与部署。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-security",
+      "title": "启用 DDS-Security / SROS2",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Advanced/Security/Introducing-ros2-security.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Advanced/Security/Introducing-ros2-security.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Advanced/Security/Introducing-ros2-security.rst",
+      "category": "安全",
+      "version": "Jazzy",
+      "description": "keystore、enclave、安全环境变量及演示。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-tracing",
+      "title": "ros2_tracing 性能分析",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Advanced/ROS2-Tracing-Trace-and-Analyze.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Advanced/ROS2-Tracing-Trace-and-Analyze.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Advanced/ROS2-Tracing-Trace-and-Analyze.rst",
+      "category": "性能",
+      "version": "Jazzy",
+      "description": "采集执行事件并分析回调耗时。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-rmw",
+      "title": "选择不同 RMW 实现",
+      "url": "https://docs.ros.org/en/jazzy/How-To-Guides/Working-with-multiple-RMW-implementations.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/How-To-Guides/Working-with-multiple-RMW-implementations.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/How-To-Guides/Working-with-multiple-RMW-implementations.rst",
+      "category": "网络",
+      "version": "Jazzy",
+      "description": "用 RMW_IMPLEMENTATION 选择中间件并注意 daemon 环境。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-bag",
+      "title": "rosbag2 录制与回放",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Recording-And-Playing-Back-Data/Recording-And-Playing-Back-Data.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Beginner-CLI-Tools/Recording-And-Playing-Back-Data/Recording-And-Playing-Back-Data.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Beginner-CLI-Tools/Recording-And-Playing-Back-Data/Recording-And-Playing-Back-Data.rst",
+      "category": "调试",
+      "version": "Jazzy",
+      "description": "选择话题、录包、查询元数据与可重复回放。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-doctor",
+      "title": "ros2 doctor 诊断",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Getting-Started-With-Ros2doctor.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Beginner-Client-Libraries/Getting-Started-With-Ros2doctor.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Beginner-Client-Libraries/Getting-Started-With-Ros2doctor.rst",
+      "category": "调试",
+      "version": "Jazzy",
+      "description": "检查环境、平台、网络和正在运行的 ROS 图。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-discovery",
+      "title": "动态发现范围与静态对等端",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Advanced/Improved-Dynamic-Discovery.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Advanced/Improved-Dynamic-Discovery.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Advanced/Improved-Dynamic-Discovery.rst",
+      "category": "网络",
+      "version": "Jazzy",
+      "description": "ROS_AUTOMATIC_DISCOVERY_RANGE、ROS_STATIC_PEERS；DDS 与 Zenoh 配置区别。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-domain",
+      "title": "ROS_DOMAIN_ID 与端口约束",
+      "url": "https://docs.ros.org/en/jazzy/Concepts/Intermediate/About-Domain-ID.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Concepts/Intermediate/About-Domain-ID.rst",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Concepts/Intermediate/About-Domain-ID.rst",
+      "category": "网络",
+      "version": "Jazzy",
+      "description": "同域发现、逻辑隔离及平台端口范围。",
+      "verifiedVia": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-examples",
+      "title": "ros2/examples · jazzy",
+      "url": "https://github.com/ros2/examples/tree/jazzy",
+      "sourceUrl": "https://github.com/ros2/examples/tree/jazzy",
+      "verificationUrl": "https://github.com/ros2/examples/tree/jazzy",
+      "category": "源码示例",
+      "version": "Jazzy",
+      "description": "同一功能的 lambda、成员函数、不同语言等最小实现。",
+      "verifiedVia": "已联网读取一手来源",
+      "checkedAt": "2026-11-06",
+      "type": "官方源码"
+    },
+    {
+      "id": "core-demos",
+      "title": "ros2/demos · jazzy",
+      "url": "https://github.com/ros2/demos/tree/jazzy",
+      "sourceUrl": "https://github.com/ros2/demos/tree/jazzy",
+      "verificationUrl": "https://github.com/ros2/demos/tree/jazzy",
+      "category": "源码示例",
+      "version": "Jazzy",
+      "description": "demo_nodes、action_tutorials、composition、lifecycle 等演示包。",
+      "verifiedVia": "已联网读取一手来源",
+      "checkedAt": "2026-11-06",
+      "type": "官方源码"
+    },
+    {
+      "id": "core-rclcpp",
+      "title": "rclcpp · jazzy",
+      "url": "https://github.com/ros2/rclcpp/tree/jazzy",
+      "sourceUrl": "https://github.com/ros2/rclcpp/tree/jazzy",
+      "verificationUrl": "https://github.com/ros2/rclcpp/tree/jazzy",
+      "category": "客户端库",
+      "version": "Jazzy",
+      "description": "C++ 客户端库源码、组件和生命周期支持。",
+      "verifiedVia": "已联网读取一手来源",
+      "checkedAt": "2026-11-06",
+      "type": "官方源码"
+    },
+    {
+      "id": "core-rclpy",
+      "title": "rclpy · jazzy",
+      "url": "https://github.com/ros2/rclpy/tree/jazzy",
+      "sourceUrl": "https://github.com/ros2/rclpy/tree/jazzy",
+      "verificationUrl": "https://github.com/ros2/rclpy/tree/jazzy",
+      "category": "客户端库",
+      "version": "Jazzy",
+      "description": "Python 客户端库源码、执行器、动作及生命周期支持。",
+      "verifiedVia": "已联网读取一手来源",
+      "checkedAt": "2026-11-06",
+      "type": "官方源码"
+    },
+    {
+      "id": "core-lifecycle",
+      "title": "官方 Lifecycle 演示说明",
+      "url": "https://github.com/ros2/demos/blob/jazzy/lifecycle/README.rst",
+      "sourceUrl": "https://github.com/ros2/demos/blob/jazzy/lifecycle/README.rst",
+      "verificationUrl": "https://github.com/ros2/demos/blob/jazzy/lifecycle/README.rst",
+      "category": "生命周期",
+      "version": "Jazzy",
+      "description": "四个主要状态、转换回调和 lifecycle_talker 示例。",
+      "verifiedVia": "已联网读取一手来源",
+      "checkedAt": "2026-11-06",
+      "type": "官方源码"
+    },
+    {
+      "id": "core-time",
+      "title": "ROS 时间设计",
+      "url": "https://design.ros2.org/articles/clock_and_time.html",
+      "sourceUrl": "https://design.ros2.org/articles/clock_and_time.html",
+      "verificationUrl": "https://design.ros2.org/articles/clock_and_time.html",
+      "category": "空间与时间",
+      "version": "ROS 2 通用设计",
+      "description": "System / Steady / ROS time、/clock、仿真时间和时间跳变。",
+      "verifiedVia": "已联网读取一手来源",
+      "checkedAt": "2026-11-06",
+      "type": "官方设计"
+    },
+    {
+      "id": "core-colcon",
+      "title": "colcon 快速开始",
+      "url": "https://colcon.readthedocs.io/en/released/user/quick-start.html",
+      "sourceUrl": "https://colcon.readthedocs.io/en/released/user/quick-start.html",
+      "verificationUrl": "https://colcon.readthedocs.io/en/released/user/quick-start.html",
+      "category": "构建",
+      "version": "colcon released",
+      "description": "list、build、test、test-result 及包选择参数。",
+      "verifiedVia": "已联网读取一手来源",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-releases",
+      "title": "ROS 2 发行版与维护周期",
+      "url": "https://github.com/ros2/ros2_documentation/blob/rolling/source/Releases.rst",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/rolling/source/Releases.rst",
+      "verificationUrl": "https://github.com/ros2/ros2_documentation/blob/rolling/source/Releases.rst",
+      "category": "版本",
+      "version": "发行版总览",
+      "description": "核对当前发行版与 EOL；Jazzy 支持至 2029-05，Lyrical 已于 2026 发布。",
+      "verifiedVia": "已联网读取一手来源",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-launch-yaml",
+      "title": "官方 YAML launch 源文件",
+      "url": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/How-To-Guides/launch/different_formats_launch.yaml",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/How-To-Guides/launch/different_formats_launch.yaml",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/How-To-Guides/launch/different_formats_launch.yaml",
+      "category": "配置",
+      "version": "Jazzy",
+      "description": "核对 launch YAML 的 node、arg、remap 和 param 结构。",
+      "verifiedVia": "已联网读取一手来源",
+      "checkedAt": "2026-11-06",
+      "type": "官方源码"
+    },
+    {
+      "id": "core-launch-python",
+      "title": "官方 Python launch 源文件",
+      "url": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/How-To-Guides/launch/different_formats_launch.py",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/How-To-Guides/launch/different_formats_launch.py",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/How-To-Guides/launch/different_formats_launch.py",
+      "category": "配置",
+      "version": "Jazzy",
+      "description": "核对 LaunchDescription、Node 及 substitutions API。",
+      "verifiedVia": "已联网读取一手来源",
+      "checkedAt": "2026-11-06",
+      "type": "官方源码"
+    },
+    {
+      "id": "core-action-demo-entry",
+      "title": "动作 Python 示例可执行入口",
+      "url": "https://raw.githubusercontent.com/ros2/demos/jazzy/action_tutorials/action_tutorials_py/setup.py",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/demos/jazzy/action_tutorials/action_tutorials_py/setup.py",
+      "verificationUrl": "https://raw.githubusercontent.com/ros2/demos/jazzy/action_tutorials/action_tutorials_py/setup.py",
+      "category": "源码示例",
+      "version": "Jazzy",
+      "description": "确认 fibonacci_action_server 和 fibonacci_action_client 的真实入口。",
+      "verifiedVia": "已联网读取一手来源",
+      "checkedAt": "2026-11-06",
+      "type": "官方源码"
+    }
+  ],
+  "chapters": [
+    {
+      "id": "architecture",
+      "title": "ROS 2 的分层与通信选型",
+      "stage": "基础",
+      "goals": [
+        "把应用、客户端库、RMW、中间件与工具放到正确的位置",
+        "根据数据流选择 Topic、Service 或 Action"
+      ],
+      "concepts": [
+        "节点是计算图中的功能实体，进程是操作系统的隔离单位；一个进程可以包含多个节点。包则负责代码、依赖与安装组织，三者不能混为一谈。",
+        "话题传输持续数据；服务表达较短的请求与回应；动作适合需要反馈、结果和取消的长期任务。动作并不是一个普通话题。",
+        "rclcpp 与 rclpy 共用接口定义和通信图。语言不同不妨碍通信，但类型、名称、QoS 与发现环境必须匹配。"
+      ],
+      "steps": [
+        "画出传感器 → 定位 → 规划 → 控制的数据流。",
+        "对每条边标注消息类型、频率、是否需要响应与取消。",
+        "先启动 demo talker/listener，再把图中的进程和节点分别标出来。"
+      ],
+      "commands": [
+        {
+          "label": "终端 A：C++ 发布者",
+          "code": "ros2 run demo_nodes_cpp talker",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        },
+        {
+          "label": "终端 B：Python 订阅者",
+          "code": "ros2 run demo_nodes_py listener",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        },
+        {
+          "label": "终端 C：观察计算图",
+          "code": "ros2 node list\nros2 topic list -t",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        }
+      ],
+      "expected": [
+        "C++ 发布的字符串能被 Python 节点收到。",
+        "能解释 package、executable、process 和 node 各负责什么。"
+      ],
+      "pitfalls": [
+        "把“一个节点”默认当作“一个进程”。",
+        "用服务实现持续遥控速度流，或者用普通话题自行拼接目标取消协议。"
+      ],
+      "exercise": "为巡检机器人设计相机数据、修改曝光、导航到目标点三条接口，并说明选择理由。",
+      "sourceIds": [
+        "core-concepts",
+        "core-client-libraries",
+        "core-install"
+      ],
+      "prerequisites": "已安装 ROS 2 Jazzy；每个新终端先 source /opt/ros/jazzy/setup.bash。",
+      "validation": "依据官方 Jazzy 文档与示例核对；本研究未运行 ROS 节点",
+      "exerciseAnswer": "相机图像使用 sensor_msgs/msg/Image 话题，因为它持续产生数据且可以有多个消费者；修改曝光可用参数或短服务，并校验范围；导航目标使用 Action，因为执行较久，需要反馈、取消和最终结果。实际接口名、频率与 frame_id 还要写入系统接口表。"
+    },
+    {
+      "id": "installation",
+      "title": "环境安装与第一条跨语言通信",
+      "stage": "基础",
+      "goals": [
+        "建立可复现的 Jazzy 学习环境",
+        "确认 C++ 与 Python 示例能互通"
+      ],
+      "concepts": [
+        "本路线默认 Ubuntu 24.04 和 Jazzy。Jazzy 是长期支持版本，但截至核对日期并非最新发行版。",
+        "desktop 包含常用图形工具与示例；ros-base 适合无图形部署。安装前应按官方页面配置 ROS apt 软件源。"
+      ],
+      "steps": [
+        "先检查系统发行版、CPU 架构和 UTF-8 locale。",
+        "按官方安装页完成软件源配置，然后选择 desktop。",
+        "在两个独立终端分别加载环境并运行示例；把验证通过的环境记录下来。"
+      ],
+      "commands": [
+        {
+          "label": "检查环境",
+          "code": "cat /etc/os-release\nuname -m\nlocale",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        },
+        {
+          "label": "已完成官方 apt 软件源配置后",
+          "code": "sudo apt update\nsudo apt install ros-jazzy-desktop ros-dev-tools\nsource /opt/ros/jazzy/setup.bash\nprintenv ROS_DISTRO",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        },
+        {
+          "label": "终端 A / B 分别执行",
+          "code": "# 终端 A\nros2 run demo_nodes_cpp talker\n# 终端 B\nros2 run demo_nodes_py listener",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        }
+      ],
+      "expected": [
+        "ROS_DISTRO 输出 jazzy。",
+        "两个示例持续收发，说明基础安装和跨语言接口可用。"
+      ],
+      "pitfalls": [
+        "在 Ubuntu 22.04 上直接照抄 Jazzy deb 安装命令。",
+        "把第三方教程里的 ros-jazzy-desktop-full 当作本路线的官方推荐命令。",
+        "用未 source 的新终端诊断“找不到 ros2”。"
+      ],
+      "exercise": "写一份五行环境记录：操作系统、架构、ROS_DISTRO、RMW_IMPLEMENTATION 和安装方式。",
+      "sourceIds": [
+        "core-install",
+        "core-releases"
+      ],
+      "prerequisites": "Ubuntu 24.04；安装操作需要本机相应权限；本网站展示命令，不自动修改系统。",
+      "validation": "依据官方 Jazzy 文档与示例核对；本研究未运行 ROS 节点",
+      "exerciseAnswer": "示例记录：Ubuntu 24.04；amd64（以 uname -m 实际输出为准）；ROS_DISTRO=jazzy；RMW_IMPLEMENTATION 未设置时使用该安装的默认实现，需从诊断输出确认；通过官方 deb 软件源安装 ros-jazzy-desktop。不要把示例环境冒充你的机器实测结果。"
+    },
+    {
+      "id": "workspace",
+      "title": "工作空间、包、ament 与 colcon",
+      "stage": "基础",
+      "goals": [
+        "理解依赖、构建与安装三个阶段",
+        "能定位 overlay 中实际运行的软件包"
+      ],
+      "concepts": [
+        "colcon 编排多个包；ament_cmake 描述 CMake 包构建，ament_python 使用 setuptools 安装 Python 包。rosdep 按 package.xml 安装外部依赖。",
+        "src 存源码，build 存构建中间产物，install 存运行入口，log 存构建日志。编辑 src 后，运行的仍是 install 中的版本。"
+      ],
+      "steps": [
+        "在独立学习工作空间的 src 下创建包。",
+        "先解决依赖再构建；用 colcon list 确认包被发现。",
+        "在新终端先 source Jazzy，再 source 工作空间 install/setup.bash。",
+        "通过 ros2 pkg prefix 检查当前生效的包路径。"
+      ],
+      "commands": [
+        {
+          "label": "创建 Python 入门包",
+          "code": "mkdir -p ~/ros2_learning_ws/src\ncd ~/ros2_learning_ws/src\nros2 pkg create --build-type ament_python --license Apache-2.0 --node-name hello learning_py --dependencies rclpy",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        },
+        {
+          "label": "构建并加载",
+          "code": "cd ~/ros2_learning_ws\nrosdep install --from-paths src --ignore-src --rosdistro jazzy -y\ncolcon build --symlink-install\nsource install/setup.bash\nros2 pkg prefix learning_py\nros2 run learning_py hello",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        }
+      ],
+      "expected": [
+        "包能被 colcon 找到，可执行入口能由 ros2 run 启动。",
+        "prefix 指向学习工作空间而非不期望的其他 overlay。"
+      ],
+      "pitfalls": [
+        "尚未初始化 rosdep；首次使用需按 rosdep 官方指南初始化并 update。",
+        "把两个同名包放入同一 src。",
+        "Python 修改了 entry_points、package.xml 或 data_files 后以为 --symlink-install 可以免构建。",
+        "编译时加载正在构建的旧 overlay 导致依赖污染。"
+      ],
+      "exercise": "分别创建 ament_cmake 与 ament_python 包，比较构建文件和可执行安装位置。",
+      "sourceIds": [
+        "core-workspace",
+        "core-package",
+        "core-rosdep",
+        "core-ament",
+        "core-colcon"
+      ],
+      "prerequisites": "已安装 ROS 2 Jazzy；每个新终端先 source /opt/ros/jazzy/setup.bash。",
+      "validation": "依据官方 Jazzy 文档与示例核对；本研究未运行 ROS 节点",
+      "exerciseAnswer": "ament_cmake 包至少包含 package.xml 与 CMakeLists.txt，通过 add_executable 和 install(TARGETS ...) 安装程序；ament_python 包包含 package.xml、setup.py、setup.cfg、resource 标记和 Python 模块，通过 console_scripts 暴露入口。两者最后都通过 colcon 安装到工作空间 install 下，由 ros2 run 查询入口。"
+    },
+    {
+      "id": "graph-cli",
+      "title": "用 CLI 读懂运行中的系统",
+      "stage": "基础",
+      "goals": [
+        "从节点、接口、类型和频率逐层定位问题",
+        "掌握 turtlesim 作为通信实验台"
+      ],
+      "concepts": [
+        "先确认端点存在，再确认类型，最后观察内容与频率。图工具显示连接关系，不能保证每个消息及时到达。",
+        "节点名称可重映射；相对话题名会受命名空间影响。查看完整解析后的名字比猜测源码字符串更可靠。"
+      ],
+      "steps": [
+        "运行 turtlesim 和键盘节点。",
+        "列出节点、话题与消息定义。",
+        "按方向键并观察 /turtle1/cmd_vel，接着用 node info 查发布端。",
+        "把节点改到另一命名空间，再比较完整话题名称。"
+      ],
+      "commands": [
+        {
+          "label": "终端 A / B",
+          "code": "# 终端 A\nros2 run turtlesim turtlesim_node\n# 终端 B\nros2 run turtlesim turtle_teleop_key",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        },
+        {
+          "label": "终端 C：由外到内检查",
+          "code": "ros2 node list\nros2 node info /turtlesim\nros2 topic list -t\nros2 topic info /turtle1/cmd_vel --verbose\nros2 interface show geometry_msgs/msg/Twist\nros2 topic echo /turtle1/cmd_vel",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        }
+      ],
+      "expected": [
+        "按键时可看到 linear/angular 数值变化。",
+        "能找出每条数据流的生产者和消费者。"
+      ],
+      "pitfalls": [
+        "键盘终端未获得焦点，看不到数据却误判通信失败。",
+        "仅因 topic list 中出现名称就断言订阅一定收到消息。"
+      ],
+      "exercise": "给第二只 turtlesim 设置 /robot2 命名空间，列出它和第一只不会冲突的名字。",
+      "sourceIds": [
+        "core-cli",
+        "core-topics-cli",
+        "core-doctor"
+      ],
+      "prerequisites": "已安装 ROS 2 Jazzy；每个新终端先 source /opt/ros/jazzy/setup.bash。",
+      "validation": "依据官方 Jazzy 文档与示例核对；本研究未运行 ROS 节点",
+      "exerciseAnswer": "可运行 ros2 run turtlesim turtlesim_node --ros-args -r __ns:=/robot2 -r __node:=sim2；其相对接口解析到 /robot2 下，例如 /robot2/turtle1/cmd_vel。键盘节点也需相同命名空间。注意绝对话题名以 / 开头，不会随命名空间自动改变。"
+    },
+    {
+      "id": "pubsub",
+      "title": "C++ / Python 发布订阅与回调写法",
+      "stage": "通信",
+      "goals": [
+        "写出周期发布与事件订阅节点",
+        "在 lambda、成员函数和 Python 方法间建立映射"
+      ],
+      "concepts": [
+        "发布者决定消息何时产生；订阅回调由执行器在消息到来时调度。timer 也需要执行器调度，构造了 timer 并不等于程序会自动运行。",
+        "C++ 模板类型 std_msgs::msg::String 对应 Python 的 std_msgs.msg.String。接口语义相同，内存管理与回调绑定方式不同。"
+      ],
+      "steps": [
+        "先运行官方跨语言 demo，确认环境无误。",
+        "阅读 examples 中 member_function 与 lambda 的不同实现。",
+        "创建自己的包，声明依赖、添加安装入口并构建。",
+        "将话题重映射到同一名称，交换 C++ 和 Python 的发布订阅角色。"
+      ],
+      "commands": [
+        {
+          "label": "互换两端语言",
+          "code": "# 终端 A\nros2 run demo_nodes_py talker\n# 终端 B\nros2 run demo_nodes_cpp listener",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        },
+        {
+          "label": "统一接口后检查",
+          "code": "ros2 topic type /chatter\nros2 topic hz /chatter\nros2 topic info /chatter --verbose",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        }
+      ],
+      "expected": [
+        "不同语言节点在同名同类型话题上通信。",
+        "将周期从 1 秒改为 0.1 秒后，观察频率相应改变。"
+      ],
+      "pitfalls": [
+        "把 publisher、subscription 或 timer 只存于临时局部变量，未维持对象生命周期。",
+        "C++ lambda 捕获对象生命周期短于回调；Python 未设置 console_scripts。",
+        "把 QoS depth=10 误当成发布频率 10 Hz。"
+      ],
+      "exercise": "给消息加递增序号；停掉订阅者后继续发布，再解释恢复后收到的序号。",
+      "sourceIds": [
+        "core-cpp-topic",
+        "core-py-topic",
+        "core-examples",
+        "core-rclcpp",
+        "core-rclpy"
+      ],
+      "prerequisites": "已安装 ROS 2 Jazzy；每个新终端先 source /opt/ros/jazzy/setup.bash。",
+      "validation": "依据官方 Jazzy 文档与示例核对；本研究未运行 ROS 节点",
+      "exerciseAnswer": "每次发布前增加序号。默认 volatile 订阅恢复后通常从重新匹配后的新消息继续，不能期待补收离线期间的全部消息；具体缓存与可靠重传也受 QoS、资源和端点生命周期影响。若确需离线数据，应记录到 bag 或应用持久存储，不把 reliable 当成无限历史。"
+    },
+    {
+      "id": "interfaces",
+      "title": "自定义消息、服务与动作接口包",
+      "stage": "通信",
+      "goals": [
+        "建立跨语言共用的接口层",
+        "分清数据结构与通信模式"
+      ],
+      "concepts": [
+        ".msg 定义消息；.srv 以一处分隔线区分请求和响应；.action 以两处分隔线区分目标、结果和反馈。",
+        "Jazzy 官方生成接口路径使用 ament_cmake 和 rosidl_generate_interfaces；即使使用者全部是 Python，接口包仍可独立为 CMake 包。"
+      ],
+      "steps": [
+        "优先检查标准接口是否已经能表达数据。",
+        "独立创建 learning_interfaces 并添加 msg/srv/action 文件。",
+        "声明生成、运行时和成员组依赖，再在 CMake 中列出全部接口文件。",
+        "先构建接口包、加载 install，再构建使用接口的节点包。"
+      ],
+      "commands": [
+        {
+          "label": "创建接口包",
+          "code": "cd ~/ros2_learning_ws/src\nros2 pkg create --build-type ament_cmake --license Apache-2.0 learning_interfaces",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        },
+        {
+          "label": "理解标准结构",
+          "code": "ros2 interface show std_msgs/msg/Header\nros2 interface show geometry_msgs/msg/TwistStamped\nros2 interface show example_interfaces/srv/AddTwoInts",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        },
+        {
+          "label": "完成定义和构建配置后",
+          "code": "cd ~/ros2_learning_ws\ncolcon build --packages-select learning_interfaces\nsource install/setup.bash",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        }
+      ],
+      "expected": [
+        "生成的接口可同时被 C++ include 和 Python import。",
+        "ros2 interface show 能显示自己定义的类型。"
+      ],
+      "pitfalls": [
+        "只新建 .msg 文件，却忘记 rosidl_generate_interfaces。",
+        "没有说明数值单位、坐标系、时间戳或数组长度约束。",
+        "用不同定义却同名的接口在两台机器间通信。"
+      ],
+      "exercise": "设计 WheelFeedback.msg，明确时间戳、左右轮角速度单位和有效性字段。",
+      "sourceIds": [
+        "core-interfaces",
+        "core-action-interface",
+        "core-ament"
+      ],
+      "prerequisites": "已安装 ROS 2 Jazzy；每个新终端先 source /opt/ros/jazzy/setup.bash。",
+      "validation": "依据官方 Jazzy 文档与示例核对；本研究未运行 ROS 节点",
+      "exerciseAnswer": "可用 std_msgs/Header header、float64 left_velocity_rad_s、float64 right_velocity_rad_s、bool valid。header.stamp 表示采样时间；约定左右轮从机器人前进方向看，正值对应向前滚动；若数据可能独立失效应分别提供有效性而非单一 bool。只有确需引用坐标系时才为 frame_id 定义明确语义。"
+    },
+    {
+      "id": "services",
+      "title": "服务调用、Future 与超时",
+      "stage": "通信",
+      "goals": [
+        "实现短请求响应功能",
+        "用异步调用保持节点可继续处理事件"
+      ],
+      "concepts": [
+        "服务适合查询、重置等短操作。长任务若需要进度与取消，应选择动作。",
+        "rclcpp 的服务客户端以 async_send_request 返回 future；rclpy 推荐 call_async。返回 future 只表示请求已提交，不表示响应已得到。"
+      ],
+      "steps": [
+        "启动加法服务，先用 CLI 验证服务名和接口。",
+        "分别阅读 C++ 与 Python 官方客户端。",
+        "在节点回调里使用完成回调处理结果，并设计超时及失败日志。",
+        "停掉服务端，确认客户端能报告不可用而非永久卡住。"
+      ],
+      "commands": [
+        {
+          "label": "终端 A：服务端",
+          "code": "ros2 run demo_nodes_cpp add_two_ints_server",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        },
+        {
+          "label": "终端 B：检查和调用",
+          "code": "ros2 service list -t\nros2 service type /add_two_ints\nros2 service call /add_two_ints example_interfaces/srv/AddTwoInts \"{a: 4, b: 8}\"",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        }
+      ],
+      "expected": [
+        "响应 sum 为 12。",
+        "服务不存在时能分清等待发现和等待响应两个阶段。"
+      ],
+      "pitfalls": [
+        "在默认互斥回调组的回调中同步等待本组负责完成的 future，造成死锁。",
+        "把 spin_until_future_complete 随意放进已由同一执行器 spin 的回调。"
+      ],
+      "exercise": "给客户端添加有限等待和失败重试上限，并记录每次请求耗时。",
+      "sourceIds": [
+        "core-cpp-service",
+        "core-py-service",
+        "core-sync-async",
+        "core-callback-groups"
+      ],
+      "prerequisites": "已安装 ROS 2 Jazzy；每个新终端先 source /opt/ros/jazzy/setup.bash。",
+      "validation": "依据官方 Jazzy 文档与示例核对；本研究未运行 ROS 节点",
+      "exerciseAnswer": "等待服务发现应有总超时；请求提交后记录 steady-clock 起点并用异步完成回调处理结果；超时后标记请求已过期，忽略迟到结果，并按有限次数和退避重试。超时并不保证服务端没有执行，所以会改变状态的操作应考虑幂等性或请求 ID。"
+    },
+    {
+      "id": "actions",
+      "title": "动作：目标、反馈、结果与取消",
+      "stage": "通信",
+      "goals": [
+        "实现可观察、可终止的长任务协议",
+        "理解目标接受与目标成功是两个不同阶段"
+      ],
+      "concepts": [
+        "动作客户端先请求目标，服务器可接受或拒绝；接受后会持续反馈并最终产生成功、取消或失败结果。",
+        "C++ rclcpp_action 和 Python rclpy.action 的语法不同，但目标状态机和接口定义一致。取消请求还需要服务端检查并落实。"
+      ],
+      "steps": [
+        "先运行发行版自带的 Fibonacci 动作演示。",
+        "用 action info 和 interface show 读出类型。",
+        "发送目标并观察 feedback 与最终 result。",
+        "在自己的实现中加入可取消的执行循环以及目标输入范围校验。"
+      ],
+      "commands": [
+        {
+          "label": "如未安装，先安装官方示例",
+          "code": "sudo apt install ros-jazzy-action-tutorials-py",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        },
+        {
+          "label": "终端 A：动作服务端",
+          "code": "ros2 run action_tutorials_py fibonacci_action_server",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        },
+        {
+          "label": "终端 B：观察与发送目标",
+          "code": "ros2 action list -t\nros2 action info /fibonacci\nros2 action send_goal /fibonacci action_tutorials_interfaces/action/Fibonacci \"{order: 5}\" --feedback",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        }
+      ],
+      "expected": [
+        "能看到目标被接受、反馈更新以及最终序列。",
+        "知道客户端收到 GoalHandle 不等于任务完成。"
+      ],
+      "pitfalls": [
+        "执行回调阻塞所有其他回调，导致取消请求不能及时处理。",
+        "服务端忘记设定 succeed/abort/canceled 终态或返回结果。",
+        "直接把教程 action 类型名替换成其他包而没同步构建接口。"
+      ],
+      "exercise": "把演示改成带总步数和当前步数的巡检任务，分别测试成功、拒绝与取消路径。",
+      "sourceIds": [
+        "core-action-interface",
+        "core-cpp-action",
+        "core-py-action",
+        "core-action-demo-entry"
+      ],
+      "prerequisites": "已安装 ROS 2 Jazzy；每个新终端先 source /opt/ros/jazzy/setup.bash。",
+      "validation": "依据官方 Jazzy 文档与示例核对；本研究未运行 ROS 节点",
+      "exerciseAnswer": "Goal 包含目标点列表或总步数；Feedback 提供已完成步数；Result 提供完成状态和说明。拒绝空任务或越界输入；执行过程中定期发布反馈并检查取消；成功调用 succeed，取消调用 canceled，故障调用 abort，最终返回对应 Result。并发配置要确保取消请求能被处理。"
+    },
+    {
+      "id": "parameters",
+      "title": "参数、YAML 与动态配置",
+      "stage": "工程化",
+      "goals": [
+        "把可调配置从代码中抽离",
+        "理解启动覆盖与运行时变更的区别"
+      ],
+      "concepts": [
+        "参数属于具体节点，具有名称和类型；它们不是 ROS 1 的全局参数服务器。",
+        "declare_parameter 提供默认值和类型边界。参数文件以节点名和 ros__parameters 组织；启动参数可覆盖代码默认值。",
+        "参数被接受后，应用仍需将新值真正用于算法；仅修改参数存储不会自动重建定时器或控制器内部状态。"
+      ],
+      "steps": [
+        "用 turtlesim 的背景色参数练习 list/get/set。",
+        "dump 参数并检查 YAML 中的节点名。",
+        "启动自己的节点时传入 --params-file。",
+        "给动态参数建立范围校验；把相互约束的参数作为一个配置整体处理。"
+      ],
+      "commands": [
+        {
+          "label": "turtlesim 正在运行时",
+          "code": "ros2 param list /turtlesim\nros2 param get /turtlesim background_r\nros2 param set /turtlesim background_r 160\nros2 param dump /turtlesim",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        },
+        {
+          "label": "命令行覆盖示例",
+          "code": "ros2 run turtlesim turtlesim_node --ros-args -r __node:=configured_sim -p background_r:=160",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        }
+      ],
+      "expected": [
+        "参数查询能看到新值。",
+        "同一可执行程序可通过不同参数创建不同实例。"
+      ],
+      "pitfalls": [
+        "YAML 的节点名称与最终重映射后的名字不匹配。",
+        "整数 1 和浮点数 1.0 被当成完全相同参数类型。",
+        "把 launch argument 当作已经声明到节点的 ROS 参数。"
+      ],
+      "exercise": "为自己的节点设计频率参数，并拒绝 0 和负值；测试参数变化是否真正改变发布周期。",
+      "sourceIds": [
+        "core-cpp-param",
+        "core-py-param",
+        "core-launch-formats"
+      ],
+      "prerequisites": "已安装 ROS 2 Jazzy；每个新终端先 source /opt/ros/jazzy/setup.bash。",
+      "validation": "依据官方 Jazzy 文档与示例核对；本研究未运行 ROS 节点",
+      "exerciseAnswer": "声明 double 类型频率，并在参数回调中校验有限且大于 0。验证失败返回 unsuccessful，保持旧配置；成功后在适当的更新路径重新设置定时器周期。用 ros2 param set 进行合法/非法值测试，再用 ros2 topic hz 和时间戳证实行为变化；只检查 param get 不够。"
+    },
+    {
+      "id": "launch",
+      "title": "Python / XML / YAML 启动系统",
+      "stage": "工程化",
+      "goals": [
+        "用一个入口启动可配置的节点集合",
+        "把三种 launch 写法映射到相同语义"
+      ],
+      "concepts": [
+        "launch 文件描述启动动作；节点源码实现运行逻辑。Python launch 可以启动 C++ 节点，XML/YAML 也可以启动 Python 节点。",
+        "Python 用 LaunchDescription 与 Node 对象；XML/YAML 由前端解析到动作。复杂动态计算可用 Python，但普通参数、重映射、命名空间三种格式均可表达。"
+      ],
+      "steps": [
+        "先制作仅启动一个 talker 的最小文件。",
+        "添加 namespace 与 chatter→telemetry 的 remap。",
+        "用 Python、XML、YAML 分别表达同一配置并逐个运行。",
+        "最后加入 launch argument、参数文件和 include，确认参数传递链。"
+      ],
+      "commands": [
+        {
+          "label": "保存对应完整示例后，逐个测试",
+          "code": "ros2 launch ./telemetry.launch.py\n# 停止后测试另一个格式\nros2 launch ./telemetry.launch.xml\n# 停止后测试另一个格式\nros2 launch ./telemetry.launch.yaml",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        },
+        {
+          "label": "另一个终端验证三者语义",
+          "code": "ros2 node list\nros2 topic list -t\nros2 topic echo /robot1/telemetry",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        }
+      ],
+      "expected": [
+        "三种文件均启动 /robot1/talker，并发布 /robot1/telemetry。",
+        "文件格式改变不影响节点语言和接口。"
+      ],
+      "pitfalls": [
+        "混淆参数 YAML 与 launch YAML；前者有 ros__parameters，后者有 launch 动作。",
+        "把 ROS 1 XML 的 type 属性直接用到 ROS 2 Node 配置；ROS 2 前端使用 exec。",
+        "launch.py 文件存在 src 中但没有安装到包 share 目录。"
+      ],
+      "exercise": "将 robot1 改成启动参数，运行两个命名空间，确认它们不会共用同名相对话题。",
+      "sourceIds": [
+        "core-launch-formats",
+        "core-launch-yaml",
+        "core-launch-python",
+        "core-package"
+      ],
+      "prerequisites": "已安装 ROS 2 Jazzy；每个新终端先 source /opt/ros/jazzy/setup.bash。",
+      "validation": "依据官方 Jazzy 文档与示例核对；本研究未运行 ROS 节点",
+      "exerciseAnswer": "在 Python 中用 DeclareLaunchArgument 与 LaunchConfiguration，把 namespace 传给 Node；XML/YAML 用 arg 和对应 var substitution。分别以 robot1 和 robot2 启动，预期出现 /robot1/telemetry 与 /robot2/telemetry。不要把输入参数写成固定字符串 namespace=\"robot_ns\"。"
+    },
+    {
+      "id": "qos",
+      "title": "QoS：能发现不等于能通信",
+      "stage": "通信",
+      "goals": [
+        "根据传感器和状态数据选择 QoS",
+        "诊断 requested/offered 不兼容"
+      ],
+      "concepts": [
+        "QoS 是发布端与订阅端的契约。可靠订阅者要求 reliable，best_effort 发布者无法满足；reliable 发布者可以向 best_effort 订阅者提供数据。",
+        "transient_local 用于保留历史样本给晚加入者，但双方 durability 及历史深度仍需正确配置；它不等于永久数据库。",
+        "depth 控制 KeepLast 缓存，不控制频率。提高可靠性也不能保证任意网络下的实时截止时间。"
+      ],
+      "steps": [
+        "用 topic info --verbose 读取两个端点 QoS。",
+        "让 best_effort 发布者对接 reliable 订阅者，观察不兼容。",
+        "把订阅者改为 best_effort，再观察消息到达。",
+        "针对地图、激光与控制状态分别写出 QoS 选择理由。"
+      ],
+      "commands": [
+        {
+          "label": "终端 A：best-effort 发布",
+          "code": "ros2 topic pub /qos_demo std_msgs/msg/String \"{data: qos}\" --rate 2 --qos-reliability best_effort",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        },
+        {
+          "label": "终端 B：先观察不匹配，再中断并修改",
+          "code": "ros2 topic echo /qos_demo --qos-reliability reliable\n# Ctrl+C 后\nros2 topic echo /qos_demo --qos-reliability best_effort",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        },
+        {
+          "label": "端点证据",
+          "code": "ros2 topic info /qos_demo --verbose",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        }
+      ],
+      "expected": [
+        "不匹配组合不传输消息；匹配后收到数据。",
+        "能从端点输出而非猜测判断 reliability 和 durability。"
+      ],
+      "pitfalls": [
+        "把 reliable 等同于应用处理“绝不丢数据”。",
+        "只改 RViz 订阅名称却忽略 QoS。",
+        "把 SensorDataQoS 的默认深度误记为所有语言的 depth=10。"
+      ],
+      "exercise": "为 30 Hz 图像与一次性地图发布分别设计 QoS，并测试晚加入订阅者。",
+      "sourceIds": [
+        "core-qos",
+        "core-topics-cli",
+        "core-examples"
+      ],
+      "prerequisites": "已安装 ROS 2 Jazzy；每个新终端先 source /opt/ros/jazzy/setup.bash。",
+      "validation": "依据官方 Jazzy 文档与示例核对；本研究未运行 ROS 节点",
+      "exerciseAnswer": "30 Hz 图像可先从 SensorDataQoS（best effort、volatile、有限历史）开始，接受个别帧丢失以控制延迟；地图晚加入者需要历史数据，通常选择 reliable 与 transient_local，并正确配置发布订阅两端。具体 depth 应由消息大小、频率和允许内存确定，再测试延迟与丢失。"
+    },
+    {
+      "id": "executors",
+      "title": "执行器、回调组与并发边界",
+      "stage": "工程化",
+      "goals": [
+        "解释回调为何没有按预期并发",
+        "设计不会互相阻塞的服务、定时器和订阅"
+      ],
+      "concepts": [
+        "执行器取出就绪事件并运行回调。多线程执行器提供线程资源，回调组决定哪些回调允许并发；只换执行器不保证并发。",
+        "默认回调组为 MutuallyExclusive。同一互斥组内的回调不能并行；Reentrant 允许重入，应用需要自己保护共享数据。",
+        "C++ 和 Python 都支持回调组，但 Python 的 CPU 密集型计算还受解释器执行模型和所用扩展影响。"
+      ],
+      "steps": [
+        "先用单线程执行器观察长回调对定时器的影响。",
+        "为独立的订阅和服务建立不同回调组并保存引用。",
+        "换为 MultiThreadedExecutor，检查延迟是否改善。",
+        "用线程安全队列或锁保护共享状态，并为同步等待绘制依赖关系。"
+      ],
+      "commands": [
+        {
+          "label": "观察现象而非仅看线程数",
+          "code": "ros2 topic hz /chatter\nros2 topic info /chatter --verbose",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        },
+        {
+          "label": "阅读对应官方最小源码",
+          "code": "# 对照 ros2/examples 的 rclcpp/executors 与 rclpy/executors 目录；代码按 Jazzy 分支阅读。",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        }
+      ],
+      "expected": [
+        "能够指出哪个回调组允许并发，哪个资源需要同步。",
+        "服务响应不会因同组回调阻塞而永久等待。"
+      ],
+      "pitfalls": [
+        "在同一互斥组里进行同步服务等待。",
+        "忘记保存回调组对象引用。",
+        "把回调开始顺序当作严格 FIFO 或实时调度保证。"
+      ],
+      "exercise": "给一个 100 ms 的定时器和 1 秒的服务处理添加时间日志，比较执行器与回调组的组合。",
+      "sourceIds": [
+        "core-executors",
+        "core-callback-groups",
+        "core-sync-async"
+      ],
+      "prerequisites": "已安装 ROS 2 Jazzy；每个新终端先 source /opt/ros/jazzy/setup.bash。",
+      "validation": "依据官方 Jazzy 文档与示例核对；本研究未运行 ROS 节点",
+      "exerciseAnswer": "单线程下长服务回调会推迟定时器；多线程但同一默认互斥组也不能并发；多线程配不同互斥组或合适的 Reentrant 组后允许并发。记录回调进入/退出的 steady 时间与线程 ID，比较定时器抖动，并对共享状态加保护。"
+    },
+    {
+      "id": "lifecycle",
+      "title": "生命周期节点与启动顺序",
+      "stage": "工程化",
+      "goals": [
+        "把初始化、运行、停用和清理分开",
+        "按状态组织可控的驱动启动过程"
+      ],
+      "concepts": [
+        "生命周期节点有 unconfigured、inactive、active、finalized 等主要状态。configure/activate 等转换触发对应回调。",
+        "驱动可在 configure 分配资源，在 activate 开始对外工作，在 deactivate 停止输出，再由 cleanup 释放资源。状态机提供协议，具体行为仍由节点实现。"
+      ],
+      "steps": [
+        "启动官方 lifecycle_talker。",
+        "先读取状态，再 configure 和 activate。",
+        "观察 inactive 与 active 时消息行为的差异。",
+        "设计设备初始化失败时的错误返回和重新尝试流程。"
+      ],
+      "commands": [
+        {
+          "label": "终端 A：官方演示节点",
+          "code": "ros2 run lifecycle lifecycle_talker",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        },
+        {
+          "label": "终端 B：操作状态机",
+          "code": "ros2 lifecycle get /lc_talker\nros2 lifecycle set /lc_talker configure\nros2 lifecycle set /lc_talker activate\nros2 lifecycle set /lc_talker deactivate\nros2 lifecycle set /lc_talker cleanup",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        }
+      ],
+      "expected": [
+        "能按合法转换顺序进入 active 再返回 unconfigured。",
+        "理解“节点进程存在”与“节点已激活工作”不同。"
+      ],
+      "pitfalls": [
+        "对 unconfigured 节点直接 activate。",
+        "把普通 publisher 当作会自动遵守所有生命周期状态。",
+        "在转换回调里无期限等待设备，拖住系统 bringup。"
+      ],
+      "exercise": "为一个虚拟温度传感器定义每个状态下允许的操作，并添加初始化失败分支。",
+      "sourceIds": [
+        "core-lifecycle",
+        "core-demos"
+      ],
+      "prerequisites": "已安装 ROS 2 Jazzy；每个新终端先 source /opt/ros/jazzy/setup.bash。",
+      "validation": "依据官方 Jazzy 文档与示例核对；本研究未运行 ROS 节点",
+      "exerciseAnswer": "unconfigured 只接受配置；configure 建立传感器资源，失败返回失败状态并保留明确日志；inactive 资源就绪但停止主输出；activate 开始采样，deactivate 停止采样；cleanup 释放资源。再次 configure 前应确保旧资源已清理；错误处理不能留下后台线程继续输出。"
+    },
+    {
+      "id": "composition",
+      "title": "组件化、独立进程与进程内通信",
+      "stage": "工程化",
+      "goals": [
+        "用同一节点功能选择不同部署方式",
+        "理解组件化和零拷贝是不同问题"
+      ],
+      "concepts": [
+        "rclcpp_components 可把注册好的 C++ 节点共享库加载到容器中；独立进程更容易隔离崩溃，组合部署减少进程开销。",
+        "C++ 组件构造函数接收 NodeOptions，并通过注册宏和 CMake 声明可加载插件。Python 多节点执行器不等同于此 C++ 动态组件机制。",
+        "同进程部署不自动保证零拷贝；还需考虑 intra-process 选项、消息所有权、订阅数量和 RMW 能力。"
+      ],
+      "steps": [
+        "列出已经注册的组件类型。",
+        "启动容器，动态加载 Talker 与 Listener。",
+        "查询容器与组件 ID，再按 ID 卸载一个组件。",
+        "把自己的节点转换成接收 NodeOptions 的可组合类。"
+      ],
+      "commands": [
+        {
+          "label": "终端 A：启动容器",
+          "code": "ros2 run rclcpp_components component_container",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        },
+        {
+          "label": "终端 B：加载与检查",
+          "code": "ros2 component types\nros2 component load /ComponentManager composition composition::Talker\nros2 component load /ComponentManager composition composition::Listener\nros2 component list",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        }
+      ],
+      "expected": [
+        "一个容器进程中出现多个节点并收发消息。",
+        "知道组件 ID 与 ROS 节点名称是不同标识。"
+      ],
+      "pitfalls": [
+        "认为多个节点在同一容器里就必定并行。",
+        "忘记注册、安装或导出共享库，导致 component types 找不到类型。",
+        "未经测量即宣称所有消息实现零拷贝。"
+      ],
+      "exercise": "比较两个独立 demo 进程与一个容器的启动方式，记录优缺点并注明尚未实测的性能假设。",
+      "sourceIds": [
+        "core-composition",
+        "core-composable",
+        "core-executors"
+      ],
+      "prerequisites": "已安装 ROS 2 Jazzy；每个新终端先 source /opt/ros/jazzy/setup.bash。",
+      "validation": "依据官方 Jazzy 文档与示例核对；本研究未运行 ROS 节点",
+      "exerciseAnswer": "独立进程启动简单，故障隔离较强，通信需要跨进程；组件容器可动态加载并探索进程内优化，但一个进程的崩溃可能影响全部组件。线程模型由容器执行器与回调组决定。只有实测后才能比较 CPU、内存和延迟，不能仅凭进程数量给出性能结论。"
+    },
+    {
+      "id": "tf2",
+      "title": "tf2：坐标树、时间戳与外参",
+      "stage": "空间与时间",
+      "goals": [
+        "把传感器观测变换到机器人或地图坐标系",
+        "用工具排查断链、方向与时间问题"
+      ],
+      "concepts": [
+        "tf2 保存随时间变化的坐标关系。查询不仅需要两个 frame，还需要数据对应的时间。",
+        "静态外参表达固定安装关系；运动关系需要动态发布。坐标树要求每个子 frame 有明确父节点，避免多个发布者竞争同一关系。",
+        "常见移动机器人链是 map → odom → base_link → sensor。不同边由不同模块负责，不能重复发布。"
+      ],
+      "steps": [
+        "先用静态广播器建立 base_link → laser。",
+        "用 tf2_echo 检查方向和平移。",
+        "运行 view_frames 观察树结构。",
+        "再加入带 Header 的传感器数据，按其时间戳查询变换。"
+      ],
+      "commands": [
+        {
+          "label": "终端 A：显式参数静态变换",
+          "code": "ros2 run tf2_ros static_transform_publisher --x 0.2 --y 0 --z 0.3 --roll 0 --pitch 0 --yaw 0 --frame-id base_link --child-frame-id laser",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        },
+        {
+          "label": "终端 B：检查",
+          "code": "ros2 run tf2_ros tf2_echo base_link laser\nros2 run tf2_tools view_frames",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        }
+      ],
+      "expected": [
+        "laser 相对 base_link 的位置与输入一致。",
+        "能分清缺少 frame、树不连通和时间外推三类错误。"
+      ],
+      "pitfalls": [
+        "交换 target/source 后误以为结果数值应不变。",
+        "混用角度制和弧度制，或给四元数填入欧拉角。",
+        "实机时间与 use_sim_time 混用，导致变换时间不在缓存范围。"
+      ],
+      "exercise": "再添加 camera_link，解释如何由 tf2 合成 laser 到 camera_link 的变换。",
+      "sourceIds": [
+        "core-tf2",
+        "core-static-tf",
+        "core-time"
+      ],
+      "prerequisites": "已安装 ROS 2 Jazzy；每个新终端先 source /opt/ros/jazzy/setup.bash。",
+      "validation": "依据官方 Jazzy 文档与示例核对；本研究未运行 ROS 节点",
+      "exerciseAnswer": "给 camera_link 也定义相对 base_link 的固定外参。查询 camera_link 与 laser 的关系时，tf2 沿树组合一条变换及另一条的逆变换。查询时明确目标坐标系和源坐标系，先用已知点验证方向；固定外参只需静态发布，避免重复动态发布同一边。"
+    },
+    {
+      "id": "time-bag",
+      "title": "ROS 时间、录包与可重复实验",
+      "stage": "调试",
+      "goals": [
+        "让仿真、回放与节点共享一致的时间基准",
+        "用 rosbag2 固定输入重现算法问题"
+      ],
+      "concepts": [
+        "ROS time 可由 /clock 驱动；use_sim_time 是节点参数。系统时间和 steady time 适用于不同目的，不应把所有时间差都来自同一种时钟。",
+        "bag 保存消息与元数据，回放会重新发布数据。录制时应考虑 /tf、/tf_static、传感器与配置上下文。",
+        "记录数据不会自动记录整个系统的运行逻辑；重现结果还依赖代码版本、参数与时间配置。"
+      ],
+      "steps": [
+        "在 turtlesim 中录制控制话题。",
+        "停止录制并检查消息数量和时长。",
+        "停止键盘输入，重置场景后回放。",
+        "对使用时间戳的算法明确 use_sim_time，并由回放提供 /clock。"
+      ],
+      "commands": [
+        {
+          "label": "录制：turtlesim 与键盘节点已运行",
+          "code": "ros2 bag record -o turtle_session /turtle1/cmd_vel /turtle1/pose",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        },
+        {
+          "label": "停止录制后检查与回放",
+          "code": "ros2 bag info turtle_session\nros2 bag play turtle_session",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        },
+        {
+          "label": "对依赖仿真时间的重放系统",
+          "code": "ros2 bag play turtle_session --clock\n# 消费节点须配置 use_sim_time=true；勿同时启动竞争的 /clock 发布者。",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        }
+      ],
+      "expected": [
+        "能查看录包包含的类型、数量和持续时间。",
+        "同一输入可重复用于调试，时间基准有明确来源。"
+      ],
+      "pitfalls": [
+        "启用 use_sim_time 却没有 /clock，导致 ROS 时间不推进。",
+        "回放和实机驱动同时发布同名传感器数据。",
+        "以为重放速度改变后所有外部设备行为也会同步改变。"
+      ],
+      "exercise": "为一次定位故障写录包清单：必需话题、参数快照、代码提交和时钟设置。",
+      "sourceIds": [
+        "core-bag",
+        "core-time",
+        "core-qos"
+      ],
+      "prerequisites": "已安装 ROS 2 Jazzy；每个新终端先 source /opt/ros/jazzy/setup.bash。",
+      "validation": "依据官方 Jazzy 文档与示例核对；本研究未运行 ROS 节点",
+      "exerciseAnswer": "清单至少包含相关传感器话题、/tf、/tf_static，以及定位输出和诊断；另保存参数 YAML、地图/标定、Git 提交、ROS 发行版与软件包版本。记录使用真实时间还是 /clock；回放时停止竞争输入源，统一消费者 use_sim_time，并明确采用哪个 /clock 发布者。"
+    },
+    {
+      "id": "testing",
+      "title": "测试、诊断与持续集成",
+      "stage": "工程化",
+      "goals": [
+        "把算法测试和节点集成测试分层",
+        "用可重复证据判断构建是否可用"
+      ],
+      "concepts": [
+        "纯算法适合用 gtest/pytest 做输入输出测试；节点连接、进程退出和话题行为适合 launch_testing 等集成测试。",
+        "构建成功不等于测试成功；colcon test 启动测试后，还应检查 test-result。",
+        "诊断工具提供环境线索，不能替代业务验收。测试环境要记录发行版、依赖和参数。"
+      ],
+      "steps": [
+        "先为纯计算函数写可重复单元测试。",
+        "增加进程启动、有效消息到达与退出行为的集成检查。",
+        "在干净的 Jazzy 环境运行构建和测试。",
+        "失败时保存日志、依赖版本和最小重现命令。"
+      ],
+      "commands": [
+        {
+          "label": "工作空间根目录",
+          "code": "colcon build --symlink-install\ncolcon test --event-handlers console_direct+\ncolcon test-result --verbose",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        },
+        {
+          "label": "环境基线",
+          "code": "ros2 doctor --report",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        }
+      ],
+      "expected": [
+        "能区分构建失败、测试断言失败和测试根本未注册。",
+        "报告包含测试数量、失败数量与日志路径。"
+      ],
+      "pitfalls": [
+        "只看 colcon test 命令退出，而不读取 test-result。",
+        "依赖任意 sleep 代替就绪检测，造成偶发失败。",
+        "在同一 ROS_DOMAIN_ID 上并行运行互相干扰的集成测试。"
+      ],
+      "exercise": "给“超时后停止输出命令”的行为添加一个可重复测试，并说明如何隔离 ROS 图。",
+      "sourceIds": [
+        "core-testing",
+        "core-colcon",
+        "core-doctor"
+      ],
+      "prerequisites": "已安装 ROS 2 Jazzy；每个新终端先 source /opt/ros/jazzy/setup.bash。",
+      "validation": "依据官方 Jazzy 文档与示例核对；本研究未运行 ROS 节点",
+      "exerciseAnswer": "给控制逻辑注入可控时间和命令输入：有效命令到达后输出应更新；超过超时阈值后输出应为零。集成测试用独立 ROS_DOMAIN_ID 和明确命名空间，等待端点就绪而非固定长 sleep；在测试结束销毁进程，检查退出状态与消息内容。"
+    },
+    {
+      "id": "network",
+      "title": "DDS、RMW、多机发现与隔离",
+      "stage": "工程化",
+      "goals": [
+        "为双机通信建立一致的发现配置",
+        "按层定位网络与中间件问题"
+      ],
+      "concepts": [
+        "RMW 是 ROS 客户端与中间件之间的适配层。切换实现要先安装对应软件包，并保持整个实验的配置可追溯。",
+        "ROS_DOMAIN_ID 用于逻辑分组，不是安全认证。DDS 发现还受子网、多播、防火墙、网络接口和发现范围影响。",
+        "Jazzy 的动态发现环境变量用于支持它们的 DDS 实现；rmw_zenoh 使用自己的配置方式。"
+      ],
+      "steps": [
+        "先确保单机 talker/listener 能通信。",
+        "在两台机器使用相同域和兼容消息定义。",
+        "逐项检查发现范围、网络互通与接口配置。",
+        "切换 RMW 后停止旧 daemon，再启动诊断工具。"
+      ],
+      "commands": [
+        {
+          "label": "每个相关终端统一设置",
+          "code": "export ROS_DOMAIN_ID=42\nexport ROS_AUTOMATIC_DISCOVERY_RANGE=SUBNET\nros2 daemon stop",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        },
+        {
+          "label": "可选：安装并选择 Cyclone DDS",
+          "code": "sudo apt install ros-jazzy-rmw-cyclonedds-cpp\nexport RMW_IMPLEMENTATION=rmw_cyclonedds_cpp\nros2 daemon stop\nros2 run demo_nodes_cpp talker",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        }
+      ],
+      "expected": [
+        "同域、匹配配置的两台机器能收发 demo 消息。",
+        "改变域后节点不再互相发现，恢复后重新发现。"
+      ],
+      "pitfalls": [
+        "把 domain ID 当成访问控制。",
+        "后台 daemon 使用旧 RMW，CLI 视图与节点环境不一致。",
+        "在 DDS 和 Zenoh 间机械复制发现变量。"
+      ],
+      "exercise": "写一份双机诊断顺序：环境、域、消息类型、QoS、网络、RMW，再记录每步证据。",
+      "sourceIds": [
+        "core-rmw",
+        "core-domain",
+        "core-discovery",
+        "core-doctor"
+      ],
+      "prerequisites": "已安装 ROS 2 Jazzy；每个新终端先 source /opt/ros/jazzy/setup.bash。",
+      "validation": "依据官方 Jazzy 文档与示例核对；本研究未运行 ROS 节点",
+      "exerciseAnswer": "先确认两个终端加载相同目标发行版和预期 overlay，再核对域与发现范围；检查 interface 定义与 topic info 的 QoS；确认主机网络、接口和多播/防火墙条件；最后比较 RMW 配置及 daemon。每一步保存输出，并用最小 talker/listener 排除上层算法问题。"
+    },
+    {
+      "id": "security",
+      "title": "SROS2：身份、加密与权限",
+      "stage": "工程化",
+      "goals": [
+        "理解 keystore 与 enclave 的职责",
+        "完成安全通信前的配置检查"
+      ],
+      "concepts": [
+        "SROS2 为支持 DDS-Security 的中间件准备身份与权限材料。节点使用 enclave 选择安全身份；安全通信还依赖治理和访问权限配置。",
+        "安全模式不能只靠 ROS_DOMAIN_ID 实现。证书配置和应用权限应分开审查。",
+        "不同中间件及发行版的安全支持存在限制，不能直接假设跨厂商安全互通。"
+      ],
+      "steps": [
+        "先确认所用 RMW 的安全支持。",
+        "在专用实验目录创建 keystore 和两个 enclave。",
+        "按官方教程设置 ROS_SECURITY_KEYSTORE、ROS_SECURITY_ENABLE 和 Enforce 策略。",
+        "分别启动带 enclave 的 talker/listener，最后收紧权限测试拒绝路径。"
+      ],
+      "commands": [
+        {
+          "label": "只创建实验身份材料",
+          "code": "ros2 security create_keystore ./security_demo\nros2 security create_enclave ./security_demo /demo/talker\nros2 security create_enclave ./security_demo /demo/listener",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        },
+        {
+          "label": "后续配置入口",
+          "code": "# 按官方 SROS2 教程设置绝对 keystore 路径、启用安全及 Enforce 策略。\n# 运行节点时通过 --ros-args --enclave 指定其身份。",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        }
+      ],
+      "expected": [
+        "能找到为各 enclave 生成的材料并解释谁可以访问哪个话题。",
+        "启用强制策略后错误身份不能静默退回无安全模式。"
+      ],
+      "pitfalls": [
+        "把带私钥的整个 keystore 提交到公共仓库。",
+        "仅启用加密却未检查发布/订阅权限。",
+        "将某一 DDS 厂商验证成功推断为所有 RMW 均适用。"
+      ],
+      "exercise": "为传感器发布者和只读监控器列出最小话题权限，并测试未授权写入被拒绝。",
+      "sourceIds": [
+        "core-security",
+        "core-security-index",
+        "core-rmw"
+      ],
+      "prerequisites": "已安装 ROS 2 Jazzy；每个新终端先 source /opt/ros/jazzy/setup.bash。",
+      "validation": "依据官方 Jazzy 文档与示例核对；本研究未运行 ROS 节点",
+      "exerciseAnswer": "传感器身份只获得发布其数据话题所需权限；监控身份只允许订阅这些数据及必要诊断接口，默认拒绝控制命令发布。用未授权身份尝试写入控制话题并核对拒绝日志；同时验证正常订阅仍可用。证书和私钥按各节点身份分发，不共享整套管理员材料。"
+    },
+    {
+      "id": "performance",
+      "title": "性能分析、Tracing 与实时边界",
+      "stage": "工程化",
+      "goals": [
+        "建立吞吐、延迟和回调耗时的测量方法",
+        "区分平均性能与截止时间保证"
+      ],
+      "concepts": [
+        "topic hz 是观测工具，测得的接收频率会受观察节点和资源竞争影响；它不是端到端延迟的完整证明。",
+        "tracing 可关联执行器与回调事件，用于定位排队、阻塞和过长计算。优化前要固定负载、消息大小和机器配置。",
+        "多线程、组合节点与零拷贝各有条件；在普通桌面内核上平均更快并不等于硬实时保证。"
+      ],
+      "steps": [
+        "选定指标：发布频率、端到端延迟分布、CPU、内存和丢失序号。",
+        "记录原始基线并启用 tracing。",
+        "一次只改变一个因素，例如执行器或部署方式。",
+        "比较分位数和最坏样本，解释异常来自何处。"
+      ],
+      "commands": [
+        {
+          "label": "安装并检查追踪能力",
+          "code": "sudo apt install ros-jazzy-ros2trace ros-jazzy-tracetools-analysis\nros2 run tracetools status",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        },
+        {
+          "label": "按教程采集会话",
+          "code": "ros2 trace --session-name learning-trace --list\n# 根据提示开始记录，再在另一终端运行待分析节点。",
+          "type": "commands",
+          "validation": "仅按文档核对，未在本次任务中执行"
+        }
+      ],
+      "expected": [
+        "能获得一份可用于分析回调耗时的 trace。",
+        "每个优化结论都有固定负载和前后测量数据。"
+      ],
+      "pitfalls": [
+        "只报告平均值，忽略长尾和超时。",
+        "把 intra-process、DDS shared memory 与 loaned message 混成同一个开关。",
+        "为追求频率在实时路径里大量分配内存或同步打印日志。"
+      ],
+      "exercise": "比较单进程组件与独立进程的同一消息链；列明环境、指标和未验证的推测。",
+      "sourceIds": [
+        "core-tracing",
+        "core-executors",
+        "core-composition",
+        "core-qos"
+      ],
+      "prerequisites": "已安装 ROS 2 Jazzy；每个新终端先 source /opt/ros/jazzy/setup.bash。",
+      "validation": "依据官方 Jazzy 文档与示例核对；本研究未运行 ROS 节点",
+      "exerciseAnswer": "保持同一机器、发行版、RMW、消息类型、大小、频率与订阅数。分别记录进程布局、intra-process 配置、CPU/内存、延迟分布与序号丢失；重复多轮并报告分位数和异常样本。把未测的零拷贝、实时性或跨机器收益明确标为假设。"
+    }
+  ],
+  "comparisons": [
+    {
+      "id": "compare-publisher",
+      "title": "相同发布行为：rclcpp 与 rclpy",
+      "question": "同一 std_msgs/String 话题如何用两种语言发布？",
+      "variants": [
+        {
+          "label": "C++ / rclcpp",
+          "language": "cpp",
+          "code": "// Node 派生类的方法内；publisher_ 为持久成员\npublisher_ = create_publisher<std_msgs::msg::String>(\"telemetry\", 10);\nstd_msgs::msg::String message;\nmessage.data = \"robot ready\";\npublisher_->publish(message);",
+          "scope": "核心片段；需完整节点类、头文件、main、依赖及安装目标",
+          "when": "需要静态类型、C++ 生态库或对资源控制更细时",
+          "type": "snippet",
+          "validation": "仅按官方 Jazzy API 核对，未编译/运行"
+        },
+        {
+          "label": "Python / rclpy",
+          "language": "python",
+          "code": "# Node 派生类的方法内；self.publisher 持久保存对象\nself.publisher = self.create_publisher(String, \"telemetry\", 10)\nmessage = String()\nmessage.data = \"robot ready\"\nself.publisher.publish(message)",
+          "scope": "核心片段；需导入 String、完整节点、main 和 console_scripts",
+          "when": "快速验证、算法编排与 Python 库整合",
+          "type": "snippet",
+          "validation": "仅按官方 Jazzy API 核对，未编译/运行"
+        }
+      ],
+      "notes": [
+        "两端接口类型和解析后的话题名必须相同。",
+        "10 表示 KeepLast 队列深度，不是 10 Hz。周期发布需另建 timer。",
+        "不把语言选择直接等同于实时性保证。"
+      ],
+      "sourceIds": [
+        "core-cpp-topic",
+        "core-py-topic"
+      ],
+      "version": "Jazzy",
+      "validation": "API 与官方 Jazzy 原文对照；未做 ROS 运行验证"
+    },
+    {
+      "id": "compare-callback",
+      "title": "回调的不同写法：lambda、绑定成员方法、Python 方法",
+      "question": "改变回调写法时，通信逻辑是否改变？",
+      "variants": [
+        {
+          "label": "C++ lambda",
+          "language": "cpp",
+          "code": "subscription_ = create_subscription<std_msgs::msg::String>(\n  \"telemetry\", 10,\n  [this](std_msgs::msg::String::ConstSharedPtr message) {\n    RCLCPP_INFO(get_logger(), \"%s\", message->data.c_str());\n  });",
+          "scope": "类方法内核心片段；subscription_ 需为成员",
+          "when": "短小、仅在本处使用的处理逻辑",
+          "type": "snippet",
+          "validation": "仅按官方 Jazzy API 核对，未编译/运行"
+        },
+        {
+          "label": "C++ 成员函数",
+          "language": "cpp",
+          "code": "subscription_ = create_subscription<std_msgs::msg::String>(\n  \"telemetry\", 10,\n  std::bind(&TelemetryNode::on_message, this, std::placeholders::_1));\n// on_message 的签名：\n// void on_message(std_msgs::msg::String::ConstSharedPtr message);",
+          "scope": "核心片段；需定义 TelemetryNode::on_message 并包含 functional",
+          "when": "较长逻辑、需要单独命名的方法",
+          "type": "snippet",
+          "validation": "仅按官方 Jazzy API 核对，未编译/运行"
+        },
+        {
+          "label": "Python 绑定方法",
+          "language": "python",
+          "code": "self.subscription = self.create_subscription(\n    String, \"telemetry\", self.on_message, 10)\n\ndef on_message(self, message):\n    self.get_logger().info(message.data)",
+          "scope": "片段；构造函数语句与类方法需放在对应位置",
+          "when": "常见 Python 节点类写法",
+          "type": "snippet",
+          "validation": "仅按官方 Jazzy API 核对，未编译/运行"
+        }
+      ],
+      "notes": [
+        "三种写法都由 executor 调度；不改变 QoS 或数据类型。",
+        "C++ 捕获 this 时必须保证对象在回调期间存活。"
+      ],
+      "sourceIds": [
+        "core-examples",
+        "core-cpp-topic",
+        "core-py-topic"
+      ],
+      "version": "Jazzy",
+      "validation": "API 与官方 Jazzy 原文对照；未做 ROS 运行验证"
+    },
+    {
+      "id": "compare-service",
+      "title": "服务：C++ Future 与 Python Future",
+      "question": "发送请求后如何继续处理其他事件？",
+      "variants": [
+        {
+          "label": "C++ 异步客户端",
+          "language": "cpp",
+          "code": "auto request = std::make_shared<example_interfaces::srv::AddTwoInts::Request>();\nrequest->a = 4;\nrequest->b = 8;\nclient_->async_send_request(request,\n  [this](rclcpp::Client<example_interfaces::srv::AddTwoInts>::SharedFuture result) {\n    RCLCPP_INFO(get_logger(), \"sum=%ld\", result.get()->sum);\n  });",
+          "scope": "核心片段；client_ 已 create_client 且服务可用；节点持续 spin",
+          "when": "由完成回调处理结果，避免阻塞发起回调",
+          "type": "snippet",
+          "validation": "仅按官方 Jazzy API 核对，未编译/运行"
+        },
+        {
+          "label": "Python 异步客户端",
+          "language": "python",
+          "code": "request = AddTwoInts.Request()\nrequest.a, request.b = 4, 8\nfuture = self.client.call_async(request)\nfuture.add_done_callback(self.on_response)\n\n# 另定义类方法，并为异常/超时添加处理\ndef on_response(self, future):\n    self.get_logger().info(f\"sum={future.result().sum}\")",
+          "scope": "核心片段；client 已创建，需导入接口并持续 spin",
+          "when": "与 rclpy 回调模型配合的常用方式",
+          "type": "snippet",
+          "validation": "仅按官方 Jazzy API 核对，未编译/运行"
+        }
+      ],
+      "notes": [
+        "需要服务发现等待、超时和异常处理；此对照仅展示请求与结果 API。",
+        "Python 的同步 call() 不是 C++ 的直接对应物；官方建议优先 call_async。"
+      ],
+      "sourceIds": [
+        "core-cpp-service",
+        "core-py-service",
+        "core-sync-async"
+      ],
+      "version": "Jazzy",
+      "validation": "API 与官方 Jazzy 原文对照；未做 ROS 运行验证"
+    },
+    {
+      "id": "compare-actions",
+      "title": "动作：两种语言的同一状态机",
+      "question": "Goal、Feedback 和 Result 在 C++/Python 中怎样对应？",
+      "variants": [
+        {
+          "label": "C++ / rclcpp_action",
+          "language": "text",
+          "code": "创建服务端：rclcpp_action::create_server<ActionT>(...)\n处理目标：handle_goal → ACCEPT_AND_EXECUTE / REJECT\n反馈：goal_handle->publish_feedback(feedback)\n成功：goal_handle->succeed(result)\n取消：goal_handle->is_canceling() → canceled(result)\n客户端：async_send_goal → async_get_result",
+          "scope": "API 对照清单；不是可执行源码",
+          "when": "C++ 动作节点和组件",
+          "type": "snippet",
+          "validation": "仅按官方 Jazzy API 核对，未编译/运行"
+        },
+        {
+          "label": "Python / rclpy.action",
+          "language": "text",
+          "code": "创建服务端：ActionServer(node, ActionT, name, execute_callback, ...)\n处理目标：goal_callback → GoalResponse.ACCEPT / REJECT\n反馈：goal_handle.publish_feedback(feedback)\n成功：goal_handle.succeed(); return result\n取消：goal_handle.is_cancel_requested → canceled(); return result\n客户端：send_goal_async → get_result_async",
+          "scope": "API 对照清单；不是可执行源码",
+          "when": "Python 任务逻辑与快速实验",
+          "type": "snippet",
+          "validation": "仅按官方 Jazzy API 核对，未编译/运行"
+        }
+      ],
+      "notes": [
+        "两端可共用同一 .action。",
+        "接受目标、完成执行和收到结果是不同阶段。",
+        "取消回调、可取消执行循环和 executor 配置需要配套设计。"
+      ],
+      "sourceIds": [
+        "core-cpp-action",
+        "core-py-action",
+        "core-action-interface"
+      ],
+      "version": "Jazzy",
+      "validation": "API 与官方 Jazzy 原文对照；未做 ROS 运行验证"
+    },
+    {
+      "id": "compare-params",
+      "title": "相同参数：命令行、参数 YAML、Python launch",
+      "question": "运行配置放在哪一层更合适？",
+      "variants": [
+        {
+          "label": "CLI",
+          "language": "bash",
+          "code": "ros2 run turtlesim turtlesim_node --ros-args -r __node:=sim -p background_r:=160",
+          "scope": "可直接运行，需图形环境及 turtlesim",
+          "when": "一次性实验与最小重现",
+          "type": "commands",
+          "validation": "仅按官方 Jazzy API 核对，未编译/运行"
+        },
+        {
+          "label": "参数文件",
+          "language": "yaml",
+          "code": "sim:\n  ros__parameters:\n    background_r: 160\n    background_g: 80\n    background_b: 40",
+          "scope": "保存为 colors.yaml 后使用 --params-file colors.yaml；节点名设为 sim",
+          "when": "可评审、可复用的环境配置",
+          "type": "snippet",
+          "validation": "仅按官方 Jazzy API 核对，未编译/运行"
+        },
+        {
+          "label": "Python launch 中的参数",
+          "language": "python",
+          "code": "Node(\n    package=\"turtlesim\", executable=\"turtlesim_node\", name=\"sim\",\n    parameters=[{\"background_r\": 160, \"background_g\": 80, \"background_b\": 40}],\n)",
+          "scope": "LaunchDescription 中的单个动作片段；需 Node 导入",
+          "when": "与启动参数、多个节点配置联动",
+          "type": "snippet",
+          "validation": "仅按官方 Jazzy API 核对，未编译/运行"
+        }
+      ],
+      "notes": [
+        "参数文件 YAML 和 launch YAML 是两种格式。",
+        "节点名、命名空间、参数类型都影响配置是否生效。"
+      ],
+      "sourceIds": [
+        "core-cpp-param",
+        "core-py-param",
+        "core-launch-formats"
+      ],
+      "version": "Jazzy",
+      "validation": "API 与官方 Jazzy 原文对照；未做 ROS 运行验证"
+    },
+    {
+      "id": "compare-launch",
+      "title": "等价系统：Python / XML / YAML launch",
+      "question": "启动同一命名空间下的 talker 并重映射话题，三种写法如何对应？",
+      "variants": [
+        {
+          "label": "Python",
+          "language": "python",
+          "code": "from launch import LaunchDescription\nfrom launch_ros.actions import Node\n\ndef generate_launch_description():\n    return LaunchDescription([\n        Node(package=\"demo_nodes_cpp\", executable=\"talker\",\n             namespace=\"robot1\", name=\"talker\", output=\"screen\",\n             remappings=[(\"chatter\", \"telemetry\")])\n    ])",
+          "scope": "完整最小 launch 文件；保存为 telemetry.launch.py 后 ros2 launch ./telemetry.launch.py",
+          "when": "需要复用 Python 逻辑或复杂生成时",
+          "type": "complete",
+          "validation": "仅按官方 Jazzy API 核对，未编译/运行"
+        },
+        {
+          "label": "XML",
+          "language": "xml",
+          "code": "<launch>\n  <node pkg=\"demo_nodes_cpp\" exec=\"talker\"\n        namespace=\"robot1\" name=\"talker\" output=\"screen\">\n    <remap from=\"chatter\" to=\"telemetry\"/>\n  </node>\n</launch>",
+          "scope": "完整最小 launch 文件；保存为 telemetry.launch.xml",
+          "when": "配置结构清晰，适合熟悉 XML 的团队",
+          "type": "complete",
+          "validation": "仅按官方 Jazzy API 核对，未编译/运行"
+        },
+        {
+          "label": "YAML",
+          "language": "yaml",
+          "code": "launch:\n  - node:\n      pkg: demo_nodes_cpp\n      exec: talker\n      namespace: robot1\n      name: talker\n      output: screen\n      remap:\n        - from: chatter\n          to: telemetry",
+          "scope": "完整最小 launch 文件；保存为 telemetry.launch.yaml",
+          "when": "希望声明式且简洁的配置",
+          "type": "complete",
+          "validation": "仅按官方 Jazzy API 核对，未编译/运行"
+        }
+      ],
+      "notes": [
+        "三者都发布 /robot1/telemetry；每次只运行一种避免重复节点名。",
+        "Python launch 并不要求所启动的节点也是 Python。",
+        "本组可直接启动，但本研究未实际运行 ROS；依赖 demo_nodes_cpp 和对应 launch 前端。"
+      ],
+      "sourceIds": [
+        "core-launch-formats",
+        "core-launch-yaml",
+        "core-launch-python"
+      ],
+      "version": "Jazzy",
+      "validation": "API 与官方 Jazzy 原文对照；未做 ROS 运行验证"
+    },
+    {
+      "id": "compare-executor",
+      "title": "执行器：单线程与多线程的对应写法",
+      "question": "有多个就绪回调时，谁决定能否并发？",
+      "variants": [
+        {
+          "label": "C++ 单线程",
+          "language": "cpp",
+          "code": "rclcpp::executors::SingleThreadedExecutor executor;\nexecutor.add_node(node);\nexecutor.spin();",
+          "scope": "main 中核心片段；node 已创建且 rclcpp 已初始化",
+          "when": "简单节点、希望回调串行执行",
+          "type": "snippet",
+          "validation": "仅按官方 Jazzy API 核对，未编译/运行"
+        },
+        {
+          "label": "C++ 多线程",
+          "language": "cpp",
+          "code": "rclcpp::executors::MultiThreadedExecutor executor(\n    rclcpp::ExecutorOptions(), 2);\nexecutor.add_node(node);\nexecutor.spin();",
+          "scope": "main 中核心片段；需配套 callback groups",
+          "when": "独立回调允许并发，且共享状态已同步",
+          "type": "snippet",
+          "validation": "仅按官方 Jazzy API 核对，未编译/运行"
+        },
+        {
+          "label": "Python 多线程",
+          "language": "python",
+          "code": "from rclpy.executors import MultiThreadedExecutor\nexecutor = MultiThreadedExecutor(num_threads=2)\nexecutor.add_node(node)\nexecutor.spin()",
+          "scope": "main 中核心片段；需初始化、回调组与清理代码",
+          "when": "等待 I/O 或独立回调任务；CPU 并行能力需按实际负载测试",
+          "type": "snippet",
+          "validation": "仅按官方 Jazzy API 核对，未编译/运行"
+        }
+      ],
+      "notes": [
+        "默认互斥组中的回调不会因为使用多线程执行器自动并发。",
+        "Reentrant 并不替代线程安全设计。"
+      ],
+      "sourceIds": [
+        "core-executors",
+        "core-callback-groups"
+      ],
+      "version": "Jazzy",
+      "validation": "API 与官方 Jazzy 原文对照；未做 ROS 运行验证"
+    },
+    {
+      "id": "compare-composition",
+      "title": "部署：独立节点与 C++ 组件容器",
+      "question": "同样的节点功能怎样选择进程边界？",
+      "variants": [
+        {
+          "label": "独立进程",
+          "language": "bash",
+          "code": "# 两个终端分别运行\nros2 run demo_nodes_cpp talker\nros2 run demo_nodes_cpp listener",
+          "scope": "可直接运行；各自为独立进程",
+          "when": "便于隔离、调试与按进程管理",
+          "type": "commands",
+          "validation": "仅按官方 Jazzy API 核对，未编译/运行"
+        },
+        {
+          "label": "组件容器",
+          "language": "bash",
+          "code": "# 终端 A\nros2 run rclcpp_components component_container\n# 终端 B\nros2 component load /ComponentManager composition composition::Talker\nros2 component load /ComponentManager composition composition::Listener",
+          "scope": "可直接运行；需官方 composition 包",
+          "when": "希望运行时装卸 C++ 节点并探索进程内通信",
+          "type": "commands",
+          "validation": "仅按官方 Jazzy API 核对，未编译/运行"
+        }
+      ],
+      "notes": [
+        "这里对照相同话题功能的两种官方示例部署；不是声称二者是同一可执行文件。",
+        "Python 多节点 executor 不等于 rclcpp_components 动态共享库加载。",
+        "是否获得零拷贝收益需要单独验证。"
+      ],
+      "sourceIds": [
+        "core-composition",
+        "core-composable",
+        "core-demos"
+      ],
+      "version": "Jazzy",
+      "validation": "API 与官方 Jazzy 原文对照；未做 ROS 运行验证"
+    },
+    {
+      "id": "compare-build",
+      "title": "构建：ament_cmake 与 ament_python",
+      "question": "ROS 包如何把源码变成可被 ros2 run 找到的入口？",
+      "variants": [
+        {
+          "label": "C++ 包",
+          "language": "bash",
+          "code": "ros2 pkg create --build-type ament_cmake --license Apache-2.0 --node-name hello learning_cpp --dependencies rclcpp",
+          "scope": "在工作空间 src 运行，生成 CMake 包骨架",
+          "when": "使用 C++、共享库或自定义接口生成",
+          "type": "commands",
+          "validation": "仅按官方 Jazzy API 核对，未编译/运行"
+        },
+        {
+          "label": "Python 包",
+          "language": "bash",
+          "code": "ros2 pkg create --build-type ament_python --license Apache-2.0 --node-name hello learning_py --dependencies rclpy",
+          "scope": "在工作空间 src 运行，生成 Python 包骨架",
+          "when": "Python 节点、setuptools 与 console_scripts",
+          "type": "commands",
+          "validation": "仅按官方 Jazzy API 核对，未编译/运行"
+        },
+        {
+          "label": "共同构建入口",
+          "language": "bash",
+          "code": "cd ~/ros2_learning_ws\nrosdep install --from-paths src --ignore-src --rosdistro jazzy -y\ncolcon build --symlink-install\nsource install/setup.bash",
+          "scope": "两种包可位于同一工作空间",
+          "when": "统一解决依赖、构建与加载环境",
+          "type": "commands",
+          "validation": "仅按官方 Jazzy API 核对，未编译/运行"
+        }
+      ],
+      "notes": [
+        "CMake 需要安装可执行目标；Python 需要正确的 entry_points 和 setup.cfg。",
+        "接口包与使用它的节点包可采用不同构建类型。"
+      ],
+      "sourceIds": [
+        "core-package",
+        "core-ament",
+        "core-colcon",
+        "core-interfaces"
+      ],
+      "version": "Jazzy",
+      "validation": "API 与官方 Jazzy 原文对照；未做 ROS 运行验证"
+    },
+    {
+      "id": "compare-qos",
+      "title": "QoS：便捷配置与显式配置",
+      "question": "如何在 C++ 和 Python 表达传感器数据订阅？",
+      "variants": [
+        {
+          "label": "C++ SensorDataQoS",
+          "language": "cpp",
+          "code": "subscription_ = create_subscription<sensor_msgs::msg::LaserScan>(\n    \"scan\", rclcpp::SensorDataQoS(), callback);",
+          "scope": "Node 方法内片段；需已有 callback 和持久 subscription_",
+          "when": "使用官方传感器数据配置",
+          "type": "snippet",
+          "validation": "仅按官方 Jazzy API 核对，未编译/运行"
+        },
+        {
+          "label": "Python 预定义配置",
+          "language": "python",
+          "code": "from rclpy.qos import qos_profile_sensor_data\nself.subscription = self.create_subscription(\n    LaserScan, \"scan\", self.on_scan, qos_profile_sensor_data)",
+          "scope": "Node 方法内片段；需导入 LaserScan 和定义 on_scan",
+          "when": "与 C++ SensorDataQoS 对齐预定义策略",
+          "type": "snippet",
+          "validation": "仅按官方 Jazzy API 核对，未编译/运行"
+        },
+        {
+          "label": "Python 显式指定",
+          "language": "python",
+          "code": "from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy\nqos = QoSProfile(depth=5,\n    reliability=ReliabilityPolicy.BEST_EFFORT,\n    durability=DurabilityPolicy.VOLATILE)",
+          "scope": "核心片段；展示主要传感器 QoS 策略，其他字段使用默认值",
+          "when": "需要读者直接看见关键策略",
+          "type": "snippet",
+          "validation": "仅按官方 Jazzy API 核对，未编译/运行"
+        }
+      ],
+      "notes": [
+        "不要只比较 depth；reliability 与 durability 会影响匹配。",
+        "显式设置片段只说明关键字段，预定义配置的完整值以当前 Jazzy API 为准。"
+      ],
+      "sourceIds": [
+        "core-qos",
+        "core-rclcpp",
+        "core-rclpy"
+      ],
+      "version": "Jazzy",
+      "validation": "API 与官方 Jazzy 原文对照；未做 ROS 运行验证"
+    }
+  ]
+}

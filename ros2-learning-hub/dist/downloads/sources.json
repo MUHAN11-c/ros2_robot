@@ -1,0 +1,3168 @@
+{
+  "checkedAt": "2026-11-06",
+  "resources": [
+    {
+      "id": "core-tutorials",
+      "title": "ROS 2 Jazzy 官方教程总目录",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials.rst",
+      "category": "入门",
+      "version": "Jazzy",
+      "description": "按 CLI、客户端库、中级和高级循序学习。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-concepts",
+      "title": "ROS 2 Jazzy 概念目录",
+      "url": "https://docs.ros.org/en/jazzy/Concepts.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Concepts.rst",
+      "category": "架构",
+      "version": "Jazzy",
+      "description": "补足节点、接口、发现、执行器、DDS 等原理。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-howtos",
+      "title": "ROS 2 Jazzy 操作指南",
+      "url": "https://docs.ros.org/en/jazzy/How-To-Guides.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/How-To-Guides.rst",
+      "category": "工程化",
+      "version": "Jazzy",
+      "description": "适合查找已经明确的工程问题及配置方法。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-install",
+      "title": "Ubuntu 24.04 上安装 Jazzy",
+      "url": "https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Installation/Ubuntu-Install-Debs.rst",
+      "category": "环境",
+      "version": "Jazzy",
+      "description": "官方软件源、desktop/ros-base 安装、环境加载及双语言验收。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-cli",
+      "title": "CLI 工具学习路线",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Beginner-CLI-Tools.rst",
+      "category": "入门",
+      "version": "Jazzy",
+      "description": "turtlesim、节点、话题、服务、参数、动作与 bag 入门。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-client-libraries",
+      "title": "C++ / Python 客户端库教程",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Beginner-Client-Libraries.rst",
+      "category": "通信",
+      "version": "Jazzy",
+      "description": "从包构建到跨语言通信的官方示例入口。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-intermediate",
+      "title": "中级教程",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Intermediate.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Intermediate.rst",
+      "category": "工程化",
+      "version": "Jazzy",
+      "description": "动作、组件、launch、tf2、测试、URDF 与 RViz。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-advanced",
+      "title": "高级教程",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Advanced.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Advanced.rst",
+      "category": "工程化",
+      "version": "Jazzy",
+      "description": "发现、tracing、DDS、录包、安全及 RMW 扩展。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-workspace",
+      "title": "工作空间与 overlay",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Creating-A-Workspace/Creating-A-Workspace.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Beginner-Client-Libraries/Creating-A-Workspace/Creating-A-Workspace.rst",
+      "category": "构建",
+      "version": "Jazzy",
+      "description": "掌握 underlay、overlay、依赖安装与环境加载顺序。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-package",
+      "title": "创建 CMake 或 Python 包",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Creating-Your-First-ROS2-Package.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Beginner-Client-Libraries/Creating-Your-First-ROS2-Package.rst",
+      "category": "构建",
+      "version": "Jazzy",
+      "description": "两种构建类型的目录、安装与可执行入口差异。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-topics-cli",
+      "title": "话题检查与调试",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Topics/Understanding-ROS2-Topics.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Topics/Understanding-ROS2-Topics.rst",
+      "category": "通信",
+      "version": "Jazzy",
+      "description": "通过 list、info、echo、hz 与 rqt_graph 检查数据流。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-cpp-topic",
+      "title": "C++ 发布者与订阅者",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Cpp-Publisher-And-Subscriber.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Cpp-Publisher-And-Subscriber.rst",
+      "category": "通信",
+      "version": "Jazzy",
+      "description": "rclcpp 发布、订阅、定时器与 CMake 接入。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-py-topic",
+      "title": "Python 发布者与订阅者",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Py-Publisher-And-Subscriber.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Py-Publisher-And-Subscriber.rst",
+      "category": "通信",
+      "version": "Jazzy",
+      "description": "rclpy 节点类、回调和 setuptools 可执行入口。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-cpp-service",
+      "title": "C++ 服务与客户端",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Cpp-Service-And-Client.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Cpp-Service-And-Client.rst",
+      "category": "通信",
+      "version": "Jazzy",
+      "description": "请求响应类型、服务回调及异步请求。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-py-service",
+      "title": "Python 服务与客户端",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Py-Service-And-Client.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Py-Service-And-Client.rst",
+      "category": "通信",
+      "version": "Jazzy",
+      "description": "create_service、create_client 与 Future。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-interfaces",
+      "title": "自定义 msg 和 srv",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Custom-ROS2-Interfaces.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Beginner-Client-Libraries/Custom-ROS2-Interfaces.rst",
+      "category": "接口",
+      "version": "Jazzy",
+      "description": "独立 ament_cmake 接口包供 C++ 和 Python 共用。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-cpp-param",
+      "title": "C++ 参数节点",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Using-Parameters-In-A-Class-CPP.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Beginner-Client-Libraries/Using-Parameters-In-A-Class-CPP.rst",
+      "category": "配置",
+      "version": "Jazzy",
+      "description": "声明、读取参数及从 launch 传入覆盖值。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-py-param",
+      "title": "Python 参数节点",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Using-Parameters-In-A-Class-Python.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Beginner-Client-Libraries/Using-Parameters-In-A-Class-Python.rst",
+      "category": "配置",
+      "version": "Jazzy",
+      "description": "参数声明、默认值、类型与 launch 配置。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-action-interface",
+      "title": "创建 action 接口",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Intermediate/Creating-an-Action.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Intermediate/Creating-an-Action.rst",
+      "category": "接口",
+      "version": "Jazzy",
+      "description": "goal、result、feedback 三部分定义及构建依赖。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-cpp-action",
+      "title": "C++ 动作服务端与客户端",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Intermediate/Writing-an-Action-Server-Client/Cpp.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Intermediate/Writing-an-Action-Server-Client/Cpp.rst",
+      "category": "通信",
+      "version": "Jazzy",
+      "description": "rclcpp_action 目标处理、反馈、结果与取消。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-py-action",
+      "title": "Python 动作服务端与客户端",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Intermediate/Writing-an-Action-Server-Client/Py.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Intermediate/Writing-an-Action-Server-Client/Py.rst",
+      "category": "通信",
+      "version": "Jazzy",
+      "description": "ActionServer、ActionClient 及目标执行过程。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-qos",
+      "title": "QoS 策略与兼容性",
+      "url": "https://docs.ros.org/en/jazzy/Concepts/Intermediate/About-Quality-of-Service-Settings.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Concepts/Intermediate/About-Quality-of-Service-Settings.rst",
+      "category": "通信",
+      "version": "Jazzy",
+      "description": "reliability、durability、history、deadline 及 requested/offered。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-executors",
+      "title": "执行器概念",
+      "url": "https://docs.ros.org/en/jazzy/Concepts/Intermediate/About-Executors.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Concepts/Intermediate/About-Executors.rst",
+      "category": "并发",
+      "version": "Jazzy",
+      "description": "spin、回调调度、单线程与多线程执行器。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-callback-groups",
+      "title": "回调组及死锁规避",
+      "url": "https://docs.ros.org/en/jazzy/How-To-Guides/Using-callback-groups.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/How-To-Guides/Using-callback-groups.rst",
+      "category": "并发",
+      "version": "Jazzy",
+      "description": "MutuallyExclusive/Reentrant、默认组、生命周期与同步等待问题。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-sync-async",
+      "title": "同步与异步服务调用",
+      "url": "https://docs.ros.org/en/jazzy/How-To-Guides/Sync-Vs-Async.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/How-To-Guides/Sync-Vs-Async.rst",
+      "category": "并发",
+      "version": "Jazzy",
+      "description": "Python call 的死锁风险及 call_async 推荐路径。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-composition",
+      "title": "在一个进程里组合节点",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Intermediate/Composition.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Intermediate/Composition.rst",
+      "category": "组件",
+      "version": "Jazzy",
+      "description": "容器、注册组件、运行时加载及卸载。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-composable",
+      "title": "把 C++ 节点写成组件",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Intermediate/Writing-a-Composable-Node.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Intermediate/Writing-a-Composable-Node.rst",
+      "category": "组件",
+      "version": "Jazzy",
+      "description": "NodeOptions、注册宏、共享库与容器执行器。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-launch-formats",
+      "title": "Python / XML / YAML launch 对照",
+      "url": "https://docs.ros.org/en/jazzy/How-To-Guides/Launch-file-different-formats.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/How-To-Guides/Launch-file-different-formats.rst",
+      "category": "配置",
+      "version": "Jazzy",
+      "description": "相同系统在三种 launch 格式中的表达及能力差别。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-rosdep",
+      "title": "rosdep 依赖管理",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Intermediate/Rosdep.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Intermediate/Rosdep.rst",
+      "category": "构建",
+      "version": "Jazzy",
+      "description": "package.xml 依赖键到平台软件包的映射。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-ament",
+      "title": "ament_cmake 用户指南",
+      "url": "https://docs.ros.org/en/jazzy/How-To-Guides/Ament-CMake-Documentation.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/How-To-Guides/Ament-CMake-Documentation.rst",
+      "category": "构建",
+      "version": "Jazzy",
+      "description": "目标、依赖、安装、导出与测试。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-tf2",
+      "title": "tf2 C++ / Python 教程路线",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Intermediate/Tf2/Tf2-Main.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Intermediate/Tf2/Tf2-Main.rst",
+      "category": "空间与时间",
+      "version": "Jazzy",
+      "description": "广播、监听、时间缓存、四元数和坐标变换调试。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-static-tf",
+      "title": "静态 TF 与命令行广播器",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Intermediate/Tf2/Writing-A-Tf2-Static-Broadcaster-Py.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Intermediate/Tf2/Writing-A-Tf2-Static-Broadcaster-Py.rst",
+      "category": "空间与时间",
+      "version": "Jazzy",
+      "description": "固定传感器外参与 static_transform_publisher。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-testing",
+      "title": "ROS 2 自动化测试",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Intermediate/Testing/Testing-Main.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Intermediate/Testing/Testing-Main.rst",
+      "category": "测试",
+      "version": "Jazzy",
+      "description": "组织单元测试与节点级集成验证的入门。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-security-index",
+      "title": "SROS2 安全教程目录",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Advanced/Security/Security-Main.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Advanced/Security/Security-Main.rst",
+      "category": "安全",
+      "version": "Jazzy",
+      "description": "证书库、跨主机安全、访问控制与部署。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-security",
+      "title": "启用 DDS-Security / SROS2",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Advanced/Security/Introducing-ros2-security.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Advanced/Security/Introducing-ros2-security.rst",
+      "category": "安全",
+      "version": "Jazzy",
+      "description": "keystore、enclave、安全环境变量及演示。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-tracing",
+      "title": "ros2_tracing 性能分析",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Advanced/ROS2-Tracing-Trace-and-Analyze.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Advanced/ROS2-Tracing-Trace-and-Analyze.rst",
+      "category": "性能",
+      "version": "Jazzy",
+      "description": "采集执行事件并分析回调耗时。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-rmw",
+      "title": "选择不同 RMW 实现",
+      "url": "https://docs.ros.org/en/jazzy/How-To-Guides/Working-with-multiple-RMW-implementations.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/How-To-Guides/Working-with-multiple-RMW-implementations.rst",
+      "category": "网络",
+      "version": "Jazzy",
+      "description": "用 RMW_IMPLEMENTATION 选择中间件并注意 daemon 环境。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-bag",
+      "title": "rosbag2 录制与回放",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Recording-And-Playing-Back-Data/Recording-And-Playing-Back-Data.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Beginner-CLI-Tools/Recording-And-Playing-Back-Data/Recording-And-Playing-Back-Data.rst",
+      "category": "调试",
+      "version": "Jazzy",
+      "description": "选择话题、录包、查询元数据与可重复回放。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-doctor",
+      "title": "ros2 doctor 诊断",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Getting-Started-With-Ros2doctor.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Beginner-Client-Libraries/Getting-Started-With-Ros2doctor.rst",
+      "category": "调试",
+      "version": "Jazzy",
+      "description": "检查环境、平台、网络和正在运行的 ROS 图。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-discovery",
+      "title": "动态发现范围与静态对等端",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Advanced/Improved-Dynamic-Discovery.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Tutorials/Advanced/Improved-Dynamic-Discovery.rst",
+      "category": "网络",
+      "version": "Jazzy",
+      "description": "ROS_AUTOMATIC_DISCOVERY_RANGE、ROS_STATIC_PEERS；DDS 与 Zenoh 配置区别。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-domain",
+      "title": "ROS_DOMAIN_ID 与端口约束",
+      "url": "https://docs.ros.org/en/jazzy/Concepts/Intermediate/About-Domain-ID.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/Concepts/Intermediate/About-Domain-ID.rst",
+      "category": "网络",
+      "version": "Jazzy",
+      "description": "同域发现、逻辑隔离及平台端口范围。",
+      "versionNote": "",
+      "verification": "已读取官方 jazzy 分支原文；正式文档域名触发 Anubis，未声称网页直连成功",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-examples",
+      "title": "ros2/examples · jazzy",
+      "url": "https://github.com/ros2/examples/tree/jazzy",
+      "sourceUrl": "https://github.com/ros2/examples/tree/jazzy",
+      "category": "源码示例",
+      "version": "Jazzy",
+      "description": "同一功能的 lambda、成员函数、不同语言等最小实现。",
+      "versionNote": "",
+      "verification": "已联网读取一手来源",
+      "checkedAt": "2026-11-06",
+      "type": "官方源码"
+    },
+    {
+      "id": "core-demos",
+      "title": "ros2/demos · jazzy",
+      "url": "https://github.com/ros2/demos/tree/jazzy",
+      "sourceUrl": "https://github.com/ros2/demos/tree/jazzy",
+      "category": "源码示例",
+      "version": "Jazzy",
+      "description": "demo_nodes、action_tutorials、composition、lifecycle 等演示包。",
+      "versionNote": "",
+      "verification": "已联网读取一手来源",
+      "checkedAt": "2026-11-06",
+      "type": "官方源码"
+    },
+    {
+      "id": "core-rclcpp",
+      "title": "rclcpp · jazzy",
+      "url": "https://github.com/ros2/rclcpp/tree/jazzy",
+      "sourceUrl": "https://github.com/ros2/rclcpp/tree/jazzy",
+      "category": "客户端库",
+      "version": "Jazzy",
+      "description": "C++ 客户端库源码、组件和生命周期支持。",
+      "versionNote": "",
+      "verification": "已联网读取一手来源",
+      "checkedAt": "2026-11-06",
+      "type": "官方源码"
+    },
+    {
+      "id": "core-rclpy",
+      "title": "rclpy · jazzy",
+      "url": "https://github.com/ros2/rclpy/tree/jazzy",
+      "sourceUrl": "https://github.com/ros2/rclpy/tree/jazzy",
+      "category": "客户端库",
+      "version": "Jazzy",
+      "description": "Python 客户端库源码、执行器、动作及生命周期支持。",
+      "versionNote": "",
+      "verification": "已联网读取一手来源",
+      "checkedAt": "2026-11-06",
+      "type": "官方源码"
+    },
+    {
+      "id": "core-lifecycle",
+      "title": "官方 Lifecycle 演示说明",
+      "url": "https://github.com/ros2/demos/blob/jazzy/lifecycle/README.rst",
+      "sourceUrl": "https://github.com/ros2/demos/blob/jazzy/lifecycle/README.rst",
+      "category": "生命周期",
+      "version": "Jazzy",
+      "description": "四个主要状态、转换回调和 lifecycle_talker 示例。",
+      "versionNote": "",
+      "verification": "已联网读取一手来源",
+      "checkedAt": "2026-11-06",
+      "type": "官方源码"
+    },
+    {
+      "id": "core-time",
+      "title": "ROS 时间设计",
+      "url": "https://design.ros2.org/articles/clock_and_time.html",
+      "sourceUrl": "https://design.ros2.org/articles/clock_and_time.html",
+      "category": "空间与时间",
+      "version": "ROS 2 通用设计",
+      "description": "System / Steady / ROS time、/clock、仿真时间和时间跳变。",
+      "versionNote": "",
+      "verification": "已联网读取一手来源",
+      "checkedAt": "2026-11-06",
+      "type": "官方设计"
+    },
+    {
+      "id": "core-colcon",
+      "title": "colcon 快速开始",
+      "url": "https://colcon.readthedocs.io/en/released/user/quick-start.html",
+      "sourceUrl": "https://colcon.readthedocs.io/en/released/user/quick-start.html",
+      "category": "构建",
+      "version": "colcon released",
+      "description": "list、build、test、test-result 及包选择参数。",
+      "versionNote": "",
+      "verification": "已联网读取一手来源",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-releases",
+      "title": "ROS 2 发行版与维护周期",
+      "url": "https://github.com/ros2/ros2_documentation/blob/rolling/source/Releases.rst",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/rolling/source/Releases.rst",
+      "category": "版本",
+      "version": "发行版总览",
+      "description": "核对当前发行版与 EOL；Jazzy 支持至 2029-05，Lyrical 已于 2026 发布。",
+      "versionNote": "",
+      "verification": "已联网读取一手来源",
+      "checkedAt": "2026-11-06",
+      "type": "官方文档"
+    },
+    {
+      "id": "core-launch-yaml",
+      "title": "官方 YAML launch 源文件",
+      "url": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/How-To-Guides/launch/different_formats_launch.yaml",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/How-To-Guides/launch/different_formats_launch.yaml",
+      "category": "配置",
+      "version": "Jazzy",
+      "description": "核对 launch YAML 的 node、arg、remap 和 param 结构。",
+      "versionNote": "",
+      "verification": "已联网读取一手来源",
+      "checkedAt": "2026-11-06",
+      "type": "官方源码"
+    },
+    {
+      "id": "core-launch-python",
+      "title": "官方 Python launch 源文件",
+      "url": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/How-To-Guides/launch/different_formats_launch.py",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/How-To-Guides/launch/different_formats_launch.py",
+      "category": "配置",
+      "version": "Jazzy",
+      "description": "核对 LaunchDescription、Node 及 substitutions API。",
+      "versionNote": "",
+      "verification": "已联网读取一手来源",
+      "checkedAt": "2026-11-06",
+      "type": "官方源码"
+    },
+    {
+      "id": "core-action-demo-entry",
+      "title": "动作 Python 示例可执行入口",
+      "url": "https://raw.githubusercontent.com/ros2/demos/jazzy/action_tutorials/action_tutorials_py/setup.py",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/demos/jazzy/action_tutorials/action_tutorials_py/setup.py",
+      "category": "源码示例",
+      "version": "Jazzy",
+      "description": "确认 fibonacci_action_server 和 fibonacci_action_client 的真实入口。",
+      "versionNote": "",
+      "verification": "已联网读取一手来源",
+      "checkedAt": "2026-11-06",
+      "type": "官方源码"
+    },
+    {
+      "id": "eco-nav2",
+      "title": "Nav2 官方文档（Jazzy）",
+      "url": "https://docs.nav2.org/jazzy/",
+      "sourceUrl": "",
+      "category": "导航",
+      "version": "Jazzy",
+      "description": "导航服务器、插件、调参与机器人接入的总入口。",
+      "versionNote": "根域名目前进入 Rolling；学习时保留 /jazzy/ 前缀。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-nav2-quick",
+      "title": "Nav2 仿真快速开始",
+      "url": "https://docs.nav2.org/jazzy/getting_started/quickstart/quickstart/",
+      "sourceUrl": "",
+      "category": "导航",
+      "version": "Jazzy",
+      "description": "在 Gazebo 中运行最小导航系统，设置初始位姿并发送目标。",
+      "versionNote": "选择页面 Jazzy and newer 标签；旧 Gazebo Classic 安装项不适用于此主线。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-nav2-setup",
+      "title": "Nav2 首次机器人接入指南",
+      "url": "https://docs.nav2.org/jazzy/configuration_and_development/first_time_robot_setup_guide/",
+      "sourceUrl": "",
+      "category": "导航",
+      "version": "Jazzy",
+      "description": "按 TF、模型、里程计、传感器与 footprint 准备自己的机器人。",
+      "versionNote": "话题类型、TF 发布者与时钟必须与实际驱动一致。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-nav2-config",
+      "title": "Nav2 参数与插件配置",
+      "url": "https://docs.nav2.org/jazzy/configuration_and_development/configuration_guide/",
+      "sourceUrl": "",
+      "category": "导航",
+      "version": "Jazzy",
+      "description": "查阅 planner、controller、costmap、行为树等组件的配置入口。",
+      "versionNote": "文档会持续更新，具体可用参数还要与安装包版本对照。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-nav2-commander",
+      "title": "Nav2 Simple Commander Python API",
+      "url": "https://docs.nav2.org/jazzy/configuration_and_development/simple_commander_api/simple_commander_api/",
+      "sourceUrl": "",
+      "category": "导航",
+      "version": "Jazzy",
+      "description": "通过 Python 组织导航目标、反馈、取消和结果处理。",
+      "versionNote": "BasicNavigator 是任务编排封装，不替代底层导航服务器。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-nav2-fusion",
+      "title": "Nav2：融合里程计",
+      "url": "https://docs.nav2.org/jazzy/configuration_and_development/first_time_robot_setup_guide/odom/setup_robot_localization/",
+      "sourceUrl": "",
+      "category": "定位",
+      "version": "Jazzy",
+      "description": "将轮式里程计与 IMU 接入 robot_localization。",
+      "versionNote": "融合参数需按传感器数据、坐标系和协方差设计。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-nav2-map",
+      "title": "Nav2：建图与定位",
+      "url": "https://docs.nav2.org/jazzy/configuration_and_development/first_time_robot_setup_guide/sensors/mapping_localization/",
+      "sourceUrl": "",
+      "category": "定位",
+      "version": "Jazzy",
+      "description": "理解 SLAM、地图服务与已知地图定位的职责。",
+      "versionNote": "map→odom 通常由 SLAM 或定位节点提供，避免多节点重复发布。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-control",
+      "title": "ros2_control 官方文档",
+      "url": "https://control.ros.org/jazzy/index.html",
+      "sourceUrl": "",
+      "category": "控制",
+      "version": "Jazzy",
+      "description": "控制管理器、硬件抽象、控制器与生态项目索引。",
+      "versionNote": "Jazzy 仍受支持；它并非 2026 年最新发行版。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-control-demo",
+      "title": "DiffBot 差速底盘官方示例",
+      "url": "https://control.ros.org/jazzy/doc/ros2_control_demos/example_2/doc/userdoc.html",
+      "sourceUrl": "",
+      "category": "控制",
+      "version": "Jazzy",
+      "description": "把 URDF、硬件插件、控制器 YAML 与启动文件连成可观察链路。",
+      "versionNote": "本地 example_2 已有 Python/XML launch 对照；示例运动不是实机验证。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-diff-drive",
+      "title": "diff_drive_controller 参数与接口",
+      "url": "https://control.ros.org/jazzy/doc/ros2_controllers/diff_drive_controller/doc/userdoc.html",
+      "sourceUrl": "",
+      "category": "控制",
+      "version": "Jazzy",
+      "description": "差速运动学、轮速接口、里程计、限速与命令超时配置。",
+      "versionNote": "当前 Jazzy 文档的输入为 geometry_msgs/msg/TwistStamped。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-jtc",
+      "title": "joint_trajectory_controller",
+      "url": "https://control.ros.org/jazzy/doc/ros2_controllers/joint_trajectory_controller/doc/userdoc.html",
+      "sourceUrl": "",
+      "category": "控制",
+      "version": "Jazzy",
+      "description": "关节轨迹插值、命令接口与 FollowJointTrajectory action。",
+      "versionNote": "接口组合需与硬件插件导出的 command/state interfaces 一致。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-hardware",
+      "title": "编写 ros2_control 硬件组件",
+      "url": "https://control.ros.org/jazzy/doc/ros2_control/hardware_interface/doc/writing_new_hardware_component.html",
+      "sourceUrl": "",
+      "category": "硬件",
+      "version": "Jazzy",
+      "description": "学习插件导出、生命周期以及 read/write 与硬件通信的边界。",
+      "versionNote": "使用 Jazzy 头文件核查回调签名，不直接复制 Humble 或 Rolling API。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-manager",
+      "title": "Controller Manager",
+      "url": "https://control.ros.org/jazzy/doc/ros2_control/controller_manager/doc/userdoc.html",
+      "sourceUrl": "",
+      "category": "控制",
+      "version": "Jazzy",
+      "description": "控制器生命周期、管理服务、周期与参数加载行为。",
+      "versionNote": "控制器管理器名称可以自定义；CLI 需要指定相应命名空间。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-gz-control",
+      "title": "gz_ros2_control 源码",
+      "url": "https://github.com/ros-controls/gz_ros2_control/tree/jazzy",
+      "sourceUrl": "",
+      "category": "仿真",
+      "version": "Jazzy",
+      "description": "让 Gazebo 仿真关节通过 ros2_control 控制器驱动。",
+      "versionNote": "现代 Gazebo 使用 gz_ros2_control；不要与 gazebo_ros2_control 混用。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-gazebo",
+      "title": "Gazebo Harmonic 文档",
+      "url": "https://gazebosim.org/docs/harmonic/",
+      "sourceUrl": "",
+      "category": "仿真",
+      "version": "Harmonic",
+      "description": "世界、模型、传感器、物理与 ROS 集成教程。",
+      "versionNote": "Jazzy 主线搭配 Harmonic。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-gazebo-install",
+      "title": "Gazebo 与 ROS 版本配对",
+      "url": "https://gazebosim.org/docs/harmonic/ros_installation/",
+      "sourceUrl": "",
+      "category": "仿真",
+      "version": "多版本",
+      "description": "核对 ROS、Ubuntu 与 Gazebo 的官方配对关系。",
+      "versionNote": "当前最新 LTS 组合已变化；本网站选定 Ubuntu24.04/Jazzy/Harmonic。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-ros-gz",
+      "title": "ros_gz Jazzy 源码",
+      "url": "https://github.com/gazebosim/ros_gz/tree/jazzy",
+      "sourceUrl": "",
+      "category": "仿真",
+      "version": "Jazzy",
+      "description": "Gazebo 启动、实体创建、消息桥接与演示包。",
+      "versionNote": "桥接方向与消息映射需要显式配置。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-tf2",
+      "title": "geometry2／tf2 Jazzy 源码",
+      "url": "https://github.com/ros2/geometry2/tree/jazzy",
+      "sourceUrl": "",
+      "category": "坐标与模型",
+      "version": "Jazzy",
+      "description": "坐标变换缓存、C++/Python 接口与 tf2 工具实现。",
+      "versionNote": "每条动态边需要正确时间戳；静态变换与动态变换的用途不同。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-urdf",
+      "title": "URDF 官方教程源码",
+      "url": "https://github.com/ros/urdf_tutorial/tree/ros2",
+      "sourceUrl": "",
+      "category": "坐标与模型",
+      "version": "ROS 2",
+      "description": "从最小模型到可视化、关节、物理属性与 Xacro 的教学示例。",
+      "versionNote": "ros2 是共享分支名，不等于发行版名；配合 Jazzy 二进制包阅读。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-rsp",
+      "title": "robot_state_publisher 源码",
+      "url": "https://github.com/ros/robot_state_publisher/tree/jazzy",
+      "sourceUrl": "",
+      "category": "坐标与模型",
+      "version": "Jazzy",
+      "description": "根据模型和 joint_states 发布机器人链接坐标关系。",
+      "versionNote": "它不提供轮式里程计，也不计算 map→odom。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-rviz",
+      "title": "RViz2 源码与说明",
+      "url": "https://github.com/ros2/rviz/tree/jazzy",
+      "sourceUrl": "",
+      "category": "工具",
+      "version": "Jazzy",
+      "description": "三维显示、Display 插件与交互工具的官方实现。",
+      "versionNote": "RViz 是可视化工具，不负责物理仿真。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-xacro",
+      "title": "Xacro 项目",
+      "url": "https://github.com/ros/xacro",
+      "sourceUrl": "",
+      "category": "坐标与模型",
+      "version": "多版本",
+      "description": "通过属性、宏和参数复用机器人 XML 模型。",
+      "versionNote": "默认分支随项目维护变化；使用 Jazzy 包版本验证语法。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-slam",
+      "title": "slam_toolbox Jazzy 源码与指南",
+      "url": "https://github.com/SteveMacenski/slam_toolbox/tree/jazzy",
+      "sourceUrl": "",
+      "category": "定位",
+      "version": "Jazzy",
+      "description": "二维激光 SLAM、定位模式、地图与位姿图持久化。",
+      "versionNote": "二维栅格地图保存与可继续建图的位姿图序列化不是同一个操作。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-localization",
+      "title": "robot_localization 项目",
+      "url": "https://github.com/cra-ros-pkg/robot_localization",
+      "sourceUrl": "",
+      "category": "定位",
+      "version": "多版本",
+      "description": "EKF/UKF 与 GNSS 融合的维护者入口。",
+      "versionNote": "默认分支不是安装版本保证；先按 rosdistro 与发行版选择依赖。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-image-pipeline",
+      "title": "image_pipeline Jazzy 源码",
+      "url": "https://github.com/ros-perception/image_pipeline/tree/jazzy",
+      "sourceUrl": "",
+      "category": "感知",
+      "version": "Jazzy",
+      "description": "相机标定、去畸变、立体视觉和深度图处理。",
+      "versionNote": "Jazzy 中部分 image_transport/QoS 参数发生过变更。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-cv-bridge",
+      "title": "vision_opencv／cv_bridge",
+      "url": "https://github.com/ros-perception/vision_opencv",
+      "sourceUrl": "",
+      "category": "感知",
+      "version": "多版本",
+      "description": "ROS Image 与 OpenCV 图像转换及相机几何工具。",
+      "versionNote": "已核查项目无可用 /tree/jazzy 链接；不要假定所有项目都有 jazzy 分支。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-pcl",
+      "title": "perception_pcl 项目",
+      "url": "https://github.com/ros-perception/perception_pcl",
+      "sourceUrl": "",
+      "category": "感知",
+      "version": "多版本",
+      "description": "PointCloud2、PCL 数据结构与点云处理的 ROS 集成。",
+      "versionNote": "按目标发行版安装 pcl_ros/pcl_conversions，并核对 PointCloud2 字段。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-image-common",
+      "title": "image_common／image_transport",
+      "url": "https://github.com/ros-perception/image_common",
+      "sourceUrl": "",
+      "category": "感知",
+      "version": "多版本",
+      "description": "图像传输插件、相机标定信息和 camera_info 管理。",
+      "versionNote": "ROS 发行版与仓库分支需对应；压缩传输不等于修改原始消息类型。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-image-examples",
+      "title": "image_transport 教程源码",
+      "url": "https://github.com/ros-perception/image_transport_tutorials",
+      "sourceUrl": "",
+      "category": "感知",
+      "version": "多版本",
+      "description": "图像发布订阅、传输插件与相关演示。",
+      "versionNote": "检查依赖版本后再使用新加入的 Python 接口。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-micro",
+      "title": "micro-ROS 官方新站",
+      "url": "https://micro.vulcanexus.org/",
+      "sourceUrl": "",
+      "category": "嵌入式",
+      "version": "多版本",
+      "description": "微控制器端 ROS 2、支持硬件、RTOS 与教程入口。",
+      "versionNote": "旧 micro.ros.org 已迁移到此地址。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-micro-tutorial",
+      "title": "micro-ROS Linux 首个应用",
+      "url": "https://micro.vulcanexus.org/docs/tutorials/core/first_application_linux/",
+      "sourceUrl": "",
+      "category": "嵌入式",
+      "version": "Humble 示例",
+      "description": "用 Linux 主机体验 micro-ROS client/Agent 的通信链路。",
+      "versionNote": "正文仍以 Humble/Ubuntu22.04 开始；Jazzy 工具应使用 jazzy 分支。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-micro-setup",
+      "title": "micro_ros_setup Jazzy",
+      "url": "https://github.com/micro-ROS/micro_ros_setup/tree/jazzy",
+      "sourceUrl": "",
+      "category": "嵌入式",
+      "version": "Jazzy",
+      "description": "构建、配置、下载微控制器应用与 Agent 的工具。",
+      "versionNote": "交叉编译器、板卡 SDK 和传输方式要与目标硬件匹配。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-micro-agent",
+      "title": "micro-ROS Agent Jazzy",
+      "url": "https://github.com/micro-ROS/micro-ROS-Agent/tree/jazzy",
+      "sourceUrl": "",
+      "category": "嵌入式",
+      "version": "Jazzy",
+      "description": "在微控制器传输和 ROS 图之间建立会话。",
+      "versionNote": "串口与 UDP 配置不能混用；自定义接口需两端一致。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-sros2",
+      "title": "SROS2 Jazzy",
+      "url": "https://github.com/ros2/sros2/tree/jazzy",
+      "sourceUrl": "",
+      "category": "工程化",
+      "version": "Jazzy",
+      "description": "创建安全密钥库、身份与 enclave 配置的官方工具。",
+      "versionNote": "安全能力取决于中间件与构建配置，ROS_DOMAIN_ID 不是安全边界。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-rosbag",
+      "title": "rosbag2 Jazzy 源码与使用说明",
+      "url": "https://github.com/ros2/rosbag2/tree/jazzy",
+      "sourceUrl": "",
+      "category": "数据与诊断",
+      "version": "Jazzy",
+      "description": "录制、回放、过滤、存储插件与 QoS 覆盖。",
+      "versionNote": "回放时同时检查 /clock、use_sim_time 与录制的 TF。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-mcap",
+      "title": "MCAP 官方指南",
+      "url": "https://mcap.dev/guides",
+      "sourceUrl": "",
+      "category": "数据与诊断",
+      "version": "格式与 SDK",
+      "description": "理解多话题时序数据容器、索引、Schema 与读写工具。",
+      "versionNote": "MCAP 是容器格式，不会自动修复错误时间戳或缺失话题。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-foxglove",
+      "title": "Foxglove Bridge 文档",
+      "url": "https://docs.foxglove.dev/docs/fleet/bridge",
+      "sourceUrl": "",
+      "category": "数据与诊断",
+      "version": "滚动文档",
+      "description": "通过桥接器检查实时 ROS 数据或结合文件回放分析。",
+      "versionNote": "旧 connecting-to-data 地址已重定向；以安装版本可用参数为准。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-zenoh",
+      "title": "rmw_zenoh Jazzy",
+      "url": "https://github.com/ros2/rmw_zenoh/tree/jazzy",
+      "sourceUrl": "",
+      "category": "通信",
+      "version": "Jazzy",
+      "description": "Zenoh RMW、路由器与跨主机连接配置。",
+      "versionNote": "默认发现行为与 DDS 不同，需要按文档运行路由器或显式修改配置。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-fastdds",
+      "title": "Fast DDS 维护者文档",
+      "url": "https://fast-dds.docs.eprosima.com/en/latest/",
+      "sourceUrl": "",
+      "category": "通信",
+      "version": "最新上游",
+      "description": "DDS 发现、QoS、XML 配置、传输与安全说明。",
+      "versionNote": "latest 不是 Jazzy 系统库版本；应切换对应版本文档。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-cyclone",
+      "title": "Cyclone DDS 维护者文档",
+      "url": "https://cyclonedds.io/docs/cyclonedds/latest/",
+      "sourceUrl": "",
+      "category": "通信",
+      "version": "最新上游",
+      "description": "DDS 配置、网络接口、示例、安全与 API。",
+      "versionNote": "不要把最新上游配置字段直接当作 Jazzy 包支持的字段。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-rmf",
+      "title": "Open-RMF 主仓库",
+      "url": "https://github.com/open-rmf/rmf",
+      "sourceUrl": "",
+      "category": "多机器人",
+      "version": "多版本",
+      "description": "机器人车队、设施接口、交通协商与任务管理的起点。",
+      "versionNote": "不同 ROS/Gazebo 组合需要使用相应分支与依赖清单。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-rmf-demos",
+      "title": "Open-RMF 演示工程",
+      "url": "https://github.com/open-rmf/rmf_demos",
+      "sourceUrl": "",
+      "category": "多机器人",
+      "version": "多版本",
+      "description": "办公楼、门、电梯、多个车队的协同仿真参考。",
+      "versionNote": "先固定版本；Open-RMF 不替代每台机器人的局部导航。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-isaac-ros",
+      "title": "NVIDIA Isaac ROS",
+      "url": "https://nvidia-isaac-ros.github.io/",
+      "sourceUrl": "",
+      "category": "感知与 AI",
+      "version": "供应商版本",
+      "description": "GPU 加速视觉、定位、DNN 推理与参考工作流。",
+      "versionNote": "先核对 GPU、驱动、JetPack、容器和 ROS 版本兼容矩阵。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-isaac-compute",
+      "title": "Isaac ROS 计算平台配置",
+      "url": "https://nvidia-isaac-ros.github.io/getting_started/compute/index.html",
+      "sourceUrl": "",
+      "category": "感知与 AI",
+      "version": "供应商版本",
+      "description": "验证 Jetson/x86 GPU 平台和开发环境要求。",
+      "versionNote": "支持范围与版本持续变化，不能仅凭存在 CUDA 即认定兼容。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-isaac-sim",
+      "title": "Isaac Sim ROS 2 教程",
+      "url": "https://docs.isaacsim.omniverse.nvidia.com/latest/ros2_tutorials/index.html",
+      "sourceUrl": "",
+      "category": "仿真",
+      "version": "供应商版本",
+      "description": "通过 ROS 2 bridge 连接仿真传感器、机器人控制与应用。",
+      "versionNote": "当前页面推荐 Humble/Jazzy；latest 会随 Isaac Sim 版本更新。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-turtlebot",
+      "title": "TurtleBot3 官方手册",
+      "url": "https://emanual.robotis.com/docs/en/platform/turtlebot3/quick-start/",
+      "sourceUrl": "",
+      "category": "项目实践",
+      "version": "多版本",
+      "description": "从平台安装到仿真、SLAM 与导航的成套官方学习工程。",
+      "versionNote": "注意手册发行版选择器和机器人型号。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-moveit",
+      "title": "MoveIt 2 教程总览",
+      "url": "https://moveit.picknik.ai/main/index.html",
+      "sourceUrl": "",
+      "category": "机械臂",
+      "version": "Rolling 文档",
+      "description": "机械臂规划、运动学、场景、控制与教程索引。",
+      "versionNote": "/main/ 页面明确标注 Rolling；Jazzy 使用前须核对 API。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-moveit-start",
+      "title": "MoveIt 2 入门环境",
+      "url": "https://moveit.picknik.ai/main/doc/tutorials/getting_started/getting_started.html",
+      "sourceUrl": "",
+      "category": "机械臂",
+      "version": "多版本指导",
+      "description": "配置 MoveIt 教程工作区、依赖和构建环境。",
+      "versionNote": "其中 latest/Jazzy 的年代描述可能过时，以发行版生命周期表为准。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-moveit-jazzy",
+      "title": "MoveIt 2 Jazzy 源码",
+      "url": "https://github.com/moveit/moveit2/tree/jazzy",
+      "sourceUrl": "",
+      "category": "机械臂",
+      "version": "Jazzy",
+      "description": "Jazzy 下规划核心、move_group、moveit_py、Servo 等实现。",
+      "versionNote": "用于核对 Rolling 教程中涉及的接口是否已经发布到 Jazzy。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-servo",
+      "title": "MoveIt Servo 教程",
+      "url": "https://moveit.picknik.ai/main/doc/examples/realtime_servo/realtime_servo_tutorial.html",
+      "sourceUrl": "",
+      "category": "机械臂",
+      "version": "Rolling 文档",
+      "description": "关节、笛卡尔增量运动及碰撞/奇异性处理的学习入口。",
+      "versionNote": "当前页面功能和服务名可能超过 Jazzy；不能直接复制到实机。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-mtc",
+      "title": "MoveIt Task Constructor 抓放教程",
+      "url": "https://moveit.picknik.ai/main/doc/tutorials/pick_and_place_with_moveit_task_constructor/pick_and_place_with_moveit_task_constructor.html",
+      "sourceUrl": "",
+      "category": "机械臂",
+      "version": "Rolling 文档",
+      "description": "以阶段组织抓取、接近、夹持与放置规划。",
+      "versionNote": "先确认对应发行版的 MTC 分支、依赖和示例。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-rosbridge",
+      "title": "rosbridge_suite ROS 2",
+      "url": "https://github.com/RobotWebTools/rosbridge_suite/tree/ros2",
+      "sourceUrl": "",
+      "category": "工具",
+      "version": "ROS 2",
+      "description": "将 ROS 图通过 WebSocket 协议接入浏览器应用。",
+      "versionNote": "浏览器 UI 和机器人控制权限需要明确边界。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-diagnostics",
+      "title": "ROS diagnostics 项目",
+      "url": "https://github.com/ros/diagnostics/tree/ros2",
+      "sourceUrl": "",
+      "category": "数据与诊断",
+      "version": "ROS 2",
+      "description": "发布、汇总和检查硬件及节点健康状态。",
+      "versionNote": "诊断状态只是观测接口，不能替代独立的硬件急停。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-tracing",
+      "title": "ros2_tracing Jazzy",
+      "url": "https://github.com/ros2/ros2_tracing/tree/jazzy",
+      "sourceUrl": "",
+      "category": "数据与诊断",
+      "version": "Jazzy",
+      "description": "利用 LTTng 等工具采集节点、回调和中间件时序。",
+      "versionNote": "trace 可用性依赖系统包、权限和构建时插桩。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "eco-rosdistro",
+      "title": "ROS Jazzy 发行清单",
+      "url": "https://github.com/ros/rosdistro/blob/master/jazzy/distribution.yaml",
+      "sourceUrl": "",
+      "category": "工程化",
+      "version": "Jazzy",
+      "description": "核对软件包发布版本、源码仓库与实际使用的分支。",
+      "versionNote": "发行版名称不保证源码分支也叫 jazzy。",
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "type": "官方／维护者"
+    },
+    {
+      "id": "local-control",
+      "title": "ros2_control 本地固定提交",
+      "url": "https://github.com/ros-controls/ros2_control/tree/f9e24287fc1d6996e5ba1656a9ee24e5f33adef7",
+      "sourceUrl": "",
+      "category": "本地项目",
+      "version": "jazzy",
+      "description": "硬件抽象、资源管理、控制管理器实现",
+      "versionNote": "优先阅读 hardware_interface 与 controller_manager；Jazzy API 以本地头文件为准。",
+      "verification": "本地 Git 与源码核对；未执行联网逐文件抓取",
+      "checkedAt": "2026-11-06",
+      "type": "维护者源码"
+    },
+    {
+      "id": "local-controllers",
+      "title": "ros2_controllers 本地固定提交",
+      "url": "https://github.com/ros-controls/ros2_controllers/tree/bee185cbb98815116af9cfb00ff595b0b800e91a",
+      "sourceUrl": "",
+      "category": "本地项目",
+      "version": "jazzy",
+      "description": "差速、关节轨迹及关节状态控制器实现",
+      "versionNote": "优先阅读 diff_drive_controller 和 joint_state_broadcaster。",
+      "verification": "本地 Git 与源码核对；未执行联网逐文件抓取",
+      "checkedAt": "2026-11-06",
+      "type": "维护者源码"
+    },
+    {
+      "id": "local-demos",
+      "title": "ros2_control_demos 本地固定提交",
+      "url": "https://github.com/ros-controls/ros2_control_demos/tree/fbab026e147824971c97996f3789f97c2ee9e9ac",
+      "sourceUrl": "",
+      "category": "本地项目",
+      "version": "jazzy",
+      "description": "控制框架官方示例集",
+      "versionNote": "example_2 提供 DiffBot，含 Python/XML launch 与 mock hardware 路径。",
+      "verification": "本地 Git 与源码核对；未执行联网逐文件抓取",
+      "checkedAt": "2026-11-06",
+      "type": "维护者源码"
+    },
+    {
+      "id": "local-agrosensebot",
+      "title": "AgroSenseBot 本地固定提交",
+      "url": "https://github.com/AIRLab-POLIMI/AgroSenseBot/tree/4ad700b090b9f3ddb8513c7519938bd7f0974709",
+      "sourceUrl": "",
+      "category": "本地项目",
+      "version": "jazzy",
+      "description": "农业履带平台的 CANopen、控制、导航与系统集成",
+      "versionNote": "检出 jazzy，但 README 保留 Iron 安装段；不可直接照抄运行。",
+      "verification": "本地 Git 与源码核对；未执行联网逐文件抓取",
+      "checkedAt": "2026-11-06",
+      "type": "维护者源码"
+    },
+    {
+      "id": "local-bunker",
+      "title": "bunker_ros2 本地固定提交",
+      "url": "https://github.com/agilexrobotics/bunker_ros2/tree/f24f722b245eb1d2572c47d091fc847d9fd68cf4",
+      "sourceUrl": "",
+      "category": "本地项目",
+      "version": "jazzy",
+      "description": "成品履带底盘的 ROS wrapper 与设备消息",
+      "versionNote": "当前 README /cmd_vel 使用 Twist；与 DiffBot 的 TwistStamped 不同。",
+      "verification": "本地 Git 与源码核对；未执行联网逐文件抓取",
+      "checkedAt": "2026-11-06",
+      "type": "维护者源码"
+    },
+    {
+      "id": "local-linorobot",
+      "title": "linorobot2 本地固定提交",
+      "url": "https://github.com/linorobot/linorobot2/tree/f6b0bd0350c4a9d6b815ef4bb5c701a1e5129711",
+      "sourceUrl": "",
+      "category": "本地项目",
+      "version": "jazzy",
+      "description": "移动机器人上位机模型、SLAM、Nav2 和仿真工程",
+      "versionNote": "结合其对应硬件仓库理解上下位机数据链；按本地提交阅读。",
+      "verification": "本地 Git 与源码核对；未执行联网逐文件抓取",
+      "checkedAt": "2026-11-06",
+      "type": "维护者源码"
+    },
+    {
+      "id": "local-linorobot-hardware",
+      "title": "linorobot2_hardware 本地固定提交",
+      "url": "https://github.com/linorobot/linorobot2_hardware/tree/fbbbb922f4bd778e23268210b7bd7a6ac4c75d83",
+      "sourceUrl": "",
+      "category": "本地项目",
+      "version": "jazzy",
+      "description": "基于 micro-ROS 的电机、编码器与 IMU 固件",
+      "versionNote": "板卡、工具链、传输和上位机分支需共同核对。",
+      "verification": "本地 Git 与源码核对；未执行联网逐文件抓取",
+      "checkedAt": "2026-11-06",
+      "type": "维护者源码"
+    },
+    {
+      "id": "local-ugv",
+      "title": "ugv_sdk 本地固定提交",
+      "url": "https://github.com/agilexrobotics/ugv_sdk/tree/f2704eacdc90357078cd93ec60aae08bb4baab35",
+      "sourceUrl": "",
+      "category": "本地项目",
+      "version": "main",
+      "description": "AgileX 底盘 CAN/UART 协议和 C++ 设备抽象",
+      "versionNote": "通用 main 分支，不按 ROS 发行版命名；配合 BUNKER wrapper 阅读。",
+      "verification": "本地 Git 与源码核对；未执行联网逐文件抓取",
+      "checkedAt": "2026-11-06",
+      "type": "维护者源码"
+    },
+    {
+      "id": "tutorial-zsc",
+      "title": "ROS2 完全教程 · zsc",
+      "url": "https://zsc.github.io/ros2_tutorial/",
+      "sourceUrl": "https://github.com/zsc/ros2_tutorial",
+      "category": "中文教程",
+      "version": "Humble / Jazzy 混合",
+      "description": "按架构、通信、控制、规划和学习算法梳理知识；结合官方版本资料阅读。仓库实际包含22章，目录声明的23、24章未随当前提交提供。",
+      "versionNote": "",
+      "verification": "页面及本地源码核对",
+      "checkedAt": "2026-11-06",
+      "type": "作者／维护者资料"
+    },
+    {
+      "id": "tutorial-rzl6",
+      "title": "ROS2 理论与实践 · 核心篇",
+      "url": "https://rzl6.github.io/ROS2_Tuition/",
+      "sourceUrl": "https://github.com/Rzl6/ROS2_Tuition",
+      "category": "中文教程",
+      "version": "Humble / Ubuntu 22.04",
+      "description": "通信、launch、rosbag、tf2、RViz与URDF的中文分步教程，含C++/Python对照；迁移到Jazzy时重新核对命令和依赖。",
+      "versionNote": "",
+      "verification": "页面及本地源码核对",
+      "checkedAt": "2026-11-06",
+      "type": "作者／维护者资料"
+    },
+    {
+      "id": "tutorial-fishros",
+      "title": "动手学 ROS 2 · 鱼香 ROS",
+      "url": "https://fishros.com/d2lros2/",
+      "sourceUrl": "https://github.com/fishros/ros2_town",
+      "category": "中文教程",
+      "version": "多版本，按章节辨认",
+      "description": "从通信到FishBot、导航、控制、micro-ROS的实践课程。搜索索引保留Humble第二版说明，当前入口可见Foxy版链接，学习前须确认所选版本。",
+      "versionNote": "",
+      "verification": "入口与作者仓库核对",
+      "checkedAt": "2026-11-06",
+      "type": "作者／维护者资料"
+    },
+    {
+      "id": "tutorial-articulated",
+      "title": "Articulated Robotics · 移动机器人实作",
+      "url": "https://articulatedrobotics.xyz/tutorials/",
+      "sourceUrl": "",
+      "category": "作者教程",
+      "version": "多版本",
+      "description": "作者Josh Newans的移动机器人、坐标变换和Docker课程；旧教程的Gazebo Classic命令需按Harmonic迁移。",
+      "versionNote": "",
+      "verification": "作者目录核对",
+      "checkedAt": "2026-11-06",
+      "type": "作者／维护者资料"
+    },
+    {
+      "id": "tutorial-addison",
+      "title": "Automatic Addison · ROS 2 教程目录",
+      "url": "https://automaticaddison.com/tutorials/",
+      "sourceUrl": "",
+      "category": "作者教程",
+      "version": "Jazzy / Lyrical / Iron 分区",
+      "description": "作者维护的分版本教程目录，包含导航和机械臂；本网站学习主线选Jazzy分区，避免跟随首页的新发行版命令。",
+      "versionNote": "",
+      "verification": "作者目录核对",
+      "checkedAt": "2026-11-06",
+      "type": "作者／维护者资料"
+    },
+    {
+      "id": "tutorial-murilo",
+      "title": "Murilo’s ROS2 Tutorial",
+      "url": "https://ros2-tutorial.readthedocs.io/en/latest/",
+      "sourceUrl": "",
+      "category": "作者教程",
+      "version": "Jazzy / Ubuntu 24.04",
+      "description": "Murilo M. Marinho的课程资料，以Python、工作空间和工程习惯为重点；用于曼彻斯特大学机器人软件教学。",
+      "versionNote": "",
+      "verification": "教程首页核对",
+      "checkedAt": "2026-11-06",
+      "type": "作者／维护者资料"
+    },
+    {
+      "id": "tutorial-utv",
+      "title": "Intelligent Systems Lab · ROS 2 Examples",
+      "url": "https://github.com/IntelligentSystemsLabUTV/ros2-examples/tree/jazzy",
+      "sourceUrl": "",
+      "category": "示例源码",
+      "version": "Jazzy 分支",
+      "description": "维护者提供的C++/Python、接口定义、launch工程示例。README说明有些包仍在开发，应以实际存在的包和COLCON_IGNORE为准。",
+      "versionNote": "",
+      "verification": "Jazzy分支README核对",
+      "checkedAt": "2026-11-06",
+      "type": "作者／维护者资料"
+    },
+    {
+      "id": "extra-migrate",
+      "title": "官方 ROS 1 → ROS 2 迁移指南",
+      "url": "https://docs.ros.org/en/jazzy/How-To-Guides/Migrating-from-ROS1.html",
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/jazzy/source/How-To-Guides/Migrating-from-ROS1.rst",
+      "category": "迁移与部署",
+      "version": "Jazzy",
+      "description": "迁移代码、构建系统、配置和运行模型的官方入口。",
+      "versionNote": "",
+      "verification": "官方 Jazzy 源文件核对",
+      "checkedAt": "2026-11-06",
+      "type": "作者／维护者资料"
+    },
+    {
+      "id": "extra-bridge",
+      "title": "ros1_bridge 官方仓库与平台支持",
+      "url": "https://github.com/ros2/ros1_bridge",
+      "sourceUrl": "",
+      "category": "迁移与部署",
+      "version": "按 Ubuntu / ROS 组合核对",
+      "description": "双向桥接的类型映射、构建条件与系统兼容表；Ubuntu 24.04 不提供 ROS 1 支持。",
+      "versionNote": "",
+      "verification": "官方 README 核对",
+      "checkedAt": "2026-11-06",
+      "type": "作者／维护者资料"
+    },
+    {
+      "id": "extra-docker",
+      "title": "OSRF Docker Images",
+      "url": "https://github.com/osrf/docker_images",
+      "sourceUrl": "",
+      "category": "迁移与部署",
+      "version": "按镜像标签选择 Jazzy",
+      "description": "ROS 官方镜像定义与 OSRF 扩展镜像来源，用于固定用户空间依赖。",
+      "versionNote": "",
+      "verification": "维护者仓库核对",
+      "checkedAt": "2026-11-06",
+      "type": "作者／维护者资料"
+    },
+    {
+      "id": "frontier-gym",
+      "title": "Gymnasium 环境 API",
+      "url": "https://gymnasium.farama.org/api/env/",
+      "sourceUrl": "",
+      "category": "前沿学习与数据",
+      "version": "Gymnasium，独立于 ROS 发行版",
+      "description": "reset/step、终止与截断接口的维护者定义。",
+      "versionNote": "",
+      "verification": "2026-11-06 维护者或作者页面核对；教材实验为原创",
+      "checkedAt": "2026-11-06",
+      "type": "作者／维护者资料"
+    },
+    {
+      "id": "frontier-isaaclab",
+      "title": "Isaac Lab 官方文档",
+      "url": "https://isaac-sim.github.io/IsaacLab/main/index.html",
+      "sourceUrl": "",
+      "category": "前沿学习与数据",
+      "version": "main；实施时固定版本",
+      "description": "机器人学习、仿真环境及策略部署工作流。",
+      "versionNote": "",
+      "verification": "2026-11-06 维护者或作者页面核对；教材实验为原创",
+      "checkedAt": "2026-11-06",
+      "type": "作者／维护者资料"
+    },
+    {
+      "id": "frontier-rai",
+      "title": "RAI 维护者仓库",
+      "url": "https://github.com/RobotecAI/rai",
+      "sourceUrl": "",
+      "category": "前沿学习与数据",
+      "version": "项目独立版本",
+      "description": "面向 ROS 2 的具身模型工具与任务框架。",
+      "versionNote": "",
+      "verification": "2026-11-06 维护者或作者页面核对；教材实验为原创",
+      "checkedAt": "2026-11-06",
+      "type": "作者／维护者资料"
+    },
+    {
+      "id": "frontier-cap",
+      "title": "Code as Policies 作者项目页",
+      "url": "https://code-as-policies.github.io/",
+      "sourceUrl": "",
+      "category": "前沿学习与数据",
+      "version": "研究方法，非 Jazzy 安装教程",
+      "description": "研究语言模型程序如何组织机器人控制接口调用。",
+      "versionNote": "",
+      "verification": "2026-11-06 维护者或作者页面核对；教材实验为原创",
+      "checkedAt": "2026-11-06",
+      "type": "作者／维护者资料"
+    },
+    {
+      "id": "frontier-act",
+      "title": "ACT 作者实现",
+      "url": "https://github.com/tonyzhaozh/act",
+      "sourceUrl": "",
+      "category": "前沿学习与数据",
+      "version": "研究实现，独立依赖",
+      "description": "动作分块模仿学习及作者实验实现。",
+      "versionNote": "",
+      "verification": "2026-11-06 维护者或作者页面核对；教材实验为原创",
+      "checkedAt": "2026-11-06",
+      "type": "作者／维护者资料"
+    },
+    {
+      "id": "frontier-diffusion",
+      "title": "Diffusion Policy 作者项目页",
+      "url": "https://diffusion-policy.cs.columbia.edu/",
+      "sourceUrl": "",
+      "category": "前沿学习与数据",
+      "version": "研究实现，独立依赖",
+      "description": "动作序列的条件去噪生成与滚动执行方法。",
+      "versionNote": "",
+      "verification": "2026-11-06 维护者或作者页面核对；教材实验为原创",
+      "checkedAt": "2026-11-06",
+      "type": "作者／维护者资料"
+    },
+    {
+      "id": "frontier-dvc",
+      "title": "DVC 数据流水线文档",
+      "url": "https://doc.dvc.org/user-guide/pipelines",
+      "sourceUrl": "",
+      "category": "前沿学习与数据",
+      "version": "独立工具版本",
+      "description": "数据依赖、流水线与实验复现的维护者文档。",
+      "versionNote": "",
+      "verification": "2026-11-06 维护者或作者页面核对；教材实验为原创",
+      "checkedAt": "2026-11-06",
+      "type": "作者／维护者资料"
+    }
+  ],
+  "tutorialPages": [
+    {
+      "site": "rzl6",
+      "title": "课程简介",
+      "url": "https://rzl6.github.io/ROS2_Tuition/index.html",
+      "lessons": [
+        "architecture"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "1.1.1 ROS2发展历程",
+      "url": "https://rzl6.github.io/ROS2_Tuition/chapter1/11-ros2jian-jie/111-ros2fa-zhan-li-cheng.html",
+      "lessons": [
+        "architecture"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "1.1 ROS2简介",
+      "url": "https://rzl6.github.io/ROS2_Tuition/chapter1/11-ros2jian-jie.html",
+      "lessons": [
+        "architecture"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "1.1.2 ROS2组成体系",
+      "url": "https://rzl6.github.io/ROS2_Tuition/chapter1/11-ros2jian-jie/112-ros2zu-cheng-ti-xi.html",
+      "lessons": [
+        "architecture"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "1.1.3 ROS2优势",
+      "url": "https://rzl6.github.io/ROS2_Tuition/chapter1/11-ros2jian-jie/113-ros2you-shi.html",
+      "lessons": [
+        "architecture"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "第1章 ROS2概述与环境搭建",
+      "url": "https://rzl6.github.io/ROS2_Tuition/chapter1.html",
+      "lessons": [
+        "architecture",
+        "installation",
+        "workspace"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "1.2.1 安装ROS2",
+      "url": "https://rzl6.github.io/ROS2_Tuition/chapter1/12-ros2an-zhuang/121-an-zhuang-ros2.html",
+      "lessons": [
+        "installation"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "1.2 ROS2安装",
+      "url": "https://rzl6.github.io/ROS2_Tuition/chapter1/12-ros2an-zhuang.html",
+      "lessons": [
+        "installation"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "1.2.2 测试ROS2",
+      "url": "https://rzl6.github.io/ROS2_Tuition/chapter1/12-ros2an-zhuang/122-ce-shi-ros2.html",
+      "lessons": [
+        "installation"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "1.2.3 安装colcon构建工具",
+      "url": "https://rzl6.github.io/ROS2_Tuition/chapter1/12-ros2an-zhuang/123-an-zhuang-ros2-gou-jian-gong-ju.html",
+      "lessons": [
+        "installation"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "1.3.1 案例简介",
+      "url": "https://rzl6.github.io/ROS2_Tuition/chapter1/13-ros2kuai-su-ti-yan/131.html",
+      "lessons": [
+        "workspace",
+        "pubsub"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "1.3.2 HelloWorld（C++）",
+      "url": "https://rzl6.github.io/ROS2_Tuition/chapter1/13-ros2kuai-su-ti-yan/131-helloworldcshi-73b029.html",
+      "lessons": [
+        "workspace",
+        "pubsub"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "1.3 ROS2快速体验",
+      "url": "https://rzl6.github.io/ROS2_Tuition/chapter1/13-ros2kuai-su-ti-yan.html",
+      "lessons": [
+        "workspace",
+        "pubsub"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "1.3.3 HelloWorld（Python）",
+      "url": "https://rzl6.github.io/ROS2_Tuition/chapter1/13-ros2kuai-su-ti-yan/132-helloworldpythonshi-73b029.html",
+      "lessons": [
+        "workspace",
+        "pubsub"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "1.3.4 运行优化",
+      "url": "https://rzl6.github.io/ROS2_Tuition/chapter1/13-ros2kuai-su-ti-yan/134-yun-xing-you-hua.html",
+      "lessons": [
+        "workspace",
+        "pubsub"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "1.4.1 安装VSCode",
+      "url": "https://rzl6.github.io/ROS2_Tuition/chapter1/14-ros2ji-cheng-kai-fa-huan-jing-da-jian/141-an-zhuang-vscode.html",
+      "lessons": [
+        "workspace"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "1.4.2 安装终端",
+      "url": "https://rzl6.github.io/ROS2_Tuition/chapter1/14-ros2ji-cheng-kai-fa-huan-jing-da-jian/142-an-zhuang-zhong-duan.html",
+      "lessons": [
+        "workspace"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "1.4 ROS2集成开发环境搭建",
+      "url": "https://rzl6.github.io/ROS2_Tuition/chapter1/14-ros2ji-cheng-kai-fa-huan-jing-da-jian.html",
+      "lessons": [
+        "workspace"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "1.4.3 安装git",
+      "url": "https://rzl6.github.io/ROS2_Tuition/chapter1/14-ros2ji-cheng-kai-fa-huan-jing-da-jian/143-an-zhuang-git.html",
+      "lessons": [
+        "workspace"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "1.5.1 ROS2文件系统",
+      "url": "https://rzl6.github.io/ROS2_Tuition/chapter1/15-ros2ti-xi-kuang-jia/151-ros2wen-jian-xi-tong.html",
+      "lessons": [
+        "architecture",
+        "workspace"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "1.5 ROS2体系框架",
+      "url": "https://rzl6.github.io/ROS2_Tuition/chapter1/15-ros2ti-xi-kuang-jia.html",
+      "lessons": [
+        "architecture",
+        "workspace"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "1.5.2 ROS2核心模块",
+      "url": "https://rzl6.github.io/ROS2_Tuition/chapter1/15-ros2ti-xi-kuang-jia/153-xue-xi-mo-kuai.html",
+      "lessons": [
+        "architecture",
+        "workspace"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "1.5.3 ROS2技术支持",
+      "url": "https://rzl6.github.io/ROS2_Tuition/chapter1/15-ros2ti-xi-kuang-jia/153-ros2jie-shu-zhi-chi.html",
+      "lessons": [
+        "architecture",
+        "workspace"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "1.5.4 ROS2应用方向",
+      "url": "https://rzl6.github.io/ROS2_Tuition/chapter1/15-ros2ti-xi-kuang-jia/154-ros2jie-mei-zu-zhi.html",
+      "lessons": [
+        "architecture",
+        "workspace"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "1.6 本章小结",
+      "url": "https://rzl6.github.io/ROS2_Tuition/chapter1/16-ben-zhang-xiao-jie.html",
+      "lessons": [
+        "architecture"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "2.1 通信机制简介",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-2-zhang-ros2-tong-xin-ji-zhi-he-xin/21-jie-kou-xiao-xi.html",
+      "lessons": [
+        "interfaces"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "2.2 话题通信",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-2-zhang-ros2-tong-xin-ji-zhi-he-xin/22-hua-ti-tong-xin.html",
+      "lessons": [
+        "pubsub",
+        "interfaces"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "第2章 ROS2通信机制核心",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-2-zhang-ros2-tong-xin-ji-zhi-he-xin.html",
+      "lessons": [
+        "pubsub",
+        "services",
+        "actions",
+        "parameters"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "2.2.1 案例以及案例分析",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-2-zhang-ros2-tong-xin-ji-zhi-he-xin/22-hua-ti-tong-xin/221-hua-ti-tong-xin-an-li-fen-xi.html",
+      "lessons": [
+        "pubsub",
+        "interfaces"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "2.2.2 话题通信之原生消息（C++）",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-2-zhang-ros2-tong-xin-ji-zhi-he-xin/22-hua-ti-tong-xin/222-hua-ti-tong-xin-c-shi-73b028-yuan-sheng-xiao-606f29.html",
+      "lessons": [
+        "pubsub",
+        "interfaces"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "2.2.3 话题通信之原生消息（Python）",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-2-zhang-ros2-tong-xin-ji-zhi-he-xin/22-hua-ti-tong-xin/223-hua-ti-tong-xin-python-shi-73b028-yuan-sheng-xiao-606f29.html",
+      "lessons": [
+        "pubsub",
+        "interfaces"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "2.2.4 话题通信自定义接口消息",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-2-zhang-ros2-tong-xin-ji-zhi-he-xin/22-hua-ti-tong-xin/222-hua-ti-tong-xin-jie-kou-xiao-xi.html",
+      "lessons": [
+        "pubsub",
+        "interfaces"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "2.2.5 话题通信之自定义消息（C++）",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-2-zhang-ros2-tong-xin-ji-zhi-he-xin/22-hua-ti-tong-xin/223-hua-ti-tong-xin-c-shi-xian.html",
+      "lessons": [
+        "pubsub",
+        "interfaces"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "2.2.6 话题通信之自定义消息（Python）",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-2-zhang-ros2-tong-xin-ji-zhi-he-xin/22-hua-ti-tong-xin/224-hua-ti-tong-xin-python-shi-xian.html",
+      "lessons": [
+        "pubsub",
+        "interfaces"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "2.3 服务通信",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-2-zhang-ros2-tong-xin-ji-zhi-he-xin/23-fu-wu-tong-xin.html",
+      "lessons": [
+        "services",
+        "interfaces"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "2.3.1 案例以及案例分析",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-2-zhang-ros2-tong-xin-ji-zhi-he-xin/23-fu-wu-tong-xin/231-fu-wu-tong-xin-li-lun-mo-xing.html",
+      "lessons": [
+        "services",
+        "interfaces"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "2.3.2 服务通信接口消息",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-2-zhang-ros2-tong-xin-ji-zhi-he-xin/23-fu-wu-tong-xin/232-hua-ti-tong-xin-jie-kou-xiao-xi.html",
+      "lessons": [
+        "services",
+        "interfaces"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "2.3.3 服务通信（C++）",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-2-zhang-ros2-tong-xin-ji-zhi-he-xin/23-fu-wu-tong-xin/233-fu-wu-tong-xin-c-shi-xian.html",
+      "lessons": [
+        "services",
+        "interfaces"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "2.3.4 服务通信（Python）",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-2-zhang-ros2-tong-xin-ji-zhi-he-xin/23-fu-wu-tong-xin/234-fu-wu-tong-xin-python-shi-xian.html",
+      "lessons": [
+        "services",
+        "interfaces"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "2.4 动作通信",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-2-zhang-ros2-tong-xin-ji-zhi-he-xin/24-dong-zuo-tong-xin.html",
+      "lessons": [
+        "actions",
+        "interfaces"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "2.4.1 案例以及案例分析",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-2-zhang-ros2-tong-xin-ji-zhi-he-xin/24-dong-zuo-tong-xin/241-dong-zuo-tong-xin-li-lun-mo-xing.html",
+      "lessons": [
+        "actions",
+        "interfaces"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "2.4.2 动作通信接口消息",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-2-zhang-ros2-tong-xin-ji-zhi-he-xin/24-dong-zuo-tong-xin/242-dong-zuo-tong-xin-jie-kou-xiao-xi.html",
+      "lessons": [
+        "actions",
+        "interfaces"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "2.4.3 动作通信（C++）",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-2-zhang-ros2-tong-xin-ji-zhi-he-xin/24-dong-zuo-tong-xin/243-dong-zuo-tong-xin-c-shi-xian.html",
+      "lessons": [
+        "actions",
+        "interfaces"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "2.4.4 动作通信（Python）",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-2-zhang-ros2-tong-xin-ji-zhi-he-xin/24-dong-zuo-tong-xin/244-dong-zuo-tong-xin-python-shi-xian.html",
+      "lessons": [
+        "actions",
+        "interfaces"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "2.5 参数服务",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-2-zhang-ros2-tong-xin-ji-zhi-he-xin/25-can-shu-fu-wu.html",
+      "lessons": [
+        "parameters"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "2.5.1 案例以及案例分析",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-2-zhang-ros2-tong-xin-ji-zhi-he-xin/25-can-shu-fu-wu/251-can-shu-fu-wu-li-lun-mo-xing.html",
+      "lessons": [
+        "parameters"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "2.5.2 参数数据类型",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-2-zhang-ros2-tong-xin-ji-zhi-he-xin/25-can-shu-fu-wu/252-can-shu-shu-ju-lei-xing.html",
+      "lessons": [
+        "parameters"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "2.5.3 参数服务（C++）",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-2-zhang-ros2-tong-xin-ji-zhi-he-xin/25-can-shu-fu-wu/253-can-shu-fu-wu-c-shi-xian.html",
+      "lessons": [
+        "parameters"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "2.5.4 参数服务（Python）",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-2-zhang-ros2-tong-xin-ji-zhi-he-xin/25-can-shu-fu-wu/254-can-shu-fu-wu-python-shi-xian.html",
+      "lessons": [
+        "parameters"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "2.6 本章小结",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-2-zhang-ros2-tong-xin-ji-zhi-he-xin/28-ben-zhang-xiao-jie.html",
+      "lessons": [
+        "pubsub",
+        "services",
+        "actions",
+        "parameters"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "3.1 分布式",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong/31-fen-bu-shi.html",
+      "lessons": [
+        "network"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "3.2 工作空间覆盖",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong/32-gong-zuo-kong-jian-fu-gai.html",
+      "lessons": [
+        "workspace"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "第3章 ROS2通信机制补充",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong.html",
+      "lessons": [
+        "graph-cli",
+        "network",
+        "workspace"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "3.3 元功能包",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong/33-yuan-gong-neng-bao.html",
+      "lessons": [
+        "workspace"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "3.4 节点重名",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong/34-jie-dian-zhong-ming.html",
+      "lessons": [
+        "graph-cli",
+        "launch"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "3.4.1 ros2 run设置节点名称",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong/34-jie-dian-zhong-ming/341-rou-si.html",
+      "lessons": [
+        "graph-cli",
+        "launch"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "3.4.2 launch文件设置节点名称",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong/34-jie-dian-zhong-ming/342-launch-wen-jian-jie-jue-jie-dian-zhong-ming-wen-ti.html",
+      "lessons": [
+        "graph-cli",
+        "launch"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "3.4.3 编码设置节点名称",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong/34-jie-dian-zhong-ming/343-bian-ma-jie-jue-jie-dian-zhong-ming-wen-ti.html",
+      "lessons": [
+        "graph-cli",
+        "launch"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "3.5 话题重名",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong/35-hua-ti-zhong-ming.html",
+      "lessons": [
+        "graph-cli",
+        "launch"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "3.5.1 ros2 run设置话题名称",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong/35-hua-ti-zhong-ming/351-ros2-run-xiu-gai-hua-ti-ming-cheng.html",
+      "lessons": [
+        "graph-cli",
+        "launch"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "3.5.2 launch文件设置话题名称",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong/35-hua-ti-zhong-ming/352-launch-wen-jian-xiu-gai-hua-ti-ming-cheng.html",
+      "lessons": [
+        "graph-cli",
+        "launch"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "3.5.3 编码设置话题名称",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong/35-hua-ti-zhong-ming/353-bian-ma-she-zhi-hua-ti-ming-cheng.html",
+      "lessons": [
+        "graph-cli",
+        "launch"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "3.6 时间相关API",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong/36-chang-yong-api.html",
+      "lessons": [
+        "time-bag"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "3.6.1 Rate",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong/36-chang-yong-api/361-rate.html",
+      "lessons": [
+        "time-bag"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "3.6.2 Time",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong/36-chang-yong-api/362-time.html",
+      "lessons": [
+        "time-bag"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "3.6.3 Duration",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong/36-chang-yong-api/363-duration.html",
+      "lessons": [
+        "time-bag"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "3.6.4 Time 与 Duration 运算",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong/36-chang-yong-api/364-time-yu-duration-yun-suan.html",
+      "lessons": [
+        "time-bag"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "3.7 通信机制工具",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong/37-tong-xin-ji-zhi-ming-ling.html",
+      "lessons": [
+        "graph-cli"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "3.7.1 命令工具",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong/37-tong-xin-ji-zhi-ming-ling/371-ming-ling-gong-ju.html",
+      "lessons": [
+        "graph-cli"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "3.7.2 rqt工具箱",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong/37-tong-xin-ji-zhi-ming-ling/372-rqtgong-ju-xiang.html",
+      "lessons": [
+        "graph-cli"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "3.8 通信机制实操",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong/38-tong-xin-ji-zhi-lian-xi.html",
+      "lessons": [
+        "pubsub",
+        "services",
+        "actions",
+        "parameters"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "3.8.1 话题通信案例分析",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong/38-tong-xin-ji-zhi-lian-xi/381-hua-ti-tong-xin-lian-xi.html",
+      "lessons": [
+        "pubsub"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "3.8.2 话题通信实现",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong/38-tong-xin-ji-zhi-lian-xi/382-fu-wu-tong-xin-lian-xi.html",
+      "lessons": [
+        "pubsub"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "3.8.3 服务通信案例分析",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong/38-tong-xin-ji-zhi-lian-xi/383-dong-zuo-tong-xin-lian-xi.html",
+      "lessons": [
+        "services"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "3.8.4 服务通信实现",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong/38-tong-xin-ji-zhi-lian-xi/384-can-shu-fu-wu-lian-xi.html",
+      "lessons": [
+        "services"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "3.8.5 动作通信案例分析",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong/38-tong-xin-ji-zhi-lian-xi/385-dong-zuo-tong-xin-an-li-fen-xi.html",
+      "lessons": [
+        "actions"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "3.8.6 动作通信实现",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong/38-tong-xin-ji-zhi-lian-xi/386-dong-zuo-tong-xin-shi-xian.html",
+      "lessons": [
+        "actions"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "3.8.7 参数服务案例分析",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong/38-tong-xin-ji-zhi-lian-xi/387-can-shu-fu-wu-an-li-fen-xi.html",
+      "lessons": [
+        "services"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "3.8.8 参数服务实现",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong/38-tong-xin-ji-zhi-lian-xi/388-can-shu-fu-wu-shi-xian.html",
+      "lessons": [
+        "services"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "3.9 本章小结",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-3-zhang-ros2-tong-xin-ji-zhi-bu-chong/39-ben-zhang-xiao-jie.html",
+      "lessons": [
+        "graph-cli"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "4.1 启动文件launch简介",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-4-zhang-ros2-gong-ju-zhi-launch-rosbag2-yu-rqt/41-launch-jian-jie.html",
+      "lessons": [
+        "launch"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "4.1.1 launch 基本使用流程",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-4-zhang-ros2-gong-ju-zhi-launch-rosbag2-yu-rqt/41-launch-jian-jie/411-launch-ji-ben-shi-yong-liu-cheng.html",
+      "lessons": [
+        "launch"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "4.2 launch之Python实现",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-4-zhang-ros2-gong-ju-zhi-launch-rosbag2-yu-rqt/42-launchzhi-python-shi-xian.html",
+      "lessons": [
+        "launch"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "4.2.1 节点设置",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-4-zhang-ros2-gong-ju-zhi-launch-rosbag2-yu-rqt/42-launchzhi-python-shi-xian/421-jie-dian-she-zhi.html",
+      "lessons": [
+        "launch"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "4.2.2 执行指令",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-4-zhang-ros2-gong-ju-zhi-launch-rosbag2-yu-rqt/42-launchzhi-python-shi-xian/422-zhi-xing-ming-ling.html",
+      "lessons": [
+        "launch"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "第4章 ROS2工具之launch与rosbag2",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-4-zhang-ros2-gong-ju-zhi-launch-rosbag2-yu-rqt.html",
+      "lessons": [
+        "launch",
+        "time-bag"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "4.2.3 参数设置",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-4-zhang-ros2-gong-ju-zhi-launch-rosbag2-yu-rqt/42-launchzhi-python-shi-xian/424-wen-jian-bao-han.html",
+      "lessons": [
+        "launch"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "4.2.4 文件包含",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-4-zhang-ros2-gong-ju-zhi-launch-rosbag2-yu-rqt/42-launchzhi-python-shi-xian/425-wen-jian-bao-han.html",
+      "lessons": [
+        "launch"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "4.2.5 分组设置",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-4-zhang-ros2-gong-ju-zhi-launch-rosbag2-yu-rqt/42-launchzhi-python-shi-xian/426-fen-zu-she-zhi.html",
+      "lessons": [
+        "launch"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "4.2.6 添加事件",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-4-zhang-ros2-gong-ju-zhi-launch-rosbag2-yu-rqt/42-launchzhi-python-shi-xian/423-tian-jia-shi-jian.html",
+      "lessons": [
+        "launch"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "4.3 launch之xml、yaml实现",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-4-zhang-ros2-gong-ju-zhi-launch-rosbag2-yu-rqt/43-launchzhi-xml-shi-xian.html",
+      "lessons": [
+        "launch"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "4.3.1 节点设置",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-4-zhang-ros2-gong-ju-zhi-launch-rosbag2-yu-rqt/43-launchzhi-xml-shi-xian/431-jie-dian-she-zhi.html",
+      "lessons": [
+        "launch"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "4.3.2 执行指令",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-4-zhang-ros2-gong-ju-zhi-launch-rosbag2-yu-rqt/43-launchzhi-xml-shi-xian/432-zhi-xing-zhi-ling.html",
+      "lessons": [
+        "launch"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "4.3.3 参数设置",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-4-zhang-ros2-gong-ju-zhi-launch-rosbag2-yu-rqt/43-launchzhi-xml-shi-xian/433-can-shu-she-zhi.html",
+      "lessons": [
+        "launch"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "4.3.4 文件包含",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-4-zhang-ros2-gong-ju-zhi-launch-rosbag2-yu-rqt/43-launchzhi-xml-shi-xian/434-wen-jian-bao-han.html",
+      "lessons": [
+        "launch"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "4.3.5 分组设置",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-4-zhang-ros2-gong-ju-zhi-launch-rosbag2-yu-rqt/43-launchzhi-xml-shi-xian/435-fen-zu-she-zhi.html",
+      "lessons": [
+        "launch"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "4.4.1 ros2 bag 命令工具",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-4-zhang-ros2-gong-ju-zhi-launch-rosbag2-yu-rqt/44-rosbag2/441-ros2-bag-ming-ling-gong-ju.html",
+      "lessons": [
+        "time-bag"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "4.4 录制回放工具——rosbag2",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-4-zhang-ros2-gong-ju-zhi-launch-rosbag2-yu-rqt/44-rosbag2.html",
+      "lessons": [
+        "time-bag"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "4.4.2 rosbag2 编程（C++）",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-4-zhang-ros2-gong-ju-zhi-launch-rosbag2-yu-rqt/44-rosbag2/442-rosbag2-zhi-c-shi-xian.html",
+      "lessons": [
+        "time-bag"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "4.4.3 rosbag2 编程（Python）",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-4-zhang-ros2-gong-ju-zhi-launch-rosbag2-yu-rqt/44-rosbag2/443-rosbag2-zhi-python-shi-xian.html",
+      "lessons": [
+        "time-bag"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "4.5 本章小结",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-4-zhang-ros2-gong-ju-zhi-launch-rosbag2-yu-rqt/46-ben-zhang-xiao-jie.html",
+      "lessons": [
+        "launch",
+        "time-bag"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "5.1 坐标变换简介",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-5-zhang-ros2-gong-ju-zhi-zuo-biao-bian-huan/51-zuo-biao-bian-huan-jian-jie.html",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "5.1.1 案例安装以及运行",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-5-zhang-ros2-gong-ju-zhi-zuo-biao-bian-huan/51-zuo-biao-bian-huan-jian-jie/511-an-li-an-zhuang-yi-ji-yun-xing.html",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "5.2 坐标相关消息",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-5-zhang-ros2-gong-ju-zhi-zuo-biao-bian-huan/52-zuo-biao-xiao-xi.html",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "第5章 ROS2工具之坐标变换",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-5-zhang-ros2-gong-ju-zhi-zuo-biao-bian-huan.html",
+      "lessons": [
+        "tf2"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "5.3 坐标变换广播",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-5-zhang-ros2-gong-ju-zhi-zuo-biao-bian-huan/53-zuo-biao-xi-guang-bo.html",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "5.3.1 坐标系广播案例以及分析",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-5-zhang-ros2-gong-ju-zhi-zuo-biao-bian-huan/53-zuo-biao-xi-guang-bo/531-jing-tai-zuo-biao-xi-guan-xi-guang-bo.html",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "5.3.2 静态广播器（命令）",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-5-zhang-ros2-gong-ju-zhi-zuo-biao-bian-huan/53-zuo-biao-xi-guang-bo/532-jing-tai-guang-bo-qi-ff08-ming-ling-ff09.html",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "5.3.3 静态广播器（C++）",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-5-zhang-ros2-gong-ju-zhi-zuo-biao-bian-huan/53-zuo-biao-xi-guang-bo/533-jing-tai-guang-bo-qi-ff08-c-++.html",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "5.3.4 静态广播器（Python）",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-5-zhang-ros2-gong-ju-zhi-zuo-biao-bian-huan/53-zuo-biao-xi-guang-bo/534-jing-tai-guang-bo-qi-ff08-python.html",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "5.3.5 动态广播器（C++）",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-5-zhang-ros2-gong-ju-zhi-zuo-biao-bian-huan/53-zuo-biao-xi-guang-bo/535-dong-tai-guang-bo-qi-ff08-c-++.html",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "5.3.6 动态广播器（Python）",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-5-zhang-ros2-gong-ju-zhi-zuo-biao-bian-huan/53-zuo-biao-xi-guang-bo/536-dong-tai-guang-bo-qi-ff08-python.html",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "5.3.7 坐标点发布案例以及分析",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-5-zhang-ros2-gong-ju-zhi-zuo-biao-bian-huan/53-zuo-biao-xi-guang-bo/537-zuo-biao-dian-fa-bu-an-li-fen-xi.html",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "5.3.8 坐标点发布（C++）",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-5-zhang-ros2-gong-ju-zhi-zuo-biao-bian-huan/53-zuo-biao-xi-guang-bo/538-zuo-biao-dian-fa-bu-ff08-c-++.html",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "5.3.9 坐标点发布（Python）",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-5-zhang-ros2-gong-ju-zhi-zuo-biao-bian-huan/53-zuo-biao-xi-guang-bo/539-zuo-biao-dian-fa-bu-ff08-python.html",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "5.4 坐标变换监听",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-5-zhang-ros2-gong-ju-zhi-zuo-biao-bian-huan/54-zuo-biao-xi-jian-ting.html",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "5.4.1 坐标系变换案例以及分析",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-5-zhang-ros2-gong-ju-zhi-zuo-biao-bian-huan/54-zuo-biao-xi-jian-ting/541-zuo-biao-xi-bian-huan.html",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "5.4.2 坐标系变换（C++）",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-5-zhang-ros2-gong-ju-zhi-zuo-biao-bian-huan/54-zuo-biao-xi-jian-ting/542-zuo-biao-dian-bian-huan.html",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "5.4.3 坐标系变换（Python）",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-5-zhang-ros2-gong-ju-zhi-zuo-biao-bian-huan/54-zuo-biao-xi-jian-ting/543-zuo-biao-xi-bian-huan-ff08-c-++.html",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "5.4.4 坐标点变换（C++）",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-5-zhang-ros2-gong-ju-zhi-zuo-biao-bian-huan/54-zuo-biao-xi-jian-ting/544-zuo-biao-dian-bian-huan-ff08-c-++.html",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "5.4.5 坐标点变换（Python）",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-5-zhang-ros2-gong-ju-zhi-zuo-biao-bian-huan/54-zuo-biao-xi-jian-ting/545-zuo-biao-dian-bian-huan-ff08-python.html",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "5.5 坐标变换工具",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-5-zhang-ros2-gong-ju-zhi-zuo-biao-bian-huan/55-tfgong-ju.html",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "5.6 坐标变换实操",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-5-zhang-ros2-gong-ju-zhi-zuo-biao-bian-huan/56-zuo-biao-bian-huan-shi-cao.html",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "5.6.1 乌龟跟随案例以及分析",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-5-zhang-ros2-gong-ju-zhi-zuo-biao-bian-huan/56-zuo-biao-bian-huan-shi-cao/561-wu-gui-gen-sui-an-li-yi-ji-an-li-fen-xi.html",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "5.6.2 乌龟跟随实现（C++）",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-5-zhang-ros2-gong-ju-zhi-zuo-biao-bian-huan/56-zuo-biao-bian-huan-shi-cao/562-wu-gui-gen-sui-shi-xian-ff08-c-++.html",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "5.6.3 乌龟跟随实现（Python）",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-5-zhang-ros2-gong-ju-zhi-zuo-biao-bian-huan/56-zuo-biao-bian-huan-shi-cao/563-wu-gui-gen-sui-shi-xian-ff08-python.html",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "5.6.4 乌龟护航案例以及分析",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-5-zhang-ros2-gong-ju-zhi-zuo-biao-bian-huan/56-zuo-biao-bian-huan-shi-cao/562-wu-gui-hu-hang-an-li-yi-ji-fen-xi.html",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "5.6.5 乌龟护航实现（C++）",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-5-zhang-ros2-gong-ju-zhi-zuo-biao-bian-huan/56-zuo-biao-bian-huan-shi-cao/565-wu-gui-hu-hang-shi-xian-ff08-c-++.html",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "5.6.6 乌龟护航实现（Python）",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-5-zhang-ros2-gong-ju-zhi-zuo-biao-bian-huan/56-zuo-biao-bian-huan-shi-cao/566-wu-gui-hu-hang-shi-xian-ff08-python.html",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "5.7 本章小结",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-5-zhang-ros2-gong-ju-zhi-zuo-biao-bian-huan/57-ben-zhang-xiao-jie.html",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "6.1 可视化简介",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-6-zhang-ros2-ji-qi-ren-jian-mo-yu-fang-zhen/61-gai-shu.html",
+      "lessons": [
+        "eco-model-rviz"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "第6章 ROS2工具之可视化",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-6-zhang-ros2-ji-qi-ren-jian-mo-yu-fang-zhen.html",
+      "lessons": [
+        "eco-model-rviz"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "6.2 rviz2 基本使用",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-6-zhang-ros2-ji-qi-ren-jian-mo-yu-fang-zhen/62-rviz2-ji-ben-shi-yong.html",
+      "lessons": [
+        "eco-model-rviz"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "6.3.1 案例以及案例分析",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-6-zhang-ros2-ji-qi-ren-jian-mo-yu-fang-zhen/63-urdfji-cheng-rviz2-ji-ben-liu-cheng/631-an-li-yi-ji-an-li-fen-xi.html",
+      "lessons": [
+        "eco-model-rviz"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "6.3.2 案例实现",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-6-zhang-ros2-ji-qi-ren-jian-mo-yu-fang-zhen/63-urdfji-cheng-rviz2-ji-ben-liu-cheng/632-an-li-shi-xian.html",
+      "lessons": [
+        "eco-model-rviz"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "6.3 rviz2集成URDF基本流程",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-6-zhang-ros2-ji-qi-ren-jian-mo-yu-fang-zhen/63-urdfji-cheng-rviz2-ji-ben-liu-cheng.html",
+      "lessons": [
+        "eco-model-rviz"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "6.4 URDF使用语法",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-6-zhang-ros2-ji-qi-ren-jian-mo-yu-fang-zhen/64-urdfyu-fa.html",
+      "lessons": [
+        "eco-model-rviz"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "6.4.1 URDF语法01_robot",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-6-zhang-ros2-ji-qi-ren-jian-mo-yu-fang-zhen/64-urdfyu-fa/641-urdfyu-fa-01-robot.html",
+      "lessons": [
+        "eco-model-rviz"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "6.4.2 URDF语法02_link",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-6-zhang-ros2-ji-qi-ren-jian-mo-yu-fang-zhen/64-urdfyu-fa/642-urdfyu-fa-02-link.html",
+      "lessons": [
+        "eco-model-rviz"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "6.4.3 URDF语法03_joint",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-6-zhang-ros2-ji-qi-ren-jian-mo-yu-fang-zhen/64-urdfyu-fa/643-urdfyu-fa-03-joint.html",
+      "lessons": [
+        "eco-model-rviz"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "6.4.4 URDF练习",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-6-zhang-ros2-ji-qi-ren-jian-mo-yu-fang-zhen/64-urdfyu-fa/644-urdflian-xi.html",
+      "lessons": [
+        "eco-model-rviz"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "6.4.5 URDF工具",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-6-zhang-ros2-ji-qi-ren-jian-mo-yu-fang-zhen/64-urdfyu-fa/645-urdfgong-ju.html",
+      "lessons": [
+        "eco-model-rviz"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "6.5 URDF优化_xacro",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-6-zhang-ros2-ji-qi-ren-jian-mo-yu-fang-zhen/65-urdfyou-hua-xacro.html",
+      "lessons": [
+        "eco-model-rviz"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "6.5.1 xacro_快速体验",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-6-zhang-ros2-ji-qi-ren-jian-mo-yu-fang-zhen/65-urdfyou-hua-xacro/651-xacrokuai-su-ti-yan.html",
+      "lessons": [
+        "eco-model-rviz"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "6.5.2 xacro_使用语法",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-6-zhang-ros2-ji-qi-ren-jian-mo-yu-fang-zhen/65-urdfyou-hua-xacro/652-xacroshi-yong-yu-fa.html",
+      "lessons": [
+        "eco-model-rviz"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "6.5.3 xacro_练习",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-6-zhang-ros2-ji-qi-ren-jian-mo-yu-fang-zhen/65-urdfyou-hua-xacro/653-xacroshi-yong-shi-li.html",
+      "lessons": [
+        "eco-model-rviz"
+      ]
+    },
+    {
+      "site": "rzl6",
+      "title": "6.6 本章小结",
+      "url": "https://rzl6.github.io/ROS2_Tuition/di-6-zhang-ros2-ji-qi-ren-jian-mo-yu-fang-zhen/66-ben-zhang-xiao-jie.html",
+      "lessons": [
+        "eco-model-rviz"
+      ]
+    },
+    {
+      "site": "zsc",
+      "title": "第 1 章：ROS1 核心概念回顾",
+      "url": "https://zsc.github.io/ros2_tutorial/chapter1.html",
+      "lessons": [
+        "architecture",
+        "migration"
+      ]
+    },
+    {
+      "site": "zsc",
+      "title": "第 2 章：ROS1 的局限性分析",
+      "url": "https://zsc.github.io/ros2_tutorial/chapter2.html",
+      "lessons": [
+        "architecture",
+        "network"
+      ]
+    },
+    {
+      "site": "zsc",
+      "title": "第 3 章：从 ROS1 到 ROS2 的迁移策略",
+      "url": "https://zsc.github.io/ros2_tutorial/chapter3.html",
+      "lessons": [
+        "migration"
+      ]
+    },
+    {
+      "site": "zsc",
+      "title": "第 4 章：ROS2 架构与设计理念",
+      "url": "https://zsc.github.io/ros2_tutorial/chapter4.html",
+      "lessons": [
+        "architecture"
+      ]
+    },
+    {
+      "site": "zsc",
+      "title": "第 5 章：节点与执行器模型",
+      "url": "https://zsc.github.io/ros2_tutorial/chapter5.html",
+      "lessons": [
+        "executors",
+        "lifecycle",
+        "composition"
+      ]
+    },
+    {
+      "site": "zsc",
+      "title": "第 6 章：通信机制深度解析",
+      "url": "https://zsc.github.io/ros2_tutorial/chapter6.html",
+      "lessons": [
+        "pubsub",
+        "services",
+        "actions",
+        "qos"
+      ]
+    },
+    {
+      "site": "zsc",
+      "title": "第 7 章：Launch 系统与配置管理",
+      "url": "https://zsc.github.io/ros2_tutorial/chapter7.html",
+      "lessons": [
+        "launch",
+        "parameters"
+      ]
+    },
+    {
+      "site": "zsc",
+      "title": "第 8 章：tf2 坐标变换框架",
+      "url": "https://zsc.github.io/ros2_tutorial/chapter8.html",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "site": "zsc",
+      "title": "第 9 章：时间同步与回放系统",
+      "url": "https://zsc.github.io/ros2_tutorial/chapter9.html",
+      "lessons": [
+        "time-bag"
+      ]
+    },
+    {
+      "site": "zsc",
+      "title": "第 10 章：传感器数据处理管道",
+      "url": "https://zsc.github.io/ros2_tutorial/chapter10.html",
+      "lessons": [
+        "eco-perception-pipeline"
+      ]
+    },
+    {
+      "site": "zsc",
+      "title": "第 11 章：SLAM 与定位系统",
+      "url": "https://zsc.github.io/ros2_tutorial/chapter11.html",
+      "lessons": [
+        "eco-slam-mapping",
+        "eco-state-estimation"
+      ]
+    },
+    {
+      "site": "zsc",
+      "title": "第 12 章：导航栈 Nav2",
+      "url": "https://zsc.github.io/ros2_tutorial/chapter12.html",
+      "lessons": [
+        "eco-nav2-stack",
+        "eco-nav2-task-programming"
+      ]
+    },
+    {
+      "site": "zsc",
+      "title": "第 13 章：ros2_control 框架",
+      "url": "https://zsc.github.io/ros2_tutorial/chapter13.html",
+      "lessons": [
+        "eco-control-framework",
+        "eco-hardware-integration"
+      ]
+    },
+    {
+      "site": "zsc",
+      "title": "第 14 章：MoveIt2 运动规划",
+      "url": "https://zsc.github.io/ros2_tutorial/chapter14.html",
+      "lessons": [
+        "eco-moveit-planning",
+        "eco-manipulation-tasks"
+      ]
+    },
+    {
+      "site": "zsc",
+      "title": "第 15 章：实时系统与性能优化",
+      "url": "https://zsc.github.io/ros2_tutorial/chapter15.html",
+      "lessons": [
+        "performance"
+      ]
+    },
+    {
+      "site": "zsc",
+      "title": "第 16 章：安全性与诊断系统",
+      "url": "https://zsc.github.io/ros2_tutorial/chapter16.html",
+      "lessons": [
+        "security",
+        "eco-data-observability"
+      ]
+    },
+    {
+      "site": "zsc",
+      "title": "第 17 章：仿真集成（Gazebo/Ignition）",
+      "url": "https://zsc.github.io/ros2_tutorial/chapter17.html",
+      "lessons": [
+        "eco-gazebo-simulation"
+      ]
+    },
+    {
+      "site": "zsc",
+      "title": "第 18 章：多机器人系统",
+      "url": "https://zsc.github.io/ros2_tutorial/chapter18.html",
+      "lessons": [
+        "eco-multi-robot"
+      ]
+    },
+    {
+      "site": "zsc",
+      "title": "第 19 章：计算机视觉与深度学习",
+      "url": "https://zsc.github.io/ros2_tutorial/chapter19.html",
+      "lessons": [
+        "eco-perception-pipeline",
+        "eco-accelerated-robotics"
+      ]
+    },
+    {
+      "site": "zsc",
+      "title": "第 20 章：机器人强化学习",
+      "url": "https://zsc.github.io/ros2_tutorial/chapter20.html",
+      "lessons": [
+        "learning-rl"
+      ]
+    },
+    {
+      "site": "zsc",
+      "title": "第 21 章：大语言模型与具身智能",
+      "url": "https://zsc.github.io/ros2_tutorial/chapter21.html",
+      "lessons": [
+        "learning-embodied"
+      ]
+    },
+    {
+      "site": "zsc",
+      "title": "第 22 章：神经网络运动控制",
+      "url": "https://zsc.github.io/ros2_tutorial/chapter22.html",
+      "lessons": [
+        "learning-policy"
+      ]
+    }
+  ]
+}

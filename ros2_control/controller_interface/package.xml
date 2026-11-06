@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="2">
+  <name>controller_interface</name>
+  <version>4.50.0</version>
+  <description>Base classes for controllers and syntax cookies for supporting common sensor types in controllers and broadcasters</description>
+  <maintainer email="bence.magyar.robotics@gmail.com">Bence Magyar</maintainer>
+  <maintainer email="denis@stoglrobotics.de">Denis Štogl</maintainer>
+  <maintainer email="christoph.froehlich@ait.ac.at">Christoph Froehlich</maintainer>
+  <maintainer email="sai.kishor@pal-robotics.com">Sai Kishor Kothakota</maintainer>
+  <license>Apache License 2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_gen_version_h</buildtool_depend>
+
+  <build_depend>ros2_control_cmake</build_depend>
+
+  <depend>fmt</depend>
+  <depend>hardware_interface</depend>
+  <depend>joint_limits</depend>
+  <depend>lifecycle_msgs</depend>
+  <depend>pal_statistics</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_lifecycle</depend>
+  <depend>realtime_tools</depend>
+
+  <!-- message headers included by the installed semantic_components headers -->
+  <build_export_depend>geometry_msgs</build_export_depend>
+  <build_export_depend>sensor_msgs</build_export_depend>
+  <build_export_depend>std_msgs</build_export_depend>
+
+  <test_depend>ament_cmake_gmock</test_depend>
+  <test_depend>geometry_msgs</test_depend>
+  <test_depend>sensor_msgs</test_depend>
+  <test_depend>std_msgs</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

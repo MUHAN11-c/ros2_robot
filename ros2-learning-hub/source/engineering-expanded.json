@@ -1,0 +1,1340 @@
+{
+  "chapters": [
+    {
+      "id": "qos",
+      "sections": [
+        {
+          "title": "从业务要求推导通信契约",
+          "paragraphs": [
+            "设想相机每秒产生三十帧图像，而识别器只来得及处理十帧。保存全部图像适合离线分析，在线避障却更需要最新图像。QoS 的选择必须先回答：允许丢哪些数据、最旧可以接受多久、晚启动是否需要历史、失联如何发现。它配置的是通信行为，不能替应用决定过期指令是否仍然有效。",
+            "排查时把链路分成发现、端点匹配、传输、回调处理四层。节点出现在图中只能证明发现发生过；发布者和订阅者的名称与类型相同也不保证策略兼容。即使底层已经接收，执行器忙于其他回调仍会推迟处理。把这四层混在一起，会出现不断调大队列却无法改善延迟的情况。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "逐项判断请求与提供是否相容",
+          "paragraphs": [
+            "可靠性可以理解为订阅者提出最低要求：可靠发布者能够连接可靠或尽力订阅者；尽力发布者只能满足尽力订阅者。持久性也有方向：瞬态本地发布者可以匹配瞬态本地或易失订阅者；易失发布者不能满足要求历史数据的瞬态本地订阅者。两项都兼容才可能通信，不能只检查其中一项。",
+            "截止间隔比较的是持续时间。发布端承诺的最大间隔应小于或等于订阅端允许的最大间隔；发布端二十毫秒、订阅端五十毫秒可兼容，反向则不满足要求。默认的无限持续时间不能当作一个具体的短间隔。活性策略及租约也参与兼容判断，手动话题活性比自动活性要求更严格；history 和 depth 不要求两端数字完全相同。"
+          ],
+          "bullets": [
+            "可靠发布 → 可靠订阅：兼容；可靠发布 → 尽力订阅：兼容。",
+            "尽力发布 → 可靠订阅：不兼容；尽力发布 → 尽力订阅：兼容。",
+            "瞬态本地发布 → 易失订阅：能匹配，但不能据此要求晚加入历史；历史重放应明确配置双方瞬态本地。"
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "缓存、过期与业务确认解决不同问题",
+          "paragraphs": [
+            "KeepLast 的深度表示保留的样本数，不是发布频率。假设单条图像约三兆字节、深度十，仅样本有效载荷就约三十兆字节；复制、分配和中间件缓冲还会增加内存。KeepAll 也受资源限制，不能视为无限存储。如果每个回调耗时八十毫秒，单线程最多约每秒处理十二点五条，调整深度不能让它处理完每秒四十条的持续输入。",
+            "可靠传输会重试，但不保证应用在指定时刻处理数据，也不保证设备已经执行动作。控制指令应携带可校验的时间或序号，并设计超时停止；需要确认结果的操作应有响应或反馈。Lifespan 让过期样本失效，Deadline 反映预期消息间隔并可触发事件，它们都不会自动提高发布频率或替控制器执行保护逻辑。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "用最小实验分离不匹配与处理迟缓",
+          "paragraphs": [
+            "本实验只需 Jazzy 的命令行工具和 std_msgs。每个终端先加载同一环境、使用相同域，确保没有同名旧发布者。终端甲持续发布尽力消息，终端乙先提出可靠要求，再终止并改成尽力要求。终端丙保留端点详情，作为判断原因的证据；不要用“画面没有更新”代替对策略的检查。",
+            "首次组合应无法传递样本，并可能出现不兼容提示；改为尽力后应持续收到内容。若仍无数据，首先检查类型、域、名称重映射及多个发布端，再检查订阅进程是否真的在执行回调。命令中的可靠性只覆盖对应策略，其余策略保留工具默认值，因此正式工程仍应保存完整配置。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "三个终端的匹配实验",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 所有终端先执行\nsource /opt/ros/jazzy/setup.bash\nexport ROS_DOMAIN_ID=42\n# 终端甲\nros2 topic pub /qos_probe std_msgs/msg/String '{data: sample}' --rate 2 --qos-reliability best_effort\n# 终端乙：先执行第一条，Ctrl+C 后执行第二条\nros2 topic echo /qos_probe std_msgs/msg/String --qos-reliability reliable\nros2 topic echo /qos_probe std_msgs/msg/String --qos-reliability best_effort\n# 终端丙\nros2 topic info /qos_probe --verbose",
+              "explanation": "终端甲每半秒生成一个样本；终端乙只改变请求的可靠性，以控制变量；终端丙查看每个发布和订阅端点，避免把另一节点的配置误认为当前实验配置。注释所标终端应分别打开，不能把阻塞命令当作顺序脚本一次执行。"
+            }
+          ]
+        },
+        {
+          "title": "晚加入实验与瞬态本地的存活边界",
+          "paragraphs": [
+            "下面是独立 Python 文件，保存为 durable_once.py 后运行。它只发布一次并继续存活；几秒后再启动订阅者，就能把历史交付与周期性重发区分开。发布者退出后由它维护的瞬态本地缓存也随之失去，不应把此策略当作跨重启数据库。保存地图文件与发布地图消息是两个独立责任。",
+            "示例在节点构造中创建深度一的可靠瞬态本地发布者，发布后进入 spin 保持上下文和通信实体存活。生产程序还应根据配置检查资源限制和版本行为；多个历史状态是否有意义取决于业务，而不是深度越大越好。先启动易失订阅者再发送，与晚启动易失订阅者是两个不同实验条件。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "durable_once.py 完整脚本",
+              "language": "python",
+              "type": "complete",
+              "code": "import rclpy\nfrom rclpy.node import Node\nfrom rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy\nfrom std_msgs.msg import String\n\ndef main():\n    rclpy.init()\n    node = Node('durable_once')\n    qos = QoSProfile(depth=1, reliability=ReliabilityPolicy.RELIABLE,\n                     durability=DurabilityPolicy.TRANSIENT_LOCAL)\n    publisher = node.create_publisher(String, '/last_state', qos)\n    publisher.publish(String(data='configured'))\n    try:\n        rclpy.spin(node)\n    except KeyboardInterrupt:\n        pass\n    finally:\n        node.destroy_node()\n        if rclpy.ok():\n            rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+              "explanation": "QoSProfile 固定三项关键策略；publisher 变量在 spin 期间保持引用。String 是消息而非裸字符串。脚本没有定时器，因此晚加入收到的 configured 来自历史缓存。"
+            },
+            {
+              "label": "另一终端晚加入",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 topic echo /last_state std_msgs/msg/String --qos-durability transient_local --qos-reliability reliable --once",
+              "explanation": "明确消息类型可避免依赖类型自动发现；--once 收到一个样本即退出。应在发布者仍运行时执行。"
+            }
+          ]
+        },
+        {
+          "title": "把选择写成可以复查的配置说明",
+          "paragraphs": [
+            "对传感器流，可从尽力、易失、小深度开始，再以可接受丢帧率和数据年龄检验；对最新配置，可选可靠、瞬态本地、深度一；对带副作用的服务，通常使用可靠且易失，避免重启后把陈旧请求当作新事务。以上是有条件的起点，最终取舍应写出负载和容许故障，而非只记录一个预设名称。",
+            "验收记录至少保留两端策略、发送和接收数量、消息时间戳或序号、观察窗口与失联行为。重连、晚加入、慢消费者三种情况分开测试。频率正常但数据很旧，意味着新鲜度目标仍失败；无丢序号但控制超时，也不能称为业务成功。本章命令与代码用于教学，未在本次内容扩写中实际运行 ROS。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "为地图和激光分别定义契约",
+        "scenario": "机器人需要让晚打开的界面立即看到已有地图，同时只用近时刻激光做避障。",
+        "steps": [
+          "地图采用可靠、瞬态本地、深度一，保持发布者存活；先发布再打开界面，核查它收到历史地图。",
+          "激光采用匹配的尽力订阅及有限深度，记录扫描采样时间与处理时间；人为增加处理耗时，观察数据年龄。",
+          "先调整处理能力或丢弃过旧样本，再评估队列；重启地图发布者，验证需要重新加载地图文件。"
+        ],
+        "result": "两类数据分别满足“晚加入能获得状态”和“只使用足够新的观测”，不会用同一个大队列掩盖不同需求。"
+      },
+      "exercises": [
+        {
+          "question": "尽力、瞬态本地发布者能否连接可靠、瞬态本地订阅者？",
+          "answer": "不能。持久性相容，但可靠性请求高于提供能力。应按业务选择提高发布可靠性或降低订阅要求，并重新检查其他策略；只把双方深度改为相同无效。"
+        },
+        {
+          "question": "每秒五十条输入，每次回调五十毫秒，增加深度到一百能否长期不积压？",
+          "answer": "单线程持续处理能力约每秒二十条，低于五十条输入，增加深度只能延后拥塞并增加潜在等待。应降低输入频率、减少回调工作、设计受控并发或明确丢弃策略，然后测量数据年龄和资源使用。"
+        },
+        {
+          "question": "可靠订阅收到速度指令，能否据此断言电机执行成功？",
+          "answer": "不能。收到只是通信证据；还需要驱动反馈或业务确认，以及时间戳、超时和故障处理。可靠传输不等于执行器被调度，也不等于物理设备响应。"
+        }
+      ]
+    },
+    {
+      "id": "executors",
+      "sections": [
+        {
+          "title": "等待集、就绪回调与执行资源",
+          "paragraphs": [
+            "节点创建订阅、服务和定时器后，还需要执行器不断等待事件并调用处理函数。消息进入中间件并不等于订阅回调已经开始；等待线程调度、互斥回调组和共享资源都可能增加延迟。把回调执行拆成“事件就绪、获得执行许可、进入函数、完成工作”，才容易解释频率下降发生在哪里。",
+            "单线程执行器每次只能执行一个回调，因此一个耗时一秒的服务会占住这一秒的执行资源。多线程执行器提供多个工作线程，但允许并发的回调才有机会使用它们。调度还受操作系统影响，不能把就绪顺序理解为严格消息先进先出，也不能从线程数量推导确定的截止时间。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "回调组表达哪些工作可以同时进行",
+          "paragraphs": [
+            "互斥组保证同组回调不同时执行，可用于保护一组共享而不具备线程安全的状态。可重入组允许不同回调并行，也可能让同一个回调的两次调用重叠。不同互斥组之间允许并发，因此“订阅一个组、慢服务一个组”常比把所有东西塞进可重入组更容易推理。",
+            "未指定回调组的实体通常进入节点默认互斥组。即使用四线程执行器，如果所有实体都留在该组，这个节点仍会串行执行。创建组后保存为成员，确保其生命周期覆盖相应实体。Python 的线程还受解释器和扩展库执行方式影响：等待网络的任务可能获益，纯 Python 密集计算并不能简单获得与核数等比例的加速。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "用等待关系识别服务死锁",
+          "paragraphs": [
+            "假设定时器与客户端属于同一互斥组。定时器调用同步服务并等待结果，客户端处理响应所需的回调也要进入这个组；组却被仍在等待的定时器占用，于是形成循环等待。服务端即使早已返回响应，也无法解除客户端内部的阻塞。多加线程不能突破互斥组的许可，所以这个错误经常表现为“服务器有日志，客户端永远不返回”。",
+            "优先让定时器发出异步请求后立即返回，再在之后的回调或轮询中处理完成的 future。若确实需要同步等待，等待者与响应处理必须具备可并发的组配置和足够线程，同时不能持有完成路径需要的锁；还需要超时。不要在已由执行器管理的节点回调内递归调用 spin_until_future_complete 来碰运气，这会引入嵌套执行或节点归属问题。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "完整异步客户端：同一个互斥组也能前进",
+          "paragraphs": [
+            "先在另一个终端运行 demo_nodes_cpp 的 add_two_ints_server，再将以下脚本保存为 async_poll.py 并运行。程序使用一个短定时器维护“空闲或等待”状态：空闲时发请求，等待时只检查 future 是否完成，绝不在定时器里等待网络结果。单线程执行器就能在两次定时器之间处理响应。",
+            "这个例子故意不引入多线程，以证明解决死锁首先是解除等待依赖。一次仅保留一个未完成请求，避免服务变慢后积累大量 future。服务不可用时定时器直接返回；超过两秒就移除本地未完成请求记录并报警。移除记录不等于撤销服务端已经开始的操作，因此真实有副作用的请求还必须考虑重复执行与幂等。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "async_poll.py 完整脚本",
+              "language": "python",
+              "type": "complete",
+              "code": "import time\nimport rclpy\nfrom rclpy.node import Node\nfrom example_interfaces.srv import AddTwoInts\n\nclass AsyncPoll(Node):\n    def __init__(self):\n        super().__init__('async_poll')\n        self.client = self.create_client(AddTwoInts, 'add_two_ints')\n        self.pending = None\n        self.sent_at = 0.0\n        self.timer = self.create_timer(0.2, self.tick)\n\n    def tick(self):\n        if self.pending is not None:\n            if self.pending.done():\n                try:\n                    result = self.pending.result()\n                    self.get_logger().info(f'sum={result.sum}')\n                except Exception as error:\n                    self.get_logger().error(str(error))\n                self.pending = None\n            elif time.monotonic() - self.sent_at > 2.0:\n                self.client.remove_pending_request(self.pending)\n                self.get_logger().warning('response timeout')\n                self.pending = None\n            return\n        if not self.client.service_is_ready():\n            return\n        request = AddTwoInts.Request()\n        request.a = 7\n        request.b = 5\n        self.sent_at = time.monotonic()\n        self.pending = self.client.call_async(request)\n\ndef main():\n    rclpy.init()\n    node = AsyncPoll()\n    try:\n        rclpy.spin(node)\n    except KeyboardInterrupt:\n        pass\n    finally:\n        node.destroy_node()\n        if rclpy.ok():\n            rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+              "explanation": "tick 的每条路径都快速返回，响应回调因此可以运行；done 只读完成状态，不阻塞。monotonic 用于真实等待超时，不受仿真暂停或系统时钟校正影响。捕获结果异常是为了把服务失败与调度失败分开。"
+            },
+            {
+              "label": "启动依赖与脚本",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 两个终端均先 source /opt/ros/jazzy/setup.bash\n# 终端甲\nros2 run demo_nodes_cpp add_two_ints_server\n# 终端乙，位于脚本所在目录\npython3 async_poll.py",
+              "explanation": "运行前需要 demo_nodes_cpp、rclpy 和 example_interfaces。正常可观察到 sum=12；停止服务端后客户端停止发新请求，服务恢复后重新开始。"
+            }
+          ]
+        },
+        {
+          "title": "需要并行时如何划分共享状态",
+          "paragraphs": [
+            "并行设计先列出可变数据的读写者。例如订阅回调更新最新传感器快照，定时器读取快照生成输出，慢服务保存诊断文件。可把快照复制和交换放在短临界区，耗时文件操作放在锁外；或者用有界队列让专门工作线程处理。不要为了避免竞争而把整段磁盘写入锁住，否则其它线程仍会被拖住。",
+            "必须明确析构顺序：先停止新任务，再唤醒并结束工作线程，最后释放它们引用的数据和 ROS 实体。对成员的引用捕获并不会自动延长对象寿命。线程安全、回调组许可、执行器线程数是三个独立约束；解决了一个并不意味着另外两个自动成立。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "用时间线给调度问题留下证据",
+          "paragraphs": [
+            "记录回调名称、开始和结束的单调时刻、线程标识、输入序号，并将日志采样或缓冲，避免测量本身主导耗时。比较单线程、同组多线程、分组多线程三个配置，检查长服务期间定时器间隔是否变大。接收频率只是外部现象，进入和退出时间才能说明线程是在计算、等待锁还是没有被调度。",
+            "若所有线程都在等待同一锁，应修复锁依赖；若一个组持续被占用，应缩短回调或重新划组；若 CPU 已饱和，应减少工作或改变进程与计算部署。每次只改一项，保留负载和数据集。本章给出的是结构推演与教学代码，未把资料核对冒充目标机器的并发验证。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "定时发布被慢服务拖住",
+        "scenario": "一个节点每一百毫秒发布一次状态，同时服务请求需要一秒磁盘操作。",
+        "steps": [
+          "先用单线程记录状态回调间隔，确认磁盘操作期间出现长间隙。",
+          "换多线程但保持默认互斥组，预期仍不能同时执行两种回调。",
+          "把慢服务放入独立互斥组，保持状态组短小，并在共享快照上使用短临界区；再次测量时间线。"
+        ],
+        "result": "分组且存在空闲执行线程后，两种回调允许重叠；是否达到一百毫秒目标仍由实测抖动、负载与锁等待决定。"
+      },
+      "exercises": [
+        {
+          "question": "客户端和定时器在同组，增加到八个线程为何仍可能死锁？",
+          "answer": "定时器等待响应而占住互斥组，处理响应的回调无法获得同一组许可。线程空闲也无助于解除循环。应使发起回调返回，或者在正确的不同组配置与足够线程下设置有界等待，并检查锁依赖。"
+        },
+        {
+          "question": "把两个回调放进可重入组后，计数偶尔减少，如何判断？",
+          "answer": "先检查两个回调是否读出同一旧值再各自写回，造成更新覆盖；也检查同一回调是否重入。用锁、原子操作或单一写入者保护更新，再验证吞吐和延迟。可重入只允许调度，不保证共享数据安全。"
+        },
+        {
+          "question": "异步客户端为什么仍要限制未完成请求数量？",
+          "answer": "异步解决阻塞，不会限制请求增长。服务长期变慢时，无界 future 会消耗内存并让结果过时。应设置在途数量、超时和重试规则；本章一次一条最容易验证，且超时后不能假设服务端停止执行。"
+        }
+      ]
+    },
+    {
+      "id": "lifecycle",
+      "sections": [
+        {
+          "title": "把进程存在与业务就绪分开",
+          "paragraphs": [
+            "一个驱动进程能够出现在节点列表里，不代表设备已经打开、标定已经加载或数据值得使用。生命周期把这些准备和运行阶段暴露为可查询的协议，使启动管理器能够先验证资源，再允许主功能输出。对于依赖相机、定位和控制器的系统，这比猜测启动需要几秒更可控。",
+            "主要状态包括未配置、未激活、激活和终结；转换过程还有配置中、激活中、停用中、清理中及错误处理等中间状态。外部管理者请求转换，节点执行相应回调并报告结果。状态机提供合法路径和接口，设备操作的具体顺序、失败后资源如何恢复，仍需要实现者明确设计。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "状态转换应遵守资源的所有权",
+          "paragraphs": [
+            "未配置状态应允许设置和检查配置；configure 成功后进入 inactive，此时资源准备好但主功能还没运行；activate 成功进入 active；deactivate 成功回到 inactive；cleanup 成功回到 unconfigured。finalized 是终结状态，不能再原地 configure，通常由进程管理器销毁并重新创建实例。",
+            "以串口传感器为例，配置阶段校验参数、打开串口并加载标定，激活阶段启动采样；停用阶段停止采样和输出，清理阶段关闭串口并释放缓冲。把耗时初始化集中在配置阶段，能让启动管理者区别“准备慢”与“运行异常”。资源申请成功后才更新成员状态，失败路径释放已取得的部分资源，避免重试时重复占用设备。"
+          ],
+          "bullets": [
+            "合法常见顺序：unconfigured → configure → inactive → activate → active。",
+            "可重配顺序：active → deactivate → inactive → cleanup → unconfigured，再重新配置。",
+            "一次状态转换返回成功后，仍应检查输入新鲜度、输出有效性和设备状态；状态标签不是传感器质量报告。"
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "在官方演示中逐步观察状态与消息",
+          "paragraphs": [
+            "本实验需要 lifecycle 演示包。终端甲运行 lifecycle_talker，终端乙持续观察 lifecycle_chatter，终端丙按顺序请求转换。每一步后都读取状态，并等几秒观察是否有新消息。不要同时运行自动切换状态的 lifecycle_service_client，否则它会与手工命令争用状态机，使观察结果难以解释。",
+            "这个演示最有价值的细节是：配置后已经创建普通定时器，inactive 时定时器仍可能执行，只是生命周期发布者不发送消息。因而日志显示“publisher inactive”并不说明停用失败。它说明生命周期发布者的输出门控与普通回调的调度是不同机制；需要停止耗时采样的驱动应主动取消定时器或阻止采样工作。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "三个终端的分步实验",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 如未安装演示包，在学习机执行一次\nsudo apt install ros-jazzy-lifecycle\n# 所有终端均先执行\nsource /opt/ros/jazzy/setup.bash\n# 终端甲\nros2 run lifecycle lifecycle_talker\n# 终端乙\nros2 topic echo /lifecycle_chatter std_msgs/msg/String\n# 终端丙：每次转换后观察终端甲乙，再执行下一步\nros2 lifecycle get /lc_talker\nros2 lifecycle set /lc_talker configure\nros2 lifecycle get /lc_talker\nros2 lifecycle set /lc_talker activate\nros2 lifecycle get /lc_talker\nros2 lifecycle set /lc_talker deactivate\nros2 lifecycle get /lc_talker\nros2 lifecycle set /lc_talker cleanup\nros2 lifecycle get /lc_talker",
+              "explanation": "configure 后应为 inactive，activate 后应为 active，deactivate 后为 inactive，cleanup 后为 unconfigured。echo 是持续运行的观察者；消息是否新增与 get 返回状态共同构成证据。示例激活回调本身有演示性等待，因此命令响应不一定立即完成。"
+            }
+          ]
+        },
+        {
+          "title": "失败返回、异常与恢复不是同一条路径",
+          "paragraphs": [
+            "配置回调返回 FAILURE 表示本次配置没有成功，正常回到未配置状态；返回 ERROR 或未捕获异常会进入错误处理流程。激活回调返回 FAILURE 则回到 inactive。程序应把预期的可恢复失败，例如端口暂不可用，与内部状态已经不可信的错误区分开，日志写明具体阶段、设备与恢复建议。",
+            "进入错误处理后要执行必要的停止和清理，根据实现的返回结果决定能否回到未配置状态；不能假设任何错误都会自动恢复。转换回调若无限等待，管理请求也可能一直挂起。应对设备等待设置有界超时，并定义超时后已申请资源的归属。外部管理器重试前先重新读取状态，而不是重复发送上一条命令。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "按依赖关系组织一组节点",
+          "paragraphs": [
+            "假设定位依赖里程计和激光，导航又依赖定位。启动管理者可先配置所有必要资源，再激活上游输入，确认其数据与 TF 可用，之后激活下游算法。这里的“确认”应该检查实际主题、频率、坐标关系与时间，而不只是节点名存在。静态地图已经加载但地图发布者尚未提供历史，也可能让下游等待。",
+            "停用时常需要先阻止下游产生新动作，再停止上游数据源，最后清理资源；具体顺序由系统依赖决定。对驱动的停止行为必须在驱动层实现，不能把切换 lifecycle 状态本身当作物理急停。普通订阅、服务、后台线程和非生命周期发布者不会仅因继承了 LifecycleNode 就全部自动受控。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "用状态、行为与资源三类证据验收",
+          "paragraphs": [
+            "状态证据来自 lifecycle get 和转换事件；行为证据来自新增消息、设备访问和业务反馈；资源证据来自线程结束、文件关闭和再次配置成功。三者需要一致。例如 inactive 后还出现新采样说明采样门控可能遗漏；cleanup 后再次 configure 报端口占用，说明释放路径不完整。只检查日志中出现“成功”容易漏掉这些问题。",
+            "测试至少覆盖完整往返、配置失败再重试、激活失败、运行中停用，以及终结后的管理行为。测试可先使用假设备，注入打开失败和读取超时，避免依赖真实硬件才能发现状态管理缺陷。状态图和具体行为应随实现一起更新。本章依据 Jazzy 演示源码解释状态与定时器行为，未执行真实设备操作。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "相机驱动可重试配置",
+        "scenario": "相机第一次打开失败，第二次恢复，要求整个导航系统不能提前消费无效图像。",
+        "steps": [
+          "驱动 configure 尝试打开相机，失败时释放部分资源并返回 FAILURE，状态保持 unconfigured；管理器记录原因。",
+          "恢复设备后再次 configure，成功进入 inactive，校验标定与帧名称，然后 activate 并观察带正确时间戳的图像。",
+          "只有图像和所需 TF 有效后才启动依赖算法；停用时先阻止下游动作，再停相机采样并 cleanup。"
+        ],
+        "result": "恢复依赖于明确的状态与数据证据，重复配置不会遗留第二条采样线程或占用旧设备句柄。"
+      },
+      "exercises": [
+        {
+          "question": "unconfigured 能否直接 activate？",
+          "answer": "不能，必须先 configure 成功进入 inactive，再请求 activate。若命令被拒绝，应查询当前状态与可用转换，不要通过延长 sleep 绕开状态约束。"
+        },
+        {
+          "question": "inactive 时仍看到定时器日志，是否违反生命周期？",
+          "answer": "不一定。普通定时器仍可能运行，生命周期发布者只限制消息发送。应根据节点合同判断是否需要取消定时器、停止后台线程或屏蔽处理；不能用状态名推断所有实现行为。"
+        },
+        {
+          "question": "cleanup 后重新配置失败，错误为设备已被占用，该查什么？",
+          "answer": "检查停用是否停止并等待采样线程、清理是否关闭设备句柄，以及配置失败路径是否释放此前资源。先查实际占用进程和线程，再核对状态。仅重启管理器不会修复节点内部泄漏。"
+        }
+      ]
+    },
+    {
+      "id": "composition",
+      "sections": [
+        {
+          "title": "节点边界与进程边界可以独立选择",
+          "paragraphs": [
+            "ROS 节点是接口和功能的组织单位，操作系统进程是内存及故障隔离单位。两个节点可以位于两个进程，也可以位于同一个进程；主题名称和消息合同不必因此改变。组合部署适合数据交换频繁、希望减少进程间开销的模块，独立进程则更容易单独重启并限制一次崩溃的影响范围。",
+            "组件化把 C++ 节点实现编译为共享库，由容器加载并把节点加入执行器。它改变部署方式，不自动改变算法、QoS 或回调组，也不承诺速度一定更快。若图像链路传输成本很小而算法计算占主要时间，组合后总体收益可能有限；应先量出真正的瓶颈。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "一个可加载组件需要哪些组成部分",
+          "paragraphs": [
+            "节点类必须能接收 NodeOptions，并把它传给基类构造函数，使容器提供的参数、名称、命名空间及进程内通信选项真正生效。注册宏让共享库暴露节点工厂，构建系统的注册命令把插件类型写入可发现的资源索引。这两部分缺一不可：库能编译不代表 ros2 component types 能看到它。",
+            "下面建立一个最小 ament_cmake 包，依赖由 ros2 pkg create 写入 package.xml。把节点源码与完整 CMakeLists.txt 保存到标注位置再构建；生成的独立可执行入口与动态组件使用同一个类。不要在组件构造函数里调用 spin，也不要让构造函数无限等待硬件，否则加载服务会被阻塞。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "创建包：在新工作空间根目录执行",
+              "language": "bash",
+              "type": "commands",
+              "code": "source /opt/ros/jazzy/setup.bash\nmkdir -p src\ncd src\nros2 pkg create hub_component --build-type ament_cmake --dependencies rclcpp rclcpp_components std_msgs",
+              "explanation": "该命令生成 package.xml 和目录骨架；下一段源码保存为 src/hub_component/src/talker.cpp，CMake 内容替换该包现有 CMakeLists.txt。这里的 src 路径均相对工作空间根目录。"
+            },
+            {
+              "label": "src/hub_component/src/talker.cpp",
+              "language": "cpp",
+              "type": "complete",
+              "code": "#include <chrono>\n#include <memory>\n#include \"rclcpp/rclcpp.hpp\"\n#include \"rclcpp_components/register_node_macro.hpp\"\n#include \"std_msgs/msg/string.hpp\"\n\nnamespace hub {\nclass Talker : public rclcpp::Node {\npublic:\n  explicit Talker(const rclcpp::NodeOptions & options)\n  : Node(\"hub_talker\", options) {\n    publisher_ = create_publisher<std_msgs::msg::String>(\"chatter\", 10);\n    timer_ = create_wall_timer(std::chrono::seconds(1), [this]() {\n      auto message = std::make_unique<std_msgs::msg::String>();\n      message->data = \"component ready\";\n      publisher_->publish(std::move(message));\n    });\n  }\nprivate:\n  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;\n  rclcpp::TimerBase::SharedPtr timer_;\n};\n}\nRCLCPP_COMPONENTS_REGISTER_NODE(hub::Talker)",
+              "explanation": "构造函数只建立通信实体并返回；成员引用保持发布者与定时器存活。unique_ptr 表达消息所有权转移，为支持的进程内路径提供优化条件；宏注册的全限定类名必须与 CMake 和加载命令一致。"
+            },
+            {
+              "label": "src/hub_component/CMakeLists.txt",
+              "language": "text",
+              "type": "complete",
+              "code": "cmake_minimum_required(VERSION 3.8)\nproject(hub_component)\nfind_package(ament_cmake REQUIRED)\nfind_package(rclcpp REQUIRED)\nfind_package(rclcpp_components REQUIRED)\nfind_package(std_msgs REQUIRED)\nadd_library(hub_talker SHARED src/talker.cpp)\ntarget_compile_features(hub_talker PUBLIC cxx_std_17)\nament_target_dependencies(hub_talker rclcpp rclcpp_components std_msgs)\nrclcpp_components_register_node(hub_talker\n  PLUGIN \"hub::Talker\"\n  EXECUTABLE hub_talker_node)\ninstall(TARGETS hub_talker\n  ARCHIVE DESTINATION lib\n  LIBRARY DESTINATION lib\n  RUNTIME DESTINATION bin)\nament_package()",
+              "explanation": "SHARED 创建可动态加载的库；注册命令同时生成资源索引和独立入口 hub_talker_node。安装规则把运行所需的库放入 install，避免只能在 build 目录偶然运行。代码块用 text 标注 CMake 文本。"
+            }
+          ]
+        },
+        {
+          "title": "加载、查看与卸载应使用实际标识",
+          "paragraphs": [
+            "在工作空间根目录构建后，每个新终端先加载 install/setup.bash。组件类型是 hub::Talker，包名是 hub_component，默认节点名是 hub_talker，容器管理节点名是 ComponentManager；它们承担不同角色，不应相互替换。加载返回的数字是容器内组件标识，卸载时应采用本次实际返回值。",
+            "卸载会销毁组件实例，之后该节点应从图中消失，其他组件仍可继续运行。若组件自行创建线程，应在析构时正确停止和回收它们，否则卸载可能阻塞或访问已释放内存。动态卸载不是处理任意崩溃的隔离机制，同一进程内错误仍可能导致整个容器退出。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "构建并加载组件",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 工作空间根目录\ncolcon build --packages-select hub_component\nsource install/setup.bash\nros2 component types\n# 终端甲，已 source 同一 install/setup.bash\nros2 run rclcpp_components component_container\n# 终端乙，已 source 同一 install/setup.bash\nros2 component load /ComponentManager hub_component hub::Talker\nros2 component list\nros2 topic echo /chatter std_msgs/msg/String\n# echo 结束后，只有上面的 list 显示 ID 为 1 时才用此示例 ID\nros2 component unload /ComponentManager 1",
+              "explanation": "types 检查安装与注册，load 检查实际装载，list 给出容器与实例 ID，echo 检查业务输出。每层分别验证能够缩小“包存在但组件不能运行”的原因范围。"
+            }
+          ]
+        },
+        {
+          "title": "选择执行器并显式开启进程内通信",
+          "paragraphs": [
+            "默认 component_container 使用单线程执行器，多个节点的回调仍可能彼此阻塞。component_container_mt 提供多线程执行器，最终并发仍受各节点回调组约束。将独立节点迁入容器时，如果原来的 main 选择了多线程，现在也必须在容器层保留合适配置，不能只删掉 main 就认为运行语义完全相同。",
+            "下面的完整 launch 文件使用官方 composition 示例，在一个多线程容器中装入发布者和订阅者，显式开启进程内通信。extra_arguments 属于组件装载选项，和节点参数 parameters 不同。应在使用此文件前安装 composition 与 launch_ros，并保存为本地 pair.launch.py；可以直接 ros2 launch ./pair.launch.py 运行。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "pair.launch.py 完整文件",
+              "language": "python",
+              "type": "complete",
+              "code": "from launch import LaunchDescription\nfrom launch_ros.actions import ComposableNodeContainer\nfrom launch_ros.descriptions import ComposableNode\n\ndef generate_launch_description():\n    container = ComposableNodeContainer(\n        name='pair_container', namespace='',\n        package='rclcpp_components', executable='component_container_mt',\n        output='screen',\n        composable_node_descriptions=[\n            ComposableNode(package='composition', plugin='composition::Talker',\n                           name='talker',\n                           extra_arguments=[{'use_intra_process_comms': True}]),\n            ComposableNode(package='composition', plugin='composition::Listener',\n                           name='listener',\n                           extra_arguments=[{'use_intra_process_comms': True}]),\n        ])\n    return LaunchDescription([container])",
+              "explanation": "两个描述创建两个节点实例但共享容器进程；相同的选项分别传给双方。此文件展示部署配置，不应与上一实验中尚在运行的同名话题发布者混用。"
+            }
+          ]
+        },
+        {
+          "title": "为何同一进程不等于任何情况都零拷贝",
+          "paragraphs": [
+            "进程内路径可以减少序列化和复制，但实际行为依赖消息所有权、订阅回调签名、订阅者数量和是否还存在进程外消费者。一个独占消息面对多个需要各自修改的数据处理者，不可能简单让所有人同时拥有唯一所有权。混合订阅时还可能需要为中间件保留另一条传输路径。",
+            "DDS 共享内存和借用消息属于另外的机制，还受所选中间件、消息类型及支持能力约束。打开 use_intra_process_comms 不能证明它们也打开了。实验中比较延迟、CPU、分配和复制证据，比把所有优化统称为零拷贝更有意义；即使优化确实减少复制，也不能由此推出硬实时保证。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "按插件、调度与故障三个层次排错",
+          "paragraphs": [
+            "找不到类型时检查包前缀、注册类名、共享库安装和新终端 overlay；类型可见却加载失败时检查构造异常、缺少共享依赖和重复节点配置；节点存在却不输出时再查执行器、回调组、话题重映射和 QoS。不要用更换容器一次同时掩盖注册与通信问题。",
+            "部署取舍应记录故障范围、升级频率、消息负载与性能结果。可把同属一条图像流水线的组件组合，同时把不稳定第三方驱动放在独立进程；这是工程选择，不是必须全部合并的原则。本章源码为完整教学示例，构建和时延结论需在目标 Jazzy 环境执行后确认。",
+            "迁移后还应比较两种部署的外部合同：完整节点名、话题类型、参数值、启动失败和退出行为。特别检查使用相对名称的组件是否获得预期命名空间。只有外部行为一致，独立进程与容器之间的性能比较才是在比较同一个系统。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "把一条图像处理链迁入容器",
+        "scenario": "现有采集、滤波、检测三节点独立运行，怀疑大型图像复制导致开销。",
+        "steps": [
+          "先固定图像大小、频率、订阅者数量，记录原布局下的延迟分布与资源使用。",
+          "逐个把类改为 NodeOptions 构造并完成注册，先保持原 QoS 和算法验证输出一致。",
+          "选择适合回调组的容器，开启进程内选项，再加入和移除进程外观察者，分别测量。"
+        ],
+        "result": "只有输出合同仍满足且测量显示收益，才把该布局作为部署选择；还需接受一个组件崩溃可能带走整条链的故障范围。"
+      },
+      "exercises": [
+        {
+          "question": "component types 能看到类型，但 node list 看不到节点，是否异常？",
+          "answer": "不一定。types 只说明已安装的资源索引包含该组件类型，尚未证明实例已经加载。应启动容器并执行 load，检查其响应，再看 list 和节点图。"
+        },
+        {
+          "question": "删去 main 后原来并行的节点开始阻塞，优先查什么？",
+          "answer": "检查 main 原先的执行器类型和回调组设置是否在组件容器中保留。默认单线程容器可能改变调度；换成多线程容器后仍需确保相关回调组允许并发。"
+        },
+        {
+          "question": "同进程且开启进程内选项，能否断言没有任何复制？",
+          "answer": "不能。需要结合消息所有权、订阅数量、回调签名、跨进程消费者与传输机制判断，并以测量或追踪佐证。进程内选项不等于 DDS 共享内存或借用消息支持。"
+        }
+      ]
+    },
+    {
+      "id": "tf2",
+      "sections": [
+        {
+          "title": "一个坐标数值必须带上坐标系和时刻",
+          "paragraphs": [
+            "激光报告前方一点距离一米，只能说明它相对激光原点的位置。若激光安装在车体前方二十厘米，那么同一点在车体坐标系的前向坐标是一点二米。坐标变换改变的是同一几何对象的表示，不能只改消息中的 frame_id 而保留原来的数值；那样相当于把一个不同位置的点冒充原观测。",
+            "约定目标坐标系为 A、源坐标系为 B，变换写成 p_A = R_AB p_B + t_AB。lookup_transform 的前两个参数正是目标、源：它返回把源中的数值转换到目标所需的变换。反向变换需要旋转矩阵转置和负的旋转后平移，只有没有旋转的特殊情况才是直接把平移取负。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "树结构与每条边的责任",
+          "paragraphs": [
+            "一棵 TF 树中，每个子坐标系在同一有效关系中应有明确父坐标系，不能形成环。移动机器人常把全局修正放在 map 到 odom，把连续局部运动放在 odom 到 base_link，再通过固定外参连接传感器。每条边只由职责明确的模块维护，两个模块同时抢发同一子坐标系会让跳变难以解释。",
+            "固定安装关系通过静态广播器发布到 /tf_static；车轮里程计、关节运动等关系通过动态广播发布到 /tf。静态关系对查询时刻不随时间变化，但仍要让订阅者确实获得这条边。动态关系需要时间序列，缓冲区仅保留有限历史。发布一个看起来正确的当前姿态，不能回答已经被丢弃的很久以前姿态。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "先用可手算的外参检验方向和单位",
+          "paragraphs": [
+            "以下实验只创建 base_link 到 laser 的静态关系，平移单位是米，欧拉角参数单位是弧度。保持静态广播器运行，在另一终端查询正反方向。正向应得到约零点二、零、零点三的平移；反向在本例无旋转时为对应负数。再用激光中的点一、零、零手算车体中的一点二、零、零点三。",
+            "若观察结果与预期相反，先画出父子关系和源、目标的箭头，再考虑是否写错数值。四元数采用四个分量表示旋转，需要是有效的单位四元数；不能把三个欧拉角直接填进其前三项。相机光学坐标轴与车体常用坐标轴不同，外参应包含方向转换，不能只关注安装位置。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "建立并检查固定安装关系",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 终端甲，先 source /opt/ros/jazzy/setup.bash\nros2 run tf2_ros static_transform_publisher --x 0.2 --y 0 --z 0.3 --roll 0 --pitch 0 --yaw 0 --frame-id base_link --child-frame-id laser\n# 终端乙：分别运行并观察，Ctrl+C 后切换下一条\nros2 run tf2_ros tf2_echo base_link laser\nros2 run tf2_ros tf2_echo laser base_link\nros2 run tf2_tools view_frames",
+              "explanation": "前两个 frame 参数决定查询方向；view_frames 汇总一段观察窗口内收到的树，生成的图可用来找断链和重复责任，但图形连通并不自动证明每个历史时刻均有可用数据。"
+            }
+          ]
+        },
+        {
+          "title": "查询采样时刻，理解最新与当前的差别",
+          "paragraphs": [
+            "传感器消息的 header.stamp 应表示数据对应的采样时刻，算法一般要查询该时刻的变换。用接收时刻替代，会把传输延迟期间机器人的运动混入空间误差。速度每秒一米、延迟一百毫秒，就可能仅因时间错位产生十厘米位置偏差；机器人转弯时还会产生与观测距离相关的角度误差。",
+            "零时间在 TF 查询中有特殊含义，表示最新可用变换；它不是“此刻”，多段动态链路还要满足共同可用时间。查询 now 时最新 TF 可能尚未到达，出现向未来外推；查询过旧观测则可能早于缓存。增大等待超时只能等待未来到达的数据，不能制造已丢失历史，也不能修复一台机器使用系统时间、另一台使用仿真时间的错误。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "非阻塞地消费带时间戳的点",
+          "paragraphs": [
+            "下面完整脚本保存为 point_transform.py，依赖 rclpy、geometry_msgs、tf2_ros 和 tf2_geometry_msgs。它订阅 /sensor_point，按原始时间查询到 base_link 的变换，成功后发布 /base_point。查询不设置阻塞等待，因此单线程执行器仍有机会处理 TF 订阅；如果暂时缺少变换，本教学程序明确丢弃该点并记录原因。",
+            "生产应用若不能丢弃，应加入有界待处理队列或合适的消息过滤机制，等待对应 TF 到达，再按采样顺序处理，并设最大等待时间。不要在同一个单线程回调中长时间等待还需要该线程接收的 TF。例子将输出时间保留为原观测时刻，让下游知道坐标换了，而数据并没有因此变新。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "point_transform.py 完整文件",
+              "language": "python",
+              "type": "complete",
+              "code": "import rclpy\nfrom rclpy.node import Node\nfrom rclpy.time import Time\nfrom geometry_msgs.msg import PointStamped\nfrom tf2_ros import Buffer, TransformListener, TransformException\nfrom tf2_geometry_msgs import do_transform_point\n\nclass PointTransformer(Node):\n    def __init__(self):\n        super().__init__('point_transformer')\n        self.buffer = Buffer(node=self)\n        self.listener = TransformListener(self.buffer, self)\n        self.publisher = self.create_publisher(PointStamped, '/base_point', 10)\n        self.subscription = self.create_subscription(\n            PointStamped, '/sensor_point', self.receive, 10)\n\n    def receive(self, message):\n        if not message.header.frame_id:\n            self.get_logger().warning('empty source frame')\n            return\n        try:\n            transform = self.buffer.lookup_transform(\n                'base_link', message.header.frame_id,\n                Time.from_msg(message.header.stamp))\n        except TransformException as error:\n            self.get_logger().warning(f'point dropped: {error}')\n            return\n        result = do_transform_point(message, transform)\n        result.header.stamp = message.header.stamp\n        self.publisher.publish(result)\n\ndef main():\n    rclpy.init()\n    node = PointTransformer()\n    try:\n        rclpy.spin(node)\n    except KeyboardInterrupt:\n        pass\n    finally:\n        node.destroy_node()\n        if rclpy.ok():\n            rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+              "explanation": "Buffer 保存收到的关系，TransformListener 建立 TF 订阅；Time.from_msg 把输入时间转换为查询类型；do_transform_point 同时计算旋转和平移。异常表示当前无法完成这一坐标请求，不能悄悄把未变换数据标为目标坐标系。"
+            },
+            {
+              "label": "仅针对上面的静态关系进行数值验证",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 保持静态广播器运行，另开终端运行脚本\npython3 point_transform.py\n# 再开终端观察输出\nros2 topic echo /base_point geometry_msgs/msg/PointStamped\n# 最后一个终端发送测试点；省略 stamp 得到零时间\nros2 topic pub --once /sensor_point geometry_msgs/msg/PointStamped '{header: {frame_id: laser}, point: {x: 1.0, y: 0.0, z: 0.0}}'",
+              "explanation": "本次只验证固定外参，零时间查询最新关系足够。动态机器人数据必须使用真实采样时间，不能照搬省略 stamp 的测试输入。预期输出 frame_id 为 base_link，坐标约为 1.2、0、0.3。"
+            }
+          ]
+        },
+        {
+          "title": "先分类型再排查时间与发布来源",
+          "paragraphs": [
+            "找不到坐标系时，检查拼写、命名空间是否误加到 frame 名以及广播者是否存活；树不连通时，查缺失的中间边和父子责任；时间外推时，保留请求时间、最早和最新可用时间、各节点 use_sim_time 与 /clock 来源。三个问题的解决路径不同，不能统一用加大 timeout 处理。",
+            "对于实机跨计算机数据，检查时钟同步和驱动是否把设备时钟转换到约定时间基准；对于回放，检查 TF 与传感器是否来自同一次记录，以及回放跳转后缓存是否被重建。不要把所有 frame 强行连接到世界原点来消除报错，这会把可诊断的缺边变成隐蔽的错误几何。本章为资料核对与推演，未验证目标机器的外参。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "激光点在转弯时拖出重影",
+        "scenario": "静止时点云与地图重合，转弯时明显拖尾，传感器消息晚于采样一百毫秒到达。",
+        "steps": [
+          "检查传感器 header 是否记录采样时刻，比较处理代码是否用 now 或零时间查询。",
+          "读取相同时间段的 odom 到 base_link 及固定激光外参，按消息原时间计算变换。",
+          "若原时间不在缓存中，再查延迟、缓存长度和时钟；只在确认关系稍晚到达时采用有界等待。"
+        ],
+        "result": "空间误差被分解为安装外参、时间错位和缓存可用性三类，不能用静态外参调偏来补偿随速度变化的时间误差。"
+      },
+      "exercises": [
+        {
+          "question": "laser 相对 base_link 前移零点二米，laser 中 x=1 的点在车体中 x 是多少？",
+          "answer": "无旋转时为一点二米，因为目标坐标等于源坐标加激光原点在车体中的位置。反向查询应使用逆变换；存在旋转时先旋转再平移，不能只给 x 加常量。"
+        },
+        {
+          "question": "查询 now 报未来外推，是否说明系统时间来自未来？",
+          "answer": "不一定。TF 生成与传输需要时间，查询时最新变换可能比 now 早几毫秒。先比对时间差与时钟来源；合理延迟可用有界等待解决，巨大时间差则优先查时间基准。"
+        },
+        {
+          "question": "把旧点的 frame_id 改为 map 后发布，为什么不是坐标变换？",
+          "answer": "数值仍表示旧坐标系中的位置，修改标签没有应用旋转和平移。应在原采样时刻查询从源到 map 的变换并计算新坐标，同时保留观测时间。"
+        }
+      ]
+    },
+    {
+      "id": "time-bag",
+      "sections": [
+        {
+          "title": "三种时钟分别回答不同问题",
+          "paragraphs": [
+            "系统时间用于与真实日期和其它主机对齐，但校时可能让它跳变；单调时间用于本机经过多久的测量，适合设备超时和性能计时；ROS 时间用于把算法放在真实运行、仿真或回放的共同时间轴。选择时钟首先看问题：传感器观测属于哪个时刻，与等待串口还剩多少时间，不一定使用同一种时钟。",
+            "节点启用 use_sim_time 后，其 ROS 时间由 /clock 驱动。这个参数是逐节点设置的，一个节点启用不会自动替整个图启用。在尚未收到时钟时 ROS 时间可能为零；暂停或向后跳转也属于可能行为。依赖时间差的积分器、滤波缓存和超时逻辑必须定义如何处理零值与回退，不能默认时间永远递增。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "把消息时间与录制时间区别开",
+          "paragraphs": [
+            "带 Header 的消息可以保存原采样时间，bag 还会记录用于组织播放时序的时间。通常录制时间来自录制节点收到消息时的时钟，而非自动解析每种消息内部的 Header；传感器先采样再经网络到达，两者本来就可能不同。读取 bag 元数据中的起止时间，不能直接推导所有传感器的实际同步精度。",
+            "仿真录制使用 --use-sim-time 时，录制器用收到的 /clock 更新记录时间；在第一条 /clock 之前不会写消息，以避免零时间与正常仿真时间混在一起。应同时保存消息内时间、时钟配置和必要的 TF。多机真实数据还需要校时记录，否则回放虽然能重发原数据，也会保留当时已经存在的时间不一致。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "录制一个有明确输入输出的最小实验",
+          "paragraphs": [
+            "安装 turtlesim 和 rosbag2 后，在独立实验域中启动 turtlesim。先启动录制，再启动速度发布者，使包里包含命令和实际姿态；持续数秒后依次停止发布者与录制器，用 bag info 检查类型、数量和时长。记录命令不等于记录运动结果，因此同时保存姿态有助于区分输入缺失和模型行为差异。",
+            "回放前将海龟重置到初始状态，停止所有实时速度发布者。本次只播放 cmd_vel，保留当前模拟器作为 pose 的唯一来源；若同时重放原 pose，会在同一主题混入录制轨迹与新轨迹。比较两次姿态时需区分主题或保存独立结果，不能把观察到任意姿态消息当作重现成功。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "按终端分别运行的录制与回放步骤",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 所有终端先加载 Jazzy 环境并使用同一实验域\nsource /opt/ros/jazzy/setup.bash\nexport ROS_DOMAIN_ID=42\n# 终端甲\nros2 run turtlesim turtlesim_node\n# 终端乙：目录 turtle_trial 必须尚不存在\nros2 bag record -o turtle_trial --topics /turtle1/cmd_vel /turtle1/pose\n# 终端丙：运行约十秒后 Ctrl+C\nros2 topic pub /turtle1/cmd_vel geometry_msgs/msg/Twist '{linear: {x: 1.0}, angular: {z: 0.5}}' --rate 2\n# 终端乙 Ctrl+C 停止录制后，在该目录检查\nros2 bag info turtle_trial\n# 已停止实时速度发布者，再重置与回放\nros2 service call /reset std_srvs/srv/Empty '{}'\nros2 bag play turtle_trial --topics /turtle1/cmd_vel",
+              "explanation": "record 订阅并保存指定主题；info 检查实际录到什么；reset 恢复起点；play 的主题筛选避免旧姿态与新姿态竞争。该实验演示数据重放，不保证 GUI 模拟器在不同调度负载下逐浮点数完全一致。"
+            }
+          ]
+        },
+        {
+          "title": "让消费算法与回放共享时间轴",
+          "paragraphs": [
+            "对定位等依赖时间戳的算法，应在启动配置里把所有相关消费者的 use_sim_time 设为 true，并选一个 /clock 来源。使用 bag play --clock 时由播放器产生时钟；若仿真器仍同时发 /clock，应停用其中一个。Jazzy 播放器在该模式下排除包中原 /clock 的重放，但不能替你停止外部仿真器的时钟。",
+            "下面完整探针故意用单调时钟触发打印，输出的却是节点 ROS 时间。保存为 clock_probe.py，带 use_sim_time 参数运行后，即使回放暂停或没有 /clock，探针仍能打印并揭示 ROS 时间停在哪里。若探针本身也采用暂停的 ROS 定时器，恰好会失去观察“时钟暂停”的能力。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "clock_probe.py 完整脚本",
+              "language": "python",
+              "type": "complete",
+              "code": "import rclpy\nfrom rclpy.node import Node\nfrom rclpy.clock import Clock, ClockType\n\ndef main():\n    rclpy.init()\n    node = Node('clock_probe')\n    steady = Clock(clock_type=ClockType.STEADY_TIME)\n    timer = node.create_timer(\n        1.0, lambda: node.get_logger().info(\n            f'ros_time_ns={node.get_clock().now().nanoseconds}'),\n        clock=steady)\n    try:\n        rclpy.spin(node)\n    except KeyboardInterrupt:\n        pass\n    finally:\n        node.destroy_timer(timer)\n        node.destroy_node()\n        if rclpy.ok():\n            rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+              "explanation": "单调时钟只负责一秒一次的观察节奏；node.get_clock 返回节点选定的 ROS 时钟。两种时钟用于不同目的，不在同一个时间差公式中相减。"
+            },
+            {
+              "label": "探针与播放器分别在两个终端运行",
+              "language": "bash",
+              "type": "commands",
+              "code": "python3 clock_probe.py --ros-args -p use_sim_time:=true\n# 另一终端，使用已录好的包\nros2 bag play turtle_trial --clock --rate 0.5 --topics /turtle1/cmd_vel",
+              "explanation": "先运行探针且没有时钟来源时可看到未初始化时间；播放器开始后时间推进，半速回放使包内时间相对墙钟更慢。若回放速度提高，消费算法也必须有足够计算能力。"
+            }
+          ]
+        },
+        {
+          "title": "QoS、静态 TF 与不完整录包",
+          "paragraphs": [
+            "录制器也是订阅者，播放器也是发布者，因此同样受 QoS 相容性限制。自动推导通常能覆盖常见情况，但对特殊策略或晚加入静态数据，应检查实际端点及包中的数量。若 /tf_static 没录到，回放时图上可能只剩动态链；要么录到原静态消息，要么按原标定启动唯一的静态来源。",
+            "下面 YAML 展示一个主题的显式覆盖，保存为 bag_qos.yaml。它让静态 TF 的录制订阅请求可靠、瞬态本地的有限历史，前提是原发布者确实提供匹配策略。覆盖文件只解决匹配与缓存请求，不会自动重建已经丢失的数据，也不会修正错误的传感器 frame_id。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "bag_qos.yaml",
+              "language": "yaml",
+              "type": "complete",
+              "code": "/tf_static:\n  history: keep_last\n  depth: 10\n  reliability: reliable\n  durability: transient_local",
+              "explanation": "顶层是完整主题名，下面是对应策略。这里深度十仅为教学选择，实际应结合静态发布者组织方式和资源需求确定。"
+            },
+            {
+              "label": "为现有机器人数据使用覆盖配置",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 bag record -o localization_trial --qos-profile-overrides-path bag_qos.yaml --topics /scan /odom /tf /tf_static",
+              "explanation": "前提是这些主题已由待调查系统发布，且输出目录未存在。仿真数据还应给录制器加 --use-sim-time，并确认 /clock 正常到达。"
+            }
+          ]
+        },
+        {
+          "title": "把可重现条件作为录包的一部分保存",
+          "paragraphs": [
+            "一份可复查实验还包括代码提交、软件版本、参数文件、地图、标定、启动命令、时钟来源与初始状态。bag 只保存选定数据，不会自动把动态加载的参数、随机种子、设备固件和外部文件都封存。若算法读取当前系统时间或访问未记录网络服务，即使输入主题相同也可能产生不同输出。",
+            "排错顺序是先确认消息存在且数量合理，再检查回放端点 QoS 与唯一发布来源，之后检查时钟和 TF，最后比较算法输出。循环播放和跳转可能让时间向后，需要清空或重置有历史状态的算法；不要把第二轮残留状态与第一轮比较后误判随机性。本章命令经过资料核对，未在此次写作中实际采集录包。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "复现一次定位跳变",
+        "scenario": "已有一次实机定位跳变，需要在离线机器上判断是扫描输入、TF 还是参数导致。",
+        "steps": [
+          "保存扫描、里程计、动态与静态 TF、定位输出以及参数和地图快照，记录各主机校时状态。",
+          "离线启动算法并统一 use_sim_time，只保留播放器时钟与录制输入；避免同时启动原驱动。",
+          "先单次慢速回放，记录跳变前后的消息时间与变换范围；再只改变一个参数并保存输出到另一个主题或包。"
+        ],
+        "result": "对照能够把输入不完整、时间基准错配和算法行为区分开；重发消息成功本身不足以证明问题已复现。"
+      },
+      "exercises": [
+        {
+          "question": "启用 use_sim_time 后程序没有进展，第一步检查什么？",
+          "answer": "检查 /clock 是否存在并更新，以及该节点是否真的启用了参数。没有收到时钟时 ROS 时间可能为零；若使用 ROS 定时器，它也可能不触发。用单调时钟探针观察可以避免自身被暂停。"
+        },
+        {
+          "question": "录了 pose 和 cmd_vel，为什么重放 pose 会干扰运动验收？",
+          "answer": "模拟器本身也发布当前 pose，同主题会同时出现原记录和新结果。应只回放输入命令，或把原输出重映射到参考主题，再比较两条来源清晰的轨迹。"
+        },
+        {
+          "question": "把回放速度改为两倍是否会把消息 header.stamp 数值也乘二？",
+          "answer": "不会按这种方式缩放原始消息内容。播放器改变发布调度，并可推进对应回放时钟；Header 通常仍是原观测时间。消费算法须使用同一时间轴，并处理更高的实际输入负载。"
+        }
+      ]
+    },
+    {
+      "id": "network",
+      "sections": [
+        {
+          "title": "把 ROS 图、发现与数据通道分开理解",
+          "paragraphs": [
+            "客户端库通过 RMW 适配层调用通信实现；在常见 DDS 部署中，参与者先发现彼此，再交换端点资料，匹配类型与 QoS，最后传输业务数据。图中出现远端节点只证明部分发现信息已经到达，不等于每种消息都能通过网络，更不等于应用回调已经处理完数据。",
+            "多机故障应先从最小发布订阅对定位。若连字符串都无法跨机传输，先处理环境和网络；若字符串正常而大图像卡顿，再检查带宽、分片、缓存和负载。每次改变一个条件，并记录两端的观察。一次同时换中间件、域和路由，虽然可能暂时成功，却无法知道哪个条件真正起作用。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "域号提供逻辑隔离，名称提供接口组织",
+          "paragraphs": [
+            "ROS_DOMAIN_ID 把实验图划入不同逻辑域。同一实验的发布者、订阅者和命令行观察者应使用同一个值；相同主题名位于不同域时通常不会互相发现。域号不是密码，知道或尝试相同域的进程仍可加入。因此它适合让两组学习实验避免误连，不能代替身份认证、加密和访问控制。",
+            "域号也影响常见 DDS 的端口计算，不能任意选一个很大的整数。少量进程的入门实验可以在官方建议的零到一百零一区间选取如四十二，并避开同网络已有实验；大量参与者、特定系统临时端口范围和厂商配置仍需单独核查。命名空间则组织同一图中的接口，即使两个机器人名称不同，仍可能共享 /tf 或其它绝对主题，不能混淆两种隔离。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "先建立能解释的单机与双机基线",
+          "paragraphs": [
+            "以下以两台 Ubuntu 24.04/Jazzy 学习机为例，默认它们已安装 demo_nodes_cpp 与同一个可用 RMW。先在每台机器各自验证 talker 和 listener，再在甲机运行 talker、乙机运行 listener。停止单机试验中的旧进程，避免远端失败却误把本机残留消息当成跨机成功。",
+            "每个实际运行节点的终端都需要设置环境，修改另一个终端不会改变已启动进程。先加载系统环境，再加载需要的工作空间；自定义消息应在两机使用一致定义与构建版本。下面显式选择已安装的 Fast DDS，清除与基线相冲突的旧发现设置；如果未安装该 RMW，应先安装对应 Jazzy 软件包。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "两台机器的每个实验终端都执行",
+              "language": "bash",
+              "type": "commands",
+              "code": "source /opt/ros/jazzy/setup.bash\nexport ROS_DOMAIN_ID=42\nexport RMW_IMPLEMENTATION=rmw_fastrtps_cpp\nunset ROS_LOCALHOST_ONLY\nunset ROS_STATIC_PEERS\nexport ROS_AUTOMATIC_DISCOVERY_RANGE=SUBNET\nros2 daemon stop\n# 甲机\nros2 run demo_nodes_cpp talker\n# 乙机，另一个终端\nros2 run demo_nodes_cpp listener",
+              "explanation": "先统一域、实现与发现范围，减少不必要变量。SUBNET 对支持此配置的 DDS 实现使用子网发现，并不保证跨路由器或被隔离无线客户端之间可达。"
+            },
+            {
+              "label": "在两端分别保留诊断输出",
+              "language": "bash",
+              "type": "commands",
+              "code": "printenv ROS_DISTRO ROS_DOMAIN_ID RMW_IMPLEMENTATION ROS_AUTOMATIC_DISCOVERY_RANGE ROS_STATIC_PEERS\nros2 node list\nros2 topic info /chatter --verbose\nros2 doctor --report",
+              "explanation": "只读取相关环境项。比较两端端点数量、名称、类型与策略；环境值未设置时 printenv 可能返回非零，这本身不等于 ROS 节点故障。"
+            }
+          ]
+        },
+        {
+          "title": "发现范围与静态对端的选择条件",
+          "paragraphs": [
+            "Jazzy 对支持这些设置的 DDS RMW 提供 SUBNET、LOCALHOST、OFF 与 SYSTEM_DEFAULT。LOCALHOST 限制自动发现到本机；OFF 禁止发现其它节点；SYSTEM_DEFAULT 不主动覆盖中间件自己的设置。ROS_STATIC_PEERS 是以分号分隔的指定对端列表，可在关闭子网自动发现而保留本机发现时联系明确的远端地址。",
+            "假设甲机地址为一九二点一六八点五十点十一，乙机末段为十二，下方配置在两边互相填对端。执行前应换成实际地址，并确认两边都没有 OFF；地址列表不是防火墙规则，更不是访问许可名单，网络路由和所需数据端口仍必须可达。rmw_zenoh 不采用这两项发现变量，应使用它自己的路由与会话配置，不能机械照搬。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "明确对端的示例，先终止原节点再重新启动",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 甲机：把地址替换为乙机实际地址\nexport ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST\nexport ROS_STATIC_PEERS='192.168.50.12'\n# 乙机：把地址替换为甲机实际地址\nexport ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST\nexport ROS_STATIC_PEERS='192.168.50.11'\n# 各机在自己的配置下重新启动节点与观察工具\nros2 daemon stop",
+              "explanation": "分号用于多个对端时必须留在引号内，避免被 shell 当作命令分隔符。配置影响后续创建的节点；现有进程不会随终端变量改变而自动重新配置。"
+            }
+          ]
+        },
+        {
+          "title": "网络证据应逐层缩小问题范围",
+          "paragraphs": [
+            "先核查主机地址、路由和所选网卡，再测试基本可达性与多播。ping 成功只说明 ICMP 路径可用，不能证明 DDS 发现或数据端口可用。无线接入点可能隔离客户端，VPN 可能改变路由，多网卡机器可能选择了不可达接口；容器还会增加网络命名空间与地址转换层。",
+            "使用 ros2 multicast 的发送接收可以辅助判断多播路径，但它成功也只代表该测试的组和端口通过，不是所有 DDS 配置都正确。若发现正常而大消息异常，应进一步观察丢包、分片、接口 MTU 和接收缓冲，并复核两端 QoS。保留最小消息大小和负载，逐步增加，才能看出故障阈值。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "仅在有权限诊断的两台学习机执行",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 接收机\nros2 multicast receive\n# 发送机\nros2 multicast send\n# 分别查看本机地址与路由\nip -brief address\nip route",
+              "explanation": "receive 应先运行，再从另一台发送。工具若不存在需安装 ros-jazzy-ros2multicast。测试结果应与实际 DDS 端点结果分开记录，不通过时再检查允许的网络策略和接口配置。"
+            }
+          ]
+        },
+        {
+          "title": "更换 RMW 与 CLI 缓存时保持实验一致",
+          "paragraphs": [
+            "RMW_IMPLEMENTATION 指定的是进程启动时要加载的实现，设置一个未安装的标识会导致加载失败。比较不同实现时，应先安装其软件包、终止旧节点、统一两端配置并重新启动。不同 DDS 厂商的普通数据互通存在条件，安全互通又有额外限制，入门基线最好先用同一实现排除变量。",
+            "ROS 命令行可能使用后台 daemon 缓存图信息。更换实现后旧 daemon 不会自动按新环境重建，所以可能出现应用彼此通信而 node list 仍异常的现象。停止对应 daemon 后再观察，必要时使用支持的无 daemon 查询方式。最终验收应有跨机接收内容与序号、恢复连接和负载记录，而不是仅截取一个节点列表。本章未在本次写作中进行双机联网试验。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "两台电脑同域却看不到彼此",
+        "scenario": "甲机单机演示正常，乙机单机演示正常，跨机没有字符串到达。",
+        "steps": [
+          "终止所有旧演示，分别保存两端相关环境、消息类型和 RMW；确认观察命令与节点在同域。",
+          "检查子网、路由、多播与无线隔离；若需要明确对端，使用 LOCALHOST 加互相填写的静态对端重新试验。",
+          "若图已出现而消息仍不到，再检查实际端点 QoS 与数据路径；切换 RMW 后停止旧 daemon。"
+        ],
+        "result": "每一步都有能排除一层原因的证据，避免把网络、匹配和执行器三个问题混为“DDS 不稳定”。"
+      },
+      "exercises": [
+        {
+          "question": "两个节点在不同域，但主题和消息完全相同，是否应该通信？",
+          "answer": "通常不会。不同域用于逻辑隔离；把实际节点进程与诊断工具都设置为同域后重新启动。修改某个 shell 的变量不能改变已经运行的节点。"
+        },
+        {
+          "question": "ping 成功、multicast 测试成功，能否排除网络问题？",
+          "answer": "不能。它们只验证特定协议路径和测试端口，DDS 端口、接口选择、大消息分片及回程路由仍可能不同。还需端点发现和实际业务消息证据。"
+        },
+        {
+          "question": "把静态对端列表设为两台可信主机是否完成访问控制？",
+          "answer": "没有。发现名单只影响主动联系的方式，不认证身份或限制对方发布哪些内容。敏感图应独立设计身份、权限、加密和网络边界；域号也不是安全凭证。"
+        }
+      ]
+    },
+    {
+      "id": "security",
+      "sections": [
+        {
+          "title": "身份、授权与保密分别解决什么问题",
+          "paragraphs": [
+            "身份认证回答通信对端是谁；授权决定该身份能发布、订阅或调用哪些接口；加密保护传输内容。仅把域号改成难猜的数字，没有提供上述保证。SROS2 为支持 DDS-Security 的中间件管理证书与权限材料，使 ROS 应用能够选择安全身份，但操作系统账号、进程文件权限和设备访问仍是另外的管理层。",
+            "先明确哪些节点需要哪些接口，再准备身份。传感器可发布观测，监控器可订阅观测，监控器不应因为“能看数据”就获得控制指令发布权。一个 enclave 表示一组安全材料与权限边界，不必机械等同于节点名；同一进程或共享上下文的组件身份设计还需要结合中间件参与者布局，不能假设每个组件天然隔离。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "在独立实验目录准备身份材料",
+          "paragraphs": [
+            "以下实验限定同一台 Jazzy 学习机、已具备安全支持的 rmw_fastrtps_cpp，以及 sros2、demo_nodes_cpp、demo_nodes_py。使用全新的 security_lab 目录，先创建 keystore，再为两个独立进程创建 enclave。默认生成的权限适合连通性演示，不能直接当成最终最小权限策略。",
+            "keystore 包含身份与权限的证书颁发材料，以及每个 enclave 的证书、私钥、治理和权限文件。运行节点只需适当的运行材料；能够签发或签署权限的管理员私钥不应随所有运行节点一起分发。实验采用 umask 收紧新文件默认权限，目录不要加入代码仓库或作为普通教材附件分享。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "一次性建立实验材料",
+              "language": "bash",
+              "type": "commands",
+              "code": "source /opt/ros/jazzy/setup.bash\numask 077\nmkdir security_lab\ncd security_lab\nros2 security create_keystore keystore\nros2 security create_enclave keystore /lab/talker\nros2 security create_enclave keystore /lab/listener",
+              "explanation": "mkdir 使用新的目录名，避免误改已有 keystore。两个 enclave 路径用于定位材料，并不改变程序的 ROS 节点名：demo 仍分别叫 talker 和 listener。"
+            }
+          ]
+        },
+        {
+          "title": "显式启用并强制使用安全身份",
+          "paragraphs": [
+            "所有运行终端都需设置 keystore 的绝对路径、启用开关和 Enforce 策略，再通过 --enclave 选择自己的身份。Enforce 使缺失或错误材料不能悄悄降级为无安全运行。两个终端必须采用一致域和兼容的安全中间件；Jazzy 官方教程不支持把跨厂商安全互通当作可保证条件。",
+            "下面先做正常收发，证明证书和环境能够一起工作。另一个测试使用不存在的 enclave，预期创建安全节点失败。这个失败仅证明缺失身份被拒绝，还不能证明某个已经认证的身份受到主题权限限制；后面必须再做真实的越权发布测试。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "两个终端均进入 security_lab 后执行共同配置",
+              "language": "bash",
+              "type": "commands",
+              "code": "source /opt/ros/jazzy/setup.bash\nexport ROS_DOMAIN_ID=42\nexport RMW_IMPLEMENTATION=rmw_fastrtps_cpp\nexport ROS_SECURITY_KEYSTORE=\"$(pwd)/keystore\"\nexport ROS_SECURITY_ENABLE=true\nexport ROS_SECURITY_STRATEGY=Enforce\nunset ROS_SECURITY_ENCLAVE_OVERRIDE\n# 终端甲\nros2 run demo_nodes_cpp talker --ros-args --enclave /lab/talker\n# 终端乙\nros2 run demo_nodes_py listener --ros-args --enclave /lab/listener\n# 停止一个演示后，单独验证不存在的身份\nros2 run demo_nodes_cpp talker --ros-args --enclave /lab/missing",
+              "explanation": "ROS_SECURITY_KEYSTORE 必须指向实际同一个实验目录。最后一条应失败；正常演示应收到 chatter。命令行工具也是进程，若参与受保护图，需要独立考虑其身份和允许的操作，不能把无权限的 CLI 视图当成图不存在。"
+            }
+          ]
+        },
+        {
+          "title": "将主题允许清单写入权限并重新签名",
+          "paragraphs": [
+            "权限最终以签名文件交给中间件使用，只编辑可读 XML 不会自动改变已签署的策略。下面完整脚本应保存为 restrict_permissions.py，在 security_lab 目录且两节点都停止后运行。它只修改本实验两份权限，保留生成的身份主体和有效期，把域限制为四十二，并分别只允许业务主题 chatter 的发布或订阅。",
+            "普通 ROS 主题映射为带 rt/ 前缀的 DDS 主题；参数服务还包含请求和响应实体。脚本允许每个 demo 自己节点名称下的服务实体，以及日志、参数事件和必要发现信息，所以它是限制业务主题的教学策略，并非适用于任意应用的通用最小权限模板。新增动作或改变命名空间前，需要重新梳理实际接口。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "restrict_permissions.py 完整实验脚本",
+              "language": "python",
+              "type": "complete",
+              "code": "from pathlib import Path\nimport subprocess\nimport xml.etree.ElementTree as ET\n\nroot = Path('keystore').resolve()\nfor role in ('talker', 'listener'):\n    enclave = root / 'enclaves' / 'lab' / role\n    path = enclave / 'permissions.xml'\n    tree = ET.parse(path)\n    grant = tree.getroot().find('./permissions/grant')\n    if grant is None:\n        raise RuntimeError(f'grant missing: {path}')\n    for child in list(grant):\n        if child.tag in ('allow_rule', 'deny_rule', 'default'):\n            grant.remove(child)\n    rule = ET.SubElement(grant, 'allow_rule')\n    domains = ET.SubElement(rule, 'domains')\n    ET.SubElement(domains, 'id').text = '42'\n    own_services = f'*/{role}/*'\n    published = ['rt/rosout', 'rt/parameter_events',\n                 own_services, 'ros_discovery_info']\n    subscribed = ['rt/parameter_events', own_services, 'ros_discovery_info']\n    if role == 'talker':\n        published.append('rt/chatter')\n    else:\n        subscribed.append('rt/chatter')\n    for direction, names in (('publish', published), ('subscribe', subscribed)):\n        topics = ET.SubElement(ET.SubElement(rule, direction), 'topics')\n        for name in names:\n            ET.SubElement(topics, 'topic').text = name\n    ET.SubElement(grant, 'default').text = 'DENY'\n    ET.indent(tree, space='  ')\n    tree.write(path, encoding='utf-8', xml_declaration=True)\n    subprocess.run([\n        'openssl', 'smime', '-sign', '-text',\n        '-in', str(path), '-out', str(enclave / 'permissions.p7s'),\n        '-signer', str(enclave / 'permissions_ca.cert.pem'),\n        '-inkey', str(root / 'private' / 'permissions_ca.key.pem')\n    ], check=True)\n    print(f'updated and signed: {role}')",
+              "explanation": "脚本先移除原允许规则，避免旧的广泛权限继续生效，再写唯一域和允许清单，最后用权限 CA 签名。check=True 使签名失败立即报错；不应在失败后继续把旧权限当作新策略。它使用的是权限 CA 私钥，不是某个节点的身份私钥。"
+            }
+          ]
+        },
+        {
+          "title": "同时验证允许路径与拒绝路径",
+          "paragraphs": [
+            "重新启动原 talker 和 listener，正常 chatter 应仍能传输；随后停止原 talker，用同一合法 enclave 把 chatter 重映射为 forbidden_chatter。身份没有变化，但新的业务主题不在允许清单，应被中间件拒绝创建对应通信实体，应用可能因此退出并记录授权错误。再恢复原命令，应恢复正常。",
+            "拒绝测试需要看拒绝原因，不能只看“没有收到”。程序崩溃、网络断开或 QoS 不兼容也会导致没有消息，却不是权限发挥作用。保留安全日志、所用 enclave、域、最终话题名及策略版本。修改 XML 后忘记重新签名、修改了错误目录、进程没有重启，都会让实验仍使用旧配置。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "停止原 talker 后测试越权发布",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 run demo_nodes_cpp talker --ros-args --enclave /lab/talker --remap chatter:=forbidden_chatter",
+              "explanation": "该命令仍使用有效身份，但试图创建未授权主题。需保持 Enforce 和正确 keystore 环境，确认报错来自权限拒绝，再用未重映射命令复验正常路径。"
+            }
+          ]
+        },
+        {
+          "title": "从实验策略过渡到可维护部署",
+          "paragraphs": [
+            "部署材料需要记录身份主体、证书有效期、签署者、权限版本和目标设备。到期、撤换设备或接口变化后，应有重新签发、分发和恢复验证流程；系统时间错误也可能使本来正确的证书被判定尚未生效或已过期。权限变更应与接口变更一起审查，防止应用改了名称而策略仍指向旧名称。",
+            "发现信息可见不代表所有业务数据都可读取，加密包也不等于端点被攻陷后仍安全。把管理员签名能力与运行私钥分开、限制文件可读范围，并以必要权限部署，才能让通信保护成为系统中的一层。本章依据官方安全与访问控制教程补齐离线步骤，未声称已经在本机完成加密抓包或拒绝验证。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "监控器可读但不能改写控制指令",
+        "scenario": "需要让只读监控进程读取传感器，同时防止它借用合法身份发布控制主题。",
+        "steps": [
+          "先把读取、日志和必要基础接口列为允许项，不给控制主题发布权限；为监控进程分配独立运行材料。",
+          "正常启动监控并核对数据，再用同一身份尝试未授权发布，检查明确的授权拒绝日志。",
+          "保留正常与拒绝两种验证记录，签署后的策略、证书有效期和应用版本一同管理。"
+        ],
+        "result": "身份有效与动作被授权被分别验证；域隔离和主题名称约定不会被误当作访问控制。"
+      },
+      "exercises": [
+        {
+          "question": "打开 ROS_SECURITY_ENABLE 就一定禁止降级吗？",
+          "answer": "不够。还需设置 Enforce、提供正确 keystore 与 enclave，并选择支持安全的 RMW。用缺失身份启动应失败，才能验证没有静默回落；之后还需验证权限拒绝。"
+        },
+        {
+          "question": "编辑 permissions.xml 后越权发布仍成功，优先检查什么？",
+          "answer": "检查是否移除了旧的广泛允许规则、是否用正确权限 CA 重新生成 permissions.p7s、进程是否重启、环境是否指向修改的目录。再核对最终 DDS 主题匹配与域，不能仅凭 XML 文件内容断言运行策略。"
+        },
+        {
+          "question": "为何运行设备不应带整个 keystore 的管理员私钥？",
+          "answer": "运行节点只需要自身身份和受信任的签名材料，签发权限的 CA 私钥能为其它身份或更大权限背书。把它分发到每台设备会扩大单台失陷的影响，应在受控签署环境保存，按身份分发运行材料。"
+        }
+      ]
+    },
+    {
+      "id": "testing",
+      "sections": [
+        {
+          "title": "测试从可观察合同出发",
+          "paragraphs": [
+            "先写系统应在什么输入下产生什么结果，再选择测试工具。纯算法测试验证数值和边界，节点测试验证消息类型、参数和错误处理，集成测试验证多进程连接、就绪和退出。构建成功只能证明某些源码经过编译与链接，不能证明接口连接正确，更不能证明超时路径真正工作。",
+            "例如“命令停止更新后输出归零”至少包含新命令可用、过期判定、边界时刻、没有任何命令和时间异常五类情况。如果测试只重复给新命令并观察非零输出，即使通过，也没有覆盖最重要的停止条件。把计算策略从 ROS 回调中分离，可以用可控时间直接验证，而不必等待真实半秒反复试验。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "用注入时间验证明确的边界",
+          "paragraphs": [
+            "下方两个完整文件保存到同一目录。策略函数接收命令、最后接收时刻、当前时刻和超时界限；时间单位全部为纳秒。约定恰好达到界限仍有效，超过界限才归零；负年龄表示时间基准异常，也返回零。这里验证的是教学输出策略，不是完整车辆制动或功能安全方案。",
+            "测试使用整数时刻而不依赖真实 sleep，所以运行快且没有调度随机性。新鲜、恰好到边界、超出一个纳秒、未来时刻和缺失输入分别对应独立断言。有限值检查防止无穷和非数值进入后续计算；真实应用还应按自身合同限制幅值，并明确非法参数是拒绝启动还是返回错误。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "policy.py 完整文件",
+              "language": "python",
+              "type": "complete",
+              "code": "import math\n\ndef select_output(speed, last_seen_ns, now_ns, timeout_ns):\n    if timeout_ns <= 0:\n        raise ValueError('timeout must be positive')\n    if last_seen_ns is None or not math.isfinite(speed):\n        return 0.0\n    age = now_ns - last_seen_ns\n    if age < 0 or age > timeout_ns:\n        return 0.0\n    return speed",
+              "explanation": "时间来自函数参数，函数没有访问系统时钟或 ROS 状态。这样测试可精确控制边界，运行节点则负责把同一时钟来源的时刻传入。"
+            },
+            {
+              "label": "test_policy.py 完整文件",
+              "language": "python",
+              "type": "complete",
+              "code": "import pytest\nfrom policy import select_output\n\ndef test_fresh_command():\n    assert select_output(0.4, 100, 150, 100) == 0.4\n\ndef test_timeout_boundary():\n    assert select_output(0.4, 100, 200, 100) == 0.4\n    assert select_output(0.4, 100, 201, 100) == 0.0\n\ndef test_missing_future_and_nonfinite():\n    assert select_output(0.4, None, 150, 100) == 0.0\n    assert select_output(0.4, 200, 150, 100) == 0.0\n    assert select_output(float('nan'), 100, 150, 100) == 0.0\n\ndef test_invalid_timeout():\n    with pytest.raises(ValueError):\n        select_output(0.4, 100, 150, 0)",
+              "explanation": "四个测试函数分别覆盖正常、边界、异常数据及非法配置。使用 pytest -q test_policy.py 运行，需要已安装 python3-pytest；若故意把大于改为大于等于，边界测试应失败，以证明断言有区分力。"
+            }
+          ]
+        },
+        {
+          "title": "集成测试必须等实际消息并设置总期限",
+          "paragraphs": [
+            "单元测试不验证 ROS 发现和消息传递。下面完整 launch_testing 文件启动官方 talker，用测试节点订阅独立命名空间中的 chatter，并在五秒真实时间内等待非空消息。ReadyToTest 只允许测试开始，不宣称 talker 已经完成发现；循环通过 spin_once 接收消息，以“条件满足或总期限到达”结束。",
+            "保存为 test_talker.py，安装 launch_testing、launch_ros、rclpy、std_msgs 与 demo_nodes_cpp 后运行 launch_test test_talker.py。该示例验证通信合同和退出码，没有把控制台日志文字作为唯一依据。固定测试主题仍需要隔离实验域，避免另一个同名测试的发布者让本测试错误通过。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "test_talker.py 完整文件",
+              "language": "python",
+              "type": "complete",
+              "code": "import time\nimport unittest\nimport launch\nimport launch_ros.actions\nimport launch_testing\nimport launch_testing.actions\nimport launch_testing.asserts\nimport rclpy\nfrom std_msgs.msg import String\n\ndef generate_test_description():\n    talker = launch_ros.actions.Node(\n        package='demo_nodes_cpp', executable='talker',\n        namespace='integration_case', output='screen')\n    return launch.LaunchDescription([\n        talker, launch_testing.actions.ReadyToTest()\n    ]), {'talker': talker}\n\nclass TestMessages(unittest.TestCase):\n    @classmethod\n    def setUpClass(cls):\n        rclpy.init()\n\n    @classmethod\n    def tearDownClass(cls):\n        rclpy.shutdown()\n\n    def test_nonempty_message(self):\n        node = rclpy.create_node('integration_observer')\n        received = []\n        subscription = node.create_subscription(\n            String, '/integration_case/chatter',\n            lambda message: received.append(message.data), 10)\n        end = time.monotonic() + 5.0\n        try:\n            while not received and time.monotonic() < end:\n                rclpy.spin_once(node, timeout_sec=0.1)\n            self.assertTrue(received, 'no message within 5 seconds')\n            self.assertTrue(received[0], 'message is empty')\n        finally:\n            node.destroy_subscription(subscription)\n            node.destroy_node()\n\n@launch_testing.post_shutdown_test()\nclass TestExit(unittest.TestCase):\n    def test_exit_code(self, proc_info, talker):\n        launch_testing.asserts.assertExitCodes(proc_info, process=talker)",
+              "explanation": "活动测试与被测进程同时运行，关闭后的测试再核对退出状态。测试节点在 finally 中清理，避免失败后残留订阅。总期限使用单调时间，因此仿真时钟暂停不会让测试无限等待。"
+            }
+          ]
+        },
+        {
+          "title": "注册测试与确认确实运行",
+          "paragraphs": [
+            "把测试文件放进包的 test 目录并不总会自动注册。ament_cmake 包可在 BUILD_TESTING 条件内查找 launch_testing_ament_cmake 并添加 launch 测试，同时在 package.xml 声明测试依赖。Python 包则需要正确的 pytest 配置与依赖。注册失败可能导致报告显示零测试，而命令仍没有直接报编译错误。",
+            "运行时先构建，再执行 colcon test，最后读取 colcon test-result --verbose。必须确认期望的测试数量、失败和错误数量，以及日志路径。旧测试结果也可能留在构建目录中，持续集成最好使用干净工作空间或明确管理本次结果，不能拿昨天的 XML 当作今天的验证。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "加入已有 ament_cmake 包的注册片段",
+              "language": "text",
+              "type": "snippet",
+              "code": "if(BUILD_TESTING)\n  find_package(launch_testing_ament_cmake REQUIRED)\n  add_launch_test(test/test_talker.py TIMEOUT 30)\nendif()",
+              "explanation": "该片段位于已有 CMakeLists.txt 的 ament_package() 之前。package.xml 需添加 launch_testing_ament_cmake、launch_ros、rclpy、std_msgs 和 demo_nodes_cpp 的 test_depend；这是注册片段，不是完整软件包。"
+            },
+            {
+              "label": "工作空间中的验证命令",
+              "language": "bash",
+              "type": "commands",
+              "code": "colcon build\nsource install/setup.bash\ncolcon test --event-handlers console_direct+\ncolcon test-result --verbose",
+              "explanation": "test 负责运行，test-result 汇总结果。遇到失败应读取对应包的测试输出，不以终端最后出现一行 finished 推断所有断言通过。"
+            }
+          ]
+        },
+        {
+          "title": "让集成测试免受其它 ROS 图干扰",
+          "paragraphs": [
+            "每个并行测试应使用独立域或项目提供的域分配机制，并为节点和资源分配独立名称。仅改 namespace 不能隔离绝对主题、固定服务、设备文件或全局 /clock。手工学习实验可以在空闲域运行；持续集成应由测试启动器分配并回收资源，避免多个作业都硬编码四十二。",
+            "测试数据使用固定种子和已知初始状态，等待条件应有期限和有用错误消息。发现延迟、首次初始化和正常运行的性能要求需要分别规定，不能给所有断言套同一个任意 sleep。若只在繁忙机器偶尔失败，先保存时间线和资源指标，再判断是测试期限不合理还是产品确有负载问题。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "故障注入与结果解释",
+          "paragraphs": [
+            "关键路径还应验证未发现服务、参数非法、消息过期、节点退出和时间跳变等情况。故障注入优先使用假设备或受控输入，使预期结果清楚且可恢复。测试不仅要证明正常时会输出，还要证明异常时不会悄悄沿用陈旧状态。每种故障应对应可读的断言，而非仅检查程序没有崩溃。",
+            "诊断报告能帮助比较系统、依赖和中间件，但不能替代行为断言。验收记录应写明测试层次、范围、环境和未覆盖部分；单元测试通过不意味着硬件已验证，浏览器测试也不验证 ROS 程序。本章提供可保存的测试文件，其 ROS 集成部分未在本次教材扩写中实际执行。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "验证命令过期后的输出策略",
+        "scenario": "系统收到一条有效命令，之后输入中断，需要确认边界和节点集成都符合约定。",
+        "steps": [
+          "先用注入整数时间验证未收到命令、刚好到界限和超过界限三种输出，不依赖真实等待。",
+          "再启动节点并发送带测试标识的命令，等待确认输入已处理，然后停止发送，在有界期限内等待零输出。",
+          "隔离测试域和时钟，检查节点正常退出；失败时保留接收、过期判断与输出的关联日志。"
+        ],
+        "result": "算法边界与 ROS 连接被分层验证，既不会把网络迟到误判为计算错误，也不会用纯函数通过掩盖节点没有调用策略。"
+      },
+      "exercises": [
+        {
+          "question": "colcon test 结束但报告零测试，能否视为通过？",
+          "answer": "不能。需要检查测试注册、BUILD_TESTING、依赖和发现规则，并确认本次期望的测试数量。零测试只表示没有执行到这些断言，不证明功能正确。"
+        },
+        {
+          "question": "为什么等待五秒后检查一次比条件循环更容易出问题？",
+          "answer": "固定等待既可能浪费时间，也可能在繁忙环境仍不够。带总期限的条件循环能尽早成功并在失败时清楚报告缺少什么证据；同时必须 spin 或采用能推进回调的等待方式。"
+        },
+        {
+          "question": "只有正常输入测试通过，是否覆盖了超时保护？",
+          "answer": "没有。应独立测试缺失输入、恰好边界、过期和异常时钟，并在节点层验证策略确实影响输出。故意破坏边界条件后测试应失败，这有助于发现空洞断言。"
+        }
+      ]
+    },
+    {
+      "id": "performance",
+      "sections": [
+        {
+          "title": "先把指标定义到时间点与单位",
+          "paragraphs": [
+            "性能问题可能是发布太慢、消息排队、计算太久或输出过旧。首先为链路定义时间点：产生输入、调用发布、开始订阅回调、完成处理、形成输出。发布到回调开始的差值包括传输与调度等待；回调开始到结束反映处理区间；采样到执行结果则是更完整的端到端延迟。不同差值不能共用一个含糊的“延迟”名称。",
+            "同时记录吞吐、丢失或重复序号、内存和处理器使用率。接收频率达到三十赫兹，数据仍可能落后一秒；平均耗时很低，也可能每隔几秒出现一次长暂停。应在确定业务目标后报告中位数、较高分位数、最大观测值和超时次数，并保留负载与观察时长。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "保证时钟可比较并控制测量扰动",
+          "paragraphs": [
+            "在同一台 Linux 主机上，可用共享的单调时钟来源记录发布与回调时刻，不受系统校时和仿真暂停影响。跨主机的单调时刻没有共同起点，不能直接相减；跨机单向延迟需要对齐时钟并评估同步误差，或者改测同一时钟下的往返时间。往返的一半也只在额外对称假设成立时近似单向延迟。",
+            "每条消息都打印长日志、保存大文件或调用外部绘图，会改变被测程序的调度和 I/O。优先记录紧凑序号与时间，使用有界缓冲，结束后再输出。还要报告工具开关：同一话题多一个观察者可能增加序列化、复制或带宽，测量工具不是没有成本的透明窗口。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "一个可以手算并核对的分布示例",
+          "paragraphs": [
+            "把同一发布者的每个样本记录为序号、调用发布前时刻、订阅回调开始和结束时刻。下方 CSV 只是合成数据，时间单位纳秒，对应发布到回调开始分别为一、二、三、四、五十毫秒。平均值为十二毫秒，中位数三毫秒，最高延迟五十毫秒；若目标是十毫秒，其中一个样本已经违约。",
+            "完整分析脚本采用最近秩方法计算分位数，并明确计算的是内部序号缺口，而非完整网络丢包率。测试开始前和结束后的丢失无法仅由接收到的序号范围推断。五个样本只用于核对算法，正式实验需要足够样本与多轮运行，不能把小样本百分之九十九分位数包装成稳定的系统保证。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "sample_latency.csv 合成数据",
+              "language": "text",
+              "type": "complete",
+              "code": "seq,send_ns,start_ns,end_ns\n1,100000000,101000000,102000000\n2,200000000,202000000,203000000\n3,300000000,303000000,304000000\n4,400000000,404000000,405000000\n5,500000000,550000000,551000000",
+              "explanation": "send_ns 与 start_ns 差值包含该观察边界内的等待；end_ns 与 start_ns 差值在合成例中均为一毫秒。数据并非任何机器人实测结果。"
+            },
+            {
+              "label": "latency_report.py 完整分析脚本",
+              "language": "python",
+              "type": "complete",
+              "code": "import csv\nimport math\nimport sys\n\nwith open(sys.argv[1], newline='', encoding='utf-8') as stream:\n    rows = list(csv.DictReader(stream))\nif not rows:\n    raise SystemExit('no samples')\nsequences = []\nwaiting_ms = []\ncallback_ms = []\nfor row in rows:\n    sequence = int(row['seq'])\n    sent, start, end = (int(row[key]) for key in ('send_ns', 'start_ns', 'end_ns'))\n    if not sent <= start <= end:\n        raise ValueError(f'invalid clock ordering at sequence {sequence}')\n    sequences.append(sequence)\n    waiting_ms.append((start - sent) / 1_000_000)\n    callback_ms.append((end - start) / 1_000_000)\n\ndef report(name, values):\n    ordered = sorted(values)\n    def percentile(fraction):\n        index = max(0, math.ceil(fraction * len(ordered)) - 1)\n        return ordered[index]\n    print(name, {\n        'count': len(ordered),\n        'mean_ms': sum(ordered) / len(ordered),\n        'p50_ms': percentile(0.50),\n        'p95_ms': percentile(0.95),\n        'p99_ms': percentile(0.99),\n        'max_ms': ordered[-1],\n    })\n\nreport('publish_to_callback_start', waiting_ms)\nreport('callback_duration', callback_ms)\nunique = set(sequences)\nprint('duplicate_samples', len(sequences) - len(unique))\nprint('missing_inside_observed_range', max(unique) - min(unique) + 1 - len(unique))\nprint('out_of_order_pairs', sum(b < a for a, b in zip(sequences, sequences[1:])))",
+              "explanation": "用 python3 latency_report.py sample_latency.csv 运行。程序拒绝时钟顺序矛盾的样本，而不是把负延迟取绝对值；跨机器未经同步的数据不能靠此脚本自动修复。分析以单一发布者且序号不重置为前提。"
+            }
+          ]
+        },
+        {
+          "title": "用 tracing 找到延迟落在哪一段",
+          "paragraphs": [
+            "如果外部测量显示长尾，下一步需要观察内部事件。ROS 追踪点可记录回调进入和退出、发布及执行相关事件。对同一回调实例匹配开始结束，结合进程、线程和对象标识，能够区别回调自身很慢与回调迟迟没有被调度。跨多个节点的因果链还需要业务序号或其它关联信息，不能把相邻两条事件直接当作同一消息。",
+            "下面是在有追踪支持的 Linux/Jazzy 环境中的采集流程。先确认 Tracing enabled，再启动会话，按提示开始记录，然后在另一个终端启动待测程序。若节点在追踪开始前已经创建，某些初始化映射事件可能缺失，后续分析会更困难。采集结束后读取实际事件，确认不是一个空目录。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "追踪能力、会话与原始事件检查",
+              "language": "bash",
+              "type": "commands",
+              "code": "sudo apt install ros-jazzy-ros2trace ros-jazzy-tracetools-analysis babeltrace\nsource /opt/ros/jazzy/setup.bash\nros2 run tracetools status\nros2 trace --session-name engineering_probe --list\n# 按提示开始后，在另一终端运行待测 ROS 程序\n# 程序完成后回到追踪终端，按提示停止\nbabeltrace \"$HOME/.ros/tracing/engineering_probe\"",
+              "explanation": "--list 会显示将启用的事件，交互式会话仍需按提示开始和停止。输出目录以工具实际打印为准；如果设置过追踪基础目录，应采用对应路径。这里只采集并检查数据，不把“追踪已开启”当作性能已达标。"
+            }
+          ]
+        },
+        {
+          "title": "一次改变一个因素并解释取舍",
+          "paragraphs": [
+            "固定处理器、系统版本、RMW、消息大小、发布频率、订阅数、QoS、参数和数据集，先预热再采集基线。比较不同执行器或组件布局时，保持业务工作量相同，并重复多轮。可以交错运行甲乙配置，减少温度、后台负载和缓存状态随时间变化造成的偏差；保留异常样本，不只挑最好的一次。",
+            "优化方向应由证据决定：回调计算长可降低算法成本，等待锁长应缩短临界区，排队长应控制负载，传输复制成本大再考虑组件、进程内路径或支持的共享内存。降低可靠性可能减少等待却增加丢样，减小队列可能改善新鲜度却放弃历史，应同时报告收益与业务代价。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "实时性是可满足截止时间的系统属性",
+          "paragraphs": [
+            "普通桌面系统平均更快，不意味着最坏情况存在可保证上界。硬实时需要对调度、内存、锁、驱动和硬件链路一起分析；实时路径中不可控的内存分配、缺页、同步打印和无限等待都可能制造长尾。安装实时内核或提高线程优先级只是其中一环，不会自动解决回调组死锁或设备阻塞。",
+            "工程报告应写“在何种负载、多久观察、多少样本下，最大观测值和违约次数是多少”。最大观测值不是理论最坏值，没有看到违约也不证明任何未来负载都安全。先把功能正确、软实时性能与硬实时论证区分，才能为后续优化留下可信基线。本章合成数据可离线核算，追踪命令未在本次写作中执行。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "平均延迟正常但周期性出现卡顿",
+        "scenario": "一条图像链平均六毫秒，但界面每隔数秒停顿，要求定位是否来自计算或调度。",
+        "steps": [
+          "采集输入到输出的序号与时刻，报告高分位、最大值和超过业务期限的次数，确认卡顿对应真实数据延迟。",
+          "在相同负载下追踪回调，比较异常样本的回调持续时间与开始前等待，检查日志、磁盘和锁行为。",
+          "只改变一个已确认因素，如把同步写盘移出回调，再重复测量并核对输出质量与丢样。"
+        ],
+        "result": "结论说明具体延迟段和变更代价，不用频率均值或某次最快记录代替长尾证据。"
+      },
+      "exercises": [
+        {
+          "question": "两台机器分别取 monotonic_ns 后相减，为什么可能得到无意义延迟？",
+          "answer": "两机单调时钟没有共同起点，值之间不能直接比较。应采用评估过同步误差的公共时间基准，或测同一端时钟下的往返时间；不能把负数简单修成正数。"
+        },
+        {
+          "question": "五个样本延迟为一、二、三、四、五十毫秒，平均与中位数分别多少？",
+          "answer": "平均为十二毫秒，中位数三毫秒，最大五十毫秒。最近秩方法下百分之九十五和百分之九十九分位都是五十毫秒；样本很少，仅说明计算方式，不能表示稳定的长尾概率。"
+        },
+        {
+          "question": "topic hz 达到目标且没有丢序号，能否证明实时性？",
+          "answer": "不能。频率不反映样本年龄，可靠队列可能完整传递过时消息；还需时间点明确的延迟分布、违约次数和负载条件。有限测量也只能给观测证据，不能独自证明硬实时最坏上界。"
+        }
+      ]
+    },
+    {
+      "id": "deployment",
+      "sections": [
+        {
+          "title": "交付物是可运行系统的全部输入",
+          "paragraphs": [
+            "把源码复制到另一台机器，并不意味着系统可以复现。实际运行还取决于操作系统、ROS 发行版、系统依赖、编译选项、消息定义、参数、标定、地图和设备固件。应把这些输入与一次验收结果关联，使别人能够知道“运行的是哪一版”，而不是只知道某个文件夹的名字。",
+            "先区分开发环境、构建环境与运行环境。开发环境可能包含编辑器和调试工具，构建环境需要编译器与头文件，运行环境需要可执行文件、共享库和资源。精简运行环境的前提是证明安装产物齐全；如果 launch 或模型只在源码目录中存在，删除源码就会暴露之前被开发路径掩盖的问题。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "依赖声明、源码版本与安装规则",
+          "paragraphs": [
+            "package.xml 描述包的依赖关系，rosdep 将系统依赖键映射为平台软件包，colcon 按工作空间组织构建。它们不是同一层的锁文件：安装成功不代表每次取到完全相同的软件版本。可复现交付应保存源码提交或精确仓库清单、系统包版本以及所用依赖来源，涉及离线部署还需提前准备对应包或镜像。",
+            "运行入口应通过包索引定位资源，不把开发者家目录写死到 launch 中。C++ 包应安装共享库、程序、launch、配置和模型；Python 包应配置正确的模块、console_scripts 与数据文件。重新开一个只加载目标环境的终端，检查包前缀与程序入口，可以发现旧 overlay 偶然提供依赖的情况。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "在已经构建的目标工作空间记录环境与产物",
+              "language": "bash",
+              "type": "commands",
+              "code": "source /opt/ros/jazzy/setup.bash\nsource install/setup.bash\nros2 doctor --report\nros2 pkg prefix hub_component\nros2 pkg executables hub_component\ndpkg-query -W 'ros-jazzy-*'",
+              "explanation": "示例包来自组件章节；换成自己的包时应检查实际名称。prefix 应指向本次目标安装目录，executables 应包含约定入口。版本清单用于追溯，不能自动替代依赖包归档。"
+            }
+          ]
+        },
+        {
+          "title": "容器固定用户空间，但不固定整个机器人",
+          "paragraphs": [
+            "容器把用户空间文件与依赖封装起来，仍共享宿主机内核。它不能自动提供真实硬件、实时调度、GPU 驱动兼容性或跨主机 DDS 发现。初次验证可以把发布和观察命令放在同一个容器内，先证明应用产物可用；然后分别增加宿主机、网络和设备边界，逐层验收。",
+            "下面是完整教学镜像，构建上下文包含本章 Dockerfile、entrypoint.sh，以及组件章节生成的 src/hub_component 包。它保留编译工具和源码以方便学习，并不宣称是最小生产镜像。构建时需要已配置的软件源和网络，完成后镜像可以归档带到符合平台条件的离线机器；网站正文阅读本身不依赖联网。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "Dockerfile 完整示例",
+              "language": "text",
+              "type": "complete",
+              "code": "ARG ROS_IMAGE=ros:jazzy-ros-base\nFROM ${ROS_IMAGE}\nSHELL [\"/bin/bash\", \"-o\", \"pipefail\", \"-c\"]\nWORKDIR /work\nCOPY src/ src/\nRUN apt-get update && \\\n    rosdep update --rosdistro jazzy && \\\n    rosdep install --from-paths src --ignore-src --rosdistro jazzy -y && \\\n    source /opt/ros/jazzy/setup.bash && \\\n    colcon build --merge-install --cmake-args -DCMAKE_BUILD_TYPE=Release && \\\n    rm -rf /var/lib/apt/lists/*\nCOPY entrypoint.sh /entrypoint.sh\nRUN chmod +x /entrypoint.sh\nENTRYPOINT [\"/entrypoint.sh\"]\nCMD [\"ros2\", \"run\", \"hub_component\", \"hub_talker_node\"]",
+              "explanation": "基础 ros-base 镜像提供构建与依赖工具；COPY 只复制本项目源码；rosdep 读取 package.xml，随后生成合并安装目录。删除 apt 索引减少无用体积，不等于删除已安装依赖。"
+            },
+            {
+              "label": "entrypoint.sh 完整文件",
+              "language": "bash",
+              "type": "complete",
+              "code": "#!/usr/bin/env bash\nset -e\nsource /opt/ros/jazzy/setup.bash\nsource /work/install/setup.bash\nexec \"$@\"",
+              "explanation": "先加载系统与工作空间环境，再用 exec 把入口进程替换为应用，使停止信号更直接到达应用。它不后台化节点，也不依赖交互式 shell 的个人启动文件。"
+            }
+          ]
+        },
+        {
+          "title": "固定镜像输入并验证正常停止",
+          "paragraphs": [
+            "镜像标签便于阅读，但标签指向的内容可能变化。首次拉取后记录仓库摘要，并用摘要作为构建参数，才能固定基础镜像内容；随后 apt 安装的依赖仍可能随软件源更新，所以还要保存构建结果和包清单。保留最终镜像本身，比仅保存一份使用浮动软件源的 Dockerfile 更接近可再次运行的交付。",
+            "下面先在本机构建并运行，再进入同一个容器观察 chatter。发布消息证明入口、库和消息支持能工作，正常停止证明信号与清理路径基本可用。这个结果不包含跨容器通信、跨主机通信或设备访问；每增加一种边界，都应该用相同业务合同再检查一次。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "构建、启动与容器内观察",
+              "language": "bash",
+              "type": "commands",
+              "code": "docker pull ros:jazzy-ros-base\nJAZZY_BASE_IMAGE=$(docker image inspect ros:jazzy-ros-base --format '{{index .RepoDigests 0}}')\ndocker build --build-arg ROS_IMAGE=\"$JAZZY_BASE_IMAGE\" -t hub-demo:local .\n# 终端甲：前台运行\ndocker run --rm -it --name hub-demo hub-demo:local\n# 终端乙：进入同一容器，复用明确的环境入口\ndocker exec -it hub-demo /entrypoint.sh ros2 topic echo /chatter std_msgs/msg/String\n# 观察结束后停止容器\ndocker stop hub-demo",
+              "explanation": "构建参数保存实际基础摘要，镜像名称 hub-demo:local 是本地标签。exec 启动观察进程时也加载工作空间，因为它不会自动继承另一个进程后来修改的 shell 环境。stop 后检查应用是否正常退出及是否有清理错误。"
+            }
+          ]
+        },
+        {
+          "title": "硬件、网络与配置作为显式部署边界",
+          "paragraphs": [
+            "真实驱动通常需要特定设备文件、组权限和稳定设备标识；只授予需要的设备和资源，比把所有问题交给全特权容器更易维护。DDS 跨容器或跨主机发现需要考虑网络命名空间、多播和路由，不能因为容器内部演示成功就推断宿主机一定能看到节点。时钟同步与安全身份材料也必须按目标部署提供。",
+            "参数、地图和标定可作为只读配置输入，与运行日志分开保存。配置变更应有版本或校验值，避免镜像相同但现场文件不同造成难复现的问题。启动顺序依赖实际就绪条件：设备打开、地图可用、TF 连通和所需生命周期状态；简单延迟十秒不能证明这些条件已经满足。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "从发布包到可回退验收",
+          "paragraphs": [
+            "交付清单应包含入口命令、环境变量、预期节点与主题、参数值、坐标边、日志位置、停止方式以及已验证的平台。先在不加载开发工作空间的环境中执行，再从外部确认消息内容、QoS、时间与退出行为。若涉及硬件，再加入固件、设备权限和设备反馈验收，不能把进程启动当成整机成功。",
+            "保留上一版镜像与配置，先验证新版本再切换，并定义回退条件。离线导出可用 docker save，导入可用 docker load；还要检查架构与宿主机能力，并用文件校验值确认传输完整。回退应同时恢复相容配置和数据格式，否则换回旧程序仍可能读不了新配置。本章示例未在本次写作中构建容器。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "归档已验证的本地镜像",
+              "language": "bash",
+              "type": "commands",
+              "code": "docker image inspect hub-demo:local --format '{{.Id}}'\ndocker save -o hub-demo.tar hub-demo:local\nsha256sum hub-demo.tar\n# 在已安装 Docker、平台相容的目标机器上\ndocker load -i hub-demo.tar",
+              "explanation": "本地镜像 ID、基础仓库摘要与 tar 校验值是不同标识，均应注明用途。tar 校验值确认传输内容一致，不能代替运行验收或证明目标硬件兼容。"
+            }
+          ]
+        }
+      ],
+      "workedExample": {
+        "title": "交给另一台离线学习机复现",
+        "scenario": "目标机器不能临时下载依赖，需要运行组件章节的字符串发布程序。",
+        "steps": [
+          "在可构建机器上固定基础摘要，构建并验收最终镜像，记录架构、镜像 ID、入口和预期消息。",
+          "导出镜像并计算校验值，同时交付明确配置和验证命令；在目标机器导入前核对文件和平台。",
+          "运行后检查消息内容、包前缀和停止行为，再保存目标机器的验收日志。"
+        ],
+        "result": "离线机器不需要重新猜测依赖和构建路径；仍需已具备相容的容器运行环境，且本实验不包含真实设备验证。"
+      },
+      "exercises": [
+        {
+          "question": "固定源码提交是否足以固定部署结果？",
+          "answer": "不够。基础系统、依赖版本、编译选项、消息定义和运行配置都可能变化。应保存这些输入或最终产物，并记录实际运行验收。"
+        },
+        {
+          "question": "同一 Dockerfile 一个月后构建为什么可能不同？",
+          "answer": "基础标签和软件源内容可能更新，依赖解析结果也可能变化。固定基础摘要、保存依赖版本并归档最终镜像可以改善可追溯性；只固定标签并不能锁住所有输入。"
+        },
+        {
+          "question": "容器中话题正常，宿主机看不到，首先应该重新编译吗？",
+          "answer": "先查网络命名空间、发现范围、域与接口路由，再核对宿主机观察环境和 QoS。容器内部成功说明部分应用链路已工作，不能直接说明跨边界通信配置正确。"
+        }
+      ]
+    },
+    {
+      "id": "migration",
+      "sections": [
+        {
+          "title": "迁移目标是保持明确的行为合同",
+          "paragraphs": [
+            "迁移不能只按函数名称搜索替换。先列出每个模块的输入输出名称、消息类型、单位、坐标系、时间含义、频率、超时、错误与取消行为，再确定哪些保持不变、哪些有意改变。旧程序中未写出的默认行为也属于风险来源，例如默认队列、参数缺失处理或启动先后顺序。",
+            "先选一条不直接操作设备的最小链路作为样板，把计算与通信封装分开。保留旧版本的已知输入和结果，用同一数据验证新实现。每完成一个模块都能说明“这个输入会得到什么输出”，比等所有文件都编译通过之后才排查整机更容易定位差异，也便于在某阶段失败时回退。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "ROS 1 到 ROS 2 的结构变化",
+          "paragraphs": [
+            "ROS 2 的常见发现机制不依赖 ROS 1 的 roscore，节点参数由各节点持有，回调由执行器和回调组控制。原来的全局参数读取、同步等待与自定义线程假设都需要重新检查。服务请求发出并不等于副作用完成，动作的接受、反馈、取消和结果也应分别验证，不能仅因为接口有相似名称就视为语义相同。",
+            "构建从 catkin 迁到 ament 与 colcon 时，要更新依赖声明、消息生成、安装规则和运行入口；Python 导入从旧接口模块迁到对应 msg、srv 或 action 命名空间。迁移后应从 install 环境运行，确认程序不是偶然从源码目录找到资源。旧 roslaunch 配置也需要逐项翻译参数归属、重映射和条件，不是只改文件后缀。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "跨发行版先建立目标平台矩阵",
+          "paragraphs": [
+            "本教材目标是 Ubuntu 24.04 与 ROS 2 Jazzy。来自 Humble 的教程可能使用不同系统库、Python 版本、Gazebo 代际、控制器接口或插件 API；来自 Rolling 的代码则可能使用 Jazzy 尚不存在的功能。把发行版、源码分支、实际安装版本和插件类型一起写入迁移记录，才能在遇到不一致时选定裁决依据。",
+            "Gazebo Classic 的插件不能仅改一个名字就当作现代 Gazebo 插件加载；速度输入也可能是 Twist 或 TwistStamped，必须检查实际控制器，而非认定所有 Jazzy 软件都统一更换了类型。参数名相似也不保证单位和默认值相同。先通过运行端点和接口定义取证，再决定是否需要适配层。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "在目标环境核对真实合同",
+              "language": "bash",
+              "type": "commands",
+              "code": "source /opt/ros/jazzy/setup.bash\nros2 topic list -t\nros2 topic info /cmd_vel --verbose\nros2 interface show geometry_msgs/msg/Twist\nros2 interface show geometry_msgs/msg/TwistStamped\nros2 param list /controller_manager",
+              "explanation": "前两条需要对应系统正在运行；controller_manager 也须实际存在。不存在应回到启动与安装检查，而非据此编造参数。接口定义说明字段，真实端点详情说明目标到底接受哪种消息。"
+            }
+          ]
+        },
+        {
+          "title": "桥接能够连接系统，但有平台和类型前提",
+          "paragraphs": [
+            "ros1_bridge 需要一个能同时提供两侧依赖的可构建环境，桥接能力取决于构建时可见的接口。自定义消息通常需要先在两侧构建并提供映射，再构建桥；动态桥也可能要等匹配的发布订阅关系出现才建立连接。它不是一种把任意未知字节流自动理解成新消息的通用转换器。",
+            "截至本教材核查日，维护者支持表明确 Ubuntu 24.04 不提供 ROS 1 支持，不能把 ros1_bridge 当作 Jazzy 主机上的默认二进制依赖。旧系统若必须保留，应单独设计相容的桥接环境或明确的边界协议，并评估维护和部署成本。桥接会增加延迟、故障点和类型约束，因此仍需逐接口验收，不能把“桥启动了”当作迁移完成。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "完整适配案例：明确新时间戳的含义",
+          "paragraphs": [
+            "假设旧软件输出不带 Header 的速度消息，目标消费合同要求带时间戳的消息。下面完整脚本在独立教学主题间适配，接收旧消息时读取当前 ROS 时间并填入 Header。它只能声明“适配器在此时接收这条命令”，无法恢复旧消息真正产生的时刻；若旧链路可能积压，这种加戳会把旧命令伪装成新鲜输入，正式设计应在源头提供时间。",
+            "保存为 stamp_twist.py，依赖 rclpy 和 geometry_msgs。这里 frame_id 固定为 base_link，仅在旧数据的速度语义本来就相对该坐标系时成立；代码没有做坐标旋转。消息结构适配、坐标变换、单位转换和过期保护是四件不同的事，应分别定义与验证。下面所有主题均是教学名称，不连接真实控制器。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "stamp_twist.py 完整教学适配器",
+              "language": "python",
+              "type": "complete",
+              "code": "import rclpy\nfrom rclpy.node import Node\nfrom geometry_msgs.msg import Twist, TwistStamped\n\nclass StampTwist(Node):\n    def __init__(self):\n        super().__init__('stamp_twist')\n        self.publisher = self.create_publisher(\n            TwistStamped, '/migration/stamped_cmd', 10)\n        self.subscription = self.create_subscription(\n            Twist, '/migration/legacy_cmd', self.receive, 10)\n\n    def receive(self, message):\n        output = TwistStamped()\n        output.header.stamp = self.get_clock().now().to_msg()\n        output.header.frame_id = 'base_link'\n        output.twist = message\n        self.publisher.publish(output)\n\ndef main():\n    rclpy.init()\n    node = StampTwist()\n    try:\n        rclpy.spin(node)\n    except KeyboardInterrupt:\n        pass\n    finally:\n        node.destroy_node()\n        if rclpy.ok():\n            rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()",
+              "explanation": "发布与订阅采用明确的不同主题，避免形成回路。赋给 twist 的是原消息数值；新 Header 来自适配器当前时钟。仿真使用时适配器与消费者必须一致设置 use_sim_time。"
+            },
+            {
+              "label": "在三个终端验证结构与数值",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 所有终端先 source /opt/ros/jazzy/setup.bash\n# 终端甲\npython3 stamp_twist.py\n# 终端乙\nros2 topic echo /migration/stamped_cmd geometry_msgs/msg/TwistStamped\n# 终端丙\nros2 topic pub --once /migration/legacy_cmd geometry_msgs/msg/Twist '{linear: {x: 0.2}, angular: {z: 0.1}}'",
+              "explanation": "应看到 linear.x 与 angular.z 保持输入值，并增加 base_link 和当前接收时刻。这个观察只证明适配器按设计赋值，不能证明旧命令足够新或真实控制器接受该合同。"
+            }
+          ]
+        },
+        {
+          "title": "回归顺序与可回退的变更边界",
+          "paragraphs": [
+            "回归从纯计算与接口定义开始，再测试单节点、跨语言通信、参数和完整启动；之后用固定录制输入验证时间与坐标，进入仿真，最后才在明确边界下验证设备。每一阶段都保存输入、期望结果、允许误差和失败日志。与旧系统比较时，应说明算法、依赖或时间语义是否有意变化，而不是把所有差异都算作错误或都忽略。",
+            "迁移期间保留旧环境和配置快照，在新环境使用独立工作空间，避免同时加载相互覆盖的包。对于必须改变的接口，提供清楚的适配责任与退役条件；不能让临时桥永久隐藏未迁移的关键模块。完成标准应是合同、构建、运行、诊断和部署均有对应证据。本章只提供迁移方法和教学适配器，未移植用户实机工程。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "将旧底盘教程迁到 Jazzy",
+        "scenario": "旧教程使用 Humble、某款 Classic 仿真插件和不带戳的速度消息，目标是现有 Jazzy 工程。",
+        "steps": [
+          "先记录旧工程实际插件、输入类型、TF 与时钟约定，建立可重放的基线，不从教程标题猜接口。",
+          "在 Jazzy 环境确认替代仿真与控制器插件、消息类型和参数；必要的适配层逐项声明单位、坐标和时间含义。",
+          "先在教学或仿真主题验证，再完成启动、录包回归和部署检查；保留旧版本与配置供回退。"
+        ],
+        "result": "版本变化被拆成可检查的依赖、接口和行为差异，而不是一次性全局替换 Twist 或插件名字。"
+      },
+      "exercises": [
+        {
+          "question": "把 Twist 包装成 TwistStamped 是否恢复了原始采样时间？",
+          "answer": "没有。接收时加戳只记录适配器接收时刻，不能知道此前排队多久。若业务依赖命令新鲜度，应让源头携带时间或使用另有明确保证的时效合同。"
+        },
+        {
+          "question": "旧 C++ 包编译通过但 launch 找不到参数文件，优先查什么？",
+          "answer": "检查安装规则是否把配置复制到 share 下，以及 launch 是否通过包索引定位资源。开发目录存在文件不表示 install 中存在；再核对目标环境是否加载了正确 overlay。"
+        },
+        {
+          "question": "能否直接在 Ubuntu 24.04 安装 ROS 1 再默认使用 ros1_bridge？",
+          "answer": "不能按维护者支持情况作此假设。需要同时支持两侧依赖的专门环境，并为自定义接口完成构建和映射。Jazzy 迁移计划必须把桥接平台与验证作为独立工作项，而非默认可用组件。"
+        }
+      ]
+    }
+  ]
+}

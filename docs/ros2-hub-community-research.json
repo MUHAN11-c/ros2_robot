@@ -1,0 +1,20 @@
+{
+  "checkedAt": "2026-11-06",
+  "resources": [
+    {"id":"tutorial-zsc","title":"ROS2 完全教程 · zsc","url":"https://zsc.github.io/ros2_tutorial/","sourceUrl":"https://github.com/zsc/ros2_tutorial","category":"中文教程","version":"Humble / Jazzy 混合","description":"按架构、通信、控制、规划和学习算法梳理知识；结合官方版本资料阅读。仓库实际包含22章，目录声明的23、24章未随当前提交提供。","verified":"页面及本地源码核对","level":"进阶"},
+    {"id":"tutorial-rzl6","title":"ROS2 理论与实践 · 核心篇","url":"https://rzl6.github.io/ROS2_Tuition/","sourceUrl":"https://github.com/Rzl6/ROS2_Tuition","category":"中文教程","version":"Humble / Ubuntu 22.04","description":"通信、launch、rosbag、tf2、RViz与URDF的中文分步教程，含C++/Python对照；迁移到Jazzy时重新核对命令和依赖。","verified":"页面及本地源码核对","level":"入门"},
+    {"id":"tutorial-fishros","title":"动手学 ROS 2 · 鱼香 ROS","url":"https://fishros.com/d2lros2/","sourceUrl":"https://github.com/fishros/ros2_town","category":"中文教程","version":"多版本，按章节辨认","description":"从通信到FishBot、导航、控制、micro-ROS的实践课程。搜索索引保留Humble第二版说明，当前入口可见Foxy版链接，学习前须确认所选版本。","verified":"入口与作者仓库核对","level":"入门"},
+    {"id":"tutorial-articulated","title":"Articulated Robotics · 移动机器人实作","url":"https://articulatedrobotics.xyz/tutorials/","category":"作者教程","version":"多版本","description":"作者Josh Newans的移动机器人、坐标变换和Docker课程；旧教程的Gazebo Classic命令需按Harmonic迁移。","verified":"作者目录核对","level":"实战"},
+    {"id":"tutorial-addison","title":"Automatic Addison · ROS 2 教程目录","url":"https://automaticaddison.com/tutorials/","category":"作者教程","version":"Jazzy / Lyrical / Iron 分区","description":"作者维护的分版本教程目录，包含导航和机械臂；本网站学习主线选Jazzy分区，避免跟随首页的新发行版命令。","verified":"作者目录核对","level":"实战"},
+    {"id":"tutorial-murilo","title":"Murilo’s ROS2 Tutorial","url":"https://ros2-tutorial.readthedocs.io/en/latest/","category":"作者教程","version":"Jazzy / Ubuntu 24.04","description":"Murilo M. Marinho的课程资料，以Python、工作空间和工程习惯为重点；用于曼彻斯特大学机器人软件教学。","verified":"教程首页核对","level":"入门"},
+    {"id":"tutorial-utv","title":"Intelligent Systems Lab · ROS 2 Examples","url":"https://github.com/IntelligentSystemsLabUTV/ros2-examples/tree/jazzy","category":"示例源码","version":"Jazzy 分支","description":"维护者提供的C++/Python、接口定义、launch工程示例。README说明有些包仍在开发，应以实际存在的包和COLCON_IGNORE为准。","verified":"Jazzy分支README核对","level":"进阶"}
+  ],
+  "localCatalog": "ros2-hub-local-tutorials.json",
+  "localPageCounts": {"zsc":22,"rzl6":147},
+  "notes": [
+    "本次将本地两套教程的所有已存在章节页列入目录，标题和相对路径来自本地文件；并未逐一联网确认169个网页的实时响应。",
+    "zsc当前提交ae6703d未找到显式LICENSE；只建立索引和原创学习说明，不再分发全文。",
+    "Rzl6/ROS2_Tuition包含MIT许可证；本次依然优先链接原文，避免正文版本被误当成Jazzy。",
+    "本地控制工坊为当前工作区已有成果，集成副本需保留其第三方许可和出处。"
+  ]
+}

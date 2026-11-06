@@ -1,2 +1,0 @@
---- run: ros2 lifecycle get /lifecycle_node_cpp (timeout 5s)
-Node not found

@@ -1,0 +1,168 @@
+{
+  "snapshotDate": "2026-11-06",
+  "timezone": "Asia/Shanghai",
+  "destination": "https://github.com/MUHAN11-c/ros2_robot.git",
+  "branch": "learn",
+  "layout": "workspace files at repository root",
+  "remoteBaseCommit": "266791959045aadc4331755ac6312fdc94da6706",
+  "replacesPreviousLearnFiles": true,
+  "mainBranchModified": false,
+  "continuation": "CONTINUE.md",
+  "payloadFileCount": 3459,
+  "payloadBytes": 354298308,
+  "exclusions": [
+    ".agents",
+    ".aws",
+    ".codex",
+    ".env",
+    ".env.development",
+    ".env.local",
+    ".env.production",
+    ".git",
+    ".openai",
+    ".playwright-mcp",
+    ".pytest_cache",
+    ".venv",
+    ".vscode/*.db*",
+    "__pycache__",
+    "id_ed25519",
+    "id_rsa",
+    "ipch",
+    "node_modules"
+  ],
+  "excludedGeneratedDirectories": [
+    "ros2-learning-hub/examples/build",
+    "ros2-learning-hub/examples/install",
+    "ros2-learning-hub/examples/log",
+    "ros2-learning-hub/foundation-examples/build",
+    "ros2-learning-hub/foundation-examples/install",
+    "ros2-learning-hub/foundation-examples/log"
+  ],
+  "repositories": [
+    {
+      "path": "AgroSenseBot",
+      "url": "https://github.com/AIRLab-POLIMI/AgroSenseBot.git",
+      "branch": "jazzy",
+      "commit": "4ad700b090b9f3ddb8513c7519938bd7f0974709",
+      "dirty": false,
+      "submodules": "",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "path": "ROS2_Tuition",
+      "url": "https://github.com/Rzl6/ROS2_Tuition.git",
+      "branch": "main",
+      "commit": "ad2b17d56836f272e2127a789c462fccddc5a6ac",
+      "dirty": false,
+      "submodules": "",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "path": "Robotics_Tutorial",
+      "url": "https://github.com/Michael-Jetson/Robotics_Tutorial.git",
+      "branch": "main",
+      "commit": "7cb9e3d423196062c59dd346aae16285d962fb7c",
+      "dirty": false,
+      "submodules": "",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "path": "bunker_ros2",
+      "url": "https://github.com/agilexrobotics/bunker_ros2.git",
+      "branch": "jazzy",
+      "commit": "f24f722b245eb1d2572c47d091fc847d9fd68cf4",
+      "dirty": false,
+      "submodules": "",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "path": "linorobot2",
+      "url": "https://github.com/linorobot/linorobot2.git",
+      "branch": "jazzy",
+      "commit": "f6b0bd0350c4a9d6b815ef4bb5c701a1e5129711",
+      "dirty": false,
+      "submodules": "",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "path": "linorobot2_hardware",
+      "url": "https://github.com/linorobot/linorobot2_hardware.git",
+      "branch": "jazzy",
+      "commit": "fbbbb922f4bd778e23268210b7bd7a6ac4c75d83",
+      "dirty": false,
+      "submodules": "",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "path": "ros2_control",
+      "url": "https://github.com/ros-controls/ros2_control.git",
+      "branch": "jazzy",
+      "commit": "f9e24287fc1d6996e5ba1656a9ee24e5f33adef7",
+      "dirty": false,
+      "submodules": "",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "path": "ros2_control_demos",
+      "url": "https://github.com/ros-controls/ros2_control_demos.git",
+      "branch": "jazzy",
+      "commit": "fbab026e147824971c97996f3789f97c2ee9e9ac",
+      "dirty": false,
+      "submodules": "",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "path": "ros2_controllers",
+      "url": "https://github.com/ros-controls/ros2_controllers.git",
+      "branch": "jazzy",
+      "commit": "bee185cbb98815116af9cfb00ff595b0b800e91a",
+      "dirty": false,
+      "submodules": "",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "path": "ros2_tutorial",
+      "url": "https://github.com/zsc/ros2_tutorial.git",
+      "branch": "main",
+      "commit": "ae6703d73947442c5705350e88970b77089ab15a",
+      "dirty": false,
+      "submodules": "",
+      "licenseFiles": []
+    },
+    {
+      "path": "ugv_sdk",
+      "url": "https://github.com/agilexrobotics/ugv_sdk.git",
+      "branch": "main",
+      "commit": "f2704eacdc90357078cd93ec60aae08bb4baab35",
+      "dirty": false,
+      "submodules": "b796f7d44681514f58a683a3a71ff17c94edb0c1 test/googletest (b796f7d)",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    }
+  ],
+  "notes": [
+    "Reference repositories are ordinary source snapshots, not gitlinks; upstream histories are not copied.",
+    "Work in progress is retained explicitly and does not replace the working site entry.",
+    "TRANSFER_FILES.sha256 hashes all payload files including this manifest, except the checksum file itself.",
+    "Personal credentials, browser learning progress, running processes and build/install caches are outside this snapshot."
+  ]
+}

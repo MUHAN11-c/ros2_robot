@@ -1,0 +1,77 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 40  # Hz
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    asb_base_controller:
+      type: asb_track_controller/DiffDriveController
+
+    asb_platform_controller:
+      type: asb_platform_controller/ASBPlatformController
+
+asb_base_controller:
+  ros__parameters:
+    left_wheel_names: ["left_track_joint"]
+    right_wheel_names: ["right_track_joint"]
+
+    wheel_separation: 1.0
+
+    # The motor has a gearbox with a 40.61 reduction, attached to a wheel with radius r_w = 0.151 m.
+    # The equivalent wheel radius is 0.151 m / 40.61
+    wheel_radius: 0.003718296
+
+    # account for track kinematics slippage (still assuming center of mass is in base_link, which is not always)
+#    wheel_separation_multiplier: 1.6  # real robot on concrete
+#    wheel_separation_multiplier: 2.943851999  # simulated robot on terrain
+    wheel_separation_multiplier: 1.0  # no adjustment
+    left_wheel_radius_multiplier: 1.0
+    right_wheel_radius_multiplier: 1.0
+
+    publish_rate: 50.0
+    odom_frame_id: odom
+    base_frame_id: base_footprint
+    pose_covariance_diagonal : [0.00001, 0.00001, 1000000000000.0, 1000000000000.0, 1000000000000.0, 0.001]
+    twist_covariance_diagonal: [0.1, 0.1, 1000000000000.0, 1000000000000.0, 1000000000000.0, 0.1]
+
+    open_loop: false
+    enable_odom_tf: true
+
+    cmd_vel_timeout: 0.2
+    #publish_limited_velocity: true
+    use_stamped_vel: false
+    #velocity_rolling_window_size: 10
+
+    use_angular_velocity_pid: true
+    angular_velocity_pid_params:
+      p: 0.0
+      i: 4.0
+      d: 0.0
+      i_bound: 1.0
+      use_adaptive_integral_anti_windup: true
+      adaptive_i_base_bound: 0.1
+      adaptive_i_max_bound: 4.0
+
+    publish_pid_state: true
+
+    min_turning_radius: 1.4
+    max_wheel_angular_velocity: 314.159265359  # rad/s, referring to the track's motor velocity. 3000/60*2*pi.
+
+    # Velocity and acceleration limits. Whenever a min_* is unspecified, default to -max_*
+    linear.x.has_velocity_limits: true
+    linear.x.has_acceleration_limits: true
+    linear.x.has_jerk_limits: false
+
+    # The maximum motor vel is 3000 RPM (50 rev per second). The maximum track velocity is 50 RPS * C_eq = 1.168137135,
+    # where C_eq is the equivalent circumference of the wheel when factoring the gearbox, C_eq = 2 π r_w / 40.61 = 0.02336
+    linear.x.max_velocity: 1.168137135
+    linear.x.max_acceleration: 2.5
+
+    angular.z.has_velocity_limits: true
+    angular.z.has_acceleration_limits: false
+    angular.z.has_jerk_limits: false
+
+    # TODO compute with the real max track RPM
+    angular.z.max_velocity: 1.0
+#    angular.z.max_acceleration: 5.0

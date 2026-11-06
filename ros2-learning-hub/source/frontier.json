@@ -1,0 +1,568 @@
+{
+  "chapters": [
+    {
+      "id": "learning-rl",
+      "title": "强化学习与 Sim2Real：从策略实验到 ROS 2 接口",
+      "summary": "把强化学习拆成环境、策略、训练和部署四部分，先用可解释的参数搜索理解闭环，再讨论如何把训练结果接到机器人。",
+      "goals": [
+        "定义观测、动作、奖励和回合边界",
+        "区分训练循环与 ROS 2 在线控制循环",
+        "建立仿真到实机的接口检查与评估步骤"
+      ],
+      "prerequisites": [
+        "已理解 ROS 2 话题、Action、时间戳与日志",
+        "Python 3；本章离线实验仅依赖标准库"
+      ],
+      "version": "Jazzy 接口主线；学习算法独立版本",
+      "concepts": [
+        "把强化学习拆成环境、策略、训练和部署四部分，先用可解释的参数搜索理解闭环，再讨论如何把训练结果接到机器人。"
+      ],
+      "sections": [
+        {
+          "title": "把机器人任务写成可检查的接口",
+          "paragraphs": [
+            "设想一台小车停在目标位置。环境保存位置与速度，策略读取观测并选择加速度或速度目标，环境推进一段时间后返回新观测和奖励。这里最容易遗漏的是动作的物理意义：同样的数值 0.5 可以表示米每秒、弧度、归一化电流或者无量纲网络输出。先把单位、维度、排列顺序和采样周期写进接口表，再选择学习算法。",
+            "观测应是部署时能获得的量。仿真器能直接提供真实速度和接触力，并不代表实机有相同传感器。若训练使用了实机没有的量，要设计估计器，或把它仅用于训练时的辅助信息。部署可见的策略输入与训练时帮助优化的额外信息应分别列出，否则仿真成功也无法构造在线输入。"
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "奖励、终止与时间截断分别表达什么",
+          "paragraphs": [
+            "本章的原创实验用位置误差平方惩罚偏离目标，同时用控制量平方限制过大动作。奖励是优化目标的一种表达，既不是安全证明，也不保证学到人期待的行为。观察每个奖励分量与实际轨迹，比只看总回报更容易发现漏洞。例如只奖励前进距离时，机器人可能忽略姿态和停止要求。",
+            "Gymnasium 的 step 接口返回下一观测、奖励、terminated、truncated 和 info。任务成功或失败可构成终止，外部时间上限可构成截断；两者都需要重置回合，但价值估计处理并不总相同。reset 返回观测与附加信息。旧教程的单一 done 标志不能机械替换训练目标中的终止掩码。这个区别影响算法更新，不只是变量命名。"
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "完整实验：对一个小策略做参数搜索",
+          "paragraphs": [
+            "下面文件从零实现一维质点、固定时间积分和一个反馈策略。它不依赖学习框架；训练在这里指比较候选增益，并选择训练种子上的平均回报最高者。用这一小实验可以完整观察环境、候选策略、训练集和留出评估之间的数据流，随后再把搜索器换成适合任务的强化学习算法。",
+            "position 是相对目标的误差，velocity 是速度，force 被限幅到正负一。每轮动作先更新速度，再更新位置；改变质量会改变相同动作下的响应。脚本先用五个初始状态选择增益，再用十个不同种子、三种质量评估。输出同时保留回报和最终误差，避免仅看一个指标作判断。"
+          ],
+          "codeBlocks": [
+            {
+              "label": "rl_gain_search.py",
+              "language": "python",
+              "type": "complete",
+              "code": "\"\"\"A tiny policy-search experiment; standard library only, no robot connection.\"\"\"\nimport json\nimport random\n\ndef rollout(gain, seed, mass=1.0, steps=120):\n    rng = random.Random(seed)\n    position, velocity = rng.uniform(-2.0, 2.0), 0.0\n    reward = 0.0\n    for _ in range(steps):\n        force = max(-1.0, min(1.0, -gain * position - 0.8 * velocity))\n        velocity += (force / mass - 0.1 * velocity) * 0.05\n        position += velocity * 0.05\n        reward -= position ** 2 + 0.01 * force ** 2\n    return reward, abs(position)\n\ndef evaluate(gain, seeds, mass=1.0):\n    results = [rollout(gain, seed, mass) for seed in seeds]\n    return {\"gain\": gain, \"mass\": mass,\n            \"mean_return\": sum(x[0] for x in results) / len(results),\n            \"mean_final_error\": sum(x[1] for x in results) / len(results)}\n\ndef main():\n    candidates = [evaluate(g, range(5)) for g in (0.0, 0.25, 0.5, 1.0, 2.0)]\n    best = max(candidates, key=lambda item: item[\"mean_return\"])[\"gain\"]\n    print(json.dumps({\"training\": candidates, \"selected_gain\": best,\n                      \"held_out\": [evaluate(best, range(100, 110), mass)\n                                   for mass in (0.7, 1.0, 1.5)]}, indent=2))\n\nif __name__ == \"__main__\":\n    main()\n",
+              "explanation": "完整、可运行的原创参数搜索实验。不是 PPO、SAC 或 Isaac Lab 的实现，也不代表任何机器人性能结果。"
+            }
+          ]
+        },
+        {
+          "title": "将策略装进 ROS 2 节点之前先固定时序",
+          "paragraphs": [
+            "实际部署可拆成观测收集、模型推理、输出适配三个节点或组件。观测收集检查时间戳并按训练顺序拼接数据；推理输出原始动作；适配层执行反归一化、限幅和接口转换。关节命令可进入合适的 ros2_control 控制器，移动速度可进入底盘命令入口。接口选择取决于任务的控制量，不能仅因为某个话题名字熟悉就直接连接。",
+            "训练环境的 step 常常同步推进仿真，ROS 2 回调却由数据到达驱动。定时推理时必须说明取最近一帧还是一组同步观测，以及数据超过多久视为过期。慢推理线程不能无限堆积历史请求，否则控制输出虽然不断产生，实际对应的却是几秒前的世界。记录观测时间、推理起止和命令时间，才能分辨感知延迟和模型延迟。"
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "从仿真到真实环境需要验证哪些差异",
+          "paragraphs": [
+            "先在相同仿真中重放导出的策略，再换一个物理配置验证鲁棒性，最后才进入受约束的硬件测试。质量、摩擦、延迟、噪声、执行器响应与相机外观都可能形成差异。域随机化的作用是覆盖合理变化范围；范围必须有测量依据，盲目扩大所有噪声可能让训练任务失去意义。",
+            "Isaac Lab 提供机器人学习环境与训练工作流，但其版本、仿真后端和导出接口独立演进。将项目使用的版本和模型文件摘要与 ROS 2 工作空间一起记录。不要把网页 main 分支的新示例直接套进旧安装环境。离线教材能完整解释连接方法；大型仿真器、模型权重和训练数据仍需要单独准备，不能由一份 HTML 替代。"
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "建立可重复的评估与故障实验",
+          "paragraphs": [
+            "固定测试场景集，分别统计成功率、碰撞或越界事件、到达时间、控制变化和推理延迟。把训练时见过的场景与未见过的场景分开，保留失败轨迹。小样本中的一次成功只能说明这一回合完成，不能推断泛化能力。先比较简单反馈策略，才能判断新模型究竟改善了什么。",
+            "故障实验可以从断开一类观测、加入延迟、交换关节顺序开始，在纯仿真或离线回放中验证拒绝与恢复逻辑。系统应能指出输入违反了哪条合同，并停止接纳过期策略输出。把模型的平均效果和控制系统的失效处理分别验收，二者不能互相代替。"
+          ],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "独立训练种子与评估种子",
+        "scenario": "比较反馈增益在不同质量下的表现，理解训练成绩与泛化评估的差别。",
+        "steps": [
+          "运行完整脚本，保存 selected_gain 与三组 held_out 指标。",
+          "把候选增益限制为 0，比较平均回报和最终误差。",
+          "保持训练种子不变，将质量改为 0.3 与 3.0；记录是否仍能接近目标。",
+          "写出若将 force 换成 TwistStamped 速度命令，需要改变哪些模型、单位和接口。"
+        ],
+        "result": "得到可复查的数值表，并明确这个实验只验证一维模型中的策略搜索流程。"
+      },
+      "exercises": [
+        {
+          "question": "为什么不能把仿真器提供的所有状态直接作为部署观测？",
+          "answer": "部署时必须能通过传感器或估计器构造同样的输入。无法获取的真实状态会造成训练与部署接口不一致。"
+        },
+        {
+          "question": "回报提高而最终位置误差变大可能意味着什么？",
+          "answer": "总奖励含有多个时间步和多个分量。策略可能更快减少早期误差，却在结束时仍有偏差；应检查轨迹、奖励分量和任务验收指标。"
+        },
+        {
+          "question": "ROS 2 推理变慢时，增加队列长度能解决吗？",
+          "answer": "通常只会保留更多过期观测。需要设定数据新鲜度、丢弃过期请求、测量耗时，并调整模型或频率；控制层另有超时处理。"
+        }
+      ],
+      "steps": [
+        {
+          "title": "运行本章完整离线实验",
+          "body": "在随教材提供的 examples 目录执行。程序不连接机器人，也不调用云端服务。",
+          "language": "bash",
+          "code": "python3 offline_labs/rl_gain_search.py"
+        }
+      ],
+      "commands": [],
+      "expected": [
+        "输出五个候选策略、选定增益和三组留出评估。",
+        "所有计算在本地完成，不创建 ROS 节点。"
+      ],
+      "pitfalls": [
+        "把算法演示的成功当成真实机器人已通过验收。",
+        "训练与部署的单位、时间、关节顺序或归一化不一致。"
+      ],
+      "exercise": "写出本章模块的输入、输出、时间约束，以及失败时系统如何恢复。",
+      "exerciseAnswer": "输入应包含明确类型、单位、参考系、时间戳与版本；输出应有范围和有效期。超时、无效数值与未知任务必须形成可观察的失败状态，交给已经验证的控制或任务层处理；不能继续沿用过期输出。用一次正常输入和一次故障注入证明这条链路。",
+      "sourceIds": [
+        "frontier-gym",
+        "frontier-isaaclab"
+      ],
+      "validation": "本章附带的 Python 标准库实验在本机执行；未训练大型模型、未连接外部模型服务、未部署到真实机器人。"
+    },
+    {
+      "id": "learning-embodied",
+      "title": "语言模型与具身任务：结构化计划、技能与反馈",
+      "summary": "把自然语言转换成可以验证、执行和取消的任务计划。使用明确的技能合同连接 Nav2、MoveIt 与感知模块。",
+      "goals": [
+        "设计模型输出与机器人技能之间的边界",
+        "验证任务参数并管理异步执行状态",
+        "以失败场景评价任务规划系统"
+      ],
+      "prerequisites": [
+        "已理解 ROS 2 话题、Action、时间戳与日志",
+        "Python 3；本章离线实验仅依赖标准库"
+      ],
+      "version": "Jazzy 接口主线；学习算法独立版本",
+      "concepts": [
+        "把自然语言转换成可以验证、执行和取消的任务计划。使用明确的技能合同连接 Nav2、MoveIt 与感知模块。"
+      ],
+      "sections": [
+        {
+          "title": "自然语言、世界状态和动作技能各负责什么",
+          "paragraphs": [
+            "一句“去桌旁看看杯子”隐含了地点、物体、观察方法和结束条件。语言模型可以协助分解任务，但系统仍需要真实地图中的地点、来自感知的物体观测和可执行的机器人技能。把这三层混在同一段提示词中，往往很难判断失败发生在理解、定位还是执行。",
+            "先定义一个小世界：只有 desk 和 dock 两个地点，只有 navigate 与 inspect 两个技能。模型的职责是选择技能和参数；地点对应的地图坐标由应用配置提供。机器人姿态、物体置信度和观测时间属于运行状态，应随着执行更新，不能把几分钟前的文字描述当成当前环境。"
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "两种写法：生成程序与生成结构化任务",
+          "paragraphs": [
+            "Code as Policies 研究了将语言指令组织为调用机器人接口的程序；RAI 提供将模型工具与 ROS 2 集成的框架。它们展示了不同的系统组织方式。学习时应区分研究方法与自己机器人上已经验证的能力，不能根据演示视频推断任何型号都能直接使用。",
+            "本章采用结构化任务列表作为教学入口。相比自由程序，有限技能名和参数字段更容易定义完整的验收规则，也便于记录和回放。需要复杂条件时，可以把任务编译到状态机或行为树，由已有执行器处理重试与取消。这里的选择是本教材的工程设计示例，并不是声称所有任务都应使用同一种表示。"
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "完整实验：对计划做结构与语义检查",
+          "paragraphs": [
+            "完整脚本验证步骤数量、技能名称、字段集合、地点和超时。它有意只打印 DRY_RUN，没有连接 ROS 2。先验证一个正常计划，再输入未知技能与不存在的地点，观察 REJECTED。这样可以在没有模型账号、网络或机器人的情况下理解“候选计划”到“允许执行的计划”的转换。",
+            "JSON 能解析只说明语法正确，不能说明地点存在或技能可用。检查时还要拒绝额外字段、非有限数值和超出预算的时间。对实际项目，应把合同扩展为任务类型定义与参数校验函数，并让每个版本的技能库声明自己支持哪些合同。错误信息应保留字段与原因，方便定位生成或配置问题。"
+          ],
+          "codeBlocks": [
+            {
+              "label": "plan_contract.py",
+              "language": "python",
+              "type": "complete",
+              "code": "\"\"\"Validate a task proposal and print a dry-run; never executes ROS commands.\"\"\"\nimport json\nimport math\n\nPLACES = {\"desk\": (1.0, 0.5, 0.0), \"dock\": (0.0, 0.0, 0.0)}\n\ndef validate(raw):\n    plan = json.loads(raw)\n    if not isinstance(plan, list) or not 1 <= len(plan) <= 8:\n        raise ValueError(\"plan must contain 1..8 steps\")\n    for step in plan:\n        if not isinstance(step, dict):\n            raise ValueError(\"step must be an object\")\n        skill = step.get(\"skill\")\n        allowed = {\"navigate\": {\"skill\", \"place\", \"timeout\"},\n                   \"inspect\": {\"skill\", \"object\", \"timeout\"}}\n        if not isinstance(skill, str) or skill not in allowed or set(step) != allowed[skill]:\n            raise ValueError(\"unknown skill or unexpected fields\")\n        timeout = step[\"timeout\"]\n        if type(timeout) not in (int, float) or not math.isfinite(timeout) or not 0 < timeout <= 120:\n            raise ValueError(\"invalid timeout\")\n        if skill == \"navigate\" and (not isinstance(step[\"place\"], str) or step[\"place\"] not in PLACES):\n            raise ValueError(\"unknown place\")\n        if skill == \"inspect\" and step[\"object\"] not in (\"cup\", \"marker\"):\n            raise ValueError(\"unsupported object\")\n    return plan\n\ndef main():\n    sample = '[{\"skill\":\"navigate\",\"place\":\"desk\",\"timeout\":60},{\"skill\":\"inspect\",\"object\":\"cup\",\"timeout\":10}]'\n    for index, step in enumerate(validate(sample), 1):\n        print(\"DRY_RUN\", index, step)\n    for bad in ('[{\"skill\":\"shell\",\"command\":\"anything\",\"timeout\":10}]',\n                '[{\"skill\":\"navigate\",\"place\":\"unknown\",\"timeout\":60}]'):\n        try:\n            validate(bad)\n        except ValueError as error:\n            print(\"REJECTED\", error)\n        else:\n            raise AssertionError(\"invalid plan accepted\")\n\nif __name__ == \"__main__\":\n    main()\n",
+              "explanation": "完整离线计划校验器；只预览任务，不执行模型生成的代码，不启动机器人。"
+            }
+          ]
+        },
+        {
+          "title": "把技能连接到 ROS 2 Action 状态机",
+          "paragraphs": [
+            "navigate 技能可以封装 Nav2 的导航 Action：确认服务器可用，构造带 map 参考系与时间戳的目标，发送后保存 goal handle，订阅反馈并等待最终结果。任务层需要分别处理目标被拒绝、执行失败、超时和取消；发送请求成功并不等于到达目标。inspect 可以是感知请求，也可以是一个需要多步观察的 Action，取决于持续时间和反馈需求。",
+            "连续步骤只在前一步达到明确成功条件后推进。例如导航成功后还要确认相机观测是新鲜的，再读取杯子检测结果。失败时可选择重试、回退到观察点或返回需要人工处理的状态；具体策略由任务需求决定。不要让语言模型反复生成同一个无效动作而没有次数上限和状态记录。"
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "使用世界模型，避免用聊天历史代替状态",
+          "paragraphs": [
+            "世界模型可以很小：地点表、机器人当前姿态、物体列表、技能可用性和当前任务状态。每条观测包含来源与时间，物体坐标包含参考系。若检测结果在 camera_link，需要在对应观测时间转换到 map 或机器人基座坐标后才能交给运动模块。没有转换证据时，应请求重新观察，而不是填一个看似合理的坐标。",
+            "提示词提供任务目标和工具说明，运行状态由程序构建。日志分别保存用户指令、候选计划、校验结果、实际技能调用与结果。这种分离让你能够不重新调用模型就重放执行流程，也能比较同一任务的不同模型输出。日志中不应保存访问令牌；这是部署记录设计的一部分。"
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "如何评价完整任务而不仅是生成质量",
+          "paragraphs": [
+            "建立包含正常任务、未知地点、不可见物体、导航失败和取消请求的小测试集。分别统计计划合法率、技能执行成功率、端到端完成率以及恢复所用时间。生成文字流畅不代表计划有用，计划合法也不代表环境允许执行。把每一层的失败分开，才能知道应该改提示、感知还是控制。",
+            "离线阶段可用固定 JSON 计划和模拟 Action 结果完成所有状态转换测试；再接入真实模型时，只替换候选计划来源。最后才把经过验证的技能适配到仿真或硬件。对于云端模型，还需处理网络中断和调用超时，使任务层保持有界等待；已运行的控制循环不应依赖持续联网聊天。"
+          ],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "桌旁观察任务的离线验收",
+        "scenario": "让系统把“到桌旁观察杯子”转换成两步任务，并证明未知动作不会进入执行阶段。",
+        "steps": [
+          "运行校验器，确认两条 DRY_RUN 和两条 REJECTED。",
+          "将 desk 改为 dock，观察目标仅来自地点白名单。",
+          "将 timeout 改为负数，确认校验失败。",
+          "纸面模拟 Nav2 返回 ABORTED，写出第二步是否执行及最终任务状态。"
+        ],
+        "result": "掌握计划合同与执行状态机的边界；无需在线模型就能验证核心流程。"
+      },
+      "exercises": [
+        {
+          "question": "为何不能把“计划合法”作为“任务成功”？",
+          "answer": "合法只说明满足输入合同。服务器可能拒绝，路线可能被阻挡，物体可能不存在，必须观察实际执行结果。"
+        },
+        {
+          "question": "目标地点应该由模型自由生成坐标吗？",
+          "answer": "教学实现从已知地点表解析坐标。若允许自由坐标，仍需验证参考系、范围、可达性和观测依据，并由运动规划模块检查。"
+        },
+        {
+          "question": "任务取消后应该只停止生成下一条计划吗？",
+          "answer": "还需取消已发送的活动 goal，等待取消响应和终态，并执行该技能定义的停止或恢复流程。只停止规划不会自动停止当前动作。"
+        }
+      ],
+      "steps": [
+        {
+          "title": "运行本章完整离线实验",
+          "body": "在随教材提供的 examples 目录执行。程序不连接机器人，也不调用云端服务。",
+          "language": "bash",
+          "code": "python3 offline_labs/plan_contract.py"
+        }
+      ],
+      "commands": [],
+      "expected": [
+        "正常任务输出 DRY_RUN；未知技能与地点输出 REJECTED。",
+        "程序结束后没有 ROS 节点或后台任务。"
+      ],
+      "pitfalls": [
+        "把算法演示的成功当成真实机器人已通过验收。",
+        "训练与部署的单位、时间、关节顺序或归一化不一致。"
+      ],
+      "exercise": "写出本章模块的输入、输出、时间约束，以及失败时系统如何恢复。",
+      "exerciseAnswer": "输入应包含明确类型、单位、参考系、时间戳与版本；输出应有范围和有效期。超时、无效数值与未知任务必须形成可观察的失败状态，交给已经验证的控制或任务层处理；不能继续沿用过期输出。用一次正常输入和一次故障注入证明这条链路。",
+      "sourceIds": [
+        "frontier-rai",
+        "frontier-cap"
+      ],
+      "validation": "本章附带的 Python 标准库实验在本机执行；未训练大型模型、未连接外部模型服务、未部署到真实机器人。"
+    },
+    {
+      "id": "learning-policy",
+      "title": "模仿学习与神经策略：数据、动作块与部署适配",
+      "summary": "沿着示范数据、训练样本、动作预测与控制执行理解模仿学习，比较逐步回归、ACT 与 Diffusion Policy 的输出方式。",
+      "goals": [
+        "把机器人示范转换成带版本的数据合同",
+        "理解动作块、预测窗口与执行窗口",
+        "验证神经策略输出进入控制器前的必要条件"
+      ],
+      "prerequisites": [
+        "已理解 ROS 2 话题、Action、时间戳与日志",
+        "Python 3；本章离线实验仅依赖标准库"
+      ],
+      "version": "Jazzy 接口主线；学习算法独立版本",
+      "concepts": [
+        "沿着示范数据、训练样本、动作预测与控制执行理解模仿学习，比较逐步回归、ACT 与 Diffusion Policy 的输出方式。"
+      ],
+      "sections": [
+        {
+          "title": "先定义示范到底记录了什么",
+          "paragraphs": [
+            "模仿学习从示范中学习观测到动作的映射。记录相机画面和关节值并不足以自动形成训练数据：还需要明确关节值是测得状态还是下发目标，以及动作在画面采集前后哪个时刻生效。一个示范回合应保存时间戳、关节顺序、单位、控制模式、相机标定和任务结果。",
+            "数据处理先对齐时钟，再按选定频率采样。异步传感器可使用近邻或插值，但必须记录容许的时间误差。关节角通常可以在合理条件下插值，离散抓手开关不能随意平均成半个动作。保留原始记录和转换配置，避免之后只能得到一份无法追溯的训练数组。"
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "三种策略写法的联系与区别",
+          "paragraphs": [
+            "简单行为克隆可以把当前观测映射成下一步动作，用监督误差拟合示范。它易于建立基线，但部署时小误差可能把系统带到训练数据很少覆盖的状态。增加更多同类静态画面并不一定解决这个问题；包含恢复过程的示范和针对失败场景的数据更有解释力。",
+            "ACT 使用动作分块，预测一段未来动作；Diffusion Policy 使用条件去噪过程生成动作序列，并采用滚动执行思路。理解二者时先比较输入历史长度、预测长度、实际执行长度和重新规划频率。这些长度影响延迟与反馈响应，不能仅按论文中的网络名称选择控制周期。算法细节和训练依赖仍需固定对应实现版本。"
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "归一化、数据划分与坐标合同",
+          "paragraphs": [
+            "训练集计算出的均值和尺度是模型的一部分，应随权重一起保存。推理阶段使用同一组统计量，输出反归一化后才具有物理单位。绝对关节角、关节角增量和末端位姿增量不是同一种动作表示；同维度数组也可能表达完全不同的控制意图。部署前写出每个维度的名称和含义。",
+            "训练与验证应按回合、场景或采集批次划分，避免相邻帧分别进入两边造成成绩虚高。视觉任务还应检查同一背景、同一物体实例是否跨越划分边界。测试集用于最后的固定评估，不应在每次观察失败后继续调参并仍称其为未见数据。教材的小实验不训练网络，而是验证预测结果进入控制系统时的合同。"
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "完整实验：预测动作的时间与数值门控",
+          "paragraphs": [
+            "下面文件约定六个关节位置目标，单位为弧度，并检查维度、有限数值、数据年龄和每步最大变化。脚本演示接受新鲜输出、拒绝过期输出和拒绝 NaN。它的作用是把接口假设变成可运行的规则；正负一的关节范围仅用于数学示例，实际机器人必须从自身模型和控制需求确定。",
+            "返回 None 表示这次预测不能使用。调用方应进入已经设计并验证的保持、停止或其他恢复模式；对于不同控制器，这些行为并不相同。把关节位置命令全部写成零可能造成大幅运动，因此不能将零数组作为通用停止方案。限幅本身也不是碰撞检查，仍需要规划场景与控制层约束。"
+          ],
+          "codeBlocks": [
+            {
+              "label": "policy_gate.py",
+              "language": "python",
+              "type": "complete",
+              "code": "\"\"\"Demonstrate timestamp/dimension/finite/rate checks for a six-joint policy.\"\"\"\nimport math\n\ndef gate(candidate, previous, age_seconds, dt, limit=0.5):\n    # These are position targets in radians, not torques or velocities.\n    if len(candidate) != 6 or len(previous) != 6:\n        raise ValueError(\"expected six joints in the agreed order\")\n    if not all(math.isfinite(x) for x in (*candidate, *previous, age_seconds, dt, limit)):\n        raise ValueError(\"non-finite input\")\n    if dt <= 0 or limit <= 0:\n        raise ValueError(\"invalid control interval or rate limit\")\n    if age_seconds < 0 or age_seconds > 0.1:\n        return None  # Caller must select its independently verified stop/hold mode.\n    output = []\n    for target, last in zip(candidate, previous):\n        bounded = max(-1.0, min(1.0, target))\n        output.append(last + max(-limit * dt, min(limit * dt, bounded - last)))\n    return output\n\ndef main():\n    print(\"ACCEPTED\", gate([0.5] * 6, [0.0] * 6, 0.02, 0.02))\n    print(\"STALE\", gate([0.5] * 6, [0.0] * 6, 0.3, 0.02))\n    try:\n        gate([float(\"nan\")] * 6, [0.0] * 6, 0.02, 0.02)\n    except ValueError as error:\n        print(\"REJECTED\", error)\n\nif __name__ == \"__main__\":\n    main()\n",
+              "explanation": "完整标准库实验。以六关节位置目标演示合同检查；不是机器人控制器，也不是安全认证组件。"
+            }
+          ]
+        },
+        {
+          "title": "动作块如何接入在线执行",
+          "paragraphs": [
+            "假设模型预测二十步未来动作，只执行前四步后重新观测，可以减少一次预测误差累积过长的问题。推理线程与控制线程之间用明确的序列号和时间戳交换动作块。新块到达时，应说明替换剩余动作还是平滑衔接；旧块用完而新块未到时，应进入定义好的超时行为。",
+            "对 ROS 2，可将已验证的关节轨迹交给合适的轨迹控制器，或者由专用适配节点按约定频率产生目标。控制器所需的关节名、轨迹时间和当前状态必须一致。推理节点的平均耗时还不够，要统计尾部延迟与连续超时；多摄像头预处理、GPU同步和日志写入都可能影响这条链路。"
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "从离线误差走向任务验收",
+          "paragraphs": [
+            "离线损失用于发现拟合问题，任务验收还需检查成功率、恢复能力、动作平滑度和耗时。先用录包回放验证输入处理和模型输出，再在仿真中验证闭环，最后逐步接入硬件。每一步保存模型摘要、归一化统计、控制频率和测试场景，才能解释不同结果来自模型还是部署配置。",
+            "当同一场景存在多种合理动作时，简单平均可能生成无效的中间动作。这解释了学习动作分布的动机，但生成式模型同样可能产生无效输出。不要省略接口校验和反馈执行。针对失败回合，先检查示范覆盖、时间对齐和动作定义，再决定是否更换模型结构。"
+          ],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "验证六关节策略输出合同",
+        "scenario": "在不加载模型和不连接机械臂的情况下，检查三种预测结果的处理。",
+        "steps": [
+          "运行脚本，确认 ACCEPTED 六个值均为 0.01。",
+          "确认过期输入得到 STALE None，非有限值被拒绝。",
+          "将控制周期改为 0.01，预测每步最大变化后再运行。",
+          "为真实机械臂写出六个关节名、实际限位和停用策略，但先不接硬件。"
+        ],
+        "result": "理解策略输出与控制器输入之间还需要时间、数值和语义适配。"
+      },
+      "exercises": [
+        {
+          "question": "为什么离线损失很低但机器人仍可能失败？",
+          "answer": "部署状态可能偏离示范分布，传感器时间或动作含义也可能不一致。还可能存在推理延迟、未覆盖场景和控制执行误差。"
+        },
+        {
+          "question": "预测二十步是否必须全部执行？",
+          "answer": "不必。预测窗口与执行窗口可以不同，滚动观测和重新预测允许只执行前一部分；实际长度应通过闭环评估选择。"
+        },
+        {
+          "question": "为什么训练数据不能简单按相邻帧随机分割？",
+          "answer": "连续帧高度相似，可能把同一示范的信息泄漏到验证集。按回合或场景分割更能评价未见条件下的表现。"
+        }
+      ],
+      "steps": [
+        {
+          "title": "运行本章完整离线实验",
+          "body": "在随教材提供的 examples 目录执行。程序不连接机器人，也不调用云端服务。",
+          "language": "bash",
+          "code": "python3 offline_labs/policy_gate.py"
+        }
+      ],
+      "commands": [],
+      "expected": [
+        "新鲜预测被限速为每关节 0.01 弧度的变化。",
+        "过期或非有限输入不会被当作可用命令。"
+      ],
+      "pitfalls": [
+        "把算法演示的成功当成真实机器人已通过验收。",
+        "训练与部署的单位、时间、关节顺序或归一化不一致。"
+      ],
+      "exercise": "写出本章模块的输入、输出、时间约束，以及失败时系统如何恢复。",
+      "exerciseAnswer": "输入应包含明确类型、单位、参考系、时间戳与版本；输出应有范围和有效期。超时、无效数值与未知任务必须形成可观察的失败状态，交给已经验证的控制或任务层处理；不能继续沿用过期输出。用一次正常输入和一次故障注入证明这条链路。",
+      "sourceIds": [
+        "frontier-act",
+        "frontier-diffusion"
+      ],
+      "validation": "本章附带的 Python 标准库实验在本机执行；未训练大型模型、未连接外部模型服务、未部署到真实机器人。"
+    },
+    {
+      "id": "cloud-mlops",
+      "title": "云端与边缘：机器人数据集、模型版本与交付闭环",
+      "summary": "把录包、标注、训练、评估和部署组织成可追溯的数据流程。边缘设备负责有时限的执行，云端或工作站承担可异步完成的任务。",
+      "goals": [
+        "设计原始数据到模型发布的版本链",
+        "用离线清单验证数据是否变化",
+        "建立边缘模型切换、断网与回滚的验收流程"
+      ],
+      "prerequisites": [
+        "已理解 ROS 2 话题、Action、时间戳与日志",
+        "Python 3；本章离线实验仅依赖标准库"
+      ],
+      "version": "Jazzy 接口主线；学习算法独立版本",
+      "concepts": [
+        "把录包、标注、训练、评估和部署组织成可追溯的数据流程。边缘设备负责有时限的执行，云端或工作站承担可异步完成的任务。"
+      ],
+      "sections": [
+        {
+          "title": "按时限划分边缘和远端职责",
+          "paragraphs": [
+            "机器人上的控制循环需要在确定时间内得到结果，数据清洗和模型训练通常可以延后完成。先给每项工作标注延迟预算、带宽需求、离线要求和失败影响，再决定放在哪台机器。云端是可选部署位置，本章实验完全在本地进行；同样的方法也适用于实验室服务器和移动硬盘。",
+            "把原始传感器数据持续传到远端不一定必要。可以先在边缘记录完整回合与关键指标，再按任务选择上传数据。网络中断时，正在执行的机器人任务应依照本地策略处理；远端服务不可用不应让控制线程无限等待。模型更新是独立管理流程，不应在每次推理时下载权重。"
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "从 rosbag 记录到训练样本的五层关系",
+          "paragraphs": [
+            "第一层保存原始录包与设备信息，第二层保存时间同步和标定参数，第三层保存清洗及标注结果，第四层保存训练划分与转换程序，第五层保存权重、评估和部署配置。每一层指向输入版本。只保留最终权重，无法回答模型为什么在某台机器人上表现不同。",
+            "对相机数据，标定分辨率、裁剪和图像编码会影响输入；对关节数据，名称、单位和控制模式会影响动作含义。将这些合同写进数据集元信息，并在转换程序入口验证。新的标定不能悄悄覆盖旧数据的解释，应形成新的转换版本。rosbag 是原始记录容器，不等同于已经清洗好的训练集。"
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "完整实验：给数据目录生成确定性清单",
+          "paragraphs": [
+            "下面程序逐个读取文件，计算 SHA-256 摘要，记录相对路径和字节数。相同内容产生相同清单，修改一行后对应摘要变化。它用分块读取避免一次把大文件装进内存；不修改数据目录。实验输出应放到输入目录之外，否则下一次会把上一次生成的清单也纳入输入。",
+            "摘要说明字节内容是否一致，不证明数据正确、标签可靠或来源可信。采集设备、场景、许可和标注规范还需要元信息。符号链接在本实验中被拒绝，因为它可能把目录外数据引入版本范围；真实项目应明确选择跟随、固化还是禁止链接，而不是无意中改变数据边界。"
+          ],
+          "codeBlocks": [
+            {
+              "label": "dataset_manifest.py",
+              "language": "python",
+              "type": "complete",
+              "code": "\"\"\"Create a deterministic manifest on stdout. Input data is never modified.\"\"\"\nimport hashlib\nimport json\nimport sys\nfrom pathlib import Path\n\ndef manifest(root):\n    root = Path(root).resolve(strict=True)\n    if not root.is_dir():\n        raise ValueError(\"dataset root must be a directory\")\n    files = []\n    for path in sorted(root.rglob(\"*\")):\n        if path.is_symlink():\n            raise ValueError(\"symbolic links require an explicit data policy\")\n        if not path.is_file():\n            continue\n        digest = hashlib.sha256()\n        with path.open(\"rb\") as stream:\n            for block in iter(lambda: stream.read(1024 * 1024), b\"\"):\n                digest.update(block)\n        files.append({\"path\": path.relative_to(root).as_posix(),\n                      \"bytes\": path.stat().st_size, \"sha256\": digest.hexdigest()})\n    return {\"schema\": 1, \"files\": files}\n\nif __name__ == \"__main__\":\n    if len(sys.argv) != 2:\n        raise SystemExit(\"usage: python3 dataset_manifest.py DATA_DIRECTORY\")\n    print(json.dumps(manifest(sys.argv[1]), ensure_ascii=False, indent=2))\n",
+              "explanation": "完整只读目录清单工具。输出写到标准输出，由调用者决定保存位置。"
+            }
+          ]
+        },
+        {
+          "title": "把数据处理步骤组织成可重跑的流水线",
+          "paragraphs": [
+            "可以先用普通脚本组织 extract、validate、split、train 和 evaluate，每一步声明输入文件、参数和输出。DVC 等工具可进一步跟踪数据依赖与流水线，帮助判断输入变化后哪些步骤需要重跑。工具不能替代语义合同：即使缓存命中，也仍需知道训练划分是否正确、评估是否使用了相同配置。",
+            "固定随机种子有助于比较实验，但并不保证所有硬件与并行算子产生逐位相同结果。发布记录应同时保存环境、代码提交、数据清单、参数和指标容许范围。先复现一份小样本流水线，再扩展到大数据，通常更容易区分依赖问题和算法问题。"
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "模型发布与 ROS 2 部署配置要一起验收",
+          "paragraphs": [
+            "一个模型发布单元至少包括权重、输入输出定义、归一化统计、依赖版本、评估摘要和启动参数。边缘节点加载时先检查合同，再执行本地预热或固定样本推理，确认维度和数值范围，最后进入可用状态。生命周期节点可以表达配置、激活和停用过程，但切换策略仍需要应用自己定义。",
+            "保留一个经过验证的旧版本，更新失败时回到已知状态。切换时应明确处理进行中的任务、旧模型的输出队列和新模型的时间基准。仅替换磁盘上的文件并不能让已加载的进程自动采用新权重；反过来，强行重启进程也不等于完成了任务级交接。"
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "用证据闭合采集、训练与部署循环",
+          "paragraphs": [
+            "部署日志应能关联模型版本与具体回合，记录成功、失败、输入异常和延迟。回收失败样本时保留场景上下文，避免只挑选容易成功的数据继续训练。用固定评估集比较新旧版本，并另建新场景集观察泛化；这样才能解释改进是来自模型还是测试条件变化。",
+            "最后做三个可观察实验：断网时本地读取仍正常，数据文件变化时清单能发现，模型合同不匹配时启动被拒绝。它们分别覆盖网络、数据和接口边界。把实验结果与发布记录一起保存，使另一位开发者能够从记录重建同样的输入并验证结论。"
+          ],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "可复查的数据清单",
+        "scenario": "为一个小型模拟数据目录生成清单，证明修改数据会改变摘要。",
+        "steps": [
+          "在临时目录创建 raw 子目录和一份 CSV，使用本章命令生成清单到 raw 之外。",
+          "不修改输入再次生成并比较，结果应完全相同。",
+          "向 CSV 增加一行，再生成清单，观察 bytes 和 sha256 改变。",
+          "把清单、转换参数和模型版本关联到一份发布记录。"
+        ],
+        "result": "得到可复现的数据身份记录，并理解哈希校验与数据质量评价的区别。"
+      },
+      "exercises": [
+        {
+          "question": "为何权重文件不能单独构成可交付模型？",
+          "answer": "还需要输入输出合同、归一化统计、依赖与部署配置，以及可复查的评估。否则无法确定同一权重是否接收了相同含义的数据。"
+        },
+        {
+          "question": "哈希相同是否表示标签一定正确？",
+          "answer": "不表示。哈希比较字节一致性，标签质量、采集条件和任务适用性需要另外检查。"
+        },
+        {
+          "question": "边缘设备断网后应该如何处理远端任务？",
+          "answer": "按照预先定义的超时与恢复流程处理远端请求，并保留本地有时限的控制能力。重连后再同步有版本的数据，避免阻塞控制回调。"
+        }
+      ],
+      "steps": [
+        {
+          "title": "运行本章完整离线实验",
+          "body": "在随教材提供的 examples 目录执行。程序不连接机器人，也不调用云端服务。",
+          "language": "bash",
+          "code": "workdir=$(mktemp -d)\nmkdir \"$workdir/raw\"\nprintf \"t,q\\n0,0.1\\n\" > \"$workdir/raw/sample.csv\"\npython3 offline_labs/dataset_manifest.py \"$workdir/raw\" > \"$workdir/manifest.json\"\ncat \"$workdir/manifest.json\""
+        }
+      ],
+      "commands": [],
+      "expected": [
+        "清单包含 sample.csv 的相对路径、长度和 SHA-256。",
+        "相同输入可生成相同清单；输入目录内容不会被修改。"
+      ],
+      "pitfalls": [
+        "把算法演示的成功当成真实机器人已通过验收。",
+        "训练与部署的单位、时间、关节顺序或归一化不一致。"
+      ],
+      "exercise": "写出本章模块的输入、输出、时间约束，以及失败时系统如何恢复。",
+      "exerciseAnswer": "输入应包含明确类型、单位、参考系、时间戳与版本；输出应有范围和有效期。超时、无效数值与未知任务必须形成可观察的失败状态，交给已经验证的控制或任务层处理；不能继续沿用过期输出。用一次正常输入和一次故障注入证明这条链路。",
+      "sourceIds": [
+        "frontier-dvc"
+      ],
+      "validation": "本章附带的 Python 标准库实验在本机执行；未训练大型模型、未连接外部模型服务、未部署到真实机器人。"
+    }
+  ],
+  "resources": [
+    {
+      "id": "frontier-gym",
+      "title": "Gymnasium 环境 API",
+      "url": "https://gymnasium.farama.org/api/env/",
+      "category": "前沿学习与数据",
+      "version": "Gymnasium，独立于 ROS 发行版",
+      "description": "reset/step、终止与截断接口的维护者定义。",
+      "verification": "2026-11-06 维护者或作者页面核对；教材实验为原创"
+    },
+    {
+      "id": "frontier-isaaclab",
+      "title": "Isaac Lab 官方文档",
+      "url": "https://isaac-sim.github.io/IsaacLab/main/index.html",
+      "category": "前沿学习与数据",
+      "version": "main；实施时固定版本",
+      "description": "机器人学习、仿真环境及策略部署工作流。",
+      "verification": "2026-11-06 维护者或作者页面核对；教材实验为原创"
+    },
+    {
+      "id": "frontier-rai",
+      "title": "RAI 维护者仓库",
+      "url": "https://github.com/RobotecAI/rai",
+      "category": "前沿学习与数据",
+      "version": "项目独立版本",
+      "description": "面向 ROS 2 的具身模型工具与任务框架。",
+      "verification": "2026-11-06 维护者或作者页面核对；教材实验为原创"
+    },
+    {
+      "id": "frontier-cap",
+      "title": "Code as Policies 作者项目页",
+      "url": "https://code-as-policies.github.io/",
+      "category": "前沿学习与数据",
+      "version": "研究方法，非 Jazzy 安装教程",
+      "description": "研究语言模型程序如何组织机器人控制接口调用。",
+      "verification": "2026-11-06 维护者或作者页面核对；教材实验为原创"
+    },
+    {
+      "id": "frontier-act",
+      "title": "ACT 作者实现",
+      "url": "https://github.com/tonyzhaozh/act",
+      "category": "前沿学习与数据",
+      "version": "研究实现，独立依赖",
+      "description": "动作分块模仿学习及作者实验实现。",
+      "verification": "2026-11-06 维护者或作者页面核对；教材实验为原创"
+    },
+    {
+      "id": "frontier-diffusion",
+      "title": "Diffusion Policy 作者项目页",
+      "url": "https://diffusion-policy.cs.columbia.edu/",
+      "category": "前沿学习与数据",
+      "version": "研究实现，独立依赖",
+      "description": "动作序列的条件去噪生成与滚动执行方法。",
+      "verification": "2026-11-06 维护者或作者页面核对；教材实验为原创"
+    },
+    {
+      "id": "frontier-dvc",
+      "title": "DVC 数据流水线文档",
+      "url": "https://doc.dvc.org/user-guide/pipelines",
+      "category": "前沿学习与数据",
+      "version": "独立工具版本",
+      "description": "数据依赖、流水线与实验复现的维护者文档。",
+      "verification": "2026-11-06 维护者或作者页面核对；教材实验为原创"
+    }
+  ]
+}

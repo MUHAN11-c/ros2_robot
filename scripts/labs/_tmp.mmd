@@ -1,7 +1,0 @@
-
-%%{init: {"theme":"base","themeVariables":{"primaryColor":"#FFFFFF","primaryBorderColor":"#8166B1","primaryTextColor":"#292530","lineColor":"#B39ADE","fontSize":"14px"}}}%%
-flowchart LR
-    P["世界系点 pw<br/>（米）"] -->|"外参 R,t<br/>第2-3讲"| C["相机系点 pc<br/>（米）"]
-    C -->|"除以 Z<br/>透视投影"| N["归一化平面 x,y<br/>（米，无量纲化）"]
-    N -->|"径向畸变 k1,k2<br/>真实镜头"| D["畸变坐标 x',y'"]
-    D -->|"内参 K<br/>fx fy cx cy"| U["像素 u,v<br/>（照片上的点）"]

@@ -1,0 +1,29 @@
+
+<!--
+  This Behavior Tree replans the global path only if the goal changes, the plan becomes invalid, or (at most n times)
+  the controller fails to follow the global path.
+-->
+<root main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <RecoveryNode number_of_retries="10" name="NavigateRecovery">
+      <PipelineSequence name="NavigateWithReplanning">
+        <RateController hz="2.0">
+          <RecoveryNode number_of_retries="1" name="ComputePathToPose">
+            <Fallback>
+              <ReactiveSequence>
+                <Inverter>
+                  <GlobalUpdatedGoal/>
+                </Inverter>
+                <IsPathValid path="{path}"/>
+              </ReactiveSequence>
+              <ComputePathToPose goal="{goal}" path="{path}" planner_id="GridBased"/>
+            </Fallback>
+            <ClearEntireCostmap name="ClearGlobalCostmap-Context" service_name="global_costmap/clear_entirely_global_costmap"/>
+          </RecoveryNode>
+        </RateController>
+        <FollowPath path="{path}" controller_id="FollowPath" goal_checker_id="asb_goal_checker"  progress_checker_id="simple_progress_checker" />
+      </PipelineSequence>
+      <ComputePathToPose goal="{goal}" path="{path}" planner_id="GridBased"/>
+    </RecoveryNode>
+  </BehaviorTree>
+</root>

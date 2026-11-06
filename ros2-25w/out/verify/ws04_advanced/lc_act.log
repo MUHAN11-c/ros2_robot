@@ -1,2 +1,0 @@
---- run: ros2 lifecycle set /my_lifecycle_node_cpp activate (timeout 6s)
-Transitioning successful

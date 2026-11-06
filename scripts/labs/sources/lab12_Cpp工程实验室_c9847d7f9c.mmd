@@ -1,8 +1,0 @@
-
-%%{init: {"theme":"base","themeVariables":{"primaryColor":"#FFFFFF","primaryBorderColor":"#8166B1","primaryTextColor":"#292530","lineColor":"#8166B1","fontSize":"14px"}}}%%
-flowchart LR
-    A(["Pose2D struct<br/>x / y / theta"]) -- "compose 复合" --> B["位姿链<br/>forward + 原地旋转"]
-    C["vector&lt;Waypoint&gt;<br/>轨迹点容器"] -- "sort + lambda" --> D["按 cost 排序"]
-    B --> E{"assert 断言<br/>长度不变 / 结合律 / 轨迹总长"}
-    D --> E
-    E -- "全部通过" --> F(["输出实测结果 ✓"])

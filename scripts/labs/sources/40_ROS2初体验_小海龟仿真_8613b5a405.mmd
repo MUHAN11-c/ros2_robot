@@ -1,6 +1,0 @@
-
-%%{init: {"theme":"base","themeVariables":{"primaryColor":"#FFFFFF","primaryBorderColor":"#8166B1","primaryTextColor":"#292530","lineColor":"#8166B1","fontSize":"14px"}}}%%
-flowchart LR
-    PUB["发布者 Publisher<br/>turtle_teleop_key<br/>（键盘遥控节点）"] -- "话题 /turtle1/cmd_vel<br/>消息 Twist：线速度 + 角速度" --> SUB["订阅者 Subscriber<br/>turtlesim_node<br/>（小海龟仿真器）"]
-    DDS["ROS2 / DDS 负责递送与发现<br/>谁在发、谁在收都不重要"] -.- PUB
-    DDS -.- SUB

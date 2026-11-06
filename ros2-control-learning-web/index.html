@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="面向零基础的 ros2_control 中文学习工作台。通过双语交互架构图、控制循环动画和官方 Jazzy DiffBot 示例理解机器人控制。">
+  <meta name="theme-color" content="#172b40">
+  <title>ros2_control 学习工坊 · Jazzy</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css?v=20261106-1">
+  <script src="logic.js?v=20261106-1" defer></script>
+  <script src="content.js?v=20261106-1" defer></script>
+  <script src="diagram.js?v=20261106-1" defer></script>
+  <script src="app.js?v=20261106-1" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到学习内容</a>
+  <aside id="sidebar" class="sidebar" aria-label="课程导航">
+    <a class="brand" href="#architecture" aria-label="ros2_control 学习工坊首页">
+      <span class="brand-symbol" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <span><strong>ros2_control</strong><small>学习工坊 <span class="brand-en">/ learning lab</span></small></span>
+    </a>
+    <div class="course-label">机器人控制，从这里开始</div>
+    <button class="search-trigger" data-action="search"><span class="icon" data-icon="search"></span><span>搜索知识与术语</span><kbd>/</kbd></button>
+    <div class="nav-caption">入门学习路径 <span>LEARNING PATH</span></div>
+    <nav id="course-nav" aria-label="学习单元"></nav>
+    <div class="sidebar-footer">
+      <div class="progress-heading"><span>你的学习进度</span><strong id="progress-fraction">0 / 7</strong></div>
+      <div class="progress-track" role="progressbar" aria-label="课程完成进度" aria-valuemin="0" aria-valuemax="7" aria-valuenow="0"><span id="progress-fill"></span></div>
+      <p id="progress-note">每懂一点，就向前一步。</p>
+      <button class="sidebar-resource" data-action="sources"><span class="icon" data-icon="book"></span>官方文档与源码<span class="icon" data-icon="arrow-up-right"></span></button>
+      <div class="sidebar-bottom"><span class="version-dot"></span>ROS 2 Jazzy <button data-action="reset" aria-label="重置学习进度">重置进度</button></div>
+    </div>
+  </aside>
+  <div id="nav-backdrop" class="nav-backdrop" hidden></div>
+  <div class="page-shell">
+    <header class="topbar">
+      <div class="breadcrumb"><button class="icon-button mobile-menu" data-action="menu" aria-label="展开课程导航" aria-controls="sidebar" aria-expanded="false"><span class="icon" data-icon="menu"></span></button><span>学习路径</span><span class="breadcrumb-slash">/</span><strong id="breadcrumb-current">读懂系统架构</strong></div>
+      <div class="topbar-right"><span class="edition">JAZZY EDITION</span><a href="https://control.ros.org/jazzy/" target="_blank" rel="noopener noreferrer">官方文档<span class="icon" data-icon="external"></span></a><span class="local-label"><i></i>本地学习</span></div>
+    </header>
+    <main id="main" tabindex="-1"></main>
+    <footer class="site-footer"><span>用可视化，连接概念与实践。</span><span>独立中文学习资料 · 依据官方 Jazzy 文档 · <button data-action="sources">来源与说明</button></span></footer>
+  </div>
+  <dialog id="search-dialog" class="search-dialog" aria-labelledby="search-title">
+    <div class="dialog-top"><h2 id="search-title">找到一个概念</h2><button class="icon-button" data-close="search-dialog" aria-label="关闭搜索"><span class="icon" data-icon="close"></span></button></div>
+    <label class="search-field"><span class="icon" data-icon="search"></span><input id="search-input" type="search" placeholder="搜索接口、控制器、TwistStamped…" autocomplete="off"></label>
+    <div id="search-results" class="search-results" aria-live="polite"></div>
+    <div class="dialog-foot"><span>支持中文和英文术语</span><span><kbd>Esc</kbd> 关闭</span></div>
+  </dialog>
+  <dialog id="sources-dialog" class="sources-dialog" aria-labelledby="sources-title"></dialog>
+  <dialog id="reset-dialog" class="reset-dialog" aria-labelledby="reset-title">
+    <h2 id="reset-title">重新开始这一轮学习？</h2><p>将清除本浏览器中 7 个单元的完成标记。课程内容和文件不会被修改。</p><div class="dialog-actions"><button class="button secondary" data-close="reset-dialog">保留进度</button><button class="button primary" data-action="confirm-reset">重置进度</button></div>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <noscript><div class="noscript">请启用 JavaScript 以使用交互课程。参考资料：<a href="https://control.ros.org/jazzy/">官方 Jazzy 文档</a>。</div></noscript>
+</body>
+</html>

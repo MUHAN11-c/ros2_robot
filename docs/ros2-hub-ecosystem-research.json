@@ -1,0 +1,2321 @@
+{
+  "title": "ROS 2 综合学习网站：生态研究与章节材料",
+  "checkedAt": "2026-11-06",
+  "baseline": "Ubuntu 24.04 / ROS 2 Jazzy / Gazebo Harmonic",
+  "scope": "覆盖主要生态的已核查资源清单，不宣称穷尽互联网所有教程。所有章节为原创归纳，保留一手来源用于继续阅读。",
+  "validation": "已联网核对所列官方/维护者入口与本地 Git/源码。未安装依赖、编译 ROS 工程、运行节点或连接硬件；步骤中的命令是读者练习说明。",
+  "resources": [
+    {
+      "id": "eco-nav2",
+      "title": "Nav2 官方文档（Jazzy）",
+      "url": "https://docs.nav2.org/jazzy/",
+      "category": "导航",
+      "version": "Jazzy",
+      "description": "导航服务器、插件、调参与机器人接入的总入口。",
+      "level": "进阶",
+      "versionNote": "根域名目前进入 Rolling；学习时保留 /jazzy/ 前缀。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-nav2-quick",
+      "title": "Nav2 仿真快速开始",
+      "url": "https://docs.nav2.org/jazzy/getting_started/quickstart/quickstart/",
+      "category": "导航",
+      "version": "Jazzy",
+      "description": "在 Gazebo 中运行最小导航系统，设置初始位姿并发送目标。",
+      "level": "中级",
+      "versionNote": "选择页面 Jazzy and newer 标签；旧 Gazebo Classic 安装项不适用于此主线。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-nav2-setup",
+      "title": "Nav2 首次机器人接入指南",
+      "url": "https://docs.nav2.org/jazzy/configuration_and_development/first_time_robot_setup_guide/",
+      "category": "导航",
+      "version": "Jazzy",
+      "description": "按 TF、模型、里程计、传感器与 footprint 准备自己的机器人。",
+      "level": "中级",
+      "versionNote": "话题类型、TF 发布者与时钟必须与实际驱动一致。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-nav2-config",
+      "title": "Nav2 参数与插件配置",
+      "url": "https://docs.nav2.org/jazzy/configuration_and_development/configuration_guide/",
+      "category": "导航",
+      "version": "Jazzy",
+      "description": "查阅 planner、controller、costmap、行为树等组件的配置入口。",
+      "level": "进阶",
+      "versionNote": "文档会持续更新，具体可用参数还要与安装包版本对照。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-nav2-commander",
+      "title": "Nav2 Simple Commander Python API",
+      "url": "https://docs.nav2.org/jazzy/configuration_and_development/simple_commander_api/simple_commander_api/",
+      "category": "导航",
+      "version": "Jazzy",
+      "description": "通过 Python 组织导航目标、反馈、取消和结果处理。",
+      "level": "中级",
+      "versionNote": "BasicNavigator 是任务编排封装，不替代底层导航服务器。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-nav2-fusion",
+      "title": "Nav2：融合里程计",
+      "url": "https://docs.nav2.org/jazzy/configuration_and_development/first_time_robot_setup_guide/odom/setup_robot_localization/",
+      "category": "定位",
+      "version": "Jazzy",
+      "description": "将轮式里程计与 IMU 接入 robot_localization。",
+      "level": "中级",
+      "versionNote": "融合参数需按传感器数据、坐标系和协方差设计。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-nav2-map",
+      "title": "Nav2：建图与定位",
+      "url": "https://docs.nav2.org/jazzy/configuration_and_development/first_time_robot_setup_guide/sensors/mapping_localization/",
+      "category": "定位",
+      "version": "Jazzy",
+      "description": "理解 SLAM、地图服务与已知地图定位的职责。",
+      "level": "中级",
+      "versionNote": "map→odom 通常由 SLAM 或定位节点提供，避免多节点重复发布。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-control",
+      "title": "ros2_control 官方文档",
+      "url": "https://control.ros.org/jazzy/index.html",
+      "category": "控制",
+      "version": "Jazzy",
+      "description": "控制管理器、硬件抽象、控制器与生态项目索引。",
+      "level": "中级",
+      "versionNote": "Jazzy 仍受支持；它并非 2026 年最新发行版。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-control-demo",
+      "title": "DiffBot 差速底盘官方示例",
+      "url": "https://control.ros.org/jazzy/doc/ros2_control_demos/example_2/doc/userdoc.html",
+      "category": "控制",
+      "version": "Jazzy",
+      "description": "把 URDF、硬件插件、控制器 YAML 与启动文件连成可观察链路。",
+      "level": "中级",
+      "versionNote": "本地 example_2 已有 Python/XML launch 对照；示例运动不是实机验证。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-diff-drive",
+      "title": "diff_drive_controller 参数与接口",
+      "url": "https://control.ros.org/jazzy/doc/ros2_controllers/diff_drive_controller/doc/userdoc.html",
+      "category": "控制",
+      "version": "Jazzy",
+      "description": "差速运动学、轮速接口、里程计、限速与命令超时配置。",
+      "level": "中级",
+      "versionNote": "当前 Jazzy 文档的输入为 geometry_msgs/msg/TwistStamped。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-jtc",
+      "title": "joint_trajectory_controller",
+      "url": "https://control.ros.org/jazzy/doc/ros2_controllers/joint_trajectory_controller/doc/userdoc.html",
+      "category": "控制",
+      "version": "Jazzy",
+      "description": "关节轨迹插值、命令接口与 FollowJointTrajectory action。",
+      "level": "进阶",
+      "versionNote": "接口组合需与硬件插件导出的 command/state interfaces 一致。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-hardware",
+      "title": "编写 ros2_control 硬件组件",
+      "url": "https://control.ros.org/jazzy/doc/ros2_control/hardware_interface/doc/writing_new_hardware_component.html",
+      "category": "硬件",
+      "version": "Jazzy",
+      "description": "学习插件导出、生命周期以及 read/write 与硬件通信的边界。",
+      "level": "进阶",
+      "versionNote": "使用 Jazzy 头文件核查回调签名，不直接复制 Humble 或 Rolling API。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-manager",
+      "title": "Controller Manager",
+      "url": "https://control.ros.org/jazzy/doc/ros2_control/controller_manager/doc/userdoc.html",
+      "category": "控制",
+      "version": "Jazzy",
+      "description": "控制器生命周期、管理服务、周期与参数加载行为。",
+      "level": "进阶",
+      "versionNote": "控制器管理器名称可以自定义；CLI 需要指定相应命名空间。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-gz-control",
+      "title": "gz_ros2_control 源码",
+      "url": "https://github.com/ros-controls/gz_ros2_control/tree/jazzy",
+      "category": "仿真",
+      "version": "Jazzy",
+      "description": "让 Gazebo 仿真关节通过 ros2_control 控制器驱动。",
+      "level": "中级",
+      "versionNote": "现代 Gazebo 使用 gz_ros2_control；不要与 gazebo_ros2_control 混用。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-gazebo",
+      "title": "Gazebo Harmonic 文档",
+      "url": "https://gazebosim.org/docs/harmonic/",
+      "category": "仿真",
+      "version": "Harmonic",
+      "description": "世界、模型、传感器、物理与 ROS 集成教程。",
+      "level": "中级",
+      "versionNote": "Jazzy 主线搭配 Harmonic。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-gazebo-install",
+      "title": "Gazebo 与 ROS 版本配对",
+      "url": "https://gazebosim.org/docs/harmonic/ros_installation/",
+      "category": "仿真",
+      "version": "多版本",
+      "description": "核对 ROS、Ubuntu 与 Gazebo 的官方配对关系。",
+      "level": "入门",
+      "versionNote": "当前最新 LTS 组合已变化；本网站选定 Ubuntu24.04/Jazzy/Harmonic。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-ros-gz",
+      "title": "ros_gz Jazzy 源码",
+      "url": "https://github.com/gazebosim/ros_gz/tree/jazzy",
+      "category": "仿真",
+      "version": "Jazzy",
+      "description": "Gazebo 启动、实体创建、消息桥接与演示包。",
+      "level": "中级",
+      "versionNote": "桥接方向与消息映射需要显式配置。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-tf2",
+      "title": "geometry2／tf2 Jazzy 源码",
+      "url": "https://github.com/ros2/geometry2/tree/jazzy",
+      "category": "坐标与模型",
+      "version": "Jazzy",
+      "description": "坐标变换缓存、C++/Python 接口与 tf2 工具实现。",
+      "level": "中级",
+      "versionNote": "每条动态边需要正确时间戳；静态变换与动态变换的用途不同。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-urdf",
+      "title": "URDF 官方教程源码",
+      "url": "https://github.com/ros/urdf_tutorial/tree/ros2",
+      "category": "坐标与模型",
+      "version": "ROS 2",
+      "description": "从最小模型到可视化、关节、物理属性与 Xacro 的教学示例。",
+      "level": "入门",
+      "versionNote": "ros2 是共享分支名，不等于发行版名；配合 Jazzy 二进制包阅读。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-rsp",
+      "title": "robot_state_publisher 源码",
+      "url": "https://github.com/ros/robot_state_publisher/tree/jazzy",
+      "category": "坐标与模型",
+      "version": "Jazzy",
+      "description": "根据模型和 joint_states 发布机器人链接坐标关系。",
+      "level": "中级",
+      "versionNote": "它不提供轮式里程计，也不计算 map→odom。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-rviz",
+      "title": "RViz2 源码与说明",
+      "url": "https://github.com/ros2/rviz/tree/jazzy",
+      "category": "工具",
+      "version": "Jazzy",
+      "description": "三维显示、Display 插件与交互工具的官方实现。",
+      "level": "入门",
+      "versionNote": "RViz 是可视化工具，不负责物理仿真。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-xacro",
+      "title": "Xacro 项目",
+      "url": "https://github.com/ros/xacro",
+      "category": "坐标与模型",
+      "version": "多版本",
+      "description": "通过属性、宏和参数复用机器人 XML 模型。",
+      "level": "入门",
+      "versionNote": "默认分支随项目维护变化；使用 Jazzy 包版本验证语法。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-slam",
+      "title": "slam_toolbox Jazzy 源码与指南",
+      "url": "https://github.com/SteveMacenski/slam_toolbox/tree/jazzy",
+      "category": "定位",
+      "version": "Jazzy",
+      "description": "二维激光 SLAM、定位模式、地图与位姿图持久化。",
+      "level": "中级",
+      "versionNote": "二维栅格地图保存与可继续建图的位姿图序列化不是同一个操作。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-localization",
+      "title": "robot_localization 项目",
+      "url": "https://github.com/cra-ros-pkg/robot_localization",
+      "category": "定位",
+      "version": "多版本",
+      "description": "EKF/UKF 与 GNSS 融合的维护者入口。",
+      "level": "进阶",
+      "versionNote": "默认分支不是安装版本保证；先按 rosdistro 与发行版选择依赖。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-image-pipeline",
+      "title": "image_pipeline Jazzy 源码",
+      "url": "https://github.com/ros-perception/image_pipeline/tree/jazzy",
+      "category": "感知",
+      "version": "Jazzy",
+      "description": "相机标定、去畸变、立体视觉和深度图处理。",
+      "level": "中级",
+      "versionNote": "Jazzy 中部分 image_transport/QoS 参数发生过变更。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-cv-bridge",
+      "title": "vision_opencv／cv_bridge",
+      "url": "https://github.com/ros-perception/vision_opencv",
+      "category": "感知",
+      "version": "多版本",
+      "description": "ROS Image 与 OpenCV 图像转换及相机几何工具。",
+      "level": "中级",
+      "versionNote": "已核查项目无可用 /tree/jazzy 链接；不要假定所有项目都有 jazzy 分支。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-pcl",
+      "title": "perception_pcl 项目",
+      "url": "https://github.com/ros-perception/perception_pcl",
+      "category": "感知",
+      "version": "多版本",
+      "description": "PointCloud2、PCL 数据结构与点云处理的 ROS 集成。",
+      "level": "进阶",
+      "versionNote": "按目标发行版安装 pcl_ros/pcl_conversions，并核对 PointCloud2 字段。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-image-common",
+      "title": "image_common／image_transport",
+      "url": "https://github.com/ros-perception/image_common",
+      "category": "感知",
+      "version": "多版本",
+      "description": "图像传输插件、相机标定信息和 camera_info 管理。",
+      "level": "中级",
+      "versionNote": "ROS 发行版与仓库分支需对应；压缩传输不等于修改原始消息类型。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-image-examples",
+      "title": "image_transport 教程源码",
+      "url": "https://github.com/ros-perception/image_transport_tutorials",
+      "category": "感知",
+      "version": "多版本",
+      "description": "图像发布订阅、传输插件与相关演示。",
+      "level": "中级",
+      "versionNote": "检查依赖版本后再使用新加入的 Python 接口。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-micro",
+      "title": "micro-ROS 官方新站",
+      "url": "https://micro.vulcanexus.org/",
+      "category": "嵌入式",
+      "version": "多版本",
+      "description": "微控制器端 ROS 2、支持硬件、RTOS 与教程入口。",
+      "level": "进阶",
+      "versionNote": "旧 micro.ros.org 已迁移到此地址。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-micro-tutorial",
+      "title": "micro-ROS Linux 首个应用",
+      "url": "https://micro.vulcanexus.org/docs/tutorials/core/first_application_linux/",
+      "category": "嵌入式",
+      "version": "Humble 示例",
+      "description": "用 Linux 主机体验 micro-ROS client/Agent 的通信链路。",
+      "level": "中级",
+      "versionNote": "正文仍以 Humble/Ubuntu22.04 开始；Jazzy 工具应使用 jazzy 分支。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-micro-setup",
+      "title": "micro_ros_setup Jazzy",
+      "url": "https://github.com/micro-ROS/micro_ros_setup/tree/jazzy",
+      "category": "嵌入式",
+      "version": "Jazzy",
+      "description": "构建、配置、下载微控制器应用与 Agent 的工具。",
+      "level": "进阶",
+      "versionNote": "交叉编译器、板卡 SDK 和传输方式要与目标硬件匹配。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-micro-agent",
+      "title": "micro-ROS Agent Jazzy",
+      "url": "https://github.com/micro-ROS/micro-ROS-Agent/tree/jazzy",
+      "category": "嵌入式",
+      "version": "Jazzy",
+      "description": "在微控制器传输和 ROS 图之间建立会话。",
+      "level": "进阶",
+      "versionNote": "串口与 UDP 配置不能混用；自定义接口需两端一致。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-sros2",
+      "title": "SROS2 Jazzy",
+      "url": "https://github.com/ros2/sros2/tree/jazzy",
+      "category": "工程化",
+      "version": "Jazzy",
+      "description": "创建安全密钥库、身份与 enclave 配置的官方工具。",
+      "level": "进阶",
+      "versionNote": "安全能力取决于中间件与构建配置，ROS_DOMAIN_ID 不是安全边界。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-rosbag",
+      "title": "rosbag2 Jazzy 源码与使用说明",
+      "url": "https://github.com/ros2/rosbag2/tree/jazzy",
+      "category": "数据与诊断",
+      "version": "Jazzy",
+      "description": "录制、回放、过滤、存储插件与 QoS 覆盖。",
+      "level": "中级",
+      "versionNote": "回放时同时检查 /clock、use_sim_time 与录制的 TF。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-mcap",
+      "title": "MCAP 官方指南",
+      "url": "https://mcap.dev/guides",
+      "category": "数据与诊断",
+      "version": "格式与 SDK",
+      "description": "理解多话题时序数据容器、索引、Schema 与读写工具。",
+      "level": "中级",
+      "versionNote": "MCAP 是容器格式，不会自动修复错误时间戳或缺失话题。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-foxglove",
+      "title": "Foxglove Bridge 文档",
+      "url": "https://docs.foxglove.dev/docs/fleet/bridge",
+      "category": "数据与诊断",
+      "version": "滚动文档",
+      "description": "通过桥接器检查实时 ROS 数据或结合文件回放分析。",
+      "level": "中级",
+      "versionNote": "旧 connecting-to-data 地址已重定向；以安装版本可用参数为准。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-zenoh",
+      "title": "rmw_zenoh Jazzy",
+      "url": "https://github.com/ros2/rmw_zenoh/tree/jazzy",
+      "category": "通信",
+      "version": "Jazzy",
+      "description": "Zenoh RMW、路由器与跨主机连接配置。",
+      "level": "进阶",
+      "versionNote": "默认发现行为与 DDS 不同，需要按文档运行路由器或显式修改配置。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-fastdds",
+      "title": "Fast DDS 维护者文档",
+      "url": "https://fast-dds.docs.eprosima.com/en/latest/",
+      "category": "通信",
+      "version": "最新上游",
+      "description": "DDS 发现、QoS、XML 配置、传输与安全说明。",
+      "level": "进阶",
+      "versionNote": "latest 不是 Jazzy 系统库版本；应切换对应版本文档。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-cyclone",
+      "title": "Cyclone DDS 维护者文档",
+      "url": "https://cyclonedds.io/docs/cyclonedds/latest/",
+      "category": "通信",
+      "version": "最新上游",
+      "description": "DDS 配置、网络接口、示例、安全与 API。",
+      "level": "进阶",
+      "versionNote": "不要把最新上游配置字段直接当作 Jazzy 包支持的字段。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-rmf",
+      "title": "Open-RMF 主仓库",
+      "url": "https://github.com/open-rmf/rmf",
+      "category": "多机器人",
+      "version": "多版本",
+      "description": "机器人车队、设施接口、交通协商与任务管理的起点。",
+      "level": "进阶",
+      "versionNote": "不同 ROS/Gazebo 组合需要使用相应分支与依赖清单。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-rmf-demos",
+      "title": "Open-RMF 演示工程",
+      "url": "https://github.com/open-rmf/rmf_demos",
+      "category": "多机器人",
+      "version": "多版本",
+      "description": "办公楼、门、电梯、多个车队的协同仿真参考。",
+      "level": "进阶",
+      "versionNote": "先固定版本；Open-RMF 不替代每台机器人的局部导航。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-isaac-ros",
+      "title": "NVIDIA Isaac ROS",
+      "url": "https://nvidia-isaac-ros.github.io/",
+      "category": "感知与 AI",
+      "version": "供应商版本",
+      "description": "GPU 加速视觉、定位、DNN 推理与参考工作流。",
+      "level": "进阶",
+      "versionNote": "先核对 GPU、驱动、JetPack、容器和 ROS 版本兼容矩阵。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-isaac-compute",
+      "title": "Isaac ROS 计算平台配置",
+      "url": "https://nvidia-isaac-ros.github.io/getting_started/compute/index.html",
+      "category": "感知与 AI",
+      "version": "供应商版本",
+      "description": "验证 Jetson/x86 GPU 平台和开发环境要求。",
+      "level": "进阶",
+      "versionNote": "支持范围与版本持续变化，不能仅凭存在 CUDA 即认定兼容。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-isaac-sim",
+      "title": "Isaac Sim ROS 2 教程",
+      "url": "https://docs.isaacsim.omniverse.nvidia.com/latest/ros2_tutorials/index.html",
+      "category": "仿真",
+      "version": "供应商版本",
+      "description": "通过 ROS 2 bridge 连接仿真传感器、机器人控制与应用。",
+      "level": "进阶",
+      "versionNote": "当前页面推荐 Humble/Jazzy；latest 会随 Isaac Sim 版本更新。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-turtlebot",
+      "title": "TurtleBot3 官方手册",
+      "url": "https://emanual.robotis.com/docs/en/platform/turtlebot3/quick-start/",
+      "category": "项目实践",
+      "version": "多版本",
+      "description": "从平台安装到仿真、SLAM 与导航的成套官方学习工程。",
+      "level": "入门",
+      "versionNote": "注意手册发行版选择器和机器人型号。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-moveit",
+      "title": "MoveIt 2 教程总览",
+      "url": "https://moveit.picknik.ai/main/index.html",
+      "category": "机械臂",
+      "version": "Rolling 文档",
+      "description": "机械臂规划、运动学、场景、控制与教程索引。",
+      "level": "中级",
+      "versionNote": "/main/ 页面明确标注 Rolling；Jazzy 使用前须核对 API。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-moveit-start",
+      "title": "MoveIt 2 入门环境",
+      "url": "https://moveit.picknik.ai/main/doc/tutorials/getting_started/getting_started.html",
+      "category": "机械臂",
+      "version": "多版本指导",
+      "description": "配置 MoveIt 教程工作区、依赖和构建环境。",
+      "level": "中级",
+      "versionNote": "其中 latest/Jazzy 的年代描述可能过时，以发行版生命周期表为准。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-moveit-jazzy",
+      "title": "MoveIt 2 Jazzy 源码",
+      "url": "https://github.com/moveit/moveit2/tree/jazzy",
+      "category": "机械臂",
+      "version": "Jazzy",
+      "description": "Jazzy 下规划核心、move_group、moveit_py、Servo 等实现。",
+      "level": "进阶",
+      "versionNote": "用于核对 Rolling 教程中涉及的接口是否已经发布到 Jazzy。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-servo",
+      "title": "MoveIt Servo 教程",
+      "url": "https://moveit.picknik.ai/main/doc/examples/realtime_servo/realtime_servo_tutorial.html",
+      "category": "机械臂",
+      "version": "Rolling 文档",
+      "description": "关节、笛卡尔增量运动及碰撞/奇异性处理的学习入口。",
+      "level": "进阶",
+      "versionNote": "当前页面功能和服务名可能超过 Jazzy；不能直接复制到实机。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-mtc",
+      "title": "MoveIt Task Constructor 抓放教程",
+      "url": "https://moveit.picknik.ai/main/doc/tutorials/pick_and_place_with_moveit_task_constructor/pick_and_place_with_moveit_task_constructor.html",
+      "category": "机械臂",
+      "version": "Rolling 文档",
+      "description": "以阶段组织抓取、接近、夹持与放置规划。",
+      "level": "进阶",
+      "versionNote": "先确认对应发行版的 MTC 分支、依赖和示例。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-rosbridge",
+      "title": "rosbridge_suite ROS 2",
+      "url": "https://github.com/RobotWebTools/rosbridge_suite/tree/ros2",
+      "category": "工具",
+      "version": "ROS 2",
+      "description": "将 ROS 图通过 WebSocket 协议接入浏览器应用。",
+      "level": "中级",
+      "versionNote": "浏览器 UI 和机器人控制权限需要明确边界。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-diagnostics",
+      "title": "ROS diagnostics 项目",
+      "url": "https://github.com/ros/diagnostics/tree/ros2",
+      "category": "数据与诊断",
+      "version": "ROS 2",
+      "description": "发布、汇总和检查硬件及节点健康状态。",
+      "level": "中级",
+      "versionNote": "诊断状态只是观测接口，不能替代独立的硬件急停。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-tracing",
+      "title": "ros2_tracing Jazzy",
+      "url": "https://github.com/ros2/ros2_tracing/tree/jazzy",
+      "category": "数据与诊断",
+      "version": "Jazzy",
+      "description": "利用 LTTng 等工具采集节点、回调和中间件时序。",
+      "level": "进阶",
+      "versionNote": "trace 可用性依赖系统包、权限和构建时插桩。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "eco-rosdistro",
+      "title": "ROS Jazzy 发行清单",
+      "url": "https://github.com/ros/rosdistro/blob/master/jazzy/distribution.yaml",
+      "category": "工程化",
+      "version": "Jazzy",
+      "description": "核对软件包发布版本、源码仓库与实际使用的分支。",
+      "level": "进阶",
+      "versionNote": "发行版名称不保证源码分支也叫 jazzy。",
+      "verified": true,
+      "verification": "已读取官方或维护者页面",
+      "checkedAt": "2026-11-06",
+      "sourceType": "官方／维护者"
+    },
+    {
+      "id": "local-control",
+      "title": "ros2_control 本地固定提交",
+      "url": "https://github.com/ros-controls/ros2_control/tree/f9e24287fc1d6996e5ba1656a9ee24e5f33adef7",
+      "category": "本地项目",
+      "version": "jazzy",
+      "description": "硬件抽象、资源管理、控制管理器实现",
+      "level": "进阶",
+      "versionNote": "优先阅读 hardware_interface 与 controller_manager；Jazzy API 以本地头文件为准。",
+      "verified": true,
+      "verification": "本地 Git 与源码核对；未执行联网逐文件抓取",
+      "checkedAt": "2026-11-06",
+      "sourceType": "维护者源码",
+      "localPath": "/home/mu/Desktop/ros2_jazzy_tracked_refs/ros2_control"
+    },
+    {
+      "id": "local-controllers",
+      "title": "ros2_controllers 本地固定提交",
+      "url": "https://github.com/ros-controls/ros2_controllers/tree/bee185cbb98815116af9cfb00ff595b0b800e91a",
+      "category": "本地项目",
+      "version": "jazzy",
+      "description": "差速、关节轨迹及关节状态控制器实现",
+      "level": "进阶",
+      "versionNote": "优先阅读 diff_drive_controller 和 joint_state_broadcaster。",
+      "verified": true,
+      "verification": "本地 Git 与源码核对；未执行联网逐文件抓取",
+      "checkedAt": "2026-11-06",
+      "sourceType": "维护者源码",
+      "localPath": "/home/mu/Desktop/ros2_jazzy_tracked_refs/ros2_controllers"
+    },
+    {
+      "id": "local-demos",
+      "title": "ros2_control_demos 本地固定提交",
+      "url": "https://github.com/ros-controls/ros2_control_demos/tree/fbab026e147824971c97996f3789f97c2ee9e9ac",
+      "category": "本地项目",
+      "version": "jazzy",
+      "description": "控制框架官方示例集",
+      "level": "进阶",
+      "versionNote": "example_2 提供 DiffBot，含 Python/XML launch 与 mock hardware 路径。",
+      "verified": true,
+      "verification": "本地 Git 与源码核对；未执行联网逐文件抓取",
+      "checkedAt": "2026-11-06",
+      "sourceType": "维护者源码",
+      "localPath": "/home/mu/Desktop/ros2_jazzy_tracked_refs/ros2_control_demos"
+    },
+    {
+      "id": "local-agrosensebot",
+      "title": "AgroSenseBot 本地固定提交",
+      "url": "https://github.com/AIRLab-POLIMI/AgroSenseBot/tree/4ad700b090b9f3ddb8513c7519938bd7f0974709",
+      "category": "本地项目",
+      "version": "jazzy",
+      "description": "农业履带平台的 CANopen、控制、导航与系统集成",
+      "level": "进阶",
+      "versionNote": "检出 jazzy，但 README 保留 Iron 安装段；不可直接照抄运行。",
+      "verified": true,
+      "verification": "本地 Git 与源码核对；未执行联网逐文件抓取",
+      "checkedAt": "2026-11-06",
+      "sourceType": "维护者源码",
+      "localPath": "/home/mu/Desktop/ros2_jazzy_tracked_refs/AgroSenseBot"
+    },
+    {
+      "id": "local-bunker",
+      "title": "bunker_ros2 本地固定提交",
+      "url": "https://github.com/agilexrobotics/bunker_ros2/tree/f24f722b245eb1d2572c47d091fc847d9fd68cf4",
+      "category": "本地项目",
+      "version": "jazzy",
+      "description": "成品履带底盘的 ROS wrapper 与设备消息",
+      "level": "进阶",
+      "versionNote": "当前 README /cmd_vel 使用 Twist；与 DiffBot 的 TwistStamped 不同。",
+      "verified": true,
+      "verification": "本地 Git 与源码核对；未执行联网逐文件抓取",
+      "checkedAt": "2026-11-06",
+      "sourceType": "维护者源码",
+      "localPath": "/home/mu/Desktop/ros2_jazzy_tracked_refs/bunker_ros2"
+    },
+    {
+      "id": "local-linorobot",
+      "title": "linorobot2 本地固定提交",
+      "url": "https://github.com/linorobot/linorobot2/tree/f6b0bd0350c4a9d6b815ef4bb5c701a1e5129711",
+      "category": "本地项目",
+      "version": "jazzy",
+      "description": "移动机器人上位机模型、SLAM、Nav2 和仿真工程",
+      "level": "进阶",
+      "versionNote": "结合其对应硬件仓库理解上下位机数据链；按本地提交阅读。",
+      "verified": true,
+      "verification": "本地 Git 与源码核对；未执行联网逐文件抓取",
+      "checkedAt": "2026-11-06",
+      "sourceType": "维护者源码",
+      "localPath": "/home/mu/Desktop/ros2_jazzy_tracked_refs/linorobot2"
+    },
+    {
+      "id": "local-linorobot-hardware",
+      "title": "linorobot2_hardware 本地固定提交",
+      "url": "https://github.com/linorobot/linorobot2_hardware/tree/fbbbb922f4bd778e23268210b7bd7a6ac4c75d83",
+      "category": "本地项目",
+      "version": "jazzy",
+      "description": "基于 micro-ROS 的电机、编码器与 IMU 固件",
+      "level": "进阶",
+      "versionNote": "板卡、工具链、传输和上位机分支需共同核对。",
+      "verified": true,
+      "verification": "本地 Git 与源码核对；未执行联网逐文件抓取",
+      "checkedAt": "2026-11-06",
+      "sourceType": "维护者源码",
+      "localPath": "/home/mu/Desktop/ros2_jazzy_tracked_refs/linorobot2_hardware"
+    },
+    {
+      "id": "local-ugv",
+      "title": "ugv_sdk 本地固定提交",
+      "url": "https://github.com/agilexrobotics/ugv_sdk/tree/f2704eacdc90357078cd93ec60aae08bb4baab35",
+      "category": "本地项目",
+      "version": "main",
+      "description": "AgileX 底盘 CAN/UART 协议和 C++ 设备抽象",
+      "level": "进阶",
+      "versionNote": "通用 main 分支，不按 ROS 发行版命名；配合 BUNKER wrapper 阅读。",
+      "verified": true,
+      "verification": "本地 Git 与源码核对；未执行联网逐文件抓取",
+      "checkedAt": "2026-11-06",
+      "sourceType": "维护者源码",
+      "localPath": "/home/mu/Desktop/ros2_jazzy_tracked_refs/ugv_sdk"
+    }
+  ],
+  "chapters": [
+    {
+      "id": "eco-tf-frames",
+      "title": "tf2：建立一致的坐标与时间关系",
+      "category": "坐标与模型",
+      "level": "中级",
+      "summary": "机器人并不是只有一个位置。激光、相机、车体和地图分别拥有坐标系，tf2 负责在指定时刻把数据从一个坐标系换算到另一个。先画出树，再写广播器，通常比到 RViz 中反复调整更有效。",
+      "prerequisites": [
+        "节点与话题",
+        "时间戳与 ROS 时钟",
+        "三维平移与四元数基础"
+      ],
+      "objectives": [
+        "分清 map、odom、base_link 和传感器坐标系",
+        "区分静态标定与运动变换",
+        "能通过 CLI 定位断开的 TF 边"
+      ],
+      "concepts": [
+        "map→odom 表示全局定位对局部里程计的修正；odom→base_link 应连续，适合短时间控制，但允许长期漂移。",
+        "base_link→laser 等固定安装关系用静态变换；关节引起的动态关系由 robot_state_publisher 根据 joint_states 计算。",
+        "一次变换查询同时约束源坐标系、目标坐标系和时间。时间超出缓存范围也会失败，不能只看 frame 名字是否存在。"
+      ],
+      "steps": [
+        {
+          "title": "先做一个完全独立的静态变换实验",
+          "body": "在已经 source Jazzy 的终端发布一个传感器安装位姿。此命令只发布坐标关系，不控制任何设备。",
+          "code": "ros2 run tf2_ros static_transform_publisher --x 0.2 --y 0 --z 0.15 --roll 0 --pitch 0 --yaw 0 --frame-id base_link --child-frame-id laser",
+          "language": "bash"
+        },
+        {
+          "title": "从另一个终端查询",
+          "body": "观察查询结果是否保持不变，再交换两个 frame 的顺序，解释逆变换的含义。",
+          "code": "ros2 run tf2_ros tf2_echo base_link laser",
+          "language": "bash"
+        },
+        {
+          "title": "接入已有机器人后检查完整链",
+          "body": "安装 tf2_tools 后生成坐标树。先分别证明 map→odom、odom→base_link、base_link→laser 可查询，再观察完整链。",
+          "code": "ros2 run tf2_tools view_frames\nros2 run tf2_ros tf2_echo odom base_link",
+          "language": "bash"
+        },
+        {
+          "title": "将时间当成接口的一部分",
+          "body": "仿真节点统一使用 use_sim_time；真机传感器使用同步后的时间。查日志中的 extrapolation 方向，而不是增大所有超时来隐藏错误。"
+        }
+      ],
+      "expected": [
+        "静态实验中 base_link 到 laser 的平移为设置值，重复查询保持一致。",
+        "完整机器人每个子 frame 有明确且唯一的父关系。"
+      ],
+      "pitfalls": [
+        "同一条 TF 边被 EKF 与底盘驱动同时发布会导致跳变。",
+        "frame_id 不带前导斜杠；命名空间不自动改变消息内的 frame_id。",
+        "把仿真时间与系统时间混用，通常会出现过去或未来外推错误。"
+      ],
+      "exercise": "设计一台带雷达、IMU、云台相机的底盘 TF 树，逐条写出发布者与静态/动态属性，并验证相机到地图的完整查询。",
+      "sourceIds": [
+        "eco-tf2",
+        "eco-rsp",
+        "eco-nav2-setup"
+      ],
+      "validation": "资料与本地源码已核对；命令为读者练习说明，本次未安装、编译或运行 ROS 节点，未连接硬件。",
+      "exerciseAnswer": [
+        "可采用 map→odom→base_link→laser、base_link→imu_link 和 base_link→pan_link→camera_link→camera_optical_frame。map→odom 由定位/SLAM 发布，odom→base_link 由轮式里程计或融合节点发布，固定传感器安装边为静态。",
+        "云台可动关节由关节状态和 robot_state_publisher 发布动态变换。验收时每个 child frame 只能有一个有效父关系；在传感器消息时间处可查询 camera_optical_frame 到 map。"
+      ]
+    },
+    {
+      "id": "eco-model-rviz",
+      "title": "URDF、Xacro 与 RViz：把机器人描述变成可检查模型",
+      "category": "坐标与模型",
+      "level": "中级",
+      "summary": "用 URDF 表达刚体和关节，用 Xacro 把尺寸及重复结构参数化，再用 RViz 检查坐标、外观和关节关系。模型不仅服务显示，还会影响碰撞检测、运动学与控制器中的关节名称。",
+      "prerequisites": [
+        "tf2 坐标树",
+        "XML 基础",
+        "ROS 包资源路径"
+      ],
+      "objectives": [
+        "建立 link/joint 的树状结构",
+        "理解 visual、collision、inertial 的职责",
+        "将模型、关节状态和 TF 三者对应起来"
+      ],
+      "concepts": [
+        "visual 只决定显示，collision 决定碰撞几何；惯量和质量进入动力学计算，不能用随意的零值敷衍。",
+        "Xacro 是生成 URDF 的宏语言；先展开再检查，可以把宏求值问题与模型问题分开。",
+        "robot_state_publisher 消费模型和 joint_states，RViz 消费 TF 与显示消息；两者都不是物理模拟器。"
+      ],
+      "steps": [
+        {
+          "title": "检查可用教学包",
+          "body": "需要安装 Jazzy 的 urdf_tutorial、xacro、robot_state_publisher 与 RViz 相关包。先确认包资源目录。",
+          "code": "ros2 pkg prefix --share urdf_tutorial\nros2 pkg prefix --share robot_state_publisher",
+          "language": "bash"
+        },
+        {
+          "title": "运行官方最小模型",
+          "body": "下面命令引用已安装教学包中的模型，不依赖当前目录。",
+          "code": "ros2 launch urdf_tutorial display.launch.py model:=\"$(ros2 pkg prefix --share urdf_tutorial)/urdf/01-myfirst.urdf\"",
+          "language": "bash"
+        },
+        {
+          "title": "将自己的模型展开为 URDF",
+          "body": "把 robot.urdf.xacro 替换为实际文件；先检查展开结果，再接入 launch。",
+          "code": "xacro robot.urdf.xacro > /tmp/robot.urdf",
+          "language": "bash"
+        },
+        {
+          "title": "在 RViz 分层排查",
+          "body": "先设置 Fixed Frame 为模型根 frame，启用 TF 与 RobotModel；再观察 /joint_states。没有关节状态时不要先修改 mesh。",
+          "code": "ros2 topic echo /joint_states --once",
+          "language": "bash"
+        }
+      ],
+      "expected": [
+        "RViz 模型显示与设计的坐标树一致。",
+        "调整关节时，对应子 link 和 TF 一起变化。"
+      ],
+      "pitfalls": [
+        "joint 名称在 URDF、控制器 YAML 和 JointState 中必须逐字一致。",
+        "mesh 路径优先用 package://；绝对个人路径无法在另一台机器复现。",
+        "URDF 显示正确不代表碰撞模型、惯量或控制接口正确。"
+      ],
+      "exercise": "把一个双轮底盘的轮距和轮半径改成 Xacro 参数，增加雷达 link，并用 TF 显示核对轴向。",
+      "sourceIds": [
+        "eco-urdf",
+        "eco-xacro",
+        "eco-rsp",
+        "eco-rviz"
+      ],
+      "validation": "资料与本地源码已核对；命令为读者练习说明，本次未安装、编译或运行 ROS 节点，未连接硬件。",
+      "exerciseAnswer": [
+        "轮距和轮半径设置为 Xacro 属性或参数，左右轮位置由同一轮距参数的正负一半生成；控制器参数也必须使用对应数值或由同一配置来源生成。",
+        "雷达 link 通过 fixed joint 连到 base_link；展开 Xacro 后核对 joint 名称、轮轴方向和 TF。改变参数后模型与控制配置若不一致，视为练习未完成。"
+      ]
+    },
+    {
+      "id": "eco-gazebo-simulation",
+      "title": "Gazebo Harmonic：仿真、桥接与统一时钟",
+      "category": "仿真",
+      "level": "中级",
+      "summary": "先把仿真世界跑起来，再桥接一个消息，最后接入控制器。这样可以区分物理模型、Gazebo Transport、ROS 消息和控制器四个层次。Jazzy 路线使用现代 Gazebo Harmonic。",
+      "prerequisites": [
+        "URDF/Xacro",
+        "话题类型与 QoS",
+        "use_sim_time"
+      ],
+      "objectives": [
+        "辨认 Gazebo 与 ROS 的两个通信图",
+        "显式配置桥接方向和类型",
+        "让传感器、TF、导航共用仿真时间"
+      ],
+      "concepts": [
+        "ros_gz_bridge 只转换已经支持的消息类型，并非任意消息的自动桥。",
+        "/clock 是仿真时间源；需要仿真时间的 ROS 节点必须开启 use_sim_time。",
+        "gz_ros2_control 把仿真关节作为硬件后端，controller_manager 与控制器仍运行相同的 ROS 控制接口。"
+      ],
+      "steps": [
+        {
+          "title": "确认版本配对",
+          "body": "在已配置 ROS 软件源的 Ubuntu24.04 上，按官方配对安装 Jazzy ros_gz。",
+          "code": "sudo apt install ros-jazzy-ros-gz",
+          "language": "bash"
+        },
+        {
+          "title": "启动一个空世界",
+          "body": "图形环境需要可用显示和图形驱动；无图形环境按官方说明使用无 GUI 模式。",
+          "code": "ros2 launch ros_gz_sim gz_sim.launch.py gz_args:=\"-r empty.sdf\"",
+          "language": "bash"
+        },
+        {
+          "title": "桥接时钟",
+          "body": "另开终端，下面的 [ 表示 Gazebo 到 ROS 的单向桥。引号避免 shell 解释特殊字符。",
+          "code": "ros2 run ros_gz_bridge parameter_bridge \"/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock\"",
+          "language": "bash"
+        },
+        {
+          "title": "从 ROS 一侧验证",
+          "body": "确认时钟连续推进，再向世界加入模型与传感器。按各传感器消息类型分别建立桥。",
+          "code": "ros2 topic echo /clock --once\nros2 topic list -t",
+          "language": "bash"
+        }
+      ],
+      "expected": [
+        "Gazebo 启动，ROS 侧可收到 /clock。",
+        "暂停仿真时仿真时钟停止，恢复后继续推进。"
+      ],
+      "pitfalls": [
+        "gazebo_ros_pkgs 的 Classic 教程不能直接当作 ros_gz 教程。",
+        "桥接双向同名消息可能形成反馈或重复发布，应只开启需要的方向。",
+        "use_sim_time 为 true 但没有 /clock 时，许多时间相关逻辑会等待。"
+      ],
+      "exercise": "加入一个二维激光传感器，桥接 LaserScan，在 RViz 中同时显示机器人、TF 与激光，并说明数据链中每个组件的职责。",
+      "sourceIds": [
+        "eco-gazebo",
+        "eco-gazebo-install",
+        "eco-ros-gz",
+        "eco-gz-control"
+      ],
+      "validation": "资料与本地源码已核对；命令为读者练习说明，本次未安装、编译或运行 ROS 节点，未连接硬件。",
+      "exerciseAnswer": [
+        "数据链应为 Gazebo 激光传感器→Gazebo Transport→ros_gz_bridge→sensor_msgs/LaserScan→RViz。桥只转换消息，传感器模拟由 Gazebo 完成。",
+        "从同一个 /clock 驱动仿真时间；LaserScan.header.frame_id 必须通过 TF 连到 RViz Fixed Frame。验收包括暂停时钟、恢复时钟后仍正确显示。"
+      ]
+    },
+    {
+      "id": "eco-control-framework",
+      "title": "ros2_control：读懂从命令到硬件的闭环",
+      "category": "控制",
+      "level": "中级",
+      "summary": "控制管理器周期性读取硬件状态、调用控制器更新，再写出硬件命令。学习时从官方 DiffBot 示例观察接口的申请与生命周期，比直接修改真实电机驱动更容易建立完整理解。",
+      "prerequisites": [
+        "URDF 和关节命名",
+        "ROS 参数与 launch",
+        "基础 C++"
+      ],
+      "objectives": [
+        "区分硬件插件与控制器插件",
+        "理解状态接口、命令接口和资源占用",
+        "能解释控制器为何处于 inactive 或无法激活"
+      ],
+      "concepts": [
+        "硬件插件抽象数据交换，控制器负责控制算法或命令转换；两者通过具名接口连接。",
+        "state interface 表示测得或估计的量，command interface 表示可写目标；velocity 一词出现在两边时含义不同。",
+        "activate 之前通常要完成配置及接口检查；同一个命令资源不能被不兼容的控制器同时独占。"
+      ],
+      "steps": [
+        {
+          "title": "使用已编译的 Jazzy 官方示例",
+          "body": "本地源码位于 ros2_control_demos/example_2；先在独立工作区安装依赖并编译，再 source install/setup.bash。",
+          "code": "ros2 launch ros2_control_demo_example_2 diffbot.launch.py use_mock_hardware:=True",
+          "language": "bash"
+        },
+        {
+          "title": "查看硬件导出的接口",
+          "body": "先确认 joint 名称和 velocity 接口都存在。",
+          "code": "ros2 control list_hardware_interfaces",
+          "language": "bash"
+        },
+        {
+          "title": "查看控制器状态",
+          "body": "joint_state_broadcaster 与底盘控制器应按示例进入 active；若管理器改名，给 CLI 添加 -c 指定路径。",
+          "code": "ros2 control list_controllers\nros2 control list_hardware_components",
+          "language": "bash"
+        },
+        {
+          "title": "追溯配置来源",
+          "body": "依次阅读模型中的 ros2_control 标签、插件 XML、控制器 YAML 与 spawner 启动动作，把每个名称连到定义位置。"
+        }
+      ],
+      "expected": [
+        "命令接口显示 available，并在控制器启动后由正确控制器 claimed。",
+        "控制器状态和关节状态发布符合示例预期。"
+      ],
+      "pitfalls": [
+        "动态库能编译并不等于 pluginlib 能发现它；还需正确导出和安装描述文件。",
+        "硬件 on_activate 成功之前不应假定 write 已经可向电机下发。",
+        "示例 mock hardware 回显的是模型行为，不证明真实编码器闭环正确。"
+      ],
+      "exercise": "绘制 read→update→write 的数据流，在每条连线上标出单位、数据来源和调用频率，并解释接口未被 claimed 时应查哪一层。",
+      "sourceIds": [
+        "eco-control",
+        "eco-control-demo",
+        "eco-manager",
+        "eco-hardware"
+      ],
+      "validation": "资料与本地源码已核对；命令为读者练习说明，本次未安装、编译或运行 ROS 节点，未连接硬件。",
+      "exerciseAnswer": [
+        "read 把编码器/仿真位置和速度更新到 state interfaces；update 读取状态并产生 command interfaces；write 将命令转换到驱动或仿真接口。轮速应是 rad/s，车体线速度是 m/s。",
+        "available 但未 claimed 时先查控制器是否配置/激活以及 joint/interface 名是否匹配；接口不存在时查 URDF 和硬件插件导出。不要先修改控制算法。"
+      ]
+    },
+    {
+      "id": "eco-diff-drive-tracks",
+      "title": "差速与履带底盘：从 TwistStamped 到左右轮速",
+      "category": "控制",
+      "level": "中级",
+      "summary": "差速模型把车体线速度和角速度换算为左右侧速度。履带底盘可以先借用此接口组织软件，但转弯滑移会使几何轮距与有效轮距不同，必须通过实测与外部定位校准。",
+      "prerequisites": [
+        "ros2_control 基础",
+        "里程计与 TF",
+        "线速度/角速度单位"
+      ],
+      "objectives": [
+        "理解 v_left = v − ωb/2、v_right = v + ωb/2",
+        "识别 Twist 与 TwistStamped 的接口差别",
+        "区分开环里程计和编码器反馈里程计"
+      ],
+      "concepts": [
+        "diff_drive_controller 输出的是关节角速度，因此左右线速度还需除以有效轮半径。",
+        "Jazzy 文档使用带时间戳的 TwistStamped；时间戳用于判断命令是否过期。",
+        "履带滑移不是修改一个 PID 就能完全解决的问题；校准、速度限制、IMU 和外部定位应协同设计。"
+      ],
+      "steps": [
+        {
+          "title": "先查实际输入接口",
+          "body": "在官方 DiffBot 示例运行时检查 /cmd_vel，其他工程要替换为真实控制器的话题名。",
+          "code": "ros2 topic info /cmd_vel --verbose",
+          "language": "bash"
+        },
+        {
+          "title": "只在示例或已确认的仿真中发送低速命令",
+          "body": "header: auto 让 CLI 填写当前时间。该示例针对 TwistStamped 订阅者。",
+          "code": "ros2 topic pub --rate 10 /cmd_vel geometry_msgs/msg/TwistStamped \"{header: auto, twist: {linear: {x: 0.1}, angular: {z: 0.0}}}\"",
+          "language": "bash"
+        },
+        {
+          "title": "观察状态和里程计",
+          "body": "从 ros2 topic list -t 查出 odom 路径，检查速度、位姿和 frame_id，而不只看 RViz 是否移动。",
+          "code": "ros2 topic list -t\nros2 topic echo /joint_states --once",
+          "language": "bash"
+        },
+        {
+          "title": "设计校准实验",
+          "body": "在实机批准测试条件下分别记录直行距离和原地转角，使用外部测量估计半径与有效轮距；保留地面材质、载荷和速度条件。"
+        }
+      ],
+      "expected": [
+        "直行指令下左右侧目标方向一致；原地转向时左右侧方向相反。",
+        "停止发布后控制器依据 cmd_vel_timeout 处理过期命令。"
+      ],
+      "pitfalls": [
+        "不要向 Twist 订阅者发布 TwistStamped，或反向混用；ROS 不会自动转换。",
+        "open_loop=true 使用命令估计里程计，不等于测到了轮速。",
+        "本地 BUNKER 驱动与 ros2_control 示例的消息类型不同，应按实际驱动检查。"
+      ],
+      "exercise": "对照本地 example_2 与 bunker_ros2，列出输入消息、底层通信、里程计发布者、TF 发布者和超时处理的差别。",
+      "sourceIds": [
+        "eco-diff-drive",
+        "eco-control-demo",
+        "local-bunker",
+        "local-agrosensebot"
+      ],
+      "validation": "资料与本地源码已核对；命令为读者练习说明，本次未安装、编译或运行 ROS 节点，未连接硬件。",
+      "exerciseAnswer": [
+        "当前 example_2 接收 TwistStamped 并经 diff_drive_controller 产生关节速度，BUNKER wrapper README 接收 Twist 并调用 ugv_sdk。差异必须由 topic info 与实际源码确认。",
+        "验收应把每套系统的 odom 和 TF 发布者、命令超时、编码器反馈路径列清。履带有效轮距需要标定，几何轮距只能作为起点。"
+      ]
+    },
+    {
+      "id": "eco-hardware-integration",
+      "title": "实机接入：标准硬件接口与厂商 SDK 两条路线",
+      "category": "硬件",
+      "level": "进阶",
+      "summary": "真实底盘常见两种接入方式：通过 ros2_control 硬件插件暴露关节接口，或用厂商 SDK 包装成 ROS 驱动节点。先追踪测量与命令链路，再决定是否需要统一成控制器框架。",
+      "prerequisites": [
+        "ros2_control",
+        "C++ 与线程基础",
+        "CAN/串口基础"
+      ],
+      "objectives": [
+        "理解驱动包装与硬件插件的分工",
+        "记录总线、协议、单位、超时和故障反馈",
+        "能从物理通信逐层定位故障"
+      ],
+      "concepts": [
+        "SDK 通常解决报文编解码与设备抽象，ROS wrapper 解决话题、参数和时间戳；它们不是同一层。",
+        "read/write 热路径中要控制阻塞、内存分配与日志开销；通讯线程和控制周期的交界需要清晰。",
+        "驱动失联、命令超时与急停反馈应作为具体状态处理，不能只让上层继续发送零速。"
+      ],
+      "steps": [
+        {
+          "title": "记录已固定的本地来源",
+          "body": "本地有 Jazzy 的 AgroSenseBot、BUNKER、Linorobot2 和 main 的 ugv_sdk；阅读时记录提交，避免更新后示例含义变化。"
+        },
+        {
+          "title": "先检查通信设备",
+          "body": "以下是只读观测命令；只有设备已由正确配置启用时，candump 才能看到数据。",
+          "code": "ip -details link show can0\ncandump can0",
+          "language": "bash"
+        },
+        {
+          "title": "再检查 ROS 接口",
+          "body": "启动实际驱动前核对厂商的电源、通信、使能与测试条件；启动后首先观察状态话题，而不是立即发送运动命令。",
+          "code": "ros2 node list\nros2 topic list -t\nros2 topic info /cmd_vel --verbose",
+          "language": "bash"
+        },
+        {
+          "title": "把集成方案写成契约",
+          "body": "为输入命令、状态反馈、坐标系、时钟、重连策略与停止路径各写一条可验证要求。选择虚拟 CAN 或 mock 后端先测试异常路径。"
+        }
+      ],
+      "expected": [
+        "能够明确指出每个关节状态或底盘状态来自哪一条测量链路。",
+        "通信中断时系统状态可被观察，并进入定义好的停止或降级流程。"
+      ],
+      "pitfalls": [
+        "AgroSenseBot 本地虽检出 jazzy，README 仍有 Iron 安装命令；不能直接复制执行。",
+        "ugv_sdk 为通用 C++ SDK，main 不代表 ROS Jazzy 专用分支。",
+        "在 Linux 上看到 CAN 帧并不证明 ID、协议版本和设备型号匹配。"
+      ],
+      "exercise": "选 BUNKER 或 AgroSenseBot，绘制从 ROS 命令到 CAN 报文再到反馈的链路，并为五个可能故障各指定一个观测点。",
+      "sourceIds": [
+        "eco-hardware",
+        "local-agrosensebot",
+        "local-bunker",
+        "local-ugv",
+        "local-linorobot"
+      ],
+      "validation": "资料与本地源码已核对；命令为读者练习说明，本次未安装、编译或运行 ROS 节点，未连接硬件。",
+      "exerciseAnswer": [
+        "BUNKER 链路可归纳为 cmd_vel→ROS wrapper→ugv_sdk 设备抽象→CAN 报文→底盘控制器，反馈按相反方向转换成 ROS 状态与里程计。AgroSenseBot 采用 ros2_control 硬件层接入 CANopen。",
+        "五个观测点可选：设备枚举、ip link 总线状态、candump 原始报文、SDK 解码状态、ROS 话题/控制器状态。超时或协议不匹配应停在出现证据异常的最早层。"
+      ]
+    },
+    {
+      "id": "eco-slam-mapping",
+      "title": "二维 SLAM：从传感器数据到可复用地图",
+      "category": "定位",
+      "level": "中级",
+      "summary": "SLAM 同时估计机器人轨迹与环境地图。先用可靠的扫描、短期里程计和时间同步建立输入条件，再讨论地图质量。成功显示一张图，只证明数据曾被处理，不代表地图可用于长期定位。",
+      "prerequisites": [
+        "tf2",
+        "LaserScan",
+        "里程计和仿真时间"
+      ],
+      "objectives": [
+        "检查 SLAM 必需的扫描和变换",
+        "区分栅格地图与位姿图",
+        "能保存地图并验证再次加载"
+      ],
+      "concepts": [
+        "SLAM 常提供 map→odom，底盘或融合节点提供 odom→base_link；这条链让扫描能被放到地图上。",
+        "地图分辨率会影响内存、细节和后续规划；更细不一定更准确。",
+        "栅格地图适合已知地图定位；可继续优化的 SLAM 会话还需要算法自己的位姿图数据。"
+      ],
+      "steps": [
+        {
+          "title": "先验证扫描和 TF",
+          "body": "在带二维激光的模拟机器人或实机上检查。将 /scan 与 laser 替换为实际名称。",
+          "code": "ros2 topic hz /scan\nros2 topic echo /scan --once\nros2 run tf2_ros tf2_echo base_link laser",
+          "language": "bash"
+        },
+        {
+          "title": "启动异步 SLAM 示例",
+          "body": "需要已安装 slam_toolbox 且输入话题/坐标系符合所用参数。use_sim_time 在真机上改为 false。",
+          "code": "ros2 launch slam_toolbox online_async_launch.py use_sim_time:=true",
+          "language": "bash"
+        },
+        {
+          "title": "缓慢覆盖环境并形成回环",
+          "body": "在 RViz 显示 /map、扫描与 TF。以回到起点后的重合程度评估闭环效果，保留原始 bag 以便复盘。"
+        },
+        {
+          "title": "保存导航用地图",
+          "body": "需要 nav2_map_server；输出路径所在目录应存在。",
+          "code": "ros2 run nav2_map_server map_saver_cli -f /tmp/learning_map",
+          "language": "bash"
+        }
+      ],
+      "expected": [
+        "地图随扫描扩展，回环后已有墙体与新扫描尽量对齐。",
+        "保存得到地图图像与 YAML 描述，可以在新会话加载。"
+      ],
+      "pitfalls": [
+        "扫描 frame 无法转换到 base frame 会让建图停滞或丢帧。",
+        "把反光、玻璃和运动物体造成的异常完全归因于算法参数，容易掩盖传感器问题。",
+        "仅保存 PNG/PGM 不包含地图原点、分辨率和阈值等 YAML 信息。"
+      ],
+      "exercise": "在同一份 bag 上对比两种建图参数，记录地图重影、回环表现、CPU 与处理延迟，解释取舍。",
+      "sourceIds": [
+        "eco-slam",
+        "eco-nav2-map",
+        "eco-rosbag"
+      ],
+      "validation": "资料与本地源码已核对；命令为读者练习说明，本次未安装、编译或运行 ROS 节点，未连接硬件。",
+      "exerciseAnswer": [
+        "比较时必须使用同一份 bag、时钟和输入话题，仅改变指定参数。记录墙体重影、闭环前后偏差、CPU 和处理延迟；单看地图截图不足以判断优劣。",
+        "参数改变若提高细节却显著增加处理积压，应解释其代价。导航地图与位姿图分别保存，并在新会话验证读取。"
+      ]
+    },
+    {
+      "id": "eco-state-estimation",
+      "title": "状态估计：轮速、IMU、GNSS 与定位坐标系",
+      "category": "定位",
+      "level": "进阶",
+      "summary": "融合的目标是利用互补传感器约束状态，同时承认各自的不确定性。首先统一单位、轴向、时间戳和协方差，再配置 EKF/UKF；滤波器无法自动识别错误的传感器契约。",
+      "prerequisites": [
+        "tf2 与 odom/map",
+        "Odometry 与 Imu 消息",
+        "协方差基础"
+      ],
+      "objectives": [
+        "分辨连续局部估计与可能跳变的全局定位",
+        "按状态量选择融合输入",
+        "理解协方差和重复测量的影响"
+      ],
+      "concepts": [
+        "轮速擅长短期平面运动，IMU 提供角速度与加速度约束，GNSS 提供全局位置但可能跳变。",
+        "robot_localization 输入配置通常按 x,y,z,roll,pitch,yaw 及速度/加速度的固定顺序选择量；必须逐项核对。",
+        "同一个编码器同时生成的位置和速度并非两份独立信息，重复融合可能制造过度自信。"
+      ],
+      "steps": [
+        {
+          "title": "验证原始数据",
+          "body": "在任何融合之前，静止记录 IMU 与轮式里程计，检查轴向、噪声、协方差与消息时间。",
+          "code": "ros2 topic echo /imu/data --once\nros2 topic echo /odom --once",
+          "language": "bash"
+        },
+        {
+          "title": "建立最小二维配置",
+          "body": "从维护者参数示例开始，只启用真实可测的平面状态；先融合一种里程计，再逐项增加 IMU。"
+        },
+        {
+          "title": "显式指定唯一 TF 发布者",
+          "body": "若 EKF 发布 odom→base_link，关闭底盘驱动对同一边的发布，并检查 RViz/TF 无跳变。",
+          "code": "ros2 run tf2_ros tf2_echo odom base_link",
+          "language": "bash"
+        },
+        {
+          "title": "对比原始与融合输出",
+          "body": "以同一段直行、转弯和静止数据比较 /odometry/filtered 的稳定性与延迟。",
+          "code": "ros2 topic echo /odometry/filtered --once",
+          "language": "bash"
+        }
+      ],
+      "expected": [
+        "静止时估计没有明显持续漂移，运动方向与真实坐标约定一致。",
+        "滤波输出包含合理的协方差，且 TF 无重复发布。"
+      ],
+      "pitfalls": [
+        "ENU/NED 混用会让 IMU/GNSS 轴向错误，滤波参数无法修正坐标定义。",
+        "协方差填零不代表测量绝对精确；应理解包对各字段的解释。",
+        "把 map 与 odom 的职责合并，会使控制面对不连续位姿跳变。"
+      ],
+      "exercise": "为履带底盘设计局部 EKF 与全局定位的 TF 分工，写出每个传感器贡献哪些状态，并用 bag 验证一项输入失效后的表现。",
+      "sourceIds": [
+        "eco-localization",
+        "eco-nav2-fusion",
+        "eco-nav2-map"
+      ],
+      "validation": "资料与本地源码已核对；命令为读者练习说明，本次未安装、编译或运行 ROS 节点，未连接硬件。",
+      "exerciseAnswer": [
+        "局部融合节点发布连续的 odom→base_link，使用轮式里程计与 IMU 的适当状态；全局 SLAM/定位或全局融合节点提供 map→odom。相同边只能有一个发布者。",
+        "断开一项输入后检查协方差、漂移、更新率和日志，而不是只判断节点是否还活着。输入选择不能把同一编码器派生的多项数据都视为独立高置信测量。"
+      ]
+    },
+    {
+      "id": "eco-nav2-stack",
+      "title": "Nav2：从给定目标到可解释的导航行为",
+      "category": "导航",
+      "level": "中级",
+      "summary": "导航系统将目标、定位、地图、传感器和底盘控制组合起来。学习重点是能解释机器人为什么停下、为什么绕路，以及哪个服务器或输入条件导致失败。",
+      "prerequisites": [
+        "SLAM 或已知地图定位",
+        "tf2",
+        "差速控制",
+        "action"
+      ],
+      "objectives": [
+        "跑通官方仿真导航",
+        "区分规划器、控制器与 costmap",
+        "利用 lifecycle 和 action 反馈排查失败"
+      ],
+      "concepts": [
+        "全局规划器生成路径，局部控制器依据路径与局部环境产生速度，代价地图提供障碍与通行代价。",
+        "footprint 应覆盖机器人真实外形；圆形半径近似适合的对象有限。",
+        "导航 lifecycle 节点未 active、定位未初始化或 TF 不连通时，发布目标也不会得到正常运动。"
+      ],
+      "steps": [
+        {
+          "title": "准备官方 Jazzy 仿真依赖",
+          "body": "在已安装 ROS Jazzy 和配置软件源后安装 Nav2。",
+          "code": "sudo apt install ros-jazzy-navigation2 ros-jazzy-nav2-bringup",
+          "language": "bash"
+        },
+        {
+          "title": "启动集成示例",
+          "body": "该示例依赖 nav2_bringup 的仿真资源，缺失时按官方 Quickstart 安装 nav2-minimal-tb 系列包。",
+          "code": "ros2 launch nav2_bringup tb3_simulation_launch.py headless:=False",
+          "language": "bash"
+        },
+        {
+          "title": "建立定位再发送目标",
+          "body": "在 RViz 使用 2D Pose Estimate 设置初始位置与朝向，再发送导航目标；观察全局路径、局部路径和代价地图。"
+        },
+        {
+          "title": "检查失败发生在哪一层",
+          "body": "先看 lifecycle 状态，再看 action 类型和反馈，最后查传感器与 TF。",
+          "code": "ros2 lifecycle nodes\nros2 lifecycle get /controller_server\nros2 action list -t\nros2 topic info /cmd_vel --verbose",
+          "language": "bash"
+        }
+      ],
+      "expected": [
+        "机器人在模拟环境中到达可通行的目标，并报告导航结果。",
+        "在路径被阻挡时能观察到重新规划或恢复，而不只看到停止。"
+      ],
+      "pitfalls": [
+        "Jazzy 选择现代 Gazebo；不要从同页 Iron 标签复制 Classic 安装命令。",
+        "地图坐标与初始位姿不一致会让粒子滤波定位失败。",
+        "改快控制频率不能解决错误 footprint、TF 延迟或速度接口不匹配。"
+      ],
+      "exercise": "设计三个失败场景：目标在障碍中、激光丢失、局部路径被挡住，分别记录 action 结果、日志和 costmap 变化。",
+      "sourceIds": [
+        "eco-nav2-quick",
+        "eco-nav2-setup",
+        "eco-nav2-config"
+      ],
+      "validation": "资料与本地源码已核对；命令为读者练习说明，本次未安装、编译或运行 ROS 节点，未连接硬件。",
+      "exerciseAnswer": [
+        "障碍中的目标通常在规划或目标可达性阶段失败；激光丢失要观察 costmap 数据有效性与传感器超时；临时阻挡主要观察局部控制、重规划和恢复。具体结果以当前插件和参数为准。",
+        "每个场景记录 action 的终态、错误日志、TF 连通性和代价地图截图/数据。能找到首次异常的组件，比记住单一错误码更重要。"
+      ]
+    },
+    {
+      "id": "eco-nav2-task-programming",
+      "title": "导航任务编排：行为树与 Python Commander",
+      "category": "导航",
+      "level": "中级",
+      "summary": "导航服务器解决一次导航能力，任务层则决定下一步做什么、何时取消、失败后如何处理。先通过 Python Commander 编排简单流程，再深入行为树，把两层职责分清。",
+      "prerequisites": [
+        "Nav2 仿真",
+        "Python",
+        "action 状态与取消"
+      ],
+      "objectives": [
+        "用 Commander 发送目标并读取结果",
+        "理解行为树 tick、条件和恢复",
+        "避免阻塞式任务逻辑吞掉取消请求"
+      ],
+      "concepts": [
+        "行为树不是简单的顺序脚本；运行节点会跨 tick 保持状态，需要清晰处理成功、失败和运行中。",
+        "Simple Commander 封装常见导航 action，但调用前仍需 Nav2 服务 active 和有效定位。",
+        "任务成功要读取明确结果，不能因为 isTaskComplete 返回 true 就视为到达。"
+      ],
+      "steps": [
+        {
+          "title": "先观察导航接口",
+          "body": "在官方仿真启动且初始定位完成后，查看服务的 action 类型。",
+          "code": "ros2 action list -t\nros2 action info /navigate_to_pose",
+          "language": "bash"
+        },
+        {
+          "title": "阅读 Commander 的最小流程",
+          "body": "核心顺序为构建 BasicNavigator → 设置初始位姿 → waitUntilNav2Active → goToPose → 反馈/取消 → getResult。每个 PoseStamped 都填写 map frame、时间戳和合法四元数。"
+        },
+        {
+          "title": "为任务加上截止条件",
+          "body": "循环等待任务时检查超时和反馈；取消后继续等待取消完成并记录最终结果。把移动中的异常状态留在日志和 bag 中。"
+        },
+        {
+          "title": "再修改行为树",
+          "body": "复制安装包中与当前版本匹配的 BT XML 到自己的配置包，每次只调整一个恢复行为或规划条件，保留原始版本用于对照。"
+        }
+      ],
+      "expected": [
+        "任务脚本区分成功、失败和取消，并能在期限到达时停止等待。",
+        "行为树修改前后可通过相同场景复现差异。"
+      ],
+      "pitfalls": [
+        "Rolling 新增的 BT 插件不一定已发布在 Jazzy；插件名要从安装包核对。",
+        "坐标设为 (0,0) 不一定是有效导航目标，应在当前地图中选择自由空间。",
+        "在单线程回调内长期阻塞等待 action 可能妨碍反馈与取消处理。"
+      ],
+      "exercise": "实现三个路点巡检：每个点记录到达结果与耗时，超过任务期限就取消；将应用任务层与 Nav2 内部 BT 的职责画成两层流程。",
+      "sourceIds": [
+        "eco-nav2-commander",
+        "eco-nav2-config",
+        "eco-nav2-quick"
+      ],
+      "validation": "资料与本地源码已核对；命令为读者练习说明，本次未安装、编译或运行 ROS 节点，未连接硬件。",
+      "exerciseAnswer": [
+        "任务层按路点构造带 map frame 和时间戳的 PoseStamped，调用导航后持续检查反馈、超时与取消；任务完成后读取明确结果，再决定是否进入下一点。",
+        "应用层负责巡检顺序与业务期限，Nav2 BT 负责一次导航中的规划、跟踪与恢复。取消请求发出后还要等待确认并记录结果，不能立刻假定机器人已停止。"
+      ]
+    },
+    {
+      "id": "eco-moveit-planning",
+      "title": "MoveIt 2：规划场景、运动规划与轨迹执行",
+      "category": "机械臂",
+      "level": "中级",
+      "summary": "MoveIt 将机器人模型、关节状态、碰撞环境、运动学求解和轨迹执行接在一起。先在模拟或 mock 控制环境中完整走通“规划—检查—执行”，再接入真实机械臂控制器。",
+      "prerequisites": [
+        "URDF/Xacro 与 TF",
+        "joint_states",
+        "action",
+        "ros2_control"
+      ],
+      "objectives": [
+        "区分 URDF、SRDF 与 MoveIt 配置",
+        "解释规划成功但执行失败的原因",
+        "对照 C++ MoveGroupInterface 与 Python moveit_py 的边界"
+      ],
+      "concepts": [
+        "URDF 表达几何与关节；SRDF 增加规划组、末端执行器和语义关系。",
+        "规划场景包括机器人状态与环境碰撞对象；屏幕上看见物体不等于规划器已经把它当作障碍。",
+        "规划输出 JointTrajectory，执行仍依赖控制器及 FollowJointTrajectory 等接口。"
+      ],
+      "steps": [
+        {
+          "title": "固定教程和源码版本",
+          "body": "先阅读入门环境指导并锁定 Jazzy 的 MoveIt 软件包/源码。main 文档是 Rolling，必要时查 Jazzy 头文件和示例。"
+        },
+        {
+          "title": "用已配置好的机器人演示包启动",
+          "body": "选择官方教程对应的 Panda 或自己的 MoveIt 配置包，先启用 mock/fake 后端。不要省略机器人描述、语义模型和控制配置。"
+        },
+        {
+          "title": "检查状态与执行接口",
+          "body": "在 RViz 中规划到命名姿态前，确认关节状态持续更新以及控制 action 存在。",
+          "code": "ros2 topic echo /joint_states --once\nros2 action list -t\nros2 control list_controllers",
+          "language": "bash"
+        },
+        {
+          "title": "加入一个碰撞物体再规划",
+          "body": "比较无障碍与有障碍时的路径；确认 planning scene 收到对象，而不是仅在 RViz 添加了一个视觉 marker。"
+        }
+      ],
+      "expected": [
+        "RViz 能显示有效机器人状态并规划到合法目标。",
+        "执行 action 返回的结果与模拟机器人关节变化一致。"
+      ],
+      "pitfalls": [
+        "目标不可达、IK 无解、碰撞和控制器错误属于不同阶段，应分别查看错误码。",
+        "Python moveit_py 与旧 ROS1 moveit_commander 不可混为同一套 API。",
+        "moveit.picknik.ai/jazzy 并非本次可核实的文档入口，不能凭路径猜测存在。"
+      ],
+      "exercise": "为同一机械臂任务分别记录规划时间、规划成功率和执行结果，故意加入碰撞物体验证场景同步。",
+      "sourceIds": [
+        "eco-moveit",
+        "eco-moveit-start",
+        "eco-moveit-jazzy",
+        "eco-jtc"
+      ],
+      "validation": "资料与本地源码已核对；命令为读者练习说明，本次未安装、编译或运行 ROS 节点，未连接硬件。",
+      "exerciseAnswer": [
+        "规划时间从请求到返回轨迹计算，执行时间从发送控制 action 到结果返回；两者必须分开记录。规划成功但 controller action 不可用，属于执行集成失败。",
+        "加入碰撞物体后应确认 planning scene 中存在对象，并观察路径绕行或返回无解；仅向 RViz 发布 marker 不满足验收。"
+      ]
+    },
+    {
+      "id": "eco-manipulation-tasks",
+      "title": "机械臂进阶：Servo 与 Task Constructor",
+      "category": "机械臂",
+      "level": "进阶",
+      "summary": "离线轨迹规划、在线增量伺服和多阶段抓放解决不同问题。Servo 适合连续交互或视觉伺服，Task Constructor 把接近、抓取与放置拆成可组合阶段，二者都依赖准确模型和状态反馈。",
+      "prerequisites": [
+        "MoveIt 基础规划",
+        "控制器轨迹接口",
+        "碰撞模型与末端坐标系"
+      ],
+      "objectives": [
+        "区分规划一次轨迹与持续发送增量命令",
+        "理解 Servo 的坐标、限速与碰撞约束",
+        "把抓放任务分成具有明确输入输出的阶段"
+      ],
+      "concepts": [
+        "Servo 输入表达关节或末端增量运动，输出需要匹配下游控制器；消息坐标系错误会改变运动方向。",
+        "Servo 的软件碰撞/奇异性处理不替代驱动限制和硬件安全机制。",
+        "MTC 用阶段传播候选解，能分别解释抓取姿态生成、IK、接近和连接阶段的失败。"
+      ],
+      "steps": [
+        {
+          "title": "先核对 Jazzy 支持的接口",
+          "body": "以 moveit2 的 jazzy 分支确认 Servo 的消息、服务和参数；Rolling 教程中出现的新命令类型只作为扩展阅读。",
+          "code": "ros2 pkg prefix --share moveit_servo\nros2 service list -t\nros2 topic list -t",
+          "language": "bash"
+        },
+        {
+          "title": "先运行模拟示例",
+          "body": "按所选版本的 Servo 演示启动完整模型与控制器，确保 joint_states 及时且坐标链连通。"
+        },
+        {
+          "title": "从单轴小增量开始",
+          "body": "只在模拟中检查关节方向、末端 frame 与停止行为；逐步增加复杂度，记录指令超时后的输出。"
+        },
+        {
+          "title": "按阶段调试抓放",
+          "body": "将 MTC 任务拆成当前状态、打开夹爪、接近、生成抓取、闭合、抬升、转移、放置；失败时检查第一个无解阶段。"
+        }
+      ],
+      "expected": [
+        "能解释同一目标为何适合规划、Servo 或多阶段任务。",
+        "模拟中停止输入后不会持续沿旧命令运动。"
+      ],
+      "pitfalls": [
+        "Rolling Servo 教程中的服务名和输入支持不能未经核对用于 Jazzy。",
+        "末端速度在工具坐标系与世界坐标系中含义不同。",
+        "夹爪闭合成功只说明执行接口完成，不自动证明物体被可靠抓取。"
+      ],
+      "exercise": "设计一个模拟抓放流程，为每个阶段列出成功条件、失败恢复以及需要的传感器反馈；说明哪一步可以使用 Servo。",
+      "sourceIds": [
+        "eco-servo",
+        "eco-mtc",
+        "eco-moveit-jazzy"
+      ],
+      "validation": "资料与本地源码已核对；命令为读者练习说明，本次未安装、编译或运行 ROS 节点，未连接硬件。",
+      "exerciseAnswer": [
+        "至少拆成接近、对准、闭合夹爪、确认抓取、抬升、转移、放置与释放。每阶段分别定义位置、力/触觉或视觉确认及失败恢复。",
+        "近距离连续对准可用 Servo，远距离绕障碍移动可用轨迹规划，多阶段候选解组织可用 MTC；最终选择取决于传感器和控制接口，不是 API 名称。"
+      ]
+    },
+    {
+      "id": "eco-perception-pipeline",
+      "title": "感知管线：图像、深度、点云与时间同步",
+      "category": "感知",
+      "level": "中级",
+      "summary": "感知节点接收的不只是像素或点。编码、相机内参、坐标系、时间戳和 QoS 共同组成数据契约。先证明输入的几何与时序正确，再接入检测模型或点云算法。",
+      "prerequisites": [
+        "话题与 QoS",
+        "tf2",
+        "Python/OpenCV 或 C++ 基础"
+      ],
+      "objectives": [
+        "理解 Image 与 CameraInfo 的配对",
+        "用 cv_bridge 正确转换编码",
+        "把点云变换与滤波接到可观察的数据链"
+      ],
+      "concepts": [
+        "cv_bridge 把 ROS 图像与 OpenCV 表示互换，颜色通道顺序和深度类型必须显式理解。",
+        "image_transport 选择 raw/compressed 等传输插件；压缩节省带宽，但会增加编解码和可能的损失。",
+        "PointCloud2 是带字段布局的二进制数据；不能假设每个点都只有 x,y,z 三个 float。"
+      ],
+      "steps": [
+        {
+          "title": "确认相机话题契约",
+          "body": "以实际相机命名替换 /camera 路径，检查类型、QoS、分辨率、编码和 CameraInfo。",
+          "code": "ros2 topic info /camera/image_raw --verbose\nros2 topic echo /camera/camera_info --once",
+          "language": "bash"
+        },
+        {
+          "title": "先显示原始数据",
+          "body": "在 RViz 或 image_view 中观察输入；显示有问题时不要先调识别模型。检查 optical frame 与机器人坐标之间的旋转。"
+        },
+        {
+          "title": "对比两个图像传输方案",
+          "body": "记录 raw 与 compressed 的带宽、CPU 与延迟，同时确认订阅端支持所选 transport。",
+          "code": "ros2 topic bw /camera/image_raw",
+          "language": "bash"
+        },
+        {
+          "title": "让每个处理节点保留可追溯元数据",
+          "body": "滤波或检测输出保留正确 header；需要多传感器同步时设定可解释的时间容差，并观察丢帧数量。"
+        }
+      ],
+      "expected": [
+        "图像方向、颜色与深度单位符合传感器说明。",
+        "点云在正确 TF 下与机器人和地图几何对齐。"
+      ],
+      "pitfalls": [
+        "BGR/RGB 混用会改变模型输入；16UC1 深度不能当作普通 8 位彩图。",
+        "只调整队列大小不能弥补不同设备的时钟偏移。",
+        "某些 image_pipeline 参数在 Jazzy 发生过更名，旧教程需要逐项核查。"
+      ],
+      "exercise": "搭建相机→去畸变→处理→可视化链路，对每个节点记录输入类型、编码、frame、时间戳以及处理耗时。",
+      "sourceIds": [
+        "eco-image-pipeline",
+        "eco-cv-bridge",
+        "eco-image-common",
+        "eco-image-examples",
+        "eco-pcl"
+      ],
+      "validation": "资料与本地源码已核对；命令为读者练习说明，本次未安装、编译或运行 ROS 节点，未连接硬件。",
+      "exerciseAnswer": [
+        "输入契约至少包括 Image 编码、尺寸、步长、CameraInfo、frame_id、采样时间与 QoS；每个处理阶段列出输出格式和是否改变分辨率/相机内参。",
+        "验收用同一输入检查颜色、几何对齐、处理延迟和丢帧。改变图像尺寸后仍沿用旧内参，或丢弃 header，都属于链路错误。"
+      ]
+    },
+    {
+      "id": "eco-data-observability",
+      "title": "数据与诊断：rosbag2、MCAP、Foxglove 与 tracing",
+      "category": "数据与诊断",
+      "level": "中级",
+      "summary": "可复现的机器人问题需要数据证据。记录输入、状态、TF 和关键配置，再用同一份记录重跑算法，能把偶发现场问题转化为可检查的回归场景。",
+      "prerequisites": [
+        "话题与消息",
+        "ROS 时间",
+        "节点参数"
+      ],
+      "objectives": [
+        "录制并回放一段完整数据",
+        "区分记录时间与消息 header 时间",
+        "选择日志、诊断与 trace 的合适用途"
+      ],
+      "concepts": [
+        "rosbag2 负责消息录制回放，存储插件决定文件格式；MCAP 能承载多话题与 Schema，但不会自动保存所有外部配置。",
+        "diagnostics 适合汇总健康状态，日志解释事件，trace 关注回调与执行时序，这三类证据互补。",
+        "回放机器人数据时需要重建原先的时钟与 TF 条件，避免现场驱动与 bag 同时发布相同数据。"
+      ],
+      "steps": [
+        {
+          "title": "录制一个小而完整的实验",
+          "body": "仅录制实际存在的话题，给输出目录取新的名称。下面示例针对已有 /scan、/odom、/tf 和 /tf_static 的系统。",
+          "code": "ros2 bag record -s mcap -o learning_run /scan /odom /tf /tf_static",
+          "language": "bash"
+        },
+        {
+          "title": "查看记录内容",
+          "body": "停止录制后检查话题数、消息数、时长和存储格式。",
+          "code": "ros2 bag info learning_run",
+          "language": "bash"
+        },
+        {
+          "title": "使用记录时钟回放",
+          "body": "让下游算法开启 use_sim_time，再回放。不要同时保留原始驱动发布同名输入。",
+          "code": "ros2 bag play learning_run --clock",
+          "language": "bash"
+        },
+        {
+          "title": "从现象深入到时间线",
+          "body": "先用 RViz/Foxglove 比较输出，再用 diagnostics 观察健康状态；若问题是回调延迟，按 ros2_tracing 指南采集 trace。"
+        }
+      ],
+      "expected": [
+        "相同 bag 在固定参数下能重现相同类别的问题。",
+        "记录说明中包括软件提交、参数、frame 约定和实验环境。"
+      ],
+      "pitfalls": [
+        "未录制 /tf_static 可能使回放无法重建传感器安装关系。",
+        "QoS 不匹配会造成录制缺数据；先查看订阅兼容性，再使用 QoS override。",
+        "只看 ros2 topic hz 的平均频率可能漏掉长尾延迟与突发丢帧。"
+      ],
+      "exercise": "制作一个故障复现包：bag、参数 YAML、版本清单、启动命令和预期现象；换一个新终端验证可复现性。",
+      "sourceIds": [
+        "eco-rosbag",
+        "eco-mcap",
+        "eco-foxglove",
+        "eco-diagnostics",
+        "eco-tracing"
+      ],
+      "validation": "资料与本地源码已核对；命令为读者练习说明，本次未安装、编译或运行 ROS 节点，未连接硬件。",
+      "exerciseAnswer": [
+        "复现包应包含原始 bag、必要 TF、参数 YAML、软件提交/包版本、启动顺序、时钟设置与问题判定标准。若涉及外部模型和地图，也要记录来源与版本。",
+        "使用新终端和隔离话题环境重放，确认没有现场驱动重复发布；用同一判定标准再次观察问题才算复现成功。"
+      ]
+    },
+    {
+      "id": "eco-microcontrollers",
+      "title": "micro-ROS：把微控制器纳入 ROS 图",
+      "category": "嵌入式",
+      "level": "进阶",
+      "summary": "micro-ROS 在资源受限设备上实现 ROS 2 客户端能力，通过 Agent 与较大计算机上的 ROS 系统连接。先用主机示例理解会话，再讨论板卡、实时性和静态内存。",
+      "prerequisites": [
+        "C 语言",
+        "发布订阅",
+        "串口或 UDP 基础"
+      ],
+      "objectives": [
+        "解释 client、transport、Agent 的分工",
+        "保持固件与 Agent 的接口版本一致",
+        "区分执行器逻辑与底层 RTOS 调度"
+      ],
+      "concepts": [
+        "Agent 建立通信桥，但微控制器的控制逻辑与故障响应仍需自身设计。",
+        "动态长度消息需要预先规划内存；桌面端随手创建容器的写法不适合直接搬到小内存设备。",
+        "ROS 发行版、板卡工具链与 micro-ROS 分支共同决定兼容性。"
+      ],
+      "steps": [
+        {
+          "title": "从迁移后的官方文档进入",
+          "body": "新版站点为 micro.vulcanexus.org；Linux 教程正文仍使用 Humble，应将其作为流程说明并核查 Jazzy 分支。"
+        },
+        {
+          "title": "先在主机验证工具链",
+          "body": "在独立工作区构建 Jazzy 的 micro_ros_setup 或按维护者提供的发行包准备 Agent。先运行 Linux ping/pong，再选择具体板卡。"
+        },
+        {
+          "title": "启动匹配传输的 Agent",
+          "body": "以下示例仅启动 UDP Agent，不刷写设备。微控制器端必须配置相同主机地址和端口。",
+          "code": "ros2 run micro_ros_agent micro_ros_agent udp4 --port 8888",
+          "language": "bash"
+        },
+        {
+          "title": "验证会话与图发现",
+          "body": "连接客户端后先观察 Agent 会话日志，再检查节点和话题；自定义消息必须在双方生成一致的类型支持。",
+          "code": "ros2 node list\nros2 topic list -t",
+          "language": "bash"
+        }
+      ],
+      "expected": [
+        "客户端会话建立后，主机 ROS 图能发现预期实体。",
+        "重启客户端或断开传输时，系统按设计恢复或报告故障。"
+      ],
+      "pitfalls": [
+        "串口设备权限与波特率问题不同于 ROS QoS 问题，应逐层检查。",
+        "Agent 能启动不代表固件已经连接；需要会话日志与话题证据。",
+        "micro-ROS 不自动提供安全认证或硬实时控制保证。"
+      ],
+      "exercise": "用 Linorobot2 硬件参考，列出上位机与 MCU 的消息、频率、单位、时间源以及失联停止条件。",
+      "sourceIds": [
+        "eco-micro",
+        "eco-micro-tutorial",
+        "eco-micro-setup",
+        "eco-micro-agent",
+        "local-linorobot-hardware"
+      ],
+      "validation": "资料与本地源码已核对；命令为读者练习说明，本次未安装、编译或运行 ROS 节点，未连接硬件。",
+      "exerciseAnswer": [
+        "上位机通常发送车体速度，MCU 采集编码器与 IMU 并执行底层控制，经 micro-ROS Agent 向 ROS 图发布。每项消息记录单位、频率、时间源与传输方式。",
+        "验收至少包含客户端重启、Agent 重启和传输断开三种情形。失联停止应由靠近执行机构的逻辑保证，不能依赖网页或上位机继续运行。"
+      ]
+    },
+    {
+      "id": "eco-multi-robot",
+      "title": "多机器人：命名、隔离与 Open-RMF 任务协调",
+      "category": "多机器人",
+      "level": "进阶",
+      "summary": "两台机器人一起运行时，问题首先是身份、坐标和数据隔离，然后才是任务分配。Open-RMF 在更高层协调车队与设施，而每台机器人的定位和避障仍需要可靠运行。",
+      "prerequisites": [
+        "命名空间与 remap",
+        "Nav2",
+        "tf2",
+        "网络发现"
+      ],
+      "objectives": [
+        "为机器人建立一致命名方案",
+        "区分 ROS_DOMAIN_ID 隔离与命名空间",
+        "理解车队适配器和交通协商的职责"
+      ],
+      "concepts": [
+        "命名空间改变 ROS 资源名，但不会自动重写消息中的 frame_id；这两种命名要一同设计。",
+        "同一域中允许共享地图与任务信息，也要避免 /cmd_vel、/tf 等资源碰撞。",
+        "RMF 的 fleet adapter 把车队状态和任务接口接到协调系统；它不是统一替代所有机器人驱动。"
+      ],
+      "steps": [
+        {
+          "title": "先在仿真中复制两台机器人",
+          "body": "使用 robot1、robot2 两个命名空间，并记录每台机器人 TF frame 的完整名字。"
+        },
+        {
+          "title": "检查资源是否串线",
+          "body": "查看各自节点、话题与 action；向 robot1 发出任务时，robot2 的控制接口不应收到该命令。",
+          "code": "ros2 node list\nros2 topic list -t\nros2 action list -t",
+          "language": "bash"
+        },
+        {
+          "title": "加入共享设施与任务层",
+          "body": "阅读 Open-RMF 主仓库对应发行版的依赖清单，再选一个已维护的 rmf_demos 场景学习门、电梯和车队适配。"
+        },
+        {
+          "title": "定义恢复和观测",
+          "body": "模拟一个机器人离线、门不可用或任务被取消，明确任务层与机器人层各自报告什么状态。"
+        }
+      ],
+      "expected": [
+        "两台机器人的传感器、TF 与命令互不串线。",
+        "协调层能观察任务进展及失联，而不是只依赖网页上的位置动画。"
+      ],
+      "pitfalls": [
+        "共享 /tf 不等于 frame 名可以重复。",
+        "ROS_DOMAIN_ID 不同通常无法直接发现彼此，需要明确的桥接或跨域设计。",
+        "RMF 交通计划与机器人局部避障是不同层次，不能只实现其中之一。"
+      ],
+      "exercise": "画出两台底盘、一扇门和一个调度器的数据图，标出私有资源、共享资源和每类故障的负责组件。",
+      "sourceIds": [
+        "eco-rmf",
+        "eco-rmf-demos",
+        "eco-nav2-setup"
+      ],
+      "validation": "资料与本地源码已核对；命令为读者练习说明，本次未安装、编译或运行 ROS 节点，未连接硬件。",
+      "exerciseAnswer": [
+        "robot1、robot2 的命令、传感器与局部 TF 身份应独立；地图或调度任务可以共享，但共享规则要明确。消息内 frame_id 需显式命名，不能只靠 ROS namespace。",
+        "门状态由设施适配器负责，车队任务由调度/适配层负责，机器人避障与执行由本机负责。离线或取消时各层应有可观察结果。"
+      ]
+    },
+    {
+      "id": "eco-network-security",
+      "title": "通信与安全：DDS、Zenoh、发现和权限边界",
+      "category": "通信",
+      "level": "进阶",
+      "summary": "分布式 ROS 系统的排错应从网络连通、发现、类型、QoS 到应用逻辑逐层推进。更换 RMW 是一次通信架构选择，安全身份与访问控制也必须独立于域号配置。",
+      "prerequisites": [
+        "QoS",
+        "网络与端口基础",
+        "环境变量"
+      ],
+      "objectives": [
+        "理解 DDS 与 Zenoh 的发现差别",
+        "避免 CLI daemon 残留造成错误观察",
+        "知道域隔离与身份授权的区别"
+      ],
+      "concepts": [
+        "DDS 实现共享标准接口，但其发现、传输与调优配置不同；上游 latest 文档也可能超出 Jazzy 包版本。",
+        "rmw_zenoh 默认配置依赖路由器进行发现；直接套用 DDS 多播经验可能看不到节点。",
+        "SROS2 基于密钥库、身份和权限策略；ROS_DOMAIN_ID 只用于逻辑分组，不是认证。"
+      ],
+      "steps": [
+        {
+          "title": "记录两端通信环境",
+          "body": "先核对发行版、RMW、domain、网络接口和系统时间，再查看 QoS；每次实验只改一层。",
+          "code": "printenv ROS_DISTRO RMW_IMPLEMENTATION ROS_DOMAIN_ID",
+          "language": "bash"
+        },
+        {
+          "title": "在独立终端比较 RMW",
+          "body": "安装目标 RMW 后停止旧 daemon，再在所有参与进程中选择一致的实现。不要强杀所有 ROS 进程。",
+          "code": "ros2 daemon stop\nexport RMW_IMPLEMENTATION=rmw_cyclonedds_cpp",
+          "language": "bash"
+        },
+        {
+          "title": "测试 Zenoh 路由器方案",
+          "body": "已安装 Jazzy rmw_zenoh_cpp 后，在终端一运行路由器；终端二、三设置 RMW_IMPLEMENTATION=rmw_zenoh_cpp 后分别运行 demo talker/listener。",
+          "code": "ros2 run rmw_zenoh_cpp rmw_zenohd",
+          "language": "bash"
+        },
+        {
+          "title": "学习安全身份配置",
+          "body": "在临时练习目录建立独立密钥库与 enclave，按 SROS2 Jazzy 教程配置启用和强制策略；不要提交私钥。",
+          "code": "ros2 security create_keystore demo_keystore\nros2 security create_enclave demo_keystore /learning/talker",
+          "language": "bash"
+        }
+      ],
+      "expected": [
+        "同一套发布订阅能在选定通信实现下稳定互通，错误能定位到具体层。",
+        "启用安全后，允许和拒绝的通信都能用明确测试观察。"
+      ],
+      "pitfalls": [
+        "RMW 改变后旧 daemon 可能仍使用原实现，先停止并重启观察工具。",
+        "不同机器域号相同不保证网络可发现，路由、防火墙和容器网络仍会影响通信。",
+        "不要把命名空间、域号或未加密 WebSocket 当作访问控制。"
+      ],
+      "exercise": "为双机传感器传输制作检查表：发现、吞吐、延迟、断线恢复和权限拒绝各设计一个实验，并保存版本及配置。",
+      "sourceIds": [
+        "eco-fastdds",
+        "eco-cyclone",
+        "eco-zenoh",
+        "eco-sros2",
+        "eco-rosbridge"
+      ],
+      "validation": "资料与本地源码已核对；命令为读者练习说明，本次未安装、编译或运行 ROS 节点，未连接硬件。",
+      "exerciseAnswer": [
+        "先用小消息证明发现和互通，再测目标数据量下的吞吐/P95 延迟与丢帧；断开链路后测恢复时间。保留 domain、RMW、网络接口与版本。",
+        "权限测试应同时证明允许的通信成功、未授权的通信被拒绝。仅设置不同 ROS_DOMAIN_ID 或隐藏话题不能替代身份与授权测试。"
+      ]
+    },
+    {
+      "id": "eco-accelerated-robotics",
+      "title": "GPU 感知与 AI 仿真：Isaac ROS、Isaac Sim 的接入边界",
+      "category": "感知与 AI",
+      "level": "进阶",
+      "summary": "GPU 加速和高保真仿真能扩展感知与数据能力，但应放在稳定的数据契约之上。先完成普通 ROS 输入输出，再核对供应商平台矩阵，最后引入容器、推理和仿真桥。",
+      "prerequisites": [
+        "图像与点云管线",
+        "ROS 时间和 TF",
+        "Linux 容器基础"
+      ],
+      "objectives": [
+        "区分 Isaac ROS 软件管线与 Isaac Sim 仿真器",
+        "核对 GPU/驱动/容器/ROS 的兼容关系",
+        "用端到端指标评价加速收益"
+      ],
+      "concepts": [
+        "Isaac ROS 侧重加速感知与机器人软件包，Isaac Sim 侧重仿真、传感器和场景，两者可以结合但不是同一个产品。",
+        "GPU 算子耗时降低不代表端到端响应更快；拷贝、队列、同步和序列化可能成为新瓶颈。",
+        "仿真中的相机帧率、时钟与物理步长会改变数据分布，训练或测试时应记录这些设置。"
+      ],
+      "steps": [
+        {
+          "title": "从计算平台矩阵开始",
+          "body": "记录目标硬件、驱动、JetPack 或 x86 系统、容器镜像与 ROS 发行版。只使用维护者声明支持的组合。"
+        },
+        {
+          "title": "先验证普通 ROS 数据链",
+          "body": "通过 bag 或真实传感器建立输入基线，记录帧率、带宽、端到端延迟和输出质量。",
+          "code": "ros2 topic hz /camera/image_raw\nros2 topic bw /camera/image_raw",
+          "language": "bash"
+        },
+        {
+          "title": "在仿真桥两侧检查同一个消息",
+          "body": "Isaac Sim 启用 ROS 2 bridge 后，核对图像编码、TF、/clock 与 use_sim_time。官方当前文档推荐 Humble/Jazzy，但具体版本仍需固定。"
+        },
+        {
+          "title": "再替换为加速组件",
+          "body": "保持输入数据集不变，用相同任务指标比较 CPU/GPU 方案，明确启动耗时、显存、吞吐与延迟之间的取舍。"
+        }
+      ],
+      "expected": [
+        "能记录并复现完整软硬件版本组合。",
+        "加速方案的收益由同一数据集上的端到端测量支持。"
+      ],
+      "pitfalls": [
+        "供应商 latest 文档会变化，不应把当日教程当作长期兼容保证。",
+        "显卡可用不等于驱动、容器或特定 Isaac 包兼容。",
+        "在模拟器中表现良好不能直接证明真实传感器分布和硬件时序正确。"
+      ],
+      "exercise": "选择图像去畸变或深度处理任务，写一份普通 ROS 与加速实现的对照实验，至少报告吞吐、P95 延迟、资源占用与输出差异。",
+      "sourceIds": [
+        "eco-isaac-ros",
+        "eco-isaac-compute",
+        "eco-isaac-sim",
+        "eco-image-pipeline"
+      ],
+      "validation": "资料与本地源码已核对；命令为读者练习说明，本次未安装、编译或运行 ROS 节点，未连接硬件。",
+      "exerciseAnswer": [
+        "固定输入 bag、图像尺寸、算法参数和输出质量标准，分别测 CPU/GPU 路径的吞吐、端到端 P95 延迟、CPU、内存、GPU/显存及启动耗时。",
+        "若 GPU 算子更快但端到端延迟更高，应查数据复制、批处理等待和队列。报告具体兼容矩阵与不支持的环境，避免泛化为所有设备都更快。"
+      ]
+    }
+  ],
+  "localProjects": [
+    {
+      "id": "local-control",
+      "name": "ros2_control",
+      "path": "/home/mu/Desktop/ros2_jazzy_tracked_refs/ros2_control",
+      "url": "https://github.com/ros-controls/ros2_control/tree/f9e24287fc1d6996e5ba1656a9ee24e5f33adef7",
+      "branch": "jazzy",
+      "commit": "f9e24287fc1d6996e5ba1656a9ee24e5f33adef7",
+      "description": "硬件抽象、资源管理、控制管理器实现",
+      "note": "优先阅读 hardware_interface 与 controller_manager；Jazzy API 以本地头文件为准。",
+      "verified": true,
+      "checkedAt": "2026-11-06",
+      "verification": "已读取本地分支、提交和 README／示例；未编译运行"
+    },
+    {
+      "id": "local-controllers",
+      "name": "ros2_controllers",
+      "path": "/home/mu/Desktop/ros2_jazzy_tracked_refs/ros2_controllers",
+      "url": "https://github.com/ros-controls/ros2_controllers/tree/bee185cbb98815116af9cfb00ff595b0b800e91a",
+      "branch": "jazzy",
+      "commit": "bee185cbb98815116af9cfb00ff595b0b800e91a",
+      "description": "差速、关节轨迹及关节状态控制器实现",
+      "note": "优先阅读 diff_drive_controller 和 joint_state_broadcaster。",
+      "verified": true,
+      "checkedAt": "2026-11-06",
+      "verification": "已读取本地分支、提交和 README／示例；未编译运行"
+    },
+    {
+      "id": "local-demos",
+      "name": "ros2_control_demos",
+      "path": "/home/mu/Desktop/ros2_jazzy_tracked_refs/ros2_control_demos",
+      "url": "https://github.com/ros-controls/ros2_control_demos/tree/fbab026e147824971c97996f3789f97c2ee9e9ac",
+      "branch": "jazzy",
+      "commit": "fbab026e147824971c97996f3789f97c2ee9e9ac",
+      "description": "控制框架官方示例集",
+      "note": "example_2 提供 DiffBot，含 Python/XML launch 与 mock hardware 路径。",
+      "verified": true,
+      "checkedAt": "2026-11-06",
+      "verification": "已读取本地分支、提交和 README／示例；未编译运行"
+    },
+    {
+      "id": "local-agrosensebot",
+      "name": "AgroSenseBot",
+      "path": "/home/mu/Desktop/ros2_jazzy_tracked_refs/AgroSenseBot",
+      "url": "https://github.com/AIRLab-POLIMI/AgroSenseBot/tree/4ad700b090b9f3ddb8513c7519938bd7f0974709",
+      "branch": "jazzy",
+      "commit": "4ad700b090b9f3ddb8513c7519938bd7f0974709",
+      "description": "农业履带平台的 CANopen、控制、导航与系统集成",
+      "note": "检出 jazzy，但 README 保留 Iron 安装段；不可直接照抄运行。",
+      "verified": true,
+      "checkedAt": "2026-11-06",
+      "verification": "已读取本地分支、提交和 README／示例；未编译运行"
+    },
+    {
+      "id": "local-bunker",
+      "name": "bunker_ros2",
+      "path": "/home/mu/Desktop/ros2_jazzy_tracked_refs/bunker_ros2",
+      "url": "https://github.com/agilexrobotics/bunker_ros2/tree/f24f722b245eb1d2572c47d091fc847d9fd68cf4",
+      "branch": "jazzy",
+      "commit": "f24f722b245eb1d2572c47d091fc847d9fd68cf4",
+      "description": "成品履带底盘的 ROS wrapper 与设备消息",
+      "note": "当前 README /cmd_vel 使用 Twist；与 DiffBot 的 TwistStamped 不同。",
+      "verified": true,
+      "checkedAt": "2026-11-06",
+      "verification": "已读取本地分支、提交和 README／示例；未编译运行"
+    },
+    {
+      "id": "local-linorobot",
+      "name": "linorobot2",
+      "path": "/home/mu/Desktop/ros2_jazzy_tracked_refs/linorobot2",
+      "url": "https://github.com/linorobot/linorobot2/tree/f6b0bd0350c4a9d6b815ef4bb5c701a1e5129711",
+      "branch": "jazzy",
+      "commit": "f6b0bd0350c4a9d6b815ef4bb5c701a1e5129711",
+      "description": "移动机器人上位机模型、SLAM、Nav2 和仿真工程",
+      "note": "结合其对应硬件仓库理解上下位机数据链；按本地提交阅读。",
+      "verified": true,
+      "checkedAt": "2026-11-06",
+      "verification": "已读取本地分支、提交和 README／示例；未编译运行"
+    },
+    {
+      "id": "local-linorobot-hardware",
+      "name": "linorobot2_hardware",
+      "path": "/home/mu/Desktop/ros2_jazzy_tracked_refs/linorobot2_hardware",
+      "url": "https://github.com/linorobot/linorobot2_hardware/tree/fbbbb922f4bd778e23268210b7bd7a6ac4c75d83",
+      "branch": "jazzy",
+      "commit": "fbbbb922f4bd778e23268210b7bd7a6ac4c75d83",
+      "description": "基于 micro-ROS 的电机、编码器与 IMU 固件",
+      "note": "板卡、工具链、传输和上位机分支需共同核对。",
+      "verified": true,
+      "checkedAt": "2026-11-06",
+      "verification": "已读取本地分支、提交和 README／示例；未编译运行"
+    },
+    {
+      "id": "local-ugv",
+      "name": "ugv_sdk",
+      "path": "/home/mu/Desktop/ros2_jazzy_tracked_refs/ugv_sdk",
+      "url": "https://github.com/agilexrobotics/ugv_sdk/tree/f2704eacdc90357078cd93ec60aae08bb4baab35",
+      "branch": "main",
+      "commit": "f2704eacdc90357078cd93ec60aae08bb4baab35",
+      "description": "AgileX 底盘 CAN/UART 协议和 C++ 设备抽象",
+      "note": "通用 main 分支，不按 ROS 发行版命名；配合 BUNKER wrapper 阅读。",
+      "verified": true,
+      "checkedAt": "2026-11-06",
+      "verification": "已读取本地分支、提交和 README／示例；未编译运行"
+    }
+  ],
+  "versionNotes": [
+    {
+      "topic": "主线版本",
+      "detail": "本网站固定 Ubuntu24.04 + ROS 2 Jazzy + Gazebo Harmonic。2026 年官方页面已出现 Lyrical/Jetty，不能称 Jazzy 为最新发行版。",
+      "sourceIds": [
+        "eco-gazebo-install",
+        "eco-control"
+      ]
+    },
+    {
+      "topic": "Nav2 文档迁移",
+      "detail": "根站现在导向 Rolling；旧 /getting_started/index.html 无效。使用已核查的 /jazzy/getting_started/quickstart/quickstart/ 等新路径。",
+      "sourceIds": [
+        "eco-nav2",
+        "eco-nav2-quick"
+      ]
+    },
+    {
+      "topic": "micro-ROS 文档迁移",
+      "detail": "micro.ros.org 根页面明确迁往 micro.vulcanexus.org；新站 Linux 入门仍以 Humble 为例。",
+      "sourceIds": [
+        "eco-micro",
+        "eco-micro-tutorial",
+        "eco-micro-setup"
+      ]
+    },
+    {
+      "topic": "MoveIt 文档版本",
+      "detail": "moveit.picknik.ai/main 明确标为 Rolling；本次 /jazzy/ 路径未能访问，使用 Jazzy 源码交叉核对。",
+      "sourceIds": [
+        "eco-moveit",
+        "eco-moveit-jazzy"
+      ]
+    },
+    {
+      "topic": "底盘命令类型",
+      "detail": "当前 Jazzy diff_drive_controller 为 TwistStamped；本地 BUNKER wrapper 示例为 Twist。须先 ros2 topic info --verbose，不应全站统一替换。",
+      "sourceIds": [
+        "eco-diff-drive",
+        "local-bunker",
+        "eco-control-demo"
+      ]
+    },
+    {
+      "topic": "分支不等于环境验证",
+      "detail": "AgroSenseBot 本地为 jazzy 分支，但 README 含 Iron/Ubuntu22.04 指令；该项目仅作结构参考，待独立依赖与运行验证。",
+      "sourceIds": [
+        "local-agrosensebot"
+      ]
+    },
+    {
+      "topic": "默认分支",
+      "detail": "不能对每个仓库都构造 /tree/jazzy：vision_opencv 本次此路径为 404。应查 rosdistro 和发布标签。",
+      "sourceIds": [
+        "eco-cv-bridge",
+        "eco-rosdistro"
+      ]
+    },
+    {
+      "topic": "供应商生态",
+      "detail": "Isaac、Fast DDS、Cyclone DDS 和 Foxglove 的 latest 文档不代表 Jazzy 的已安装版本；记录软件和硬件兼容矩阵。",
+      "sourceIds": [
+        "eco-isaac-compute",
+        "eco-fastdds",
+        "eco-cyclone",
+        "eco-foxglove"
+      ]
+    }
+  ],
+  "linkAudit": [
+    {
+      "url": "https://docs.nav2.org/getting_started/index.html",
+      "status": "404",
+      "replacement": "https://docs.nav2.org/jazzy/getting_started/quickstart/quickstart/"
+    },
+    {
+      "url": "https://micro.ros.org/docs/tutorials/core/first_application_linux/",
+      "status": "404，根站声明已迁移",
+      "replacement": "https://micro.vulcanexus.org/docs/tutorials/core/first_application_linux/"
+    },
+    {
+      "url": "https://moveit.picknik.ai/jazzy/index.html",
+      "status": "抓取不可访问；不作为已验证页面",
+      "replacement": "https://moveit.picknik.ai/main/index.html"
+    },
+    {
+      "url": "https://github.com/ros-perception/vision_opencv/tree/jazzy",
+      "status": "404",
+      "replacement": "https://github.com/ros-perception/vision_opencv"
+    },
+    {
+      "url": "https://docs.foxglove.dev/docs/connecting-to-data/ros-foxglove-bridge/",
+      "status": "重定向",
+      "replacement": "https://docs.foxglove.dev/docs/fleet/bridge"
+    },
+    {
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Intermediate/Tf2/Tf2-Main.html",
+      "status": "返回 Anubis Access Denied；未读取正文",
+      "replacement": "https://github.com/ros2/geometry2/tree/jazzy"
+    },
+    {
+      "url": "https://docs.ros.org/en/jazzy/Tutorials/Intermediate/URDF/URDF-Main.html",
+      "status": "返回 Anubis Access Denied；未读取正文",
+      "replacement": "https://github.com/ros/urdf_tutorial/tree/ros2"
+    },
+    {
+      "url": "https://docs.ros.org/en/jazzy/p/slam_toolbox/",
+      "status": "返回 Anubis Access Denied；未读取正文",
+      "replacement": "https://github.com/SteveMacenski/slam_toolbox/tree/jazzy"
+    },
+    {
+      "url": "https://docs.ros.org/en/jazzy/p/robot_localization/",
+      "status": "返回 Anubis Access Denied；未读取正文",
+      "replacement": "https://github.com/cra-ros-pkg/robot_localization"
+    },
+    {
+      "url": "https://docs.ros.org/en/jazzy/p/rosbag2_storage_mcap/",
+      "status": "返回 Anubis Access Denied；未读取正文",
+      "replacement": "https://github.com/ros2/rosbag2/tree/jazzy"
+    }
+  ],
+  "summaryCounts": {
+    "resources": 63,
+    "chapters": 18,
+    "localProjects": 8,
+    "versionNotes": 8
+  }
+}

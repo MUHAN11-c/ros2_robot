@@ -1,0 +1,2097 @@
+{
+  "chapters": [
+    {
+      "id": "eco-tf-frames",
+      "sections": [
+        {
+          "title": "先把位置问题写成坐标问题",
+          "paragraphs": [
+            "一个激光点的数值只有连同坐标系和采样时刻才有意义。雷达测得前方一米，指的是雷达自身轴向；雷达装在车头偏左的位置时，这个点在车体坐标中会改变。tf2 保存坐标关系，使每个算法不必自己维护整套安装和运动关系。它不负责判断定位是否准确，也不会从图像或编码器自动推导缺失的变换。",
+            "本章使用三个层次：世界或地图、连续局部里程计、车体与传感器。地图允许全局定位修正，里程计要求短时间平滑，车体内部关系来自机械安装和关节状态。先把每条边的发布者写在纸上，再运行节点，可以提前发现两个节点同时声明同一关系的问题。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "理解变换的方向和复合",
+          "paragraphs": [
+            "把激光坐标中的点变换到车体坐标时，先按激光坐标轴相对车体的旋转转动点，再加上激光原点在车体中的平移。交换源和目标得到的是逆变换，不能只把平移改为负数而保持旋转不动。多级变换按照路径依次相乘，顺序通常不可交换。",
+            "ROS 常用右手坐标约定：车体向前为 x、向左为 y、向上为 z。相机 optical frame 常用另一种专门约定，不能因为模型画面看起来正确就省略它与 camera_link 的旋转。四元数应为合法单位四元数；全零不是没有旋转，单位四元数的 w 为一。"
+          ],
+          "bullets": [
+            "长度使用米，角速度使用弧度每秒；角度命令需检查是欧拉角还是四元数。",
+            "命名空间不会自动重写消息内的 frame_id。"
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "给每条消息定义时间与发布合同",
+          "paragraphs": [
+            "TF 动态关系通过 /tf 发布，固定安装关系通过 /tf_static 发布。静态广播使用适合晚加入订阅者的持久性语义，因此传感器节点晚启动仍能取得安装关系。动态广播则需要连续更新，缓存只能回答其保存时间范围内的问题。查询失败既可能是树不连通，也可能是请求时间落在缓存之外。",
+            "传感器 header.stamp 应表达测量发生的时间，而不是任意改成算法收到消息的时间。仿真时让传感器、TF 与消费节点都使用同一个 /clock；实机上则要同步主机和设备时间。将查询改成最新变换能够帮助诊断，却可能把延迟数据投到错误位置，不能视作所有时间问题的正式修复。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "最小实验：定义一个雷达安装位置",
+          "paragraphs": [
+            "实验只需要已安装 Jazzy 与 tf2_ros。每个新终端先执行 source /opt/ros/jazzy/setup.bash。终端一保持静态发布进程运行，终端二执行查询。下面命令为可复现实验说明，本次编写时没有启动 ROS 节点。它只发布坐标关系，不会向底盘发送运动命令。",
+            "这里假定雷达在车体前方二十厘米、上方十五厘米，方向与车体一致。先查询车体到雷达，再交换顺序。由于旋转为单位旋转，这个特例的逆变换平移恰好取负；随后把 yaw 改为九十度，就能观察为什么一般情况不能仅取负。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "终端一：静态安装关系",
+              "language": "bash",
+              "type": "commands",
+              "code": "source /opt/ros/jazzy/setup.bash\nros2 run tf2_ros static_transform_publisher --x 0.2 --y 0 --z 0.15 --roll 0 --pitch 0 --yaw 0 --frame-id base_link --child-frame-id laser",
+              "explanation": "保持进程运行；修改参数时先停止旧进程，防止两个发布者同时声明 laser。"
+            },
+            {
+              "label": "终端二：查询与检查",
+              "language": "bash",
+              "type": "commands",
+              "code": "source /opt/ros/jazzy/setup.bash\nros2 run tf2_ros tf2_echo base_link laser",
+              "explanation": "输出平移应为指定安装位置。结束查询后可交换两个 frame 名重复实验。"
+            }
+          ]
+        },
+        {
+          "title": "把实验扩展成一棵真实机器人树",
+          "paragraphs": [
+            "通常由定位或建图节点发布 map 到 odom，由轮式里程计或融合节点发布 odom 到 base_link，由 robot_state_publisher 发布车体内部关系。传感器安装也可以放进 URDF 的固定关节，此时不要再另外运行同名静态发布者。对旋转云台等运动部件，关节状态必须随测量更新。",
+            "检查时从局部到全局逐段证明连通性。先确认 base_link 到 laser，再确认 odom 到 base_link，最后确认 map 到 odom。只在 RViz 使用 map 显示整个系统，容易把最末端的缺失关系误认为地图问题。一个稳定的 TF 树不应存在环，每个 child 应有明确且唯一的父节点。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "有完整机器人后执行",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 run tf2_tools view_frames\nros2 run tf2_ros tf2_echo odom base_link",
+              "explanation": "需要安装 tf2_tools；生成树图后对照预先画出的发布责任表。"
+            }
+          ]
+        },
+        {
+          "title": "用现象定位失败层次",
+          "paragraphs": [
+            "报 unknown frame 时先检查名字和发布者是否存在；报无法连接时检查中间边；报过去外推时检查消息是否过旧或缓存是否太短；报未来外推时检查时间源、时间偏差和最新 TF 是否滞后。增大等待时间只能处理短暂到达顺序问题，无法修正两个时钟相差几分钟的系统。",
+            "如果点云会偶尔跳动，除了定位算法，还要检查重复发布和时间戳。把 odom 到 base_link 的发布者缩减到一个，录制 /tf、/tf_static 和原始传感器后再重放。验收不仅是查询成功，还应包括静止时关系稳定、运动时变化连续，以及在传感器实际时间戳处可以查询。",
+            "可以用一个已知位置的点检查变换方向：令雷达前方一米的点为输入，在无旋转安装条件下，车体坐标应为前方一米二、上方十五厘米。先手算再与程序结果比较，这比只确认 TF 树连通更能发现父子关系写反或单位混用。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "给一台差速小车接入前置雷达",
+        "scenario": "雷达安装正确，但 RViz 使用 map 作为 Fixed Frame 后仍无法显示扫描。",
+        "steps": [
+          "证明 base_link 到 laser 可查询，排除安装边缺失。",
+          "证明 odom 到 base_link 连续更新，确认里程计发布者。",
+          "发现 map 到 odom 尚未发布；启动定位或在无全局定位的实验中暂用 odom 显示。",
+          "核对扫描时间与 TF 时间同属仿真时钟后再观察。"
+        ],
+        "result": "显示恢复的原因是补齐正确层次的坐标关系，而非修改雷达数据。"
+      },
+      "exercises": [
+        {
+          "question": "为什么静态坐标关系不能用每帧最新测量来回覆盖？",
+          "answer": "固定安装关系应保持稳定。若安装会变化，它就是动态关系，需要真实关节测量和正确时间戳，而不是多个节点竞争发布。"
+        },
+        {
+          "question": "查询最新变换能消除时间问题吗？",
+          "answer": "它可能避免缓存外推报错，但延迟传感器会被转换到错误时刻的机器人姿态，运动中产生几何误差。"
+        },
+        {
+          "question": "EKF 与底盘都发布 odom→base_link 会怎样？",
+          "answer": "同一 child 的来源竞争可能造成跳变和不一致，应保留一个负责该边的发布者，另一方仅发布测量话题。"
+        }
+      ]
+    },
+    {
+      "id": "eco-model-rviz",
+      "sections": [
+        {
+          "title": "模型是多个模块共享的结构合同",
+          "paragraphs": [
+            "URDF 用 link 描述刚体，用 joint 描述刚体之间的连接。一个轮子是一个 link，轮轴约束由 joint 表达；传感器固定安装也通过 fixed joint 连接。模型应构成树，模型中的名字会继续出现在 joint_states、控制器参数和运动规划配置中，因此名字属于跨模块接口，不能只为了显示方便随意改变。",
+            "同一个 link 可以有不同的 visual 和 collision。前者决定外观，后者决定接触与碰撞检测；为了计算效率，复杂网格常用简单几何近似碰撞体。质量与惯量描述动力学。RViz 可以显示一个没有合理惯量的模型，但物理仿真可能发散，所以外观正确只是第一层验收。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "理解关节原点、轴和状态的关系",
+          "paragraphs": [
+            "joint 的 origin 定义子关节坐标相对父 link 的安装变换，axis 定义在关节坐标中的运动方向。车轮的旋转轴通常不沿车体前进方向。若左右轮使用镜像模型，要分别核对正方向，不能只凭 mesh 外观推断编码器符号。continuous 用于连续旋转，revolute 需要上下限，fixed 没有可变关节状态。",
+            "robot_state_publisher 读取 robot_description，并结合 JointState 中的关节位置发布 TF。它不会从速度目标积分出正确轮子位置，也不会提供底盘全局位姿。joint_state_publisher 可以为显示提供人为关节值，实际运行时应由硬件或控制系统提供真实状态，避免两套状态同时驱动模型。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "先制作可独立打开的最小描述",
+          "paragraphs": [
+            "把下面完整 XML 保存为 robot.urdf。它只包含车体和固定雷达，用于验证资源、模型和 TF 链，不包含车轮、电机、碰撞规划或惯量求解。使用最小模型能使显示问题与复杂机械结构分离。本章代码和命令未经本次 ROS 运行验证，读者应按输出判据逐步检查。",
+            "模型尺寸使用米，颜色值在零到一之间。雷达的几何中心与 link 原点在此示例中重合，因此 joint origin 就是安装位置。增加 mesh 时优先使用 package:// 资源地址，并让安装规则把资源复制到包的 share 目录；个人电脑上的绝对路径无法被其他工作区可靠解析。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "robot.urdf：完整的最小显示模型",
+              "language": "xml",
+              "type": "complete",
+              "code": "<?xml version=\"1.0\"?>\n<robot name=\"learning_base\">\n  <link name=\"base_link\">\n    <visual>\n      <geometry><box size=\"0.4 0.3 0.12\"/></geometry>\n      <material name=\"body\"><color rgba=\"0.15 0.4 0.55 1\"/></material>\n    </visual>\n    <collision><geometry><box size=\"0.4 0.3 0.12\"/></geometry></collision>\n  </link>\n  <link name=\"laser\">\n    <visual>\n      <geometry><cylinder radius=\"0.04\" length=\"0.05\"/></geometry>\n      <material name=\"sensor\"><color rgba=\"0.9 0.5 0.1 1\"/></material>\n    </visual>\n  </link>\n  <joint name=\"base_to_laser\" type=\"fixed\">\n    <parent link=\"base_link\"/><child link=\"laser\"/>\n    <origin xyz=\"0.15 0 0.1\" rpy=\"0 0 0\"/>\n  </joint>\n</robot>",
+              "explanation": "这是显示/TF 教学文件，未提供用于物理仿真的惯量与传感器插件。"
+            }
+          ]
+        },
+        {
+          "title": "按模型、状态、显示的顺序启动",
+          "paragraphs": [
+            "在已经安装 urdf_tutorial、robot_state_publisher 和 RViz 的环境中，可用官方 display launch 加载刚保存的文件。终端当前目录要包含 robot.urdf；路径应展开成完整路径。启动后先把 RViz Fixed Frame 设为 base_link，再打开 RobotModel 和 TF，检查雷达是否处于车头上方。",
+            "只有固定关节时，即使没有持续 joint_states，固定边也应出现。加入活动关节后才需要关节状态，状态数组中的 name 与 position 必须对应，位置单位通常为弧度或米。先确认 TF 变化，再看 mesh 是否跟随，能区分状态问题与资源显示问题。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "加载本地文件",
+              "language": "bash",
+              "type": "commands",
+              "code": "source /opt/ros/jazzy/setup.bash\nros2 launch urdf_tutorial display.launch.py model:=\"$(pwd)/robot.urdf\"",
+              "explanation": "此命令依赖已安装的教学包。可在另一个终端执行 tf2_echo base_link laser 检查安装关系。"
+            }
+          ]
+        },
+        {
+          "title": "用 Xacro 消除尺寸与重复结构的不一致",
+          "paragraphs": [
+            "当左右轮、螺栓或传感器结构重复时，复制 XML 很容易遗漏一次修改。Xacro 允许定义尺寸属性和结构宏，最终仍展开成普通 URDF。应先单独展开文件并检查输出，再交给 launch；这样宏错误不会被大量启动日志淹没。",
+            "参数化不应只覆盖外观。轮半径和轮距还进入控制器运动学，关节名称进入控制资源清单。可以让同一份工程配置生成各文件，或至少在验收清单中比较两边值。Xacro 中修改一个尺寸，并不会神奇地修改独立 YAML 中的数字，维护者仍需建立它们的关联。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "展开并检查",
+              "language": "bash",
+              "type": "commands",
+              "code": "xacro robot.urdf.xacro > /tmp/learning_robot.urdf\ncheck_urdf /tmp/learning_robot.urdf",
+              "explanation": "第二条需要 urdfdom 工具。结构检查通过仅证明树和语法基本成立，不证明质量、惯量与单位正确。"
+            }
+          ]
+        },
+        {
+          "title": "把模型验收分成四个层次",
+          "paragraphs": [
+            "第一层是语法和树结构，确认没有重复 link、断开的 joint 或多个根。第二层是坐标，检查轮轴、传感器轴和光学轴。第三层是资源，确认 mesh 与材料可以在安装后的 share 路径找到。第四层才是动力学与控制，核对惯量正定、关节限位、碰撞几何和导出的控制接口。",
+            "常见现象可以按层判断：模型完全不出现时先查 robot_description 和 Fixed Frame；单个部件缺失时查资源路径与父子关系；关节转反时查 axis、驱动符号和状态单位；仿真爆炸时查碰撞穿透、质量、惯量及步长。不要在 RViz 中随意旋转显示来掩盖源模型的轴向错误。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "组织文件与保证安装后仍能打开",
+          "paragraphs": [
+            "建议把描述文件放在 description 或 urdf 目录，网格放 meshes，显示配置放 rviz，启动文件放 launch。包的安装规则应覆盖这些目录，使用者通过包的 share 路径查找资源，而不依赖源码目录。检查时先构建并 source 安装空间，再从另一个当前目录启动同一模型，能够发现被本地相对路径掩盖的问题。",
+            "修改一个 link 或 joint 的名称后，搜索模型、控制器、状态发布和规划配置中的所有引用，并重新生成 TF 图。把命名表作为模型的一部分维护，避免同一机械部件在不同文件中使用多个近似名字。版本记录应包含模型参数，而不只是 mesh 文件；轮距、工具偏置和安装旋转的变化都可能改变算法结果。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "为已有底盘增加雷达",
+        "scenario": "模型已能显示，但新增雷达与扫描相差九十度。",
+        "steps": [
+          "单独展开 Xacro，确认固定关节安装位置。",
+          "显示 TF 坐标轴，区分 laser 与 camera optical 等不同约定。",
+          "核对驱动消息的 frame_id 是否正是新增 link。",
+          "在 URDF 中修正真实安装旋转，重新启动发布者。"
+        ],
+        "result": "雷达模型、扫描方向与 TF 坐标一致，修改保持在唯一的模型来源中。"
+      },
+      "exercises": [
+        {
+          "question": "visual 和 collision 能否使用不同形状？",
+          "answer": "可以。显示网格可详细，碰撞体可简化，但简化必须覆盖实际需要避免的接触区域。"
+        },
+        {
+          "question": "为什么 joint_state_publisher 不能替代编码器反馈？",
+          "answer": "它提供人为或默认关节值，不代表实际测量。用于实机状态会让显示与真实机械状态脱离。"
+        },
+        {
+          "question": "Xacro 改了轮距，控制器会自动改变吗？",
+          "answer": "不会。独立 YAML 仍保留原值，需要共同配置来源或明确同步和校验。"
+        }
+      ]
+    },
+    {
+      "id": "eco-gazebo-simulation",
+      "sections": [
+        {
+          "title": "先区分模拟器、传输桥和机器人算法",
+          "paragraphs": [
+            "Gazebo 计算世界中的物理和传感器，Gazebo Transport 传送模拟器消息，ros_gz_bridge 在已支持的 ROS 与 Gazebo 类型间转换，ROS 节点再处理数据。机器人在 Gazebo 中出现，不等于 ROS 已经收到传感器；ROS 能看到话题，也不等于控制器真正驱动了模拟关节。",
+            "Jazzy 与 Ubuntu24.04 的本章主线使用 Harmonic。旧 Gazebo Classic 的插件名、启动包与模型搜索变量不能直接迁移使用。先固定这三个版本，再选择 ros_gz 与 gz_ros2_control，能避免把不同代的仿真接口拼在同一个工程里。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "用一个文件定义可观察的世界",
+          "paragraphs": [
+            "下面的 SDF 是独立最小世界，包含物理、用户命令和场景广播系统。它不包含机器人，目的是证明世界可以运行并产生时间。将文件保存为 learning.sdf，在有可用图形环境的终端启动。此处给出的是实验文件和运行方法，本次没有实际启动 Gazebo。",
+            "世界文件决定物理步长与实时目标。仿真时间每一步增加多少与墙上时钟走了多少是两个概念。机器算力不足时实时因子可能下降，但正确使用仿真时间的机器人算法仍能按仿真时间理解事件；若一部分节点坚持使用系统时间，时间关系就会被破坏。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "learning.sdf：完整最小世界",
+              "language": "xml",
+              "type": "complete",
+              "code": "<?xml version=\"1.0\"?>\n<sdf version=\"1.9\">\n  <world name=\"learning\">\n    <physics name=\"default\" type=\"ignored\">\n      <max_step_size>0.001</max_step_size>\n      <real_time_factor>1.0</real_time_factor>\n    </physics>\n    <plugin filename=\"gz-sim-physics-system\" name=\"gz::sim::systems::Physics\"/>\n    <plugin filename=\"gz-sim-user-commands-system\" name=\"gz::sim::systems::UserCommands\"/>\n    <plugin filename=\"gz-sim-scene-broadcaster-system\" name=\"gz::sim::systems::SceneBroadcaster\"/>\n  </world>\n</sdf>",
+              "explanation": "完整世界文件只验证时间与基础系统；没有机器人、地面和传感器。"
+            }
+          ]
+        },
+        {
+          "title": "把桥接配置当作明确的数据合同",
+          "paragraphs": [
+            "每条桥都应列出 Gazebo 话题、ROS 话题、两端消息类型和方向。时钟通常只从模拟器流向 ROS，速度命令通常从 ROS 流向模拟器，传感器通常反向。随意开启双向桥会引入重复发布或循环，最小权限式的数据方向也更便于排错。",
+            "下面配置将 /clock 单向转换成 rosgraph_msgs/msg/Clock。如果你的世界只发布 /world/learning/clock，就把 gz_topic_name 改成实际列出的名字，ROS 一侧仍可保持 /clock。不要靠猜测桥接消息存在，先查看 Gazebo 话题，再查看 ROS 输出。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "bridge.yaml：完整时钟桥配置",
+              "language": "yaml",
+              "type": "complete",
+              "code": "- ros_topic_name: /clock\n  gz_topic_name: /clock\n  ros_type_name: rosgraph_msgs/msg/Clock\n  gz_type_name: gz.msgs.Clock\n  direction: GZ_TO_ROS",
+              "explanation": "可继续追加传感器映射；每条映射需要检查 ros_gz_bridge 是否支持该类型。"
+            }
+          ]
+        },
+        {
+          "title": "按世界、桥、算法的次序运行",
+          "paragraphs": [
+            "首先启动世界并让其运行，再启动桥接器，确认 ROS 收到时钟后才启动依赖仿真时间的算法。每个 ROS 终端先 source Jazzy。启动命令中的 config_file 使用绝对路径，避免不同终端当前目录造成“文件存在但加载不到”的误解。",
+            "暂停世界时，/clock 数值应停止推进，恢复后继续增长。观察节点的定时器是否跟随暂停：使用 ROS 时钟的定时器和基于墙上时钟的监控逻辑可能有不同表现，这种区别应该是设计选择。一次实验只启用一个时钟源，避免回放 bag 时另一个模拟器还在发布 /clock。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "三个独立终端的操作",
+              "language": "bash",
+              "type": "commands",
+              "code": "gz sim -r learning.sdf\n# 在另一个已 source Jazzy 的终端运行：\nros2 run ros_gz_bridge parameter_bridge --ros-args -p config_file:=\"$(pwd)/bridge.yaml\"\n# 在第三个终端检查：\nros2 topic echo /clock --once",
+              "explanation": "前两个命令是常驻进程，必须在不同终端运行。"
+            }
+          ]
+        },
+        {
+          "title": "再接入机器人、传感器和控制器",
+          "paragraphs": [
+            "机器人模型进入 Gazebo 后，需要质量、惯量、碰撞与关节结构形成有效物理对象。添加激光或相机时，还需要对应传感器系统和插件配置。先从一个传感器开始，列出频率、frame、噪声和消息编码，再在 RViz 检查几何方向。显示帧率不一定等于传感器采样频率。",
+            "使用 gz_ros2_control 时，仿真关节成为 ros2_control 的硬件后端。控制器看到的状态和命令接口可以与实机一致，但摩擦、延迟与饱和不会自动等同真实设备。保持同一控制接口有利于迁移，仍需用实测数据逐项校准模型，而不是把模拟成功视为最终硬件验收。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "建立分层输出判据",
+          "paragraphs": [
+            "世界层验收是时间持续推进且模型物理稳定；桥层验收是两端类型、方向和频率符合合同；算法层验收是参数时钟与 TF 一致；控制层验收是目标、关节状态和里程计形成预期关系。每层至少保留一个命令行观测点，使失败时不必只盯着三维画面猜测。",
+            "若模拟器有激光但 ROS 无话题，查桥配置和类型；ROS 有数据但 RViz 不显示，查 Fixed Frame、TF 和 QoS；机器人抖动或穿地，查惯量、碰撞和步长；控制器 active 却不动，查 joint 名、接口 claimed 状态和实际后端。把这些问题分开修复，避免同时调多个无关参数。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "保存一套可迁移的仿真实验目录",
+          "paragraphs": [
+            "把 learning.sdf、bridge.yaml、机器人描述、控制器配置和 RViz 配置放在同一个学习包中，并记录启动顺序。地图、模型材质或其他外部资源若由远程服务器首次下载，应说明缓存条件；网页能离线阅读不代表所有模拟资产已经在每台电脑存在。为了复现实验，应优先固定小型本地模型和确定的参数。",
+            "结束实验时先停止发送控制命令，再停止算法、桥和世界，避免下次运行仍有旧发布者。新实验开始前检查 /clock 和相关话题的发布者数量。若不同启动文件被重复运行，多个机器人状态发布者或桥接器可能同时存在，表现为重复数据而非明显启动错误。把进程生命周期也列入实验记录，才能区分模型问题与环境残留。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "定位一个“导航启动后一直等待”的仿真问题",
+        "scenario": "Nav2 已启动，机器人模型可见，但时间相关日志持续等待。",
+        "steps": [
+          "查看 ROS /clock 是否存在并有数值。",
+          "发现 Gazebo 只发布世界路径时钟，而桥配置使用错误话题。",
+          "修正 gz_topic_name，保持 ROS 输出为 /clock。",
+          "确认所有导航和 TF 节点 use_sim_time 一致后重试。"
+        ],
+        "result": "算法获得同一个有效时间源，后续定位和控制问题才有可比较的时间基础。"
+      },
+      "exercises": [
+        {
+          "question": "为什么不能让 bag 和模拟器同时发布 /clock？",
+          "answer": "两个时间源可能互相覆盖或跳变，使定时器、缓存与消息排序无法保持一致，应明确选择一个时间源。"
+        },
+        {
+          "question": "桥接成功说明物理模型正确吗？",
+          "answer": "不说明。桥只转换数据，惯量、碰撞、摩擦与关节约束属于模拟器模型层。"
+        },
+        {
+          "question": "Jazzy 旧教程中的 gazebo_ros2_control 能直接用于 Harmonic 吗？",
+          "answer": "不能直接当作同一接口。本路线使用现代 Gazebo 对应的 gz_ros2_control，需要核对插件和依赖版本。"
+        }
+      ]
+    },
+    {
+      "id": "eco-control-framework",
+      "sections": [
+        {
+          "title": "从周期循环理解控制框架",
+          "paragraphs": [
+            "ros2_control 将设备通信与控制算法拆开：硬件组件提供状态和可写命令，控制器消费状态并计算命令，controller_manager 管理生命周期、资源和更新顺序。典型循环先 read、再 update、最后 write。这里的顺序表示依赖关系，实际执行线程与异步设置还要由具体配置确定。",
+            "这种分层让同一个差速控制器可以连接模拟器、mock 硬件或真实设备，而硬件层不必重复实现导航速度转换。框架没有替用户提供完整设备协议，也没有自动保证任何控制周期都满足硬实时要求。必须测量循环耗时、阻塞和抖动，才能判断目标频率是否合适。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "接口名称、单位与占用是一份合同",
+          "paragraphs": [
+            "接口通常按 joint/interface 命名，例如 left_wheel_joint/velocity。状态侧的 velocity 是测量或估计的速度，命令侧的 velocity 是希望设备执行的目标，两者不应因为同名就混为一个数组。转动关节位置使用弧度、速度使用弧度每秒，硬件层负责把编码器计数和厂商单位换算到这个合同。",
+            "一个命令接口通常只能由被允许的控制链占用。available 表示资源存在且可供使用，claimed 表示当前控制器已经取得它。控制器 inactive 时可能配置完成但尚未占用执行资源。硬件生命周期和控制器生命周期相关却不相同，排错时要分别查看，而不是只看某一个节点是否存在。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "URDF 中的控制标签示意",
+              "language": "xml",
+              "type": "snippet",
+              "code": "<ros2_control name=\"LearningSystem\" type=\"system\">\n  <hardware><plugin>mock_components/GenericSystem</plugin></hardware>\n  <joint name=\"left_wheel_joint\">\n    <command_interface name=\"velocity\"/>\n    <state_interface name=\"position\"/>\n    <state_interface name=\"velocity\"/>\n  </joint>\n  <joint name=\"right_wheel_joint\">\n    <command_interface name=\"velocity\"/>\n    <state_interface name=\"position\"/>\n    <state_interface name=\"velocity\"/>\n  </joint>\n</ros2_control>",
+              "explanation": "这是嵌入合法 robot 模型中的片段；对应关节必须已在 URDF 定义。它不构成独立机器人文件。"
+            }
+          ]
+        },
+        {
+          "title": "用官方本地源码准备一个隔离实验",
+          "paragraphs": [
+            "准备一份 Jazzy 分支的 ros2_control_demos 源码后，将它复制到独立学习工作区。先 source 系统 Jazzy，再用 rosdep 安装依赖并仅构建 example_2 及其工作区依赖。下面命令未在本次任务运行；如果某项依赖未解析，应先记录包名并解决版本问题。",
+            "复制的是参考源码，不代表必须重编整个 ros2_control。系统二进制包通常可提供框架依赖，但源码分支可能随维护更新；若出现 API 不一致，要将示例提交与框架包版本一起固定，不能随意修改头文件来让编译通过。构建成功后在新终端 source 学习工作区再运行。",
+            "此实验需要提前准备官方 ros2_control_demos 的 Jazzy 源码。若已有克隆，设置 CONTROL_DEMOS_SRC 为自己机器上的实际目录；若没有，可在联网准备阶段执行下方获取命令。断网运行前还需安装 rosdep 所列依赖。离线教材包不包含这一外部仿真工程或系统依赖。复制到新电脑时不要沿用作者的绝对路径。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "仅在联网准备阶段：获取 Jazzy 示例源码",
+              "language": "bash",
+              "type": "commands",
+              "code": "mkdir -p \"$HOME/ros2_refs\"\ngit clone --branch jazzy https://github.com/ros-controls/ros2_control_demos.git \"$HOME/ros2_refs/ros2_control_demos\"\ngit -C \"$HOME/ros2_refs/ros2_control_demos\" rev-parse HEAD",
+              "explanation": "目标目录应尚不存在；已有仓库不必再次克隆。记录实际提交，并核对其 Jazzy 分支。也可以从另一台电脑复制已经准备的源码。"
+            },
+            {
+              "label": "准备与构建本地示例",
+              "language": "bash",
+              "type": "commands",
+              "code": "source /opt/ros/jazzy/setup.bash\nmkdir -p \"$HOME/ros2_learning_ws/src\"\nCONTROL_DEMOS_SRC=\"$HOME/ros2_refs/ros2_control_demos\"\n# 已有其他位置的克隆时，将上一行替换为该实际目录。\ntest -d \"$CONTROL_DEMOS_SRC/example_2\" || { echo \"请先准备 Jazzy 示例源码\"; exit 1; }\ncp -a \"$CONTROL_DEMOS_SRC\" \"$HOME/ros2_learning_ws/src/\"\ncd \"$HOME/ros2_learning_ws\"\nrosdep install --from-paths src --ignore-src --rosdistro jazzy -y\ncolcon build --symlink-install --packages-up-to ros2_control_demo_example_2\nsource install/setup.bash",
+              "explanation": "首次配置 rosdep 的环境还需完成 rosdep init/update。目标目录应是新学习目录，重复执行前先检查是否已有源码。"
+            }
+          ]
+        },
+        {
+          "title": "启动、配置和激活分别在做什么",
+          "paragraphs": [
+            "启动文件先提供 robot_description，再启动管理器和相关节点，spawner 负责加载、配置并按要求激活控制器。机器人模型告诉资源管理器有哪些硬件接口，控制器 YAML 告诉管理器选择什么控制算法和哪些关节。两边名字必须完全一致，单独能解析 YAML 并不证明资源匹配。",
+            "使用 mock 后端先检查整个管理链，能够在没有总线和电机的情况下观察接口占用。它的行为通常是根据命令模拟或回显状态，不包含真实编码器误差、设备延迟和失联。不要把 mock 中能动当作真实硬件闭环已经成立。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "常驻示例与另一个终端的检查",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 launch ros2_control_demo_example_2 diffbot.launch.py use_mock_hardware:=True\n# 在另一个已 source 学习工作区的终端执行：\nros2 control list_hardware_components\nros2 control list_hardware_interfaces\nros2 control list_controllers",
+              "explanation": "若管理器使用自定义名字，给控制 CLI 的 -c 参数提供实际管理器路径。"
+            }
+          ]
+        },
+        {
+          "title": "逐项判读输出而不是只看机器人移动",
+          "paragraphs": [
+            "先在硬件列表中确认组件生命周期符合预期，再在接口列表中找到左右轮的命令和状态。底盘控制器 active 后，其需要的命令接口应被 claimed；关节状态广播器应能发布 JointState。若控制器类型正确但接口仍未占用，查看配置阶段的第一条错误，不要直接重启整个桌面环境。",
+            "运动命令到达后，比较目标速度、关节状态和里程计。轮子显示转动只证明显示链收到了状态；里程计变化也可能来自 open_loop 对命令的积分。完整验收应写明状态来源、命令超时策略以及控制器停用后命令资源是否释放。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "性能与故障要落到明确边界",
+          "paragraphs": [
+            "read 和 write 中的长时间阻塞会占用周期预算，频繁分配内存和打印日志也会引入抖动。设备通信可使用独立线程和有界缓冲，但线程间必须定义数据的新鲜度、所有权和异常状态。不能为了“非阻塞”而把过期测量无限重复使用。",
+            "插件无法发现时查导出 XML 和安装路径；接口缺失时查模型与硬件导出；激活失败时查设备准备条件和资源冲突；运行不稳时查周期耗时和反馈时间。建议每次保留启动日志、参数文件和版本清单，使下一次修改能够与已知状态比较。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "参数文件与资源表一起版本化",
+          "paragraphs": [
+            "建议在实验目录同时保存 controllers.yaml、机器人描述和一份接口清单。清单逐项列出关节、状态接口、命令接口、单位、控制器及反馈来源。更新硬件插件或控制器后，重新导出 list_hardware_interfaces 和 list_controllers 的结果，与清单比较。这样可以在真正发送命令前发现接口删除、更名或占用变化。",
+            "需要切换控制器时，先明确旧控制器退出后的命令状态，以及新控制器是否使用当前测量作为起点。释放资源并不天然意味着设备立即停机，接管成功也不意味着目标连续。模拟中检查切换前后的命令突变和生命周期日志，比只验证切换服务返回成功更接近实际系统要求。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "控制器 active 失败的逐层排查",
+        "scenario": "差速控制器类型能加载，但激活时提示找不到右轮速度接口。",
+        "steps": [
+          "列出硬件接口，发现硬件使用 right_wheel_joint。",
+          "检查 YAML，发现误写成 right_wheel。",
+          "修正控制器关节名称并重新加载配置。",
+          "再次确认两个 velocity 命令接口 claimed，随后检查 JointState。"
+        ],
+        "result": "修复接口合同即可激活，无需更换控制器或修改底层算法。"
+      },
+      "exercises": [
+        {
+          "question": "state velocity 与 command velocity 为什么要分开？",
+          "answer": "一个表示实际反馈，一个表示目标；分开才能观察跟踪误差、饱和和故障。"
+        },
+        {
+          "question": "控制器进程存在等于控制器 active 吗？",
+          "answer": "不等于。进程、加载、配置、激活和资源占用是不同状态，需要控制 CLI 与日志验证。"
+        },
+        {
+          "question": "提高 update_rate 一定改善控制吗？",
+          "answer": "不一定。硬件通信和计算可能超过周期预算，导致更大抖动；应先测量耗时和真实反馈频率。"
+        }
+      ]
+    },
+    {
+      "id": "eco-diff-drive-tracks",
+      "sections": [
+        {
+          "title": "从车体命令推导左右侧运动",
+          "paragraphs": [
+            "差速底盘的常用输入是车体前向速度 v 和绕竖直轴的角速度 ω。若左右轮接触线间距为 b，左右侧线速度分别为 v−ωb/2 与 v+ωb/2。轮半径为 r 时，再分别除以 r 得到轮轴角速度。这个推导假定平面运动和理想无侧滑滚动，解释了为什么正向直行时两侧同向、原地转向时两侧反向。",
+            "输入线速度单位为米每秒，角速度为弧度每秒，控制器输出的轮速通常为弧度每秒。若驱动使用每分钟转数或编码器每周期增量，转换必须放在明确的边界。左右电机安装镜像可能使电气正方向相反，应在硬件层统一成模型定义的关节正方向。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "履带模型可借用，但滑移不能忽略",
+          "paragraphs": [
+            "履带转向依靠地面接触中的滑移，几何轮距与从转弯数据反推的有效轮距可能不同，并随地面、载荷和速度变化。因此差速模型可以作为软件接口和初始近似，却不能承诺在所有场景得到无偏里程计。应分别记录直行距离误差和转角误差，再考虑半径和有效轮距的校准。",
+            "里程计还有两种数据来源：反馈模式根据实际关节位置或速度积分，open_loop 则根据命令估计运动。后者在示例和没有反馈的场景有用途，但无法知道轮子是否受阻、打滑或驱动未执行。若需要可靠状态估计，应把真实轮速、IMU 和外部定位纳入可解释的融合链。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "先确认命令消息与时间戳合同",
+          "paragraphs": [
+            "当前 Jazzy diff_drive_controller 文档的速度输入为 TwistStamped，其 linear.x 与 angular.z 承载平面速度，header.stamp 表示命令时间。控制器可据此拒绝过期命令。很多旧驱动和本地 BUNKER 示例仍使用 Twist，没有 header。两种消息不是可自动互换的同一类型，桥接节点必须明确处理补时间戳与过期语义。",
+            "实际话题可能是控制器私有的 cmd_vel，也可能被 launch 重映射到 /cmd_vel。先用 topic info 检查真实类型、发布者和订阅者，再写命令。速度命令属于持续控制流，不应只保证一条消息到达而忽略发布频率与看门狗；可靠传输也无法替代超时停止机制。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "查看实际端点",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 topic list -t\nros2 topic info /cmd_vel --verbose\nros2 control list_controllers",
+              "explanation": "如果实际输入名称不同，后续发布命令必须随之修改，不能假定所有机器人都使用全局 /cmd_vel。"
+            }
+          ]
+        },
+        {
+          "title": "读懂一份最小控制器参数",
+          "paragraphs": [
+            "下面片段只描述差速控制器本身，应放入项目采用的参数加载结构中，并由 spawner 或管理器正确加载。关节名称必须匹配模型和硬件接口。示例设置反馈式里程计，并由控制器发布 odom 到 base_link；若 EKF 改为负责这条 TF，就应关闭这里的 TF 发布。",
+            "轮距和轮半径只是教学值，需要替换为实际模型和标定结果。命令超时、速度限制和加速度限制都属于系统合同，配置后还要通过实验验证。某些历史版本的参数名称和限速开关不同，使用当前安装包的参数定义，不要把跨发行版片段直接拼接。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "controllers.yaml 中的控制器片段",
+              "language": "yaml",
+              "type": "snippet",
+              "code": "diffbot_base_controller:\n  ros__parameters:\n    type: diff_drive_controller/DiffDriveController\n    left_wheel_names: [left_wheel_joint]\n    right_wheel_names: [right_wheel_joint]\n    wheel_separation: 0.30\n    wheel_radius: 0.05\n    open_loop: false\n    position_feedback: true\n    odom_frame_id: odom\n    base_frame_id: base_link\n    enable_odom_tf: true\n    cmd_vel_timeout: 0.5\n    publish_rate: 50.0\n    linear.x.max_velocity: 0.3\n    angular.z.max_velocity: 0.5",
+              "explanation": "配置片段依赖已存在的管理器、硬件、joint_state_broadcaster 和启动流程；不是独立可启动工程。"
+            }
+          ]
+        },
+        {
+          "title": "在模拟后端执行三个小实验",
+          "paragraphs": [
+            "先使用前章的 DiffBot mock 或仿真后端。第一步只发布低速直行，检查左右目标符号一致；第二步只发布低角速度，检查两侧符号相反；第三步停止发布，观察命令超时后的行为。下面命令没有在本次编写中执行，且只适用于确认类型为 TwistStamped 的模拟话题。",
+            "header: auto 由 CLI 在发布时生成时间戳。若 use_sim_time 为真，命令发布进程也需要正确使用模拟时间，避免命令落在不同时间域。停止键盘发布后不要只看画面，应查看控制器输出或轮速反馈是否按预期衰减到零，并记录达到停止状态的时间。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "模拟中低速直行",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 topic pub --rate 10 /cmd_vel geometry_msgs/msg/TwistStamped \"{header: auto, twist: {linear: {x: 0.1}, angular: {z: 0.0}}}\"",
+              "explanation": "先确认模拟后端和话题类型；停止发布后观察 cmd_vel_timeout 的效果。仿真时可通过 --ros-args -p use_sim_time:=true 为 CLI 节点选择模拟时间。"
+            }
+          ]
+        },
+        {
+          "title": "校准与失败定位需要可测量证据",
+          "paragraphs": [
+            "直行一段距离后比较外部测量与 odom 距离，转动一整圈后比较外部角度与 odom 角度。每次只改一个校准因素，并记录地面、载荷、速度、时间和轮胎或履带状态。多次往返比单次测量更能揭示系统偏差。若正反向误差不对称，还要检查间隙、死区与机械阻力。",
+            "收到消息却不动时，先看控制器 active 和接口 claimed，再看命令时间是否过期，最后看硬件写入和驱动使能。方向相反时先查单位与符号，曲线误差大时再查轮距和滑移。导航控制器不应被用来掩盖底层里程计单位错误，否则所有上层调参都失去可靠基础。",
+            "用数值先检查公式：取 v 为每秒零点二米、ω 为每秒一弧度、b 为零点四米、r 为零点一米，则左轮角速度为零，右轮为每秒四弧度。这代表绕左侧接触点转弯。将这个结果与软件输出比较，可以在机器人不运动时发现左右次序或量纲错误。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "计算并检查一次原地转向",
+        "scenario": "轮距为零点三米、半径零点零五米，目标角速度零点四弧度每秒。",
+        "steps": [
+          "左右线速度分别为负零点零六与正零点零六米每秒。",
+          "除以轮半径得到负一点二与正一点二弧度每秒。",
+          "在模拟中对比命令、关节状态和 odom 角速度。",
+          "停止发布并测量超时停止；实机标定另需外部角度测量。"
+        ],
+        "result": "理想模型的计算、接口单位与可观察输出形成一致链路。"
+      },
+      "exercises": [
+        {
+          "question": "为何不能把 Twist 直接发到 TwistStamped 话题？",
+          "answer": "消息结构与类型支持不同，ROS 不会自动补 header 或转换。需要显式适配并定义时间戳语义。"
+        },
+        {
+          "question": "open_loop 里程计能检测车轮受阻吗？",
+          "answer": "不能，它依赖命令估计运动，即使电机未执行也可能继续积分。"
+        },
+        {
+          "question": "履带有效轮距能用一次实验永久确定吗？",
+          "answer": "通常不能。接触和滑移随地面、载荷与速度变化，应记录条件并评估不同工况。"
+        }
+      ]
+    },
+    {
+      "id": "eco-hardware-integration",
+      "sections": [
+        {
+          "title": "先选择接入边界，再实现设备协议",
+          "paragraphs": [
+            "一条路线是 ROS 驱动节点直接调用厂商 SDK，把车体速度、设备状态和里程计暴露为话题；另一条路线是 ros2_control 硬件插件把关节状态与命令暴露给通用控制器。前者适合已有完整底盘控制盒，后者适合需要统一关节控制资源的设备。两者可以共存，但不能让两个路径同时争夺同一执行器。",
+            "厂商 SDK 常负责报文打包、协议版本和设备类型抽象，ROS wrapper 负责话题、参数、时间戳和生命周期。把这两层分开，能让没有 ROS 的协议测试先证明设备通信，再检查 ROS 集成。不要把节点启动成功当作设备已经在线，也不要用持续重发运动命令来判断设备状态。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "写清楚硬件接口的六项合同",
+          "paragraphs": [
+            "每项命令至少写出单位、范围、符号、刷新周期、超时动作与使能条件；每项反馈至少写出测量来源、采样时间、误差、无效值和丢失处理。例如编码器计数需要分辨率、减速比和方向才能转成关节弧度，电机内部速度目标也未必等于车轮真实速度。",
+            "时间合同尤其容易被忽略。设备报文可能没有时间戳，此时主机接收时间只是近似，不能假装它就是准确采样时刻。多个状态在不同报文到达时，还要决定一次 read 是否可以组合不同年龄的数据。为每个缓存维护更新时间和有效标志，比盲目重复最后一帧更可诊断。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "最小无硬件实验：把协议转换单独验证",
+          "paragraphs": [
+            "下面使用自定义教学报文，不代表 BUNKER、CANopen 或任何厂商协议。它规定速度以毫米每秒编码为有符号十六位小端数，温度以摄氏度编码为有符号字节。保存为 protocol_check.py，用普通 Python 即可验证单位、符号与长度检查，完全不需要 ROS 或连接设备。",
+            "这种实验把“数学和二进制转换是否正确”从“电机是否响应”中分离。真实项目应根据厂商公开协议替换字段、量程、校验和与消息标识，并用记录到的已知报文做回归。教学测试通过只证明这份自定义格式一致，不能推导真实硬件可以使用同样字节。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "protocol_check.py：完整的离线编码实验",
+              "language": "python",
+              "type": "complete",
+              "code": "import struct\n\ndef encode_speed(speed_m_s):\n    raw = round(speed_m_s * 1000)\n    if not -32768 <= raw <= 32767:\n        raise ValueError(\"speed out of range\")\n    return struct.pack(\"<h\", raw)\n\ndef decode_status(payload):\n    if len(payload) != 3:\n        raise ValueError(\"expected three bytes\")\n    speed_raw, temperature = struct.unpack(\"<hb\", payload)\n    return speed_raw / 1000.0, temperature\n\nif __name__ == \"__main__\":\n    assert encode_speed(-0.25) == bytes([6, 255])\n    assert decode_status(bytes([250, 0, 30])) == (0.25, 30)\n    print(\"teaching protocol checks passed\")",
+              "explanation": "这是完整可运行的纯 Python 教学程序，未在本次文档编写时执行；不存在任何实机写入操作。"
+            }
+          ]
+        },
+        {
+          "title": "从物理链路向 ROS 图逐层检查",
+          "paragraphs": [
+            "真实接入时先确认设备、电源、驱动与通信接口准备好，再用只读观测查看总线状态和已有报文。Linux 中 can0 存在不代表波特率、接线终端、设备协议或报文 ID 正确。看见原始帧后，再运行只读 SDK 查询，最后启动 ROS wrapper 或硬件组件。",
+            "本地 BUNKER 工程通过 ugv_sdk 接入底盘，README 的速度接口使用 Twist；AgroSenseBot 展示 ros2_control 与 CANopen 的组合，但本地 Jazzy 分支 README 仍有 Iron 安装指令。阅读时固定提交并查代码实际接口，不应将旧安装命令简单替换发行版名称后执行。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "已经配置好的 CAN 接口只读观测",
+              "language": "bash",
+              "type": "commands",
+              "code": "ip -details link show can0\ncandump can0",
+              "explanation": "需要系统已有 can-utils 与正确接口配置。candump 常驻运行；这里只观测现有报文，不注入 CAN 帧。"
+            }
+          ]
+        },
+        {
+          "title": "控制循环和通信线程如何交换数据",
+          "paragraphs": [
+            "把可能阻塞的串口读取放到通信线程，控制周期读取一个受保护或无锁设计正确的最新状态快照，是常见组织方式。关键不是使用了多少线程，而是快照是否原子一致、命令何时被发送、异常何时被看见。队列应有明确容量和满队列策略，不能让旧速度命令排队数秒后才执行。",
+            "硬件激活前应完成必要握手和状态确认；停用时定义停止指令、资源释放与故障保持方式。通信断开后，软件应将状态标为无效并触发定义好的控制行为。靠近执行器的看门狗和硬件停止条件应独立于上位机网页或调度程序，避免上位机卡死时只能期待下一条零速消息。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "给每一层设计一个失败观测点",
+          "paragraphs": [
+            "设备层查看供电、接口和使能状态；传输层查看错误计数与收发帧；协议层查看长度、校验和、ID 与量纲；SDK 层查看设备状态；ROS 层查看消息类型、频率、时间和控制器状态。故障定位时寻找第一个不满足合同的层次，不要从最上层不断增加重试次数。",
+            "验收至少包含正常启动、重复启动、客户端掉线、设备掉线、反馈过期和恢复。对每个场景记录状态迁移与停止时间，并明确哪些情况允许自动恢复、哪些需要人工确认。测试顺序从离线解码、虚拟后端到批准的实机条件逐步推进；本章没有声称这些实机测试已经完成。",
+            "设备心跳新鲜不代表每个传感器反馈都新鲜。控制盒可能持续发心跳，却停止更新编码器；应分别记录报文接收序号、数据采样序号和更新时间。通过回放重复编码器帧、同时保持心跳更新的记录，可以验证系统是否把旧测量误判为有效状态。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "底盘状态不更新的定位过程",
+        "scenario": "ROS 节点在线，但 odom 一直不变。",
+        "steps": [
+          "确认 can0 有报文且错误计数没有持续增长。",
+          "用已知协议检查报文 ID，发现设备配置为另一型号协议。",
+          "在 SDK 层选择匹配型号并重新验证只读状态。",
+          "确认反馈时间更新后，再检查 ROS 消息和里程计积分。"
+        ],
+        "result": "问题定位在设备协议选择，而不是导航器或 RViz。"
+      },
+      "exercises": [
+        {
+          "question": "为什么接收时间不总等于采样时间？",
+          "answer": "设备内部采样、排队和传输都有延迟。没有设备时间戳时只能记录接收近似并评估误差。"
+        },
+        {
+          "question": "为何运动命令队列不宜无限增长？",
+          "answer": "旧命令延迟执行会使机器人响应过去的意图，应使用有界队列、最新命令语义或明确拒绝策略。"
+        },
+        {
+          "question": "SDK 解码测试通过是否证明整车控制安全？",
+          "answer": "不证明。还需验证使能、限幅、反馈、超时、急停和系统故障行为，且须在明确的实机条件下实施。"
+        }
+      ]
+    },
+    {
+      "id": "eco-slam-mapping",
+      "sections": [
+        {
+          "title": "SLAM 的输入不是一张图，而是一段运动证据",
+          "paragraphs": [
+            "二维激光 SLAM 将连续扫描和运动估计结合，构建机器人轨迹与占据栅格。激光提供周围障碍几何，里程计提供短期运动先验，扫描匹配再寻找与历史观测一致的姿态。回到已经见过的地方时，回环约束可调整累积误差，但算法无法凭空恢复从未被传感器观察到的区域。",
+            "本章先做一个静止方形房间实验：自己产生 LaserScan，不需要真实雷达或完整物理模拟器。实验只验证消息、TF 和地图生成的数据链，不证明移动建图质量。将静止输入替换为真实运动数据后，才需要评价重影、漂移、回环和地图一致性。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "定义扫描、坐标与时钟合同",
+          "paragraphs": [
+            "LaserScan 中每条距离对应 angle_min 加索引乘 angle_increment，长度单位是米，角度是弧度。range_min/range_max 之外的值需要按消息和算法约定处理，不能将“没有测到障碍”误写为零距离。header.frame_id 表示扫描坐标，header.stamp 应与 TF 查询的采样时间一致。",
+            "slam_toolbox 通常使用 odom 到 base frame 的运动关系，并发布 map 到 odom。机器人内部 base_link 到 laser 必须已知。只让扫描话题有数据而没有 TF，无法把不同时间的观测组合起来。最小实验使用系统时间，所有节点关闭 use_sim_time；以后回放或仿真时再整体切到统一时钟。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "生成一份完整的合成扫描",
+          "paragraphs": [
+            "将下方脚本保存为 square_scan.py。它在原点朝四周发射三百六十条射线，房间边界位于 x、y 的正负两米。每条射线取与四面墙最先相交的距离，因此角点附近距离更长。脚本使用传感器数据 QoS，以十赫兹发布，所有值和几何关系都能直接检查。",
+            "运行前需要系统 Jazzy 的 rclpy 和 sensor_msgs，终端 source 系统环境后用 python3 启动。代码为完整单文件节点，编写时未实际运行。它故意不模拟噪声、遮挡、滚动扫描或运动畸变，避免把教学几何与真实雷达性能混为一谈。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "square_scan.py：完整合成传感器",
+              "language": "python",
+              "type": "complete",
+              "code": "import math\nimport rclpy\nfrom rclpy.node import Node\nfrom rclpy.qos import qos_profile_sensor_data\nfrom sensor_msgs.msg import LaserScan\n\nclass SquareScan(Node):\n    def __init__(self):\n        super().__init__(\"square_scan\")\n        self.pub = self.create_publisher(LaserScan, \"/scan\", qos_profile_sensor_data)\n        self.timer = self.create_timer(0.1, self.publish_scan)\n\n    def publish_scan(self):\n        msg = LaserScan()\n        msg.header.stamp = self.get_clock().now().to_msg()\n        msg.header.frame_id = \"laser\"\n        msg.angle_min = -math.pi\n        msg.angle_increment = 2.0 * math.pi / 360.0\n        msg.angle_max = msg.angle_min + 359 * msg.angle_increment\n        msg.range_min = 0.05\n        msg.range_max = 10.0\n        msg.scan_time = 0.1\n        for i in range(360):\n            a = msg.angle_min + i * msg.angle_increment\n            distance = min(2.0 / max(abs(math.cos(a)), 1e-9),\n                           2.0 / max(abs(math.sin(a)), 1e-9))\n            msg.ranges.append(distance)\n        self.pub.publish(msg)\n\ndef main():\n    rclpy.init()\n    node = SquareScan()\n    try:\n        rclpy.spin(node)\n    except KeyboardInterrupt:\n        pass\n    finally:\n        node.destroy_node()\n        if rclpy.ok():\n            rclpy.shutdown()\n\nif __name__ == \"__main__\":\n    main()",
+              "explanation": "该节点没有运动控制功能，仅发布合成扫描。"
+            }
+          ]
+        },
+        {
+          "title": "配置并按顺序启动建图",
+          "paragraphs": [
+            "将配置保存为 mapping.yaml，先启动合成扫描，再分别启动 odom 到 base_link 和 base_link 到 laser 的静态变换，最后启动 slam_toolbox。静止机器人允许这两条关系保持单位变换；真实移动系统绝不能把里程计边固定为零来掩盖缺失驱动。每个常驻命令使用独立终端。",
+            "最小参数说明了地图、里程计、车体和扫描名称；其他参数采用安装包默认值。若节点报告参数或求解器不兼容，首先核查是否确实运行 Jazzy 包，并查看第一条配置错误。地图分辨率设为五厘米，表示每个栅格覆盖的地面长度，不等于传感器测量精度。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "mapping.yaml",
+              "language": "yaml",
+              "type": "complete",
+              "code": "slam_toolbox:\n  ros__parameters:\n    use_sim_time: false\n    mode: mapping\n    map_frame: map\n    odom_frame: odom\n    base_frame: base_link\n    scan_topic: /scan\n    resolution: 0.05\n    map_update_interval: 2.0",
+              "explanation": "供 slam_toolbox 的在线异步 launch 读取。"
+            },
+            {
+              "label": "每个命令在独立已 source 的终端运行",
+              "language": "bash",
+              "type": "commands",
+              "code": "python3 square_scan.py\nros2 run tf2_ros static_transform_publisher --frame-id odom --child-frame-id base_link\nros2 run tf2_ros static_transform_publisher --frame-id base_link --child-frame-id laser\nros2 launch slam_toolbox online_async_launch.py slam_params_file:=\"$(pwd)/mapping.yaml\" use_sim_time:=false",
+              "explanation": "需要安装 ros-jazzy-slam-toolbox；静态边仅属于本节静止实验。"
+            }
+          ]
+        },
+        {
+          "title": "判读地图并保存可以再次加载的结果",
+          "paragraphs": [
+            "在 RViz 中选择 map 作为 Fixed Frame，添加 Map、LaserScan 和 TF。预期能观察到围绕原点的方形墙体，墙内空间被标为已观测自由区域。先比较扫描几何和地图，而不是追求图像边缘完全平滑：占据栅格离散化会使斜向边缘出现台阶。",
+            "保存导航用地图时，map_saver_cli 生成图像和 YAML。YAML 保存分辨率、原点和阈值，单独拷贝图像无法完整恢复地图。若希望以后继续优化建图，还需要 slam_toolbox 自己的位姿图序列化；导航栅格和算法内部图不是同一种持久化对象。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "检查并保存",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 topic echo /map --once --field info\nros2 run nav2_map_server map_saver_cli -f /tmp/square_map",
+              "explanation": "需要 nav2_map_server。保存后应同时保留地图图像与 YAML。"
+            }
+          ]
+        },
+        {
+          "title": "从合成房间过渡到真实数据",
+          "paragraphs": [
+            "接入移动平台时撤掉假的 odom 静态边，由底盘或融合节点提供运动变换，保留真实安装关系。先缓慢直行和转弯，检查扫描在 odom 中是否合理，再探索环境。重影可能来自时间偏差、错误安装、里程计尺度或运动畸变，不能只靠扫描匹配参数弥补。",
+            "比较参数时录制同一份 /scan、TF 和必要状态，固定时钟后重复建图。记录地图重影、回到起点后的对齐、CPU 和积压。空白地图先查扫描数量、TF、时间和节点状态；地图弯曲先查里程计尺度与传感器安装；重复墙体先查时间延迟和回环条件。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "把“地图可用”写成可重复判据",
+          "paragraphs": [
+            "最低验收包括：地图话题持续发布，frame 为 map，分辨率和尺寸符合预期，保存后可以重新加载，扫描与墙体在正确姿态下对齐。真实场景还应选取几段独立测量距离比较尺度，记录动态物体造成的污染，并确认导航所需区域没有因遮挡而被错误假定为自由空间。",
+            "静止方房实验提供一个确定基线。若更换算法后连这个简单输入都不能生成合理图形，应先修复接口；若基线正常而实测失败，再逐步引入噪声、运动和回环。这样的实验阶梯能够把系统集成问题与算法鲁棒性问题分开。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "从零消息到一张方形地图",
+        "scenario": "没有实体雷达，希望学习扫描、TF、SLAM 和地图文件的关系。",
+        "steps": [
+          "运行合成扫描，确认每帧三百六十个距离。",
+          "发布静止机器人两条 TF，并用 tf2_echo 验证。",
+          "加载最小建图参数，等待地图更新。",
+          "在 RViz 比较方形扫描与地图，再保存图像和 YAML。"
+        ],
+        "result": "完成一个可检查的静止建图链路；它只验证接口，不包含移动定位与回环性能结论。"
+      },
+      "exercises": [
+        {
+          "question": "静止实验为何能用 odom→base_link 静态变换？",
+          "answer": "因为机器人位置被明确设为不动。真实移动平台必须由运动估计持续更新这条边。"
+        },
+        {
+          "question": "保存一张地图图片足够吗？",
+          "answer": "不够，还需要分辨率、原点等 YAML 信息。继续建图还可能需要算法自己的位姿图数据。"
+        },
+        {
+          "question": "地图出现两层墙先查什么？",
+          "answer": "先查传感器时间、安装 TF、运动估计和消息延迟，再判断扫描匹配或回环参数。"
+        }
+      ],
+      "sourceUrls": [
+        "https://github.com/SteveMacenski/slam_toolbox/blob/jazzy/launch/online_async_launch.py"
+      ]
+    },
+    {
+      "id": "eco-state-estimation",
+      "sections": [
+        {
+          "title": "估计状态与测量状态是两件事",
+          "paragraphs": [
+            "轮式里程计、IMU 和 GNSS 都只从各自物理机制观察机器人。状态估计器将测量与运动模型结合，输出在当前信息下最合理的状态及不确定性。它不是把所有传感器简单平均，也不会自动识别错误单位、错误坐标或重复信息。输入合同错误时，滤波结果可能很平滑却完全错误。",
+            "robot_localization 的 EKF 和 UKF 处理位置、姿态、速度与加速度等状态。二维底盘通常限制垂直运动和横滚俯仰，但仍须理解真实 IMU 如何测量重力与角速度。学习时先用一项速度测量看清积分行为，再逐渐加入互补信息，避免第一天就配置十个输入。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "设计 map、odom 和 base_link 的发布职责",
+          "paragraphs": [
+            "odom 表达连续的局部运动估计，允许缓慢漂移，适合控制；map 表达全局参考，可因重新定位发生修正。局部滤波器通常提供 odom 到 base_link，全局定位提供 map 到 odom。使用 GNSS 或其他全局来源时，必须决定如何保持局部控制所依赖的连续关系。",
+            "每条 TF 边只保留一个负责发布的节点。如果底盘驱动已经发布 odom 到 base_link，而 EKF 也发布同一条边，就要关闭其中一个。消息仍可由底盘发布供融合使用，关闭 TF 不等于关闭测量。输入消息的 frame 与 child_frame 应与真实量的表达坐标一致。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "协方差和输入选择决定融合含义",
+          "paragraphs": [
+            "协方差表达测量不确定性及状态间相关性，不是为了通过格式检查随便填写的数组。把不可靠测量标成极小协方差会让它主导估计；把同一个编码器派生的位置和速度当作独立高置信来源重复输入，也可能造成虚假的确定性。应先了解设备给出的数值究竟是否可信。",
+            "输入配置向量按固定顺序对应位置三项、姿态三项、线速度三项、角速度三项和加速度三项。必须逐个写出名称，不要只复制一长串 true/false。二维约束可利用确实不存在的侧向运动，但履带打滑等实际现象需要谨慎，不能把所有横向速度都当作绝对为零的测量。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "最小实验：只融合一条前向速度",
+          "paragraphs": [
+            "将下面配置保存为 ekf.yaml。输入只启用前向速度，其他维度不声明为测量。world_frame 选 odom，节点负责发布局部 TF。该实验是滤波接口教学，不代表可以用单一速度完成可靠定位；没有绝对约束时，位置随积分漂移是预期现象。",
+            "发布器提供每秒十次的零点一米每秒速度和明确协方差。该数据是合成测量，未连接设备。本章代码和命令未在本次编写环境运行。需要已安装 robot_localization，并在每个终端 source Jazzy；节点运行后再启动输入，观察从等待到输出的变化。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "ekf.yaml：完整最小参数文件",
+              "language": "yaml",
+              "type": "complete",
+              "code": "ekf_filter_node:\n  ros__parameters:\n    frequency: 30.0\n    sensor_timeout: 0.3\n    two_d_mode: true\n    publish_tf: true\n    map_frame: map\n    odom_frame: odom\n    base_link_frame: base_link\n    world_frame: odom\n    odom0: /wheel/odom\n    odom0_config: [false, false, false, false, false, false, true, false, false, false, false, false, false, false, false]\n    odom0_differential: false\n    odom0_relative: false",
+              "explanation": "只有配置向量的第七项为 true，代表前向线速度。"
+            },
+            {
+              "label": "启动滤波器",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 run robot_localization ekf_node --ros-args --params-file \"$(pwd)/ekf.yaml\"",
+              "explanation": "本例不使用仿真时钟；真实仿真输入要统一 use_sim_time。"
+            }
+          ]
+        },
+        {
+          "title": "用完整合成测量观察输出",
+          "paragraphs": [
+            "下面文件保存为 wheel_measurement.py。消息 pose 不作为融合输入，因此只给出合法单位四元数；速度协方差的六个对角元素均明确填写。真实设备应使用自己的误差估计，不能照搬这些教学数值。header.frame_id 为 odom，child_frame_id 为 base_link，时间由节点时钟产生。",
+            "输出 /odometry/filtered 应开始更新，前向速度趋近输入值，位置随时间推进。停止发布后，估计器可能按预测模型继续演化，而不会自然变成机器人控制用的急停逻辑。这说明“测量超时”和“执行器停止”属于不同系统职责。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "wheel_measurement.py",
+              "language": "python",
+              "type": "complete",
+              "code": "import rclpy\nfrom rclpy.node import Node\nfrom nav_msgs.msg import Odometry\n\nclass WheelMeasurement(Node):\n    def __init__(self):\n        super().__init__(\"wheel_measurement\")\n        self.pub = self.create_publisher(Odometry, \"/wheel/odom\", 10)\n        self.timer = self.create_timer(0.1, self.publish_measurement)\n\n    def publish_measurement(self):\n        m = Odometry()\n        m.header.stamp = self.get_clock().now().to_msg()\n        m.header.frame_id = \"odom\"\n        m.child_frame_id = \"base_link\"\n        m.pose.pose.orientation.w = 1.0\n        m.twist.twist.linear.x = 0.1\n        for i in [0, 7, 14, 21, 28, 35]:\n            m.twist.covariance[i] = 0.01\n        self.pub.publish(m)\n\ndef main():\n    rclpy.init()\n    n = WheelMeasurement()\n    try:\n        rclpy.spin(n)\n    except KeyboardInterrupt:\n        pass\n    finally:\n        n.destroy_node()\n        if rclpy.ok():\n            rclpy.shutdown()\n\nif __name__ == \"__main__\":\n    main()",
+              "explanation": "这是独立的合成测量节点，只供验证滤波输入合同。"
+            }
+          ]
+        },
+        {
+          "title": "逐步增加 IMU 和全局约束",
+          "paragraphs": [
+            "加入 IMU 前先静止记录角速度与加速度，检查轴向、偏置、重力处理和姿态参考。某些设备使用 NED，ROS 常用 ENU，二者转换不仅是改 frame 名。需要明确的旋转或驱动输出设置，并在已知姿态下验证结果。方向错误的角速度会让转弯估计持续偏离。",
+            "GNSS 进入全局估计时，还涉及地理坐标投影、航向和基准。位置精度并非任何时候固定，遮挡和多路径会改变误差。每加入一个来源，使用同一 bag 比较有无该来源的漂移、延迟与协方差变化，确认改善来自有效信息，而不是显示曲线变得更平滑。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "用残差和失效实验判断估计质量",
+          "paragraphs": [
+            "静止时检查输出速度是否接近零，直行时检查侧向漂移，转弯时检查角速度符号和尺度。若加入某个传感器后立即跳变，先查该传感器时间、frame、单位与协方差。若速度正确但位置越来越远，要区分无绝对约束的正常漂移与单位或积分错误。",
+            "为每项输入分别做中断和恢复实验，记录输出是否持续、协方差是否合理增长，以及重连时是否突然跃迁。最终验收不是“滤波器没报错”，而是在已知路径或外部测量下有可解释的误差，并能明确报告失效状态。传感器失效后继续输出数值，不等于数值仍然可信。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "解释看起来平滑却持续漂移的输出",
+        "scenario": "单独融合恒定前向速度，机器人估计位置一直增加。",
+        "steps": [
+          "确认合成输入确实持续报告非零速度。",
+          "确认配置只融合速度，没有绝对位置观测。",
+          "认识到位置积分增长符合模型。",
+          "改用零速度输入并观察响应，再讨论真实偏置的影响。"
+        ],
+        "result": "能够区分模型的预期行为与滤波器错误，而不是通过任意减小协方差追求静止图像。"
+      },
+      "exercises": [
+        {
+          "question": "为什么不能把所有输入协方差都设很小？",
+          "answer": "这会过度相信不可靠测量，掩盖噪声和重复信息，导致估计不一致。"
+        },
+        {
+          "question": "输入超时会自动使电机停止吗？",
+          "answer": "不会。状态估计与执行器安全是不同职责，电机停止应由控制和硬件看门狗处理。"
+        },
+        {
+          "question": "为何 map 与 odom 常要分开？",
+          "answer": "全局修正可能跳变，局部控制需要连续参考。分开能同时表达长期定位和短期平滑运动。"
+        }
+      ]
+    },
+    {
+      "id": "eco-nav2-stack",
+      "sections": [
+        {
+          "title": "把导航拆成可观察的能力链",
+          "paragraphs": [
+            "一个导航目标进入系统后，定位提供机器人当前姿态，全局规划器选择通路，局部控制器生成速度，底盘执行命令，传感器不断更新障碍信息。Nav2 将这些能力分成服务器，并用行为树组织调用与恢复。地图只是其中一种环境信息，不能代替实时传感器或正确的机器人模型。",
+            "理解每一层的输入输出，比只记住某个 launch 名更有迁移价值。规划器通常输出路径，控制器输出车体速度，底盘输出关节运动与里程计。若路径正常但机器人不动，应向控制和底盘层追踪；若没有路径，先检查定位、地图和规划请求，不必先修改电机参数。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "明确地图、代价地图与外形的区别",
+          "paragraphs": [
+            "静态地图记录环境占据情况，costmap 在此基础上或局部传感器基础上构建通行代价。障碍层处理观察到的障碍，膨胀层为靠近障碍的区域增加代价。膨胀半径不等于机器人真实外形；footprint 描述机器人接触地面的几何范围，两者分别影响可行性与路径偏好。",
+            "长方形履带底盘转弯时扫过的区域大于中心点路径。用过小圆形半径近似会让规划看似能通过，实际车角却碰撞。应先确定模型尺寸与 footprint，再调路径平滑度、控制速度和膨胀代价。把速度降得很低不能弥补错误的碰撞几何。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "建立导航必须满足的接口合同",
+          "paragraphs": [
+            "定位和地图相关消息通常处于 map 坐标，局部运动使用 odom，底盘是 base_link，传感器必须通过 TF 连通。时间统一后，传感器消息才能正确落入代价地图。话题名称之外，还要核对 LaserScan 或 PointCloud2 类型、QoS、频率及障碍有效时间。",
+            "导航服务器采用生命周期管理，进程存在不等于已经 active。地图、定位或 TF 尚未准备好时，生命周期或行为树可能持续等待。速度输出的类型也要与下游驱动匹配，当前系统可能使用 Twist 或 TwistStamped；应实际查看，而不是用不同年代教程的默认值推断。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "从官方集成仿真建立基线",
+          "paragraphs": [
+            "在已正确安装系统 Jazzy 的 Ubuntu24.04 上安装 navigation2 和 nav2_bringup，并使用其集成示例。它包含机器人、仿真和 RViz 的常用组合，便于先验证一条已组织好的链路。此处命令是读者运行说明，本次没有执行安装或导航。下载依赖需要网络，教材正文与解释可离线阅读。",
+            "Jazzy 使用现代 Gazebo；若仿真资源缺失，安装对应 nav2-minimal-tb 系列包后再启动，不应改去使用 Iron 的 Gazebo Classic 包。启动完成后等待地图和 RViz 加载，观察节点状态。没有图形环境时需要相应无 GUI 配置，不能仅把窗口打不开等同导航失败。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "安装并启动 Jazzy 集成实验",
+              "language": "bash",
+              "type": "commands",
+              "code": "source /opt/ros/jazzy/setup.bash\nsudo apt install ros-jazzy-navigation2 ros-jazzy-nav2-bringup\nros2 launch nav2_bringup tb3_simulation_launch.py headless:=False",
+              "explanation": "若缺少仿真资源，核对 ros-jazzy-nav2-minimal-tb 系列包。该 launch 是常驻进程。"
+            }
+          ]
+        },
+        {
+          "title": "先定位，再下发一个明确目标",
+          "paragraphs": [
+            "在 RViz 中使用 2D Pose Estimate，把初始位置放到与模拟机器人相符的地图位置，并拖动箭头设置朝向。定位尚不确定时，直接发送很远目标会同时引入多个变量。先选附近自由区域，观察粒子分布、全局路径、局部轨迹和速度命令，确认方向正确后再增加距离。",
+            "设置初始姿态不是永久锁定机器人位置，而是给定位器一个起始分布。若粒子或扫描与地图不匹配，应重新核对地图、frame、时间和初始朝向。不要用反复点击目标掩盖定位尚未成立的事实；目标取消、失败和成功都应该有可观察的 action 结果。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "检查系统状态",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 lifecycle nodes\nros2 lifecycle get /controller_server\nros2 action list -t\nros2 topic info /cmd_vel --verbose",
+              "explanation": "有命名空间时替换为实际路径。把检查结果与 RViz 现象一起记录。"
+            }
+          ]
+        },
+        {
+          "title": "把调整限制在一个可解释变量上",
+          "paragraphs": [
+            "首先固定地图、机器人外形和传感器合同，再调整速度与加速度范围，之后才比较规划器或控制器插件。每次使用同一组起终点和障碍场景，记录成功率、时间、最小障碍距离以及速度平滑程度。只看某一次走得更快，很容易把偶然定位差异误认为参数改进。",
+            "控制频率提高会增加计算负担，并不必然改善跟踪。传感器更新太慢、TF 延迟或底盘响应慢时，局部控制器仍然面对陈旧状态。查看整个链路的采样、计算与执行频率，确认瓶颈在哪里，再决定要优化算法、减少数据量还是更改硬件接口。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "按失败阶段定位原因",
+          "paragraphs": [
+            "目标被拒绝时检查 action 服务与生命周期；规划失败时检查目标是否在自由空间、地图连通和规划器约束；控制失败时检查局部障碍、进度判据、速度限制和底盘反馈；恢复失败时检查行为树是否允许当前恢复动作。错误发生的阶段决定优先检查对象。",
+            "导航成功的最低标准包括：action 报告成功，最终位置和朝向在设定容差内，过程没有违反定义好的外形和速度约束，停止后没有继续执行过期命令。加入临时障碍、取消和传感器失效实验，才能了解系统在正常路径之外如何表现。仿真验收仍不替代实机测试。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "路径已经画出，机器人却不动",
+        "scenario": "全局路径正常，局部控制器 active，但底盘状态保持零。",
+        "steps": [
+          "查看 /cmd_vel 是否有发布以及真实消息类型。",
+          "查看下游驱动的订阅类型和重映射。",
+          "发现上游 TwistStamped 与驱动 Twist 不匹配。",
+          "通过明确的适配或正确配置统一接口，再验证命令超时与停止。"
+        ],
+        "result": "问题在控制接口合同，重新调规划器不会解决。"
+      },
+      "exercises": [
+        {
+          "question": "footprint 与 inflation radius 是同一个量吗？",
+          "answer": "不是。footprint 表达机器人几何，膨胀层表达靠近障碍的代价区域，两者不能互相替代。"
+        },
+        {
+          "question": "为什么先设置初始姿态再导航？",
+          "answer": "定位器需要建立地图中的姿态估计，否则 TF 和代价地图无法可靠支持规划与控制。"
+        },
+        {
+          "question": "路径存在但不动先查哪里？",
+          "answer": "先查局部控制输出、消息类型、重映射、控制器状态和底盘反馈，而非立即修改全局规划参数。"
+        }
+      ]
+    },
+    {
+      "id": "eco-nav2-task-programming",
+      "sections": [
+        {
+          "title": "任务层与导航层分别负责什么",
+          "paragraphs": [
+            "一次 NavigateToPose 解决“到达这个目标”，巡检程序还要决定访问顺序、超时、失败记录和是否继续下一点。任务层不应重新实现局部避障，导航层也不知道每个巡检点的业务意义。把两层分开后，测试任务逻辑可以复用同一套已验证导航能力。",
+            "BasicNavigator 是常见导航 action 的 Python 封装，简化客户端创建与反馈读取，但并不会自动启动所有服务、生成地图或建立定位。调用前仍需满足前章的服务器、TF、时钟和底盘合同。代码跑到 goToPose 一行不意味着机器人已经接受任务，更不意味着最后到达。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "区分接受、运行、取消和结束",
+          "paragraphs": [
+            "action 请求经历目标提交、接受或拒绝、运行中反馈、最终结果等阶段。任务结束可能是成功，也可能是失败或取消。isTaskComplete 仅表示当前等待阶段结束，必须继续读取结果。若程序在结束时不分原因就标记“完成”，巡检统计会把失败点算成已巡检。",
+            "取消同样是一个过程。发送 cancelTask 后，应等待服务器给出结果并继续观察底盘状态；任务结果属于软件协议，实际停止还取决于控制链和硬件。业务超时通常从导航任务开始计时，服务器启动等待应另设系统级期限，不能混用一个计时变量掩盖启动阻塞。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "目标消息的坐标和时钟合同",
+          "paragraphs": [
+            "PoseStamped 包含位置、单位四元数、frame 与时间戳。地图中的目标通常使用 map frame，位置单位为米，朝向用四元数表达。平面 yaw 转四元数时 z 等于半角正弦，w 等于半角余弦，其余两项为零。把 yaw 直接写进 orientation.z 不是合法的一般转换。",
+            "初始定位与导航目标不是同一件事。初始姿态告诉定位器机器人在哪里，目标告诉任务希望机器人去哪里。两者都应选择当前地图中合理位置。程序示例通过命令行显式提供起点和目标，避免把某一张演示地图的坐标假装成所有地图都可用的固定答案。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "完整单目标任务脚本",
+          "paragraphs": [
+            "把代码保存为 navigate_once.py，需要已安装 nav2_simple_commander 并运行前章的导航仿真。脚本设置初始姿态，等待服务激活，发送一个目标，超时后请求取消，并输出最终结果。它是完整应用脚本，但依赖已经运行的导航系统，不能单独替代地图、定位与驱动。代码未经本次 ROS 运行验证。",
+            "--sim-time 用于与仿真系统保持一致；真实系统通常不传该开关。--timeout 只约束目标执行阶段，waitUntilNav2Active 的启动等待不在此期限内。若启动条件不成立，应回到生命周期和 TF 检查，实际部署可再为进程启动设置独立监督期限。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "navigate_once.py",
+              "language": "python",
+              "type": "complete",
+              "code": "import argparse\nimport math\nimport time\nimport rclpy\nfrom rclpy.parameter import Parameter\nfrom geometry_msgs.msg import PoseStamped\nfrom nav2_simple_commander.robot_navigator import BasicNavigator, TaskResult\n\ndef pose(nav, values):\n    x, y, yaw = values\n    result = PoseStamped()\n    result.header.frame_id = \"map\"\n    result.header.stamp = nav.get_clock().now().to_msg()\n    result.pose.position.x = x\n    result.pose.position.y = y\n    result.pose.orientation.z = math.sin(yaw / 2.0)\n    result.pose.orientation.w = math.cos(yaw / 2.0)\n    return result\n\ndef main():\n    parser = argparse.ArgumentParser()\n    parser.add_argument(\"--start\", nargs=3, type=float, required=True)\n    parser.add_argument(\"--goal\", nargs=3, type=float, required=True)\n    parser.add_argument(\"--timeout\", type=float, default=60.0)\n    parser.add_argument(\"--sim-time\", action=\"store_true\")\n    args = parser.parse_args()\n    if args.timeout <= 0:\n        parser.error(\"timeout must be positive\")\n    rclpy.init(args=[])\n    nav = BasicNavigator()\n    nav.set_parameters([Parameter(\"use_sim_time\", Parameter.Type.BOOL, args.sim_time)])\n    try:\n        nav.setInitialPose(pose(nav, args.start))\n        nav.waitUntilNav2Active()\n        if not nav.goToPose(pose(nav, args.goal)):\n            print(\"rejected\")\n            return\n        deadline = time.monotonic() + args.timeout\n        cancellation_requested = False\n        while not nav.isTaskComplete():\n            if time.monotonic() >= deadline and not cancellation_requested:\n                nav.cancelTask()\n                cancellation_requested = True\n            time.sleep(0.1)\n        result = nav.getResult()\n        names = {TaskResult.SUCCEEDED: \"succeeded\",\n                 TaskResult.CANCELED: \"canceled\",\n                 TaskResult.FAILED: \"failed\"}\n        print(names.get(result, \"unknown\"))\n    finally:\n        nav.destroy_node()\n        if rclpy.ok():\n            rclpy.shutdown()\n\nif __name__ == \"__main__\":\n    main()",
+              "explanation": "仅在已准备好的仿真中运行，起点和目标必须来自当前地图的有效自由空间。"
+            }
+          ]
+        },
+        {
+          "title": "将一次任务扩展为可审计巡检",
+          "paragraphs": [
+            "不要简单把多个 goToPose 连在一起而不等待结果。为每个点保存目标、提交时间、接受状态、最终结果和失败原因，再决定继续、重试或退出。重试次数应有上限，重试前也应确认失败条件已经改变，否则只是在重复同一个错误。",
+            "巡检过程中的“到达”可能还需附加业务条件，例如停稳、采集图像或读取仪表。这些应作为独立阶段，导航成功后再验证。日志中的一行成功不代表相机数据已保存。若任务中断，持久化记录应足以决定从哪里恢复，避免重复执行不可重复的业务动作。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "行为树描述一次导航内部的决策",
+          "paragraphs": [
+            "行为树通过周期性 tick 评估条件与动作。节点可返回成功、失败或运行中，控制节点决定执行哪些子节点。恢复节点可以在规划或控制失败后调用清理代价地图、等待或其他策略，再重试主流程。它与普通顺序脚本最大的区别是运行中状态和重新评估机制。",
+            "修改 BT XML 时从安装版本提供的树复制到自己的配置包，保持插件类型和端口定义一致。新增一个条件后，先画出成功与失败两条路径，再运行场景。Rolling 文档里的新插件不一定已发布到 Jazzy，因此不能仅凭节点名字看起来合理就插入 XML。本章不提供脱离插件版本的伪完整行为树。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "验证业务期限和异常路径",
+          "paragraphs": [
+            "先用附近有效目标验证成功，再用不可达目标验证失败，最后用较短任务期限验证取消。比较脚本结果与 action 状态和底盘停止情况，确认三者一致。模拟服务器未激活时，应能把问题定位为启动条件，而不是将其记为正常导航失败。",
+            "循环内不要执行长时间图像计算或阻塞网络请求，否则反馈处理和取消可能延迟。任务层需要耗时业务时，使用明确的异步或独立执行结构，并保留取消传播。测试的重点是状态转换和责任边界，而不是让脚本在任何情况下都打印一条令人安心的结束消息。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "三点巡检的状态记录",
+        "scenario": "第二个路点被临时障碍堵住，但第三点仍可能可达。",
+        "steps": [
+          "逐点执行并记录结果，而非同时覆盖当前目标。",
+          "第二点超过期限后请求取消并等待确认。",
+          "根据业务规则记录跳过原因或退出，不把失败计为完成。",
+          "仅在规则允许时继续第三点，并单独记录其结果。"
+        ],
+        "result": "能够恢复和解释任务过程，导航层与业务层各自的失败清晰可见。"
+      },
+      "exercises": [
+        {
+          "question": "isTaskComplete 为真代表成功吗？",
+          "answer": "不代表，必须读取最终结果区分成功、失败和取消。"
+        },
+        {
+          "question": "为什么目标执行超时用 monotonic 时钟？",
+          "answer": "它适合计算经过时间，不受系统时间调整影响；是否使用真实时间或仿真时间作为业务期限应明确选择。"
+        },
+        {
+          "question": "行为树与巡检脚本为何不是重复实现？",
+          "answer": "行为树通常组织一次导航中的规划、控制与恢复，巡检脚本组织业务路点和结果规则，层次不同。"
+        }
+      ],
+      "sourceUrls": [
+        "https://github.com/ros-navigation/navigation2/blob/jazzy/nav2_simple_commander/nav2_simple_commander/robot_navigator.py"
+      ]
+    },
+    {
+      "id": "eco-moveit-planning",
+      "sections": [
+        {
+          "title": "把机械臂流程分成建模、规划与执行",
+          "paragraphs": [
+            "MoveIt 根据机器人模型、当前关节状态、运动学求解器和环境碰撞信息计算运动路径，再交给执行接口完成。规划成功只说明找到了满足当前模型约束的候选轨迹，不证明真实机械臂已经执行，也不证明模型与现场完全一致。应在每个阶段留下可观察输出。",
+            "URDF 说明几何和关节，SRDF 说明规划组、末端执行器和语义，joint limits 限制可用范围，kinematics 配置选择求解器，controller 配置描述轨迹送到哪里。这些文件共同组成机器人配置，缺少任何一类都可能使“界面能打开”却无法完成规划或执行。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "关节状态、坐标和控制接口必须一致",
+          "paragraphs": [
+            "JointState 的名称、位置和时间戳定义当前机器人状态。规划场景若长期使用旧状态，生成的轨迹起点就可能与真实关节差距很大。关节角使用弧度，移动关节使用米，末端目标的 frame 必须能够变换到规划参考系。错误的工具安装变换会让目标在错误位置被解释。",
+            "轨迹执行常通过 FollowJointTrajectory action，控制器必须识别相同关节集合和名称。时间字段表示轨迹点相对开始时刻的到达时间，必须递增。速度与加速度若提供，也要与位置轨迹一致。MoveIt 控制器配置中的名称、action namespace 与 ros2_control 实际端点应一一对应。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "准备一个不连接真实机械臂的基线",
+          "paragraphs": [
+            "本章选用官方示例机器人配置的 mock 或 fake 控制后端。先安装 Jazzy 的 MoveIt 与示例资源，确认当前环境只 source 同一发行版。下面给出 Panda 配置包的常见二进制入口；若目标软件源没有该包，应停下来核对发布版本，不能把 main 分支随意混入当前工作区。",
+            "启动后应在 RViz 看到机器人模型、规划组和交互标记。先选择已定义的命名姿态或小范围合法目标，使用 Plan 生成路径，再检查轨迹展示，最后在 mock 环境执行。运行任何 demo 前明确其控制后端，避免把同一套启动文件误接到已有真实控制器。命令未在本次任务运行。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "准备 Panda mock 演示",
+              "language": "bash",
+              "type": "commands",
+              "code": "source /opt/ros/jazzy/setup.bash\nsudo apt install ros-jazzy-moveit ros-jazzy-moveit-resources-panda-moveit-config\nros2 launch moveit_resources_panda_moveit_config demo.launch.py ros2_control_hardware_type:=mock_components",
+              "explanation": "这是具名示例配置包的演示入口。运行前检查安装包中的 launch 默认使用的控制后端与当前 ROS 图。"
+            }
+          ]
+        },
+        {
+          "title": "用只读检查定位规划之前的问题",
+          "paragraphs": [
+            "先确认 joint_states 正在更新，再确认机器人描述和语义配置已加载，最后检查所选 planning group 是否包含预期关节。RViz 显示模型只说明渲染拿到了部分信息，不代表 move_group 正在使用同一个完整参数集。尤其在多个命名空间中，参数和状态订阅路径可能不同。",
+            "在已有 MoveIt 配置中，分别记录规划参考 frame、末端 link、关节组和控制器 action 名称。任何代码示例都应把这些名称作为配置而不是默认猜测。Panda 示例里的组名不能直接用于 AUBO、UR 或自制机械臂，机械结构和控制关节数量也可能不同。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "检查输入与执行端点",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 topic echo /joint_states --once\nros2 action list -t\nros2 control list_controllers\nros2 param list /move_group",
+              "explanation": "根据实际命名空间调整路径。先保存输出再调参数，便于确认修改是否生效。"
+            }
+          ]
+        },
+        {
+          "title": "理解轨迹文件而不立即驱动硬件",
+          "paragraphs": [
+            "下方是 JointTrajectory 数据概念示例，只有两关节和两个时间点，展示名称顺序、位置及时间的对应关系。它不是 Panda 的完整控制目标，也不应直接发往任意机械臂。真实轨迹必须满足所有受控关节的名字、限位、速度、加速度及控制器允许的起点误差。",
+            "使用轨迹前逐点检查时间递增，并根据相邻位置差和时间差估算平均速度。这不能代替完整动态验证，但能抓住秒与毫秒混淆、角度与弧度混淆以及关节顺序颠倒等明显错误。把数据结构看懂之后，再使用规划接口生成符合实际模型的轨迹。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "trajectory.yaml：数据结构概念示例",
+              "language": "yaml",
+              "type": "concept",
+              "code": "joint_names: [joint_a, joint_b]\npoints:\n  - positions: [0.0, 0.0]\n    time_from_start: {sec: 1, nanosec: 0}\n  - positions: [0.2, -0.1]\n    time_from_start: {sec: 3, nanosec: 0}",
+              "explanation": "此数据只用于解释结构，不是任何真实机器人的可执行目标；不要直接发布到设备。"
+            }
+          ]
+        },
+        {
+          "title": "规划场景与可视标记并不等价",
+          "paragraphs": [
+            "向 RViz 发布一个 Marker 只会让观察者看见物体，规划器不会因此把它当作障碍。碰撞对象必须进入 planning scene，带有正确几何、姿态和 frame。附着物还要指定附着 link 和允许接触关系，才能让抓着物体的机械臂按正确外形规划。",
+            "做一个对照实验：先在无障碍场景规划到固定目标，再通过规划场景接口或 RViz 场景工具加入障碍，保持起点和目标不变。预期路径绕开障碍或明确返回无解。如果轨迹完全穿过障碍，先查场景同步、对象 frame 和规划组，而不是先更换规划算法。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "C++、Python 与版本之间的边界",
+          "paragraphs": [
+            "MoveGroupInterface 提供常见的 C++ 规划和执行入口，moveit_py 提供 Python 侧接口；它们共享机器人配置与规划系统，但调用形式和能力细节不必完全一致。ROS1 的 moveit_commander 不能当作 ROS2 moveit_py 的等价导入。教程中的 main 页面是 Rolling，Jazzy 应以实际安装 API 为准。",
+            "排错按阶段进行：当前状态超时查 joint_states 与时间；逆解失败查目标和运动学；规划失败查碰撞和约束；执行失败查控制器 action、关节名字和跟踪容差。最终记录规划成功率、规划时间、执行结果及末端误差。mock 验证只证明软件配置链路，不证明真实机构动态性能。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "规划成功但执行 action 不存在",
+        "scenario": "RViz 可以显示规划轨迹，点击执行却失败。",
+        "steps": [
+          "确认规划场景与当前状态有效。",
+          "列出 action，发现配置指向的 FollowJointTrajectory 端点不存在。",
+          "核对 ros2_control 控制器是否 active 以及实际 action namespace。",
+          "修正 MoveIt 控制器映射，在 mock 环境再次执行并观察关节变化。"
+        ],
+        "result": "修复的是执行集成，规划器本身不需要重新调参。"
+      },
+      "exercises": [
+        {
+          "question": "Marker 能阻止 MoveIt 规划穿过物体吗？",
+          "answer": "不能，必须把碰撞对象加入 planning scene；显示与规划是不同数据通道。"
+        },
+        {
+          "question": "关节名字正确但顺序错误有何影响？",
+          "answer": "轨迹数值可能被对应到错误关节，导致规划或执行异常，必须按 joint_names 与每个数组逐项对应。"
+        },
+        {
+          "question": "Panda 的规划组名能直接用到其他机械臂吗？",
+          "answer": "不能，规划组来自该机器人的 SRDF，必须核对实际配置和关节集合。"
+        }
+      ],
+      "sourceUrls": [
+        "https://github.com/moveit/moveit_resources/blob/ros2/panda_moveit_config/launch/demo.launch.py"
+      ]
+    },
+    {
+      "id": "eco-manipulation-tasks",
+      "sections": [
+        {
+          "title": "三种运动问题需要三种组织方式",
+          "paragraphs": [
+            "预先规划一段轨迹适合明确起点、目标和碰撞环境；Servo 适合持续输入小增量并根据最新状态更新；多阶段抓放需要把接近、对准、夹持和搬运等步骤组织起来。选择方式取决于任务的信息变化和控制周期，而不是哪套 API 看起来更简短。",
+            "MoveIt Task Constructor 将复杂任务分为阶段，并在阶段间传递候选解。某个抓取姿态可能有逆解，却无法从当前状态接近；另一个姿态可能能接近，但夹持后无法抬升。分阶段表示有助于解释哪一项约束首先使任务失败，避免把所有失败都归结为“规划不好”。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "Servo 的输入输出与坐标合同",
+          "paragraphs": [
+            "在线伺服常输入关节增量速度或末端笛卡尔速度，输出满足下游控制接口要求的关节命令。TwistStamped 的 frame_id 说明速度在哪个坐标中表达，同样的 x 方向在工具坐标和基座坐标中可能完全不同。时间戳和输入超时定义了命令何时仍然有效。",
+            "关节反馈必须足够及时，碰撞模型与场景需要持续一致。软件可以根据奇异性和碰撞距离缩放速度，但这些功能不等同硬件急停或认证安全控制。Rolling 文档中存在的命令类型、服务名和参数，不一定已经进入 Jazzy，接入时应先列出安装包真实接口。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "用离线数值实验理解增量运动",
+          "paragraphs": [
+            "在启动机器人之前，可先验证速度与周期的关系。若每秒希望关节转动零点二弧度，控制周期为十毫秒，则单周期位置增量为零点零零二弧度。若周期抖动，使用固定时间步积分会与真实时间产生差异；若队列积压，又会执行过时意图。",
+            "下面脚本用有界速度和显式时间步生成关节增量，并检查输出。它只是纯 Python 的数值模型，不调用 MoveIt，也不是完整 Servo 算法。通过这种小实验先理解限幅和时间，再观察真正 Servo 的输出，可以避免把单位错误误判为运动学或线程问题。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "increment_check.py：完整离线实验",
+              "language": "python",
+              "type": "complete",
+              "code": "def step(position, requested_velocity, dt, velocity_limit):\n    if dt <= 0 or velocity_limit <= 0:\n        raise ValueError(\"positive dt and limit required\")\n    velocity = max(-velocity_limit, min(velocity_limit, requested_velocity))\n    return position + velocity * dt\n\nif __name__ == \"__main__\":\n    q = 0.0\n    for _ in range(100):\n        q = step(q, 0.2, 0.01, 0.1)\n    assert abs(q - 0.1) < 1e-9\n    print(\"position after one second:\", q)",
+              "explanation": "输出应为约零点一弧度，因为请求速度被限幅。本次编写未执行该实验。"
+            }
+          ]
+        },
+        {
+          "title": "在模拟中建立在线命令链",
+          "paragraphs": [
+            "先完成上一章的模型、状态和 mock 控制器，再选择与 Jazzy 安装版本相符的 Servo launch 配置。启动后列出输入话题、命令类型选择服务、状态输出和控制器端点，把它们写入实验记录。先只观察系统是否准备好，不要立即连续发送多轴命令。",
+            "第一组运动仅在模拟中测试单轴小速度，检查方向和输出关节；第二组停止输入，检查命令超时；第三组将目标靠近模型限位或受控障碍，观察软件缩放或拒绝。每次保留明确的停止路径。参数文件至少说明 planning frame、末端 link、输入话题、输出类型和命令超时。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "运行前只读核查",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 pkg prefix --share moveit_servo\nros2 topic list -t\nros2 service list -t\nros2 action list -t\nros2 topic echo /joint_states --once",
+              "explanation": "这是接口调查命令，不会启动伺服或驱动机械臂。记录实际接口后再按本机版本配置测试。"
+            }
+          ]
+        },
+        {
+          "title": "把抓放分解成具有后置条件的阶段",
+          "paragraphs": [
+            "一个自足任务至少包括获取当前状态、打开夹爪、移动到预抓取位姿、接近、闭合、确认抓取、抬升、转移、放置和释放。每一步都要有可检查的成功条件。夹爪 action 完成只证明控制动作结束，不证明物体真的被抓住，业务上可能还需要力、触觉或视觉反馈。",
+            "MTC 阶段可以生成候选状态、向前或向后传播运动、连接两个可行片段。阶段顺序不应只按照自然语言排列，还要考虑需要哪些前置状态与碰撞允许关系。夹持后应把物体附着到正确 link，放置后再解除附着，否则规划场景与真实搬运状态会逐渐脱离。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "任务状态表：完整概念示例",
+              "language": "text",
+              "type": "concept",
+              "code": "PREGRASP -> APPROACH -> CLOSE -> VERIFY -> LIFT -> TRANSFER -> PLACE -> OPEN\nAPPROACH 失败：退回已知预抓取状态\nVERIFY 失败：不抬升，重新观察或释放\nTRANSFER 失败：保持已验证夹持，重新规划或进入人工处理\nOPEN 成功：确认释放，解除场景中的附着对象",
+              "explanation": "这是业务状态设计，不是可直接执行的 MTC 源码；每个阶段的真实 API 与机器人配置相关。"
+            }
+          ]
+        },
+        {
+          "title": "让感知更新与运动决策协调",
+          "paragraphs": [
+            "视觉给出的物体位姿可能抖动或延迟，不能把每帧检测直接作为无限速度的新目标。先将检测变换到规划参考系，确认时间、置信度和目标身份，再决定是否更新目标。目标已经被夹持后，其状态模型也应改变，不能继续把原始桌面检测当作唯一真值。",
+            "接近阶段可用小范围 Servo 修正，长距离绕障则通常需要规划。两者交接时明确谁拥有控制接口，避免两个命令源同时有效。切换应有停止、确认和接管条件；只是暂停某个 Python 循环，不一定释放底层控制资源或清空已经排队的命令。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "以失败注入验证完整任务",
+          "paragraphs": [
+            "在模拟中分别设置不可达抓取姿态、碰撞阻挡、反馈停止、目标丢失和夹持失败。每种情况都应在正确阶段失败并进入定义好的恢复。若所有失败都统一重启整个系统，说明任务状态还不够明确，也不利于保护已经握持的物体。",
+            "记录阶段耗时、候选数量、首个失败原因和最终业务结果，才能比较策略。性能指标不能只包括抓取成功次数，还应包括错误抓取、恢复成功和物体损伤等与任务相关的结果。本章的离线与模拟设计没有验证任何真实机械臂安全性能。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "夹爪闭合但物体未被抓住",
+        "scenario": "闭合 action 返回成功，视觉仍看到物体在桌面。",
+        "steps": [
+          "将 action 成功解释为夹爪动作完成。",
+          "进入 VERIFY 阶段检查物体或夹持反馈。",
+          "验证失败时保持机械臂在已知接近状态，不执行抬升。",
+          "释放或重新观察后再生成候选抓取。"
+        ],
+        "result": "控制协议成功与业务抓取成功被明确区分。"
+      },
+      "exercises": [
+        {
+          "question": "Servo 输入 frame 错误会造成什么？",
+          "answer": "同样数值会沿错误坐标轴解释，运动方向与操作者意图不一致，必须核对参考系。"
+        },
+        {
+          "question": "为什么抓放要有 VERIFY 阶段？",
+          "answer": "夹爪动作完成不等于物体被可靠夹持，需要独立反馈确认业务条件。"
+        },
+        {
+          "question": "规划与 Servo 切换只停一个上层循环够吗？",
+          "answer": "不一定。需要处理控制权、队列、超时和接管状态，避免两个命令源同时作用。"
+        }
+      ]
+    },
+    {
+      "id": "eco-perception-pipeline",
+      "sections": [
+        {
+          "title": "把图像当作带几何和时间的数据",
+          "paragraphs": [
+            "一帧图像不仅是一块像素数组，还包含宽高、编码、行步长、坐标系和采样时间。相机内参描述像素射线与相机坐标之间的关系，畸变参数描述镜头造成的偏差。若处理节点修改尺寸或裁剪图像，却仍沿用旧 CameraInfo，后续三维计算会使用错误的几何模型。",
+            "ROS Image 与 OpenCV 图像之间由 cv_bridge 进行表示转换。BGR 和 RGB 的通道数相同，但含义不同；深度图可能是十六位无符号整数或浮点数，单位也依设备而异。不能把所有输入强制转换成普通彩色图后再做距离判断。先写清数据合同，再讨论检测模型精度。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "设计源、处理和显示三个模块",
+          "paragraphs": [
+            "最小管线由图像源发布原始帧，处理节点订阅并生成结果，显示工具只消费输出。各模块之间使用明确的话题和编码，处理节点保留输入时间与 frame，便于观察延迟和进行空间关联。若结果代表原图中的边缘，它应仍属于同一个光学坐标和采样时刻。",
+            "传感器流通常更重视新鲜数据，队列过深可能让处理器一直工作在几秒前的图像上。QoS 应兼容发布者，同时根据任务选择丢帧、可靠传输和缓冲策略。可靠通信不意味着队列不会积压，最好分别记录输入频率、处理耗时、输出频率与消息年龄。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "完整合成图像与边缘实验",
+          "paragraphs": [
+            "下面单文件节点既生成测试图像，也通过 ROS 订阅接口接收该图像并处理，因此能检查消息转换与回调链，不需要实体相机。它使用黑底白框的确定图案，以 bgr8 发布，输出 Canny 边缘为 mono8。源和处理器在真实工程中可以拆成不同节点，但其话题合同保持相同。",
+            "保存为 image_lab.py，使用系统 Python 与发行版提供的 cv_bridge、OpenCV、NumPy。不要为了运行示例随意用 pip 覆盖系统 NumPy，否则可能破坏二进制扩展兼容性。代码是完整教学节点，未在本次编写环境实际运行；它不包含真实相机标定和硬件驱动。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "image_lab.py",
+              "language": "python",
+              "type": "complete",
+              "code": "import cv2\nimport numpy as np\nimport rclpy\nfrom rclpy.node import Node\nfrom rclpy.qos import qos_profile_sensor_data\nfrom sensor_msgs.msg import Image\nfrom cv_bridge import CvBridge\n\nclass ImageLab(Node):\n    def __init__(self):\n        super().__init__(\"image_lab\")\n        self.bridge = CvBridge()\n        self.raw_pub = self.create_publisher(Image, \"/camera/image_raw\", qos_profile_sensor_data)\n        self.edge_pub = self.create_publisher(Image, \"/camera/edges\", qos_profile_sensor_data)\n        self.sub = self.create_subscription(Image, \"/camera/image_raw\", self.process, qos_profile_sensor_data)\n        self.timer = self.create_timer(0.1, self.generate)\n\n    def generate(self):\n        frame = np.zeros((240, 320, 3), dtype=np.uint8)\n        cv2.rectangle(frame, (80, 60), (240, 180), (255, 255, 255), 3)\n        msg = self.bridge.cv2_to_imgmsg(frame, encoding=\"bgr8\")\n        msg.header.stamp = self.get_clock().now().to_msg()\n        msg.header.frame_id = \"camera_optical_frame\"\n        self.raw_pub.publish(msg)\n\n    def process(self, msg):\n        frame = self.bridge.imgmsg_to_cv2(msg, desired_encoding=\"bgr8\")\n        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)\n        edges = cv2.Canny(gray, 50, 150)\n        output = self.bridge.cv2_to_imgmsg(edges, encoding=\"mono8\")\n        output.header = msg.header\n        self.edge_pub.publish(output)\n\ndef main():\n    rclpy.init()\n    node = ImageLab()\n    try:\n        rclpy.spin(node)\n    except KeyboardInterrupt:\n        pass\n    finally:\n        node.destroy_node()\n        if rclpy.ok():\n            rclpy.shutdown()\n\nif __name__ == \"__main__\":\n    main()",
+              "explanation": "处理结果保留输入 header；没有把处理完成时间冒充原始采样时间。"
+            }
+          ]
+        },
+        {
+          "title": "按输入、输出和元数据检查实验",
+          "paragraphs": [
+            "启动后先检查 /camera/image_raw 的类型、编码和频率，再检查 /camera/edges。用 rqt_image_view 分别打开两条话题，预期原图为白框，结果为边缘线。由于像素边界与阈值会影响局部形状，验收重点是输入输出关系、尺寸和编码，而不是对某张截图逐像素猜测。",
+            "比较两条消息的 header，结果应保留相同 frame 与采样时间。若处理慢导致消息年龄增大，应通过减少计算、限制队列或合理丢帧改善，而不是把输出时间戳改成当前时间隐藏延迟。显示工具默认 QoS 不兼容时要调整订阅设置，不能据此断言处理节点没发布。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "检查与显示",
+              "language": "bash",
+              "type": "commands",
+              "code": "python3 image_lab.py\n# 另一个已 source 的终端：\nros2 topic info /camera/image_raw --verbose\nros2 topic hz /camera/edges\nros2 run rqt_image_view rqt_image_view",
+              "explanation": "显示命令需要 rqt_image_view；前两条常驻命令按需要在独立终端运行。"
+            }
+          ]
+        },
+        {
+          "title": "传输压缩和几何处理要分开",
+          "paragraphs": [
+            "image_transport 允许选择原始或压缩传输，目的是管理带宽和编解码开销。压缩传输并不自动完成去畸变、缩放或相机标定，丢失压缩也可能改变像素值。深度图需要符合其专门传输格式，不能作为普通彩色 JPEG 处理后再用于精确距离。",
+            "图像去畸变依赖正确 CameraInfo，双目深度依赖左右相机标定与同步，深度到点云还需要相机投影模型。每一步都应保留能够追溯的输入来源。若相机标定文件与实际分辨率不一致，即使图像看起来清楚，空间位置仍可能产生系统误差。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "点云处理遵守字段和 frame 合同",
+          "paragraphs": [
+            "PointCloud2 使用字段描述和二进制布局，点中可能包含颜色、强度、时间或其他数据。处理器不能假定所有点都是连续三个 float。转换到 PCL 或 NumPy 时检查字段名、偏移、字节序与有效点，滤波后也应正确更新消息结构和 header。",
+            "把点云变换到 base_link 或 map 时，使用采样时刻的 TF。不同传感器同时观测同一物体时，空间重叠不良可能来自外参或时间偏差。先用静止环境检查外参，再用运动环境检查同步，能够减少在几何与时序两种错误之间反复猜测。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "建立端到端感知验收",
+          "paragraphs": [
+            "一条合格管线应能回答：输入来自哪里、编码是什么、在哪个 frame、何时采样、处理花多久、丢了多少帧、输出如何用于下游。算法精度与系统新鲜度需要一起评估，迟到的高精度结果也可能不适合当前控制决策。保存固定 bag 是比较不同实现的可靠起点。",
+            "黑屏先查编码与显示订阅，颜色异常先查通道顺序，几何错位先查内外参，运动时重影先查同步，内存增长先查队列和缓存生命周期。只有这些合同成立后，调整检测阈值或替换模型才有可解释意义。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "边缘处理正常却看不到结果",
+        "scenario": "输出话题有频率，图像显示窗口仍为空。",
+        "steps": [
+          "查看输出编码为 mono8，确认显示工具支持。",
+          "检查发布者为传感器数据 QoS。",
+          "调整显示订阅兼容性，再比较原图与边缘。",
+          "确认 header 没有被改写，记录数据年龄。"
+        ],
+        "result": "把显示连接问题与图像算法问题分离。"
+      },
+      "exercises": [
+        {
+          "question": "输出为什么保留输入时间戳？",
+          "answer": "结果描述原始采样时刻的场景，保留它才能与 TF、其他传感器和延迟分析正确关联。"
+        },
+        {
+          "question": "压缩传输会自动去畸变吗？",
+          "answer": "不会，传输编码与几何校正是不同步骤，后者需要有效标定。"
+        },
+        {
+          "question": "PointCloud2 能直接按三个浮点数一组读取吗？",
+          "answer": "不能普遍如此，必须按字段、偏移、步长和字节序解析。"
+        }
+      ]
+    },
+    {
+      "id": "eco-data-observability",
+      "sections": [
+        {
+          "title": "先定义问题需要什么证据",
+          "paragraphs": [
+            "机器人问题经常只在某一帧、某一次重连或某种负载下出现。日志可以解释节点做了什么，消息记录保存它看到了什么，诊断状态反映设备是否健康，trace 展示回调和调度的时间关系。这些工具回答不同问题，不能只保留一张终端截图就期待复现实验。",
+            "记录计划应从待验证假设出发。定位异常需要原始传感器、TF、里程计和参数；控制延迟需要输入命令、反馈与时间线；图像错误需要原始编码和相机信息。全量录制虽然简单，但可能增加磁盘和通信负载，应确认记录过程本身没有显著改变系统行为。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "时间、QoS 和类型决定记录是否完整",
+          "paragraphs": [
+            "bag 中的接收时间与消息 header 中的采样时间并不总相同。网络延迟和节点队列会拉开两者，回放时应保留这种区别。自定义消息还需要相应类型支持，单有文件不代表另一台机器就能解释所有字段。记录说明中应保存包版本、接口定义和配置。",
+            "录制器也是订阅者，需要与发布者 QoS 兼容。静态 TF 和某些状态话题使用持久性语义，晚启动的录制器是否能收到历史状态要检查。若话题存在却消息数为零，先查看端点和 QoS，而不是立即判断存储插件损坏。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "从最小 chatter 实验学会完整闭环",
+          "paragraphs": [
+            "先运行系统自带 talker，在另一个终端录制 /chatter，几秒后停止录制。输出目录使用一个尚不存在的新名字，避免误覆盖或混合实验。录制停止后先查看 metadata，再停止原始 talker，最后回放。这样观察者看到的消息来源只有一个，不会把实时发布与回放混在一起。",
+            "命令要求安装 demo_nodes_cpp、rosbag2 及 MCAP 存储插件，并在各终端 source Jazzy。本章未实际执行这些命令。实验成功标准是记录消息数大于零、能够说明录制时长，并在原始发布者停止后从回放再次收到同类消息。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "终端一：产生测试数据",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 run demo_nodes_cpp talker",
+              "explanation": "保持运行直到录制完成，再用 Ctrl+C 停止。"
+            },
+            {
+              "label": "终端二：录制后检查",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 bag record -s mcap -o learning_chatter /chatter\n# Ctrl+C 停止录制后运行：\nros2 bag info learning_chatter",
+              "explanation": "目录名必须是新实验目录；不要把停止提示当作另一个自动执行命令。"
+            },
+            {
+              "label": "停止原 talker 后回放",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 bag play learning_chatter\n# 另一个终端观察：\nros2 topic echo /chatter",
+              "explanation": "回放和观察分别运行；确认实时 talker 已经停止。"
+            }
+          ]
+        },
+        {
+          "title": "MCAP 与 SQLite 是存储选择",
+          "paragraphs": [
+            "rosbag2 负责发现、订阅、序列化与回放，存储插件决定数据如何落盘。MCAP 是可保存多种带时间数据和 schema 的容器，SQLite 插件使用数据库形式组织记录。格式选择会影响索引、压缩、工具兼容性和恢复方式，但不会自动修复缺失消息或错误时间戳。",
+            "比较格式时使用同一数据集和消息速率，记录写入吞吐、CPU、文件大小、随机访问与恢复需求。不要只以压缩后的大小判断优劣。压缩级别越高可能越耗 CPU，造成原本没有的丢帧；对实时录制而言，完整性和可恢复性往往比最小文件更关键。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "重放机器人数据时重建时钟和 TF",
+          "paragraphs": [
+            "包含运动数据的 bag 常需要 /tf、/tf_static 与地图等上下文。让下游算法开启 use_sim_time，再使用回放时钟。此时关闭其他 /clock 发布者，停止真实驱动对同名输入的发布，避免两个源竞争。改变播放速率也不意味着算法时钟和计算负载会自动保持原来的关系。",
+            "记录使用的参数与 launch 版本同样重要。bag 保存消息，不会自动捕获所有文件、模型权重、地图路径和系统环境。复现包应包括这些依赖的版本或内容，以及启动顺序和预期判据。数据可以离线读取，但某些算法仍需要额外模型或插件才能重跑。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "以回放时间驱动算法",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 bag play learning_chatter --clock",
+              "explanation": "对时间敏感的下游节点需显式启用 use_sim_time；本例 chatter 本身没有空间语义。"
+            }
+          ]
+        },
+        {
+          "title": "诊断和 tracing 的使用边界",
+          "paragraphs": [
+            "DiagnosticArray 可以汇总设备温度、通信状态、频率或错误码，关键是定义每项状态什么时候更新、何时过期以及怎样判为异常。一个绿色状态若十分钟前发布后再未更新，不应被当作当前健康。诊断聚合帮助观察，但不承担底层执行器的停止功能。",
+            "当问题是回调延迟或线程竞争时，需要时序 trace，而不是在每次循环中大量打印日志。ros2_tracing 的事件能够帮助区分等待、回调执行和消息路径，但使用前要确认系统工具、权限与插桩支持。采集会产生额外开销，应记录开启和关闭采集时的行为差异。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "用复现包而不是口头描述交付问题",
+          "paragraphs": [
+            "一个最小复现包可以包含 bag、参数 YAML、机器人模型版本、软件提交清单、启动命令和一句可自动或人工判定的故障描述。例如“第十秒到第十二秒输出位姿跳变超过某个阈值”比“定位有点怪”更适合比较修复。对敏感数据还应按实际权限控制共享范围。",
+            "验收时使用新终端或独立工作区，按记录顺序重新启动，确认不依赖旧进程和环境残留。修复后重放同一数据，再加入新的边界样例。若只有原作者的电脑能够重现，说明还存在未记录依赖，应继续补齐，而不是把问题归为不可重复。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "录制成功但回放无法显示激光",
+        "scenario": "bag 文件可打开，RViz 报找不到 laser 到 map 的变换。",
+        "steps": [
+          "检查记录话题，发现缺少 /tf_static。",
+          "核对传感器安装模型，补充固定变换的可复现来源。",
+          "统一回放时钟与消费节点 use_sim_time。",
+          "再次记录包含必要上下文的数据并验证新终端回放。"
+        ],
+        "result": "问题是记录上下文不完整，不是激光算法失效。"
+      },
+      "exercises": [
+        {
+          "question": "bag 有文件就代表录制完整吗？",
+          "answer": "不代表，应检查消息数、时长、话题、QoS 和所需上下文。"
+        },
+        {
+          "question": "为什么重放前停掉原始驱动？",
+          "answer": "避免同名话题出现实时与回放两个发布者，造成重复数据和时间混乱。"
+        },
+        {
+          "question": "日志能替代 trace 分析回调延迟吗？",
+          "answer": "通常不能。日志说明事件，trace 更适合精确时间关系，大量日志还可能改变系统时序。"
+        }
+      ]
+    },
+    {
+      "id": "eco-microcontrollers",
+      "sections": [
+        {
+          "title": "client、传输和 Agent 各做一层工作",
+          "paragraphs": [
+            "micro-ROS 把 ROS 2 客户端能力带到资源受限设备。微控制器上的应用建立节点、发布者和订阅者，通过选定传输与主机 Agent 建立会话，Agent 再与较完整的 ROS 系统交互。它不是把桌面 Linux 全部搬到 MCU，也不会让任意板卡自动拥有足够内存和算力。",
+            "把这三层分开有助于排错：固件负责本地逻辑与设备采样，传输负责串口或网络字节，Agent 负责会话与图连接。Agent 启动成功只是主机端准备好，客户端尚未连接时 ROS 图里可能没有预期节点。必须同时观察会话日志和消息数据。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "资源约束影响程序结构",
+          "paragraphs": [
+            "桌面程序可以频繁创建字符串、向量和动态消息，MCU 往往需要预先规划容量和生命周期。包含可变长度字段的消息尤其要明确分配策略。队列、执行器句柄、传输缓存与应用栈都占内存，不能只按一个消息结构体的大小估算需求。",
+            "rclc executor 决定回调和定时器如何被调度，但底层 RTOS、驱动中断和控制任务仍有自己的时序。一个 ROS 回调处理过久可能拖延其他事件。需要硬实时的电机环通常应在设备本地明确组织，通信回调只更新有界目标或状态，不应让网络抖动直接决定控制周期。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "先完成主机上的 Agent 与通信实验",
+          "paragraphs": [
+            "选择 Linux 主机实验可以先理解会话，而不涉及刷写或损坏硬件。Jazzy 路线使用 micro_ros_setup 的 jazzy 分支，在独立工作区安装依赖并构建工具，再构建 Agent。下面步骤未在本次执行，下载和编译需要网络及工具链，正文解释可离线阅读。",
+            "micro-ROS 网站已经迁移，部分入门正文仍以 Humble 为例，因此不能照抄旧容器标签。工具分支、Agent 和客户端类型支持应属于一致版本集合。若构建失败，记录实际提交和依赖错误，不要通过混入其他发行版的 setup 脚本尝试解决。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "构建主机 Agent 的具体顺序",
+              "language": "bash",
+              "type": "commands",
+              "code": "source /opt/ros/jazzy/setup.bash\nmkdir -p \"$HOME/microros_learning_ws/src\"\ncd \"$HOME/microros_learning_ws\"\ngit clone -b jazzy https://github.com/micro-ROS/micro_ros_setup.git src/micro_ros_setup\nrosdep update\nrosdep install --from-paths src --ignore-src --rosdistro jazzy -y\ncolcon build --symlink-install\nsource install/local_setup.bash\nros2 run micro_ros_setup create_agent_ws.sh\nros2 run micro_ros_setup build_agent.sh\nsource install/local_setup.bash",
+              "explanation": "使用全新工作区；已存在源码时先检查，不重复覆盖。系统初次 rosdep 初始化另行完成。"
+            }
+          ]
+        },
+        {
+          "title": "UDP 与串口使用不同连接合同",
+          "paragraphs": [
+            "UDP 客户端必须知道 Agent 所在主机地址和端口，双方要有网络路由；串口客户端和 Agent 则需要设备路径、波特率及访问权限一致。把 UDP 端口写正确不能解决串口权限，选择正确传输后再观察对应层的证据。防火墙和容器网络也会影响 UDP 会话。",
+            "下面分别展示两种 Agent 入口，一次实验只选择一种。设备路径必须换成真实枚举结果，不应随意对所有设备放开权限。Agent 详细日志用于观察会话建立、实体创建和断线，稳定运行后可降低日志量。启动 Agent 不会自行产生传感器节点，仍需要匹配客户端。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "UDP Agent",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 run micro_ros_agent micro_ros_agent udp4 --port 8888 -v6",
+              "explanation": "客户端需配置此主机地址与端口；这是常驻服务。"
+            },
+            {
+              "label": "串口 Agent：替换实际设备路径",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 run micro_ros_agent micro_ros_agent serial --dev /dev/ttyACM0 -b 115200 -v6",
+              "explanation": "仅在固件使用同一串口传输和波特率时使用。"
+            }
+          ]
+        },
+        {
+          "title": "定义一条可完整验证的电机通信合同",
+          "paragraphs": [
+            "以底盘为例，上位机发送目标车体速度，MCU 更新本地控制目标并周期性读取编码器，返回里程计或轮速。应明确每项量的单位、正方向、频率、最大消息年龄和失联动作。上下位机都需要知道命令何时过期，而不是只依赖 DDS 已收到一条消息。",
+            "自定义消息需要在双方构建相同接口。仅在主机安装一个新的 msg 包，不会自动改变已经烧录的固件。改变字段顺序、类型或数组长度后应重新生成并编译客户端与 Agent 相关支持，保存接口版本。名称相同但类型定义不同也可能无法通信。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "先用离线状态机验证失联逻辑",
+          "paragraphs": [
+            "下面程序模拟命令新鲜度判断，不调用 ROS、不写电机，也不代表完整固件。它使用单调经过时间，避免系统时钟调整造成超时判断混乱。程序表达一条清楚规则：只有已收到命令且年龄在阈值内，才允许目标进入控制层。",
+            "真实固件还需结合使能、急停、驱动故障和通信状态。恢复连接后是否自动恢复旧目标要明确设计，通常不应把断线前的陈旧命令重新当作新命令。通过断线、重连和重新启动的顺序测试，能暴露仅正常运行时看不出来的状态错误。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "watchdog_model.py：完整离线状态模型",
+              "language": "python",
+              "type": "complete",
+              "code": "def accepted_target(now, received_at, requested, timeout=0.3):\n    if received_at is None:\n        return 0.0\n    age = now - received_at\n    if age < 0 or age > timeout:\n        return 0.0\n    return max(-0.2, min(0.2, requested))\n\nassert accepted_target(1.0, None, 0.1) == 0.0\nassert accepted_target(1.1, 1.0, 0.1) == 0.1\nassert accepted_target(1.5, 1.0, 0.1) == 0.0\nassert accepted_target(1.1, 1.0, 0.8) == 0.2\nprint(\"watchdog model checks passed\")",
+              "explanation": "这是明确的教学模型，未在本次执行；实机停止路径需要独立验证。"
+            }
+          ]
+        },
+        {
+          "title": "按重启和失效矩阵完成验收",
+          "paragraphs": [
+            "至少测试客户端先启动、Agent 先启动、客户端重启、Agent 重启和传输断开。每个场景记录会话是否恢复、ROS 实体是否重新出现、命令是否保持过期、状态是否被正确标记。节点重新可见不代表所有业务状态已经恢复。",
+            "参考本地 Linorobot2 固件时，先核对板卡、PlatformIO 环境、传输、接口与上位机分支。它提供工程组织参考，不意味着任何电机驱动和编码器都能直接使用相同参数。验收结果应写清实际硬件与软件版本，本章没有对任何板卡刷写或实机行为作运行证明。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "Agent 正常运行却没有 MCU 话题",
+        "scenario": "主机进程没有退出，但 ros2 topic list 看不到预期编码器数据。",
+        "steps": [
+          "查看 Agent 是否真正建立客户端会话。",
+          "核对固件使用 UDP 还是串口以及地址或设备配置。",
+          "会话建立后检查实体创建和接口类型支持。",
+          "最后查看固件采样任务是否发布，并验证断线停止规则。"
+        ],
+        "result": "从会话层逐步定位，不把空 ROS 图直接归因于 QoS。"
+      },
+      "exercises": [
+        {
+          "question": "Agent 启动成功等于 MCU 已连接吗？",
+          "answer": "不等于，需要会话、实体创建日志以及实际数据证明。"
+        },
+        {
+          "question": "改了自定义 msg 只重编主机够吗？",
+          "answer": "不够，客户端和相关类型支持也要保持一致，固件需重新生成和构建。"
+        },
+        {
+          "question": "通信回调能代替硬实时电机环吗？",
+          "answer": "不能自动代替。网络和调度抖动需要与本地控制周期隔离，并设计明确的目标更新与超时机制。"
+        }
+      ]
+    },
+    {
+      "id": "eco-multi-robot",
+      "sections": [
+        {
+          "title": "从两台机器人的身份开始设计",
+          "paragraphs": [
+            "单机器人常使用全局 /cmd_vel、/scan 和 /odom，多机器人直接复制后就可能互相覆盖。第一步不是分配复杂任务，而是为每台机器人定义唯一身份，并让节点、话题、服务和 action 在可预测的命名空间下运行。共享资源应显式列出，不能让它们恰好因为名字相同而混在一起。",
+            "命名空间解决 ROS 图资源名的组织，frame_id 是消息内部字符串，通常不会自动跟着改变。两台机器人若都发布 odom 到 base_link，即使命令话题已经隔离，TF 仍可能冲突。身份方案应同时覆盖图名称、TF 名称、设备标识、地图关系和日志目录。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "先做完整的双 turtlesim 隔离实验",
+          "paragraphs": [
+            "本章用桌面包中的 turtlesim 建立最小实验，不需要两台实体底盘。分别启动两个窗口，给它们不同命名空间，再把键盘控制节点放入其中一个命名空间。预期只有目标窗口中的海龟响应。这个实验只验证图名称隔离，不包含 TF、网络延迟或真实避障。",
+            "每个常驻命令在独立终端运行，并 source 同一 Jazzy 环境。终端必须有图形显示支持，键盘控制终端保持焦点。下面命令未在本次执行，读者应先列出真实话题，再验证控制只作用于预期实例。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "两个模拟机器人",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 run turtlesim turtlesim_node --ros-args -r __ns:=/robot1\n# 另一个终端：\nros2 run turtlesim turtlesim_node --ros-args -r __ns:=/robot2\n# 第三个终端，只控制 robot1：\nros2 run turtlesim turtle_teleop_key --ros-args -r __ns:=/robot1",
+              "explanation": "三个常驻进程分别运行。相对话题会被展开到对应命名空间。"
+            },
+            {
+              "label": "检查隔离结果",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 node list\nros2 topic info /robot1/turtle1/cmd_vel --verbose\nros2 topic info /robot2/turtle1/cmd_vel --verbose",
+              "explanation": "比较两条命令话题的发布和订阅端点，验证没有意外串线。"
+            }
+          ]
+        },
+        {
+          "title": "命名空间和域隔离解决不同问题",
+          "paragraphs": [
+            "同一 ROS_DOMAIN_ID 中的机器人可以发现并共享数据，命名空间用来组织各自资源。不同域通常互相不直接发现，可以作为逻辑分组，但不等于身份认证或访问授权。跨域通信需要明确的桥接或其他架构，不能只把域号改回相同就宣称已经完成安全设计。",
+            "多机器人既需要共享全局任务，又可能需要隔离高带宽传感器。应按带宽、失联行为和权限定义哪些信息跨边界传递。例如共享低频状态和任务结果，而原始相机留在本机处理。桥接还需要时间戳和来源身份，避免调度器误把旧状态当作当前状态。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "规划共享坐标与每台机器人的局部坐标",
+          "paragraphs": [
+            "一种常见设计使用共享 map，再为每台机器人保留独立 odom 和 base frame。定位器提供 map 到该机器人 odom，局部估计提供机器人 odom 到 base。传感器 frame 继续带上该机器人的身份前缀。另一种设计让机器人使用不同地图，再通过经过定义的地图变换连接，复杂度更高。",
+            "共享 /tf 话题本身并不危险，关键是 frame 名是否唯一和关系是否一致。反过来，把 /tf 重映射为不同话题，也不自动解决上层算法如何同时查询各机器人坐标的问题。选择方案时应明确消费者需要哪棵树、在哪里获得它，以及多地图时如何处理漂移和全局修正。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "Open-RMF 协调的是车队与设施",
+          "paragraphs": [
+            "机器人本机导航负责局部定位、路径跟踪和避障，Open-RMF 在更高层组织任务、车队和设施交通。fleet adapter 把某种机器人或厂商车队的状态、任务和完成反馈翻译给协调系统。门、电梯等设施也需要适配接口，不能仅在地图上画一个图标就认为可以被调度。",
+            "交通计划反映预期占用，不等于所有机器人都会绝对按计划执行。适配器应持续报告实际位置、剩余任务和异常，协调层才能调整。先把单台机器人任务的成功、失败、取消和重连做可靠，再接到车队层；否则车队调度只会放大已有不确定性。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "用离线资源模型理解共享通道",
+          "paragraphs": [
+            "下方是完整的教学资源预约程序：两台机器人申请同一个窄门，只有当前持有者释放后下一台才能进入。它不是 Open-RMF 的实现，也没有解决路径规划、死锁或分布式一致性；它用最少代码表达资源所有权为什么必须显式存在。",
+            "真实系统还需要租约、超时、持有者失联、取消和恢复策略。如果机器人失联时立即释放资源，但实际机器人仍停在门内，另一台就可能被派往已占用区域。因此“软件任务结束”和“物理资源已空闲”应有独立的确认条件。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "reservation_model.py",
+              "language": "python",
+              "type": "complete",
+              "code": "owners = {}\n\ndef acquire(resource, robot):\n    current = owners.get(resource)\n    if current is None or current == robot:\n        owners[resource] = robot\n        return True\n    return False\n\ndef release(resource, robot):\n    if owners.get(resource) != robot:\n        raise ValueError(\"only owner may release\")\n    del owners[resource]\n\nassert acquire(\"door_a\", \"robot1\")\nassert not acquire(\"door_a\", \"robot2\")\nrelease(\"door_a\", \"robot1\")\nassert acquire(\"door_a\", \"robot2\")\nprint(\"reservation model checks passed\")",
+              "explanation": "纯 Python 概念实验，未在本次执行；不能作为真实交通安全控制器。"
+            }
+          ]
+        },
+        {
+          "title": "验收多机器人系统的异常路径",
+          "paragraphs": [
+            "在正常任务之外，模拟一台机器人离线、一个门不可用、地图版本不一致和任务被取消。检查其他机器人是否仍可运行，调度器是否显示明确原因，以及旧任务是否会在重连后意外恢复。给每台机器人保留独立日志与数据标识，才能追踪跨系统事件顺序。",
+            "最低验收包括命令不串线、状态有唯一来源、TF 不冲突、任务结果可追踪、共享资源有明确释放条件。多机器人数量增加后再测带宽与发现开销，而不是仅复制更多节点观察是否启动。相同配置在两台成功，不保证在几十台和无线网络中仍有相同性能。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "两台底盘使用同名 frame 导致显示跳动",
+        "scenario": "命令已经放进 robot1 和 robot2 命名空间，但 RViz 中底盘位置来回跳。",
+        "steps": [
+          "检查 /tf，发现两台都声明 child frame 为 base_link。",
+          "为 frame 设计独立名称并修改模型、驱动和导航配置。",
+          "保留清楚的共享 map 关系。",
+          "再验证话题命名空间和消息内部 frame 同时正确。"
+        ],
+        "result": "图资源隔离与坐标身份隔离同时成立。"
+      },
+      "exercises": [
+        {
+          "question": "命名空间会自动改 frame_id 吗？",
+          "answer": "通常不会，消息内部坐标名称必须由模型或节点参数显式配置。"
+        },
+        {
+          "question": "机器人掉线就能立即释放门资源吗？",
+          "answer": "不能简单这样做，机器人可能仍占用物理通道，需要定义额外确认和恢复策略。"
+        },
+        {
+          "question": "Open-RMF 能替代本机 Nav2 吗？",
+          "answer": "不能直接替代。它协调车队和设施，本机仍需要可靠定位、运动与避障能力。"
+        }
+      ]
+    },
+    {
+      "id": "eco-network-security",
+      "sections": [
+        {
+          "title": "按照发现、数据和应用三层理解通信",
+          "paragraphs": [
+            "两个节点不能互通时，先判断是否发现彼此，再判断消息类型与 QoS 是否兼容，最后检查应用是否正确处理数据。网络连通测试只能证明部分传输路径，不保证 ROS 发现和数据流成立。节点列表为空也可能是本地 CLI daemon 使用了不同 RMW，而不是远端程序根本没有启动。",
+            "RMW 将 ROS 上层接口连接到底层通信实现。Fast DDS、Cyclone DDS 与 Zenoh 的发现和配置机制不同，应用消息不变并不代表网络部署方式完全相同。更换实现应当是可记录、可回退的实验，所有参与进程和观察工具的环境都要一致。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "先建立可重复的双机基线",
+          "paragraphs": [
+            "记录每台主机的 ROS 发行版、RMW、域号、网卡、容器或虚拟机网络模式和时间同步方式。先用低速小消息证明发布订阅互通，再增加到目标数据量。一次只改变一个因素，否则无法解释是中间件、网络接口还是 QoS 改善了结果。",
+            "在真实网络中，发现可能依赖多播或显式服务器，数据传输还受路由、防火墙、MTU 和无线质量影响。不要为排错无限放开所有端口；应从当前实现的配置与观测得到具体需求。检查消息年龄和丢帧比仅看节点能够出现更接近应用实际要求。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "记录环境并重启观察工具",
+              "language": "bash",
+              "type": "commands",
+              "code": "printenv ROS_DISTRO RMW_IMPLEMENTATION ROS_DOMAIN_ID\nros2 daemon stop\nros2 doctor --report",
+              "explanation": "daemon 停止只影响 CLI 发现缓存；不需要强杀所有 ROS 进程。"
+            }
+          ]
+        },
+        {
+          "title": "用明确环境比较 DDS 实现",
+          "paragraphs": [
+            "以 Cyclone DDS 为例，先安装对应 Jazzy RMW 包，再在所有实验终端选择同一实现。一个终端运行 talker，另一个运行 listener。最好使用新的终端，避免此前安全配置、域号和发现参数残留。环境变量只对之后启动的进程生效，不会改变已经运行的节点。",
+            "上游 latest 文档可能描述比 Jazzy 系统库更高的版本，网络配置字段需要按安装版本核对。比较时固定消息大小、频率、网络和 CPU 负载，报告发现时间、吞吐、延迟分布与恢复行为，不能只凭单次平均频率给某实现下普遍结论。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "各实验终端使用相同设置",
+              "language": "bash",
+              "type": "commands",
+              "code": "source /opt/ros/jazzy/setup.bash\nexport RMW_IMPLEMENTATION=rmw_cyclonedds_cpp\nexport ROS_DOMAIN_ID=42\nros2 daemon stop\nros2 run demo_nodes_cpp talker",
+              "explanation": "另一个同样设置的终端运行 demo_nodes_cpp listener。需预先安装 ros-jazzy-rmw-cyclonedds-cpp。"
+            }
+          ]
+        },
+        {
+          "title": "Zenoh 需要理解路由器和默认发现",
+          "paragraphs": [
+            "Jazzy 的 rmw_zenoh 默认配置与常见 DDS 多播发现不同，节点通常借助路由器获得发现信息。没有路由器时直接运行两个普通 demo，可能看起来像 ROS 发布订阅坏了，实际是部署前提缺失。跨主机时还需要按选定版本显式配置路由器连接，不应假定默认配置已经跨所有网卡开放。",
+            "实验先限制在单机：运行路由器，再让 talker 和 listener 使用 rmw_zenoh_cpp，确认图和数据都成立。之后再增加第二台主机并记录连接配置。切换实现前停掉旧 demo 和 daemon，避免不同通信图混在一次观察里。本章命令未实际运行。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "终端一启动路由器",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 run rmw_zenoh_cpp rmw_zenohd",
+              "explanation": "需要 ros-jazzy-rmw-zenoh-cpp。"
+            },
+            {
+              "label": "其他终端运行应用",
+              "language": "bash",
+              "type": "commands",
+              "code": "export RMW_IMPLEMENTATION=rmw_zenoh_cpp\nros2 daemon stop\nros2 run demo_nodes_cpp talker",
+              "explanation": "另一个相同环境运行 listener；跨主机另需路由器连接配置。"
+            }
+          ]
+        },
+        {
+          "title": "域号不是身份，命名空间不是权限",
+          "paragraphs": [
+            "ROS_DOMAIN_ID 用于逻辑分组，命名空间用于资源组织，二者都不证明发送者是谁。SROS2 提供创建密钥库、身份和 enclave 的工具，底层安全能力还取决于 RMW 与构建支持。安全设计需要明确谁可以发布哪些话题、调用哪些服务，而不是只把话题名改得难猜。",
+            "下面先建立两个测试 enclave。它验证身份材料的生成与强制启用流程，不代表已经完成最小权限策略。默认生成的权限可能较宽，真实项目还要按通信合同制定和验证策略。私钥只保存在授权环境，不能随教材、日志或源码仓库一起发布。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "在新的练习目录创建测试身份",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 security create_keystore learning_keystore\nros2 security create_enclave learning_keystore /learning/talker\nros2 security create_enclave learning_keystore /learning/listener",
+              "explanation": "这些命令创建本地测试文件；目录应是新的教学目录。"
+            },
+            {
+              "label": "各安全实验终端选择同一密钥库",
+              "language": "bash",
+              "type": "commands",
+              "code": "export ROS_SECURITY_KEYSTORE=\"$(pwd)/learning_keystore\"\nexport ROS_SECURITY_ENABLE=true\nexport ROS_SECURITY_STRATEGY=Enforce\nros2 run demo_nodes_cpp talker --ros-args --enclave /learning/talker",
+              "explanation": "另一个终端配置同一路径后，用 /learning/listener 启动 listener。使用支持所需安全能力的相同 RMW。"
+            }
+          ]
+        },
+        {
+          "title": "正向成功与反向拒绝都要验证",
+          "paragraphs": [
+            "一个安全实验不能只证明合法节点可通信，还应证明缺失身份、错误身份或未授权端点被拒绝。先在隔离教学环境中使用不存在的 enclave 检查 Enforce 是否阻止启动或通信，再为具体话题制定最小权限并测试允许与拒绝。拒绝日志应能区分身份材料缺失和授权不匹配。",
+            "加密和授权也不能替代应用的数据校验。合法节点可能发送超范围速度、过旧时间戳或错误 frame，接收端仍需执行接口合同检查。浏览器桥和远程控制界面同样需要认证、授权和连接范围，不能因为机器人网络在局域网就默认所有访问都可信。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "形成可复现的网络与权限验收",
+          "paragraphs": [
+            "验收记录至少包含软件版本、环境变量、发现配置、网络拓扑、消息大小与频率、延迟分位数、丢帧和断线恢复时间。安全部分记录策略版本和测试主体，不记录私钥内容。若中间件切换使发现改善但数据延迟变差，应如实解释取舍。",
+            "故障顺序建议从主机网络、进程环境、发现、类型、QoS、时间和应用逐层排除。避免在不知道根因时同时更换 RMW、关闭安全、扩大队列并改用最新代码。一次受控实验得到的可解释证据，比偶然恢复通信更适合作为后续部署基础。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "换了 RMW 后节点列表仍异常",
+        "scenario": "talker 与 listener 正常收发，但 CLI 的节点列表不符合预期。",
+        "steps": [
+          "记录应用和 CLI 的 RMW 环境。",
+          "发现旧 daemon 在更换实现之前启动。",
+          "停止 daemon，并在相同环境重新运行观察命令。",
+          "确认数据通路与观察通路的实现一致。"
+        ],
+        "result": "修复观察环境残留，而非误改正在正常工作的应用。"
+      },
+      "exercises": [
+        {
+          "question": "域号相同意味着对端可信么？",
+          "answer": "不意味着，域号只是逻辑分组，身份和授权需要独立机制。"
+        },
+        {
+          "question": "环境变量会改变已经运行的节点吗？",
+          "answer": "不会，通常只影响之后启动的进程，需要明确重启相关实验进程。"
+        },
+        {
+          "question": "合法节点收到授权后还需要校验速度范围吗？",
+          "answer": "需要。授权解决谁可通信，应用合同解决数据是否有效、及时和在允许范围内。"
+        }
+      ]
+    },
+    {
+      "id": "eco-accelerated-robotics",
+      "sections": [
+        {
+          "title": "先区分加速管线与高保真模拟器",
+          "paragraphs": [
+            "Isaac ROS 提供以 GPU 加速感知和机器人计算为重点的软件组件，Isaac Sim 提供物理、场景、传感器和 ROS 桥接等仿真能力。它们可以结合，但不是同一个程序，也不要求所有 ROS 学习都从 GPU 开始。普通 ROS 数据管线建立稳定后，再引入加速更容易解释收益与失败。",
+            "供应商产品以自己的版本矩阵发布，支持的 GPU、驱动、JetPack、操作系统、容器和 ROS 版本会变化。不能因为电脑有 CUDA 就认定所有组件兼容，也不能把 latest 文档视为 Jazzy 的固定契约。项目应记录确切镜像或软件版本，把环境本身作为实验条件。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "定义算法替换前后必须相同的合同",
+          "paragraphs": [
+            "比较普通和加速实现时，保持输入消息类型、编码、尺寸、时间戳、frame 和输出语义一致。图像去畸变输出的内参应对应新图像，检测输出的类别和坐标含义应可比较，深度结果单位不能因为后端变化而改变。否则看到的差异可能来自不同问题定义而非实现性能。",
+            "某些优化通过共享 GPU 内存或特殊传输减少复制，这会改变节点组合、内存生命周期和调试方式。它仍需要在与普通 ROS 模块交界处提供明确数据契约。使用加速传输不意味着消息天然无延迟，队列、同步和设备调度仍可能决定端到端表现。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "用离线时间模型看清瓶颈",
+          "paragraphs": [
+            "端到端响应包含采样等待、传输、排队、复制、计算和输出发布。GPU 核函数更快，但如果新增两次大图复制和批处理等待，总延迟可能反而更高。吞吐量表示单位时间处理多少帧，延迟表示某一帧多久到达结果，这两个指标不能互相替代。",
+            "下面程序使用人工给定的时间分量，展示为什么只报告计算时间会得出错误结论。它不是硬件 benchmark，也没有推断任何具体 GPU 的性能。真正实验应从同一时钟域或可靠时间同步中测量各阶段，记录中位数和高分位，而不是只记录最好的一帧。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "latency_model.py：完整离线分析实验",
+              "language": "python",
+              "type": "complete",
+              "code": "def percentile(values, q):\n    values = sorted(values)\n    position = (len(values) - 1) * q\n    lower = int(position)\n    upper = min(lower + 1, len(values) - 1)\n    weight = position - lower\n    return values[lower] * (1 - weight) + values[upper] * weight\n\ncpu_ms = [2 + 12 + x for x in [1, 2, 1, 3, 2]]\ngpu_ms = [4 + 3 + 4 + x for x in [1, 2, 8, 12, 20]]\nfor name, samples in [(\"cpu\", cpu_ms), (\"gpu\", gpu_ms)]:\n    print(name, \"median\", percentile(samples, 0.5), \"p95\", percentile(samples, 0.95))",
+              "explanation": "数值是教学假设；程序未在本次执行。GPU 计算项更小，但排队波动会增加尾部延迟。"
+            }
+          ]
+        },
+        {
+          "title": "建立可以复现的输入基线",
+          "paragraphs": [
+            "先用普通 ROS 相机或已知 bag 固定输入，记录分辨率、帧率、编码、标定和场景。把基线算法输出保存下来，定义可比较的误差指标，例如像素差、检测精确率或深度误差。没有质量约束时，用更低分辨率、更小模型获得的速度提升不能直接称为同一算法的加速。",
+            "运行前记录 CPU、内存、GPU、驱动和电源模式。Jetson 等平台的散热和功耗模式会改变频率，长时间负载可能与刚启动时不同。测试应包含预热和稳定运行区间，并说明初始化模型加载是否计入响应时间。对于实际机器人，启动时间和失败恢复也可能是关键指标。"
+          ],
+          "bullets": [],
+          "codeBlocks": [
+            {
+              "label": "ROS 数据基线检查",
+              "language": "bash",
+              "type": "commands",
+              "code": "ros2 topic info /camera/image_raw --verbose\nros2 topic hz /camera/image_raw\nros2 topic bw /camera/image_raw\nros2 bag record -s mcap -o perception_baseline /camera/image_raw /camera/camera_info /tf /tf_static",
+              "explanation": "替换为实际存在的话题；录制与观察可能增加负载，需记录其影响。"
+            }
+          ]
+        },
+        {
+          "title": "让模拟器桥接满足相同时间与坐标约定",
+          "paragraphs": [
+            "Isaac Sim 中的相机、关节和机器人状态通过 ROS 2 bridge 接入应用。桥接后的消息仍需正确 frame、采样时间、编码和频率。模拟器的世界坐标约定与 ROS 机器人约定可能存在转换，导入 URDF 后也要检查关节轴与单位，而不是只看模型尺寸似乎正常。",
+            "选择模拟时钟后，下游节点统一使用 use_sim_time，且只有一个 /clock 来源。传感器更新率、物理步长和渲染帧率并非必然相同，快放仿真可能让处理节点积压。先用一个传感器和一个简单消费节点验证，再增加神经网络、多个机器人或复杂场景。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "把模拟数据与真实数据差异列为实验因素",
+          "paragraphs": [
+            "高保真画面不保证传感器统计与真实设备一致。镜头畸变、曝光、噪声、滚动快门、深度无效值和时间偏差都可能影响算法。用于训练或评估时，应记录场景、光照、材质、随机种子和传感器设置，并使用独立真实数据检查迁移差异。",
+            "域随机化是一种改变训练条件的方法，不会自动证明覆盖了真实环境。若算法在模拟中成功、实机失败，先比较输入合同和数据分布，再判断是否需要模型调整。切换到更复杂模拟器不能替代对真实错误的测量。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "交付一份有边界的性能结论",
+          "paragraphs": [
+            "报告应同时给出吞吐、端到端中位和高分位延迟、资源占用、输出质量、启动时间与版本组合。说明输入数据、测试时长和失效条件，避免把某台设备上的单次结果推广成所有 ROS 系统的普遍结论。若加速只改善吞吐而未改善控制响应，也应如实标明。",
+            "排错时，导入错误查环境与二进制依赖，节点无数据查传输和 QoS，延迟增长查队列与复制，结果偏差查编码、标定和模型输入，运行一段时间后变慢查温度与资源泄漏。前沿组件仍应遵守这些基础系统方法。本章没有安装供应商环境或声称完成真实 GPU 性能测试。"
+          ],
+          "bullets": [],
+          "codeBlocks": []
+        }
+      ],
+      "workedExample": {
+        "title": "GPU 算子更快但机器人响应更慢",
+        "scenario": "推理从十二毫秒降为三毫秒，但输出偶尔晚到数十毫秒。",
+        "steps": [
+          "分开记录复制、排队、推理和发布耗时。",
+          "发现批处理等待和输出复制形成长尾。",
+          "在质量和吞吐约束下调整批量与传输边界。",
+          "使用相同 bag 重测端到端高分位延迟。"
+        ],
+        "result": "以机器人需要的响应指标判断收益，而非只比较单个算子的耗时。"
+      },
+      "exercises": [
+        {
+          "question": "吞吐高是否一定延迟低？",
+          "answer": "不一定，批处理可提高吞吐却增加单帧等待，必须分别测量。"
+        },
+        {
+          "question": "模拟器画面逼真是否证明实机效果？",
+          "answer": "不证明，真实传感器分布、标定、时间和噪声可能不同，需要独立验证。"
+        },
+        {
+          "question": "如何公平比较普通与加速实现？",
+          "answer": "固定输入数据、质量要求、分辨率、算法参数和环境，测量完整链路并报告版本和资源条件。"
+        }
+      ]
+    }
+  ]
+}

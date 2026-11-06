@@ -1,0 +1,5 @@
+/config_sim:
+  ros__parameters:
+    background_r: 100
+    background_g: 80
+    background_b: 40

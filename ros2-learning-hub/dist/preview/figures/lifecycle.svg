@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 480" width="880" height="480" role="img" aria-labelledby="lifecycle-title lifecycle-desc" xml:lang="zh-CN">
+  <title id="lifecycle-title">生命周期：先准备，再运行，最后清理</title>
+  <desc id="lifecycle-desc">成功转换路径为 unconfigured 经 configure 到 inactive，经 activate 到 active；active 经 deactivate 回到 inactive，inactive 经 cleanup 回到 unconfigured。三个主要运行状态都可经 shutdown 到 finalized，终结后没有返回箭头。本图省略转换中状态和错误处理。</desc>
+  <defs>
+    <marker id="lifecycle-arrow-green" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="9" markerHeight="9" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M 1 1 L 9 5 L 1 9 Z" fill="#257457" />
+    </marker>
+    <marker id="lifecycle-arrow-orange" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="9" markerHeight="9" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M 1 1 L 9 5 L 1 9 Z" fill="#bf722d" />
+    </marker>
+  </defs>
+  <style>text{font-family:"Noto Sans CJK SC","Microsoft YaHei","PingFang SC",sans-serif;} </style>
+  <rect x="0.75" y="0.75" width="878.5" height="478.5" rx="18" fill="#fbfcfa" stroke="#d8e3da" stroke-width="1.4" />
+  <rect x="28" y="25" width="5" height="28" rx="2" fill="#257457" stroke="#257457" stroke-width="1.4" />
+  <text x="46" y="45" font-size="24" fill="#20382c" font-weight="700" text-anchor="start">生命周期：先准备，再运行，最后清理</text>
+  <text x="46" y="69" font-size="16" fill="#5e7166" font-weight="400" text-anchor="start">只画成功路径；状态标签与资源、输出行为应共同验证。</text>
+  <rect x="44" y="132" width="200" height="76" rx="13" fill="white" stroke="#d8e3da" stroke-width="1.4" />
+  <text x="144" y="163" font-size="21" fill="#20382c" font-weight="700" text-anchor="middle">unconfigured</text>
+  <text x="144" y="190" font-size="16" fill="#5e7166" font-weight="400" text-anchor="middle">未配置</text>
+  <rect x="340" y="132" width="200" height="76" rx="13" fill="#edf5ef" stroke="#d8e3da" stroke-width="1.4" />
+  <text x="440" y="163" font-size="21" fill="#20382c" font-weight="700" text-anchor="middle">inactive</text>
+  <text x="440" y="190" font-size="16" fill="#5e7166" font-weight="400" text-anchor="middle">已配置，未激活</text>
+  <rect x="636" y="132" width="200" height="76" rx="13" fill="#257457" stroke="#257457" stroke-width="1.4" />
+  <text x="736" y="163" font-size="21" fill="white" font-weight="700" text-anchor="middle">active</text>
+  <text x="736" y="190" font-size="16" fill="white" font-weight="400" text-anchor="middle">主功能运行</text>
+  <path d="M 244 151 H 340" fill="none" stroke="#257457" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#lifecycle-arrow-green)" />
+  <text x="292.0" y="134" font-size="15" fill="#257457" font-weight="500" text-anchor="middle">configure</text>
+  <path d="M 540 151 H 636" fill="none" stroke="#257457" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#lifecycle-arrow-green)" />
+  <text x="588.0" y="134" font-size="15" fill="#257457" font-weight="500" text-anchor="middle">activate</text>
+  <path d="M 340 193 H 244" fill="none" stroke="#257457" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#lifecycle-arrow-green)" />
+  <text x="292.0" y="227" font-size="15" fill="#257457" font-weight="500" text-anchor="middle">cleanup</text>
+  <path d="M 636 193 H 540" fill="none" stroke="#257457" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#lifecycle-arrow-green)" />
+  <text x="588.0" y="227" font-size="15" fill="#257457" font-weight="500" text-anchor="middle">deactivate</text>
+  <path d="M 144 208 V 300 H 440" fill="none" stroke="#257457" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M 736 208 V 300 H 440" fill="none" stroke="#257457" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M 440 208 V 344" fill="none" stroke="#257457" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#lifecycle-arrow-green)" />
+  <circle cx="440" cy="300" r="4" fill="#257457" />
+  <text x="158" y="269" font-size="16" fill="#257457" font-weight="400" text-anchor="start">shutdown</text>
+  <text x="454" y="269" font-size="16" fill="#257457" font-weight="400" text-anchor="start">shutdown</text>
+  <text x="750" y="269" font-size="16" fill="#257457" font-weight="400" text-anchor="start">shutdown</text>
+  <rect x="340" y="344" width="200" height="76" rx="13" fill="#f4f3ee" stroke="#dddace" stroke-width="1.4" />
+  <text x="440" y="376" font-size="21" fill="#20382c" font-weight="700" text-anchor="middle">finalized</text>
+  <text x="440" y="403" font-size="17" fill="#5e7166" font-weight="400" text-anchor="middle">终结</text>
+  <text x="440" y="446" font-size="17" fill="#bf722d" font-weight="600" text-anchor="middle">终结后不再原地 configure / activate</text>
+  <text x="46" y="470" font-size="14" fill="#5e7166" font-weight="400" text-anchor="start">简化范围：配置中等转换状态、失败返回与 error processing 未展开。</text>
+</svg>

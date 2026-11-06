@@ -1,0 +1,24 @@
+asb_webots_robot:
+  ros__parameters:
+    sim_state_topic : /system_test/state
+    sim_state_cmd_topic : /system_test/state_cmd
+
+    gnss_1_topic: /gnss_1/llh_position
+    gnss_1_frame_id: gnss_1_link  # in the real robot, the NavSatFix message refers to the frame of the antenna 1 published by the microstrain driver
+    gnss_2_topic: /gnss_2/llh_position
+    gnss_2_frame_id: gnss_2_link  # in the real robot, the NavSatFix message refers to the frame of the antenna 2 published by the microstrain driver
+    gnss_update_rate: 2.0
+    gnss_covariance_diagonal: [0.2, 0.2, 0.2]
+
+    # TODO rename topic, it's not really an odometry
+    inertial_unit_topic: /ekf/odometry_map
+    inertial_unit_parent_frame_id: map
+    inertial_unit_child_frame_id: inertial_link  # in the real robot, this message refers to imu_link
+    inertial_unit_update_rate: 2.0
+    inertial_unit_covariance_diagonal: [0.2, 0.2, 0.2]
+
+    imu_topic: /imu
+    imu_update_rate: 100.0
+    imu_frame_id: imu_link
+    gyro_frame_id: gyro_link
+    gyro_covariance_diagonal: [0.1, 0.1, 0.1]

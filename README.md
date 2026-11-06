@@ -1,93 +1,37 @@
-# Robotics Tutorial
+# ROS 2 离线学习网站与参考工程
 
-[![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/)
+这是 2026-11-06 的工作区快照，供换电脑后继续开发。按用户要求，它替换 `learn` 分支原有文件，直接位于仓库根目录；`main` 分支不作改动。**当前网站与教材可阅读；理论推导扩展和新版阅读器整合尚未完成。**
 
-**从零起步的机器人学系统化教学文档**：按大学本科→研究生的主流教材脉络组织，从"第一次写代码"一路通到"足式机器人与具身智能"前沿。
-
-**在线文档（GitHub Pages）：** <https://muhuan11-c.github.io/ros2_robot/> — 由 GitHub Actions 自动构建发布，`git push` 即更新，随时可公网访问。
-
-> **声明：** 本项目大量使用 AI（Claude、Codex 等）结合互联网调研来撰写内容。尽管所有文档均经过多轮独立审核与事实核查，但仍然无法完全避免错误。如果您在阅读过程中发现任何事实性错误、论文引用偏差或技术描述不当，欢迎通过 Issue 反馈，我们会及时修正。
-
-**Author:** Pengfei Guo
-**Affiliation:** 达妙科技 (DAMIAO Technology)
-**License:** [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/) — 非商业用途（学习与研究）自由使用，需注明出处，不授权商业用途
-**AI Collaboration:** 内容由 Claude 与 Codex 辅助编写，经多轮双盲审核与基于互联网调研的事实核查
-
----
-
-## 四阶段学习体系（入门重构版）
-
-```text
-第〇阶 入门筑基 ⛩️   数学（同济高数/线代/浙大概率论）+ C++/Python/Linux/Git
-                       + 机器人通识（Craig 导论/坐标变换/ROS2 小海龟）—— 从零起步
-第一阶 本科核心 ⚡      胡寿松《自动控制原理》/ 高翔《视觉SLAM十四讲》/ ROS2 工程
-第二阶 研究生进阶 ❖    Boyd《凸优化》/ Thrun《概率机器人》/ 郑大钟《线性系统理论》
-第三阶 前沿与博士 ✦    论文与开源项目精读 —— 原版深水区 430+ 篇
-```
-
-**学习者总入口：[从零开始学习路线总图](00_项目导航/从零开始学习路线总图.md)**（含每章学时表、毕业自测、三种学习节奏）。
-
-## 项目结构
-
-```
-ros2_robot/
-├── 00_项目导航/            # 学习路线总图、教材书单、编写规范、重写路线图
-├── 01_数学/                # 00_大学基础筑基(新) + 深层十子方向(微分几何/李群/优化/控制/概率/动力学…)
-├── 02_C++基础与进阶/       # 00_入门(新) + 15_Python与工具链(新) + 语言核心/并发/工程化
-├── 03_SLAM/                # 00_入门(新) + 理论/库(GTSAM,g2o)/系统精读/Mini-LIO
-├── 04_移动机器人规控/       # 时空规划/采样MPC/不确定性/博弈/多机/TAMP/无人机
-├── 05_运动控制/             # 足式(27章)/机械臂(51篇)/复合(48篇)/仿真
-├── 06_具身智能/             # RL运控 28 章(Isaac Lab/mjlab 全链路) + 前沿综述
-└── 07_机器人学导论/         # (新) 什么是机器人/坐标变换/正运动学/ROS2初体验
-```
-
-## 内容概览
-
-| 阶段/方向 | 文件数 | 说明 |
-|------|------:|------|
-| 第〇阶 入门筑基 | 33 | 本轮全新撰写（数学 7 + C++ 7 + Python 2 + 导论 5 + SLAM 1 + 映射 6 + 导航与规范 5） |
-| 01 数学基础 | 90 | 深层完工（十子方向双审闭环），入门筑基章已上线 |
-| 02 C++基础与进阶 | 58 | 深层完工（41 篇双审闭环），入门 7 章已上线 |
-| 03 SLAM | 15 | 入门样板重写完成；系统精读占位章排期待补 |
-| 04 移动机器人规控 | 84 | 完工（综述+采样 MPC 审核闭环） |
-| 05 运动控制 | 152 | 完工（全部 67 篇教学正文双审闭环） |
-| 06 具身智能 | 30 | 完工（RL 运控 28 章审核闭环） |
-| 07 机器人学导论 | 5 | 本轮全新撰写 |
-
-全部重写排期见 [重写路线图](00_项目导航/重写路线图.md)。
-
-## 质量标准
-
-- **第〇阶（入门章）**：遵循 v6.0 编写规范——逐步演算禁止跳步、术语首现必定义、每章配可运行代码、练习折叠完整解答、机器人挂钩具体化
-- **深层（原版章节）**：v5.0 规范，每篇 ≥2,000 行、双轮独立审核、五层质量门禁（结构/准确/一致/完整/润色）
-- **教材锚定**：每章标注对应的教材章节（同济/浙大/胡寿松/Craig/Boyd/Thrun/Strang 等），便于回书查证
-
-## 使用方法
+## 在另一台电脑恢复
 
 ```bash
-git clone https://github.com/MUHAN11-c/ros2_robot.git
+git clone --branch learn --single-branch https://github.com/MUHAN11-c/ros2_robot.git
+cd ros2_robot
+python3 -m http.server 8766 --bind 127.0.0.1 --directory ros2-learning-hub/dist
 ```
 
-初学读者请从 [从零开始学习路线总图](00_项目导航/从零开始学习路线总图.md) 进入；有基础读者从各方向《学习路径与教材映射》进入。
+- 双栏图解样稿：[本地样稿](http://127.0.0.1:8766/layout-preview.html#/architecture/figure/architecture)。这是最新确认的设计方向。
+- 已完成内容的交互入口：[本地教材](http://127.0.0.1:8766/index.html)。目前仍是上一版正式布局。
+- 全部正文连续阅读：[本地连续教材](http://127.0.0.1:8766/book.html)。可直接双击打开，关闭 JavaScript 也可阅读。
+- 换机续作细节：[CONTINUE.md](CONTINUE.md)。让新电脑上的 Codex 先读这份文件。
+- 快照来源与版本：[TRANSFER_MANIFEST.json](TRANSFER_MANIFEST.json)。源码文件 SHA256：[TRANSFER_FILES.sha256](TRANSFER_FILES.sha256)。
 
-## 引用
+## 目录
 
-```
-Robotics Tutorial by Pengfei Guo, DAMIAO Technology
-https://github.com/MUHAN11-c/ros2_robot
-Licensed under CC BY-NC 4.0
-```
+| 目录 | 内容 |
+| --- | --- |
+| `ros2-learning-hub/` | 44 章离线教材、12 组写法对照、内容源、构建脚本、测试、图解、示例和离线包 |
+| `ros2-learning-hub/work-in-progress/` | 尚未完成的新版正式阅读器；保留供继续实现，不作为可用入口 |
+| `ros2-control-learning-web/` | ros2_control 配套工坊 |
+| `docs/superpowers/` | 设计方案、实施计划、进度与研究记录 |
+| `ros2_tutorial/`、`ROS2_Tuition/`、`Robotics_Tutorial/` | 用户指定的三个教程源码快照 |
+| `ros2_control/`、`ros2_controllers/`、`ros2_control_demos/` | Jazzy 控制框架、控制器与示例 |
+| `AgroSenseBot/`、`bunker_ros2/`、`ugv_sdk/`、`linorobot2/`、`linorobot2_hardware/` | 移动机器人、履带底盘及上下位机参考工程 |
 
-## 许可协议
+参考仓库以真实文件保存，不是需要再次下载的子模块。各自的来源、分支、提交与许可证保持独立；原始 Git 历史没有嵌套复制，版本可按 manifest 追溯。根目录 `README.txt`、`projects.json` 和 `references.repos` 是较早的参考工程下载记录，当前状态以本文件和 `CONTINUE.md` 为准。
 
-本项目采用 [CC BY-NC 4.0 国际许可协议](https://creativecommons.org/licenses/by-nc/4.0/)。
+上传快照不含登录凭据、`.aws`、`.codex`、`.agents`、`.openai`、嵌套 `.git`、缓存、生成的 ROS 编译安装目录。已保留教材、参考源码、项目资源、截图、验证记录和构建期公式转换器。离线包是教材，不是 Ubuntu/ROS 软件镜像；在新电脑运行 ROS 示例需要另行准备 Ubuntu 24.04 与 ROS 2 Jazzy。
 
-**欢迎所有以学习与研究为目的的下载、传播与内容改造。** 你可以自由地：
-- **分享** — 以任何媒介或格式复制、转载本材料
-- **改编** — 对本材料进行混合、转换与再创作
+## 使用与许可
 
-但须遵守以下条件：
-- **署名** — 必须注明出处、提供许可协议链接，并说明是否进行了修改。
-- **非商业性使用** — 不得将本材料用于商业目的；本项目不授权任何商业用途，如需商业授权请联系作者。
-
-> **侵权与纠错：** 如发现任何内容侵权（图片、文字、论文引用等）或事实性错误，请及时通过 Issue 反馈，我们会尽快处理与修正。
+原创学习网站的许可证见 `ros2-learning-hub/LICENSE`，第三方说明见 `ros2-learning-hub/dist/THIRD_PARTY_NOTICES.md`。第三方项目继续按各目录原有许可证和版权声明使用；本快照不重新许可这些项目。Robotics_Tutorial 为 CC BY-NC 4.0，zsc 教程须按其原仓库授权情况使用，不应将参考快照视为对其内容的重新授权。

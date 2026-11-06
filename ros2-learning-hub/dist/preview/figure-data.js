@@ -1,0 +1,119 @@
+/* Original diagrams for the design-review preview. */
+window.PreviewFigureData = [
+  {
+    "id": "architecture",
+    "file": "preview/figures/architecture.svg",
+    "title": "ROS 2：从应用到通信实现",
+    "kind": "架构图",
+    "caption": "从上向下读接口层次：应用可选择并列的 rclcpp 或 rclpy，两者都位于共同的 rcl 之上，再经 RMW 接入具体通信实现。图中只画常见 DDS 路径，省略类型支持、执行器内部和操作系统；不表示所有 RMW 都基于 DDS。",
+    "alt": "五层 ROS 2 架构：应用、并列的 rclcpp 与 rclpy、rcl、RMW、DDS；侧栏说明跨语言接口、可替换中间件及执行器职责。",
+    "placements": [
+      {
+        "chapter": "architecture",
+        "afterSection": 2
+      },
+      {
+        "chapter": "network",
+        "afterSection": 0
+      }
+    ]
+  },
+  {
+    "id": "pubsub",
+    "file": "preview/figures/pubsub.svg",
+    "title": "发布订阅：一个契约，多个消费者",
+    "kind": "架构图",
+    "caption": "沿绿色箭头从发布者读到两个独立订阅端。虚线区是逻辑话题的名称、类型与 QoS 契约，不是消息中央服务器；每一对端点独立匹配。订阅端收到数据后仍由 Executor 调度回调，图不规定底层 DDS 的传输拓扑。",
+    "alt": "一个发布者通过逻辑话题 /scan 向算法和记录器两个订阅者提供 LaserScan，双方按 QoS 匹配，各订阅节点的执行器调度回调。",
+    "placements": [
+      {
+        "chapter": "pubsub",
+        "afterSection": 0
+      },
+      {
+        "chapter": "qos",
+        "afterSection": 1
+      },
+      {
+        "chapter": "executors",
+        "afterSection": 0
+      }
+    ]
+  },
+  {
+    "id": "action",
+    "file": "preview/figures/action.svg",
+    "title": "Action：接受、反馈与结果是不同阶段",
+    "kind": "时序图",
+    "caption": "时间向下：客户端先发目标并得到接受响应，再异步请求最终结果；运行中可收到多次反馈。橙色表示取消请求及获准响应，获准后仍需等待服务端停止并返回 CANCELED 结果。本例省略目标拒绝和 SUCCEEDED、ABORTED 等其它终态。",
+    "alt": "客户端和服务端双泳道时序：目标请求、接受、异步等待结果、两次反馈、取消请求、取消获准、最终 CANCELED；明确取消确认不等于任务结束。",
+    "placements": [
+      {
+        "chapter": "actions",
+        "afterSection": 4
+      },
+      {
+        "chapter": "eco-nav2-task-programming",
+        "afterSection": 1
+      }
+    ]
+  },
+  {
+    "id": "lifecycle",
+    "file": "preview/figures/lifecycle.svg",
+    "title": "生命周期：先准备，再运行，最后清理",
+    "kind": "状态图",
+    "caption": "先沿正向箭头 configure、activate 进入 active；反向箭头 deactivate、cleanup 回到可重新配置的状态。unconfigured、inactive、active 都可经 shutdown 到 finalized，终结后没有返回箭头。只展示成功转换，省略中间状态、失败返回和错误处理；节点状态也不自动停止所有普通回调。",
+    "alt": "四状态生命周期：未配置与未激活通过 configure 和 cleanup 往返，未激活与激活通过 activate 和 deactivate 往返，三个状态均可 shutdown 到终结。",
+    "placements": [
+      {
+        "chapter": "lifecycle",
+        "afterSection": 1
+      },
+      {
+        "chapter": "eco-nav2-stack",
+        "afterSection": 2
+      }
+    ]
+  },
+  {
+    "id": "control",
+    "file": "preview/figures/control.svg",
+    "title": "ros2_control：状态与命令组成反馈闭环",
+    "kind": "流程图",
+    "caption": "在 controller_manager 框内从左向右读一个典型周期：read 把测量或估计值送入状态接口，update 结合参考计算命令，write 将命令送往设备或仿真。绿色是状态反馈，橙色是参考或命令。省略异步硬件、线程分配、级联控制与故障处理，顺序不构成硬实时保证。",
+    "alt": "管理器调度 read、update、write 三步，目标参考输入控制器，设备状态反馈到 read，命令由 write 下发设备，状态和命令用不同颜色区分。",
+    "placements": [
+      {
+        "chapter": "eco-control-framework",
+        "afterSection": 0
+      },
+      {
+        "chapter": "eco-hardware-integration",
+        "afterSection": 0
+      },
+      {
+        "chapter": "eco-diff-drive-tracks",
+        "afterSection": 0
+      }
+    ]
+  },
+  {
+    "id": "nav2",
+    "file": "preview/figures/nav2.svg",
+    "title": "Nav2：规划、控制与底盘反馈",
+    "kind": "流程图",
+    "caption": "自上而下读地图、定位/状态估计和传感器对代价地图的支撑，再沿规划器输出路径、控制器输出速度、底盘执行的链路读。虚线反馈经里程计与状态估计返回坐标链；map→odom 的全局定位与 odom→base_link 的局部运动各有责任来源。各 costmap 按图层选择地图和观测，并非必定使用全部输入；行为树、恢复、平滑器和生命周期未展开。",
+    "alt": "地图、odom/TF 和传感器输入支持全局与局部代价地图；全局规划器输出路径到局部控制器，后者输出速度到底盘，状态和里程计反馈回估计与 TF。",
+    "placements": [
+      {
+        "chapter": "eco-nav2-stack",
+        "afterSection": 0
+      },
+      {
+        "chapter": "eco-nav2-task-programming",
+        "afterSection": 0
+      }
+    ]
+  }
+];

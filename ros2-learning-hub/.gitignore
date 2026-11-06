@@ -1,0 +1,8 @@
+.qa/
+__pycache__/
+*.pyc
+examples/build/
+examples/install/
+examples/log/
+*.tar.gz
+*.egg-info/

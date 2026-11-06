@@ -1,26 +1,25 @@
-# 损坏的旧 .git 备份（21M，Nutstore 同步损坏后留存，勿提交）
-.git_corrupt_bak/
+# Local credentials and agent/browser state are not project content.
+**/.aws/
+**/.codex/
+**/.agents/
+**/.openai/
+**/.playwright-mcp/
+**/.env
+**/.env.local
+**/.env.production
+**/.env.*.local
 
-# 归档：个人笔记（docx/pdf）+ 下载的论文 PDF，不进入公开仓库
-_archive/
-
-# 明显草稿 / 失败归档
-_failed_archive/
-tmp_*.md
-*_failed.md
-
-# 工具自动生成产物（claude-mem 上下文桩，非项目内容）
-AGENTS.md
-
-# MkDocs 站点构建产物（scripts/build_site.sh 生成）
-site/
-.generated/
-mkdocs.generated.yml
-.cache-docs/
-.venv/
-
-# 站点脚手架参考副本（临时）
-.wiki_ref/
-
-# Mermaid 预渲染工具链（本地 node 依赖，产物已提交 assets/labs/diagrams/）
-scripts/labs/node_modules/
+# Generated runtime and build outputs; source snapshots remain versioned.
+**/__pycache__/
+**/*.pyc
+**/node_modules/
+**/.venv/
+**/.pytest_cache/
+.vscode/*.db*
+.vscode/ipch/
+ros2-learning-hub/examples/build/
+ros2-learning-hub/examples/install/
+ros2-learning-hub/examples/log/
+ros2-learning-hub/foundation-examples/build/
+ros2-learning-hub/foundation-examples/install/
+ros2-learning-hub/foundation-examples/log/

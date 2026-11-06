@@ -1,0 +1,657 @@
+// Copyright 2020 PAL Robotics S.L.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+/// \author Adolfo Rodriguez Tsouroukdissian
+
+#include "joint_limits/joint_limits_rosparam.hpp"
+
+#include <cmath>
+#include <string>
+#include <vector>
+
+#include "gmock/gmock.h"
+#include "lifecycle_msgs/msg/state.hpp"
+#include "rclcpp/parameter.hpp"
+#include "rclcpp/utilities.hpp"
+#include "rclcpp_lifecycle/lifecycle_node.hpp"
+
+class JointLimitsRosParamTest : public ::testing::Test
+{
+public:
+  void SetUp()
+  {
+    rclcpp::NodeOptions node_options;
+    node_options.allow_undeclared_parameters(true).automatically_declare_parameters_from_overrides(
+      true);
+    const std::vector<std::string> node_option_arguments = {
+      "--ros-args", "--params-file",
+      std::string(PARAMETERS_FILE_PATH) + std::string("joint_limits_rosparam.yaml")};
+    node_options.arguments(node_option_arguments);
+
+    node_ = rclcpp::Node::make_shared("JointLimitsRosparamTestNode", node_options);
+  }
+
+  void TearDown() { node_.reset(); }
+
+protected:
+  rclcpp::Node::SharedPtr node_;
+};
+
+TEST_F(JointLimitsRosParamTest, parse_joint_limits)
+{
+  // Invalid specification
+  {
+    joint_limits::JointLimits limits;
+
+    // test default values
+    EXPECT_FALSE(limits.has_position_limits);
+    EXPECT_TRUE(std::isnan(limits.min_position));
+    EXPECT_TRUE(std::isnan(limits.max_position));
+    EXPECT_FALSE(limits.has_velocity_limits);
+    EXPECT_TRUE(std::isnan(limits.max_velocity));
+    EXPECT_FALSE(limits.has_acceleration_limits);
+    EXPECT_TRUE(std::isnan(limits.max_acceleration));
+    EXPECT_FALSE(limits.has_deceleration_limits);
+    EXPECT_TRUE(std::isnan(limits.max_deceleration));
+    EXPECT_FALSE(limits.has_jerk_limits);
+    EXPECT_TRUE(std::isnan(limits.max_jerk));
+    EXPECT_FALSE(limits.has_effort_limits);
+    EXPECT_TRUE(std::isnan(limits.max_effort));
+    EXPECT_FALSE(limits.angle_wraparound);
+
+    // try to read limits for not-existing joints
+    EXPECT_FALSE(get_joint_limits(
+      "bad_joint", node_->get_node_parameters_interface(), node_->get_node_logging_interface(),
+      limits));
+    EXPECT_FALSE(get_joint_limits(
+      "unknown_joint", node_->get_node_parameters_interface(), node_->get_node_logging_interface(),
+      limits));
+
+    // default values should not change
+    EXPECT_FALSE(limits.has_position_limits);
+    EXPECT_TRUE(std::isnan(limits.min_position));
+    EXPECT_TRUE(std::isnan(limits.max_position));
+    EXPECT_FALSE(limits.has_velocity_limits);
+    EXPECT_TRUE(std::isnan(limits.max_velocity));
+    EXPECT_FALSE(limits.has_acceleration_limits);
+    EXPECT_TRUE(std::isnan(limits.max_acceleration));
+    EXPECT_FALSE(limits.has_deceleration_limits);
+    EXPECT_TRUE(std::isnan(limits.max_deceleration));
+    EXPECT_FALSE(limits.has_jerk_limits);
+    EXPECT_TRUE(std::isnan(limits.max_jerk));
+    EXPECT_FALSE(limits.has_effort_limits);
+    EXPECT_TRUE(std::isnan(limits.max_effort));
+    EXPECT_FALSE(limits.angle_wraparound);
+  }
+
+  // Get full specification from parameter server
+  {
+    joint_limits::JointLimits limits;
+    EXPECT_TRUE(get_joint_limits(
+      "foo_joint", node_->get_node_parameters_interface(), node_->get_node_logging_interface(),
+      limits));
+
+    EXPECT_TRUE(limits.has_position_limits);
+    EXPECT_EQ(0.0, limits.min_position);
+    EXPECT_EQ(1.0, limits.max_position);
+
+    EXPECT_TRUE(limits.has_velocity_limits);
+    EXPECT_EQ(2.0, limits.max_velocity);
+
+    EXPECT_TRUE(limits.has_acceleration_limits);
+    EXPECT_EQ(5.0, limits.max_acceleration);
+
+    EXPECT_TRUE(limits.has_deceleration_limits);
+    EXPECT_EQ(7.5, limits.max_deceleration);
+
+    EXPECT_TRUE(limits.has_jerk_limits);
+    EXPECT_EQ(100.0, limits.max_jerk);
+
+    EXPECT_TRUE(limits.has_effort_limits);
+    EXPECT_EQ(20.0, limits.max_effort);
+
+    // parameters is 'true', but because there are position limits it is ignored
+    EXPECT_FALSE(limits.angle_wraparound);
+  }
+
+  // Specifying flags but not values should set nothing
+  {
+    joint_limits::JointLimits limits;
+    EXPECT_TRUE(get_joint_limits(
+      "yinfoo_joint", node_->get_node_parameters_interface(), node_->get_node_logging_interface(),
+      limits));
+
+    EXPECT_FALSE(limits.has_position_limits);
+    EXPECT_FALSE(limits.has_velocity_limits);
+    EXPECT_FALSE(limits.has_acceleration_limits);
+    EXPECT_FALSE(limits.has_deceleration_limits);
+    EXPECT_FALSE(limits.has_jerk_limits);
+    EXPECT_FALSE(limits.has_effort_limits);
+  }
+
+  // Specifying values but not flags should set nothing
+  {
+    joint_limits::JointLimits limits;
+    EXPECT_TRUE(get_joint_limits(
+      "yangfoo_joint", node_->get_node_parameters_interface(), node_->get_node_logging_interface(),
+      limits));
+
+    EXPECT_FALSE(limits.has_position_limits);
+    EXPECT_FALSE(limits.has_velocity_limits);
+    EXPECT_FALSE(limits.has_acceleration_limits);
+    EXPECT_FALSE(limits.has_deceleration_limits);
+    EXPECT_FALSE(limits.has_jerk_limits);
+    EXPECT_FALSE(limits.has_effort_limits);
+  }
+
+  // Disable already set values
+  {
+    joint_limits::JointLimits limits;
+    EXPECT_TRUE(get_joint_limits(
+      "foo_joint", node_->get_node_parameters_interface(), node_->get_node_logging_interface(),
+      limits));
+    EXPECT_TRUE(limits.has_position_limits);
+    EXPECT_TRUE(limits.has_velocity_limits);
+    EXPECT_TRUE(limits.has_acceleration_limits);
+    EXPECT_TRUE(limits.has_deceleration_limits);
+    EXPECT_TRUE(limits.has_jerk_limits);
+    EXPECT_TRUE(limits.has_effort_limits);
+
+    EXPECT_TRUE(get_joint_limits(
+      "antifoo_joint", node_->get_node_parameters_interface(), node_->get_node_logging_interface(),
+      limits));
+    EXPECT_FALSE(limits.has_position_limits);
+    EXPECT_FALSE(limits.has_velocity_limits);
+    EXPECT_FALSE(limits.has_acceleration_limits);
+    EXPECT_FALSE(limits.has_deceleration_limits);
+    EXPECT_FALSE(limits.has_jerk_limits);
+    EXPECT_FALSE(limits.has_effort_limits);
+    EXPECT_TRUE(limits.angle_wraparound);
+  }
+
+  // Incomplete position limits specification does not get loaded
+  {
+    joint_limits::JointLimits limits;
+    EXPECT_TRUE(get_joint_limits(
+      "baz_joint", node_->get_node_parameters_interface(), node_->get_node_logging_interface(),
+      limits));
+
+    EXPECT_FALSE(limits.has_position_limits);
+    EXPECT_TRUE(std::isnan(limits.min_position));
+    EXPECT_TRUE(std::isnan(limits.max_position));
+  }
+
+  // Override only one field, leave all others unchanged
+  {
+    joint_limits::JointLimits limits;
+    EXPECT_TRUE(get_joint_limits(
+      "bar_joint", node_->get_node_parameters_interface(), node_->get_node_logging_interface(),
+      limits));
+
+    EXPECT_FALSE(limits.has_position_limits);
+    EXPECT_TRUE(std::isnan(limits.min_position));
+    EXPECT_TRUE(std::isnan(limits.max_position));
+
+    // Max velocity is overridden
+    EXPECT_TRUE(limits.has_velocity_limits);
+    EXPECT_EQ(2.0, limits.max_velocity);
+
+    EXPECT_FALSE(limits.has_acceleration_limits);
+    EXPECT_TRUE(std::isnan(limits.max_acceleration));
+
+    EXPECT_FALSE(limits.has_deceleration_limits);
+    EXPECT_TRUE(std::isnan(limits.max_deceleration));
+
+    EXPECT_FALSE(limits.has_jerk_limits);
+    EXPECT_TRUE(std::isnan(limits.max_jerk));
+
+    EXPECT_FALSE(limits.has_effort_limits);
+    EXPECT_TRUE(std::isnan(limits.max_effort));
+  }
+}
+
+TEST_F(JointLimitsRosParamTest, parse_soft_joint_limits)
+{
+  // Invalid specification
+  {
+    joint_limits::SoftJointLimits soft_limits;
+
+    // test default values
+    EXPECT_TRUE(std::isnan(soft_limits.min_position));
+    EXPECT_TRUE(std::isnan(soft_limits.max_position));
+    EXPECT_TRUE(std::isnan(soft_limits.k_position));
+    EXPECT_TRUE(std::isnan(soft_limits.k_velocity));
+
+    // try to read limits for not-existing joints
+    EXPECT_FALSE(get_joint_limits(
+      "bad_joint", node_->get_node_parameters_interface(), node_->get_node_logging_interface(),
+      soft_limits));
+    EXPECT_FALSE(get_joint_limits(
+      "unknown_joint", node_->get_node_parameters_interface(), node_->get_node_logging_interface(),
+      soft_limits));
+
+    // default values should not change
+    EXPECT_TRUE(std::isnan(soft_limits.min_position));
+    EXPECT_TRUE(std::isnan(soft_limits.max_position));
+    EXPECT_TRUE(std::isnan(soft_limits.k_position));
+    EXPECT_TRUE(std::isnan(soft_limits.k_velocity));
+  }
+
+  // Get full specification from parameter server
+  {
+    joint_limits::SoftJointLimits soft_limits;
+    EXPECT_TRUE(get_joint_limits(
+      "foo_joint", node_->get_node_parameters_interface(), node_->get_node_logging_interface(),
+      soft_limits));
+
+    EXPECT_EQ(10.0, soft_limits.k_position);
+    EXPECT_EQ(20.0, soft_limits.k_velocity);
+    EXPECT_EQ(0.1, soft_limits.min_position);
+    EXPECT_EQ(0.9, soft_limits.max_position);
+  }
+
+  // Skip parsing soft limits if has_soft_limits is false
+  {
+    joint_limits::SoftJointLimits soft_limits;
+    EXPECT_FALSE(get_joint_limits(
+      "foobar_joint", node_->get_node_parameters_interface(), node_->get_node_logging_interface(),
+      soft_limits));
+    EXPECT_TRUE(std::isnan(soft_limits.min_position));
+    EXPECT_TRUE(std::isnan(soft_limits.max_position));
+    EXPECT_TRUE(std::isnan(soft_limits.k_position));
+    EXPECT_TRUE(std::isnan(soft_limits.k_velocity));
+  }
+
+  // Incomplete soft limits specification does not get loaded
+  {
+    joint_limits::SoftJointLimits soft_limits;
+    EXPECT_FALSE(get_joint_limits(
+      "barbaz_joint", node_->get_node_parameters_interface(), node_->get_node_logging_interface(),
+      soft_limits));
+    EXPECT_TRUE(std::isnan(soft_limits.min_position));
+    EXPECT_TRUE(std::isnan(soft_limits.max_position));
+    EXPECT_TRUE(std::isnan(soft_limits.k_position));
+    EXPECT_TRUE(std::isnan(soft_limits.k_velocity));
+  }
+}
+
+class JointLimitsUndeclaredRosParamTest : public ::testing::Test
+{
+public:
+  void SetUp()
+  {
+    rclcpp::NodeOptions node_options;
+    const std::vector<std::string> node_option_arguments = {
+      "--ros-args", "--params-file",
+      std::string(PARAMETERS_FILE_PATH) + std::string("joint_limits_rosparam.yaml")};
+    node_options.arguments(node_option_arguments);
+
+    node_ = rclcpp::Node::make_shared("JointLimitsRosparamTestNode", node_options);
+  }
+
+  void TearDown() { node_.reset(); }
+
+protected:
+  rclcpp::Node::SharedPtr node_;
+};
+
+class JointLimitsLifecycleNodeUndeclaredRosParamTest : public ::testing::Test
+{
+public:
+  void SetUp()
+  {
+    rclcpp::NodeOptions node_options;
+    const std::vector<std::string> node_option_arguments = {
+      "--ros-args", "--params-file",
+      std::string(PARAMETERS_FILE_PATH) + std::string("joint_limits_rosparam.yaml")};
+    node_options.arguments(node_option_arguments);
+
+    lifecycle_node_ =
+      rclcpp_lifecycle::LifecycleNode::make_shared("JointLimitsRosparamTestNode", node_options);
+  }
+
+  void TearDown()
+  {
+    if (
+      lifecycle_node_->get_current_state().id() !=
+        lifecycle_msgs::msg::State::PRIMARY_STATE_FINALIZED &&
+      rclcpp::ok())
+    {
+      lifecycle_node_->shutdown();
+    }
+    lifecycle_node_.reset();
+  }
+
+protected:
+  rclcpp_lifecycle::LifecycleNode::SharedPtr lifecycle_node_;
+};
+
+TEST_F(JointLimitsUndeclaredRosParamTest, parse_declared_joint_limits_node)
+{
+  // Get full specification from parameter server - no need to test logic
+  {
+    joint_limits::JointLimits limits;
+    // try to read limits for not-existing joints
+    EXPECT_FALSE(get_joint_limits("bad_joint", node_, limits));
+    EXPECT_FALSE(get_joint_limits("unknown_joint", node_, limits));
+
+    // try to read existing but undeclared joint
+    EXPECT_FALSE(get_joint_limits("foo_joint", node_, limits));
+
+    // declare parameters
+    EXPECT_TRUE(joint_limits::declare_parameters("foo_joint", node_));
+
+    // now should be successful
+    EXPECT_TRUE(get_joint_limits("foo_joint", node_, limits));
+
+    EXPECT_TRUE(limits.has_position_limits);
+    EXPECT_EQ(0.0, limits.min_position);
+    EXPECT_EQ(1.0, limits.max_position);
+
+    EXPECT_TRUE(limits.has_velocity_limits);
+    EXPECT_EQ(2.0, limits.max_velocity);
+
+    EXPECT_TRUE(limits.has_acceleration_limits);
+    EXPECT_EQ(5.0, limits.max_acceleration);
+
+    EXPECT_TRUE(limits.has_deceleration_limits);
+    EXPECT_EQ(7.5, limits.max_deceleration);
+
+    EXPECT_TRUE(limits.has_jerk_limits);
+    EXPECT_EQ(100.0, limits.max_jerk);
+
+    EXPECT_TRUE(limits.has_effort_limits);
+    EXPECT_EQ(20.0, limits.max_effort);
+
+    // parameters is 'true', but because there are position limits it is ignored
+    EXPECT_FALSE(limits.angle_wraparound);
+  }
+}
+
+TEST_F(JointLimitsLifecycleNodeUndeclaredRosParamTest, parse_declared_joint_limits_lifecycle_node)
+{
+  // Get full specification from parameter server - no need to test logic
+  {
+    joint_limits::JointLimits limits;
+    // try to read limits for not-existing joints
+    EXPECT_FALSE(get_joint_limits("bad_joint", lifecycle_node_, limits));
+    EXPECT_FALSE(get_joint_limits("unknown_joint", lifecycle_node_, limits));
+
+    // try to read existing but undeclared joint
+    EXPECT_FALSE(get_joint_limits("foo_joint", lifecycle_node_, limits));
+
+    // declare parameters
+    EXPECT_TRUE(joint_limits::declare_parameters("foo_joint", lifecycle_node_));
+
+    // now should be successful
+    EXPECT_TRUE(get_joint_limits("foo_joint", lifecycle_node_, limits));
+
+    EXPECT_TRUE(limits.has_position_limits);
+    EXPECT_EQ(0.0, limits.min_position);
+    EXPECT_EQ(1.0, limits.max_position);
+
+    EXPECT_TRUE(limits.has_velocity_limits);
+    EXPECT_EQ(2.0, limits.max_velocity);
+
+    EXPECT_TRUE(limits.has_acceleration_limits);
+    EXPECT_EQ(5.0, limits.max_acceleration);
+
+    EXPECT_TRUE(limits.has_deceleration_limits);
+    EXPECT_EQ(7.5, limits.max_deceleration);
+
+    EXPECT_TRUE(limits.has_jerk_limits);
+    EXPECT_EQ(100.0, limits.max_jerk);
+
+    EXPECT_TRUE(limits.has_effort_limits);
+    EXPECT_EQ(20.0, limits.max_effort);
+
+    // parameters is 'true', but because there are position limits it is ignored
+    EXPECT_FALSE(limits.angle_wraparound);
+  }
+}
+
+TEST_F(JointLimitsUndeclaredRosParamTest, parse_declared_soft_joint_limits_node)
+{
+  // Get full specification from parameter server - no need to test logic
+  {
+    joint_limits::SoftJointLimits soft_limits;
+    // try to read existing but undeclared joint
+    EXPECT_FALSE(get_joint_limits("foo_joint", node_, soft_limits));
+
+    // declare parameters
+    EXPECT_TRUE(joint_limits::declare_parameters("foo_joint", node_));
+
+    // now should be successful
+    EXPECT_TRUE(get_joint_limits("foo_joint", node_, soft_limits));
+
+    EXPECT_EQ(10.0, soft_limits.k_position);
+    EXPECT_EQ(20.0, soft_limits.k_velocity);
+    EXPECT_EQ(0.1, soft_limits.min_position);
+    EXPECT_EQ(0.9, soft_limits.max_position);
+  }
+}
+
+TEST_F(
+  JointLimitsLifecycleNodeUndeclaredRosParamTest, parse_declared_soft_joint_limits_lifecycle_node)
+{
+  // Get full specification from parameter server - no need to test logic
+  {
+    joint_limits::SoftJointLimits soft_limits;
+    // try to read existing but undeclared joint
+    EXPECT_FALSE(get_joint_limits("foo_joint", lifecycle_node_, soft_limits));
+
+    // declare parameters
+    EXPECT_TRUE(joint_limits::declare_parameters("foo_joint", lifecycle_node_));
+
+    // now should be successful
+    EXPECT_TRUE(get_joint_limits("foo_joint", lifecycle_node_, soft_limits));
+
+    EXPECT_EQ(10.0, soft_limits.k_position);
+    EXPECT_EQ(20.0, soft_limits.k_velocity);
+    EXPECT_EQ(0.1, soft_limits.min_position);
+    EXPECT_EQ(0.9, soft_limits.max_position);
+  }
+}
+
+TEST_F(JointLimitsRosParamTest, position_limits_flag_reports_only_real_updates)
+{
+  joint_limits::JointLimits limits;
+  limits.has_position_limits = true;
+  limits.min_position = -1.0;
+  limits.max_position = 1.0;
+
+  const std::vector<rclcpp::Parameter> parameters{
+    rclcpp::Parameter("joint_limits.foo_joint.has_position_limits", false)};
+
+  EXPECT_TRUE(
+    joint_limits::check_for_limits_update(
+      "foo_joint", parameters, node_->get_node_logging_interface(), limits));
+  EXPECT_FALSE(limits.has_position_limits);
+
+  // Reapplying the same value must not report a change.
+  EXPECT_FALSE(
+    joint_limits::check_for_limits_update(
+      "foo_joint", parameters, node_->get_node_logging_interface(), limits));
+  EXPECT_FALSE(limits.has_position_limits);
+
+  const std::vector<rclcpp::Parameter> enable_parameters{
+    rclcpp::Parameter("joint_limits.foo_joint.has_position_limits", true)};
+
+  EXPECT_TRUE(
+    joint_limits::check_for_limits_update(
+      "foo_joint", enable_parameters, node_->get_node_logging_interface(), limits));
+  EXPECT_TRUE(limits.has_position_limits);
+
+  EXPECT_FALSE(
+    joint_limits::check_for_limits_update(
+      "foo_joint", enable_parameters, node_->get_node_logging_interface(), limits));
+  EXPECT_TRUE(limits.has_position_limits);
+}
+
+TEST_F(JointLimitsRosParamTest, other_limit_flags_report_only_effective_updates)
+{
+  using JointLimits = joint_limits::JointLimits;
+  struct FlagCase
+  {
+    const char * name;
+    bool JointLimits::* enabled;
+    double JointLimits::* maximum;
+  };
+
+  const FlagCase flags[] = {
+    {"has_velocity_limits", &JointLimits::has_velocity_limits, &JointLimits::max_velocity},
+    {"has_acceleration_limits", &JointLimits::has_acceleration_limits,
+     &JointLimits::max_acceleration},
+    {"has_deceleration_limits", &JointLimits::has_deceleration_limits,
+     &JointLimits::max_deceleration},
+    {"has_jerk_limits", &JointLimits::has_jerk_limits, &JointLimits::max_jerk},
+    {"has_effort_limits", &JointLimits::has_effort_limits, &JointLimits::max_effort},
+  };
+
+  for (const auto & flag : flags)
+  {
+    SCOPED_TRACE(flag.name);
+    JointLimits limits;
+    const std::string parameter_name = "joint_limits.foo_joint." + std::string(flag.name);
+    const auto set_flag = [&](bool value)
+    {
+      return joint_limits::check_for_limits_update(
+        "foo_joint", {rclcpp::Parameter(parameter_name, value)},
+        node_->get_node_logging_interface(), limits);
+    };
+
+    EXPECT_FALSE(set_flag(false));
+    EXPECT_FALSE(set_flag(true));  // No valid maximum: rejected without a change.
+    EXPECT_FALSE(limits.*flag.enabled);
+
+    limits.*flag.maximum = 2.0;
+    EXPECT_TRUE(set_flag(true));
+    EXPECT_TRUE(limits.*flag.enabled);
+    EXPECT_FALSE(set_flag(true));
+    EXPECT_TRUE(set_flag(false));
+    EXPECT_FALSE(limits.*flag.enabled);
+    EXPECT_FALSE(set_flag(false));
+
+    // A rejected parameter type must not change the stored flag.
+    EXPECT_FALSE(
+      joint_limits::check_for_limits_update(
+        "foo_joint", {rclcpp::Parameter(parameter_name, 1)}, node_->get_node_logging_interface(),
+        limits));
+    EXPECT_FALSE(limits.*flag.enabled);
+  }
+}
+
+TEST_F(JointLimitsRosParamTest, angle_wraparound_reports_only_effective_updates)
+{
+  joint_limits::JointLimits limits;
+  const auto set_wraparound = [&](bool value)
+  {
+    return joint_limits::check_for_limits_update(
+      "foo_joint", {rclcpp::Parameter("joint_limits.foo_joint.angle_wraparound", value)},
+      node_->get_node_logging_interface(), limits);
+  };
+
+  EXPECT_FALSE(set_wraparound(false));
+  limits.has_position_limits = true;
+  EXPECT_FALSE(set_wraparound(true));  // Mutually exclusive with position limits.
+  EXPECT_FALSE(limits.angle_wraparound);
+
+  limits.has_position_limits = false;
+  EXPECT_TRUE(set_wraparound(true));
+  EXPECT_TRUE(limits.angle_wraparound);
+  EXPECT_FALSE(set_wraparound(true));
+  EXPECT_TRUE(set_wraparound(false));
+  EXPECT_FALSE(limits.angle_wraparound);
+  EXPECT_FALSE(set_wraparound(false));
+}
+
+TEST_F(JointLimitsRosParamTest, unchanged_flag_does_not_clear_other_batch_updates)
+{
+  joint_limits::JointLimits limits;
+  limits.max_velocity = 2.0;
+  limits.max_effort = 3.0;
+
+  const std::vector<rclcpp::Parameter> parameters{
+    rclcpp::Parameter("joint_limits.foo_joint.max_velocity", 4.0),
+    rclcpp::Parameter("joint_limits.foo_joint.has_velocity_limits", false),
+    rclcpp::Parameter("joint_limits.foo_joint.has_effort_limits", false)};
+
+  EXPECT_TRUE(
+    joint_limits::check_for_limits_update(
+      "foo_joint", parameters, node_->get_node_logging_interface(), limits));
+  EXPECT_DOUBLE_EQ(limits.max_velocity, 4.0);
+  EXPECT_FALSE(limits.has_velocity_limits);
+  EXPECT_FALSE(limits.has_effort_limits);
+
+  EXPECT_FALSE(
+    joint_limits::check_for_limits_update(
+      "foo_joint", parameters, node_->get_node_logging_interface(), limits));
+}
+
+TEST_F(JointLimitsRosParamTest, check_for_limits_update_accumulates_over_the_whole_batch)
+{
+  // A parameter event delivers the whole set at once. A change to any one of them has to
+  // be reported, no matter what follows it in the batch.
+  {
+    joint_limits::JointLimits limits;
+    limits.min_position = -1.0;
+    limits.max_position = 1.0;
+    limits.max_velocity = 2.0;
+
+    const std::vector<rclcpp::Parameter> parameters{
+      rclcpp::Parameter("joint_limits.foo_joint.min_position", -5.0),  // changed
+      rclcpp::Parameter("joint_limits.foo_joint.max_velocity", 2.0)};  // unchanged
+
+    joint_limits::JointLimits updated_limits = limits;
+    EXPECT_TRUE(
+      joint_limits::check_for_limits_update(
+        "foo_joint", parameters, node_->get_node_logging_interface(), updated_limits));
+    EXPECT_EQ(-5.0, updated_limits.min_position);
+
+    // ... and a batch that changes nothing still has to report no change
+    const std::vector<rclcpp::Parameter> unchanged_parameters{
+      rclcpp::Parameter("joint_limits.foo_joint.min_position", -5.0),
+      rclcpp::Parameter("joint_limits.foo_joint.max_velocity", 2.0)};
+    EXPECT_FALSE(
+      joint_limits::check_for_limits_update(
+        "foo_joint", unchanged_parameters, node_->get_node_logging_interface(), updated_limits));
+  }
+
+  {
+    joint_limits::SoftJointLimits soft_limits;
+    soft_limits.k_position = 10.0;
+    soft_limits.k_velocity = 20.0;
+    soft_limits.min_position = 0.1;
+    soft_limits.max_position = 0.9;
+
+    const std::vector<rclcpp::Parameter> parameters{
+      rclcpp::Parameter("joint_limits.foo_joint.k_position", 30.0),   // changed
+      rclcpp::Parameter("joint_limits.foo_joint.k_velocity", 20.0)};  // unchanged
+
+    joint_limits::SoftJointLimits updated_limits = soft_limits;
+    EXPECT_TRUE(
+      joint_limits::check_for_limits_update(
+        "foo_joint", parameters, node_->get_node_logging_interface(), updated_limits));
+    EXPECT_EQ(30.0, updated_limits.k_position);
+  }
+}
+
+int main(int argc, char ** argv)
+{
+  rclcpp::init(argc, argv);
+  testing::InitGoogleMock(&argc, argv);
+  int ret = RUN_ALL_TESTS();
+  rclcpp::shutdown();
+  return ret;
+}

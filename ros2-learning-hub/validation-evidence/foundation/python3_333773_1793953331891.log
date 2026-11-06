@@ -1,0 +1,6 @@
+[INFO] [1793953332.284556615] [learning_count_client]: current=1
+[INFO] [1793953332.779889969] [learning_count_client]: current=2
+[INFO] [1793953333.279884409] [learning_count_client]: current=3
+[INFO] [1793953333.780142168] [learning_count_client]: current=4
+[INFO] [1793953334.181055223] [learning_count_client]: cancel accepted=True
+[INFO] [1793953334.280341329] [learning_count_client]: status=CANCELED, completed=4

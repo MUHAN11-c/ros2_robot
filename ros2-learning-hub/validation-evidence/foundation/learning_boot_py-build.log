@@ -1,0 +1,22 @@
+running develop
+running egg_info
+creating learning_boot_py.egg-info
+writing learning_boot_py.egg-info/PKG-INFO
+writing dependency_links to learning_boot_py.egg-info/dependency_links.txt
+writing entry points to learning_boot_py.egg-info/entry_points.txt
+writing requirements to learning_boot_py.egg-info/requires.txt
+writing top-level names to learning_boot_py.egg-info/top_level.txt
+writing manifest file 'learning_boot_py.egg-info/SOURCES.txt'
+reading manifest file 'learning_boot_py.egg-info/SOURCES.txt'
+writing manifest file 'learning_boot_py.egg-info/SOURCES.txt'
+running build_ext
+Creating /tmp/ros2-foundation-validation-b3pfmcge/install/learning_boot_py/lib/python3.12/site-packages/learning-boot-py.egg-link (link to .)
+Installing hello script to /tmp/ros2-foundation-validation-b3pfmcge/install/learning_boot_py/lib/learning_boot_py
+
+Installed /tmp/ros2-foundation-validation-b3pfmcge/build/learning_boot_py
+running symlink_data
+creating /tmp/ros2-foundation-validation-b3pfmcge/install/learning_boot_py/share/ament_index
+creating /tmp/ros2-foundation-validation-b3pfmcge/install/learning_boot_py/share/ament_index/resource_index
+creating /tmp/ros2-foundation-validation-b3pfmcge/install/learning_boot_py/share/ament_index/resource_index/packages
+symbolically linking /tmp/ros2-foundation-validation-b3pfmcge/build/learning_boot_py/resource/learning_boot_py -> /tmp/ros2-foundation-validation-b3pfmcge/install/learning_boot_py/share/ament_index/resource_index/packages
+symbolically linking /tmp/ros2-foundation-validation-b3pfmcge/build/learning_boot_py/package.xml -> /tmp/ros2-foundation-validation-b3pfmcge/install/learning_boot_py/share/learning_boot_py

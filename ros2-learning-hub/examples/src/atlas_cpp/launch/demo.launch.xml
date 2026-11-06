@@ -1,0 +1,4 @@
+<launch>
+  <node pkg="atlas_cpp" exec="talker" namespace="atlas" name="talker" output="screen"/>
+  <node pkg="atlas_py" exec="listener" namespace="atlas" name="listener" output="screen"/>
+</launch>

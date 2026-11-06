@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>atlas_cpp</name><version>0.1.0</version>
+  <description>ROS 2 学习图谱：完整 C++ 发布订阅与三种 launch 示例</description>
+  <maintainer email="learner@example.com">ROS 2 Atlas contributors</maintainer>
+  <license>Apache-2.0</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>rclcpp</depend><depend>std_msgs</depend>
+  <depend>example_interfaces</depend>
+  <exec_depend>atlas_py</exec_depend><exec_depend>launch_ros</exec_depend>
+  <exec_depend>launch_xml</exec_depend><exec_depend>launch_yaml</exec_depend>
+  <export><build_type>ament_cmake</build_type></export>
+</package>

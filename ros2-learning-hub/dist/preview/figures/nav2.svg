@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 500" width="880" height="500" role="img" aria-labelledby="nav2-title nav2-desc" xml:lang="zh-CN">
+  <title id="nav2-title">Nav2：规划、控制与底盘反馈</title>
+  <desc id="nav2-desc">静态地图、定位与状态估计提供的 odom 和 TF，以及激光点云等传感器，为配置相应图层的代价地图提供信息。全局代价地图支持规划器生成路径，局部代价地图支持控制器生成速度命令。底盘执行命令，反馈经里程计和状态估计返回定位与 TF 链路。此图省略行为树、恢复与生命周期管理。</desc>
+  <defs>
+    <marker id="nav2-arrow-green" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="9" markerHeight="9" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M 1 1 L 9 5 L 1 9 Z" fill="#257457" />
+    </marker>
+    <marker id="nav2-arrow-orange" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="9" markerHeight="9" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M 1 1 L 9 5 L 1 9 Z" fill="#bf722d" />
+    </marker>
+  </defs>
+  <style>text{font-family:"Noto Sans CJK SC","Microsoft YaHei","PingFang SC",sans-serif;} </style>
+  <rect x="0.75" y="0.75" width="878.5" height="498.5" rx="18" fill="#fbfcfa" stroke="#d8e3da" stroke-width="1.4" />
+  <rect x="28" y="25" width="5" height="28" rx="2" fill="#257457" stroke="#257457" stroke-width="1.4" />
+  <text x="46" y="45" font-size="24" fill="#20382c" font-weight="700" text-anchor="start">Nav2：规划、控制与底盘反馈</text>
+  <text x="46" y="69" font-size="16" fill="#5e7166" font-weight="400" text-anchor="start">先检查数据与坐标关系，再沿“路径 → 速度 → 反馈”定位问题。</text>
+  <rect x="32" y="94" width="224" height="72" rx="12" fill="white" stroke="#d8e3da" stroke-width="1.4" />
+  <text x="144" y="123" font-size="20" fill="#20382c" font-weight="700" text-anchor="middle">静态地图</text>
+  <text x="144" y="150" font-size="14" fill="#5e7166" font-weight="400" text-anchor="middle">环境占据先验</text>
+  <rect x="328" y="94" width="224" height="72" rx="12" fill="white" stroke="#d8e3da" stroke-width="1.4" />
+  <text x="440" y="123" font-size="20" fill="#20382c" font-weight="700" text-anchor="middle">定位与状态估计</text>
+  <text x="440" y="150" font-size="14" fill="#5e7166" font-weight="400" text-anchor="middle">odom + TF：map → base_link</text>
+  <rect x="624" y="94" width="224" height="72" rx="12" fill="white" stroke="#d8e3da" stroke-width="1.4" />
+  <text x="736" y="123" font-size="20" fill="#20382c" font-weight="700" text-anchor="middle">激光 / 点云</text>
+  <text x="736" y="150" font-size="14" fill="#5e7166" font-weight="400" text-anchor="middle">采样时间 + 传感器坐标系</text>
+  <path d="M 144 166 V 201" fill="none" stroke="#257457" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#nav2-arrow-green)" />
+  <path d="M 440 166 V 201" fill="none" stroke="#257457" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#nav2-arrow-green)" />
+  <path d="M 736 166 V 201" fill="none" stroke="#257457" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#nav2-arrow-green)" />
+  <rect x="48" y="201" width="784" height="83" rx="12" fill="#f1f6f0" stroke="#d8e3da" stroke-width="1.4" />
+  <text x="440" y="226" font-size="18" fill="#257457" font-weight="700" text-anchor="middle">代价地图 Costmaps · 按图层选用输入</text>
+  <rect x="86" y="239" width="278" height="33" rx="8" fill="white" stroke="#d8e3da" stroke-width="1.4" />
+  <text x="225" y="262" font-size="18" fill="#20382c" font-weight="600" text-anchor="middle">全局代价地图</text>
+  <rect x="516" y="239" width="278" height="33" rx="8" fill="white" stroke="#d8e3da" stroke-width="1.4" />
+  <text x="655" y="262" font-size="18" fill="#20382c" font-weight="600" text-anchor="middle">局部代价地图</text>
+  <path d="M 225 272 V 316" fill="none" stroke="#257457" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#nav2-arrow-green)" />
+  <path d="M 655 272 V 316" fill="none" stroke="#257457" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#nav2-arrow-green)" />
+  <rect x="86" y="316" width="278" height="64" rx="12" fill="white" stroke="#d8e3da" stroke-width="1.4" />
+  <text x="225" y="343" font-size="19" fill="#20382c" font-weight="700" text-anchor="middle">Planner · 全局规划器</text>
+  <text x="225" y="367" font-size="16" fill="#5e7166" font-weight="400" text-anchor="middle">生成可通行路径</text>
+  <rect x="516" y="316" width="278" height="64" rx="12" fill="white" stroke="#d8e3da" stroke-width="1.4" />
+  <text x="655" y="343" font-size="19" fill="#20382c" font-weight="700" text-anchor="middle">Controller · 局部控制器</text>
+  <text x="655" y="367" font-size="16" fill="#5e7166" font-weight="400" text-anchor="middle">跟踪路径并响应障碍</text>
+  <path d="M 364 348 H 516" fill="none" stroke="#257457" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#nav2-arrow-green)" />
+  <text x="440" y="335" font-size="17" fill="#257457" font-weight="600" text-anchor="middle">路径</text>
+  <path d="M 655 380 V 421" fill="none" stroke="#bf722d" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#nav2-arrow-orange)" />
+  <text x="675" y="405" font-size="17" fill="#bf722d" font-weight="600" text-anchor="start">速度命令</text>
+  <rect x="516" y="421" width="278" height="52" rx="12" fill="#257457" stroke="#257457" stroke-width="1.4" />
+  <text x="655" y="453" font-size="21" fill="white" font-weight="700" text-anchor="middle">底盘 / 驱动</text>
+  <path d="M 794 447 H 863 V 79 H 440 V 94" fill="none" stroke="#257457" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6 5" marker-end="url(#nav2-arrow-green)" />
+  <text x="848" y="338" font-size="15" fill="#257457" font-weight="600" text-anchor="middle" transform="rotate(-90 848 338)">状态 / 里程计反馈</text>
+  <rect x="72" y="414" width="356" height="55" rx="10" fill="#f7f4ec" stroke="#e9decd" stroke-width="1.4" />
+  <text x="90" y="437" font-size="17" fill="#bf722d" font-weight="600" text-anchor="start">TF 提供坐标与时间关系</text>
+  <text x="90" y="460" font-size="15" fill="#5e7166" font-weight="400" text-anchor="start">map → odom → base_link → sensor</text>
+  <text x="46" y="493" font-size="14" fill="#5e7166" font-weight="400" text-anchor="start">简化常见导航链：未展开行为树、恢复、平滑器及生命周期管理。</text>
+</svg>

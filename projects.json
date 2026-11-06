@@ -1,0 +1,118 @@
+{
+  "checked_on": "2026-11-06",
+  "folder": "/home/mu/Desktop/ros2_jazzy_tracked_refs",
+  "clone_mode": "depth=1, single-branch, recursive submodules",
+  "verification": "核对实际分支、HEAD 与 origin 分支一致、远端地址、工作区干净及子模块状态；未安装依赖、编译或运行",
+  "projects": [
+    {
+      "name": "ros2_control_demos",
+      "repo": "ros-controls/ros2_control_demos",
+      "branch": "jazzy",
+      "purpose": "优先阅读 example_2：差速底盘硬件接口、模型、控制器配置和启动文件",
+      "url": "https://github.com/ros-controls/ros2_control_demos.git",
+      "checked_branch": "jazzy",
+      "commit": "fbab026e147824971c97996f3789f97c2ee9e9ac",
+      "origin": "https://github.com/ros-controls/ros2_control_demos.git",
+      "clean": true,
+      "submodule_status": "",
+      "ok": true
+    },
+    {
+      "name": "ros2_control",
+      "repo": "ros-controls/ros2_control",
+      "branch": "jazzy",
+      "purpose": "控制管理器、SystemInterface 与硬件抽象源码",
+      "url": "https://github.com/ros-controls/ros2_control.git",
+      "checked_branch": "jazzy",
+      "commit": "f9e24287fc1d6996e5ba1656a9ee24e5f33adef7",
+      "origin": "https://github.com/ros-controls/ros2_control.git",
+      "clean": true,
+      "submodule_status": "",
+      "ok": true
+    },
+    {
+      "name": "ros2_controllers",
+      "repo": "ros-controls/ros2_controllers",
+      "branch": "jazzy",
+      "purpose": "diff_drive_controller 与 joint_state_broadcaster 源码",
+      "url": "https://github.com/ros-controls/ros2_controllers.git",
+      "checked_branch": "jazzy",
+      "commit": "bee185cbb98815116af9cfb00ff595b0b800e91a",
+      "origin": "https://github.com/ros-controls/ros2_controllers.git",
+      "clean": true,
+      "submodule_status": "",
+      "ok": true
+    },
+    {
+      "name": "AgroSenseBot",
+      "repo": "AIRLab-POLIMI/AgroSenseBot",
+      "branch": "jazzy",
+      "purpose": "农业履带底盘：控制、硬件接入、实机与导航工程参考",
+      "url": "https://github.com/AIRLab-POLIMI/AgroSenseBot.git",
+      "checked_branch": "jazzy",
+      "commit": "4ad700b090b9f3ddb8513c7519938bd7f0974709",
+      "origin": "https://github.com/AIRLab-POLIMI/AgroSenseBot.git",
+      "clean": true,
+      "submodule_status": "",
+      "ok": true
+    },
+    {
+      "name": "bunker_ros2",
+      "repo": "agilexrobotics/bunker_ros2",
+      "branch": "jazzy",
+      "purpose": "履带成品底盘的 ROS 2 驱动与 CAN 接入参考",
+      "url": "https://github.com/agilexrobotics/bunker_ros2.git",
+      "checked_branch": "jazzy",
+      "commit": "f24f722b245eb1d2572c47d091fc847d9fd68cf4",
+      "origin": "https://github.com/agilexrobotics/bunker_ros2.git",
+      "clean": true,
+      "submodule_status": "",
+      "ok": true
+    },
+    {
+      "name": "ugv_sdk",
+      "repo": "agilexrobotics/ugv_sdk",
+      "branch": "main",
+      "purpose": "BUNKER 配套通用 C++ 通信 SDK；不按 ROS 发行版划分，远端无 jazzy 分支",
+      "url": "https://github.com/agilexrobotics/ugv_sdk.git",
+      "checked_branch": "main",
+      "commit": "f2704eacdc90357078cd93ec60aae08bb4baab35",
+      "origin": "https://github.com/agilexrobotics/ugv_sdk.git",
+      "clean": true,
+      "submodule_status": "b796f7d44681514f58a683a3a71ff17c94edb0c1 test/googletest (b796f7d)",
+      "ok": true
+    },
+    {
+      "name": "linorobot2",
+      "repo": "linorobot/linorobot2",
+      "branch": "jazzy",
+      "purpose": "ROS 2 上位机：模型、启动、里程计与自主导航",
+      "url": "https://github.com/linorobot/linorobot2.git",
+      "checked_branch": "jazzy",
+      "commit": "f6b0bd0350c4a9d6b815ef4bb5c701a1e5129711",
+      "origin": "https://github.com/linorobot/linorobot2.git",
+      "clean": true,
+      "submodule_status": "",
+      "ok": true
+    },
+    {
+      "name": "linorobot2_hardware",
+      "repo": "linorobot/linorobot2_hardware",
+      "branch": "jazzy",
+      "purpose": "Linorobot2 配套 micro-ROS 下位机固件与硬件配置",
+      "url": "https://github.com/linorobot/linorobot2_hardware.git",
+      "checked_branch": "jazzy",
+      "commit": "fbbbb922f4bd778e23268210b7bd7a6ac4c75d83",
+      "origin": "https://github.com/linorobot/linorobot2_hardware.git",
+      "clean": true,
+      "submodule_status": "",
+      "ok": true
+    }
+  ],
+  "excluded": [
+    {
+      "repo": "HANDS-FREE/OpenRE",
+      "reason": "远端没有 jazzy 分支，本次未下载"
+    }
+  ]
+}

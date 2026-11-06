@@ -1,0 +1,6 @@
+[INFO] [1793953336.101671295] [learning_count_client]: current=1
+[INFO] [1793953336.595505253] [learning_count_client]: current=2
+[INFO] [1793953337.095615415] [learning_count_client]: current=3
+[INFO] [1793953337.595862868] [learning_count_client]: current=4
+[INFO] [1793953338.096086572] [learning_count_client]: current=5
+[INFO] [1793953338.096472432] [learning_count_client]: status=SUCCEEDED, completed=5

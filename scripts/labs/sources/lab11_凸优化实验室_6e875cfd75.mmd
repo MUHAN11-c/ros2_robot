@@ -1,8 +1,0 @@
-
-%%{init: {"theme":"base","themeVariables":{"primaryColor":"#FFFFFF","primaryBorderColor":"#8166B1","primaryTextColor":"#292530","lineColor":"#B39ADE","fontSize":"14px"}}}%%
-flowchart TD
-    A([写出目标函数与约束]) --> B[/"画等高线 + 可行域"/]
-    B --> C{"无约束最优点<br>在可行域内吗？"}
-    C -- 是 --> D([它就是解：内点])
-    C -- 否 --> E["最优解在边界：<br>∇f = −λ·∇g（KKT 平稳性）"]
-    E --> F(["数值核对 KKT 三条件"])

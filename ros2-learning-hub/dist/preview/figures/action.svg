@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 500" width="880" height="500" role="img" aria-labelledby="action-title action-desc" xml:lang="zh-CN">
+  <title id="action-title">Action：接受、反馈与结果是不同阶段</title>
+  <desc id="action-desc">客户端先发送目标并收到接受响应，随后异步请求最终结果。服务端可多次反馈。客户端发取消请求，收到取消获准响应后仍须等待服务端停止并返回最终 CANCELED 结果。图示只表示一次被接受且取消成功的目标。</desc>
+  <defs>
+    <marker id="action-arrow-green" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="9" markerHeight="9" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M 1 1 L 9 5 L 1 9 Z" fill="#257457" />
+    </marker>
+    <marker id="action-arrow-orange" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="9" markerHeight="9" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M 1 1 L 9 5 L 1 9 Z" fill="#bf722d" />
+    </marker>
+  </defs>
+  <style>text{font-family:"Noto Sans CJK SC","Microsoft YaHei","PingFang SC",sans-serif;} </style>
+  <rect x="0.75" y="0.75" width="878.5" height="498.5" rx="18" fill="#fbfcfa" stroke="#d8e3da" stroke-width="1.4" />
+  <rect x="28" y="25" width="5" height="28" rx="2" fill="#257457" stroke="#257457" stroke-width="1.4" />
+  <text x="46" y="45" font-size="24" fill="#20382c" font-weight="700" text-anchor="start">Action：接受、反馈与结果是不同阶段</text>
+  <text x="46" y="69" font-size="16" fill="#5e7166" font-weight="400" text-anchor="start">示例路径：目标被接受后，客户端请求取消。</text>
+  <rect x="160" y="88" width="180" height="40" rx="12" fill="#edf5ef" stroke="#d8e3da" stroke-width="1.4" />
+  <rect x="560" y="88" width="180" height="40" rx="12" fill="#edf5ef" stroke="#d8e3da" stroke-width="1.4" />
+  <text x="250" y="115" font-size="20" fill="#257457" font-weight="700" text-anchor="middle">动作客户端</text>
+  <text x="650" y="115" font-size="20" fill="#257457" font-weight="700" text-anchor="middle">动作服务端</text>
+  <path d="M 250 128 V 443" fill="none" stroke="#257457" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 6" />
+  <path d="M 650 128 V 443" fill="none" stroke="#257457" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 6" />
+  <rect x="643" y="188" width="14" height="250" rx="4" fill="#d9eadf" stroke="#b8d4c2" stroke-width="1.4" />
+  <path d="M 86 150 V 425" fill="none" stroke="#257457" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#action-arrow-green)" />
+  <text x="86" y="136" font-size="16" fill="#5e7166" font-weight="400" text-anchor="middle">时间</text>
+  <rect x="224" y="242" width="458" height="70" rx="10" fill="none" stroke="#d8e3da" stroke-width="1.4" stroke-dasharray="5 5" />
+  <text x="127" y="268" font-size="15" fill="#5e7166" font-weight="400" text-anchor="middle">
+    <tspan x="127" dy="0">运行中</tspan>
+    <tspan x="127" dy="23">多次反馈</tspan>
+  </text>
+  <path d="M 250 151 H 643" fill="none" stroke="#257457" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#action-arrow-green)" />
+  <text x="446" y="142" font-size="17" fill="#257457" font-weight="400" text-anchor="middle">目标请求（Goal）</text>
+  <path d="M 643 187 H 250" fill="none" stroke="#257457" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#action-arrow-green)" />
+  <text x="446" y="178" font-size="17" fill="#257457" font-weight="400" text-anchor="middle">目标响应：接受</text>
+  <path d="M 250 223 H 643" fill="none" stroke="#257457" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#action-arrow-green)" />
+  <text x="446" y="214" font-size="17" fill="#257457" font-weight="400" text-anchor="middle">请求结果：异步等待</text>
+  <path d="M 643 267 H 250" fill="none" stroke="#257457" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#action-arrow-green)" />
+  <text x="446" y="258" font-size="17" fill="#257457" font-weight="400" text-anchor="middle">反馈：进度 1</text>
+  <path d="M 643 301 H 250" fill="none" stroke="#257457" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#action-arrow-green)" />
+  <text x="446" y="292" font-size="17" fill="#257457" font-weight="400" text-anchor="middle">反馈：进度 2</text>
+  <path d="M 250 337 H 643" fill="none" stroke="#bf722d" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#action-arrow-orange)" />
+  <text x="446" y="328" font-size="17" fill="#bf722d" font-weight="400" text-anchor="middle">取消请求（Cancel）</text>
+  <path d="M 643 373 H 250" fill="none" stroke="#bf722d" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#action-arrow-orange)" />
+  <text x="446" y="364" font-size="17" fill="#bf722d" font-weight="600" text-anchor="middle">取消确认：请求获准</text>
+  <path d="M 643 429 H 250" fill="none" stroke="#257457" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#action-arrow-green)" />
+  <text x="446" y="420" font-size="17" fill="#257457" font-weight="600" text-anchor="middle">最终结果：CANCELED</text>
+  <rect x="704" y="250" width="138" height="153" rx="10" fill="#fff7ed" stroke="#ebd7bd" stroke-width="1.4" />
+  <text x="720" y="278" font-size="17" fill="#20382c" font-weight="600" text-anchor="start">服务端执行</text>
+  <text x="720" y="307" font-size="16" fill="#5e7166" font-weight="400" text-anchor="start">
+    <tspan x="720" dy="0">取消获准后，</tspan>
+    <tspan x="720" dy="25">仍需停止工作</tspan>
+    <tspan x="720" dy="25">并设置终态。</tspan>
+  </text>
+  <text x="46" y="464" font-size="17" fill="#bf722d" font-weight="600" text-anchor="start">取消确认 ≠ 任务已经结束。客户端仍要等待最终结果。</text>
+  <text x="46" y="488" font-size="14" fill="#5e7166" font-weight="400" text-anchor="start">简化：未画目标拒绝，以及正常成功 SUCCEEDED、执行失败 ABORTED 等路径。</text>
+</svg>

@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+<robot name="asb_webots_robot">
+    <webots>
+
+        <plugin type="asb_webots_driver::ASBWebotsDriver" />
+
+        <device reference="base_scan_front_multilayer_sim" type="Lidar">
+            <ros>
+                <enabled>true</enabled>
+                <updateRate>10</updateRate>
+                <topicName>/scan_front_multilayer</topicName>
+                <alwaysOn>false</alwaysOn>
+                <frameName>base_scan_front_multilayer_sim</frameName>
+            </ros>
+        </device>
+
+        <device reference="base_scan_rear_multilayer_sim" type="Lidar">
+            <ros>
+                <enabled>true</enabled>
+                <updateRate>10</updateRate>
+                <topicName>/scan_rear_multilayer</topicName>
+                <alwaysOn>false</alwaysOn>
+                <frameName>base_scan_rear_multilayer_sim</frameName>
+            </ros>
+        </device>
+
+        <!-- disable the default ROS2 topic for the sensor, which is published from the driver -->
+        <device reference="gnss_1_link" type="GPS">
+            <ros>
+                <enabled>false</enabled>
+            </ros>
+        </device>
+        <device reference="gnss_2_link" type="GPS">
+            <ros>
+                <enabled>false</enabled>
+            </ros>
+        </device>
+
+    </webots>
+
+</robot>

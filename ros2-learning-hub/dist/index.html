@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="以 ROS 2 Jazzy 为主线的中文学习图谱。系统课程、C++与Python写法对照、官方资料、生态项目与可下载示例。">
+  <meta name="theme-color" content="#254f40">
+  <title>ROS 2 学习图谱 · 从节点到机器人</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="logic.js" defer></script>
+  <script src="textbook.js" defer></script>
+  <script src="content.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">跳到正文</a>
+  <aside id="sidebar" aria-label="学习导航">
+    <a class="brand" href="#/home"><span class="ros-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span>ROS 2 <b>学习图谱</b><small>THE ROBOTICS FIELD GUIDE</small></span></a>
+    <div class="edition"><span class="status-dot"></span> Jazzy Jalisco <span class="pill">LTS</span></div>
+    <button class="sidebar-search" data-action="search"><span data-icon="search"></span>搜索知识、API、资料<kbd>/</kbd></button>
+    <nav id="navigation" aria-label="主要导航"></nav>
+    <div class="sidebar-bottom"><div class="progress-label"><span>我的学习进度</span><strong id="progress-count">0 / 0</strong></div><progress id="progress" value="0" max="44" aria-label="课程完成进度"></progress><div class="sidebar-meta"><span>本地保存 · 随时继续</span><a href="#/saved" aria-label="查看收藏">我的书签 ↗</a></div></div>
+  </aside>
+  <button id="backdrop" aria-label="收起导航" hidden></button>
+  <div class="shell">
+    <header class="topbar"><div class="crumb"><button class="icon-button mobile-menu" data-action="menu" aria-expanded="false" aria-controls="sidebar" aria-label="展开导航"><span data-icon="menu"></span></button><a href="#/home">学习工作台</a><span>/</span><span id="breadcrumb">总览</span></div><div class="top-actions"><span class="checked">资料核对 · 2026.11.06</span><button class="icon-button" data-action="theme" aria-label="切换深浅主题"><span data-icon="sun"></span></button><a class="github-link" href="https://docs.ros.org/en/jazzy/" target="_blank" rel="noopener noreferrer">官方文档 <span data-icon="external"></span></a></div></header>
+    <main id="main" tabindex="-1"><p class="loading">正在展开学习图谱…</p></main>
+    <footer class="footer"><span><strong>ROS 2 学习图谱</strong> · 把概念连接成系统。</span><span>独立中文学习资料 <a href="#/about">来源与版本说明 ↗</a></span></footer>
+  </div>
+  <dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-heading"><h2 id="search-title">搜索整个知识库</h2><button class="icon-button" data-close="search-dialog" aria-label="关闭搜索">✕</button></div><label class="search-box"><span data-icon="search"></span><input id="search-input" type="search" placeholder="试试 QoS、发布者、Nav2、launch…" autocomplete="off" aria-label="搜索课程和资料"></label><div id="search-results" aria-live="polite"></div><div class="dialog-footer">课程 · 写法对照 · 全部来源 <span><kbd>Esc</kbd> 关闭</span></div></dialog>
+  <dialog id="copy-dialog" aria-labelledby="copy-title"><div class="dialog-heading"><h2 id="copy-title">选中并复制代码</h2><button class="icon-button" data-close="copy-dialog" aria-label="关闭复制面板">✕</button></div><p>浏览器未允许自动复制。请使用 Ctrl/Cmd+C。</p><textarea id="copy-text" readonly aria-label="待复制的代码"></textarea></dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <noscript>可直接打开 <a href="book.html">完整离线教材</a>，无需 JavaScript。</noscript>
+</body>
+</html>
