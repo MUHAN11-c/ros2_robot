@@ -1,0 +1,55 @@
+{
+  "checkedAt": "2026-11-07",
+  "passed": true,
+  "sourceSha256": "8413248f56faa8e2eb63af7a8faba606fe056fd72920345eb1adf3781632f1cb",
+  "results": [
+    {
+      "args": [
+        "--help"
+      ],
+      "exitCode": 0,
+      "passed": true
+    },
+    {
+      "args": [
+        "--timeout",
+        "nan"
+      ],
+      "exitCode": 2,
+      "passed": true
+    },
+    {
+      "args": [
+        "--timeout",
+        "inf"
+      ],
+      "exitCode": 2,
+      "passed": true
+    },
+    {
+      "args": [
+        "--timeout",
+        "0"
+      ],
+      "exitCode": 2,
+      "passed": true
+    },
+    {
+      "args": [
+        "--domain",
+        "233"
+      ],
+      "exitCode": 2,
+      "passed": true
+    },
+    {
+      "args": [
+        "-O",
+        "--help"
+      ],
+      "exitCode": 1,
+      "passed": true
+    }
+  ],
+  "scope": "仅标准库CLI路径，不导入ROS、不创建端点；ROS行为由7场景独立记录。"
+}

@@ -1,0 +1,29 @@
+{
+  "scope": "保存功能接入时保护的原文与教材产物；三个读取器文件的旧版本单独备份。不是内容穷尽或新实验通过证明。",
+  "files": {
+    "reader-library.js": "84df52e02671bf601e0eb99e99aadbc698044b19c69632a9167382cf9361d1ab",
+    "content.js": "00a5fcf19735a8054f472120da0f6964bfe821948c7860abaa50e70b5b1f24f2",
+    "book.html": "c2947f941e27cb31d35ec59487e7d12b7a24eae534c83d3cecd9e9587a0d0539",
+    "preview/figures.js": "dc367d6663e6c996c432af33182901b944187e7b1c26ff9ea8430a7ac45f8372",
+    "preview/figure-data.js": "ff536d7777bbe8616203bdf1c158aa88f7428cad9523fbb151cf36591309949b",
+    "downloads/atlas_examples.zip": "3e590a85c11fc0cf2a87ad81db4bf61f2fd63cfe77a07d539f23bdd716b5e1ac",
+    "downloads/validation-evidence.zip": "cca77940ae64d131792c5a08aa09521a16118105c622fd282f8c6767875048b4"
+  },
+  "readerIntegration": {
+    "index.html": {
+      "previousSha256": "684e16ad64abbf3c654c53744fe02457bff5d0fd71ad5425a9d9399515af2878",
+      "currentSha256": "9ae4d164d0b68cea1309bb94820fd3f562f4cd2ad136b6ecb4d775d747a5564e",
+      "backup": "backups/20261107-before-file-saving/dist/index.html"
+    },
+    "reader.js": {
+      "previousSha256": "a474d8b3c9cb5525084a929a36b1c88c373e217e5150917bbb0c3ceb7d50ad5e",
+      "currentSha256": "cb997782ee9412e338da61da0c600401d1fff695649fd1a875b18baed62180bc",
+      "backup": "backups/20261107-before-file-saving/dist/reader.js"
+    },
+    "reader.css": {
+      "previousSha256": "79e77ae5e6a1739e5c861a64b04a728ad40da317cada2d474a225ba13ff18ab6",
+      "currentSha256": "9503aad974e9d57ff89242a1c055c88f0acb957217972f3362e35695d899a09d",
+      "backup": "backups/20261107-before-file-saving/dist/reader.css"
+    }
+  }
+}

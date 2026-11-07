@@ -1,0 +1,673 @@
+{
+  "meta": {
+    "report": "validation-evidence/gazebo-sensors-current-validation.json",
+    "reportSha256": "697c865879d240e7e9266488b308d7a6d7f88f5df9a3527230f03303d6b60686",
+    "sourceReads": [
+      {
+        "sourceId": "gazebosim--docs",
+        "commit": "05287873c23e4a9cfc148e0ad6a08a109fc406d8",
+        "path": "ros2-learning-hub/references/sources/ecosystem/gazebosim--docs/master--05287873c23e/harmonic/sensors.md",
+        "sha256": "6d4b335b7f8f05ada4f478af68ffbb4fd00a281758001e55e9fedec04657f365"
+      },
+      {
+        "sourceId": "gazebosim--docs",
+        "commit": "05287873c23e4a9cfc148e0ad6a08a109fc406d8",
+        "path": "ros2-learning-hub/references/sources/ecosystem/gazebosim--docs/master--05287873c23e/harmonic/sdf_worlds.md",
+        "sha256": "878796f78b8e6a0263ec492bb53314edbce0a3f9a0cd362fc457f649b98d8c71"
+      },
+      {
+        "sourceId": "gazebosim--docs",
+        "commit": "05287873c23e4a9cfc148e0ad6a08a109fc406d8",
+        "path": "ros2-learning-hub/references/sources/ecosystem/gazebosim--docs/master--05287873c23e/harmonic/troubleshooting.md",
+        "sha256": "521e66c9cad3e3c4ca96ff3fe256e077a2a8e9d1da65a3f7617fdce85cba5cb0"
+      },
+      {
+        "sourceId": "gazebosim--ros_gz",
+        "commit": "3c15c8edeb747824066e86990f6a4ebfda913c50",
+        "path": "ros2-learning-hub/references/sources/ecosystem/gazebosim--ros_gz/jazzy--3c15c8edeb74/ros_gz_bridge/README.md",
+        "sha256": "67651ccaf874f39444b305c5b6467779d9d4145031d4959071da78433c5e8c73"
+      },
+      {
+        "sourceId": "gazebosim--ros_gz",
+        "commit": "3c15c8edeb747824066e86990f6a4ebfda913c50",
+        "path": "ros2-learning-hub/references/sources/ecosystem/gazebosim--ros_gz/jazzy--3c15c8edeb74/ros_gz_bridge/src/bridge_config.cpp",
+        "sha256": "0f300e56260438210239e467dcdbcaef4e6c9456b72209ee21d6a814a895a3d2"
+      },
+      {
+        "sourceId": "gazebosim--ros_gz",
+        "commit": "3c15c8edeb747824066e86990f6a4ebfda913c50",
+        "path": "ros2-learning-hub/references/sources/ecosystem/gazebosim--ros_gz/jazzy--3c15c8edeb74/ros_gz_bridge/src/bridge_handle_gz_to_ros.cpp",
+        "sha256": "fad25926006c0d015aa557f70a27a6220fb5782cb1a9728588f292865bfdb4f7"
+      },
+      {
+        "sourceId": "gazebosim--ros_gz",
+        "commit": "3c15c8edeb747824066e86990f6a4ebfda913c50",
+        "path": "ros2-learning-hub/references/sources/ecosystem/gazebosim--ros_gz/jazzy--3c15c8edeb74/ros_gz_interfaces/srv/ControlWorld.srv",
+        "sha256": "dd021a6bfed9c7ec7f0da01d52d9d340564576f20ae0b88315285417c5ecd242"
+      },
+      {
+        "sourceId": "gazebosim--ros_gz",
+        "commit": "3c15c8edeb747824066e86990f6a4ebfda913c50",
+        "path": "ros2-learning-hub/references/sources/ecosystem/gazebosim--ros_gz/jazzy--3c15c8edeb74/ros_gz_bridge/src/convert/ros_gz_interfaces.cpp",
+        "sha256": "989df81eb84b0c8b4151b5b8631d880a4cc7b71dbd254e2ea3df88e0472bffbf"
+      },
+      {
+        "sourceId": "gazebosim--ros_gz",
+        "commit": "3c15c8edeb747824066e86990f6a4ebfda913c50",
+        "path": "ros2-learning-hub/references/sources/ecosystem/gazebosim--ros_gz/jazzy--3c15c8edeb74/ros_gz_bridge/src/convert/rosgraph_msgs.cpp",
+        "sha256": "bc95978bb106fb3c4acbb4e3d26a600738b9f78995c9961e551c5de635b9f1ea"
+      },
+      {
+        "sourceId": "gazebosim--ros_gz",
+        "commit": "3c15c8edeb747824066e86990f6a4ebfda913c50",
+        "path": "ros2-learning-hub/references/sources/ecosystem/gazebosim--ros_gz/jazzy--3c15c8edeb74/ros_gz_bridge/src/convert/sensor_msgs.cpp",
+        "sha256": "cf6653658f483062a70b1b0e881f3880a47d430736323b4c8d8e726249664024"
+      },
+      {
+        "sourceId": "gazebosim--ros_gz_project_template",
+        "commit": "045e981d03aac1cc3712ab6bb086f52ea79aebf9",
+        "path": "ros2-learning-hub/references/sources/official-examples/gazebosim--ros_gz_project_template/main--045e981d03aa/ros_gz_example_bringup/config/ros_gz_example_bridge.yaml",
+        "sha256": "2a9b35a0f388870f303b1b3df62b430dcd4649864edfa190942bdd95af257178"
+      },
+      {
+        "sourceId": "ros2--common_interfaces",
+        "commit": "a941f14bb318d8d904505ed935ccbb97f24a70a4",
+        "path": "ros2-learning-hub/references/sources/official-core/ros2--common_interfaces/jazzy--a941f14bb318/sensor_msgs/msg/Image.msg",
+        "sha256": "575cd3434771916c2b551db8ac484522ecef1d6105196e043a305887d2730704"
+      },
+      {
+        "sourceId": "ros2--common_interfaces",
+        "commit": "a941f14bb318d8d904505ed935ccbb97f24a70a4",
+        "path": "ros2-learning-hub/references/sources/official-core/ros2--common_interfaces/jazzy--a941f14bb318/sensor_msgs/msg/CameraInfo.msg",
+        "sha256": "1fced83678f5f2708aff8540987594692452de9f0b43905ce3bfba689226f3aa"
+      },
+      {
+        "sourceId": "ros2--common_interfaces",
+        "commit": "a941f14bb318d8d904505ed935ccbb97f24a70a4",
+        "path": "ros2-learning-hub/references/sources/official-core/ros2--common_interfaces/jazzy--a941f14bb318/sensor_msgs/msg/LaserScan.msg",
+        "sha256": "bb688599d8787fa1b48393e50064013e58449055eb60e501eb01a07e8bc03357"
+      },
+      {
+        "sourceId": "ros2--common_interfaces",
+        "commit": "a941f14bb318d8d904505ed935ccbb97f24a70a4",
+        "path": "ros2-learning-hub/references/sources/official-core/ros2--common_interfaces/jazzy--a941f14bb318/sensor_msgs/msg/PointCloud2.msg",
+        "sha256": "22699bfd6c68be148363a2e889408833a5a37d3464ea20032d1c757336b80f2a"
+      },
+      {
+        "sourceId": "ros2--common_interfaces",
+        "commit": "a941f14bb318d8d904505ed935ccbb97f24a70a4",
+        "path": "ros2-learning-hub/references/sources/official-core/ros2--common_interfaces/jazzy--a941f14bb318/sensor_msgs/msg/PointField.msg",
+        "sha256": "6e6d5d51d2e464d3074b44b112f219e67fcdc0b280260d93f8cefd9710ec972e"
+      },
+      {
+        "sourceId": "ros-perception--image_pipeline",
+        "commit": "6c3df3099bc7b1ec92215719215c8eefd0d3aa69",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-perception--image_pipeline/jazzy--6c3df3099bc7/image_pipeline/doc/camera_info.rst",
+        "sha256": "dddf9617492de7cf4631ce287aad6f59c39bfa780f69c1653c681bb459abb685"
+      },
+      {
+        "sourceId": "ros-perception--image_pipeline",
+        "commit": "6c3df3099bc7b1ec92215719215c8eefd0d3aa69",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-perception--image_pipeline/jazzy--6c3df3099bc7/image_proc/src/rectify.cpp",
+        "sha256": "f5d05194c512ecd5ec0f8c96a12cc14cbae906c886ac8ce0990b8988f4cd7861"
+      },
+      {
+        "sourceId": "ros-perception--vision_opencv",
+        "commit": "9800f67cea477c44cfb64e349854bcb6a09dc9ce",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-perception--vision_opencv/humble--9800f67cea47/cv_bridge/python/cv_bridge/core.py",
+        "sha256": "e95e914bcaf23c88e759c673fa7f6f95884b37e278c94fd72429d347b0b04056"
+      },
+      {
+        "sourceId": "existing--Robotics_Tutorial",
+        "commit": "7cb9e3d423196062c59dd346aae16285d962fb7c",
+        "path": "Robotics_Tutorial/02_C++基础与进阶/40_通用库剖析/50_PCL点云库.md",
+        "sha256": "a0a948fdc7b0613111474062b6a3281b6dc1051dd097224e05f2e2ddd518017c"
+      },
+      {
+        "sourceId": "ros-perception--perception_pcl",
+        "commit": "c5e7e72d20cbbc164e9d940f75ae2a6ae5bbf41a",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-perception--perception_pcl/jazzy--c5e7e72d20cb/pcl_conversions/include/pcl_conversions/pcl_conversions.h",
+        "sha256": "8565cd22ca2930169b7a16e7fccda2e8568cbef1687432e45a7c4ac67b19cb7c"
+      },
+      {
+        "sourceId": "ros2--rclpy",
+        "commit": "521012e60ba21319ef29141f8f521a0e072fe652",
+        "path": "ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2/rclpy/rclpy/time_source.py",
+        "sha256": "9aacb85102019116edc6eb74a6993ca7efa3296273bfa53c30cebbb792d446f5"
+      },
+      {
+        "sourceId": "ros2--rclpy",
+        "commit": "521012e60ba21319ef29141f8f521a0e072fe652",
+        "path": "ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2/rclpy/rclpy/qos.py",
+        "sha256": "0fba9cda7e15dd40f3ed32a0b3d8e60ef9060040e201e886aa1cebb2a61745f6"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_costmap_2d/plugins/obstacle_layer.cpp",
+        "sha256": "e2e6e56b04d6ade1ded6f17b08667dba220f453b6000c122ece638cee1839caf"
+      },
+      {
+        "sourceId": "SteveMacenski--slam_toolbox",
+        "commit": "f84dad92a6579aeff4fe0c2590bbc74d3348e5af",
+        "path": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/config/mapper_params_online_async.yaml",
+        "sha256": "a47dcd2ade5929b491d1897df539dceeabaaa3bfe6dc0d39f1f7af6c53d79a8c"
+      }
+    ]
+  },
+  "chapters": {
+    "eco-gazebo-simulation": {
+      "appendSourceIds": [
+        "sensor-gz-world",
+        "sensor-bridge-config",
+        "sensor-control",
+        "sensor-template"
+      ],
+      "validation": "在本机 Gazebo Sim, version 8.15.0 与 Jazzy ros_gz_bridge 1.0.24，域 227/LOCALHOST、独立 Gazebo Transport 分区实际运行。通过无窗口 EGL Ogre2 实测时钟、传感器、世界控制和暂停恢复。范围为固定模拟相机、激光和实际桥接，GUI、实机、SLAM、Nav2 和底盘仿真由其他实验验收。",
+      "appendSections": [
+        {
+          "title": "在本地小世界实测单向桥与暂停恢复",
+          "paragraphs": [
+            "把 SDF 中的物理系统和 Sensors 系统分开观察。步长为 0.005 s，传感器配置 10 Hz。模型只由本地几何构成，ROS 端取得图像、内参、激光和点云之后再谈算法。",
+            "官方工程模板把速度命令放在 ROS 到 Gazebo 的方向，并把时钟、里程计和扫描放在反向。本例从世界专属 /world/hub_perception/clock 转发到 ROS /clock，五条数据映射实际查到桥发布端和单向图结构。ControlWorld 走单独服务路径，响应成功后还要检查时钟是否推进。",
+            "SDF 只描述仿真中的数据。桥的 ROS 类型、QoS 和命名空间由 YAML 显式给出，传感器 frame_id 与下游提供的 TF 逐一配对。原始 Header 保持仿真采集时间。本机无窗口运行选择了可用的 EGL vendor，先前的软件 EGL 路径在驱动初始化阶段失败。"
+          ],
+          "bullets": [],
+          "tables": [
+            {
+              "title": "同一真实仿真世界的时钟和采样",
+              "columns": [
+                "阶段",
+                "ROS 时间（s）",
+                "采样与控制回执"
+              ],
+              "rows": [
+                [
+                  "初始暂停",
+                  "0",
+                  "桥已发现，时间尚未推进"
+                ],
+                [
+                  "运行",
+                  "0.655",
+                  "ControlWorld 恢复成功，收到图像与激光"
+                ],
+                [
+                  "暂停",
+                  "0.660",
+                  "排空队列后观察 0.40 单调秒，五类采样时戳不变"
+                ],
+                [
+                  "再恢复",
+                  "0.700",
+                  "服务回执成功，时钟与五类采样时戳推进"
+                ]
+              ],
+              "caption": "三处非零值取自这一轮采样。暂停窗口以单调时钟测量，不能用冻结的仿真时间限时。",
+              "evidenceFile": "validation-evidence/gazebo-sensors-current-validation.json",
+              "evidenceSha256": "697c865879d240e7e9266488b308d7a6d7f88f5df9a3527230f03303d6b60686"
+            }
+          ],
+          "codeBlocks": [
+            {
+              "label": "运行 Gazebo 传感器实验",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 在 ros2-learning-hub 目录执行，需已安装 Jazzy、Harmonic、ros_gz_bridge 与 cv_bridge。\nsource /opt/ros/jazzy/setup.bash\n# 输入是本地小世界和桥映射。227 为隔离本机 DDS 域。结果写到新建 /tmp 目录。\npython3 examples/gazebo_labs/validate_sensors.py --domain-id 227\n# Ogre2 若无法创建 EGL 上下文，可用 --egl-vendor-json 指向本机有效的 vendor JSON。",
+              "explanation": "先在暂停世界发现服务和端点，再让真实世界运行并核对时钟、相机、点云与 ROS 消费端。"
+            },
+            {
+              "label": "gazebo_labs/sensors.sdf",
+              "language": "xml",
+              "type": "complete",
+              "sourceFile": "examples/gazebo_labs/sensors.sdf",
+              "explanation": "独立 SDF 文件。世界只包含本地红板和静止传感器台架，固定安装和无噪声设定只用于检查接口。"
+            },
+            {
+              "label": "gazebo_labs/bridge.yaml",
+              "language": "yaml",
+              "type": "complete",
+              "sourceFile": "examples/gazebo_labs/bridge.yaml",
+              "explanation": "五条单向数据映射，世界控制作为单独服务桥。frame_id 字符串和实际 TF 分开设置。"
+            },
+            {
+              "label": "gazebo_labs/validate_sensors.py",
+              "language": "python",
+              "type": "complete",
+              "sourceFile": "examples/gazebo_labs/validate_sensors.py",
+              "explanation": "执行与回收进程，按时戳对齐消息，验证数据字段、图像与点云并留存报告和原始采样。"
+            }
+          ]
+        }
+      ],
+      "appendExercises": [
+        {
+          "question": "世界控制回执成功后还需要看什么？",
+          "answer": "等待相应窗口内的 /clock 和传感器采集时戳按预期冻结或推进。用单调秒限制等待。"
+        },
+        {
+          "question": "多个 Gazebo 世界时，应怎样给同一 ROS 域提供 /clock？",
+          "answer": "选择一个世界的限定时钟主题作为 ROS /clock 的唯一提供者。其他世界需要另设隔离域或时钟命名方案，避免同时驱动消费者。"
+        }
+      ]
+    },
+    "eco-perception-pipeline": {
+      "appendSourceIds": [
+        "sensor-image-contract",
+        "sensor-image-calibration",
+        "sensor-opencv",
+        "sensor-scan-contract",
+        "sensor-converters",
+        "sensor-pcl-layout",
+        "sensor-pcl-convert"
+      ],
+      "validation": "在本机 Gazebo Sim, version 8.15.0 与 Jazzy ros_gz_bridge 1.0.24，域 227/LOCALHOST、独立 Gazebo Transport 分区实际运行。真实桥接图像并使用 cv_bridge 4.1.0、OpenCV 4.6.0 处理，按二进制结构解码点云。范围为固定模拟相机、激光和实际桥接，GUI、实机、SLAM、Nav2 和底盘仿真由其他实验验收。",
+      "appendSections": [
+        {
+          "title": "从模拟传感器核对采集、编码、内参与点字段",
+          "paragraphs": [
+            "把 Image、CameraInfo 和处理后的边缘图按 Header.stamp 精确配对，再核对光学 frame。96 像素宽、水平视场 π/3 rad 时，fx=96/(2·tan(π/6))≈83.14 px。读 CameraInfo 的 K 与本次采样配置交叉核对，K、D、R、P 的校正过程在相机资料中分别说明。",
+            "RGB 输入经 cv_bridge 按显式编码转换成 BGR 数组。对这块红板，灰度换算压低了边界对比度；同一 Canny 阈值应用到红通道后检出竖边。输出 mono8 时保留原时戳和 frame，改像素颜色不需要重写采样位置或时间。阈值和选色结果仅限这个场景。",
+            "扫描中心束和点云中心点应对应同一板面。点云解析必须先看 fields、point_step、row_step 与端序，再用偏移读坐标，过滤非有限点。PointCloud2 与 PCL 结构的转换也有实际复制边界。本地 pcl_conversions 的 toPCL 给数据数组赋值，moveToPCL 则交换数组，应用要根据调用的重载判断开销与输入所有权。",
+            "本例 LiDAR 的 scan_time 和 time_increment 均为零，同时实测相邻采样 Header 间隔为 0.10 s。源码的桥转换没有从模拟器消息填入两个时长字段。对运动平台做去畸变前，应先确认驱动是否提供逐束时序及完整时间源。"
+          ],
+          "bullets": [],
+          "tables": [
+            {
+              "title": "同戳 RGB、CameraInfo 与边缘检查",
+              "columns": [
+                "观测量",
+                "实测值",
+                "读法"
+              ],
+              "rows": [
+                [
+                  "原图",
+                  "96×64，rgb8",
+                  "每行 288 字节，整帧 18432 字节"
+                ],
+                [
+                  "K 内参",
+                  "83.14 / 83.14 / 48.00 / 32.00",
+                  "依次为 fx、fy、cx、cy，单位 px"
+                ],
+                [
+                  "同戳样本组",
+                  "7",
+                  "按 Header.stamp 配对原图、内参与输出，三者同光学 frame"
+                ],
+                [
+                  "边缘",
+                  "mono8，每行 96 字节",
+                  "阈值 40/120 下灰度 0，红通道 128 个非零像素"
+                ]
+              ],
+              "caption": "96×64 图像来自固定红板与相机。内参核对的是本例视场和像素尺寸，实机标定需要另外的数据与验证。",
+              "evidenceFile": "validation-evidence/gazebo-sensors-current-validation.json",
+              "evidenceSha256": "697c865879d240e7e9266488b308d7a6d7f88f5df9a3527230f03303d6b60686"
+            },
+            {
+              "title": "同戳 LaserScan 与 PointCloud2",
+              "columns": [
+                "消息",
+                "实测结构",
+                "几何与时间"
+              ],
+              "rows": [
+                [
+                  "LaserScan",
+                  "41 束，29 束有有限距离",
+                  "中心 2.2001 m，angle_increment 0.030 rad"
+                ],
+                [
+                  "PointCloud2",
+                  "41×1，每点 32 B，每行 1312 B",
+                  "x/y/z 偏移 0 / 4 / 8 B，中心点 2.2001 / 0.0000 / 0.0000 m"
+                ],
+                [
+                  "时间字段",
+                  "scan_time = time_increment = 0 s",
+                  "桥没有填逐束时差。此轮相邻扫描 Header 间隔为 0.10 s"
+                ]
+              ],
+              "caption": "板面理论中心为 2.20 m。两端射线越过板边，样本含非有限回波。读取点云时按消息字段、行步长、点步长和端序解码。",
+              "evidenceFile": "validation-evidence/gazebo-sensors-current-validation.json",
+              "evidenceSha256": "697c865879d240e7e9266488b308d7a6d7f88f5df9a3527230f03303d6b60686"
+            }
+          ],
+          "codeBlocks": []
+        }
+      ],
+      "appendExercises": [
+        {
+          "question": "为何同阈值的灰度图和红通道会有不同边缘结果？",
+          "answer": "灰度对通道加权，颜色边界可能只有很小的亮度梯度。先核 RGB/BGR 顺序，再按所需目标选择通道或改阈值。"
+        },
+        {
+          "question": "点云有三个 FLOAT32 坐标，为何每点 32 B？",
+          "answer": "点还可能有附加字段及对齐填充。字段的 offset 描述 x/y/z，每点和每行长度按 point_step、row_step 读取。"
+        }
+      ]
+    },
+    "eco-tf-frames": {
+      "appendSourceIds": [
+        "sensor-image-contract",
+        "sensor-scan-contract",
+        "sensor-bridge-config"
+      ],
+      "sections": {
+        "6": {
+          "appendParagraphs": [
+            "仿真章另以真实桥接相机 Header 时戳查询 rig_base ← camera_optical_frame。光学单位点 (0, 0, 1) m 和同原点激光的 (1, 0, 0) m 都变到台架 (1, 0, 0) m。桥的 frame_id 覆盖只改标签，轴向关系由独立静态 TF 提供。模型章带安装平移的光学试验仍单独记录。"
+          ]
+        }
+      },
+      "appendExercises": [
+        {
+          "question": "只把 Gazebo 图像的 frame_id 改成 camera_optical_frame，会发生轴变换吗？",
+          "answer": "改名不改变像素或三维轴。应为相机安装位置与光学旋转发布相应 TF，并用采样时戳查变换。"
+        }
+      ]
+    },
+    "qos": {
+      "appendSourceIds": [
+        "sensor-bridge-config",
+        "sensor-clock-client"
+      ],
+      "appendSections": [
+        {
+          "title": "发现扫描话题后，分别核对匹配和接收",
+          "paragraphs": [
+            "在真实 Gazebo 桥的扫描话题上同时放两个订阅者。图上有 1 个 BEST_EFFORT 发布者；BEST_EFFORT 订阅匹配并收到 6 条，RELIABLE 订阅匹配数为 0 且零接收。报告记录了同一时间窗下的端点和接收计数。",
+            "排查时分开记录话题名与类型、端点提供与请求 QoS、实际收到的采样数。把订阅策略对齐到模拟传感器只能解决传输匹配，Header、坐标系和数据质量仍要分别验证。"
+          ],
+          "bullets": [],
+          "tables": [],
+          "codeBlocks": []
+        }
+      ],
+      "appendExercises": [
+        {
+          "question": "topic list 能看到 scan，但 RELIABLE 消费者一直空，先看什么？",
+          "answer": "查实际提供端的可靠性和消费端请求值。若提供 BEST_EFFORT，可对照同窗 BEST_EFFORT 订阅的匹配和接收。"
+        }
+      ]
+    },
+    "time-bag": {
+      "appendSourceIds": [
+        "sensor-control",
+        "sensor-clock-client"
+      ],
+      "sections": {
+        "0": {
+          "appendParagraphs": [
+            "仿真章用真实 Harmonic 观察到暂停后 ROS 时间与五类采样时戳冻结，恢复后同步继续。软件定时器、录放与真实世界控制分别有证据。重放接入同一域前，先划清现场桥和回放的 /clock 发布职责；监测暂停或服务无响应时采用单调超时。"
+          ]
+        }
+      },
+      "appendExercises": [
+        {
+          "question": "Gazebo 暂停后，为何检查程序仍能在 0.40 秒结束？",
+          "answer": "0.40 秒来自本机单调时钟。订阅的仿真时间保持不变，程序超时仍能继续计算。"
+        }
+      ]
+    },
+    "eco-slam-mapping": {
+      "appendSourceIds": [
+        "sensor-slam-input",
+        "sensor-scan-contract",
+        "sensor-converters"
+      ],
+      "sections": {
+        "1": {
+          "appendParagraphs": [
+            "先用仿真章的实际扫描核第 20 束距离约 2.20 m、激光 frame 和采样时戳。SLAM Toolbox 配置还需独立指定 scan_topic、odom_frame、base_frame 与 map_frame。静止台架只检查入口；走廊、转弯和回环的建图效果需要有运动和里程计的不同数据。"
+          ]
+        }
+      },
+      "appendExercises": [
+        {
+          "question": "只有连续重复的静止墙面扫描，能否验收建图的回环？",
+          "answer": "回环需要实际重访与时序观测。静止采样只适用于验收扫描结构、坐标与输入链路。"
+        }
+      ]
+    },
+    "eco-nav2-stack": {
+      "appendSourceIds": [
+        "sensor-nav2-filter",
+        "sensor-scan-contract"
+      ],
+      "sections": {
+        "2": {
+          "appendParagraphs": [
+            "Nav2 障碍层对 LaserScan 和 PointCloud2 分别使用 TF 消息过滤。先在仿真章验证实际 scan 的 QoS、采样时戳和 laser_link 到基座的变换，再核对代价地图实际配置的目标帧。远处无回波可能为无穷值，标记、清除、inf_is_valid 与距离参数分别检查。这里的传感器实测范围止于消费合同，代价地图输出与导航任务另验。"
+          ]
+        }
+      },
+      "appendExercises": [
+        {
+          "question": "激光 echo 有数据，代价地图仍无障碍，如何沿链路排查？",
+          "answer": "查障碍层订阅的实际话题与数据类型，再按 Header.stamp 检查目标帧 TF，最后检查标记范围、清除和无穷距离规则。"
+        }
+      ]
+    }
+  },
+  "resources": [
+    {
+      "id": "sensor-gz-world",
+      "title": "Harmonic 世界与传感器系统",
+      "category": "仿真与感知 · 固定源码",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/gazebosim--docs/master--05287873c23e/harmonic/sensors.md",
+      "url": "https://github.com/gazebosim/docs/blob/05287873c23e4a9cfc148e0ad6a08a109fc406d8/harmonic/sensors.md",
+      "version": "master · 05287873c23e",
+      "description": "依据 Harmonic 文档分开加载物理与渲染系统，SDF 单位和更新率明确。EGL 选择记录随本机报告保留。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "sensor-bridge-config",
+      "title": "ros_gz_bridge 映射和 Header 覆盖",
+      "category": "仿真与感知 · 固定源码",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/gazebosim--ros_gz/jazzy--3c15c8edeb74/ros_gz_bridge/README.md",
+      "url": "https://github.com/gazebosim/ros_gz/blob/3c15c8edeb747824066e86990f6a4ebfda913c50/ros_gz_bridge/README.md",
+      "version": "jazzy · 3c15c8edeb74",
+      "description": "核对映射方向、QoS、每条 frame_id 与 wall-time 开关，保留 Gazebo 采集时戳。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "sensor-control",
+      "title": "世界控制请求与仿真时钟转换",
+      "category": "仿真与感知 · 固定源码",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/gazebosim--ros_gz/jazzy--3c15c8edeb74/ros_gz_interfaces/srv/ControlWorld.srv",
+      "url": "https://github.com/gazebosim/ros_gz/blob/3c15c8edeb747824066e86990f6a4ebfda913c50/ros_gz_interfaces/srv/ControlWorld.srv",
+      "version": "jazzy · 3c15c8edeb74",
+      "description": "控制服务的 pause 字段进入 Gazebo WorldControl，ROS Clock 传递仿真时间。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "sensor-converters",
+      "title": "图像、LaserScan 和点云的桥转换",
+      "category": "仿真与感知 · 固定源码",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/gazebosim--ros_gz/jazzy--3c15c8edeb74/ros_gz_bridge/src/convert/sensor_msgs.cpp",
+      "url": "https://github.com/gazebosim/ros_gz/blob/3c15c8edeb747824066e86990f6a4ebfda913c50/ros_gz_bridge/src/convert/sensor_msgs.cpp",
+      "version": "jazzy · 3c15c8edeb74",
+      "description": "扫描时间字段在这版转换中设为零，点云仍携带字段表和二进制布局。安装与快照版本分别记录。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "sensor-template",
+      "title": "Gazebo 工程模板的方向划分",
+      "category": "仿真与感知 · 固定源码",
+      "localPath": "ros2-learning-hub/references/sources/official-examples/gazebosim--ros_gz_project_template/main--045e981d03aa/ros_gz_example_bringup/config/ros_gz_example_bridge.yaml",
+      "url": "https://github.com/gazebosim/ros_gz_project_template/blob/045e981d03aac1cc3712ab6bb086f52ea79aebf9/ros_gz_example_bringup/config/ros_gz_example_bridge.yaml",
+      "version": "main · 045e981d03aa",
+      "description": "模板中控制命令走 ROS 到 Gazebo，时钟与扫描走反向。这里只迁移方向划分，实测使用独立静止世界。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "sensor-image-contract",
+      "title": "Image 与 CameraInfo 采样合同",
+      "category": "仿真与感知 · 固定源码",
+      "localPath": "ros2-learning-hub/references/sources/official-core/ros2--common_interfaces/jazzy--a941f14bb318/sensor_msgs/msg/Image.msg",
+      "url": "https://github.com/ros2/common_interfaces/blob/a941f14bb318d8d904505ed935ccbb97f24a70a4/sensor_msgs/msg/Image.msg",
+      "version": "jazzy · a941f14bb318",
+      "description": "图像按 encoding 和 step 解码。图像与内参的 Header 应对应同一相机光学 frame。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "sensor-scan-contract",
+      "title": "LaserScan 与 PointCloud2 二进制合同",
+      "category": "仿真与感知 · 固定源码",
+      "localPath": "ros2-learning-hub/references/sources/official-core/ros2--common_interfaces/jazzy--a941f14bb318/sensor_msgs/msg/LaserScan.msg",
+      "url": "https://github.com/ros2/common_interfaces/blob/a941f14bb318d8d904505ed935ccbb97f24a70a4/sensor_msgs/msg/LaserScan.msg",
+      "version": "jazzy · a941f14bb318",
+      "description": "LaserScan 按 X 前、Z 上的轴向解释，点云按字段、端序与步长解释。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "sensor-image-calibration",
+      "title": "内参、畸变与校正流程",
+      "category": "仿真与感知 · 固定源码",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/ros-perception--image_pipeline/jazzy--6c3df3099bc7/image_pipeline/doc/camera_info.rst",
+      "url": "https://github.com/ros-perception/image_pipeline/blob/6c3df3099bc7b1ec92215719215c8eefd0d3aa69/image_pipeline/doc/camera_info.rst",
+      "version": "jazzy · 6c3df3099bc7",
+      "description": "用 K、D、R、P 理解图像标定与校正，教材把这个流程和单通道边缘处理分开。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "sensor-opencv",
+      "title": "cv_bridge 解码与编码接口",
+      "category": "仿真与感知 · 固定源码",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/ros-perception--vision_opencv/humble--9800f67cea47/cv_bridge/python/cv_bridge/core.py",
+      "url": "https://github.com/ros-perception/vision_opencv/blob/9800f67cea477c44cfb64e349854bcb6a09dc9ce/cv_bridge/python/cv_bridge/core.py",
+      "version": "humble · 9800f67cea47",
+      "description": "核读本地 Humble Python 源码的行跨度、端序和显式编码。实测使用已安装 Jazzy cv_bridge，版本分列。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "sensor-pcl-layout",
+      "title": "点云字段、偏移与点类型",
+      "category": "仿真与感知 · 固定源码",
+      "localPath": "Robotics_Tutorial/02_C++基础与进阶/40_通用库剖析/50_PCL点云库.md",
+      "url": "https://github.com/Michael-Jetson/Robotics_Tutorial/blob/7cb9e3d423196062c59dd346aae16285d962fb7c/02_C%2B%2B%E5%9F%BA%E7%A1%80%E4%B8%8E%E8%BF%9B%E9%98%B6/40_%E9%80%9A%E7%94%A8%E5%BA%93%E5%89%96%E6%9E%90/50_PCL%E7%82%B9%E4%BA%91%E5%BA%93.md",
+      "version": "main · 7cb9e3d42319",
+      "description": "借助专题讲义对照结构化点与字段描述。是否复制按实际转换函数单独核查。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "sensor-pcl-convert",
+      "title": "PCL 转换的拷贝与移动入口",
+      "category": "仿真与感知 · 固定源码",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/ros-perception--perception_pcl/jazzy--c5e7e72d20cb/pcl_conversions/include/pcl_conversions/pcl_conversions.h",
+      "url": "https://github.com/ros-perception/perception_pcl/blob/c5e7e72d20cbbc164e9d940f75ae2a6ae5bbf41a/pcl_conversions/include/pcl_conversions/pcl_conversions.h",
+      "version": "jazzy · c5e7e72d20cb",
+      "description": "当前快照的 toPCL 复制 data，moveToPCL 交换 data 缓冲，应用应按具体重载推断所有权。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "sensor-clock-client",
+      "title": "Python TimeSource 与传感器 QoS",
+      "category": "仿真与感知 · 固定源码",
+      "localPath": "ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2/rclpy/rclpy/time_source.py",
+      "url": "https://github.com/ros2/rclpy/blob/521012e60ba21319ef29141f8f521a0e072fe652/rclpy/rclpy/time_source.py",
+      "version": "jazzy · 521012e60ba2",
+      "description": "TimeSource 为时钟建立深度 1 的尽力而为订阅。传感器与控制端点按实际 QoS 分开核对。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "sensor-nav2-filter",
+      "title": "Nav2 障碍层的消息与 TF 门控",
+      "category": "仿真与感知 · 固定源码",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_costmap_2d/plugins/obstacle_layer.cpp",
+      "url": "https://github.com/ros-navigation/navigation2/blob/94d1c2a345dda6ff637e6a72c9101d927ee99f19/nav2_costmap_2d/plugins/obstacle_layer.cpp",
+      "version": "jazzy · 94d1c2a345dd",
+      "description": "LaserScan 和 PointCloud2 分别进入 TF 消息过滤器。清除、标记和无穷距离处理各有参数边界。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "sensor-slam-input",
+      "title": "SLAM Toolbox 的输入与帧",
+      "category": "仿真与感知 · 固定源码",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/config/mapper_params_online_async.yaml",
+      "url": "https://github.com/SteveMacenski/slam_toolbox/blob/f84dad92a6579aeff4fe0c2590bbc74d3348e5af/config/mapper_params_online_async.yaml",
+      "version": "jazzy · f84dad92a657",
+      "description": "配置把扫描入口、地图帧、里程计帧、机器人基座分别列出。静止台架只检查测量入口。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    }
+  ],
+  "apiReferences": [
+    {
+      "id": "api-gz-sensor-contract",
+      "title": "仿真桥接与传感器消费合同",
+      "lessons": [
+        "eco-gazebo-simulation",
+        "eco-perception-pipeline"
+      ],
+      "columns": [
+        "接口",
+        "输入",
+        "实际检查",
+        "边界"
+      ],
+      "rows": [
+        [
+          "Clock",
+          "Gazebo 世界时间",
+          "单向发布到 ROS /clock",
+          "消费者显式 use_sim_time，监控采用单调软期限"
+        ],
+        [
+          "ControlWorld",
+          "pause 布尔请求",
+          "服务回执与实际时钟推进",
+          "服务发现和世界执行是不同证据"
+        ],
+        [
+          "Image / CameraInfo",
+          "编码、行字节、内参、采集 Header",
+          "同帧同戳、颜色与尺寸",
+          "重标 frame 后另有正确 TF，校正另用相机模型"
+        ],
+        [
+          "LaserScan",
+          "角度 rad，距离 m，采样时戳",
+          "41 束与中心 2.20 m",
+          "零扫描时间字段按桥版本解释，非有限回波保留语义"
+        ],
+        [
+          "PointCloud2",
+          "字段、字节偏移、端序、行/点步长",
+          "解码中心三维坐标",
+          "先筛非有限点，别把数组直接当连续 XYZ"
+        ]
+      ]
+    }
+  ]
+}

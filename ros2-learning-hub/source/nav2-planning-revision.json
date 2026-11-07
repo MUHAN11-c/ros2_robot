@@ -1,0 +1,890 @@
+{
+  "meta": {
+    "report": "validation-evidence/nav2-planning-current-validation.json",
+    "reportSha256": "4366cea60de4f7bfa8a1b8648562b41d2356ca6ee62ceff84dffc2389ae8a0a3",
+    "portableReport": "validation-evidence/nav2-planning-portable-current-validation.json",
+    "portableReportSha256": "36e98334aa3cc9c81f12ba5a14e7e357e483639226b2d55578a41e076ae2dfb2",
+    "sourceReads": [
+      {
+        "sourceId": "ros2--common_interfaces",
+        "commit": "a941f14bb318d8d904505ed935ccbb97f24a70a4",
+        "path": "ros2-learning-hub/references/sources/official-core/ros2--common_interfaces/jazzy--a941f14bb318/nav_msgs/msg/OccupancyGrid.msg",
+        "sha256": "3e54ec7e662bdd6d5528efab99c6e34ce3eed27ce628721fcdb4e5e1bbf8188b"
+      },
+      {
+        "sourceId": "ros2--common_interfaces",
+        "commit": "a941f14bb318d8d904505ed935ccbb97f24a70a4",
+        "path": "ros2-learning-hub/references/sources/official-core/ros2--common_interfaces/jazzy--a941f14bb318/nav_msgs/msg/MapMetaData.msg",
+        "sha256": "6868a7d604c6cc033dd0adfac8a0adb0a6dedae1b7b140dbb47c83f3bcc6f140"
+      },
+      {
+        "sourceId": "ros2--common_interfaces",
+        "commit": "a941f14bb318d8d904505ed935ccbb97f24a70a4",
+        "path": "ros2-learning-hub/references/sources/official-core/ros2--common_interfaces/jazzy--a941f14bb318/nav_msgs/srv/GetMap.srv",
+        "sha256": "b4bdbb1875bfd2b22596e238cb9571f0baec6505032f7df8cc7e5cd47bfd3adc"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_map_server/src/map_io.cpp",
+        "sha256": "b021b4f9e14a0f113196e661c2c2f3ec85f689723a8d4b2d2fdf00aa68af2905"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_msgs/srv/LoadMap.srv",
+        "sha256": "301ea2a2226e8723ae8a421eefc4dfbc0e3ed7819402583bd13c034f0802d3aa"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_map_server/src/map_server/map_server.cpp",
+        "sha256": "13192df8c3ab5788a09a4b160ca6ba8ecfbba97501ead06a3ba463427d809f69"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_map_server/include/nav2_map_server/map_server.hpp",
+        "sha256": "e962a1403370cd97217190d36c29d06fb70550c2f536e112150b706561b41867"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_amcl/src/amcl_node.cpp",
+        "sha256": "8f458800deca6db48f53a9f6441fe010163aa3925ab40c6326b2762d7748aea8"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_msgs/srv/SetInitialPose.srv",
+        "sha256": "266e28482f7008b9290d1bda52a18bb0418cad468c78ccdb021faf5a21653b86"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_costmap_2d/plugins/static_layer.cpp",
+        "sha256": "81606bf320d682901f661fa83223da42d5c631add5eb98e0055aee29cd1ac4ac"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_costmap_2d/src/costmap_2d_ros.cpp",
+        "sha256": "c4e49339a0d17979fdd773fd8bbf189c5aaadc3d77744be907bc1aec115de583"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_bringup/params/nav2_params.yaml",
+        "sha256": "299f9002d6dcfbf661e532c99f32dda1766eab3afa3ab71a52378d80e7ef956f"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_costmap_2d/plugins/obstacle_layer.cpp",
+        "sha256": "e2e6e56b04d6ade1ded6f17b08667dba220f453b6000c122ece638cee1839caf"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_costmap_2d/plugins/inflation_layer.cpp",
+        "sha256": "b2271d598f5b47322956cbf758d56299d191ff7b5989a04563439212b049b99d"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_costmap_2d/src/costmap_2d_publisher.cpp",
+        "sha256": "b631995db2fff331bff8a9e19d5304c82240d0f490ea30831ffa39369bc567bc"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_msgs/srv/GetCostmap.srv",
+        "sha256": "898caf7bae5f0044569e6092cc5607192497d151034c9c881de12496b50998ed"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_msgs/msg/CostmapMetaData.msg",
+        "sha256": "35db3946f56000d0e9e7ad4c823fdcc1815cbd480a2f799bc86eacd2b0afc3b1"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_costmap_2d/include/nav2_costmap_2d/cost_values.hpp",
+        "sha256": "65466e2018aa443d8f4949a8a2d69ec44907bfafd0486f4e8b493061f146c9d4"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_planner/src/planner_server.cpp",
+        "sha256": "aafc6a6e9651316eb00e7053f3d0a57f7dcec2ffdfa7e8f06112b4eeee11ad4a"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_msgs/action/ComputePathToPose.action",
+        "sha256": "2a1bdad4de1f0308c51f154d39a7c6aad1919bf9cfa848fe621557c7f8a33060"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_msgs/srv/IsPathValid.srv",
+        "sha256": "bdbdca1e6a9cb90991973bc33025b337a6eda9359376a3e69b842629e0d28165"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_navfn_planner/src/navfn_planner.cpp",
+        "sha256": "fdd1e926c508ac04050b943607552c7410e4edab3835748780b288af34bc53fe"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_navfn_planner/src/navfn.cpp",
+        "sha256": "f3dcf705a6c180ec856ddfe77e4ffb8a1b172eb4169e5532db57c976dc571599"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_planner/package.xml",
+        "sha256": "e69ac50d57a50c18617217b493d629e901ec245af764f678005a2bd722f230f0"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_simple_commander/nav2_simple_commander/robot_navigator.py",
+        "sha256": "093b90c2417fb2158b30abd9b88cc7eecd04447de2205e3b8afb43fd5b66e3da"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2_tutorials",
+        "commit": "f3bd892a60d3fb91560ecb726bf922eb9bcbc858",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2_tutorials/jazzy--f3bd892a60d3/nav2_straightline_planner/src/straight_line_planner.cpp",
+        "sha256": "42e6947fb8a815469037d7770b6b3d420be71b8d50abf62c21dea23bc991b674"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2_tutorials",
+        "commit": "f3bd892a60d3fb91560ecb726bf922eb9bcbc858",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2_tutorials/jazzy--f3bd892a60d3/nav2_straightline_planner/global_planner_plugin.xml",
+        "sha256": "6e154df88f7c138bc57b96a45aba0825790ba5c6caee47bde02f4742cfbe512a"
+      },
+      {
+        "sourceId": "SteveMacenski--slam_toolbox",
+        "commit": "f84dad92a6579aeff4fe0c2590bbc74d3348e5af",
+        "path": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/README.md",
+        "sha256": "b73b114ac176dda6a52d19451aae26465fa122755dcc7c8a2e31f8765c33a366"
+      },
+      {
+        "sourceId": "SteveMacenski--slam_toolbox",
+        "commit": "f84dad92a6579aeff4fe0c2590bbc74d3348e5af",
+        "path": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/srv/SaveMap.srv",
+        "sha256": "a5e6254b516c2fb0a3f3f68013b70aea145d439a2990048b20777114fa6dc741"
+      },
+      {
+        "sourceId": "SteveMacenski--slam_toolbox",
+        "commit": "f84dad92a6579aeff4fe0c2590bbc74d3348e5af",
+        "path": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/srv/SerializePoseGraph.srv",
+        "sha256": "17fe283d24d2727b1518bced9bd3324f0fd3744e691091932ef3cce724efde84"
+      },
+      {
+        "sourceId": "SteveMacenski--slam_toolbox",
+        "commit": "f84dad92a6579aeff4fe0c2590bbc74d3348e5af",
+        "path": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/srv/DeserializePoseGraph.srv",
+        "sha256": "6c21806ad9987476d6ceea7b0fad0c746147ffe7247355950259478f1f275227"
+      },
+      {
+        "sourceId": "SteveMacenski--slam_toolbox",
+        "commit": "f84dad92a6579aeff4fe0c2590bbc74d3348e5af",
+        "path": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/config/mapper_params_localization.yaml",
+        "sha256": "e16a36fdb1089a07cd92ed393c8a669f7892fae568de41456db7e1edacc7f624"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_bringup/launch/bringup_launch.py",
+        "sha256": "96d1376a837cece6e08075c989361ceb9efc0723fcd4555fc73b002ca489d05b"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_bringup/launch/localization_launch.py",
+        "sha256": "6058f4b8a3c18a49201ecdc4309047ddcc73f8c9059a54c38df85441c9ebbc0f"
+      },
+      {
+        "sourceId": "existing--linorobot2",
+        "commit": "f6b0bd0350c4a9d6b815ef4bb5c701a1e5129711",
+        "path": "linorobot2/linorobot2_navigation/launch/navigation.launch.py",
+        "sha256": "c3a952ec9d48901c75038e9caa1402538c8d9ff637971245272ec95fe04de979"
+      },
+      {
+        "sourceId": "existing--linorobot2",
+        "commit": "f6b0bd0350c4a9d6b815ef4bb5c701a1e5129711",
+        "path": "linorobot2/linorobot2_navigation/config/navigation.yaml",
+        "sha256": "cba6c13344d43148bd78db8cfb06dc5bcc6e5173c140e06b70d4dc7b2fc64ea4"
+      },
+      {
+        "sourceId": "existing--linorobot2",
+        "commit": "f6b0bd0350c4a9d6b815ef4bb5c701a1e5129711",
+        "path": "linorobot2/linorobot2_navigation/launch/slam.launch.py",
+        "sha256": "de6fe87d8865dbe3a4616dd875010abbaa12965eca5c622a7c4870f7eead99b9"
+      },
+      {
+        "sourceId": "existing--linorobot2",
+        "commit": "f6b0bd0350c4a9d6b815ef4bb5c701a1e5129711",
+        "path": "linorobot2/linorobot2_navigation/config/slam.yaml",
+        "sha256": "b0d401b0911c4888e73d2d950a3780a4c8e7988020224978bbb494305d09487a"
+      },
+      {
+        "sourceId": "existing--Robotics_Tutorial",
+        "commit": "7cb9e3d423196062c59dd346aae16285d962fb7c",
+        "path": "Robotics_Tutorial/02_C++基础与进阶/50_ROS2工程化/30_SLAM导航与仿真生态.md",
+        "sha256": "be219eaf2ba2eac9f3f75361b7dac9df0e8b51cfb19a54805aee0b78a071c1c9"
+      }
+    ]
+  },
+  "chapters": {
+    "eco-nav2-stack": {
+      "validation": "在本机 Jazzy Nav2 1.3.13、Harmonic 8.15.0、ros_gz_bridge 1.0.24 的固定激光台架实测。运行 MapServer、AMCL、全局代价地图和 NavFn。SLAM 建图、完整 NavigateToPose 行为树、控制器、运动底盘和硬件待分别验证。",
+      "appendSourceIds": [
+        "nav-lab-grid",
+        "nav-lab-map-io",
+        "nav-lab-map-server",
+        "nav-lab-static-layer",
+        "nav-lab-marking",
+        "nav-lab-raw-costs",
+        "nav-lab-planner",
+        "nav-lab-reference-chain"
+      ],
+      "appendSections": [
+        {
+          "title": "从先验图像到可逐格核对的占据地图",
+          "paragraphs": [
+            "脚本将四面墙和一根非对称柱投到 80 × 60 格，分辨率 0.10 m/格，原点为 (-4.0 / -3.0) m。箱体只存在于 Gazebo 场景。PGM 首行对应最高 y，OccupancyGrid 首行对应最低 y，发布后以柱的位置核对行翻转。",
+            "MapServer 实际输出 3215 个空闲格、529 个占据格和 1056 个未知格。trinary 模式按 YAML 的分辨率、原点、阈值和 negate 解释像素，图像灰度与 ROS 占据值需要分别读。",
+            "先查生命周期状态，再查 GetMap 与话题。配置成功时服务已发现，未激活的回应仍是空图。激活后发布端可靠且瞬态本地，两种晚加入订阅都与提供端匹配，但只有请求瞬态本地的订阅得到历史地图。"
+          ],
+          "bullets": [],
+          "tables": [
+            {
+              "title": "地图节点状态、晚加入订阅和加载回执",
+              "columns": [
+                "操作",
+                "本次实际输出",
+                "判断"
+              ],
+              "rows": [
+                [
+                  "配置后查 GetMap",
+                  "0 格",
+                  "等到 active 再读取有效图"
+                ],
+                [
+                  "激活后晚加入",
+                  "瞬态本地收到 4800 格，易失订阅收到 0 条",
+                  "提供端与请求端匹配仍需区分历史样本"
+                ],
+                [
+                  "空路径 / 缺 YAML / 缺图像",
+                  "1 / 3 / 2",
+                  "三次均再次查到旧地图"
+                ],
+                [
+                  "重新加载同一 YAML",
+                  "结果 0，易失订阅收到 1 条",
+                  "同一栅格，新发布时戳"
+                ]
+              ],
+              "caption": "占据图逐格核对，障碍、空闲和未知均在地图帧下验证。回执失败时以另一次 GetMap 判断旧图状态。",
+              "evidenceFile": "validation-evidence/nav2-planning-current-validation.json",
+              "evidenceSha256": "4366cea60de4f7bfa8a1b8648562b41d2356ca6ee62ceff84dffc2389ae8a0a3"
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "让同一个规划目标绕过新增障碍",
+          "paragraphs": [
+            "用固定激光收到 361 束，中心距离 1.9501 m。全局代价地图的静态层接地图，障碍层按扫描采样时戳查 TF。此处关闭射线清除，仅对比标记。全局图用 0.10 m/格、0.18 m 圆半径和 0.38 m 膨胀范围。",
+            "GetCostmap 返回 master 原始字节。0 为空闲，253 为内切膨胀格，254 为致命，255 为未知。可视化 OccupancyGrid 把这些值重新编码。Jazzy 固定实现的服务把地图时刻字段填为响应时钟读数，用扫描 Header 查真正的采集时刻。",
+            "将内部节点的 obstacle_layer.enabled 从 false 改为 true。除参数回执外，还要从主图读出箱体附近 8 个新增致命格。激光只看见箱体的可见面，图中的完整虚线框来自世界几何。然后用同一起终点验旧路径和重算路径。"
+          ],
+          "bullets": [],
+          "tables": [
+            {
+              "title": "同一起终点与两份实际全局代价图",
+              "columns": [
+                "代价地图",
+                "路径",
+                "采样与服务结果"
+              ],
+              "rows": [
+                [
+                  "静态层与膨胀层",
+                  "89 点，4.55 m",
+                  "原路径 IsPathValid 为真"
+                ],
+                [
+                  "启用激光标记",
+                  "用同一条旧路径检查",
+                  "中心线采到 1 个箱体新增致命格，IsPathValid 为假"
+                ],
+                [
+                  "启用激光标记",
+                  "重算 97 点，4.93 m",
+                  "IsPathValid 为真，中心线采样无 253/254/255 格"
+                ]
+              ],
+              "caption": "实际从同一 TF 样本固定起点，目标 x / y 为 2.35 / 0.00 m。折线每最多 0.025 m 采一格。",
+              "evidenceFile": "validation-evidence/nav2-planning-current-validation.json",
+              "evidenceSha256": "4366cea60de4f7bfa8a1b8648562b41d2356ca6ee62ceff84dffc2389ae8a0a3"
+            }
+          ],
+          "codeBlocks": []
+        }
+      ],
+      "appendExercises": [
+        {
+          "question": "两个晚加入订阅都已匹配，为何只有一个收到旧地图？",
+          "answer": "瞬态本地允许取活动发布者保留的旧样本。易失订阅匹配后只等后续发布。本例重载同一地图验证了易失订阅可以收到新数据。"
+        },
+        {
+          "question": "加载路径为空、YAML 缺失、图像缺失时怎样定位？",
+          "answer": "这次分别得到 1、3、2。按错误对应检查输入、YAML 和图像，再独立查询 GetMap 核实旧图状态。"
+        },
+        {
+          "question": "收到障碍层开关的成功回执后，还要怎样确认可规划？",
+          "answer": "先查同一场景主图是否出现新代价值，再比较相同起终点的旧路径检查和新规划回执。"
+        }
+      ]
+    },
+    "eco-state-estimation": {
+      "validation": "软件差速与局部 EKF 按独立域225的报告实测。在本机 Jazzy Nav2 1.3.13、Harmonic 8.15.0、ros_gz_bridge 1.0.24 的固定激光台架实测。另核近真值初值、无运动更新和扫描时刻 TF。IMU、GNSS、全局重定位与运动中的定位精度待单独测量。",
+      "appendSourceIds": [
+        "nav-lab-amcl",
+        "nav-lab-map-server"
+      ],
+      "appendSections": [
+        {
+          "title": "用扫描和 TF 确认 AMCL 的初始位姿",
+          "paragraphs": [
+            "AMCL 使用带协方差的地图系初值与扫描更新粒子分布。这里知道固定台架位置，因此使用较小的对角协方差。x、y 方差为 0.0025 m²，偏航方差为 0.0025 rad²。定位输出的协方差随估计变化，不能把输入先验当成传感器精度。",
+            "SetInitialPose 的响应体为空。把相同数字先标成 odom，再标成 map。观察窗口里都有新激光，只有通过全局帧检查的请求产生地图位姿与 TF。无运动更新服务标记下一次扫描更新，本次收到一个更新后的位姿时戳。",
+            "软件底盘章的局部 EKF 负责 odom 到基座。此台架的同一边为静态，AMCL 独自发布 map 到 odom，基座到激光另加 0.30 m 高度。部署时为两类边分别指定发布者，并以实际扫描时戳检查能否串接。"
+          ],
+          "bullets": [],
+          "tables": [
+            {
+              "title": "从初始位姿回执到 AMCL 与 TF 输出",
+              "columns": [
+                "阶段",
+                "输入",
+                "实际结果"
+              ],
+              "rows": [
+                [
+                  "错误初值",
+                  "frame=odom，坐标与后面的正确初值相同",
+                  "服务有回应，0.30 s 扫描窗内无新位姿，map 到基座不可查"
+                ],
+                [
+                  "正确初值",
+                  "frame=map，x / y 为 -2.20 / 0.00 m",
+                  "AMCL 输出 -2.2050 / 0.0007 m，位置误差 0.0051 m，偏航 0.0008 rad"
+                ],
+                [
+                  "无运动更新",
+                  "request_nomotion_update 后继续接收扫描",
+                  "位姿时戳从 1.700 s 推进到 1.800 s"
+                ],
+                [
+                  "按扫描查 TF",
+                  "采样时刻 2.000 s",
+                  "激光原点在 map 中为 -2.2033 / 0.0022 / 0.3000 m"
+                ]
+              ],
+              "caption": "位置与偏航为无运动更新后的实测输出。台架提供固定里程计边，AMCL 提供全局校正边。",
+              "evidenceFile": "validation-evidence/nav2-planning-current-validation.json",
+              "evidenceSha256": "4366cea60de4f7bfa8a1b8648562b41d2356ca6ee62ceff84dffc2389ae8a0a3"
+            }
+          ],
+          "codeBlocks": []
+        }
+      ],
+      "appendExercises": [
+        {
+          "question": "SetInitialPose 有回应，却一直没有 map 到 odom，要查什么？",
+          "answer": "分别查初值的 frame、地图可用、AMCL 活动状态、激光时间与到 odom 的 TF。用实际位姿和 TF 作为业务验收。"
+        }
+      ]
+    },
+    "eco-nav2-task-programming": {
+      "validation": "独立域217的假服务端验证十二类 NavigateToPose 客户端协议，包括超时、取消和迟到接受。在本机 Jazzy Nav2 1.3.13、Harmonic 8.15.0、ros_gz_bridge 1.0.24 的固定激光台架实测。另实测 ComputePathToPose 的五类规划失败。完整 NavigateToPose 导航执行仍待验证。",
+      "appendSourceIds": [
+        "nav-lab-planner",
+        "nav-lab-commander",
+        "nav-lab-navfn"
+      ],
+      "appendSections": [
+        {
+          "title": "从 ComputePathToPose 定位规划失败阶段",
+          "paragraphs": [
+            "路径规划动作返回 Path、规划时长和错误码。use_start=false 时从全局代价地图的 TF 取当前基座，true 时用请求的 start。起终点须能变到全局帧。实测同时保留目标接受与最后状态，空路径按对应错误码解释。",
+            "Jazzy 快照的 BasicNavigator.getPath 给调用者 Path 或 None。需要把 TF 失败、规划器未配置、目标越界和无可行路径分开记录时，直接调用动作并保留完整结果以及规划服务器日志。",
+            "本轮成功规划的 planning_time 为 0 仿真纳秒。规划器用节点时钟计算，两个读数可能落在同一个仿真时刻。等待期限仍用单调时间，耗时基准需另行测量。"
+          ],
+          "bullets": [],
+          "tables": [
+            {
+              "title": "实际规划动作的接受与业务终态",
+              "columns": [
+                "请求",
+                "接受回执",
+                "终态",
+                "结果码",
+                "位姿数"
+              ],
+              "rows": [
+                [
+                  "真实 TF 起点",
+                  "接受",
+                  "SUCCEEDED",
+                  "0 · NONE",
+                  "89"
+                ],
+                [
+                  "柱内目标",
+                  "接受",
+                  "ABORTED",
+                  "206 · GOAL_OCCUPIED",
+                  "0"
+                ],
+                [
+                  "地图外目标",
+                  "接受",
+                  "ABORTED",
+                  "204 · GOAL_OUTSIDE_MAP",
+                  "0"
+                ],
+                [
+                  "墙外未知格",
+                  "接受",
+                  "ABORTED",
+                  "208 · NO_VALID_PATH",
+                  "0"
+                ],
+                [
+                  "不存在的插件 ID",
+                  "接受",
+                  "ABORTED",
+                  "201 · INVALID_PLANNER",
+                  "0"
+                ],
+                [
+                  "不存在的目标坐标系",
+                  "接受",
+                  "ABORTED",
+                  "202 · TF_ERROR",
+                  "0"
+                ]
+              ],
+              "caption": "动作协议接受与规划可行性分开。五类故障记录错误码和日志。本机该版回执的 error_msg 为空。",
+              "evidenceFile": "validation-evidence/nav2-planning-current-validation.json",
+              "evidenceSha256": "4366cea60de4f7bfa8a1b8648562b41d2356ca6ee62ceff84dffc2389ae8a0a3"
+            }
+          ],
+          "codeBlocks": []
+        }
+      ],
+      "appendExercises": [
+        {
+          "question": "同样是零个路径点，目标在柱内和目标在未知区有何区别？",
+          "answer": "本机严格容差配置下，柱内是 206，禁止走未知区时该目标为 208。结合代价图和动作错误码区分判据。"
+        }
+      ]
+    },
+    "theory-planning": {
+      "validation": "Python 标准库网格实验已实测。在本机 Jazzy Nav2 1.3.13、Harmonic 8.15.0、ros_gz_bridge 1.0.24 的固定激光台架实测。运行 MapServer、AMCL、全局代价地图和 NavFn。SLAM 建图、完整 NavigateToPose 行为树、控制器、运动底盘和硬件待分别验证。",
+      "appendSourceIds": [
+        "nav-lab-navfn",
+        "nav-lab-straightline",
+        "nav-lab-raw-costs"
+      ],
+      "appendSections": [
+        {
+          "title": "从网格最短路过渡到 NavFn 势场路径",
+          "paragraphs": [
+            "教学四邻域实验按离散步数检查最短路。NavFn 先把 ROS 代价值映射为内部成本，使用 Dijkstra 或 A* 传播势场，再由梯度提取折线路径。位姿点数受到提取步长和插值影响，不能直接当作格数或势场成本。",
+            "官方直线插件教学示例展示了 pluginlib 注册和统一 createPlan 入口，具体实现只插值。相同接口可以返回不同质量的路径，检查要依据插件实现、代价值和失败合同。本台架实际加载 GridBased 对应 NavFn，关闭 A* 与未知区通行，目标容差设为 0 m。",
+            "同样的起点和目标，实测路径由 4.55 m 变为 4.93 m。沿每段最多 0.025 m 采中心线，另调用 IsPathValid 检查剩余离散位姿。两项证据均用于当前静态图，车辆动力学、连续扫掠和安全间距要由后续验证负责。"
+          ],
+          "bullets": [],
+          "tables": [],
+          "codeBlocks": []
+        }
+      ],
+      "appendExercises": [
+        {
+          "question": "为什么路径点数增加不能直接证明全局规划代价增加？",
+          "answer": "点数取决于输出采样、插值和路径提取。应分别计算折线长度、对照代价地图并理解插件内部的势场成本。"
+        }
+      ]
+    },
+    "eco-slam-mapping": {
+      "validation": "SLAM Toolbox 的节点启动、走行建图、回环与图恢复为读者练习。固定激光实验另实测先验 PGM/YAML 读取和重载。",
+      "appendSourceIds": [
+        "nav-lab-slam-artifacts",
+        "nav-lab-map-io",
+        "nav-lab-linorobot"
+      ],
+      "appendSections": [
+        {
+          "title": "把占据图与可继续建图的位姿图区分保存",
+          "paragraphs": [
+            "占据图交给 Nav2 MapServer 时，需要 PGM 与 YAML 配对保存。台架从已知几何生成这对文件，重载能核对分辨率、原点与占据结果。使用地图时应另记录地图数据来源、生成时刻和尺寸。",
+            "SLAM Toolbox 的 SaveMap 和 SerializePoseGraph 对应不同产物。序列化位姿图供继续建图或图定位使用，反序列化时还要选择首节点、指定姿态或定位匹配方式。只有栅格文件时，图中的扫描、位姿节点和约束无法从像素完整恢复。",
+            "本地 Jazzy 快照的 mapper_params_localization.yaml 中仍写着 mode: mapping 并带 localization 注释。准备图定位时，检查实际启动的节点、有效模式和图文件入口。Linorobot2 将建图与导航放在独立启动文件，这些参数也要按实际运行分支核对。"
+          ],
+          "bullets": [],
+          "tables": [],
+          "codeBlocks": []
+        }
+      ],
+      "appendExercises": [
+        {
+          "question": "若要隔天在旧地图基础上继续做图优化，除了 PGM 与 YAML 应保存什么？",
+          "answer": "同时序列化 SLAM Toolbox 的位姿图及数据，记录建图参数、文件名、初始匹配策略和版本。"
+        }
+      ]
+    },
+    "project-navigation": {
+      "validation": "局部轮反馈、Odometry 与 EKF 按独立域225验证。NavigateToPose 客户端在域217对假服务端完成十二类协议验证。在本机 Jazzy Nav2 1.3.13、Harmonic 8.15.0、ros_gz_bridge 1.0.24 的固定激光台架实测。运行 MapServer、AMCL、全局代价地图和 NavFn。SLAM 建图、完整 NavigateToPose 行为树、控制器、运动底盘和硬件待分别验证。",
+      "appendSourceIds": [
+        "nav-lab-linorobot",
+        "nav-lab-bringup",
+        "nav-lab-map-server",
+        "nav-lab-amcl",
+        "nav-lab-planner"
+      ],
+      "appendSections": [
+        {
+          "title": "可解压复跑的分段导航台架",
+          "paragraphs": [
+            "先在隔离台架完成地图、定位与全局规划。启动顺序由实际服务、消息和 TF 判定。地图配置后激活，再激活 AMCL 并给出 map 系初值，最后激活 PlannerServer。关闭时逐个停用和清理，保留各状态回执。",
+            "Linorobot2 的工程配置中 AMCL 用 base_footprint，导航器与全局代价地图用 base_link。复用工程配置前先查两个基座之间的 TF。外层启动把 map 路径传入 Nav2，固定版定位启动将其赋给 yaml_filename。外层的 initial_pose_* 参数仍需对照被包含文件及 AMCL 实际生效参数。",
+            "台架把实际地图、扫描和命名空间内的规划器连在一起，主试验用域 229，从原创示例包解压后用域 230 重跑。两次分别记录 12 次生命周期切换、实际规划终态和五个直接进程的退出。运行源码和配置按报告指纹核对。"
+          ],
+          "bullets": [],
+          "tables": [],
+          "codeBlocks": [
+            {
+              "label": "运行本地 Nav2 固定激光台架",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 从 ros2-learning-hub 运行。先加载 Jazzy 与本机已安装的 Nav2、Harmonic 和桥。\nsource /opt/ros/jazzy/setup.bash\n# 229 是示例的本机 DDS 域，改为当前空闲的 1..232。输入是同目录 SDF 和 YAML。\n# 输出为 /tmp 中的新地图、原始代价值、路径和报告。脚本不发送速度。\npython3 examples/nav2_labs/validate_nav2.py --domain-id 229\n# 解压源码 ZIP 后从 atlas_examples 运行时去掉 examples/。\n# 本机使用 NVIDIA EGL 时，加 --egl-vendor-json /usr/share/glvnd/egl_vendor.d/10_nvidia.json。"
+            },
+            {
+              "label": "validate_nav2.py",
+              "language": "python",
+              "type": "complete",
+              "sourceFile": "examples/nav2_labs/validate_nav2.py",
+              "explanation": "完整驱动依次等待真实扫描、地图、定位与规划。复用同包 gazebo_labs 的进程管理辅助，退出时回收自身节点。"
+            },
+            {
+              "label": "nav2.yaml",
+              "language": "yaml",
+              "type": "complete",
+              "sourceFile": "examples/nav2_labs/nav2.yaml",
+              "explanation": "三个生命周期节点与内部全局代价地图。距离用米、频率用 Hz。仅改障碍层 enabled 做两次路径对照。"
+            },
+            {
+              "label": "bridge.yaml",
+              "language": "yaml",
+              "type": "complete",
+              "sourceFile": "examples/nav2_labs/bridge.yaml",
+              "explanation": "将专属世界时钟与激光单向转入独立 DDS 域。Header 保持模拟时钟，TF 单独提供。"
+            },
+            {
+              "label": "nav_room.sdf",
+              "language": "xml",
+              "type": "complete",
+              "sourceFile": "examples/nav2_labs/nav_room.sdf",
+              "explanation": "固定几何，单位米和弧度。map_ 模型组成先验图，observation_box 仅供运行期激光看到。"
+            }
+          ]
+        }
+      ],
+      "appendExercises": [
+        {
+          "question": "先确定地图、扫描、TF 都有输出，为何还需检查代价地图订阅全名？",
+          "answer": "PlannerServer 内的代价地图另有命名空间。相对名可能解析到它内部，实验用限定节点 remap 后再从 ROS 图检查订阅。"
+        }
+      ]
+    },
+    "eco-tf-frames": {
+      "appendSourceIds": [
+        "nav-lab-amcl"
+      ],
+      "sections": {
+        "2": {
+          "appendParagraphs": [
+            "在导航台架中，AMCL 用扫描时戳加 transform_tolerance 发布 map 到 odom。查看最新 TF 与按激光采集时刻查询是两项检查。台架通过当时的 map 到 laser_link 查询，验证固定安装平移仍为 0.30 m。"
+          ]
+        }
+      }
+    },
+    "eco-gazebo-simulation": {
+      "appendSourceIds": [
+        "nav-lab-marking"
+      ],
+      "sections": {
+        "7": {
+          "appendParagraphs": [
+            "导航章另有一个固定房间，它的真实扫描从同样的桥进入 AMCL 和 Nav2 障碍层。场景的运行期箱体与先验地图分开，用来比较标记前后的路径。当前相机实验的 ControlWorld 暂停回执继续独立解释。"
+          ]
+        }
+      }
+    },
+    "qos": {
+      "appendSourceIds": [
+        "nav-lab-map-server"
+      ],
+      "sections": {
+        "4": {
+          "appendParagraphs": [
+            "MapServer 的实际对照把两个订阅者都放在激活之后。请求瞬态本地的订阅收到旧地图，易失订阅虽匹配但起初为空。成功重载同一 YAML 后它收到新发布，证明历史可用性与当前匹配可以分别验证。"
+          ]
+        }
+      }
+    }
+  },
+  "resources": [
+    {
+      "id": "nav-lab-grid",
+      "title": "占据栅格的布局、元数据与读取服务",
+      "category": "地图与规划 · 固定源码",
+      "localPath": "ros2-learning-hub/references/sources/official-core/ros2--common_interfaces/jazzy--a941f14bb318/nav_msgs/msg/OccupancyGrid.msg",
+      "url": "https://github.com/ros2/common_interfaces/blob/a941f14bb318d8d904505ed935ccbb97f24a70a4/nav_msgs/msg/OccupancyGrid.msg",
+      "version": "jazzy · a941f14bb318",
+      "description": "占据数组按行主序铺开，分辨率和原点随消息传输。PGM 行方向由 MapServer 的图像读取实现转换。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "nav-lab-map-io",
+      "title": "MapServer 的图像装载与错误分类",
+      "category": "地图与规划 · 固定源码",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_map_server/src/map_io.cpp",
+      "url": "https://github.com/ros-navigation/navigation2/blob/94d1c2a345dda6ff637e6a72c9101d927ee99f19/nav2_map_server/src/map_io.cpp",
+      "version": "jazzy · 94d1c2a345dd",
+      "description": "Trinary 将灰度和阈值转为占据、自由、未知。空路径、YAML 解析失败与图像读取失败分别映射回执码。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "nav-lab-map-server",
+      "title": "地图生命周期与保留发布",
+      "category": "地图与规划 · 固定源码",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_map_server/src/map_server/map_server.cpp",
+      "url": "https://github.com/ros-navigation/navigation2/blob/94d1c2a345dda6ff637e6a72c9101d927ee99f19/nav2_map_server/src/map_server/map_server.cpp",
+      "version": "jazzy · 94d1c2a345dd",
+      "description": "配置文件在 configure 阶段加载，active 阶段才提供地图。主题使用可靠、瞬态本地 QoS。运行期重新加载成功才发布新地图。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "nav-lab-amcl",
+      "title": "AMCL 的初始位姿、扫描更新和 TF",
+      "category": "地图与规划 · 固定源码",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_amcl/src/amcl_node.cpp",
+      "url": "https://github.com/ros-navigation/navigation2/blob/94d1c2a345dda6ff637e6a72c9101d927ee99f19/nav2_amcl/src/amcl_node.cpp",
+      "version": "jazzy · 94d1c2a345dd",
+      "description": "初值需在全局帧。服务回执无业务布尔字段。无运动请求标记下一次更新，AMCL 的 map 到 odom 时戳来自扫描与有效余量。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "nav-lab-static-layer",
+      "title": "静态层、父命名空间和全局代价地图",
+      "category": "地图与规划 · 固定源码",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_costmap_2d/plugins/static_layer.cpp",
+      "url": "https://github.com/ros-navigation/navigation2/blob/94d1c2a345dda6ff637e6a72c9101d927ee99f19/nav2_costmap_2d/plugins/static_layer.cpp",
+      "version": "jazzy · 94d1c2a345dd",
+      "description": "PlannerServer 内部创建代价地图节点。它的默认地图入口与父命名空间有关，覆盖相对话题后需核实际全名。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "nav-lab-marking",
+      "title": "扫描标记和膨胀的不同职责",
+      "category": "地图与规划 · 固定源码",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_costmap_2d/plugins/obstacle_layer.cpp",
+      "url": "https://github.com/ros-navigation/navigation2/blob/94d1c2a345dda6ff637e6a72c9101d927ee99f19/nav2_costmap_2d/plugins/obstacle_layer.cpp",
+      "version": "jazzy · 94d1c2a345dd",
+      "description": "障碍层按扫描与目标帧 TF 标记可见表面。膨胀层将周边格赋为距离相关代价，与先验 OccupancyGrid 数值不同。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "nav-lab-raw-costs",
+      "title": "主代价图字节和 GetCostmap 回执",
+      "category": "地图与规划 · 固定源码",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_costmap_2d/src/costmap_2d_publisher.cpp",
+      "url": "https://github.com/ros-navigation/navigation2/blob/94d1c2a345dda6ff637e6a72c9101d927ee99f19/nav2_costmap_2d/src/costmap_2d_publisher.cpp",
+      "version": "jazzy · 94d1c2a345dd",
+      "description": "服务返回 master 图的逐格字节。可视化 OccupancyGrid 会把代价值换算为另一套标度。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "nav-lab-planner",
+      "title": "规划服务器的起点、异常和路径检查",
+      "category": "地图与规划 · 固定源码",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_planner/src/planner_server.cpp",
+      "url": "https://github.com/ros-navigation/navigation2/blob/94d1c2a345dda6ff637e6a72c9101d927ee99f19/nav2_planner/src/planner_server.cpp",
+      "version": "jazzy · 94d1c2a345dd",
+      "description": "use_start 控制取 TF 或指定起点。失败路径与 Action 接受分开。半径模式下 IsPathValid 检查剩余路径的离散点。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "nav-lab-navfn",
+      "title": "NavFn 的势场传播与路径提取",
+      "category": "地图与规划 · 固定源码",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_navfn_planner/src/navfn_planner.cpp",
+      "url": "https://github.com/ros-navigation/navigation2/blob/94d1c2a345dda6ff637e6a72c9101d927ee99f19/nav2_navfn_planner/src/navfn_planner.cpp",
+      "version": "jazzy · 94d1c2a345dd",
+      "description": "先转代价值，按开关选择 Dijkstra 或 A* 传播，再沿势场提取路径。允许未知和目标容差由插件参数决定。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "nav-lab-commander",
+      "title": "BasicNavigator 的规划快捷入口",
+      "category": "地图与规划 · 固定源码",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_simple_commander/nav2_simple_commander/robot_navigator.py",
+      "url": "https://github.com/ros-navigation/navigation2/blob/94d1c2a345dda6ff637e6a72c9101d927ee99f19/nav2_simple_commander/nav2_simple_commander/robot_navigator.py",
+      "version": "jazzy · 94d1c2a345dd",
+      "description": "getPath 提供 Path 或 None，内部才取完整动作结果。需要保留 error_code 时可直接使用动作消息。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "nav-lab-straightline",
+      "title": "直线规划插件教学与注册",
+      "category": "地图与规划 · 固定源码",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2_tutorials/jazzy--f3bd892a60d3/nav2_straightline_planner/src/straight_line_planner.cpp",
+      "url": "https://github.com/ros-navigation/navigation2_tutorials/blob/f3bd892a60d3fb91560ecb726bf922eb9bcbc858/nav2_straightline_planner/src/straight_line_planner.cpp",
+      "version": "jazzy · f3bd892a60d3",
+      "description": "示例展示 GlobalPlanner 的生命周期与 pluginlib 注册，createPlan 按起终点插值，未用占据代价做绕行。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "nav-lab-slam-artifacts",
+      "title": "SLAM Toolbox 的栅格保存与图序列化",
+      "category": "地图与规划 · 固定源码",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/README.md",
+      "url": "https://github.com/SteveMacenski/slam_toolbox/blob/f84dad92a6579aeff4fe0c2590bbc74d3348e5af/README.md",
+      "version": "jazzy · f84dad92a657",
+      "description": "图像地图供地图服务器加载。位姿图序列化另带扫描和约束语义，反序列化请求区分启动匹配方式。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "nav-lab-bringup",
+      "title": "Nav2 Jazzy 的启动与定位配置入口",
+      "category": "地图与规划 · 固定源码",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_bringup/launch/bringup_launch.py",
+      "url": "https://github.com/ros-navigation/navigation2/blob/94d1c2a345dda6ff637e6a72c9101d927ee99f19/nav2_bringup/launch/bringup_launch.py",
+      "version": "jazzy · 94d1c2a345dd",
+      "description": "bringup 将定位与导航分开包含，定位启动把 map 路径交给 yaml_filename。参数按实际包含文件核对。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "nav-lab-linorobot",
+      "title": "Linorobot2 的建图与导航配置",
+      "category": "地图与规划 · 固定源码",
+      "localPath": "linorobot2/linorobot2_navigation/launch/navigation.launch.py",
+      "url": "https://github.com/linorobot/linorobot2/blob/f6b0bd0350c4a9d6b815ef4bb5c701a1e5129711/linorobot2_navigation/launch/navigation.launch.py",
+      "version": "jazzy · f6b0bd0350c4",
+      "description": "建图包含 SLAM Toolbox，导航包含 Nav2。AMCL 和规划使用不同基座帧时，要从模型查二者之间的 TF。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "nav-lab-reference-chain",
+      "title": "导航生态的分层排错路线",
+      "category": "地图与规划 · 固定源码",
+      "localPath": "Robotics_Tutorial/02_C++基础与进阶/50_ROS2工程化/30_SLAM导航与仿真生态.md",
+      "url": "https://github.com/Michael-Jetson/Robotics_Tutorial/blob/7cb9e3d423196062c59dd346aae16285d962fb7c/02_C%2B%2B%E5%9F%BA%E7%A1%80%E4%B8%8E%E8%BF%9B%E9%98%B6/50_ROS2%E5%B7%A5%E7%A8%8B%E5%8C%96/30_SLAM%E5%AF%BC%E8%88%AA%E4%B8%8E%E4%BB%BF%E7%9C%9F%E7%94%9F%E6%80%81.md",
+      "version": "main · 7cb9e3d42319",
+      "description": "沿传感器、TF、代价地图、全局规划、控制、底盘逐段核对。教材的固定台架提供其中前四段的实测。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    }
+  ],
+  "apiReferences": [
+    {
+      "id": "api-nav2-map-planning",
+      "title": "Nav2 地图、定位与规划接口",
+      "lessons": [
+        "eco-nav2-stack",
+        "eco-nav2-task-programming",
+        "project-navigation"
+      ],
+      "columns": [
+        "接口",
+        "输入",
+        "回执与检查",
+        "边界"
+      ],
+      "rows": [
+        [
+          "GetMap / LoadMap",
+          "活动 MapServer 与地图 YAML",
+          "GetMap 的 OccupancyGrid，LoadMap 的 result 及后续地图消息",
+          "检查分辨率、原点和实际栅格。失败回执里的 map 不用作新地图"
+        ],
+        [
+          "SetInitialPose",
+          "map 系 PoseWithCovarianceStamped",
+          "响应体为空，以 AMCL 位姿和 TF 验收",
+          "坐标、时间与协方差含义分别核对"
+        ],
+        [
+          "GetCostmap",
+          "全局代价地图服务",
+          "master 图的尺寸、原点、分辨率与 uint8 字节",
+          "不要用占据图 0 到 100 的标度解释 253 到 255"
+        ],
+        [
+          "ComputePathToPose",
+          "起点策略、目标帧、planner_id",
+          "接受、终态、error_code 和 Path 分开读取",
+          "规划成功后另验控制与执行"
+        ],
+        [
+          "IsPathValid",
+          "同一全局帧的 Path",
+          "看当前代价图上的剩余路径",
+          "半径模式以离散位姿检查，连续足印与运动约束需另查"
+        ]
+      ]
+    }
+  ]
+}

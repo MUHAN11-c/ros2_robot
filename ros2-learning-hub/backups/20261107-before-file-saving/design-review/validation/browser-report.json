@@ -1,0 +1,127 @@
+{
+  "passed": true,
+  "checkedAt": "2026-11-07",
+  "scope": "独立网页设计样稿",
+  "chapters": 60,
+  "assets": 7,
+  "mobileRoutes": 140,
+  "editorRoutes": 120,
+  "screenshots": [
+    {
+      "file": "desktop-light.png",
+      "title": "桌面1440px · 樱粉浅色首页",
+      "width": 1440,
+      "height": 1040
+    },
+    {
+      "file": "desktop-dark.png",
+      "title": "桌面1440px · 夜紫深色首页",
+      "width": 1440,
+      "height": 1040
+    },
+    {
+      "file": "chapter-light.png",
+      "title": "章节正文与上下文图解",
+      "width": 1440,
+      "height": 1040
+    },
+    {
+      "file": "search-results.png",
+      "title": "搜索命中与片段高亮",
+      "width": 1440,
+      "height": 1040
+    },
+    {
+      "file": "search-empty.png",
+      "title": "搜索空态",
+      "width": 1440,
+      "height": 1040
+    },
+    {
+      "file": "editor-desktop.png",
+      "title": "1440px原排版直接编辑",
+      "width": 1440,
+      "height": 1040
+    },
+    {
+      "file": "note-drawer.png",
+      "title": "章节笔记编辑抽屉",
+      "width": 1440,
+      "height": 1040
+    },
+    {
+      "file": "lab-wide.png",
+      "title": "坐标实验宽屏",
+      "width": 1440,
+      "height": 1040
+    },
+    {
+      "file": "model-lab.png",
+      "title": "机器人几何模型",
+      "width": 1440,
+      "height": 1040
+    },
+    {
+      "file": "gallery.png",
+      "title": "紫樱素材画廊",
+      "width": 1440,
+      "height": 1040
+    },
+    {
+      "file": "mobile-390.png",
+      "title": "390px手机首页",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "file": "mobile-320.png",
+      "title": "320px手机首页",
+      "width": 320,
+      "height": 844
+    },
+    {
+      "file": "mobile-dark.png",
+      "title": "390px深色首页",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "file": "mobile-note.png",
+      "title": "390px章节笔记",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "file": "editor-mobile.png",
+      "title": "390px深色原排版编辑",
+      "width": 390,
+      "height": 844
+    }
+  ],
+  "checks": [
+    "左栏只含学习目录并延伸到底，全部页面入口保持顶部同一行",
+    "首页紫樱、深浅主题头像、笔记空态与60章数据",
+    "本章目录与小节深链接",
+    "全文搜索高亮、方向键选择和回车定位",
+    "原排版直接编辑中文段落、标题、表格、代码；字体与组件结构保持，粗体与撤销重做、自动保存、刷新恢复、章节隔离、源码入口与真实导出",
+    "笔记自动保存、Markdown预览、刷新恢复",
+    "真实JSON备份下载、旧版进度合并、正式存储隔离",
+    "实际备份含正文草稿，旧版与新版导入均保留草稿及笔记",
+    "TF数值、宽屏可交互、状态保留与折叠释放",
+    "原排版编辑保留可交互实验，模式切换后数值状态连续",
+    "模型视角与关节变化区分、坐标轴与退出释放",
+    "紫樱图库加载、类别与用途筛选、出处及裁切详情",
+    "真实单章Markdown下载与连续表格",
+    "原文元数据搜索结果有实际标题、版本与路径落点",
+    "390/320px全部70路由无整页溢出，手机菜单与Esc",
+    "390/320px另120条原排版编辑路由无整页溢出，手机直接修改与目录焦点隔离",
+    "file://完全断网阅读、搜索、实验、笔记与正文草稿恢复",
+    "存储容量不足时明确标注未持久保存，仍可真实导出当前正文",
+    "排版草稿清理脚本、事件、外部图片和危险链接；粘贴仅文本，中文输入法合成结束后保存",
+    "可选源码应用后回到正文，兼容Markdown草稿并可继续原位编辑"
+  ],
+  "errors": [],
+  "externalRequests": [],
+  "badResponses": [],
+  "websockets": []
+}

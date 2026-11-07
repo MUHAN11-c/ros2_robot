@@ -1,0 +1,493 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-11-07T02:35:33+08:00",
+  "reviewer": "applied_content 独立内容审查",
+  "scope": {
+    "mathChapters": 8,
+    "existingChapters": 44,
+    "newAppliedChaptersCrossChecked": 8,
+    "mergedChapters": 60,
+    "mergeOrder": "core/ecosystem/extra/frontier → foundation/engineering/ecosystem-expanded覆盖同ID字段 → math/applied加入 → code-annotations按章节/区块位置覆盖；未运行构建器。",
+    "apiReferenceTables": 11,
+    "readOnlyContentReview": true,
+    "outputOnly": "validation-evidence/math-and-core-review.json"
+  },
+  "overallConclusion": "数学八章的已查前提、公式、数值和标准库实验一致，未发现主要数学推导错误。问题主要在工程等待边界、输入有限性、控制接口注释及实践准备链。初次发现后主代理并行修复的项目按当前覆层复验状态单列；本报告不替代ROS、仿真或硬件验证。",
+  "severityMeaning": {
+    "P2": "应修正的实际代码边界或执行链缺项",
+    "P3": "术语或表述准确性问题"
+  },
+  "sourceFingerprints": [
+    {
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/source/core.json",
+      "sha256": "d9b2ff2a0fd7ac0c2301d35eef9a6d5375f7618c8c00b6abb74d33daabd22ca1"
+    },
+    {
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/source/ecosystem.json",
+      "sha256": "a35cf138bedc9c2ddbf652b57b9ab80c9e7840a5be31d404e7dfdc1a074ecb0b"
+    },
+    {
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/source/extra.json",
+      "sha256": "43f9cc90277ac0679b78e0d809f26e4c0dfeecb4ecb89d24ed24d83571fd5b31"
+    },
+    {
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/source/frontier.json",
+      "sha256": "26bd1eb0daf000dcbaf8cd41fa5db71b1f54d393a3cb2946ae9ef7d21c86d86a"
+    },
+    {
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/source/foundation-expanded.json",
+      "sha256": "03066f23dac6fb008b5cac41f205537de458b27abc6218ae770d2e717918f684"
+    },
+    {
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/source/engineering-expanded.json",
+      "sha256": "ab702b766eeb1179ee9d634d9671d750a368e5f274abe3cbbaa9d34b1e0ad98c"
+    },
+    {
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/source/ecosystem-expanded.json",
+      "sha256": "2e0a372b8d7d85cfb5555a09d7edc81893fcdabb357bc26984d531e477489e6a"
+    },
+    {
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/source/math-foundations.json",
+      "sha256": "7c86adfa2adf3d15b42448c2d5846e15c8e0a45a00bc5e8bd8f12e1c1eedd5e8"
+    },
+    {
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/source/applied-robotics.json",
+      "sha256": "671731089eac4d8f2470df95f8895695e34a57d3f35eeada8f02ece8c76be7d1"
+    },
+    {
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/source/code-annotations.json",
+      "sha256": "116ecba50f0506e387a7de3e7ee0392641a5e001d25839fdf7d3ffea73fc4037"
+    },
+    {
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/source/api-reference.json",
+      "sha256": "66476a9c5d0f1ff0c657c1698ea518d9a20cab7220e70f566acdac2f89f33a7a"
+    }
+  ],
+  "checks": [
+    {
+      "name": "最终合并Python代码语法",
+      "status": "passed",
+      "method": "仅将type=complete且language=python/py的最终覆层区块交给ast.parse；不导入ROS。",
+      "blocks": 53,
+      "errors": []
+    },
+    {
+      "name": "数学章节完整代码独立执行",
+      "status": "passed",
+      "method": "每个JSON完整Python区块以独立python3 -进程执行，标准库环境；没有依赖共享实验模块。",
+      "results": [
+        {
+          "chapterId": "math-linear",
+          "section": 6,
+          "block": 0,
+          "label": "math_linear.py",
+          "codeSha256": "2f43a477e5dacb0fa731218a1d7f6d1299ba15bed030cc77a6cbe09e76aa0a26",
+          "exitCode": 0,
+          "stdout": "线性代数实验通过： {'x_m': [0.9333333333333332, 1.9333333333333333], 'residual_m': [-0.06666666666666676, -0.06666666666666665, 0.06666666666666687], 'variance_sum_m2': 0.19, 'condition_normal_matrix': 3.0}",
+          "stderr": ""
+        },
+        {
+          "chapterId": "math-rigid",
+          "section": 6,
+          "block": 0,
+          "label": "math_rigid.py",
+          "codeSha256": "cd54ffbbdc0674d2a27301e010e819730b663c032711763454cc1737aea0a5a2",
+          "exitCode": 0,
+          "stdout": "刚体变换实验通过： {'point_in_A_m': [1.0000000000000002, 4.0], 'recovered_in_B_m': [2.0, -1.1102230246251565e-16], 'quaternion_xyzw': [0.0, 0.0, 0.7071067811865475, 0.7071067811865476]}",
+          "stderr": ""
+        },
+        {
+          "chapterId": "math-probability",
+          "section": 6,
+          "block": 0,
+          "label": "math_probability.py",
+          "codeSha256": "078bd5e514b4c2a5838316b1f0e2a7b94fc8fa8674bf5d637348ebe340c1870c",
+          "exitCode": 0,
+          "stdout": "概率与测量实验通过： {'posterior_inside': 0.6923076923076924, 'fused_position_m': 2.12, 'fused_variance_m2': 0.032, 'sample_mean_m': 1.9993681787128574, 'sample_variance_m2': 0.0400064089756765}",
+          "stderr": ""
+        },
+        {
+          "chapterId": "math-estimation",
+          "section": 6,
+          "block": 0,
+          "label": "math_estimation.py",
+          "codeSha256": "d0067818e352a8b498a19831c965177284e1d060ede4d596faa0bc58cf29e8f9",
+          "exitCode": 0,
+          "stdout": "状态估计实验通过： {'predicted_state': [1.0, 1.0], 'gain': [0.5675675675675677, 0.16216216216216217], 'corrected_state': [1.1135135135135135, 1.0324324324324323], 'corrected_covariance': [[0.022702702702702703, 0.006486486486486486], [0.006486486486486486, 0.017567567567567575]], 'NIS': 0.43243243243243223}",
+          "stderr": ""
+        },
+        {
+          "chapterId": "math-optimization",
+          "section": 6,
+          "block": 0,
+          "label": "math_optimization.py",
+          "codeSha256": "9b58f439170fe865ac836ffa1fbdba4adc18a32e0bd9361633512d8697770c94",
+          "exitCode": 0,
+          "stdout": "优化实验通过： {'nonlinear_positive_root': 2.0000000000139786, 'accepted_costs': [4.5, 2.1391633970459685, 0.015950303717150036, 2.049673528185426e-06, 2.622998878662707e-13, 1.5632091821226052e-21], 'constrained_solution': 1.0, 'L2_mean': 6.5, 'Huber_estimate': 2.333333333333333}",
+          "stderr": ""
+        },
+        {
+          "chapterId": "math-kinematics",
+          "section": 6,
+          "block": 0,
+          "label": "math_kinematics.py",
+          "codeSha256": "94776f77a3f7b4a6259bf0b3394db9ee91efa8bbafa084d93e851f61a6d74574",
+          "exitCode": 0,
+          "stdout": "运动学实验通过： {'tip_position_m': [0.8660254037844388, 0.09999999999999995], 'tip_velocity_m_s': [-0.039999999999999994, 0.13856406460551024], 'joint_torque_Nm': [2.3980762113533167, 1.4392304845413264], 'power_W': 0.3356921938165307}",
+          "stderr": ""
+        },
+        {
+          "chapterId": "math-dynamics",
+          "section": 6,
+          "block": 0,
+          "label": "math_dynamics.py",
+          "codeSha256": "1532c6b99faaa8b65b3776ed99fd11fb1128f269193b0ff410755637e6cd5dae",
+          "exitCode": 0,
+          "stdout": "动力学实验通过： {'initial_energy_J': 2.306898142739168, 'conservative_drift_J': 6.629443660699508e-09, 'dissipative_final_energy_J': 0.04264670634787831, 'holding_torque_Nm': 2.899053227347741}",
+          "stderr": ""
+        },
+        {
+          "chapterId": "math-control",
+          "section": 6,
+          "block": 0,
+          "label": "math_control.py",
+          "codeSha256": "d98a59085cb6f3be4077358ba55b4886ec69e2fff1b03259d2364a8b2ba896c8",
+          "exitCode": 0,
+          "stdout": "反馈控制实验通过： {'stable_error_m': 2.0370359763344877e-10, 'unstable_error_m': 1024.0, 'saturated_error_m': 5.923061480360563e-15, 'PD_final_state': [-3.346573622797253e-08, -3.97849118325584e-07], 'PD_damping_ratio': 0.7071067811865475}",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "name": "数学标准库总实验",
+      "status": "passed",
+      "command": "python3 examples/theory_labs/math_labs.py",
+      "cwd": "/home/wjz/ros2_robot/ros2-learning-hub",
+      "exitCode": 0,
+      "note": "本轮实际执行，8个子实验通过；不属于ROS验证。"
+    },
+    {
+      "name": "数学前提与手工数值交叉核对",
+      "status": "passed-with-one-wording-finding",
+      "cases": [
+        "最小二乘满列秩前提、正规方程条件数3和解14/15、29/15；协方差x+y方差0.19含交叉项。",
+        "T_AB将B分量变A分量，列基约定、逆平移-R^Tt、复合次序和ROS四元数xyzw一致；q与-q表示同旋转而共轭用于单位四元数求逆。",
+        "联合高斯/独立条件说明齐全；不相关不等于独立反例正确；Bayes后验9/13，独立测量融合2.12m和0.032m²。",
+        "CV过程噪声为每区间常加速度模型，非连续白噪声混用；Kalman P-、K、Joseph协方差及NIS 0.4324324324与代码一致；可观性和高斯分布解释前提已说明。",
+        "非线性残差GN/LM、阻尼与坏驻点、凸盒投影、Huber估计7/3及L2均值6.5一致，没有保证任意非凸全局收敛。",
+        "平面2R位置、雅可比、奇异条件、两支IK环带及功率/外力符号一致；质量矩阵正定与任务Jacobian奇异不混淆。",
+        "无质量杆质点摆惯量0.5kg·m²、重力矩和能量符号一致；RK4误差不冒充严格保能。",
+        "理想速度积分器ZOH稳定条件0<k*dt<2、失稳1024及PD阻尼比约0.7071一致；连续与离散、饱和和延迟边界明确。"
+      ]
+    },
+    {
+      "name": "原44章重点接口与新16章交叉核对",
+      "status": "reviewed",
+      "topics": [
+        "tf2方向、采样时间与latest语义",
+        "ROS/系统/单调时钟、bag及单一clock发布责任",
+        "QoS请求/提供与transient_local发布者寿命",
+        "Executor回调组与异步future超时副作用",
+        "ros2_control关节资源、轮速/车速与TwistStamped",
+        "SLAM/robot_localization的TF责任和观测合同",
+        "Nav2目标接纳、取消、终态与执行期限",
+        "MoveIt规划/时间参数化/控制执行链及版本边界",
+        "前沿策略数据、动作块和有限数值门控"
+      ],
+      "note": "按风险和接口逐项审查，不表示所有44章的每个软件依赖、命令或第三方算法均已运行。"
+    },
+    {
+      "name": "看门狗并行修复后复验",
+      "status": "passed",
+      "results": [
+        {
+          "input": "NaN requested",
+          "actual": 0.0,
+          "expected": 0.0
+        },
+        {
+          "input": "NaN now",
+          "actual": 0.0,
+          "expected": 0.0
+        },
+        {
+          "input": "NaN received_at",
+          "actual": 0.0,
+          "expected": 0.0
+        },
+        {
+          "input": "+Inf requested",
+          "actual": 0.0,
+          "expected": 0.0
+        }
+      ],
+      "checksStdout": "离线看门狗模型有限性、时间边界及限幅断言通过；未验证硬件停车。"
+    }
+  ],
+  "findings": [
+    {
+      "id": "review-watchdog-nonfinite",
+      "severity": "P2",
+      "status": "resolved-in-current-overlay",
+      "title": "看门狗须在限幅和年龄判断之前拒绝非有限输入",
+      "locations": [
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/source/ecosystem-expanded.json",
+          "chapterId": "eco-microcontrollers",
+          "jsonPointer": "/chapters/14/sections/5/codeBlocks/0/code"
+        },
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/source/code-annotations.json",
+          "chapterId": "eco-microcontrollers",
+          "jsonPointer": "/chapters/eco-microcontrollers/sections/5:0/code"
+        }
+      ],
+      "evidence": {
+        "initialObservation": "初次读取的accepted_target只检查None、age<0、age>timeout后执行max/min。已在纯标准库中复现NaN目标返回+0.2m/s、NaN now或received_at返回0.1m/s。",
+        "currentRecheck": [
+          {
+            "input": "NaN requested",
+            "actual": 0.0,
+            "expected": 0.0
+          },
+          {
+            "input": "NaN now",
+            "actual": 0.0,
+            "expected": 0.0
+          },
+          {
+            "input": "NaN received_at",
+            "actual": 0.0,
+            "expected": 0.0
+          },
+          {
+            "input": "+Inf requested",
+            "actual": 0.0,
+            "expected": 0.0
+          }
+        ],
+        "currentChecksStdout": "离线看门狗模型有限性、时间边界及限幅断言通过；未验证硬件停车。"
+      },
+      "impact": "旧代码会把无效速度变成正限速，并让无效时间绕过失联门控。该问题是教学数值模型行为，不是本轮实机故障证据。",
+      "recommendation": "先验证now/received_at/requested/timeout及限速均为有限实数，时间合同与正阈值成立后再比较和限幅；保持无效输入拒绝值与实机停止确认的区别。当前覆层已修复，应保留边界断言。",
+      "validationToAdd": [
+        "NaN/±Inf分别进入请求、时间及阈值均拒绝",
+        "未来戳、缺失戳、非法类型、负/零阈值拒绝",
+        "精确超时边界与紧邻过期值行为一致"
+      ]
+    },
+    {
+      "id": "review-nav2-cancel-wait",
+      "severity": "P2",
+      "status": "open",
+      "title": "Simple Commander取消调用内部可无界等待，外层deadline不能覆盖它",
+      "locations": [
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/source/ecosystem-expanded.json",
+          "chapterId": "eco-nav2-task-programming",
+          "jsonPointer": "/chapters/9/sections/3/codeBlocks/0/code"
+        },
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/source/code-annotations.json",
+          "chapterId": "eco-nav2-task-programming",
+          "jsonPointer": "/chapters/eco-nav2-task-programming/sections/3:0/code"
+        },
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/source/applied-robotics.json",
+          "chapterId": "project-navigation",
+          "jsonPointer": "/chapters/6/sections/3/codeBlocks/0/code"
+        }
+      ],
+      "evidence": {
+        "pinnedImplementation": {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_simple_commander/nav2_simple_commander/robot_navigator.py",
+          "cancelTaskLine": 454,
+          "spinCallLine": 459,
+          "spinCall": "rclpy.spin_until_future_complete(self, future)",
+          "hasTimeoutKeyword": false
+        },
+        "oldClient": "任务deadline触发后同步进入nav.cancelTask()，返回之后才继续外层while。",
+        "projectClient": "deadline+5.0的异常检查位于nav.cancelTask()调用之后，取消future不返回时该检查不会执行。",
+        "scope": "Jazzy固定源码的静态调用链核对；未运行Nav2服务端失联故障测试。"
+      },
+      "impact": "旧章与新项目章都可能在取消服务失联时永久停在客户端调用中。六十秒执行期限与额外五秒终态期限不构成整个任务的有界等待保证。",
+      "recommendation": "采用原生ActionClient与cancel_goal_async，分别为目标接纳、执行、取消响应和最终结果设置单调时钟期限，并以有界spin推进future；或准确说明高层API等待边界，配套独立监督流程。取消未确认时报告该状态，不能把客户端退出当作底盘停稳。",
+      "validationToAdd": [
+        "动作服务器拒绝目标",
+        "执行阶段超时后取消成功",
+        "取消服务不回复时在指定期限报告取消未确认",
+        "取消回复后结果future仍不完成",
+        "仿真/clock暂停时单调监控仍工作"
+      ]
+    },
+    {
+      "id": "review-control-joint-comment",
+      "severity": "P2",
+      "status": "resolved-in-current-overlay",
+      "title": "ros2_control接口资源joint与URDF运动学joint须明确区分",
+      "locations": [
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/source/code-annotations.json",
+          "chapterId": "eco-control-framework",
+          "jsonPointer": "/chapters/eco-control-framework/sections/1:0/code"
+        }
+      ],
+      "evidence": {
+        "initialObservation": "左/右轮ros2_control joint之前的自动注释为“定义父/子link间关节；fixed表示固定安装关系”。但该层只有接口声明，没有URDF运动学joint的parent/child/type。",
+        "currentRecheck": "<!-- 【中文教学注释】 URDF 中的控制标签示意 -->\n<!-- 本例作用：这是嵌入合法 robot 模型中的片段；对应关节必须已在 URDF 定义。它不构成独立机器人文件。 -->\n<!-- 输入输出：输入为 URDF 控制接口、硬件插件和控制器配置；输出为状态接口、命令接口和控制器状态。 -->\n<!-- 执行顺序与边界：加载硬件并导出接口后才能配置/激活控制器；mock 反馈不是真实编码器，控制标签片段不包含完整机器人或启动工程。 -->\n<!-- 描述供controller_manager使用的硬件与关节接口；它不是完整机器人URDF或自动启动控制循环的脚本。 -->\n<ros2_control name=\"LearningSystem\" type=\"system\">\n  <!-- 选择硬件组件插件；mock_components/GenericSystem只模拟状态，不连接电机/读取真实编码器。 -->\n  <hardware><plugin>mock_components/GenericSystem</plugin></hardware>\n  <!-- 这里引用URDF中已经存在的同名关节，并声明控制器可用的state/command接口；不在ros2_control标签内定义父子link或运动学关节。 -->\n  <joint name=\"left_wheel_joint\">\n    <!-- 声明可被控制器占用的命令接口；轮关节velocity单位rad/s，与底盘Twist线速度m/s不同。 -->\n    <command_interface name=\"velocity\"/>\n    <!-- 声明只读反馈接口；转动关节position为rad、velocity为rad/s，需由硬件read步骤正确填充。 -->\n    <state_interface name=\"position\"/>\n    <!-- 声明只读反馈接口；转动关节position为rad、velocity为rad/s，需由硬件read步骤正确填充。 -->\n    <state_interface name=\"velocity\"/>\n  </joint>\n  <!-- 这里引用URDF中已经存在的同名关节，并声明控制器可用的state/command接口；不在ros2_control标签内定义父子link或运动学关节。 -->\n  <joint name=\"right_wheel_joint\">\n    <!-- 声明可被控制器占用的命令接口；轮关节velocity单位rad/s，与底盘Twist线速度m/s不同。 -->\n    <command_interface name=\"velocity\"/>\n    <!-- 声明只读反馈接口；转动关节position为rad、velocity为rad/s，需由硬件read步骤正确填充。 -->\n    <state_interface name=\"position\"/>\n    <!-- 声明只读反馈接口；转动关节position为rad、velocity为rad/s，需由硬件read步骤正确填充。 -->\n    <state_interface name=\"velocity\"/>\n  </joint>\n</ros2_control>",
+        "officialExample": {
+          "file": "/home/wjz/ros2_robot/ros2_control_demos/example_2/description/ros2_control/diffbot.ros2_control.xacro",
+          "sha256": "bac3c83abc269efc0809b15c1ddd6362e942ef78c9c72812fa3e8fe05879b930",
+          "resourceJointLines": [
+            21,
+            26
+          ],
+          "note": "该官方示例的ros2_control joint仅声明接口；对应机械关节在description/urdf/diffbot.urdf.xacro模型中定义。"
+        }
+      },
+      "impact": "旧注释使读者混淆机械连接与控制接口资源，影响模型、控制器及新项目的关节合同理解。",
+      "recommendation": "写成“引用URDF中已定义的同名关节并声明状态/命令接口，不重新定义父子link与运动学”。当前覆层已修正，应避免在不同XML上下文复用运动学joint注释模板。",
+      "validationToAdd": [
+        "人工核对joint注释所在父标签是否为ros2_control",
+        "与完整URDF中同名运动学joint交叉核对"
+      ]
+    },
+    {
+      "id": "review-perception-prerequisites",
+      "severity": "P2",
+      "status": "open",
+      "title": "完整图像实验缺少对应二进制依赖安装与导入预检",
+      "locations": [
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/source/ecosystem-expanded.json",
+          "chapterId": "eco-perception-pipeline",
+          "jsonPointer": "/chapters/12/sections/2"
+        },
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/source/ecosystem-expanded.json",
+          "chapterId": "eco-perception-pipeline",
+          "jsonPointer": "/chapters/12/sections/3/codeBlocks/0"
+        }
+      ],
+      "evidence": {
+        "imports": [
+          "cv2",
+          "numpy",
+          "cv_bridge",
+          "rclpy",
+          "sensor_msgs.msg.Image"
+        ],
+        "viewerCommand": "ros2 run rqt_image_view rqt_image_view",
+        "initialObservation": "原章节只要求使用系统Python及发行版依赖，执行链直接从python3 image_lab.py开始；全部站内source/examples/foundation-examples中未给python3-opencv、python3-numpy、ros-jazzy-cv-bridge和ros-jazzy-rqt-image-view准备命令。",
+        "currentRequiredDependencyNamesPresent": false
+      },
+      "impact": "已有ROS安装不保证这些可选包齐全；缺少任何一项时，读者无法凭该实验的站内步骤完成准备与显示。不能断言所有desktop环境都会失败。",
+      "recommendation": "补充Jazzy系统包安装、系统Python路径、import cv2/numpy/cv_bridge预检和ros2 pkg prefix rqt_image_view检查，再给启动、QoS及编码验收。明确本轮未运行ROS图像链。",
+      "validationToAdd": [
+        "最小目标环境执行依赖导入预检",
+        "启动后原图/边缘输出保留尺寸、编码、frame与原采样时间"
+      ]
+    },
+    {
+      "id": "review-microros-host-client-chain",
+      "severity": "P2",
+      "status": "open",
+      "title": "Linux主机micro-ROS通信实验只准备Agent，缺少实际客户端链",
+      "locations": [
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/source/ecosystem-expanded.json",
+          "chapterId": "eco-microcontrollers",
+          "jsonPointer": "/chapters/14/sections/2"
+        },
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/source/ecosystem-expanded.json",
+          "chapterId": "eco-microcontrollers",
+          "jsonPointer": "/chapters/14/sections/3"
+        }
+      ],
+      "evidence": {
+        "initialObservation": "“先完成主机上的Agent与通信实验”只构建和运行Agent；正文正确说Agent不会产生传感器节点，但未给host客户端创建、构建、运行和ROS图验收。离线watchdog不建立micro-ROS会话。",
+        "officialHostGuide": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/ecosystem/micro-ROS--micro-ROS.github.io/master--1b1b14116183/_docs/tutorials/core/first_application_linux/index.md",
+        "hostGuideCommands": [
+          "ros2 run micro_ros_setup create_firmware_ws.sh host",
+          "ros2 run micro_ros_setup build_firmware.sh",
+          "客户端终端export RMW_IMPLEMENTATION=rmw_microxrcedds",
+          "ros2 run micro_ros_demos_rclc ping_pong"
+        ],
+        "jazzySourceConfig": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/ecosystem/micro-ROS--micro_ros_setup/jazzy--ed45678c6c0b/config/host/generic/client_host_packages.repos",
+        "currentHostClientCommandsPresent": false,
+        "versionBoundary": "网站Linux教程中的demos链接仍指向Humble；本地固定Jazzy setup的host配置明确导入jazzy demos，不能把Humble步骤默认为Jazzy已运行。"
+      },
+      "impact": "读者照章运行停在空Agent，不能验证章节声称的主机会话与通信目标。",
+      "recommendation": "补全可不刷板的host客户端准备、Agent/客户端/普通DDS观察终端的环境隔离、地址端口与预期话题/输出，以及中断恢复验收；若本轮未构建运行，明确标注待运行。MCU刷写只作为独立扩展。",
+      "validationToAdd": [
+        "Agent与host客户端会话建立日志",
+        "普通DDS终端能看到预期节点和消息",
+        "Agent/客户端分别重启后的恢复",
+        "客户端终端使用rmw_microxrcedds不会污染普通DDS观察终端"
+      ]
+    },
+    {
+      "id": "review-walltimer-clock-name",
+      "severity": "P3",
+      "status": "resolved-wording",
+      "title": "create_wall_timer默认时钟不宜称为“墙钟/稳态”",
+      "locations": [
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/source/api-reference.json",
+          "apiId": "api-timer-clock",
+          "jsonPointer": "/apiReferences/2/rows/1/1"
+        }
+      ],
+      "evidence": {
+        "currentText": "`create_wall_timer` 使用 `RCL_STEADY_TIME` 稳态时钟",
+        "implementationFile": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp/include/rclcpp/timer.hpp",
+        "implementationLine": 380,
+        "implementation": "std::make_shared<Clock>(RCL_STEADY_TIME)"
+      },
+      "impact": "“墙钟”通常指会受日期校时影响的SYSTEM_TIME，与time-bag章对单调时间的区别冲突。API名称WallTimer不等于系统日期时钟。",
+      "recommendation": "明确写“RCL_STEADY_TIME单调时钟；不随use_sim_time变化”，并保留Python节点时钟与显式ROS时钟API的区别。",
+      "validationToAdd": [
+        "源码核对Clock类型",
+        "仿真时钟暂停时比较两类timer行为（ROS未运行）"
+      ]
+    },
+    {
+      "id": "review-pd-position-wording",
+      "severity": "P3",
+      "status": "resolved-wording",
+      "title": "PD正文“比例加速度反馈”与给定控制律不符",
+      "locations": [
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/source/math-foundations.json",
+          "chapterId": "math-control",
+          "jsonPointer": "/chapters/7/sections/2/paragraphs/0"
+        }
+      ],
+      "evidence": {
+        "currentParagraph": "真实机械系统通常不能直接改变位置变化率，而是通过力或力矩产生加速度。对一个质量为m、物理黏性阻尼为c的质点，输入力要先减阻力，再除以质量才能得到加速度。使用比例位置误差反馈和速度阻尼反馈时，误差方程变为二阶形式；比例项提供类似弹簧的恢复作用，微分项与物理阻尼共同消耗运动能量。",
+        "actualControlLaw": "u=-kp*e-kd*edot，kp单位N/m",
+        "numericExperiment": "m=2kg,c=0.4N·s/m,kp=4N/m,kd=3.6N·s/m，阻尼比0.7071067811865475；公式和代码数值均正确。"
+      },
+      "impact": "仅为术语错误，可能让读者误以为比例项测量加速度；不构成推导或实现错误。",
+      "recommendation": "改成“比例位置误差反馈和速度阻尼反馈”。",
+      "validationToAdd": [
+        "正文术语与控制律、单位一致"
+      ]
+    }
+  ],
+  "summary": {
+    "findings": 7,
+    "open": 3,
+    "resolvedInCurrentReviewSnapshot": 4,
+    "requiresRosRecheck": 0
+  },
+  "limits": [
+    "本轮没有启动、构建或运行ROS 2、DDS通信、Nav2、MoveIt、Gazebo、micro-ROS或硬件。",
+    "53份Python完整代码通过AST解析不代表ROS包、插件、消息类型或运行环境正确。",
+    "独立数学实验验证的是写明的低维模型与固定数值，不证明任意输入或真实机器人稳定/安全。",
+    "Nav2取消无超时为固定Jazzy实现的源码证据，未注入服务失联；修改为原生ActionClient后仍须运行故障场景。",
+    "并行代理可能在报告写入后继续修改源文件；仅sourceFingerprints与codeSha256对应的快照属于本次已审查范围。",
+    "未把参考仓库覆盖数量作为正文细节穷尽或项目全部已运行的证明。"
+  ]
+}

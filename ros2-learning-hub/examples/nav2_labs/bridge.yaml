@@ -1,0 +1,17 @@
+# 从单一 Gazebo 世界转发仿真时间。所有测试节点处于独立 DDS 域。
+- ros_topic_name: /clock
+  gz_topic_name: /world/hub_nav_room/clock
+  ros_type_name: rosgraph_msgs/msg/Clock
+  gz_type_name: gz.msgs.Clock
+  direction: GZ_TO_ROS
+  qos_profile: CLOCK
+
+# 扫描的角度 rad、距离 m。ROS 侧 scan 相对于本次命名空间，采集时戳保持不变。
+# frame_id 仅用于标签，验证程序另发布 base_link 到 laser_link 的 0.30 m 安装平移。
+- ros_topic_name: scan
+  gz_topic_name: /hub_nav/scan
+  ros_type_name: sensor_msgs/msg/LaserScan
+  gz_type_name: gz.msgs.LaserScan
+  direction: GZ_TO_ROS
+  qos_profile: SENSOR_DATA
+  frame_id: laser_link

@@ -1,0 +1,1872 @@
+{
+  "schemaVersion": 1,
+  "status": "approved_for_iteration5_bounded_bag_assets_with_source_research",
+  "approved": true,
+  "checkedAt": "2026-11-07T05:46:33+08:00",
+  "scope": [
+    "只读当前time-bag/eco-data-observability有效正文、安装Jazzy和固定官方实现；仅写本报告。",
+    "本代理不启动DDS，不修改教材/参考/实验源码；根最终实际录放通过后，独立核对报告、当前源码、原始日志、SQL与MCAP字节。",
+    "批准仅限两份当前绑定报告及所述软件范围；研究建议中尚未执行的支路继续保留未测。"
+  ],
+  "sourceRecords": [
+    {
+      "id": "bag-README-md",
+      "repository": "ros2/rosbag2",
+      "version": "0.26.11",
+      "localPath": "references/sources/official-core/ros2--rosbag2/jazzy--12b5e8ba4eb5/README.md",
+      "path": "README.md",
+      "referenceCommit": "12b5e8ba4eb5665501a16f0d9e050552a1149f56",
+      "referenceSha256": "481f8a8402f5faa5c8bbc8584204cfc3336cdb0687213c89db6ea8a448625873",
+      "referenceLineCount": 593,
+      "releaseCommit": "cb8fa198b93bfed90e2417b52b8645fb9ef89c2b",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/README.md",
+      "releaseSha256": "f2852fb3eaa1102ee9856a314323de78e005fa07fd91f0ab94592802d60689aa",
+      "releaseLineCount": 589,
+      "referenceEqualsRelease": false,
+      "verification": "只读本地固定快照与官方0.26.11固定release HTTP字节；不运行DDS或上游代码",
+      "referenceLineRanges": [
+        {
+          "start": 80,
+          "end": 88
+        },
+        {
+          "start": 169,
+          "end": 178
+        },
+        {
+          "start": 338,
+          "end": 363
+        },
+        {
+          "start": 516,
+          "end": 524
+        }
+      ],
+      "observation": "README新增会话结束停clock说明只对应参考补丁，release无该段，不作安装行为依据。",
+      "releaseLineRanges": [
+        {
+          "start": 80,
+          "end": 88
+        },
+        {
+          "start": 169,
+          "end": 174
+        },
+        {
+          "start": 334,
+          "end": 359
+        },
+        {
+          "start": 512,
+          "end": 520
+        }
+      ]
+    },
+    {
+      "id": "bag-rosbag2_transport-src-rosbag2_transport-recorder-cpp",
+      "repository": "ros2/rosbag2",
+      "version": "0.26.11",
+      "localPath": "references/sources/official-core/ros2--rosbag2/jazzy--12b5e8ba4eb5/rosbag2_transport/src/rosbag2_transport/recorder.cpp",
+      "path": "rosbag2_transport/src/rosbag2_transport/recorder.cpp",
+      "referenceCommit": "12b5e8ba4eb5665501a16f0d9e050552a1149f56",
+      "referenceSha256": "51681aab1d1e8627478bd3080131bd05c351d159a41b1d2184b31a4d838f187b",
+      "referenceLineCount": 1095,
+      "releaseCommit": "cb8fa198b93bfed90e2417b52b8645fb9ef89c2b",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_transport/src/rosbag2_transport/recorder.cpp",
+      "releaseSha256": "51681aab1d1e8627478bd3080131bd05c351d159a41b1d2184b31a4d838f187b",
+      "releaseLineCount": 1095,
+      "referenceEqualsRelease": true,
+      "verification": "只读本地固定快照与官方0.26.11固定release HTTP字节；不运行DDS或上游代码",
+      "referenceLineRanges": [
+        {
+          "start": 210,
+          "end": 214
+        },
+        {
+          "start": 319,
+          "end": 337
+        },
+        {
+          "start": 635,
+          "end": 672
+        },
+        {
+          "start": 747,
+          "end": 806
+        },
+        {
+          "start": 874,
+          "end": 928
+        }
+      ],
+      "observation": "Linux普通录制直接取RMW received/source两个时戳，sim分支recv改node.now；等待正clock后才创建数据订阅；已订阅QoS不自动重建。",
+      "releaseLineRanges": [
+        {
+          "start": 210,
+          "end": 214
+        },
+        {
+          "start": 319,
+          "end": 337
+        },
+        {
+          "start": 635,
+          "end": 672
+        },
+        {
+          "start": 747,
+          "end": 806
+        },
+        {
+          "start": 874,
+          "end": 928
+        }
+      ]
+    },
+    {
+      "id": "bag-rosbag2_transport-src-rosbag2_transport-player-cpp",
+      "repository": "ros2/rosbag2",
+      "version": "0.26.11",
+      "localPath": "references/sources/official-core/ros2--rosbag2/jazzy--12b5e8ba4eb5/rosbag2_transport/src/rosbag2_transport/player.cpp",
+      "path": "rosbag2_transport/src/rosbag2_transport/player.cpp",
+      "referenceCommit": "12b5e8ba4eb5665501a16f0d9e050552a1149f56",
+      "referenceSha256": "a62fd82160f84d76c296b876a5e1be3b65fe4ec06799e3f589b46b389195422c",
+      "referenceLineCount": 2048,
+      "releaseCommit": "cb8fa198b93bfed90e2417b52b8645fb9ef89c2b",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_transport/src/rosbag2_transport/player.cpp",
+      "releaseSha256": "1b90304e5a6602e6ae470e6c27d03cb80f8795374921a9b8329276aef659984f",
+      "releaseLineCount": 2044,
+      "referenceEqualsRelease": false,
+      "verification": "只读本地固定快照与官方0.26.11固定release HTTP字节；不运行DDS或上游代码",
+      "referenceLineRanges": [
+        {
+          "start": 49,
+          "end": 78
+        },
+        {
+          "start": 451,
+          "end": 463
+        },
+        {
+          "start": 569,
+          "end": 579
+        },
+        {
+          "start": 1097,
+          "end": 1112
+        },
+        {
+          "start": 1189,
+          "end": 1262
+        },
+        {
+          "start": 1266,
+          "end": 1310
+        },
+        {
+          "start": 1348,
+          "end": 1361
+        },
+        {
+          "start": 1439,
+          "end": 1464
+        }
+      ],
+      "observation": "以recv时间调度/原序列化载荷发布；过滤/clock内部publisher/QoS覆盖分开；本快照有release没有的结束会话cancel timer。",
+      "releaseLineRanges": [
+        {
+          "start": 49,
+          "end": 78
+        },
+        {
+          "start": 451,
+          "end": 463
+        },
+        {
+          "start": 569,
+          "end": 575
+        },
+        {
+          "start": 1093,
+          "end": 1108
+        },
+        {
+          "start": 1185,
+          "end": 1258
+        },
+        {
+          "start": 1262,
+          "end": 1306
+        },
+        {
+          "start": 1344,
+          "end": 1357
+        },
+        {
+          "start": 1435,
+          "end": 1460
+        }
+      ]
+    },
+    {
+      "id": "bag-rosbag2_cpp-src-rosbag2_cpp-writer-cpp",
+      "repository": "ros2/rosbag2",
+      "version": "0.26.11",
+      "localPath": "references/sources/official-core/ros2--rosbag2/jazzy--12b5e8ba4eb5/rosbag2_cpp/src/rosbag2_cpp/writer.cpp",
+      "path": "rosbag2_cpp/src/rosbag2_cpp/writer.cpp",
+      "referenceCommit": "12b5e8ba4eb5665501a16f0d9e050552a1149f56",
+      "referenceSha256": "73fa446a06a893c59192ee6972d221b9ce8649aa9a1b21f0d31157847661ed00",
+      "referenceLineCount": 223,
+      "releaseCommit": "cb8fa198b93bfed90e2417b52b8645fb9ef89c2b",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_cpp/src/rosbag2_cpp/writer.cpp",
+      "releaseSha256": "73fa446a06a893c59192ee6972d221b9ce8649aa9a1b21f0d31157847661ed00",
+      "releaseLineCount": 223,
+      "referenceEqualsRelease": true,
+      "verification": "只读本地固定快照与官方0.26.11固定release HTTP字节；不运行DDS或上游代码",
+      "referenceLineRanges": [
+        {
+          "start": 193,
+          "end": 215
+        }
+      ],
+      "observation": "显式接收/发布时戳直接赋到SerializedBagMessage，没有此处的Header解析或source不可用自动替换。",
+      "releaseLineRanges": [
+        {
+          "start": 193,
+          "end": 215
+        }
+      ]
+    },
+    {
+      "id": "bag-rosbag2_storage-src-rosbag2_storage-qos-cpp",
+      "repository": "ros2/rosbag2",
+      "version": "0.26.11",
+      "localPath": "references/sources/official-core/ros2--rosbag2/jazzy--12b5e8ba4eb5/rosbag2_storage/src/rosbag2_storage/qos.cpp",
+      "path": "rosbag2_storage/src/rosbag2_storage/qos.cpp",
+      "referenceCommit": "12b5e8ba4eb5665501a16f0d9e050552a1149f56",
+      "referenceSha256": "105a98dabedeb4819ecd7d07861fc9fd9a49e3f04fbc09e4428fce8b48133999",
+      "referenceLineCount": 492,
+      "releaseCommit": "cb8fa198b93bfed90e2417b52b8645fb9ef89c2b",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_storage/src/rosbag2_storage/qos.cpp",
+      "releaseSha256": "105a98dabedeb4819ecd7d07861fc9fd9a49e3f04fbc09e4428fce8b48133999",
+      "releaseLineCount": 492,
+      "referenceEqualsRelease": true,
+      "verification": "只读本地固定快照与官方0.26.11固定release HTTP字节；不运行DDS或上游代码",
+      "referenceLineRanges": [
+        {
+          "start": 332,
+          "end": 413
+        },
+        {
+          "start": 423,
+          "end": 467
+        }
+      ],
+      "observation": "record按已发现端点适配history/reliability/durability；play在记录profiles兼容同型时复制再重置history，否则警告回默认。",
+      "releaseLineRanges": [
+        {
+          "start": 332,
+          "end": 413
+        },
+        {
+          "start": 423,
+          "end": 467
+        }
+      ]
+    },
+    {
+      "id": "bag-rosbag2_storage-include-rosbag2_storage-qos-hpp",
+      "repository": "ros2/rosbag2",
+      "version": "0.26.11",
+      "localPath": "references/sources/official-core/ros2--rosbag2/jazzy--12b5e8ba4eb5/rosbag2_storage/include/rosbag2_storage/qos.hpp",
+      "path": "rosbag2_storage/include/rosbag2_storage/qos.hpp",
+      "referenceCommit": "12b5e8ba4eb5665501a16f0d9e050552a1149f56",
+      "referenceSha256": "748511ad93b3707d13f5ace15171d5a842e49f263214a9338ea9d9c520e09793",
+      "referenceLineCount": 202,
+      "releaseCommit": "cb8fa198b93bfed90e2417b52b8645fb9ef89c2b",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_storage/include/rosbag2_storage/qos.hpp",
+      "releaseSha256": "748511ad93b3707d13f5ace15171d5a842e49f263214a9338ea9d9c520e09793",
+      "releaseLineCount": 202,
+      "referenceEqualsRelease": true,
+      "verification": "只读本地固定快照与官方0.26.11固定release HTTP字节；不运行DDS或上游代码",
+      "installedPath": "/opt/ros/jazzy/include/rosbag2_storage/rosbag2_storage/qos.hpp",
+      "installedSha256": "748511ad93b3707d13f5ace15171d5a842e49f263214a9338ea9d9c520e09793",
+      "installedEqualsRelease": true,
+      "referenceLineRanges": [
+        {
+          "start": 38,
+          "end": 92
+        }
+      ],
+      "observation": "默认history来自rmw默认深度；发布回放default_history重置为KEEP_LAST默认深度，不保留原writer全部缓存历史。",
+      "releaseLineRanges": [
+        {
+          "start": 38,
+          "end": 92
+        }
+      ]
+    },
+    {
+      "id": "bag-rosbag2_storage-include-rosbag2_storage-serialized_bag_message-hpp",
+      "repository": "ros2/rosbag2",
+      "version": "0.26.11",
+      "localPath": "references/sources/official-core/ros2--rosbag2/jazzy--12b5e8ba4eb5/rosbag2_storage/include/rosbag2_storage/serialized_bag_message.hpp",
+      "path": "rosbag2_storage/include/rosbag2_storage/serialized_bag_message.hpp",
+      "referenceCommit": "12b5e8ba4eb5665501a16f0d9e050552a1149f56",
+      "referenceSha256": "4deafc272060c27ee5e7a9c6d174727a4d664e310ab5cdb6e3dbbc83cbea0636",
+      "referenceLineCount": 47,
+      "releaseCommit": "cb8fa198b93bfed90e2417b52b8645fb9ef89c2b",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_storage/include/rosbag2_storage/serialized_bag_message.hpp",
+      "releaseSha256": "4deafc272060c27ee5e7a9c6d174727a4d664e310ab5cdb6e3dbbc83cbea0636",
+      "releaseLineCount": 47,
+      "referenceEqualsRelease": true,
+      "verification": "只读本地固定快照与官方0.26.11固定release HTTP字节；不运行DDS或上游代码",
+      "installedPath": "/opt/ros/jazzy/include/rosbag2_storage/rosbag2_storage/serialized_bag_message.hpp",
+      "installedSha256": "4deafc272060c27ee5e7a9c6d174727a4d664e310ab5cdb6e3dbbc83cbea0636",
+      "installedEqualsRelease": true,
+      "referenceLineRanges": [
+        {
+          "start": 27,
+          "end": 41
+        }
+      ],
+      "observation": "纳秒recv/send元数据与原序列化payload独立；header注释不可替代具体插件实现核查。",
+      "releaseLineRanges": [
+        {
+          "start": 27,
+          "end": 41
+        }
+      ]
+    },
+    {
+      "id": "bag-rosbag2_storage-src-rosbag2_storage-default_storage_id-cpp",
+      "repository": "ros2/rosbag2",
+      "version": "0.26.11",
+      "localPath": "references/sources/official-core/ros2--rosbag2/jazzy--12b5e8ba4eb5/rosbag2_storage/src/rosbag2_storage/default_storage_id.cpp",
+      "path": "rosbag2_storage/src/rosbag2_storage/default_storage_id.cpp",
+      "referenceCommit": "12b5e8ba4eb5665501a16f0d9e050552a1149f56",
+      "referenceSha256": "963bb24f7d0d8366880bf37a8387b65e84f01155f043e1d4e62c4a2f8f6187fe",
+      "referenceLineCount": 24,
+      "releaseCommit": "cb8fa198b93bfed90e2417b52b8645fb9ef89c2b",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_storage/src/rosbag2_storage/default_storage_id.cpp",
+      "releaseSha256": "963bb24f7d0d8366880bf37a8387b65e84f01155f043e1d4e62c4a2f8f6187fe",
+      "releaseLineCount": 24,
+      "referenceEqualsRelease": true,
+      "verification": "只读本地固定快照与官方0.26.11固定release HTTP字节；不运行DDS或上游代码",
+      "referenceLineRanges": [
+        {
+          "start": 19,
+          "end": 24
+        }
+      ],
+      "observation": "此版本默认storage id为mcap；显式-s sqlite3选择另一插件，需确认实际安装。",
+      "releaseLineRanges": [
+        {
+          "start": 19,
+          "end": 24
+        }
+      ]
+    },
+    {
+      "id": "bag-rosbag2_storage_sqlite3-src-rosbag2_storage_sqlite3-sqlite_storage-cpp",
+      "repository": "ros2/rosbag2",
+      "version": "0.26.11",
+      "localPath": "references/sources/official-core/ros2--rosbag2/jazzy--12b5e8ba4eb5/rosbag2_storage_sqlite3/src/rosbag2_storage_sqlite3/sqlite_storage.cpp",
+      "path": "rosbag2_storage_sqlite3/src/rosbag2_storage_sqlite3/sqlite_storage.cpp",
+      "referenceCommit": "12b5e8ba4eb5665501a16f0d9e050552a1149f56",
+      "referenceSha256": "336c3f9f7fc4b2fba4ff8fa0bb781ecd80f1252393e886dbc47bb316b4ed4a78",
+      "referenceLineCount": 1058,
+      "releaseCommit": "cb8fa198b93bfed90e2417b52b8645fb9ef89c2b",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_storage_sqlite3/src/rosbag2_storage_sqlite3/sqlite_storage.cpp",
+      "releaseSha256": "336c3f9f7fc4b2fba4ff8fa0bb781ecd80f1252393e886dbc47bb316b4ed4a78",
+      "releaseLineCount": 1058,
+      "referenceEqualsRelease": true,
+      "verification": "只读本地固定快照与官方0.26.11固定release HTTP字节；不运行DDS或上游代码",
+      "referenceLineRanges": [
+        {
+          "start": 290,
+          "end": 306
+        },
+        {
+          "start": 376,
+          "end": 391
+        },
+        {
+          "start": 464,
+          "end": 471
+        },
+        {
+          "start": 539,
+          "end": 543
+        },
+        {
+          "start": 669,
+          "end": 686
+        }
+      ],
+      "observation": "messages只存timestamp=recv、topic_id和data；read_next只赋recv，不恢复独立send字段；时间排序并以message id作次级顺序。",
+      "releaseLineRanges": [
+        {
+          "start": 290,
+          "end": 306
+        },
+        {
+          "start": 376,
+          "end": 391
+        },
+        {
+          "start": 464,
+          "end": 471
+        },
+        {
+          "start": 539,
+          "end": 543
+        },
+        {
+          "start": 669,
+          "end": 686
+        }
+      ]
+    },
+    {
+      "id": "bag-rosbag2_storage_mcap-src-mcap_storage-cpp",
+      "repository": "ros2/rosbag2",
+      "version": "0.26.11",
+      "localPath": "references/sources/official-core/ros2--rosbag2/jazzy--12b5e8ba4eb5/rosbag2_storage_mcap/src/mcap_storage.cpp",
+      "path": "rosbag2_storage_mcap/src/mcap_storage.cpp",
+      "referenceCommit": "12b5e8ba4eb5665501a16f0d9e050552a1149f56",
+      "referenceSha256": "c84ca81b0799ada3b258e39f74dde45b753fe2a071af65ca95900a1f7663d5e5",
+      "referenceLineCount": 982,
+      "releaseCommit": "cb8fa198b93bfed90e2417b52b8645fb9ef89c2b",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_storage_mcap/src/mcap_storage.cpp",
+      "releaseSha256": "c84ca81b0799ada3b258e39f74dde45b753fe2a071af65ca95900a1f7663d5e5",
+      "releaseLineCount": 982,
+      "referenceEqualsRelease": true,
+      "verification": "只读本地固定快照与官方0.26.11固定release HTTP字节；不运行DDS或上游代码",
+      "referenceLineRanges": [
+        {
+          "start": 553,
+          "end": 560
+        },
+        {
+          "start": 630,
+          "end": 667
+        },
+        {
+          "start": 722,
+          "end": 751
+        },
+        {
+          "start": 867,
+          "end": 880
+        }
+      ],
+      "observation": "MCAP logTime=recv、publishTime=send且读取保留两者；过滤可走linear reader；无index对时间排序支持有限，publish-time order未实现。",
+      "releaseLineRanges": [
+        {
+          "start": 553,
+          "end": 560
+        },
+        {
+          "start": 630,
+          "end": 667
+        },
+        {
+          "start": 722,
+          "end": 751
+        },
+        {
+          "start": 867,
+          "end": 880
+        }
+      ]
+    },
+    {
+      "id": "bag-rosbag2_storage_mcap-README-md",
+      "repository": "ros2/rosbag2",
+      "version": "0.26.11",
+      "localPath": "references/sources/official-core/ros2--rosbag2/jazzy--12b5e8ba4eb5/rosbag2_storage_mcap/README.md",
+      "path": "rosbag2_storage_mcap/README.md",
+      "referenceCommit": "12b5e8ba4eb5665501a16f0d9e050552a1149f56",
+      "referenceSha256": "8a33d22f1f4e7d8c4976dc936fec1f72c2ed6ab04d4be59acd8440bc6b991280",
+      "referenceLineCount": 146,
+      "releaseCommit": "cb8fa198b93bfed90e2417b52b8645fb9ef89c2b",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_storage_mcap/README.md",
+      "releaseSha256": "8a33d22f1f4e7d8c4976dc936fec1f72c2ed6ab04d4be59acd8440bc6b991280",
+      "releaseLineCount": 146,
+      "referenceEqualsRelease": true,
+      "verification": "只读本地固定快照与官方0.26.11固定release HTTP字节；不运行DDS或上游代码",
+      "referenceLineRanges": [
+        {
+          "start": 35,
+          "end": 77
+        },
+        {
+          "start": 90,
+          "end": 148
+        }
+      ],
+      "observation": "插件chunk压缩/CRC/index/preset与rosbag2通用compression分开；fastwrite文档关于子集读取的概括需结合当前linear-filter实现和实测，不能直接当所有过滤都失败。",
+      "releaseLineRanges": [
+        {
+          "start": 35,
+          "end": 77
+        },
+        {
+          "start": 90,
+          "end": 148
+        }
+      ]
+    },
+    {
+      "id": "bag-rosbag2_storage_sqlite3-README-md",
+      "repository": "ros2/rosbag2",
+      "version": "0.26.11",
+      "localPath": "references/sources/official-core/ros2--rosbag2/jazzy--12b5e8ba4eb5/rosbag2_storage_sqlite3/README.md",
+      "path": "rosbag2_storage_sqlite3/README.md",
+      "referenceCommit": "12b5e8ba4eb5665501a16f0d9e050552a1149f56",
+      "referenceSha256": "dce6b61adf7574ebc2c0a240d6def384204fa074820c1d9c04dc469b747e3cfa",
+      "referenceLineCount": 31,
+      "releaseCommit": "cb8fa198b93bfed90e2417b52b8645fb9ef89c2b",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_storage_sqlite3/README.md",
+      "releaseSha256": "dce6b61adf7574ebc2c0a240d6def384204fa074820c1d9c04dc469b747e3cfa",
+      "releaseLineCount": 31,
+      "referenceEqualsRelease": true,
+      "verification": "只读本地固定快照与官方0.26.11固定release HTTP字节；不运行DDS或上游代码",
+      "referenceLineRanges": [
+        {
+          "start": 1,
+          "end": 29
+        }
+      ],
+      "observation": "默认偏性能，崩溃损坏风险需按需求选resilient；配置不是任意崩溃保证，本轮未故障注入。",
+      "releaseLineRanges": [
+        {
+          "start": 1,
+          "end": 29
+        }
+      ]
+    },
+    {
+      "id": "bag-rosbag2_py-src-rosbag2_py-_reader-cpp",
+      "repository": "ros2/rosbag2",
+      "version": "0.26.11",
+      "localPath": "references/sources/official-core/ros2--rosbag2/jazzy--12b5e8ba4eb5/rosbag2_py/src/rosbag2_py/_reader.cpp",
+      "path": "rosbag2_py/src/rosbag2_py/_reader.cpp",
+      "referenceCommit": "12b5e8ba4eb5665501a16f0d9e050552a1149f56",
+      "referenceSha256": "43b93c8826c322318da8f7b4f72baa51b9b8b96bdfd678a43ace64d7a0e639da",
+      "referenceLineCount": 132,
+      "releaseCommit": "cb8fa198b93bfed90e2417b52b8645fb9ef89c2b",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_py/src/rosbag2_py/_reader.cpp",
+      "releaseSha256": "43b93c8826c322318da8f7b4f72baa51b9b8b96bdfd678a43ace64d7a0e639da",
+      "releaseLineCount": 132,
+      "referenceEqualsRelease": true,
+      "verification": "只读本地固定快照与官方0.26.11固定release HTTP字节；不运行DDS或上游代码",
+      "referenceLineRanges": [
+        {
+          "start": 48,
+          "end": 56
+        }
+      ],
+      "observation": "read_next三元组只暴露topic、序列化字节与recv时间，不能据它读到send。",
+      "releaseLineRanges": [
+        {
+          "start": 48,
+          "end": 56
+        }
+      ]
+    },
+    {
+      "id": "bag-rosbag2_py-src-rosbag2_py-_writer-cpp",
+      "repository": "ros2/rosbag2",
+      "version": "0.26.11",
+      "localPath": "references/sources/official-core/ros2--rosbag2/jazzy--12b5e8ba4eb5/rosbag2_py/src/rosbag2_py/_writer.cpp",
+      "path": "rosbag2_py/src/rosbag2_py/_writer.cpp",
+      "referenceCommit": "12b5e8ba4eb5665501a16f0d9e050552a1149f56",
+      "referenceSha256": "304eb6f5f00b697ed3a6142b4e97fd04b0b83c8f6672ab816914c5a320c54cec",
+      "referenceLineCount": 162,
+      "releaseCommit": "cb8fa198b93bfed90e2417b52b8645fb9ef89c2b",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_py/src/rosbag2_py/_writer.cpp",
+      "releaseSha256": "304eb6f5f00b697ed3a6142b4e97fd04b0b83c8f6672ab816914c5a320c54cec",
+      "releaseLineCount": 162,
+      "referenceEqualsRelease": true,
+      "verification": "只读本地固定快照与官方0.26.11固定release HTTP字节；不运行DDS或上游代码",
+      "referenceLineRanges": [
+        {
+          "start": 46,
+          "end": 67
+        },
+        {
+          "start": 102,
+          "end": 115
+        }
+      ],
+      "observation": "导出三/四参数write；三参数把recv与send设为同一值，四参数可做无DDS元数据反例。",
+      "releaseLineRanges": [
+        {
+          "start": 46,
+          "end": 67
+        },
+        {
+          "start": 102,
+          "end": 115
+        }
+      ]
+    },
+    {
+      "id": "bag-ros2bag-ros2bag-verb-record-py",
+      "repository": "ros2/rosbag2",
+      "version": "0.26.11",
+      "localPath": "references/sources/official-core/ros2--rosbag2/jazzy--12b5e8ba4eb5/ros2bag/ros2bag/verb/record.py",
+      "path": "ros2bag/ros2bag/verb/record.py",
+      "referenceCommit": "12b5e8ba4eb5665501a16f0d9e050552a1149f56",
+      "referenceSha256": "328efa6b8963612a5cca6988d4d0d4f2065686daea6e8d7f574ee7edb865e74a",
+      "referenceLineCount": 393,
+      "releaseCommit": "cb8fa198b93bfed90e2417b52b8645fb9ef89c2b",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/ros2bag/ros2bag/verb/record.py",
+      "releaseSha256": "328efa6b8963612a5cca6988d4d0d4f2065686daea6e8d7f574ee7edb865e74a",
+      "releaseLineCount": 393,
+      "referenceEqualsRelease": true,
+      "verification": "只读本地固定快照与官方0.26.11固定release HTTP字节；不运行DDS或上游代码",
+      "installedPath": "/opt/ros/jazzy/lib/python3.12/site-packages/ros2bag/verb/record.py",
+      "installedSha256": "328efa6b8963612a5cca6988d4d0d4f2065686daea6e8d7f574ee7edb865e74a",
+      "installedEqualsRelease": true,
+      "referenceLineRanges": [
+        {
+          "start": 62,
+          "end": 74
+        },
+        {
+          "start": 132,
+          "end": 134
+        },
+        {
+          "start": 165,
+          "end": 168
+        },
+        {
+          "start": 273,
+          "end": 279
+        }
+      ],
+      "observation": "CLI支持显式--topics/存储/QoS/sim；输出目录不可已存在，sim与no-discovery在CLI明确拒绝。",
+      "releaseLineRanges": [
+        {
+          "start": 62,
+          "end": 74
+        },
+        {
+          "start": 132,
+          "end": 134
+        },
+        {
+          "start": 165,
+          "end": 168
+        },
+        {
+          "start": 273,
+          "end": 279
+        }
+      ]
+    },
+    {
+      "id": "bag-ros2bag-ros2bag-verb-play-py",
+      "repository": "ros2/rosbag2",
+      "version": "0.26.11",
+      "localPath": "references/sources/official-core/ros2--rosbag2/jazzy--12b5e8ba4eb5/ros2bag/ros2bag/verb/play.py",
+      "path": "ros2bag/ros2bag/verb/play.py",
+      "referenceCommit": "12b5e8ba4eb5665501a16f0d9e050552a1149f56",
+      "referenceSha256": "0e0ebef5fb0c25c7b1a6bcc1858e47e427ed1b08f90aa10c34cc1f595f71513a",
+      "referenceLineCount": 313,
+      "releaseCommit": "cb8fa198b93bfed90e2417b52b8645fb9ef89c2b",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/ros2bag/ros2bag/verb/play.py",
+      "releaseSha256": "0e0ebef5fb0c25c7b1a6bcc1858e47e427ed1b08f90aa10c34cc1f595f71513a",
+      "releaseLineCount": 313,
+      "referenceEqualsRelease": true,
+      "verification": "只读本地固定快照与官方0.26.11固定release HTTP字节；不运行DDS或上游代码",
+      "installedPath": "/opt/ros/jazzy/lib/python3.12/site-packages/ros2bag/verb/play.py",
+      "installedSha256": "0e0ebef5fb0c25c7b1a6bcc1858e47e427ed1b08f90aa10c34cc1f595f71513a",
+      "installedEqualsRelease": true,
+      "referenceLineRanges": [
+        {
+          "start": 64,
+          "end": 114
+        },
+        {
+          "start": 249,
+          "end": 274
+        }
+      ],
+      "observation": "--clock可省频率，常量40Hz；默认不开。CLI仅固定频率--clock分支自动exclude原/clock，不把其他clock模式或C++API泛同。",
+      "releaseLineRanges": [
+        {
+          "start": 64,
+          "end": 114
+        },
+        {
+          "start": 249,
+          "end": 274
+        }
+      ]
+    },
+    {
+      "id": "rcl-clock-started",
+      "repository": "ros2/rcl",
+      "version": "9.2.11",
+      "releaseCommit": "22c0b957140035c675f0a061daaab5fd6b2080e7",
+      "path": "rcl/src/rcl/time.c",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rcl/22c0b957140035c675f0a061daaab5fd6b2080e7/rcl/src/rcl/time.c",
+      "releaseSha256": "3dd4b88b6eadb68a416427b4d85b9e525f835c1990e3c11d9c483143d07354a8",
+      "releaseLineCount": 475,
+      "lineRanges": [
+        {
+          "start": 76,
+          "end": 83
+        }
+      ],
+      "verification": "只读精确release官方HTTP原文；未调用RCL创建节点"
+    },
+    {
+      "id": "rclcpp-clock-started",
+      "repository": "ros2/rclcpp",
+      "version": "安装28.1.22；参考28.1.23",
+      "localPath": "references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp/src/rclcpp/clock.cpp",
+      "path": "rclcpp/src/rclcpp/clock.cpp",
+      "referenceCommit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "referenceSha256": "0c8c17edd51476ae0be31ad30d9ee379135d5ac271500fafe565b7f7b81876c4",
+      "releaseCommit": "3aa906a2c7ad13d1623b31a55731993f56538e72",
+      "releaseSha256": "0c8c17edd51476ae0be31ad30d9ee379135d5ac271500fafe565b7f7b81876c4",
+      "referenceEqualsRelease": true,
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rclcpp/3aa906a2c7ad13d1623b31a55731993f56538e72/rclcpp/src/rclcpp/clock.cpp",
+      "lineRanges": [
+        {
+          "start": 212,
+          "end": 273
+        }
+      ],
+      "verification": "只读固定release及本地快照；未调用创建ROS clock或节点"
+    },
+    {
+      "id": "official-qos-override-guide",
+      "repository": "ros2/ros2_documentation",
+      "version": "Jazzy固定文档快照",
+      "referenceCommit": "929e37c4c6d0746e75d10f1fd76f024743ff75ea",
+      "localPath": "references/sources/official-docs/ros2--ros2_documentation/jazzy--929e37c4c6d0/source/How-To-Guides/Overriding-QoS-Policies-For-Recording-And-Playback.rst",
+      "path": "source/How-To-Guides/Overriding-QoS-Policies-For-Recording-And-Playback.rst",
+      "referenceSha256": "fcf837f622c8e9e4de9439da8dd26e6c1fa189ba95d6a248a45715bcb7ef8ef1",
+      "referenceLineCount": 111,
+      "sourceUrl": "https://github.com/ros2/ros2_documentation/blob/929e37c4c6d0746e75d10f1fd76f024743ff75ea/source/How-To-Guides/Overriding-QoS-Policies-For-Recording-And-Playback.rst",
+      "verification": "只读已保存官方原文；在线docs站Anubis拒绝未当作核对成功"
+    },
+    {
+      "id": "rmw-message-info",
+      "installedPath": "/opt/ros/jazzy/include/rmw/rmw/types.h",
+      "version": "本机rmw安装headers",
+      "installedSha256": "c1e7be9e420d3c32cf6b24db62c3fbd6b97d0518811f6f4677db09d835cf3830",
+      "lineRanges": [
+        {
+          "start": 630,
+          "end": 649
+        }
+      ],
+      "verification": "只读安装公开header；未启动DDS",
+      "sourceUrl": "https://github.com/ros2/rmw"
+    },
+    {
+      "id": "clock-header",
+      "installedPath": "/opt/ros/jazzy/include/rclcpp/rclcpp/clock.hpp",
+      "version": "28.1.22",
+      "installedSha256": "dc2c33381deafc3db5c94ec59d9a731f533794419acfa7d33a16d5379a8f61a9",
+      "lineRanges": [
+        {
+          "start": 147,
+          "end": 190
+        }
+      ],
+      "verification": "只读安装公开header；未启动DDS",
+      "sourceUrl": "https://github.com/ros2/rclcpp/blob/3aa906a2c7ad13d1623b31a55731993f56538e72/rclcpp/include/rclcpp/clock.hpp"
+    },
+    {
+      "id": "fastcdr-include-fastcdr-Cdr.h",
+      "repository": "eProsima/Fast-CDR",
+      "version": "2.2.8",
+      "releaseCommit": "1bc9c919311ffce555b445560bf7ae062a4e1c72",
+      "path": "include/fastcdr/Cdr.h",
+      "sourceUrl": "https://raw.githubusercontent.com/eProsima/Fast-CDR/1bc9c919311ffce555b445560bf7ae062a4e1c72/include/fastcdr/Cdr.h",
+      "releaseSha256": "868848df218ed4741020aa86bee21afcb9d242b03b34f9fa2214e6384d436505",
+      "releaseLineCount": 3712,
+      "verification": "只读官方固定release；未编译或运行序列化器",
+      "installedPath": "/opt/ros/jazzy/include/fastcdr/fastcdr/Cdr.h",
+      "installedSha256": "868848df218ed4741020aa86bee21afcb9d242b03b34f9fa2214e6384d436505",
+      "installedEqualsRelease": true,
+      "lineRanges": [
+        {
+          "start": 3175,
+          "end": 3190
+        }
+      ]
+    },
+    {
+      "id": "fastcdr-src-cpp-Cdr.cpp",
+      "repository": "eProsima/Fast-CDR",
+      "version": "2.2.8",
+      "releaseCommit": "1bc9c919311ffce555b445560bf7ae062a4e1c72",
+      "path": "src/cpp/Cdr.cpp",
+      "sourceUrl": "https://raw.githubusercontent.com/eProsima/Fast-CDR/1bc9c919311ffce555b445560bf7ae062a4e1c72/src/cpp/Cdr.cpp",
+      "releaseSha256": "af3a74aeac78e64f11d21757b662b5e248b735a27f8c9164858c4c512c9b8bd2",
+      "releaseLineCount": 3441,
+      "verification": "只读官方固定release；未编译或运行序列化器",
+      "doubleParameterLineNumbers": [
+        694
+      ]
+    },
+    {
+      "id": "mcap-v0-spec",
+      "sourceUrl": "https://mcap.dev/spec",
+      "version": "MCAP major0；2026-11-07在线规范",
+      "verification": "官方规范web核读Magic、record header、Message0x05/Chunk0x06及uint16/uint32/uint64布局；动态网页未伪造固定commit或原文件SHA",
+      "webLineRanges": [
+        {
+          "start": 37,
+          "end": 47
+        },
+        {
+          "start": 117,
+          "end": 128
+        },
+        {
+          "start": 169,
+          "end": 193
+        }
+      ]
+    }
+  ],
+  "reviewedReports": {
+    "bag-current-validation.json": {
+      "sha256": "99e8bbe699f8fc4666255f0d927535ceef1a63788fb31f1b537926b7d6c5b6e7",
+      "scope": "3次真实CLI录制、2次真实CLI回放、无DDS双后端四参Writer字段探针；7项源/输入指纹。未测父SIGINT/原生挂起、保活Player会话结束、吞吐/压缩/崩溃。",
+      "sourceHashesVerified": 7,
+      "verifiedAt": "2026-11-07T06:02:06+08:00"
+    },
+    "bag-cli-boundaries-current-validation.json": {
+      "sha256": "e40ed6d095f73429eedd3d98dea64194ae9cb9457d498eb66f39cf39aac2cc59",
+      "scope": "6项帮助/非法参数返回码及相对新目录双后端探针；3Python指纹。报告仅保留检查标签和返回码，未记录各非法实参完整argv；不据此推广任意参数全集。",
+      "sourceHashesVerified": 3,
+      "verifiedAt": "2026-11-07T06:02:06+08:00"
+    }
+  },
+  "findings": [
+    {
+      "id": "BAG-01",
+      "severity": "P2",
+      "status": "source_confirmed_and_bounded_runtime_evidence_available",
+      "chapters": [
+        "time-bag",
+        "eco-data-observability"
+      ],
+      "locations": [
+        "time-bag.sections[1]",
+        "eco-data-observability.sections[1]"
+      ],
+      "finding": "应区分消息Header、RMW发送元数据、bag接收记录时间三种时间，默认Linux录制不是简单的Python/C++回调开始时now。",
+      "evidence": [
+        {
+          "sourceId": "bag-rosbag2_transport-src-rosbag2_transport-recorder-cpp",
+          "start": 757,
+          "end": 806,
+          "lineBasis": "固定reference文件；若player release则相同段在574后偏移-4行"
+        },
+        {
+          "sourceId": "bag-rosbag2_cpp-src-rosbag2_cpp-writer-cpp",
+          "start": 193,
+          "end": 215,
+          "lineBasis": "固定reference文件；若player release则相同段在574后偏移-4行"
+        }
+      ],
+      "suggestion": "说明本机Linux普通分支直接取MessageInfo.received_timestamp/source_timestamp；sim分支仅把recv替换成node.now，Header原样留在payload。Header采样含义由生产者合同定义，不自动成为所有消息的真实物理采样时刻。",
+      "validation": "建议合成Header与时钟刻意不同，读回两者与完整字段；不把RMW source/header或sim recv直接相减当网络时延。",
+      "boundReport": "bag-current-validation.json"
+    },
+    {
+      "id": "BAG-02",
+      "severity": "P2",
+      "status": "source_confirmed_and_bounded_runtime_evidence_available",
+      "chapters": [
+        "time-bag"
+      ],
+      "locations": [
+        "time-bag.sections[1]"
+      ],
+      "finding": "首条/clock到达不等于started；实现要求clock值严格大于0，而且等待发生在创建数据订阅之前。",
+      "evidence": [
+        {
+          "sourceId": "bag-rosbag2_transport-src-rosbag2_transport-recorder-cpp",
+          "start": 319,
+          "end": 337,
+          "lineBasis": "固定reference文件；若player release则相同段在574后偏移-4行"
+        },
+        {
+          "sourceId": "bag-rosbag2_transport-src-rosbag2_transport-recorder-cpp",
+          "start": 635,
+          "end": 672,
+          "lineBasis": "固定reference文件；若player release则相同段在574后偏移-4行"
+        },
+        {
+          "sourceId": "rcl-clock-started",
+          "start": 76,
+          "end": 83
+        }
+      ],
+      "suggestion": "写成“首次正值/clock使录制时钟启动后才发现/订阅数据”；门前volatile样本通常已错过，不能承诺等clock后自动补录。sim与--no-discovery明确不相容。",
+      "validation": "无clock、仅0clock、正clock三阶段，发不同序号；同时查真实数据匹配端点和关闭后的bag，不能仅凭日志或零文件判断。",
+      "boundReport": "bag-current-validation.json"
+    },
+    {
+      "id": "BAG-03",
+      "severity": "P2",
+      "status": "source_confirmed_and_bounded_runtime_evidence_available",
+      "chapters": [
+        "eco-data-observability",
+        "time-bag"
+      ],
+      "locations": [
+        "eco-data-observability.sections[3]"
+      ],
+      "finding": "两个插件的时间字段保真度不同：MCAP保存recv/logTime及send/publishTime；SQLite当前messages表只保存recv timestamp。",
+      "evidence": [
+        {
+          "sourceId": "bag-rosbag2_storage_mcap-src-mcap_storage-cpp",
+          "start": 553,
+          "end": 560,
+          "lineBasis": "固定reference文件；若player release则相同段在574后偏移-4行"
+        },
+        {
+          "sourceId": "bag-rosbag2_storage_mcap-src-mcap_storage-cpp",
+          "start": 867,
+          "end": 880,
+          "lineBasis": "固定reference文件；若player release则相同段在574后偏移-4行"
+        },
+        {
+          "sourceId": "bag-rosbag2_storage_sqlite3-src-rosbag2_storage_sqlite3-sqlite_storage-cpp",
+          "start": 290,
+          "end": 306,
+          "lineBasis": "固定reference文件；若player release则相同段在574后偏移-4行"
+        },
+        {
+          "sourceId": "bag-rosbag2_storage_sqlite3-src-rosbag2_storage_sqlite3-sqlite_storage-cpp",
+          "start": 376,
+          "end": 391,
+          "lineBasis": "固定reference文件；若player release则相同段在574后偏移-4行"
+        },
+        {
+          "sourceId": "bag-rosbag2_storage_sqlite3-src-rosbag2_storage_sqlite3-sqlite_storage-cpp",
+          "start": 464,
+          "end": 471,
+          "lineBasis": "固定reference文件；若player release则相同段在574后偏移-4行"
+        }
+      ],
+      "suggestion": "格式对照表加入独立send时间持久化区别，限定0.26.11；不要只比较压缩/文件大小，也不要声称Header被覆盖或SQLite一定丢掉消息本体。",
+      "validation": "同一payload，显式recv10s/send9s/Header7s写两后端；核原始SQL列及MCAP Message字段、同一payload字节，和Python reader仅recv三元组边界。",
+      "boundReport": "bag-current-validation.json"
+    },
+    {
+      "id": "BAG-04",
+      "severity": "P2",
+      "status": "source_confirmed_and_bounded_runtime_evidence_available",
+      "chapters": [
+        "time-bag",
+        "eco-data-observability"
+      ],
+      "locations": [
+        "time-bag.sections[3]",
+        "eco-data-observability.sections[4]"
+      ],
+      "finding": "回放按recv timestamp调度，--clock发布受控回放轴，不会重写消息Header或替所有消费者启用use_sim_time。",
+      "evidence": [
+        {
+          "sourceId": "bag-rosbag2_transport-src-rosbag2_transport-player-cpp",
+          "start": 451,
+          "end": 454,
+          "lineBasis": "固定reference文件；若player release则相同段在574后偏移-4行"
+        },
+        {
+          "sourceId": "bag-rosbag2_transport-src-rosbag2_transport-player-cpp",
+          "start": 1097,
+          "end": 1112,
+          "lineBasis": "固定reference文件；若player release则相同段在574后偏移-4行"
+        },
+        {
+          "sourceId": "bag-rosbag2_transport-src-rosbag2_transport-player-cpp",
+          "start": 1439,
+          "end": 1464,
+          "lineBasis": "固定reference文件；若player release则相同段在574后偏移-4行"
+        },
+        {
+          "sourceId": "bag-ros2bag-ros2bag-verb-play-py",
+          "start": 100,
+          "end": 114,
+          "lineBasis": "固定reference文件；若player release则相同段在574后偏移-4行"
+        }
+      ],
+      "suggestion": "--clock不带值为40Hz，单位为墙钟定时器调度频率；--rate调整回放轴速率，不是“每条Header自动平移”。消费者仍须逐节点设置use_sim_time。",
+      "validation": "全量回放不带clock时消费者ROS时间仍0且Header保留；筛选回放带clock时记录clock值/唯一来源和完整消息字段，不承诺精确40次/秒或固定耗时。",
+      "boundReport": "bag-current-validation.json"
+    },
+    {
+      "id": "BAG-05",
+      "severity": "P2",
+      "status": "source_confirmed_and_bounded_runtime_evidence_available",
+      "chapters": [
+        "time-bag",
+        "eco-data-observability"
+      ],
+      "locations": [
+        "time-bag.sections[4]",
+        "eco-data-observability.sections[1]",
+        "api-rosbag-qos"
+      ],
+      "finding": "录制订阅的QoS请求与回放发布的QoS提供是两个方向；volatile晚加入可相容却不请求之前历史，不能把缺历史都叫不兼容。",
+      "evidence": [
+        {
+          "sourceId": "bag-rosbag2_transport-src-rosbag2_transport-recorder-cpp",
+          "start": 874,
+          "end": 928,
+          "lineBasis": "固定reference文件；若player release则相同段在574后偏移-4行"
+        },
+        {
+          "sourceId": "bag-rosbag2_transport-src-rosbag2_transport-player-cpp",
+          "start": 49,
+          "end": 78,
+          "lineBasis": "固定reference文件；若player release则相同段在574后偏移-4行"
+        },
+        {
+          "sourceId": "bag-rosbag2_storage-src-rosbag2_storage-qos-cpp",
+          "start": 332,
+          "end": 413,
+          "lineBasis": "固定reference文件；若player release则相同段在574后偏移-4行"
+        },
+        {
+          "sourceId": "bag-rosbag2_storage-src-rosbag2_storage-qos-cpp",
+          "start": 451,
+          "end": 467,
+          "lineBasis": "固定reference文件；若player release则相同段在574后偏移-4行"
+        }
+      ],
+      "suggestion": "覆盖优先，自动record按当前端点适配；已建订阅不因后续弱QoS发布者自动重建。play混合原profile可退默认，同型原profile回放仍重置history，不能复刻各原writer缓存。metadata.offered_profiles描述原发布者，不等于录制器实际请求。",
+      "validation": "同一仍存活transient_local writer先发一次状态，晚启动两录制器分别请求transient/volatile，匹配数/正向交付/关闭后计数共同支撑13 vs12；不要靠未发现时的一次无消息证明。",
+      "boundReport": "bag-current-validation.json"
+    },
+    {
+      "id": "BAG-06",
+      "severity": "P2",
+      "status": "source_confirmed_persistent_player_not_runtime_tested",
+      "chapters": [
+        "time-bag",
+        "eco-data-observability"
+      ],
+      "finding": "同标称0.26.11的固定快照有release没有的“会话结束取消clock timer”补丁，不能将新README保证归到本机安装。",
+      "evidence": [
+        {
+          "sourceId": "bag-rosbag2_transport-src-rosbag2_transport-player-cpp",
+          "start": 569,
+          "end": 579,
+          "lineBasis": "固定reference文件；若player release则相同段在574后偏移-4行"
+        },
+        {
+          "sourceId": "bag-README-md",
+          "start": 169,
+          "end": 178,
+          "lineBasis": "固定reference文件；若player release则相同段在574后偏移-4行"
+        }
+      ],
+      "suggestion": "正文只说明CLI退出和保活Player会话分别验证；暂停时发不变clock与结束会话后停clock也分开。不要依据包版本字符串声称所有C++实现字节相同。",
+      "validation": "若需要此主张，未来用保活Player服务API明确测会话结束、停止、重开及暂停；当前CLI实验不自动覆盖保活。"
+    },
+    {
+      "id": "BAG-07",
+      "severity": "P3",
+      "status": "text_revision_recommended_runtime_clock_difference_verified",
+      "chapters": [
+        "time-bag",
+        "eco-data-observability"
+      ],
+      "locations": [
+        "time-bag.commands[1]",
+        "time-bag.sections[2].codeBlocks[0]",
+        "eco-data-observability.sections[2].codeBlocks[2]"
+      ],
+      "finding": "部分不带--clock的play命令上方共用注释讲--clock发时钟，容易让读者把可选行为当该命令实际行为。",
+      "evidence": [
+        {
+          "sourceId": "bag-ros2bag-ros2bag-verb-play-py",
+          "start": 100,
+          "end": 105,
+          "lineBasis": "固定reference文件；若player release则相同段在574后偏移-4行"
+        }
+      ],
+      "suggestion": "不带flag时明确“本条不产生回放时钟”；只有显式--clock的行介绍clock频率。现有“筛选cmd_vel保留实时pose唯一来源”正文逻辑正确。",
+      "validation": "静态对照命令与注释，实际全量无clock/筛选有clock分别保存观测。"
+    },
+    {
+      "id": "BAG-08",
+      "severity": "P3",
+      "status": "source_confirmed_performance_recovery_not_tested",
+      "chapters": [
+        "eco-data-observability"
+      ],
+      "locations": [
+        "eco-data-observability.sections[3]"
+      ],
+      "finding": "MCAP插件chunk压缩/index与rosbag2通用压缩不同；fastwrite/noChunking不是通用高效索引配置，SQLite默认性能配置也不是崩溃恢复保证。",
+      "evidence": [
+        {
+          "sourceId": "bag-rosbag2_storage_mcap-README-md",
+          "start": 35,
+          "end": 148,
+          "lineBasis": "固定reference文件；若player release则相同段在574后偏移-4行"
+        },
+        {
+          "sourceId": "bag-rosbag2_storage_mcap-src-mcap_storage-cpp",
+          "start": 630,
+          "end": 667,
+          "lineBasis": "固定reference文件；若player release则相同段在574后偏移-4行"
+        },
+        {
+          "sourceId": "bag-rosbag2_storage_mcap-src-mcap_storage-cpp",
+          "start": 722,
+          "end": 751,
+          "lineBasis": "固定reference文件；若player release则相同段在574后偏移-4行"
+        },
+        {
+          "sourceId": "bag-rosbag2_storage_sqlite3-README-md",
+          "start": 15,
+          "end": 29,
+          "lineBasis": "固定reference文件；若player release则相同段在574后偏移-4行"
+        }
+      ],
+      "suggestion": "把存储ID、preset、配置文件、压缩层及版本一起保存；当前线性过滤实现与旧README关于无index子集读取的概括不宜直接泛化为全部失败，性能/seek需实测。",
+      "validation": "本轮无吞吐/压缩/崩溃注入，不给格式性能排名；单消息noChunking只用于字段探针。"
+    },
+    {
+      "id": "BAG-09",
+      "severity": "P2",
+      "status": "source_confirmed_and_bounded_runtime_evidence_available",
+      "chapters": [
+        "time-bag",
+        "eco-data-observability"
+      ],
+      "finding": "CDR对齐填充使重新序列化字节SHA不成为消息语义相等的可靠判据。",
+      "evidence": [
+        {
+          "sourceId": "fastcdr-include-fastcdr-Cdr.h",
+          "start": 3175,
+          "end": 3190
+        },
+        {
+          "sourceId": "fastcdr-src-cpp-Cdr.cpp",
+          "start": 693,
+          "end": 725
+        }
+      ],
+      "suggestion": "DDS录制/回放按所有Header/frame/Point语义字段比较；原始bag bytes SHA仅标识那次记录。显式Writer固定同一payload跨后端仍可核逐字节一致，不删该断言。",
+      "validation": "最终按Header/frame/Point x/y/z所有字段对照通过；显式Writer同一payload跨存储SHA一致保留；首轮CDR SHA失败与第二次clock QoS导入失败均在previousAttempts中。",
+      "boundReport": "bag-current-validation.json"
+    }
+  ],
+  "suggestedExperiments": [
+    {
+      "id": "BAG-EXP-01",
+      "status": "bounded_subset_executed_by_root_and_independently_reviewed",
+      "type": "offline-storage",
+      "purpose": "区分Header/recv/send及两个插件字段",
+      "inputs": "同一PointStamped载荷Header7s、recv10s、send9s；明确四参数Writer；MCAP本例noChunking",
+      "assertions": [
+        "两后端读回recv10s/Header7s及相同原payload",
+        "SQL列仅id/topic_id/timestamp/data，timestamp10s",
+        "MCAP Message logTime10s/publishTime9s；普通Python read_next不能声称输出send"
+      ],
+      "limits": "不是网络时延或通用MCAP解析/压缩测试",
+      "boundReport": "bag-current-validation.json"
+    },
+    {
+      "id": "BAG-EXP-02",
+      "status": "bounded_subset_executed_by_root_and_independently_reviewed",
+      "type": "real-cli-record",
+      "purpose": "普通接收时间与Header分开",
+      "inputs": "独立域/LOCALHOST，6个合成输入和派生序号，Header约1000s，普通系统录制",
+      "assertions": [
+        "先确认实际匹配再发送，关闭后metadata/读回6条逐字段一致",
+        "记录时间与故意设置的Header不同，不能把其差值当真实传输时延"
+      ],
+      "limits": "不保证任意负载无丢包或精确速率",
+      "boundReport": "bag-current-validation.json"
+    },
+    {
+      "id": "BAG-EXP-03",
+      "status": "bounded_subset_executed_by_root_and_independently_reviewed",
+      "type": "real-cli-record-sim",
+      "purpose": "无clock/0clock/正clock门控及门前数据",
+      "inputs": "每阶段不同哨兵序号，volatile数据，正clock10s后再发0..5",
+      "assertions": [
+        "正clock前数据订阅未建立且哨兵未被补录",
+        "正clock后匹配并读回指定recv时间，不把Header替换",
+        "--no-discovery+sim按实际实现拒绝另列"
+      ],
+      "limits": "不将一次值0的clock当started；保留具体RMW/版本",
+      "boundReport": "bag-current-validation.json",
+      "unexecutedSubset": "sim与--no-discovery组合仍仅源码核读，没有将其算成独立CLI实测。"
+    },
+    {
+      "id": "BAG-EXP-04",
+      "status": "bounded_subset_executed_by_root_and_independently_reviewed",
+      "type": "real-cli-history",
+      "purpose": "相容却未请求历史的反例",
+      "inputs": "存活transient_local writer录制前一次静态状态；两次录制分别请求transient/volatile",
+      "assertions": [
+        "正例静态1条、反例0条，但两者有匹配且正常数据交付",
+        "保留YAML与source指纹、publisher生存期，区分缺历史与消息损坏"
+      ],
+      "limits": "不推广为所有writer/RMW缓存大小或无限持久化",
+      "boundReport": "bag-current-validation.json"
+    },
+    {
+      "id": "BAG-EXP-05",
+      "status": "bounded_subset_executed_by_root_and_independently_reviewed",
+      "type": "real-cli-replay",
+      "purpose": "筛选与时钟不重写消息/不产生旧派生输出",
+      "inputs": "先停止原发布者并核0端点；暂停启动播放器，匹配后Resume；全量无clock与input-only有clock两例",
+      "assertions": [
+        "无clock时sim消费者ROS time0且Header依旧存在",
+        "input-only6条、派生/静态0，原字段不变且只有一个内部clock来源",
+        "保存实际clock观测，不承诺40Hz精确计数或硬实时"
+      ],
+      "limits": "CLI自然退出不验证保活Player结束会话行为",
+      "boundReport": "bag-current-validation.json",
+      "unexecutedSubset": "bag中没有录入原/clock，因此CLI排除原bag/clock的分支仅源码支持；未测持久Player服务会话。"
+    },
+    {
+      "id": "BAG-EXP-06",
+      "status": "future_optional_not_run",
+      "type": "persistent-player",
+      "purpose": "核同版本补丁差异",
+      "inputs": "保活Player节点的暂停、结束、停止和重启会话",
+      "assertions": [
+        "分别记录消息状态与clock timer是否继续发；以实际安装行为更新文案"
+      ],
+      "limits": "不能据参考README或普通CLI退出替代此证据"
+    },
+    {
+      "id": "BAG-EXP-07",
+      "status": "future_optional_not_run",
+      "type": "failure-cleanup",
+      "purpose": "父SIGINT/挂起清理支路",
+      "inputs": "仅向自建父PID发INT，或受控挂起；保存子树身份",
+      "assertions": [
+        "只清自建PID/组，无重复INT导致的可避免异常，回收与报告保留",
+        "控制器应急清理若使用，不计产品清理通过"
+      ],
+      "limits": "正常退出不自动证明这些未注入支路"
+    }
+  ],
+  "environment": {
+    "rosDistribution": "Jazzy",
+    "installedPackages": [
+      {
+        "package": "rosbag2",
+        "version": "0.26.11",
+        "path": "/opt/ros/jazzy/share/rosbag2/package.xml",
+        "sha256": "4e1bbeb429b33947bc7b17201e1a9b2ddc26e06ffbda74e5bb4df520f553a8dc"
+      },
+      {
+        "package": "rosbag2_cpp",
+        "version": "0.26.11",
+        "path": "/opt/ros/jazzy/share/rosbag2_cpp/package.xml",
+        "sha256": "418ddec18c051283332d567bb1952867548879a1810ed9ffa61d3dac720de105"
+      },
+      {
+        "package": "rosbag2_transport",
+        "version": "0.26.11",
+        "path": "/opt/ros/jazzy/share/rosbag2_transport/package.xml",
+        "sha256": "0f83063906662a83fa72535646b0c1de6fc21655732bd66259b48a6e555bf0f1"
+      },
+      {
+        "package": "rosbag2_storage",
+        "version": "0.26.11",
+        "path": "/opt/ros/jazzy/share/rosbag2_storage/package.xml",
+        "sha256": "eb6efda028f1331e30b0e33b9285e56e628077abb0fd5724f99de00fee9862dd"
+      },
+      {
+        "package": "rosbag2_storage_mcap",
+        "version": "0.26.11",
+        "path": "/opt/ros/jazzy/share/rosbag2_storage_mcap/package.xml",
+        "sha256": "acc82409b691c18a57207587c0bc41c01a78a66254205988686c818ffc33e6ab"
+      },
+      {
+        "package": "rosbag2_storage_sqlite3",
+        "version": "0.26.11",
+        "path": "/opt/ros/jazzy/share/rosbag2_storage_sqlite3/package.xml",
+        "sha256": "44344d9be2ade2029b678c8a32c19e89d79a2a0670411ca71ea41ff5c0968218"
+      },
+      {
+        "package": "rosbag2_py",
+        "version": "0.26.11",
+        "path": "/opt/ros/jazzy/share/rosbag2_py/package.xml",
+        "sha256": "0a977b8e315c9dbbd1343bf68a5607010e2f730f803ccba6c345e4b1f7815f8c"
+      },
+      {
+        "package": "ros2bag",
+        "version": "0.26.11",
+        "path": "/opt/ros/jazzy/share/ros2bag/package.xml",
+        "sha256": "0bec57396f00aada100858996bac21681aa903355f1f715c3ce697880153573e"
+      },
+      {
+        "package": "rclcpp",
+        "version": "28.1.22",
+        "path": "/opt/ros/jazzy/share/rclcpp/package.xml",
+        "sha256": "2a44fcf2aa4ac75a95e9268ee6cae97f280276b2247c727e902de1f022d3bb4f"
+      },
+      {
+        "package": "rcl",
+        "version": "9.2.11",
+        "path": "/opt/ros/jazzy/share/rcl/package.xml",
+        "sha256": "ec712235b55f64747fc7afc86a106536ffe0b09130246fe649a129945ecec59c"
+      },
+      {
+        "package": "rmw",
+        "version": "7.3.4",
+        "path": "/opt/ros/jazzy/share/rmw/package.xml",
+        "sha256": "e1da794c6b3bf4924d51d1dbea510a636bfbad6306e5adcf5fdaaa7adce88257"
+      },
+      {
+        "package": "rmw_fastrtps_cpp",
+        "version": "8.4.4",
+        "path": "/opt/ros/jazzy/share/rmw_fastrtps_cpp/package.xml",
+        "sha256": "a83647c331cfb0a82192aec8f7205448f80aab1445fbbc93e683cf419855afe9"
+      }
+    ],
+    "installedArtifactFingerprints": [
+      {
+        "path": "/opt/ros/jazzy/lib/librosbag2_transport.so",
+        "resolvedPath": "/opt/ros/jazzy/lib/librosbag2_transport.so",
+        "bytes": 1421496,
+        "sha256": "b3c607f818ef6701fc9bacf628117f5e23bbf9bebbec7878f0e09705ddd746db"
+      },
+      {
+        "path": "/opt/ros/jazzy/lib/librosbag2_cpp.so",
+        "resolvedPath": "/opt/ros/jazzy/lib/librosbag2_cpp.so",
+        "bytes": 652880,
+        "sha256": "f6f6bb3b2e73b5b9f4ca718b9aa46ea5a28249481e990dddcf871076c5c0efa7"
+      },
+      {
+        "path": "/opt/ros/jazzy/lib/librosbag2_storage.so",
+        "resolvedPath": "/opt/ros/jazzy/lib/librosbag2_storage.so",
+        "bytes": 536176,
+        "sha256": "f77d696b923394857560ece44e9674dc9365f6112001d78d5f5a6fea4ba6db87"
+      },
+      {
+        "path": "/opt/ros/jazzy/lib/librosbag2_storage_mcap.so",
+        "resolvedPath": "/opt/ros/jazzy/lib/librosbag2_storage_mcap.so",
+        "bytes": 369592,
+        "sha256": "0b18e76455fb79949b6ed8575c93717251b279632be80b6be445613415652d3e"
+      },
+      {
+        "path": "/opt/ros/jazzy/lib/librosbag2_storage_sqlite3.so",
+        "resolvedPath": "/opt/ros/jazzy/lib/librosbag2_storage_sqlite3.so",
+        "bytes": 451808,
+        "sha256": "71423358fb2952422207c210b63349a53b8740d3bad47d746e46239a69057026"
+      }
+    ],
+    "inspection": "package.xml/header/Python/库文件只读指纹；没有加载共享库执行录放，也没有运行ros2命令或DDS。"
+  },
+  "reviewedContent": {
+    "path": "dist/content.js",
+    "sha256": "b095ce656163f5291765a1bb4082b5c7b2e61a4901782a4663482cf9b6f0fb77",
+    "chapters": [
+      {
+        "id": "time-bag",
+        "title": "ROS 时间、录包与可重复实验",
+        "sectionTitles": [
+          "三种时钟分别回答不同问题",
+          "把消息时间与录制时间区别开",
+          "录制一个有明确输入输出的最小实验",
+          "让消费算法与回放共享时间轴",
+          "QoS、静态 TF 与不完整录包",
+          "把可重现条件作为录包的一部分保存",
+          "受控软件时钟：把未初始化、暂停和推进分开"
+        ],
+        "chapterJsonSha256": "8d30ff20e8b98b7d62c0a2a2d97521077e1190fea13306528f581848bc32af1d",
+        "validationStatement": "2026-11-07已在独立域223/LOCALHOST使用真实rclpy与合成/clock验证未到、暂停、推进三个timer窗口，增量0/8、0/8、8/8；约2.682秒，含单独跳变结算。未执行正文turtlesim录包/回放、真实数据采集或完整仿真；回放主题筛选与时钟条件由固定Jazzy源码核对。"
+      },
+      {
+        "id": "eco-data-observability",
+        "title": "数据与诊断：rosbag2、MCAP、Foxglove 与 tracing",
+        "sectionTitles": [
+          "先定义问题需要什么证据",
+          "时间、QoS 和类型决定记录是否完整",
+          "从最小 chatter 实验学会完整闭环",
+          "MCAP 与 SQLite 是存储选择",
+          "重放机器人数据时重建时钟和 TF",
+          "诊断和 tracing 的使用边界",
+          "用复现包而不是口头描述交付问题"
+        ],
+        "chapterJsonSha256": "25f2f9d77b1b7a152ebda98207703ad039f30fee34d6773aeb1e2e2bbeb37bbd",
+        "validationStatement": "资料与本地源码已核对；命令为读者练习说明，本次未安装、编译或运行 ROS 节点，未连接硬件。"
+      }
+    ],
+    "reviewDepth": "两章现有正文/命令/注释/API逐段核对；time-bag已实测的是既有clock timer，不是bag录放。"
+  },
+  "versionDifferences": [
+    {
+      "component": "rosbag2",
+      "installed": "0.26.11",
+      "reference": "0.26.11 at12b5e8ba4eb5665501a16f0d9e050552a1149f56",
+      "release": "0.26.11 tag→cb8fa198b93bfed90e2417b52b8645fb9ef89c2b",
+      "comparison": "16个所核文件中14逐字节一致；player.cpp与README不同。安装record/play Python及两个storage headers逐字节匹配release；仅版本相同不推出C++全部源码/二进制相同。"
+    },
+    {
+      "component": "player session clock",
+      "difference": "参考player.cpp比release在播放循环/异常路径结束后多if(clock_publish_timer_!=nullptr){clock_publish_timer_->cancel();}；参考README新增加只在会话内固定频率发布/暂停继续发不变值的说明。",
+      "referenceLines": [
+        574,
+        576
+      ],
+      "releaseContextLines": [
+        569,
+        577
+      ],
+      "impact": "安装版0.26.11对应release入口没有此取消；节点保活时结束会话后clock是否仍发必须实测。CLI退出销毁节点与Player保活是不同场景。不要将快照新增保证套给安装版。"
+    },
+    {
+      "component": "rclcpp/rcl clock",
+      "installed": "rclcpp28.1.22/rcl9.2.11",
+      "reference": "rclcpp28.1.23固定快照+精确28.1.22 release比较；rcl精确9.2.11 release",
+      "impact": "Clock.started header称non-zero，底层实现实际query_now>0。用正clock描述门控，不把仅到达一条值0的Clock当启动。"
+    }
+  ],
+  "onlineVerification": {
+    "checkedAt": "2026-11-07T05:50:08+08:00",
+    "officialAttempts": [
+      "docs.ros.org Jazzy QoS覆盖页被Anubis Access Denied；未据该错误页面声称核读正文",
+      "web固定raw多处Cache miss；只读HTTP直接取官方固定release字节并保存SHA/逐项比较",
+      "本地已保存官方QoS guide原文核读，固定文档commit与在线滚动页分开"
+    ],
+    "scope": "没有访问社区二手推断来替代一手实现；网络只读，没有下载/安装新的ROS软件或镜像。"
+  },
+  "textbookMaterial": {
+    "timestampTable": {
+      "columns": [
+        "时间字段",
+        "本机0.26.11来源",
+        "用途",
+        "不能推断"
+      ],
+      "rows": [
+        [
+          "Header.stamp",
+          "序列化消息中的生产者字段",
+          "按生产者合同解释采样/事件时间",
+          "不自动成为bag播放时间或真实物理采样证明"
+        ],
+        [
+          "send_timestamp",
+          "普通/仿真Recorder均取RMW source_timestamp",
+          "记录中间件发布元数据，MCAP publishTime保留",
+          "不是Header；与sim recv未必同一时间域"
+        ],
+        [
+          "recv_timestamp",
+          "普通Linux取RMW received_timestamp；sim取录制节点ROS now",
+          "存储起止/回放调度轴",
+          "不是回调入口测量或跨主机可直接相减时延"
+        ],
+        [
+          "播放器/clock",
+          "按记录轴、速率和steady经过时间生成",
+          "驱动启用use_sim_time的消费者",
+          "不重写Header、不自动修补过去错误时间戳"
+        ]
+      ]
+    },
+    "storageTable": {
+      "columns": [
+        "插件",
+        "当前持久化时间字段",
+        "Python普通read_next",
+        "本轮应保留的配置边界"
+      ],
+      "rows": [
+        [
+          "mcap",
+          "logTime=recv，publishTime=send",
+          "topic/bytes/recv三元组",
+          "chunk/index/preset另记，Header仍在原payload"
+        ],
+        [
+          "sqlite3",
+          "messages.timestamp=recv；未独立持久化send",
+          "topic/bytes/recv三元组",
+          "当前schema与pragma/preset另记，不声称通用崩溃保证"
+        ]
+      ]
+    },
+    "qosExplanation": "录制器是订阅者，回放器是新的发布者。显式覆盖只改变它自己的端点策略；相容性不等于请求历史，历史请求也受原writer仍存活/缓存限额约束。原数据未录到不会在回放时自动补回。",
+    "replayExplanation": "--topics筛选原主题名，既不自动带上TF/参数，也不改原bag或重映射主题。CLI --clock另建/clock发布者并将原bag的/clock加入排除表，外部clock来源仍须关闭；其他clock模式或直接C++Player配置不能由这一CLI分支推出相同行为。"
+  },
+  "assetReviewDraft": {
+    "status": "final_assets_reviewed",
+    "paths": [
+      "examples/bag_labs/record_replay_lab.py",
+      "examples/bag_labs/storage_fields.py",
+      "examples/bag_labs/inspect_bag.py",
+      "examples/bag_labs/qos_transient.yaml",
+      "examples/bag_labs/qos_volatile.yaml",
+      "examples/bag_labs/mcap_no_chunk.yaml",
+      "examples/bag_labs/README.md"
+    ],
+    "readDepth": "全部当前3Python/3YAML/README逐段只读，最终代码/报告尚待运行结束后重核SHA。",
+    "items": [
+      {
+        "id": "FIX-CDR",
+        "status": "fixed_and_executed_in_main_report",
+        "request": "用完整语义字段比较DDS往返，保留显式Writer同bytes对照。",
+        "verification": "所有Header/frame/Point字段比对，原始bag SHA仅作字节身份；显式Writer原payload跨插件一致仍保留。"
+      },
+      {
+        "id": "FIX-MATCH",
+        "status": "fixed_and_executed_in_main_report",
+        "request": "保留回放订阅对象并等待get_publisher_count实际匹配后Resume；仅图count+固定sleep不当匹配证明。",
+        "verification": "持有订阅对象，Resume前实际匹配1/1/1与1/0/0已保存；clock有独立匹配等待。"
+      },
+      {
+        "id": "FIX-SIGNAL-RACE",
+        "status": "fixed_source_inspected_failure_injection_not_run",
+        "request": "stop里每个killpg捕获ProcessLookupError并继续wait与其他清理，不因自然退出竞态截断finally。",
+        "verification": "修复逻辑已逐段核对，正常运行无升级/遗留；没有为覆盖异常分支而伪造实测。"
+      },
+      {
+        "id": "FIX-RELATIVE-PATH",
+        "status": "fixed_and_executed_in_boundary_report",
+        "request": "storage_fields.probe先resolve显式新目录，以支持CLI相对--output再db.as_uri。",
+        "verification": "probe入口resolve后mkdir；新相对fields目录两插件返回0，SQLite连接显式closing。"
+      },
+      {
+        "id": "FIX-SPIN-TIMEOUT",
+        "status": "fixed_source_inspected_failure_injection_not_run",
+        "request": "spin_once剩余timeout钳到>=0，避免while与再次取now跨界后把负值误当无限等待。",
+        "verification": "修复逻辑已逐段核对，正常运行无升级/遗留；没有为覆盖异常分支而伪造实测。"
+      }
+    ],
+    "approval": "批准两份当前报告及其明确的软件范围；不批准未实施的扩展实验。"
+  },
+  "textbookResources": [
+    {
+      "id": "iter5-bag-recorder",
+      "title": "录制时间与仿真时钟门控",
+      "url": "https://github.com/ros2/rosbag2/blob/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_transport/src/rosbag2_transport/recorder.cpp",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_transport/src/rosbag2_transport/recorder.cpp",
+      "category": "时间、录包与数据复现",
+      "version": "0.26.11",
+      "description": "Linux普通录制直接取RMW received/source两个时戳，sim分支recv改node.now；等待正clock后才创建数据订阅；已订阅QoS不自动重建。",
+      "verification": "只读本地固定快照与官方0.26.11固定release HTTP字节；不运行DDS或上游代码；本研究本身未运行DDS。 根有限实测另见当前已绑定报告；仅其中列出的行为经过实际验证。",
+      "checkedAt": "2026-11-07T05:55:29+08:00",
+      "type": "official-source",
+      "lessons": [
+        "time-bag",
+        "eco-data-observability"
+      ],
+      "versionNote": "rosbag2安装/release0.26.11；固定reference仍标0.26.11但player.cpp含额外取消timer补丁，不能整包视同。"
+    },
+    {
+      "id": "iter5-bag-player-cli",
+      "title": "回放主题筛选、clock选项与覆盖",
+      "url": "https://github.com/ros2/rosbag2/blob/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/ros2bag/ros2bag/verb/play.py",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/ros2bag/ros2bag/verb/play.py",
+      "category": "时间、录包与数据复现",
+      "version": "0.26.11",
+      "description": "--clock可省频率，常量40Hz；默认不开。CLI仅固定频率--clock分支自动exclude原/clock，不把其他clock模式或C++API泛同。",
+      "verification": "只读本地固定快照与官方0.26.11固定release HTTP字节；不运行DDS或上游代码；本研究本身未运行DDS。 根有限实测另见当前已绑定报告；仅其中列出的行为经过实际验证。",
+      "checkedAt": "2026-11-07T05:55:29+08:00",
+      "type": "official-source",
+      "lessons": [
+        "time-bag",
+        "eco-data-observability"
+      ],
+      "versionNote": "rosbag2安装/release0.26.11；固定reference仍标0.26.11但player.cpp含额外取消timer补丁，不能整包视同。"
+    },
+    {
+      "id": "iter5-bag-storage-mcap",
+      "title": "MCAP时间字段与读取实现",
+      "url": "https://github.com/ros2/rosbag2/blob/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_storage_mcap/src/mcap_storage.cpp",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_storage_mcap/src/mcap_storage.cpp",
+      "category": "时间、录包与数据复现",
+      "version": "0.26.11",
+      "description": "MCAP logTime=recv、publishTime=send且读取保留两者；过滤可走linear reader；无index对时间排序支持有限，publish-time order未实现。",
+      "verification": "只读本地固定快照与官方0.26.11固定release HTTP字节；不运行DDS或上游代码；本研究本身未运行DDS。 根有限实测另见当前已绑定报告；仅其中列出的行为经过实际验证。",
+      "checkedAt": "2026-11-07T05:55:29+08:00",
+      "type": "official-source",
+      "lessons": [
+        "time-bag",
+        "eco-data-observability"
+      ],
+      "versionNote": "rosbag2安装/release0.26.11；固定reference仍标0.26.11但player.cpp含额外取消timer补丁，不能整包视同。"
+    },
+    {
+      "id": "iter5-bag-storage-sqlite",
+      "title": "SQLite当前时间字段与schema",
+      "url": "https://github.com/ros2/rosbag2/blob/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_storage_sqlite3/src/rosbag2_storage_sqlite3/sqlite_storage.cpp",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_storage_sqlite3/src/rosbag2_storage_sqlite3/sqlite_storage.cpp",
+      "category": "时间、录包与数据复现",
+      "version": "0.26.11",
+      "description": "messages只存timestamp=recv、topic_id和data；read_next只赋recv，不恢复独立send字段；时间排序并以message id作次级顺序。",
+      "verification": "只读本地固定快照与官方0.26.11固定release HTTP字节；不运行DDS或上游代码；本研究本身未运行DDS。 根有限实测另见当前已绑定报告；仅其中列出的行为经过实际验证。",
+      "checkedAt": "2026-11-07T05:55:29+08:00",
+      "type": "official-source",
+      "lessons": [
+        "time-bag",
+        "eco-data-observability"
+      ],
+      "versionNote": "rosbag2安装/release0.26.11；固定reference仍标0.26.11但player.cpp含额外取消timer补丁，不能整包视同。"
+    },
+    {
+      "id": "iter5-bag-qos",
+      "title": "录制/回放两个方向的QoS适配",
+      "url": "https://github.com/ros2/rosbag2/blob/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_storage/src/rosbag2_storage/qos.cpp",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_storage/src/rosbag2_storage/qos.cpp",
+      "category": "时间、录包与数据复现",
+      "version": "0.26.11",
+      "description": "record按已发现端点适配history/reliability/durability；play在记录profiles兼容同型时复制再重置history，否则警告回默认。",
+      "verification": "只读本地固定快照与官方0.26.11固定release HTTP字节；不运行DDS或上游代码；本研究本身未运行DDS。 根有限实测另见当前已绑定报告；仅其中列出的行为经过实际验证。",
+      "checkedAt": "2026-11-07T05:55:29+08:00",
+      "type": "official-source",
+      "lessons": [
+        "time-bag",
+        "eco-data-observability"
+      ],
+      "versionNote": "rosbag2安装/release0.26.11；固定reference仍标0.26.11但player.cpp含额外取消timer补丁，不能整包视同。"
+    },
+    {
+      "id": "iter5-bag-python-api",
+      "title": "Python显式接收/发送时间写入重载",
+      "url": "https://github.com/ros2/rosbag2/blob/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_py/src/rosbag2_py/_writer.cpp",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_py/src/rosbag2_py/_writer.cpp",
+      "category": "时间、录包与数据复现",
+      "version": "0.26.11",
+      "description": "导出三/四参数write；三参数把recv与send设为同一值，四参数可做无DDS元数据反例。",
+      "verification": "只读本地固定快照与官方0.26.11固定release HTTP字节；不运行DDS或上游代码；本研究本身未运行DDS。 根有限实测另见当前已绑定报告；仅其中列出的行为经过实际验证。",
+      "checkedAt": "2026-11-07T05:55:29+08:00",
+      "type": "official-source",
+      "lessons": [
+        "time-bag",
+        "eco-data-observability"
+      ],
+      "versionNote": "rosbag2安装/release0.26.11；固定reference仍标0.26.11但player.cpp含额外取消timer补丁，不能整包视同。"
+    },
+    {
+      "id": "iter5-bag-cdr-alignment",
+      "title": "Fast-CDR对齐字节与语义比较",
+      "url": "https://github.com/eProsima/Fast-CDR/blob/1bc9c919311ffce555b445560bf7ae062a4e1c72/include/fastcdr/Cdr.h",
+      "sourceUrl": "https://raw.githubusercontent.com/eProsima/Fast-CDR/1bc9c919311ffce555b445560bf7ae062a4e1c72/include/fastcdr/Cdr.h",
+      "category": "时间、录包与数据复现",
+      "version": "2.2.8",
+      "description": "固定版本实现核对；语义/原始字节身份分开，不把padding差异当消息字段变化。",
+      "verification": "只读官方固定release；未编译或运行序列化器；本研究本身未运行DDS。 根有限实测另见当前已绑定报告；仅其中列出的行为经过实际验证。",
+      "checkedAt": "2026-11-07T05:55:29+08:00",
+      "type": "official-source",
+      "lessons": [
+        "time-bag",
+        "eco-data-observability"
+      ],
+      "versionNote": "安装Fast-CDR2.2.8；所核header逐字节匹配官方v2.2.8固定提交，未扩成任意RMW序列化保证。"
+    },
+    {
+      "id": "iter5-bag-player-version-boundary",
+      "title": "播放器会话时钟与同版本补丁差异",
+      "url": "https://github.com/ros2/rosbag2/blob/12b5e8ba4eb5665501a16f0d9e050552a1149f56/rosbag2_transport/src/rosbag2_transport/player.cpp",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/12b5e8ba4eb5665501a16f0d9e050552a1149f56/rosbag2_transport/src/rosbag2_transport/player.cpp",
+      "category": "时间、录包与数据复现",
+      "version": "参考0.26.11 post-tag快照",
+      "description": "该快照在会话循环结束后新增取消固定clock timer；精确0.26.11 release没有这一块。CLI退出与保活Player结束会话分别验收，不从新README反推安装行为。",
+      "versionNote": "reference12b5e8...与release cb8fa198...标称相同但player.cpp字节不同；差异及双方SHA在本审查保存。",
+      "verification": "只读固定两提交差异；当前实验仅验证CLI自然退出，未测保活Player会话停clock。",
+      "checkedAt": "2026-11-07T05:58:28+08:00",
+      "type": "official-source",
+      "lessons": [
+        "time-bag",
+        "eco-data-observability"
+      ]
+    },
+    {
+      "id": "iter5-bag-clock-positive",
+      "title": "RCL时钟启动要求正值",
+      "url": "https://github.com/ros2/rcl/blob/22c0b957140035c675f0a061daaab5fd6b2080e7/rcl/src/rcl/time.c#L76-L83",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rcl/22c0b957140035c675f0a061daaab5fd6b2080e7/rcl/src/rcl/time.c",
+      "category": "时间、录包与数据复现",
+      "version": "rcl9.2.11",
+      "versionNote": "本机安装rcl9.2.11；Clock.started底层用query_now>0判断，非零header措辞应以实现的正值条件细化。",
+      "description": "录制器调用wait_until_started，底层只有当前时间严格大于零才视为started；零clock到达仍等待。当前实验覆盖未到、零、正10s，不声称测试负时刻。",
+      "verification": "只读精确官方release源码及rclcpp调用链；零/正clock的实际数据订阅边界另由已绑定bag报告验证。",
+      "checkedAt": "2026-11-07T06:00:12+08:00",
+      "type": "official-source",
+      "lessons": [
+        "time-bag",
+        "eco-data-observability"
+      ]
+    }
+  ],
+  "validationLimits": [
+    "本代理未启动DDS、ros2 CLI或新的录放过程；独立核读当前源码/结果，另只用标准库只读SQL和无分块MCAP字节复核实际文件。",
+    "批准绑定两份当前报告及7项当前实验源/输入指纹（CLI附报告另列3Python），不声称当前正文已经全部修订或网站已重建。",
+    "既有clock_timer_lab实测不冒充bag录放；本次新增3录制/2回放与显式Writer双后端是根实际执行后审查，不重复旧ROS实验。",
+    "没有验证吞吐/压缩/损坏恢复、多机校时、真实TF/传感器、GUI海龟、仿真/硬件或物理停车。",
+    "父SIGINT/原生挂起分支仅有清理代码和静态修复，本轮未注入；当前仅8个跟踪CLI根PID正常/主动停止后回收。",
+    "同版参考post-tag timer补丁与release差异保留；当前CLI自然退出不覆盖保活Player会话结束，包版本不等于整包字节同一。",
+    "默认普通录制的RMW元数据、软件clock与Header字段属于不同时间域，不从人工指定或相减的数值推导真实网络时延。",
+    "CLI边界报告只记录标签/RC与相对路径结果，没有保存每个非法参数的完整argv/输出；本审查按该有限记录批准，不声称可重放全部边界调用。"
+  ],
+  "summary": {
+    "status": "approved_for_iteration5_bounded_bag_assets_with_source_research",
+    "approved": true,
+    "findings": 9,
+    "sourceRecords": 24,
+    "textbookResources": 9,
+    "suggestedExperiments": 7,
+    "actualDdsRunsByReviewer": 0,
+    "pending": "根负责将原创解释接入正文/API并验证网站；研究中未执行支路继续保留未测。",
+    "boundReports": 2,
+    "sourceHashEntries": 10,
+    "uniqueSourceFiles": 7,
+    "unresolvedBlockingAssetFindings": 0,
+    "integrationScriptSha256": "b3ddf9f7c139af80fd8c5b19661b6409fb6b6b43613dc433b07bd288d85ff2bf",
+    "finalDurationS": 9.509629038999265,
+    "finalClockMessages": 31,
+    "finalObserverRosTimeNs": 11232125020
+  },
+  "assetReviews": [
+    {
+      "path": "examples/bag_labs",
+      "files": [
+        {
+          "path": "examples/bag_labs/README.md",
+          "sha256": "9b87cbbedf845e7abd5a3701cbce0f18bc3845cbe21ba55d3c2d6eed02cded02"
+        },
+        {
+          "path": "examples/bag_labs/inspect_bag.py",
+          "sha256": "9be0688fb2ba1b7191e490152e528c707a21e58412423fbf79c8ba7f6ced04e8"
+        },
+        {
+          "path": "examples/bag_labs/mcap_no_chunk.yaml",
+          "sha256": "edd632e29373c428ce3780dd800f9b4d2d096b82794d5460be8e9c8291237af5"
+        },
+        {
+          "path": "examples/bag_labs/qos_transient.yaml",
+          "sha256": "76aaaaf537ecdf6b8992f227d353d626998f2537f82e0afc6788b21dabddb2cc"
+        },
+        {
+          "path": "examples/bag_labs/qos_volatile.yaml",
+          "sha256": "ab8ba5c7566fed287566a3f0949763c83b94961b2774da3e41485996e6cdfc00"
+        },
+        {
+          "path": "examples/bag_labs/record_replay_lab.py",
+          "sha256": "276591ff7dc7a6282e1888f9671ebbf71c79ec6cc69c58929d188319bd4c629c"
+        },
+        {
+          "path": "examples/bag_labs/storage_fields.py",
+          "sha256": "d951e5747b14a29fee33b6f8299ef75b1b256e41d288b8563e78c682ad557b7d"
+        }
+      ],
+      "syntax": "3份Python AST通过；YAML输入指纹与当前报告一致。",
+      "inspection": "全读3Python/3YAML/README；代码修改通过根实际完整重跑后独立核对，未由本代理再运行DDS。",
+      "results": [
+        "普通SQLite与sim MCAP分别13条；volatile历史反例12条，metadata/static0与实际读回一致。",
+        "sim无clock/0clock阶段数据匹配0/0/0；最终0..5逐字段完整，门前100/101/200/201未入bag，正clock记录时间10s起每条250ms。",
+        "全量无clock收到6/6/1、clock0、消费者ROS time0；筛选有clock收到6/0/0、唯一clock发布者、31条软件clock、结束观察ROS time11232125020ns。计数仅该次有限运行。",
+        "Resume前actual subscription.get_publisher_count：全量1/1/1，筛选1/0/0；暂停数据为0，运行前原发布端点为0。",
+        "Header/frame/Point x/y/z所有字段与显式expectedInputFields对照；派生序号0..5和静态字符串也断言，不再用重新序列化SHA冒充语义相等。",
+        "显式Writer Header7s/recv10s/send9s，SQLite单timestamp与MCAP log/publish两字段分别成立，原始payload相同。",
+        "3个录制器各一次SIGINT后exit0，3个info与2个player自然exit0；8份日志当前字节SHA匹配，8个跟踪CLI根PID的/proc项复核消失。未将这项扩成未跟踪任意后代或父中断注入。",
+        "单独只读SQL实际13行timestamp/payloadSHA匹配报告；标准库重新读显式noChunking MCAP的Message头与payloadSHA匹配报告。未打开ROS节点或DDS。",
+        "源码修复signal race/非负spin timeout是静态核查；异常分支并未注入，原报告限制正确。",
+        "两个旧失败（CDR SHA与不存在的qos_profile_clock导入）及先前通过尝试保留；最终源码/报告不隐藏失败历史。"
+      ],
+      "finalRunDurationS": 9.509629038999265
+    }
+  ],
+  "research": {
+    "status": "completed_bounded_source_review",
+    "primarySourceRecords": 24,
+    "versionDivergencePreserved": true,
+    "unexecutedQuestions": [
+      "保活Player会话结束/停止/重开timer",
+      "原bag已包含/clock时CLI自动排除的运行反例",
+      "sim+no-discovery运行拒绝",
+      "吞吐/压缩/无index seek/文件损坏恢复/多机",
+      "父SIGINT/原生挂起与异常清理升级"
+    ],
+    "note": "保留研究结论与提议，未实测项不因本次批准变成完成。"
+  },
+  "finalizedAt": "2026-11-07T06:02:06+08:00",
+  "reviewedIntegrationScript": {
+    "path": "scripts/build_iteration5_material.py",
+    "sha256": "b3ddf9f7c139af80fd8c5b19661b6409fb6b6b43613dc433b07bd288d85ff2bf",
+    "approved": true,
+    "scope": "只读审核生成器技术解释/表格与报告门禁；未执行写出正文/API的main后半段。",
+    "checks": [
+      "Header、RMW recv/source、软件clock及播放轴分开；人工990s差值不当网络延迟",
+      "started统一严格大于零/正clock，不把零或负时刻叫已启动",
+      "CLI自然退出与保活Player会话停止clock的同版补丁差异明确",
+      "三处不带--clock命令旁注按实际选项修正",
+      "原/turtle pose唯一来源与GUI流程未运行边界保留",
+      "四张表从绑定报告数值构造，六完整文件引用同7源/配置指纹",
+      "approved+两报告SHA在任何写出前核对；资源对应两章",
+      "CDR字段语义/原始字节身份、静态历史请求/相容性和未注入清理支路分开",
+      "只读执行至4张table构造完成，行列/证据SHA均通过；未运行其后的命令覆层/API写出。"
+    ]
+  },
+  "approvalHistory": [
+    {
+      "at": "2026-11-07T06:02:06+08:00",
+      "event": "final_bindings_refreshed_after_complete_rerun",
+      "supersededReportHashes": {
+        "bag-current-validation.json": "5b671853cdcb24acaa54aeaf237deb652712692849d85c90ababd38830bf9f2f",
+        "bag-cli-boundaries-current-validation.json": "cce304570c64dc5eec544c6d4c5f7afa209c8436dc2099171d84eb6e38e5882c"
+      },
+      "currentReportHashes": {
+        "bag-current-validation.json": "99e8bbe699f8fc4666255f0d927535ceef1a63788fb31f1b537926b7d6c5b6e7",
+        "bag-cli-boundaries-current-validation.json": "e40ed6d095f73429eedd3d98dea64194ae9cb9457d498eb66f39cf39aac2cc59"
+      },
+      "reason": "根把断言文字细化为正值后完整重跑；已独立核当前源/报告，旧SHA被正式门禁正确拒绝，没有绕过。"
+    }
+  ],
+  "rawArtifactFingerprints": [
+    {
+      "path": "/tmp/ros2-bag-lab-t4b66f6l/system_sqlite/metadata.yaml",
+      "bytes": 2785,
+      "sha256": "595338e6b8f94e42beffde89335700f0e6f8cbf9677855928e68f5ec7c4f0495"
+    },
+    {
+      "path": "/tmp/ros2-bag-lab-t4b66f6l/system_sqlite/system_sqlite_0.db3",
+      "bytes": 28672,
+      "sha256": "399aaf90aa27c2624804c28430db478ab4fdc029a45748f2e8239a35fd207d0c"
+    },
+    {
+      "path": "/tmp/ros2-bag-lab-t4b66f6l/sim_mcap/metadata.yaml",
+      "bytes": 2760,
+      "sha256": "8a807066979e7588d320f78f024d2fc3d3f07f14fc1f46ed71480ae96cae2585"
+    },
+    {
+      "path": "/tmp/ros2-bag-lab-t4b66f6l/sim_mcap/sim_mcap_0.mcap",
+      "bytes": 11492,
+      "sha256": "f5d21b1bad8ee9e28d12eded07d97d1c13e05f4e09df450a99c29406d9add661"
+    },
+    {
+      "path": "/tmp/ros2-bag-lab-t4b66f6l/late_volatile_mcap/metadata.yaml",
+      "bytes": 2794,
+      "sha256": "d131774c00d8e58976b24124c0e0e9de3ada4da640187a0a70728c034e77fa22"
+    },
+    {
+      "path": "/tmp/ros2-bag-lab-t4b66f6l/late_volatile_mcap/late_volatile_mcap_0.mcap",
+      "bytes": 10642,
+      "sha256": "d4a569d0751e10bc90fe447c9a078476c59f9fc199ed9f910acccb420ac1cb3d"
+    }
+  ]
+}

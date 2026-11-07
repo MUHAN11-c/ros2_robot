@@ -1,0 +1,600 @@
+{
+  "checkedAt": "2026-11-07",
+  "passed": true,
+  "sourceSha256": "8889b259f26f34e4f2a14489f29ff680c140fc7566ae2182ed306f120c4b37f9",
+  "domain": 221,
+  "discovery": "LOCALHOST",
+  "rmw": "rmw_fastrtps_cpp",
+  "results": [
+    {
+      "case": "discovery-absent",
+      "service": "/service_deadline_c13ec3f603/sum",
+      "passed": true,
+      "events": [],
+      "serverDelay_s": 0.0,
+      "discovered": false,
+      "discoveryElapsed_s": 0.40014907800104993,
+      "outcome": "discovery_timeout",
+      "requestSent": false,
+      "totalElapsed_s": 0.4261854409996886
+    },
+    {
+      "case": "success",
+      "service": "/service_deadline_5e0543a998/sum",
+      "passed": true,
+      "events": [
+        {
+          "event": "server_ready",
+          "at_s": 10107.372834475,
+          "service": "/service_deadline_5e0543a998/sum",
+          "delay_s": 0.0
+        },
+        {
+          "event": "server_started",
+          "at_s": 10107.541978752,
+          "a": 4,
+          "b": 8
+        },
+        {
+          "event": "server_completed",
+          "at_s": 10107.542038622,
+          "sum": 12,
+          "executed_count": 1
+        },
+        {
+          "event": "service_dispatch_returned",
+          "at_s": 10107.542089732
+        }
+      ],
+      "serverDelay_s": 0.0,
+      "discovered": true,
+      "discoveryElapsed_s": 1.3199998647905886e-05,
+      "requestSent": true,
+      "sentAt_s": 10107.396290735,
+      "responseDeadline_s": 1.0,
+      "clientFinishedAt_s": 10107.542241623,
+      "responseInWindow": true,
+      "outcome": "success",
+      "sum": 12,
+      "serverCleanup": {
+        "alive": false,
+        "exitCode": 0,
+        "forced": false
+      },
+      "totalElapsed_s": 0.4817778899996483
+    },
+    {
+      "case": "late-kept",
+      "service": "/service_deadline_38cfffed2b/sum",
+      "passed": true,
+      "events": [
+        {
+          "event": "server_ready",
+          "at_s": 10107.858812918,
+          "service": "/service_deadline_38cfffed2b/sum",
+          "delay_s": 0.8
+        },
+        {
+          "event": "server_started",
+          "at_s": 10108.027837956,
+          "a": 4,
+          "b": 8
+        },
+        {
+          "event": "server_completed",
+          "at_s": 10108.827917645,
+          "sum": 12,
+          "executed_count": 1
+        },
+        {
+          "event": "service_dispatch_returned",
+          "at_s": 10108.828056835
+        }
+      ],
+      "serverDelay_s": 0.8,
+      "discovered": true,
+      "discoveryElapsed_s": 1.0989999282173812e-05,
+      "requestSent": true,
+      "sentAt_s": 10107.897982793,
+      "responseDeadline_s": 0.25,
+      "clientFinishedAt_s": 10108.148133971,
+      "responseInWindow": false,
+      "outcome": "timed_out_then_late_response",
+      "sum": 12,
+      "lateResponseAt_s": 10108.828238625,
+      "futureDone": true,
+      "serverCleanup": {
+        "alive": false,
+        "exitCode": 0,
+        "forced": false
+      },
+      "totalElapsed_s": 1.2908571070001926
+    },
+    {
+      "case": "late-detached",
+      "service": "/service_deadline_d0098bcf10/sum",
+      "passed": true,
+      "events": [
+        {
+          "event": "server_ready",
+          "at_s": 10109.159371635,
+          "service": "/service_deadline_d0098bcf10/sum",
+          "delay_s": 0.8
+        },
+        {
+          "event": "server_started",
+          "at_s": 10109.328374383,
+          "a": 4,
+          "b": 8
+        },
+        {
+          "event": "server_completed",
+          "at_s": 10110.128453254,
+          "sum": 12,
+          "executed_count": 1
+        },
+        {
+          "event": "service_dispatch_returned",
+          "at_s": 10110.128584844
+        }
+      ],
+      "serverDelay_s": 0.8,
+      "discovered": true,
+      "discoveryElapsed_s": 1.8840000848285854e-05,
+      "requestSent": true,
+      "sentAt_s": 10109.189503991,
+      "responseDeadline_s": 0.25,
+      "clientFinishedAt_s": 10109.43968261,
+      "responseInWindow": false,
+      "pendingRemovedAt_s": 10109.4396912,
+      "outcome": "timed_out_pending_removed_server_completed",
+      "futureDone": false,
+      "serverCleanup": {
+        "alive": false,
+        "exitCode": 0,
+        "forced": false
+      },
+      "totalElapsed_s": 1.600773524000033
+    },
+    {
+      "case": "cpp-late",
+      "service": "/service_deadline_ac12a1a4ce/sum",
+      "passed": true,
+      "events": [
+        {
+          "event": "server_ready",
+          "at_s": 10110.773349521,
+          "service": "/service_deadline_ac12a1a4ce/sum",
+          "delay_s": 3.0
+        },
+        {
+          "event": "server_started",
+          "at_s": 10110.942350429,
+          "a": 4,
+          "b": 8
+        },
+        {
+          "event": "server_completed",
+          "at_s": 10113.942426689,
+          "sum": 12,
+          "executed_count": 1
+        },
+        {
+          "event": "service_dispatch_returned",
+          "at_s": 10113.942507809
+        }
+      ],
+      "serverDelay_s": 3.0,
+      "discovered": true,
+      "discoveryElapsed_s": 1.137000072048977e-05,
+      "clientExitCode": 1,
+      "clientLog": "[ERROR] [1793994320.718694022] [service_deadline_ac12a1a4ce.learning_sum_client_cpp]: sum response timed out or was interrupted\n",
+      "clientFinishedAt_s": 10113.046339305,
+      "clientCommand": [
+        "/tmp/ros2-hub-validation/foundation/build/learning_service_cpp/client",
+        "--ros-args",
+        "-r",
+        "__ns:=/service_deadline_ac12a1a4ce"
+      ],
+      "clientElapsed_s": 2.2357894719989417,
+      "requestSent": true,
+      "outcome": "client_timeout_server_later_completed",
+      "serverCleanup": {
+        "alive": false,
+        "exitCode": 0,
+        "forced": false
+      },
+      "totalElapsed_s": 3.5415202869990026
+    },
+    {
+      "case": "cpp-absent",
+      "service": "/service_deadline_b692bd5997/sum",
+      "passed": true,
+      "events": [],
+      "serverDelay_s": 3.0,
+      "discovered": false,
+      "discoveryElapsed_s": 0.40013921500030847,
+      "clientExitCode": 1,
+      "clientLog": "[ERROR] [1793994324.323188506] [service_deadline_b692bd5997.learning_sum_client_cpp]: sum service was not discovered\n",
+      "clientFinishedAt_s": 10116.65115968,
+      "clientCommand": [
+        "/tmp/ros2-hub-validation/foundation/build/learning_service_cpp/client",
+        "--ros-args",
+        "-r",
+        "__ns:=/service_deadline_b692bd5997"
+      ],
+      "clientElapsed_s": 2.1201399090004998,
+      "requestSent": false,
+      "outcome": "client_discovery_failed",
+      "totalElapsed_s": 2.524942779000412
+    },
+    {
+      "case": "python-late",
+      "service": "/service_deadline_6ddda32ec3/sum",
+      "passed": true,
+      "events": [
+        {
+          "event": "server_ready",
+          "at_s": 10116.832309462,
+          "service": "/service_deadline_6ddda32ec3/sum",
+          "delay_s": 3.0
+        },
+        {
+          "event": "server_started",
+          "at_s": 10117.256794332,
+          "a": 4,
+          "b": 8
+        },
+        {
+          "event": "server_completed",
+          "at_s": 10120.256870507,
+          "sum": 12,
+          "executed_count": 1
+        },
+        {
+          "event": "service_dispatch_returned",
+          "at_s": 10120.256946767
+        }
+      ],
+      "serverDelay_s": 3.0,
+      "discovered": true,
+      "discoveryElapsed_s": 1.6140000298037194e-05,
+      "clientExitCode": 1,
+      "clientLog": "[ERROR] [1793994327.038417070] [service_deadline_6ddda32ec3.learning_sum_client_py]: sum response timed out\n",
+      "clientFinishedAt_s": 10119.380558978,
+      "clientCommand": [
+        "/usr/bin/python3",
+        "/home/wjz/ros2_robot/ros2-learning-hub/foundation-examples/lessons/services/client.py",
+        "--ros-args",
+        "-r",
+        "__ns:=/service_deadline_6ddda32ec3"
+      ],
+      "clientElapsed_s": 2.523302823999984,
+      "requestSent": true,
+      "outcome": "client_timeout_server_later_completed",
+      "serverCleanup": {
+        "alive": false,
+        "exitCode": 0,
+        "forced": false
+      },
+      "totalElapsed_s": 3.788201700999707
+    },
+    {
+      "case": "python-absent",
+      "service": "/service_deadline_a0c3703a61/sum",
+      "passed": true,
+      "events": [],
+      "serverDelay_s": 3.0,
+      "discovered": false,
+      "discoveryElapsed_s": 0.40015193199906207,
+      "clientExitCode": 1,
+      "clientLog": "[ERROR] [1793994330.785389848] [service_deadline_a0c3703a61.learning_sum_client_py]: sum service was not discovered\n",
+      "clientFinishedAt_s": 10123.128579837,
+      "clientCommand": [
+        "/usr/bin/python3",
+        "/home/wjz/ros2_robot/ros2-learning-hub/foundation-examples/lessons/services/client.py",
+        "--ros-args",
+        "-r",
+        "__ns:=/service_deadline_a0c3703a61"
+      ],
+      "clientElapsed_s": 2.2840261490000557,
+      "requestSent": false,
+      "outcome": "client_discovery_failed",
+      "totalElapsed_s": 2.68865084600111
+    }
+  ],
+  "limits": [
+    "只发送无量纲整数加法与独立IPC观察；无机器人、仿真或设备命令。",
+    "超时清理本地pending不撤销服务端工作；服务本身不提供通用取消。",
+    "monotonic只在同主机两个进程之间比较，软期限不能抢占任意原生阻塞。",
+    "实验退出0表示预期故障断言通过，不表示每个请求业务成功。"
+  ],
+  "foundationInputs": [
+    {
+      "file": "/tmp/ros2-hub-validation/foundation/build/learning_service_cpp/client",
+      "sha256": "674e4c9eb18b00bb1af42a5e20bc51d68bc47d4b17ddc4f384eddd253668bf0e"
+    },
+    {
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/foundation-examples/lessons/services/client.py",
+      "sha256": "c69b16953d5c3921f423c162b1660b9589b4ddcf6ad81bb323e8151599d624bf"
+    }
+  ],
+  "rclpyVersion": "7.1.12",
+  "previousAttempts": [
+    {
+      "checkedAt": "2026-11-07",
+      "passed": true,
+      "sourceSha256": "ff553c291e439baf2395e937ff3d0b32b8c61be3415488c187d4a32263fa0a30",
+      "domain": 221,
+      "discovery": "LOCALHOST",
+      "rmw": "rmw_fastrtps_cpp",
+      "results": [
+        {
+          "case": "discovery-absent",
+          "service": "/service_deadline_37892a4907/sum",
+          "passed": true,
+          "events": [],
+          "serverDelay_s": 0.0,
+          "discovered": false,
+          "discoveryElapsed_s": 0.4001231120000739,
+          "outcome": "discovery_timeout",
+          "requestSent": false,
+          "totalElapsed_s": 0.4684178379993682
+        },
+        {
+          "case": "success",
+          "service": "/service_deadline_36d173016d/sum",
+          "passed": true,
+          "events": [
+            {
+              "event": "server_ready",
+              "at_s": 10034.873343584,
+              "service": "/service_deadline_36d173016d/sum",
+              "delay_s": 0.0
+            },
+            {
+              "event": "server_started",
+              "at_s": 10034.97015228,
+              "a": 4,
+              "b": 8
+            },
+            {
+              "event": "server_completed",
+              "at_s": 10034.97021458,
+              "sum": 12,
+              "executed_count": 1
+            },
+            {
+              "event": "service_dispatch_returned",
+              "at_s": 10034.97026004
+            }
+          ],
+          "serverDelay_s": 0.0,
+          "discovered": true,
+          "discoveryElapsed_s": 0.06034217100022943,
+          "requestSent": true,
+          "sentAt_s": 10034.96997596,
+          "responseDeadline_s": 1.0,
+          "clientFinishedAt_s": 10034.97039405,
+          "responseInWindow": true,
+          "outcome": "success",
+          "sum": 12,
+          "serverCleanup": {
+            "alive": false,
+            "exitCode": 0,
+            "forced": false
+          },
+          "totalElapsed_s": 0.4178196039993054
+        },
+        {
+          "case": "late-kept",
+          "service": "/service_deadline_b50e5545c6/sum",
+          "passed": true,
+          "events": [
+            {
+              "event": "server_ready",
+              "at_s": 10035.284516853,
+              "service": "/service_deadline_b50e5545c6/sum",
+              "delay_s": 0.8
+            },
+            {
+              "event": "server_started",
+              "at_s": 10035.453883259,
+              "a": 4,
+              "b": 8
+            },
+            {
+              "event": "server_completed",
+              "at_s": 10036.253957795,
+              "sum": 12,
+              "executed_count": 1
+            },
+            {
+              "event": "service_dispatch_returned",
+              "at_s": 10036.254122125
+            }
+          ],
+          "serverDelay_s": 0.8,
+          "discovered": true,
+          "discoveryElapsed_s": 1.5630001144018024e-05,
+          "requestSent": true,
+          "sentAt_s": 10035.306708969,
+          "responseDeadline_s": 0.25,
+          "clientFinishedAt_s": 10035.556877169,
+          "responseInWindow": false,
+          "outcome": "timed_out_then_late_response",
+          "sum": 12,
+          "lateResponseAt_s": 10036.254282595,
+          "futureDone": true,
+          "serverCleanup": {
+            "alive": false,
+            "exitCode": 0,
+            "forced": false
+          },
+          "totalElapsed_s": 1.2870619490004174
+        },
+        {
+          "case": "late-detached",
+          "service": "/service_deadline_bf17723794/sum",
+          "passed": true,
+          "events": [
+            {
+              "event": "server_ready",
+              "at_s": 10036.588414834,
+              "service": "/service_deadline_bf17723794/sum",
+              "delay_s": 0.8
+            },
+            {
+              "event": "server_started",
+              "at_s": 10036.757220609,
+              "a": 4,
+              "b": 8
+            },
+            {
+              "event": "server_completed",
+              "at_s": 10037.557293908,
+              "sum": 12,
+              "executed_count": 1
+            },
+            {
+              "event": "service_dispatch_returned",
+              "at_s": 10037.557432138
+            }
+          ],
+          "serverDelay_s": 0.8,
+          "discovered": true,
+          "discoveryElapsed_s": 2.8530999770737253e-05,
+          "requestSent": true,
+          "sentAt_s": 10036.614402342,
+          "responseDeadline_s": 0.25,
+          "clientFinishedAt_s": 10036.864581493,
+          "responseInWindow": false,
+          "pendingRemovedAt_s": 10036.864587633,
+          "outcome": "timed_out_pending_removed_server_completed",
+          "futureDone": false,
+          "serverCleanup": {
+            "alive": false,
+            "exitCode": 0,
+            "forced": false
+          },
+          "totalElapsed_s": 1.5755454310001369
+        },
+        {
+          "case": "cpp-late",
+          "service": "/service_deadline_a8eea89241/sum",
+          "passed": true,
+          "events": [
+            {
+              "event": "server_ready",
+              "at_s": 10038.166606868,
+              "service": "/service_deadline_a8eea89241/sum",
+              "delay_s": 3.0
+            },
+            {
+              "event": "server_started",
+              "at_s": 10038.467681415,
+              "a": 4,
+              "b": 8
+            },
+            {
+              "event": "server_completed",
+              "at_s": 10041.467758877,
+              "sum": 12,
+              "executed_count": 1
+            },
+            {
+              "event": "service_dispatch_returned",
+              "at_s": 10041.467840367
+            }
+          ],
+          "serverDelay_s": 3.0,
+          "discovered": true,
+          "discoveryElapsed_s": 1.0349998774472624e-05,
+          "clientExitCode": 1,
+          "clientLog": "[ERROR] [1793994248.243961159] [service_deadline_a8eea89241.learning_sum_client_cpp]: sum response timed out or was interrupted\n",
+          "clientFinishedAt_s": 10040.571774773,
+          "serverCleanup": {
+            "alive": false,
+            "exitCode": 0,
+            "forced": false
+          },
+          "totalElapsed_s": 3.6704652259995783
+        },
+        {
+          "case": "cpp-absent",
+          "service": "/service_deadline_ac2664c801/sum",
+          "passed": true,
+          "events": [],
+          "serverDelay_s": 3.0,
+          "discovered": false,
+          "discoveryElapsed_s": 0.40012926000053994,
+          "clientExitCode": 1,
+          "clientLog": "[ERROR] [1793994251.851783077] [service_deadline_ac2664c801.learning_sum_client_cpp]: sum service was not discovered\n",
+          "clientFinishedAt_s": 10044.179956441,
+          "totalElapsed_s": 2.5248680029999377
+        },
+        {
+          "case": "python-late",
+          "service": "/service_deadline_a4ee49ae50/sum",
+          "passed": true,
+          "events": [
+            {
+              "event": "server_ready",
+              "at_s": 10044.373576628,
+              "service": "/service_deadline_a4ee49ae50/sum",
+              "delay_s": 3.0
+            },
+            {
+              "event": "server_started",
+              "at_s": 10044.806467934,
+              "a": 4,
+              "b": 8
+            },
+            {
+              "event": "server_completed",
+              "at_s": 10047.806543749,
+              "sum": 12,
+              "executed_count": 1
+            },
+            {
+              "event": "service_dispatch_returned",
+              "at_s": 10047.806631569
+            }
+          ],
+          "serverDelay_s": 3.0,
+          "discovered": true,
+          "discoveryElapsed_s": 1.700000029813964e-05,
+          "clientExitCode": 1,
+          "clientLog": "[ERROR] [1793994254.594807252] [service_deadline_a4ee49ae50.learning_sum_client_py]: sum response timed out\n",
+          "clientFinishedAt_s": 10046.94078578,
+          "serverCleanup": {
+            "alive": false,
+            "exitCode": 0,
+            "forced": false
+          },
+          "totalElapsed_s": 3.8123877109992463
+        },
+        {
+          "case": "python-absent",
+          "service": "/service_deadline_4be6b88bb6/sum",
+          "passed": true,
+          "events": [],
+          "serverDelay_s": 3.0,
+          "discovered": false,
+          "discoveryElapsed_s": 0.4001269769996725,
+          "clientExitCode": 1,
+          "clientLog": "[ERROR] [1793994258.353037712] [service_deadline_4be6b88bb6.learning_sum_client_py]: sum service was not discovered\n",
+          "clientFinishedAt_s": 10050.699155892,
+          "totalElapsed_s": 2.7065823289995024
+        }
+      ],
+      "limits": [
+        "只发送无量纲整数加法与独立IPC观察；无机器人、仿真或设备命令。",
+        "超时清理本地pending不撤销服务端工作；服务本身不提供通用取消。",
+        "monotonic只在同主机两个进程之间比较，软期限不能抢占任意原生阻塞。",
+        "实验退出0表示预期故障断言通过，不表示每个请求业务成功。"
+      ],
+      "rclpyVersion": "7.1.12"
+    }
+  ]
+}

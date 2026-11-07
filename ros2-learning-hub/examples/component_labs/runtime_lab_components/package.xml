@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!-- 原创组件实验包：仅发布教学速度/事件，不接机器人。依赖声明不等于自动安装。 -->
+<package format="3">
+  <name>runtime_lab_components</name>
+  <version>0.1.0</version>
+  <description>原创 NodeOptions 参数与组件容器调度实验</description>
+  <maintainer email="learner@example.com">ROS 2 Learning Hub</maintainer>
+  <license>Apache-2.0</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_components</depend>
+  <depend>rcl_interfaces</depend>
+  <depend>std_msgs</depend>
+  <depend>std_srvs</depend>
+  <exec_depend>composition_interfaces</exec_depend>
+  <export><build_type>ament_cmake</build_type></export>
+</package>

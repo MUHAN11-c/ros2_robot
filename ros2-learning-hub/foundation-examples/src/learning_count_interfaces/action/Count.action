@@ -1,5 +1,12 @@
+# 【中文教学注释】 foundation-examples/src/learning_count_interfaces/action/Count.action
+# 输入输出：输入为 Count 目标 target 或取消请求；输出为 current 反馈、completed 结果及终态，计数无量纲。
+# 执行顺序与边界：服务端接受 1..20 且同一时刻只运行一个目标；每步约 0.5 秒。取消请求被接受与任务已取消是两个事件，共享 busy 状态按线程模型保护。
+# 目标计数，无量纲uint32；本章服务端额外限制1..20，字段类型本身不表达该业务范围。
 uint32 target
+# 分隔目标/结果/反馈三个部分，顺序是Action接口协议的一部分。
 ---
+# 最终结果中的已完成步数，无量纲；取消或失败时可能小于目标。
 uint32 completed
 ---
+# 中间反馈计数，无量纲；反馈不是最终状态，客户端还需检查结果终态。
 uint32 current

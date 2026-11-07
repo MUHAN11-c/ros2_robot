@@ -1,0 +1,71 @@
+{
+  "passed": true,
+  "checkedAt": "2026-11-07",
+  "stage": "60 章目录、正文编号与下级标题复核",
+  "chapters": 60,
+  "mascot": "紫樱",
+  "assets": 7,
+  "screenshots": 20,
+  "browserScenarios": 23,
+  "mobileReadingRoutes": 140,
+  "mobileEditorRoutes": 120,
+  "fileSaveScenarios": 8,
+  "backendUnitChecks": 5,
+  "readerIntegrationFilesBackedUp": 3,
+  "sourceHashes": {
+    "index.html": "43934428e50505f4d4e9ab0f8494255b0ff5e7e0dc850a1be7c43d4aa25492c4",
+    "styles.css": "72357301fb42f0000154ea3bd0a875b60e36da186f6c731b6f28093a6becfcdf",
+    "app.js": "5b29eb34f49129f94036567a1b20973c366dc49f7dc99127a89ded843ce0f24b",
+    "logic.js": "3572dfbc56bf1e25214cebf1fa4c8d81b81e672e6694e76b8630e2018dd64738",
+    "editor.js": "ee9e565371ccd74a5cc604fa13c8b52973790056785d6b1991831f93d8132500",
+    "visual-editor.js": "8558e86164bef5d8fac8f04ce3acfc256fd0f589c58883588f67892f0ba23f59",
+    "file-store.js": "e213d3dcea0f9d97a76f41beb9bf2f55419daf876f23305cee0fc7ab49bb7332",
+    "service-config.js": "fa341110b356276c0850843d3cb93756221df24d2109d4e45584761ecf83ad96",
+    "labs.js": "8bd29e5e2f7cebc7358eb07df3547bf940ffa732c7dcc3d8db868160d97ad2ac",
+    "assets-data.js": "3b72127856318a3368264286e1a80f86d92148696badc6fa86a2d3a9904f071d",
+    "review-evidence.js": "83cfdc0fd34cf819d6a3c52d52cd5b5b4e803552125c7e82a6cb24539090aba6",
+    "source/mascot-assets.json": "c936af1d7096e4efc84efbb7fdc5a6e10fff79b4d788e13ee737dc72b6745bca",
+    "source/component-contract.json": "8c4efd9a0c234254725f1e4c5f568068cff8ae7377e226c3d19b9c0bcbdc4049",
+    "../dist/index.html": "9ae4d164d0b68cea1309bb94820fd3f562f4cd2ad136b6ecb4d775d747a5564e",
+    "../dist/reader.js": "4a60d90db1cf942c02001f6f9911548d03b606b67512dcaeb5554d81cba26510",
+    "../dist/reader.css": "9503aad974e9d57ff89242a1c055c88f0acb957217972f3362e35695d899a09d",
+    "../dist/local-edits.js": "d9276724e4985a619d82b9c6ca40155ca75dc69d7b90e3cd9d7359cd22d0e695",
+    "../source/local-edits.json": "b9c6bf297abbe24303c68dcd4d63b28731a99cb7c64b505947a9665fe4aa461d",
+    "../scripts/serve_local.py": "780b9fc50d34e8f8b17068def848b21abed2c21af8554804b3016eb39a1bb0c5",
+    "../scripts/local_editions.py": "246a55dcd800e4c74d698fef8463c48b1341eb5ca9c381594a2c6a25d8c99d76",
+    "../scripts/build_content.py": "23265ccc8e914b4091aff9edb3be3ee114903a613f0a82f3acc5ee0d8640e5ac",
+    "../scripts/book_export.py": "c375cdab1cc4a56f9df5d2e7a18af80260ce0e9b7b5b9462305dfc50f85966c3",
+    "scripts/qa_browser.cjs": "db678c6fcd421d64e2b8fd58ac2eb10cf66f6cf8ce442c8b515d8835797ea88e",
+    "scripts/qa_outline.cjs": "1b9bb7543b78faf650125835b82dec7a73265e470b893140e98773274e5ce673",
+    "scripts/prepare_review.py": "ab7de4f67d0b5f09581bbe517cffd14a699baa1c8d504f7d86c83a19d68e40f5",
+    "../dist/content.js": "01183ab91a03860a4b92b387300fc5cd203658d38d8f0bd21aae7d5265426d4d",
+    "source/formal-baseline.json": "887a295a89e4c1c70799fab1edb3214c6ce7c49b54c63b6efb489fde679e918f"
+  },
+  "reportHashes": {
+    "browser-report.json": "d046350de557155542767362cd3e31aef1ce2f6d4508e348a2745db49851537d",
+    "logic-report.json": "bfbe0d2a9e97d9d21c1a8a3e14e460dd4f58a38bff5f6acd49b0807437708449",
+    "viewport-report.json": "72c5909af976bbe4c2d8fb29ab9322135c5538ec26a7caff9b2b2e2b9cd9ebf6",
+    "file-save-report.json": "e2c678d811cf064a2c4420cc67621d166a3279802439f69fc2181c3d094e598e",
+    "build-restore-report.json": "c7f9cfbfd9663603eaf02f71f285a074fb158e285e938764443b8cf57801a167",
+    "preparation.json": "460d53a93a90585bc34ad36981673ebd66d8abc232a7b2fbecc412436648b898"
+  },
+  "validationReuse": [
+    "本轮运行断网全章检查、数据层回归和独立副本的写盘备份检查。有限几何视口报告及早期恢复记录沿用原范围。"
+  ],
+  "scope": "独立审查版的全章目录层级、正文开头与锚点复核，另查手机子项定位、表格布局和原位编辑后的目录更新。",
+  "outlineAudit": {
+    "widths": [
+      1440,
+      390,
+      320
+    ],
+    "chaptersPerWidth": 60,
+    "numberedSections": 438,
+    "childEntries": 250,
+    "numberedChildren": 62,
+    "entriesPerWidth": 1096,
+    "desktopSectionJumps": 1096
+  },
+  "currentFormalBaselineFiles": 7,
+  "priorFormalBaselineBackedUpFiles": 7
+}

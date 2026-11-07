@@ -1,0 +1,143 @@
+{
+  "reviewedAt": "2026-11-07",
+  "reviewType": "当前有效正文的独立研究审查",
+  "status": "完成；发现两项 P2 和两项 P3，未修改教材源或页面",
+  "scope": {
+    "effectiveContent": "直接解析当前 dist/content.js 的 window.ROS2Hub，完整阅读 tf2 与 time-bag 的 sections、代码、快捷 commands、steps、案例、习题和关联 API 表；没有沿用上轮正文记忆。",
+    "chapterLocations": {"tf2": "/lessons/30", "time-bag": "/lessons/23"},
+    "apiTables": ["api-timer-clock", "api-tf2-time", "api-rosbag-qos"],
+    "primaryEvidence": "本地固定 Jazzy geometry2、rclpy、rosbag2、turtlesim 源码与 ROS 时间设计文档。",
+    "limits": "本轮没有创建 ROS Node、启动 DDS 通信、录制/播放真实 bag、启动 turtlesim 或其他仿真，也没有运行硬件。仅执行进程内 Buffer 数值核对；建议验证步骤不是已运行结果。"
+  },
+  "inputSnapshots": [
+    {"path": "dist/content.js", "sha256": "ead17272c0777387cb5b51a94d0bd2319994aafa646cf2df8eb0bb185b306334"},
+    {"path": "source/api-reference.json", "sha256": "66476a9c5d0f1ff0c657c1698ea518d9a20cab7220e70f566acdac2f89f33a7a"}
+  ],
+  "summary": {
+    "openFindings": 4,
+    "byPriority": {"P1": 0, "P2": 2, "P3": 2},
+    "highestPriorityAction": "先使 time-bag 的快捷回放命令与正文同样筛选 cmd_vel，避免录制 pose 与当前 turtlesim pose 混发；随后补齐 tf2 timeout 的时钟和执行器前提。",
+    "overallAssessment": "目标/源方向、按消息采样时刻查询、零时刻 latest、静态/动态职责、非阻塞 Python 消费、回放时钟唯一来源和 Header 不随倍速改写等核心解释基本正确。问题集中在快捷命令与正文不一致、API 省略关键时钟条件以及两处会误导阅读的通用注释。"
+  },
+  "findings": [
+    {
+      "id": "TF-TIME-001",
+      "priority": "P2",
+      "severity": "中",
+      "title": "快捷回放命令重放 pose，与正文的唯一输出来源合同冲突",
+      "locations": [
+        {"file": "dist/content.js", "chapterId": "time-bag", "jsonPointer": "/lessons/23/commands/0/code", "label": "录制：turtlesim 与键盘节点已运行", "relevantText": "ros2 bag record -o turtle_session /turtle1/cmd_vel /turtle1/pose"},
+        {"file": "dist/content.js", "chapterId": "time-bag", "jsonPointer": "/lessons/23/commands/1/code", "label": "停止录制后检查与回放", "relevantText": "ros2 bag play turtle_session"},
+        {"file": "dist/content.js", "chapterId": "time-bag", "jsonPointer": "/lessons/23/commands/2/code", "label": "对依赖仿真时间的重放系统", "relevantText": "ros2 bag play turtle_session --clock"},
+        {"file": "dist/content.js", "chapterId": "time-bag", "sectionIndex": 2, "paragraphIndex": 1, "relevantText": "本次只播放 cmd_vel，保留当前模拟器作为 pose 的唯一来源；若同时重放原 pose，会在同一主题混入录制轨迹与新轨迹。"}
+      ],
+      "problem": "快捷录制块记录了 cmd_vel 和 pose，后两个快捷回放块均未筛选主题。按章节 steps 重置并保持 turtlesim 运行时，播放器会重新发布旧 pose，而 turtlesim 也继续发布当前 pose。完整正文的 turtle_trial 示例已正确使用 --topics /turtle1/cmd_vel，但快捷命令仍保留相反行为。",
+      "trigger": "读者按快捷 commands 而非完整 sections 执行，录完 turtle_session、重置存活的 turtlesim 后整包播放。",
+      "impact": "pose 订阅者混入原轨迹和新轨迹，可能把任意 pose 消息误判为回放复现结果，妨碍定位输入与输出差异。",
+      "evidence": [
+        {"kind": "fixed-upstream-source", "path": "references/sources/official-core/ros2--rosbag2/jazzy--12b5e8ba4eb5/ros2bag/ros2bag/verb/play.py", "lines": [68, 69], "observed": "--topics 是显式播放筛选，默认空列表；当前两个快捷命令未提供此参数。"},
+        {"kind": "fixed-upstream-source", "path": "references/sources/official-core/ros2--rosbag2/jazzy--12b5e8ba4eb5/rosbag2_transport/src/rosbag2_transport/player.cpp", "lines": [1266, 1276], "observed": "播放器把 topics_to_filter 应用到 Reader 的 StorageFilter；未筛选时会播放存储中的相应主题。"},
+        {"kind": "fixed-upstream-source", "path": "references/sources/official-examples/ros--ros_tutorials/jazzy--c83136eb8d0d/turtlesim/src/turtle.cpp", "lines": [76, 81], "observed": "每只存活海龟创建 cmd_vel 订阅及 pose 发布器；302–309 行在更新中发布 pose。"}
+      ],
+      "recommendedChanges": [
+        "commands[1] 改为 ros2 bag play turtle_session --topics /turtle1/cmd_vel。",
+        "commands[2] 若保留该海龟包作为时钟演示，改为 ros2 bag play turtle_session --clock --topics /turtle1/cmd_vel，并明确它只验证时钟/输入回放。",
+        "若要对照原 pose，另示范把录制输出重映射到参考主题，不能把它混回当前 pose；与正文使用相同的重置和唯一发布者要求。"
+      ],
+      "validationMethod": "先静态检查所有 time-bag 回放命令与对应录制主题。后续可在独立域生成只含 cmd_vel/pose 的无物理副作用测试 bag，检查筛选后播放器不创建原 pose 输出；本轮没有执行这项跨进程验证。",
+      "confidence": "高"
+    },
+    {
+      "id": "TF-TIME-002",
+      "priority": "P2",
+      "severity": "中",
+      "title": "tf2 超时说明遗漏计时来源，不能据此承诺墙钟等待上界",
+      "locations": [
+        {"file": "source/api-reference.json", "apiId": "api-tf2-time", "jsonPointer": "/apiReferences/7/rows/4", "rowLabel": "异常处理", "relevantText": "超时是等待上限，不是重新标记时间戳"},
+        {"file": "dist/content.js", "chapterId": "tf2", "apiId": "api-tf2-time", "rowIndex": 4},
+        {"file": "dist/content.js", "chapterId": "tf2", "sectionIndex": 4, "paragraphIndex": 1, "relevantText": "生产应用若不能丢弃，应加入有界待处理队列或合适的消息过滤机制，等待对应 TF 到达，再按采样顺序处理，并设最大等待时间。"}
+      ],
+      "problem": "API 表把 C++ lookupTransform 与 Python lookup_transform 合在同一接口说明中，却没有说明 timeout 按哪个时钟推进。固定 Jazzy C++ Buffer::canTransform 用构造时传入的 clock_->now() 轮询期限；若这个时钟为暂停的 ROS 时间、变换缺失、专用接收线程条件成立且上下文未关闭，正的 timeout 也可能持续等待。该版本 Python can_transform 另建默认 SYSTEM_TIME Clock，并在循环中 sleep，不等于 monotonic，也不会自己处理被阻塞线程上的 TF 回调。正文实际 Python 示例不设置阻塞 timeout，当前代码并没有这个挂起问题；风险是读者依据过于一般的表格扩写有期限等待时得到错误保证。",
+      "trigger": "将 C++ Buffer 构造为节点 ROS clock、启用 use_sim_time，暂停 /clock 后对不存在的变换调用正 timeout；或把 Python 的同步 timeout 等待放进需要同一单线程执行器接收 TF 的回调。",
+      "impact": "把 ROS Duration 或系统时钟等待误认为固定墙钟期限；冻结时钟可能令 C++ 调用长期不返回，Python 同步等待则可能阻止缺失 TF 被接收。",
+      "evidence": [
+        {"kind": "fixed-upstream-source", "path": "references/sources/official-core/ros2--geometry2/jazzy--f702874b1c85/tf2_ros/include/tf2_ros/buffer.hpp", "lines": [75, 103], "observed": "Buffer 明确接收用于时间/等待的 clock，并保存为 clock_。"},
+        {"kind": "fixed-upstream-source", "path": "references/sources/official-core/ros2--geometry2/jazzy--f702874b1c85/tf2_ros/src/buffer.cpp", "lines": [58, 66], "observed": "带 timeout 的 lookupTransform 先调用 canTransform。"},
+        {"kind": "fixed-upstream-source", "path": "references/sources/official-core/ros2--geometry2/jazzy--f702874b1c85/tf2_ros/src/buffer.cpp", "lines": [108, 134], "observed": "非零 timeout 先检查专用线程；以 clock_->now() 与 start_time+timeout 比较，每轮真实 sleep 10ms。冻结 clock 不会使这个期限自然到达；此结论为源码条件推断，未在本轮启动 ROS 节点复现。"},
+        {"kind": "fixed-upstream-source", "path": "references/sources/official-core/ros2--geometry2/jazzy--f702874b1c85/tf2_ros_py/tf2_ros/buffer.py", "lines": [233, 243], "observed": "Python 同步 can_transform 使用新建 rclpy.clock.Clock()，循环 sleep(0.02)，源码明确指出阻塞执行器问题。"},
+        {"kind": "fixed-upstream-source", "path": "references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2/rclpy/rclpy/clock.py", "lines": [178, 193], "observed": "Clock() 默认类型为 SYSTEM_TIME，不是 STEADY_TIME。"},
+        {"kind": "fixed-upstream-source", "path": "references/sources/official-core/ros2--geometry2/jazzy--f702874b1c85/tf2_ros_py/tf2_ros/transform_listener.py", "lines": [51, 58], "observed": "Python TransformListener 默认 spin_thread=False，仍需执行器接收 TF；设置 ReentrantCallbackGroup 本身不增加单线程执行器的执行线程。"}
+      ],
+      "recommendedChanges": [
+        "把表中绝对化的“等待上限”改为“timeout 的期限按具体接口/构造时钟计算，不能自动当墙钟上界”，给出固定 Jazzy 的 C++/Python 差异。",
+        "说明需要墙钟业务截止时，用 monotonic 管理的非阻塞 can_transform/lookup 与有界队列，或经验证的异步机制；不能把一个外层 deadline 放在内部阻塞调用后面。",
+        "保留当前不阻塞、缺 TF 明确丢弃的教学实现，并明确增加同步 timeout 不是自动升级成可靠等待。"
+      ],
+      "validationMethod": "后续用只含 TF/clock 的隔离假节点验证：冻结正值 ROS clock、缺失 TF、启用有效接收线程时，子进程墙钟监督应能捕获 C++ 同步等待超时不推进；替代非阻塞方案应在 monotonic 期限内返回。另用单线程 Python 回调验证排队 TF 能在回调返回后被处理。不可把这些建议写成当前已运行。",
+      "confidence": "高（源码条件推断；未做跨进程挂起实验）"
+    },
+    {
+      "id": "TF-TIME-003",
+      "priority": "P3",
+      "severity": "低",
+      "title": "clock_probe 的通用注释与实际稳态定时器相反",
+      "locations": [
+        {"file": "dist/content.js", "chapterId": "time-bag", "sectionIndex": 3, "codeBlockIndex": 0, "label": "clock_probe.py 完整脚本", "codeLine": 16, "relevantText": "使用节点时钟，仿真时间暂停可能影响触发。"},
+        {"file": "dist/content.js", "chapterId": "time-bag", "sectionIndex": 3, "codeBlockIndex": 0, "codeLine": 22, "relevantText": "clock=steady)"}
+      ],
+      "problem": "正文和实际代码正确地以 STEADY_TIME 驱动一秒观察节奏，输出节点 ROS 时间；插入的通用 create_timer 注释却说使用节点时钟且可能随仿真暂停。此处恰好是本章希望读者理解的两种时钟分工，矛盾注释会使读者怀疑探针能否观察暂停。",
+      "evidence": [
+        {"kind": "fixed-upstream-source", "path": "references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2/rclpy/rclpy/node.py", "lines": [1750, 1781], "observed": "仅 clock=None 时才使用 self._clock；显式传入 steady 时 Timer 使用该稳态时钟。"}
+      ],
+      "recommendedChanges": ["把该行改成：周期为1秒、显式使用 STEADY_TIME；/clock 暂停不暂停观察节奏，回调读取的仍是可能暂停的节点 ROS 时间。不要调整正确代码去迎合错误注释。"],
+      "validationMethod": "静态核对注释与 clock=steady 一致；后续可只发布固定 /clock 数值，观察日志持续出现而 ros_time_ns 不变。本轮只核对源码，没有运行该节点。",
+      "confidence": "高"
+    },
+    {
+      "id": "TF-TIME-004",
+      "priority": "P3",
+      "severity": "低",
+      "title": "view_frames 被误注释成需要 Ctrl+C 结束的持续观察进程",
+      "locations": [
+        {"file": "dist/content.js", "chapterId": "tf2", "commandIndex": 1, "label": "终端 B：检查", "relevantText": "从已安装包tf2_tools启动view_frames；此进程通常持续运行，另用新终端执行观察命令，Ctrl+C结束。"},
+        {"file": "dist/content.js", "chapterId": "tf2", "sectionIndex": 2, "codeBlockIndex": 0, "label": "建立并检查固定安装关系"}
+      ],
+      "problem": "同一套命令中的 static_transform_publisher 与 tf2_echo 确实持续运行，但 view_frames 正常路径先收集默认5秒，再获取 FrameGraph、调用 dot 生成 .gv/.pdf 并自行退出。通用注释诱导读者过早 Ctrl+C，也没有告诉读者生成物在哪里。不能把默认收集5秒扩大成整个工具必定5秒返回：其服务查询与外部 dot 调用还有单独的等待行为。",
+      "evidence": [
+        {"kind": "fixed-upstream-source", "path": "references/sources/official-core/ros2--geometry2/jazzy--f702874b1c85/tf2_tools/tf2_tools/view_frames.py", "lines": [49, 68], "observed": "--wait-time/-t 默认5秒，用观察窗口收集 TF。"},
+        {"kind": "fixed-upstream-source", "path": "references/sources/official-core/ros2--geometry2/jazzy--f702874b1c85/tf2_tools/tf2_tools/view_frames.py", "lines": [90, 108], "observed": "在当前目录写 frames_日期.gv/.pdf（或 -o 指定前缀），调用 dot，随后销毁节点并退出。"}
+      ],
+      "recommendedChanges": ["为 view_frames 单独写注释：默认收集约5秒后生成当前工作目录中的图文件并退出；可用 -o tf_snapshot 固定输出名前缀，正常等待完成，不按持续 echo 的方式 Ctrl+C。"],
+      "validationMethod": "先只检查命令帮助与输出路径；后续在独立静态 TF 测试域运行 view_frames -o tf_snapshot，确认两个文件存在、图含 base_link→laser 且进程正常结束。本轮未启动该节点。",
+      "confidence": "高"
+    }
+  ],
+  "nonBlockingTeachingImprovements": [
+    {
+      "id": "TF-TIME-EXPERIMENT-001",
+      "priority": "建议",
+      "location": {"chapterId": "tf2", "sectionIndex": 3, "sectionTitle": "查询采样时刻，理解最新与当前的差别"},
+      "assessment": "现有静态点实验足以验证方向和平移，不能展示动态链中用 latest 替代消息时刻造成的误差；这是可补充的教学实验，不把已经正确的正文判为错误。",
+      "suggestion": "增加不创建 Node 的进程内 Buffer 数值实验：base→sensor 在 t=10秒为 x=0米、t=11秒为 x=1米，姿态恒定单位四元数；sensor 点 x=1米的采样时刻为10.5秒。按消息时刻查得1.5米，Time(0) 查 latest 得2米，时间错位产生0.5米差异；9.9与11.1秒应外推失败。再保留静态外参的1.2、0、0.3米例子，对比静态和动态的时间条件。",
+      "performedVerification": "已使用本机已安装 Jazzy 的公开 Buffer.set_transform / set_transform_static / lookup_transform 与 do_transform_point 在进程内执行上述数值断言；没有 rclpy.init、Node、DDS、仿真或硬件。"
+    }
+  ],
+  "verifiedCorrectClaims": [
+    {"chapterId": "tf2", "locations": ["sections[0].paragraphs[1]", "sections[2]", "api-tf2-time.rows[0]"], "checked": "lookup(target,source,time) 把 source 中数据变到 target；tf2_echo base_link laser 采用这一数据变换方向，静态点算例为 [1.2,0,0.3] 米。", "evidence": "geometry2 固定 Jazzy tf2_ros/src/tf2_echo.cpp:69–72,193–194 及进程内 Buffer 数值断言。"},
+    {"chapterId": "tf2", "locations": ["sections[3]", "sections[4]"], "checked": "零时刻表示最新可用、动态链需要共同可用时间；按输入 Header 查询而非接收时刻，输出保留输入采样时刻，当前例子不设置同步等待。", "evidence": "geometry2 tf2/src/buffer_core.cpp:346–347 调用 getLatestCommonTime；Python Buffer 与 TransformListener 默认执行方式及有效正文代码已核对。"},
+    {"chapterId": "tf2", "locations": ["sections[1].paragraphs[1]", "sections[2]"], "checked": "静态关系走 /tf_static，动态关系走 /tf；正文要求保持静态广播器运行并让订阅者获得数据，没有把 transient_local 当成发布者退出后的永久存储。", "evidence": "geometry2 tf2_ros_py/tf2_ros/static_transform_broadcaster.py:54–63、transform_listener.py:69–101。"},
+    {"chapterId": "time-bag", "locations": ["sections[1]", "sections[3].paragraphs[0]", "api-rosbag-qos"], "checked": "bag 组织时序的时间与消息 Header 区分；--use-sim-time 等待时钟后才开始订阅录制，--clock 由播放器生成时钟且该固定 Jazzy CLI 排除包中原 /clock；消费者还须逐节点设置 use_sim_time。", "evidence": "rosbag2 recorder.cpp:639–650,777–787；ros2bag/verb/play.py:100–105,267–271；ROS 时间设计文档。"},
+    {"chapterId": "time-bag", "locations": ["sections[3]", "sections[5]", "exercises[2]"], "checked": "实际 clock_probe 代码正确显式使用稳态触发、读取节点 ROS 时间；倍速播放改变发布调度，不自动将 Header 数值乘倍速；暂停、回退和状态重置的责任已说明。", "evidence": "有效代码及 rclpy create_timer clock 参数路径、rosbag2 播放选项与 ROS 时间设计文档。"}
+  ],
+  "performedChecks": [
+    {"kind": "read-current-output", "result": "完整读取两章当前有效数据和三组关联 API；审查记录包含当前生成物与 API 源 SHA256。"},
+    {"kind": "source-review", "result": "核对固定 Jazzy geometry2、rclpy、rosbag2、turtlesim 与 ROS 时间设计的一手实现；未浏览第三方结论。"},
+    {"kind": "in-process-installed-api-numerical-check", "result": {"dynamicSampled_t10_5_x_m": 1.5, "dynamicLatest_x_m": 2.0, "outOfRangeExtrapolationFailures": [[9, 900000000], [11, 100000000]], "staticPoint_m": [1.2, 0.0, 0.3]}, "boundary": "仅进程内 Buffer，不创建 Node 或通信；安装实现结果不代替任意其他版本的运行保证。"}
+  ],
+  "notPerformed": [
+    "没有启动 turtlesim、仿真、Nav2 或任何硬件。",
+    "没有实际执行章节录制/回放流程、验证晚加入 /tf_static 的跨进程 QoS，或运行 view_frames。",
+    "C++ 冻结 ROS 时钟下的同步 timeout 风险来自固定源码条件推断，没有在本轮运行挂起子进程。",
+    "没有修改 source、dist、examples、构建器或原始参考仓库；本轮唯一新交付是此审查 JSON。"
+  ]
+}

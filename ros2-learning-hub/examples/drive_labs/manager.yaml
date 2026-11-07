@@ -1,0 +1,16 @@
+# 管理器输入为 RSP 发布的 URDF。加载硬件后才配置并切换控制器。
+# 100 Hz 是本例请求的读/更新/写频率。实验未测周期抖动或实时性。
+/**/controller_manager:
+  ros__parameters:
+    update_rate: 100
+    drive:
+      type: diff_drive_controller/DiffDriveController
+    reserve:
+      # 与 drive 使用相同的两个速度命令接口。故意保持 inactive 以验证互斥。
+      type: diff_drive_controller/DiffDriveController
+    state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+/**/state_broadcaster:
+  ros__parameters:
+    # 输出到自己的命名空间。RSP 只订阅这个 JointState，轮位置 rad、速度 rad/s。
+    use_local_topics: true

@@ -1,0 +1,34 @@
+{
+  "scope": "本轮全章目录审查采用的正式教材指纹。上一版文件有备份，readerIntegration 保存初次文件直存记录。",
+  "files": {
+    "reader-library.js": "84df52e02671bf601e0eb99e99aadbc698044b19c69632a9167382cf9361d1ab",
+    "content.js": "5cc15af8b5022d8a603a4713ca839dbee785a62251b7f9eeacb42abe7ee0bfec",
+    "book.html": "845139ef0e1716c4ed7e628613582901a07f68298de714d6d35d968b3a0ce575",
+    "preview/figures.js": "5611d131d4081e955bffba94ea71dd27ba390b1a1a9fe8ced70ab055bcbec791",
+    "preview/figure-data.js": "c30e4a7d02563db6c662df51a52a44fd7edb53555de05471376f2a2ea408f9b4",
+    "downloads/atlas_examples.zip": "32f7fb37c03c8b8bcc47110faa8d3ab727771c120b31b4f2434ed5c96508dd10",
+    "downloads/validation-evidence.zip": "ba4281ddfd50b728d54edfad4cf228838fac9fb4668a9ebbbbd8f1c0a1d04727",
+    "index.html": "8a017aa5c0b4647e9edba133279faa2bff8f4813fed2ecfbf3f070b7ea673319",
+    "reader.js": "9af6555e0c46609c31a263fc971826d477f504b68392aa17b12f6691391b98f2",
+    "reader.css": "8c53feae88f13a22a63d4f19a02a55c820b7b40a5ddbacfd1451e38d722b019f",
+    "chapter-outline.js": "85363a34187601e1c35c6b41a8bff61aac27d35097bf852da9c77dcfe3f95e78"
+  },
+  "readerIntegration": {
+    "index.html": {
+      "previousSha256": "684e16ad64abbf3c654c53744fe02457bff5d0fd71ad5425a9d9399515af2878",
+      "currentSha256": "9ae4d164d0b68cea1309bb94820fd3f562f4cd2ad136b6ecb4d775d747a5564e",
+      "backup": "backups/20261107-before-file-saving/dist/index.html"
+    },
+    "reader.js": {
+      "previousSha256": "a474d8b3c9cb5525084a929a36b1c88c373e217e5150917bbb0c3ceb7d50ad5e",
+      "currentSha256": "cb997782ee9412e338da61da0c600401d1fff695649fd1a875b18baed62180bc",
+      "backup": "backups/20261107-before-file-saving/dist/reader.js"
+    },
+    "reader.css": {
+      "previousSha256": "79e77ae5e6a1739e5c861a64b04a728ad40da317cada2d474a225ba13ff18ab6",
+      "currentSha256": "9503aad974e9d57ff89242a1c055c88f0acb957217972f3362e35695d899a09d",
+      "backup": "backups/20261107-before-file-saving/dist/reader.css"
+    }
+  },
+  "previousBaseline": "backups/20261107-before-chapter-outline/design-review/source/formal-baseline.json"
+}

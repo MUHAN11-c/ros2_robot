@@ -1,0 +1,2278 @@
+{
+  "chapters": [
+    {
+      "id": "math-linear",
+      "title": "线性代数：从观测方程到可解释的最小二乘",
+      "summary": "把矩阵看成带单位和坐标约定的数据契约，用一个二维位置估计贯穿秩、残差、加权求解、协方差与数值退化。",
+      "goals": [
+        "把测量关系写成维数、次序和单位一致的矩阵方程",
+        "手推普通与加权最小二乘并检查残差正交性",
+        "识别不可观方向、协方差相关项和病态求解的区别"
+      ],
+      "prerequisites": [
+        "能进行代数展开与求导",
+        "会运行独立 Python 文件"
+      ],
+      "version": "数学模型与标准库实验；ROS 2 Jazzy 为工程对应主线",
+      "concepts": [
+        "矩阵的每一列对应一个有明确单位的未知量，每一行对应一个测量或约束。",
+        "方程数量多不意味着信息充分；必须检查不同方向的独立性。",
+        "最小二乘给出指定误差模型下的折中，结果仍需残差、单位和模型检查。"
+      ],
+      "sections": [
+        {
+          "title": "先写清向量保存了什么",
+          "paragraphs": [
+            "设机器人在平面中的位置状态按 x、y 次序存为列向量，两项单位都是米。传感器输出可以是 x、y 或 x+y，并不要求每个传感器都直接测量完整状态。把这些关系逐行排列得到观测矩阵：列的次序一旦确定，后续雅可比、协方差和消息转换都必须沿用。交换两个数组元素会改变物理意义，即使程序的尺寸检查仍然通过。",
+            "矩阵乘法首先是一套量纲规则。若状态改成位置与速度，第二列的系数通常要包含时间，才能把米每秒变成米；不能因为两个数组长度都是二就直接相加。实际调试先在纸上标注输入、输出、坐标系、时间戳和单位，再计算。一个数值正常的输出，可能只是把厘米当成米后的错误答案；浮点数类型不会替你发现这种问题。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "y=Ax",
+              "label": "线性观测映射",
+              "explanation": "第 i 行给出一个测量：把该行系数分别乘以状态分量再求和。例中三行依次为 [1,0]、[0,1]、[1,1]；状态为 [1,2]m 时输出 [1,2,3]m。该式本身不包含噪声或估计最优性。",
+              "symbols": [
+                {
+                  "symbol": "x",
+                  "meaning": "n 维待估计状态",
+                  "unit": "本例 m"
+                },
+                {
+                  "symbol": "A",
+                  "meaning": "m 行 n 列观测矩阵",
+                  "unit": "本例无量纲"
+                },
+                {
+                  "symbol": "y",
+                  "meaning": "m 维理想观测",
+                  "unit": "本例 m"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "独立信息、秩与不可观方向",
+          "paragraphs": [
+            "只有测量 x+y 时，状态 [1,2] 与 [2,1] 产生同一结果。增加一条测量 2x+2y 仍不能区分它们，因为第二行只是第一行的倍数。向量 [1,-1] 是零空间方向：沿它改变状态不改变任何预测观测。这类退化是模型的信息缺失，不是增加小数位、提高采样率或换一种编程语言就能解决的问题。",
+            "在标定和 SLAM 中，缺少绝对参考还会产生规范自由度，例如所有位姿共同平移而相对测量不变。常见处理是固定一个参考状态，或加入有真实物理依据的先验。给矩阵对角线随意加数虽然可能让线性方程可解，却引入了新的偏好，不能把它叫作增加了传感器信息。分清模型退化与计算失败，才能选择正确修复方向。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "A v=0,\\quad \\operatorname{rank}(A)<n",
+              "label": "零空间与不唯一性",
+              "explanation": "若存在非零 v 满足 Av=0，则 A(x+cv)=Ax，对任意标量 c 都成立，因此仅凭这些观测无法唯一恢复 x。例中 A 的两行为 [1,1] 和 [2,2]，取 v=[1,-1] 即可直接验算。",
+              "symbols": [
+                {
+                  "symbol": "v",
+                  "meaning": "观测不可区分的状态变化方向",
+                  "unit": "与 x 相同"
+                },
+                {
+                  "symbol": "n",
+                  "meaning": "状态维数",
+                  "unit": "无量纲"
+                },
+                {
+                  "symbol": "c",
+                  "meaning": "沿零空间方向的幅度",
+                  "unit": "依 v 的归一化约定"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "从残差平方和推到正规方程",
+          "paragraphs": [
+            "实际三个测量可能给出 x=1、y=2、x+y=2.8 米，没有一个状态能同时满足。定义残差为预测减测量，并最小化三个残差平方和的一半。把每个平方项展开后，对 x 和 y 分别求导；导数为零要求残差与观测矩阵的两列正交。注意这里要求导的是总代价，不能把每个残差都强迫为零，因为测量本来就互相矛盾。",
+            "本例的正规矩阵为 [[2,1],[1,2]]，右端为 [3.8,4.8]，解得 x=14/15、y=29/15 米。三个残差依次为 -1/15、-1/15、1/15 米；分别将第一和第三、第二和第三残差相加，都得到零。这比只检查“解看起来接近观测”更有力。残差很小也不能证明模型正确：如果所有测量共享同一偏置，最小二乘可能非常一致地估错。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "\\min_x \\frac12(Ax-b)^T W(Ax-b),\\qquad A^TWA\\hat x=A^TWb",
+              "label": "加权最小二乘的驻点条件",
+              "explanation": "令 r=Ax-b，代价梯度为 A^TWr；令梯度为零得到右式。W 为对称正定权重且 A 满列秩时解唯一。本例先取 W=I。独立同单位测量常取权重为方差倒数，但相关测量应使用完整协方差的逆或等价白化。",
+              "symbols": [
+                {
+                  "symbol": "b",
+                  "meaning": "实际观测列向量",
+                  "unit": "本例 m"
+                },
+                {
+                  "symbol": "W",
+                  "meaning": "残差权重矩阵",
+                  "unit": "方差倒数时 m^-2"
+                },
+                {
+                  "symbol": "r",
+                  "meaning": "预测减观测的残差",
+                  "unit": "本例 m"
+                },
+                {
+                  "symbol": "\\hat x",
+                  "meaning": "估计状态",
+                  "unit": "本例 m"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "权重、相关性与协方差传播",
+          "paragraphs": [
+            "权重表示这套代价如何评价误差，不是主观的“相信百分比”。一个标准差为 0.2 米的独立测量方差是 0.04 平方米，精度是每平方米 25；把 0.2 直接填成方差会改变融合结果。若两条观测都来自同一轮编码器，它们很可能相关，简单重复堆叠会把同一份信息计算两次。此时应建模联合协方差，或只保留独立信息源。",
+            "协方差描述误差围绕均值的二阶变化。对称性来自乘积交换，半正定性来自任意投影的方差不能为负。两个方向的边缘方差不能代替完整矩阵：设位置协方差对角为 0.04、0.09，互协方差为 0.03 平方米，那么 x+y 的方差是 0.19；忽略相关项只得到 0.13。坐标系旋转后协方差也必须随映射变换，不能只旋转均值。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "\\Sigma_y=A\\Sigma_xA^T",
+              "label": "线性映射下的不确定性",
+              "explanation": "将 y-E[y]=A(x-E[x]) 代入协方差定义，并把常量矩阵移到期望外得到该式。它只需二阶矩存在，不要求高斯。对 y=x+y，A=[1,1]，直接矩阵相乘得到 0.04+0.09+2×0.03=0.19 平方米。",
+              "symbols": [
+                {
+                  "symbol": "\\Sigma_x",
+                  "meaning": "输入状态协方差",
+                  "unit": "本例 m^2"
+                },
+                {
+                  "symbol": "\\Sigma_y",
+                  "meaning": "输出协方差",
+                  "unit": "本例 m^2"
+                },
+                {
+                  "symbol": "A",
+                  "meaning": "确定的线性映射",
+                  "unit": "依变量单位而定"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "同一个最小二乘问题的不同求法",
+          "paragraphs": [
+            "小型教学实验可以显式形成二阶正规矩阵，再用行列式求解，便于跟手算对照。工程中通常应调用成熟分解：QR 避免显式平方条件数，SVD 更适合分析秩与弱约束方向。它们求解的是同一类最小二乘目标，数值路径和退化处理不同；不能因为普通样例结果相同，就认定所有实现对近奇异数据都同样可靠。",
+            "若 A 的奇异值最大与最小之比很大，观测的微小变化就可能引起状态的大变化；形成 A 的转置乘 A 会把谱条件数平方。实验中正规矩阵的特征值为 1、3，条件数为 3，尚不病态。真实系统还应考虑列缩放、浮点精度、残差白化和异常值。求解失败要记录实际矩阵或可复现输入，而不是只打印一个“逆矩阵不存在”的错误后继续发布上次结果。"
+          ],
+          "bullets": [],
+          "equations": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "求解接口对照：消元、分解与输入契约",
+          "paragraphs": [
+            "本章solve2接收二阶矩阵与二维右端，返回按原状态顺序排列的两个分量；行列式接近零时抛出异常。该接口求的是线性方程，不会替调用方生成最小二乘问题，所以调用前才有形成正规矩阵的步骤。若把原始三行观测直接塞入二阶求解器，问题维度就已错误。先画清“原始观测—局部方程—线性求解—状态更新”的数据流，才能区分问题构造与求解算法。",
+            "使用QR求同一个超定问题时，先写A=QR，利用正交矩阵保持向量长度的性质，把目标变成最小化R乘状态与Q转置乘观测之间的差；再解相应三角系统。这个路径不必显式形成A转置乘A，因而避免了正规方程对条件数的平方放大。教学代码没有实现完整QR，不应把通过二阶小例子写成已经验证了某个数值库的所有分解策略。",
+            "SVD把状态方向分成不同强度的奇异方向。接近零的奇异值表示某个方向的观测变化很弱，需要结合噪声、变量尺度和任务需求确定阈值；机械地把所有小于同一个绝对数的值截断，可能受米与毫米换算影响。选择最小范数解也引入了范数定义，若位置和角度尺度混用，该偏好并不天然具有正确物理意义。报告应同时列出尺度与采用的秩判据。",
+            "一次求解结束后，至少复查预测观测、残差和代价是否与原问题一致，再用另一个可以独立实现的性质验收。本例使用残差正交与已知手算答案，而非再运行一遍同样的二阶求解公式。后续使用C++或Python矩阵库时，应保留这些小数据作为跨语言对照，比较状态顺序、权重与异常状态处理；相同输出函数名不保证相同边界行为。"
+          ],
+          "bullets": [],
+          "equations": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "把数学契约带进 ROS 接口与实验",
+          "paragraphs": [
+            "在 ROS 消息中，数组长度只告诉你存储结构，不告诉你是否用了正确物理约定。位置、线速度、角速度不能直接做未经缩放的欧氏距离；位姿协方差按接口指定的变量次序保存，读写前应查看消息定义。接入 C++ 矩阵库或 Python 数值库时，显式转换行列形状并给变量加单位后缀，能减少广播、转置和下标次序造成的隐蔽错误。",
+            "下面完整文件依次验证普通最小二乘、带权残差正交、奇异矩阵拒绝、协方差投影和条件数。它选择二维问题是为了让每个输出都能手算，不是推荐手写求解器替代成熟库。试验记录应同时保留输入、假设和异常分支；若换成三维或带偏置状态，应重新推导每个矩阵的形状与单位，再决定增加观测还是增加先验。"
+          ],
+          "bullets": [],
+          "equations": [],
+          "codeBlocks": [
+            {
+              "label": "math_linear.py",
+              "language": "python",
+              "type": "complete",
+              "code": "#!/usr/bin/env python3\n\"\"\"输入：固定的二维观测；输出：最小二乘位置、残差和投影方差。只需标准库。\"\"\"\n\ndef run():\n    import math\n\n    def solve2(matrix, vector):\n        # 教学用二阶线性方程求解器；输入的两行长度均为 2。\n        # 1e-12 是本例量纲统一后的绝对退化阈值，不是通用数值策略。\n        a, b = matrix[0]\n        c, d = matrix[1]\n        determinant = a * d - b * c\n        if abs(determinant) < 1e-12:\n            raise ValueError('观测退化：不能唯一求解两个未知量')\n        return [(d * vector[0] - b * vector[1]) / determinant,\n                (-c * vector[0] + a * vector[1]) / determinant]\n\n    # 状态为 [x, y]，单位 m；每行观测系数无量纲，b 的单位为 m。\n    matrix = [[1.0, 0.0], [0.0, 1.0], [1.0, 1.0]]\n    observations = [1.0, 2.0, 2.8]\n    # W=I：三个观测具有相同方差。先形成 H=A^T A 和 g=A^T b。\n    hessian = [[sum(row[i] * row[j] for row in matrix)\n                for j in range(2)] for i in range(2)]\n    gradient_rhs = [sum(row[i] * z for row, z in zip(matrix, observations))\n                    for i in range(2)]\n    estimate = solve2(hessian, gradient_rhs)\n    residual = [sum(a * x for a, x in zip(row, estimate)) - z\n                for row, z in zip(matrix, observations)]\n    # 验收一：最小二乘残差应正交于 A 的两列，误差容差单位为 m。\n    normal_residual = [sum(row[i] * r for row, r in zip(matrix, residual))\n                       for i in range(2)]\n    assert max(map(abs, normal_residual)) < 1e-12\n    assert math.isclose(estimate[0], 14.0 / 15.0, abs_tol=1e-12)\n    assert math.isclose(estimate[1], 29.0 / 15.0, abs_tol=1e-12)\n\n    # 验收二：带权情形也必须满足 A^T W r=0；权重的共同缩放不改变解。\n    weights = [1.0, 4.0, 1.0]\n    weighted_h = [[sum(w * row[i] * row[j] for row, w in zip(matrix, weights))\n                   for j in range(2)] for i in range(2)]\n    weighted_g = [sum(w * row[i] * z for row, z, w in zip(matrix, observations, weights))\n                  for i in range(2)]\n    weighted_x = solve2(weighted_h, weighted_g)\n    weighted_r = [sum(a * x for a, x in zip(row, weighted_x)) - z\n                  for row, z in zip(matrix, observations)]\n    assert all(abs(sum(w * row[i] * r for row, r, w in zip(matrix, weighted_r, weights))) < 1e-12\n               for i in range(2))\n\n    # 验收三：重复方向观测不会增加秩，显式拒绝奇异方程。\n    try:\n        solve2([[1.0, 1.0], [2.0, 2.0]], [1.0, 2.0])\n    except ValueError:\n        pass\n    else:\n        raise AssertionError('奇异矩阵本应被拒绝')\n\n    # 协方差单位 m^2；投影 s=x+y 时必须包括相关项 2*cov(x,y)。\n    covariance = [[0.04, 0.03], [0.03, 0.09]]\n    variance_sum = sum(sum(row) for row in covariance)\n    assert covariance[0][0] > 0.0\n    assert covariance[0][0] * covariance[1][1] - covariance[0][1] ** 2 > 0.0\n    assert math.isclose(variance_sum, 0.19, abs_tol=1e-12)\n    # 本例 H 的特征值是 1、3，所以谱条件数为 3；A 的条件数为 sqrt(3)。\n    trace = hessian[0][0] + hessian[1][1]\n    gap = math.sqrt((hessian[0][0] - hessian[1][1]) ** 2 + 4 * hessian[0][1] ** 2)\n    condition_h = (trace + gap) / (trace - gap)\n    assert math.isclose(condition_h, 3.0, abs_tol=1e-12)\n    result = {'x_m': estimate, 'residual_m': residual, 'variance_sum_m2': variance_sum,\n              'condition_normal_matrix': condition_h}\n    print('线性代数实验通过：', result)\n    return result\n\nif __name__ == '__main__':\n    run()\n",
+              "explanation": "这是原创完整文件，只使用 Python 标准库。复制到同名文件后可直接运行；输入、输出、单位、执行顺序和边界检查都写在中文注释中。实验检查当前理想模型的数学性质，不代表 ROS 节点、仿真或实机已经验证。"
+            }
+          ]
+        }
+      ],
+      "workedExample": {
+        "title": "贯穿案例：三条不一致观测如何确定二维位置",
+        "scenario": "三条同方差测量依次为 x=1m、y=2m、x+y=2.8m。",
+        "steps": [
+          "按状态 [x,y] 写出三行 A 和 b，确认每项单位都是米。",
+          "形成 A^TA=[[2,1],[1,2]] 与 A^Tb=[3.8,4.8]。",
+          "求解得到 [14/15,29/15]m，计算残差 [-1/15,-1/15,1/15]m。",
+          "验证 A^Tr=0，再把第二条权重改为4，检查新的加权正交条件。"
+        ],
+        "result": "普通解约 [0.933333,1.933333]m；程序还会拒绝两行成倍数的退化系统。"
+      },
+      "exercises": [
+        {
+          "question": "把第三条观测改为3m，最小二乘解与残差是什么？",
+          "answer": "三个测量一致，解为 [1,2]m，三个残差均为0。"
+        },
+        {
+          "question": "为什么测量 x+y 与 2x+2y 不能恢复两个位置分量？",
+          "answer": "两行线性相关，秩为1；沿 [1,-1] 改变状态不会改变观测，解不唯一。"
+        },
+        {
+          "question": "本章协方差例中，忽略0.03的互协方差会怎样？",
+          "answer": "将 x+y 的方差从0.19误算为0.13平方米，低估该方向的不确定性。"
+        }
+      ],
+      "steps": [
+        {
+          "title": "先固定模型与单位",
+          "body": "按本章符号表手算案例，明确观测、状态、控制量的坐标系和单位；先记录理论值，再运行代码，避免只看“通过”字样。"
+        },
+        {
+          "title": "运行完整数值实验",
+          "body": "将本章完整 Python 文件保存到空目录。Python 3 无需安装第三方包；若使用随站源码包，也可运行统一的 math_labs.py 并选择本章。",
+          "code": "# 输入是文件中的固定教学数据；不会连接 ROS 图或控制硬件。\npython3 math_linear.py\n# 随站合并实验集可只运行这一章；参数是章节 ID。\npython3 math_labs.py --chapter math-linear",
+          "language": "bash",
+          "type": "commands"
+        },
+        {
+          "title": "解释通过与失败的含义",
+          "body": "将打印数值与手算结果逐项对照。再按练习改变一个参数，区分数学前提被破坏、浮点误差和实现错误。不要删除失败断言来制造通过。"
+        }
+      ],
+      "commands": [],
+      "expected": [
+        "普通与加权残差均满足相应正交条件。",
+        "奇异系统被明确拒绝，相关协方差投影得到0.19平方米。"
+      ],
+      "pitfalls": [
+        "把标准差当方差，或把不同单位状态未经缩放地混入同一代价。",
+        "将增加阻尼误称为恢复了不可观方向的信息。",
+        "直接求逆替代分解而不检查秩、缩放和输入有限性。"
+      ],
+      "exercise": "为本章实验写一份输入输出契约：列出状态次序、单位、前提、一个正常案例、一个必须拒绝或明确标记退化的案例。",
+      "exerciseAnswer": "契约应明确本章模型的量纲与坐标约定，正常案例需给出可复算的数值；退化案例应对应正文列出的边界，并解释失败原因。实验只验证这个有限模型，不把结果外推到任意噪声、任意机器人或实机安全。",
+      "sourceIds": [
+        "math-vmls",
+        "math-ros-interfaces"
+      ],
+      "validation": "原创数学推导；读取本地参考教程以核对主题范围，并与本章列出的一手资料交叉核对。标准库完整实验已在本轮运行并通过断言；ROS 构建、仿真、硬件未运行。"
+    },
+    {
+      "id": "math-rigid",
+      "title": "刚体变换：坐标、旋转与四元数的统一约定",
+      "summary": "沿 A←B←C 的坐标链推导二维与三维变换，说明复合、求逆、四元数次序和局部姿态误差为什么必须共同约定。",
+      "goals": [
+        "用带下标的变换式确定输入输出坐标系",
+        "手推复合与逆变换并验证长度和旋转约束",
+        "按ROS的xyzw次序处理四元数并识别符号等价"
+      ],
+      "prerequisites": [
+        "已理解向量、矩阵乘法与转置",
+        "知道角度与弧度的转换"
+      ],
+      "version": "数学模型与标准库实验；ROS 2 Jazzy 为工程对应主线",
+      "concepts": [
+        "同一个物理点可以在不同坐标系有不同坐标；换坐标不代表物体真的移动。",
+        "位姿由旋转和平移共同构成，复合通常不交换。",
+        "单位四元数有四个分量但只有三个姿态自由度，q和-q表示同一旋转。"
+      ],
+      "sections": [
+        {
+          "title": "从点的坐标开始约定方向",
+          "paragraphs": [
+            "本章把 T_AB 定义为把 B 系坐标转换成 A 系坐标的映射，列向量左乘。平移 t_AB 是 B 原点在 A 中的位置，旋转 R_AB 的三列是 B 的三个单位轴在 A 中的表达。这样每个下标都有明确含义：看到 R_AB 乘 p_B，就知道结果是 p_A。不要仅用“相机到机器人”这种容易把物体移动和换坐标混在一起的口头说法。",
+            "设 B 系比 A 系绕共同的 z 轴正向转九十度，B 原点在 A 中为 [1,2] 米，点在 B 中为 [2,0] 米。先旋转得到 [0,2]，再加平移得到 A 中 [1,4] 米。若反过来先给点加 [1,2] 再旋转，就把本来在 A 中表达的平移当成 B 中分量，算出另一个物理过程。单位都正确也不能消除这种方向错误。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "p_A=R_{AB}p_B+t_{AB}",
+              "label": "坐标变换的输入与输出",
+              "explanation": "旋转先把同一向量从B系分量变为A系分量，平移再补上两原点的位移。本章只讨论欧氏刚体变换，不含缩放、镜像或投影；三维相机像素到空间点还需要内参和深度模型。",
+              "symbols": [
+                {
+                  "symbol": "p_A,p_B",
+                  "meaning": "同一物理点的两种坐标",
+                  "unit": "m"
+                },
+                {
+                  "symbol": "R_{AB}",
+                  "meaning": "B到A的旋转矩阵",
+                  "unit": "无量纲"
+                },
+                {
+                  "symbol": "t_{AB}",
+                  "meaning": "B原点在A中的位置",
+                  "unit": "m"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "旋转矩阵保持长度却不允许任意相加",
+          "paragraphs": [
+            "刚体旋转需要保持内积和右手性，因此旋转矩阵满足列向量互相正交、长度为一，且行列式为正一。转置就是逆矩阵。行列式为负一的正交矩阵还包含镜像，不能作为普通机器人姿态。连续相乘会受到浮点舍入影响，实际系统需要检查误差并通过合理方式重新投影或归一化，而不是把任意三乘三数组当作旋转。",
+            "一般不能用矩阵元素的算术平均表示平均姿态。例如单位旋转与绕 z 轴半周旋转的平均，会把平面轴压成零。旋转群的约束解释了为什么姿态不能像位置一样任意加减。对于指定单位轴，可以用 Rodrigues 公式构造旋转；输入轴必须先归一化，角度使用弧度。零角度给单位矩阵，接近半周时旋转仍然有效，只是从旋转恢复轴角可能有分支问题。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "R^TR=I,\\quad \\det R=1,\\qquad R=I+\\sin\\theta K+(1-\\cos\\theta)K^2",
+              "label": "旋转约束与轴角构造",
+              "explanation": "K是单位轴u的叉乘矩阵，满足Kv=u×v。把矩阵指数的幂级数按K的幂归并可得到右式。实验用u=[0,0,1]和theta=pi/2构造R，逐项验证R^TR=I及x轴被映到y轴。",
+              "symbols": [
+                {
+                  "symbol": "R",
+                  "meaning": "三维旋转矩阵",
+                  "unit": "无量纲"
+                },
+                {
+                  "symbol": "u",
+                  "meaning": "单位旋转轴",
+                  "unit": "无量纲"
+                },
+                {
+                  "symbol": "K",
+                  "meaning": "单位轴的叉乘矩阵",
+                  "unit": "无量纲"
+                },
+                {
+                  "symbol": "\\theta",
+                  "meaning": "绕该轴的右手旋转角",
+                  "unit": "rad"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "齐次矩阵为何能统一复合与求逆",
+          "paragraphs": [
+            "在三维点后面补一得到齐次坐标，就能把旋转和平移装进同一个四乘四矩阵。最后一行固定为 [0,0,0,1]，它的作用是让矩阵乘法同时完成旋转后平移。方向向量应补零，因为方向不随原点平移变化；将速度向量错误地补一，会给速度加入位置偏移。齐次表示没有把米和无量纲混为一谈，矩阵各块仍保留各自物理角色。",
+            "推导逆变换时从 p_A=R p_B+t 出发，先减去t，再左乘R的转置，得到 p_B=R^T p_A-R^Tt。因此逆变换平移不是简单的负t，还必须旋转到新的表达坐标系。程序中最实用的检查是“出去再回来”：任取一个点，经正变换后再经逆变换，误差应只剩浮点量级；这种检查比只测试单位旋转更能发现平移方向错误。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "T_{AB}=\\begin{bmatrix}R_{AB}&t_{AB}\\\\0&1\\end{bmatrix},\\qquad T_{AB}^{-1}=\\begin{bmatrix}R_{AB}^T&-R_{AB}^Tt_{AB}\\\\0&1\\end{bmatrix}",
+              "label": "位姿与逆变换",
+              "explanation": "左上块为3×3旋转，右上块为3×1平移。直接相乘即可验算T乘逆矩阵为单位矩阵。二维实验用同一原理验证点[2,0]m在往返后恢复。",
+              "symbols": [
+                {
+                  "symbol": "T_{AB}",
+                  "meaning": "B到A的齐次变换",
+                  "unit": "旋转块无量纲，平移块m"
+                },
+                {
+                  "symbol": "I",
+                  "meaning": "相应维数的单位矩阵",
+                  "unit": "无量纲"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "串联变换时让中间坐标系消去",
+          "paragraphs": [
+            "若先把 C 中的点变到 B，再从 B 变到 A，代入两次坐标关系得到旋转 R_AB R_BC，平移 R_AB t_BC+t_AB。中间的 B 下标相邻，便于检查链条连接。只有表达在同一坐标系的向量才能相加，所以不能直接把 t_AB 与 t_BC 相加。坐标树中的每条边都要满足同一语义，不能某条边按主动旋转、另一条边按被动换坐标。",
+            "相同两个旋转或位移交换次序通常得到不同结果，这是空间运动的性质而非库函数异常。tf2 的查询方向、发布变换的父子帧和实际传感器外参必须一起核对；父帧名与子帧名只是元数据，写反后不会自动帮你求逆。动态坐标还必须使用同一时间上的变换，不能把一个当前点配上明显过期的底盘姿态。空间约定正确与时间约定正确是两项独立条件。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "R_{AC}=R_{AB}R_{BC},\\qquad t_{AC}=R_{AB}t_{BC}+t_{AB}",
+              "label": "位姿链的复合",
+              "explanation": "将p_B=R_BCp_C+t_BC代入p_A=R_ABp_B+t_AB，并分别整理p_C的系数与常量项得到两式。实验比较“分两次变换”和“合并后一次变换”，并检查结果一致。",
+              "symbols": [
+                {
+                  "symbol": "R_{AC}",
+                  "meaning": "C到A的合成旋转",
+                  "unit": "无量纲"
+                },
+                {
+                  "symbol": "t_{AC}",
+                  "meaning": "C原点在A中的位置",
+                  "unit": "m"
+                },
+                {
+                  "symbol": "t_{BC}",
+                  "meaning": "C原点在B中的位置",
+                  "unit": "m"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "四元数的存储次序、归一化与相对姿态",
+          "paragraphs": [
+            "ROS 几何消息采用 x、y、z、w 次序，本章所有函数的输入输出也保持这一顺序。其他教材或库可能把标量w放在前面，因此不能只看“四个浮点数”就直接传递。本地官方四元数教程的相对旋转示例中存在输入索引与返回次序容易混淆的写法；这里的原创乘法函数把次序写进注释，并用乘以共轭得到恒等旋转的断言检查。",
+            "四元数必须为单位长度才表示纯旋转；零四元数无法归一化，不能用它表示未知姿态后的默认有效旋转。单位四元数的逆是向量部分取负、标量部分不变；把四个分量全取负得到同一姿态，并非一般意义的逆。比较姿态不能直接比较四个分量是否相等，插值前也应考虑q与负q的符号等价。姿态的小误差宜在三维切空间表达，不能把四个分量当作互相独立的四个角度。"
+          ],
+          "bullets": [],
+          "equations": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "表示与API对照：矩阵乘法和四元数乘法",
+          "paragraphs": [
+            "同一个旋转作用到向量，可以直接用旋转矩阵左乘，也可以把向量嵌成标量部分为零的四元数，再按q乘向量乘q逆计算。前者输出普通三维向量，后者先输出四元数且理论标量部分为零；调用方应明确取出向量部分。实验在九十度旋转上对照这两条计算路径，而非只检查四元数长度，因此能更直接发现乘法或分量次序错误。",
+            "本章quaternion_product只是代数乘法，输入输出都写死为xyzw，不会把非单位输入自动当作合法姿态。如果一个库的构造函数参数是wxyz，而消息读写接口是xyzw，就应在适配层明确逐项赋值，并为恒等姿态、单轴四分之一周和乘以逆的结果留测试。不要依赖一串未说明次序的列表在多个库之间自由传递，尤其不要根据变量名q猜测内部排列。",
+            "比较两条姿态轨迹时，可以先把四元数符号对齐，或者使用相对旋转的几何量；直接比较四个分量的欧氏差，会把q跳到负q误判为很大的姿态变化。对齐符号不能消除真实角度跨越分支的问题，长时间积分仍需检查归一化和角速度表达系。姿态误差的局部三维向量必须同时说明它乘在原姿态左侧还是右侧，不能在协方差传播中随意更换。",
+            "二维教学里的rotate2和apply2刻意分成两个接口：前者处理方向或位移的分量变化，后者处理相对不同原点的点坐标。实际tf2也区分点、向量、姿态等消息语义。一个方便的调试顺序是先验证原点变到哪里，再验证三个单位轴，最后验证任意点与往返关系；这样可以分别定位平移、旋转和复合方向的问题，而不只看模型整体外观是否大致正确。"
+          ],
+          "bullets": [],
+          "equations": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "用两种表示互证，再进入机器人坐标系统",
+          "paragraphs": [
+            "下面实验同时保留二维旋转、三维 Rodrigues 矩阵和单位四元数。它们不是三个不同的物理世界，而是同一个刚体旋转的不同表示；一个方便手算，一个方便线性代数，一个方便存储和复合。检查时比较变换后的点或相对旋转，而不是强求数据结构相同。代码明确采用左乘列向量，角度统一弧度，位置统一米，避免语言接口掩盖数学约定。",
+            "把这些数学结果接入 tf2 时，还需要处理缓存、时间戳、父子帧关系和查询异常；本章实验不包含这些运行机制。建议先用静态外参验证长度保持和往返一致，再验证两条不同坐标路径的复合一致性。若观察到模型整体镜像，先查轴方向与右手性；若模型跟随运动但有时间偏移，先查时间链路。不要一开始就用大量平移补偿去掩盖错误旋转。"
+          ],
+          "bullets": [],
+          "equations": [],
+          "codeBlocks": [
+            {
+              "label": "math_rigid.py",
+              "language": "python",
+              "type": "complete",
+              "code": "#!/usr/bin/env python3\n\"\"\"输入：米和弧度表示的位姿；输出：变换、逆变换与四元数一致性检查。\"\"\"\n\ndef run():\n    import math\n\n    def rotate2(angle_rad, point_m):\n        # 列向量约定：R_AB 将 B 系分量转换为 A 系分量。\n        c, s = math.cos(angle_rad), math.sin(angle_rad)\n        x, y = point_m\n        return [c * x - s * y, s * x + c * y]\n\n    def apply2(angle_rad, translation_m, point_m):\n        return [a + b for a, b in zip(rotate2(angle_rad, point_m), translation_m)]\n\n    def quaternion_product(left, right):\n        # 所有参数与返回值都严格采用 ROS 消息的 (x,y,z,w) 次序。\n        # 乘法不交换；先应用 right，再应用 left 对应 left*right。\n        x, y, z, w = left\n        a, b, c, d = right\n        return [w*a + x*d + y*c - z*b, w*b - x*c + y*d + z*a,\n                w*c + x*b - y*a + z*d, w*d - x*a - y*b - z*c]\n\n    # 平面实验：B 原点在 A 中为 (1,2)m，B 相对 A 绕 z 正转 90 度。\n    angle = math.pi / 2.0\n    translation = [1.0, 2.0]\n    point_b = [2.0, 0.0]\n    point_a = apply2(angle, translation, point_b)\n    assert all(math.isclose(a, b, abs_tol=1e-12) for a, b in zip(point_a, [1.0, 4.0]))\n    inverse_translation = rotate2(-angle, [-x for x in translation])\n    recovered = apply2(-angle, inverse_translation, point_a)\n    assert max(abs(a-b) for a, b in zip(recovered, point_b)) < 1e-12\n    # 串联 A<-B<-C：不能直接把不同坐标系中的平移向量相加。\n    t_bc = [0.5, 0.0]\n    t_ac = apply2(angle, translation, t_bc)\n    direct = apply2(angle + 0.2, t_ac, [0.3, -0.1])\n    chained = apply2(angle, translation, apply2(0.2, t_bc, [0.3, -0.1]))\n    assert max(abs(a-b) for a, b in zip(direct, chained)) < 1e-12\n\n    # Rodrigues：本例单位旋转轴是 z，K=[u]_x；验证正交性与指定点的旋转。\n    unit_axis = [0.0, 0.0, 1.0]\n    k = [[0.0, -unit_axis[2], unit_axis[1]],\n         [unit_axis[2], 0.0, -unit_axis[0]], [-unit_axis[1], unit_axis[0], 0.0]]\n    k2 = [[sum(k[i][n] * k[n][j] for n in range(3)) for j in range(3)] for i in range(3)]\n    rotation = [[float(i == j) + math.sin(angle)*k[i][j] + (1-math.cos(angle))*k2[i][j]\n                 for j in range(3)] for i in range(3)]\n    for i in range(3):\n        for j in range(3):\n            assert abs(sum(rotation[n][i]*rotation[n][j] for n in range(3)) - float(i == j)) < 1e-12\n    assert abs(rotation[0][0]) < 1e-12 and math.isclose(rotation[1][0], 1.0, abs_tol=1e-12)\n\n    # 单位四元数与其共轭相乘得到恒等旋转；零四元数不允许归一化。\n    q = [0.0, 0.0, math.sin(angle/2.0), math.cos(angle/2.0)]\n    assert math.isclose(sum(x*x for x in q), 1.0, abs_tol=1e-12)\n    inverse_q = [-q[0], -q[1], -q[2], q[3]]\n    identity_q = quaternion_product(q, inverse_q)\n    assert max(abs(a-b) for a, b in zip(identity_q, [0, 0, 0, 1])) < 1e-12\n    # q 与 -q 的二次旋转表达式一致；符号不同不代表姿态突变。\n    yaw_cos_q = 1.0 - 2.0 * q[2]**2\n    yaw_cos_minus_q = 1.0 - 2.0 * (-q[2])**2\n    assert yaw_cos_q == yaw_cos_minus_q\n    # 用纯向量四元数再次计算旋转，与 Rodrigues 的第一列独立对照。\n    rotated_vector = quaternion_product(quaternion_product(q, [1.0, 0.0, 0.0, 0.0]), inverse_q)[:3]\n    negative_q = [-value for value in q]\n    negative_inverse = [-value for value in inverse_q]\n    rotated_negative = quaternion_product(\n        quaternion_product(negative_q, [1.0, 0.0, 0.0, 0.0]), negative_inverse)[:3]\n    assert max(abs(rotated_vector[i]-rotation[i][0]) for i in range(3)) < 1e-12\n    assert max(abs(a-b) for a, b in zip(rotated_vector, rotated_negative)) < 1e-12\n    result = {'point_in_A_m': point_a, 'recovered_in_B_m': recovered, 'quaternion_xyzw': q}\n    print('刚体变换实验通过：', result)\n    return result\n\nif __name__ == '__main__':\n    run()\n",
+              "explanation": "这是原创完整文件，只使用 Python 标准库。复制到同名文件后可直接运行；输入、输出、单位、执行顺序和边界检查都写在中文注释中。实验检查当前理想模型的数学性质，不代表 ROS 节点、仿真或实机已经验证。"
+            }
+          ]
+        }
+      ],
+      "workedExample": {
+        "title": "贯穿案例：相机点如何回到底盘坐标",
+        "scenario": "用二维截面模拟一个绕z轴九十度的传感器外参，平移为[1,2]m。",
+        "steps": [
+          "将传感器中的点[2,0]m旋转为[0,2]m，再平移得[1,4]m。",
+          "按逆平移-R^Tt和逆旋转计算回程，恢复[2,0]m。",
+          "增加B←C变换，比较逐级换坐标与合并矩阵结果。",
+          "用z轴四元数和Rodrigues旋转验证同一九十度旋转的几何效果。"
+        ],
+        "result": "往返与复合误差小于1e-12；四元数按xyzw保存并保持单位长度。"
+      },
+      "exercises": [
+        {
+          "question": "为什么T的逆平移一般不等于-t？",
+          "answer": "-t仍在原来的A系表达，逆映射的输出在B系，必须再乘R的转置得到-R^Tt。"
+        },
+        {
+          "question": "q=[0,0,sin(pi/4),cos(pi/4)]与-q表示何种关系？",
+          "answer": "它们表示同一个绕z轴九十度旋转；q的逆则只对前三个分量取负。"
+        },
+        {
+          "question": "位置与方向向量的齐次末尾分量为什么分别是1和0？",
+          "answer": "位置需要包含原点平移，补1；方向只受旋转影响，补0使平移块不参与。"
+        }
+      ],
+      "steps": [
+        {
+          "title": "先固定模型与单位",
+          "body": "按本章符号表手算案例，明确观测、状态、控制量的坐标系和单位；先记录理论值，再运行代码，避免只看“通过”字样。"
+        },
+        {
+          "title": "运行完整数值实验",
+          "body": "将本章完整 Python 文件保存到空目录。Python 3 无需安装第三方包；若使用随站源码包，也可运行统一的 math_labs.py 并选择本章。",
+          "code": "# 输入是文件中的固定教学数据；不会连接 ROS 图或控制硬件。\npython3 math_rigid.py\n# 随站合并实验集可只运行这一章；参数是章节 ID。\npython3 math_labs.py --chapter math-rigid",
+          "language": "bash",
+          "type": "commands"
+        },
+        {
+          "title": "解释通过与失败的含义",
+          "body": "将打印数值与手算结果逐项对照。再按练习改变一个参数，区分数学前提被破坏、浮点误差和实现错误。不要删除失败断言来制造通过。"
+        }
+      ],
+      "commands": [],
+      "expected": [
+        "二维点[2,0]m经变换得到[1,4]m，再经逆变换返回。",
+        "矩阵正交性、坐标链一致性和四元数共轭恒等式通过断言。"
+      ],
+      "pitfalls": [
+        "把旋转角的度数直接传给要求弧度的三角函数。",
+        "混用xyzw和wxyz，或把四元数全取负误当作求逆。",
+        "不同帧的平移直接相加，或动态变换时间戳不一致。"
+      ],
+      "exercise": "为本章实验写一份输入输出契约：列出状态次序、单位、前提、一个正常案例、一个必须拒绝或明确标记退化的案例。",
+      "exerciseAnswer": "契约应明确本章模型的量纲与坐标约定，正常案例需给出可复算的数值；退化案例应对应正文列出的边界，并解释失败原因。实验只验证这个有限模型，不把结果外推到任意噪声、任意机器人或实机安全。",
+      "sourceIds": [
+        "math-modern-rigid",
+        "math-tf2-quaternion"
+      ],
+      "validation": "原创数学推导；读取本地参考教程以核对主题范围，并与本章列出的一手资料交叉核对。标准库完整实验已在本轮运行并通过断言；ROS 构建、仿真、硬件未运行。"
+    },
+    {
+      "id": "math-probability",
+      "title": "概率与不确定性：从条件概率到传感器融合",
+      "summary": "通过二元定位事件和两台位置传感器，解释先验、似然、后验、方差、相关性与高斯融合，明确哪些结论依赖独立与分布假设。",
+      "goals": [
+        "手算一次带基础发生率的贝叶斯更新",
+        "区分标准差、方差、相关与独立",
+        "推导两个独立高斯测量的精度加权融合并理解失效条件"
+      ],
+      "prerequisites": [
+        "理解均值、平方和与分数运算",
+        "已了解线性观测及协方差"
+      ],
+      "version": "数学模型与标准库实验；ROS 2 Jazzy 为工程对应主线",
+      "concepts": [
+        "概率是对不确定事件的模型，需要说明条件与样本空间。",
+        "高斯只是常用模型，噪声不因为被写进协方差矩阵就自动变成高斯。",
+        "融合要求避免重复计算共享的信息，低方差不能单独证明估计准确。"
+      ],
+      "sections": [
+        {
+          "title": "先确定事件，再讨论“检测有多准”",
+          "paragraphs": [
+            "设机器人可能位于一个特定区域，进入区域的先验概率为0.2。传感器在区域内报告阳性的概率为0.9，在区域外误报阳性的概率为0.1。这三个数描述不同条件，不能把0.9直接当成“阳性后在区域内的概率”。先验反映测量前的知识，似然描述在假定状态下产生观测的可能性，后验把二者结合后重新评价状态。",
+            "把所有情况分成“在区域内且阳性”和“在区域外且阳性”，对应概率分别为0.18和0.08。已知阳性后，样本空间只剩这两类，所以区域内概率变为0.18除以0.26，约0.6923。若区域非常罕见，即使传感器命中率高，误报也可能占多数。这个例子说明，机器人感知模块只给检测置信度时，下游还需要知道它究竟是哪一种条件概率。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "P(H\\mid Z)=\\frac{P(Z\\mid H)P(H)}{P(Z\\mid H)P(H)+P(Z\\mid \\neg H)P(\\neg H)}",
+              "label": "二元事件的贝叶斯更新",
+              "explanation": "分子是H与Z同时发生的概率，分母由H和非H两类阳性事件相加得到。分母必须大于零，否则该模型认为Z不可能发生，不能继续条件化。代入0.9、0.2、0.1得到9/13。",
+              "symbols": [
+                {
+                  "symbol": "H",
+                  "meaning": "机器人在指定区域内的事件",
+                  "unit": "概率无量纲"
+                },
+                {
+                  "symbol": "Z",
+                  "meaning": "传感器报告阳性的事件",
+                  "unit": "概率无量纲"
+                },
+                {
+                  "symbol": "P(H)",
+                  "meaning": "观测前的先验概率",
+                  "unit": "无量纲"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "随机量的均值、方差和物理单位",
+          "paragraphs": [
+            "位置误差不是一串可以随意平均的数，它对应在某个坐标系和某段工况下的随机变量。均值表示中心，方差衡量偏离中心的平方平均；标准差是方差的平方根，因此位置标准差单位是米，位置方差单位是平方米。把均方误差与方差混用还会忽略偏置：一个总是偏移一米的传感器可能波动很小，却不准确。",
+            "若只有有限组实验数据，先说明是否把它们当成总体，还是用来估计未知分布。代码中的样本方差采用n减一作分母，在独立同分布且二阶矩存在时是常见的无偏估计方式；它不是“每次一定更接近真值”的保证。采样需尽量覆盖实际转速、地面和温度等条件。静止时估计的方差直接搬到剧烈颠簸工况，可能使滤波器过度自信，而这个错误不会由矩阵尺寸检查发现。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "\\mu=E[X],\\qquad \\sigma^2=E[(X-\\mu)^2],\\qquad E[(X-a)^2]=\\sigma^2+(\\mu-a)^2",
+              "label": "波动与偏置的分解",
+              "explanation": "将X-a写成(X-mu)+(mu-a)，平方后取期望；交叉项因E[X-mu]=0而消失。若估计的标准差很小但均值远离真实参考a，均方误差仍然很大。该式只要求二阶矩存在。",
+              "symbols": [
+                {
+                  "symbol": "X",
+                  "meaning": "测量或状态随机变量",
+                  "unit": "本例m"
+                },
+                {
+                  "symbol": "\\mu",
+                  "meaning": "均值",
+                  "unit": "本例m"
+                },
+                {
+                  "symbol": "\\sigma^2",
+                  "meaning": "方差",
+                  "unit": "本例m^2"
+                },
+                {
+                  "symbol": "a",
+                  "meaning": "用于评价误差的确定参考",
+                  "unit": "本例m"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "零相关、独立与重复信息",
+          "paragraphs": [
+            "协方差为零只表示两个变量的线性共变动为零，一般不能推出独立。取X等概率为负一、零、一，令Y=X的平方：X与Y的协方差为零，但知道X后就完全知道Y，两者明显依赖。只有添加联合高斯等特定条件，零互协方差才能推出独立；仅仅各自看起来像高斯也不能替代联合分布条件。",
+            "在机器人中，轮速和轮式里程计的位置往往来自同一编码器积分，两个定位结果还可能共享同一地图或同一先验。如果把它们当独立测量反复融合，估计协方差会缩小，却没有获得对应数量的新信息。正确做法可能是选取互补变量、保留相关项，或在统一估计问题中只引入一次原始因子。消息来自不同话题并不意味着统计上独立。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "\\operatorname{Cov}(X,Y)=E[(X-E[X])(Y-E[Y])]",
+              "label": "互协方差的含义",
+              "explanation": "协方差只测量二阶线性相关。实验枚举X=-1,0,1与Y=X^2，得到协方差0；同时Y仍由X确定，构成“不相关不等于独立”的可复算反例。",
+              "symbols": [
+                {
+                  "symbol": "X,Y",
+                  "meaning": "同一概率模型下的随机量",
+                  "unit": "分别按物理量定义"
+                },
+                {
+                  "symbol": "\\operatorname{Cov}(X,Y)",
+                  "meaning": "互协方差",
+                  "unit": "X单位乘Y单位"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "高斯似然与精度加权融合的推导",
+          "paragraphs": [
+            "现在假设同一个静止位置由两台无偏、独立传感器测量，观测分别为2.0米、2.6米，噪声标准差为0.2米、0.4米。假设状态使用平坦先验，两个高斯似然相乘；取负对数后，得到两个按方差倒数加权的残差平方。把平方项展开，再收集位置的二次项和一次项，配方就能读出后验均值与方差。",
+            "两个精度分别是25和6.25每平方米，总精度31.25；后验方差是0.032平方米，均值是(25乘2.0加6.25乘2.6)除以31.25，得到2.12米。较小方差的传感器权重更高，但并非完全忽略另一台。如果存在已知高斯先验，还要再加入一次先验精度与信息项；若两传感器相关，则不能继续简单把两个精度直接相加。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "\\sigma_*^2=\\left(\\sum_i\\sigma_i^{-2}\\right)^{-1},\\qquad \\mu_*=\\sigma_*^2\\sum_i\\sigma_i^{-2}z_i",
+              "label": "独立高斯位置观测的融合",
+              "explanation": "适用于对同一标量状态的无偏独立高斯观测与平坦先验。展开sum((x-z_i)^2/sigma_i^2)并完成平方即可得到。这里sigma_i^{-2}表示1/sigma_i^2，不能误写成标准差倒数。",
+              "symbols": [
+                {
+                  "symbol": "z_i",
+                  "meaning": "第i台传感器的测量",
+                  "unit": "m"
+                },
+                {
+                  "symbol": "\\sigma_i^2",
+                  "meaning": "该传感器噪声方差",
+                  "unit": "m^2"
+                },
+                {
+                  "symbol": "\\mu_*",
+                  "meaning": "后验均值",
+                  "unit": "m"
+                },
+                {
+                  "symbol": "\\sigma_*^2",
+                  "meaning": "后验方差",
+                  "unit": "m^2"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "分布假设失效时怎样解释结果",
+          "paragraphs": [
+            "激光遮挡、多路径、视觉误匹配和轮胎打滑可能产生偏置、重尾或多峰分布。这时单个均值和协方差仍可作为有限摘要，但不一定完整描述信念；两个相距很远的候选位置的均值甚至可能落在障碍中。高斯融合公式输出一个数，并不能证明传感器异常已经消失。应在原始观测层记录失败类型，分析残差、工作条件和独立参考误差。",
+            "鲁棒损失、混合分布、粒子方法和故障诊断各有适用范围，不能只根据“非高斯”三个字就选择一个万能替代算法。首先问噪声是否有系统偏差，观测是否相关，模型与坐标是否正确；这些错误常常比更换滤波器影响更大。若采用统计门限，还要区分模型条件成立下的误拒概率与真实系统风险，不能把有限概率保证改写为绝对不会误判。"
+          ],
+          "bullets": [],
+          "equations": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "同一融合任务的三种接口与误差检查",
+          "paragraphs": [
+            "对于本章独立标量高斯测量，可以直接累加精度和精度乘测量的信息量；也可以构造加权最小二乘目标；还可以把一个高斯先验逐条更新。这三种计算路径在同一独立性假设、相同数据只使用一次且精度正常时给出同样结果。若每条测量已经包含了同一先验，再逐条更新，就重复加入先验信息；代码形式相似不能弥补模型语义不同。",
+            "当只有两个传感器时，读者可以手算加权平均的两个归一化权重分别为0.8和0.2，因此2.0与2.6的折中为2.12。融合方差比两个独立测量各自方差都小，原因是新的独立信息增加了精度，不是平均操作本身有神奇去噪能力。若两份数据是同一传感器输出的拷贝，物理信息没有增加；对相同数值用同一公式会得到过小方差，说明输入契约已被违反。",
+            "概率接口还要区分返回的是概率、对数概率、密度还是未归一化权重。连续变量某一个精确点的概率通常为零，但该点的密度可以非零甚至大于一；不能把密度数值当作百分比裁到零和一之间。多个小似然相乘可能下溢，使用对数域时应在归一化时统一减去适当基准并保持求和规则；本章二元实验数值较大，没有把未实现的大规模数值技巧标为已验证。",
+            "评价融合效果应把精度与校准分开。除了看均值偏差，还可以按预测标准差把实际参考误差归一化，观察在不同工况下是否持续过大或过小；这要求参考数据质量已知且样本具有代表性。没有真值时可以检查残差与一致性线索，但不能据此断言所有状态误差都正确。上述分析把公式、观测来源和评价准则连在一起，避免把单个协方差字段当成完整可信度证明。"
+          ],
+          "bullets": [],
+          "equations": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "理论值、枚举与随机采样三种验证路径",
+          "paragraphs": [
+            "本章程序分三层检查。第一层直接算二元后验和两个高斯测量的闭式解；第二层枚举有限分布验证不相关但不独立的反例；第三层用固定随机种子生成样本，比较样本均值和方差与设定参数。这三种路径验证不同问题：代数实现、逻辑命题和采样行为不应混作同一类证据。随机实验固定种子是为了可复现，不是为了人为挑选好看的结果。",
+            "对接 ROS 消息时，还需把统计量放到正确坐标系与时间范围。传感器给出的协方差可能只是测量噪声，也可能已经包含上游估计器的先验信息；直接按独立原始测量处理会重复利用历史。先明确发布者输出的变量定义和来源，再决定如何融合。下面的标准库实验有意只使用静止位置标量，便于把每一步手算与输出对齐，而不掩盖在复杂话题图中。"
+          ],
+          "bullets": [],
+          "equations": [],
+          "codeBlocks": [
+            {
+              "label": "math_probability.py",
+              "language": "python",
+              "type": "complete",
+              "code": "#!/usr/bin/env python3\n\"\"\"输入：已知概率及独立测量方差；输出：后验概率、融合值与相关性反例。\"\"\"\n\ndef run():\n    import math\n    import random\n\n    def binary_posterior(prior, hit_rate, false_alarm):\n        # 三个输入都是 [0,1] 内的无量纲概率；分母为零表示事件不可能发生。\n        if not all(0.0 <= p <= 1.0 for p in (prior, hit_rate, false_alarm)):\n            raise ValueError('概率必须在 [0,1] 内')\n        evidence = prior * hit_rate + (1.0-prior) * false_alarm\n        if evidence <= 0.0:\n            raise ValueError('观测事件概率为零，不能条件化')\n        return prior * hit_rate / evidence\n\n    posterior = binary_posterior(0.2, 0.9, 0.1)\n    assert math.isclose(posterior, 9.0/13.0, abs_tol=1e-12)\n    try:\n        binary_posterior(0.5, 0.0, 0.0)\n    except ValueError:\n        pass\n    else:\n        raise AssertionError('零证据事件本应被拒绝')\n\n    # 两个传感器独立观测同一静止位置：米、平方米；采用平坦先验。\n    measurements_m = [2.0, 2.6]\n    variances_m2 = [0.04, 0.16]\n    precisions = [1.0/value for value in variances_m2]\n    posterior_variance = 1.0 / sum(precisions)\n    posterior_mean = posterior_variance * sum(z*w for z, w in zip(measurements_m, precisions))\n    assert math.isclose(posterior_mean, 2.12, abs_tol=1e-12)\n    assert math.isclose(posterior_variance, 0.032, abs_tol=1e-12)\n\n    # 有限样本计算证明：零协方差不蕴含独立。Y=X^2 完全由 X 决定。\n    x_values = [-1.0, 0.0, 1.0]\n    y_values = [x*x for x in x_values]\n    mean_x, mean_y = sum(x_values)/3.0, sum(y_values)/3.0\n    covariance = sum((x-mean_x)*(y-mean_y) for x, y in zip(x_values, y_values))/3.0\n    assert math.isclose(covariance, 0.0, abs_tol=1e-12)\n    assert y_values[1] == 0.0 and y_values[0] == 1.0\n\n    # 固定随机种子，使采样实验可复现；容差是该固定样本的验收界限。\n    # 不能把一次采样通过解释成分布、独立性或传感器质量的证明。\n    generator = random.Random(20261107)\n    samples = [generator.gauss(2.0, 0.2) for _ in range(30000)]\n    sample_mean = sum(samples)/len(samples)\n    sample_variance = sum((v-sample_mean)**2 for v in samples)/(len(samples)-1)\n    assert abs(sample_mean-2.0) < 0.01\n    assert abs(sample_variance-0.04) < 0.002\n    result = {'posterior_inside': posterior, 'fused_position_m': posterior_mean,\n              'fused_variance_m2': posterior_variance, 'sample_mean_m': sample_mean,\n              'sample_variance_m2': sample_variance}\n    print('概率与测量实验通过：', result)\n    return result\n\nif __name__ == '__main__':\n    run()\n",
+              "explanation": "这是原创完整文件，只使用 Python 标准库。复制到同名文件后可直接运行；输入、输出、单位、执行顺序和边界检查都写在中文注释中。实验检查当前理想模型的数学性质，不代表 ROS 节点、仿真或实机已经验证。"
+            }
+          ]
+        }
+      ],
+      "workedExample": {
+        "title": "贯穿案例：一次阳性检测与两台定位传感器",
+        "scenario": "先判断区域事件，再独立估计静止位置；两者是不同行为，不共享一套未经说明的“置信度”。",
+        "steps": [
+          "将区域阳性拆成0.18和0.08两种联合事件，算出后验9/13。",
+          "把0.2m、0.4m标准差平方，得到0.04、0.16m²。",
+          "按精度完成平方，得到融合位置2.12m与方差0.032m²。",
+          "枚举X和X²验证零协方差不代表独立，再查看固定种子采样统计。"
+        ],
+        "result": "四类断言均通过；程序明确拒绝零证据事件，不把一次采样误差视为真分布证明。"
+      },
+      "exercises": [
+        {
+          "question": "若先验区域概率从0.2变为0.01，保持同样命中率与误报率，阳性后的概率是多少？",
+          "answer": "0.009/(0.009+0.099)=1/12，约0.08333；必须考虑基础发生率。"
+        },
+        {
+          "question": "把同一份标准差0.2m的测量当成两台独立传感器，会得到什么错误？",
+          "answer": "会把方差从0.04缩成0.02m²，虚构出新信息；相同原始测量不具有独立噪声。"
+        },
+        {
+          "question": "不假设高斯时，线性协方差传播是否仍成立？",
+          "answer": "对确定线性映射且二阶矩存在，仍成立；高斯的额外作用是用均值和协方差完整参数化分布。"
+        }
+      ],
+      "steps": [
+        {
+          "title": "先固定模型与单位",
+          "body": "按本章符号表手算案例，明确观测、状态、控制量的坐标系和单位；先记录理论值，再运行代码，避免只看“通过”字样。"
+        },
+        {
+          "title": "运行完整数值实验",
+          "body": "将本章完整 Python 文件保存到空目录。Python 3 无需安装第三方包；若使用随站源码包，也可运行统一的 math_labs.py 并选择本章。",
+          "code": "# 输入是文件中的固定教学数据；不会连接 ROS 图或控制硬件。\npython3 math_probability.py\n# 随站合并实验集可只运行这一章；参数是章节 ID。\npython3 math_labs.py --chapter math-probability",
+          "language": "bash",
+          "type": "commands"
+        },
+        {
+          "title": "解释通过与失败的含义",
+          "body": "将打印数值与手算结果逐项对照。再按练习改变一个参数，区分数学前提被破坏、浮点误差和实现错误。不要删除失败断言来制造通过。"
+        }
+      ],
+      "commands": [],
+      "expected": [
+        "二元后验为9/13，静止位置融合结果为2.12m、0.032m²。",
+        "有限枚举给出零协方差的依赖反例；固定种子样本统计在声明容差内。"
+      ],
+      "pitfalls": [
+        "把命中率解释成观测后的状态概率。",
+        "用不同话题名代替统计独立性判断。",
+        "把低方差当成低偏置或整体准确的证明。"
+      ],
+      "exercise": "为本章实验写一份输入输出契约：列出状态次序、单位、前提、一个正常案例、一个必须拒绝或明确标记退化的案例。",
+      "exerciseAnswer": "契约应明确本章模型的量纲与坐标约定，正常案例需给出可复算的数值；退化案例应对应正文列出的边界，并解释失败原因。实验只验证这个有限模型，不把结果外推到任意噪声、任意机器人或实机安全。",
+      "sourceIds": [
+        "math-probability-course",
+        "math-robot-localization"
+      ],
+      "validation": "原创数学推导；读取本地参考教程以核对主题范围，并与本章列出的一手资料交叉核对。标准库完整实验已在本轮运行并通过断言；ROS 构建、仿真、硬件未运行。"
+    },
+    {
+      "id": "math-estimation",
+      "title": "状态估计：预测、Kalman更新与一致性边界",
+      "summary": "从位置—速度模型手推一次预测与测量更新，用Joseph协方差形式、可观性和新息诊断把抽象公式连到ROS传感器融合。",
+      "goals": [
+        "按位置与速度单位构造离散状态转移和过程协方差",
+        "手算新息、增益与后验状态并验证协方差",
+        "区分精确线性高斯KF、线性最小均方估计与非线性近似"
+      ],
+      "prerequisites": [
+        "已理解协方差、相关性与高斯测量融合",
+        "能进行二阶矩阵乘法"
+      ],
+      "version": "数学模型与标准库实验；ROS 2 Jazzy 为工程对应主线",
+      "concepts": [
+        "预测将旧估计推进到测量时间，更新只使用当前新增的观测信息。",
+        "滤波器的最优性依赖模型、噪声、初始条件和评价准则。",
+        "可观性和一致性诊断不能被“轨迹看起来平滑”替代。"
+      ],
+      "sections": [
+        {
+          "title": "状态模型、时间步长与噪声假设",
+          "paragraphs": [
+            "用状态 [位置,速度] 表示沿直线行驶的机器人，单位分别为米和米每秒。匀速模型在一秒后把位置加上速度乘时间，速度保持不变。模型没有声称真实机器人永远匀速，而是把未建模加速度放到过程噪声。状态转移矩阵的右上角必须是采样间隔，不能把写死的一秒直接用于不规则时间戳，否则速度与位置更新会出现系统误差。",
+            "本章选择每个采样区间内加速度扰动恒定、区间间独立且零均值，标准差为0.1米每二次方秒。于是同一加速度同时影响位置和速度，过程协方差出现非零交叉项。这个离散常加速度随机模型与连续时间白加速度模型的谱密度不同；二者对时间间隔的幂次也不同。给Q矩阵赋值前必须先说明扰动来源与单位，不能只凭“越大越灵敏”来调。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "F=\\begin{bmatrix}1&\\Delta t\\\\0&1\\end{bmatrix},\\quad G=\\begin{bmatrix}\\Delta t^2/2\\\\\\Delta t\\end{bmatrix},\\quad Q=G\\sigma_a^2G^T",
+              "label": "离散常加速度扰动模型",
+              "explanation": "在一个采样区间内由位置增量v*dt+0.5*a*dt²、速度增量a*dt推得G。加速度扰动只有一个标量，因此Q是G与自身转置的外积乘加速度方差，通常含位置—速度相关项。",
+              "symbols": [
+                {
+                  "symbol": "F",
+                  "meaning": "匀速状态转移矩阵",
+                  "unit": "各元素依状态量纲确定"
+                },
+                {
+                  "symbol": "G",
+                  "meaning": "加速度对状态的影响",
+                  "unit": "位置行s²，速度行s"
+                },
+                {
+                  "symbol": "\\Delta t",
+                  "meaning": "采样间隔",
+                  "unit": "s"
+                },
+                {
+                  "symbol": "\\sigma_a^2",
+                  "meaning": "区间常加速度扰动方差",
+                  "unit": "m²/s⁴"
+                },
+                {
+                  "symbol": "Q",
+                  "meaning": "离散过程噪声协方差",
+                  "unit": "位置块m²、速度块m²/s²"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "先预测均值，再传播不确定性",
+          "paragraphs": [
+            "预测均值只是在没有新观测时根据模型推进已有信息；预测协方差还要考虑旧误差如何经模型传播，以及本区间新增过程噪声。推导从误差 e减等于F乘旧误差加过程噪声开始，展开外积并取期望。如果旧误差与过程噪声不相关，交叉项才消失，得到熟悉的两项之和。若噪声与过去状态相关，必须保留额外项，不能直接套用。",
+            "初始状态取[0m,1m/s]、协方差对角为0.04和0.01，间隔一秒。先验位置变为1m，先验速度仍为1m/s；传播后旧协方差为[[0.05,0.01],[0.01,0.01]]，再加Q=[[0.0025,0.005],[0.005,0.01]]，得到[[0.0525,0.015],[0.015,0.02]]。交叉项意味着位置观测会间接修正速度，不能把两个维度当成互不联系的标量滤波器。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "\\hat x_k^-=F\\hat x_{k-1}^+,\\qquad P_k^-=FP_{k-1}^+F^T+Q",
+              "label": "均值与协方差预测",
+              "explanation": "假设过程噪声零均值，并与前一时刻估计误差不相关；有已知控制输入时还应在均值中加入相应输入项。高斯条件不是这两个矩传播公式成立的必要条件，但决定分布是否仍能由这两个矩完整表示。",
+              "symbols": [
+                {
+                  "symbol": "\\hat x^-",
+                  "meaning": "当前测量到来前的预测状态",
+                  "unit": "位置m、速度m/s"
+                },
+                {
+                  "symbol": "\\hat x^+",
+                  "meaning": "上一时刻测量后的估计",
+                  "unit": "位置m、速度m/s"
+                },
+                {
+                  "symbol": "P^-,P^+",
+                  "meaning": "预测和更新后的误差协方差",
+                  "unit": "按状态分量单位相乘"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "新息告诉测量提供了什么新信息",
+          "paragraphs": [
+            "位置传感器测到1.2m，观测矩阵H=[1,0]，测量方差R=0.04平方米。新息是测量减预测，因此为0.2m；新息方差是预测位置方差加测量噪声方差，为0.0925平方米。Kalman增益由预测误差与新息的相关性除以新息方差构成，得到位置增益约0.567568，速度增益约0.162162每秒。不同增益分量的单位不必相同。",
+            "把增益乘新息加到预测上，位置变为1.1135135m，速度变为1.0324324m/s。位置观测间接调整速度的原因是P中的位置—速度相关项，而不是传感器真的测出了速度。推导可以从最小化更新误差协方差的迹开始，或从联合高斯完成平方开始；前一种得到线性估计中的最小均方性质，后一种在完整线性高斯条件下给出精确条件分布。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "\\nu=z-H\\hat x^-,\\quad S=HP^-H^T+R,\\quad K=P^-H^TS^{-1},\\quad \\hat x^+=\\hat x^-+K\\nu",
+              "label": "测量更新与Kalman增益",
+              "explanation": "要求S可逆；本例S是严格正的标量，直接除法即可。多维实现通常通过分解求解线性方程，避免显式构造逆矩阵。测量噪声还需与预测误差不相关，否则公式需要改变。",
+              "symbols": [
+                {
+                  "symbol": "z",
+                  "meaning": "当前位置观测",
+                  "unit": "m"
+                },
+                {
+                  "symbol": "H",
+                  "meaning": "状态到观测的映射",
+                  "unit": "本例[1,0]"
+                },
+                {
+                  "symbol": "\\nu",
+                  "meaning": "新息，即测量减预测",
+                  "unit": "m"
+                },
+                {
+                  "symbol": "S,R",
+                  "meaning": "新息和测量噪声方差",
+                  "unit": "m²"
+                },
+                {
+                  "symbol": "K",
+                  "meaning": "新息到状态修正的增益",
+                  "unit": "位置分量无量纲、速度分量s^-1"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "协方差的Joseph形式与数值检查",
+          "paragraphs": [
+            "将更新误差写成(I-KH)乘预测误差减K乘测量噪声，再取外积期望，得到Joseph形式。理论上的最优增益下，它与简化式(I-KH)P等价；但实际浮点计算中，两个半正定项相加通常比从较大矩阵里相减更便于维护合法协方差。它仍然不是对任意错误Q、R或不正确模型的万能修复，输入矩阵本身必须有明确含义。",
+            "实验逐项比较Joseph式与简化式，检查对称性以及二阶矩阵的正定条件。工程中还应避免把小的负特征值直接当成物理“负方差”，应分析舍入、更新次序、错误相关性或数据损坏。不能用对角线取绝对值掩盖问题，因为这样修改了概率模型。运行日志应包括实际时间间隔、观测来源、门限决定和协方差诊断，使失败可以复现。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "P^+=(I-KH)P^-(I-KH)^T+KRK^T",
+              "label": "Joseph协方差更新",
+              "explanation": "根据更新误差的两项相加推导，在预测误差与测量噪声不相关时交叉项为零。实验验证与简化公式在双精度下差异小于1e-12，并验证得到的二维协方差对称正定。",
+              "symbols": [
+                {
+                  "symbol": "I",
+                  "meaning": "状态维数的单位矩阵",
+                  "unit": "无量纲"
+                },
+                {
+                  "symbol": "P^+",
+                  "meaning": "测量后的误差协方差",
+                  "unit": "各状态单位两两相乘"
+                },
+                {
+                  "symbol": "K,R,H",
+                  "meaning": "与测量更新相同的增益、噪声和观测模型",
+                  "unit": "见前节"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "可观性、门限与“最优”的精确范围",
+          "paragraphs": [
+            "连续两次只测位置时，可观性矩阵两行为[1,0]与[1,dt]，dt非零即可在无噪理想模型中区分位置和速度；若一直只测速度，则绝对位置偏移不能被观测消除。滤波输出的平滑程度不能替代这个信息分析。还可以把新息除以其预测标准差做归一化：本例NIS为新息平方除以S，约0.4324；把观测改成100m会显著超过门限9。",
+            "一维新息在正确线性高斯模型下可用相应卡方分布解释门限；门限9对应约三倍标准差，不是绝对异常判决。精确高斯后验需要初始状态与噪声满足相应联合高斯、独立或不相关假设，只有“模型线性”并不足够。放弃高斯但保留正确二阶矩和不相关条件时，可讨论最优线性均方估计；不能进一步声称对所有非线性估计器也最优。"
+          ],
+          "bullets": [],
+          "equations": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "同功能对照：协方差形式、信息形式与顺序更新",
+          "paragraphs": [
+            "位置分量的一次后验还可以独立地通过精度融合计算：预测位置方差是0.0525平方米，测量方差是0.04平方米，两项精度相加后得到后验位置方差，再用精度加权均值得到同一个1.1135135米。完整程序把这个结果与二维Kalman更新的位置分量比较，形成另一条验算路径。速度修正仍依赖联合协方差，不能只凭这个标量等式替代完整状态估计。",
+            "协方差形式直接维护均值和误差协方差，信息形式维护精度矩阵及其乘均值的信息向量。独立测量更新在信息形式中具有相加结构，但预测通常不是简单相加；不能把某一种形式在更新时方便的性质误传到整个递推。平方根实现则维护协方差或信息矩阵的因子，以改善有限精度计算中的数值性质。这些是相同模型的不同代数实现，不是额外提供了传感器信息。",
+            "如果两个同时刻测量的噪声彼此独立，并且每次使用的是更新后的状态和协方差，逐条更新与把观测堆叠后一次更新在理想线性运算中等价。若噪声相关，简单顺序融合会丢掉相关块；若是非线性模型，还要说明是否在两次更新间重新线性化，这会使计算路径不同。跨语言比较要固定测量次序、线性化点、门限和舍入精度，不能只对齐最终话题名。",
+            "实现接口应区分predict与correct分别推进到哪个时间。重复对同一个时间区间预测，或把延迟观测当成当前观测直接更新，会产生与矩阵公式无关的时间错误。恢复历史状态再重放、采用适当延迟处理或拒绝过旧数据，都需要明确策略。本章固定一秒间隔与单次观测，故只验证这一时间契约；后续接入真实传感器时应把时间戳异常作为独立验收项。"
+          ],
+          "bullets": [],
+          "equations": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "EKF、误差状态与ROS融合的接口边界",
+          "paragraphs": [
+            "非线性模型用EKF时，要在当前估计附近线性化过程和观测，雅可比把小误差近似映射到新误差；大偏差、错误对应或强非线性会让这种局部近似失效。姿态若存成单位四元数，误差仍宜在三维旋转切空间定义，并明确左扰动还是右扰动；把四元数四个分量当成独立角度做协方差，会破坏单位长度与几何含义。不同误差状态、迭代或不变滤波方法也有各自模型条件。",
+            "接入robot_localization时，应核对变量次序、传感器frame_id、时间戳、测量协方差和重复信息来源。配置项表示融合哪些状态，不是说数组里未选中元素可以任意错误；坐标变换和数据有效性仍要先完成。本章完整实验只做一轮位置—速度滤波，帮助你独立复算核心公式。它没有实现完整robot_localization节点，也没有验证IMU偏置、非完整约束或车辆打滑。"
+          ],
+          "bullets": [],
+          "equations": [],
+          "codeBlocks": [
+            {
+              "label": "math_estimation.py",
+              "language": "python",
+              "type": "complete",
+              "code": "#!/usr/bin/env python3\n\"\"\"输入：位置/速度先验与一次位置观测；输出：Kalman 更新、协方差和新息门限。\"\"\"\n\ndef run():\n    import math\n\n    def transpose(a):\n        return [list(row) for row in zip(*a)]\n\n    def multiply(a, b):\n        # 只用于本例的小矩阵；尺寸必须满足 A 的列数等于 B 的行数。\n        assert len(a[0]) == len(b)\n        return [[sum(x*y for x, y in zip(row, column)) for column in zip(*b)] for row in a]\n\n    def add(a, b):\n        return [[x+y for x, y in zip(ra, rb)] for ra, rb in zip(a, b)]\n\n    # x=[位置(m),速度(m/s)]；dt 单位 s；一次采样内未知加速度恒定。\n    dt = 1.0\n    state = [0.0, 1.0]\n    covariance = [[0.04, 0.0], [0.0, 0.01]]\n    transition = [[1.0, dt], [0.0, 1.0]]\n    sigma_acceleration = 0.1  # m/s^2；这不是连续白噪声的谱密度。\n    input_column = [0.5*dt*dt, dt]\n    process_covariance = [[sigma_acceleration**2*a*b for b in input_column] for a in input_column]\n    predicted_state = [state[0]+dt*state[1], state[1]]\n    predicted_covariance = add(multiply(multiply(transition, covariance), transpose(transition)),\n                               process_covariance)\n    assert math.isclose(predicted_covariance[0][0], 0.0525, abs_tol=1e-12)\n\n    # H=[1,0] 只测位置；R 必须是方差 m^2，不能误填标准差 0.2m。\n    measured_position, measurement_variance = 1.2, 0.04\n    innovation = measured_position-predicted_state[0]\n    innovation_variance = predicted_covariance[0][0]+measurement_variance\n    assert innovation_variance > 0.0\n    gain = [predicted_covariance[i][0]/innovation_variance for i in range(2)]\n    corrected_state = [x+k*innovation for x, k in zip(predicted_state, gain)]\n\n    # Joseph 形式：P+=(I-KH)P-(I-KH)^T+KRK^T，较直接减法更便于保留正定性。\n    identity_minus_kh = [[1.0-gain[0], 0.0], [-gain[1], 1.0]]\n    corrected_covariance = add(\n        multiply(multiply(identity_minus_kh, predicted_covariance), transpose(identity_minus_kh)),\n        [[measurement_variance*a*b for b in gain] for a in gain])\n    simplified = multiply(identity_minus_kh, predicted_covariance)\n    assert max(abs(a-b) for ra, rb in zip(corrected_covariance, simplified) for a, b in zip(ra, rb)) < 1e-12\n    assert abs(corrected_covariance[0][1]-corrected_covariance[1][0]) < 1e-12\n    assert corrected_covariance[0][0]*corrected_covariance[1][1]-corrected_covariance[0][1]**2 > 0.0\n    assert math.isclose(corrected_state[0], 1.1135135135135135, abs_tol=1e-12)\n    # 同一个位置后验也能通过“先验精度+测量精度”计算，独立核对位置分量。\n    scalar_variance = 1.0/(1.0/predicted_covariance[0][0]+1.0/measurement_variance)\n    scalar_mean = scalar_variance*(predicted_state[0]/predicted_covariance[0][0]\n                                   + measured_position/measurement_variance)\n    assert math.isclose(corrected_state[0], scalar_mean, abs_tol=1e-12)\n\n    # 无量纲 NIS：一维正确线性高斯模型下，门限 9 对应约三倍标准差。\n    nis = innovation**2/innovation_variance\n    outlier_nis = (100.0-predicted_state[0])**2/innovation_variance\n    assert nis < 9.0 and outlier_nis > 9.0\n    # 两次位置测量的可观性矩阵 [[1,0],[1,dt]] 在 dt!=0 时满秩。\n    assert dt != 0.0\n    result = {'predicted_state': predicted_state, 'gain': gain, 'corrected_state': corrected_state,\n              'corrected_covariance': corrected_covariance, 'NIS': nis}\n    print('状态估计实验通过：', result)\n    return result\n\nif __name__ == '__main__':\n    run()\n",
+              "explanation": "这是原创完整文件，只使用 Python 标准库。复制到同名文件后可直接运行；输入、输出、单位、执行顺序和边界检查都写在中文注释中。实验检查当前理想模型的数学性质，不代表 ROS 节点、仿真或实机已经验证。"
+            }
+          ]
+        }
+      ],
+      "workedExample": {
+        "title": "贯穿案例：一秒预测后融合一次位置测量",
+        "scenario": "初始[0m,1m/s]，初始P=diag(0.04,0.01)，区间加速度标准差0.1m/s²，位置测量1.2m、方差0.04m²。",
+        "steps": [
+          "由常加速度区间模型构造F、G和Q，得到预测P的第一项0.0525m²。",
+          "计算新息0.2m、新息方差0.0925m²。",
+          "用增益[0.567568,0.162162]更新状态。",
+          "比较两种协方差写法，并检查正常新息和100m异常观测的NIS。"
+        ],
+        "result": "更新状态约[1.113514m,1.032432m/s]；协方差对称正定，模型内门限测试通过。"
+      },
+      "exercises": [
+        {
+          "question": "如果测量方差无限增大，更新会怎样？",
+          "answer": "在预测协方差有限且其他条件正常时，增益趋于零，估计接近预测；不是把预测方差也变成零。"
+        },
+        {
+          "question": "本章为何位置测量能更新速度？",
+          "answer": "预测P中位置与速度互协方差为0.015，测量残差通过它影响速度增益。"
+        },
+        {
+          "question": "“线性系统会自动使状态与观测联合高斯”是否正确？",
+          "answer": "不正确；还需初始状态与过程、测量噪声具有合适的联合高斯结构。线性变换只保持已有的高斯性，不会凭空创造高斯分布。"
+        }
+      ],
+      "steps": [
+        {
+          "title": "先固定模型与单位",
+          "body": "按本章符号表手算案例，明确观测、状态、控制量的坐标系和单位；先记录理论值，再运行代码，避免只看“通过”字样。"
+        },
+        {
+          "title": "运行完整数值实验",
+          "body": "将本章完整 Python 文件保存到空目录。Python 3 无需安装第三方包；若使用随站源码包，也可运行统一的 math_labs.py 并选择本章。",
+          "code": "# 输入是文件中的固定教学数据；不会连接 ROS 图或控制硬件。\npython3 math_estimation.py\n# 随站合并实验集可只运行这一章；参数是章节 ID。\npython3 math_labs.py --chapter math-estimation",
+          "language": "bash",
+          "type": "commands"
+        },
+        {
+          "title": "解释通过与失败的含义",
+          "body": "将打印数值与手算结果逐项对照。再按练习改变一个参数，区分数学前提被破坏、浮点误差和实现错误。不要删除失败断言来制造通过。"
+        }
+      ],
+      "commands": [],
+      "expected": [
+        "预测、增益、更新状态可逐项手算复现。",
+        "Joseph与简化协方差一致，正常及大残差门限案例符合本模型预期。"
+      ],
+      "pitfalls": [
+        "把连续白加速度谱密度与区间常加速度方差混为一谈。",
+        "仅凭轨迹平滑就称滤波器准确或一致。",
+        "重复融合共享先验，或把局部非线性近似当精确高斯后验。"
+      ],
+      "exercise": "为本章实验写一份输入输出契约：列出状态次序、单位、前提、一个正常案例、一个必须拒绝或明确标记退化的案例。",
+      "exerciseAnswer": "契约应明确本章模型的量纲与坐标约定，正常案例需给出可复算的数值；退化案例应对应正文列出的边界，并解释失败原因。实验只验证这个有限模型，不把结果外推到任意噪声、任意机器人或实机安全。",
+      "sourceIds": [
+        "math-kalman-lecture",
+        "math-robot-localization"
+      ],
+      "validation": "原创数学推导；读取本地参考教程以核对主题范围，并与本章列出的一手资料交叉核对。标准库完整实验已在本轮运行并通过断言；ROS 构建、仿真、硬件未运行。"
+    },
+    {
+      "id": "math-optimization",
+      "title": "优化基础：从残差到可诊断的迭代求解",
+      "summary": "把标定、定位与规划中的误差写成目标函数，推导Gauss–Newton、阻尼步、约束投影和Huber损失，并用失败反例限定算法能力。",
+      "goals": [
+        "构造量纲一致的残差与目标函数",
+        "从局部线性化推导Gauss–Newton和阻尼步",
+        "理解边界最优点、异常值与终止条件的不同含义"
+      ],
+      "prerequisites": [
+        "掌握最小二乘与基本微分",
+        "能解释雅可比的输入输出维数"
+      ],
+      "version": "数学模型与标准库实验；ROS 2 Jazzy 为工程对应主线",
+      "concepts": [
+        "优化求解器只会优化实际写出的模型，不会自动补上单位、碰撞或执行器约束。",
+        "非线性迭代通常依赖初值，目标下降不等于找到全局最优。",
+        "同一任务可用不同算法实现，但比较必须统一目标、约束和终止标准。"
+      ],
+      "sections": [
+        {
+          "title": "先定义残差和尺度，再讨论算法",
+          "paragraphs": [
+            "假设测量给出某个状态函数的预测关系，残差取预测减测量。所有残差都为零意味着模型与观测完全一致，但含噪数据通常做不到，因而用标量目标评价折中。位置误差单位是米、角度误差单位是弧度，直接把两者平方相加就隐含了一种任意尺度选择。若有可信噪声协方差，可以通过白化把它们变成可比较的无量纲残差。",
+            "本章以无量纲残差r(x)=x平方减四为贯穿例子。它在正二和负二都有零点，因此目标不是一个只有唯一谷底的凸二次函数。选择x大于零的工作范围相当于加入物理分支条件，不能由求解器自行猜测。真实机器人标定也应先解释状态范围、参数约束和观测模型，再把数组传入库；否则一个数值上收敛的解可能违反真实几何或机械限制。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "F(x)=\\frac12 r(x)^Tr(x),\\qquad \\nabla F(x)=J(x)^Tr(x)",
+              "label": "非线性最小二乘的梯度",
+              "explanation": "J是残差对状态的雅可比；按链式法则对每个残差平方求导后相加即可得到。对r=x²-4，J=2x，梯度为2x(x²-4)。实验在x=1.3处用中心差分独立核对解析梯度。",
+              "symbols": [
+                {
+                  "symbol": "x",
+                  "meaning": "待优化状态",
+                  "unit": "本例无量纲"
+                },
+                {
+                  "symbol": "r",
+                  "meaning": "经过适当尺度处理的残差向量",
+                  "unit": "本例无量纲"
+                },
+                {
+                  "symbol": "J",
+                  "meaning": "残差对状态的雅可比",
+                  "unit": "依变量单位而定"
+                },
+                {
+                  "symbol": "F",
+                  "meaning": "平方残差总代价",
+                  "unit": "本例无量纲"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "从Taylor展开得到Gauss–Newton",
+          "paragraphs": [
+            "在当前状态附近把残差写成r加J乘增量，忽略增量二阶以上项，再对近似残差平方和求最小值，就回到线性最小二乘。正规方程的左边是J的转置乘J，右边是负J转置乘r。这个步骤近似的是残差函数，不是把整个非线性问题一次性变成全局凸问题；下一轮仍要在新的状态重新计算残差和雅可比。",
+            "对本例x=1，残差为负三，雅可比为二，Gauss–Newton增量是四分之六，即1.5，候选状态跳到2.5。继续迭代会在这个初值下接近正根，但如果从x=0开始，雅可比就是零，不能通过该观测的一阶信息决定方向。实际系统应检查秩、步长、残差与初值，而不是把“矩阵求解成功”当成正确估计的充分条件。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "r(x+\\delta)\\approx r(x)+J\\delta,\\qquad J^TJ\\delta=-J^Tr",
+              "label": "Gauss–Newton局部子问题",
+              "explanation": "固定当前x后，右侧是增量delta的线性最小二乘。需要足够的局部线性近似质量；J满列秩时该子问题解唯一。实验的解析梯度检查与非线性迭代共同验证这组代数关系。",
+              "symbols": [
+                {
+                  "symbol": "\\delta",
+                  "meaning": "本轮状态增量",
+                  "unit": "与x相同"
+                },
+                {
+                  "symbol": "J^TJ",
+                  "meaning": "局部正规矩阵",
+                  "unit": "按状态和残差尺度确定"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "阻尼能改善局部求解，却不能制造全局保证",
+          "paragraphs": [
+            "给正规矩阵加正的对角阻尼，会惩罚过大的增量并缓解局部秩不足。阻尼较小时接近Gauss–Newton，较大时更接近沿负梯度的小步。不同变量尺度差异大时，直接用同一个阻尼乘单位矩阵还会产生不均匀影响，因此工程实现需要变量归一化或更合理的对角尺度。阻尼不是可以任意忽略单位的纯经验常数。",
+            "本章实现先计算候选步，再比较真实目标是否下降；接受后减小阻尼，拒绝后增大阻尼。它只是展示核心机制的简化版本，没有冒充完整的生产级LM信赖域算法。特别地，在x=0时梯度为零，即使阻尼严格为正，求出的增量仍为零，而目标值明显不是全局最小。这一反例直接说明，“加了阻尼”不能推出从任何初值必然找到正确分支。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "(J^TJ+\\lambda I)\\delta=-J^Tr,\\qquad \\lambda>0",
+              "label": "带对角阻尼的局部步",
+              "explanation": "对局部平方残差目标再加lambda/2乘增量模平方，求导得到此式。lambda为正使该局部矩阵在欧氏同尺度状态下正定，但不消除原始目标的多峰、错误模型或坏驻点。",
+              "symbols": [
+                {
+                  "symbol": "\\lambda",
+                  "meaning": "增量惩罚的阻尼参数",
+                  "unit": "与J^TJ对角相容"
+                },
+                {
+                  "symbol": "I",
+                  "meaning": "状态维数的单位矩阵",
+                  "unit": "无量纲"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "约束最优点不要求原目标梯度为零",
+          "paragraphs": [
+            "考虑最小化二分之一乘(x减三)的平方，但限制x在负一到一之间。没有约束时最优是三，有约束时只能选一；此时原目标的导数等于负二，并不为零。因为继续向正方向移动虽然会降目标，却违反上边界。判断约束最优必须把可行方向或约束乘子一起考虑，不能沿用无约束“梯度小才算解”的单一标准。",
+            "投影梯度先走一步负梯度，再把候选值投回可行区间。本例区间是闭凸集，投影就是钳位；若可行集是复杂非凸碰撞区域，简单逐维钳位通常不再等价。实验从零开始，以步长二分之一迭代得到一，并用上边界乘子二抵消原目标导数。这个简单案例帮助读者区分约束处理与最终给控制命令做限幅：后者并不会自动重新求解原优化问题。"
+          ],
+          "bullets": [],
+          "equations": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "异常值、Huber损失与鲁棒性的范围",
+          "paragraphs": [
+            "测量为2.0、2.1、1.9、20.0米时，普通平方损失的最优均值是6.5米，异常观测的巨大残差占据了主要影响。Huber损失对小残差保持平方增长，对大残差改成线性增长，因此大残差的梯度贡献被限制。阈值需要与残差尺度相容，不能把图像像素阈值原封不动用在米或弧度残差上。先白化再定阈值是一种常见组织方式。",
+            "本例把测量按一米参考尺度无量纲化，取阈值一。在解附近前三个残差都处于二次区，大异常残差在外侧贡献固定负一，因此驻点满足三倍x减六再减一等于零，得到七除以三。它比普通均值更接近正常观测簇，但并没有完全消除异常值影响，也不保证在多数观测错误或模型偏置时仍正确。鲁棒核与异常检测、数据关联和传感器故障诊断需要共同设计。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "\\rho_\\delta(r)=\\begin{cases}\\frac12r^2,&|r|\\leq\\delta\\\\\\delta(|r|-\\frac12\\delta),&|r|>\\delta\\end{cases}",
+              "label": "本章采用的Huber损失",
+              "explanation": "两段在阈值处函数值与一阶导数相接；外侧导数为delta乘残差符号。实验直接累加截断后的导数做一维下降，得到7/3。此定义比某些资料的Huber表达式整体小一半，不影响同一目标的最优点，但会改变梯度步长尺度。",
+              "symbols": [
+                {
+                  "symbol": "r",
+                  "meaning": "经过尺度处理的残差",
+                  "unit": "本例无量纲"
+                },
+                {
+                  "symbol": "\\delta",
+                  "meaning": "二次区与线性区的分界",
+                  "unit": "与r相同"
+                },
+                {
+                  "symbol": "\\rho",
+                  "meaning": "单个残差损失",
+                  "unit": "r单位的平方"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "实现对照：残差符号、导数来源与停止理由",
+          "paragraphs": [
+            "残差也可以定义为测量减预测。若把r和J同时取负，平方目标、梯度J转置乘r及Gauss–Newton增量都不变；如果只改残差符号而忘记改雅可比，就会得到反向更新。这个等价关系适合作为跨实现检查：两份程序即使选择不同残差约定，只要导数与状态更新一致，仍应优化同一个问题。比较前先写清每个接口输出的符号含义。",
+            "导数可以解析推导、自动微分或有限差分取得。解析式便于理解且可能高效，但容易手工出错；自动微分沿计算图使用链式法则，不会自动修正错误模型、不可微分分支或不合理参数化；有限差分实现简单，却对扰动尺度和浮点相消敏感。完整程序用有限差分核对解析梯度，二者只共享目标函数，能帮助发现导数表达式错误，而不需要把大系统求解结果作为唯一参考。",
+            "停止可能因为残差很小、梯度很小、增量很小、到达边界、达到迭代上限或数值失败。它们含义不同：坏驻点可以梯度小，强阻尼可以让增量小，不可达目标也可能使求解器在上限处停止。本章把真目标下降和目标根检查分开，并保留非最优驻点反例；工程结果对象也应保留停止原因，不能把所有“函数返回了”都渲染成同一个成功标签。",
+            "在机器人执行链中，还要区分优化变量是否可行与执行命令是否可行。轨迹优化输出的速度可能受到连续约束，而采样后的离散控制器又有独立限幅和延迟；只对最后命令裁剪会改变规划的运动关系。适当的接口应返回目标状态、对应时间、可行性信息和失败策略，让执行层判断是否继续、降速或重新规划。数学小例子应先把这些契约解释清楚，再扩展到真实求解器。"
+          ],
+          "bullets": [],
+          "equations": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "同一功能的实现比较与可复现验收",
+          "paragraphs": [
+            "本章同时演示有限差分与解析梯度、普通与阻尼最小二乘、投影与乘子解释、平方与Huber代价。比较这些方法时必须固定相同的残差、坐标、变量尺度和终止条件；若一个方法额外使用先验或更宽松误差阈值，运行时间就不能直接对比。C++或Python库提供的求解结果对象还应检查状态码、可行性、最终残差和实际迭代次数，不能只读取最后一个状态数组。",
+            "完整实验记录每次接受后的真实目标值，并断言它严格下降；同时保留x为零的非最优驻点反例。把这一习惯带到标定、SLAM和规划中，可以区分“局部步算对了”与“原问题解得合适”。后续扩展应逐项加入噪声、约束和复杂残差，每次保留一个能够手工复算的小实例；不要在第一次引入巨大稀疏系统时才发现残差符号与雅可比方向相反。"
+          ],
+          "bullets": [],
+          "equations": [],
+          "codeBlocks": [
+            {
+              "label": "math_optimization.py",
+              "language": "python",
+              "type": "complete",
+              "code": "#!/usr/bin/env python3\n\"\"\"输入：固定非线性残差与异常测量；输出：阻尼迭代、约束解和鲁棒估计。\"\"\"\n\ndef run():\n    import math\n\n    def residual(x):\n        return x*x-4.0  # 教学无量纲残差，正根为 2，负根为 -2。\n\n    def objective(x):\n        return 0.5*residual(x)**2\n\n    # 用中心差分独立核对解析梯度；h 是无量纲状态扰动。\n    point, h = 1.3, 1e-6\n    numerical_gradient = (objective(point+h)-objective(point-h))/(2*h)\n    analytical_gradient = 2*point*residual(point)\n    assert abs(numerical_gradient-analytical_gradient) < 1e-6\n\n    # 一维 LM 风格演示：先提候选步，再用真实目标值决定接受与否。\n    # 实际求解器通常使用更完整的信赖域增益比和尺度处理。\n    x, damping = 1.0, 0.1\n    accepted_costs = [objective(x)]\n    for _ in range(60):\n        r, jacobian = residual(x), 2*x\n        if abs(r) < 1e-10:\n            break\n        delta = -jacobian*r/(jacobian*jacobian+damping)\n        candidate = min(5.0, max(0.1, x+delta))  # 显式选择正根分支的状态范围。\n        if objective(candidate) < objective(x):\n            x = candidate\n            damping = max(1e-12, damping/3.0)\n            accepted_costs.append(objective(x))\n        else:\n            damping *= 10.0\n    assert abs(x-2.0) < 1e-8\n    assert all(a > b for a, b in zip(accepted_costs, accepted_costs[1:]))\n    # x=0 的梯度为零，增加阻尼并不能自动摆脱这个非最优驻点。\n    assert 2*0.0*residual(0.0) == 0.0 and objective(0.0) > objective(2.0)\n\n    # 投影梯度：最小化 0.5*(x-3)^2，约束 [-1,1]；最优点位于上边界。\n    constrained = 0.0\n    for _ in range(30):\n        constrained = min(1.0, max(-1.0, constrained-0.5*(constrained-3.0)))\n    assert constrained == 1.0\n    multiplier = 3.0-constrained\n    assert math.isclose((constrained-3.0)+multiplier, 0.0, abs_tol=1e-12)\n\n    # Huber 损失：delta=1m；这里已把测量按 1m 参考尺度无量纲化。\n    measurements = [2.0, 2.1, 1.9, 20.0]\n    ordinary_mean = sum(measurements)/len(measurements)\n    robust = 2.0\n    for _ in range(150):\n        gradient = sum(max(-1.0, min(1.0, robust-z)) for z in measurements)\n        robust -= 0.2*gradient\n    assert math.isclose(robust, 7.0/3.0, abs_tol=1e-8)\n    assert ordinary_mean == 6.5 and abs(robust-2.0) < abs(ordinary_mean-2.0)\n    result = {'nonlinear_positive_root': x, 'accepted_costs': accepted_costs,\n              'constrained_solution': constrained, 'L2_mean': ordinary_mean, 'Huber_estimate': robust}\n    print('优化实验通过：', result)\n    return result\n\nif __name__ == '__main__':\n    run()\n",
+              "explanation": "这是原创完整文件，只使用 Python 标准库。复制到同名文件后可直接运行；输入、输出、单位、执行顺序和边界检查都写在中文注释中。实验检查当前理想模型的数学性质，不代表 ROS 节点、仿真或实机已经验证。"
+            }
+          ]
+        }
+      ],
+      "workedExample": {
+        "title": "贯穿案例：求平方观测的正根并处理异常测量",
+        "scenario": "先求r=x²-4的正根，再用约束和鲁棒估计检验“同一优化接口”背后的不同数学问题。",
+        "steps": [
+          "在x=1.3用中心差分核对梯度2x(x²-4)。",
+          "从x=1按阻尼子问题求候选步，仅接受真实目标下降的候选。",
+          "验证x=0虽梯度为零但并非最优，不能用停止条件冒充全局结论。",
+          "分别求区间约束问题和四个位置测量的Huber估计。"
+        ],
+        "result": "正根约2；区间约束解为1、对应上边界乘子2；L2均值6.5，Huber估计7/3。"
+      },
+      "exercises": [
+        {
+          "question": "为什么给J^TJ加正阻尼后，仍不能保证从x=0求到x²=4的根？",
+          "answer": "x=0时J=0，右端-J^Tr也为0，阻尼方程只给出零增量；原目标的坏驻点仍存在。"
+        },
+        {
+          "question": "本章约束问题在x=1处梯度为-2，为什么仍是最优？",
+          "answer": "沿负梯度向正方向走会违反上边界；上边界乘子2满足站立条件和互补关系。"
+        },
+        {
+          "question": "Huber阈值变大到让所有残差处于二次区，会发生什么？",
+          "answer": "该区间内目标退化为普通平方损失，异常值的影响重新不受截断限制；最优值会趋向普通均值。"
+        }
+      ],
+      "steps": [
+        {
+          "title": "先固定模型与单位",
+          "body": "按本章符号表手算案例，明确观测、状态、控制量的坐标系和单位；先记录理论值，再运行代码，避免只看“通过”字样。"
+        },
+        {
+          "title": "运行完整数值实验",
+          "body": "将本章完整 Python 文件保存到空目录。Python 3 无需安装第三方包；若使用随站源码包，也可运行统一的 math_labs.py 并选择本章。",
+          "code": "# 输入是文件中的固定教学数据；不会连接 ROS 图或控制硬件。\npython3 math_optimization.py\n# 随站合并实验集可只运行这一章；参数是章节 ID。\npython3 math_labs.py --chapter math-optimization",
+          "language": "bash",
+          "type": "commands"
+        },
+        {
+          "title": "解释通过与失败的含义",
+          "body": "将打印数值与手算结果逐项对照。再按练习改变一个参数，区分数学前提被破坏、浮点误差和实现错误。不要删除失败断言来制造通过。"
+        }
+      ],
+      "commands": [],
+      "expected": [
+        "有限差分与解析梯度一致，接受序列的真实代价下降。",
+        "保留坏驻点反例，并得到可复算的约束与Huber解。"
+      ],
+      "pitfalls": [
+        "把局部线性化的子问题正定误称为原问题全局凸。",
+        "省略残差尺度与约束可行性，只比较最后状态和耗时。",
+        "用真实目标没有下降的候选继续迭代，却不记录拒绝原因。"
+      ],
+      "exercise": "为本章实验写一份输入输出契约：列出状态次序、单位、前提、一个正常案例、一个必须拒绝或明确标记退化的案例。",
+      "exerciseAnswer": "契约应明确本章模型的量纲与坐标约定，正常案例需给出可复算的数值；退化案例应对应正文列出的边界，并解释失败原因。实验只验证这个有限模型，不把结果外推到任意噪声、任意机器人或实机安全。",
+      "sourceIds": [
+        "math-cvx"
+      ],
+      "validation": "原创数学推导；读取本地参考教程以核对主题范围，并与本章列出的一手资料交叉核对。标准库完整实验已在本轮运行并通过断言；ROS 构建、仿真、硬件未运行。"
+    },
+    {
+      "id": "math-kinematics",
+      "title": "运动学：正解、逆解、雅可比与虚功",
+      "summary": "用两自由度平面机械臂把关节角、末端位置、速度、奇异性与力矩联系起来，推导与实现互相校验。",
+      "goals": [
+        "从几何关系推导两连杆正运动学和两支逆解",
+        "用解析与有限差分两种实现验证雅可比",
+        "解释奇异构型以及力—力矩映射的功率一致性"
+      ],
+      "prerequisites": [
+        "掌握三角函数、坐标变换与链式法则",
+        "已理解矩阵的秩与转置"
+      ],
+      "version": "数学模型与标准库实验；ROS 2 Jazzy 为工程对应主线",
+      "concepts": [
+        "运动学描述几何和速度关系，不会自动计算惯性或控制稳定性。",
+        "逆运动学可能无解、多解，或在边界处数值敏感。",
+        "同一雅可比必须明确末端变量、表达坐标系与关节次序。"
+      ],
+      "sections": [
+        {
+          "title": "先选模型与关节变量，避免把示意图当通用机械臂",
+          "paragraphs": [
+            "考虑两根刚性杆在同一平面运动，两个转动关节的轴都沿正z方向，关节角以弧度计。第一杆长度0.6米，第二杆0.4米；第二个关节角是第二杆相对第一杆的转角，不是它相对基坐标系的绝对朝向。因此第二杆在基坐标系的方向是两个角之和。这条几何约定决定后面所有正解、雅可比和逆解的符号。",
+            "第一杆末端的向量是长度乘第一角的正弦、余弦，第二杆的向量要用合角，再相加得到末端位置。该公式只描述末端位置两维，没有描述工具朝向、关节弹性、齿隙和碰撞。真实URDF中的origin、axis和关节顺序可能完全不同，必须先把模型对应到实际坐标约定，不能看到“两个关节”就照抄平面公式。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "x=l_1\\cos q_1+l_2\\cos(q_1+q_2),\\qquad y=l_1\\sin q_1+l_2\\sin(q_1+q_2)",
+              "label": "平面两连杆正运动学",
+              "explanation": "把两个杆向量都表达在基坐标系再相加。代入l1=0.6、l2=0.4、q1=pi/6、q2=-pi/3，得末端约[0.8660254,0.1]米。",
+              "symbols": [
+                {
+                  "symbol": "l_1,l_2",
+                  "meaning": "两根杆的长度",
+                  "unit": "m"
+                },
+                {
+                  "symbol": "q_1,q_2",
+                  "meaning": "第一关节角与第二相对关节角",
+                  "unit": "rad"
+                },
+                {
+                  "symbol": "x,y",
+                  "meaning": "末端在基坐标系中的位置",
+                  "unit": "m"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "速度雅可比是对正解逐项求导",
+          "paragraphs": [
+            "对正运动学按两个角分别求偏导，得到两乘二的平移雅可比。第一列表示只让第一关节以单位角速度转动时的末端速度，第二列表示只让第二关节转动的贡献；实际末端速度是按两个关节速度的线性组合。这里雅可比描述的是基坐标系中的位置导数，不是完整六维空间twist的雅可比，不能与另一种定义直接混用。",
+            "实验选关节速度[0.2,-0.1]弧度每秒，得到末端速度约[-0.04,0.138564]米每秒。独立实现中心差分：分别对一个关节加减百万分之一弧度，正解位置的差除以两倍扰动。把它与解析雅可比比较，可以发现合角求导、关节排列和符号错误。扰动太大会有截断误差，太小又放大浮点相消，差分步长需要结合量级选择。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "\\dot p=J(q)\\dot q,\\qquad J=\\begin{bmatrix}-l_1\\sin q_1-l_2\\sin(q_1+q_2)&-l_2\\sin(q_1+q_2)\\\\l_1\\cos q_1+l_2\\cos(q_1+q_2)&l_2\\cos(q_1+q_2)\\end{bmatrix}",
+              "label": "关节速度到末端速度",
+              "explanation": "对x、y分别按q1、q2求导，并用链式法则乘关节速度。解析与中心差分是同一导数的不同实现；前者高效，后者适合小例子独立验算，但不应把有限差分误差当成真实机器人建模误差。",
+              "symbols": [
+                {
+                  "symbol": "p",
+                  "meaning": "末端二维位置",
+                  "unit": "m"
+                },
+                {
+                  "symbol": "J",
+                  "meaning": "本章平移雅可比",
+                  "unit": "m/rad"
+                },
+                {
+                  "symbol": "\\dot q",
+                  "meaning": "关节速度",
+                  "unit": "rad/s"
+                },
+                {
+                  "symbol": "\\dot p",
+                  "meaning": "末端线速度",
+                  "unit": "m/s"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "奇异性是局部运动能力的损失",
+          "paragraphs": [
+            "将雅可比行列式展开，交叉项抵消，得到两杆长度之积乘第二关节角的正弦。当第二关节为零或半周时，两列方向线性相关，末端瞬时速度不能覆盖整个平面。机械臂拉直时不能在一阶近似下沿杆长方向伸得更远，这与实际几何一致。奇异性不表示机器人消失或程序必然崩溃，而是某些任务方向变得不可实现或非常敏感。",
+            "在接近奇异点时直接求雅可比逆，会把小的末端速度请求放大成很大的关节速度。伪逆可以定义某种最小范数解，阻尼最小二乘可以限制增量，但两者都需要明确任务误差、关节限位与允许速度，且可能引入跟踪偏差。若机械臂根本达不到目标，增加迭代次数不会改变可达域；应向上层报告退化或无解，而非只继续发布越来越大的速度。"
+          ],
+          "bullets": [],
+          "equations": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "逆解先检查可达域，再选择分支",
+          "paragraphs": [
+            "由末端到原点的距离平方展开，可以消去第一关节角，得到第二角余弦。目标距离必须位于两杆长度之差与长度之和之间，本例为0.2到1.0米。余弦不在负一到一时，目标不可达；只允许对浮点舍入造成的微小越界钳位，不能把任意远目标都强行变成边界解。对于等长杆在原点的特例，还会出现第一角不唯一，需要单独讨论。",
+            "第二角可以取反余弦的正支或负支，对应两种肘部形态；再用目标方向角减去第二杆引起的偏角得到第一角。使用atan2保留象限信息，不能直接用y除x后取普通反正切。两支都通过正运动学回代检查位置，再结合关节限位、碰撞和连续性选择可执行解。数值逆运动学能处理更复杂模型，但同样需要初值、收敛判据与可行性检查。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "\\cos q_2=\\frac{x^2+y^2-l_1^2-l_2^2}{2l_1l_2},\\qquad q_1=\\operatorname{atan2}(y,x)-\\operatorname{atan2}(l_2\\sin q_2,l_1+l_2\\cos q_2)",
+              "label": "两连杆逆运动学",
+              "explanation": "先由余弦定理确定q2的正负分支，再从末端方向中减去杆系内部偏角得到q1。实验对同一目标验证两支回代，并显式拒绝距离2米的目标。",
+              "symbols": [
+                {
+                  "symbol": "q_1,q_2",
+                  "meaning": "求得的两个关节角",
+                  "unit": "rad"
+                },
+                {
+                  "symbol": "x,y",
+                  "meaning": "目标点在基坐标系中的坐标",
+                  "unit": "m"
+                },
+                {
+                  "symbol": "l_1,l_2",
+                  "meaning": "正的杆长",
+                  "unit": "m"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "为什么力矩映射使用雅可比转置",
+          "paragraphs": [
+            "设f是机器人为平衡外界反作用而向工具输出的末端力，在同一基坐标系表达；外界对机器人的力为-f。忽略动态加速与其他负载时，工具输出功率等于相应关节输入功率。将末端位移等于雅可比乘关节位移代入，并要求对任意微小关节位移都成立，就得到关节力矩等于雅可比转置乘f。转置来自功的对偶配对，不是为了把数组形状凑成能相乘。",
+            "本例末端力为[2,3]牛顿，代码计算两个关节力矩，并比较关节侧与末端侧的功率，两者都约为0.335692瓦。若力与雅可比使用不同坐标系，等式就不再代表同一个物理功。更一般的六维力旋量还需要与同一约定的twist配对；角速度和线速度的排列在不同库中可能不同，必须同时核对。该静力映射不包含重力补偿和惯性加速力矩。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "\\tau=J^Tf,\\qquad \\tau^T\\dot q=f^T\\dot p",
+              "label": "虚功与瞬时功率一致性",
+              "explanation": "由delta p=J delta q以及tau^T delta q=f^T delta p，比较任意delta q的系数得到第一式；换成速度即得第二式。实验以同一J、同一表达系的力和速度验证功率相等。",
+              "symbols": [
+                {
+                  "symbol": "\\tau",
+                  "meaning": "关节广义力；本章为转动关节力矩",
+                  "unit": "N·m"
+                },
+                {
+                  "symbol": "f",
+                  "meaning": "基坐标系中的末端平面力",
+                  "unit": "N"
+                },
+                {
+                  "symbol": "J",
+                  "meaning": "前节定义的平移雅可比",
+                  "unit": "m/rad"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "同功能对照：解析正逆解与数值模型接口",
+          "paragraphs": [
+            "本章forward接收两个弧度角，返回基坐标系下的二维米制位置；jacobian接收同一关节顺序，返回位置对两个角的导数；inverse还需要一个肘部支路符号，并可能抛出不可达异常。把三个接口的契约写在一起，比只列出公式更容易发现组合错误。逆解返回的角即使满足目标位置，也没有包含关节限位和碰撞可行性的证明，调用方仍需继续检查。",
+            "解析逆解利用两杆几何结构，计算步骤短并能明确枚举两支。数值逆解通常从当前关节角出发，反复用雅可比或梯度减少目标误差，适合更多自由度和复杂约束，但可能停在坏初值附近。若比较两者，应固定末端任务只含位置还是还含姿态、误差范数、关节上下界和成功阈值；不同任务维数会让看似相同的“到达目标”包含不同要求。",
+            "微分运动学中的关节角速度输入与静力映射中的末端力输入是对偶接口：一个把关节运动传到末端，另一个把期望工具输出负载传回关节。这里工具对环境施加f，环境对工具反作用为负f；若改成给定外界对机器人的力，则静态补偿力矩要相应变号，并叠加重力等其他负载。明确力的施加对象，才能把虚功等式与动力学方程放到同一符号体系。",
+            "真实模型更换工具点时，位置雅可比会随参考点改变；即使表达坐标轴不变，也不能继续使用旧点的平移导数。六维速度与力的坐标变换还需要同时处理参考点转移造成的力矩项，不能只把三个力分量旋转后认为整个wrench已完成转换。学习时先用本章两个关节、一个明确末端点的模型手算，再逐项扩展参考点、坐标系与任务变量，能保留可解释的排错路径。"
+          ],
+          "bullets": [],
+          "equations": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "从教学函数到机器人模型API",
+          "paragraphs": [
+            "正解、逆解和雅可比三个接口应共享关节次序、基坐标系、工具点和长度单位。ROS的关节状态可按名字到达，并不保证数组顺序天然等于运动学模型顺序；使用前应按关节名映射。模型库还可能提供空间雅可比、体坐标雅可比、几何雅可比或解析雅可比，名字接近但输入输出定义不同。比较同功能实现时，先把末端参考点和表达坐标系统一。",
+            "下面完整程序覆盖正解、解析导数、差分导数、两支逆解、不可达点拒绝、奇异性和虚功检查。它没有实现碰撞检测、关节限位规划或动力学，不能把目标点可达理解为整段路径可执行。进入MoveIt等系统时，把这类小模型作为独立回归样例，再逐项检查模型、规划与控制接口，有助于明确错误发生在几何层还是执行层。"
+          ],
+          "bullets": [],
+          "equations": [],
+          "codeBlocks": [
+            {
+              "label": "math_kinematics.py",
+              "language": "python",
+              "type": "complete",
+              "code": "#!/usr/bin/env python3\n\"\"\"输入：两连杆长度(m)、角度(rad)、角速度(rad/s)；输出：位置、雅可比和力矩。\"\"\"\n\ndef run():\n    import math\n    length_1, length_2 = 0.6, 0.4  # 两个刚性杆的长度，单位 m。\n\n    def forward(q):\n        a, b = q\n        return [length_1*math.cos(a)+length_2*math.cos(a+b),\n                length_1*math.sin(a)+length_2*math.sin(a+b)]\n\n    def jacobian(q):\n        a, b = q\n        return [[-length_1*math.sin(a)-length_2*math.sin(a+b), -length_2*math.sin(a+b)],\n                [length_1*math.cos(a)+length_2*math.cos(a+b), length_2*math.cos(a+b)]]\n\n    def inverse(point, elbow_sign):\n        # elbow_sign 为 +1 或 -1，显式选择肘部两种支路；越界目标必须拒绝。\n        px, py = point\n        cosine = (px*px+py*py-length_1**2-length_2**2)/(2*length_1*length_2)\n        if cosine < -1.0-1e-12 or cosine > 1.0+1e-12:\n            raise ValueError('目标不在两连杆可达环带内')\n        # 仅钳位浮点舍入误差，不能把真实越界目标投射成可达目标。\n        q2 = elbow_sign*math.acos(min(1.0, max(-1.0, cosine)))\n        q1 = math.atan2(py, px)-math.atan2(length_2*math.sin(q2), length_1+length_2*math.cos(q2))\n        return [q1, q2]\n\n    q = [math.pi/6.0, -math.pi/3.0]\n    position = forward(q)\n    j = jacobian(q)\n    step = 1e-6  # 雅可比差分的角度扰动，单位 rad。\n    for joint in range(2):\n        plus, minus = q.copy(), q.copy()\n        plus[joint] += step\n        minus[joint] -= step\n        numerical = [(a-b)/(2*step) for a, b in zip(forward(plus), forward(minus))]\n        assert max(abs(numerical[i]-j[i][joint]) for i in range(2)) < 1e-8\n    recovered = inverse(position, -1)\n    assert max(abs(a-b) for a, b in zip(recovered, q)) < 1e-12\n    for branch in (-1, 1):\n        p = forward(inverse(position, branch))\n        assert max(abs(a-b) for a, b in zip(p, position)) < 1e-12\n    try:\n        inverse([2.0, 0.0], 1)\n    except ValueError:\n        pass\n    else:\n        raise AssertionError('不可达点本应被拒绝')\n\n    # J 的单位 m/rad；qdot 单位 rad/s，因此末端速度单位 m/s。\n    rates = [0.2, -0.1]\n    velocity = [sum(a*b for a, b in zip(row, rates)) for row in j]\n    force = [2.0, 3.0]  # 在同一个基坐标系表达的末端力，单位 N。\n    torque = [sum(j[i][k]*force[i] for i in range(2)) for k in range(2)]\n    # 虚功/功率一致性：tau^T*qdot 与 F^T*pdot 均为 W。\n    power_joint = sum(a*b for a, b in zip(torque, rates))\n    power_tip = sum(a*b for a, b in zip(force, velocity))\n    assert math.isclose(power_joint, power_tip, abs_tol=1e-12)\n    determinant = j[0][0]*j[1][1]-j[0][1]*j[1][0]\n    assert math.isclose(determinant, length_1*length_2*math.sin(q[1]), abs_tol=1e-12)\n    straight = jacobian([0.3, 0.0])\n    assert abs(straight[0][0]*straight[1][1]-straight[0][1]*straight[1][0]) < 1e-12\n    result = {'tip_position_m': position, 'tip_velocity_m_s': velocity,\n              'joint_torque_Nm': torque, 'power_W': power_tip}\n    print('运动学实验通过：', result)\n    return result\n\nif __name__ == '__main__':\n    run()\n",
+              "explanation": "这是原创完整文件，只使用 Python 标准库。复制到同名文件后可直接运行；输入、输出、单位、执行顺序和边界检查都写在中文注释中。实验检查当前理想模型的数学性质，不代表 ROS 节点、仿真或实机已经验证。"
+            }
+          ]
+        }
+      ],
+      "workedExample": {
+        "title": "贯穿案例：同一两连杆模型的五种一致性检查",
+        "scenario": "杆长0.6m与0.4m，关节角[pi/6,-pi/3]，关节速度[0.2,-0.1]rad/s。",
+        "steps": [
+          "用几何正解得到[0.8660254,0.1]m。",
+          "解析求J，用中心差分检查两列，再映射关节速度。",
+          "分别求两支逆解并回代到同一目标位置。",
+          "将末端力[2,3]N映射到关节力矩，比较两侧功率。",
+          "用拉直构型验证雅可比行列式为零，并拒绝2米外的目标。"
+        ],
+        "result": "解析与差分雅可比误差小于1e-8；末端速度约[-0.04,0.138564]m/s，功率一致。"
+      },
+      "exercises": [
+        {
+          "question": "q2=0时为什么任务雅可比奇异，但不代表每个关节都不能运动？",
+          "answer": "关节仍能转动，但两列末端速度方向相关，末端局部平移能力只有一个独立方向。"
+        },
+        {
+          "question": "两个逆解回代位置相同，是否就可以随意切换？",
+          "answer": "不可以；需考虑关节限位、碰撞、速度和路径连续性，突然换支可能要求不连续关节运动。"
+        },
+        {
+          "question": "雅可比J用基坐标系表达，而力用工具坐标系表达，能否直接用J转置乘力？",
+          "answer": "不能；必须先将力转换到与雅可比对应的表达系和参考点，再使用一致的功率配对。"
+        }
+      ],
+      "steps": [
+        {
+          "title": "先固定模型与单位",
+          "body": "按本章符号表手算案例，明确观测、状态、控制量的坐标系和单位；先记录理论值，再运行代码，避免只看“通过”字样。"
+        },
+        {
+          "title": "运行完整数值实验",
+          "body": "将本章完整 Python 文件保存到空目录。Python 3 无需安装第三方包；若使用随站源码包，也可运行统一的 math_labs.py 并选择本章。",
+          "code": "# 输入是文件中的固定教学数据；不会连接 ROS 图或控制硬件。\npython3 math_kinematics.py\n# 随站合并实验集可只运行这一章；参数是章节 ID。\npython3 math_labs.py --chapter math-kinematics",
+          "language": "bash",
+          "type": "commands"
+        },
+        {
+          "title": "解释通过与失败的含义",
+          "body": "将打印数值与手算结果逐项对照。再按练习改变一个参数，区分数学前提被破坏、浮点误差和实现错误。不要删除失败断言来制造通过。"
+        }
+      ],
+      "commands": [],
+      "expected": [
+        "正解与两支逆解回代一致，解析导数通过中心差分检查。",
+        "功率一致性、奇异构型与不可达点拒绝均通过断言。"
+      ],
+      "pitfalls": [
+        "把第二关节相对角误当成第二杆的绝对角。",
+        "忽略任务雅可比定义、工具参考点或关节名字映射。",
+        "对真实不可达目标进行大幅钳位，再宣称逆解成功。"
+      ],
+      "exercise": "为本章实验写一份输入输出契约：列出状态次序、单位、前提、一个正常案例、一个必须拒绝或明确标记退化的案例。",
+      "exerciseAnswer": "契约应明确本章模型的量纲与坐标约定，正常案例需给出可复算的数值；退化案例应对应正文列出的边界，并解释失败原因。实验只验证这个有限模型，不把结果外推到任意噪声、任意机器人或实机安全。",
+      "sourceIds": [
+        "math-modern-kinematics",
+        "math-modern-static",
+        "math-ros-interfaces"
+      ],
+      "validation": "原创数学推导；读取本地参考教程以核对主题范围，并与本章列出的一手资料交叉核对。标准库完整实验已在本轮运行并通过断言；ROS 构建、仿真、硬件未运行。"
+    },
+    {
+      "id": "math-dynamics",
+      "title": "动力学：由能量推导力矩与数值积分",
+      "summary": "从理想单摆的动能与势能推导运动方程，区分质心惯量与转轴惯量，比较保守和耗散实验并说明多关节推广条件。",
+      "goals": [
+        "独立推导单摆的Euler–Lagrange方程并核对单位",
+        "用能量守恒和耗散关系验算动力学实现",
+        "区分动力学质量矩阵、运动学奇异性与数值积分误差"
+      ],
+      "prerequisites": [
+        "掌握运动学、基础微分与功的定义",
+        "知道速度、加速度、力和力矩的单位"
+      ],
+      "version": "数学模型与标准库实验；ROS 2 Jazzy 为工程对应主线",
+      "concepts": [
+        "运动学给出几何关系，动力学还需要质量、惯量、力和约束。",
+        "动力学方程要与角度零点、重力方向和力矩正方向一起使用。",
+        "数值积分只是近似连续模型，稳定或保能的数学性质必须说明适用条件。"
+      ],
+      "sections": [
+        {
+          "title": "先固定单摆的物理模型与能量零点",
+          "paragraphs": [
+            "本章使用无质量刚杆、杆端质点和无间隙转轴，摆长0.5米、质点质量2千克，重力加速度9.81米每二次方秒。角度从竖直向下方向按正向转动计量，因此零角度是最低点。这个定义决定重力恢复力矩的符号：正小角度时，重力应使角度减小。若改成从竖直向上计角，不能只换图而保留原方程的符号。",
+            "质点速度大小为摆长乘角速度，转轴惯量是质量乘摆长平方。选最低点势能为零，抬高后势能为质量乘重力乘高度差。能量的绝对零点可以改变，但力矩来自势能对角度的导数，因此一致的常量平移不影响运动。下面实验把每个参数的单位写进注释，不把质点单摆当成有分布质量的真实机械臂模型。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "I=ml^2,\\qquad T=\\frac12 I\\dot\\theta^2,\\qquad V=mgl(1-\\cos\\theta)",
+              "label": "单摆的惯量与机械能",
+              "explanation": "速度平方为l²乘角速度平方，代入质点动能得到T；高度比最低点增加l(1-cos theta)，得到V。总能量E=T+V。适用于杆无质量、质点集中在杆端的理想模型。",
+              "symbols": [
+                {
+                  "symbol": "m",
+                  "meaning": "杆端质点质量",
+                  "unit": "kg"
+                },
+                {
+                  "symbol": "l",
+                  "meaning": "转轴到质点距离",
+                  "unit": "m"
+                },
+                {
+                  "symbol": "I",
+                  "meaning": "相对转轴的转动惯量",
+                  "unit": "kg·m²"
+                },
+                {
+                  "symbol": "\\theta",
+                  "meaning": "相对竖直向下的角度",
+                  "unit": "rad"
+                },
+                {
+                  "symbol": "T,V",
+                  "meaning": "动能、势能",
+                  "unit": "J"
+                },
+                {
+                  "symbol": "g",
+                  "meaning": "重力加速度大小",
+                  "unit": "m/s²"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "逐项代入Euler–Lagrange方程",
+          "paragraphs": [
+            "令拉格朗日函数为动能减势能。先对角速度求偏导得到I乘角速度，再对时间求导得到I乘角加速度；对角度求偏导则得到负mgl乘正弦。将两项按Euler–Lagrange的“时间导数减坐标导数”相减，恢复力矩以正项出现在方程左侧。非保守的执行器力矩和黏性阻尼放到右侧，阻尼应反对当前角速度。",
+            "由此可直接求给定状态和输入下的角加速度，或者反过来求希望保持某姿态所需的静态力矩。角度0.3弧度、角速度零时，需要约2.89905牛米的保持力矩；若电机上限低于它，控制器不能凭参数调整就实现该静态平衡。摩擦、减速器效率、接触和电流限幅会继续改变真实系统，应在更完整模型中显式考虑，不能藏进一个随意的惯量值。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "\\frac{d}{dt}\\frac{\\partial L}{\\partial\\dot\\theta}-\\frac{\\partial L}{\\partial\\theta}=\\tau-b\\dot\\theta,\\qquad I\\ddot\\theta+mgl\\sin\\theta=\\tau-b\\dot\\theta",
+              "label": "单摆运动方程",
+              "explanation": "L=T-V。对两个偏导逐项计算，得到I乘角加速度加重力项。令角速度、角加速度均为零，就得到静态保持力矩tau=mgl sin theta。",
+              "symbols": [
+                {
+                  "symbol": "L",
+                  "meaning": "拉格朗日函数",
+                  "unit": "J"
+                },
+                {
+                  "symbol": "\\tau",
+                  "meaning": "执行器沿正角方向的力矩",
+                  "unit": "N·m"
+                },
+                {
+                  "symbol": "b",
+                  "meaning": "线性黏性阻尼系数",
+                  "unit": "N·m·s/rad"
+                },
+                {
+                  "symbol": "\\ddot\\theta",
+                  "meaning": "角加速度",
+                  "unit": "rad/s²"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "惯量位置、坐标轴与物理可实现性",
+          "paragraphs": [
+            "惯量必须说明相对哪个点、哪个坐标系。点质量在自身质心的转动惯量为零，但相对远处转轴的惯量不为零；有质量杆或刚体还要通过平行轴关系加入质心平移贡献。把CAD导出的质心惯量直接填到另一原点，往往使仿真加速或稳定性明显异常。质量单位千克、长度单位米，惯量就应是千克平方米，毫米单位导出的数值需要相应平方换算。",
+            "完整惯量张量是对称矩阵，合理物理质量分布还需满足相应主惯量非负及三角关系，不能只把三个对角数随意设成小正数。URDF的惯量与惯性坐标原点应共同核对，视觉模型的外形正确不表示惯性参数正确。对本章质点模型我们只用一个指定转轴的标量I，避免让三维惯量与平面运动约束的不同含义被同一个数组掩盖。"
+          ],
+          "bullets": [],
+          "equations": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "能量导数提供独立的实现检查",
+          "paragraphs": [
+            "把总能量对时间求导，得到I乘角速度乘角加速度，加mgl乘正弦乘角速度。再代入运动方程，重力项正好抵消，留下角速度乘执行器力矩减阻尼耗散。当没有输入与阻尼时，总能量应保持常数；有正阻尼且无输入时，能量应不增加。这个检验与直接检查角加速度公式走了不同的代数路径，能抓住常见的重力或阻尼符号错误。",
+            "完整实验先运行无阻尼十秒，再运行有阻尼十秒，并分别记录能量漂移与单步能量变化。数值积分不能严格复现所有连续性质，所以验收设置了明确误差容差和步长；这里的四阶Runge–Kutta不是严格保能积分器。若长期仿真能量漂移，应缩小时间步、检查模型并比较更合适积分方法，不能把积分误差解释成真实电机输入或摩擦。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "E=T+V,\\qquad \\dot E=\\dot\\theta(\\tau-b\\dot\\theta)",
+              "label": "功率输入与耗散",
+              "explanation": "由链式法则求E导数，再使用运动方程消去角加速度。当tau=0且b>0时，能量导数为-b乘角速度平方，非正；这不是说每一步任意数值积分都自动单调。",
+              "symbols": [
+                {
+                  "symbol": "E",
+                  "meaning": "机械总能量",
+                  "unit": "J"
+                },
+                {
+                  "symbol": "\\dot E",
+                  "meaning": "机械能变化率",
+                  "unit": "W"
+                },
+                {
+                  "symbol": "\\dot\\theta\\tau",
+                  "meaning": "执行器瞬时机械功率",
+                  "unit": "W"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "多关节推广：质量矩阵与约束的边界",
+          "paragraphs": [
+            "多关节系统的动能可以写成关节速度的二次型，质量矩阵把各部件平移和转动能量汇总到同一广义坐标。位置相关的交叉项会带来科氏与离心项，势能梯度给出重力项。若广义坐标独立、活动部件具有合理的正质量和惯量、非零关节速度产生正动能，质量矩阵才具有相应正定性；包含冗余坐标或无质量自由度的模型不能直接套用这一结论。",
+            "运动学任务雅可比奇异不等于关节空间质量矩阵必然奇异。实验用两个杆端质点的平面两连杆质量矩阵，在拉直、弯曲和折叠构型检查正定性；即使末端任务雅可比失秩，关节运动仍有正动能。若加入接触约束，必须联合处理约束力与加速度一致性，不能仅把外力加到任意关节；本章只介绍标准结构，不实现完整接触动力学求解器。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "M(q)\\ddot q+C(q,\\dot q)\\dot q+g(q)=\\tau+J(q)^Tf_{ext}",
+              "label": "独立广义坐标下的常见动力学结构",
+              "explanation": "由各刚体动能与势能构造拉格朗日方程，可整理为惯性、速度相关项、重力项与外力广义映射。C的具体矩阵表示不唯一，而C乘关节速度对应确定的速度相关广义力；本章只对单摆特例与两连杆质量矩阵性质作数值验证。",
+              "symbols": [
+                {
+                  "symbol": "q",
+                  "meaning": "独立广义坐标",
+                  "unit": "转动rad、移动m"
+                },
+                {
+                  "symbol": "M",
+                  "meaning": "关节空间质量矩阵",
+                  "unit": "随广义坐标类型而定"
+                },
+                {
+                  "symbol": "C\\dot q",
+                  "meaning": "速度相关广义力",
+                  "unit": "对应关节力或力矩"
+                },
+                {
+                  "symbol": "g(q)",
+                  "meaning": "势能对广义坐标的梯度",
+                  "unit": "对应关节力或力矩"
+                },
+                {
+                  "symbol": "f_{ext}",
+                  "meaning": "指定参考点、表达系的外力",
+                  "unit": "力与力矩的组合"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "同功能对照：微分方程、能量检查与积分器",
+          "paragraphs": [
+            "本章derivative接收角度、角速度及阻尼、力矩，返回角速度与角加速度；rk4调用它四次近似前进一个固定时间步；energy只读取状态计算机械能。三个函数承担不同职责，能量函数不应调用同一份角加速度公式才能给出答案，否则独立检查的价值会降低。将模型、积分与验收分开，也有利于把手算方程与其他语言实现逐项比较。",
+            "显式Euler先用当前导数前进一步，计算量小却可能在振荡系统中积累明显能量误差；四阶Runge–Kutta在光滑模型上有更高局部精度，但仍不是严格的长期保能方法。辛积分器针对特定Hamilton结构改善长期几何性质，也需要满足相应模型和步进条件。不能只根据方法名称就宣称任意接触、阻尼或刚性系统都稳定，本章只执行规定步长的两种能量情形。",
+            "把同一单摆模型改写为逆动力学时，给定期望角加速度、当前角度和角速度，计算惯性项、重力项和阻尼项之和即可；如果电机只能接收位置目标，还必须经过下游驱动器才能实现力矩，接口不再等价。负载增加、传动比变化和摩擦会改变参数，不能仅让命令数值相同就认为测试了同一种物理对象。实测电流也不一定直接等于关节输出力矩。",
+            "每个构型都应检查质量矩阵与能量定义的一致性。实验中的两杆端质点有正质量，任意非零关节速度都带来正动能，因此所测构型的二阶质量矩阵满足正定判据。若建模时删去部件质量却仍保留对应自由度，或者重复引入约束坐标，这一性质可能失效。遇到分解失败应先检查模型自由度与物理参数，再考虑求解器容差，而不是无条件把矩阵对角线调大。"
+          ],
+          "bullets": [],
+          "equations": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "正动力学、逆动力学与控制接口的区别",
+          "paragraphs": [
+            "给定状态和力矩求加速度叫正动力学，给定期望状态变化求所需力矩叫逆动力学。两者共享物理模型，却有不同输入输出与数值处理；工程实现通常用递推或分解，避免显式求巨大质量矩阵的逆。运动学正解即使正确，也不能代替这些动力学计算；只有关节位置目标的控制接口往往在下游隐藏了驱动器闭环，不等于上层直接控制力矩。",
+            "下面实验按“定义能量、定义导数、积分、验收”执行，所有状态都保持角度与角速度次序。它没有连接ros2_control，也没有真实电机、接触、传输延迟或温升模型。学习时应先用此类可手算系统核对单位与符号，再进入仿真器和硬件接口；发现能量或保持力矩明显不合理时，优先核查物理参数及坐标约定，而不是直接增大反馈增益。"
+          ],
+          "bullets": [],
+          "equations": [],
+          "codeBlocks": [
+            {
+              "label": "math_dynamics.py",
+              "language": "python",
+              "type": "complete",
+              "code": "#!/usr/bin/env python3\n\"\"\"输入：理想单摆参数与初始状态；输出：能量守恒、耗散、力矩平衡和质量矩阵检查。\"\"\"\n\ndef run():\n    import math\n    mass, length, gravity = 2.0, 0.5, 9.81  # kg、m、m/s^2；杆无质量，质点在杆端。\n    inertia = mass*length*length  # 转轴惯量 kg*m^2，不是质心处惯量。\n    dt = 0.005  # 固定积分步长 s；本实验不含接触碰撞或执行器延迟。\n\n    def derivative(state, viscous, torque):\n        angle, rate = state\n        # angle 自竖直向下方向计量(rad)，rate 单位 rad/s。\n        acceleration = (torque-viscous*rate-mass*gravity*length*math.sin(angle))/inertia\n        return [rate, acceleration]\n\n    def rk4(state, viscous, torque):\n        # 四阶 Runge-Kutta 是数值近似，不是严格的保能积分器。\n        k1 = derivative(state, viscous, torque)\n        k2 = derivative([x+dt*k/2 for x, k in zip(state, k1)], viscous, torque)\n        k3 = derivative([x+dt*k/2 for x, k in zip(state, k2)], viscous, torque)\n        k4 = derivative([x+dt*k for x, k in zip(state, k3)], viscous, torque)\n        return [x+dt*(a+2*b+2*c+d)/6 for x, a, b, c, d in zip(state, k1, k2, k3, k4)]\n\n    def energy(state):\n        angle, rate = state\n        return 0.5*inertia*rate*rate+mass*gravity*length*(1-math.cos(angle))  # J\n\n    initial = [0.7, 0.0]\n    conservative = initial.copy()\n    initial_energy = energy(initial)\n    for _ in range(2000):\n        conservative = rk4(conservative, 0.0, 0.0)\n    drift = abs(energy(conservative)-initial_energy)\n    assert drift < 1e-6\n\n    dissipative, previous_energy = initial.copy(), initial_energy\n    for _ in range(2000):\n        dissipative = rk4(dissipative, 0.2, 0.0)  # b 单位 N*m*s/rad。\n        next_energy = energy(dissipative)\n        assert next_energy <= previous_energy+1e-10\n        previous_energy = next_energy\n    assert energy(dissipative) < initial_energy\n\n    # 静态平衡需要 tau=m*g*l*sin(theta)；并非所有姿态都能由限幅电机保持。\n    held_angle = 0.3\n    holding_torque = mass*gravity*length*math.sin(held_angle)\n    assert abs(derivative([held_angle, 0.0], 0.2, holding_torque)[1]) < 1e-12\n    # 能量导数 dE/dt=omega*(tau-b*omega)，用状态导数验证同一等式。\n    state, b, tau = [0.3, 0.1], 0.2, 0.5\n    speed, acceleration = derivative(state, b, tau)\n    chain_rule = inertia*state[1]*acceleration+mass*gravity*length*math.sin(state[0])*speed\n    assert math.isclose(chain_rule, state[1]*(tau-b*state[1]), abs_tol=1e-12)\n\n    # 两个杆端质点的平面 2R 质量矩阵，验证动力学正定性与运动学奇异的区别。\n    l1, l2, m1, m2 = 0.6, 0.4, 1.0, 0.5\n    for q2 in (0.0, 0.4, math.pi):\n        a = m1*l1*l1+m2*(l1*l1+l2*l2+2*l1*l2*math.cos(q2))\n        b12 = m2*(l2*l2+l1*l2*math.cos(q2))\n        d = m2*l2*l2\n        assert a > 0.0 and a*d-b12*b12 > 0.0\n    result = {'initial_energy_J': initial_energy, 'conservative_drift_J': drift,\n              'dissipative_final_energy_J': energy(dissipative), 'holding_torque_Nm': holding_torque}\n    print('动力学实验通过：', result)\n    return result\n\nif __name__ == '__main__':\n    run()\n",
+              "explanation": "这是原创完整文件，只使用 Python 标准库。复制到同名文件后可直接运行；输入、输出、单位、执行顺序和边界检查都写在中文注释中。实验检查当前理想模型的数学性质，不代表 ROS 节点、仿真或实机已经验证。"
+            }
+          ]
+        }
+      ],
+      "workedExample": {
+        "title": "贯穿案例：同一单摆的静态与动态两种验收",
+        "scenario": "2kg质点、0.5m摆长、初始角0.7rad，先无阻尼再加入0.2N·m·s/rad阻尼。",
+        "steps": [
+          "由速度几何推导I=0.5kg·m²，并构造T和V。",
+          "按Euler–Lagrange逐项推导角加速度，核对重力恢复符号。",
+          "用步长0.005s积分十秒，检查无阻尼能量漂移。",
+          "加入阻尼，检查机械能不增加，并单独验证0.3rad静态保持力矩。"
+        ],
+        "result": "保守能量漂移在1e-6J内；有阻尼能量衰减，静态力矩约2.89905N·m。"
+      },
+      "exercises": [
+        {
+          "question": "为什么本章点质量的质心惯量为零，而转轴惯量为ml²？",
+          "answer": "惯量依参考点而变；质点自身没有分布半径，但相对远处转轴具有距离l，平方距离乘质量产生ml²。"
+        },
+        {
+          "question": "无输入、有正阻尼时，连续总能量导数是什么？",
+          "answer": "-b乘角速度平方，非正；任意离散积分器仍可能产生数值误差，需要单独验算。"
+        },
+        {
+          "question": "两连杆拉直时末端雅可比失秩，关节质量矩阵一定奇异吗？",
+          "answer": "不一定；合理有质量的独立关节运动仍具有正动能，任务方向能力退化和惯性矩阵退化是不同问题。"
+        }
+      ],
+      "steps": [
+        {
+          "title": "先固定模型与单位",
+          "body": "按本章符号表手算案例，明确观测、状态、控制量的坐标系和单位；先记录理论值，再运行代码，避免只看“通过”字样。"
+        },
+        {
+          "title": "运行完整数值实验",
+          "body": "将本章完整 Python 文件保存到空目录。Python 3 无需安装第三方包；若使用随站源码包，也可运行统一的 math_labs.py 并选择本章。",
+          "code": "# 输入是文件中的固定教学数据；不会连接 ROS 图或控制硬件。\npython3 math_dynamics.py\n# 随站合并实验集可只运行这一章；参数是章节 ID。\npython3 math_labs.py --chapter math-dynamics",
+          "language": "bash",
+          "type": "commands"
+        },
+        {
+          "title": "解释通过与失败的含义",
+          "body": "将打印数值与手算结果逐项对照。再按练习改变一个参数，区分数学前提被破坏、浮点误差和实现错误。不要删除失败断言来制造通过。"
+        }
+      ],
+      "commands": [],
+      "expected": [
+        "静态保持力矩可直接代回方程，能量导数恒等式一致。",
+        "规定步长下保守与耗散数值验收通过，质量矩阵在所测构型正定。"
+      ],
+      "pitfalls": [
+        "混淆角度零点、重力方向和力矩正方向。",
+        "把质心惯量直接当成转轴惯量，或忽略毫米到米的平方换算。",
+        "用一次离散能量检查通过声称任意步长与真实硬件都稳定。"
+      ],
+      "exercise": "为本章实验写一份输入输出契约：列出状态次序、单位、前提、一个正常案例、一个必须拒绝或明确标记退化的案例。",
+      "exerciseAnswer": "契约应明确本章模型的量纲与坐标约定，正常案例需给出可复算的数值；退化案例应对应正文列出的边界，并解释失败原因。实验只验证这个有限模型，不把结果外推到任意噪声、任意机器人或实机安全。",
+      "sourceIds": [
+        "math-modern-dynamics",
+        "math-urdf-inertia"
+      ],
+      "validation": "原创数学推导；读取本地参考教程以核对主题范围，并与本章列出的一手资料交叉核对。标准库完整实验已在本轮运行并通过断言；ROS 构建、仿真、硬件未运行。"
+    },
+    {
+      "id": "math-control",
+      "title": "反馈控制：误差动力学、采样与执行器限制",
+      "summary": "从位置积分器与力控质点推导P和PD闭环，解释连续稳定为何不等于离散实现稳定，并用限幅、能量与反例连接控制器实现。",
+      "goals": [
+        "从对象模型推导闭环误差方程及增益单位",
+        "手算采样积分器稳定区间并验证失稳反例",
+        "用PD能量函数检查收敛，同时识别限幅、延迟和模型误差的边界"
+      ],
+      "prerequisites": [
+        "掌握状态、速度、加速度与动力学",
+        "理解基本微分方程和能量"
+      ],
+      "version": "数学模型与标准库实验；ROS 2 Jazzy 为工程对应主线",
+      "concepts": [
+        "控制器输出的物理量由对象接口决定，位置、速度、力矩目标不能混用增益。",
+        "闭环性质属于对象、控制律、采样和限制的整体，不属于一个孤立参数。",
+        "数值实验验证声明的理想模型，不自动推出实机稳定或安全。"
+      ],
+      "sections": [
+        {
+          "title": "控制开始于对象接口与误差符号",
+          "paragraphs": [
+            "设目标位置固定为零，误差定义为实际位置减目标。先选择一个理想对象：控制输入就是位置变化率，也就是速度。若控制律取负增益乘误差，机器人偏向正方向时收到负速度，误差才会减小。若另一套代码把误差定义成目标减实际，控制符号要同时改变；仅复制一个正数增益而忽略误差定义，可能把负反馈变成正反馈。",
+            "此时比例增益的单位是每秒，因为米乘每秒必须得到米每秒。若输入改成力，比例增益就变成牛顿每米；改成关节力矩，还要按角度单位重新解释。ROS控制消息的字段名和数组形状不能替代这个物理契约。使用控制器前应明确它接收位置、速度、加速度、电流还是力矩目标，以及底层驱动器是否还有自己的闭环。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "e=x-x_d,\\quad u=-ke,\\quad \\dot e=-ke,\\quad e(t)=e(0)e^{-kt}",
+              "label": "理想速度接口的P闭环",
+              "explanation": "假设x点等于u、目标xd固定、没有延迟或限幅。代入控制律得到一阶微分方程，分离变量积分可得指数解。k>0时该连续理想模型误差收敛；目标在运动时还需考虑目标速度或前馈。",
+              "symbols": [
+                {
+                  "symbol": "e,x,x_d",
+                  "meaning": "位置误差、实际位置、目标位置",
+                  "unit": "m"
+                },
+                {
+                  "symbol": "u",
+                  "meaning": "理想对象接收的速度",
+                  "unit": "m/s"
+                },
+                {
+                  "symbol": "k",
+                  "meaning": "比例增益",
+                  "unit": "s^-1"
+                },
+                {
+                  "symbol": "t",
+                  "meaning": "时间",
+                  "unit": "s"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "同一控制律在采样实现中有新的条件",
+          "paragraphs": [
+            "如果每隔固定周期读取一次位置，计算速度，并在下一次采样前保持这个速度，理想积分器的误差每步变成原来的1减增益乘周期倍。离散稳定要求该倍数的绝对值小于一，因此增益与周期的乘积必须在零到二之间。连续时间只要求增益为正，在离散实现中还远远不够；周期抖动、计算延迟和命令超时会进一步影响实际系统。",
+            "取增益2每秒、周期0.1秒，每步误差乘0.8，逐步衰减；取增益3每秒、周期1秒，每步误差乘负二，误差符号来回翻转且幅值增长。这个例子没有用复杂机器人模型，却能直接发现“提高增益总能更快”的错误直觉。调参时应同时记录采样周期与延迟，而不是只保存一组脱离执行频率的PID数值。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "e_{j+1}=(1-k\\Delta t)e_j,\\qquad |1-k\\Delta t|<1\\iff 0<k\\Delta t<2",
+              "label": "采样积分器的离散稳定区间",
+              "explanation": "该递推来自零阶保持速度命令下的理想积分器精确一步积分，不是对任意对象都成立的通用PID条件。若0<k*dt≤1则误差不换号；若1<k*dt<2则交替衰减。",
+              "symbols": [
+                {
+                  "symbol": "j",
+                  "meaning": "采样序号",
+                  "unit": "无量纲"
+                },
+                {
+                  "symbol": "\\Delta t",
+                  "meaning": "固定控制周期",
+                  "unit": "s"
+                },
+                {
+                  "symbol": "k\\Delta t",
+                  "meaning": "增益与周期之积",
+                  "unit": "无量纲"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "力控制对象与PD的二阶误差模型",
+          "paragraphs": [
+            "真实机械系统通常不能直接改变位置变化率，而是通过力或力矩产生加速度。对一个质量为m、物理黏性阻尼为c的质点，输入力要先减阻力，再除以质量才能得到加速度。使用比例位置误差反馈和速度阻尼反馈时，误差方程变为二阶形式；比例项提供类似弹簧的恢复作用，微分项与物理阻尼共同消耗运动能量。",
+            "在质量正、比例增益正且总阻尼正的连续线性模型下，误差趋向零。自然频率由刚度与质量比决定，阻尼比决定响应是否振荡。实验取质量2kg、物理阻尼0.4N·s/m、比例增益4N/m、微分增益3.6N·s/m，总阻尼4，对应阻尼比约0.7071。这里直接使用模型中的速度，若从有噪位置做差分估计速度，还需要独立处理噪声放大和滤波延迟。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "m\\ddot e+(c+k_d)\\dot e+k_pe=0,\\qquad \\omega_n=\\sqrt{k_p/m},\\qquad \\zeta=\\frac{c+k_d}{2\\sqrt{mk_p}}",
+              "label": "力接口PD闭环与阻尼比",
+              "explanation": "对象为m*xddot=u-c*xdot，目标固定，控制为u=-kp*e-kd*edot。将控制代入对象并整理即可得到；wn和zeta来自与标准二阶特征多项式比较系数。连续结论不包含执行器饱和与采样延迟。",
+              "symbols": [
+                {
+                  "symbol": "m",
+                  "meaning": "质点质量",
+                  "unit": "kg"
+                },
+                {
+                  "symbol": "c,k_d",
+                  "meaning": "物理与反馈阻尼",
+                  "unit": "N·s/m"
+                },
+                {
+                  "symbol": "k_p",
+                  "meaning": "比例恢复增益",
+                  "unit": "N/m"
+                },
+                {
+                  "symbol": "\\omega_n",
+                  "meaning": "自然角频率",
+                  "unit": "rad/s"
+                },
+                {
+                  "symbol": "\\zeta",
+                  "meaning": "阻尼比",
+                  "unit": "无量纲"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "能量函数解释“为什么会收敛”",
+          "paragraphs": [
+            "对上述PD模型，选动能加虚拟弹簧势能作为Lyapunov候选。质量与比例增益都为正时，该函数对非零误差状态严格为正；沿闭环轨迹求导后，恢复项抵消，剩下负的总阻尼乘速度平方。它说明能量不会增加，但仅凭导数非正还应进一步检查能量不变集合：本系统若速度一直为零而位置误差不为零，就会产生非零加速度，无法永久停在那里。",
+            "在这个连续线性无输入模型中，最大不变集合只剩原点，因此误差收敛。实验用固定步长四阶积分近似轨迹，并检查能量单调及最终状态；这是实现验收，不是对所有控制程序的数学证明。若控制输入有饱和、碰撞切换或延迟，必须重新分析相应系统。一个漂亮的Lyapunov公式不能绕过它依赖的模型假设。"
+          ],
+          "bullets": [],
+          "equations": [
+            {
+              "tex": "V(e,\\dot e)=\\frac12 k_pe^2+\\frac12m\\dot e^2,\\qquad \\dot V=-(c+k_d)\\dot e^2\\leq0",
+              "label": "PD误差系统的能量函数",
+              "explanation": "用链式法则求导，再代入上一节误差方程，弹簧恢复功率与质量加速度项相消。m>0、kp>0保证V正定，总阻尼>0保证非正导数；渐近结论还需对不变集合作说明。",
+              "symbols": [
+                {
+                  "symbol": "V",
+                  "meaning": "误差系统的候选能量",
+                  "unit": "J"
+                },
+                {
+                  "symbol": "\\dot V",
+                  "meaning": "候选能量变化率",
+                  "unit": "W"
+                },
+                {
+                  "symbol": "e,\\dot e",
+                  "meaning": "位置与速度误差",
+                  "unit": "m、m/s"
+                }
+              ]
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "限幅、积分抗饱和与目标变化",
+          "paragraphs": [
+            "执行器有限速、限流和力矩上限，大误差时计算出的控制量可能无法执行。速度接口例中加0.3m/s限幅后，初期误差每0.1秒最多减少0.03m，实际收敛速度受到物理上限约束；把比例增益加大并不会让电机无限加速。对于常值外部扰动力，纯PD还可能留下静态偏差，因为恢复力必须用非零误差来抵消扰动。",
+            "积分项可以在一定条件下消除常值扰动造成的偏差，但饱和期间积分器若继续累积，会导致解除饱和后长时间超调。条件积分或回算抗饱和需要依据实际已执行输入设计，不能只给积分状态随意夹一个很大的数。本章只解释该机制，不把未实现的完整PID、抗饱和或轨迹跟踪算法标为已验证；完整工程还应明确目标更新、超时停车与状态重置顺序。"
+          ],
+          "bullets": [],
+          "equations": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "同功能对照：状态反馈、采样回调与验收信号",
+          "paragraphs": [
+            "本章discrete_integrator把测量、控制与理想对象更新写在一个循环中，便于看出每个采样周期的先后顺序；PD实验则把连续对象导数与数值积分分开。真实ROS回调可能在不同执行器线程中接收状态、更新目标和发送命令，因此需要明确每次控制使用的是哪一版状态与目标。一个线程安全的程序也可能由于时间戳或采样顺序错误而实现了另一套控制律。",
+            "同样的比例控制可以在速度接口中直接输出速度，也可以在力接口中构成恢复力。前者的一步误差递推只有一个状态，后者还必须携带速度和质量；两份代码即使都有一个名为gain的变量，其物理意义与稳定边界也不同。用同一套输入输出表比较C++回调、Python原型与标准库模型时，应先对齐对象单位、延迟、限幅和目标保持方式，再比较响应曲线。",
+            "误差大小、控制量大小、饱和持续时间和状态时间戳应作为相互配合的验收信号。只看最终位置接近目标，可能掩盖中途超限、长时间反复振荡或输出了过时命令；只看命令没有超限，又不能证明目标可达。稳定反例中的1024米只是理想递推的数学结果，不应真的发送给机器人；本章所有实验只在内存中计算，正是为了在连接硬件前识别这类条件错误。",
+            "如果下游拒绝命令或进入故障状态，上层积分器是否冻结、目标是否保留、恢复后是否重置，都属于控制器契约的一部分。把这些行为与控制公式一起说明，读者才能理解同功能的不同实现为何在故障恢复时表现不同。本章尚未实现完整生命周期控制器，因此只给出需要继续验证的边界；已经通过的范围仍是固定周期理想积分器和无延迟连续PD数值模型。"
+          ],
+          "bullets": [],
+          "equations": [],
+          "codeBlocks": []
+        },
+        {
+          "title": "把推导变成有界、可检查的控制代码",
+          "paragraphs": [
+            "下面文件用两种对象强调同一功能的实现差别：位置积分器直接离散递推，力控质点则积分位置与速度两个状态。前者能精确写出离散稳定乘子，后者用连续PD模型的能量关系做数值检查；二者的增益不能互相复制。若改写成C++控制周期回调，应保持相同输入输出与单位，并使用真实采样间隔，同时避免在控制线程中进行不受控阻塞操作。",
+            "实验包含一个必须出现的失稳反例：负二倍离散乘子在十步后把一米误差放大到1024米。保留这个反例是为了证明验收能识别坏条件，而不是只展示成功。接入ros2_control前，还要核对硬件接口、指令限幅、观测延迟、控制器生命周期和异常处理；本章不连接硬件。理想模型、软件测试、仿真与实机试验应该分别记录，不能互相替代。"
+          ],
+          "bullets": [],
+          "equations": [],
+          "codeBlocks": [
+            {
+              "label": "math_control.py",
+              "language": "python",
+              "type": "complete",
+              "code": "#!/usr/bin/env python3\n\"\"\"输入：固定离散控制模型和 PD 模型；输出：稳定/失稳反例、限幅响应与能量检查。\"\"\"\n\ndef run():\n    import math\n\n    def discrete_integrator(initial_error_m, gain_per_s, period_s, steps, limit_m_s=None):\n        if gain_per_s <= 0.0 or period_s <= 0.0:\n            raise ValueError('增益和采样周期必须为正')\n        error = initial_error_m\n        history = [error]\n        for _ in range(steps):\n            velocity = -gain_per_s*error  # P 控制输出的单位为 m/s。\n            if limit_m_s is not None:\n                velocity = max(-limit_m_s, min(limit_m_s, velocity))\n            error += period_s*velocity  # 本例被控对象是理想位置积分器。\n            history.append(error)\n        return history\n\n    # 离散闭环乘子为 1-k*dt；连续时间 k>0 并不足以保证离散实现稳定。\n    stable = discrete_integrator(1.0, 2.0, 0.1, 100)\n    unstable = discrete_integrator(1.0, 3.0, 1.0, 10)\n    assert abs(stable[-1]) < 1e-8\n    assert abs(unstable[-1]) == 1024.0\n    saturated = discrete_integrator(2.0, 2.0, 0.1, 200, limit_m_s=0.3)\n    assert abs(saturated[-1]) < 1e-8\n    assert max(abs(b-a) for a, b in zip(saturated, saturated[1:])) <= 0.030000000001\n\n    # 力控质点：m*xddot=u-c*xdot；u=-kp*x-kd*xdot，目标位置固定为 0m。\n    mass, physical_damping = 2.0, 0.4  # kg、N*s/m。\n    kp, kd = 4.0, 3.6  # N/m、N*s/m；闭环总阻尼为 4.0 N*s/m。\n    dt = 0.005\n    state = [1.0, 0.0]  # [位置误差(m), 速度(m/s)]。\n\n    def derivative(value):\n        error, speed = value\n        return [speed, (-kp*error-(physical_damping+kd)*speed)/mass]\n\n    def lyapunov(value):\n        error, speed = value\n        return 0.5*kp*error*error+0.5*mass*speed*speed  # J。\n\n    previous_energy = lyapunov(state)\n    for _ in range(3000):\n        # RK4 仅用于近似连续对象，不能据此证明真实机器人闭环稳定。\n        k1 = derivative(state)\n        k2 = derivative([x+dt*k/2 for x, k in zip(state, k1)])\n        k3 = derivative([x+dt*k/2 for x, k in zip(state, k2)])\n        k4 = derivative([x+dt*k for x, k in zip(state, k3)])\n        state = [x+dt*(a+2*b+2*c+d)/6 for x, a, b, c, d in zip(state, k1, k2, k3, k4)]\n        current_energy = lyapunov(state)\n        assert current_energy <= previous_energy+1e-10\n        previous_energy = current_energy\n    assert abs(state[0]) < 1e-5 and abs(state[1]) < 1e-5\n    damping_ratio = (physical_damping+kd)/(2*math.sqrt(mass*kp))\n    assert math.isclose(damping_ratio, 1/math.sqrt(2), abs_tol=1e-12)\n    result = {'stable_error_m': stable[-1], 'unstable_error_m': unstable[-1],\n              'saturated_error_m': saturated[-1], 'PD_final_state': state,\n              'PD_damping_ratio': damping_ratio}\n    print('反馈控制实验通过：', result)\n    return result\n\nif __name__ == '__main__':\n    run()\n",
+              "explanation": "这是原创完整文件，只使用 Python 标准库。复制到同名文件后可直接运行；输入、输出、单位、执行顺序和边界检查都写在中文注释中。实验检查当前理想模型的数学性质，不代表 ROS 节点、仿真或实机已经验证。"
+            }
+          ]
+        }
+      ],
+      "workedExample": {
+        "title": "贯穿案例：改变采样周期为什么会把P控制变成发散",
+        "scenario": "先对理想速度接口比较两组增益与周期，再对质量2kg的力接口测试连续PD近似。",
+        "steps": [
+          "由x点=u和u=-ke推导连续指数衰减。",
+          "用k=2/s、dt=0.1s得到稳定乘子0.8。",
+          "改成k=3/s、dt=1s得到乘子-2，十步后误差幅值1024m。",
+          "加入速度上限检查每步位移，再用力控PD的能量函数验证另一对象模型。"
+        ],
+        "result": "稳定与失稳案例均按理论出现；PD能量在规定数值容差内不增加，误差与速度趋近零。"
+      },
+      "exercises": [
+        {
+          "question": "理想采样积分器中k*dt=2时，误差是渐近稳定吗？",
+          "answer": "不是；乘子为-1，误差符号交替但幅值不衰减，位于严格稳定区间边界。"
+        },
+        {
+          "question": "速度接口的P增益能直接用于力接口吗？",
+          "answer": "不能；前者单位s^-1，后者为N/m，且对象阶次与闭环动态不同。"
+        },
+        {
+          "question": "为什么V点非正后仍要检查不变集合？",
+          "answer": "非正只能说明候选能量不增加，可能存在非零状态始终停在能量不变集合；本章PD模型需进一步用误差方程排除这些状态。"
+        }
+      ],
+      "steps": [
+        {
+          "title": "先固定模型与单位",
+          "body": "按本章符号表手算案例，明确观测、状态、控制量的坐标系和单位；先记录理论值，再运行代码，避免只看“通过”字样。"
+        },
+        {
+          "title": "运行完整数值实验",
+          "body": "将本章完整 Python 文件保存到空目录。Python 3 无需安装第三方包；若使用随站源码包，也可运行统一的 math_labs.py 并选择本章。",
+          "code": "# 输入是文件中的固定教学数据；不会连接 ROS 图或控制硬件。\npython3 math_control.py\n# 随站合并实验集可只运行这一章；参数是章节 ID。\npython3 math_labs.py --chapter math-control",
+          "language": "bash",
+          "type": "commands"
+        },
+        {
+          "title": "解释通过与失败的含义",
+          "body": "将打印数值与手算结果逐项对照。再按练习改变一个参数，区分数学前提被破坏、浮点误差和实现错误。不要删除失败断言来制造通过。"
+        }
+      ],
+      "commands": [],
+      "expected": [
+        "离散稳定案例衰减，失稳案例按-2倍增长，限幅位移满足上限。",
+        "连续PD模型的规定数值实验中能量与最终误差符合推导。"
+      ],
+      "pitfalls": [
+        "把连续时间的正增益条件直接当成任意采样周期下的稳定保证。",
+        "混用误差符号或输入单位，导致反馈方向与物理接口不一致。",
+        "把本章未实现的抗饱和、延迟与真实硬件情形宣称已经验证。"
+      ],
+      "exercise": "为本章实验写一份输入输出契约：列出状态次序、单位、前提、一个正常案例、一个必须拒绝或明确标记退化的案例。",
+      "exerciseAnswer": "契约应明确本章模型的量纲与坐标约定，正常案例需给出可复算的数值；退化案例应对应正文列出的边界，并解释失败原因。实验只验证这个有限模型，不把结果外推到任意噪声、任意机器人或实机安全。",
+      "sourceIds": [
+        "math-modern-control",
+        "math-lyapunov-lecture"
+      ],
+      "validation": "原创数学推导；读取本地参考教程以核对主题范围，并与本章列出的一手资料交叉核对。标准库完整实验已在本轮运行并通过断言；ROS 构建、仿真、硬件未运行。"
+    }
+  ],
+  "resources": [
+    {
+      "id": "math-vmls",
+      "title": "Boyd、Vandenberghe：Introduction to Applied Linear Algebra 作者站点",
+      "url": "https://web.stanford.edu/~boyd/vmls/",
+      "category": "数学与机器人基础",
+      "version": "数学资料；与ROS发行版无关",
+      "description": "线性映射、最小二乘与数值分解的作者课程入口；本书正文使用自行构造的二维观测例子。",
+      "verification": "已读取作者网页与课程资源说明；图书PDF本次抓取超时，未声称完整阅读。本站二维推导及标准库实验独立复算。",
+      "type": "作者教材／官方维护者资料",
+      "checkedAt": "2026-11-07"
+    },
+    {
+      "id": "math-ros-interfaces",
+      "title": "ROS 2 Jazzy：PoseWithCovariance 消息定义",
+      "url": "https://github.com/ros2/common_interfaces/blob/a941f14bb318d8d904505ed935ccbb97f24a70a4/geometry_msgs/msg/PoseWithCovariance.msg",
+      "category": "数学与机器人基础",
+      "version": "Jazzy 固定源码快照",
+      "description": "说明位姿协方差采用6×6行主序，变量为位置与固定轴旋转；不能把任意状态次序直接放入数组。",
+      "verification": "读取已下载的Jazzy源码快照中geometry_msgs/msg/PoseWithCovariance.msg；没有构建消息包。",
+      "type": "作者教材／官方维护者资料",
+      "checkedAt": "2026-11-07"
+    },
+    {
+      "id": "math-modern-rigid",
+      "title": "Modern Robotics：齐次变换矩阵",
+      "url": "https://modernrobotics.northwestern.edu/nu-gm-book-resource/3-3-1-homogeneous-transformation-matrices/",
+      "category": "数学与机器人基础",
+      "version": "数学资料；与ROS发行版无关",
+      "description": "作者的坐标、位姿、复合与逆变换讲解；本站采用明确的A←B约定并给出独立数值实验。",
+      "verification": "已读取作者网页正文；没有下载或转录视频。",
+      "type": "作者教材／官方维护者资料",
+      "checkedAt": "2026-11-07"
+    },
+    {
+      "id": "math-tf2-quaternion",
+      "title": "ROS 2 Jazzy：四元数基础教程源码",
+      "url": "https://github.com/ros2/ros2_documentation/blob/929e37c4c6d0746e75d10f1fd76f024743ff75ea/source/Tutorials/Intermediate/Tf2/Quaternion-Fundamentals.rst",
+      "category": "数学与机器人基础",
+      "version": "Jazzy 固定源码快照",
+      "description": "ROS四元数的xyzw存储、单位长度、乘法次序和相对旋转。本站实现统一输入输出次序，避免样例代码中不同排列约定混用。",
+      "verification": "读取已下载Jazzy固定快照RST全文，检查消息次序与样例返回次序；本站原创乘法以共轭恒等式独立验证。",
+      "type": "作者教材／官方维护者资料",
+      "checkedAt": "2026-11-07"
+    },
+    {
+      "id": "math-probability-course",
+      "title": "MIT 6.041SC：条件概率与Bayes公式",
+      "url": "https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/pages/unit-i/lecture-2/",
+      "category": "数学与机器人基础",
+      "version": "数学资料；与ROS发行版无关",
+      "description": "概率课程的条件化与独立性学习入口；本站用区域检测、相关性反例和标量测量构造原创完整讲解。",
+      "verification": "已读取MIT课程章节与相邻独立性课程页面；本站数值例子与代码独立编写、执行。",
+      "type": "作者教材／官方维护者资料",
+      "checkedAt": "2026-11-07"
+    },
+    {
+      "id": "math-kalman-lecture",
+      "title": "Stanford EE363：The Kalman Filter",
+      "url": "https://ee363.stanford.edu/archive/lectures/kf.pdf",
+      "category": "数学与机器人基础",
+      "version": "数学资料；与ROS发行版无关",
+      "description": "用于核对线性Gauss–Markov模型、初始状态与噪声假设，以及均值协方差递推。",
+      "verification": "已读取Stanford作者课程归档PDF，重点核对统计假设、预测与测量更新；本站位置—速度数据为原创。",
+      "type": "作者教材／官方维护者资料",
+      "checkedAt": "2026-11-07"
+    },
+    {
+      "id": "math-robot-localization",
+      "title": "robot_localization：Jazzy 状态估计与传感器配置说明",
+      "url": "https://github.com/cra-ros-pkg/robot_localization/tree/fea7fc3dcad81c533121e4aa2fb1087a0565d8cc",
+      "category": "数学与机器人基础",
+      "version": "Jazzy-devel 固定源码快照",
+      "description": "用于工程侧核对变量顺序、frame_id、传感器配置、时间参数与重复融合信息；本站二维Kalman实验不是该包的完整实现。",
+      "verification": "读取本地Jazzy-devel固定快照的state_estimation_nodes与传感器配置RST；未运行节点。",
+      "type": "作者教材／官方维护者资料",
+      "checkedAt": "2026-11-07"
+    },
+    {
+      "id": "math-cvx",
+      "title": "Boyd、Vandenberghe：Convex Optimization",
+      "url": "https://web.stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf",
+      "category": "数学与机器人基础",
+      "version": "数学资料；与ROS发行版无关",
+      "description": "核对最小二乘、约束最优性与鲁棒损失的基础条件；本站非线性标量、区间约束及异常测量例子均为原创。",
+      "verification": "已读取作者公开PDF的最优性条件与鲁棒逼近相关段落；不复刻第三方教材正文或插图。",
+      "type": "作者教材／官方维护者资料",
+      "checkedAt": "2026-11-07"
+    },
+    {
+      "id": "math-modern-kinematics",
+      "title": "Modern Robotics：空间雅可比",
+      "url": "https://modernrobotics.northwestern.edu/nu-gm-book-resource/5-1-1-space-jacobian/",
+      "category": "数学与机器人基础",
+      "version": "数学资料；与ROS发行版无关",
+      "description": "核对关节速度到末端运动的映射与表达坐标系；本站平面位置雅可比明确区别于完整空间twist雅可比。",
+      "verification": "已读取作者网页正文；本站2R平面正解与解析导数另外用有限差分复算。",
+      "type": "作者教材／官方维护者资料",
+      "checkedAt": "2026-11-07"
+    },
+    {
+      "id": "math-modern-static",
+      "title": "Modern Robotics：开链静力学与虚功",
+      "url": "https://modernrobotics.northwestern.edu/nu-gm-book-resource/5-2-statics-of-open-chains/",
+      "category": "数学与机器人基础",
+      "version": "数学资料；与ROS发行版无关",
+      "description": "核对雅可比转置映射的功率对偶条件与表达系一致性。",
+      "verification": "已读取作者网页正文；本站以独立力、关节速度数据验证功率相等。",
+      "type": "作者教材／官方维护者资料",
+      "checkedAt": "2026-11-07"
+    },
+    {
+      "id": "math-modern-dynamics",
+      "title": "Modern Robotics：拉格朗日动力学",
+      "url": "https://modernrobotics.northwestern.edu/nu-gm-book-resource/chapter-8-1-lagrangian-formulation-of-dynamics-part-1-of-2/",
+      "category": "数学与机器人基础",
+      "version": "数学资料；与ROS发行版无关",
+      "description": "以能量和广义坐标组织动力学的作者讲解；本站单摆与两杆质点模型为独立推导。",
+      "verification": "已读取作者课程网页；本站单摆的静态平衡、守恒及耗散用标准库实验验算。",
+      "type": "作者教材／官方维护者资料",
+      "checkedAt": "2026-11-07"
+    },
+    {
+      "id": "math-urdf-inertia",
+      "title": "ROS 2 Jazzy：URDF物理与惯性属性教程源码",
+      "url": "https://github.com/ros2/ros2_documentation/blob/929e37c4c6d0746e75d10f1fd76f024743ff75ea/source/Tutorials/Intermediate/URDF/Adding-Physical-and-Collision-Properties-to-a-URDF-Model.rst",
+      "category": "数学与机器人基础",
+      "version": "Jazzy 固定源码快照",
+      "description": "用于核对质量、惯量矩阵、惯性坐标系以及关节阻尼单位；本站不采用随意小惯量代替物理建模。",
+      "verification": "读取本地固定Jazzy快照RST全文；未运行URDF仿真。",
+      "type": "作者教材／官方维护者资料",
+      "checkedAt": "2026-11-07"
+    },
+    {
+      "id": "math-modern-control",
+      "title": "Modern Robotics：二阶误差动力学",
+      "url": "https://modernrobotics.northwestern.edu/nu-gm-book-resource/11-2-2-2-second-order-error-dynamics/",
+      "category": "数学与机器人基础",
+      "version": "数学资料；与ROS发行版无关",
+      "description": "用于核对质量—弹簧—阻尼类误差模型与阻尼比；本站另推导采样积分器的离散稳定边界。",
+      "verification": "已读取作者网页正文；本站固定参数的P与PD实验独立执行。",
+      "type": "作者教材／官方维护者资料",
+      "checkedAt": "2026-11-07"
+    },
+    {
+      "id": "math-lyapunov-lecture",
+      "title": "Stanford EE363：Basic Lyapunov Theory",
+      "url": "https://ee363.stanford.edu/archive/lectures/lyap.pdf",
+      "category": "数学与机器人基础",
+      "version": "数学资料；与ROS发行版无关",
+      "description": "核对正定候选函数、非正导数与不变集合分析所需的区别。",
+      "verification": "已读取作者课程归档PDF；本站只对明确给出的连续PD模型作能量分析与数值检验。",
+      "type": "作者教材／官方维护者资料",
+      "checkedAt": "2026-11-07"
+    }
+  ],
+  "researchNotes": {
+    "authoring": "本站原创推导、数值例子与实验；社区资料只用于范围核对，未复制其正文。",
+    "localScopeRead": [
+      "Robotics_Tutorial/SUMMARY.md",
+      "Robotics_Tutorial/01_数学/10_纯数学基础/20_向量空间与线性变换.md",
+      "Robotics_Tutorial/01_数学/20_微分几何与李群/30_李群基础与SO3_SE3.md",
+      "Robotics_Tutorial/01_数学/30_优化理论/50_非线性优化.md",
+      "Robotics_Tutorial/01_数学/40_控制理论/70_Lyapunov稳定性理论.md",
+      "Robotics_Tutorial/01_数学/50_刚体动力学/20_Lagrange与Hamilton力学.md",
+      "Robotics_Tutorial/01_数学/60_概率与估计/10_贝叶斯滤波与线性高斯滤波.md"
+    ],
+    "corrections": [
+      "线性模型本身不会创造联合高斯分布；精确KF后验还需初值与噪声假设。",
+      "局部阻尼矩阵正定不推出非线性目标的全局最优或任意初值收敛。",
+      "四元数代码必须统一输入输出排列；本站全部采用xyzw并用恒等式验证。",
+      "PD的非正能量导数还要结合不变集合才能得到所述渐近结论。"
+    ]
+  }
+}

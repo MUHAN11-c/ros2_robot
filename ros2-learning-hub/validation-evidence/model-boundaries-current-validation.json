@@ -1,0 +1,85 @@
+{
+  "checkedAt": "2026-11-07",
+  "passed": true,
+  "checks": [
+    {
+      "name": "driver-help",
+      "argv": [
+        "/usr/bin/python3",
+        "/home/wjz/ros2_robot/ros2-learning-hub/examples/model_labs/validate_model.py",
+        "--help"
+      ],
+      "returnCode": 0,
+      "expected": 0,
+      "stdout": "usage: validate_model.py [-h] [--domain-id DOMAIN_ID] [--report REPORT]\n\n构建安装描述包，再用真实RSP和tf2检查模型；不启动RViz或仿真器。\n\n输入：本目录完整包、两组轮半径/轮距、有限JointState位置rad。\n输出：独立/tmp构建、展开模型、日志、安装指纹与JSON报告。\n步骤：复制安装→异目录启动→晚加入固定TF→位置/非法长度/合法仅速度状态→光学轴。\n等待用monotonic秒，几何m，时间戳ns；源码SHA是文件身份，TF按语义数值比较。\n边界：只验证本例树、数值与正常退出；父中断、GUI、动力学和硬件未覆盖。\n\noptions:\n  -h, --help            show this help message and exit\n  --domain-id DOMAIN_ID\n                        专用本机域，默认219\n  --report REPORT       省略则写本次/tmp目录，不覆盖教材证据\n",
+      "stderr": ""
+    },
+    {
+      "name": "inspector-help",
+      "argv": [
+        "/usr/bin/python3",
+        "/home/wjz/ros2_robot/ros2-learning-hub/examples/model_labs/inspect_model.py",
+        "--help"
+      ],
+      "returnCode": 0,
+      "expected": 0,
+      "stdout": "usage: inspect_model.py [-h] urdf\n\n标准库读取已展开的小URDF，检查本章几何与对角惯量合同，不启动DDS。 输入：普通URDF（先展开Xacro）；输出树、尺寸、关节轴和惯量JSON。\n边界：只处理盒体/圆柱与对角惯量；不是通用URDF验证器、碰撞或动力学仿真。\ncheck_urdf另用真正URDF解析器检查，几何正确仍需实际机械/标定验证。\n\npositional arguments:\n  urdf\n\noptions:\n  -h, --help  show this help message and exit\n",
+      "stderr": ""
+    },
+    {
+      "name": "domain-rejected",
+      "argv": [
+        "/usr/bin/python3",
+        "/home/wjz/ros2_robot/ros2-learning-hub/examples/model_labs/validate_model.py",
+        "--domain-id",
+        "233"
+      ],
+      "returnCode": 2,
+      "expected": 2,
+      "stdout": "",
+      "stderr": "usage: validate_model.py [-h] [--domain-id DOMAIN_ID] [--report REPORT]\nvalidate_model.py: error: domain-id须在0..232\n"
+    }
+  ],
+  "negativeInertia": {
+    "file": "/tmp/ros2-model-negative-inertia-0cgkgoia/negative.urdf",
+    "sha256": "ddf3e77248f416cded667fa48af7628f47abaac359f173a34f08d9cdc9beafb8",
+    "changed": "left_wheel Iyy=-0.00064 kg*m^2",
+    "commands": {
+      "urdfParser": {
+        "argv": [
+          "check_urdf",
+          "/tmp/ros2-model-negative-inertia-0cgkgoia/negative.urdf"
+        ],
+        "returnCode": 0,
+        "stdout": "robot name is: learning_wheeled_model\n---------- Successfully Parsed XML ---------------\nroot Link: base_footprint has 1 child(ren)\n    child(1):  base_link\n        child(1):  camera_link\n            child(1):  camera_optical_frame\n        child(2):  laser\n        child(3):  left_wheel\n        child(4):  right_wheel\n",
+        "stderr": ""
+      },
+      "numericInspector": {
+        "argv": [
+          "/usr/bin/python3",
+          "/home/wjz/ros2_robot/ros2-learning-hub/examples/model_labs/inspect_model.py",
+          "/tmp/ros2-model-negative-inertia-0cgkgoia/negative.urdf"
+        ],
+        "returnCode": 1,
+        "stdout": "",
+        "stderr": "Traceback (most recent call last):\n  File \"/home/wjz/ros2_robot/ros2-learning-hub/examples/model_labs/inspect_model.py\", line 85, in <module>\n    if __name__ == '__main__':main()\n                              ^^^^^^\n  File \"/home/wjz/ros2_robot/ros2-learning-hub/examples/model_labs/inspect_model.py\", line 82, in main\n    print(json.dumps(inspect_model(options.urdf), ensure_ascii=False, indent=2))\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/wjz/ros2_robot/ros2-learning-hub/examples/model_labs/inspect_model.py\", line 70, in inspect_model\n    if not math.isfinite(mass) or mass <= 0 or not all(math.isfinite(x) and x > 0 for x in diag):raise ValueError('质量/惯量须正且有限')\n                                                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: 质量/惯量须正且有限\n"
+      }
+    }
+  },
+  "sourceHashes": [
+    {
+      "path": "examples/model_labs/inspect_model.py",
+      "sha256": "b261d249c680cfb275acd269656bef53f30bddbc44f8c7c20dc2a99ac6a82ee1"
+    },
+    {
+      "path": "examples/model_labs/validate_model.py",
+      "sha256": "75537a1417d5f9c12b785fea8e70fad50fa57d76fc895536d9165270bed66e6d"
+    }
+  ],
+  "limits": [
+    "只对明确负主惯量fixture与三项CLI核对，不证明任意非对角惯量、资源/碰撞或动力学。"
+  ],
+  "fixtureHistory": [
+    "首次辅助命令的嵌套shell引号损坏XPath，尚未运行负惯量探针；改为固定迭代查找再执行。"
+  ]
+}

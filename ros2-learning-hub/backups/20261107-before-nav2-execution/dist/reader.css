@@ -1,0 +1,132 @@
+/* 在已确认的双栏版式上补齐教材、公式、附录和无障碍阅读样式。 */
+/* 路径和 API 名称可在窄屏换行；代码块仍由自己的 pre 横向滚动。 */
+#reading p,#reading li,#reading summary{overflow-wrap:anywhere}
+:root{--surface:#fff;--surface-soft:#f6f8f5;--code-bg:#f5f8f5;--strong:#1e4936;--text:#36493d;--border:#dfe7df}
+body{color:var(--text)}#reading{min-width:0}.chapter-intro{color:#596c5e}.chapter-meta{flex-wrap:wrap;color:#677b6b}.reading-section>p,.reading-section>ul{color:#415649}.token-comment{color:#536f5a}.code-caption,.copy-button{color:#5f7565}.code-explanation{color:#536c5a}.source-note{color:#5c7263}.section-anchor{font:14px var(--mono);margin-left:9px;opacity:0;color:var(--green)}h2:hover .section-anchor,.section-anchor:focus{opacity:1}.library-nav{font-size:12px;margin-top:19px;line-height:1.5}.library-nav>a,.library-nav details>a{display:block;padding:7px 9px;border-radius:5px;color:#536d5b}.library-nav a:hover{background:#eaf2ec}.library-nav a[aria-current]{color:#215b3c;background:#e8f1e9}.library-nav details{margin-top:4px}.library-nav summary{cursor:pointer;padding:7px 9px;color:#6b7a6d}.library-nav details>a{padding-left:20px}.sidebar{overflow-y:auto}.sidebar #chapter-tree{margin-top:16px;min-height:160px}.sidebar-footer{padding-block:13px}.sidebar-footer .theme-switch{font-size:11px;margin-top:12px;color:#5c7562}.sidebar-footer #reading-progress{display:block;color:#516b58}.tree-link.done:after{content:'✓';color:var(--green);font-size:11px;margin-left:auto}.review-trigger{display:flex;align-items:center;gap:8px;font-size:11px;white-space:nowrap;color:#607a67}.study-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:23px}.study-actions button,.button{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:8px 13px;border:1px solid #cfded1;background:var(--surface);border-radius:6px;color:var(--green);font-size:12px;line-height:1.65}.study-actions [aria-pressed=true]{background:#e7f2e9;border-color:#a9c7b0;color:#245e39}.study-actions button:hover,.button:hover{background:#edf5ee;border-color:#a4c5ae}.button.small{padding:6px 10px;font-size:11px}.button-row{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0}.chapter-header .study-actions{margin-bottom:0}.reading-section .implementation-section{margin-block:28px}.reading-section .implementation-section h2{font-size:19px}.implementation-toolbar{flex-wrap:wrap}.code-tabs{overflow-x:auto;scrollbar-width:thin;flex:1;min-width:100px}.code-tabs [role=tab]{flex-shrink:0}.implementation-toolbar .compare-toggle{margin-block:7px}.implementation-pane{background:var(--surface)}.implementation.compare .implementation-panels{overflow:hidden}.equation{margin:25px 0;border:1px solid var(--border);border-radius:8px;background:#f8faf6;overflow:hidden;min-width:0}.equation>figcaption{font-size:13px;font-weight:650;padding:12px 18px;border-bottom:1px solid var(--border);color:#315b3c}.math-scroll{max-width:100%;overflow-x:auto;padding:20px 18px;scrollbar-width:thin;overscroll-behavior-x:contain}.math-scroll math{font-size:1.15em;color:var(--ink);min-width:max-content}.equation>p{margin:0;padding:0 18px 16px;font-size:13px;line-height:1.95;color:#526951}.equation .table-scroll{padding:0 18px 16px}.table-scroll{overflow-x:auto;max-width:100%;min-width:0;scrollbar-width:thin;overscroll-behavior-x:contain}table{border-collapse:collapse;width:100%;font-size:12px;line-height:1.85;text-align:left}th,td{vertical-align:top;border:1px solid var(--border);padding:10px 12px}th{background:#edf3eb;font-weight:600;white-space:nowrap}td{background:var(--surface);overflow-wrap:anywhere}.symbol-table td:first-child{min-width:75px}.symbol-table td:nth-child(2){min-width:140px}.symbol-table td:last-child{min-width:90px}.formula-source{font-size:11px;padding:0 18px 13px;color:#6b7e67}.formula-source summary{cursor:pointer}.formula-source pre{overflow-x:auto;max-width:100%;padding:10px;background:#edf1e9;border-radius:4px}.formula-source code{white-space:pre;overflow-wrap:normal;background:transparent;padding:0}.api-reference{margin:27px 0}.api-reference h3{font-size:17px;margin-bottom:15px}.api-reference table{min-width:650px}.api-reference ul{font-size:13px;color:#526953}.api-reference td code{white-space:normal;word-break:break-word}.notice{border:1px solid #dbe7d8;border-left:3px solid #93b68c;border-radius:5px;padding:17px 20px;margin:24px 0;background:#f5f9f1;color:#4f6c4b;font-size:13px;line-height:1.95;overflow-wrap:anywhere}.notice.bad{border-color:#d9ac8c;background:#fff6ee;color:#8d4729}.muted,.filter-count{font-size:11px;color:#677c69}.filter-count{margin:12px 0 23px}.empty{padding:24px 0;font-size:13px;color:#6a7e6c}.tag{display:inline-block;font-size:10px;border:1px solid #d9e4d5;background:#f4f8f0;border-radius:4px;padding:2px 7px;color:#617a58;line-height:1.7;overflow-wrap:anywhere}.section-heading{display:flex;align-items:baseline;gap:15px}.section-heading>span{font-size:11px;color:var(--muted)}.lesson-list{border-top:1px solid var(--border)}.lesson-row{display:flex;align-items:baseline;gap:16px;padding:19px 0;border-bottom:1px solid var(--border);min-width:0}.lesson-row>div{flex:1;min-width:0}.lesson-number{font:11px var(--mono);color:#90a08b}.lesson-row h3{font-size:15px;margin:0 0 7px;color:#334f38}.lesson-row p{font-size:12px;color:#687d65;margin:0 0 7px;line-height:1.85}.lesson-row small{font-size:10px;color:#7f9178}.row-check{color:#609256;font-size:15px}.lesson-row:hover h3{color:var(--green)}.lesson-chip{display:inline-block;font-size:11px;color:#3d7143;border:1px solid #dbe8d7;border-radius:4px;padding:4px 8px;margin:4px 6px 4px 0;max-width:100%;overflow-wrap:anywhere;background:#fafcf8}.chapter-links{margin-block:13px}.home-intro{padding:0 0 28px;border-bottom:1px solid var(--border)}.home-intro h1{font-size:44px;line-height:1.5;letter-spacing:-.055em;margin:15px 0 21px;color:#284731}.home-intro .chapter-intro{max-width:670px}.home-intro .button:first-child{background:#2b6645;color:#fff;border-color:#2b6645}.reading-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;padding:24px 0 28px;border-bottom:1px solid var(--border)}.reading-stats>div{display:flex;flex-direction:column;gap:5px}.reading-stats strong{font:500 29px/1.4 var(--mono);color:#3c6844}.reading-stats span{font-size:11px;color:#70826b}.learning-chain{display:flex;align-items:center;gap:13px;flex-wrap:wrap;margin-top:30px;color:#607956;font-size:12px}.learning-chain>span{border-block:1px solid #d6e2d0;padding:8px 1px}.learning-chain i{font-style:normal;color:#9cab92}.learning-paths{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 35px}.learning-paths section{padding-top:12px;border-top:2px solid #d8e6d1;min-width:0}.learning-paths h3{font-size:17px;margin-top:8px}.learning-paths p{font-size:12px;color:#6d8064}.learning-paths ol{font-size:12px;line-height:1.85}.editorial-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:27px}.editorial-grid section{min-width:0}.editorial-grid span{font:10px var(--mono);color:#87a078}.editorial-grid h3{font-size:16px;margin:10px 0}.editorial-grid p{font-size:12px;color:#697e5e}.filters{display:flex;gap:12px;flex-wrap:wrap;align-items:end;padding:18px 0;border-block:1px solid var(--border);margin:25px 0 10px}.filters>input{flex:1;min-width:180px;width:100%;max-width:100%}.filters label{font-size:10px;color:#68805d;min-width:110px;max-width:100%}.filters select{display:block;width:100%;max-width:220px;margin-top:5px}.filters input,.filters select{font-family:var(--sans);font-size:12px;color:#385c39;border:1px solid #d3e1ce;padding:9px 10px;border-radius:5px;background:var(--surface);min-width:0}.resource-row,.library-row,.coverage-row,.project-file,.issue{padding:20px 0;border-bottom:1px solid var(--border);font-size:13px;min-width:0}.resource-row summary,.library-row summary,.project-file summary,.issue summary{cursor:pointer;color:#385c3a;overflow-wrap:anywhere}.resource-row summary,.library-row summary{display:flex;gap:12px;align-items:baseline;justify-content:space-between;list-style:none}.resource-row summary strong,.library-row summary strong{font-weight:600;min-width:0}.resource-row summary:before,.library-row summary:before{content:'+';color:#7b9870;flex-shrink:0}.resource-row[open] summary:before,.library-row[open] summary:before{content:'−'}.resource-row summary strong,.library-row summary strong{flex:1}.resource-row summary .tag,.library-row summary .tag{max-width:35%;flex-shrink:0;white-space:normal}.resource-row p,.library-row p{margin:14px 0}.coverage-row h3{font-size:14px;margin:10px 0}.coverage-row p{font-size:12px;line-height:1.9}.coverage-row details{font-size:11px;color:#6b8062}.coverage-row details p{font-size:11px}.source-link{font-size:11px;color:#597f47;text-decoration:underline;text-underline-offset:3px}.source-file-list{list-style:none;padding:0;border-top:1px solid var(--border)}.source-file-list li{padding:9px 0;border-bottom:1px solid var(--border);margin:0;font-size:12px}.source-file-list small{display:block;font:9px/1.8 var(--mono);color:#829576;overflow-wrap:anywhere}.source-file-list a{color:#3d713e}.original-document{white-space:pre-wrap;overflow-wrap:anywhere;tab-size:4;max-width:100%;overflow:auto;font:12px/1.95 var(--mono);border:1px solid var(--border);background:var(--surface-soft);padding:22px;border-radius:6px}.original-document code{font:inherit;background:none;padding:0;white-space:inherit;color:var(--text)}.download-list{border-top:1px solid var(--border)}.download-row{display:flex;align-items:center;gap:20px;padding:23px 0;border-bottom:1px solid var(--border)}.download-row>div{flex:1;min-width:0}.download-row h2{font-size:16px;margin:0 0 7px}.download-row p{font-size:12px;color:#6b8062;margin:0}.download-row>span{color:#5b8749}.glossary{display:grid;grid-template-columns:1fr 1fr;gap:24px}.glossary section{border-top:1px solid var(--border);padding-top:12px}.glossary h3{margin:0 0 5px}.glossary small{font:10px var(--mono);color:#839676}.glossary p{font-size:12px;margin-top:9px}.qos-fields{display:grid;grid-template-columns:1fr 1fr;gap:15px}.qos-fields fieldset{min-width:0;border:1px solid var(--border);font-size:12px}.qos-fields legend{color:#4e7441}.qos-fields label{display:block;font-size:11px;margin:8px 0}.qos-fields select{display:block;max-width:100%;width:100%;font-size:12px;padding:7px;border:1px solid var(--border);background:var(--surface);color:var(--text);margin-top:4px}.qos-widget output{display:block}.project-file summary{font:11px/1.8 var(--mono)}.issue p{margin-top:15px}.mini-toc ol{font-size:12px;padding-left:24px;columns:2}.mini-toc ol li{break-inside:avoid}.page-footer{gap:15px}.page-footer span{overflow-wrap:anywhere}
+/* 深色只切换阅读表面与文字；数学、表格和代码保持同一可访问对比关系。 */
+body[data-theme=dark]{--ink:#e1eade;--text:#d2ddce;--muted:#b2c0a7;--line:#334333;--border:#3b5039;--green:#aed49a;--surface:#1d2b21;--surface-soft:#1a271d;--code-bg:#203024;--sidebar:#17251b;background:#1d2b21;color:var(--text)}body[data-theme=dark] .topbar{background:#1d2b21ed}body[data-theme=dark] .chapter-intro,body[data-theme=dark] .reading-section>p,body[data-theme=dark] .reading-section>ul,body[data-theme=dark] .muted,body[data-theme=dark] .code-explanation,body[data-theme=dark] .source-note{color:#b7c9ac}body[data-theme=dark] .home-intro h1,body[data-theme=dark] .lesson-row h3,body[data-theme=dark] .chapter-header h1{color:#e0ead8}body[data-theme=dark] .search-trigger,body[data-theme=dark] .implementation,body[data-theme=dark] .implementation-toolbar,body[data-theme=dark] .code-example,body[data-theme=dark] .code-explanation,body[data-theme=dark] .equation,body[data-theme=dark] dialog{background:#203024;color:var(--text);border-color:#3b5039}body[data-theme=dark] .notice,body[data-theme=dark] .learning-goals,body[data-theme=dark] th,body[data-theme=dark] .tag,body[data-theme=dark] .lesson-chip,body[data-theme=dark] .study-actions [aria-pressed=true]{background:#293d29;color:#c0d7ad;border-color:#49613f}body[data-theme=dark] code{background:#30452c;color:#d1dfc3}body[data-theme=dark] .code-example code{background:none;color:#d0dec6}body[data-theme=dark] .token-comment{color:#a9be9b}body[data-theme=dark] .token-string{color:#b8d88c}body[data-theme=dark] .token-keyword{color:#c8b4db}body[data-theme=dark] .token-number{color:#e0bf8f}body[data-theme=dark] .tree-link[aria-current=page],body[data-theme=dark] .library-nav a[aria-current],body[data-theme=dark] .search-result:hover{background:#2e442c;color:#c3dcb1}body[data-theme=dark] .library-nav>a,body[data-theme=dark] .library-nav details>a,body[data-theme=dark] .tree-link,body[data-theme=dark] .resource-row summary,body[data-theme=dark] .library-row summary,body[data-theme=dark] .project-file summary,body[data-theme=dark] .issue summary{color:#b8cca9}body[data-theme=dark] .equation>figcaption,body[data-theme=dark] .equation>p{color:#c0d4b2}body[data-theme=dark] .formula-source pre{background:#30412d}
+@media(max-width:1000px){.reading-stats{gap:12px}.editorial-grid{grid-template-columns:1fr}.editorial-grid section{border-bottom:1px solid var(--border);padding-bottom:12px}.editorial-grid p{margin-bottom:0}}
+@media(max-width:800px){.home-intro h1{font-size:34px}.home-intro .button{font-size:11px;padding-inline:10px}.reading-stats{grid-template-columns:1fr 1fr;gap:21px}.reading-stats strong{font-size:25px}.learning-paths{grid-template-columns:1fr;gap:20px}.filters{gap:10px}.filters>input{flex-basis:100%}.filters label{flex:1;min-width:0}.filters select{width:100%;max-width:100%;min-width:0}.mini-toc ol{columns:1}.glossary{grid-template-columns:1fr}.qos-fields{grid-template-columns:1fr}.math-scroll{padding:16px 12px}.equation>p,.equation>figcaption{padding-inline:12px}.equation .table-scroll{padding-inline:12px}.symbol-table{font-size:11px}.study-actions{gap:7px}.study-actions button{font-size:10px;padding:7px 9px}.original-document{font-size:10px;padding:13px}.resource-row summary,.library-row summary{gap:7px;font-size:12px}.lesson-row{gap:10px}.lesson-row h3{font-size:14px}.download-row h2{font-size:15px}.reading-section .api-reference h3{font-size:15px}.api-reference table{font-size:11px}.sidebar #chapter-tree{min-height:120px}.page-footer{font-size:9px}.button-row{gap:8px}.button{max-width:100%;white-space:normal}}
+@media(max-width:360px){.home-intro h1{font-size:30px}.chapter-meta{gap:7px}.study-actions button{font-size:10px}.reading-stats span{font-size:10px}.learning-chain{gap:9px;font-size:10px}.tag{font-size:9px}}
+@media print{.study-actions,.button-row,.filters,.source-link{display:none!important}.equation,.api-reference{break-inside:avoid}.math-scroll,.table-scroll{overflow:visible}.api-reference table{min-width:0;font-size:9px}.source-note{display:block}.notice{background:white;color:#111}.home-intro h1{font-size:30px}}
+
+/* 文件修订沿用章节结构，独立表格与代码容器保留局部滚动。 */
+.local-edition .table-wrap{max-width:100%;overflow:auto}.local-edition .static-figure img{display:block;width:100%;height:auto}.local-edition .chapter-summary{padding:18px;border:1px solid var(--line)}.local-edition .exercise-question{min-width:0;overflow-wrap:anywhere}.local-edition [data-edit-key]{white-space:pre-wrap}
+
+/* 左栏只显示学习目录。顶部工具与长菜单分别在一行内滚动和下拉。 */
+.reader-topbar {--bar-height:58px; height:var(--bar-height); z-index:45; gap:14px; padding:0 24px}
+.reader-identity,.reader-tools,.reader-topbar .library-nav {display:flex; align-items:center; gap:8px; min-width:0}
+.reader-identity,.reader-tools {flex:none}
+.reader-topbar .brand {gap:7px; font-size:15px; white-space:nowrap}
+.reader-topbar .brand strong {font-size:14px}
+.reader-topbar .brand-symbol {font-size:24px}
+.reader-topbar .library-nav {margin:0 auto 0 0}
+.library-primary {display:flex; align-items:center; min-width:0; overflow:auto; scrollbar-width:none; white-space:nowrap}
+.reader-topbar .library-nav details {flex:none; margin:0; white-space:nowrap}
+.reader-topbar .library-nav a,.reader-topbar .library-nav summary {display:block; padding:7px 9px; border-radius:5px; color:var(--text)}
+.library-dropdown {
+  position:absolute;
+  top:calc(100% + 4px);
+  inset-inline-end:24px;
+  width:min(260px,calc(100vw - 24px));
+  max-height:calc(100dvh - 75px);
+  overflow:auto;
+  padding:7px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:7px;
+  box-shadow:0 10px 25px #0002;
+}
+.reader-topbar .search-trigger {width:auto; padding:6px 8px; gap:5px; white-space:nowrap}
+.reader-topbar .icon-button {color:var(--green); flex:none}
+.reader-topbar .review-trigger {justify-content:center}
+.reader-topbar .reader-tools [data-icon] {display:grid; place-items:center}
+.reader-topbar .reader-tools svg {width:16px; height:16px}
+#edit-link {padding:4px 7px; border:1px solid var(--border); border-radius:5px; color:var(--green); font-size:11px; white-space:nowrap}
+#edit-link[hidden] {display:none}
+.sidebar {top:58px; padding-top:12px; overflow:hidden}
+.reader-tree-heading {display:flex; align-items:baseline; justify-content:space-between; gap:7px; padding:3px 2px 8px; color:var(--text); font-size:12px}
+.reader-tree-heading #reading-progress {color:var(--muted); font-size:10px}
+.sidebar #chapter-tree {margin-top:0; min-height:0; overscroll-behavior:contain}
+.reader-breadcrumbs {margin:18px auto 0; max-width:1010px; padding-inline:65px; color:var(--muted)}
+.reader-breadcrumbs #breadcrumb-stage {display:inline; color:var(--muted)}
+.tree-subtree {margin:2px 0 9px 22px; padding-inline-start:6px; border-inline-start:1px solid var(--line)}
+.tree-subtree > summary {
+  display:flex;
+  align-items:baseline;
+  gap:5px;
+  padding:5px 7px;
+  list-style:none;
+  cursor:pointer;
+  font-size:11px;
+  color:var(--muted);
+}
+.tree-subtree > summary::before {content:'›'; font-size:14px}
+.tree-subtree[open] > summary::before {transform:rotate(90deg)}
+.tree-subtree > summary small {margin-inline-start:auto; white-space:nowrap}
+.section-outline,.section-outline ul {list-style:none; margin:0; padding:0}
+.section-outline a {
+  display:grid;
+  grid-template-columns:31px minmax(0,1fr);
+  align-items:baseline;
+  gap:6px;
+  padding:5px 7px;
+  border-radius:4px;
+  font-size:12px;
+  line-height:1.65;
+  color:var(--text);
+}
+.outline-index {color:var(--muted); font:10px var(--mono); white-space:nowrap}
+.outline-label {min-width:0; overflow-wrap:anywhere}
+.section-outline .outline-children {margin-inline-start:12px; border-inline-start:1px solid var(--line); padding-inline-start:4px}
+.outline-children a {grid-template-columns:minmax(42px,max-content) minmax(0,1fr); font-size:11px}
+.outline-children a:has(> [aria-hidden=true]) {grid-template-columns:26px minmax(0,1fr)}
+.outline-caption {display:block; padding:4px 7px; margin-top:4px; border-top:1px solid var(--line); color:var(--muted); font-size:10px}
+.section-outline a:hover,.section-outline a[aria-current=location],.library-dropdown a:hover {background:var(--surface-soft); color:var(--green)}
+.section-outline a[aria-current=location] {font-weight:650; box-shadow:inset 2px 0 var(--green)}
+.section-outline li:has(> .outline-children a[aria-current=location]) > a {color:var(--green); font-weight:650}
+.tree-subtree > summary:focus-visible,.section-outline a:focus-visible {outline:2px solid var(--green); outline-offset:-2px}
+.mini-toc .section-outline {max-width:36rem}
+.mini-toc .section-outline ul {columns:1}
+#reading :is(h2,h3,h4,h5,h6)[data-section-number] {
+  display:block;
+  position:relative;
+  padding-inline-start:49px;
+  overflow-wrap:anywhere;
+}
+#reading :is(h2,h3,h4,h5,h6)[data-section-number]::before {
+  content:attr(data-section-number);
+  position:absolute;
+  inset-block-start:.55em;
+  inset-inline-start:0;
+  min-width:32px;
+  padding:3px 4px;
+  border-radius:4px;
+  background:var(--surface-soft);
+  color:var(--green);
+  font:11px/1.4 var(--mono);
+  text-align:center;
+}
+#reading h3[data-section-number] {padding-inline-start:57px}
+#reading h3[data-section-number]::before {min-width:43px; inset-block-start:.3em; font-size:10px}
+#reading :is(h4,h5,h6)[data-section-number] {padding-inline-start:82px}
+#reading .matched-section > h2,#reading :is(h3,h4,h5,h6).matched-section {
+  animation:reader-section-match 1.6s ease-out;
+  border-radius:5px;
+}
+@keyframes reader-section-match {from {background:var(--surface-soft)} to {background:transparent}}
+@media(max-width:1190px) {.reader-breadcrumbs {padding-inline:42px}}
+@media(max-width:800px) {
+  .reader-topbar {--bar-height:52px; gap:5px; padding-inline:8px}
+  .reader-topbar .brand > span:last-child,.reader-tools #search-trigger > span:last-child {display:none}
+  .reader-topbar .reader-tools,.reader-topbar .reader-identity {gap:3px}
+  .reader-topbar .icon-button,.reader-tools #search-trigger {width:28px; height:30px; padding:0; justify-content:center}
+  .reader-topbar .library-nav a,.reader-topbar .library-nav summary {font-size:11px; padding-inline:5px}
+  .reader-topbar .library-nav {gap:3px}
+  .library-dropdown {inset-inline-end:8px}
+  .sidebar {top:52px}
+  .reader-breadcrumbs {margin-top:12px; padding-inline:24px}
+}
+@media(max-width:360px) {.reader-breadcrumbs {padding-inline:18px}}
+@media(prefers-reduced-motion:reduce) {#reading .matched-section > h2,#reading :is(h3,h4,h5,h6).matched-section {animation:none}}
+@media print {.reader-breadcrumbs {display:none}}

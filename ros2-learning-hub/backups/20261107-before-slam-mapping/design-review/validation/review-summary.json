@@ -1,0 +1,71 @@
+{
+  "passed": true,
+  "checkedAt": "2026-11-07",
+  "stage": "融合 Nav2 台架后的全章目录与实测图复核",
+  "chapters": 60,
+  "mascot": "紫樱",
+  "assets": 7,
+  "screenshots": 21,
+  "browserScenarios": 23,
+  "mobileReadingRoutes": 140,
+  "mobileEditorRoutes": 120,
+  "fileSaveScenarios": 8,
+  "backendUnitChecks": 5,
+  "readerIntegrationFilesBackedUp": 3,
+  "sourceHashes": {
+    "index.html": "43934428e50505f4d4e9ab0f8494255b0ff5e7e0dc850a1be7c43d4aa25492c4",
+    "styles.css": "72357301fb42f0000154ea3bd0a875b60e36da186f6c731b6f28093a6becfcdf",
+    "app.js": "5b29eb34f49129f94036567a1b20973c366dc49f7dc99127a89ded843ce0f24b",
+    "logic.js": "3572dfbc56bf1e25214cebf1fa4c8d81b81e672e6694e76b8630e2018dd64738",
+    "editor.js": "ee9e565371ccd74a5cc604fa13c8b52973790056785d6b1991831f93d8132500",
+    "visual-editor.js": "8558e86164bef5d8fac8f04ce3acfc256fd0f589c58883588f67892f0ba23f59",
+    "file-store.js": "e213d3dcea0f9d97a76f41beb9bf2f55419daf876f23305cee0fc7ab49bb7332",
+    "service-config.js": "fa341110b356276c0850843d3cb93756221df24d2109d4e45584761ecf83ad96",
+    "labs.js": "8bd29e5e2f7cebc7358eb07df3547bf940ffa732c7dcc3d8db868160d97ad2ac",
+    "assets-data.js": "3b72127856318a3368264286e1a80f86d92148696badc6fa86a2d3a9904f071d",
+    "review-evidence.js": "94af907a3b4ae84c3ac10590be2d63d76dcba1e857f4f770bdfddc6a079a7032",
+    "source/mascot-assets.json": "c936af1d7096e4efc84efbb7fdc5a6e10fff79b4d788e13ee737dc72b6745bca",
+    "source/component-contract.json": "8c4efd9a0c234254725f1e4c5f568068cff8ae7377e226c3d19b9c0bcbdc4049",
+    "../dist/index.html": "9ae4d164d0b68cea1309bb94820fd3f562f4cd2ad136b6ecb4d775d747a5564e",
+    "../dist/reader.js": "4a60d90db1cf942c02001f6f9911548d03b606b67512dcaeb5554d81cba26510",
+    "../dist/reader.css": "9503aad974e9d57ff89242a1c055c88f0acb957217972f3362e35695d899a09d",
+    "../dist/local-edits.js": "d9276724e4985a619d82b9c6ca40155ca75dc69d7b90e3cd9d7359cd22d0e695",
+    "../source/local-edits.json": "b9c6bf297abbe24303c68dcd4d63b28731a99cb7c64b505947a9665fe4aa461d",
+    "../scripts/serve_local.py": "780b9fc50d34e8f8b17068def848b21abed2c21af8554804b3016eb39a1bb0c5",
+    "../scripts/local_editions.py": "246a55dcd800e4c74d698fef8463c48b1341eb5ca9c381594a2c6a25d8c99d76",
+    "../scripts/build_content.py": "186cfd0c72d384d2b0122275f61bf14e28874f46fff85c4a042b0fe3371d0d27",
+    "../scripts/book_export.py": "c375cdab1cc4a56f9df5d2e7a18af80260ce0e9b7b5b9462305dfc50f85966c3",
+    "scripts/qa_browser.cjs": "a08e4fa5191a897af8d7716d96a07d4b2569eec3eaf3bcf97a1960658e3a8237",
+    "scripts/qa_outline.cjs": "1b9bb7543b78faf650125835b82dec7a73265e470b893140e98773274e5ce673",
+    "scripts/prepare_review.py": "86f9f3fb1e888a499b6fcfd7437cda95a90c8d89c3ee6718c1f7ba787fdcc3bd",
+    "../dist/content.js": "5cc15af8b5022d8a603a4713ca839dbee785a62251b7f9eeacb42abe7ee0bfec",
+    "source/formal-baseline.json": "830dfa3fba1ea6e4c22973f10a275843448ec35e6d590bdd623ef88828632574"
+  },
+  "reportHashes": {
+    "browser-report.json": "39cdc4687e8be1e9f9ff6e3be3fb87d2eba651e04e016289243a251dbc81c4e4",
+    "logic-report.json": "bfbe0d2a9e97d9d21c1a8a3e14e460dd4f58a38bff5f6acd49b0807437708449",
+    "viewport-report.json": "72c5909af976bbe4c2d8fb29ab9322135c5538ec26a7caff9b2b2e2b9cd9ebf6",
+    "file-save-report.json": "e2c678d811cf064a2c4420cc67621d166a3279802439f69fc2181c3d094e598e",
+    "build-restore-report.json": "c7f9cfbfd9663603eaf02f71f285a074fb158e285e938764443b8cf57801a167",
+    "preparation.json": "529d0f346ff1a0c5b5a09dd94bde4b8a60c7a654c166a1709ba9a12cea1fef78"
+  },
+  "validationReuse": [
+    "全章目录、手机阅读与编辑及断网样稿本轮重新检查。文件写盘、数据层和有限几何视口沿用相应报告。"
+  ],
+  "scope": "三种视口全章目录与桌面逐条定位，新增 Nav2 规划对照图截图和断网阅读。",
+  "outlineAudit": {
+    "widths": [
+      1440,
+      390,
+      320
+    ],
+    "chaptersPerWidth": 60,
+    "numberedSections": 445,
+    "childEntries": 259,
+    "numberedChildren": 68,
+    "entriesPerWidth": 1112,
+    "desktopSectionJumps": 1112
+  },
+  "currentFormalBaselineFiles": 7,
+  "priorFormalBaselineBackedUpFiles": 7
+}

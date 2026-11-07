@@ -1,0 +1,47 @@
+{
+  "passed": true,
+  "scope": "实际解压后的章节目录、图像、三级标题写盘与断网恢复",
+  "archiveSha256": "5a7ddebf5c5452f70d81a17769c3b507b15fd60183b883ae5b9fe80ad4a61491",
+  "extractedFilesMatched": 130,
+  "actualExtractedWrite": true,
+  "galleryImages": 7,
+  "screenshotImages": 20,
+  "checkedChapters": [
+    {
+      "width": 1440,
+      "id": "eco-model-rviz",
+      "number": 33,
+      "numbered": 11,
+      "childEntries": 9,
+      "numberedChildren": 4,
+      "entries": 28,
+      "jumps": 28
+    },
+    {
+      "width": 390,
+      "id": "math-estimation",
+      "number": 8,
+      "numbered": 7,
+      "childEntries": 4,
+      "numberedChildren": 1,
+      "entries": 17
+    },
+    {
+      "width": 320,
+      "id": "actions",
+      "number": 16,
+      "numbered": 9,
+      "childEntries": 3,
+      "numberedChildren": 2,
+      "entries": 20
+    }
+  ],
+  "checks": [
+    "逐文件核对解压副本 SHA256",
+    "三个视口实查不同章节及模型章所有目录锚点",
+    "截图与吉祥物离线解码",
+    "真实保存三级标题，保留原文备份并在空白浏览器断网恢复"
+  ],
+  "errors": [],
+  "external": []
+}

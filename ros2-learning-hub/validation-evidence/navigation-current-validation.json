@@ -1,0 +1,1047 @@
+{
+  "checkedAt": "2026-11-07",
+  "canonicalCode": "examples/navigation/bounded_navigation.py",
+  "codeSha256": "1121390d73f9d9bf15caf69e6771ab29d3c33cffe60cc24be55edf764d63b959",
+  "performed": "AST/py_compile、CLI 输入有限值/期限断言、安装签名检查与隔离假服务端协议实验。",
+  "installedPackages": {
+    "ros-jazzy-rclpy": "7.1.12-1noble.20260912.162354",
+    "ros-jazzy-nav2-msgs": "1.3.13-1noble.20260921.023049",
+    "ros-jazzy-action-msgs": "2.0.4-1noble.20260911.052334"
+  },
+  "rosDomainId": 217,
+  "discoveryRange": "LOCALHOST",
+  "actionPrefix": "/bounded_probe_",
+  "protocolCases": [
+    {
+      "case": "absent",
+      "passed": true,
+      "processElapsed_s": 0.755,
+      "exitCode": 5,
+      "summary": {
+        "event": "summary",
+        "goal_uuid": "c6f6e56845694301aca3e50ea009d0df",
+        "elapsed_s": 0.343,
+        "trigger": "server_timeout",
+        "goal_response": "not_sent",
+        "terminal": "unknown",
+        "terminal_source": "unconfirmed",
+        "cancel_state": "not_requested",
+        "cancel_attempts": 0,
+        "nav2_result_available": false,
+        "hardware_stop_verified": false
+      },
+      "events": [
+        {
+          "event": "summary",
+          "goal_uuid": "c6f6e56845694301aca3e50ea009d0df",
+          "elapsed_s": 0.343,
+          "trigger": "server_timeout",
+          "goal_response": "not_sent",
+          "terminal": "unknown",
+          "terminal_source": "unconfirmed",
+          "cancel_state": "not_requested",
+          "cancel_attempts": 0,
+          "nav2_result_available": false,
+          "hardware_stop_verified": false
+        }
+      ],
+      "stderrHadOutput": false
+    },
+    {
+      "case": "success",
+      "passed": true,
+      "processElapsed_s": 0.604,
+      "exitCode": 0,
+      "summary": {
+        "event": "summary",
+        "goal_uuid": "96c683812d1b47aea348cdcc288fc5c2",
+        "elapsed_s": 0.195,
+        "trigger": "navigation_terminal",
+        "goal_response": "accepted",
+        "terminal": "succeeded",
+        "terminal_source": "status_topic",
+        "cancel_state": "not_requested",
+        "cancel_attempts": 0,
+        "nav2_result_available": false,
+        "hardware_stop_verified": false
+      },
+      "events": [
+        {
+          "event": "goal_sent",
+          "goal_uuid": "96c683812d1b47aea348cdcc288fc5c2",
+          "elapsed_s": 0.093
+        },
+        {
+          "event": "goal_response",
+          "goal_uuid": "96c683812d1b47aea348cdcc288fc5c2",
+          "elapsed_s": 0.094,
+          "state": "accepted"
+        },
+        {
+          "event": "summary",
+          "goal_uuid": "96c683812d1b47aea348cdcc288fc5c2",
+          "elapsed_s": 0.195,
+          "trigger": "navigation_terminal",
+          "goal_response": "accepted",
+          "terminal": "succeeded",
+          "terminal_source": "status_topic",
+          "cancel_state": "not_requested",
+          "cancel_attempts": 0,
+          "nav2_result_available": false,
+          "hardware_stop_verified": false
+        }
+      ],
+      "stderrHadOutput": false
+    },
+    {
+      "case": "reject",
+      "passed": true,
+      "processElapsed_s": 0.498,
+      "exitCode": 2,
+      "summary": {
+        "event": "summary",
+        "goal_uuid": "73fbde84d42b4bd49125a34008c7b05c",
+        "elapsed_s": 0.094,
+        "trigger": "goal_rejected",
+        "goal_response": "rejected",
+        "terminal": "unknown",
+        "terminal_source": "unconfirmed",
+        "cancel_state": "not_requested",
+        "cancel_attempts": 0,
+        "nav2_result_available": false,
+        "hardware_stop_verified": false
+      },
+      "events": [
+        {
+          "event": "goal_sent",
+          "goal_uuid": "73fbde84d42b4bd49125a34008c7b05c",
+          "elapsed_s": 0.093
+        },
+        {
+          "event": "goal_response",
+          "goal_uuid": "73fbde84d42b4bd49125a34008c7b05c",
+          "elapsed_s": 0.094,
+          "state": "rejected"
+        },
+        {
+          "event": "summary",
+          "goal_uuid": "73fbde84d42b4bd49125a34008c7b05c",
+          "elapsed_s": 0.094,
+          "trigger": "goal_rejected",
+          "goal_response": "rejected",
+          "terminal": "unknown",
+          "terminal_source": "unconfirmed",
+          "cancel_state": "not_requested",
+          "cancel_attempts": 0,
+          "nav2_result_available": false,
+          "hardware_stop_verified": false
+        }
+      ],
+      "stderrHadOutput": false
+    },
+    {
+      "case": "aborted",
+      "passed": true,
+      "processElapsed_s": 0.598,
+      "exitCode": 3,
+      "summary": {
+        "event": "summary",
+        "goal_uuid": "fe015fb8a4354b9ca0e89645f75e34c1",
+        "elapsed_s": 0.195,
+        "trigger": "navigation_terminal",
+        "goal_response": "accepted",
+        "terminal": "aborted",
+        "terminal_source": "status_topic",
+        "cancel_state": "not_requested",
+        "cancel_attempts": 0,
+        "nav2_result_available": false,
+        "hardware_stop_verified": false
+      },
+      "events": [
+        {
+          "event": "goal_sent",
+          "goal_uuid": "fe015fb8a4354b9ca0e89645f75e34c1",
+          "elapsed_s": 0.093
+        },
+        {
+          "event": "goal_response",
+          "goal_uuid": "fe015fb8a4354b9ca0e89645f75e34c1",
+          "elapsed_s": 0.093,
+          "state": "accepted"
+        },
+        {
+          "event": "summary",
+          "goal_uuid": "fe015fb8a4354b9ca0e89645f75e34c1",
+          "elapsed_s": 0.195,
+          "trigger": "navigation_terminal",
+          "goal_response": "accepted",
+          "terminal": "aborted",
+          "terminal_source": "status_topic",
+          "cancel_state": "not_requested",
+          "cancel_attempts": 0,
+          "nav2_result_available": false,
+          "hardware_stop_verified": false
+        }
+      ],
+      "stderrHadOutput": false
+    },
+    {
+      "case": "cancel",
+      "passed": true,
+      "processElapsed_s": 0.789,
+      "exitCode": 4,
+      "summary": {
+        "event": "summary",
+        "goal_uuid": "d8b2e53b55264646aba9e41918f3a23a",
+        "elapsed_s": 0.36,
+        "trigger": "navigation_timeout",
+        "goal_response": "accepted",
+        "terminal": "canceled",
+        "terminal_source": "status_topic",
+        "cancel_state": "accepted_not_terminal",
+        "cancel_attempts": 1,
+        "nav2_result_available": false,
+        "hardware_stop_verified": false
+      },
+      "events": [
+        {
+          "event": "goal_sent",
+          "goal_uuid": "d8b2e53b55264646aba9e41918f3a23a",
+          "elapsed_s": 0.097
+        },
+        {
+          "event": "goal_response",
+          "goal_uuid": "d8b2e53b55264646aba9e41918f3a23a",
+          "elapsed_s": 0.097,
+          "state": "accepted"
+        },
+        {
+          "event": "cancel_phase",
+          "goal_uuid": "d8b2e53b55264646aba9e41918f3a23a",
+          "elapsed_s": 0.348,
+          "timeout_s": 0.9
+        },
+        {
+          "event": "cancel_sent",
+          "goal_uuid": "d8b2e53b55264646aba9e41918f3a23a",
+          "elapsed_s": 0.348,
+          "attempt": 1
+        },
+        {
+          "event": "cancel_response",
+          "goal_uuid": "d8b2e53b55264646aba9e41918f3a23a",
+          "elapsed_s": 0.349,
+          "return_code": 0,
+          "own_goal_canceling": true
+        },
+        {
+          "event": "terminal_wait",
+          "goal_uuid": "d8b2e53b55264646aba9e41918f3a23a",
+          "elapsed_s": 0.349,
+          "timeout_s": 0.4,
+          "cancel_state": "accepted_not_terminal"
+        },
+        {
+          "event": "summary",
+          "goal_uuid": "d8b2e53b55264646aba9e41918f3a23a",
+          "elapsed_s": 0.36,
+          "trigger": "navigation_timeout",
+          "goal_response": "accepted",
+          "terminal": "canceled",
+          "terminal_source": "status_topic",
+          "cancel_state": "accepted_not_terminal",
+          "cancel_attempts": 1,
+          "nav2_result_available": false,
+          "hardware_stop_verified": false
+        }
+      ],
+      "stderrHadOutput": false
+    },
+    {
+      "case": "late_accept",
+      "passed": true,
+      "processElapsed_s": 1.175,
+      "exitCode": 4,
+      "summary": {
+        "event": "summary",
+        "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+        "elapsed_s": 0.788,
+        "trigger": "goal_response_timeout",
+        "goal_response": "accepted",
+        "terminal": "canceled",
+        "terminal_source": "status_topic",
+        "cancel_state": "accepted_not_terminal",
+        "cancel_attempts": 5,
+        "nav2_result_available": false,
+        "hardware_stop_verified": false
+      },
+      "events": [
+        {
+          "event": "goal_sent",
+          "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+          "elapsed_s": 0.096
+        },
+        {
+          "event": "acceptance_unknown",
+          "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+          "elapsed_s": 0.346,
+          "reason": "goal_response_timeout",
+          "detail": "服务端可能已接受；按已知 UUID 有界请求取消，禁止自动重发目标"
+        },
+        {
+          "event": "cancel_phase",
+          "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+          "elapsed_s": 0.346,
+          "timeout_s": 0.9
+        },
+        {
+          "event": "cancel_sent",
+          "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+          "elapsed_s": 0.346,
+          "attempt": 1
+        },
+        {
+          "event": "cancel_response",
+          "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+          "elapsed_s": 0.347,
+          "return_code": 2,
+          "own_goal_canceling": false
+        },
+        {
+          "event": "cancel_sent",
+          "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+          "elapsed_s": 0.448,
+          "attempt": 2
+        },
+        {
+          "event": "cancel_response",
+          "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+          "elapsed_s": 0.448,
+          "return_code": 2,
+          "own_goal_canceling": false
+        },
+        {
+          "event": "cancel_sent",
+          "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+          "elapsed_s": 0.549,
+          "attempt": 3
+        },
+        {
+          "event": "cancel_response",
+          "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+          "elapsed_s": 0.55,
+          "return_code": 2,
+          "own_goal_canceling": false
+        },
+        {
+          "event": "cancel_sent",
+          "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+          "elapsed_s": 0.65,
+          "attempt": 4
+        },
+        {
+          "event": "cancel_response",
+          "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+          "elapsed_s": 0.651,
+          "return_code": 2,
+          "own_goal_canceling": false
+        },
+        {
+          "event": "goal_response",
+          "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+          "elapsed_s": 0.747,
+          "state": "accepted"
+        },
+        {
+          "event": "cancel_sent",
+          "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+          "elapsed_s": 0.768,
+          "attempt": 5
+        },
+        {
+          "event": "cancel_response",
+          "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+          "elapsed_s": 0.768,
+          "return_code": 0,
+          "own_goal_canceling": true
+        },
+        {
+          "event": "terminal_wait",
+          "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+          "elapsed_s": 0.768,
+          "timeout_s": 0.4,
+          "cancel_state": "accepted_not_terminal"
+        },
+        {
+          "event": "summary",
+          "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+          "elapsed_s": 0.788,
+          "trigger": "goal_response_timeout",
+          "goal_response": "accepted",
+          "terminal": "canceled",
+          "terminal_source": "status_topic",
+          "cancel_state": "accepted_not_terminal",
+          "cancel_attempts": 5,
+          "nav2_result_available": false,
+          "hardware_stop_verified": false
+        }
+      ],
+      "stderrHadOutput": false
+    },
+    {
+      "case": "goal_no_ack",
+      "passed": true,
+      "processElapsed_s": 2.055,
+      "exitCode": 5,
+      "summary": {
+        "event": "summary",
+        "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+        "elapsed_s": 1.657,
+        "trigger": "goal_response_timeout",
+        "goal_response": "unknown",
+        "terminal": "unknown",
+        "terminal_source": "unconfirmed",
+        "cancel_state": "unknown_goal_id",
+        "cancel_attempts": 9,
+        "nav2_result_available": false,
+        "hardware_stop_verified": false
+      },
+      "events": [
+        {
+          "event": "goal_sent",
+          "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+          "elapsed_s": 0.106
+        },
+        {
+          "event": "acceptance_unknown",
+          "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+          "elapsed_s": 0.356,
+          "reason": "goal_response_timeout",
+          "detail": "服务端可能已接受；按已知 UUID 有界请求取消，禁止自动重发目标"
+        },
+        {
+          "event": "cancel_phase",
+          "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+          "elapsed_s": 0.356,
+          "timeout_s": 0.9
+        },
+        {
+          "event": "cancel_sent",
+          "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+          "elapsed_s": 0.357,
+          "attempt": 1
+        },
+        {
+          "event": "cancel_response",
+          "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+          "elapsed_s": 0.357,
+          "return_code": 2,
+          "own_goal_canceling": false
+        },
+        {
+          "event": "cancel_sent",
+          "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+          "elapsed_s": 0.458,
+          "attempt": 2
+        },
+        {
+          "event": "cancel_response",
+          "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+          "elapsed_s": 0.459,
+          "return_code": 2,
+          "own_goal_canceling": false
+        },
+        {
+          "event": "cancel_sent",
+          "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+          "elapsed_s": 0.559,
+          "attempt": 3
+        },
+        {
+          "event": "cancel_response",
+          "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+          "elapsed_s": 0.56,
+          "return_code": 2,
+          "own_goal_canceling": false
+        },
+        {
+          "event": "cancel_sent",
+          "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+          "elapsed_s": 0.661,
+          "attempt": 4
+        },
+        {
+          "event": "cancel_response",
+          "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+          "elapsed_s": 0.662,
+          "return_code": 2,
+          "own_goal_canceling": false
+        },
+        {
+          "event": "cancel_sent",
+          "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+          "elapsed_s": 0.762,
+          "attempt": 5
+        },
+        {
+          "event": "cancel_response",
+          "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+          "elapsed_s": 0.763,
+          "return_code": 2,
+          "own_goal_canceling": false
+        },
+        {
+          "event": "cancel_sent",
+          "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+          "elapsed_s": 0.863,
+          "attempt": 6
+        },
+        {
+          "event": "cancel_response",
+          "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+          "elapsed_s": 0.864,
+          "return_code": 2,
+          "own_goal_canceling": false
+        },
+        {
+          "event": "cancel_sent",
+          "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+          "elapsed_s": 0.964,
+          "attempt": 7
+        },
+        {
+          "event": "cancel_response",
+          "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+          "elapsed_s": 0.965,
+          "return_code": 2,
+          "own_goal_canceling": false
+        },
+        {
+          "event": "cancel_sent",
+          "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+          "elapsed_s": 1.066,
+          "attempt": 8
+        },
+        {
+          "event": "cancel_response",
+          "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+          "elapsed_s": 1.066,
+          "return_code": 2,
+          "own_goal_canceling": false
+        },
+        {
+          "event": "cancel_sent",
+          "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+          "elapsed_s": 1.167,
+          "attempt": 9
+        },
+        {
+          "event": "cancel_response",
+          "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+          "elapsed_s": 1.167,
+          "return_code": 2,
+          "own_goal_canceling": false
+        },
+        {
+          "event": "terminal_wait",
+          "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+          "elapsed_s": 1.257,
+          "timeout_s": 0.4,
+          "cancel_state": "unknown_goal_id"
+        },
+        {
+          "event": "summary",
+          "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+          "elapsed_s": 1.657,
+          "trigger": "goal_response_timeout",
+          "goal_response": "unknown",
+          "terminal": "unknown",
+          "terminal_source": "unconfirmed",
+          "cancel_state": "unknown_goal_id",
+          "cancel_attempts": 9,
+          "nav2_result_available": false,
+          "hardware_stop_verified": false
+        }
+      ],
+      "stderrHadOutput": false
+    },
+    {
+      "case": "cancel_no_ack",
+      "passed": true,
+      "processElapsed_s": 2.029,
+      "exitCode": 5,
+      "summary": {
+        "event": "summary",
+        "goal_uuid": "925fa74b5a1c474991b3f4d375f761e9",
+        "elapsed_s": 1.647,
+        "trigger": "navigation_timeout",
+        "goal_response": "accepted",
+        "terminal": "unknown",
+        "terminal_source": "unconfirmed",
+        "cancel_state": "response_timeout",
+        "cancel_attempts": 1,
+        "nav2_result_available": false,
+        "hardware_stop_verified": false
+      },
+      "events": [
+        {
+          "event": "goal_sent",
+          "goal_uuid": "925fa74b5a1c474991b3f4d375f761e9",
+          "elapsed_s": 0.095
+        },
+        {
+          "event": "goal_response",
+          "goal_uuid": "925fa74b5a1c474991b3f4d375f761e9",
+          "elapsed_s": 0.096,
+          "state": "accepted"
+        },
+        {
+          "event": "cancel_phase",
+          "goal_uuid": "925fa74b5a1c474991b3f4d375f761e9",
+          "elapsed_s": 0.347,
+          "timeout_s": 0.9
+        },
+        {
+          "event": "cancel_sent",
+          "goal_uuid": "925fa74b5a1c474991b3f4d375f761e9",
+          "elapsed_s": 0.347,
+          "attempt": 1
+        },
+        {
+          "event": "terminal_wait",
+          "goal_uuid": "925fa74b5a1c474991b3f4d375f761e9",
+          "elapsed_s": 1.247,
+          "timeout_s": 0.4,
+          "cancel_state": "response_timeout"
+        },
+        {
+          "event": "summary",
+          "goal_uuid": "925fa74b5a1c474991b3f4d375f761e9",
+          "elapsed_s": 1.647,
+          "trigger": "navigation_timeout",
+          "goal_response": "accepted",
+          "terminal": "unknown",
+          "terminal_source": "unconfirmed",
+          "cancel_state": "response_timeout",
+          "cancel_attempts": 1,
+          "nav2_result_available": false,
+          "hardware_stop_verified": false
+        }
+      ],
+      "stderrHadOutput": false
+    },
+    {
+      "case": "cancel_no_terminal",
+      "passed": true,
+      "processElapsed_s": 1.124,
+      "exitCode": 5,
+      "summary": {
+        "event": "summary",
+        "goal_uuid": "3d113eaed765480695aedd3feb38aebc",
+        "elapsed_s": 0.748,
+        "trigger": "navigation_timeout",
+        "goal_response": "accepted",
+        "terminal": "unknown",
+        "terminal_source": "unconfirmed",
+        "cancel_state": "accepted_not_terminal",
+        "cancel_attempts": 1,
+        "nav2_result_available": false,
+        "hardware_stop_verified": false
+      },
+      "events": [
+        {
+          "event": "goal_sent",
+          "goal_uuid": "3d113eaed765480695aedd3feb38aebc",
+          "elapsed_s": 0.096
+        },
+        {
+          "event": "goal_response",
+          "goal_uuid": "3d113eaed765480695aedd3feb38aebc",
+          "elapsed_s": 0.096,
+          "state": "accepted"
+        },
+        {
+          "event": "cancel_phase",
+          "goal_uuid": "3d113eaed765480695aedd3feb38aebc",
+          "elapsed_s": 0.347,
+          "timeout_s": 0.9
+        },
+        {
+          "event": "cancel_sent",
+          "goal_uuid": "3d113eaed765480695aedd3feb38aebc",
+          "elapsed_s": 0.347,
+          "attempt": 1
+        },
+        {
+          "event": "cancel_response",
+          "goal_uuid": "3d113eaed765480695aedd3feb38aebc",
+          "elapsed_s": 0.347,
+          "return_code": 0,
+          "own_goal_canceling": true
+        },
+        {
+          "event": "terminal_wait",
+          "goal_uuid": "3d113eaed765480695aedd3feb38aebc",
+          "elapsed_s": 0.347,
+          "timeout_s": 0.4,
+          "cancel_state": "accepted_not_terminal"
+        },
+        {
+          "event": "summary",
+          "goal_uuid": "3d113eaed765480695aedd3feb38aebc",
+          "elapsed_s": 0.748,
+          "trigger": "navigation_timeout",
+          "goal_response": "accepted",
+          "terminal": "unknown",
+          "terminal_source": "unconfirmed",
+          "cancel_state": "accepted_not_terminal",
+          "cancel_attempts": 1,
+          "nav2_result_available": false,
+          "hardware_stop_verified": false
+        }
+      ],
+      "stderrHadOutput": false
+    },
+    {
+      "case": "paused_clock",
+      "passed": true,
+      "processElapsed_s": 0.738,
+      "exitCode": 4,
+      "summary": {
+        "event": "summary",
+        "goal_uuid": "38e32cb801f042ef8a07381247bcfd5b",
+        "elapsed_s": 0.36,
+        "trigger": "navigation_timeout",
+        "goal_response": "accepted",
+        "terminal": "canceled",
+        "terminal_source": "status_topic",
+        "cancel_state": "accepted_not_terminal",
+        "cancel_attempts": 1,
+        "nav2_result_available": false,
+        "hardware_stop_verified": false
+      },
+      "events": [
+        {
+          "event": "goal_sent",
+          "goal_uuid": "38e32cb801f042ef8a07381247bcfd5b",
+          "elapsed_s": 0.097
+        },
+        {
+          "event": "goal_response",
+          "goal_uuid": "38e32cb801f042ef8a07381247bcfd5b",
+          "elapsed_s": 0.098,
+          "state": "accepted"
+        },
+        {
+          "event": "cancel_phase",
+          "goal_uuid": "38e32cb801f042ef8a07381247bcfd5b",
+          "elapsed_s": 0.348,
+          "timeout_s": 0.9
+        },
+        {
+          "event": "cancel_sent",
+          "goal_uuid": "38e32cb801f042ef8a07381247bcfd5b",
+          "elapsed_s": 0.348,
+          "attempt": 1
+        },
+        {
+          "event": "cancel_response",
+          "goal_uuid": "38e32cb801f042ef8a07381247bcfd5b",
+          "elapsed_s": 0.349,
+          "return_code": 0,
+          "own_goal_canceling": true
+        },
+        {
+          "event": "terminal_wait",
+          "goal_uuid": "38e32cb801f042ef8a07381247bcfd5b",
+          "elapsed_s": 0.349,
+          "timeout_s": 0.4,
+          "cancel_state": "accepted_not_terminal"
+        },
+        {
+          "event": "summary",
+          "goal_uuid": "38e32cb801f042ef8a07381247bcfd5b",
+          "elapsed_s": 0.36,
+          "trigger": "navigation_timeout",
+          "goal_response": "accepted",
+          "terminal": "canceled",
+          "terminal_source": "status_topic",
+          "cancel_state": "accepted_not_terminal",
+          "cancel_attempts": 1,
+          "nav2_result_available": false,
+          "hardware_stop_verified": false
+        }
+      ],
+      "stderrHadOutput": false
+    },
+    {
+      "case": "sigint",
+      "passed": true,
+      "processElapsed_s": 1.463,
+      "exitCode": 4,
+      "summary": {
+        "event": "summary",
+        "goal_uuid": "b410b1c583334668842e2702702359c0",
+        "elapsed_s": 1.083,
+        "trigger": "navigation_interrupted",
+        "goal_response": "accepted",
+        "terminal": "canceled",
+        "terminal_source": "status_topic",
+        "cancel_state": "accepted_not_terminal",
+        "cancel_attempts": 1,
+        "nav2_result_available": false,
+        "hardware_stop_verified": false
+      },
+      "events": [
+        {
+          "event": "goal_sent",
+          "goal_uuid": "b410b1c583334668842e2702702359c0",
+          "elapsed_s": 0.095
+        },
+        {
+          "event": "goal_response",
+          "goal_uuid": "b410b1c583334668842e2702702359c0",
+          "elapsed_s": 0.095,
+          "state": "accepted"
+        },
+        {
+          "event": "cancel_phase",
+          "goal_uuid": "b410b1c583334668842e2702702359c0",
+          "elapsed_s": 1.063,
+          "timeout_s": 0.9
+        },
+        {
+          "event": "cancel_sent",
+          "goal_uuid": "b410b1c583334668842e2702702359c0",
+          "elapsed_s": 1.063,
+          "attempt": 1
+        },
+        {
+          "event": "cancel_response",
+          "goal_uuid": "b410b1c583334668842e2702702359c0",
+          "elapsed_s": 1.064,
+          "return_code": 0,
+          "own_goal_canceling": true
+        },
+        {
+          "event": "terminal_wait",
+          "goal_uuid": "b410b1c583334668842e2702702359c0",
+          "elapsed_s": 1.064,
+          "timeout_s": 0.4,
+          "cancel_state": "accepted_not_terminal"
+        },
+        {
+          "event": "summary",
+          "goal_uuid": "b410b1c583334668842e2702702359c0",
+          "elapsed_s": 1.083,
+          "trigger": "navigation_interrupted",
+          "goal_response": "accepted",
+          "terminal": "canceled",
+          "terminal_source": "status_topic",
+          "cancel_state": "accepted_not_terminal",
+          "cancel_attempts": 1,
+          "nav2_result_available": false,
+          "hardware_stop_verified": false
+        }
+      ],
+      "stderrHadOutput": false
+    },
+    {
+      "case": "clock_absent",
+      "passed": true,
+      "processElapsed_s": 0.715,
+      "exitCode": 5,
+      "summary": {
+        "event": "summary",
+        "goal_uuid": "fae9aeb855e14b0face3191c51113acb",
+        "elapsed_s": 0.341,
+        "trigger": "clock_timeout",
+        "goal_response": "not_sent",
+        "terminal": "unknown",
+        "terminal_source": "unconfirmed",
+        "cancel_state": "not_requested",
+        "cancel_attempts": 0,
+        "nav2_result_available": false,
+        "hardware_stop_verified": false
+      },
+      "events": [
+        {
+          "event": "summary",
+          "goal_uuid": "fae9aeb855e14b0face3191c51113acb",
+          "elapsed_s": 0.341,
+          "trigger": "clock_timeout",
+          "goal_response": "not_sent",
+          "terminal": "unknown",
+          "terminal_source": "unconfirmed",
+          "cancel_state": "not_requested",
+          "cancel_attempts": 0,
+          "nav2_result_available": false,
+          "hardware_stop_verified": false
+        }
+      ],
+      "stderrHadOutput": false
+    }
+  ],
+  "notPerformed": [
+    "完整 Nav2 导航栈启动与生命周期验收",
+    "Gazebo 地图/定位/代价地图测试",
+    "真实底盘/硬件停车",
+    "任意中间件故障及硬实时截止保证"
+  ],
+  "reproduction": "examples/navigation/README.md 内提供完整隔离假服务端脚本；从 ros2-learning-hub 运行，仅用测试动作名，不替换成真实导航服务。",
+  "timingAssertions": [
+    {
+      "case": "absent",
+      "checks": [
+        {
+          "stage": "server",
+          "observed_s": 0.343,
+          "configured_s": 0.3,
+          "schedulerTolerance_s": 0.2
+        }
+      ]
+    },
+    {
+      "case": "cancel",
+      "checks": [
+        {
+          "stage": "cancel",
+          "observed_s": 0.001,
+          "configured_s": 0.9,
+          "schedulerTolerance_s": 0.2
+        },
+        {
+          "stage": "terminal",
+          "observed_s": 0.011,
+          "configured_s": 0.4,
+          "schedulerTolerance_s": 0.2
+        }
+      ]
+    },
+    {
+      "case": "late_accept",
+      "checks": [
+        {
+          "stage": "cancel",
+          "observed_s": 0.422,
+          "configured_s": 0.9,
+          "schedulerTolerance_s": 0.2
+        },
+        {
+          "stage": "terminal",
+          "observed_s": 0.02,
+          "configured_s": 0.4,
+          "schedulerTolerance_s": 0.2
+        },
+        {
+          "stage": "goal_response",
+          "observed_s": 0.25,
+          "configured_s": 0.25,
+          "schedulerTolerance_s": 0.2
+        }
+      ]
+    },
+    {
+      "case": "goal_no_ack",
+      "checks": [
+        {
+          "stage": "cancel",
+          "observed_s": 0.901,
+          "configured_s": 0.9,
+          "schedulerTolerance_s": 0.2
+        },
+        {
+          "stage": "terminal",
+          "observed_s": 0.4,
+          "configured_s": 0.4,
+          "schedulerTolerance_s": 0.2
+        },
+        {
+          "stage": "goal_response",
+          "observed_s": 0.25,
+          "configured_s": 0.25,
+          "schedulerTolerance_s": 0.2
+        }
+      ]
+    },
+    {
+      "case": "cancel_no_ack",
+      "checks": [
+        {
+          "stage": "cancel",
+          "observed_s": 0.9,
+          "configured_s": 0.9,
+          "schedulerTolerance_s": 0.2
+        },
+        {
+          "stage": "terminal",
+          "observed_s": 0.4,
+          "configured_s": 0.4,
+          "schedulerTolerance_s": 0.2
+        }
+      ]
+    },
+    {
+      "case": "cancel_no_terminal",
+      "checks": [
+        {
+          "stage": "cancel",
+          "observed_s": 0.0,
+          "configured_s": 0.9,
+          "schedulerTolerance_s": 0.2
+        },
+        {
+          "stage": "terminal",
+          "observed_s": 0.401,
+          "configured_s": 0.4,
+          "schedulerTolerance_s": 0.2
+        }
+      ]
+    },
+    {
+      "case": "paused_clock",
+      "checks": [
+        {
+          "stage": "cancel",
+          "observed_s": 0.001,
+          "configured_s": 0.9,
+          "schedulerTolerance_s": 0.2
+        },
+        {
+          "stage": "terminal",
+          "observed_s": 0.011,
+          "configured_s": 0.4,
+          "schedulerTolerance_s": 0.2
+        }
+      ]
+    },
+    {
+      "case": "sigint",
+      "checks": [
+        {
+          "stage": "cancel",
+          "observed_s": 0.001,
+          "configured_s": 0.9,
+          "schedulerTolerance_s": 0.2
+        },
+        {
+          "stage": "terminal",
+          "observed_s": 0.019,
+          "configured_s": 0.4,
+          "schedulerTolerance_s": 0.2
+        }
+      ]
+    },
+    {
+      "case": "clock_absent",
+      "checks": [
+        {
+          "stage": "clock",
+          "observed_s": 0.341,
+          "configured_s": 0.3,
+          "schedulerTolerance_s": 0.2
+        }
+      ]
+    }
+  ]
+}

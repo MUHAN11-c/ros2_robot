@@ -1,0 +1,84 @@
+{
+  "checkedAt": "2026-11-07",
+  "iteration": "2026-11-07-r5",
+  "findings": [
+    {
+      "id": "I5-BAG-01",
+      "status": "resolved",
+      "title": "未请求clock的三个回放命令旁注误称发布clock",
+      "scope": "time-bag快捷入口/海龟步骤、eco-data-observability的chatter步骤",
+      "resolution": "只修相应命令旁注并保持主题筛选；原GUI/talker练习不冒充本轮运行"
+    },
+    {
+      "id": "I5-BAG-02",
+      "status": "resolved",
+      "title": "对齐padding误作消息语义一致性判据",
+      "observedFailure": {
+        "exitCode": 1,
+        "recording": "system_sqlite",
+        "fields": {
+          "sequence": 0,
+          "headerNs": 1000000000000,
+          "frameId": "synthetic_frame",
+          "pointM": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "recordLength": 60,
+        "reserializedLength": 60,
+        "differentByteOffsets": [
+          32,
+          33,
+          34,
+          35
+        ],
+        "expectedSha256": "8a8d38b670394b8d418f76efc45d11a9aa5a77edf74810b14a3cebf093d70d83",
+        "actualSha256": "9430e57a63b797c189958e67523587871c15deec2556512885344e74981610fe"
+      },
+      "resolution": "对发布/回放比较所有Header和Point字段；原始SHA仅标识实际字节，显式同bytes落盘仍逐字节比较"
+    },
+    {
+      "id": "I5-BAG-03",
+      "status": "resolved",
+      "title": "Jazzy不存在qos_profile_clock导出",
+      "observedFailure": {
+        "exitCode": 1,
+        "type": "ImportError"
+      },
+      "resolution": "实际使用深度1/best_effort的显式Clock订阅并完整重跑"
+    },
+    {
+      "id": "I5-BAG-04",
+      "status": "resolved",
+      "title": "相对输出路径、负剩余spin与自然退出信号竞态",
+      "scope": "独立源码审查发现的参数/夹具边界；不冒称这些故障均运行触发",
+      "resolution": "先resolve新路径、非负spin等待、ProcessLookupError继续清理；相对路径及6项CLI另实测"
+    },
+    {
+      "id": "I5-META-01",
+      "status": "resolved",
+      "title": "历史汇总共享字典使r3误含r4指标",
+      "evidence": "delivery-current-validation.json中独立r3交付快照",
+      "resolution": "恢复r3的118完整文件/274练习/8表及其余可证交付统计，删除误归属实验指标；新历史采用deepcopy。"
+    }
+  ],
+  "verification": {
+    "actualRecordings": 3,
+    "actualPlaybacks": 2,
+    "normalChildReturnCodes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "sourceFingerprints": 7,
+    "failedRuntimeAttempts": 2,
+    "scope": "最后同源全流程通过；父中断/原生挂起未注入，早期语法修正不算ROS执行。"
+  }
+}

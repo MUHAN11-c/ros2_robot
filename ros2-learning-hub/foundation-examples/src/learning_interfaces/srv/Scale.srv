@@ -1,4 +1,11 @@
+# 【中文教学注释】 foundation-examples/src/learning_interfaces/srv/Scale.srv
+# 输入输出：输入为 msg/srv/action 定义及生成配置；输出为两种语言可使用的类型和 wheel_feedback 测量。
+# 执行顺序与边界：接口必须先生成并加载再导入；轮速单位 rad/s，Header 指定采样时刻与坐标系，gain 无量纲，valid 不能被缺省数值替代。
+# 待缩放输入；物理单位由业务约定，scaled与value应保持相同单位。
 float64 value
+# 无量纲缩放系数；接口类型自身不约束有限性或范围，业务层需验证NaN/Inf等输入。
 float64 gain
+# 分隔请求与响应。
 ---
+# 响应scaled=value×gain；需明确错误、溢出或非有限输入的业务策略。
 float64 scaled

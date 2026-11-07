@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "scope": "在独立副本移出生成的architecture.html/.md后，运行build_content.py --require-full，由源修订重建；逐字节与移出前一致。",
+  "files": {
+    "dist/chapters/architecture.html": "3db63c1679119ea2e994e0b0a35b379f582b69c114bf1a8b6553f65e2da23299",
+    "dist/chapters/architecture.md": "0bf39c940b3f9f1819de7b9c8d58eb5788f6a710fe632028bddfe1f8a4f44de9",
+    "source/local-edits.json": "bb6db7c2c2c76b19141241823f8a660f01ecbd105771146b76cf12aa33f3a790"
+  },
+  "backendUnitChecks": 5,
+  "fixtureRoot": "/tmp/ros2-textbook-save-1tq7gdyp/ros2-learning-hub"
+}

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!-- 将此单个系统追加到学习模型的 URDF。输入为每轮 rad/s，输出为模拟 rad 与 rad/s。 -->
+<ros2_control name="LearningMockDrive" type="system">
+  <hardware>
+    <!-- 只在内存回显速度和按控制周期积分位置。这里没有设备、物理仿真、力矩或地面接触。 -->
+    <plugin>mock_components/GenericSystem</plugin>
+    <param name="calculate_dynamics">true</param>
+  </hardware>
+  <!-- 名称必须与几何 URDF 及控制器 YAML 一致。初始角度为 0 rad。 -->
+  <joint name="left_wheel_joint">
+    <command_interface name="velocity"/>
+    <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+    <state_interface name="velocity"/>
+  </joint>
+  <joint name="right_wheel_joint">
+    <command_interface name="velocity"/>
+    <state_interface name="position"><param name="initial_value">0.0</param></state_interface>
+    <state_interface name="velocity"/>
+  </joint>
+</ros2_control>

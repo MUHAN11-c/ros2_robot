@@ -1,0 +1,7 @@
+# 受控反例：发布者仍是transient_local，但晚加入订阅只请求volatile。
+# 策略可相容却不请求早先的历史样本；本例不会再次发布静态状态。
+/bag_lab/static:
+  history: keep_last
+  depth: 1
+  reliability: reliable
+  durability: volatile

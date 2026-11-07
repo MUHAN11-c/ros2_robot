@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!-- 【中文教学注释】 robot.urdf：完整的最小显示模型 -->
+<!-- 本例作用：这是显示/TF 教学文件，未提供用于物理仿真的惯量与传感器插件。 -->
+<!-- 输入输出：输入为 URDF/Xacro、关节状态和 RViz 固定坐标系；输出为展开后的模型与可视化。 -->
+<!-- 执行顺序与边界：几何尺寸 m、rpy 为 rad；先展开宏再检查 URDF，visual/collision/inertial 职责不同，此最小显示模型没有完整动力学和控制能力。 -->
+<!-- URDF机器人根元素；此最小模型用于显示，不能由此推断已配齐惯性、控制器和真实硬件。 -->
+<robot name="learning_base">
+  <link name="base_link">
+    <visual>
+      <!-- 几何尺寸采用m；visual用于显示、collision用于碰撞，二者不能替代inertial动力学参数。 -->
+      <geometry><box size="0.4 0.3 0.12"/></geometry>
+      <material name="body"><color rgba="0.15 0.4 0.55 1"/></material>
+    </visual>
+    <collision><geometry><box size="0.4 0.3 0.12"/></geometry></collision>
+  </link>
+  <link name="laser">
+    <visual>
+      <geometry><cylinder radius="0.04" length="0.05"/></geometry>
+      <material name="sensor"><color rgba="0.9 0.5 0.1 1"/></material>
+    </visual>
+  </link>
+  <!-- 定义父/子link间关节；fixed表示固定安装关系，不从joint_states读取自由度。 -->
+  <joint name="base_to_laser" type="fixed">
+    <!-- 声明此关节的父link；整个URDF应形成无环树，不能让同一子link有多个父关系。 -->
+    <parent link="base_link"/><child link="laser"/>
+    <!-- xyz平移单位m，rpy旋转单位rad；这是相对父元素的姿态，不是世界坐标的任意标注。 -->
+    <origin xyz="0.15 0 0.1" rpy="0 0 0"/>
+  </joint>
+</robot>

@@ -1,0 +1,7 @@
+# 仅覆盖合成静态状态。输入/派生话题继续采用其发布者的可靠、易失QoS。
+# 晚加入录制器请求历史缓存，前提是仍存活的发布者提供transient_local。
+/bag_lab/static:
+  history: keep_last
+  depth: 1
+  reliability: reliable
+  durability: transient_local

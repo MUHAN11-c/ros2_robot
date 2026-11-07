@@ -1,0 +1,1125 @@
+{
+  "checkedAt": "2026-11-07",
+  "scopeClaim": "以下记录本站实际编写的章节范围，不表示原始资料逐段收录。第三方页面的核读/对应深度另见 reference-coverage.json。",
+  "chapters": [
+    {
+      "id": "architecture",
+      "title": "ROS 2 的分层与通信选型",
+      "scope": "节点是计算图中的功能实体，进程是操作系统的隔离单位；一个进程可以包含多个节点。包则负责代码、依赖与安装组织，三者不能混为一谈。",
+      "sectionTitles": [
+        "1. 先把机器人问题拆成可验证的数据流",
+        "2. 包、可执行程序、进程和节点是四个概念",
+        "3. 从应用一路到网络，中间发生了什么",
+        "4. Topic、Service、Action 怎样选",
+        "5. 名字、命名空间和类型共同定义接口",
+        "6. 第一次跨语言实验：从输出推断系统结构",
+        "7. 将演示映射回真实机器人"
+      ],
+      "sectionProseChineseCharacters": 2281,
+      "equations": 0,
+      "exercises": 4,
+      "validation": "依据官方 Jazzy 文档与示例核对；本研究未运行 ROS 节点"
+    },
+    {
+      "id": "installation",
+      "title": "环境安装与第一条跨语言通信",
+      "scope": "本路线默认 Ubuntu 24.04 和 Jazzy。Jazzy 是长期支持版本，但截至核对日期并非最新发行版。",
+      "sectionTitles": [
+        "1. 安装前先固定目标平台和联网边界",
+        "2. 配置 UTF-8 环境并理解 locale 的作用",
+        "3. 启用 Universe，并由 ros2-apt-source 管理 ROS 软件源",
+        "4. 选择 desktop 或 ros-base，而不是混装发行版",
+        "5. source 环境到底改变了什么",
+        "6. 三步验收：可发现、可收发、可诊断",
+        "7. 常见安装错误怎样逐步定位"
+      ],
+      "sectionProseChineseCharacters": 1921,
+      "equations": 0,
+      "exercises": 4,
+      "validation": "依据官方 Jazzy 文档与示例核对；本研究未运行 ROS 节点"
+    },
+    {
+      "id": "workspace",
+      "title": "工作空间、包、ament 与 colcon",
+      "scope": "colcon 编排多个包；ament_cmake 描述 CMake 包构建，ament_python 使用 setuptools 安装 Python 包。rosdep 按 package.xml 安装外部依赖。",
+      "sectionTitles": [
+        "1. 一个工作空间保存什么，哪些东西由构建产生",
+        "2. package.xml 是依赖声明，不是编译器脚本",
+        "3. C++：从源码文件到安装入口",
+        "4. Python：模块、main 与 console_scripts 的对应",
+        "5. 依赖先解决，再构建所需包",
+        "6. underlay 与 overlay：运行时到底找到哪一份包",
+        "7. 四种常见错误的定位路径"
+      ],
+      "sectionProseChineseCharacters": 1689,
+      "equations": 0,
+      "exercises": 4,
+      "validation": "依据官方 Jazzy 文档与示例核对；本研究未运行 ROS 节点"
+    },
+    {
+      "id": "graph-cli",
+      "title": "用 CLI 读懂运行中的系统",
+      "scope": "先确认端点存在，再确认类型，最后观察内容与频率。图工具显示连接关系，不能保证每个消息及时到达。",
+      "sectionTitles": [
+        "1. 把终端当作逐层测量工具",
+        "2. 建立三个终端和稳定的观察顺序",
+        "3. 话题的五种观察方式分别说明什么",
+        "4. 主动发送消息与调用服务",
+        "5. 参数和动作是另外两种观察入口",
+        "6. 用命名空间复用同一套程序",
+        "7. 形成能复现的排错记录"
+      ],
+      "sectionProseChineseCharacters": 1803,
+      "equations": 0,
+      "exercises": 4,
+      "validation": "依据官方 Jazzy 文档与示例核对；本研究未运行 ROS 节点"
+    },
+    {
+      "id": "math-linear",
+      "title": "线性代数：从观测方程到可解释的最小二乘",
+      "scope": "把矩阵看成带单位和坐标约定的数据契约，用一个二维位置估计贯穿秩、残差、加权求解、协方差与数值退化。",
+      "sectionTitles": [
+        "先写清向量保存了什么",
+        "独立信息、秩与不可观方向",
+        "从残差平方和推到正规方程",
+        "权重、相关性与协方差传播",
+        "同一个最小二乘问题的不同求法",
+        "求解接口对照：消元、分解与输入契约",
+        "把数学契约带进 ROS 接口与实验"
+      ],
+      "sectionProseChineseCharacters": 1969,
+      "equations": 4,
+      "exercises": 4,
+      "validation": "原创数学推导；读取本地参考教程以核对主题范围，并与本章列出的一手资料交叉核对。标准库完整实验已在本轮运行并通过断言；ROS 构建、仿真、硬件未运行。"
+    },
+    {
+      "id": "math-rigid",
+      "title": "刚体变换：坐标、旋转与四元数的统一约定",
+      "scope": "沿 A←B←C 的坐标链推导二维与三维变换，说明复合、求逆、四元数次序和局部姿态误差为什么必须共同约定。",
+      "sectionTitles": [
+        "从点的坐标开始约定方向",
+        "旋转矩阵保持长度却不允许任意相加",
+        "齐次矩阵为何能统一复合与求逆",
+        "串联变换时让中间坐标系消去",
+        "四元数的存储次序、归一化与相对姿态",
+        "表示与API对照：矩阵乘法和四元数乘法",
+        "用两种表示互证，再进入机器人坐标系统"
+      ],
+      "sectionProseChineseCharacters": 2012,
+      "equations": 4,
+      "exercises": 4,
+      "validation": "原创数学推导；读取本地参考教程以核对主题范围，并与本章列出的一手资料交叉核对。标准库完整实验已在本轮运行并通过断言；ROS 构建、仿真、硬件未运行。"
+    },
+    {
+      "id": "math-probability",
+      "title": "概率与不确定性：从条件概率到传感器融合",
+      "scope": "通过二元定位事件和两台位置传感器，解释先验、似然、后验、方差、相关性与高斯融合，明确哪些结论依赖独立与分布假设。",
+      "sectionTitles": [
+        "先确定事件，再讨论“检测有多准”",
+        "随机量的均值、方差和物理单位",
+        "零相关、独立与重复信息",
+        "高斯似然与精度加权融合的推导",
+        "分布假设失效时怎样解释结果",
+        "同一融合任务的三种接口与误差检查",
+        "理论值、枚举与随机采样三种验证路径"
+      ],
+      "sectionProseChineseCharacters": 2085,
+      "equations": 4,
+      "exercises": 4,
+      "validation": "原创数学推导；读取本地参考教程以核对主题范围，并与本章列出的一手资料交叉核对。标准库完整实验已在本轮运行并通过断言；ROS 构建、仿真、硬件未运行。"
+    },
+    {
+      "id": "math-estimation",
+      "title": "状态估计：预测、Kalman更新与一致性边界",
+      "scope": "从位置—速度模型手推一次预测与测量更新，用Joseph协方差形式、可观性和新息诊断把抽象公式连到ROS传感器融合。",
+      "sectionTitles": [
+        "状态模型、时间步长与噪声假设",
+        "先预测均值，再传播不确定性",
+        "新息告诉测量提供了什么新信息",
+        "协方差的Joseph形式与数值检查",
+        "可观性、门限与“最优”的精确范围",
+        "同功能对照：协方差形式、信息形式与顺序更新",
+        "EKF、误差状态与ROS融合的接口边界"
+      ],
+      "sectionProseChineseCharacters": 2026,
+      "equations": 4,
+      "exercises": 4,
+      "validation": "原创数学推导；读取本地参考教程以核对主题范围，并与本章列出的一手资料交叉核对。标准库完整实验已在本轮运行并通过断言；ROS 构建、仿真、硬件未运行。"
+    },
+    {
+      "id": "math-optimization",
+      "title": "优化基础：从残差到可诊断的迭代求解",
+      "scope": "把标定、定位与规划中的误差写成目标函数，推导Gauss–Newton、阻尼步、约束投影和Huber损失，并用失败反例限定算法能力。",
+      "sectionTitles": [
+        "先定义残差和尺度，再讨论算法",
+        "从Taylor展开得到Gauss–Newton",
+        "阻尼能改善局部求解，却不能制造全局保证",
+        "约束最优点不要求原目标梯度为零",
+        "异常值、Huber损失与鲁棒性的范围",
+        "实现对照：残差符号、导数来源与停止理由",
+        "同一功能的实现比较与可复现验收"
+      ],
+      "sectionProseChineseCharacters": 2092,
+      "equations": 4,
+      "exercises": 4,
+      "validation": "原创数学推导；读取本地参考教程以核对主题范围，并与本章列出的一手资料交叉核对。标准库完整实验已在本轮运行并通过断言；ROS 构建、仿真、硬件未运行。"
+    },
+    {
+      "id": "math-kinematics",
+      "title": "运动学：正解、逆解、雅可比与虚功",
+      "scope": "用两自由度平面机械臂把关节角、末端位置、速度、奇异性与力矩联系起来，推导与实现互相校验。",
+      "sectionTitles": [
+        "先选模型与关节变量，避免把示意图当通用机械臂",
+        "速度雅可比是对正解逐项求导",
+        "奇异性是局部运动能力的损失",
+        "逆解先检查可达域，再选择分支",
+        "为什么力矩映射使用雅可比转置",
+        "同功能对照：解析正逆解与数值模型接口",
+        "从教学函数到机器人模型API"
+      ],
+      "sectionProseChineseCharacters": 2085,
+      "equations": 4,
+      "exercises": 4,
+      "validation": "原创数学推导；读取本地参考教程以核对主题范围，并与本章列出的一手资料交叉核对。标准库完整实验已在本轮运行并通过断言；ROS 构建、仿真、硬件未运行。"
+    },
+    {
+      "id": "math-dynamics",
+      "title": "动力学：由能量推导力矩与数值积分",
+      "scope": "从理想单摆的动能与势能推导运动方程，区分质心惯量与转轴惯量，比较保守和耗散实验并说明多关节推广条件。",
+      "sectionTitles": [
+        "先固定单摆的物理模型与能量零点",
+        "逐项代入Euler–Lagrange方程",
+        "惯量位置、坐标轴与物理可实现性",
+        "能量导数提供独立的实现检查",
+        "多关节推广：质量矩阵与约束的边界",
+        "同功能对照：微分方程、能量检查与积分器",
+        "正动力学、逆动力学与控制接口的区别"
+      ],
+      "sectionProseChineseCharacters": 2095,
+      "equations": 4,
+      "exercises": 4,
+      "validation": "原创数学推导；读取本地参考教程以核对主题范围，并与本章列出的一手资料交叉核对。标准库完整实验已在本轮运行并通过断言；ROS 构建、仿真、硬件未运行。"
+    },
+    {
+      "id": "math-control",
+      "title": "反馈控制：误差动力学、采样与执行器限制",
+      "scope": "从位置积分器与力控质点推导P和PD闭环，解释连续稳定为何不等于离散实现稳定，并用限幅、能量与反例连接控制器实现。",
+      "sectionTitles": [
+        "控制开始于对象接口与误差符号",
+        "同一控制律在采样实现中有新的条件",
+        "力控制对象与PD的二阶误差模型",
+        "能量函数解释“为什么会收敛”",
+        "限幅、积分抗饱和与目标变化",
+        "同功能对照：状态反馈、采样回调与验收信号",
+        "把推导变成有界、可检查的控制代码"
+      ],
+      "sectionProseChineseCharacters": 2081,
+      "equations": 4,
+      "exercises": 4,
+      "validation": "原创数学推导；读取本地参考教程以核对主题范围，并与本章列出的一手资料交叉核对。标准库完整实验已在本轮运行并通过断言；ROS 构建、仿真、硬件未运行。"
+    },
+    {
+      "id": "pubsub",
+      "title": "C++ / Python 发布订阅与回调写法",
+      "scope": "发布者决定消息何时产生；订阅回调由执行器在消息到来时调度。timer 也需要执行器调度，构造了 timer 并不等于程序会自动运行。",
+      "sectionTitles": [
+        "1. 先确定消息契约和节点生命周期",
+        "2. 建立两个独立的示例包",
+        "3. C++ 发布者：模板类型、成员对象和定时器",
+        "4. C++ 订阅者：lambda 与成员函数如何对应",
+        "5. Python 用相同接口表达相同行为",
+        "6. 完成 Python 入口安装并构建",
+        "7. 交叉运行，理解输出与失败模式"
+      ],
+      "sectionProseChineseCharacters": 1866,
+      "equations": 0,
+      "exercises": 5,
+      "validation": "2026-11-07已在本机Jazzy重建atlas通信2包与基础10包，C++→Python和Python→C++话题互通通过。此记录不涵盖所有正文变体、跨机网络或硬件；QoS故障/历史实验另按本章关联实验记录。"
+    },
+    {
+      "id": "interfaces",
+      "title": "自定义消息、服务与动作接口包",
+      "scope": ".msg 定义消息；.srv 以一处分隔线区分请求和响应；.action 以两处分隔线区分目标、结果和反馈。",
+      "sectionTitles": [
+        "1. 接口首先是双方共享的语义契约",
+        "2. 三种定义文件的组成与字段规则",
+        "3. 为什么 Python 项目也使用 CMake 接口包",
+        "4. 生成依赖与运行依赖要配套声明",
+        "5. 构建以后观察生成类型，而不是猜名字",
+        "6. 用一个完整 Python 文件验证自定义消息",
+        "7. 接口演进和跨机器一致性"
+      ],
+      "sectionProseChineseCharacters": 1837,
+      "equations": 0,
+      "exercises": 5,
+      "validation": "依据官方 Jazzy 文档与示例核对；本研究未运行 ROS 节点"
+    },
+    {
+      "id": "services",
+      "title": "服务调用、Future 与超时",
+      "scope": "服务适合查询、重置等短操作。长任务若需要进度与取消，应选择动作。",
+      "sectionTitles": [
+        "1. 将一次请求与一次响应关联起来",
+        "2. C++ 服务端的回调参数与生存期",
+        "3. C++ 客户端：异步发送，主函数有界等待",
+        "4. Python 服务端和客户端的对应关系",
+        "5. 构建、交叉调用与终端结果解释",
+        "6. 将一次性客户端放进长期节点时要改变等待方式",
+        "7. 选择服务还是动作，以及错误信息如何设计",
+        "迟到应答：本地超时后服务可能已经执行"
+      ],
+      "sectionProseChineseCharacters": 2308,
+      "equations": 0,
+      "exercises": 7,
+      "validation": "2026-11-07双向正常记录继续有效；域221默认四例加原C++/Python迟到/缺服务四例共8项通过。服务端超时后仍各完成一次加法，子进程自然清理；未实现跨机重试幂等或生产副作用取消。"
+    },
+    {
+      "id": "actions",
+      "title": "动作：目标、反馈、结果与取消",
+      "scope": "动作客户端先请求目标，服务器可接受或拒绝；接受后会持续反馈并最终产生成功、取消或失败结果。",
+      "sectionTitles": [
+        "1. 动作把长期任务表达成可观察的状态机",
+        "2. 创建本章独立接口包，避免隐藏前置文件",
+        "3. C++ 服务端：用短定时回调推进任务",
+        "4. Python 服务端：执行回调与取消回调并存",
+        "5. 完整客户端：分别等待接受、取消确认和最终结果",
+        "6. 依次验证成功、拒绝和取消",
+        "7. 动作接口之外仍需应用负责的部分",
+        "忙碌拒绝、受控失败与恢复要形成协议闭环",
+        "Count扩展工程与有界验收的完整文件"
+      ],
+      "sectionProseChineseCharacters": 2602,
+      "equations": 0,
+      "exercises": 11,
+      "validation": "本轮实际构建独立故障扩展包，执行10组隔离Count协议场景。原C++/Python服务端保持原样；记录UUID、反馈、状态、completed、取消响应和清理。扩展故障默认关闭，显式abort_after=6时按独立服务端日志核对原因。只验证软件Action协议，不涉及仿真、硬件或物理停车；是否通过以各case及passed字段为准。"
+    },
+    {
+      "id": "parameters",
+      "title": "参数、YAML 与动态配置",
+      "scope": "参数属于具体节点，具有名称和类型；它们不是 ROS 1 的全局参数服务器。",
+      "sectionTitles": [
+        "1. 参数描述配置，而不是实时数据流",
+        "2. 一个可观察的配置节点：gain 与 enabled",
+        "3. C++ 完整实现与回调句柄",
+        "4. Python 对应实现与类型校验",
+        "5. CLI 与 YAML 都能配置同一节点",
+        "6. 参数一致性、原子更新与动态生效",
+        "7. 排查“参数改了但行为没变”",
+        "pre、on、post：存储提交不等于所有副作用事务"
+      ],
+      "sectionProseChineseCharacters": 2222,
+      "equations": 0,
+      "exercises": 8,
+      "validation": "2026-11-07原gain/启动检查继续有效；新增Python11组pre/on/post及副作用实测通过，19节点清理。同进程API、发现OFF、无参数服务/执行器；仍有RMW和parameter_events。C++三阶段、跨节点/线程和硬件事务未验证。"
+    },
+    {
+      "id": "launch",
+      "title": "Python / XML / YAML 启动系统",
+      "scope": "launch 文件描述启动动作；节点源码实现运行逻辑。Python launch 可以启动 C++ 节点，XML/YAML 也可以启动 Python 节点。",
+      "sectionTitles": [
+        "1. 启动文件负责组织系统，不代替节点业务逻辑",
+        "2. 创建只安装配置的 bringup 包",
+        "3. Python：LaunchDescription、Node 与延迟求值",
+        "4. XML 与 YAML：同一配置的两种声明式表达",
+        "5. 启动参数如何变成节点参数",
+        "6. 构建后以实际图验证三种格式等价",
+        "7. 大型系统的 include、分组和就绪条件",
+        "8. 常见报错的定位顺序"
+      ],
+      "sectionProseChineseCharacters": 1871,
+      "equations": 0,
+      "exercises": 5,
+      "validation": "依据官方 Jazzy 文档与示例核对；本研究未运行 ROS 节点"
+    },
+    {
+      "id": "qos",
+      "title": "QoS：能发现不等于能通信",
+      "scope": "QoS 是发布端与订阅端的契约。可靠订阅者要求 reliable，best_effort 发布者无法满足；reliable 发布者可以向 best_effort 订阅者提供数据。",
+      "sectionTitles": [
+        "从业务要求推导通信契约",
+        "逐项判断请求与提供是否相容",
+        "缓存、过期与业务确认解决不同问题",
+        "用最小实验分离不匹配与处理迟缓",
+        "晚加入实验与瞬态本地的存活边界",
+        "把选择写成可以复查的配置说明",
+        "用七个真实端点场景把规则变成证据",
+        "发现信息、静态兼容检查与工具自身的端点",
+        "租约、默认持续时间与传感器预设的具体值",
+        "队列深度之外，还要测到处理结束的数据年龄",
+        "发现扫描话题后，分别核对匹配和接收"
+      ],
+      "sectionProseChineseCharacters": 3269,
+      "equations": 0,
+      "exercises": 11,
+      "validation": "2026-11-07 QoS七端点及慢消费者四组已运行；后者同机独立双进程、域216、BEST_EFFORT/KeepLast。49运行/23边界断言通过，8 PID正常清理；自然负载未触发处理后拒绝，跨机/设备未验证。"
+    },
+    {
+      "id": "cpp-engineering",
+      "title": "C++ 机器人软件工程：所有权、并发与时延",
+      "scope": "把一段能运行的节点代码组织成有明确资源寿命、数据合同与故障处理的机器人程序；区分语言安全、线程安全和实时性。",
+      "sectionTitles": [
+        "从消息流开始划分模块边界",
+        "RAII 与智能指针解决谁负责释放",
+        "回调组不是跨线程数据保护的替身",
+        "把延迟、新鲜度与缓存容量分别建模",
+        "组织构建、测试与错误传播",
+        "用离线合同检查准备真实节点验证"
+      ],
+      "sectionProseChineseCharacters": 2248,
+      "equations": 2,
+      "exercises": 4,
+      "validation": "已执行 Python 标准库离线数值实验及断言；官方文档与本地固定提交源码已核对。ROS 编译、节点互通、仿真与真实硬件本轮均未运行。 本章 velocity_cache.hpp 已以 g++ -std=c++17 -pthread 编译并通过时间与并发快照检查；未据此宣称 ROS 节点通过。"
+    },
+    {
+      "id": "executors",
+      "title": "执行器、回调组与并发边界",
+      "scope": "执行器取出就绪事件并运行回调。多线程执行器提供线程资源，回调组决定哪些回调允许并发；只换执行器不保证并发。",
+      "sectionTitles": [
+        "等待集、就绪回调与执行资源",
+        "回调组表达哪些工作可以同时进行",
+        "用等待关系识别服务死锁",
+        "完整异步客户端：同一个互斥组也能前进",
+        "需要并行时如何划分共享状态",
+        "用时间线给调度问题留下证据",
+        "Context、执行器与完成回调的实际边界",
+        "先控制并发条件，再解释测到的时间线"
+      ],
+      "sectionProseChineseCharacters": 2111,
+      "equations": 0,
+      "exercises": 8,
+      "validation": "2026-11-07异步暂停clock三场景和执行器/Future四场景已实测；最大并发1/1/2，真实client done与同client组timer在响应handler释放后受控重叠。未验证C++/Action continuation、CPU加速或硬实时。"
+    },
+    {
+      "id": "lifecycle",
+      "title": "生命周期节点与启动顺序",
+      "scope": "生命周期节点有 unconfigured、inactive、active、finalized 等主要状态。configure/activate 等转换触发对应回调。",
+      "sectionTitles": [
+        "把进程存在与业务就绪分开",
+        "状态转换应遵守资源的所有权",
+        "在官方演示中逐步观察状态与消息",
+        "失败返回、异常与恢复不是同一条路径",
+        "按依赖关系组织一组节点",
+        "用状态、行为与资源三类证据验收",
+        "假资源实测：回调返回不等于最终恢复状态",
+        "普通回调、发布门控与进程生死分别观察",
+        "生命周期完整工程与复现"
+      ],
+      "sectionProseChineseCharacters": 1946,
+      "equations": 0,
+      "exercises": 10,
+      "validation": "真实构建原创rclcpp_lifecycle C++包，10组主场景和21个有限消息窗口通过，17个FakeHandle全部释放；分别核对ChangeState响应、ROS状态、回调/异常、资源与普通/生命周期发布。父SIGINT附测也通过；仅软件假资源，无硬件或仿真。"
+    },
+    {
+      "id": "composition",
+      "title": "组件化、独立进程与进程内通信",
+      "scope": "rclcpp_components 可把注册好的 C++ 节点共享库加载到容器中；独立进程更容易隔离崩溃，组合部署减少进程开销。",
+      "sectionTitles": [
+        "节点边界与进程边界可以独立选择",
+        "一个可加载组件需要哪些组成部分",
+        "加载、查看与卸载应使用实际标识",
+        "选择执行器并显式开启进程内通信",
+        "为何同一进程不等于任何情况都零拷贝",
+        "按插件、调度与故障三个层次排错",
+        "同一配置类：独立入口、组件参数与管理节点参数",
+        "shared single、shared mt与per-component executor的实际区别",
+        "完整组件包与复现脚本"
+      ],
+      "sectionProseChineseCharacters": 2247,
+      "equations": 0,
+      "exercises": 11,
+      "validation": "已真实构建原创C++包并完成5组主场景：gain类型/有限性/端点、7种NodeOptions加载配置与4类失败、官方三容器调度，以及显式管理参数服务的thread_num只读；另完成父driver有界Ctrl+C清理实测，无仿真或硬件。"
+    },
+    {
+      "id": "time-bag",
+      "title": "ROS 时间、录包与可重复实验",
+      "scope": "ROS time 可由 /clock 驱动；use_sim_time 是节点参数。系统时间和 steady time 适用于不同目的，不应把所有时间差都来自同一种时钟。",
+      "sectionTitles": [
+        "三种时钟分别回答不同问题",
+        "把消息时间与录制时间区别开",
+        "录制一个有明确输入输出的最小实验",
+        "让消费算法与回放共享时间轴",
+        "QoS、静态 TF 与不完整录包",
+        "把可重现条件作为录包的一部分保存",
+        "受控软件时钟：把未初始化、暂停和推进分开",
+        "真实录制：零值clock仍不是已启动时钟",
+        "筛选回放：让输入与派生输出各有责任",
+        "完整有界录放工程与配置"
+      ],
+      "sectionProseChineseCharacters": 2097,
+      "equations": 0,
+      "exercises": 10,
+      "validation": "2026-11-07在本机Jazzy rosbag2 0.26.11、独立域231/LOCALHOST真实运行：3组CLI录制/关闭读回、2组暂停就绪后CLI回放及双后端显式字段探针通过；原始记录计数13/13/12，筛选回放6/0/0，常规自建节点/进程清理通过。6项帮助/非法参数及相对新路径双后端另验收；失败历史保留。未运行GUI海龟、真实传感器、Foxglove、tracing、压缩/性能/恢复、父中断注入或完整仿真。 既有软件clock/timer三阶段结果仍见前轮报告，本轮未重复。"
+    },
+    {
+      "id": "testing",
+      "title": "测试、诊断与持续集成",
+      "scope": "纯算法适合用 gtest/pytest 做输入输出测试；节点连接、进程退出和话题行为适合 launch_testing 等集成测试。",
+      "sectionTitles": [
+        "测试从可观察合同出发",
+        "用注入时间验证明确的边界",
+        "集成测试必须等实际消息并设置总期限",
+        "注册测试与确认确实运行",
+        "让集成测试免受其它 ROS 图干扰",
+        "故障注入与结果解释",
+        "旧测试全过，为什么新反例仍暴露缺口？",
+        "完整注册包：业务就绪、受控失败与结果清单",
+        "完整测试工程与构建/运行命令"
+      ],
+      "sectionProseChineseCharacters": 1596,
+      "equations": 0,
+      "exercises": 10,
+      "validation": "旧策略4项通过但6个新合同反例暴露缺口，修订策略31项已实测；原talker活动/退出2项按本机有限范围实测。无硬件或制动验证。 独立ament_cmake包真实构建；gtest4、pytest7、launch active/post-shutdown各1，共13个细分JUnit案例。受控缺失业务ready保持相同注册数量但实际失败；比较默认/严格colcon退出码与test-result。使用软件Twist输入和5/7rad/s手算值，不运行仿真或硬件；是否通过以passed和各阶段原始XML为准。"
+    },
+    {
+      "id": "network",
+      "title": "DDS、RMW、多机发现与隔离",
+      "scope": "RMW 是 ROS 客户端与中间件之间的适配层。切换实现要先安装对应软件包，并保持整个实验的配置可追溯。",
+      "sectionTitles": [
+        "把 ROS 图、发现与数据通道分开理解",
+        "域号提供逻辑隔离，名称提供接口组织",
+        "先建立能解释的单机与双机基线",
+        "发现范围与静态对端的选择条件",
+        "网络证据应逐层缩小问题范围",
+        "更换 RMW 与 CLI 缓存时保持实验一致"
+      ],
+      "sectionProseChineseCharacters": 1266,
+      "equations": 0,
+      "exercises": 4,
+      "validation": "依据官方 Jazzy 文档与示例核对；本研究未运行 ROS 节点"
+    },
+    {
+      "id": "security",
+      "title": "SROS2：身份、加密与权限",
+      "scope": "SROS2 为支持 DDS-Security 的中间件准备身份与权限材料。节点使用 enclave 选择安全身份；安全通信还依赖治理和访问权限配置。",
+      "sectionTitles": [
+        "身份、授权与保密分别解决什么问题",
+        "在独立实验目录准备身份材料",
+        "显式启用并强制使用安全身份",
+        "将主题允许清单写入权限并重新签名",
+        "同时验证允许路径与拒绝路径",
+        "从实验策略过渡到可维护部署"
+      ],
+      "sectionProseChineseCharacters": 1238,
+      "equations": 0,
+      "exercises": 4,
+      "validation": "依据官方 Jazzy 文档与示例核对；本研究未运行 ROS 节点"
+    },
+    {
+      "id": "performance",
+      "title": "性能分析、Tracing 与实时边界",
+      "scope": "topic hz 是观测工具，测得的接收频率会受观察节点和资源竞争影响；它不是端到端延迟的完整证明。",
+      "sectionTitles": [
+        "先把指标定义到时间点与单位",
+        "保证时钟可比较并控制测量扰动",
+        "一个可以手算并核对的分布示例",
+        "用 tracing 找到延迟落在哪一段",
+        "一次改变一个因素并解释取舍",
+        "实时性是可满足截止时间的系统属性"
+      ],
+      "sectionProseChineseCharacters": 1343,
+      "equations": 0,
+      "exercises": 4,
+      "validation": "依据官方 Jazzy 文档与示例核对；本研究未运行 ROS 节点"
+    },
+    {
+      "id": "deployment",
+      "title": "可重复部署：依赖、容器与版本固定",
+      "scope": "让另一台电脑复现结果，需要记录的不只是源码。把操作系统、发行版、依赖版本、参数和运行入口作为一份交付物管理。",
+      "sectionTitles": [
+        "交付物是可运行系统的全部输入",
+        "依赖声明、源码版本与安装规则",
+        "容器固定用户空间，但不固定整个机器人",
+        "固定镜像输入并验证正常停止",
+        "硬件、网络与配置作为显式部署边界",
+        "从发布包到可回退验收",
+        "安装目录审计：复制成功不等于自包含",
+        "入口与信号：宿主正例和Docker计划分开",
+        "只读审计与宿主信号实验的完整文件"
+      ],
+      "sectionProseChineseCharacters": 1662,
+      "equations": 0,
+      "exercises": 10,
+      "validation": "已实际清点显式安装前缀，复制并核对保留链接的临时副本；另引用原节点宿主exec/TERM实测。Docker、复制产物及跨机运行未执行。"
+    },
+    {
+      "id": "migration",
+      "title": "迁移与版本边界：ROS 1、Humble 与 Jazzy",
+      "scope": "迁移不是替换几个命令名称。先列出接口与行为，再逐项迁移构建、API、参数、时间和依赖，让变化保持可验证。",
+      "sectionTitles": [
+        "迁移目标是保持明确的行为合同",
+        "ROS 1 到 ROS 2 的结构变化",
+        "跨发行版先建立目标平台矩阵",
+        "桥接能够连接系统，但有平台和类型前提",
+        "完整适配案例：明确新时间戳的含义",
+        "回归顺序与可回退的变更边界"
+      ],
+      "sectionProseChineseCharacters": 1313,
+      "equations": 0,
+      "exercises": 4,
+      "validation": "依据官方迁移资料与已检出源码核对；未迁移或启动用户实机工程。"
+    },
+    {
+      "id": "tf2",
+      "title": "tf2：坐标树、时间戳与外参",
+      "scope": "tf2 保存随时间变化的坐标关系。查询不仅需要两个 frame，还需要数据对应的时间。",
+      "sectionTitles": [
+        "一个坐标数值必须带上坐标系和时刻",
+        "树结构与每条边的责任",
+        "先用可手算的外参检验方向和单位",
+        "查询采样时刻，理解最新与当前的差别",
+        "非阻塞地消费带时间戳的点",
+        "先分类型再排查时间与发布来源",
+        "把时间查询和非零旋转做成可复算实验"
+      ],
+      "sectionProseChineseCharacters": 1649,
+      "equations": 0,
+      "exercises": 4,
+      "validation": "2026-11-07已用已安装Jazzy tf2公开Buffer API完成8组进程内数值/异常检查，另有CLI/容差/无通信检查；没有rclpy.init、Node、DDS或机器人。原始跨终端静态广播/point_transform/view_frames流程仍未运行；C++冻结时钟下timeout风险为固定源码推断，不宣称已执行该挂起实验。"
+    },
+    {
+      "id": "eco-tf-frames",
+      "title": "tf2：建立一致的坐标与时间关系",
+      "scope": "机器人并不是只有一个位置。激光、相机、车体和地图分别拥有坐标系，tf2 负责在指定时刻把数据从一个坐标系换算到另一个。先画出树，再写广播器，通常比到 RViz 中反复调整更有效。",
+      "sectionTitles": [
+        "先把位置问题写成坐标问题",
+        "理解变换的方向和复合",
+        "给每条消息定义时间与发布合同",
+        "最小实验：定义一个雷达安装位置",
+        "把实验扩展成一棵真实机器人树",
+        "用现象定位失败层次",
+        "用真实光学frame检查三个基轴与原点"
+      ],
+      "sectionProseChineseCharacters": 1723,
+      "equations": 0,
+      "exercises": 9,
+      "validation": "2026-11-07在Jazzy RSP 3.3.4/xacro 2.1.1、独立域219/LOCALHOST实际构建安装一个描述包，从异目录启动默认/覆盖配置并检查真实TF。参数回应后晚加入固定边、六个JointState阶段、两配置六光学点、两个非法launch拒绝、原最小URDF解析及负惯量反例通过。未运行RViz/urdf_tutorial GUI、真实相机、动力学/仿真/硬件、父中断或非零活动joint origin旋转反例；根惯量局限按源码核对。 本章原静态广播CLI/view_frames流程未运行，新增证据来自完整RSP模型。"
+    },
+    {
+      "id": "eco-model-rviz",
+      "title": "URDF、Xacro 与 RViz：把机器人描述变成可检查模型",
+      "scope": "用 URDF 表达刚体和关节，用 Xacro 把尺寸及重复结构参数化，再用 RViz 检查坐标、外观和关节关系。模型不仅服务显示，还会影响碰撞检测、运动学与控制器中的关节名称。",
+      "sectionTitles": [
+        "模型是多个模块共享的结构合同",
+        "理解关节原点、轴和状态的关系",
+        "先制作可独立打开的最小描述",
+        "按模型、状态、显示的顺序启动",
+        "用 Xacro 消除尺寸与重复结构的不一致",
+        "把模型验收分成四个层次",
+        "组织文件与保证安装后仍能打开",
+        "完整参数化模型：先把几何与惯量放在同一约定",
+        "固定边、关节状态与节流频率分开看",
+        "结构检查通过后，再做物理数值检查",
+        "完整包与异目录启动：验证安装资源而非当前目录"
+      ],
+      "sectionProseChineseCharacters": 2126,
+      "equations": 0,
+      "exercises": 8,
+      "validation": "2026-11-07在Jazzy RSP 3.3.4/xacro 2.1.1、独立域219/LOCALHOST实际构建安装一个描述包，从异目录启动默认/覆盖配置并检查真实TF。参数回应后晚加入固定边、六个JointState阶段、两配置六光学点、两个非法launch拒绝、原最小URDF解析及负惯量反例通过。未运行RViz/urdf_tutorial GUI、真实相机、动力学/仿真/硬件、父中断或非零活动joint origin旋转反例；根惯量局限按源码核对。"
+    },
+    {
+      "id": "eco-gazebo-simulation",
+      "title": "Gazebo Harmonic：仿真、桥接与统一时钟",
+      "scope": "先把仿真世界跑起来，再桥接一个消息，最后接入控制器。这样可以区分物理模型、Gazebo Transport、ROS 消息和控制器四个层次。Jazzy 路线使用现代 Gazebo Harmonic。",
+      "sectionTitles": [
+        "先区分模拟器、传输桥和机器人算法",
+        "用一个文件定义可观察的世界",
+        "把桥接配置当作明确的数据合同",
+        "按世界、桥、算法的次序运行",
+        "再接入机器人、传感器和控制器",
+        "建立分层输出判据",
+        "保存一套可迁移的仿真实验目录",
+        "在本地小世界实测单向桥与暂停恢复"
+      ],
+      "sectionProseChineseCharacters": 1697,
+      "equations": 0,
+      "exercises": 6,
+      "validation": "固定相机、激光桥接和 SLAM 离散扫描各有独立报告。本机 Jazzy Nav2 1.3.13、Harmonic 8.15.0、ros_gz_bridge 1.0.24 实测。主试验域 223，实际解压示例和地图后在域 224 重跑。范围为静态房间的单机器人仿真。本轮加入仿真差速关节与地面。GUI、硬件和动态人车环境另验。"
+    },
+    {
+      "id": "eco-perception-pipeline",
+      "title": "感知管线：图像、深度、点云与时间同步",
+      "scope": "感知节点接收的不只是像素或点。编码、相机内参、坐标系、时间戳和 QoS 共同组成数据契约。先证明输入的几何与时序正确，再接入检测模型或点云算法。",
+      "sectionTitles": [
+        "把图像当作带几何和时间的数据",
+        "设计源、处理和显示三个模块",
+        "完整合成图像与边缘实验",
+        "按输入、输出和元数据检查实验",
+        "传输压缩和几何处理要分开",
+        "点云处理遵守字段和 frame 合同",
+        "建立端到端感知验收",
+        "从模拟传感器核对采集、编码、内参与点字段"
+      ],
+      "sectionProseChineseCharacters": 1661,
+      "equations": 0,
+      "exercises": 6,
+      "validation": "在本机 Gazebo Sim, version 8.15.0 与 Jazzy ros_gz_bridge 1.0.24，域 227/LOCALHOST、独立 Gazebo Transport 分区实际运行。真实桥接图像并使用 cv_bridge 4.1.0、OpenCV 4.6.0 处理，按二进制结构解码点云。范围为固定模拟相机、激光和实际桥接，GUI、实机、SLAM、Nav2 和底盘仿真由其他实验验收。"
+    },
+    {
+      "id": "eco-data-observability",
+      "title": "数据与诊断：rosbag2、MCAP、Foxglove 与 tracing",
+      "scope": "可复现的机器人问题需要数据证据。记录输入、状态、TF 和关键配置，再用同一份记录重跑算法，能把偶发现场问题转化为可检查的回归场景。",
+      "sectionTitles": [
+        "先定义问题需要什么证据",
+        "时间、QoS 和类型决定记录是否完整",
+        "从最小 chatter 实验学会完整闭环",
+        "MCAP 与 SQLite 是存储选择",
+        "重放机器人数据时重建时钟和 TF",
+        "诊断和 tracing 的使用边界",
+        "用复现包而不是口头描述交付问题",
+        "存储实测：两个时间字段不等于Header",
+        "缓存反例：QoS相容仍可能没有早先静态样本",
+        "只读检查与显式字段探针的完整源码"
+      ],
+      "sectionProseChineseCharacters": 1778,
+      "equations": 0,
+      "exercises": 8,
+      "validation": "2026-11-07在本机Jazzy rosbag2 0.26.11、独立域231/LOCALHOST真实运行：3组CLI录制/关闭读回、2组暂停就绪后CLI回放及双后端显式字段探针通过；原始记录计数13/13/12，筛选回放6/0/0，常规自建节点/进程清理通过。6项帮助/非法参数及相对新路径双后端另验收；失败历史保留。未运行GUI海龟、真实传感器、Foxglove、tracing、压缩/性能/恢复、父中断注入或完整仿真。"
+    },
+    {
+      "id": "eco-control-framework",
+      "title": "ros2_control：读懂从命令到硬件的闭环",
+      "scope": "控制管理器周期性读取硬件状态、调用控制器更新，再写出硬件命令。学习时从官方 DiffBot 示例观察接口的申请与生命周期，比直接修改真实电机驱动更容易建立完整理解。",
+      "sectionTitles": [
+        "从周期循环理解控制框架",
+        "接口名称、单位与占用是一份合同",
+        "用官方本地源码准备一个隔离实验",
+        "启动、配置和激活分别在做什么",
+        "逐项判读输出而不是只看机器人移动",
+        "性能与故障要落到明确边界",
+        "参数文件与资源表一起版本化",
+        "同一模型上的软件差速台架与资源切换",
+        "从速度置零追到仿真车实际停稳"
+      ],
+      "sectionProseChineseCharacters": 1967,
+      "equations": 0,
+      "exercises": 7,
+      "validation": "GenericSystem 差速和局部 EKF 仍按软件台架独立验证。本机 Jazzy Nav2 1.3.13、Harmonic 8.15.0、ros_gz_bridge 1.0.24 实测。主试验域 223，实际解压示例和地图后在域 224 重跑。范围为静态房间的单机器人仿真。本轮测 Gazebo 关节、轮速里程计及独立世界参考，实机停机和故障制动待验。"
+    },
+    {
+      "id": "eco-diff-drive-tracks",
+      "title": "差速与履带底盘：从 TwistStamped 到左右轮速",
+      "scope": "差速模型把车体线速度和角速度换算为左右侧速度。履带底盘可以先借用此接口组织软件，但转弯滑移会使几何轮距与有效轮距不同，必须通过实测与外部定位校准。",
+      "sectionTitles": [
+        "从车体命令推导左右侧运动",
+        "履带模型可借用，但滑移不能忽略",
+        "先确认命令消息与时间戳合同",
+        "读懂一份最小控制器参数",
+        "在模拟后端执行三个小实验",
+        "校准与失败定位需要可测量证据",
+        "用真实控制器观察轮反馈、命令过期与恢复"
+      ],
+      "sectionProseChineseCharacters": 1674,
+      "equations": 0,
+      "exercises": 6,
+      "validation": "本机 Jazzy controller_manager 4.48.1、diff_drive_controller 4.42.1、robot_localization 3.8.3，独立 DDS 域 225/LOCALHOST 实测。实测同一软件后端的直行、转弯、停发、旧命令及恢复。旧版手工 CLI 练习和履带硬件未执行。同一 Xacro 的软件轮式模型，不接仿真器、设备、IMU 或 GNSS。观测不覆盖实时性、实机停车或地图定位。"
+    },
+    {
+      "id": "eco-hardware-integration",
+      "title": "实机接入：标准硬件接口与厂商 SDK 两条路线",
+      "scope": "真实底盘常见两种接入方式：通过 ros2_control 硬件插件暴露关节接口，或用厂商 SDK 包装成 ROS 驱动节点。先追踪测量与命令链路，再决定是否需要统一成控制器框架。",
+      "sectionTitles": [
+        "先选择接入边界，再实现设备协议",
+        "写清楚硬件接口的六项合同",
+        "最小无硬件实验：把协议转换单独验证",
+        "从物理链路向 ROS 图逐层检查",
+        "控制循环和通信线程如何交换数据",
+        "给每一层设计一个失败观测点"
+      ],
+      "sectionProseChineseCharacters": 1464,
+      "equations": 0,
+      "exercises": 5,
+      "validation": "本机 Jazzy controller_manager 4.48.1、diff_drive_controller 4.42.1、robot_localization 3.8.3，独立 DDS 域 225/LOCALHOST 实测。软件台架验证通用控制器的轮接口所有权。BUNKER、AgroSenseBot、SDK 与设备接线仍仅核本地源码。同一 Xacro 的软件轮式模型，不接仿真器、设备、IMU 或 GNSS。观测不覆盖实时性、实机停车或地图定位。"
+    },
+    {
+      "id": "theory-slam",
+      "title": "SLAM 原理：观测、位姿图与可观性",
+      "scope": "从带噪测量构造可检验的残差，理解里程计、回环和地图各自承担的角色，用一维位姿图揭示规范自由度与全局校正。",
+      "sectionTitles": [
+        "先说明估计什么与测到了什么",
+        "用残差表达测量与预测的差异",
+        "锚点消除规范自由度，不会创造外部精度",
+        "一步步解出一维回环校正",
+        "把估计结果放回 ROS 数据与 TF 链",
+        "用可重复残差实验建立调试顺序",
+        "在实际二维位姿图里区分约束、锚点与误差"
+      ],
+      "sectionProseChineseCharacters": 2298,
+      "equations": 2,
+      "exercises": 6,
+      "validation": "Python 标准库数值实验及断言已执行。在本机 Jazzy SLAM Toolbox 2.8.5、Nav2 MapServer 1.3.13、Harmonic 8.15.0 和 ros_gz_bridge 1.0.24 实测。主试验域 231，解压原创示例包后在域 232 重跑。采集使用离散移位和静止采样窗。轮地运动、扫描运动畸变、强制回环、远处重定位和跨版本图文件兼容性待测。"
+    },
+    {
+      "id": "eco-slam-mapping",
+      "title": "二维 SLAM：从传感器数据到可复用地图",
+      "scope": "SLAM 同时估计机器人轨迹与环境地图。先用可靠的扫描、短期里程计和时间同步建立输入条件，再讨论地图质量。成功显示一张图，只证明数据曾被处理，不代表地图可用于长期定位。",
+      "sectionTitles": [
+        "SLAM 的输入不是一张图，而是一段运动证据",
+        "定义扫描、坐标与时钟合同",
+        "生成一份完整的合成扫描",
+        "配置并按顺序启动建图",
+        "判读地图并保存可以再次加载的结果",
+        "从合成房间过渡到真实数据",
+        "把“地图可用”写成可重复判据",
+        "把占据图与可继续建图的位姿图区分保存",
+        "用真实仿真回波检验采集与回放合同",
+        "从有效位姿跟到实际发布的地图",
+        "新进程分别重载栅格、恢复图并继续建图"
+      ],
+      "sectionProseChineseCharacters": 2379,
+      "equations": 0,
+      "exercises": 9,
+      "validation": "在本机 Jazzy SLAM Toolbox 2.8.5、Nav2 MapServer 1.3.13、Harmonic 8.15.0 和 ros_gz_bridge 1.0.24 实测。主试验域 231，解压原创示例包后在域 232 重跑。采集使用离散移位和静止采样窗。轮地运动、扫描运动畸变、强制回环、远处重定位和跨版本图文件兼容性待测。"
+    },
+    {
+      "id": "eco-state-estimation",
+      "title": "状态估计：轮速、IMU、GNSS 与定位坐标系",
+      "scope": "融合的目标是利用互补传感器约束状态，同时承认各自的不确定性。首先统一单位、轴向、时间戳和协方差，再配置 EKF/UKF；滤波器无法自动识别错误的传感器契约。",
+      "sectionTitles": [
+        "估计状态与测量状态是两件事",
+        "设计 map、odom 和 base_link 的发布职责",
+        "协方差和输入选择决定融合含义",
+        "最小实验：只融合一条前向速度",
+        "用完整合成测量观察输出",
+        "逐步增加 IMU 和全局约束",
+        "用残差和失效实验判断估计质量",
+        "把原始里程计、融合输出和 TF 的来源分开",
+        "用扫描和 TF 确认 AMCL 的初始位姿",
+        "图定位的短期扫描会进入实时栅格",
+        "用世界采样对照移动时的 AMCL 导航反馈"
+      ],
+      "sectionProseChineseCharacters": 2251,
+      "equations": 0,
+      "exercises": 9,
+      "validation": "软件 EKF、固定激光 AMCL 与 SLAM 图定位分别有原报告。本机 Jazzy Nav2 1.3.13、Harmonic 8.15.0、ros_gz_bridge 1.0.24 实测。主试验域 223，实际解压示例和地图后在域 224 重跑。范围为静态房间的单机器人仿真。本轮移动 AMCL 从近参考初值启动。远处重定位、IMU/GNSS 与实机精度另验。"
+    },
+    {
+      "id": "theory-planning",
+      "title": "运动规划：从构型空间到可执行路径",
+      "scope": "统一理解图搜索、采样规划和轨迹优化的输入输出，推导 A* 的启发式条件，并明确路径可行、动力学可行与执行成功的区别。",
+      "sectionTitles": [
+        "先定义状态、动作、障碍和成功条件",
+        "Dijkstra 与 A* 的共同骨架和差异",
+        "手算一个必须绕行的栅格问题",
+        "足印、膨胀与车辆运动学如何改变可行性",
+        "采样规划、优化与 API 的选择条件",
+        "验证最优路径，同时证明模型没有承诺什么",
+        "从网格最短路过渡到 NavFn 势场路径",
+        "把全局路径转成差速车前视控制量"
+      ],
+      "sectionProseChineseCharacters": 2606,
+      "equations": 1,
+      "exercises": 6,
+      "validation": "Python 标准库网格实验已实测。在本机 Jazzy Nav2 1.3.13、Harmonic 8.15.0、ros_gz_bridge 1.0.24 的固定激光台架实测。运行 MapServer、AMCL、全局代价地图和 NavFn。SLAM 建图、完整 NavigateToPose 行为树、控制器、运动底盘和硬件待分别验证。"
+    },
+    {
+      "id": "theory-optimal-control",
+      "title": "最优控制：从 Bellman 递推到 LQR 与 MPC",
+      "scope": "用可手推的标量系统推导有限时域 LQR，再说明约束、非线性和实时执行如何将问题扩展到 MPC。",
+      "sectionTitles": [
+        "把目标写成有单位和边界的控制问题",
+        "Bellman 思想把长问题缩成当前一步",
+        "逐步推导最优反馈与 Riccati 系数",
+        "为什么简单限幅不是约束最优控制",
+        "模型复杂度和实时执行必须一起设计",
+        "用值函数恒等式核对实现而非只看曲线"
+      ],
+      "sectionProseChineseCharacters": 2019,
+      "equations": 3,
+      "exercises": 4,
+      "validation": "已执行 Python 标准库离线数值实验及断言；官方文档与本地固定提交源码已核对。ROS 编译、节点互通、仿真与真实硬件本轮均未运行。"
+    },
+    {
+      "id": "eco-nav2-stack",
+      "title": "Nav2：从给定目标到可解释的导航行为",
+      "scope": "导航系统将目标、定位、地图、传感器和底盘控制组合起来。学习重点是能解释机器人为什么停下、为什么绕路，以及哪个服务器或输入条件导致失败。",
+      "sectionTitles": [
+        "把导航拆成可观察的能力链",
+        "明确地图、代价地图与外形的区别",
+        "建立导航必须满足的接口合同",
+        "从官方集成仿真建立基线",
+        "先定位，再下发一个明确目标",
+        "把调整限制在一个可解释变量上",
+        "按失败阶段定位原因",
+        "从先验图像到可逐格核对的占据地图",
+        "让同一个规划目标绕过新增障碍",
+        "把已保存的 SLAM 地图接入真实导航执行",
+        "同时验收动作成功、终点误差与停稳"
+      ],
+      "sectionProseChineseCharacters": 2390,
+      "equations": 0,
+      "exercises": 10,
+      "validation": "先前固定激光台架独立核对 MapServer、AMCL、主代价图和 NavFn。本机 Jazzy Nav2 1.3.13、Harmonic 8.15.0、ros_gz_bridge 1.0.24 实测。主试验域 223，实际解压示例和地图后在域 224 重跑。范围为静态房间的单机器人仿真。本轮安装树实际执行到达、取消、两种失败和恢复到达。动态障碍、实机与跨版本待验。"
+    },
+    {
+      "id": "eco-nav2-task-programming",
+      "title": "导航任务编排：行为树与 Python Commander",
+      "scope": "导航服务器解决一次导航能力，任务层则决定下一步做什么、何时取消、失败后如何处理。先通过 Python Commander 编排简单流程，再深入行为树，把两层职责分清。",
+      "sectionTitles": [
+        "任务层与导航层分别负责什么",
+        "区分接受、运行、取消和结束",
+        "目标消息的坐标和时钟合同",
+        "完整单目标任务脚本",
+        "将一次任务扩展为可审计巡检",
+        "行为树描述一次导航内部的决策",
+        "验证业务期限和异常路径",
+        "从 ComputePathToPose 定位规划失败阶段",
+        "按目标 UUID 核对上层、下级和取消回执",
+        "结合恢复条件解释同为 ABORTED 的结果"
+      ],
+      "sectionProseChineseCharacters": 2507,
+      "equations": 0,
+      "exercises": 8,
+      "validation": "有界客户端仍有独立假服务端验证。实际行为树与下级动作：本机 Jazzy Nav2 1.3.13、Harmonic 8.15.0、ros_gz_bridge 1.0.24 实测。主试验域 223，实际解压示例和地图后在域 224 重跑。范围为静态房间的单机器人仿真。本轮验证五个任务分支和停稳。多目标调度、抢占及硬件待验。"
+    },
+    {
+      "id": "project-navigation",
+      "title": "项目：差速机器人从定位到可取消导航",
+      "scope": "沿环境、时钟、TF、地图、传感器、Action 和执行反馈逐层搭建 Nav2 仿真项目，保留失败路径和可重放证据。",
+      "sectionTitles": [
+        "项目范围、环境与不混用版本的准备链",
+        "先画发布责任表，再检查时钟与 TF",
+        "地图、初始位姿与足印形成定位合同",
+        "同一导航目标的三种入口与 API 差异",
+        "任务状态机必须处理取消、失败和旧结果",
+        "由速度和延迟推导停车距离的检查下界",
+        "从单目标扩展到可重放的导航验收",
+        "可解压复跑的分段导航台架",
+        "复跑采集、建图和图恢复，再接导航层",
+        "复跑已保存地图上的导航与停车"
+      ],
+      "sectionProseChineseCharacters": 3565,
+      "equations": 1,
+      "exercises": 8,
+      "validation": "固定图、SLAM 与假服务端协议均保留独立记录。本机 Jazzy Nav2 1.3.13、Harmonic 8.15.0、ros_gz_bridge 1.0.24 实测。主试验域 223，实际解压示例和地图后在域 224 重跑。范围为静态房间的单机器人仿真。已跑从地图与定位到导航器、控制器、平滑器和差速车反馈的完整链路。实物与跨版本执行待验。"
+    },
+    {
+      "id": "eco-moveit-planning",
+      "title": "MoveIt 2：规划场景、运动规划与轨迹执行",
+      "scope": "MoveIt 将机器人模型、关节状态、碰撞环境、运动学求解和轨迹执行接在一起。先在模拟或 mock 控制环境中完整走通“规划—检查—执行”，再接入真实机械臂控制器。",
+      "sectionTitles": [
+        "把机械臂流程分成建模、规划与执行",
+        "关节状态、坐标和控制接口必须一致",
+        "准备一个不连接真实机械臂的基线",
+        "用只读检查定位规划之前的问题",
+        "理解轨迹文件而不立即驱动硬件",
+        "规划场景与可视标记并不等价",
+        "C++、Python 与版本之间的边界"
+      ],
+      "sectionProseChineseCharacters": 1269,
+      "equations": 0,
+      "exercises": 4,
+      "validation": "资料与本地源码已核对；命令为读者练习说明，本次未安装、编译或运行 ROS 节点，未连接硬件。"
+    },
+    {
+      "id": "eco-manipulation-tasks",
+      "title": "机械臂进阶：Servo 与 Task Constructor",
+      "scope": "离线轨迹规划、在线增量伺服和多阶段抓放解决不同问题。Servo 适合连续交互或视觉伺服，Task Constructor 把接近、抓取与放置拆成可组合阶段，二者都依赖准确模型和状态反馈。",
+      "sectionTitles": [
+        "三种运动问题需要三种组织方式",
+        "Servo 的输入输出与坐标合同",
+        "用离线数值实验理解增量运动",
+        "在模拟中建立在线命令链",
+        "把抓放分解成具有后置条件的阶段",
+        "让感知更新与运动决策协调",
+        "以失败注入验证完整任务"
+      ],
+      "sectionProseChineseCharacters": 1322,
+      "equations": 0,
+      "exercises": 4,
+      "validation": "资料与本地源码已核对；命令为读者练习说明，本次未安装、编译或运行 ROS 节点，未连接硬件。"
+    },
+    {
+      "id": "project-manipulation",
+      "title": "项目：机械臂从规划场景到轨迹执行合同",
+      "scope": "用 Panda 模拟硬件建立模型、关节状态、场景、规划和执行的完整证据链，比较 C++、Python 与任务级 API，推导可验证的时间参数化。",
+      "sectionTitles": [
+        "用固定模型建立可重复的项目边界",
+        "模型、关节状态和 TF 先于规划器",
+        "规划场景与物体附着是任务状态",
+        "同一规划功能的 C++、Python 与任务级接口",
+        "把工程文件、依赖与启动次序写完整",
+        "路径需要时间化后才成为可执行轨迹",
+        "规划成功、执行接受与物理到达分别验收",
+        "用数值实验检验时序，再记录工程证据"
+      ],
+      "sectionProseChineseCharacters": 2682,
+      "equations": 2,
+      "exercises": 4,
+      "validation": "已执行 Python 标准库离线数值实验及断言；官方文档与本地固定提交源码已核对。ROS 编译、节点互通、仿真与真实硬件本轮均未运行。"
+    },
+    {
+      "id": "eco-microcontrollers",
+      "title": "micro-ROS：把微控制器纳入 ROS 图",
+      "scope": "micro-ROS 在资源受限设备上实现 ROS 2 客户端能力，通过 Agent 与较大计算机上的 ROS 系统连接。先用主机示例理解会话，再讨论板卡、实时性和静态内存。",
+      "sectionTitles": [
+        "client、传输和 Agent 各做一层工作",
+        "资源约束影响程序结构",
+        "先完成主机上的 Agent 与通信实验",
+        "UDP 与串口使用不同连接合同",
+        "定义一条可完整验证的电机通信合同",
+        "先用离线状态机验证失联逻辑",
+        "按重启和失效矩阵完成验收"
+      ],
+      "sectionProseChineseCharacters": 1499,
+      "equations": 0,
+      "exercises": 4,
+      "validation": "资料与本地源码已核对；命令为读者练习说明，本次未安装、编译或运行 ROS 节点，未连接硬件。"
+    },
+    {
+      "id": "eco-multi-robot",
+      "title": "多机器人：命名、隔离与 Open-RMF 任务协调",
+      "scope": "两台机器人一起运行时，问题首先是身份、坐标和数据隔离，然后才是任务分配。Open-RMF 在更高层协调车队与设施，而每台机器人的定位和避障仍需要可靠运行。",
+      "sectionTitles": [
+        "从两台机器人的身份开始设计",
+        "先做完整的双 turtlesim 隔离实验",
+        "命名空间和域隔离解决不同问题",
+        "规划共享坐标与每台机器人的局部坐标",
+        "Open-RMF 协调的是车队与设施",
+        "用离线资源模型理解共享通道",
+        "验收多机器人系统的异常路径"
+      ],
+      "sectionProseChineseCharacters": 1315,
+      "equations": 0,
+      "exercises": 4,
+      "validation": "资料与本地源码已核对；命令为读者练习说明，本次未安装、编译或运行 ROS 节点，未连接硬件。"
+    },
+    {
+      "id": "eco-network-security",
+      "title": "通信与安全：DDS、Zenoh、发现和权限边界",
+      "scope": "分布式 ROS 系统的排错应从网络连通、发现、类型、QoS 到应用逻辑逐层推进。更换 RMW 是一次通信架构选择，安全身份与访问控制也必须独立于域号配置。",
+      "sectionTitles": [
+        "按照发现、数据和应用三层理解通信",
+        "先建立可重复的双机基线",
+        "用明确环境比较 DDS 实现",
+        "Zenoh 需要理解路由器和默认发现",
+        "域号不是身份，命名空间不是权限",
+        "正向成功与反向拒绝都要验证",
+        "形成可复现的网络与权限验收"
+      ],
+      "sectionProseChineseCharacters": 1275,
+      "equations": 0,
+      "exercises": 4,
+      "validation": "资料与本地源码已核对；命令为读者练习说明，本次未安装、编译或运行 ROS 节点，未连接硬件。"
+    },
+    {
+      "id": "eco-accelerated-robotics",
+      "title": "GPU 感知与 AI 仿真：Isaac ROS、Isaac Sim 的接入边界",
+      "scope": "GPU 加速和高保真仿真能扩展感知与数据能力，但应放在稳定的数据契约之上。先完成普通 ROS 输入输出，再核对供应商平台矩阵，最后引入容器、推理和仿真桥。",
+      "sectionTitles": [
+        "先区分加速管线与高保真模拟器",
+        "定义算法替换前后必须相同的合同",
+        "用离线时间模型看清瓶颈",
+        "建立可以复现的输入基线",
+        "让模拟器桥接满足相同时间与坐标约定",
+        "把模拟数据与真实数据差异列为实验因素",
+        "交付一份有边界的性能结论"
+      ],
+      "sectionProseChineseCharacters": 1319,
+      "equations": 0,
+      "exercises": 4,
+      "validation": "资料与本地源码已核对；命令为读者练习说明，本次未安装、编译或运行 ROS 节点，未连接硬件。"
+    },
+    {
+      "id": "theory-legged",
+      "title": "足式机器人：接触约束、ZMP 与捕获点",
+      "scope": "从浮动基座与单边接触出发，推导线性倒立摆和捕获点，明确支撑区域、摩擦、可达性与控制稳定性之间的边界。",
+      "sectionTitles": [
+        "脚接触地面时，多了约束也多了未知力",
+        "从受力矩平衡得到线性倒立摆",
+        "支撑多边形与可行受力不能脱离条件",
+        "捕获点把速度带入能否停下的问题",
+        "从简化控制到 MPC、WBC 与 ROS 接口",
+        "用反例和捕获实验检验模型边界"
+      ],
+      "sectionProseChineseCharacters": 2149,
+      "equations": 3,
+      "exercises": 4,
+      "validation": "已执行 Python 标准库离线数值实验及断言；官方文档与本地固定提交源码已核对。ROS 编译、节点互通、仿真与真实硬件本轮均未运行。"
+    },
+    {
+      "id": "theory-aerial",
+      "title": "无人机与 ROS 2：坐标、推力和 Offboard 合同",
+      "scope": "先把 ENU/NED、FLU/FRD 与时间单位对齐，再理解四旋翼简化动力学及 PX4 Offboard 的消息、模式与失效链。",
+      "sectionTitles": [
+        "无人机集成要同时核对三套合同",
+        "世界坐标与机体坐标分别转换",
+        "用悬停受力澄清推力的物理含义",
+        "Offboard 是持续通信和状态反馈合同",
+        "消息时间、QoS 与 API 选择顺序",
+        "离线坐标验证和仿真前验收链"
+      ],
+      "sectionProseChineseCharacters": 2043,
+      "equations": 3,
+      "exercises": 4,
+      "validation": "已执行 Python 标准库离线数值实验及断言；官方文档与本地固定提交源码已核对。ROS 编译、节点互通、仿真与真实硬件本轮均未运行。"
+    },
+    {
+      "id": "learning-rl",
+      "title": "强化学习与 Sim2Real：从策略实验到 ROS 2 接口",
+      "scope": "把强化学习拆成环境、策略、训练和部署四部分，先用可解释的参数搜索理解闭环，再讨论如何把训练结果接到机器人。",
+      "sectionTitles": [
+        "把机器人任务写成可检查的接口",
+        "奖励、终止与时间截断分别表达什么",
+        "完整实验：对一个小策略做参数搜索",
+        "将策略装进 ROS 2 节点之前先固定时序",
+        "从仿真到真实环境需要验证哪些差异",
+        "建立可重复的评估与故障实验"
+      ],
+      "sectionProseChineseCharacters": 1358,
+      "equations": 0,
+      "exercises": 4,
+      "validation": "本章附带的 Python 标准库实验在本机执行；未训练大型模型、未连接外部模型服务、未部署到真实机器人。"
+    },
+    {
+      "id": "learning-embodied",
+      "title": "语言模型与具身任务：结构化计划、技能与反馈",
+      "scope": "把自然语言转换成可以验证、执行和取消的任务计划。使用明确的技能合同连接 Nav2、MoveIt 与感知模块。",
+      "sectionTitles": [
+        "自然语言、世界状态和动作技能各负责什么",
+        "两种写法：生成程序与生成结构化任务",
+        "完整实验：对计划做结构与语义检查",
+        "把技能连接到 ROS 2 Action 状态机",
+        "使用世界模型，避免用聊天历史代替状态",
+        "如何评价完整任务而不仅是生成质量"
+      ],
+      "sectionProseChineseCharacters": 1299,
+      "equations": 0,
+      "exercises": 4,
+      "validation": "本章附带的 Python 标准库实验在本机执行；未训练大型模型、未连接外部模型服务、未部署到真实机器人。"
+    },
+    {
+      "id": "learning-policy",
+      "title": "模仿学习与神经策略：数据、动作块与部署适配",
+      "scope": "沿着示范数据、训练样本、动作预测与控制执行理解模仿学习，比较逐步回归、ACT 与 Diffusion Policy 的输出方式。",
+      "sectionTitles": [
+        "先定义示范到底记录了什么",
+        "三种策略写法的联系与区别",
+        "归一化、数据划分与坐标合同",
+        "完整实验：预测动作的时间与数值门控",
+        "动作块如何接入在线执行",
+        "从离线误差走向任务验收"
+      ],
+      "sectionProseChineseCharacters": 1326,
+      "equations": 0,
+      "exercises": 4,
+      "validation": "本章附带的 Python 标准库实验在本机执行；未训练大型模型、未连接外部模型服务、未部署到真实机器人。"
+    },
+    {
+      "id": "cloud-mlops",
+      "title": "云端与边缘：机器人数据集、模型版本与交付闭环",
+      "scope": "把录包、标注、训练、评估和部署组织成可追溯的数据流程。边缘设备负责有时限的执行，云端或工作站承担可异步完成的任务。",
+      "sectionTitles": [
+        "按时限划分边缘和远端职责",
+        "从 rosbag 记录到训练样本的五层关系",
+        "完整实验：给数据目录生成确定性清单",
+        "把数据处理步骤组织成可重跑的流水线",
+        "模型发布与 ROS 2 部署配置要一起验收",
+        "用证据闭合采集、训练与部署循环"
+      ],
+      "sectionProseChineseCharacters": 1261,
+      "equations": 0,
+      "exercises": 4,
+      "validation": "本章附带的 Python 标准库实验在本机执行；未训练大型模型、未连接外部模型服务、未部署到真实机器人。"
+    }
+  ]
+}

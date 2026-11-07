@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!-- 新增原创教学扩展包。接口沿用已安装的 learning_count_interfaces，不改Result字段。 -->
+<package format="3">
+  <name>learning_count_fault_lab</name>
+  <version>0.0.1</version>
+  <description>Controlled Count action failure injection for isolated software tests</description>
+  <maintainer email="learner@example.com">ROS 2 Learning Hub</maintainer>
+  <license>Apache-2.0</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_action</depend>
+  <depend>learning_count_interfaces</depend>
+  <exec_depend>rclpy</exec_depend>
+  <export><build_type>ament_cmake</build_type></export>
+</package>

@@ -1,0 +1,341 @@
+{
+  "validatedAt": "2026-11-06T19:23:37.639117+00:00",
+  "labPath": "examples/runtime_labs/tf_buffer_lab.py",
+  "sourceSha256": "bb062e38bc7e34c01922c8f029b441707f0e4d42baaaf78a120693542c0bc8e9",
+  "sourceBytes": 14240,
+  "status": "passed",
+  "execution": {
+    "command": "source /opt/ros/jazzy/setup.bash\npython3 examples/runtime_labs/tf_buffer_lab.py --json",
+    "workingDirectory": "ros2-learning-hub",
+    "exitCode": 0,
+    "stdoutSha256": "bb4df60af000a4d0cc0e6b45559fcbbaaecf9dc49a82907b05cc270654697d8a",
+    "pythonExecutable": "/usr/bin/python3",
+    "pythonVersion": "3.12.3",
+    "rosDistribution": "Jazzy",
+    "installedPackages": {
+      "ros-jazzy-geometry-msgs": "5.3.8-1noble.20260911.102920",
+      "ros-jazzy-rclpy": "7.1.12-1noble.20260912.162354",
+      "ros-jazzy-tf2-geometry-msgs": "0.36.23-1noble.20260915.174516",
+      "ros-jazzy-tf2-py": "0.36.23-1noble.20260915.173947",
+      "ros-jazzy-tf2-ros-py": "0.36.23-1noble.20260915.174232"
+    },
+    "importedModulePaths": {
+      "geometry_msgs": "/opt/ros/jazzy/lib/python3.12/site-packages/geometry_msgs/__init__.py",
+      "rclpy": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py",
+      "tf2_ros": "/opt/ros/jazzy/lib/python3.12/site-packages/tf2_ros/__init__.py",
+      "tf2_geometry_msgs": "/opt/ros/jazzy/lib/python3.12/site-packages/tf2_geometry_msgs/__init__.py"
+    }
+  },
+  "results": {
+    "lab": "tf_buffer_lab",
+    "passed": true,
+    "checks": 8,
+    "units": {
+      "position": "m",
+      "angle": "rad",
+      "time": "s",
+      "timestamp": "整数ns",
+      "quaternion": "无量纲，x/y/z/w"
+    },
+    "absolute_tolerance": 1e-09,
+    "relative_tolerance": 0.0,
+    "results": [
+      {
+        "id": "static_forward_direction_rotation",
+        "passed": true,
+        "input": {
+          "source": "laser",
+          "target": "base_link",
+          "point_m": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "translation_m": [
+            0.2,
+            0.0,
+            0.3
+          ],
+          "yaw_rad": 1.5707963267948966,
+          "query_s": 10.5
+        },
+        "expected_point_m": [
+          0.2,
+          1.0,
+          0.3
+        ],
+        "actual_point_m": [
+          0.20000000000000023,
+          1.0,
+          0.3
+        ]
+      },
+      {
+        "id": "static_inverse_nonzero_rotation",
+        "passed": true,
+        "expected_inverse_translation_m": [
+          0.0,
+          0.2,
+          -0.3
+        ],
+        "actual_inverse_translation_m": [
+          -2.7755575615628914e-17,
+          0.2,
+          -0.3
+        ],
+        "expected_restored_point_m": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "actual_restored_point_m": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "actual_inverse_quaternion_xyzw": [
+          0.0,
+          0.0,
+          -0.7071067811865475,
+          0.7071067811865476
+        ]
+      },
+      {
+        "id": "static_arbitrary_query_times",
+        "passed": true,
+        "published_stamp_s": 123.0,
+        "queries": [
+          {
+            "query_s": 0.0,
+            "actual_point_m": [
+              0.20000000000000023,
+              1.0,
+              0.3
+            ],
+            "returned_transform_stamp_ns": 0
+          },
+          {
+            "query_s": 1.0,
+            "actual_point_m": [
+              0.20000000000000023,
+              1.0,
+              0.3
+            ],
+            "returned_transform_stamp_ns": 1000000000
+          },
+          {
+            "query_s": 10.5,
+            "actual_point_m": [
+              0.20000000000000023,
+              1.0,
+              0.3
+            ],
+            "returned_transform_stamp_ns": 10500000000
+          },
+          {
+            "query_s": 1000000.0,
+            "actual_point_m": [
+              0.20000000000000023,
+              1.0,
+              0.3
+            ],
+            "returned_transform_stamp_ns": 1000000000000000
+          }
+        ],
+        "expected_point_m": [
+          0.2,
+          1.0,
+          0.3
+        ]
+      },
+      {
+        "id": "dynamic_translation_rotation_interpolation",
+        "passed": true,
+        "input": {
+          "sample_times_s": [
+            10.0,
+            12.0
+          ],
+          "sample_x_m": [
+            0.0,
+            2.0
+          ],
+          "sample_yaw_rad": [
+            0.0,
+            1.5707963267948966
+          ],
+          "query_s": 11.0,
+          "point_m": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        },
+        "expected_translation_m": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "actual_translation_m": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "expected_point_m": [
+          1.7071067811865475,
+          0.7071067811865476,
+          0.0
+        ],
+        "actual_point_m": [
+          1.7071067811865477,
+          0.7071067811865474,
+          0.0
+        ],
+        "actual_quaternion_xyzw": [
+          0.0,
+          0.0,
+          0.3826834323650896,
+          0.9238795325112868
+        ]
+      },
+      {
+        "id": "latest_differs_from_sampling_time",
+        "passed": true,
+        "measurement_stamp_s": 11.0,
+        "sampled_transform_stamp_ns": 11000000000,
+        "latest_transform_stamp_ns": 12000000000,
+        "expected_latest_point_m": [
+          2.0,
+          1.0,
+          0.0
+        ],
+        "actual_latest_point_m": [
+          2.0,
+          1.0,
+          0.0
+        ],
+        "sampled_point_m": [
+          1.7071067811865477,
+          0.7071067811865474,
+          0.0
+        ],
+        "point_difference_m": 0.41421356237309503,
+        "expected_point_difference_m": 0.41421356237309515,
+        "limitation": "latest 不等于当前系统日期时间，也不等于原观测采样时刻；多段链还受共同可用时间约束。"
+      },
+      {
+        "id": "past_extrapolation",
+        "passed": true,
+        "query_s": 9.0,
+        "source": "sensor",
+        "expected_exception": "ExtrapolationException",
+        "actual_exception": "ExtrapolationException",
+        "message": "Lookup would require extrapolation into the past.  Requested time 9.000000 but the earliest data is at time 10.000000, when looking up transform from frame [sensor] to frame [base_dynamic]"
+      },
+      {
+        "id": "future_extrapolation",
+        "passed": true,
+        "query_s": 13.0,
+        "source": "sensor",
+        "expected_exception": "ExtrapolationException",
+        "actual_exception": "ExtrapolationException",
+        "message": "Lookup would require extrapolation into the future.  Requested time 13.000000 but the latest data is at time 12.000000, when looking up transform from frame [sensor] to frame [base_dynamic]"
+      },
+      {
+        "id": "missing_frame",
+        "passed": true,
+        "query_s": 11.0,
+        "source": "missing_sensor",
+        "expected_exception": "LookupException",
+        "actual_exception": "LookupException",
+        "message": "\"missing_sensor\" passed to lookupTransform argument source_frame does not exist. "
+      }
+    ],
+    "scope": "固定合成数据的进程内Jazzy Buffer与几何运算；未调用rclpy.init，未创建Node或通信端点。",
+    "not_verified": [
+      "TransformListener与执行器调度",
+      "DDS或网络传输",
+      "跨进程静态TF晚加入QoS",
+      "阻塞TF等待的超时行为",
+      "完整机器人TF树、外参标定、仿真与硬件"
+    ]
+  },
+  "additionalChecks": [
+    {
+      "case": "help_without_ros_import",
+      "command": [
+        "python3",
+        "-I",
+        "examples/runtime_labs/tf_buffer_lab.py",
+        "--help"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "evidence": "help在argparse阶段退出；模块顶层只导入标准库，ROS导入位于run_lab。"
+    },
+    {
+      "case": "reject_invalid_tolerance",
+      "input": "nan",
+      "exitCode": 2,
+      "passed": true
+    },
+    {
+      "case": "reject_invalid_tolerance",
+      "input": "inf",
+      "exitCode": 2,
+      "passed": true
+    },
+    {
+      "case": "reject_invalid_tolerance",
+      "input": "0",
+      "exitCode": 2,
+      "passed": true
+    },
+    {
+      "case": "reject_invalid_tolerance",
+      "input": "-1",
+      "exitCode": 2,
+      "passed": true
+    },
+    {
+      "case": "reject_invalid_tolerance",
+      "input": "0.01",
+      "exitCode": 2,
+      "passed": true
+    },
+    {
+      "case": "reject_disabled_assertions",
+      "exitCode": 2,
+      "passed": true,
+      "evidence": "本实验依赖数值assert，请使用普通python3，不能启用-O/PYTHONOPTIMIZE。"
+    },
+    {
+      "case": "ast_no_node_communication_or_blocking_timeout",
+      "passed": true
+    }
+  ],
+  "modelAssumptions": [
+    "输入是合成刚体变换，平移/点坐标为米、绕+Z的yaw为弧度、样本/查询时刻为秒；四元数排列x/y/z/w。",
+    "动态数据只有t=10与12秒两条，缓存保留配置20秒；插值是tf2数据表示规则，不证明真实机器人在两次测量之间按该模型运动。",
+    "静态变换发布stamp=123秒，但关系对0、1、10.5及1000000秒查询保持相同；Time(0)是tf2的latest标记，不是主机此刻日期时间。",
+    "默认绝对容差1e-9、相对容差0；四元数允许整体变号且检查单位长度；时间戳用整数纳秒精确比较。",
+    "查询不传阻塞timeout，缺数据立即抛指定异常；仅用公开set_transform/set_transform_static/lookup_transform/do_transform_point。"
+  ],
+  "verificationBoundary": {
+    "performed": [
+      "真实已安装Jazzy库的8组进程内几何/时间/异常断言",
+      "无ROS导入的帮助入口",
+      "5种非法容差拒绝",
+      "优化模式关闭assert时拒绝运行",
+      "AST语法与无节点/通信/阻塞timeout检查"
+    ],
+    "notPerformed": [
+      "没有调用rclpy.init或创建Node/TransformListener/通信端点",
+      "没有DDS、TF跨进程接收或静态TF晚加入QoS验证",
+      "没有阻塞等待、回调调度、/clock跳变或回放时钟实验",
+      "没有启动仿真或硬件，没有验证真实外参/完整机器人TF树"
+    ],
+    "claim": "结果只证明所列固定合成输入在所记安装版本上的数值/API行为；不证明任意版本、网络、调度或机器人系统正确。"
+  },
+  "relatedReview": "validation-evidence/iteration-tf-time-review.json"
+}

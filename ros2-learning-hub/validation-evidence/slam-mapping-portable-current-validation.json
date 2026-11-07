@@ -1,0 +1,3033 @@
+{
+  "passed": true,
+  "domainId": 232,
+  "discovery": "LOCALHOST",
+  "output": "/tmp/ros2-slam-lab-c6t_pe9c",
+  "namespace": "/slamlab_c6t_pe9c",
+  "gazeboPartition": "hub_slam_c6t_pe9c",
+  "versions": {
+    "gazebo": "Gazebo Sim, version 8.15.0",
+    "ros_gz_bridge": "1.0.24",
+    "slam_toolbox": "2.8.5",
+    "nav2_map_server": "1.3.13",
+    "rclpy": "7.1.12"
+  },
+  "lifecycle": [
+    {
+      "node": "mapper",
+      "transition": 1,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "mapper",
+      "transition": 3,
+      "success": true,
+      "state": "active"
+    },
+    {
+      "node": "mapper",
+      "transition": 4,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "mapper",
+      "transition": 2,
+      "success": true,
+      "state": "unconfigured"
+    },
+    {
+      "node": "map_server",
+      "transition": 1,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "map_server",
+      "transition": 3,
+      "success": true,
+      "state": "active"
+    },
+    {
+      "node": "map_server",
+      "transition": 4,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "map_server",
+      "transition": 2,
+      "success": true,
+      "state": "unconfigured"
+    },
+    {
+      "node": "mapper_restored",
+      "transition": 1,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "mapper_restored",
+      "transition": 3,
+      "success": true,
+      "state": "active"
+    },
+    {
+      "node": "mapper_restored",
+      "transition": 4,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "mapper_restored",
+      "transition": 2,
+      "success": true,
+      "state": "unconfigured"
+    },
+    {
+      "node": "localizer",
+      "transition": 1,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "localizer",
+      "transition": 3,
+      "success": true,
+      "state": "active"
+    },
+    {
+      "node": "localizer",
+      "transition": 4,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "localizer",
+      "transition": 2,
+      "success": true,
+      "state": "unconfigured"
+    }
+  ],
+  "sourceHashes": {
+    "slam_labs/validate_slam.py": "084096da67573e419d1bef843fbf2272d8d68b4077bc070ad6c1438f4488377b",
+    "slam_labs/scan_run.py": "a048e1b09b568b052bd507240117e39579bf98a92449b0804759fa9de2ad1a1d",
+    "slam_labs/slam.yaml": "bdcbf5e10dcc1418c053defaed10ea7b76ca894faddaa46db556d47303ad38c7",
+    "slam_labs/bridge.yaml": "6a7fed4a21662bb6d2845456376d94a03ad4a1d8c0566ae55b945dac86ffad93",
+    "nav2_labs/nav_room.sdf": "d57d32c1024a8675f37167d65a466d456f687b77abc8f28330928973489ec176",
+    "nav2_labs/validate_nav2.py": "ac913b3733fd6fba857a4fe6a3b18e7d286de64d5800d330df2415b0129d75de",
+    "gazebo_labs/validate_sensors.py": "e14314457e0c72608e057a6c2a1dea3c90c3e6e0efdf32bd1aa4c22e5d4990da"
+  },
+  "processes": [
+    {
+      "label": "gazebo",
+      "argv": [
+        "gz",
+        "sim",
+        "-s",
+        "--headless-rendering",
+        "-v",
+        "4",
+        "/tmp/ros2-slam-lab-c6t_pe9c/mapping_room.sdf"
+      ],
+      "pid": 406550,
+      "logFile": "/tmp/ros2-slam-lab-c6t_pe9c/gazebo.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "191e8f4022cd4521c37795517da0588e4ffe91fa5536bdaf4bbedb9bded9dc4f",
+      "logTail": "m[Msg] \u001b[0m\u001b[1;32mMaterial\u001b[0m\u001b[1;32m service on [\u001b[0m\u001b[1;32m/world/hub_mapping_room/visual_config/blocking\u001b[0m\u001b[1;32m] (blocking)\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mMaterial\u001b[0m\u001b[1;32m service on [\u001b[0m\u001b[1;32m/world/hub_mapping_room/wheel_slip\u001b[0m\u001b[1;32m] (async)\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mMaterial\u001b[0m\u001b[1;32m service on [\u001b[0m\u001b[1;32m/world/hub_mapping_room/wheel_slip/blocking\u001b[0m\u001b[1;32m] (blocking)\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;36m[Dbg] [SystemManager.cc:80] \u001b[0m\u001b[1;36mLoaded system [\u001b[0m\u001b[1;36mgz::sim::systems::UserCommands\u001b[0m\u001b[1;36m] for entity [\u001b[0m\u001b[1;36m1\u001b[0m\u001b[1;36m]\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mOdometryPublisher publishing odometry on [\u001b[0m\u001b[1;32m/hub_mapping/ground_pose\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mOdometryPublisher publishing odometry with covariance on [\u001b[0m\u001b[1;32m/model/scan_rig/odometry_with_covariance\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mOdometryPublisher publishing Pose_V (TF) on [\u001b[0m\u001b[1;32m/model/scan_rig/pose\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;36m[Dbg] [SystemManager.cc:80] \u001b[0m\u001b[1;36mLoaded system [\u001b[0m\u001b[1;36mgz::sim::systems::OdometryPublisher\u001b[0m\u001b[1;36m] for entity [\u001b[0m\u001b[1;36m28\u001b[0m\u001b[1;36m]\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mLoaded level [\u001b[0m\u001b[1;32mdefault\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mServing world controls on [\u001b[0m\u001b[1;32m/world/hub_mapping_room\u001b[0m\u001b[1;32m/control], [\u001b[0m\u001b[1;32m/world/hub_mapping_room\u001b[0m\u001b[1;32m/control/state] and [\u001b[0m\u001b[1;32m/world/hub_mapping_room\u001b[0m\u001b[1;32m/playback/control]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mServing GUI information on [\u001b[0m\u001b[1;32m/world/hub_mapping_room\u001b[0m\u001b[1;32m/\u001b[0m\u001b[1;32mgui/info\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mWorld [\u001b[0m\u001b[1;32mhub_mapping_room\u001b[0m\u001b[1;32m] initialized with [\u001b[0m\u001b[1;32mlab_step\u001b[0m\u001b[1;32m] physics profile.\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mServing world SDF generation service on [\u001b[0m\u001b[1;32m/world/hub_mapping_room\u001b[0m\u001b[1;32m/\u001b[0m\u001b[1;32mgenerate_world_sdf\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mServing world names on [\u001b[0m\u001b[1;32m/gazebo/worlds\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mResource path add service on [\u001b[0m\u001b[1;32m/gazebo/resource_paths/add\u001b[0m\u001b[1;32m].\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mResource path get service on [\u001b[0m\u001b[1;32m/gazebo/resource_paths/get\u001b[0m\u001b[1;32m].\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mResource path resolve service on [\u001b[0m\u001b[1;32m/gazebo/resource_paths/resolve\u001b[0m\u001b[1;32m].\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mResource paths published on [\u001b[0m\u001b[1;32m/gazebo/resource_paths\u001b[0m\u001b[1;32m].\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mServer control service on [\u001b[0m\u001b[1;32m/server_control\u001b[0m\u001b[1;32m].\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mFound no publishers on /stats, adding root stats topic\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mFound no publishers on /clock, adding root clock topic\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;36m[Dbg] [SimulationRunner.cc:627] \u001b[0m\u001b[1;36mCreating PostUpdate worker threads: \u001b[0m\u001b[1;36m3\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [SimulationRunner.cc:638] \u001b[0m\u001b[1;36mCreating postupdate worker thread (\u001b[0m\u001b[1;36m0\u001b[0m\u001b[1;36m)\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [SimulationRunner.cc:638] \u001b[0m\u001b[1;36mCreating postupdate worker thread (\u001b[0m\u001b[1;36m1\u001b[0m\u001b[1;36m)\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [Sensors.cc:953] \u001b[0m\u001b[1;36mInitialization needed\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [Sensors.cc:349] \u001b[0m\u001b[1;36mInitializing render context\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mLoading plugin [\u001b[0m\u001b[1;32mgz-rendering-ogre2\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;36m[Dbg] [RenderUtil.cc:2646] \u001b[0m\u001b[1;36mCreate scene [\u001b[0m\u001b[1;36mscene\u001b[0m\u001b[1;36m]\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [Sensors.cc:391] \u001b[0m\u001b[1;36mRendering Thread initialized\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [Sensors.cc:391] [Dbg] [Sensors.cc:953] \u001b[0m\u001b[1;36mInitialization needed\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [Lidar.cc:139] \u001b[0m\u001b[1;36mLaser scans for [\u001b[0m\u001b[1;36mscan_rig::laser::room_scan\u001b[0m\u001b[1;36m] advertised on [\u001b[0m\u001b[1;36m/hub_mapping/scan\u001b[0m\u001b[1;36m]\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [GpuLidarSensor.cc:164] \u001b[0m\u001b[1;36mLidar points for [\u001b[0m\u001b[1;36mscan_rig::laser::room_scan\u001b[0m\u001b[1;36m] advertised on [\u001b[0m\u001b[1;36m/hub_mapping/scan/points\u001b[0m\u001b[1;36m]\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [SimulationFeatures.cc:90] \u001b[0m\u001b[1;36mSimulation timestep set to: \u001b[0m\u001b[1;36m0.005\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [SignalHandler.cc:142] \u001b[0m\u001b[1;36mReceived signal[\u001b[0m\u001b[1;36m2\u001b[0m\u001b[1;36m].\u001b[0m\n\u001b[1;36m[Dbg] [ServerPrivate.cc:122] \u001b[0m\u001b[1;36mServer received signal[\u001b[0m\u001b[1;36m2\u001b[0m\u001b[1;36m]\u001b[0m\n\u001b[1;36m[Dbg] [Sensors.cc:565] \u001b[0m\u001b[1;36mSensorsPrivate::Stop\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [Sensors.cc:551] \u001b[0m\u001b[1;36mSensorsPrivate::RenderThread stopped\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [gz.cc:434] \u001b[0m\u001b[1;36mShutting down gz-sim-server\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [SimulationRunner.cc:654] \u001b[0m\u001b[1;36mExiting postupdate worker thread (\u001b[0m\u001b[1;36m1\u001b[0m\u001b[1;36m)\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36mExiting postupdate worker thread (\u001b[0m\u001b[1;36m0\u001b[0m\u001b[1;36m)\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [Sensors.cc:565] \u001b[0m\u001b[1;36mSensorsPrivate::Stop\u001b[0m\u001b[1;36m\u001b[0m\n"
+    },
+    {
+      "label": "bridge",
+      "argv": [
+        "/opt/ros/jazzy/lib/ros_gz_bridge/parameter_bridge",
+        "/world/hub_mapping_room/control@ros_gz_interfaces/srv/ControlWorld@gz.msgs.WorldControl@gz.msgs.Boolean",
+        "/world/hub_mapping_room/set_pose@ros_gz_interfaces/srv/SetEntityPose@gz.msgs.Pose@gz.msgs.Boolean",
+        "--ros-args",
+        "-r",
+        "__ns:=/slamlab_c6t_pe9c",
+        "-r",
+        "__node:=mapping_capture_bridge",
+        "-p",
+        "config_file:=/tmp/ros2-slam-portable-UL94WBtr/atlas_examples/slam_labs/bridge.yaml",
+        "-p",
+        "override_timestamps_with_wall_time:=false"
+      ],
+      "pid": 406574,
+      "logFile": "/tmp/ros2-slam-lab-c6t_pe9c/bridge.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "7b69ba7b87be25cc4758ded24e827ffedb44d81625c57b7aed3116b26ef6a782",
+      "logTail": "[INFO] [1794046310.104531447] [slamlab_c6t_pe9c.mapping_capture_bridge]: Creating ROS->GZ service bridge [/world/hub_mapping_room/control (ros_gz_interfaces/srv/ControlWorld -> gz.msgs.WorldControl/gz.msgs.Boolean)]\n[INFO] [1794046310.105076760] [slamlab_c6t_pe9c.mapping_capture_bridge]: Creating ROS->GZ service bridge [/world/hub_mapping_room/set_pose (ros_gz_interfaces/srv/SetEntityPose -> gz.msgs.Pose/gz.msgs.Boolean)]\n[INFO] [1794046311.104809082] [slamlab_c6t_pe9c.mapping_capture_bridge]: Creating GZ->ROS Bridge: [/world/hub_mapping_room/clock (gz.msgs.Clock) -> /clock (rosgraph_msgs/msg/Clock)] (Lazy 0)\n[INFO] [1794046311.105792939] [slamlab_c6t_pe9c.mapping_capture_bridge]: Creating GZ->ROS Bridge: [/hub_mapping/scan (gz.msgs.LaserScan) -> capture_scan (sensor_msgs/msg/LaserScan)] (Lazy 0)\n[INFO] [1794046311.106907194] [slamlab_c6t_pe9c.mapping_capture_bridge]: Creating GZ->ROS Bridge: [/hub_mapping/ground_pose (gz.msgs.Odometry) -> capture_pose (nav_msgs/msg/Odometry)] (Lazy 0)\n[INFO] [1794046340.405449521] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n"
+    },
+    {
+      "label": "mapper",
+      "argv": [
+        "/opt/ros/jazzy/lib/slam_toolbox/sync_slam_toolbox_node",
+        "--ros-args",
+        "-r",
+        "__ns:=/slamlab_c6t_pe9c",
+        "-r",
+        "__node:=mapper",
+        "-r",
+        "/clock:=/slamlab_c6t_pe9c/replay_clock",
+        "--params-file",
+        "/tmp/ros2-slam-portable-UL94WBtr/atlas_examples/slam_labs/slam.yaml"
+      ],
+      "pid": 406696,
+      "logFile": "/tmp/ros2-slam-lab-c6t_pe9c/mapper.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "915b50045f202c7395cca506458958e74c03749807cf1b53cdf13bcb69ff34d3",
+      "logTail": "[INFO] [1794046332.580737793] [slamlab_c6t_pe9c.mapper]: Configuring\n[INFO] [1794046332.583160242] [slamlab_c6t_pe9c.mapper]: Using solver plugin solver_plugins::CeresSolver\n[INFO] [1794046332.583238291] [slamlab_c6t_pe9c.mapper]: CeresSolver: Using SCHUR_JACOBI preconditioner.\n[INFO] [1794046332.589778289] [slamlab_c6t_pe9c.mapper]: Activating\n[WARN] [1794046332.592792661] [slamlab_c6t_pe9c.mapper]: Map Saver: Cannot save map, no map yet received on topic map.\nInfo: clipped range threshold to be within minimum and maximum range!\nRegistering sensor: [Custom Described Lidar]\n[INFO] [1794046333.598980845] [slamlab_c6t_pe9c.mapper]: SlamToolbox: Saving map as /tmp/ros2-slam-lab-c6t_pe9c/learned.\n[INFO] [1794046333.720490350] [slamlab_c6t_pe9c.map_saver]: \n\tmap_saver lifecycle node launched. \n\tWaiting on external lifecycle transitions to activate\n\tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[INFO] [1794046333.720536740] [slamlab_c6t_pe9c.map_saver]: Creating\n[INFO] [1794046333.720557399] [slamlab_c6t_pe9c.map_saver]: Configuring\n[INFO] [1794046333.721905703] [slamlab_c6t_pe9c.map_saver]: Saving map from 'map' topic to '/tmp/ros2-slam-lab-c6t_pe9c/learned' file\n[WARN] [1794046333.721921232] [slamlab_c6t_pe9c.map_saver]: Free threshold unspecified. Setting it to default value: 0.250000\n[WARN] [1794046333.721925392] [slamlab_c6t_pe9c.map_saver]: Occupied threshold unspecified. Setting it to default value: 0.650000\n[WARN] [1794046333.906648294] [map_io]: Image format unspecified. Setting it to: pgm\n[INFO] [1794046333.906684674] [map_io]: Received a 137 X 98 map @ 0.05 m/pix\n[INFO] [1794046333.908821537] [map_io]: Writing map occupancy data to /tmp/ros2-slam-lab-c6t_pe9c/learned.pgm\n[INFO] [1794046333.909042514] [map_io]: Writing map metadata to /tmp/ros2-slam-lab-c6t_pe9c/learned.yaml\n[INFO] [1794046333.909100984] [map_io]: Map saved\n[INFO] [1794046333.909103944] [slamlab_c6t_pe9c.map_saver]: Map saved successfully\n[INFO] [1794046333.909448939] [slamlab_c6t_pe9c.map_saver]: Destroying\n[INFO] [1794046335.032420236] [slamlab_c6t_pe9c.mapper]: Deactivating\n[INFO] [1794046335.193714830] [slamlab_c6t_pe9c.mapper]: Cleaning up\nSave To File /tmp/ros2-slam-lab-c6t_pe9c/learned.posegraph \nMapper <- Module\nMapper <- m_pSequentialScanMatcher\nMapper <- m_pGraph\nMapperGraph <- Graph; Graph <- m_Edges; Graph <- m_Vertices\nMapperGraph <- m_pMapper; MapperGraph <- m_pLoopScanMatcher; MapperGraph <- m_pTraversal\nMapper <- m_pMapperSensorManager\nMapperSensorManager <- m_ScanManagers; MapperSensorManager <- m_Scans\nMapper <- m_Listeners\n**Finished serializing Mapper**\nSave To File\n**Serializing Dataset**\nDataset <- m_SensorNameLookup\nDataset <- m_Data\nDataset <- m_Lasers\nDataset <- m_pDatasetInfo\n**Finished serializing Dataset**\nUnregistering sensor: Custom Described Lidar\n[INFO] [1794046340.291897815] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n"
+    },
+    {
+      "label": "map_server",
+      "argv": [
+        "/opt/ros/jazzy/lib/nav2_map_server/map_server",
+        "--ros-args",
+        "-r",
+        "__ns:=/slamlab_c6t_pe9c",
+        "-r",
+        "__node:=map_server",
+        "-r",
+        "/clock:=/slamlab_c6t_pe9c/replay_clock",
+        "-p",
+        "use_sim_time:=true",
+        "-p",
+        "yaml_filename:=/tmp/ros2-slam-lab-c6t_pe9c/learned.yaml"
+      ],
+      "pid": 406773,
+      "logFile": "/tmp/ros2-slam-lab-c6t_pe9c/map_server.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "5742da5d9eac005e0f7e82cb76158a311b132173d39448113fbe7b26050fe415",
+      "logTail": "[INFO] [1794046335.219979912] [slamlab_c6t_pe9c.map_server]: \n\tmap_server lifecycle node launched. \n\tWaiting on external lifecycle transitions to activate\n\tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[INFO] [1794046335.220031831] [slamlab_c6t_pe9c.map_server]: Creating\n[INFO] [1794046335.406095196] [slamlab_c6t_pe9c.map_server]: Configuring\n[INFO] [1794046335.406139356] [map_io]: Loading yaml file: /tmp/ros2-slam-lab-c6t_pe9c/learned.yaml\n[INFO] [1794046335.406277014] [map_io]: resolution: 0.05\n[INFO] [1794046335.406280944] [map_io]: origin[0]: -3.428\n[INFO] [1794046335.406283264] [map_io]: origin[1]: -2.457\n[INFO] [1794046335.406284954] [map_io]: origin[2]: 0\n[INFO] [1794046335.406292284] [map_io]: free_thresh: 0.196\n[INFO] [1794046335.406294344] [map_io]: occupied_thresh: 0.65\n[INFO] [1794046335.406297114] [map_io]: mode: trinary\n[INFO] [1794046335.406299324] [map_io]: negate: 0\n[INFO] [1794046335.406383743] [map_io]: Loading image_file: /tmp/ros2-slam-lab-c6t_pe9c/learned.pgm\n[INFO] [1794046335.406558280] [map_io]: Read map /tmp/ros2-slam-lab-c6t_pe9c/learned.pgm: 137 X 98 map @ 0.05 m/cell\n[INFO] [1794046335.410149546] [slamlab_c6t_pe9c.map_server]: Activating\n[INFO] [1794046335.410207915] [slamlab_c6t_pe9c.map_server]: Creating bond (map_server) to lifecycle manager.\n[INFO] [1794046335.411658647] [slamlab_c6t_pe9c.map_server]: Handling GetMap request\n[INFO] [1794046335.412419477] [slamlab_c6t_pe9c.map_server]: Deactivating\n[INFO] [1794046335.412424307] [slamlab_c6t_pe9c.map_server]: Destroying bond (map_server) to lifecycle manager.\n[INFO] [1794046335.423888264] [slamlab_c6t_pe9c.map_server]: Cleaning up\n[INFO] [1794046340.178340730] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[INFO] [1794046340.178394559] [slamlab_c6t_pe9c.map_server]: Running Nav2 LifecycleNode rcl preshutdown (map_server)\n[INFO] [1794046340.178415809] [slamlab_c6t_pe9c.map_server]: Destroying bond (map_server) to lifecycle manager.\n[INFO] [1794046340.178702985] [slamlab_c6t_pe9c.map_server]: Destroying\n"
+    },
+    {
+      "label": "mapper_restored",
+      "argv": [
+        "/opt/ros/jazzy/lib/slam_toolbox/sync_slam_toolbox_node",
+        "--ros-args",
+        "-r",
+        "__ns:=/slamlab_c6t_pe9c",
+        "-r",
+        "__node:=mapper_restored",
+        "-r",
+        "/clock:=/slamlab_c6t_pe9c/replay_clock",
+        "--params-file",
+        "/tmp/ros2-slam-portable-UL94WBtr/atlas_examples/slam_labs/slam.yaml"
+      ],
+      "pid": 406788,
+      "logFile": "/tmp/ros2-slam-lab-c6t_pe9c/mapper_restored.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "308a9ea0ae18f5e80b9dd161f9ab2fe2fcbdfc88ea3982b927405f3fcfec39ba",
+      "logTail": "[INFO] [1794046335.670549152] [slamlab_c6t_pe9c.mapper_restored]: Configuring\n[INFO] [1794046335.672950252] [slamlab_c6t_pe9c.mapper_restored]: Using solver plugin solver_plugins::CeresSolver\n[INFO] [1794046335.673033621] [slamlab_c6t_pe9c.mapper_restored]: CeresSolver: Using SCHUR_JACOBI preconditioner.\n[INFO] [1794046335.681033081] [slamlab_c6t_pe9c.mapper_restored]: Activating\n[ERROR] [1794046335.684244061] [slamlab_c6t_pe9c.mapper_restored]: serialization::Read: Failed to open requested file: /tmp/ros2-slam-lab-c6t_pe9c/missing_graph.\n[ERROR] [1794046335.684269570] [slamlab_c6t_pe9c.mapper_restored]: DeserializePoseGraph: Failed to read file: /tmp/ros2-slam-lab-c6t_pe9c/missing_graph.\n[ERROR] [1794046335.685263588] [slamlab_c6t_pe9c.mapper_restored]: Requested a localization deserialization in non-localization mode.\nLoad From File /tmp/ros2-slam-lab-c6t_pe9c/learned.posegraph \nMapper <- Module\nMapper <- m_pSequentialScanMatcher\nMapper <- m_pGraph\nMapperGraph <- Graph; Graph <- m_Edges; Graph <- m_Vertices\nMapperGraph <- m_pMapper; MapperGraph <- m_pLoopScanMatcher; MapperGraph <- m_pTraversal\nMapper <- m_pMapperSensorManager\nMapperSensorManager <- m_ScanManagers; MapperSensorManager <- m_Scans\nMapper <- m_Listeners\n**Finished serializing Mapper**\nLoad From File\n**Serializing Dataset**\nDataset <- m_SensorNameLookup\nDataset <- m_Data\nDataset <- m_Lasers\nDataset <- m_pDatasetInfo\n**Finished serializing Dataset**\nRegistering sensor: [Custom Described Lidar]\nWARNING: Logging before InitGoogleLogging() is written to STDERR\nW20261107 18:12:15.689178 406788 preprocessor.cc:67] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 16.  Bounding to maximum number available.\nInfo: clipped range threshold to be within minimum and maximum range!\nRegistering sensor: [Custom Described Lidar]\n[INFO] [1794046336.697041872] [slamlab_c6t_pe9c.mapper_restored]: Deactivating\n[INFO] [1794046336.885106037] [slamlab_c6t_pe9c.mapper_restored]: Cleaning up\nSave To File /tmp/ros2-slam-lab-c6t_pe9c/continued.posegraph \nMapper <- Module\nMapper <- m_pSequentialScanMatcher\nMapper <- m_pGraph\nMapperGraph <- Graph; Graph <- m_Edges; Graph <- m_Vertices\nMapperGraph <- m_pMapper; MapperGraph <- m_pLoopScanMatcher; MapperGraph <- m_pTraversal\nMapper <- m_pMapperSensorManager\nMapperSensorManager <- m_ScanManagers; MapperSensorManager <- m_Scans\nMapper <- m_Listeners\n**Finished serializing Mapper**\nSave To File\n**Serializing Dataset**\nDataset <- m_SensorNameLookup\nDataset <- m_Data\nDataset <- m_Lasers\nDataset <- m_pDatasetInfo\n**Finished serializing Dataset**\nUnregistering sensor: Custom Described Lidar\n[INFO] [1794046340.064801394] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n"
+    },
+    {
+      "label": "localizer",
+      "argv": [
+        "/opt/ros/jazzy/lib/slam_toolbox/localization_slam_toolbox_node",
+        "--ros-args",
+        "-r",
+        "__ns:=/slamlab_c6t_pe9c",
+        "-r",
+        "__node:=localizer",
+        "-r",
+        "/clock:=/slamlab_c6t_pe9c/replay_clock",
+        "--params-file",
+        "/tmp/ros2-slam-portable-UL94WBtr/atlas_examples/slam_labs/slam.yaml",
+        "-p",
+        "mode:=localization",
+        "-p",
+        "use_map_saver:=false"
+      ],
+      "pid": 406840,
+      "logFile": "/tmp/ros2-slam-lab-c6t_pe9c/localizer.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "22fd166aca1a2a7f9872cddada045a09c9e943b9be7c1504e0626588a44a8378",
+      "logTail": "[INFO] [1794046338.730759403] [slamlab_c6t_pe9c.localizer]: Configuring\n[INFO] [1794046338.733239373] [slamlab_c6t_pe9c.localizer]: Using solver plugin solver_plugins::CeresSolver\n[INFO] [1794046338.733318372] [slamlab_c6t_pe9c.localizer]: CeresSolver: Using SCHUR_JACOBI preconditioner.\n[INFO] [1794046338.739756292] [slamlab_c6t_pe9c.localizer]: Activating\nLoad From File /tmp/ros2-slam-lab-c6t_pe9c/learned.posegraph \nMapper <- Module\nMapper <- m_pSequentialScanMatcher\nMapper <- m_pGraph\nMapperGraph <- Graph; Graph <- m_Edges; Graph <- m_Vertices\nMapperGraph <- m_pMapper; MapperGraph <- m_pLoopScanMatcher; MapperGraph <- m_pTraversal\nMapper <- m_pMapperSensorManager\nMapperSensorManager <- m_ScanManagers; MapperSensorManager <- m_Scans\nMapper <- m_Listeners\n**Finished serializing Mapper**\nLoad From File\n**Serializing Dataset**\nDataset <- m_SensorNameLookup\nDataset <- m_Data\nDataset <- m_Lasers\nDataset <- m_pDatasetInfo\n**Finished serializing Dataset**\nRegistering sensor: [Custom Described Lidar]\nWARNING: Logging before InitGoogleLogging() is written to STDERR\nW20261107 18:12:18.745842 406840 preprocessor.cc:67] Specified options.num_threads: 50 exceeds maximum available from the threading model Ceres was compiled with: 16.  Bounding to maximum number available.\nInfo: clipped range threshold to be within minimum and maximum range!\nRegistering sensor: [Custom Described Lidar]\n[INFO] [1794046339.467452556] [slamlab_c6t_pe9c.localizer]: LocalizationSlamToolbox: Clearing localization buffer.\n[INFO] [1794046339.749503681] [slamlab_c6t_pe9c.localizer]: Deactivating\n[INFO] [1794046339.944336956] [slamlab_c6t_pe9c.localizer]: Cleaning up\nUnregistering sensor: Custom Described Lidar\n[INFO] [1794046339.951213340] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n"
+    }
+  ],
+  "capture": {
+    "sceneSha256": "1a5015da05df4558eccf32ddd5bbf353f23519b5412285db47cacf876b144334",
+    "sampleFile": "trajectory.json",
+    "sampleSha256": "d5213de9d16e72d18535a1f619d19962d86b83b6cb2d1daaef2db8ed4d2d6042",
+    "samples": 47,
+    "mappingSamples": 40,
+    "heldOutSamples": 7,
+    "raysPerSample": 361,
+    "captureEndNs": 18800000000,
+    "exactPosePairs": 47,
+    "maxPairDeltaNs": 0,
+    "maxRangeP95ErrorM": 0.02944504251105995,
+    "traveledM": 13.600000000000009,
+    "lidarHeightM": 0.3
+  },
+  "mapping": {
+    "saveBeforeMapCode": 1,
+    "badFrame": {
+      "sample": 0,
+      "captureNs": 400000000,
+      "replayNs": 350000000,
+      "frame": "unlinked_laser",
+      "truth": [
+        -2.1,
+        -1.35,
+        0.0
+      ],
+      "odom": [
+        -2.1,
+        -1.35,
+        0.0
+      ],
+      "acceptedPose": false
+    },
+    "poses": [
+      {
+        "sample": 0,
+        "captureNs": 400000000,
+        "replayNs": 400000000,
+        "frame": "laser_link",
+        "truth": [
+          -2.1,
+          -1.35,
+          0.0
+        ],
+        "odom": [
+          -2.1,
+          -1.35,
+          0.0
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          -2.1,
+          -1.35,
+          0.0
+        ],
+        "positionErrorM": 0.0,
+        "yawErrorRad": 0.0
+      },
+      {
+        "sample": 1,
+        "captureNs": 800000000,
+        "replayNs": 800000000,
+        "frame": "laser_link",
+        "truth": [
+          -2.1,
+          -1.35,
+          0.0
+        ],
+        "odom": [
+          -2.1,
+          -1.35,
+          0.0
+        ],
+        "acceptedPose": false
+      },
+      {
+        "sample": 2,
+        "captureNs": 1200000000,
+        "replayNs": 1200000000,
+        "frame": "laser_link",
+        "truth": [
+          -2.1,
+          -1.35,
+          0.0
+        ],
+        "odom": [
+          -2.1,
+          -1.35,
+          0.0
+        ],
+        "acceptedPose": false
+      },
+      {
+        "sample": 3,
+        "captureNs": 1600000000,
+        "replayNs": 1600000000,
+        "frame": "laser_link",
+        "truth": [
+          -2.1,
+          -1.35,
+          0.0
+        ],
+        "odom": [
+          -2.1,
+          -1.35,
+          0.0
+        ],
+        "acceptedPose": false
+      },
+      {
+        "sample": 4,
+        "captureNs": 2000000000,
+        "replayNs": 2000000000,
+        "frame": "laser_link",
+        "truth": [
+          -1.7000000000000002,
+          -1.35,
+          0.0
+        ],
+        "odom": [
+          -1.6944000000000001,
+          -1.35,
+          0.0007999999999999998
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          -1.7044000000000001,
+          -1.3499999999999999,
+          -0.0026899999999999776
+        ],
+        "positionErrorM": 0.0043999999999999595,
+        "yawErrorRad": 0.0026899999999999776
+      },
+      {
+        "sample": 5,
+        "captureNs": 2400000000,
+        "replayNs": 2400000000,
+        "frame": "laser_link",
+        "truth": [
+          -1.3,
+          -1.35,
+          0.0
+        ],
+        "odom": [
+          -1.2888,
+          -1.35,
+          0.0016
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          -1.298802470121773,
+          -1.351415541126424,
+          -0.0018899999999999466
+        ],
+        "positionErrorM": 0.0018541398247822506,
+        "yawErrorRad": 0.0018899999999999464
+      },
+      {
+        "sample": 6,
+        "captureNs": 2800000000,
+        "replayNs": 2800000000,
+        "frame": "laser_link",
+        "truth": [
+          -0.8999999999999999,
+          -1.35,
+          0.0
+        ],
+        "odom": [
+          -0.8831999999999999,
+          -1.35,
+          0.0024000000000000002
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          -0.9032049402435457,
+          -1.3528310822528475,
+          -0.004579999999999924
+        ],
+        "positionErrorM": 0.004276291464234764,
+        "yawErrorRad": 0.004579999999999924
+      },
+      {
+        "sample": 7,
+        "captureNs": 3200000000,
+        "replayNs": 3200000000,
+        "frame": "laser_link",
+        "truth": [
+          -0.5,
+          -1.35,
+          0.0
+        ],
+        "odom": [
+          -0.4776,
+          -1.35,
+          0.0032
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          -0.507614820700551,
+          -1.3556621472642805,
+          -0.003779999999999949
+        ],
+        "positionErrorM": 0.00948922578211402,
+        "yawErrorRad": 0.003779999999999949
+      },
+      {
+        "sample": 8,
+        "captureNs": 3600000000,
+        "replayNs": 3600000000,
+        "frame": "laser_link",
+        "truth": [
+          -0.10000000000000009,
+          -1.35,
+          0.0
+        ],
+        "odom": [
+          -0.07200000000000009,
+          -1.35,
+          0.004
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          -0.10202470115755598,
+          -1.358493212275713,
+          -0.0029799999999999827
+        ],
+        "positionErrorM": 0.008731212375021462,
+        "yawErrorRad": 0.0029799999999999827
+      },
+      {
+        "sample": 9,
+        "captureNs": 4000000000,
+        "replayNs": 4000000000,
+        "frame": "laser_link",
+        "truth": [
+          0.30000000000000027,
+          -1.35,
+          0.0
+        ],
+        "odom": [
+          0.3336000000000003,
+          -1.35,
+          0.0048000000000000004
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          0.2935654183854395,
+          -1.3613242772871454,
+          -0.005669999999999963
+        ],
+        "positionErrorM": 0.013024710999887864,
+        "yawErrorRad": 0.005669999999999964
+      },
+      {
+        "sample": 10,
+        "captureNs": 4400000000,
+        "replayNs": 4400000000,
+        "frame": "laser_link",
+        "truth": [
+          0.7000000000000002,
+          -1.35,
+          0.0
+        ],
+        "odom": [
+          0.7392000000000002,
+          -1.35,
+          0.005600000000000001
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          0.6991431874700015,
+          -1.3655708317009672,
+          -0.00486999999999993
+        ],
+        "positionErrorM": 0.0155943876946613,
+        "yawErrorRad": 0.00486999999999993
+      },
+      {
+        "sample": 11,
+        "captureNs": 4800000000,
+        "replayNs": 4800000000,
+        "frame": "laser_link",
+        "truth": [
+          1.1,
+          -1.35,
+          0.0
+        ],
+        "odom": [
+          1.1448,
+          -1.35,
+          0.0064
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          1.0947209565545637,
+          -1.369817386114789,
+          -0.004069999999999908
+        ],
+        "positionErrorM": 0.02050846391423397,
+        "yawErrorRad": 0.004069999999999908
+      },
+      {
+        "sample": 12,
+        "captureNs": 5200000000,
+        "replayNs": 5200000000,
+        "frame": "laser_link",
+        "truth": [
+          1.5,
+          -1.35,
+          0.0
+        ],
+        "odom": [
+          1.5504,
+          -1.35,
+          0.007200000000000001
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          1.5002987256391258,
+          -1.3640639405286104,
+          -0.0032699999999998845
+        ],
+        "positionErrorM": 0.014067112717247896,
+        "yawErrorRad": 0.0032699999999998845
+      },
+      {
+        "sample": 13,
+        "captureNs": 5600000000,
+        "replayNs": 5600000000,
+        "frame": "laser_link",
+        "truth": [
+          1.9,
+          -1.35,
+          0.0
+        ],
+        "odom": [
+          1.956,
+          -1.35,
+          0.008
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          1.8958764947236881,
+          -1.368310494942432,
+          -0.005959999999999916
+        ],
+        "positionErrorM": 0.018769057536290896,
+        "yawErrorRad": 0.005959999999999916
+      },
+      {
+        "sample": 14,
+        "captureNs": 6000000000,
+        "replayNs": 6000000000,
+        "frame": "laser_link",
+        "truth": [
+          2.3000000000000003,
+          -1.35,
+          0.0
+        ],
+        "odom": [
+          2.3616,
+          -1.35,
+          0.0088
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          2.301436973377047,
+          -1.3739724870352374,
+          -0.005159999999999887
+        ],
+        "positionErrorM": 0.02401551638297548,
+        "yawErrorRad": 0.005159999999999887
+      },
+      {
+        "sample": 15,
+        "captureNs": 6400000000,
+        "replayNs": 6400000000,
+        "frame": "laser_link",
+        "truth": [
+          2.3000000000000007,
+          -1.0071428571428571,
+          1.5707963267948963
+        ],
+        "odom": [
+          2.3664000000000005,
+          -1.0071428571428571,
+          1.5802820410806107
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          2.301022635924767,
+          -1.031215757733412,
+          1.5628320410806107
+        ],
+        "positionErrorM": 0.024094611992670913,
+        "yawErrorRad": 0.007964285714285644
+      },
+      {
+        "sample": 16,
+        "captureNs": 6800000000,
+        "replayNs": 6800000000,
+        "frame": "laser_link",
+        "truth": [
+          2.3000000000000003,
+          -0.6642857142857141,
+          1.5707963267948963
+        ],
+        "odom": [
+          2.3712000000000004,
+          -0.6642857142857141,
+          1.5809677553663248
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          2.301804458652299,
+          -0.6784945697294669,
+          1.5670077553663249
+        ],
+        "positionErrorM": 0.0143229760891135,
+        "yawErrorRad": 0.0037885714285714744
+      },
+      {
+        "sample": 17,
+        "captureNs": 7200000000,
+        "replayNs": 7200000000,
+        "frame": "laser_link",
+        "truth": [
+          2.3000000000000003,
+          -0.32142857142857145,
+          1.5707963267948963
+        ],
+        "odom": [
+          2.3760000000000003,
+          -0.32142857142857145,
+          1.5816534696520392
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          2.301390121200019,
+          -0.33573784042764204,
+          1.5676934696520393
+        ],
+        "positionErrorM": 0.014376634384949214,
+        "yawErrorRad": 0.003102857142857074
+      },
+      {
+        "sample": 18,
+        "captureNs": 7600000000,
+        "replayNs": 7600000000,
+        "frame": "laser_link",
+        "truth": [
+          2.3,
+          0.02142857142857157,
+          1.5707963267948963
+        ],
+        "odom": [
+          2.3808,
+          0.02142857142857157,
+          1.5823391839377534
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          2.3009757837477385,
+          -0.0029811111258169275,
+          1.5648891839377534
+        ],
+        "positionErrorM": 0.024429178380133237,
+        "yawErrorRad": 0.005907142857142888
+      },
+      {
+        "sample": 19,
+        "captureNs": 8000000000,
+        "replayNs": 8000000000,
+        "frame": "laser_link",
+        "truth": [
+          2.3,
+          0.3642857142857145,
+          1.5707963267948963
+        ],
+        "odom": [
+          2.3855999999999997,
+          0.3642857142857145,
+          1.5830248982234678
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          2.3017576064752694,
+          0.33974007687812807,
+          1.5655748982234672
+        ],
+        "positionErrorM": 0.024608484233422732,
+        "yawErrorRad": 0.005221428571429154
+      },
+      {
+        "sample": 20,
+        "captureNs": 8400000000,
+        "replayNs": 8400000000,
+        "frame": "laser_link",
+        "truth": [
+          2.3,
+          0.7071428571428574,
+          1.5707963267948963
+        ],
+        "odom": [
+          2.3903999999999996,
+          0.7071428571428574,
+          1.583710612509182
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          2.302539429202801,
+          0.6824612648820731,
+          1.5662606125091816
+        ],
+        "positionErrorM": 0.024811886208098845,
+        "yawErrorRad": 0.004535714285714754
+      },
+      {
+        "sample": 21,
+        "captureNs": 8800000000,
+        "replayNs": 8800000000,
+        "frame": "laser_link",
+        "truth": [
+          2.2999999999999994,
+          1.0500000000000007,
+          1.5707963267948963
+        ],
+        "odom": [
+          2.3951999999999996,
+          1.0500000000000007,
+          1.5843963267948964
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          2.303321251930332,
+          1.0251824528860183,
+          1.5669463267948969
+        ],
+        "positionErrorM": 0.02503879707852349,
+        "yawErrorRad": 0.003849999999999465
+      },
+      {
+        "sample": 22,
+        "captureNs": 9200000000,
+        "replayNs": 9200000000,
+        "frame": "laser_link",
+        "truth": [
+          1.9,
+          1.0500000000000007,
+          3.141592653589793
+        ],
+        "odom": [
+          2.0008,
+          1.0500000000000007,
+          3.1559926535897933
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          1.9089812982996202,
+          1.0320643836127583,
+          3.138542653589793
+        ],
+        "positionErrorM": 0.020058665317938762,
+        "yawErrorRad": 0.0030499999999999967
+      },
+      {
+        "sample": 23,
+        "captureNs": 9600000000,
+        "replayNs": 9600000000,
+        "frame": "laser_link",
+        "truth": [
+          1.4999999999999998,
+          1.0500000000000005,
+          3.141592653589793
+        ],
+        "odom": [
+          1.6063999999999998,
+          1.0500000000000005,
+          3.156792653589793
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          1.5046413446689073,
+          1.0289463143394983,
+          3.135852653589793
+        ],
+        "positionErrorM": 0.02155921520433501,
+        "yawErrorRad": 0.0057400000000003
+      },
+      {
+        "sample": 24,
+        "captureNs": 10000000000,
+        "replayNs": 10000000000,
+        "frame": "laser_link",
+        "truth": [
+          1.0999999999999996,
+          1.0500000000000005,
+          3.141592653589793
+        ],
+        "odom": [
+          1.2119999999999997,
+          1.0500000000000005,
+          3.157592653589793
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          1.1003278104752712,
+          1.0272044467993482,
+          3.1401426535897934
+        ],
+        "positionErrorM": 0.022797910111048928,
+        "yawErrorRad": 0.0014499999999997293
+      },
+      {
+        "sample": 25,
+        "captureNs": 10400000000,
+        "replayNs": 10400000000,
+        "frame": "laser_link",
+        "truth": [
+          0.6999999999999997,
+          1.0500000000000005,
+          3.141592653589793
+        ],
+        "odom": [
+          0.8175999999999998,
+          1.0500000000000005,
+          3.158392653589793
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          0.7059878568445589,
+          1.0340863775260885,
+          3.1374526535897935
+        ],
+        "positionErrorM": 0.017002876516434864,
+        "yawErrorRad": 0.0041399999999995885
+      },
+      {
+        "sample": 26,
+        "captureNs": 10800000000,
+        "replayNs": 10800000000,
+        "frame": "laser_link",
+        "truth": [
+          0.2999999999999998,
+          1.0500000000000005,
+          3.141592653589793
+        ],
+        "odom": [
+          0.42319999999999985,
+          1.0500000000000005,
+          3.159192653589793
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          0.30167432265092314,
+          1.0323445099859387,
+          3.1382526535897934
+        ],
+        "positionErrorM": 0.01773470281611815,
+        "yawErrorRad": 0.0033399999999996766
+      },
+      {
+        "sample": 27,
+        "captureNs": 11200000000,
+        "replayNs": 11200000000,
+        "frame": "laser_link",
+        "truth": [
+          -0.10000000000000053,
+          1.0500000000000003,
+          3.141592653589793
+        ],
+        "odom": [
+          0.02879999999999952,
+          1.0500000000000003,
+          3.1599926535897933
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          -0.09263921154271297,
+          1.0306026424457886,
+          3.135562653589793
+        ],
+        "positionErrorM": 0.020747016334858145,
+        "yawErrorRad": 0.00602999999999998
+      },
+      {
+        "sample": 28,
+        "captureNs": 11600000000,
+        "replayNs": 11600000000,
+        "frame": "laser_link",
+        "truth": [
+          -0.5000000000000004,
+          1.0500000000000003,
+          3.141592653589793
+        ],
+        "odom": [
+          -0.36560000000000037,
+          1.0500000000000003,
+          3.160792653589793
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          -0.4969215235258691,
+          1.0402368760539715,
+          3.136362653589793
+        ],
+        "positionErrorM": 0.010236972530357788,
+        "yawErrorRad": 0.005230000000000068
+      },
+      {
+        "sample": 29,
+        "captureNs": 12000000000,
+        "replayNs": 12000000000,
+        "frame": "laser_link",
+        "truth": [
+          -0.9000000000000004,
+          1.0500000000000003,
+          3.141592653589793
+        ],
+        "odom": [
+          -0.7600000000000003,
+          1.0500000000000003,
+          3.161592653589793
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          -0.8912038355090256,
+          1.0398711096621547,
+          3.137162653589793
+        ],
+        "positionErrorM": 0.013415175333494038,
+        "yawErrorRad": 0.004430000000000155
+      },
+      {
+        "sample": 30,
+        "captureNs": 12400000000,
+        "replayNs": 12400000000,
+        "frame": "laser_link",
+        "truth": [
+          -1.3000000000000003,
+          1.0500000000000003,
+          3.141592653589793
+        ],
+        "odom": [
+          -1.1544000000000003,
+          1.0500000000000003,
+          3.162392653589793
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          -1.2954861474921815,
+          1.0395053432703376,
+          3.137962653589793
+        ],
+        "positionErrorM": 0.011424214823601465,
+        "yawErrorRad": 0.0036300000000002437
+      },
+      {
+        "sample": 31,
+        "captureNs": 12800000000,
+        "replayNs": 12800000000,
+        "frame": "laser_link",
+        "truth": [
+          -1.7000000000000002,
+          1.05,
+          3.141592653589793
+        ],
+        "odom": [
+          -1.5488000000000002,
+          1.05,
+          3.163192653589793
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          -1.6997684594753375,
+          1.03913957687852,
+          3.138762653589793
+        ],
+        "positionErrorM": 0.010862891023670322,
+        "yawErrorRad": 0.0028300000000003322
+      },
+      {
+        "sample": 32,
+        "captureNs": 13200000000,
+        "replayNs": 13200000000,
+        "frame": "laser_link",
+        "truth": [
+          -2.1000000000000005,
+          1.05,
+          3.141592653589793
+        ],
+        "odom": [
+          -1.9432000000000005,
+          1.05,
+          3.1639926535897933
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          -2.0940507714584933,
+          1.048773810486703,
+          3.1360726535897934
+        ],
+        "positionErrorM": 0.006074278637139072,
+        "yawErrorRad": 0.005519999999999748
+      },
+      {
+        "sample": 33,
+        "captureNs": 13600000000,
+        "replayNs": 13600000000,
+        "frame": "laser_link",
+        "truth": [
+          -2.1000000000000005,
+          0.7071428571428571,
+          -1.5707963267948963
+        ],
+        "odom": [
+          -1.9384000000000006,
+          0.7071428571428571,
+          -1.547710612509182
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          -2.098823969998678,
+          0.6959162934568741,
+          -1.5721406125091815
+        ],
+        "positionErrorM": 0.011287992680695785,
+        "yawErrorRad": 0.0013442857142851317
+      },
+      {
+        "sample": 34,
+        "captureNs": 14000000000,
+        "replayNs": 14000000000,
+        "frame": "laser_link",
+        "truth": [
+          -2.1000000000000005,
+          0.3642857142857142,
+          -1.5707963267948963
+        ],
+        "odom": [
+          -1.9336000000000004,
+          0.3642857142857142,
+          -1.5470248982234678
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          -2.1024005691645007,
+          0.3530442060152593,
+          -1.5749448982234677
+        ],
+        "positionErrorM": 0.011494965876776437,
+        "yawErrorRad": 0.00414857142857139
+      },
+      {
+        "sample": 35,
+        "captureNs": 14400000000,
+        "replayNs": 14400000000,
+        "frame": "laser_link",
+        "truth": [
+          -2.1000000000000005,
+          0.021428571428571352,
+          -1.5707963267948963
+        ],
+        "odom": [
+          -1.9288000000000005,
+          0.021428571428571352,
+          -1.5463391839377534
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          -2.0971737677046853,
+          0.01018668898543069,
+          -1.574259183937753
+        ],
+        "positionErrorM": 0.011591700041515779,
+        "yawErrorRad": 0.003462857142856768
+      },
+      {
+        "sample": 36,
+        "captureNs": 14800000000,
+        "replayNs": 14800000000,
+        "frame": "laser_link",
+        "truth": [
+          -2.1,
+          -0.3214285714285716,
+          -1.5707963267948963
+        ],
+        "odom": [
+          -1.924,
+          -0.3214285714285716,
+          -1.5456534696520392
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          -2.1019469662448684,
+          -0.3326708280443981,
+          -1.5735734696520374
+        ],
+        "positionErrorM": 0.01140960171849796,
+        "yawErrorRad": 0.0027771428571410346
+      },
+      {
+        "sample": 37,
+        "captureNs": 15200000000,
+        "replayNs": 15200000000,
+        "frame": "laser_link",
+        "truth": [
+          -2.1,
+          -0.6642857142857146,
+          -1.5707963267948963
+        ],
+        "odom": [
+          -1.9192,
+          -0.6642857142857146,
+          -1.5449677553663248
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          -2.106720164785053,
+          -0.6755283450742268,
+          -1.5728877553663243
+        ],
+        "positionErrorM": 0.013097990753740258,
+        "yawErrorRad": 0.002091428571427967
+      },
+      {
+        "sample": 38,
+        "captureNs": 15600000000,
+        "replayNs": 15600000000,
+        "frame": "laser_link",
+        "truth": [
+          -2.1000000000000005,
+          -1.0071428571428573,
+          -1.5707963267948963
+        ],
+        "odom": [
+          -1.9144000000000003,
+          -1.0071428571428573,
+          -1.5442820410806106
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          -2.1014933633252375,
+          -1.0183858621040554,
+          -1.5722020410806106
+        ],
+        "positionErrorM": 0.011341750066840916,
+        "yawErrorRad": 0.0014057142857142326
+      },
+      {
+        "sample": 39,
+        "captureNs": 16000000000,
+        "replayNs": 16000000000,
+        "frame": "laser_link",
+        "truth": [
+          -2.1000000000000005,
+          -1.3500000000000008,
+          -1.5707963267948963
+        ],
+        "odom": [
+          -1.9096000000000004,
+          -1.3500000000000008,
+          -1.5435963267948962
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          -2.106266561865423,
+          -1.3612433791338845,
+          -1.5715163267948953
+        ],
+        "positionErrorM": 0.012871805310888489,
+        "yawErrorRad": 0.0007199999999989437
+      }
+    ],
+    "acceptedPoses": 37,
+    "initialMap": {
+      "frame": "map",
+      "stampNs": 400000000,
+      "size": [
+        137,
+        97
+      ],
+      "originM": [
+        -3.415684780522274,
+        -2.4291733223555934
+      ],
+      "resolutionM": 0.05000000074505806,
+      "cells": {
+        "-1": 11825,
+        "100": 86,
+        "0": 1378
+      },
+      "dataSha256": "add79dad2152330a34e5a043fa300752cd92dd7c9f8b3bc1323dfad89d99e4d7"
+    },
+    "learnedMap": {
+      "frame": "map",
+      "stampNs": 16000000000,
+      "size": [
+        137,
+        98
+      ],
+      "originM": [
+        -3.4276520005699886,
+        -2.457066120508085
+      ],
+      "resolutionM": 0.05000000074505806,
+      "cells": {
+        "-1": 449,
+        "100": 659,
+        "0": 12318
+      },
+      "dataSha256": "1b6e721eeca34ac2ab21afefdd2c64598e5ae29dcada90cda044b676bd5688e7"
+    },
+    "geometryChecks": {
+      "freeProbes": [
+        [
+          -2.1,
+          -1.35,
+          0
+        ],
+        [
+          2.3,
+          -1.35,
+          0
+        ],
+        [
+          2.3,
+          1.05,
+          0
+        ],
+        [
+          -2.1,
+          1.05,
+          0
+        ]
+      ],
+      "nearestOccupiedM": [
+        [
+          "西墙内侧",
+          -3.4,
+          0.0,
+          0.01812893988890632
+        ],
+        [
+          "北墙内侧",
+          0.0,
+          2.4,
+          0.018128967855658096
+        ],
+        [
+          "中央箱体前缘",
+          -0.25,
+          0.0,
+          0.018128933022522924
+        ],
+        [
+          "非对称柱南侧",
+          1.65,
+          1.2,
+          0.018128946569996234
+        ]
+      ]
+    },
+    "graph": {
+      "nodes": 37,
+      "mappingNodes": 37,
+      "localizationNodes": 0,
+      "mappingEdges": 38,
+      "localizationEdges": 0,
+      "positionsM": [
+        [
+          0,
+          -2.1,
+          -1.35,
+          false
+        ],
+        [
+          1,
+          -1.7044000000000001,
+          -1.3499999999999999,
+          false
+        ],
+        [
+          2,
+          -1.298802470121773,
+          -1.351415541126424,
+          false
+        ],
+        [
+          3,
+          -0.9032049402435457,
+          -1.3528310822528475,
+          false
+        ],
+        [
+          4,
+          -0.507614820700551,
+          -1.3556621472642805,
+          false
+        ],
+        [
+          5,
+          -0.10202470115755598,
+          -1.358493212275713,
+          false
+        ],
+        [
+          6,
+          0.2935654183854395,
+          -1.3613242772871454,
+          false
+        ],
+        [
+          7,
+          0.6991431874700015,
+          -1.3655708317009672,
+          false
+        ],
+        [
+          8,
+          1.0947209565545637,
+          -1.369817386114789,
+          false
+        ],
+        [
+          9,
+          1.5002987256391258,
+          -1.3640639405286104,
+          false
+        ],
+        [
+          10,
+          1.8958764947236881,
+          -1.368310494942432,
+          false
+        ],
+        [
+          11,
+          2.301436973377047,
+          -1.3739724870352374,
+          false
+        ],
+        [
+          12,
+          2.301022635924767,
+          -1.031215757733412,
+          false
+        ],
+        [
+          13,
+          2.301804458652299,
+          -0.6784945697294669,
+          false
+        ],
+        [
+          14,
+          2.301390121200019,
+          -0.33573784042764204,
+          false
+        ],
+        [
+          15,
+          2.3009757837477385,
+          -0.0029811111258169275,
+          false
+        ],
+        [
+          16,
+          2.3017576064752694,
+          0.33974007687812807,
+          false
+        ],
+        [
+          17,
+          2.302539429202801,
+          0.6824612648820731,
+          false
+        ],
+        [
+          18,
+          2.303321251930332,
+          1.0251824528860183,
+          false
+        ],
+        [
+          19,
+          1.9089812982996202,
+          1.0320643836127583,
+          false
+        ],
+        [
+          20,
+          1.5046413446689073,
+          1.0289463143394983,
+          false
+        ],
+        [
+          21,
+          1.1003278104752712,
+          1.0272044467993482,
+          false
+        ],
+        [
+          22,
+          0.7059878568445589,
+          1.0340863775260885,
+          false
+        ],
+        [
+          23,
+          0.30167432265092314,
+          1.0323445099859387,
+          false
+        ],
+        [
+          24,
+          -0.09263921154271297,
+          1.0306026424457886,
+          false
+        ],
+        [
+          25,
+          -0.4969215235258691,
+          1.0402368760539715,
+          false
+        ],
+        [
+          26,
+          -0.8912038355090256,
+          1.0398711096621547,
+          false
+        ],
+        [
+          27,
+          -1.2954861474921815,
+          1.0395053432703376,
+          false
+        ],
+        [
+          28,
+          -1.6997684594753375,
+          1.03913957687852,
+          false
+        ],
+        [
+          29,
+          -2.0940507714584933,
+          1.048773810486703,
+          false
+        ],
+        [
+          30,
+          -2.098823969998678,
+          0.6959162934568741,
+          false
+        ],
+        [
+          31,
+          -2.1024005691645007,
+          0.3530442060152593,
+          false
+        ],
+        [
+          32,
+          -2.0971737677046853,
+          0.01018668898543069,
+          false
+        ],
+        [
+          33,
+          -2.1019469662448684,
+          -0.3326708280443981,
+          false
+        ],
+        [
+          34,
+          -2.106720164785053,
+          -0.6755283450742268,
+          false
+        ],
+        [
+          35,
+          -2.1014933633252375,
+          -1.0183858621040554,
+          false
+        ],
+        [
+          36,
+          -2.106266561865423,
+          -1.3612433791338845,
+          false
+        ]
+      ]
+    },
+    "transformStampNs": 16200000000,
+    "lookupStampNs": 16000000000,
+    "mapToLaserZ": 0.29999999999999993,
+    "captureClockStayedNs": 18800000000
+  },
+  "artifacts": {
+    "rasterServiceCode": 0,
+    "graphServiceCode": 0,
+    "mapServer": {
+      "frame": "map",
+      "stampNs": 16005000000,
+      "size": [
+        137,
+        98
+      ],
+      "originM": [
+        -3.428,
+        -2.457
+      ],
+      "resolutionM": 0.05000000074505806,
+      "cells": {
+        "-1": 449,
+        "100": 659,
+        "0": 12318
+      },
+      "dataSha256": "1b6e721eeca34ac2ab21afefdd2c64598e5ae29dcada90cda044b676bd5688e7"
+    },
+    "rasterCompared": {
+      "cells": 13426,
+      "changedCells": 0,
+      "originDeltaM": 0.0003542252459631125
+    },
+    "files": {
+      "learned.pgm": {
+        "bytes": 13440,
+        "sha256": "becccea6107196349e72209d9783efe78a416785a1f27ed1011c50b851f04e3f"
+      },
+      "learned.yaml": {
+        "bytes": 129,
+        "sha256": "b5c9a2cde8525cd61f1685b26aa2721889f473d7887cd8acfc0a94b57889bf65"
+      },
+      "learned.posegraph": {
+        "bytes": 3946210,
+        "sha256": "92790a16fe8724300f949b4164701982db0e5f8c085f914d311d3e6896fc8a42"
+      },
+      "learned.data": {
+        "bytes": 546006,
+        "sha256": "e2b40757f2123200a0bc24f03377e36c8204ffd9fb51cc69aca6ab96502084c8"
+      },
+      "learned.occupancy": {
+        "bytes": 13426,
+        "sha256": "1b6e721eeca34ac2ab21afefdd2c64598e5ae29dcada90cda044b676bd5688e7"
+      }
+    }
+  },
+  "restore": {
+    "missingPrefixResponseFields": 0,
+    "missingPrefixMapCells": 0,
+    "wrongModeResponseFields": 0,
+    "wrongModeMapCells": 0,
+    "responseFields": 0,
+    "matchType": 1,
+    "beforeReplayMap": {
+      "frame": "map",
+      "stampNs": 0,
+      "size": [
+        137,
+        98
+      ],
+      "originM": [
+        -3.4276520005699886,
+        -2.457066120508085
+      ],
+      "resolutionM": 0.05000000074505806,
+      "cells": {
+        "-1": 449,
+        "100": 659,
+        "0": 12318
+      },
+      "dataSha256": "1b6e721eeca34ac2ab21afefdd2c64598e5ae29dcada90cda044b676bd5688e7"
+    },
+    "compared": {
+      "cells": 13426,
+      "changedCells": 0,
+      "originDeltaM": 0.0
+    },
+    "graph": {
+      "nodes": 37,
+      "mappingNodes": 37,
+      "localizationNodes": 0,
+      "mappingEdges": 38,
+      "localizationEdges": 0,
+      "positionsM": [
+        [
+          0,
+          -2.1,
+          -1.35,
+          false
+        ],
+        [
+          1,
+          -1.7044000000000001,
+          -1.3499999999999999,
+          false
+        ],
+        [
+          2,
+          -1.298802470121773,
+          -1.351415541126424,
+          false
+        ],
+        [
+          3,
+          -0.9032049402435457,
+          -1.3528310822528475,
+          false
+        ],
+        [
+          4,
+          -0.507614820700551,
+          -1.3556621472642805,
+          false
+        ],
+        [
+          5,
+          -0.10202470115755598,
+          -1.358493212275713,
+          false
+        ],
+        [
+          6,
+          0.2935654183854395,
+          -1.3613242772871454,
+          false
+        ],
+        [
+          7,
+          0.6991431874700015,
+          -1.3655708317009672,
+          false
+        ],
+        [
+          8,
+          1.0947209565545637,
+          -1.369817386114789,
+          false
+        ],
+        [
+          9,
+          1.5002987256391258,
+          -1.3640639405286104,
+          false
+        ],
+        [
+          10,
+          1.8958764947236881,
+          -1.368310494942432,
+          false
+        ],
+        [
+          11,
+          2.301436973377047,
+          -1.3739724870352374,
+          false
+        ],
+        [
+          12,
+          2.301022635924767,
+          -1.031215757733412,
+          false
+        ],
+        [
+          13,
+          2.301804458652299,
+          -0.6784945697294669,
+          false
+        ],
+        [
+          14,
+          2.301390121200019,
+          -0.33573784042764204,
+          false
+        ],
+        [
+          15,
+          2.3009757837477385,
+          -0.0029811111258169275,
+          false
+        ],
+        [
+          16,
+          2.3017576064752694,
+          0.33974007687812807,
+          false
+        ],
+        [
+          17,
+          2.302539429202801,
+          0.6824612648820731,
+          false
+        ],
+        [
+          18,
+          2.303321251930332,
+          1.0251824528860183,
+          false
+        ],
+        [
+          19,
+          1.9089812982996202,
+          1.0320643836127583,
+          false
+        ],
+        [
+          20,
+          1.5046413446689073,
+          1.0289463143394983,
+          false
+        ],
+        [
+          21,
+          1.1003278104752712,
+          1.0272044467993482,
+          false
+        ],
+        [
+          22,
+          0.7059878568445589,
+          1.0340863775260885,
+          false
+        ],
+        [
+          23,
+          0.30167432265092314,
+          1.0323445099859387,
+          false
+        ],
+        [
+          24,
+          -0.09263921154271297,
+          1.0306026424457886,
+          false
+        ],
+        [
+          25,
+          -0.4969215235258691,
+          1.0402368760539715,
+          false
+        ],
+        [
+          26,
+          -0.8912038355090256,
+          1.0398711096621547,
+          false
+        ],
+        [
+          27,
+          -1.2954861474921815,
+          1.0395053432703376,
+          false
+        ],
+        [
+          28,
+          -1.6997684594753375,
+          1.03913957687852,
+          false
+        ],
+        [
+          29,
+          -2.0940507714584933,
+          1.048773810486703,
+          false
+        ],
+        [
+          30,
+          -2.098823969998678,
+          0.6959162934568741,
+          false
+        ],
+        [
+          31,
+          -2.1024005691645007,
+          0.3530442060152593,
+          false
+        ],
+        [
+          32,
+          -2.0971737677046853,
+          0.01018668898543069,
+          false
+        ],
+        [
+          33,
+          -2.1019469662448684,
+          -0.3326708280443981,
+          false
+        ],
+        [
+          34,
+          -2.106720164785053,
+          -0.6755283450742268,
+          false
+        ],
+        [
+          35,
+          -2.1014933633252375,
+          -1.0183858621040554,
+          false
+        ],
+        [
+          36,
+          -2.106266561865423,
+          -1.3612433791338845,
+          false
+        ]
+      ]
+    },
+    "continuation": [
+      {
+        "sample": 40,
+        "captureNs": 16400000000,
+        "replayNs": 16400000000,
+        "frame": "laser_link",
+        "truth": [
+          -2.1,
+          -1.35,
+          0.0
+        ],
+        "odom": [
+          -1.9096,
+          -1.35,
+          0.02720000000000002
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          -2.0996000000000006,
+          -1.35,
+          -0.0007199999999999914
+        ],
+        "positionErrorM": 0.00039999999999951186,
+        "yawErrorRad": 0.0007199999999999914
+      },
+      {
+        "sample": 41,
+        "captureNs": 16800000000,
+        "replayNs": 16800000000,
+        "frame": "laser_link",
+        "truth": [
+          -2.1,
+          -1.35,
+          0.0
+        ],
+        "odom": [
+          -1.9096,
+          -1.35,
+          0.02720000000000002
+        ],
+        "acceptedPose": false
+      },
+      {
+        "sample": 42,
+        "captureNs": 17200000000,
+        "replayNs": 17200000000,
+        "frame": "laser_link",
+        "truth": [
+          -2.1,
+          -1.35,
+          0.0
+        ],
+        "odom": [
+          -1.9096,
+          -1.35,
+          0.02720000000000002
+        ],
+        "acceptedPose": false
+      },
+      {
+        "sample": 43,
+        "captureNs": 17600000000,
+        "replayNs": 17600000000,
+        "frame": "laser_link",
+        "truth": [
+          -2.1,
+          -1.35,
+          0.0
+        ],
+        "odom": [
+          -1.9096,
+          -1.35,
+          0.02720000000000002
+        ],
+        "acceptedPose": false
+      },
+      {
+        "sample": 44,
+        "captureNs": 18000000000,
+        "replayNs": 18000000000,
+        "frame": "laser_link",
+        "truth": [
+          -1.78,
+          -1.35,
+          0.0
+        ],
+        "odom": [
+          -1.5851199999999999,
+          -1.35,
+          0.027840000000000018
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          -1.7799838059352862,
+          -1.3488288846469554,
+          -0.0018249999999999692
+        ],
+        "positionErrorM": 0.0011712273126378932,
+        "yawErrorRad": 0.0018249999999999692
+      },
+      {
+        "sample": 45,
+        "captureNs": 18400000000,
+        "replayNs": 18400000000,
+        "frame": "laser_link",
+        "truth": [
+          -1.46,
+          -1.35,
+          0.0
+        ],
+        "odom": [
+          -1.2606399999999998,
+          -1.35,
+          0.02848000000000002
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          -1.4603978152337347,
+          -1.3484242322533913,
+          -0.0011849999999999916
+        ],
+        "positionErrorM": 0.0016252079717513387,
+        "yawErrorRad": 0.0011849999999999916
+      },
+      {
+        "sample": 46,
+        "captureNs": 18800000000,
+        "replayNs": 18800000000,
+        "frame": "laser_link",
+        "truth": [
+          -1.1400000000000001,
+          -1.35,
+          0.0
+        ],
+        "odom": [
+          -0.93616,
+          -1.35,
+          0.02912000000000002
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          -1.140669211849402,
+          -1.3480156042184248,
+          -0.0022900000000000173
+        ],
+        "positionErrorM": 0.002094199397696783,
+        "yawErrorRad": 0.0022900000000000173
+      }
+    ],
+    "continuedMap": {
+      "frame": "map",
+      "stampNs": 18800000000,
+      "size": [
+        137,
+        98
+      ],
+      "originM": [
+        -3.4276520005699886,
+        -2.457066120508085
+      ],
+      "resolutionM": 0.05000000074505806,
+      "cells": {
+        "-1": 445,
+        "100": 662,
+        "0": 12319
+      },
+      "dataSha256": "65e9935da22c8a9973b7c6b5d046ad1ee26c33b4338ac7209fa36d10f9456221"
+    },
+    "continuedGraph": {
+      "nodes": 41,
+      "mappingNodes": 41,
+      "localizationNodes": 0,
+      "mappingEdges": 46,
+      "localizationEdges": 0,
+      "positionsM": [
+        [
+          0,
+          -2.1,
+          -1.35,
+          false
+        ],
+        [
+          1,
+          -1.7044000000000001,
+          -1.3499999999999999,
+          false
+        ],
+        [
+          2,
+          -1.298802470121773,
+          -1.351415541126424,
+          false
+        ],
+        [
+          3,
+          -0.9032049402435457,
+          -1.3528310822528475,
+          false
+        ],
+        [
+          4,
+          -0.507614820700551,
+          -1.3556621472642805,
+          false
+        ],
+        [
+          5,
+          -0.10202470115755598,
+          -1.358493212275713,
+          false
+        ],
+        [
+          6,
+          0.2935654183854395,
+          -1.3613242772871454,
+          false
+        ],
+        [
+          7,
+          0.6991431874700015,
+          -1.3655708317009672,
+          false
+        ],
+        [
+          8,
+          1.0947209565545637,
+          -1.369817386114789,
+          false
+        ],
+        [
+          9,
+          1.5002987256391258,
+          -1.3640639405286104,
+          false
+        ],
+        [
+          10,
+          1.8958764947236881,
+          -1.368310494942432,
+          false
+        ],
+        [
+          11,
+          2.301436973377047,
+          -1.3739724870352374,
+          false
+        ],
+        [
+          12,
+          2.301022635924767,
+          -1.031215757733412,
+          false
+        ],
+        [
+          13,
+          2.301804458652299,
+          -0.6784945697294669,
+          false
+        ],
+        [
+          14,
+          2.301390121200019,
+          -0.33573784042764204,
+          false
+        ],
+        [
+          15,
+          2.3009757837477385,
+          -0.0029811111258169275,
+          false
+        ],
+        [
+          16,
+          2.3017576064752694,
+          0.33974007687812807,
+          false
+        ],
+        [
+          17,
+          2.302539429202801,
+          0.6824612648820731,
+          false
+        ],
+        [
+          18,
+          2.303321251930332,
+          1.0251824528860183,
+          false
+        ],
+        [
+          19,
+          1.9089812982996202,
+          1.0320643836127583,
+          false
+        ],
+        [
+          20,
+          1.5046413446689073,
+          1.0289463143394983,
+          false
+        ],
+        [
+          21,
+          1.1003278104752712,
+          1.0272044467993482,
+          false
+        ],
+        [
+          22,
+          0.7059878568445589,
+          1.0340863775260885,
+          false
+        ],
+        [
+          23,
+          0.30167432265092314,
+          1.0323445099859387,
+          false
+        ],
+        [
+          24,
+          -0.09263921154271297,
+          1.0306026424457886,
+          false
+        ],
+        [
+          25,
+          -0.4969215235258691,
+          1.0402368760539715,
+          false
+        ],
+        [
+          26,
+          -0.8912038355090256,
+          1.0398711096621547,
+          false
+        ],
+        [
+          27,
+          -1.2954861474921815,
+          1.0395053432703376,
+          false
+        ],
+        [
+          28,
+          -1.6997684594753375,
+          1.03913957687852,
+          false
+        ],
+        [
+          29,
+          -2.0940507714584933,
+          1.048773810486703,
+          false
+        ],
+        [
+          30,
+          -2.098823969998678,
+          0.6959162934568741,
+          false
+        ],
+        [
+          31,
+          -2.1024005691645007,
+          0.3530442060152593,
+          false
+        ],
+        [
+          32,
+          -2.0971737677046853,
+          0.01018668898543069,
+          false
+        ],
+        [
+          33,
+          -2.1019469662448684,
+          -0.3326708280443981,
+          false
+        ],
+        [
+          34,
+          -2.106720164785053,
+          -0.6755283450742268,
+          false
+        ],
+        [
+          35,
+          -2.1014933633252375,
+          -1.0183858621040554,
+          false
+        ],
+        [
+          36,
+          -2.106266561865423,
+          -1.3612433791338845,
+          false
+        ],
+        [
+          37,
+          -2.0996000000000006,
+          -1.35,
+          false
+        ],
+        [
+          38,
+          -1.7799838059352862,
+          -1.3488288846469554,
+          false
+        ],
+        [
+          39,
+          -1.4603978152337347,
+          -1.3484242322533913,
+          false
+        ],
+        [
+          40,
+          -1.140669211849402,
+          -1.3480156042184248,
+          false
+        ]
+      ]
+    },
+    "continuationSaveCode": 0
+  },
+  "localization": {
+    "matchType": 3,
+    "replayShiftNs": 60000000000,
+    "mapBefore": {
+      "frame": "map",
+      "stampNs": 0,
+      "size": [
+        137,
+        98
+      ],
+      "originM": [
+        -3.4276520005699886,
+        -2.457066120508085
+      ],
+      "resolutionM": 0.05000000074505806,
+      "cells": {
+        "-1": 449,
+        "100": 659,
+        "0": 12318
+      },
+      "dataSha256": "1b6e721eeca34ac2ab21afefdd2c64598e5ae29dcada90cda044b676bd5688e7"
+    },
+    "loadedMapCompared": {
+      "cells": 13426,
+      "changedCells": 0,
+      "originDeltaM": 0.0
+    },
+    "mapWithBuffer": {
+      "frame": "map",
+      "stampNs": 78800000000,
+      "size": [
+        137,
+        98
+      ],
+      "originM": [
+        -3.4276520005699886,
+        -2.457066120508085
+      ],
+      "resolutionM": 0.05000000074505806,
+      "cells": {
+        "-1": 443,
+        "100": 665,
+        "0": 12318
+      },
+      "dataSha256": "15463d59753b3376e0f2ebc26456933a02bb7e05c27d3b2113d9502c696e4fce"
+    },
+    "rollingMapCompared": {
+      "cells": 13426,
+      "changedCells": 8,
+      "originDeltaM": 0.0
+    },
+    "rollingCellTransitions": {
+      "0→100": 2,
+      "-1→100": 4,
+      "-1→0": 2
+    },
+    "rollingGraph": {
+      "nodes": 41,
+      "mappingNodes": 37,
+      "localizationNodes": 4,
+      "mappingEdges": 38,
+      "localizationEdges": 9,
+      "positionsM": [
+        [
+          0,
+          -2.1,
+          -1.35,
+          false
+        ],
+        [
+          1,
+          -1.7044000000000001,
+          -1.3499999999999999,
+          false
+        ],
+        [
+          2,
+          -1.298802470121773,
+          -1.351415541126424,
+          false
+        ],
+        [
+          3,
+          -0.9032049402435457,
+          -1.3528310822528475,
+          false
+        ],
+        [
+          4,
+          -0.507614820700551,
+          -1.3556621472642805,
+          false
+        ],
+        [
+          5,
+          -0.10202470115755598,
+          -1.358493212275713,
+          false
+        ],
+        [
+          6,
+          0.2935654183854395,
+          -1.3613242772871454,
+          false
+        ],
+        [
+          7,
+          0.6991431874700015,
+          -1.3655708317009672,
+          false
+        ],
+        [
+          8,
+          1.0947209565545637,
+          -1.369817386114789,
+          false
+        ],
+        [
+          9,
+          1.5002987256391258,
+          -1.3640639405286104,
+          false
+        ],
+        [
+          10,
+          1.8958764947236881,
+          -1.368310494942432,
+          false
+        ],
+        [
+          11,
+          2.301436973377047,
+          -1.3739724870352374,
+          false
+        ],
+        [
+          12,
+          2.301022635924767,
+          -1.031215757733412,
+          false
+        ],
+        [
+          13,
+          2.301804458652299,
+          -0.6784945697294669,
+          false
+        ],
+        [
+          14,
+          2.301390121200019,
+          -0.33573784042764204,
+          false
+        ],
+        [
+          15,
+          2.3009757837477385,
+          -0.0029811111258169275,
+          false
+        ],
+        [
+          16,
+          2.3017576064752694,
+          0.33974007687812807,
+          false
+        ],
+        [
+          17,
+          2.302539429202801,
+          0.6824612648820731,
+          false
+        ],
+        [
+          18,
+          2.303321251930332,
+          1.0251824528860183,
+          false
+        ],
+        [
+          19,
+          1.9089812982996202,
+          1.0320643836127583,
+          false
+        ],
+        [
+          20,
+          1.5046413446689073,
+          1.0289463143394983,
+          false
+        ],
+        [
+          21,
+          1.1003278104752712,
+          1.0272044467993482,
+          false
+        ],
+        [
+          22,
+          0.7059878568445589,
+          1.0340863775260885,
+          false
+        ],
+        [
+          23,
+          0.30167432265092314,
+          1.0323445099859387,
+          false
+        ],
+        [
+          24,
+          -0.09263921154271297,
+          1.0306026424457886,
+          false
+        ],
+        [
+          25,
+          -0.4969215235258691,
+          1.0402368760539715,
+          false
+        ],
+        [
+          26,
+          -0.8912038355090256,
+          1.0398711096621547,
+          false
+        ],
+        [
+          27,
+          -1.2954861474921815,
+          1.0395053432703376,
+          false
+        ],
+        [
+          28,
+          -1.6997684594753375,
+          1.03913957687852,
+          false
+        ],
+        [
+          29,
+          -2.0940507714584933,
+          1.048773810486703,
+          false
+        ],
+        [
+          30,
+          -2.098823969998678,
+          0.6959162934568741,
+          false
+        ],
+        [
+          31,
+          -2.1024005691645007,
+          0.3530442060152593,
+          false
+        ],
+        [
+          32,
+          -2.0971737677046853,
+          0.01018668898543069,
+          false
+        ],
+        [
+          33,
+          -2.1019469662448684,
+          -0.3326708280443981,
+          false
+        ],
+        [
+          34,
+          -2.106720164785053,
+          -0.6755283450742268,
+          false
+        ],
+        [
+          35,
+          -2.1014933633252375,
+          -1.0183858621040554,
+          false
+        ],
+        [
+          36,
+          -2.106266561865423,
+          -1.3612433791338845,
+          false
+        ],
+        [
+          37,
+          -2.1049203199055317,
+          -1.3493752397234764,
+          true
+        ],
+        [
+          38,
+          -1.7804806640524944,
+          -1.3525752472003256,
+          true
+        ],
+        [
+          39,
+          -1.4609138853992916,
+          -1.3519017731362184,
+          true
+        ],
+        [
+          40,
+          -1.141244868497858,
+          -1.3518477150111932,
+          true
+        ]
+      ]
+    },
+    "mapAfterClear": {
+      "frame": "map",
+      "stampNs": 78800000000,
+      "size": [
+        137,
+        98
+      ],
+      "originM": [
+        -3.4276520005699886,
+        -2.457066120508085
+      ],
+      "resolutionM": 0.05000000074505806,
+      "cells": {
+        "-1": 449,
+        "100": 659,
+        "0": 12318
+      },
+      "dataSha256": "1b6e721eeca34ac2ab21afefdd2c64598e5ae29dcada90cda044b676bd5688e7"
+    },
+    "clearedMapCompared": {
+      "cells": 13426,
+      "changedCells": 0,
+      "originDeltaM": 0.0
+    },
+    "clearedGraph": {
+      "nodes": 37,
+      "mappingNodes": 37,
+      "localizationNodes": 0,
+      "mappingEdges": 38,
+      "localizationEdges": 0,
+      "positionsM": [
+        [
+          0,
+          -2.1,
+          -1.35,
+          false
+        ],
+        [
+          1,
+          -1.7044000000000001,
+          -1.3499999999999999,
+          false
+        ],
+        [
+          2,
+          -1.298802470121773,
+          -1.351415541126424,
+          false
+        ],
+        [
+          3,
+          -0.9032049402435457,
+          -1.3528310822528475,
+          false
+        ],
+        [
+          4,
+          -0.507614820700551,
+          -1.3556621472642805,
+          false
+        ],
+        [
+          5,
+          -0.10202470115755598,
+          -1.358493212275713,
+          false
+        ],
+        [
+          6,
+          0.2935654183854395,
+          -1.3613242772871454,
+          false
+        ],
+        [
+          7,
+          0.6991431874700015,
+          -1.3655708317009672,
+          false
+        ],
+        [
+          8,
+          1.0947209565545637,
+          -1.369817386114789,
+          false
+        ],
+        [
+          9,
+          1.5002987256391258,
+          -1.3640639405286104,
+          false
+        ],
+        [
+          10,
+          1.8958764947236881,
+          -1.368310494942432,
+          false
+        ],
+        [
+          11,
+          2.301436973377047,
+          -1.3739724870352374,
+          false
+        ],
+        [
+          12,
+          2.301022635924767,
+          -1.031215757733412,
+          false
+        ],
+        [
+          13,
+          2.301804458652299,
+          -0.6784945697294669,
+          false
+        ],
+        [
+          14,
+          2.301390121200019,
+          -0.33573784042764204,
+          false
+        ],
+        [
+          15,
+          2.3009757837477385,
+          -0.0029811111258169275,
+          false
+        ],
+        [
+          16,
+          2.3017576064752694,
+          0.33974007687812807,
+          false
+        ],
+        [
+          17,
+          2.302539429202801,
+          0.6824612648820731,
+          false
+        ],
+        [
+          18,
+          2.303321251930332,
+          1.0251824528860183,
+          false
+        ],
+        [
+          19,
+          1.9089812982996202,
+          1.0320643836127583,
+          false
+        ],
+        [
+          20,
+          1.5046413446689073,
+          1.0289463143394983,
+          false
+        ],
+        [
+          21,
+          1.1003278104752712,
+          1.0272044467993482,
+          false
+        ],
+        [
+          22,
+          0.7059878568445589,
+          1.0340863775260885,
+          false
+        ],
+        [
+          23,
+          0.30167432265092314,
+          1.0323445099859387,
+          false
+        ],
+        [
+          24,
+          -0.09263921154271297,
+          1.0306026424457886,
+          false
+        ],
+        [
+          25,
+          -0.4969215235258691,
+          1.0402368760539715,
+          false
+        ],
+        [
+          26,
+          -0.8912038355090256,
+          1.0398711096621547,
+          false
+        ],
+        [
+          27,
+          -1.2954861474921815,
+          1.0395053432703376,
+          false
+        ],
+        [
+          28,
+          -1.6997684594753375,
+          1.03913957687852,
+          false
+        ],
+        [
+          29,
+          -2.0940507714584933,
+          1.048773810486703,
+          false
+        ],
+        [
+          30,
+          -2.098823969998678,
+          0.6959162934568741,
+          false
+        ],
+        [
+          31,
+          -2.1024005691645007,
+          0.3530442060152593,
+          false
+        ],
+        [
+          32,
+          -2.0971737677046853,
+          0.01018668898543069,
+          false
+        ],
+        [
+          33,
+          -2.1019469662448684,
+          -0.3326708280443981,
+          false
+        ],
+        [
+          34,
+          -2.106720164785053,
+          -0.6755283450742268,
+          false
+        ],
+        [
+          35,
+          -2.1014933633252375,
+          -1.0183858621040554,
+          false
+        ],
+        [
+          36,
+          -2.106266561865423,
+          -1.3612433791338845,
+          false
+        ]
+      ]
+    },
+    "originalGraphFilesIntact": true,
+    "poseResults": [
+      {
+        "sample": 40,
+        "captureNs": 16400000000,
+        "replayNs": 76400000000,
+        "frame": "laser_link",
+        "truth": [
+          -2.1,
+          -1.35,
+          0.0
+        ],
+        "odom": [
+          -1.9096,
+          -1.35,
+          0.02720000000000002
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          -2.1049203199055317,
+          -1.3493752397234764,
+          0.0
+        ],
+        "positionErrorM": 0.0049598259420964574,
+        "yawErrorRad": 0.0
+      },
+      {
+        "sample": 41,
+        "captureNs": 16800000000,
+        "replayNs": 76800000000,
+        "frame": "laser_link",
+        "truth": [
+          -2.1,
+          -1.35,
+          0.0
+        ],
+        "odom": [
+          -1.9096,
+          -1.35,
+          0.02720000000000002
+        ],
+        "acceptedPose": false
+      },
+      {
+        "sample": 42,
+        "captureNs": 17200000000,
+        "replayNs": 77200000000,
+        "frame": "laser_link",
+        "truth": [
+          -2.1,
+          -1.35,
+          0.0
+        ],
+        "odom": [
+          -1.9096,
+          -1.35,
+          0.02720000000000002
+        ],
+        "acceptedPose": false
+      },
+      {
+        "sample": 43,
+        "captureNs": 17600000000,
+        "replayNs": 77600000000,
+        "frame": "laser_link",
+        "truth": [
+          -2.1,
+          -1.35,
+          0.0
+        ],
+        "odom": [
+          -1.9096,
+          -1.35,
+          0.02720000000000002
+        ],
+        "acceptedPose": false
+      },
+      {
+        "sample": 44,
+        "captureNs": 18000000000,
+        "replayNs": 78000000000,
+        "frame": "laser_link",
+        "truth": [
+          -1.78,
+          -1.35,
+          0.0
+        ],
+        "odom": [
+          -1.5851199999999999,
+          -1.35,
+          0.027840000000000018
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          -1.7804806640524944,
+          -1.3525752472003256,
+          -0.00110499999999997
+        ],
+        "positionErrorM": 0.0026197206099400788,
+        "yawErrorRad": 0.00110499999999997
+      },
+      {
+        "sample": 45,
+        "captureNs": 18400000000,
+        "replayNs": 78400000000,
+        "frame": "laser_link",
+        "truth": [
+          -1.46,
+          -1.35,
+          0.0
+        ],
+        "odom": [
+          -1.2606399999999998,
+          -1.35,
+          0.02848000000000002
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          -1.4609138853992916,
+          -1.3519017731362184,
+          -0.0022099999999999937
+        ],
+        "positionErrorM": 0.0021099591428935297,
+        "yawErrorRad": 0.0022099999999999937
+      },
+      {
+        "sample": 46,
+        "captureNs": 18800000000,
+        "replayNs": 78800000000,
+        "frame": "laser_link",
+        "truth": [
+          -1.1400000000000001,
+          -1.35,
+          0.0
+        ],
+        "odom": [
+          -0.93616,
+          -1.35,
+          0.02912000000000002
+        ],
+        "acceptedPose": true,
+        "estimated": [
+          -1.141244868497858,
+          -1.3518477150111932,
+          -0.0015700000000000152
+        ],
+        "positionErrorM": 0.0022279471132742685,
+        "yawErrorRad": 0.001570000000000015
+      }
+    ],
+    "maxPositionErrorM": 0.0049598259420964574
+  },
+  "sourceArchive": {
+    "sha256": "1d8766336450b05b0617346a5f31bdc359b01ffd1c46b185c94574e673d967a2",
+    "files": 115,
+    "verifiedSourceFiles": 7
+  }
+}

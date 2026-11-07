@@ -1,0 +1,77 @@
+# 三个真实生命周期节点和规划服务器内部的全局代价地图。
+# 顺序为地图 configure/activate、AMCL、初始位姿和 TF、最后规划服务器。
+/**/map_server:
+  ros__parameters:
+    use_sim_time: true
+    topic_name: map
+    frame_id: map
+    # yaml_filename 由驱动传入生成的绝对路径，图像路径相对地图 YAML。
+
+/**/amcl:
+  ros__parameters:
+    use_sim_time: true
+    global_frame_id: map
+    odom_frame_id: odom
+    base_frame_id: base_link
+    scan_topic: scan
+    set_initial_pose: false
+    tf_broadcast: true
+    # 单位为 s，未来时间戳余量用于 TF 消费，不代替实测里程计。
+    transform_tolerance: 0.25
+    laser_model_type: likelihood_field
+    robot_model_type: nav2_amcl::DifferentialMotionModel
+    max_beams: 60
+    min_particles: 300
+    max_particles: 700
+    update_min_d: 0.10
+    update_min_a: 0.10
+    resample_interval: 1
+    save_pose_rate: -1.0
+
+/**/planner_server:
+  ros__parameters:
+    use_sim_time: true
+    planner_plugins: [GridBased]
+    GridBased:
+      plugin: nav2_navfn_planner::NavfnPlanner
+      use_astar: false
+      allow_unknown: false
+      # 0 m 是严格的目标检查。该实验不会借附近可达栅格放宽障碍目标。
+      tolerance: 0.0
+
+/**/global_costmap:
+  ros__parameters:
+    use_sim_time: true
+    global_frame: map
+    robot_base_frame: base_link
+    resolution: 0.10
+    robot_radius: 0.18
+    update_frequency: 10.0
+    publish_frequency: 5.0
+    transform_tolerance: 0.25
+    track_unknown_space: true
+    always_send_full_costmap: true
+    plugins: [static_layer, obstacle_layer, inflation_layer]
+    static_layer:
+      plugin: nav2_costmap_2d::StaticLayer
+      map_topic: map
+      map_subscribe_transient_local: true
+    obstacle_layer:
+      plugin: nav2_costmap_2d::ObstacleLayer
+      # 首次规划保留静态图，随后只打开此参数比较同一目标。
+      enabled: false
+      observation_sources: lidar
+      lidar:
+        data_type: LaserScan
+        topic: scan
+        marking: true
+        clearing: false
+        obstacle_min_range: 0.10
+        obstacle_max_range: 7.0
+        # 台架激光在 base_link 上方 0.30 m。高度范围也是米。
+        min_obstacle_height: 0.0
+        max_obstacle_height: 1.0
+    inflation_layer:
+      plugin: nav2_costmap_2d::InflationLayer
+      inflation_radius: 0.38
+      cost_scaling_factor: 5.0

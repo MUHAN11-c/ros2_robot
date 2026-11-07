@@ -1,0 +1,204 @@
+{
+  "checkedAt": "2026-11-07",
+  "iteration": "2026-11-07-r6",
+  "passed": true,
+  "scope": "实际colcon包发现，不当作全部包重建或运行；model_labs的learning_description另有实际单包构建报告",
+  "readmeSha256": "97f1b78c9be285512bb0337ad427c1089df00da6a3222b298f0c8db5892d31dc",
+  "results": [
+    {
+      "label": "communication-only",
+      "command": [
+        "colcon",
+        "--log-base",
+        "/tmp/ros2-hub-r6-final-package-scope-5y7ot5ri",
+        "list",
+        "--base-paths",
+        "src",
+        "--names-only"
+      ],
+      "cwd": "examples",
+      "exitCode": 0,
+      "packages": [
+        "atlas_cpp",
+        "atlas_py"
+      ],
+      "stderr": ""
+    },
+    {
+      "label": "whole-download",
+      "command": [
+        "colcon",
+        "--log-base",
+        "/tmp/ros2-hub-r6-final-package-scope-tlzhkea7",
+        "list",
+        "--base-paths",
+        ".",
+        "--names-only"
+      ],
+      "cwd": "examples",
+      "exitCode": 0,
+      "packages": [
+        "atlas_cpp",
+        "atlas_py",
+        "learning_count_fault_lab",
+        "learning_description",
+        "learning_testing_lab",
+        "runtime_lab_components",
+        "runtime_lifecycle_lab"
+      ],
+      "stderr": ""
+    }
+  ],
+  "previousIterations": [
+    {
+      "checkedAt": "2026-11-07",
+      "passed": true,
+      "scope": "colcon实际包发现；不等于重新构建或运行这些包",
+      "readmeSha256": "92371d2ec66814b0a8f7f4e6dd8274abfc260b5410f12d491643bf4b7a4c7522",
+      "results": [
+        {
+          "label": "communication-only",
+          "command": [
+            "colcon",
+            "--log-base",
+            "/tmp/ros2-hub-r3-package-scope-log",
+            "list",
+            "--base-paths",
+            "src",
+            "--names-only"
+          ],
+          "cwd": "examples",
+          "exitCode": 0,
+          "packages": [
+            "atlas_cpp",
+            "atlas_py"
+          ],
+          "stderr": ""
+        },
+        {
+          "label": "whole-download",
+          "command": [
+            "colcon",
+            "--log-base",
+            "/tmp/ros2-hub-r3-package-scope-log",
+            "list",
+            "--base-paths",
+            ".",
+            "--names-only"
+          ],
+          "cwd": "examples",
+          "exitCode": 0,
+          "packages": [
+            "atlas_cpp",
+            "atlas_py",
+            "learning_count_fault_lab",
+            "runtime_lab_components"
+          ],
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "checkedAt": "2026-11-07",
+      "iteration": "2026-11-07-r4",
+      "passed": true,
+      "scope": "实际colcon包发现，不当作重新构建或运行",
+      "readmeSha256": "bddc633eefd9c441766e77fd09311a4737012382d5c8c1dcabc8820992c16e06",
+      "results": [
+        {
+          "label": "communication-only",
+          "command": [
+            "colcon",
+            "--log-base",
+            "/tmp/ros2-hub-r4-package-scope-log",
+            "list",
+            "--base-paths",
+            "src",
+            "--names-only"
+          ],
+          "cwd": "examples",
+          "exitCode": 0,
+          "packages": [
+            "atlas_cpp",
+            "atlas_py"
+          ],
+          "stderr": ""
+        },
+        {
+          "label": "whole-download",
+          "command": [
+            "colcon",
+            "--log-base",
+            "/tmp/ros2-hub-r4-package-scope-log",
+            "list",
+            "--base-paths",
+            ".",
+            "--names-only"
+          ],
+          "cwd": "examples",
+          "exitCode": 0,
+          "packages": [
+            "atlas_cpp",
+            "atlas_py",
+            "learning_count_fault_lab",
+            "learning_testing_lab",
+            "runtime_lab_components",
+            "runtime_lifecycle_lab"
+          ],
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "checkedAt": "2026-11-07",
+      "iteration": "2026-11-07-r5",
+      "passed": true,
+      "scope": "实际colcon包发现，不当作重新构建或运行；bag_labs为脚本资产，不新增ROS包",
+      "readmeSha256": "f83781cbc0932657be0d9e63b8a18cf8c3a5cbc228ce3e5184d29305289ed3a2",
+      "results": [
+        {
+          "label": "communication-only",
+          "command": [
+            "colcon",
+            "--log-base",
+            "/tmp/ros2-hub-r5-package-scope-r33svkeb",
+            "list",
+            "--base-paths",
+            "src",
+            "--names-only"
+          ],
+          "cwd": "examples",
+          "exitCode": 0,
+          "packages": [
+            "atlas_cpp",
+            "atlas_py"
+          ],
+          "stderr": ""
+        },
+        {
+          "label": "whole-download",
+          "command": [
+            "colcon",
+            "--log-base",
+            "/tmp/ros2-hub-r5-package-scope-y7xg5ckg",
+            "list",
+            "--base-paths",
+            ".",
+            "--names-only"
+          ],
+          "cwd": "examples",
+          "exitCode": 0,
+          "packages": [
+            "atlas_cpp",
+            "atlas_py",
+            "learning_count_fault_lab",
+            "learning_testing_lab",
+            "runtime_lab_components",
+            "runtime_lifecycle_lab"
+          ],
+          "stderr": ""
+        }
+      ]
+    }
+  ]
+}

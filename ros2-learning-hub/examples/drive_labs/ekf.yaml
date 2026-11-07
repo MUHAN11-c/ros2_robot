@@ -1,0 +1,21 @@
+# 先让驱动输出原始 Odometry，再启动此节点。相对话题保留在实验命名空间内。
+/**/ekf_filter_node:
+  ros__parameters:
+    use_sim_time: false
+    frequency: 30.0
+    sensor_timeout: 0.20
+    two_d_mode: true
+    publish_tf: true
+    map_frame: map
+    odom_frame: odom
+    base_link_frame: base_footprint
+    world_frame: odom
+    odom0: drive/odom
+    # 15 项依次为位置、姿态、线速度、角速度、线加速度，各组按 x/y/z。
+    # 只融合 vx (m/s) 和 vyaw (rad/s)。避免把同一轮反馈生成的位姿重复当作独立测量。
+    odom0_config: [false, false, false,
+                   false, false, false,
+                   true, false, false,
+                   false, false, true,
+                   false, false, false]
+    # 输出为局部 Odometry 与 odom -> base_footprint。没有 map -> odom、IMU 或 GNSS。

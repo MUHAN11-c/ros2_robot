@@ -1,0 +1,852 @@
+{
+  "passed": true,
+  "checkedAt": "2026-11-07T08:25:26.117313+00:00",
+  "scope": "顺序：模型→接口→资源竞争→反馈→滤波→超时→恢复→双 TF 来源反例。",
+  "domainId": 226,
+  "discovery": "LOCALHOST",
+  "rmw": "rmw_fastrtps_cpp",
+  "output": "/tmp/ros2-learning-drive-7a_hteta",
+  "sourceHashes": {
+    "drive_labs/validate_drive.py": "2819488208590828b15f73ee991d8b550c08bc77f8c328a416c64c674201a21d",
+    "model_labs/learning_description/urdf/robot.urdf.xacro": "d9dbb396299d044d8f6c6f3d2a1c476f2045a2482d11c109dc3ab9f1da781bfc",
+    "drive_labs/mock_system.xml": "52bf3675964059561295448dbd67d73d998d2c595359b00ff8b17d0e222c27dd",
+    "drive_labs/manager.yaml": "6d5c553eab45669928f110bd01ad7cf26e3bb8c60cdcb4ca19efaf12b5cf9d07",
+    "drive_labs/diff_drive.yaml": "6e245215b5cdcd4b0f265658b83010f3d81d33b09e2da443ee46c475d43c45e0",
+    "drive_labs/ekf.yaml": "f16e997084c643f60f576129abb9f411e645ed4c0bfafcee51c87164547705ba"
+  },
+  "processes": [
+    {
+      "label": "xacro",
+      "argv": [
+        "/opt/ros/jazzy/lib/xacro/xacro",
+        "/tmp/ros2-drive-portable-Qfnq0d/atlas_examples/model_labs/learning_description/urdf/robot.urdf.xacro",
+        "-o",
+        "/tmp/ros2-learning-drive-7a_hteta/expanded.urdf"
+      ],
+      "logFile": "/tmp/ros2-learning-drive-7a_hteta/xacro.log",
+      "pid": 370841,
+      "signals": [],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "logTail": ""
+    },
+    {
+      "label": "rsp",
+      "argv": [
+        "/opt/ros/jazzy/lib/robot_state_publisher/robot_state_publisher",
+        "--ros-args",
+        "-r",
+        "__ns:=/drive_7a_hteta",
+        "-r",
+        "/tf:=/drive_7a_hteta/tf",
+        "-r",
+        "/tf_static:=/drive_7a_hteta/tf_static",
+        "-r",
+        "joint_states:=state_broadcaster/joint_states",
+        "--params-file",
+        "/tmp/ros2-learning-drive-7a_hteta/description.yaml"
+      ],
+      "logFile": "/tmp/ros2-learning-drive-7a_hteta/rsp.log",
+      "pid": 370853,
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "8f6fc40aef6a0474a1f5539c8ff57ed13ae61f083c8691a3de47e20e9c9f3e44",
+      "logTail": "[INFO] [1794039926.425753543] [drive_7a_hteta.robot_state_publisher]: Robot initialized\n[INFO] [1794039936.899560626] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n"
+    },
+    {
+      "label": "manager",
+      "argv": [
+        "/opt/ros/jazzy/lib/controller_manager/ros2_control_node",
+        "--ros-args",
+        "-r",
+        "__ns:=/drive_7a_hteta",
+        "--params-file",
+        "/tmp/ros2-drive-portable-Qfnq0d/atlas_examples/drive_labs/manager.yaml"
+      ],
+      "logFile": "/tmp/ros2-learning-drive-7a_hteta/manager.log",
+      "pid": 370854,
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "74851dee57e8f315a0ce40dc574d0991b14fecd698a6538a14433dc82609c001",
+      "logTail": "las_examples/drive_labs/diff_drive.yaml --ros-args -r /tf:=/drive_7a_hteta/controller_tf \n[INFO] [1794039927.961157166] [drive_7a_hteta.controller_manager]: Configuring controller: 'drive'\n[INFO] [1794039929.602532774] [drive_7a_hteta.controller_manager]: Loading controller : 'reserve' of type 'diff_drive_controller/DiffDriveController'\n[INFO] [1794039929.602573560] [drive_7a_hteta.controller_manager]: Loading controller 'reserve'\n[INFO] [1794039929.602692669] [drive_7a_hteta.controller_manager]: Controller 'reserve' node arguments: --ros-args --params-file /tmp/ros2-drive-portable-Qfnq0d/atlas_examples/drive_labs/manager.yaml --params-file /tmp/ros2-learning-drive-7a_hteta/reserve.yaml --ros-args -r /tf:=/drive_7a_hteta/controller_tf \n[INFO] [1794039929.611049811] [drive_7a_hteta.controller_manager]: Configuring controller: 'reserve'\n[INFO] [1794039929.751573585] [drive_7a_hteta.controller_manager]: Activating controllers: [ drive ]\n[INFO] [1794039929.759980862] [drive_7a_hteta.controller_manager]: Requested controller switch from non-realtime loop\n[INFO] [1794039929.760061985] [drive_7a_hteta.controller_manager]: Successfully switched controllers!\n[WARN] [1794039929.769988204] [drive_7a_hteta.drive]: Velocity command timed out. Braking.\n[INFO] [1794039929.771998651] [drive_7a_hteta.controller_manager]: Activating controllers: [ reserve ]\n[WARN] [1794039929.772027019] [drive_7a_hteta.controller_manager]: Unable to activate controller 'reserve' since the command interface 'left_wheel_joint/velocity' is currently claimed by another controller.\n[WARN] [1794039933.249978202] [drive_7a_hteta.drive]: Velocity command timed out. Braking.\n[WARN] [1794039933.260351517] [drive_7a_hteta.drive]: Ignoring the received message (timestamp 1794039932.2602007389) because it is older than the current time by 1.0001500660 seconds, which exceeds the allowed timeout (0.3000)\n[INFO] [1794039935.840764481] [drive_7a_hteta.controller_manager]: Activating controllers: [ reserve ]\n[INFO] [1794039935.840797028] [drive_7a_hteta.controller_manager]: Deactivating controllers: [ drive ]\n[INFO] [1794039935.849978443] [drive_7a_hteta.controller_manager]: Requested controller switch from non-realtime loop\n[INFO] [1794039935.850059716] [drive_7a_hteta.controller_manager]: Successfully switched controllers!\n[WARN] [1794039935.859974955] [drive_7a_hteta.reserve]: Velocity command timed out. Braking.\n[INFO] [1794039936.735899337] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[INFO] [1794039936.735955122] [drive_7a_hteta.controller_manager]: Shutdown request received....\n[INFO] [1794039936.735974771] [drive_7a_hteta.controller_manager]: Shutting down all controllers in the controller manager.\n[INFO] [1794039936.735983140] [drive_7a_hteta.controller_manager]: Deactivating controller 'reserve'\n[INFO] [1794039936.736007108] [drive_7a_hteta.controller_manager]: Shutting down controller 'reserve'\n[INFO] [1794039936.736104749] [drive_7a_hteta.controller_manager]: Shutting down controller 'drive'\n[INFO] [1794039936.736151515] [drive_7a_hteta.controller_manager]: Deactivating controller 'state_broadcaster'\n[INFO] [1794039936.736161984] [drive_7a_hteta.controller_manager]: Shutting down controller 'state_broadcaster'\n[INFO] [1794039936.736183912] [resource_manager]: 'deactivate' hardware 'LearningMockDrive' \n[INFO] [1794039936.736191981] [resource_manager]: Successful 'deactivate' of hardware 'LearningMockDrive'\n[INFO] [1794039936.736193371] [resource_manager]: 'shutdown' hardware 'LearningMockDrive' \n[INFO] [1794039936.736195631] [resource_manager]: Successful 'shutdown' of hardware 'LearningMockDrive'\n[INFO] [1794039936.736213799] [drive_7a_hteta.controller_manager]: Shutting down the controller manager.\n[ERROR] [1794039936.736256715] [drive_7a_hteta.controller_manager.pal_statistics]: Exception in publisher thread: context cannot be slept with because it's invalid!. Aborting!\n[ERROR] [1794039936.736256755] [drive_7a_hteta.controller_manager.pal_statistics]: Exception in publisher thread: context cannot be slept with because it's invalid!. Aborting!\n[INFO] [1794039936.740049915] [drive_7a_hteta.controller_manager.pal_statistics]: Async messages lost 0\n[INFO] [1794039936.740060044] [drive_7a_hteta.controller_manager.pal_statistics]: publish_async_failures_ 0\n[INFO] [1794039936.740517113] [drive_7a_hteta.controller_manager.pal_statistics]: Async messages lost 0\n[INFO] [1794039936.740525162] [drive_7a_hteta.controller_manager.pal_statistics]: publish_async_failures_ 0\n"
+    },
+    {
+      "label": "spawn_state_broadcaster",
+      "argv": [
+        "/opt/ros/jazzy/lib/controller_manager/spawner",
+        "state_broadcaster",
+        "-c",
+        "/drive_7a_hteta/controller_manager",
+        "-p",
+        "/tmp/ros2-drive-portable-Qfnq0d/atlas_examples/drive_labs/manager.yaml",
+        "--controller-manager-timeout",
+        "5",
+        "--service-call-timeout",
+        "3",
+        "--switch-timeout",
+        "2",
+        "--ros-args",
+        "-r",
+        "__ns:=/drive_7a_hteta"
+      ],
+      "logFile": "/tmp/ros2-learning-drive-7a_hteta/spawn_state_broadcaster.log",
+      "pid": 370912,
+      "signals": [],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "831594286cb4e96866712dadc8671af6649bc55ea5346f30babea0e7d676aede",
+      "logTail": "[INFO] [1794039927.014340359] [drive_7a_hteta.spawner_state_broadcaster]: waiting for service /drive_7a_hteta/controller_manager/list_controllers to become available...\n[INFO] [1794039927.267514471] [drive_7a_hteta.spawner_state_broadcaster]: Setting controller param \"params_file\" to \"['/tmp/ros2-drive-portable-Qfnq0d/atlas_examples/drive_labs/manager.yaml']\" for state_broadcaster\n[INFO] [1794039927.281025230] [drive_7a_hteta.spawner_state_broadcaster]: Loaded state_broadcaster\n[INFO] [1794039927.310558770] [drive_7a_hteta.spawner_state_broadcaster]: Configured and activated state_broadcaster\n"
+    },
+    {
+      "label": "spawn_drive",
+      "argv": [
+        "/opt/ros/jazzy/lib/controller_manager/spawner",
+        "drive",
+        "-c",
+        "/drive_7a_hteta/controller_manager",
+        "-p",
+        "/tmp/ros2-drive-portable-Qfnq0d/atlas_examples/drive_labs/diff_drive.yaml",
+        "--controller-manager-timeout",
+        "5",
+        "--service-call-timeout",
+        "3",
+        "--switch-timeout",
+        "2",
+        "--inactive",
+        "--controller-ros-args",
+        "-r /tf:=/drive_7a_hteta/controller_tf",
+        "--ros-args",
+        "-r",
+        "__ns:=/drive_7a_hteta"
+      ],
+      "logFile": "/tmp/ros2-learning-drive-7a_hteta/spawn_drive.log",
+      "pid": 371064,
+      "signals": [],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "5ccfed11b96f1514e554671aaa83f1f00977fe7612d2bee16b6451af323082bb",
+      "logTail": "[INFO] [1794039927.694039954] [drive_7a_hteta.spawner_drive]: waiting for service /drive_7a_hteta/controller_manager/list_controllers to become available...\n[INFO] [1794039927.946226116] [drive_7a_hteta.spawner_drive]: Setting controller param \"node_options_args\" to \"['-r', '/tf:=/drive_7a_hteta/controller_tf']\" for drive\n[INFO] [1794039927.948449483] [drive_7a_hteta.spawner_drive]: Setting controller param \"params_file\" to \"['/tmp/ros2-drive-portable-Qfnq0d/atlas_examples/drive_labs/diff_drive.yaml']\" for drive\n[INFO] [1794039927.960740264] [drive_7a_hteta.spawner_drive]: Loaded drive\n"
+    },
+    {
+      "label": "spawn_reserve",
+      "argv": [
+        "/opt/ros/jazzy/lib/controller_manager/spawner",
+        "reserve",
+        "-c",
+        "/drive_7a_hteta/controller_manager",
+        "-p",
+        "/tmp/ros2-learning-drive-7a_hteta/reserve.yaml",
+        "--controller-manager-timeout",
+        "5",
+        "--service-call-timeout",
+        "3",
+        "--switch-timeout",
+        "2",
+        "--inactive",
+        "--controller-ros-args",
+        "-r /tf:=/drive_7a_hteta/controller_tf",
+        "--ros-args",
+        "-r",
+        "__ns:=/drive_7a_hteta"
+      ],
+      "logFile": "/tmp/ros2-learning-drive-7a_hteta/spawn_reserve.log",
+      "pid": 371103,
+      "signals": [],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "15ad3b672298089d163f8f3e29e6f7a94407dc22ed9070dd7c0e1f9d34d0b30d",
+      "logTail": "[INFO] [1794039928.345589256] [drive_7a_hteta.spawner_reserve]: waiting for service /drive_7a_hteta/controller_manager/list_controllers to become available...\n[INFO] [1794039929.598513299] [drive_7a_hteta.spawner_reserve]: Setting controller param \"node_options_args\" to \"['-r', '/tf:=/drive_7a_hteta/controller_tf']\" for reserve\n[INFO] [1794039929.600892373] [drive_7a_hteta.spawner_reserve]: Setting controller param \"params_file\" to \"['/tmp/ros2-learning-drive-7a_hteta/reserve.yaml']\" for reserve\n[INFO] [1794039929.610693623] [drive_7a_hteta.spawner_reserve]: Loaded reserve\n"
+    },
+    {
+      "label": "ekf",
+      "argv": [
+        "/opt/ros/jazzy/lib/robot_localization/ekf_node",
+        "--ros-args",
+        "-r",
+        "__ns:=/drive_7a_hteta",
+        "-r",
+        "/tf:=/drive_7a_hteta/tf",
+        "-r",
+        "/tf_static:=/drive_7a_hteta/tf_static",
+        "-r",
+        "__node:=ekf_filter_node",
+        "--params-file",
+        "/tmp/ros2-drive-portable-Qfnq0d/atlas_examples/drive_labs/ekf.yaml"
+      ],
+      "logFile": "/tmp/ros2-learning-drive-7a_hteta/ekf.log",
+      "pid": 371167,
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "21173dc3dfc292004124e6fb6854212eba463c2073924b08ed88f366a3c8c112",
+      "logTail": "[INFO] [1794039936.622198477] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n"
+    }
+  ],
+  "motion": {
+    "straight": {
+      "command": [
+        0.16,
+        0.0
+      ],
+      "expectedWheelRadS": [
+        2.0,
+        2.0
+      ],
+      "joint": {
+        "stampNs": 1794039931879983321,
+        "positionRad": [
+          2.2400001460000003,
+          2.2400001460000003
+        ],
+        "velocityRadS": [
+          2.0,
+          2.0
+        ]
+      },
+      "raw": {
+        "stampNs": 1794039931869987725,
+        "frames": [
+          "odom",
+          "base_footprint"
+        ],
+        "xyM": [
+          0.17760142352000002,
+          0.0
+        ],
+        "twist": [
+          0.15999321848025153,
+          0.0
+        ],
+        "twistVariance": [
+          0.0025,
+          0.01
+        ]
+      },
+      "fused": {
+        "stampNs": 1794039931869987725,
+        "frames": [
+          "odom",
+          "base_footprint"
+        ],
+        "xyM": [
+          0.17598239948126332,
+          0.0
+        ],
+        "twist": [
+          0.16004608776107068,
+          0.0
+        ],
+        "twistVariance": [
+          0.0008400892357516778,
+          0.0017639473825389381
+        ]
+      },
+      "windowSamples": {
+        "joint": 38,
+        "raw": 19,
+        "ekf": 12
+      }
+    },
+    "turn": {
+      "command": [
+        0.16,
+        0.4
+      ],
+      "expectedWheelRadS": [
+        1.1,
+        2.9
+      ],
+      "joint": {
+        "stampNs": 1794039932999979213,
+        "positionRad": [
+          3.481002938500002,
+          5.479010237499999
+        ],
+        "velocityRadS": [
+          1.1,
+          2.9
+        ]
+      },
+      "raw": {
+        "stampNs": 1794039932989981556,
+        "frames": [
+          "odom",
+          "base_footprint"
+        ],
+        "xyM": [
+          0.3511766859836792,
+          0.03809981571837595
+        ],
+        "twist": [
+          0.15999351912446003,
+          0.3999837978111578
+        ],
+        "twistVariance": [
+          0.0025,
+          0.01
+        ]
+      },
+      "fused": {
+        "stampNs": 1794039932969978562,
+        "frames": [
+          "odom",
+          "base_footprint"
+        ],
+        "xyM": [
+          0.347102462075491,
+          0.0353030777702364
+        ],
+        "twist": [
+          0.16004260543400842,
+          0.4000200572829419
+        ],
+        "twistVariance": [
+          0.0009081617613406164,
+          0.0017945572600133058
+        ]
+      },
+      "windowSamples": {
+        "joint": 37,
+        "raw": 18,
+        "ekf": 11
+      }
+    },
+    "recovered": {
+      "command": [
+        0.16,
+        0.0
+      ],
+      "expectedWheelRadS": [
+        2.0,
+        2.0
+      ],
+      "joint": {
+        "stampNs": 1794039934709994454,
+        "positionRad": [
+          5.936017793500002,
+          8.384015426499996
+        ],
+        "velocityRadS": [
+          2.0,
+          2.0
+        ]
+      },
+      "raw": {
+        "stampNs": 1794039934699976456,
+        "frames": [
+          "odom",
+          "base_footprint"
+        ],
+        "xyM": [
+          0.5356803194613037,
+          0.14717652883380275
+        ],
+        "twist": [
+          0.15998432224945872,
+          0.0
+        ],
+        "twistVariance": [
+          0.0025,
+          0.01
+        ]
+      },
+      "fused": {
+        "stampNs": 1794039934669985475,
+        "frames": [
+          "odom",
+          "base_footprint"
+        ],
+        "xyM": [
+          0.5309610070388596,
+          0.1415514659158484
+        ],
+        "twist": [
+          0.1603906840341244,
+          2.3781998259628105e-07
+        ],
+        "twistVariance": [
+          0.0008448238233834936,
+          0.0017535267587466788
+        ]
+      },
+      "windowSamples": {
+        "joint": 35,
+        "raw": 17,
+        "ekf": 10
+      }
+    },
+    "explicitZero": {
+      "command": [
+        0.0,
+        0.0
+      ],
+      "expectedWheelRadS": [
+        0.0,
+        0.0
+      ],
+      "joint": {
+        "stampNs": 1794039935839984931,
+        "positionRad": [
+          5.955998615500002,
+          8.403996248499997
+        ],
+        "velocityRadS": [
+          0.0,
+          0.0
+        ]
+      },
+      "raw": {
+        "stampNs": 1794039935819973639,
+        "frames": [
+          "odom",
+          "base_footprint"
+        ],
+        "xyM": [
+          0.538418505707266,
+          0.14883280091961693
+        ],
+        "twist": [
+          0.0,
+          0.0
+        ],
+        "twistVariance": [
+          0.0025,
+          0.01
+        ]
+      },
+      "fused": {
+        "stampNs": 1794039935789983454,
+        "frames": [
+          "odom",
+          "base_footprint"
+        ],
+        "xyM": [
+          0.5386622415425584,
+          0.1462279150188119
+        ],
+        "twist": [
+          -0.0016404657540886047,
+          3.3525806221548656e-12
+        ],
+        "twistVariance": [
+          0.0009013531968072807,
+          0.0017736794874864193
+        ]
+      },
+      "windowSamples": {
+        "joint": 38,
+        "raw": 18,
+        "ekf": 11
+      }
+    }
+  },
+  "versions": {
+    "xacro": "2.1.1",
+    "robot_state_publisher": "3.3.4",
+    "controller_manager": "4.48.1",
+    "hardware_interface": "4.48.1",
+    "joint_state_broadcaster": "4.42.1",
+    "diff_drive_controller": "4.42.1",
+    "robot_localization": "3.8.3",
+    "rclpy": "7.1.12"
+  },
+  "namespace": "/drive_7a_hteta",
+  "geometry": {
+    "wheelRadiusM": 0.08,
+    "wheelSeparationM": 0.36,
+    "jointY_M": [
+      0.18,
+      -0.18
+    ]
+  },
+  "hardware": {
+    "name": "LearningMockDrive",
+    "plugin": "mock_components/GenericSystem",
+    "state": "active",
+    "rwRateHz": 100
+  },
+  "resources": {
+    "before": {
+      "controllers": {
+        "reserve": {
+          "state": "inactive",
+          "claimed": [],
+          "requiredState": [
+            "left_wheel_joint/position",
+            "right_wheel_joint/position"
+          ]
+        },
+        "drive": {
+          "state": "inactive",
+          "claimed": [],
+          "requiredState": [
+            "left_wheel_joint/position",
+            "right_wheel_joint/position"
+          ]
+        },
+        "state_broadcaster": {
+          "state": "active",
+          "claimed": [],
+          "requiredState": [
+            "left_wheel_joint/position",
+            "left_wheel_joint/velocity",
+            "right_wheel_joint/position",
+            "right_wheel_joint/velocity"
+          ]
+        }
+      },
+      "commands": {
+        "left_wheel_joint/velocity": [
+          true,
+          false
+        ],
+        "right_wheel_joint/velocity": [
+          true,
+          false
+        ]
+      },
+      "stateInterfaces": [
+        "left_wheel_joint/position",
+        "left_wheel_joint/velocity",
+        "right_wheel_joint/position",
+        "right_wheel_joint/velocity"
+      ],
+      "otherCommandNames": [
+        "drive/angular/velocity",
+        "drive/linear/velocity",
+        "reserve/angular/velocity",
+        "reserve/linear/velocity"
+      ]
+    },
+    "activation": {
+      "activate": [
+        "drive"
+      ],
+      "deactivate": [],
+      "ok": true,
+      "message": "Successfully switched controllers!"
+    },
+    "active": {
+      "controllers": {
+        "reserve": {
+          "state": "inactive",
+          "claimed": [],
+          "requiredState": [
+            "left_wheel_joint/position",
+            "right_wheel_joint/position"
+          ]
+        },
+        "drive": {
+          "state": "active",
+          "claimed": [
+            "left_wheel_joint/velocity",
+            "right_wheel_joint/velocity"
+          ],
+          "requiredState": [
+            "left_wheel_joint/position",
+            "right_wheel_joint/position"
+          ]
+        },
+        "state_broadcaster": {
+          "state": "active",
+          "claimed": [],
+          "requiredState": [
+            "left_wheel_joint/position",
+            "left_wheel_joint/velocity",
+            "right_wheel_joint/position",
+            "right_wheel_joint/velocity"
+          ]
+        }
+      },
+      "commands": {
+        "left_wheel_joint/velocity": [
+          true,
+          true
+        ],
+        "right_wheel_joint/velocity": [
+          true,
+          true
+        ]
+      },
+      "stateInterfaces": [
+        "left_wheel_joint/position",
+        "left_wheel_joint/velocity",
+        "right_wheel_joint/position",
+        "right_wheel_joint/velocity"
+      ],
+      "otherCommandNames": [
+        "drive/angular/velocity",
+        "drive/linear/velocity",
+        "reserve/angular/velocity",
+        "reserve/linear/velocity"
+      ]
+    },
+    "rejection": {
+      "activate": [
+        "reserve"
+      ],
+      "deactivate": [],
+      "ok": false,
+      "message": "Unable to activate controller 'reserve' since the command interface 'left_wheel_joint/velocity' is currently claimed by another controller."
+    },
+    "afterRejection": {
+      "controllers": {
+        "reserve": {
+          "state": "inactive",
+          "claimed": [],
+          "requiredState": [
+            "left_wheel_joint/position",
+            "right_wheel_joint/position"
+          ]
+        },
+        "drive": {
+          "state": "active",
+          "claimed": [
+            "left_wheel_joint/velocity",
+            "right_wheel_joint/velocity"
+          ],
+          "requiredState": [
+            "left_wheel_joint/position",
+            "right_wheel_joint/position"
+          ]
+        },
+        "state_broadcaster": {
+          "state": "active",
+          "claimed": [],
+          "requiredState": [
+            "left_wheel_joint/position",
+            "left_wheel_joint/velocity",
+            "right_wheel_joint/position",
+            "right_wheel_joint/velocity"
+          ]
+        }
+      },
+      "commands": {
+        "left_wheel_joint/velocity": [
+          true,
+          true
+        ],
+        "right_wheel_joint/velocity": [
+          true,
+          true
+        ]
+      },
+      "stateInterfaces": [
+        "left_wheel_joint/position",
+        "left_wheel_joint/velocity",
+        "right_wheel_joint/position",
+        "right_wheel_joint/velocity"
+      ],
+      "otherCommandNames": [
+        "drive/angular/velocity",
+        "drive/linear/velocity",
+        "reserve/angular/velocity",
+        "reserve/linear/velocity"
+      ]
+    }
+  },
+  "frames": {
+    "staticEdges": [
+      [
+        "base_footprint",
+        "base_link"
+      ],
+      [
+        "base_link",
+        "camera_link"
+      ],
+      [
+        "base_link",
+        "laser"
+      ],
+      [
+        "camera_link",
+        "camera_optical_frame"
+      ]
+    ],
+    "beforeEkf": [
+      [
+        "base_link",
+        "left_wheel"
+      ],
+      [
+        "base_link",
+        "right_wheel"
+      ]
+    ],
+    "withEkf": [
+      [
+        "base_link",
+        "left_wheel"
+      ],
+      [
+        "base_link",
+        "right_wheel"
+      ],
+      [
+        "odom",
+        "base_footprint"
+      ]
+    ],
+    "controlTfDisabled": true
+  },
+  "timeout": {
+    "configuredRosSeconds": 0.3,
+    "observedSteadySeconds": 0.32000439900002675,
+    "joint": {
+      "stampNs": 1794039933259987070,
+      "positionRad": [
+        3.7559970315000033,
+        6.203994664499998
+      ],
+      "velocityRadS": [
+        0.0,
+        0.0
+      ]
+    },
+    "raw": {
+      "stampNs": 1794039933259981931,
+      "frames": [
+        "odom",
+        "base_footprint"
+      ],
+      "xyM": [
+        0.38782477987109787,
+        0.057741778616445326
+      ],
+      "twist": [
+        0.0,
+        0.0
+      ],
+      "twistVariance": [
+        0.0025,
+        0.01
+      ]
+    }
+  },
+  "stale": {
+    "stampAgeSeconds": 1.0,
+    "windowSeconds": 0.35,
+    "jointSamples": 35,
+    "joint": {
+      "stampNs": 1794039933609983804,
+      "positionRad": [
+        3.7559970315000033,
+        6.203994664499998
+      ],
+      "velocityRadS": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "handoff": {
+    "switch": {
+      "activate": [
+        "reserve"
+      ],
+      "deactivate": [
+        "drive"
+      ],
+      "ok": true,
+      "message": "Successfully switched controllers!"
+    },
+    "resources": {
+      "controllers": {
+        "reserve": {
+          "state": "active",
+          "claimed": [
+            "left_wheel_joint/velocity",
+            "right_wheel_joint/velocity"
+          ],
+          "requiredState": [
+            "left_wheel_joint/position",
+            "right_wheel_joint/position"
+          ]
+        },
+        "drive": {
+          "state": "inactive",
+          "claimed": [],
+          "requiredState": [
+            "left_wheel_joint/position",
+            "right_wheel_joint/position"
+          ]
+        },
+        "state_broadcaster": {
+          "state": "active",
+          "claimed": [],
+          "requiredState": [
+            "left_wheel_joint/position",
+            "left_wheel_joint/velocity",
+            "right_wheel_joint/position",
+            "right_wheel_joint/velocity"
+          ]
+        }
+      },
+      "commands": {
+        "left_wheel_joint/velocity": [
+          true,
+          true
+        ],
+        "right_wheel_joint/velocity": [
+          true,
+          true
+        ]
+      },
+      "stateInterfaces": [
+        "left_wheel_joint/position",
+        "left_wheel_joint/velocity",
+        "right_wheel_joint/position",
+        "right_wheel_joint/velocity"
+      ],
+      "otherCommandNames": [
+        "drive/angular/velocity",
+        "drive/linear/velocity",
+        "reserve/angular/velocity",
+        "reserve/linear/velocity"
+      ]
+    },
+    "fusionEdges": [
+      [
+        "base_link",
+        "left_wheel"
+      ],
+      [
+        "base_link",
+        "right_wheel"
+      ],
+      [
+        "odom",
+        "base_footprint"
+      ]
+    ],
+    "controllerEdges": [
+      [
+        "odom",
+        "base_footprint"
+      ]
+    ],
+    "windowSeconds": 0.75,
+    "switchStampNs": 1794039935860506057,
+    "rawStampsNs": [],
+    "fusedStampsNs": [
+      1794039936051278943,
+      1794039936251295660,
+      1794039936484636257
+    ],
+    "newRawMessages": 0,
+    "newFusedMessages": 3
+  },
+  "staleLogged": true,
+  "sourceArchiveFiles": 101,
+  "sourceArchiveSha256": "82f9ea3b7d26989d06fd5f5913892b8977c1c65f06518ac6a774c141dbcd52e5"
+}

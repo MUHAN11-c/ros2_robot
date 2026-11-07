@@ -1,9 +1,7 @@
-# 未完成的阅读器整合
+# 历史阅读器整合草稿
 
-这两个文件是换机前保存的实施中间状态，不是可运行交付。
+这些文件保留2026-11-06换机前的开发起点，不是当前交付。
 
-- `reader-integration.html`：计划替代 `dist/index.html`，但依赖 `reader-library.js`、`reader.css` 尚未实现。
-- `reader.js`：从可用双栏样稿复制出的起点，尚未接入进度、资源、数学、完整路由等正式功能。
-- `../tests/reader-checks.cjs`：预先编写的验收，当前预期失败。不要删除或误报通过。
+2026-11-07已完成整合：正式入口为 `../dist/index.html`，运行代码为dist中的reader.js、reader-library.js和reader.css。公式、图解、进度、搜索、完整路由和离线导出均已接入。`../tests/reader-checks.cjs` 已在正式入口通过，不再是预期失败测试。
 
-可用入口仍是 `../dist/index.html`、`../dist/layout-preview.html` 和 `../dist/book.html`。完整续作要求见工作区根目录 `CONTINUE.md`。
+继续开发请修改正式内容源和构建器，不要用此处草稿覆盖当前页面。完整状态见工作区根CONTINUE.md。

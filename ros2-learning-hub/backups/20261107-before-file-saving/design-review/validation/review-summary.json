@@ -1,0 +1,38 @@
+{
+  "passed": true,
+  "checkedAt": "2026-11-07",
+  "stage": "原排版所见即所得编辑已完成，供视觉审查",
+  "chapters": 60,
+  "mascot": "紫樱",
+  "assets": 7,
+  "screenshots": 15,
+  "browserScenarios": 20,
+  "mobileReadingRoutes": 140,
+  "mobileEditorRoutes": 120,
+  "dataBoundaryChecks": 18,
+  "formalBaselineFilesUnchanged": 10,
+  "sourceHashes": {
+    "index.html": "e52bf01779e9e85784ebbb7322150cc8995e851485f42e152d8bae90e0506823",
+    "styles.css": "23c8b8027436358a2e830f82fa74e3cb133f4e64d72d96f0efda602f5498ad9e",
+    "app.js": "4f16dfe947a632db403658cc15f06ac8e21d70b1a9bb260adb69bac847524c37",
+    "logic.js": "3572dfbc56bf1e25214cebf1fa4c8d81b81e672e6694e76b8630e2018dd64738",
+    "editor.js": "ee9e565371ccd74a5cc604fa13c8b52973790056785d6b1991831f93d8132500",
+    "visual-editor.js": "8558e86164bef5d8fac8f04ce3acfc256fd0f589c58883588f67892f0ba23f59",
+    "labs.js": "8bd29e5e2f7cebc7358eb07df3547bf940ffa732c7dcc3d8db868160d97ad2ac",
+    "assets-data.js": "3b72127856318a3368264286e1a80f86d92148696badc6fa86a2d3a9904f071d",
+    "review-evidence.js": "fcaf13ec15e429f7d306bfdfb20ca0731440dd6d54017213837ad59f80606538",
+    "source/mascot-assets.json": "c936af1d7096e4efc84efbb7fdc5a6e10fff79b4d788e13ee737dc72b6745bca",
+    "source/component-contract.json": "8c4efd9a0c234254725f1e4c5f568068cff8ae7377e226c3d19b9c0bcbdc4049"
+  },
+  "reportHashes": {
+    "browser-report.json": "0be1e4d9017591b1382f53173e7b23e516de78e84daffc88c1973b3b1a6a4bf9",
+    "logic-report.json": "bfbe0d2a9e97d9d21c1a8a3e14e460dd4f58a38bff5f6acd49b0807437708449",
+    "viewport-report.json": "72c5909af976bbe4c2d8fb29ab9322135c5538ec26a7caff9b2b2e2b9cd9ebf6",
+    "preparation.json": "29c741c9c2a5c8bc895017f2fc7c731b0d49e35116758b2942e4ac468734c5d3"
+  },
+  "validationReuse": [
+    "labs.js 与上一版SHA相同，81模型与20变换参数的有限视口报告复用。本轮实际重跑20项网页场景、140条手机阅读路由、120条直接编辑路由及18项数据边界。"
+  ],
+  "assetSourceCommit": "266791959045aadc4331755ac6312fdc94da6706",
+  "scope": "独立审查样稿；正文直接编辑，Markdown为可选入口；正式教材只读；未运行ROS、SDK或硬件。"
+}

@@ -1,7 +1,13 @@
+<!-- 【中文教学注释】 foundation-examples/src/learning_bringup/launch/telemetry.launch.xml -->
+<!-- 输入输出：输入为 launch 参数、包内文件路径和 YAML 配置；输出为具有指定命名空间、重映射和参数的节点进程。 -->
+<!-- 执行顺序与边界：launch 描述在启动阶段解释，动作书写顺序不等于应用已就绪；相对话题继承命名空间，参数文件顶层节点名必须匹配实际节点。 -->
 <launch>
+  <!-- 声明launch参数及默认值；使用时通过$(var ...)引用，外部可按参数名覆盖。 -->
   <arg name="robot_ns" default="robot1"/>
+  <!-- 声明待启动节点的包、可执行入口和名称；属性可分多行，启动动作顺序不是应用就绪屏障。 -->
   <node pkg="demo_nodes_cpp" exec="talker" name="source"
         namespace="$(var robot_ns)" output="screen">
+    <!-- 重映射ROS名称，不改变消息类型、物理单位或坐标系。 -->
     <remap from="chatter" to="telemetry"/>
   </node>
   <node pkg="demo_nodes_py" exec="listener" name="sink"

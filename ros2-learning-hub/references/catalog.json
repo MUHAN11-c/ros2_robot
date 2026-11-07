@@ -1,0 +1,1303 @@
+{
+  "createdAt": "2026-11-07",
+  "timezone": "Asia/Shanghai",
+  "scope": "公开可下载的 ROS 2 官方文档、官方示例、主要生态教程与中英文社区课程；不宣称穷尽全网。",
+  "primaryDistro": "jazzy",
+  "upstreamPolicy": "保留原始来源、版本、许可证；下载不等于编译运行或教学正文整合。",
+  "sources": [
+    {
+      "id": "ros2--ros2_documentation",
+      "repository": "ros2/ros2_documentation",
+      "title": "ROS 2 官方完整文档与教程（含图片和代码片段）",
+      "category": "official-docs",
+      "discoveryUrl": "https://github.com/ros2/ros2_documentation",
+      "mode": "all_ros_distros"
+    },
+    {
+      "id": "ros2--examples",
+      "repository": "ros2/examples",
+      "title": "官方 C++、Python、launch_testing 示例",
+      "category": "official-examples",
+      "discoveryUrl": "https://github.com/ros2/examples",
+      "mode": "all_ros_distros"
+    },
+    {
+      "id": "ros2--demos",
+      "repository": "ros2/demos",
+      "title": "官方通信、Action、QoS、生命周期、组件与实时演示",
+      "category": "official-examples",
+      "discoveryUrl": "https://github.com/ros2/demos",
+      "mode": "all_ros_distros"
+    },
+    {
+      "id": "ros--ros_tutorials",
+      "repository": "ros/ros_tutorials",
+      "title": "官方 turtlesim 与 ROS 基础示例",
+      "category": "official-examples",
+      "discoveryUrl": "https://github.com/ros/ros_tutorials",
+      "mode": "all_ros_distros"
+    },
+    {
+      "id": "ros2--ros2",
+      "repository": "ros2/ros2",
+      "title": "ROS 2 各发行版源码清单与发行说明",
+      "category": "official-docs",
+      "discoveryUrl": "https://github.com/ros2/ros2",
+      "mode": "all_ros_distros"
+    },
+    {
+      "id": "ros2--design",
+      "repository": "ros2/design",
+      "title": "ROS 2 架构设计文档",
+      "category": "official-docs",
+      "discoveryUrl": "https://github.com/ros2/design",
+      "prefer": [
+        "gh-pages",
+        "master"
+      ]
+    },
+    {
+      "id": "ros--geometry_tutorials",
+      "repository": "ros/geometry_tutorials",
+      "title": "tf2 坐标变换官方教学代码",
+      "category": "official-examples",
+      "discoveryUrl": "https://github.com/ros/geometry_tutorials",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "ros2",
+        "rolling"
+      ]
+    },
+    {
+      "id": "ros--urdf_tutorial",
+      "repository": "ros/urdf_tutorial",
+      "title": "URDF 建模官方教程",
+      "category": "official-examples",
+      "discoveryUrl": "https://github.com/ros/urdf_tutorial",
+      "prefer": [
+        "ros2",
+        "jazzy",
+        "rolling"
+      ]
+    },
+    {
+      "id": "ros--urdf_sim_tutorial",
+      "repository": "ros/urdf_sim_tutorial",
+      "title": "URDF 运动与仿真教学示例",
+      "category": "official-examples",
+      "discoveryUrl": "https://github.com/ros/urdf_sim_tutorial",
+      "prefer": [
+        "ros2",
+        "jazzy",
+        "rolling"
+      ]
+    },
+    {
+      "id": "ros-visualization--visualization_tutorials",
+      "repository": "ros-visualization/visualization_tutorials",
+      "title": "RViz Marker 与交互可视化教程",
+      "category": "official-examples",
+      "discoveryUrl": "https://github.com/ros-visualization/visualization_tutorials",
+      "prefer": [
+        "ros2",
+        "rolling",
+        "jazzy"
+      ]
+    },
+    {
+      "id": "ros-perception--image_transport_tutorials",
+      "repository": "ros-perception/image_transport_tutorials",
+      "title": "图像传输发布订阅官方教程",
+      "category": "official-examples",
+      "discoveryUrl": "https://github.com/ros-perception/image_transport_tutorials",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling",
+        "ros2"
+      ]
+    },
+    {
+      "id": "ros2--geometry2",
+      "repository": "ros2/geometry2",
+      "title": "tf2 库、工具、测试和说明",
+      "category": "official-core",
+      "discoveryUrl": "https://github.com/ros2/geometry2",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling"
+      ]
+    },
+    {
+      "id": "ros2--rclcpp",
+      "repository": "ros2/rclcpp",
+      "title": "C++ 客户端 API 文档与示例",
+      "category": "official-core",
+      "discoveryUrl": "https://github.com/ros2/rclcpp",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling"
+      ]
+    },
+    {
+      "id": "ros2--rclpy",
+      "repository": "ros2/rclpy",
+      "title": "Python 客户端 API 文档与示例",
+      "category": "official-core",
+      "discoveryUrl": "https://github.com/ros2/rclpy",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling"
+      ]
+    },
+    {
+      "id": "ros2--launch",
+      "repository": "ros2/launch",
+      "title": "launch 核心、前端语法与示例",
+      "category": "official-core",
+      "discoveryUrl": "https://github.com/ros2/launch",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling"
+      ]
+    },
+    {
+      "id": "ros2--launch_ros",
+      "repository": "ros2/launch_ros",
+      "title": "ROS launch 与 launch_testing_ros 示例",
+      "category": "official-core",
+      "discoveryUrl": "https://github.com/ros2/launch_ros",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling"
+      ]
+    },
+    {
+      "id": "ros2--rosbag2",
+      "repository": "ros2/rosbag2",
+      "title": "录制回放、存储插件与相关示例",
+      "category": "official-core",
+      "discoveryUrl": "https://github.com/ros2/rosbag2",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling"
+      ]
+    },
+    {
+      "id": "ros2--sros2",
+      "repository": "ros2/sros2",
+      "title": "DDS 安全工具与官方安全示例",
+      "category": "official-core",
+      "discoveryUrl": "https://github.com/ros2/sros2",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling"
+      ]
+    },
+    {
+      "id": "ros2--ros2_tracing",
+      "repository": "ros2/ros2_tracing",
+      "title": "ROS 2 跟踪与性能分析教程",
+      "category": "official-core",
+      "discoveryUrl": "https://github.com/ros2/ros2_tracing",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling"
+      ]
+    },
+    {
+      "id": "ros2--rmw_zenoh",
+      "repository": "ros2/rmw_zenoh",
+      "title": "Zenoh 通信后端文档与示例",
+      "category": "official-core",
+      "discoveryUrl": "https://github.com/ros2/rmw_zenoh",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling"
+      ]
+    },
+    {
+      "id": "ros2--example_interfaces",
+      "repository": "ros2/example_interfaces",
+      "title": "官方示例配套消息、服务、Action",
+      "category": "official-core",
+      "discoveryUrl": "https://github.com/ros2/example_interfaces",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling"
+      ]
+    },
+    {
+      "id": "ros2--common_interfaces",
+      "repository": "ros2/common_interfaces",
+      "title": "标准消息接口",
+      "category": "official-core",
+      "discoveryUrl": "https://github.com/ros2/common_interfaces",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling"
+      ]
+    },
+    {
+      "id": "ros2--rcl_interfaces",
+      "repository": "ros2/rcl_interfaces",
+      "title": "参数、日志与生命周期接口",
+      "category": "official-core",
+      "discoveryUrl": "https://github.com/ros2/rcl_interfaces",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling"
+      ]
+    },
+    {
+      "id": "ros2--rosidl",
+      "repository": "ros2/rosidl",
+      "title": "自定义接口生成器与说明",
+      "category": "official-core",
+      "discoveryUrl": "https://github.com/ros2/rosidl",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling"
+      ]
+    },
+    {
+      "id": "ros2--ros2cli",
+      "repository": "ros2/ros2cli",
+      "title": "ROS 2 命令行与扩展机制",
+      "category": "official-core",
+      "discoveryUrl": "https://github.com/ros2/ros2cli",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling"
+      ]
+    },
+    {
+      "id": "ros2--rviz",
+      "repository": "ros2/rviz",
+      "title": "RViz2 插件、默认显示与使用说明",
+      "category": "official-core",
+      "discoveryUrl": "https://github.com/ros2/rviz",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling"
+      ]
+    },
+    {
+      "id": "ros--pluginlib",
+      "repository": "ros/pluginlib",
+      "title": "插件加载与插件教程配套库",
+      "category": "official-core",
+      "discoveryUrl": "https://github.com/ros/pluginlib",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling",
+        "ros2"
+      ]
+    },
+    {
+      "id": "ros-visualization--interactive_markers",
+      "repository": "ros-visualization/interactive_markers",
+      "title": "交互 Marker 服务与示例依赖",
+      "category": "official-core",
+      "discoveryUrl": "https://github.com/ros-visualization/interactive_markers",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling",
+        "ros2"
+      ]
+    },
+    {
+      "id": "ros-navigation--docs.nav2.org",
+      "repository": "ros-navigation/docs.nav2.org",
+      "title": "Nav2 官方完整教程与配置文档",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/ros-navigation/docs.nav2.org",
+      "prefer": [
+        "jazzy",
+        "rolling",
+        "main"
+      ]
+    },
+    {
+      "id": "ros-navigation--navigation2_tutorials",
+      "repository": "ros-navigation/navigation2_tutorials",
+      "title": "Nav2 官方教程配套工程",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/ros-navigation/navigation2_tutorials",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "master",
+        "main"
+      ]
+    },
+    {
+      "id": "ros-navigation--navigation2",
+      "repository": "ros-navigation/navigation2",
+      "title": "Nav2 框架与 Simple Commander 示例",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/ros-navigation/navigation2",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "main"
+      ]
+    },
+    {
+      "id": "ros-navigation--nav2_minimal_turtlebot_simulation",
+      "repository": "ros-navigation/nav2_minimal_turtlebot_simulation",
+      "title": "Nav2 官方最小机器人仿真示例",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/ros-navigation/nav2_minimal_turtlebot_simulation",
+      "prefer": [
+        "jazzy",
+        "main"
+      ]
+    },
+    {
+      "id": "moveit--moveit2_tutorials",
+      "repository": "moveit/moveit2_tutorials",
+      "title": "MoveIt 2 官方完整教程与示例",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/moveit/moveit2_tutorials",
+      "prefer": [
+        "jazzy",
+        "main",
+        "humble"
+      ]
+    },
+    {
+      "id": "moveit--moveit_task_constructor",
+      "repository": "moveit/moveit_task_constructor",
+      "title": "MoveIt Task Constructor 抓取规划示例",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/moveit/moveit_task_constructor",
+      "prefer": [
+        "jazzy",
+        "ros2",
+        "humble"
+      ]
+    },
+    {
+      "id": "moveit--moveit_resources",
+      "repository": "moveit/moveit_resources",
+      "title": "MoveIt 教程所用机器人模型与资源",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/moveit/moveit_resources",
+      "prefer": [
+        "jazzy",
+        "ros2",
+        "main"
+      ]
+    },
+    {
+      "id": "ros-controls--control.ros.org",
+      "repository": "ros-controls/control.ros.org",
+      "title": "ros2_control 官方文档站源文件",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/ros-controls/control.ros.org",
+      "prefer": [
+        "jazzy",
+        "master",
+        "main"
+      ]
+    },
+    {
+      "id": "ros-controls--roscon2022_workshop",
+      "repository": "ros-controls/roscon2022_workshop",
+      "title": "ros2_control 官方分步实操讲习班",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/ros-controls/roscon2022_workshop",
+      "prefer": [
+        "master",
+        "main"
+      ]
+    },
+    {
+      "id": "ros-controls--gz_ros2_control",
+      "repository": "ros-controls/gz_ros2_control",
+      "title": "Gazebo 与 ros2_control 集成示例",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/ros-controls/gz_ros2_control",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "master"
+      ]
+    },
+    {
+      "id": "gazebosim--docs",
+      "repository": "gazebosim/docs",
+      "title": "Gazebo 各版本教程（含 Harmonic）",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/gazebosim/docs",
+      "prefer": [
+        "master",
+        "main"
+      ]
+    },
+    {
+      "id": "gazebosim--ros_gz",
+      "repository": "gazebosim/ros_gz",
+      "title": "ROS 2 与 Gazebo 桥接、仿真演示",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/gazebosim/ros_gz",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "ros2"
+      ]
+    },
+    {
+      "id": "micro-ROS--micro_ros_setup",
+      "repository": "micro-ROS/micro_ros_setup",
+      "title": "micro-ROS 固件工作空间教程与构建配置",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/micro-ROS/micro_ros_setup",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling"
+      ]
+    },
+    {
+      "id": "micro-ROS--micro-ROS-demos",
+      "repository": "micro-ROS/micro-ROS-demos",
+      "title": "micro-ROS 官方演示程序",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/micro-ROS/micro-ROS-demos",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling"
+      ]
+    },
+    {
+      "id": "micro-ROS--micro-ROS.github.io",
+      "repository": "micro-ROS/micro-ROS.github.io",
+      "title": "micro-ROS 官方教程网站源码（历史入口）",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/micro-ROS/micro-ROS.github.io",
+      "prefer": [
+        "gh-pages",
+        "master",
+        "main"
+      ],
+      "previousUnreachableUrl": "https://github.com/micro-ROS/micro.ros.org"
+    },
+    {
+      "id": "micro-ROS--micro_ros_espidf_component",
+      "repository": "micro-ROS/micro_ros_espidf_component",
+      "title": "micro-ROS ESP-IDF 实践与示例",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/micro-ROS/micro_ros_espidf_component",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling"
+      ]
+    },
+    {
+      "id": "micro-ROS--micro_ros_platformio",
+      "repository": "micro-ROS/micro_ros_platformio",
+      "title": "micro-ROS PlatformIO 实践与示例",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/micro-ROS/micro_ros_platformio",
+      "prefer": [
+        "main",
+        "humble"
+      ]
+    },
+    {
+      "id": "open-rmf--rmf_demos",
+      "repository": "open-rmf/rmf_demos",
+      "title": "Open-RMF 多机器人协调官方演示",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/open-rmf/rmf_demos",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "main"
+      ]
+    },
+    {
+      "id": "osrf--ros2multirobotbook",
+      "repository": "osrf/ros2multirobotbook",
+      "title": "Programming Multiple Robots with ROS 2 教材",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/osrf/ros2multirobotbook",
+      "prefer": [
+        "master",
+        "main"
+      ]
+    },
+    {
+      "id": "ROBOTIS-GIT--turtlebot3",
+      "repository": "ROBOTIS-GIT/turtlebot3",
+      "title": "TurtleBot3 官方教学机器人功能包",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/ROBOTIS-GIT/turtlebot3",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "main"
+      ]
+    },
+    {
+      "id": "ROBOTIS-GIT--turtlebot3_simulations",
+      "repository": "ROBOTIS-GIT/turtlebot3_simulations",
+      "title": "TurtleBot3 官方仿真教程工程",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/ROBOTIS-GIT/turtlebot3_simulations",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "main"
+      ]
+    },
+    {
+      "id": "ROBOTIS-GIT--turtlebot3_msgs",
+      "repository": "ROBOTIS-GIT/turtlebot3_msgs",
+      "title": "TurtleBot3 示例消息依赖",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/ROBOTIS-GIT/turtlebot3_msgs",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "main"
+      ]
+    },
+    {
+      "id": "cyberbotics--webots_ros2",
+      "repository": "cyberbotics/webots_ros2",
+      "title": "Webots 官方 ROS 2 教程与示例机器人",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/cyberbotics/webots_ros2",
+      "prefer": [
+        "master",
+        "main"
+      ]
+    },
+    {
+      "id": "SteveMacenski--slam_toolbox",
+      "repository": "SteveMacenski/slam_toolbox",
+      "title": "SLAM Toolbox 建图定位说明与示例",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/SteveMacenski/slam_toolbox",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "ros2"
+      ]
+    },
+    {
+      "id": "cra-ros-pkg--robot_localization",
+      "repository": "cra-ros-pkg/robot_localization",
+      "title": "状态估计、传感器融合教程与配置示例",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/cra-ros-pkg/robot_localization",
+      "prefer": [
+        "jazzy-devel",
+        "humble-devel",
+        "rolling-devel"
+      ]
+    },
+    {
+      "id": "ros-perception--image_pipeline",
+      "repository": "ros-perception/image_pipeline",
+      "title": "相机标定、深度与立体视觉教程",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/ros-perception/image_pipeline",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling"
+      ]
+    },
+    {
+      "id": "ros-perception--image_common",
+      "repository": "ros-perception/image_common",
+      "title": "图像传输与相机标定配套库",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/ros-perception/image_common",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling"
+      ]
+    },
+    {
+      "id": "ros-perception--vision_opencv",
+      "repository": "ros-perception/vision_opencv",
+      "title": "cv_bridge 与 OpenCV 集成说明",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/ros-perception/vision_opencv",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling"
+      ]
+    },
+    {
+      "id": "ros-perception--perception_pcl",
+      "repository": "ros-perception/perception_pcl",
+      "title": "PCL 点云与 ROS 2 集成示例",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/ros-perception/perception_pcl",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "ros2"
+      ]
+    },
+    {
+      "id": "ros--robot_state_publisher",
+      "repository": "ros/robot_state_publisher",
+      "title": "机器人状态发布与 TF 教程依赖",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/ros/robot_state_publisher",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling",
+        "ros2"
+      ]
+    },
+    {
+      "id": "ros--xacro",
+      "repository": "ros/xacro",
+      "title": "Xacro 模型宏与文档示例",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/ros/xacro",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "ros2"
+      ]
+    },
+    {
+      "id": "PX4--px4_ros_com",
+      "repository": "PX4/px4_ros_com",
+      "title": "PX4 官方 ROS 2 飞行控制示例",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/PX4/px4_ros_com",
+      "prefer": [
+        "main",
+        "master"
+      ]
+    },
+    {
+      "id": "PX4--px4_msgs",
+      "repository": "PX4/px4_msgs",
+      "title": "PX4 ROS 2 示例配套消息",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/PX4/px4_msgs",
+      "prefer": [
+        "main",
+        "master"
+      ]
+    },
+    {
+      "id": "NVIDIA-ISAAC-ROS--isaac_ros_examples",
+      "repository": "NVIDIA-ISAAC-ROS/isaac_ros_examples",
+      "title": "Isaac ROS 官方示例与配置",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_examples",
+      "prefer": [
+        "main"
+      ]
+    },
+    {
+      "id": "ros-industrial--ros2_canopen",
+      "repository": "ros-industrial/ros2_canopen",
+      "title": "CANopen 教程、机器人总线示例",
+      "category": "ecosystem",
+      "discoveryUrl": "https://github.com/ros-industrial/ros2_canopen",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "master",
+        "main"
+      ]
+    },
+    {
+      "id": "fishros--d2l-ros2",
+      "repository": "fishros/d2l-ros2",
+      "title": "动手学 ROS 2 中文教程正文",
+      "category": "community-zh",
+      "discoveryUrl": "https://github.com/fishros/d2l-ros2",
+      "prefer": [
+        "humble",
+        "main",
+        "master"
+      ]
+    },
+    {
+      "id": "fishros--ros2_town",
+      "repository": "fishros/ros2_town",
+      "title": "动手学 ROS 2 配套示例源码",
+      "category": "community-zh",
+      "discoveryUrl": "https://github.com/fishros/ros2_town",
+      "prefer": [
+        "humble",
+        "main",
+        "master"
+      ]
+    },
+    {
+      "id": "fishros--ros2bookcode",
+      "repository": "fishros/ros2bookcode",
+      "title": "ROS 2 机器人开发书籍配套源码",
+      "category": "community-zh",
+      "discoveryUrl": "https://github.com/fishros/ros2bookcode",
+      "prefer": [
+        "humble",
+        "main",
+        "master"
+      ]
+    },
+    {
+      "id": "fishros--fishbot",
+      "repository": "fishros/fishbot",
+      "title": "FishBot 建模、仿真、建图与导航工程",
+      "category": "community-zh",
+      "discoveryUrl": "https://github.com/fishros/fishbot",
+      "prefer": [
+        "humble",
+        "master",
+        "main"
+      ]
+    },
+    {
+      "id": "guyuehome--ros2_21_tutorials",
+      "repository": "guyuehome/ros2_21_tutorials",
+      "title": "古月 ROS 2 入门 21 讲示例",
+      "category": "community-zh",
+      "discoveryUrl": "https://github.com/guyuehome/ros2_21_tutorials",
+      "prefer": [
+        "master",
+        "main"
+      ]
+    },
+    {
+      "id": "Seeed-Projects--AI_Robotics_Academy",
+      "repository": "Seeed-Projects/AI_Robotics_Academy",
+      "title": "Seeed 中英文 ROS 2 与机器人课程",
+      "category": "community-zh",
+      "discoveryUrl": "https://github.com/Seeed-Projects/AI_Robotics_Academy",
+      "prefer": [
+        "main"
+      ]
+    },
+    {
+      "id": "mmmarinho--ROS2_Tutorial",
+      "repository": "mmmarinho/ROS2_Tutorial",
+      "title": "Murilo 的 ROS 2 Jazzy 教程正文与示例",
+      "category": "community-en",
+      "discoveryUrl": "https://github.com/mmmarinho/ROS2_Tutorial",
+      "prefer": [
+        "main"
+      ]
+    },
+    {
+      "id": "IntelligentSystemsLabUTV--ros2-examples",
+      "repository": "IntelligentSystemsLabUTV/ros2-examples",
+      "title": "大学课程 C++ 与 Python ROS 2 详细注释示例",
+      "category": "community-en",
+      "discoveryUrl": "https://github.com/IntelligentSystemsLabUTV/ros2-examples",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "main"
+      ]
+    },
+    {
+      "id": "joshnewans--my_bot",
+      "repository": "joshnewans/my_bot",
+      "title": "Articulated Robotics 移动机器人教学工程",
+      "category": "community-en",
+      "discoveryUrl": "https://github.com/joshnewans/my_bot",
+      "prefer": [
+        "main",
+        "humble"
+      ],
+      "previousUnreachableUrl": "https://github.com/articulatedrobotics/my_bot"
+    },
+    {
+      "id": "joshnewans--diffdrive_arduino",
+      "repository": "joshnewans/diffdrive_arduino",
+      "title": "Articulated Robotics 差速底盘硬件接口",
+      "category": "community-en",
+      "discoveryUrl": "https://github.com/joshnewans/diffdrive_arduino",
+      "prefer": [
+        "humble",
+        "main"
+      ],
+      "previousUnreachableUrl": "https://github.com/articulatedrobotics/diffdrive_arduino"
+    },
+    {
+      "id": "mikeferguson--ros2_cookbook",
+      "repository": "mikeferguson/ros2_cookbook",
+      "title": "ROS 2 Cookbook 工程实践速查",
+      "category": "community-en",
+      "discoveryUrl": "https://github.com/mikeferguson/ros2_cookbook",
+      "prefer": [
+        "main",
+        "master"
+      ]
+    },
+    {
+      "id": "pawelir--ros2_course",
+      "repository": "pawelir/ros2_course",
+      "title": "ROS 2 Jazzy 七模块课程、幻灯片与实验",
+      "category": "community-en",
+      "discoveryUrl": "https://github.com/pawelir/ros2_course",
+      "prefer": [
+        "main",
+        "master"
+      ]
+    },
+    {
+      "id": "likerobotics--ros2_course",
+      "repository": "likerobotics/ros2_course",
+      "title": "ROS 2 Jazzy 课程与实验手册",
+      "category": "community-en",
+      "discoveryUrl": "https://github.com/likerobotics/ros2_course",
+      "prefer": [
+        "main",
+        "master"
+      ]
+    },
+    {
+      "id": "Satyarth-Shree--ros2-guides",
+      "repository": "Satyarth-Shree/ros2-guides",
+      "title": "ROS Simplified 入门系列正文",
+      "category": "community-en",
+      "discoveryUrl": "https://github.com/Satyarth-Shree/ros2-guides",
+      "prefer": [
+        "main",
+        "master"
+      ]
+    },
+    {
+      "id": "zeeshanhaider1007--ROS2_Limo_Cobot_Training",
+      "repository": "zeeshanhaider1007/ROS2_Limo_Cobot_Training",
+      "title": "LIMO Cobot 四天 ROS 2 教学讲义",
+      "category": "community-en",
+      "discoveryUrl": "https://github.com/zeeshanhaider1007/ROS2_Limo_Cobot_Training",
+      "prefer": [
+        "main",
+        "master"
+      ]
+    },
+    {
+      "id": "alejotoro-o--ros2-tutorials-ws",
+      "repository": "alejotoro-o/ros2-tutorials-ws",
+      "title": "ROS 2 接口、通信、仿真教学工作空间",
+      "category": "community-en",
+      "discoveryUrl": "https://github.com/alejotoro-o/ros2-tutorials-ws",
+      "prefer": [
+        "main",
+        "master"
+      ]
+    },
+    {
+      "id": "ros2--rclc",
+      "repository": "ros2/rclc",
+      "title": "micro-ROS C API 与 rclc 官方示例",
+      "category": "official-examples",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling"
+      ],
+      "discoveryUrl": "https://github.com/ros2/rclc"
+    },
+    {
+      "id": "MetroRobots--rviz_panel_tutorial",
+      "repository": "MetroRobots/rviz_panel_tutorial",
+      "title": "官方 RViz 自定义面板教程配套源码",
+      "category": "official-examples",
+      "prefer": [
+        "main",
+        "master"
+      ],
+      "discoveryUrl": "https://github.com/MetroRobots/rviz_panel_tutorial"
+    },
+    {
+      "id": "MetroRobots--rviz_plugin_tutorial",
+      "repository": "MetroRobots/rviz_plugin_tutorial",
+      "title": "官方 RViz 自定义显示插件教程配套源码",
+      "category": "official-examples",
+      "prefer": [
+        "main",
+        "master"
+      ],
+      "discoveryUrl": "https://github.com/MetroRobots/rviz_plugin_tutorial"
+    },
+    {
+      "id": "MetroRobots--rqt_bag_diagnostics_demo",
+      "repository": "MetroRobots/rqt_bag_diagnostics_demo",
+      "title": "官方 rqt_bag 插件教程配套源码",
+      "category": "official-examples",
+      "prefer": [
+        "main",
+        "master"
+      ],
+      "discoveryUrl": "https://github.com/MetroRobots/rqt_bag_diagnostics_demo"
+    },
+    {
+      "id": "ros-swg--turtlebot3_demo",
+      "repository": "ros-swg/turtlebot3_demo",
+      "title": "ROS 安全工作组 TurtleBot3 安全示例",
+      "category": "official-examples",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "master",
+        "main"
+      ],
+      "discoveryUrl": "https://github.com/ros-swg/turtlebot3_demo"
+    },
+    {
+      "id": "gazebosim--ros_gz_project_template",
+      "repository": "gazebosim/ros_gz_project_template",
+      "title": "Gazebo 官方 ROS 2 工程模板与示例",
+      "category": "official-examples",
+      "prefer": [
+        "jazzy",
+        "main"
+      ],
+      "discoveryUrl": "https://github.com/gazebosim/ros_gz_project_template"
+    },
+    {
+      "id": "ros2--realtime_support",
+      "repository": "ros2/realtime_support",
+      "title": "ROS 2 实时分配器与实时编程示例依赖",
+      "category": "official-core",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling"
+      ],
+      "discoveryUrl": "https://github.com/ros2/realtime_support"
+    },
+    {
+      "id": "ros2--rttest",
+      "repository": "ros2/rttest",
+      "title": "ROS 2 实时性能测量工具和示例",
+      "category": "official-core",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling"
+      ],
+      "discoveryUrl": "https://github.com/ros2/rttest"
+    },
+    {
+      "id": "ros2--ros1_bridge",
+      "repository": "ros2/ros1_bridge",
+      "title": "ROS 1 与 ROS 2 桥接官方示例",
+      "category": "official-core",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling"
+      ],
+      "discoveryUrl": "https://github.com/ros2/ros1_bridge"
+    },
+    {
+      "id": "ros-tracing--tracetools_analysis",
+      "repository": "ros-tracing/tracetools_analysis",
+      "title": "官方追踪教程所用分析示例与 Notebook",
+      "category": "official-core",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "rolling"
+      ],
+      "discoveryUrl": "https://github.com/ros-tracing/tracetools_analysis"
+    },
+    {
+      "id": "ros-visualization--rqt_bag",
+      "repository": "ros-visualization/rqt_bag",
+      "title": "rqt_bag 官方插件教程依赖",
+      "category": "official-core",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "ros2"
+      ],
+      "discoveryUrl": "https://github.com/ros-visualization/rqt_bag"
+    },
+    {
+      "id": "moveit--moveit2",
+      "repository": "moveit/moveit2",
+      "title": "MoveIt 2 官方源码与教程对应实现",
+      "category": "ecosystem",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "main"
+      ],
+      "discoveryUrl": "https://github.com/moveit/moveit2"
+    },
+    {
+      "id": "micro-ROS--micro_ros_arduino",
+      "repository": "micro-ROS/micro_ros_arduino",
+      "title": "micro-ROS Arduino 官方示例与发布库",
+      "category": "ecosystem",
+      "prefer": [
+        "jazzy",
+        "humble"
+      ],
+      "discoveryUrl": "https://github.com/micro-ROS/micro_ros_arduino"
+    },
+    {
+      "id": "micro-ROS--micro_ros_raspberrypi_pico_sdk",
+      "repository": "micro-ROS/micro_ros_raspberrypi_pico_sdk",
+      "title": "micro-ROS Pico 官方示例",
+      "category": "ecosystem",
+      "prefer": [
+        "jazzy",
+        "humble"
+      ],
+      "discoveryUrl": "https://github.com/micro-ROS/micro_ros_raspberrypi_pico_sdk"
+    },
+    {
+      "id": "micro-ROS--micro-ROS-Agent",
+      "repository": "micro-ROS/micro-ROS-Agent",
+      "title": "micro-ROS Agent 官方源码与说明",
+      "category": "ecosystem",
+      "prefer": [
+        "jazzy",
+        "humble"
+      ],
+      "discoveryUrl": "https://github.com/micro-ROS/micro-ROS-Agent"
+    },
+    {
+      "id": "joshnewans--articubot_one",
+      "repository": "joshnewans/articubot_one",
+      "title": "Articulated Robotics 移动机器人完整教学工程",
+      "category": "community-en",
+      "prefer": [
+        "humble",
+        "main"
+      ],
+      "discoveryUrl": "https://github.com/joshnewans/articubot_one"
+    },
+    {
+      "id": "automaticaddison--ros2_fundamentals_examples",
+      "repository": "automaticaddison/ros2_fundamentals_examples",
+      "title": "Automatic Addison ROS 2 基础教学示例",
+      "category": "community-en",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "main",
+        "master"
+      ],
+      "discoveryUrl": "https://github.com/automaticaddison"
+    },
+    {
+      "id": "automaticaddison--jazzy_ros2_fundamentals_examples",
+      "repository": "automaticaddison/jazzy_ros2_fundamentals_examples",
+      "title": "Automatic Addison Jazzy 基础教学示例",
+      "category": "community-en",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "main",
+        "master"
+      ],
+      "discoveryUrl": "https://github.com/automaticaddison"
+    },
+    {
+      "id": "automaticaddison--mycobot_ros2",
+      "repository": "automaticaddison/mycobot_ros2",
+      "title": "Automatic Addison MoveIt 2 与机械臂教程",
+      "category": "community-en",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "main",
+        "master"
+      ],
+      "discoveryUrl": "https://github.com/automaticaddison"
+    },
+    {
+      "id": "automaticaddison--yahboom_rosmaster",
+      "repository": "automaticaddison/yahboom_rosmaster",
+      "title": "Automatic Addison Nav2 移动机器人教程",
+      "category": "community-en",
+      "prefer": [
+        "jazzy",
+        "humble",
+        "main",
+        "master"
+      ],
+      "discoveryUrl": "https://github.com/automaticaddison"
+    }
+  ],
+  "existingSnapshots": [
+    {
+      "path": "AgroSenseBot",
+      "url": "https://github.com/AIRLab-POLIMI/AgroSenseBot.git",
+      "branch": "jazzy",
+      "commit": "4ad700b090b9f3ddb8513c7519938bd7f0974709",
+      "dirty": false,
+      "submodules": "",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "path": "ROS2_Tuition",
+      "url": "https://github.com/Rzl6/ROS2_Tuition.git",
+      "branch": "main",
+      "commit": "ad2b17d56836f272e2127a789c462fccddc5a6ac",
+      "dirty": false,
+      "submodules": "",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "path": "Robotics_Tutorial",
+      "url": "https://github.com/Michael-Jetson/Robotics_Tutorial.git",
+      "branch": "main",
+      "commit": "7cb9e3d423196062c59dd346aae16285d962fb7c",
+      "dirty": false,
+      "submodules": "",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "path": "bunker_ros2",
+      "url": "https://github.com/agilexrobotics/bunker_ros2.git",
+      "branch": "jazzy",
+      "commit": "f24f722b245eb1d2572c47d091fc847d9fd68cf4",
+      "dirty": false,
+      "submodules": "",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "path": "linorobot2",
+      "url": "https://github.com/linorobot/linorobot2.git",
+      "branch": "jazzy",
+      "commit": "f6b0bd0350c4a9d6b815ef4bb5c701a1e5129711",
+      "dirty": false,
+      "submodules": "",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "path": "linorobot2_hardware",
+      "url": "https://github.com/linorobot/linorobot2_hardware.git",
+      "branch": "jazzy",
+      "commit": "fbbbb922f4bd778e23268210b7bd7a6ac4c75d83",
+      "dirty": false,
+      "submodules": "",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "path": "ros2_control",
+      "url": "https://github.com/ros-controls/ros2_control.git",
+      "branch": "jazzy",
+      "commit": "f9e24287fc1d6996e5ba1656a9ee24e5f33adef7",
+      "dirty": false,
+      "submodules": "",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "path": "ros2_control_demos",
+      "url": "https://github.com/ros-controls/ros2_control_demos.git",
+      "branch": "jazzy",
+      "commit": "fbab026e147824971c97996f3789f97c2ee9e9ac",
+      "dirty": false,
+      "submodules": "",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "path": "ros2_controllers",
+      "url": "https://github.com/ros-controls/ros2_controllers.git",
+      "branch": "jazzy",
+      "commit": "bee185cbb98815116af9cfb00ff595b0b800e91a",
+      "dirty": false,
+      "submodules": "",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    },
+    {
+      "path": "ros2_tutorial",
+      "url": "https://github.com/zsc/ros2_tutorial.git",
+      "branch": "main",
+      "commit": "ae6703d73947442c5705350e88970b77089ab15a",
+      "dirty": false,
+      "submodules": "",
+      "licenseFiles": []
+    },
+    {
+      "path": "ugv_sdk",
+      "url": "https://github.com/agilexrobotics/ugv_sdk.git",
+      "branch": "main",
+      "commit": "f2704eacdc90357078cd93ec60aae08bb4baab35",
+      "dirty": false,
+      "submodules": "b796f7d44681514f58a683a3a71ff17c94edb0c1 test/googletest (b796f7d)",
+      "licenseFiles": [
+        "LICENSE"
+      ]
+    }
+  ],
+  "websiteEntrypoints": [
+    {
+      "title": "ROS 2 官方教程在线入口",
+      "url": "https://docs.ros.org/en/jazzy/Tutorials.html",
+      "status": "文档站返回访问限制，改取官方源码仓库"
+    },
+    {
+      "title": "Articulated Robotics 教程文章",
+      "url": "https://articulatedrobotics.xyz/tutorials/",
+      "status": "配套公开源码列入下载；文章正文尚未镜像"
+    },
+    {
+      "title": "Automatic Addison 教程",
+      "url": "https://automaticaddison.com/tutorials/",
+      "status": "已发现入口；未将全部文章或收费课程标为已下载"
+    },
+    {
+      "title": "The Robotics Back-End 教程",
+      "url": "https://roboticsbackend.com/category/ros2/",
+      "status": "已发现入口；未将全部文章或收费课程标为已下载"
+    }
+  ]
+}

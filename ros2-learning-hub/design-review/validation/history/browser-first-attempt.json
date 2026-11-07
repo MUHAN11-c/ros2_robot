@@ -1,0 +1,101 @@
+{
+  "passed": false,
+  "error": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-action=\"search\"]').first()\u001b[22m\n\u001b[2m    - locator resolved to <button data-action=\"search\" class=\"search-trigger\">…</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - element is outside of the viewport\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - element is outside of the viewport\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    58 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is visible, enabled and stable\u001b[22m\n\u001b[2m       - scrolling into view if needed\u001b[22m\n\u001b[2m       - done scrolling\u001b[22m\n\u001b[2m       - element is outside of the viewport\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n    at /home/wjz/ros2_robot/ros2-learning-hub/design-review/scripts/qa_browser.cjs:45:441",
+  "checks": [
+    "首页双角色、本地图片与60章数据",
+    "本章目录与小节深链接",
+    "全文搜索高亮、方向键选择和回车定位",
+    "笔记自动保存、Markdown预览、刷新恢复",
+    "真实JSON备份下载、旧版进度合并、正式存储隔离",
+    "TF数值、宽屏可交互、状态保留与折叠释放",
+    "模型视角与关节变化区分、坐标轴与退出释放",
+    "32原图加载、角色/类别筛选、来源及裁切详情",
+    "真实单章Markdown下载与连续表格",
+    "390/320px全部70路由无整页溢出，手机菜单与Esc"
+  ],
+  "screenshots": [
+    {
+      "file": "desktop-light.png",
+      "title": "桌面1440px · 神樱浅色首页",
+      "width": 1440,
+      "height": 1040
+    },
+    {
+      "file": "desktop-dark.png",
+      "title": "桌面1440px · 雷电深色首页",
+      "width": 1440,
+      "height": 1040
+    },
+    {
+      "file": "chapter-light.png",
+      "title": "章节正文与上下文图解",
+      "width": 1440,
+      "height": 1040
+    },
+    {
+      "file": "search-results.png",
+      "title": "搜索命中与片段高亮",
+      "width": 1440,
+      "height": 1040
+    },
+    {
+      "file": "search-empty.png",
+      "title": "搜索空态",
+      "width": 1440,
+      "height": 1040
+    },
+    {
+      "file": "note-drawer.png",
+      "title": "章节笔记编辑抽屉",
+      "width": 1440,
+      "height": 1040
+    },
+    {
+      "file": "lab-wide.png",
+      "title": "坐标实验宽屏",
+      "width": 1440,
+      "height": 1040
+    },
+    {
+      "file": "model-lab.png",
+      "title": "机器人几何模型",
+      "width": 1440,
+      "height": 1040
+    },
+    {
+      "file": "gallery.png",
+      "title": "角色素材画廊",
+      "width": 1440,
+      "height": 1040
+    },
+    {
+      "file": "mobile-390.png",
+      "title": "390px手机首页",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "file": "mobile-320.png",
+      "title": "320px手机首页",
+      "width": 320,
+      "height": 844
+    },
+    {
+      "file": "mobile-dark.png",
+      "title": "390px深色首页",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "file": "mobile-note.png",
+      "title": "390px章节笔记",
+      "width": 390,
+      "height": 844
+    }
+  ],
+  "errors": [],
+  "externalRequests": [],
+  "badResponses": [],
+  "websockets": [],
+  "historyNote": "首次验收已完成HTTP主流程与140条手机路由，最后file://测试误点手机屏幕外的侧栏搜索按钮而超时；修正测试选择器后重跑。此记录不是当前通过结论。"
+}

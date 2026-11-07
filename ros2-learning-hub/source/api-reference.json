@@ -1,0 +1,1040 @@
+{
+  "checkedAt": "2026-11-07",
+  "verification": "对照本地 Jazzy rclcpp/rclpy/geometry2/launch 源码和官方教程；实际构建与运行范围另见工程验证记录。",
+  "apiReferences": [
+    {
+      "id": "api-node-lifetime",
+      "title": "节点、上下文与资源生命周期",
+      "lessons": [
+        "architecture",
+        "workspace",
+        "pubsub",
+        "cpp-engineering"
+      ],
+      "columns": [
+        "责任",
+        "C++ / rclcpp",
+        "Python / rclpy",
+        "执行细节与边界"
+      ],
+      "rows": [
+        [
+          "初始化上下文",
+          "`rclcpp::init(argc, argv)`",
+          "`rclpy.init(args=args)`",
+          "在创建节点前调用；ROS 参数和普通业务参数应分清。不要在每次回调里重复初始化。"
+        ],
+        [
+          "创建节点",
+          "`std::make_shared<MyNode>()`，类继承 `rclcpp::Node`",
+          "`node = MyNode()`，类继承 `rclpy.node.Node`",
+          "节点名和命名空间共同确定完全限定名称；Python 节点同样需要保留有效对象引用。"
+        ],
+        [
+          "调度回调",
+          "`rclcpp::spin(node)`",
+          "`rclpy.spin(node)`",
+          "spin 通常阻塞当前线程并处理就绪回调，不是一次性启动后立即返回；构造 timer 不等于自动运行回调。"
+        ],
+        [
+          "停止和释放",
+          "退出执行器后释放节点/实体，再结束上下文",
+          "`node.destroy_node()`；上下文仍有效时调用 `rclpy.shutdown()`",
+          "教学示例在 finally 或作用域退出时清理；多节点共享上下文时，由拥有者统一管理，不能由任意业务回调提前关闭整个进程。"
+        ]
+      ],
+      "notes": [
+        "C++ 智能指针管理对象寿命，Python 垃圾回收时机与显式资源释放是不同概念。两个语言版本应比较可观察行为、名称与消息类型，而不是逐行对应。"
+      ]
+    },
+    {
+      "id": "api-publish-subscribe",
+      "title": "话题 API：类型、队列、回调和所有权",
+      "lessons": [
+        "pubsub",
+        "interfaces",
+        "qos"
+      ],
+      "columns": [
+        "操作",
+        "C++",
+        "Python",
+        "输入、输出与关键约束"
+      ],
+      "rows": [
+        [
+          "创建发布者",
+          "`create_publisher<MessageT>(topic, qos)`",
+          "`create_publisher(MessageT, topic, qos)`",
+          "输入为消息类型、话题名称和 QoS；输出为发布者实体。整数 10 通常表示 KEEP_LAST 深度 10 条，不是 10 Hz。"
+        ],
+        [
+          "创建订阅者",
+          "`create_subscription<MessageT>(topic, qos, callback)`",
+          "`create_subscription(MessageT, topic, callback, qos)`",
+          "两种语言的 callback 与 qos 参数顺序不同。回调接收反序列化后的消息；类型、名称和 QoS 都需匹配。"
+        ],
+        [
+          "发送消息",
+          "`publisher->publish(message)` 或相应智能指针重载",
+          "`publisher.publish(message)`",
+          "调用发送不表示接收端已执行算法或执行器；业务完成确认应通过专门接口设计。"
+        ],
+        [
+          "保留实体",
+          "C++成员SharedPtr或其他明确的强所有者",
+          "Python Node内部也保留端点；成员便于访问和显式管理",
+          "两者都要求Node/端点有效，但Python丢调用者局部变量不等于立即销毁；不要把C++强所有权规则机械套用。"
+        ],
+        [
+          "解释数据单位",
+          "由 `.msg` 字段及业务合同约定",
+          "由 `.msg` 字段及业务合同约定",
+          "String 本身没有物理单位；Twist 的线速度通常为 m/s、角速度为 rad/s。名称类似不构成单位或坐标系相同的证明。"
+        ]
+      ],
+      "notes": [
+        "QoS 历史深度不等于应用层的全部积压量，回调处理速度、DDS 实现和传输也会影响延迟。ConstSharedPtr、UniquePtr 等回调形式有所有权差别，不能假定都零复制。"
+      ]
+    },
+    {
+      "id": "api-timer-clock",
+      "title": "定时器：周期相同，时钟选择未必相同",
+      "lessons": [
+        "pubsub",
+        "executors",
+        "time-bag",
+        "eco-gazebo-simulation"
+      ],
+      "columns": [
+        "问题",
+        "C++ 写法",
+        "Python 写法",
+        "解释"
+      ],
+      "rows": [
+        [
+          "周期的单位",
+          "`create_wall_timer(500ms, callback)`",
+          "`create_timer(0.5, callback)`",
+          "500 毫秒等于 0.5 秒；理想频率 f=1/T=2 Hz，真实调度间隔受负载影响。"
+        ],
+        [
+          "默认时钟",
+          "`create_wall_timer` 使用 `RCL_STEADY_TIME` 稳态时钟",
+          "`create_timer` 未传 clock 时使用节点时钟",
+          "该稳态时钟不随 ROS 仿真时间暂停，也不同于可因系统校时跳变的日期时钟。Python 默认节点时钟在 use_sim_time 启用后受 /clock 驱动。"
+        ],
+        [
+          "ROS 时间计时",
+          "显式使用节点 clock 的 `rclcpp::create_timer` 等 API",
+          "`create_timer(..., clock=node.get_clock())`",
+          "读取参数 use_sim_time 和 /clock 状态，并确认模拟时间前进；不要把“传入一个时钟”当作时钟已正确接入。"
+        ],
+        [
+          "调度与阻塞",
+          "回调由执行器调度",
+          "回调由执行器调度",
+          "长时间计算或等待会推迟后续回调。周期不是硬实时截止时间，也不自动创建每个 timer 的独立线程。"
+        ]
+      ],
+      "notes": [
+        "普通未启用仿真时间的入门实验可获得相近行为；需要暂停、加速、回放或确定性比较时，必须先对齐时钟语义。"
+      ]
+    },
+    {
+      "id": "api-service-future",
+      "title": "服务 API：发现、请求、Future 与超时",
+      "lessons": [
+        "services",
+        "executors",
+        "testing"
+      ],
+      "columns": [
+        "阶段",
+        "C++",
+        "Python",
+        "调用顺序与失败条件"
+      ],
+      "rows": [
+        [
+          "创建服务",
+          "`create_service<ServiceT>(name, callback)`",
+          "`create_service(ServiceT, name, callback)`",
+          "C++ 示例常通过响应指针写字段；Python 回调接收 request/response 并返回 response。回调签名需与所选重载一致。"
+        ],
+        [
+          "等待服务可用",
+          "`client->wait_for_service(timeout)`",
+          "`client.wait_for_service(timeout_sec=...)`",
+          "只证明此刻发现了服务，不保证随后请求一定成功；应处理退出信号和等待超时。时间单位须在代码中写明。"
+        ],
+        [
+          "异步发送",
+          "`client->async_send_request(request)`",
+          "`future = client.call_async(request)`",
+          "返回待完成结果或与请求关联的 Future，不是服务响应本身。需要执行器处理接收事件。"
+        ],
+        [
+          "等待与取值",
+          "合适上下文使用 `spin_until_future_complete`，检查返回码后 `get()`",
+          "外层主程序使用 `spin_until_future_complete`，再检查 done/exception/result",
+          "不能把等待超时当作值为0；Future 可能未完成或包含异常。网络请求已发出后，客户端超时也不等于服务端工作已撤销。"
+        ],
+        [
+          "超时后清理登记",
+          "保留 FutureAndRequestId；不再等待时调用 `client->remove_pending_request(future)`，或使用适合的 prune API",
+          "按 rclpy Client 的公开接口管理未完成请求，不机械套用 C++ 重载",
+          "长期客户端反复超时而不清理，会使待处理请求持续积累。清理本地登记不会撤销服务端工作，重试仍要考虑业务幂等性。"
+        ],
+        [
+          "回调内继续服务调用",
+          "异步 continuation 或独立回调组/执行器设计",
+          "Future 的完成回调或状态机",
+          "默认互斥回调组中同步等待同组回调可能死锁；简单把执行器改多线程也不保证解决。"
+        ]
+      ],
+      "notes": [
+        "AddTwoInts 是无物理单位的整型算术例子。真实服务要规定幂等性、重试策略和请求有效期限；普通 ROS 服务不提供通用的任务取消语义。"
+      ]
+    },
+    {
+      "id": "api-action-state",
+      "title": "Action API：目标接受、反馈、取消与终态",
+      "lessons": [
+        "actions",
+        "eco-nav2-task-programming",
+        "project-navigation",
+        "project-manipulation"
+      ],
+      "columns": [
+        "阶段",
+        "C++ / rclcpp_action",
+        "Python / rclpy.action",
+        "必须检查的状态"
+      ],
+      "rows": [
+        [
+          "客户端实体",
+          "`rclcpp_action::create_client<ActionT>`",
+          "`ActionClient(node, ActionT, name)`",
+          "先确认 action 类型与名称，等待服务端出现；目标、反馈和结果是不同类型结构。"
+        ],
+        [
+          "发送目标",
+          "`async_send_goal(goal, options)`",
+          "`send_goal_async(goal, feedback_callback=...)`",
+          "发送完成得到 goal handle，必须判断目标是否被接受；接受不表示目标已完成。"
+        ],
+        [
+          "最终结果",
+          "结果回调或 `async_get_result(goal_handle)`",
+          "`goal_handle.get_result_async()`",
+          "同时检查 SUCCEEDED、ABORTED、CANCELED 等状态与 result 字段，不仅检查 Future 是否完成。"
+        ],
+        [
+          "请求取消",
+          "`async_cancel_goal(goal_handle)`",
+          "`goal_handle.cancel_goal_async()`",
+          "取消应答只表示请求处理情况；继续等待最终结果，并核查执行端停止或进入安全状态。"
+        ],
+        [
+          "反馈",
+          "通过发送选项设置 feedback_callback",
+          "通过 send_goal_async 的 feedback_callback",
+          "反馈可能多次出现，频率不构成控制周期保证；进度、位置、速度等字段单位按 action 合同解释。"
+        ],
+        [
+          "拒绝目标",
+          "GoalResponse::REJECT",
+          "GoalResponse.REJECT",
+          "accepted=false表示未接纳；不存在本次目标的已执行Result，不能把拒绝包装成ABORTED。"
+        ],
+        [
+          "服务端终态",
+          "succeed/canceled/abort(result)",
+          "succeed/canceled/abort后返回Result",
+          "终态status与Count.completed分别验收；Count没有原因字段，本轮故障原因由服务端独立日志记录。"
+        ]
+      ],
+      "notes": [
+        "服务端需要在可取消点检查取消请求并正确进入终态。客户端停止等待、进程退出或取消请求被接受，都不能单独证明机器人已经停止。",
+        "第3轮Count实验覆盖忙碌拒绝、结束后恢复及显式故障ABORTED；只用Python探针检查两种服务端，不代表已验证C++客户端或硬件停车。"
+      ]
+    },
+    {
+      "id": "api-parameters",
+      "title": "参数 API：声明、类型、批量校验与副作用",
+      "lessons": [
+        "parameters",
+        "deployment",
+        "cpp-engineering"
+      ],
+      "columns": [
+        "操作",
+        "C++",
+        "Python",
+        "细节"
+      ],
+      "rows": [
+        [
+          "声明参数",
+          "`declare_parameter<double>(name, default)`",
+          "`declare_parameter(name, default)`",
+          "默认值决定常见声明类型。是否接受未声明参数、自动声明覆盖等由节点选项控制，不可混为统一默认。"
+        ],
+        [
+          "读取参数",
+          "`get_parameter(name).as_double()` 等",
+          "`get_parameter(name).value` 或 typed value",
+          "参数不存在、类型不符和未初始化需分别处理；读取频率为 Hz 时要检查大于0、有限且在允许范围。"
+        ],
+        [
+          "设置前校验",
+          "`add_on_set_parameters_callback` 并保留 handle",
+          "`add_on_set_parameters_callback`",
+          "回调得到的实际批次由设置 API 决定。将传入新值与当前配置合并成候选再校验，避免验证阶段执行不可回滚硬件副作用。"
+        ],
+        [
+          "逐项设置",
+          "`set_parameters(...)`",
+          "`set_parameters(...)`",
+          "逐个参数执行设置与回调，可能出现部分成功；调用一次函数不等于整个列表原子提交。"
+        ],
+        [
+          "原子设置",
+          "`set_parameters_atomically(...)`",
+          "`set_parameters_atomically(...)`",
+          "需要上下限等跨参数不变量时使用：整批验证，全成或全败。服务层也要区分 SetParameters 与 SetParametersAtomically。"
+        ],
+        [
+          "重建依赖对象",
+          "校验通过后的适当提交阶段更新 timer 等对象",
+          "相应参数后置回调或受控配置流程",
+          "参数服务写入成功不一定会自动重建定时器。更新频率、对象寿命和线程同步需要单独实现。"
+        ]
+      ],
+      "notes": [
+        "范围描述符有助于描述接口，但复杂跨参数约束仍要显式校验。不同节点之间不自动共享参数；一个节点的批量原子设置也不是跨机器人分布式事务。"
+      ]
+    },
+    {
+      "id": "api-launch-formats",
+      "title": "同一启动合同：Python、XML 与 YAML launch",
+      "lessons": [
+        "launch",
+        "deployment",
+        "project-navigation"
+      ],
+      "columns": [
+        "能力",
+        "Python",
+        "XML / YAML",
+        "选择和边界"
+      ],
+      "rows": [
+        [
+          "启动节点",
+          "`launch_ros.actions.Node(...)`",
+          "前端 node 标签/映射",
+          "同一目标需对齐 package、executable、name、namespace、parameters 和 remappings。语法相似不保证参数类型一致。"
+        ],
+        [
+          "运行时参数",
+          "DeclareLaunchArgument + LaunchConfiguration",
+          "arg + var substitution",
+          "LaunchConfiguration 是运行时替换对象，不能在生成描述时直接当作普通 bool 或路径字符串使用。"
+        ],
+        [
+          "参数类型",
+          "必要时使用 ParameterValue(..., value_type=...)",
+          "由前端和参数表示规则解析",
+          "'false' 字符串与布尔 false、整数与浮点数不同。用 ros2 param get 验证真实类型与值。"
+        ],
+        [
+          "条件和组合",
+          "条件、IncludeLaunchDescription、事件动作",
+          "前端支持的条件、include 与 substitution",
+          "Python 适合复杂组合逻辑；声明式格式更直观。不能断言 XML/YAML 都不支持条件，也不能把任意 Python 逻辑直接逐字翻译。"
+        ],
+        [
+          "打包安装",
+          "通过 install/data_files 安装到包 share/launch",
+          "同样安装到包的 share/launch",
+          "ros2 launch 读取安装后的包资源；只在源码目录里有文件，不代表安装结果可找到它。"
+        ]
+      ],
+      "notes": [
+        "依赖、启动顺序、节点就绪与生命周期激活需要显式设计；launch 描述中的书写先后不能独自保证服务已经可用。"
+      ]
+    },
+    {
+      "id": "api-tf2-time",
+      "title": "tf2 API：目标坐标、源坐标、时刻与四元数",
+      "lessons": [
+        "tf2",
+        "eco-tf-frames",
+        "math-rigid",
+        "math-kinematics",
+        "project-navigation"
+      ],
+      "columns": [
+        "问题",
+        "接口概念",
+        "单位／约定",
+        "常见错误"
+      ],
+      "rows": [
+        [
+          "查询变换",
+          "lookupTransform / lookup_transform(target, source, time, ...)",
+          "把 source 坐标表达的量变为 target 坐标表达；平移通常为 m",
+          "目标与源顺序写反会取到逆变换。用一个已知点代入验证方向。"
+        ],
+        [
+          "查询时刻",
+          "给定消息时间戳，或接口约定的 latest",
+          "时间戳包含秒与纳秒；零时刻具有特殊含义时以 API 为准",
+          "“最新”不是“恰好与传感器消息同一时刻”。动态变换要检查外推与时间同步。"
+        ],
+        [
+          "变换消息",
+          "PointStamped / PoseStamped / Vector3Stamped 等",
+          "点包含平移；方向向量只旋转；速度还需解释参考点和表达坐标",
+          "不能把所有三元素数组都当同一种几何量；相同维度不代表同一变换规则。"
+        ],
+        [
+          "ROS 四元数",
+          "geometry_msgs/Quaternion 的字段 x, y, z, w",
+          "无量纲；通常要求单位四元数，旋转角用 rad",
+          "某些数学库采用 w,x,y,z，不能不检查顺序直接拷贝。也不能把欧拉角直接塞进四元数字段。"
+        ],
+        [
+          "异常处理",
+          "Lookup / Connectivity / Extrapolation 等异常",
+          "timeout按具体API和构造时钟计算，不能自动当墙钟上界",
+          "异常后应跳过本次计算或进入降级流程，不能沿用未经标记的旧变换当当前观测。"
+        ]
+      ],
+      "notes": [
+        "TF 是时间相关的坐标关系。发布一个同名 frame 既不能修复真实标定，也不能替代外参、里程计和全局定位各自的责任。",
+        "固定Jazzy C++ Buffer::canTransform用构造clock_->now()推进期限；冻结ROS clock可能使等待不自然超时。Python同步can_transform用默认SYSTEM_TIME并sleep，不能当monotonic机制，也不能自行调度被阻塞执行器的TF回调。",
+        "业务单调截止需要非阻塞查询/有界队列等可继续推进的路径；外层deadline放在内部阻塞调用返回之后不能约束内部等待。"
+      ]
+    },
+    {
+      "id": "api-executor-groups",
+      "title": "执行器、回调组与可重入性",
+      "lessons": [
+        "executors",
+        "composition",
+        "performance",
+        "cpp-engineering"
+      ],
+      "columns": [
+        "机制",
+        "作用",
+        "不自动保证的事",
+        "实现检查"
+      ],
+      "rows": [
+        [
+          "SingleThreadedExecutor",
+          "在一个执行线程上调度就绪回调",
+          "不会让阻塞服务调用自动取得响应",
+          "避免长回调、忙等和同线程同步依赖。"
+        ],
+        [
+          "MultiThreadedExecutor",
+          "允许多个工作线程调度符合组约束的回调",
+          "不保证所有回调并行，也不保证 Python CPU 密集任务线性加速",
+          "核对回调组、共享数据、锁、GIL及计算库是否释放GIL。"
+        ],
+        [
+          "MutuallyExclusive 组",
+          "同组回调不同时执行",
+          "不同组或外部线程仍可能并发访问同一对象",
+          "将需要互斥的数据访问放在统一同步设计中。"
+        ],
+        [
+          "Reentrant 组",
+          "允许组内回调重叠，包括同一回调的多次调用",
+          "回调本身不会自动变为线程安全",
+          "检查消息缓存、控制状态、非线程安全库及对象销毁时机。"
+        ],
+        [
+          "组件组合",
+          "把多个节点放在同一进程，选择执行器与进程内通信",
+          "不等于所有消息均零复制，也不等于隔离故障",
+          "记录回调所有权、进程内通信设置、容器线程模型与实际拷贝路径。"
+        ]
+      ],
+      "notes": [
+        "以延迟、吞吐和最大阻塞时间等实际指标比较实现；线程数量不是实时性证明。",
+        "固定Jazzy rclpy Future的应用done continuation可作为通用executor Task调度，不自动继承客户端实体的互斥回调组；共享状态仍需同步。",
+        "自建Context时Node和Executor显式使用同一Context；不要混用默认全局spin辅助执行器，也不要由多线程并发调用同一spin_once。"
+      ]
+    },
+    {
+      "id": "api-motion-contract",
+      "title": "运动接口的共同合同：单位、坐标、时间与终止",
+      "lessons": [
+        "migration",
+        "eco-diff-drive-tracks",
+        "eco-nav2-stack",
+        "eco-moveit-planning",
+        "project-navigation",
+        "project-manipulation"
+      ],
+      "columns": [
+        "接口",
+        "输入输出",
+        "单位与坐标",
+        "验收边界"
+      ],
+      "rows": [
+        [
+          "Twist / TwistStamped",
+          "线速度、角速度；带时间戳版本另有 header",
+          "线速度 m/s，角速度 rad/s；frame_id 必须与控制端合同一致",
+          "增加 header 不会自动变换速度坐标或补偿数据年龄。核对实际话题类型，不直接假设所有 Jazzy 配置相同。"
+        ],
+        [
+          "NavigateToPose",
+          "带坐标系与时间戳的目标位姿，返回结果/状态",
+          "位置 m；姿态单位四元数；常见全局 frame 为 map，但以系统配置为准",
+          "目标被接受、规划成功、控制结束和底盘停止分别检查。"
+        ],
+        [
+          "JointTrajectory",
+          "joint_names 与逐点位置/速度/加速度/时刻",
+          "旋转关节 rad，移动关节 m；速度和加速度相应每秒、每秒平方",
+          "关节顺序、数组长度、时间单调性、限位、碰撞与执行端接口都要核对。"
+        ],
+        [
+          "规划结果",
+          "候选路径或轨迹",
+          "模型坐标、时间参数化和控制周期明确",
+          "路径无碰撞不等于轨迹可执行；执行前还需新鲜场景、可达性、速度/加速度和控制器检查。"
+        ]
+      ],
+      "notes": [
+        "仅在仿真或离线模型中验证不会自动证明真实设备安全。教材工程先从可观察的低速仿真与数值检查开始，具体实机状态以设备接口为准。"
+      ]
+    },
+    {
+      "id": "api-rosbag-qos",
+      "title": "录制、回放与可重复实验",
+      "lessons": [
+        "time-bag",
+        "eco-data-observability",
+        "testing",
+        "project-navigation"
+      ],
+      "columns": [
+        "操作",
+        "输入",
+        "输出",
+        "必须记录的条件"
+      ],
+      "rows": [
+        [
+          "ros2 bag record",
+          "选定话题与可匹配的 QoS",
+          "存储文件及 metadata",
+          "记录的话题、消息类型、QoS、丢失情况和存储格式；进程存在不等于所有需要的数据都已录入。"
+        ],
+        [
+          "ros2 bag info",
+          "已完成或可识别的 bag 目录",
+          "时长、数量、话题与格式信息",
+          "检查传感器、TF、目标与状态信息是否足够重现实验，而不只看总文件大小。"
+        ],
+        [
+          "ros2 bag play --clock",
+          "bag 消息与播放时钟选项",
+          "重新发布的消息和 /clock",
+          "需要 ROS 时间的算法还要设置 use_sim_time；不要让实时节点和回放节点争夺同一输出责任。"
+        ],
+        [
+          "QoS 覆盖文件",
+          "按话题设置的匹配策略",
+          "播放器或录制器采用的显式 QoS",
+          "覆盖要依据端点真实策略，不是遇到问题一律改成 reliable；发现、类型、时钟和回调调度仍要分别核查。"
+        ],
+        [
+          "Header.stamp / recv / send",
+          "生产者消息时间字段、接收记录、RMW source记录",
+          "来源不同的整数ns",
+          "本机普通record不解析Header；sim分支改recv为ROS clock。不同时间域不能直接相减称延迟。"
+        ],
+        [
+          "record --use-sim-time",
+          "录制节点及正值/clock",
+          "开始数据订阅、用ROS时间记录",
+          "started要求当前值严格大于零；门前volatile数据不补录，历史缓存请求另按QoS核。"
+        ],
+        [
+          "SequentialWriter.write四参数",
+          "topic、同一bytes、recv_ns、send_ns",
+          "两个后端实际落盘",
+          "当前MCAP保留logTime/publishTime；SQLite只有接收timestamp。显式输入不是网络测量。"
+        ],
+        [
+          "SequentialReader.read_next",
+          "已关闭bag与匹配存储插件/类型",
+          "(topic, bytes, recv_ns)",
+          "本机Python绑定不返回send；元数据数量、语义字段、实际bytes身份分别核。"
+        ]
+      ],
+      "notes": [
+        "重播相同消息不保证硬件、调度、随机数和外部服务相同；可重复性需要把这些条件一同控制或记录。",
+        "同版快照也可能有补丁差异；本轮实测CLI自然退出，不推广Player保活会话结束后的clock timer行为。"
+      ]
+    },
+    {
+      "id": "api-qos-contract",
+      "title": "QoS API：声明、发现和实际匹配分别核对",
+      "lessons": [
+        "qos",
+        "pubsub",
+        "time-bag"
+      ],
+      "columns": [
+        "阶段",
+        "C++ / rclcpp",
+        "Python / rclpy",
+        "需要核对的细节"
+      ],
+      "rows": [
+        [
+          "声明历史",
+          "rclcpp::QoS(rclcpp::KeepLast(1))",
+          "QoSProfile(history=KEEP_LAST, depth=1)",
+          "1是条数；不是Hz、延迟上限或整个系统总缓存。"
+        ],
+        [
+          "显式策略",
+          "reliable/best_effort、transient_local/durability_volatile",
+          "ReliabilityPolicy、DurabilityPolicy",
+          "本章端点创建时应用；单纯修改外部profile变量不证明既有端点已重配置。"
+        ],
+        [
+          "发现端点",
+          "get_publishers_info_by_topic / get_subscriptions_info_by_topic",
+          "同名Node方法返回TopicEndpointInfo",
+          "图可发现不代表已匹配；RMW可能不提供history/depth，UNKNOWN/depth0不是实际无缓存。"
+        ],
+        [
+          "静态兼容",
+          "rclcpp::qos_check_compatible",
+          "qos_check_compatible返回兼容等级和reason",
+          "SYSTEM_DEFAULT/UNKNOWN可能返回WARNING：无法确定。结合端点匹配和实际样本，不能直接强转通过。"
+        ],
+        [
+          "实际匹配",
+          "Publisher::get_subscription_count 等",
+          "publisher.get_subscription_count、subscription.get_publisher_count",
+          "数量不等于回调处理完成；需再核对序号、来源、时间与业务结果。"
+        ],
+        [
+          "晚加入",
+          "提供和请求TRANSIENT_LOCAL，writer存活",
+          "可靠瞬态本地profile、有限KeepLast",
+          "实验预发41/42，晚加入只收42；writer退出后的缓存不当数据库。"
+        ],
+        [
+          "观察工具",
+          "ros2 topic echo是额外订阅者",
+          "与应用订阅者分开登记",
+          "固定Jazzy自动适配路径与显式QoS覆盖不同，echo收到不证明应用请求相同。"
+        ]
+      ],
+      "notes": [
+        "本机7个端点场景已运行；跨机、性能、所有deadline/liveliness事件与实际设备未验证。",
+        "Jazzy sensor_data关键字段为KEEP_LAST/depth5/BEST_EFFORT/VOLATILE；预设不保证端到端新鲜度。"
+      ]
+    },
+    {
+      "id": "api-parameter-stages",
+      "title": "参数pre/on/post：两种语言的签名与提交边界",
+      "lessons": [
+        "parameters",
+        "cpp-engineering",
+        "deployment"
+      ],
+      "columns": [
+        "阶段",
+        "C++ / rclcpp",
+        "Python / rclpy",
+        "验证与副作用边界"
+      ],
+      "rows": [
+        [
+          "pre",
+          "void(std::vector<Parameter>&)，就地修改",
+          "List[Parameter] → List[Parameter]，返回修改列表",
+          "合并当前完整配置并生成候选/派生值；尚未提交，不做不可回滚操作。"
+        ],
+        [
+          "on",
+          "const vector& → SetParametersResult",
+          "List[Parameter] → SetParametersResult",
+          "只校验；后续验证者仍可拒绝。参数拒绝不撤销已发生的缓存写入。"
+        ],
+        [
+          "post",
+          "void(const vector&)",
+          "List[Parameter] → None",
+          "存储提交之后运行，不是否决接口；Python反例中错误返回/异常均不回滚存储。"
+        ],
+        [
+          "注册与寿命",
+          "保留SharedPtr回调句柄",
+          "Node持有callable；注册返回None",
+          "Python使用同一callable注销，不能照搬C++句柄写法。"
+        ],
+        [
+          "应用状态",
+          "自行同步及失败恢复",
+          "区分参数存储、缓存、apply_failed",
+          "原子参数批次不是跨节点/线程或硬件资源事务。"
+        ]
+      ],
+      "notes": [
+        "Python11组主案例已实测；C++签名/顺序/句柄只核对固定Jazzy源码，未运行C++三阶段示例。",
+        "本例每节点只有一个pre。固定Jazzy多pre组合路径跨语言有差异；阶段名相同不代表组合语义完全等价。"
+      ]
+    },
+    {
+      "id": "api-composition-options",
+      "title": "组件配置：NodeOptions、加载参数与管理节点",
+      "lessons": [
+        "composition",
+        "parameters",
+        "deployment"
+      ],
+      "columns": [
+        "入口或选项",
+        "作用对象",
+        "调用/检查顺序",
+        "重要边界"
+      ],
+      "rows": [
+        [
+          "NodeOptions构造并转交Node",
+          "当前被创建的节点",
+          "构造参数→Node基类→declare_parameter→读取有效值",
+          "同一个类的独立入口和组件入口都应转交选项；构造中不spin或无限等待。"
+        ],
+        [
+          "LoadNode.parameters",
+          "本次加载的组件",
+          "发送有类型Parameter→构建parameter_overrides→组件声明读取",
+          "给管理节点传-p gain不等于给每个组件传gain；名称/命名空间与参数服务按返回值检查。"
+        ],
+        [
+          "LoadNode.extra_arguments",
+          "标准manager支持的装载开关",
+          "核对固定版本create_node_options实现",
+          "本轮实现映射use_intra_process_comms和forward_global_arguments；任意NodeOptions setter不自动成为可用extra键。"
+        ],
+        [
+          "forward_global_arguments",
+          "组件是否采用进程全局ROS参数",
+          "默认false，明确选择后才转发",
+          "全局节点重命名/参数可能影响组件；实验默认不启用，不把管理节点参数等同加载请求。"
+        ],
+        [
+          "未声明参数与自动声明",
+          "组件自身参数策略",
+          "显式declare gain并验证有限DOUBLE；未知项另查",
+          "NodeOptions默认自动声明关闭；声明前的override、已声明参数、运行时set是不同阶段。"
+        ],
+        [
+          "管理节点参数服务",
+          "ComponentManager自身",
+          "先确认参数服务实际存在，再用远程API",
+          "本机官方默认关闭管理参数服务；专用observable_manager显式开启，不能冒充官方可执行默认接口。"
+        ]
+      ],
+      "notes": [
+        "本轮ConfigComponent与管理节点/容器对照按报告实测；接口只证明列出的有限输入。自动声明选项本身不替代业务校验。",
+        "上游教程文字与固定实现存在版本描述差异；执行器默认与参数入口按固定源码、安装版本及实际结果说明。"
+      ]
+    },
+    {
+      "id": "api-container-models",
+      "title": "三种容器：执行器边界、进程边界与thread_num",
+      "lessons": [
+        "composition",
+        "executors",
+        "deployment",
+        "performance"
+      ],
+      "columns": [
+        "模型",
+        "执行资源",
+        "可启动配置",
+        "需要单独验证的边界"
+      ],
+      "rows": [
+        [
+          "component_container",
+          "共享SingleThreadedExecutor",
+          "本次实际容器名与组件加载ID",
+          "一个长回调会占用该执行线程，管理请求也可能被延迟。"
+        ],
+        [
+          "component_container_mt",
+          "共享MultiThreadedExecutor",
+          "本轮显式thread_num=2",
+          "线程数不是并发保证；仍受回调组、锁与负载影响。不是固定4线程。"
+        ],
+        [
+          "component_container_isolated默认",
+          "每组件独立SingleThreadedExecutor及线程",
+          "本轮默认模式；管理节点另由外层执行器推进",
+          "组件仍同PID/地址空间；隔开执行器不隔离内存破坏或进程崩溃。"
+        ],
+        [
+          "isolated的--use_multi_threaded_executor",
+          "每组件改用MultiThreadedExecutor",
+          "仅按固定源码核对该开关",
+          "本轮三容器时间线没有把此额外模式计为已运行。"
+        ],
+        [
+          "thread_num只读参数",
+          "管理节点声明，mt入口读取",
+          "在启动时覆盖；运行时拒绝另用可观察管理入口验收",
+          "官方管理参数服务默认关闭；read_only不代表启动override也被拒绝，更不是动态线程池重配。"
+        ]
+      ],
+      "notes": [
+        "本轮记录PID、线程和受控span；sleep/等待演示资源许可，不是实时频率、CPU独占或性能倍数证明。",
+        "卸载前取消组件自己的timer/工作并回收资源；请求已返回与任意设备处于安全状态不能画等号。"
+      ]
+    },
+    {
+      "id": "api-lifecycle-outcomes",
+      "title": "生命周期：回调返回、请求应答、状态与资源",
+      "lessons": [
+        "lifecycle",
+        "eco-nav2-stack",
+        "deployment"
+      ],
+      "columns": [
+        "阶段",
+        "回调/协议",
+        "需要查询的证据",
+        "本轮范围"
+      ],
+      "rows": [
+        [
+          "configure",
+          "SUCCESS→inactive；FAILURE→unconfigured",
+          "GetState、候选资源释放与可再次配置",
+          "假资源完整往返和配置失败后重试；不打开设备。"
+        ],
+        [
+          "activate",
+          "SUCCESS→active；FAILURE→inactive",
+          "发布者is_activated、资源快照与新消息",
+          "失败保留已配置资源，再激活成功。"
+        ],
+        [
+          "ERROR/受控异常",
+          "进入errorprocessing并调用on_error",
+          "原始转换应答与最终恢复状态分别查",
+          "on_error SUCCESS恢复unconfigured，原ChangeState仍可能false。"
+        ],
+        [
+          "on_error",
+          "SUCCESS→unconfigured；FAILURE/ERROR→finalized",
+          "GetTransitionGraph、回调事件和清理结果",
+          "标准异常转换路径按本机实现实测；不推广任意崩溃。"
+        ],
+        [
+          "LifecyclePublisher",
+          "is_activated控制发送",
+          "有限窗口内新序号、发布者状态",
+          "普通timer与普通诊断发布仍可运行，业务工作需显式门控。"
+        ],
+        [
+          "shutdown/finalized",
+          "生命周期终结，不等于ROS Context已关闭",
+          "同实例可用转换、资源与普通接口",
+          "本例finalized后仍有普通诊断，直至进程退出。"
+        ]
+      ],
+      "notes": [
+        "成功返回、最终状态、消息与资源是不同证据；状态标签不会自动处理任意文件、线程或设备。",
+        "本轮没有穷尽cleanup/shutdown各失败返回、未知原生异常、跨节点管理器或硬件状态。"
+      ]
+    },
+    {
+      "id": "api-testing-evidence",
+      "title": "测试入口：就绪、执行、XML与验收",
+      "lessons": [
+        "testing",
+        "workspace",
+        "deployment"
+      ],
+      "columns": [
+        "入口",
+        "实际含义",
+        "需保留的证据",
+        "误读边界"
+      ],
+      "rows": [
+        [
+          "ReadyToTest",
+          "允许活动测试开始",
+          "另等业务消息/状态/明确就绪",
+          "不等于ROS发现或应用已经就绪。"
+        ],
+        [
+          "colcon test默认",
+          "运行已注册测试",
+          "命令RC、CTest输出、细分JUnit",
+          "本机受控断言失败仍可RC0，不能单用它验收。"
+        ],
+        [
+          "--return-code-on-test-failure",
+          "让已记录测试失败影响CLI状态",
+          "与同次XML失败原因、数量对应",
+          "参数行为按安装版本与插件核对；缺结果另查。"
+        ],
+        [
+          "colcon test-result",
+          "汇总现有结果",
+          "本次新生成路径、失败/错误/跳过与预期数",
+          "空目录也可能CLI0；旧XML和零用例不是功能通过。"
+        ],
+        [
+          "CTest包装与细分JUnit",
+          "不同层次的结果",
+          "包装项与真正testcase分别统计",
+          "3注册、13细分、16聚合不是三套独立功能覆盖。"
+        ],
+        [
+          "post_shutdown_test",
+          "进程关闭后的测试阶段",
+          "被测进程退出码与回收",
+          "消息正例和正常退出都不证明硬件或任意中断清理。"
+        ]
+      ],
+      "notes": [
+        "受控失败应匹配预期业务断言；NoMatchingProcess等夹具错误不能冒充缺READY反例。",
+        "旧4项测试通过与新合同反例暴露缺口可同时成立；测试数量不能替代输入范围。"
+      ]
+    },
+    {
+      "id": "api-deployment-boundaries",
+      "title": "部署清单：链接、环境、进程与容器边界",
+      "lessons": [
+        "deployment",
+        "workspace",
+        "composition"
+      ],
+      "columns": [
+        "对象",
+        "记录什么",
+        "可以证明什么",
+        "仍需另证"
+      ],
+      "rows": [
+        [
+          "安装前缀",
+          "普通文件SHA、链接文本/目标与边界",
+          "本次输入的内容与外部依赖",
+          "保留symlink复制后仍可能依赖原source/build/underlay。"
+        ],
+        [
+          "环境与包",
+          "显式allowlist、目标包及underlay来源",
+          "本次可追溯配置",
+          "环境清单不是依赖闭包或包源锁文件。"
+        ],
+        [
+          "校验/归档",
+          "同范围文件和链接逐项比对",
+          "传输/复制保持哪些字节与指向",
+          "不证明迁移、ABI、硬件或实际可运行。"
+        ],
+        [
+          "shell source+exec",
+          "实际PID、可执行映射与信号退出",
+          "宿主正例的进程替换/TERM处理",
+          "exec ros2 run替换的是CLI；容器PID1和叶子节点分别查。"
+        ],
+        [
+          "Docker默认CMD",
+          "镜像内固定前缀的直接节点入口",
+          "代码静态结构及预期信号路径",
+          "本轮无Docker命令，镜像构建、docker stop与跨容器通信未运行。"
+        ]
+      ],
+      "notes": [
+        "本轮审计只读显式前缀/允许路径并有扫描上限，不扫描用户凭据或无限展开链接。",
+        "宿主exec信号正例与Docker验收分开；安装复制副本未执行，更未冒称跨机成功。"
+      ]
+    },
+    {
+      "id": "api-model-coordinates",
+      "title": "模型接口：结构、状态、TF与物理数值",
+      "lessons": [
+        "eco-model-rviz",
+        "eco-tf-frames"
+      ],
+      "columns": [
+        "对象",
+        "输入/单位",
+        "输出或语义",
+        "必须另核的边界"
+      ],
+      "rows": [
+        [
+          "joint origin / axis",
+          "xyz m、rpy rad、局部轴单位向量",
+          "安装变换先于局部关节运动",
+          "本例活动origin旋转0；一般轴按安装旋转变到父系，不能只读axis数值。"
+        ],
+        [
+          "JointState.position",
+          "RSP需位置与name等长；转动rad/平移m",
+          "算活动TF，保留输入时戳并受节流",
+          "协议允许velocity-only，但RSP会跳过无位置输入；不自动积分速度，名称/来源/日志另核。"
+        ],
+        [
+          "frame_prefix",
+          "直接前缀字符串",
+          "只拼接TF父子frame",
+          "不改URDF/JointState键，也不自动补斜杠；本例launch另约束格式。"
+        ],
+        [
+          "固定/活动TF",
+          "robot_description与有效关节位置",
+          "固定边可晚加入；活动边依赖状态",
+          "20Hz不是自动生成运动；不提供odom/map定位或物理状态保证。"
+        ],
+        [
+          "check_urdf / 数值检查",
+          "展开URDF、质量kg、惯量kg*m²",
+          "结构解析与明确数值合同分别输出",
+          "本例负Iyy可解析却数值失败；无GUI、无碰撞/动力学实测。"
+        ],
+        [
+          "camera optical frame",
+          "Z前/X右/Y下，安装平移m",
+          "点旋转加平移，方向仅旋转",
+          "有TF不等于相机标定或图像正确；本例只检查软件单位点。"
+        ]
+      ],
+      "notes": [
+        "模型树、TF数值、显示资源、动力学与硬件是不同证据。",
+        "安装与参考xacro同版仍可能有动态arg名补丁差异；本例用字面arg名，不推广未测功能。"
+      ]
+    }
+  ]
+}

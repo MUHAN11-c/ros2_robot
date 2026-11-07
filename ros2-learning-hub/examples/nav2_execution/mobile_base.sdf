@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<!-- 原创双轮小车。坐标以 m、rad 表示，质量 kg，惯量 kg·m²。
+     base_link 位于轮轴中点，X 前、Y 左、Z 上。以旧台架的同一房间和地图为输入。
+     DiffDrive 消费底盘速度，发布轮速积分里程计与动态 TF。世界位姿由另一系统测量。 -->
+<sdf version="1.9">
+  <model name="nav_cart">
+    <pose>-2.10 -1.35 0.091 0 0 0</pose>
+    <link name="base_link">
+      <!-- 质心偏后，落在双驱动轮与后随动球组成的支撑三角形内。 -->
+      <inertial>
+        <pose>-0.052 0 0.038 0 0 0</pose><mass>3.2</mass>
+        <inertia><ixx>0.023</ixx><iyy>0.042</iyy><izz>0.054</izz></inertia>
+      </inertial>
+      <collision name="body">
+        <pose>-0.026 0 0.043 0 0 0</pose><geometry><box><size>0.34 0.26 0.09</size></box></geometry>
+      </collision>
+      <visual name="body">
+        <pose>-0.026 0 0.043 0 0 0</pose><geometry><box><size>0.34 0.26 0.09</size></box></geometry>
+        <material><ambient>0.36 0.44 0.68 1</ambient><diffuse>0.36 0.44 0.68 1</diffuse></material>
+      </visual>
+      <!-- 平面扫描高于车体，距轮轴中心 0.21 m。ROS 静态安装 TF 使用同一数值。 -->
+      <sensor name="navigation_scan" type="gpu_lidar">
+        <pose>0 0 0.21 0 0 0</pose>
+        <topic>/hub_execute/scan</topic><update_rate>10</update_rate><always_on>true</always_on>
+        <lidar>
+          <scan><horizontal><samples>361</samples><resolution>1</resolution>
+            <min_angle>-3.141592653589793</min_angle><max_angle>3.141592653589793</max_angle>
+          </horizontal></scan>
+          <range><min>0.10</min><max>8.0</max><resolution>0.01</resolution></range>
+        </lidar>
+      </sensor>
+    </link>
+    <link name="left_wheel">
+      <pose>0 0.16 0 0 0 0</pose>
+      <inertial><mass>0.25</mass><inertia><ixx>0.00054</ixx><iyy>0.00101</iyy><izz>0.00054</izz></inertia></inertial>
+      <collision name="tire">
+        <pose>0 0 0 1.5707963267948966 0 0</pose>
+        <geometry><cylinder><radius>0.09</radius><length>0.040</length></cylinder></geometry>
+        <surface><friction><ode><mu>1.1</mu><mu2>1.1</mu2></ode></friction></surface>
+      </collision>
+      <visual name="tire">
+        <pose>0 0 0 1.5707963267948966 0 0</pose>
+        <geometry><cylinder><radius>0.09</radius><length>0.040</length></cylinder></geometry>
+      </visual>
+    </link>
+    <link name="right_wheel">
+      <pose>0 -0.16 0 0 0 0</pose>
+      <inertial><mass>0.25</mass><inertia><ixx>0.00054</ixx><iyy>0.00101</iyy><izz>0.00054</izz></inertia></inertial>
+      <collision name="tire">
+        <pose>0 0 0 1.5707963267948966 0 0</pose>
+        <geometry><cylinder><radius>0.09</radius><length>0.040</length></cylinder></geometry>
+        <surface><friction><ode><mu>1.1</mu><mu2>1.1</mu2></ode></friction></surface>
+      </collision>
+      <visual name="tire">
+        <pose>0 0 0 1.5707963267948966 0 0</pose>
+        <geometry><cylinder><radius>0.09</radius><length>0.040</length></cylinder></geometry>
+      </visual>
+    </link>
+    <link name="caster">
+      <!-- 半径 0.034 m，对应离地约 1 mm 的起始间隙。物理引擎随后使底盘落稳。 -->
+      <pose>-0.19 0 -0.056 0 0 0</pose>
+      <inertial><mass>0.11</mass><inertia><ixx>0.000051</ixx><iyy>0.000051</iyy><izz>0.000051</izz></inertia></inertial>
+      <collision name="ball"><geometry><sphere><radius>0.034</radius></sphere></geometry>
+        <surface><friction><ode><mu>0.32</mu><mu2>0.32</mu2></ode></friction></surface>
+      </collision>
+      <visual name="ball"><geometry><sphere><radius>0.034</radius></sphere></geometry></visual>
+    </link>
+    <!-- 轮轴与圆柱轴平行。两驱动轮共用 +Y 轴，正向轮速推进车体 +X。 -->
+    <joint name="left_wheel_joint" type="revolute">
+      <parent>base_link</parent><child>left_wheel</child>
+      <axis><xyz>0 1 0</xyz><limit><lower>-1e16</lower><upper>1e16</upper></limit></axis>
+    </joint>
+    <joint name="right_wheel_joint" type="revolute">
+      <parent>base_link</parent><child>right_wheel</child>
+      <axis><xyz>0 1 0</xyz><limit><lower>-1e16</lower><upper>1e16</upper></limit></axis>
+    </joint>
+    <joint name="caster_joint" type="ball"><parent>base_link</parent><child>caster</child></joint>
+    <plugin filename="gz-sim-diff-drive-system" name="gz::sim::systems::DiffDrive">
+      <left_joint>left_wheel_joint</left_joint><right_joint>right_wheel_joint</right_joint>
+      <wheel_separation>0.32</wheel_separation><wheel_radius>0.09</wheel_radius>
+      <topic>/hub_execute/cmd</topic>
+      <odom_topic>/hub_execute/wheel_odom</odom_topic><tf_topic>/hub_execute/wheel_tf</tf_topic>
+      <frame_id>odom</frame_id><child_frame_id>base_link</child_frame_id><odom_publish_frequency>50</odom_publish_frequency>
+    </plugin>
+    <plugin filename="gz-sim-odometry-publisher-system" name="gz::sim::systems::OdometryPublisher">
+      <odom_frame>gazebo_world</odom_frame><robot_base_frame>gazebo_cart</robot_base_frame>
+      <odom_topic>/hub_execute/world_pose</odom_topic><odom_publish_frequency>50</odom_publish_frequency>
+      <dimensions>3</dimensions>
+    </plugin>
+    <plugin filename="gz-sim-joint-state-publisher-system" name="gz::sim::systems::JointStatePublisher">
+      <topic>/hub_execute/joints</topic><joint_name>left_wheel_joint</joint_name><joint_name>right_wheel_joint</joint_name>
+    </plugin>
+  </model>
+</sdf>

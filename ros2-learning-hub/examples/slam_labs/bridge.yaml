@@ -1,0 +1,25 @@
+# Gazebo 采集钟保留在 /clock。SLAM 回放有自己隔离的 ROS 时钟，另由驱动发布。
+- ros_topic_name: /clock
+  gz_topic_name: /world/hub_mapping_room/clock
+  ros_type_name: rosgraph_msgs/msg/Clock
+  gz_type_name: gz.msgs.Clock
+  direction: GZ_TO_ROS
+  qos_profile: CLOCK
+
+# 原始扫描与 Gazebo 位姿分两条话题进入 ROS，按采集时戳配对。
+# LaserScan 距离用 m，角度用 rad。frame_id 只改标签，回放另提供真实安装关系。
+- ros_topic_name: capture_scan
+  gz_topic_name: /hub_mapping/scan
+  ros_type_name: sensor_msgs/msg/LaserScan
+  gz_type_name: gz.msgs.LaserScan
+  direction: GZ_TO_ROS
+  qos_profile: SENSOR_DATA
+  frame_id: laser_link
+
+# Gazebo 从世界位姿给出参考坐标。此流只用于采集对照，未直接接入 SLAM 的 odom TF。
+- ros_topic_name: capture_pose
+  gz_topic_name: /hub_mapping/ground_pose
+  ros_type_name: nav_msgs/msg/Odometry
+  gz_type_name: gz.msgs.Odometry
+  direction: GZ_TO_ROS
+  qos_profile: SENSOR_DATA

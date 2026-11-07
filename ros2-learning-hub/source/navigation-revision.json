@@ -1,0 +1,1243 @@
+{
+  "meta": {
+    "checkedAt": "2026-11-07",
+    "purpose": "替换两个章节中无界等待或隐式初始化定位的导航示例；按索引覆盖，不修改第三方源码。",
+    "appliesAfter": [
+      "code-annotations",
+      "content-revisions"
+    ],
+    "canonicalCodePath": "examples/navigation/bounded_navigation.py",
+    "codeSha256": "1121390d73f9d9bf15caf69e6771ab29d3c33cffe60cc24be55edf764d63b959",
+    "readmePath": "examples/navigation/README.md",
+    "indexContract": [
+      {
+        "chapterId": "eco-nav2-task-programming",
+        "source": "source/ecosystem-expanded.json",
+        "sectionIndex": 3,
+        "sectionTitle": "完整单目标任务脚本",
+        "codeBlockIndex": 0,
+        "replacesLabel": "navigate_once.py"
+      },
+      {
+        "chapterId": "project-navigation",
+        "source": "source/applied-robotics.json",
+        "sectionIndex": 3,
+        "sectionTitle": "同一导航目标的三种入口与 API 差异",
+        "codeBlockIndex": 0,
+        "replacesLabel": "project_navigation_client.py"
+      }
+    ],
+    "validation": {
+      "performed": "AST/py_compile、CLI 输入有限值/期限断言、安装签名检查与隔离假服务端协议实验。",
+      "installedPackages": {
+        "ros-jazzy-rclpy": "7.1.12-1noble.20260912.162354",
+        "ros-jazzy-nav2-msgs": "1.3.13-1noble.20260921.023049",
+        "ros-jazzy-action-msgs": "2.0.4-1noble.20260911.052334"
+      },
+      "rosDomainId": 217,
+      "discoveryRange": "LOCALHOST",
+      "actionPrefix": "/bounded_probe_",
+      "protocolCases": [
+        {
+          "case": "absent",
+          "passed": true,
+          "processElapsed_s": 0.755,
+          "exitCode": 5,
+          "summary": {
+            "event": "summary",
+            "goal_uuid": "c6f6e56845694301aca3e50ea009d0df",
+            "elapsed_s": 0.343,
+            "trigger": "server_timeout",
+            "goal_response": "not_sent",
+            "terminal": "unknown",
+            "terminal_source": "unconfirmed",
+            "cancel_state": "not_requested",
+            "cancel_attempts": 0,
+            "nav2_result_available": false,
+            "hardware_stop_verified": false
+          },
+          "events": [
+            {
+              "event": "summary",
+              "goal_uuid": "c6f6e56845694301aca3e50ea009d0df",
+              "elapsed_s": 0.343,
+              "trigger": "server_timeout",
+              "goal_response": "not_sent",
+              "terminal": "unknown",
+              "terminal_source": "unconfirmed",
+              "cancel_state": "not_requested",
+              "cancel_attempts": 0,
+              "nav2_result_available": false,
+              "hardware_stop_verified": false
+            }
+          ],
+          "stderrHadOutput": false
+        },
+        {
+          "case": "success",
+          "passed": true,
+          "processElapsed_s": 0.604,
+          "exitCode": 0,
+          "summary": {
+            "event": "summary",
+            "goal_uuid": "96c683812d1b47aea348cdcc288fc5c2",
+            "elapsed_s": 0.195,
+            "trigger": "navigation_terminal",
+            "goal_response": "accepted",
+            "terminal": "succeeded",
+            "terminal_source": "status_topic",
+            "cancel_state": "not_requested",
+            "cancel_attempts": 0,
+            "nav2_result_available": false,
+            "hardware_stop_verified": false
+          },
+          "events": [
+            {
+              "event": "goal_sent",
+              "goal_uuid": "96c683812d1b47aea348cdcc288fc5c2",
+              "elapsed_s": 0.093
+            },
+            {
+              "event": "goal_response",
+              "goal_uuid": "96c683812d1b47aea348cdcc288fc5c2",
+              "elapsed_s": 0.094,
+              "state": "accepted"
+            },
+            {
+              "event": "summary",
+              "goal_uuid": "96c683812d1b47aea348cdcc288fc5c2",
+              "elapsed_s": 0.195,
+              "trigger": "navigation_terminal",
+              "goal_response": "accepted",
+              "terminal": "succeeded",
+              "terminal_source": "status_topic",
+              "cancel_state": "not_requested",
+              "cancel_attempts": 0,
+              "nav2_result_available": false,
+              "hardware_stop_verified": false
+            }
+          ],
+          "stderrHadOutput": false
+        },
+        {
+          "case": "reject",
+          "passed": true,
+          "processElapsed_s": 0.498,
+          "exitCode": 2,
+          "summary": {
+            "event": "summary",
+            "goal_uuid": "73fbde84d42b4bd49125a34008c7b05c",
+            "elapsed_s": 0.094,
+            "trigger": "goal_rejected",
+            "goal_response": "rejected",
+            "terminal": "unknown",
+            "terminal_source": "unconfirmed",
+            "cancel_state": "not_requested",
+            "cancel_attempts": 0,
+            "nav2_result_available": false,
+            "hardware_stop_verified": false
+          },
+          "events": [
+            {
+              "event": "goal_sent",
+              "goal_uuid": "73fbde84d42b4bd49125a34008c7b05c",
+              "elapsed_s": 0.093
+            },
+            {
+              "event": "goal_response",
+              "goal_uuid": "73fbde84d42b4bd49125a34008c7b05c",
+              "elapsed_s": 0.094,
+              "state": "rejected"
+            },
+            {
+              "event": "summary",
+              "goal_uuid": "73fbde84d42b4bd49125a34008c7b05c",
+              "elapsed_s": 0.094,
+              "trigger": "goal_rejected",
+              "goal_response": "rejected",
+              "terminal": "unknown",
+              "terminal_source": "unconfirmed",
+              "cancel_state": "not_requested",
+              "cancel_attempts": 0,
+              "nav2_result_available": false,
+              "hardware_stop_verified": false
+            }
+          ],
+          "stderrHadOutput": false
+        },
+        {
+          "case": "aborted",
+          "passed": true,
+          "processElapsed_s": 0.598,
+          "exitCode": 3,
+          "summary": {
+            "event": "summary",
+            "goal_uuid": "fe015fb8a4354b9ca0e89645f75e34c1",
+            "elapsed_s": 0.195,
+            "trigger": "navigation_terminal",
+            "goal_response": "accepted",
+            "terminal": "aborted",
+            "terminal_source": "status_topic",
+            "cancel_state": "not_requested",
+            "cancel_attempts": 0,
+            "nav2_result_available": false,
+            "hardware_stop_verified": false
+          },
+          "events": [
+            {
+              "event": "goal_sent",
+              "goal_uuid": "fe015fb8a4354b9ca0e89645f75e34c1",
+              "elapsed_s": 0.093
+            },
+            {
+              "event": "goal_response",
+              "goal_uuid": "fe015fb8a4354b9ca0e89645f75e34c1",
+              "elapsed_s": 0.093,
+              "state": "accepted"
+            },
+            {
+              "event": "summary",
+              "goal_uuid": "fe015fb8a4354b9ca0e89645f75e34c1",
+              "elapsed_s": 0.195,
+              "trigger": "navigation_terminal",
+              "goal_response": "accepted",
+              "terminal": "aborted",
+              "terminal_source": "status_topic",
+              "cancel_state": "not_requested",
+              "cancel_attempts": 0,
+              "nav2_result_available": false,
+              "hardware_stop_verified": false
+            }
+          ],
+          "stderrHadOutput": false
+        },
+        {
+          "case": "cancel",
+          "passed": true,
+          "processElapsed_s": 0.789,
+          "exitCode": 4,
+          "summary": {
+            "event": "summary",
+            "goal_uuid": "d8b2e53b55264646aba9e41918f3a23a",
+            "elapsed_s": 0.36,
+            "trigger": "navigation_timeout",
+            "goal_response": "accepted",
+            "terminal": "canceled",
+            "terminal_source": "status_topic",
+            "cancel_state": "accepted_not_terminal",
+            "cancel_attempts": 1,
+            "nav2_result_available": false,
+            "hardware_stop_verified": false
+          },
+          "events": [
+            {
+              "event": "goal_sent",
+              "goal_uuid": "d8b2e53b55264646aba9e41918f3a23a",
+              "elapsed_s": 0.097
+            },
+            {
+              "event": "goal_response",
+              "goal_uuid": "d8b2e53b55264646aba9e41918f3a23a",
+              "elapsed_s": 0.097,
+              "state": "accepted"
+            },
+            {
+              "event": "cancel_phase",
+              "goal_uuid": "d8b2e53b55264646aba9e41918f3a23a",
+              "elapsed_s": 0.348,
+              "timeout_s": 0.9
+            },
+            {
+              "event": "cancel_sent",
+              "goal_uuid": "d8b2e53b55264646aba9e41918f3a23a",
+              "elapsed_s": 0.348,
+              "attempt": 1
+            },
+            {
+              "event": "cancel_response",
+              "goal_uuid": "d8b2e53b55264646aba9e41918f3a23a",
+              "elapsed_s": 0.349,
+              "return_code": 0,
+              "own_goal_canceling": true
+            },
+            {
+              "event": "terminal_wait",
+              "goal_uuid": "d8b2e53b55264646aba9e41918f3a23a",
+              "elapsed_s": 0.349,
+              "timeout_s": 0.4,
+              "cancel_state": "accepted_not_terminal"
+            },
+            {
+              "event": "summary",
+              "goal_uuid": "d8b2e53b55264646aba9e41918f3a23a",
+              "elapsed_s": 0.36,
+              "trigger": "navigation_timeout",
+              "goal_response": "accepted",
+              "terminal": "canceled",
+              "terminal_source": "status_topic",
+              "cancel_state": "accepted_not_terminal",
+              "cancel_attempts": 1,
+              "nav2_result_available": false,
+              "hardware_stop_verified": false
+            }
+          ],
+          "stderrHadOutput": false
+        },
+        {
+          "case": "late_accept",
+          "passed": true,
+          "processElapsed_s": 1.175,
+          "exitCode": 4,
+          "summary": {
+            "event": "summary",
+            "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+            "elapsed_s": 0.788,
+            "trigger": "goal_response_timeout",
+            "goal_response": "accepted",
+            "terminal": "canceled",
+            "terminal_source": "status_topic",
+            "cancel_state": "accepted_not_terminal",
+            "cancel_attempts": 5,
+            "nav2_result_available": false,
+            "hardware_stop_verified": false
+          },
+          "events": [
+            {
+              "event": "goal_sent",
+              "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+              "elapsed_s": 0.096
+            },
+            {
+              "event": "acceptance_unknown",
+              "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+              "elapsed_s": 0.346,
+              "reason": "goal_response_timeout",
+              "detail": "服务端可能已接受；按已知 UUID 有界请求取消，禁止自动重发目标"
+            },
+            {
+              "event": "cancel_phase",
+              "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+              "elapsed_s": 0.346,
+              "timeout_s": 0.9
+            },
+            {
+              "event": "cancel_sent",
+              "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+              "elapsed_s": 0.346,
+              "attempt": 1
+            },
+            {
+              "event": "cancel_response",
+              "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+              "elapsed_s": 0.347,
+              "return_code": 2,
+              "own_goal_canceling": false
+            },
+            {
+              "event": "cancel_sent",
+              "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+              "elapsed_s": 0.448,
+              "attempt": 2
+            },
+            {
+              "event": "cancel_response",
+              "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+              "elapsed_s": 0.448,
+              "return_code": 2,
+              "own_goal_canceling": false
+            },
+            {
+              "event": "cancel_sent",
+              "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+              "elapsed_s": 0.549,
+              "attempt": 3
+            },
+            {
+              "event": "cancel_response",
+              "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+              "elapsed_s": 0.55,
+              "return_code": 2,
+              "own_goal_canceling": false
+            },
+            {
+              "event": "cancel_sent",
+              "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+              "elapsed_s": 0.65,
+              "attempt": 4
+            },
+            {
+              "event": "cancel_response",
+              "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+              "elapsed_s": 0.651,
+              "return_code": 2,
+              "own_goal_canceling": false
+            },
+            {
+              "event": "goal_response",
+              "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+              "elapsed_s": 0.747,
+              "state": "accepted"
+            },
+            {
+              "event": "cancel_sent",
+              "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+              "elapsed_s": 0.768,
+              "attempt": 5
+            },
+            {
+              "event": "cancel_response",
+              "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+              "elapsed_s": 0.768,
+              "return_code": 0,
+              "own_goal_canceling": true
+            },
+            {
+              "event": "terminal_wait",
+              "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+              "elapsed_s": 0.768,
+              "timeout_s": 0.4,
+              "cancel_state": "accepted_not_terminal"
+            },
+            {
+              "event": "summary",
+              "goal_uuid": "49f1d67917a04481a8558e3d87630553",
+              "elapsed_s": 0.788,
+              "trigger": "goal_response_timeout",
+              "goal_response": "accepted",
+              "terminal": "canceled",
+              "terminal_source": "status_topic",
+              "cancel_state": "accepted_not_terminal",
+              "cancel_attempts": 5,
+              "nav2_result_available": false,
+              "hardware_stop_verified": false
+            }
+          ],
+          "stderrHadOutput": false
+        },
+        {
+          "case": "goal_no_ack",
+          "passed": true,
+          "processElapsed_s": 2.055,
+          "exitCode": 5,
+          "summary": {
+            "event": "summary",
+            "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+            "elapsed_s": 1.657,
+            "trigger": "goal_response_timeout",
+            "goal_response": "unknown",
+            "terminal": "unknown",
+            "terminal_source": "unconfirmed",
+            "cancel_state": "unknown_goal_id",
+            "cancel_attempts": 9,
+            "nav2_result_available": false,
+            "hardware_stop_verified": false
+          },
+          "events": [
+            {
+              "event": "goal_sent",
+              "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+              "elapsed_s": 0.106
+            },
+            {
+              "event": "acceptance_unknown",
+              "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+              "elapsed_s": 0.356,
+              "reason": "goal_response_timeout",
+              "detail": "服务端可能已接受；按已知 UUID 有界请求取消，禁止自动重发目标"
+            },
+            {
+              "event": "cancel_phase",
+              "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+              "elapsed_s": 0.356,
+              "timeout_s": 0.9
+            },
+            {
+              "event": "cancel_sent",
+              "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+              "elapsed_s": 0.357,
+              "attempt": 1
+            },
+            {
+              "event": "cancel_response",
+              "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+              "elapsed_s": 0.357,
+              "return_code": 2,
+              "own_goal_canceling": false
+            },
+            {
+              "event": "cancel_sent",
+              "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+              "elapsed_s": 0.458,
+              "attempt": 2
+            },
+            {
+              "event": "cancel_response",
+              "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+              "elapsed_s": 0.459,
+              "return_code": 2,
+              "own_goal_canceling": false
+            },
+            {
+              "event": "cancel_sent",
+              "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+              "elapsed_s": 0.559,
+              "attempt": 3
+            },
+            {
+              "event": "cancel_response",
+              "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+              "elapsed_s": 0.56,
+              "return_code": 2,
+              "own_goal_canceling": false
+            },
+            {
+              "event": "cancel_sent",
+              "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+              "elapsed_s": 0.661,
+              "attempt": 4
+            },
+            {
+              "event": "cancel_response",
+              "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+              "elapsed_s": 0.662,
+              "return_code": 2,
+              "own_goal_canceling": false
+            },
+            {
+              "event": "cancel_sent",
+              "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+              "elapsed_s": 0.762,
+              "attempt": 5
+            },
+            {
+              "event": "cancel_response",
+              "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+              "elapsed_s": 0.763,
+              "return_code": 2,
+              "own_goal_canceling": false
+            },
+            {
+              "event": "cancel_sent",
+              "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+              "elapsed_s": 0.863,
+              "attempt": 6
+            },
+            {
+              "event": "cancel_response",
+              "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+              "elapsed_s": 0.864,
+              "return_code": 2,
+              "own_goal_canceling": false
+            },
+            {
+              "event": "cancel_sent",
+              "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+              "elapsed_s": 0.964,
+              "attempt": 7
+            },
+            {
+              "event": "cancel_response",
+              "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+              "elapsed_s": 0.965,
+              "return_code": 2,
+              "own_goal_canceling": false
+            },
+            {
+              "event": "cancel_sent",
+              "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+              "elapsed_s": 1.066,
+              "attempt": 8
+            },
+            {
+              "event": "cancel_response",
+              "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+              "elapsed_s": 1.066,
+              "return_code": 2,
+              "own_goal_canceling": false
+            },
+            {
+              "event": "cancel_sent",
+              "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+              "elapsed_s": 1.167,
+              "attempt": 9
+            },
+            {
+              "event": "cancel_response",
+              "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+              "elapsed_s": 1.167,
+              "return_code": 2,
+              "own_goal_canceling": false
+            },
+            {
+              "event": "terminal_wait",
+              "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+              "elapsed_s": 1.257,
+              "timeout_s": 0.4,
+              "cancel_state": "unknown_goal_id"
+            },
+            {
+              "event": "summary",
+              "goal_uuid": "8d63a56333b64f6c8f887b38825ee383",
+              "elapsed_s": 1.657,
+              "trigger": "goal_response_timeout",
+              "goal_response": "unknown",
+              "terminal": "unknown",
+              "terminal_source": "unconfirmed",
+              "cancel_state": "unknown_goal_id",
+              "cancel_attempts": 9,
+              "nav2_result_available": false,
+              "hardware_stop_verified": false
+            }
+          ],
+          "stderrHadOutput": false
+        },
+        {
+          "case": "cancel_no_ack",
+          "passed": true,
+          "processElapsed_s": 2.029,
+          "exitCode": 5,
+          "summary": {
+            "event": "summary",
+            "goal_uuid": "925fa74b5a1c474991b3f4d375f761e9",
+            "elapsed_s": 1.647,
+            "trigger": "navigation_timeout",
+            "goal_response": "accepted",
+            "terminal": "unknown",
+            "terminal_source": "unconfirmed",
+            "cancel_state": "response_timeout",
+            "cancel_attempts": 1,
+            "nav2_result_available": false,
+            "hardware_stop_verified": false
+          },
+          "events": [
+            {
+              "event": "goal_sent",
+              "goal_uuid": "925fa74b5a1c474991b3f4d375f761e9",
+              "elapsed_s": 0.095
+            },
+            {
+              "event": "goal_response",
+              "goal_uuid": "925fa74b5a1c474991b3f4d375f761e9",
+              "elapsed_s": 0.096,
+              "state": "accepted"
+            },
+            {
+              "event": "cancel_phase",
+              "goal_uuid": "925fa74b5a1c474991b3f4d375f761e9",
+              "elapsed_s": 0.347,
+              "timeout_s": 0.9
+            },
+            {
+              "event": "cancel_sent",
+              "goal_uuid": "925fa74b5a1c474991b3f4d375f761e9",
+              "elapsed_s": 0.347,
+              "attempt": 1
+            },
+            {
+              "event": "terminal_wait",
+              "goal_uuid": "925fa74b5a1c474991b3f4d375f761e9",
+              "elapsed_s": 1.247,
+              "timeout_s": 0.4,
+              "cancel_state": "response_timeout"
+            },
+            {
+              "event": "summary",
+              "goal_uuid": "925fa74b5a1c474991b3f4d375f761e9",
+              "elapsed_s": 1.647,
+              "trigger": "navigation_timeout",
+              "goal_response": "accepted",
+              "terminal": "unknown",
+              "terminal_source": "unconfirmed",
+              "cancel_state": "response_timeout",
+              "cancel_attempts": 1,
+              "nav2_result_available": false,
+              "hardware_stop_verified": false
+            }
+          ],
+          "stderrHadOutput": false
+        },
+        {
+          "case": "cancel_no_terminal",
+          "passed": true,
+          "processElapsed_s": 1.124,
+          "exitCode": 5,
+          "summary": {
+            "event": "summary",
+            "goal_uuid": "3d113eaed765480695aedd3feb38aebc",
+            "elapsed_s": 0.748,
+            "trigger": "navigation_timeout",
+            "goal_response": "accepted",
+            "terminal": "unknown",
+            "terminal_source": "unconfirmed",
+            "cancel_state": "accepted_not_terminal",
+            "cancel_attempts": 1,
+            "nav2_result_available": false,
+            "hardware_stop_verified": false
+          },
+          "events": [
+            {
+              "event": "goal_sent",
+              "goal_uuid": "3d113eaed765480695aedd3feb38aebc",
+              "elapsed_s": 0.096
+            },
+            {
+              "event": "goal_response",
+              "goal_uuid": "3d113eaed765480695aedd3feb38aebc",
+              "elapsed_s": 0.096,
+              "state": "accepted"
+            },
+            {
+              "event": "cancel_phase",
+              "goal_uuid": "3d113eaed765480695aedd3feb38aebc",
+              "elapsed_s": 0.347,
+              "timeout_s": 0.9
+            },
+            {
+              "event": "cancel_sent",
+              "goal_uuid": "3d113eaed765480695aedd3feb38aebc",
+              "elapsed_s": 0.347,
+              "attempt": 1
+            },
+            {
+              "event": "cancel_response",
+              "goal_uuid": "3d113eaed765480695aedd3feb38aebc",
+              "elapsed_s": 0.347,
+              "return_code": 0,
+              "own_goal_canceling": true
+            },
+            {
+              "event": "terminal_wait",
+              "goal_uuid": "3d113eaed765480695aedd3feb38aebc",
+              "elapsed_s": 0.347,
+              "timeout_s": 0.4,
+              "cancel_state": "accepted_not_terminal"
+            },
+            {
+              "event": "summary",
+              "goal_uuid": "3d113eaed765480695aedd3feb38aebc",
+              "elapsed_s": 0.748,
+              "trigger": "navigation_timeout",
+              "goal_response": "accepted",
+              "terminal": "unknown",
+              "terminal_source": "unconfirmed",
+              "cancel_state": "accepted_not_terminal",
+              "cancel_attempts": 1,
+              "nav2_result_available": false,
+              "hardware_stop_verified": false
+            }
+          ],
+          "stderrHadOutput": false
+        },
+        {
+          "case": "paused_clock",
+          "passed": true,
+          "processElapsed_s": 0.738,
+          "exitCode": 4,
+          "summary": {
+            "event": "summary",
+            "goal_uuid": "38e32cb801f042ef8a07381247bcfd5b",
+            "elapsed_s": 0.36,
+            "trigger": "navigation_timeout",
+            "goal_response": "accepted",
+            "terminal": "canceled",
+            "terminal_source": "status_topic",
+            "cancel_state": "accepted_not_terminal",
+            "cancel_attempts": 1,
+            "nav2_result_available": false,
+            "hardware_stop_verified": false
+          },
+          "events": [
+            {
+              "event": "goal_sent",
+              "goal_uuid": "38e32cb801f042ef8a07381247bcfd5b",
+              "elapsed_s": 0.097
+            },
+            {
+              "event": "goal_response",
+              "goal_uuid": "38e32cb801f042ef8a07381247bcfd5b",
+              "elapsed_s": 0.098,
+              "state": "accepted"
+            },
+            {
+              "event": "cancel_phase",
+              "goal_uuid": "38e32cb801f042ef8a07381247bcfd5b",
+              "elapsed_s": 0.348,
+              "timeout_s": 0.9
+            },
+            {
+              "event": "cancel_sent",
+              "goal_uuid": "38e32cb801f042ef8a07381247bcfd5b",
+              "elapsed_s": 0.348,
+              "attempt": 1
+            },
+            {
+              "event": "cancel_response",
+              "goal_uuid": "38e32cb801f042ef8a07381247bcfd5b",
+              "elapsed_s": 0.349,
+              "return_code": 0,
+              "own_goal_canceling": true
+            },
+            {
+              "event": "terminal_wait",
+              "goal_uuid": "38e32cb801f042ef8a07381247bcfd5b",
+              "elapsed_s": 0.349,
+              "timeout_s": 0.4,
+              "cancel_state": "accepted_not_terminal"
+            },
+            {
+              "event": "summary",
+              "goal_uuid": "38e32cb801f042ef8a07381247bcfd5b",
+              "elapsed_s": 0.36,
+              "trigger": "navigation_timeout",
+              "goal_response": "accepted",
+              "terminal": "canceled",
+              "terminal_source": "status_topic",
+              "cancel_state": "accepted_not_terminal",
+              "cancel_attempts": 1,
+              "nav2_result_available": false,
+              "hardware_stop_verified": false
+            }
+          ],
+          "stderrHadOutput": false
+        },
+        {
+          "case": "sigint",
+          "passed": true,
+          "processElapsed_s": 1.463,
+          "exitCode": 4,
+          "summary": {
+            "event": "summary",
+            "goal_uuid": "b410b1c583334668842e2702702359c0",
+            "elapsed_s": 1.083,
+            "trigger": "navigation_interrupted",
+            "goal_response": "accepted",
+            "terminal": "canceled",
+            "terminal_source": "status_topic",
+            "cancel_state": "accepted_not_terminal",
+            "cancel_attempts": 1,
+            "nav2_result_available": false,
+            "hardware_stop_verified": false
+          },
+          "events": [
+            {
+              "event": "goal_sent",
+              "goal_uuid": "b410b1c583334668842e2702702359c0",
+              "elapsed_s": 0.095
+            },
+            {
+              "event": "goal_response",
+              "goal_uuid": "b410b1c583334668842e2702702359c0",
+              "elapsed_s": 0.095,
+              "state": "accepted"
+            },
+            {
+              "event": "cancel_phase",
+              "goal_uuid": "b410b1c583334668842e2702702359c0",
+              "elapsed_s": 1.063,
+              "timeout_s": 0.9
+            },
+            {
+              "event": "cancel_sent",
+              "goal_uuid": "b410b1c583334668842e2702702359c0",
+              "elapsed_s": 1.063,
+              "attempt": 1
+            },
+            {
+              "event": "cancel_response",
+              "goal_uuid": "b410b1c583334668842e2702702359c0",
+              "elapsed_s": 1.064,
+              "return_code": 0,
+              "own_goal_canceling": true
+            },
+            {
+              "event": "terminal_wait",
+              "goal_uuid": "b410b1c583334668842e2702702359c0",
+              "elapsed_s": 1.064,
+              "timeout_s": 0.4,
+              "cancel_state": "accepted_not_terminal"
+            },
+            {
+              "event": "summary",
+              "goal_uuid": "b410b1c583334668842e2702702359c0",
+              "elapsed_s": 1.083,
+              "trigger": "navigation_interrupted",
+              "goal_response": "accepted",
+              "terminal": "canceled",
+              "terminal_source": "status_topic",
+              "cancel_state": "accepted_not_terminal",
+              "cancel_attempts": 1,
+              "nav2_result_available": false,
+              "hardware_stop_verified": false
+            }
+          ],
+          "stderrHadOutput": false
+        },
+        {
+          "case": "clock_absent",
+          "passed": true,
+          "processElapsed_s": 0.715,
+          "exitCode": 5,
+          "summary": {
+            "event": "summary",
+            "goal_uuid": "fae9aeb855e14b0face3191c51113acb",
+            "elapsed_s": 0.341,
+            "trigger": "clock_timeout",
+            "goal_response": "not_sent",
+            "terminal": "unknown",
+            "terminal_source": "unconfirmed",
+            "cancel_state": "not_requested",
+            "cancel_attempts": 0,
+            "nav2_result_available": false,
+            "hardware_stop_verified": false
+          },
+          "events": [
+            {
+              "event": "summary",
+              "goal_uuid": "fae9aeb855e14b0face3191c51113acb",
+              "elapsed_s": 0.341,
+              "trigger": "clock_timeout",
+              "goal_response": "not_sent",
+              "terminal": "unknown",
+              "terminal_source": "unconfirmed",
+              "cancel_state": "not_requested",
+              "cancel_attempts": 0,
+              "nav2_result_available": false,
+              "hardware_stop_verified": false
+            }
+          ],
+          "stderrHadOutput": false
+        }
+      ],
+      "notPerformed": [
+        "完整 Nav2 导航栈启动与生命周期验收",
+        "Gazebo 地图/定位/代价地图测试",
+        "真实底盘/硬件停车",
+        "任意中间件故障及硬实时截止保证"
+      ],
+      "reproduction": "examples/navigation/README.md 内提供完整隔离假服务端脚本；从 ros2-learning-hub 运行，仅用测试动作名，不替换成真实导航服务。",
+      "timingAssertions": [
+        {
+          "case": "absent",
+          "checks": [
+            {
+              "stage": "server",
+              "observed_s": 0.343,
+              "configured_s": 0.3,
+              "schedulerTolerance_s": 0.2
+            }
+          ]
+        },
+        {
+          "case": "cancel",
+          "checks": [
+            {
+              "stage": "cancel",
+              "observed_s": 0.001,
+              "configured_s": 0.9,
+              "schedulerTolerance_s": 0.2
+            },
+            {
+              "stage": "terminal",
+              "observed_s": 0.011,
+              "configured_s": 0.4,
+              "schedulerTolerance_s": 0.2
+            }
+          ]
+        },
+        {
+          "case": "late_accept",
+          "checks": [
+            {
+              "stage": "cancel",
+              "observed_s": 0.422,
+              "configured_s": 0.9,
+              "schedulerTolerance_s": 0.2
+            },
+            {
+              "stage": "terminal",
+              "observed_s": 0.02,
+              "configured_s": 0.4,
+              "schedulerTolerance_s": 0.2
+            },
+            {
+              "stage": "goal_response",
+              "observed_s": 0.25,
+              "configured_s": 0.25,
+              "schedulerTolerance_s": 0.2
+            }
+          ]
+        },
+        {
+          "case": "goal_no_ack",
+          "checks": [
+            {
+              "stage": "cancel",
+              "observed_s": 0.901,
+              "configured_s": 0.9,
+              "schedulerTolerance_s": 0.2
+            },
+            {
+              "stage": "terminal",
+              "observed_s": 0.4,
+              "configured_s": 0.4,
+              "schedulerTolerance_s": 0.2
+            },
+            {
+              "stage": "goal_response",
+              "observed_s": 0.25,
+              "configured_s": 0.25,
+              "schedulerTolerance_s": 0.2
+            }
+          ]
+        },
+        {
+          "case": "cancel_no_ack",
+          "checks": [
+            {
+              "stage": "cancel",
+              "observed_s": 0.9,
+              "configured_s": 0.9,
+              "schedulerTolerance_s": 0.2
+            },
+            {
+              "stage": "terminal",
+              "observed_s": 0.4,
+              "configured_s": 0.4,
+              "schedulerTolerance_s": 0.2
+            }
+          ]
+        },
+        {
+          "case": "cancel_no_terminal",
+          "checks": [
+            {
+              "stage": "cancel",
+              "observed_s": 0.0,
+              "configured_s": 0.9,
+              "schedulerTolerance_s": 0.2
+            },
+            {
+              "stage": "terminal",
+              "observed_s": 0.401,
+              "configured_s": 0.4,
+              "schedulerTolerance_s": 0.2
+            }
+          ]
+        },
+        {
+          "case": "paused_clock",
+          "checks": [
+            {
+              "stage": "cancel",
+              "observed_s": 0.001,
+              "configured_s": 0.9,
+              "schedulerTolerance_s": 0.2
+            },
+            {
+              "stage": "terminal",
+              "observed_s": 0.011,
+              "configured_s": 0.4,
+              "schedulerTolerance_s": 0.2
+            }
+          ]
+        },
+        {
+          "case": "sigint",
+          "checks": [
+            {
+              "stage": "cancel",
+              "observed_s": 0.001,
+              "configured_s": 0.9,
+              "schedulerTolerance_s": 0.2
+            },
+            {
+              "stage": "terminal",
+              "observed_s": 0.019,
+              "configured_s": 0.4,
+              "schedulerTolerance_s": 0.2
+            }
+          ]
+        },
+        {
+          "case": "clock_absent",
+          "checks": [
+            {
+              "stage": "clock",
+              "observed_s": 0.341,
+              "configured_s": 0.3,
+              "schedulerTolerance_s": 0.2
+            }
+          ]
+        }
+      ]
+    },
+    "sourceChecks": [
+      {
+        "path": "references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2/rclpy/rclpy/action/client.py",
+        "lines": [
+          422,
+          464
+        ],
+        "checked": "公开 send_goal_async(goal, feedback_callback=None, goal_uuid=None)；ClientGoalHandle.get_result_async 与 server_is_ready。"
+      },
+      {
+        "path": "references/sources/official-core/ros2--rcl_interfaces/jazzy--7aa3caf43377/action_msgs/srv/CancelGoal.srv",
+        "checked": "非零 UUID 与零时间戳的单目标取消选择；四类返回码和 goals_canceling。"
+      },
+      {
+        "path": "references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_msgs/action/NavigateToPose.action",
+        "checked": "pose/behavior_tree、error_code/error_msg、distance_remaining 消息字段。"
+      },
+      {
+        "path": "references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2/rclpy/rclpy/client.py",
+        "lines": [
+          149,
+          160
+        ],
+        "checked": "公开 remove_pending_request(future) 清理本地服务登记，不撤销远端任务。"
+      }
+    ]
+  },
+  "chapters": {
+    "eco-nav2-task-programming": {
+      "sections": {
+        "0": {
+          "paragraphs": [
+            "一次 NavigateToPose 负责一个导航目标，巡检程序还要决定访问顺序、业务期限、失败记录和是否继续下一点。任务层不应重复实现局部避障；导航层也不知道路点的业务意义。每次任务都以唯一 UUID 关联请求、反馈、取消和终态，旧目标的迟到事件不能覆盖当前任务。",
+            "Simple Commander 用 BasicNavigator 封装常见动作，适合学习任务编排；原生 ActionClient 暴露目标 future、反馈与结果，适合精确管理协议阶段。固定 Jazzy 的 goToPose、cancelTask 与 waitUntilNav2Active 含内部等待，不能靠它们返回之后的 deadline 检查给内部等待加期限。waitUntilNav2Active 还可能发布保存的初始位姿；下方客户端选择原生异步 API，初始化定位由用户预先完成。"
+          ]
+        },
+        "1": {
+          "paragraphs": [
+            "动作请求经历发送、接受或拒绝、执行、可选取消及终态。send_goal_async 的 Future 完成表示收到目标应答，handle.accepted 表示接受，不代表到达；get_result_async 的应答 status 才是该目标结果。反馈可能暂时没有，也不是完成证明。应答超时必须保留 unknown，不能把它编造成 rejected 或 succeeded。",
+            "目标应答超时不能当作拒绝。请求可能已被服务端接受，客户端保留发送前生成的 UUID，记录 goal_response=unknown，并用公开 CancelGoal 服务按这个 UUID 请求有界取消。非零 UUID 配零时间戳只指向本目标；不得用零 UUID 加零时间戳无意取消所有任务。ERROR_NONE 且 goals_canceling 包含本 UUID 才说明取消受理，仍须等结果或精确 UUID 的终态状态。UNKNOWN_GOAL_ID 可能是目标尚未登记，有限重试结束后若无终态仍为 unknown，禁止直接重发目标。",
+            "有 goal handle 时，get_result_async 返回的应答包含 status 以及 Nav2 error_code/error_msg；仅在 Future.done 后读取，不同步阻塞。客户端同时监听精确 UUID 的状态，以便目标应答丢失时仍能看到软件终态。来自状态话题的终态不包含完整错误详情，日志明确标注 terminal_source=status_topic 和 nav2_result_available=false。取消请求、取消受理、软件 canceled、进程退出与物理停车是不同证据；summary 始终标记 hardware_stop_verified=false，仍须独立检查速度测量与停止链。"
+          ]
+        },
+        "2": {
+          "paragraphs": [
+            "目标 PoseStamped 的 frame_id 默认是 map，x/y 单位米，yaw 单位弧度并绕右手系正 Z 轴。平面姿态使用 z=sin(yaw/2)、w=cos(yaw/2)，其余四元数分量为零，构成单位四元数。改变 frame 字符串不会转换坐标；命名空间也不会自动更改 TF frame。数值有限只是必要检查，还要由用户确认目标位于匹配地图的自由空间。",
+            "初始定位告诉定位器机器人在哪里，导航目标告诉任务希望到哪里。运行本客户端前，用户必须在 RViz 2D Pose Estimate 等界面明确设置初始位姿并观察扫描/地图对齐；客户端没有 --start 参数，不创建 initialpose 发布器。启用 --sim-time 时，客户端有限等待正的 /clock；收到过正时间仍不保证以后一直推进，导航期限因此独立采用 monotonic。"
+          ]
+        },
+        "3": {
+          "paragraphs": [
+            "将下面完整源码保存为 examples/navigation/bounded_navigation.py，需要 Ubuntu24.04/ROS2 Jazzy、rclpy 与 nav2_msgs，并在运行前完成上一节的地图、定位、TF、时钟和生命周期检查。它只提交一个目标，不启动导航服务、不发布初始位姿、不自动重发。CLI 形式为 --goal X米 Y米 YAW弧度；默认 --frame map，命名空间动作可用 --action-name /robot1/navigate_to_pose。",
+            "本例把时钟接入、Action 服务发现、目标应答、导航执行、取消应答和最终终态分成六个窗口。默认分别是五、十、五、六十、三和五个单调秒；启用 --sim-time 时才使用时钟等待窗口。--timeout 从客户端观察到接受之后计时，取消阶段的发现、应答和有限重试共用 --cancel-timeout，不会因重试重置。spin_once 的有限 timeout 只约束空闲等待，不能抢占回调；普通操作系统调度与阻塞日志仍会增加耗时，因此这是协议软期限。",
+            "所有目标数值须有限，教学保护上限为位置绝对值一百万米、朝向绝对值一百万弧度；这只拦截明显单位错误，不代表地图边界。期限参数须为大于零、不超过一天的有限秒数。默认示范命令为 python3 examples/navigation/bounded_navigation.py --goal 1.0 0.5 0.0 --sim-time，必须用当前地图确认的目标替换数值；--help 显示全部窗口。",
+            "首次 Ctrl+C/SIGTERM 请求有界取消并继续等终态，第二次结束等待并报告未确认状态。取消、超时与成功可能竞争，代码保留实际终态；超时/中断/异常后才观察到 succeeded 时退出码为6，不能当期限内业务成功。退出码0只表示正常导航阶段观察到 succeeded，2表示拒绝，3表示 aborted，4表示 canceled，5表示启动/协议未知。任何返回都不证明物理停车。"
+          ],
+          "codeBlocks": {
+            "0": {
+              "label": "bounded_navigation.py",
+              "language": "python",
+              "type": "complete",
+              "code": "#!/usr/bin/env python3\n\"\"\"ROS 2 Jazzy / Nav2 的有界单目标教学客户端，只用于已检查的仿真。\n\n输入：--goal X Y YAW，X/Y 为 --frame 中的米，YAW 为绕 +Z 轴的弧度。\n输出：逐行 JSON 协议事件和一条 summary；软件结果不证明物理机器人已停车。\n前提：用户先在 RViz 等界面明确设置初始定位，并检查 TF、地图、生命周期与时钟。\n本程序不发布 initialpose、不启动 Nav2、不验证目标位于地图自由空间，也不重发目标。\n所有等待都由 monotonic 经过时间限制；这是普通操作系统上的软期限，并非硬实时保证。\n\"\"\"\n\nimport argparse\nimport json\nimport math\nimport signal\nimport sys\nimport time\nimport uuid\n\n\ndef positive_seconds(text):\n    \"\"\"解析秒：拒绝 NaN、无穷、零、负数与超过一天的教学配置。\"\"\"\n    value = float(text)\n    if not math.isfinite(value) or not 0.0 < value <= 86400.0:\n        raise argparse.ArgumentTypeError('期限须是 (0, 86400] 内的有限秒数')\n    return value\n\n\ndef parse_args(argv=None):\n    parser = argparse.ArgumentParser(description=__doc__)\n    parser.add_argument('--goal', nargs=3, type=float, required=True,\n                        metavar=('X_M', 'Y_M', 'YAW_RAD'))\n    parser.add_argument('--frame', default='map', help='目标参考系，默认 map')\n    parser.add_argument('--action-name', default='/navigate_to_pose',\n                        help='绝对 Action 名；命名空间示例 /robot1/navigate_to_pose')\n    parser.add_argument('--sim-time', action='store_true', help='使用 /clock ROS 仿真时间戳')\n    parser.add_argument('--clock-timeout', type=positive_seconds, default=5.0,\n                        help='等待正的仿真时间上限，单调秒；默认 5')\n    parser.add_argument('--server-timeout', type=positive_seconds, default=10.0,\n                        help='发现 Action 服务端上限，单调秒；默认 10')\n    parser.add_argument('--goal-response-timeout', type=positive_seconds, default=5.0,\n                        help='提交后等待目标接受/拒绝应答上限，单调秒；默认 5')\n    parser.add_argument('--timeout', type=positive_seconds, default=60.0,\n                        help='观察到目标接受后导航期限，单调秒；默认 60')\n    parser.add_argument('--cancel-timeout', type=positive_seconds, default=3.0,\n                        help='取消服务发现及所有取消应答/重试的合计上限，单调秒；默认 3')\n    parser.add_argument('--result-timeout', type=positive_seconds, default=5.0,\n                        help='取消阶段后等待结果或终态状态的上限，单调秒；默认 5')\n    args = parser.parse_args(argv)\n    if not all(math.isfinite(v) for v in args.goal):\n        parser.error('目标位置和朝向必须是有限数值，不能为 NaN 或无穷')\n    # 这个宽松上限只拦截明显量纲/输入错误，不表示地图范围或导航安全边界。\n    if any(abs(v) > 1.0e6 for v in args.goal):\n        parser.error('教学输入要求 |X|、|Y|≤10^6 米，|YAW|≤10^6 弧度；请先核对单位')\n    if not args.frame or args.frame.startswith('/') or any(c.isspace() for c in args.frame):\n        parser.error('TF frame 必须非空、无空白且不以 / 开头，例如 map 或 robot1/map')\n    if not args.action_name.startswith('/') or args.action_name.endswith('/'):\n        parser.error('action-name 必须是无结尾 / 的绝对名称')\n    return args\n\n\ndef main(argv=None):\n    args = parse_args(argv)\n    # 延迟导入让普通 Python 环境仍可查看 --help；实际通信需要 source Jazzy。\n    import rclpy\n    from action_msgs.msg import GoalStatus, GoalStatusArray\n    from action_msgs.srv import CancelGoal\n    from nav2_msgs.action import NavigateToPose\n    from rclpy.action import ActionClient\n    from rclpy.context import Context\n    from rclpy.executors import SingleThreadedExecutor\n    from rclpy.node import Node\n    from rclpy.parameter import Parameter\n    from rclpy.qos import qos_profile_action_status_default\n    from rclpy.signals import SignalHandlerOptions\n    from rclpy.validate_full_topic_name import validate_full_topic_name\n    from unique_identifier_msgs.msg import UUID\n\n    validate_full_topic_name(args.action_name)\n    terminal_names = {\n        GoalStatus.STATUS_SUCCEEDED: 'succeeded',\n        GoalStatus.STATUS_CANCELED: 'canceled',\n        GoalStatus.STATUS_ABORTED: 'aborted',\n    }\n    # 默认 rclpy SIGINT 会关闭上下文，来不及进行取消协议；改成只记录退出意图。\n    # 首次 Ctrl+C 请求有界取消，第二次 Ctrl+C 立即退出等待并报告可能仍在执行。\n    stop = {'requested': False, 'force': False}\n\n    def request_stop(signum, _frame):\n        if stop['requested']:\n            stop['force'] = True\n        stop['requested'] = True\n\n    class BoundedNavigation(Node):\n        def __init__(self, context):\n            super().__init__('bounded_navigation', context=context,\n                             parameter_overrides=[Parameter('use_sim_time', value=args.sim_time)])\n            self.started = time.monotonic()\n            self.goal_uuid = UUID(uuid=list(uuid.uuid4().bytes))  # 本次唯一且非零；发送前就保存。\n            self.goal_hex = bytes(self.goal_uuid.uuid).hex()\n            self.action = ActionClient(self, NavigateToPose, args.action_name)\n            # 公共标准取消服务：无 goal handle 时也能按已保存 UUID 请求取消。\n            # 非零 UUID + 零时间戳表示只取消该 UUID，绝不发送“取消所有目标”。\n            self.cancel_client = self.create_client(CancelGoal, args.action_name + '/_action/cancel_goal')\n            self.status_sub = self.create_subscription(\n                GoalStatusArray, args.action_name + '/_action/status', self.on_status,\n                qos_profile_action_status_default)\n            self.send_future = None\n            self.result_future = None\n            self.goal_handle = None\n            self.response = 'not_sent'\n            self.goal_may_exist = False\n            self.result_response = None\n            self.observed_status = None\n            self.cancel_state = 'not_requested'\n            self.cancel_attempts = 0\n            self.last_feedback = float('-inf')\n            self.trigger = 'not_started'\n\n        def emit(self, event, **fields):\n            # 每条事件带 UUID 和单调经过秒；节点 ROS 时间只用于消息时间戳。\n            print(json.dumps(dict(event=event, goal_uuid=self.goal_hex,\n                                  elapsed_s=round(time.monotonic() - self.started, 3), **fields),\n                             ensure_ascii=False, allow_nan=False), flush=True)\n\n        def on_status(self, message):\n            for item in message.status_list:\n                # 只观察自己的目标，忽略历史任务与其他客户端的状态。\n                if bytes(item.goal_info.goal_id.uuid) == bytes(self.goal_uuid.uuid):\n                    if item.status in terminal_names:\n                        self.observed_status = item.status\n\n        def on_feedback(self, message):\n            if bytes(message.goal_id.uuid) != bytes(self.goal_uuid.uuid):\n                return\n            now = time.monotonic()\n            if now - self.last_feedback >= 1.0:\n                self.last_feedback = now\n                distance = float(message.feedback.distance_remaining)\n                # 无效反馈只记为空，不能令 JSON NaN 或反馈异常中断取消监督。\n                self.emit('feedback', distance_remaining_m=distance if math.isfinite(distance) else None)\n\n        def observe_futures(self):\n            # 不调用 Future.result() 等待：仅在 done 后读取，执行器推进发生在 poll 中。\n            if self.send_future is not None and self.send_future.done():\n                future, self.send_future = self.send_future, None\n                try:\n                    handle = future.result()\n                    if handle is None:\n                        raise RuntimeError('目标应答没有 goal handle')\n                    self.goal_handle = handle\n                    self.response = 'accepted' if handle.accepted else 'rejected'\n                    self.emit('goal_response', state=self.response)\n                    if handle.accepted:\n                        self.result_future = handle.get_result_async()\n                    else:\n                        self.goal_may_exist = False\n                except Exception as exc:\n                    self.response = 'unknown'\n                    self.emit('goal_response_error', detail=str(exc))\n            if self.result_future is not None and self.result_future.done():\n                future, self.result_future = self.result_future, None\n                try:\n                    response = future.result()\n                    if response is None:\n                        raise RuntimeError('结果应答为空')\n                    self.result_response = response\n                    self.emit('result_response', status=int(response.status),\n                              error_code=int(response.result.error_code),\n                              error_msg=response.result.error_msg)\n                except Exception as exc:\n                    self.emit('result_error', detail=str(exc))\n\n        def terminal(self):\n            # GetResult 提供终态和 Nav2 错误详情；status 只证明软件终态，不含完整结果。\n            if self.result_response is not None and self.result_response.status in terminal_names:\n                return self.result_response.status, 'get_result'\n            if self.observed_status in terminal_names:\n                return self.observed_status, 'status_topic'\n            return None, 'unconfirmed'\n\n        def poll(self, executor, predicate, deadline, stop_early=True):\n            \"\"\"逐次有限 spin；deadline 是绝对 monotonic 秒，不受 /clock 暂停影响。\"\"\"\n            while True:\n                self.observe_futures()\n                if predicate():\n                    return 'done'\n                if stop['force'] or not self.context.ok():\n                    return 'interrupted'\n                if stop_early and stop['requested']:\n                    return 'interrupted'\n                remaining_s = deadline - time.monotonic()\n                if remaining_s <= 0.0:\n                    return 'timeout'\n                # 本节点没有长耗时回调。spin_once 的参数限制空闲等待，不抢占回调。\n                executor.spin_once(timeout_sec=min(0.05, remaining_s))\n\n        def cancel_and_wait(self, executor):\n            self.cancel_state = 'unconfirmed'\n            cancel_deadline = time.monotonic() + args.cancel_timeout\n            cancel_future = None\n            retry_at = time.monotonic()\n            self.emit('cancel_phase', timeout_s=args.cancel_timeout)\n            while self.context.ok() and not stop['force'] and time.monotonic() < cancel_deadline:\n                self.observe_futures()  # 仍接收迟到的接受应答，并取得正常结果 future。\n                if self.response == 'rejected' or self.terminal()[0] is not None:\n                    if self.cancel_attempts == 0:\n                        self.cancel_state = 'not_needed_rejected_or_terminal'\n                    break\n                now = time.monotonic()\n                if cancel_future is None and now >= retry_at and self.cancel_client.service_is_ready():\n                    request = CancelGoal.Request()\n                    request.goal_info.goal_id = self.goal_uuid\n                    # stamp 默认 sec=0/nanosec=0；不要填当前时间扩大到其他旧任务。\n                    cancel_future = self.cancel_client.call_async(request)\n                    self.cancel_attempts += 1\n                    self.emit('cancel_sent', attempt=self.cancel_attempts)\n                if cancel_future is not None and cancel_future.done():\n                    try:\n                        response = cancel_future.result()\n                        if response is None:\n                            raise RuntimeError('取消应答为空')\n                        own = any(bytes(g.goal_id.uuid) == bytes(self.goal_uuid.uuid)\n                                  for g in response.goals_canceling)\n                        self.emit('cancel_response', return_code=int(response.return_code),\n                                  own_goal_canceling=own)\n                        if response.return_code == CancelGoal.Response.ERROR_NONE and own:\n                            self.cancel_state = 'accepted_not_terminal'\n                            break\n                        if response.return_code == CancelGoal.Response.ERROR_UNKNOWN_GOAL_ID:\n                            # 接受应答丢失时，目标可能尚未注册；只在同一个取消总期限内重试。\n                            self.cancel_state = 'unknown_goal_id'\n                            cancel_future = None\n                            retry_at = now + 0.1\n                        else:\n                            self.cancel_state = ('already_terminal_unconfirmed'\n                                                 if response.return_code == CancelGoal.Response.ERROR_GOAL_TERMINATED\n                                                 else 'rejected_or_invalid')\n                            break\n                    except Exception as exc:\n                        self.cancel_state = 'response_error'\n                        self.emit('cancel_error', detail=str(exc))\n                        break\n                executor.spin_once(timeout_sec=min(0.05, max(0.0, cancel_deadline - time.monotonic())))\n            # 清理本地 service pending 登记，不等于撤销服务端工作或停止机器人。\n            if cancel_future is not None and not cancel_future.done():\n                self.cancel_client.remove_pending_request(cancel_future)\n                self.cancel_state = 'response_timeout'\n            elif self.cancel_state == 'unconfirmed':\n                self.cancel_state = 'service_unavailable_or_interrupted'\n            self.emit('terminal_wait', timeout_s=args.result_timeout,\n                      cancel_state=self.cancel_state)\n            self.poll(executor,\n                      lambda: self.terminal()[0] is not None or self.response == 'rejected',\n                      time.monotonic() + args.result_timeout, stop_early=False)\n\n        def execute(self, executor):\n            self.emit('preflight', frame=args.frame, goal_m_m_rad=args.goal,\n                      use_sim_time=args.sim_time,\n                      initial_pose='用户应在运行前设置；本客户端不发布 initialpose')\n            if args.sim_time:\n                self.trigger = 'clock_wait'\n                reason = self.poll(executor, lambda: self.get_clock().now().nanoseconds > 0,\n                                   time.monotonic() + args.clock_timeout)\n                if reason != 'done':\n                    self.trigger = 'clock_' + reason\n                    return self.finish()\n            self.trigger = 'server_wait'\n            reason = self.poll(executor, self.action.server_is_ready,\n                               time.monotonic() + args.server_timeout)\n            if reason != 'done':\n                self.trigger = 'server_' + reason\n                return self.finish()\n            if stop['requested']:\n                self.trigger = 'interrupted_before_send'\n                return self.finish()\n            goal = NavigateToPose.Goal()\n            goal.pose.header.frame_id = args.frame\n            goal.pose.header.stamp = self.get_clock().now().to_msg()\n            goal.pose.pose.position.x, goal.pose.pose.position.y = args.goal[:2]\n            yaw_rad = math.remainder(args.goal[2], 2.0 * math.pi)\n            goal.pose.pose.orientation.z = math.sin(yaw_rad / 2.0)\n            goal.pose.pose.orientation.w = math.cos(yaw_rad / 2.0)\n            # x/y 姿态分量默认零，sin²+cos²=1；不把 yaw 直接写进 quaternion.z。\n            goal.behavior_tree = ''  # 采用当前服务端配置的默认 BT，不跨版本指定 XML。\n            self.response = 'unknown'\n            self.goal_may_exist = True  # 即便发送过程异常，也不能假定远端没收到。\n            self.send_future = self.action.send_goal_async(\n                goal, feedback_callback=self.on_feedback, goal_uuid=self.goal_uuid)\n            self.emit('goal_sent')\n            self.trigger = 'goal_response_wait'\n            reason = self.poll(executor, lambda: self.response in ('accepted', 'rejected'),\n                               time.monotonic() + args.goal_response_timeout)\n            if self.response == 'rejected':\n                self.trigger = 'goal_rejected'\n                return self.finish()\n            if reason != 'done':\n                self.trigger = 'goal_response_' + reason\n                self.emit('acceptance_unknown', reason=self.trigger,\n                          detail='服务端可能已接受；按已知 UUID 有界请求取消，禁止自动重发目标')\n            else:\n                self.trigger = 'navigation_wait'\n                reason = self.poll(executor, lambda: self.terminal()[0] is not None,\n                                   time.monotonic() + args.timeout)\n                if reason == 'done':\n                    self.trigger = 'navigation_terminal'\n                    return self.finish()\n                self.trigger = 'navigation_' + reason\n            self.cancel_and_wait(executor)\n            return self.finish()\n\n        def finish(self):\n            self.observe_futures()\n            status, source = self.terminal()\n            name = terminal_names.get(status, 'unknown')\n            self.emit('summary', trigger=self.trigger, goal_response=self.response,\n                      terminal=name, terminal_source=source, cancel_state=self.cancel_state,\n                      cancel_attempts=self.cancel_attempts,\n                      nav2_result_available=self.result_response is not None,\n                      hardware_stop_verified=False)\n            # 非零表示上层不能按“导航成功”继续业务；unknown 特别禁止直接重发。\n            if self.response == 'rejected':\n                return 2\n            if name == 'succeeded' and self.trigger != 'navigation_terminal':\n                # 取消/超时与成功可能竞争；记录真实终态，但不冒充期限内业务成功。\n                return 6\n            return {'succeeded': 0, 'aborted': 3, 'canceled': 4}.get(name, 5)\n\n    context = Context()\n    node = executor = None\n    previous_handlers = {}\n    try:\n        rclpy.init(args=[], context=context, signal_handler_options=SignalHandlerOptions.NO)\n        node = BoundedNavigation(context)\n        executor = SingleThreadedExecutor(context=context)\n        executor.add_node(node)\n        for signum in (signal.SIGINT, signal.SIGTERM):\n            previous_handlers[signum] = signal.signal(signum, request_stop)\n        try:\n            return node.execute(executor)\n        except Exception as exc:\n            node.trigger = 'client_exception'\n            node.emit('client_error', detail=str(exc))\n            if node.goal_may_exist and node.terminal()[0] is None:\n                try:\n                    node.cancel_and_wait(executor)\n                except Exception as cancel_exc:\n                    node.emit('cancel_path_error', detail=str(cancel_exc))\n            return node.finish()\n    finally:\n        # 本例单线程、回调短，不启动后台任务。取消不靠销毁对象完成。\n        if executor is not None:\n            if node is not None:\n                executor.remove_node(node)\n            executor.shutdown(timeout_sec=0.0)\n        if node is not None:\n            node.action.destroy()\n            node.destroy_node()\n        if context.ok():\n            rclpy.shutdown(context=context)\n        for signum, handler in previous_handlers.items():\n            signal.signal(signum, handler)\n\n\nif __name__ == '__main__':\n    sys.exit(main())\n",
+              "explanation": "完整 ROS 依赖单文件应用，保存为 examples/navigation/bounded_navigation.py；运行需要已准备好的 Jazzy/rclpy/nav2_msgs 环境及正确的导航服务，标准库实验与本文件分开验证。输入 --goal X米 Y米 YAW弧度，初始定位必须预先由用户明确完成；没有 --start，也不发布 initialpose。所有协议阶段使用 monotonic 软期限，日志分开报告目标应答、取消应答和软件终态。示例：python3 examples/navigation/bounded_navigation.py --goal 1.0 0.5 0.0 --sim-time；数值必须换成当前地图确认的自由目标。完整 CLI 和可复现的隔离协议实验见 examples/navigation/README.md。"
+            }
+          }
+        },
+        "4": {
+          "paragraphs": [
+            "扩展巡检时，按路点记录唯一 UUID、坐标、提交/接受时刻、取消请求/应答、终态来源及错误详情。必须等上一目标得到可解释终态再按业务规则进入下一点。unknown 需要独立监督核对旧目标是否仍在运行，不能直接重新发送同一业务目标；否则两个远端任务可能竞争。重试次数和整体业务期限都要有上限。",
+            "导航 succeeded 后可能还要验证停稳、采图或读表。这些是独立业务阶段，软件状态与实际测量分别记录；巡检日志不能把失败点算成已到达。中断后只凭持久化的完整状态决定恢复位置，不能因为客户端上次已经退出就假定远端停止或不可重复动作尚未执行。"
+          ]
+        },
+        "6": {
+          "paragraphs": [
+            "先在隔离假服务端验证协议路径，再在匹配的 Jazzy 仿真中验证导航。当前假服务端已覆盖十二类：服务不存在、成功、拒绝、失败、导航超时取消、迟到接受、目标无应答、取消无应答、取消无终态、暂停正值 clock、Ctrl+C、clock 缺失。服务器发现和执行期限均由客户端 monotonic 记录；没有 Nav2、Gazebo 或硬件参与，不能将协议通过写成已完成导航验收。",
+            "完整仿真仍需测试自由目标、不可达目标、移动中取消和封路恢复，并同时记录地图/参数版本、初始位姿、目标、Action 日志、TF、clock、速度命令和速度测量。取消受理与实际减速的延迟分别统计。回调中不加入阻塞图像计算或网络请求，以免推迟反馈和取消；任务逻辑耗时业务应另设受控异步阶段。"
+          ]
+        }
+      },
+      "steps": {
+        "0": {
+          "title": "先检查生命周期、定位与动作接口",
+          "body": "用户先在匹配的仿真地图中明确设置初始定位，核对 TF 和时钟；客户端只发送导航目标，不再接受 --start 或发布 initialpose。命令只证明接口/状态可见，还要观察定位是否收敛。",
+          "language": "bash",
+          "code": "# 每个终端加载同一个 Jazzy 环境后逐项核对。\nros2 lifecycle get /amcl\nros2 lifecycle get /bt_navigator\nros2 action list -t\nros2 action info /navigate_to_pose\n# 持续观察 TF 后用 Ctrl+C 结束；不要修改时间戳掩盖错误。\nros2 run tf2_ros tf2_echo map base_link"
+        },
+        "1": {
+          "title": "保存公开异步 API 的完整单目标客户端",
+          "body": "把正文完整源码保存为 examples/navigation/bounded_navigation.py；运行 --help 检查六个期限窗口。源码通过 UUID 关联目标、取消与终态，不调用 waitUntilNav2Active/goToPose/cancelTask，也不隐式初始化定位。",
+          "code": "# 这里只显示帮助，不发目标，也不需要正在运行的服务器。\npython3 examples/navigation/bounded_navigation.py --help",
+          "language": "bash"
+        },
+        "2": {
+          "title": "用当前地图自由目标运行并核对每个阶段",
+          "body": "以下示例数值必须换成自己确认的自由目标，位置米、yaw弧度。--sim-time 与服务器保持一致；--timeout 限制接受后的导航，其他窗口分别限制启动、目标应答、取消应答和终态。unknown 禁止直接重发；任何终态均不等于停车证据。",
+          "code": "# 从 ros2-learning-hub 目录运行，先 source 同一个 Jazzy 环境。\nsource /opt/ros/jazzy/setup.bash\n# 运行前已在 RViz 设置初始定位，核对 TF、时钟及生命周期。\n# 下面数值仅示范参数格式，必须替换成自己确认的 map 自由目标。\npython3 examples/navigation/bounded_navigation.py --goal 1.0 0.5 0.0 --sim-time --clock-timeout 5 --server-timeout 10 --goal-response-timeout 5 --timeout 60 --cancel-timeout 3 --result-timeout 5",
+          "language": "bash"
+        }
+      },
+      "expected": [
+        "每个目标有唯一 UUID，接受/拒绝/unknown、取消应答与终态分别记录。",
+        "各协议等待使用独立 monotonic 软期限；缺失应答不会被外层无限等待掩盖。",
+        "隔离假服务端十二类协议断言已完成；完整 Nav2/Gazebo 与硬件停车仍未验证。"
+      ],
+      "pitfalls": [
+        "把目标应答超时当拒绝而直接重发，造成旧任务可能仍在执行。",
+        "取消应答成功却没有核对本 UUID 与最终终态；更不能把进程返回当停车。",
+        "调用含内部无界等待的高层 API 后才检查 deadline。",
+        "客户端与 RViz 重复隐式设置初始位姿，或把 frame 标签改动误当坐标转换。",
+        "使用其他发行版 BT 插件/XML，或在回调内加入长阻塞操作。"
+      ],
+      "validation": "2026-11-07 已完成 AST/语法与 CLI 有限值断言；核对本地 Jazzy 一手源码及本机 rclpy/Nav2 消息签名。已在 ROS_DOMAIN_ID=217、仅本机发现和唯一 /bounded_probe_* 假动作名下完成十二类 Action 协议故障注入断言，包括接受迟到、取消无应答、取消无终态、暂停 clock 与 Ctrl+C。实际只启动假服务端；Nav2、Gazebo、定位、规划、控制和真实硬件均未运行。离线停车/幂等规则实验的结果与这些协议验证分别记录。"
+    },
+    "project-navigation": {
+      "sections": {
+        "3": {
+          "paragraphs": [
+            "RViz Nav2 Goal 适合人工确认自由目标；Simple Commander 以 BasicNavigator 简化任务编排；原生 rclpy/rclcpp ActionClient 暴露目标应答、反馈、结果和取消过程。三种入口都要满足地图、定位、TF、时钟及生命周期合同。高层封装降低样板代码，但不会自动保证定位正确或严格限制全部等待。",
+            "本地 Jazzy 源码的 goToPose 含无限服务器发现循环及无 timeout 的目标应答等待，cancelTask 也内部等待取消应答；在调用之后检查 deadline+5 无法约束它们。waitUntilNav2Active(localizer=amcl) 还会在尚未处理 AMCL 回调时发布保存的初始位姿，不是纯等待。下方替代客户端不调用这三个方法，不创建 initialpose 发布器；初始定位由用户先在 RViz 等界面明确设置。",
+            "本例把时钟接入、Action 服务发现、目标应答、导航执行、取消应答和最终终态分成六个窗口。默认分别是五、十、五、六十、三和五个单调秒；启用 --sim-time 时才使用时钟等待窗口。--timeout 从客户端观察到接受之后计时，取消阶段的发现、应答和有限重试共用 --cancel-timeout，不会因重试重置。spin_once 的有限 timeout 只约束空闲等待，不能抢占回调；普通操作系统调度与阻塞日志仍会增加耗时，因此这是协议软期限。",
+            "目标应答超时不能当作拒绝。请求可能已被服务端接受，客户端保留发送前生成的 UUID，记录 goal_response=unknown，并用公开 CancelGoal 服务按这个 UUID 请求有界取消。非零 UUID 配零时间戳只指向本目标；不得用零 UUID 加零时间戳无意取消所有任务。ERROR_NONE 且 goals_canceling 包含本 UUID 才说明取消受理，仍须等结果或精确 UUID 的终态状态。UNKNOWN_GOAL_ID 可能是目标尚未登记，有限重试结束后若无终态仍为 unknown，禁止直接重发目标。",
+            "有 goal handle 时，get_result_async 返回的应答包含 status 以及 Nav2 error_code/error_msg；仅在 Future.done 后读取，不同步阻塞。客户端同时监听精确 UUID 的状态，以便目标应答丢失时仍能看到软件终态。来自状态话题的终态不包含完整错误详情，日志明确标注 terminal_source=status_topic 和 nav2_result_available=false。取消请求、取消受理、软件 canceled、进程退出与物理停车是不同证据；summary 始终标记 hardware_stop_verified=false，仍须独立检查速度测量与停止链。",
+            "保存完整源码为 examples/navigation/bounded_navigation.py，运行 python3 examples/navigation/bounded_navigation.py --goal X Y YAW --sim-time，其中 X/Y 为 map 中米、YAW 为弧度，须取当前地图已确认的自由目标。--frame 与 --action-name 可显式匹配命名空间。首次 Ctrl+C 请求取消，第二次停止等待仍不证明远端停止；晚到成功在超时/中断路径中以非零退出码6标记，不冒充业务按时成功。"
+          ],
+          "codeBlocks": {
+            "0": {
+              "label": "bounded_navigation.py",
+              "language": "python",
+              "type": "complete",
+              "code": "#!/usr/bin/env python3\n\"\"\"ROS 2 Jazzy / Nav2 的有界单目标教学客户端，只用于已检查的仿真。\n\n输入：--goal X Y YAW，X/Y 为 --frame 中的米，YAW 为绕 +Z 轴的弧度。\n输出：逐行 JSON 协议事件和一条 summary；软件结果不证明物理机器人已停车。\n前提：用户先在 RViz 等界面明确设置初始定位，并检查 TF、地图、生命周期与时钟。\n本程序不发布 initialpose、不启动 Nav2、不验证目标位于地图自由空间，也不重发目标。\n所有等待都由 monotonic 经过时间限制；这是普通操作系统上的软期限，并非硬实时保证。\n\"\"\"\n\nimport argparse\nimport json\nimport math\nimport signal\nimport sys\nimport time\nimport uuid\n\n\ndef positive_seconds(text):\n    \"\"\"解析秒：拒绝 NaN、无穷、零、负数与超过一天的教学配置。\"\"\"\n    value = float(text)\n    if not math.isfinite(value) or not 0.0 < value <= 86400.0:\n        raise argparse.ArgumentTypeError('期限须是 (0, 86400] 内的有限秒数')\n    return value\n\n\ndef parse_args(argv=None):\n    parser = argparse.ArgumentParser(description=__doc__)\n    parser.add_argument('--goal', nargs=3, type=float, required=True,\n                        metavar=('X_M', 'Y_M', 'YAW_RAD'))\n    parser.add_argument('--frame', default='map', help='目标参考系，默认 map')\n    parser.add_argument('--action-name', default='/navigate_to_pose',\n                        help='绝对 Action 名；命名空间示例 /robot1/navigate_to_pose')\n    parser.add_argument('--sim-time', action='store_true', help='使用 /clock ROS 仿真时间戳')\n    parser.add_argument('--clock-timeout', type=positive_seconds, default=5.0,\n                        help='等待正的仿真时间上限，单调秒；默认 5')\n    parser.add_argument('--server-timeout', type=positive_seconds, default=10.0,\n                        help='发现 Action 服务端上限，单调秒；默认 10')\n    parser.add_argument('--goal-response-timeout', type=positive_seconds, default=5.0,\n                        help='提交后等待目标接受/拒绝应答上限，单调秒；默认 5')\n    parser.add_argument('--timeout', type=positive_seconds, default=60.0,\n                        help='观察到目标接受后导航期限，单调秒；默认 60')\n    parser.add_argument('--cancel-timeout', type=positive_seconds, default=3.0,\n                        help='取消服务发现及所有取消应答/重试的合计上限，单调秒；默认 3')\n    parser.add_argument('--result-timeout', type=positive_seconds, default=5.0,\n                        help='取消阶段后等待结果或终态状态的上限，单调秒；默认 5')\n    args = parser.parse_args(argv)\n    if not all(math.isfinite(v) for v in args.goal):\n        parser.error('目标位置和朝向必须是有限数值，不能为 NaN 或无穷')\n    # 这个宽松上限只拦截明显量纲/输入错误，不表示地图范围或导航安全边界。\n    if any(abs(v) > 1.0e6 for v in args.goal):\n        parser.error('教学输入要求 |X|、|Y|≤10^6 米，|YAW|≤10^6 弧度；请先核对单位')\n    if not args.frame or args.frame.startswith('/') or any(c.isspace() for c in args.frame):\n        parser.error('TF frame 必须非空、无空白且不以 / 开头，例如 map 或 robot1/map')\n    if not args.action_name.startswith('/') or args.action_name.endswith('/'):\n        parser.error('action-name 必须是无结尾 / 的绝对名称')\n    return args\n\n\ndef main(argv=None):\n    args = parse_args(argv)\n    # 延迟导入让普通 Python 环境仍可查看 --help；实际通信需要 source Jazzy。\n    import rclpy\n    from action_msgs.msg import GoalStatus, GoalStatusArray\n    from action_msgs.srv import CancelGoal\n    from nav2_msgs.action import NavigateToPose\n    from rclpy.action import ActionClient\n    from rclpy.context import Context\n    from rclpy.executors import SingleThreadedExecutor\n    from rclpy.node import Node\n    from rclpy.parameter import Parameter\n    from rclpy.qos import qos_profile_action_status_default\n    from rclpy.signals import SignalHandlerOptions\n    from rclpy.validate_full_topic_name import validate_full_topic_name\n    from unique_identifier_msgs.msg import UUID\n\n    validate_full_topic_name(args.action_name)\n    terminal_names = {\n        GoalStatus.STATUS_SUCCEEDED: 'succeeded',\n        GoalStatus.STATUS_CANCELED: 'canceled',\n        GoalStatus.STATUS_ABORTED: 'aborted',\n    }\n    # 默认 rclpy SIGINT 会关闭上下文，来不及进行取消协议；改成只记录退出意图。\n    # 首次 Ctrl+C 请求有界取消，第二次 Ctrl+C 立即退出等待并报告可能仍在执行。\n    stop = {'requested': False, 'force': False}\n\n    def request_stop(signum, _frame):\n        if stop['requested']:\n            stop['force'] = True\n        stop['requested'] = True\n\n    class BoundedNavigation(Node):\n        def __init__(self, context):\n            super().__init__('bounded_navigation', context=context,\n                             parameter_overrides=[Parameter('use_sim_time', value=args.sim_time)])\n            self.started = time.monotonic()\n            self.goal_uuid = UUID(uuid=list(uuid.uuid4().bytes))  # 本次唯一且非零；发送前就保存。\n            self.goal_hex = bytes(self.goal_uuid.uuid).hex()\n            self.action = ActionClient(self, NavigateToPose, args.action_name)\n            # 公共标准取消服务：无 goal handle 时也能按已保存 UUID 请求取消。\n            # 非零 UUID + 零时间戳表示只取消该 UUID，绝不发送“取消所有目标”。\n            self.cancel_client = self.create_client(CancelGoal, args.action_name + '/_action/cancel_goal')\n            self.status_sub = self.create_subscription(\n                GoalStatusArray, args.action_name + '/_action/status', self.on_status,\n                qos_profile_action_status_default)\n            self.send_future = None\n            self.result_future = None\n            self.goal_handle = None\n            self.response = 'not_sent'\n            self.goal_may_exist = False\n            self.result_response = None\n            self.observed_status = None\n            self.cancel_state = 'not_requested'\n            self.cancel_attempts = 0\n            self.last_feedback = float('-inf')\n            self.trigger = 'not_started'\n\n        def emit(self, event, **fields):\n            # 每条事件带 UUID 和单调经过秒；节点 ROS 时间只用于消息时间戳。\n            print(json.dumps(dict(event=event, goal_uuid=self.goal_hex,\n                                  elapsed_s=round(time.monotonic() - self.started, 3), **fields),\n                             ensure_ascii=False, allow_nan=False), flush=True)\n\n        def on_status(self, message):\n            for item in message.status_list:\n                # 只观察自己的目标，忽略历史任务与其他客户端的状态。\n                if bytes(item.goal_info.goal_id.uuid) == bytes(self.goal_uuid.uuid):\n                    if item.status in terminal_names:\n                        self.observed_status = item.status\n\n        def on_feedback(self, message):\n            if bytes(message.goal_id.uuid) != bytes(self.goal_uuid.uuid):\n                return\n            now = time.monotonic()\n            if now - self.last_feedback >= 1.0:\n                self.last_feedback = now\n                distance = float(message.feedback.distance_remaining)\n                # 无效反馈只记为空，不能令 JSON NaN 或反馈异常中断取消监督。\n                self.emit('feedback', distance_remaining_m=distance if math.isfinite(distance) else None)\n\n        def observe_futures(self):\n            # 不调用 Future.result() 等待：仅在 done 后读取，执行器推进发生在 poll 中。\n            if self.send_future is not None and self.send_future.done():\n                future, self.send_future = self.send_future, None\n                try:\n                    handle = future.result()\n                    if handle is None:\n                        raise RuntimeError('目标应答没有 goal handle')\n                    self.goal_handle = handle\n                    self.response = 'accepted' if handle.accepted else 'rejected'\n                    self.emit('goal_response', state=self.response)\n                    if handle.accepted:\n                        self.result_future = handle.get_result_async()\n                    else:\n                        self.goal_may_exist = False\n                except Exception as exc:\n                    self.response = 'unknown'\n                    self.emit('goal_response_error', detail=str(exc))\n            if self.result_future is not None and self.result_future.done():\n                future, self.result_future = self.result_future, None\n                try:\n                    response = future.result()\n                    if response is None:\n                        raise RuntimeError('结果应答为空')\n                    self.result_response = response\n                    self.emit('result_response', status=int(response.status),\n                              error_code=int(response.result.error_code),\n                              error_msg=response.result.error_msg)\n                except Exception as exc:\n                    self.emit('result_error', detail=str(exc))\n\n        def terminal(self):\n            # GetResult 提供终态和 Nav2 错误详情；status 只证明软件终态，不含完整结果。\n            if self.result_response is not None and self.result_response.status in terminal_names:\n                return self.result_response.status, 'get_result'\n            if self.observed_status in terminal_names:\n                return self.observed_status, 'status_topic'\n            return None, 'unconfirmed'\n\n        def poll(self, executor, predicate, deadline, stop_early=True):\n            \"\"\"逐次有限 spin；deadline 是绝对 monotonic 秒，不受 /clock 暂停影响。\"\"\"\n            while True:\n                self.observe_futures()\n                if predicate():\n                    return 'done'\n                if stop['force'] or not self.context.ok():\n                    return 'interrupted'\n                if stop_early and stop['requested']:\n                    return 'interrupted'\n                remaining_s = deadline - time.monotonic()\n                if remaining_s <= 0.0:\n                    return 'timeout'\n                # 本节点没有长耗时回调。spin_once 的参数限制空闲等待，不抢占回调。\n                executor.spin_once(timeout_sec=min(0.05, remaining_s))\n\n        def cancel_and_wait(self, executor):\n            self.cancel_state = 'unconfirmed'\n            cancel_deadline = time.monotonic() + args.cancel_timeout\n            cancel_future = None\n            retry_at = time.monotonic()\n            self.emit('cancel_phase', timeout_s=args.cancel_timeout)\n            while self.context.ok() and not stop['force'] and time.monotonic() < cancel_deadline:\n                self.observe_futures()  # 仍接收迟到的接受应答，并取得正常结果 future。\n                if self.response == 'rejected' or self.terminal()[0] is not None:\n                    if self.cancel_attempts == 0:\n                        self.cancel_state = 'not_needed_rejected_or_terminal'\n                    break\n                now = time.monotonic()\n                if cancel_future is None and now >= retry_at and self.cancel_client.service_is_ready():\n                    request = CancelGoal.Request()\n                    request.goal_info.goal_id = self.goal_uuid\n                    # stamp 默认 sec=0/nanosec=0；不要填当前时间扩大到其他旧任务。\n                    cancel_future = self.cancel_client.call_async(request)\n                    self.cancel_attempts += 1\n                    self.emit('cancel_sent', attempt=self.cancel_attempts)\n                if cancel_future is not None and cancel_future.done():\n                    try:\n                        response = cancel_future.result()\n                        if response is None:\n                            raise RuntimeError('取消应答为空')\n                        own = any(bytes(g.goal_id.uuid) == bytes(self.goal_uuid.uuid)\n                                  for g in response.goals_canceling)\n                        self.emit('cancel_response', return_code=int(response.return_code),\n                                  own_goal_canceling=own)\n                        if response.return_code == CancelGoal.Response.ERROR_NONE and own:\n                            self.cancel_state = 'accepted_not_terminal'\n                            break\n                        if response.return_code == CancelGoal.Response.ERROR_UNKNOWN_GOAL_ID:\n                            # 接受应答丢失时，目标可能尚未注册；只在同一个取消总期限内重试。\n                            self.cancel_state = 'unknown_goal_id'\n                            cancel_future = None\n                            retry_at = now + 0.1\n                        else:\n                            self.cancel_state = ('already_terminal_unconfirmed'\n                                                 if response.return_code == CancelGoal.Response.ERROR_GOAL_TERMINATED\n                                                 else 'rejected_or_invalid')\n                            break\n                    except Exception as exc:\n                        self.cancel_state = 'response_error'\n                        self.emit('cancel_error', detail=str(exc))\n                        break\n                executor.spin_once(timeout_sec=min(0.05, max(0.0, cancel_deadline - time.monotonic())))\n            # 清理本地 service pending 登记，不等于撤销服务端工作或停止机器人。\n            if cancel_future is not None and not cancel_future.done():\n                self.cancel_client.remove_pending_request(cancel_future)\n                self.cancel_state = 'response_timeout'\n            elif self.cancel_state == 'unconfirmed':\n                self.cancel_state = 'service_unavailable_or_interrupted'\n            self.emit('terminal_wait', timeout_s=args.result_timeout,\n                      cancel_state=self.cancel_state)\n            self.poll(executor,\n                      lambda: self.terminal()[0] is not None or self.response == 'rejected',\n                      time.monotonic() + args.result_timeout, stop_early=False)\n\n        def execute(self, executor):\n            self.emit('preflight', frame=args.frame, goal_m_m_rad=args.goal,\n                      use_sim_time=args.sim_time,\n                      initial_pose='用户应在运行前设置；本客户端不发布 initialpose')\n            if args.sim_time:\n                self.trigger = 'clock_wait'\n                reason = self.poll(executor, lambda: self.get_clock().now().nanoseconds > 0,\n                                   time.monotonic() + args.clock_timeout)\n                if reason != 'done':\n                    self.trigger = 'clock_' + reason\n                    return self.finish()\n            self.trigger = 'server_wait'\n            reason = self.poll(executor, self.action.server_is_ready,\n                               time.monotonic() + args.server_timeout)\n            if reason != 'done':\n                self.trigger = 'server_' + reason\n                return self.finish()\n            if stop['requested']:\n                self.trigger = 'interrupted_before_send'\n                return self.finish()\n            goal = NavigateToPose.Goal()\n            goal.pose.header.frame_id = args.frame\n            goal.pose.header.stamp = self.get_clock().now().to_msg()\n            goal.pose.pose.position.x, goal.pose.pose.position.y = args.goal[:2]\n            yaw_rad = math.remainder(args.goal[2], 2.0 * math.pi)\n            goal.pose.pose.orientation.z = math.sin(yaw_rad / 2.0)\n            goal.pose.pose.orientation.w = math.cos(yaw_rad / 2.0)\n            # x/y 姿态分量默认零，sin²+cos²=1；不把 yaw 直接写进 quaternion.z。\n            goal.behavior_tree = ''  # 采用当前服务端配置的默认 BT，不跨版本指定 XML。\n            self.response = 'unknown'\n            self.goal_may_exist = True  # 即便发送过程异常，也不能假定远端没收到。\n            self.send_future = self.action.send_goal_async(\n                goal, feedback_callback=self.on_feedback, goal_uuid=self.goal_uuid)\n            self.emit('goal_sent')\n            self.trigger = 'goal_response_wait'\n            reason = self.poll(executor, lambda: self.response in ('accepted', 'rejected'),\n                               time.monotonic() + args.goal_response_timeout)\n            if self.response == 'rejected':\n                self.trigger = 'goal_rejected'\n                return self.finish()\n            if reason != 'done':\n                self.trigger = 'goal_response_' + reason\n                self.emit('acceptance_unknown', reason=self.trigger,\n                          detail='服务端可能已接受；按已知 UUID 有界请求取消，禁止自动重发目标')\n            else:\n                self.trigger = 'navigation_wait'\n                reason = self.poll(executor, lambda: self.terminal()[0] is not None,\n                                   time.monotonic() + args.timeout)\n                if reason == 'done':\n                    self.trigger = 'navigation_terminal'\n                    return self.finish()\n                self.trigger = 'navigation_' + reason\n            self.cancel_and_wait(executor)\n            return self.finish()\n\n        def finish(self):\n            self.observe_futures()\n            status, source = self.terminal()\n            name = terminal_names.get(status, 'unknown')\n            self.emit('summary', trigger=self.trigger, goal_response=self.response,\n                      terminal=name, terminal_source=source, cancel_state=self.cancel_state,\n                      cancel_attempts=self.cancel_attempts,\n                      nav2_result_available=self.result_response is not None,\n                      hardware_stop_verified=False)\n            # 非零表示上层不能按“导航成功”继续业务；unknown 特别禁止直接重发。\n            if self.response == 'rejected':\n                return 2\n            if name == 'succeeded' and self.trigger != 'navigation_terminal':\n                # 取消/超时与成功可能竞争；记录真实终态，但不冒充期限内业务成功。\n                return 6\n            return {'succeeded': 0, 'aborted': 3, 'canceled': 4}.get(name, 5)\n\n    context = Context()\n    node = executor = None\n    previous_handlers = {}\n    try:\n        rclpy.init(args=[], context=context, signal_handler_options=SignalHandlerOptions.NO)\n        node = BoundedNavigation(context)\n        executor = SingleThreadedExecutor(context=context)\n        executor.add_node(node)\n        for signum in (signal.SIGINT, signal.SIGTERM):\n            previous_handlers[signum] = signal.signal(signum, request_stop)\n        try:\n            return node.execute(executor)\n        except Exception as exc:\n            node.trigger = 'client_exception'\n            node.emit('client_error', detail=str(exc))\n            if node.goal_may_exist and node.terminal()[0] is None:\n                try:\n                    node.cancel_and_wait(executor)\n                except Exception as cancel_exc:\n                    node.emit('cancel_path_error', detail=str(cancel_exc))\n            return node.finish()\n    finally:\n        # 本例单线程、回调短，不启动后台任务。取消不靠销毁对象完成。\n        if executor is not None:\n            if node is not None:\n                executor.remove_node(node)\n            executor.shutdown(timeout_sec=0.0)\n        if node is not None:\n            node.action.destroy()\n            node.destroy_node()\n        if context.ok():\n            rclpy.shutdown(context=context)\n        for signum, handler in previous_handlers.items():\n            signal.signal(signum, handler)\n\n\nif __name__ == '__main__':\n    sys.exit(main())\n",
+              "explanation": "完整 ROS 依赖单文件应用，保存为 examples/navigation/bounded_navigation.py；运行需要已准备好的 Jazzy/rclpy/nav2_msgs 环境及正确的导航服务，标准库实验与本文件分开验证。输入 --goal X米 Y米 YAW弧度，初始定位必须预先由用户明确完成；没有 --start，也不发布 initialpose。所有协议阶段使用 monotonic 软期限，日志分开报告目标应答、取消应答和软件终态。示例：python3 examples/navigation/bounded_navigation.py --goal 1.0 0.5 0.0 --sim-time；数值必须换成当前地图确认的自由目标。完整 CLI 和可复现的隔离协议实验见 examples/navigation/README.md。"
+            }
+          }
+        },
+        "4": {
+          "paragraphs": [
+            "为每个目标在发送前生成唯一 UUID，至少区分等待服务器、等待应答、接受或拒绝、执行、请求取消和终态。目标应答超时为 unknown，因为服务端可能已经接受；记录 UUID 后按单目标取消协议处理。新任务不能复用旧 UUID；旧目标迟到结果不能覆盖新目标。",
+            "成功、取消和失败分别触发业务后续；unknown 需要独立监督先确认远端旧任务状态，不能无条件重发。取消响应表示取消请求被受理或拒绝，终态消息表示软件状态；二者都不能代替速度测量。仿真时间可以暂停或重置，外层业务期限使用 monotonic，消息仍保留正确 ROS 时间戳。",
+            "本章标准库实验故意生成旧任务成功、当前任务取消、当前任务再次成功三条事件，只接受当前任务首个终态，验证幂等规则。新增假服务端实验另行验证实际 ROS Action 协议中的应答和超时，不替代导航栈或物理控制验证。两层记录均有范围，不能把规则实验的成功推断成真正导航或硬件已经运行。"
+          ]
+        },
+        "6": {
+          "paragraphs": [
+            "完整导航仿真按固定顺序覆盖自由目标成功、障碍目标拒绝或失败、运动中取消、封路重规划或失败。每类保存初始位姿、目标、地图与参数版本、接受/取消/终态、耗时和 bag；重放时明确录制源和实时源，避免两套 scan/odom 污染同一计算图。若结果未知，先核对旧目标状态和监督停止流程再决定是否重试。",
+            "扩展建图时独立配置 SLAM，避免与定位节点重复发布全局变换；保存图数据及栅格地图各自用途。记录 map→odom、odom→base_link 的单一发布责任、时间戳和 clock 行为，避免把建图与定位切换缩减为替换一个节点名。停车算例只是恒速反应加恒减速模型，实际运动与停止须另测。",
+            "本轮已运行标准库停车/终态规则实验，以及独立域、仅本机假 Action 服务端的十二类协议断言，包括迟到接受、取消无应答、取消无终态、暂停 clock 与 Ctrl+C。没有启动 Nav2、Gazebo、地图定位或真实底盘；安装命令、完整导航、bag 重放及物理停止仍为待执行步骤。假服务端复现代码和逐阶段参数见 examples/navigation/README.md；不能引用本章预计现象冒充这些工程步骤的实测日志。"
+          ]
+        }
+      },
+      "steps": {
+        "0": {
+          "body": "从 ros2-learning-hub 执行本条标准库实验，只计算停车模型与终态幂等规则。正文另外提供有界 ROS 单目标客户端及假服务端测试；其协议验证范围与本条数值结果独立，不意味着已运行 Nav2 或硬件。"
+        }
+      },
+      "expected": [
+        "标准库停车距离为0.345 m，旧任务结果被忽略，当前任务只接受首个终态 CANCELED。",
+        "公开异步客户端按唯一 UUID 区分目标应答、取消受理、软件终态和 unknown。",
+        "假服务端十二类协议场景断言已完成；Nav2/Gazebo 与物理停车仍待按记录逐项验证。"
+      ],
+      "pitfalls": [
+        "地图与世界不匹配，或多个节点发布同一 TF 子坐标系。",
+        "目标应答超时后假定目标未接受，随即重复发送。",
+        "以无 timeout 的高层等待配外层 deadline，误以为所有阶段有界。",
+        "取消受理、软件终态、cmd_vel 归零或客户端退出被当成物理停车。",
+        "用户已设置初始定位，客户端又隐式发布未初始化位姿。"
+      ],
+      "validation": "2026-11-07 已完成 AST/语法与 CLI 有限值断言；核对本地 Jazzy 一手源码及本机 rclpy/Nav2 消息签名。已在 ROS_DOMAIN_ID=217、仅本机发现和唯一 /bounded_probe_* 假动作名下完成十二类 Action 协议故障注入断言，包括接受迟到、取消无应答、取消无终态、暂停 clock 与 Ctrl+C。实际只启动假服务端；Nav2、Gazebo、定位、规划、控制和真实硬件均未运行。离线停车/幂等规则实验的结果与这些协议验证分别记录。"
+    }
+  }
+}

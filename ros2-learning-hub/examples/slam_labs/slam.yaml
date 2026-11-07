@@ -1,0 +1,45 @@
+# 此配置用于本机隔离的同步建图。定位进程在命令行另设 mode 与 use_map_saver。
+# /clock 在进程启动时重映射到回放钟。scan 是命名空间内的回放入口。
+/**:
+  ros__parameters:
+    use_sim_time: true
+    use_lifecycle_manager: false
+    mode: mapping
+    solver_plugin: solver_plugins::CeresSolver
+    ceres_linear_solver: SPARSE_NORMAL_CHOLESKY
+    ceres_preconditioner: SCHUR_JACOBI
+    ceres_trust_strategy: LEVENBERG_MARQUARDT
+    ceres_loss_function: None
+    odom_frame: odom
+    map_frame: map
+    base_frame: base_link
+    scan_topic: scan
+    map_name: map
+    use_map_saver: true
+    enable_interactive_mode: false
+    # 时间为 s，分辨率和量程为 m，角度为 rad。采集窗为 0.40 s。
+    transform_publish_period: 0.05
+    map_update_interval: 0.20
+    resolution: 0.05
+    min_laser_range: 0.10
+    max_laser_range: 8.0
+    minimum_time_interval: 0.10
+    transform_timeout: 0.20
+    tf_buffer_duration: 30.0
+    restamp_tf: false
+    scan_queue_size: 20
+    throttle_scans: 1
+    minimum_travel_distance: 0.15
+    minimum_travel_heading: 0.12
+    check_min_dist_and_heading_precisely: true
+    use_scan_matching: true
+    use_scan_barycenter: true
+    scan_buffer_size: 10
+    scan_buffer_maximum_scan_distance: 8.0
+    link_scan_maximum_distance: 1.5
+    do_loop_closing: true
+    loop_search_maximum_distance: 1.2
+    loop_match_minimum_chain_size: 6
+    loop_match_maximum_variance_coarse: 3.0
+    loop_match_minimum_response_coarse: 0.35
+    loop_match_minimum_response_fine: 0.45

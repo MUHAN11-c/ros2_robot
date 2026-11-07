@@ -1,0 +1,1142 @@
+{
+  "schemaVersion": 1,
+  "status": "approved_for_bounded_iteration6_assets_and_integration",
+  "approved": true,
+  "checkedAt": "2026-11-07T06:32:49.196248+08:00",
+  "scope": [
+    "研究范围保持eco-model-rviz/eco-tf-frames、固定官方实现与安装版本；原始缺口和一手依据保留。",
+    "独立只读复核根代理8份model_labs原创源/输入、两份终态报告及本轮整合器；只写本JSON，不更改教材/实验/参考源码。",
+    "本代理实际DDS运行数为0；批准依据为已保存真实运行报告、原始日志/安装产物/数值与当前源码指纹的独立复核，不重跑已通过实验。",
+    "补充只读复核model-portable报告、原95文件下载ZIP和独立解压复现；两核心报告仍是正文表格来源。"
+  ],
+  "sourceRecords": [
+    {
+      "id": "rsp",
+      "repository": "ros/robot_state_publisher",
+      "commit": "d1b994d2d2eb19e4d2886be57211114134f25b50",
+      "path": "src/robot_state_publisher.cpp",
+      "version": "3.3.4",
+      "sourceUrl": "https://raw.githubusercontent.com/ros/robot_state_publisher/d1b994d2d2eb19e4d2886be57211114134f25b50/src/robot_state_publisher.cpp",
+      "sha256": "c0594eba399a7574edff923bec71f2953ad36e4972e6f7e8008c10cbc3fcc3be",
+      "lineCount": 429,
+      "verification": "只读固定官方源字节/行号，不启动DDS或运行上游工程",
+      "localPath": "references/sources/ecosystem/ros--robot_state_publisher/jazzy--d1b994d2d2eb/src/robot_state_publisher.cpp",
+      "referenceSha256": "c0594eba399a7574edff923bec71f2953ad36e4972e6f7e8008c10cbc3fcc3be",
+      "referenceEqualsRelease": true,
+      "lineRanges": [
+        {
+          "start": 117,
+          "end": 150
+        },
+        {
+          "start": 164,
+          "end": 180
+        },
+        {
+          "start": 221,
+          "end": 248
+        },
+        {
+          "start": 252,
+          "end": 298
+        },
+        {
+          "start": 300,
+          "end": 362
+        },
+        {
+          "start": 391,
+          "end": 419
+        }
+      ],
+      "observation": "固定/活动map分开；JointState仅校验name/position长度，按原joint名查map，frame_prefix只拼TF名；publish_frequency为消息回调时间门控，非周期生成状态。"
+    },
+    {
+      "id": "rsp-readme",
+      "repository": "ros/robot_state_publisher",
+      "commit": "d1b994d2d2eb19e4d2886be57211114134f25b50",
+      "path": "README.md",
+      "version": "3.3.4",
+      "sourceUrl": "https://raw.githubusercontent.com/ros/robot_state_publisher/d1b994d2d2eb19e4d2886be57211114134f25b50/README.md",
+      "sha256": "d7f2d81e4fadf6adbe2d1099db7aa4f4aac59c253e7a682e7bbf1212dee7cd64",
+      "lineCount": 30,
+      "verification": "只读固定官方源字节/行号，不启动DDS或运行上游工程",
+      "localPath": "references/sources/ecosystem/ros--robot_state_publisher/jazzy--d1b994d2d2eb/README.md",
+      "referenceSha256": "d7f2d81e4fadf6adbe2d1099db7aa4f4aac59c253e7a682e7bbf1212dee7cd64",
+      "referenceEqualsRelease": true,
+      "lineRanges": [
+        {
+          "start": 3,
+          "end": 10
+        },
+        {
+          "start": 13,
+          "end": 30
+        }
+      ],
+      "observation": "README概述需按实现细化：静态晚加入还要求活着的writer与匹配持久性；动态消息受时间戳门控。"
+    },
+    {
+      "id": "xacro",
+      "repository": "ros/xacro",
+      "commit": "390772abfe1e068f54aed674ce43873229a7db4e",
+      "path": "xacro/__init__.py",
+      "version": "2.1.1",
+      "sourceUrl": "https://raw.githubusercontent.com/ros/xacro/390772abfe1e068f54aed674ce43873229a7db4e/xacro/__init__.py",
+      "sha256": "db8197efae64013db454d90f1af749e0a09e046580c62c0e9fd975689f74ecfe",
+      "lineCount": 1190,
+      "verification": "只读固定官方源字节/行号，不启动DDS或运行上游工程",
+      "localPath": "references/sources/ecosystem/ros--xacro/ros2--da4b3849f832/xacro/__init__.py",
+      "referenceSha256": "398b82ccf3b2ae9f33d9ed93ceea5e04f3ebab10ede57d43e2f4e2de9b12e269",
+      "referenceEqualsRelease": false,
+      "installedPath": "/opt/ros/jazzy/lib/python3.12/site-packages/xacro/__init__.py",
+      "installedSha256": "db8197efae64013db454d90f1af749e0a09e046580c62c0e9fd975689f74ecfe",
+      "installedEqualsRelease": true,
+      "lineRanges": [
+        {
+          "start": 952,
+          "end": 958
+        },
+        {
+          "start": 1044,
+          "end": 1067
+        },
+        {
+          "start": 1105,
+          "end": 1125
+        }
+      ],
+      "observation": "安装/tag2.1.1与参考同版不同一行：参考额外求值xacro:arg的name；展开返回XML DOM，不做URDF/KDL/动力学验证。"
+    },
+    {
+      "id": "xacro-cli",
+      "repository": "ros/xacro",
+      "commit": "390772abfe1e068f54aed674ce43873229a7db4e",
+      "path": "xacro/cli.py",
+      "version": "2.1.1",
+      "sourceUrl": "https://raw.githubusercontent.com/ros/xacro/390772abfe1e068f54aed674ce43873229a7db4e/xacro/cli.py",
+      "sha256": "5021995936decdb13f2077149596d5f987433b797d922b63941ebef773eb79ee",
+      "lineCount": 142,
+      "verification": "只读固定官方源字节/行号，不启动DDS或运行上游工程",
+      "localPath": "references/sources/ecosystem/ros--xacro/ros2--da4b3849f832/xacro/cli.py",
+      "referenceSha256": "5021995936decdb13f2077149596d5f987433b797d922b63941ebef773eb79ee",
+      "referenceEqualsRelease": true,
+      "installedPath": "/opt/ros/jazzy/lib/python3.12/site-packages/xacro/cli.py",
+      "installedSha256": "5021995936decdb13f2077149596d5f987433b797d922b63941ebef773eb79ee",
+      "installedEqualsRelease": true,
+      "lineRanges": [
+        {
+          "start": 82,
+          "end": 142
+        }
+      ],
+      "observation": "命令行参数经process_args交给宏展开，实际资源文件必须存在。"
+    },
+    {
+      "id": "rep103",
+      "repository": "ros-infrastructure/rep",
+      "commit": "11ca24a41f31480dfb9562ba99f2a5b93d3ebda5",
+      "path": "rep-0103.rst",
+      "version": "REP103 fixed master snapshot",
+      "sourceUrl": "https://raw.githubusercontent.com/ros-infrastructure/rep/11ca24a41f31480dfb9562ba99f2a5b93d3ebda5/rep-0103.rst",
+      "sha256": "bf397ddcab96cc1d10d8f5893960cb1d5e50154dd96462433a5ac342237a0c20",
+      "lineCount": 226,
+      "verification": "只读固定官方源字节/行号，不启动DDS或运行上游工程",
+      "lineRanges": [
+        {
+          "start": 40,
+          "end": 78
+        },
+        {
+          "start": 94,
+          "end": 114
+        },
+        {
+          "start": 124,
+          "end": 168
+        }
+      ],
+      "observation": "SI、右手、body X前Y左Z上；optical Z前X右Y下；固定轴roll/pitch/yaw对应X/Y/Z。"
+    },
+    {
+      "id": "urdfdom-joint",
+      "repository": "ros/urdfdom",
+      "commit": "79f079d1fd403f8102a4053b818719b966b5f49d",
+      "path": "urdf_parser/src/joint.cpp",
+      "version": "4.0.2",
+      "sourceUrl": "https://raw.githubusercontent.com/ros/urdfdom/79f079d1fd403f8102a4053b818719b966b5f49d/urdf_parser/src/joint.cpp",
+      "sha256": "8236983a606db3a28584956c32b16be50a8466a41ae07f0fb6d3e82abc16257f",
+      "lineCount": 642,
+      "verification": "只读固定官方源字节/行号，不启动DDS或运行上游工程",
+      "lineRanges": [
+        {
+          "start": 351,
+          "end": 366
+        },
+        {
+          "start": 427,
+          "end": 469
+        }
+      ],
+      "observation": "缺origin默认identity；移动axis缺省(1,0,0)；revolute/prismatic缺limit元素解析失败；limit字段默认/必填要按解析器细化。"
+    },
+    {
+      "id": "urdfdom-model",
+      "repository": "ros/urdfdom",
+      "commit": "79f079d1fd403f8102a4053b818719b966b5f49d",
+      "path": "urdf_parser/src/model.cpp",
+      "version": "4.0.2",
+      "sourceUrl": "https://raw.githubusercontent.com/ros/urdfdom/79f079d1fd403f8102a4053b818719b966b5f49d/urdf_parser/src/model.cpp",
+      "sha256": "67fcc1a128be6d4fb9b1a5a28164941d739ba90b2e05438caf2e5d0a01571743",
+      "lineCount": 318,
+      "verification": "只读固定官方源字节/行号，不启动DDS或运行上游工程",
+      "lineRanges": [
+        {
+          "start": 232,
+          "end": 269
+        }
+      ],
+      "observation": "URDF链接/关节解析与树根检查，不是完整物理/控制验收。"
+    },
+    {
+      "id": "kdl-parser",
+      "repository": "ros2-gbp/kdl_parser-release",
+      "commit": "7caef414fed4694614276c4b6226f466e158eac3",
+      "path": "kdl_parser/src/kdl_parser.cpp",
+      "version": "2.11.0 upstream release tag",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2-gbp/kdl_parser-release/7caef414fed4694614276c4b6226f466e158eac3/kdl_parser/src/kdl_parser.cpp",
+      "sha256": "fbea8ab3ca25fd5c946d14a11dfeb6bd02e4679cf7e641a3fe09e10d8fcd03c2",
+      "lineCount": 205,
+      "verification": "只读官方ROS发布仓库精确upstream/2.11.0源；主repo未见同名tag，不混称主仓库tag",
+      "lineRanges": [
+        {
+          "start": 64,
+          "end": 84
+        },
+        {
+          "start": 94,
+          "end": 121
+        },
+        {
+          "start": 176,
+          "end": 202
+        }
+      ],
+      "observation": "轴经F_parent_joint.M旋到父坐标；惯量另有inertial坐标；root inertia警告且继续建树，根惯量不被KDL根表达。"
+    },
+    {
+      "id": "urdf-joint-header",
+      "repository": "ros/urdfdom_headers",
+      "commit": "af0f9306bcb6b88dcc79d75f28f6c5257c883bfd",
+      "path": "include/urdf_model/joint.h",
+      "version": "ROS安装1.1.3；系统/usr另有1.0.5",
+      "sourceUrl": "https://github.com/ros/urdfdom_headers/blob/af0f9306bcb6b88dcc79d75f28f6c5257c883bfd/include/urdf_model/joint.h",
+      "archiveUrl": "https://codeload.github.com/ros/urdfdom_headers/tar.gz/af0f9306bcb6b88dcc79d75f28f6c5257c883bfd",
+      "archiveSha256": "b50491234a61498db9c2124e7a96fab7c199f0e0df3776da69b9c58c52e15d9d",
+      "sha256": "57c69feb617b373416fcf674fd54dd93e1c17be79b0c1eec8097e93bb94004a5",
+      "lineCount": 230,
+      "installedPath": "/opt/ros/jazzy/include/urdfdom_headers/urdf_model/joint.h",
+      "installedSha256": "57c69feb617b373416fcf674fd54dd93e1c17be79b0c1eec8097e93bb94004a5",
+      "installedEqualsRelease": true,
+      "lineRanges": [
+        {
+          "start": 176,
+          "end": 196
+        }
+      ],
+      "verification": "只读固定官方archive内指定2文件与安装header字节比较；archive仅内存读取，未写参考目录"
+    },
+    {
+      "id": "urdf-pose-header",
+      "repository": "ros/urdfdom_headers",
+      "commit": "af0f9306bcb6b88dcc79d75f28f6c5257c883bfd",
+      "path": "include/urdf_model/pose.h",
+      "version": "ROS安装1.1.3；系统/usr另有1.0.5",
+      "sourceUrl": "https://github.com/ros/urdfdom_headers/blob/af0f9306bcb6b88dcc79d75f28f6c5257c883bfd/include/urdf_model/pose.h",
+      "archiveUrl": "https://codeload.github.com/ros/urdfdom_headers/tar.gz/af0f9306bcb6b88dcc79d75f28f6c5257c883bfd",
+      "archiveSha256": "b50491234a61498db9c2124e7a96fab7c199f0e0df3776da69b9c58c52e15d9d",
+      "sha256": "af0127a30ff8db65b6e810237e80e22eae8f3036992234ce97b2adc09b993140",
+      "lineCount": 271,
+      "installedPath": "/opt/ros/jazzy/include/urdfdom_headers/urdf_model/pose.h",
+      "installedSha256": "af0127a30ff8db65b6e810237e80e22eae8f3036992234ce97b2adc09b993140",
+      "installedEqualsRelease": true,
+      "lineRanges": [
+        {
+          "start": 140,
+          "end": 167
+        }
+      ],
+      "verification": "只读固定官方archive内指定2文件与安装header字节比较；archive仅内存读取，未写参考目录"
+    },
+    {
+      "id": "tf2-qos",
+      "repository": "ros2/geometry2",
+      "commit": "f702874b1c8535d6a038230ab2cda0ba5d521ebd",
+      "path": "tf2_ros/include/tf2_ros/qos.hpp",
+      "version": "0.36.23",
+      "sourceUrl": "https://github.com/ros2/geometry2/blob/f702874b1c8535d6a038230ab2cda0ba5d521ebd/tf2_ros/include/tf2_ros/qos.hpp",
+      "localPath": "references/sources/official-core/ros2--geometry2/jazzy--f702874b1c85/tf2_ros/include/tf2_ros/qos.hpp",
+      "sha256": "63d82fd364978a24aabc4993ec0f13fcea1df2ebc97bed990bbde6cee7d378e1",
+      "lineCount": 74,
+      "lineRanges": [
+        {
+          "start": 39,
+          "end": 70
+        }
+      ],
+      "verification": "只读已下载固定官方源；不启动DDS/GUI",
+      "installedPath": "/opt/ros/jazzy/include/tf2_ros/tf2_ros/qos.hpp",
+      "installedSha256": "63d82fd364978a24aabc4993ec0f13fcea1df2ebc97bed990bbde6cee7d378e1",
+      "installedEqualsReference": true
+    },
+    {
+      "id": "tf2-static-header",
+      "repository": "ros2/geometry2",
+      "commit": "f702874b1c8535d6a038230ab2cda0ba5d521ebd",
+      "path": "tf2_ros/include/tf2_ros/static_transform_broadcaster.hpp",
+      "version": "0.36.23",
+      "sourceUrl": "https://github.com/ros2/geometry2/blob/f702874b1c8535d6a038230ab2cda0ba5d521ebd/tf2_ros/include/tf2_ros/static_transform_broadcaster.hpp",
+      "localPath": "references/sources/official-core/ros2--geometry2/jazzy--f702874b1c85/tf2_ros/include/tf2_ros/static_transform_broadcaster.hpp",
+      "sha256": "d2e47c2fe43b2b32df9838cadefa4b5873b5703e17e1c403ddc76aeaf39b1fbb",
+      "lineCount": 117,
+      "lineRanges": [
+        {
+          "start": 60,
+          "end": 92
+        }
+      ],
+      "verification": "只读已下载固定官方源；不启动DDS/GUI",
+      "installedPath": "/opt/ros/jazzy/include/tf2_ros/tf2_ros/static_transform_broadcaster.hpp",
+      "installedSha256": "d2e47c2fe43b2b32df9838cadefa4b5873b5703e17e1c403ddc76aeaf39b1fbb",
+      "installedEqualsReference": true
+    },
+    {
+      "id": "tf2-static-accumulation",
+      "repository": "ros2/geometry2",
+      "commit": "f702874b1c8535d6a038230ab2cda0ba5d521ebd",
+      "path": "tf2_ros/src/static_transform_broadcaster.cpp",
+      "version": "0.36.23",
+      "sourceUrl": "https://github.com/ros2/geometry2/blob/f702874b1c8535d6a038230ab2cda0ba5d521ebd/tf2_ros/src/static_transform_broadcaster.cpp",
+      "localPath": "references/sources/official-core/ros2--geometry2/jazzy--f702874b1c85/tf2_ros/src/static_transform_broadcaster.cpp",
+      "sha256": "0b709f79561c33fa82a221f588a115c2a5217d82f6c181d210300ff3ea00926e",
+      "lineCount": 74,
+      "lineRanges": [
+        {
+          "start": 44,
+          "end": 71
+        }
+      ],
+      "verification": "只读已下载固定官方源；不启动DDS/GUI"
+    },
+    {
+      "id": "joint-state-contract",
+      "repository": "ros2/common_interfaces",
+      "commit": "a941f14bb318d8d904505ed935ccbb97f24a70a4",
+      "path": "sensor_msgs/msg/JointState.msg",
+      "version": "5.3.8",
+      "sourceUrl": "https://github.com/ros2/common_interfaces/blob/a941f14bb318d8d904505ed935ccbb97f24a70a4/sensor_msgs/msg/JointState.msg",
+      "localPath": "references/sources/official-core/ros2--common_interfaces/jazzy--a941f14bb318/sensor_msgs/msg/JointState.msg",
+      "sha256": "711d1771a002c7190e5bbe746a163a67477c1e2a45482a64f1fe339815ca6f5d",
+      "lineCount": 25,
+      "lineRanges": [
+        {
+          "start": 3,
+          "end": 25
+        }
+      ],
+      "verification": "只读已下载固定官方源；不启动DDS/GUI",
+      "installedPath": "/opt/ros/jazzy/share/sensor_msgs/msg/JointState.msg",
+      "installedSha256": "711d1771a002c7190e5bbe746a163a67477c1e2a45482a64f1fe339815ca6f5d",
+      "installedEqualsReference": true
+    },
+    {
+      "id": "urdf-tutorial-display",
+      "repository": "ros/urdf_tutorial",
+      "commit": "050f1e47cfdb2c5f3eb0746bc15c57e6a870faef",
+      "path": "launch/display.launch.py",
+      "version": "固定ros2教学快照，GUI未运行",
+      "sourceUrl": "https://github.com/ros/urdf_tutorial/blob/050f1e47cfdb2c5f3eb0746bc15c57e6a870faef/launch/display.launch.py",
+      "localPath": "references/sources/official-examples/ros--urdf_tutorial/ros2--050f1e47cfdb/launch/display.launch.py",
+      "sha256": "13ddd84f2582998073a221f1c1699c91ca579746adfc420b3b583a17e08832fb",
+      "lineCount": 35,
+      "lineRanges": [
+        {
+          "start": 11,
+          "end": 36
+        }
+      ],
+      "verification": "只读已下载固定官方源；不启动DDS/GUI"
+    }
+  ],
+  "findings": [
+    {
+      "id": "MODEL-01",
+      "severity": "P2",
+      "status": "source_confirmed_text_gap",
+      "locations": [
+        "eco-model-rviz.sections[2]",
+        "eco-model-rviz.sections[4].codeBlocks[0]",
+        "eco-model-rviz.steps[2]"
+      ],
+      "finding": "正文只有完整robot.urdf，却让读者展开没有提供的robot.urdf.xacro；缺参数化源与安装/启动闭环。",
+      "evidence": [
+        "reviewedContent完整文件清点",
+        "xacro:process_file要求真实XML输入文件"
+      ],
+      "recommendation": "保留原最小URDF基线，增加完整Xacro、package/CMake/launch；按安装share从异cwd展开/启动，不用原目录偶然补齐缺文件。",
+      "reviewResolution": {
+        "status": "addressed_in_reviewed_integration",
+        "evidence": "原最小URDF逐字节基线保留；新增完整Xacro/package/CMake/launch，section[4]与steps[2]均改成提供的源路径；安装副本及异cwd真实运行通过。"
+      }
+    },
+    {
+      "id": "MODEL-02",
+      "severity": "P2",
+      "status": "source_confirmed_explanation_needed",
+      "locations": [
+        "eco-model-rviz.sections[1]"
+      ],
+      "finding": "origin/axis描述方向大致正确，但缺关节零位、局部轴与运动复合顺序的自足数值解释。",
+      "evidence": [
+        "urdf-joint-header:188-196",
+        "kdl-parser:64-84",
+        "urdf-pose-header:140-167"
+      ],
+      "recommendation": "定义T_parent_child(q)=T_origin·T_motion(axis_joint,q)，origin在父link中定义零位joint/child frame，axis在joint局部帧；revolute/continuous用rad，prismatic用m，轴用单位向量。visual/collision origin另相对link，不等同关节轴。",
+      "reviewResolution": {
+        "status": "partially_addressed_with_explicit_unrun_boundary",
+        "evidence": "新活动joint局部+Y轴、零安装旋转、几何/惯量与单位说明核对；非零origin旋转复合仅按固定源码和手算，未运行反例，不能以本轮TF实测替代。"
+      }
+    },
+    {
+      "id": "MODEL-03",
+      "severity": "P2",
+      "status": "source_confirmed_runtime_evidence_pending",
+      "locations": [
+        "eco-model-rviz.sections[3]",
+        "eco-tf-frames.sections[2]"
+      ],
+      "finding": "静态晚加入与活动JointState需分别验收，静态持久性不能被泛称任意晚加入总能取得。",
+      "evidence": [
+        "rsp:143-150,278-298",
+        "tf2-qos:53-70",
+        "tf2-static-header:60-77"
+      ],
+      "recommendation": "活着的静态writer、相容/请求历史的listener、发现和有限等待分别说明；参数响应后再创建fresh listener可测真正晚加入。无JointState时活动TF缺失；设20Hz不自动制造位置。",
+      "reviewResolution": {
+        "status": "addressed_for_current_alive_writer_default_listener",
+        "evidence": "真实RSP参数响应后创建fresh Listener，固定边查询成功，活动位置输入前无动态轮边；不推广成任意QoS/已退出writer的无限持久历史。"
+      }
+    },
+    {
+      "id": "MODEL-04",
+      "severity": "P2",
+      "status": "source_confirmed_input_contract_precision",
+      "locations": [
+        "eco-model-rviz.sections[3]"
+      ],
+      "finding": "JointState通用数组合同与RSP所需位置合同不同，不能把velocity-only一律称协议畸形。",
+      "evidence": [
+        "joint-state-contract:3-18",
+        "rsp:300-311,342-356"
+      ],
+      "recommendation": "name2/position1是非法长度；name2/position空/velocity2可符合可选数组协议，但RSP忽略并警告，不能从速度积分位置。name/position相等仍不证明有限、限位或硬件正确；RSP此处不校验velocity/effort长度也不做一般数值/限位保护。",
+      "reviewResolution": {
+        "status": "addressed_with_two_distinct_inputs",
+        "evidence": "源码/README/生成器区分非法name/position不等长和协议合法的velocity-only；日志标记、0.25s旧TF时戳及随后同实例恢复均核对。"
+      }
+    },
+    {
+      "id": "MODEL-05",
+      "severity": "P2",
+      "status": "source_confirmed_explanation_needed",
+      "locations": [
+        "eco-model-rviz.sections[6]",
+        "eco-tf-frames.sections[4]"
+      ],
+      "finding": "缺frame_prefix与topic命名空间、joint键的区别；前缀不能自动消除全部多机器人命名冲突。",
+      "evidence": [
+        "rsp:252-297,342-345"
+      ],
+      "recommendation": "frame_prefix只拼到TF parent/child，输入仍用原URDF joint名字；不自动加斜杠。设置启动prefix如model/并单独命名joint_states topic。运行中改prefix不会在该参数事件路径自动重发全部fixed边，不能承诺动态迁移无旧frame。",
+      "reviewResolution": {
+        "status": "addressed_for_startup_prefix_only",
+        "evidence": "model/与alternate/两启动前缀均用原joint键驱动；topic命名空间另设；运行中改prefix/旧frame清理仍未运行，直接拼接边界保留。"
+      }
+    },
+    {
+      "id": "MODEL-06",
+      "severity": "P2",
+      "status": "source_confirmed_physics_boundary",
+      "locations": [
+        "eco-model-rviz.sections[0]",
+        "eco-model-rviz.sections[5]"
+      ],
+      "finding": "已有“显示不等于动力学”边界正确，但可补KDL根惯量警告与检查分层的具体依据。",
+      "evidence": [
+        "kdl-parser:94-121,176-202",
+        "urdfdom-model:232-269"
+      ],
+      "recommendation": "check_urdf树通过不是正惯量/质量/碰撞/控制器保证；KDL会警告根link惯量并继续，根惯量不能由该KDL树根表达。可用无质量dummy reference root加fixed joint，让实体inertial位于子link；这不是物理稳定性证明。",
+      "reviewResolution": {
+        "status": "addressed_by_limited_numeric_counterexample_and_source",
+        "evidence": "负Iyy同一文件真实check_urdf返回0、自检返回1；仅此一项变化已独立XML复核。dummy root/根惯量局限按KDL源码，未运行根惯量反例、动力学或碰撞。"
+      }
+    },
+    {
+      "id": "MODEL-07",
+      "severity": "P2",
+      "status": "source_confirmed_coordinates_gap",
+      "locations": [
+        "eco-tf-frames.sections[1]",
+        "eco-model-rviz.sections[5]"
+      ],
+      "finding": "光学frame仅说“另一种约定”，缺自足的轴向/旋转与点的方向检查。",
+      "evidence": [
+        "rep103:94-168"
+      ],
+      "recommendation": "明确body X前Y左Z上、optical Z前X右Y下，右手与rad；光学单位点转到body时加入相机origin平移，区别点和方向向量。四元数q与-q是同一旋转，比较旋转需处理该等价。",
+      "reviewResolution": {
+        "status": "addressed_for_synthetic_optical_points",
+        "evidence": "两模型6个单位点按REP103与含平移手算核对；q/-q等价，未采图像或作实际相机标定。"
+      }
+    },
+    {
+      "id": "MODEL-08",
+      "severity": "P3",
+      "status": "source_confirmed_timestamp_boundary",
+      "locations": [
+        "eco-model-rviz.sections[1]"
+      ],
+      "finding": "RSP publish_frequency是JointState回调中按header stamp/上次发布时刻门控，忽略旧时间与零时间的行为需说明。",
+      "evidence": [
+        "rsp:117-127,314-362"
+      ],
+      "recommendation": "使用有限正20Hz、唯一位置源和明确采样时戳；不要把节点启动、20Hz参数或速度数组当周期动态状态保证。不要在教材演示0/NaN频率；上游范围检查允许0/NaN却随后除频率，不当安全配置。",
+      "reviewResolution": {
+        "status": "bounded_explanation_and_fixed_20hz_only",
+        "evidence": "正文明确20Hz是收到JointState后的时戳门控而非位置生成；零/NaN频率、乱序/零header及ROS时间回退分支未在本轮运行。"
+      }
+    },
+    {
+      "id": "MODEL-09",
+      "severity": "P3",
+      "status": "source_confirmed_version_boundary",
+      "locations": [
+        "eco-model-rviz.sections[4]"
+      ],
+      "finding": "同版xacro快照已有安装release没有的动态arg名求值补丁，裸宏展开不验证整个URDF/动力学合同。",
+      "evidence": [
+        "xacro:952-958,1044-1067,1105-1125"
+      ],
+      "recommendation": "完整示例用字面arg名并显式有限尺寸校验；记录安装/tag/快照差异。展开成功、URDF解析、数值/单位、实际TF、GUI显示与动力学分别验收。",
+      "reviewResolution": {
+        "status": "addressed_by_version_separation_and_literal_names",
+        "evidence": "安装xacro2.1.1与同版post-tag快照的一行动态arg名求值差异单列；示例用字面参数名，实际默认/覆盖展开通过；不以展开证明物理合同。"
+      }
+    }
+  ],
+  "suggestedExperiments": [
+    {
+      "id": "MODEL-EXP-01",
+      "status": "verified_from_current_root_runtime_and_raw_artifacts",
+      "scope": "普通复制安装完整描述包；核最小URDF逐字节基线、Xacro/launch安装字节；异cwd启动不依赖源目录。",
+      "acceptance": "default/override展开并check_urdf，有限标准库几何/惯量检查；未构建GUI/物理仿真。",
+      "reportFiles": [
+        "model-current-validation.json"
+      ]
+    },
+    {
+      "id": "MODEL-EXP-02",
+      "status": "verified_from_current_root_runtime_and_raw_artifacts",
+      "scope": "参数响应后新建TF Listener，查固定laser与camera/optical；在任何JointState前查活动wheel缺失。",
+      "acceptance": "将固定边历史与动态无状态分开，不拿尚未发现当负例；确认JointState发布者有真实匹配。",
+      "reportFiles": [
+        "model-current-validation.json"
+      ]
+    },
+    {
+      "id": "MODEL-EXP-03",
+      "status": "verified_from_current_root_runtime_and_raw_artifacts",
+      "scope": "raw joint名输入0/0与π/2/-π/4，TF prefix使用model/和alternate/；对照平移/旋转与header stamp。",
+      "acceptance": "q与-q等价处理；position rad、轮距/半径m；只有该有限模型，活动origin rpy为0。",
+      "reportFiles": [
+        "model-current-validation.json"
+      ]
+    },
+    {
+      "id": "MODEL-EXP-04",
+      "status": "verified_from_current_root_runtime_and_raw_artifacts",
+      "scope": "name/position不等长＋velocity-only缺位置两个不同输入，日志+有限窗口TF stamp不变后再恢复。",
+      "acceptance": "第一项是长度错误，第二项是位置合同不足，不能都叫JointState协议畸形；恢复同实例证明没有崩溃。",
+      "reportFiles": [
+        "model-current-validation.json"
+      ]
+    },
+    {
+      "id": "MODEL-EXP-05",
+      "status": "verified_from_current_root_runtime_and_raw_artifacts",
+      "scope": "光学Z/X/Y三个单位点转到base，包含camera原点位移。",
+      "acceptance": "默认几何期望(1.18,0,0.1)/(0.18,-1,0.1)/(0.18,0,-0.9)m；不采相机图像。",
+      "reportFiles": [
+        "model-current-validation.json"
+      ]
+    },
+    {
+      "id": "MODEL-EXP-06",
+      "status": "verified_from_current_root_runtime_and_raw_artifacts",
+      "scope": "非法负轮半径/NaN轮距在launch创建RSP前拒绝；负惯量副本区分check_urdf与自检。",
+      "acceptance": "只动自建/tmp副本；记录明确错误标记与节点未启动，解析0不当物理合格。",
+      "reportFiles": [
+        "model-current-validation.json",
+        "model-boundaries-current-validation.json"
+      ]
+    },
+    {
+      "id": "MODEL-EXP-07",
+      "status": "not_run_source_or_hand_calculation_only",
+      "scope": "非零活动joint origin rpy与局部axis复合的非交换反例、根惯量KDL警告运行、runtime prefix迁移、父driver SIGINT/挂起。",
+      "acceptance": "当前模型不覆盖这些支路，保留源码/手算说明而不强行标运行。"
+    }
+  ],
+  "reviewedReports": {
+    "model-current-validation.json": {
+      "path": "validation-evidence/model-current-validation.json",
+      "sha256": "a34e0f42f272811e68b3e2c9f61407cd609cea4a4e15bf0645df22fb5751a88b",
+      "approved": true,
+      "passed": true,
+      "checkedAt": "2026-11-07T06:30:37.498153+08:00",
+      "scope": "8项源/输入指纹、4份普通安装副本、3份URDF解析、2配置6个JointState阶段与6光学点、2非法launch拒绝及10父命令/2子PID正常清理"
+    },
+    "model-boundaries-current-validation.json": {
+      "path": "validation-evidence/model-boundaries-current-validation.json",
+      "sha256": "a5bb0c10a1f499ab1d0c39e5f08baaa71757deca89267704cc4d61c8237be64b",
+      "approved": true,
+      "passed": true,
+      "checkedAt": "2026-11-07T06:30:37.498153+08:00",
+      "scope": "2项Python指纹、3项无ROS帮助/非法域输入、仅left_wheel Iyy负值的同一文件check_urdf成功与数值检查拒绝；辅助XPath夹具错误历史保留"
+    },
+    "model-portable-current-validation.json": {
+      "path": "validation-evidence/model-portable-current-validation.json",
+      "sha256": "e7fd0a48925fd5c7f7f85160af217cb9cf5a8db436224ae2a3699f699e1a6fd0",
+      "approved": true,
+      "passed": true,
+      "checkedAt": "2026-11-07T06:32:49.196248+08:00",
+      "role": "supplementary_source_download_reproduction",
+      "scope": "同主机已安装ROS依赖中，正式95文件源码ZIP实际解压后直接从atlas_examples根运行model_labs；8源与原工程/ZIP/解压副本相同，另核嵌入报告、10原始日志及12记录PID；不参与正文4表主数据。"
+    }
+  },
+  "textbookResources": [
+    {
+      "id": "iter6-model-rsp-contract",
+      "title": "RSP固定/活动TF与输入合同",
+      "url": "https://github.com/ros/robot_state_publisher/blob/d1b994d2d2eb19e4d2886be57211114134f25b50/src/robot_state_publisher.cpp",
+      "sourceUrl": "https://raw.githubusercontent.com/ros/robot_state_publisher/d1b994d2d2eb19e4d2886be57211114134f25b50/src/robot_state_publisher.cpp",
+      "category": "模型、关节状态与TF",
+      "version": "3.3.4",
+      "versionNote": "固定快照与3.3.4 tag同一提交；安装包版本为3.3.4，未反推全部编译选项。",
+      "description": "3.3.4实现区分固定边与活动位置，按原joint键查找，frame_prefix只改TF名；时间门控不是位置生成器。",
+      "verification": "只读固定官方源字节/行号，不启动DDS或运行上游工程；此来源核读不构成DDS/GUI/动力学实测。",
+      "checkedAt": "2026-11-07T06:23:51+08:00",
+      "type": "official-source",
+      "lessons": [
+        "eco-model-rviz",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "id": "iter6-model-jointstate-contract",
+      "title": "JointState可选数组和单位",
+      "url": "https://github.com/ros2/common_interfaces/blob/a941f14bb318d8d904505ed935ccbb97f24a70a4/sensor_msgs/msg/JointState.msg",
+      "sourceUrl": "https://github.com/ros2/common_interfaces/blob/a941f14bb318d8d904505ed935ccbb97f24a70a4/sensor_msgs/msg/JointState.msg",
+      "category": "模型、关节状态与TF",
+      "version": "5.3.8",
+      "versionNote": "安装sensor_msgs5.3.8与所核固定JointState.msg字节相同；通用消息合同与RSP消费合同分开。",
+      "description": "位置rad或m，速度/effort可选；数组等长或为空，RSP位置要求需另外满足。",
+      "verification": "只读已下载固定官方源；不启动DDS/GUI；此来源核读不构成DDS/GUI/动力学实测。",
+      "checkedAt": "2026-11-07T06:23:51+08:00",
+      "type": "official-source",
+      "lessons": [
+        "eco-model-rviz",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "id": "iter6-model-urdf-joint-frames",
+      "title": "URDF joint origin与child frame",
+      "url": "https://github.com/ros/urdfdom_headers/blob/af0f9306bcb6b88dcc79d75f28f6c5257c883bfd/include/urdf_model/joint.h",
+      "sourceUrl": "https://github.com/ros/urdfdom_headers/blob/af0f9306bcb6b88dcc79d75f28f6c5257c883bfd/include/urdf_model/joint.h",
+      "category": "模型、关节状态与TF",
+      "version": "ROS安装1.1.3；系统/usr另有1.0.5",
+      "versionNote": "采用/opt/ros/jazzy的urdfdom_headers1.1.3，所核字节与固定tag相同；/usr系统1.0.5另列。",
+      "description": "parent_to_joint_origin_transform与child frame含义，axis在joint局部坐标表达。",
+      "verification": "只读固定官方archive内指定2文件与安装header字节比较；archive仅内存读取，未写参考目录；此来源核读不构成DDS/GUI/动力学实测。",
+      "checkedAt": "2026-11-07T06:23:51+08:00",
+      "type": "official-source",
+      "lessons": [
+        "eco-model-rviz",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "id": "iter6-model-kdl-conversion",
+      "title": "KDL轴转换与根惯量边界",
+      "url": "https://github.com/ros2-gbp/kdl_parser-release/blob/7caef414fed4694614276c4b6226f466e158eac3/kdl_parser/src/kdl_parser.cpp",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2-gbp/kdl_parser-release/7caef414fed4694614276c4b6226f466e158eac3/kdl_parser/src/kdl_parser.cpp",
+      "category": "模型、关节状态与TF",
+      "version": "2.11.0 upstream release tag",
+      "versionNote": "安装kdl_parser2.11.0；精确版本源来自官方ROS发布仓库upstream/2.11.0，未混称主仓库同名tag。",
+      "description": "axis乘origin旋转；根inertia警告后继续建树，dummy root是结构处理方式，不证明动力学。",
+      "verification": "只读官方ROS发布仓库精确upstream/2.11.0源；主repo未见同名tag，不混称主仓库tag；此来源核读不构成DDS/GUI/动力学实测。",
+      "checkedAt": "2026-11-07T06:23:51+08:00",
+      "type": "official-source",
+      "lessons": [
+        "eco-model-rviz",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "id": "iter6-model-rep103",
+      "title": "REP103单位与坐标约定",
+      "url": "https://github.com/ros-infrastructure/rep/blob/11ca24a41f31480dfb9562ba99f2a5b93d3ebda5/rep-0103.rst",
+      "sourceUrl": "https://raw.githubusercontent.com/ros-infrastructure/rep/11ca24a41f31480dfb9562ba99f2a5b93d3ebda5/rep-0103.rst",
+      "category": "模型、关节状态与TF",
+      "version": "REP103 fixed master snapshot",
+      "versionNote": "固定官方REP源提交；网页渲染行与源码splitlines行号分开，约定本身不是机器人实测。",
+      "description": "右手、SI、body与optical轴向，固定轴roll/pitch/yaw需明确，不按画面猜方向。",
+      "verification": "只读固定官方源字节/行号，不启动DDS或运行上游工程；此来源核读不构成DDS/GUI/动力学实测。",
+      "checkedAt": "2026-11-07T06:23:51+08:00",
+      "type": "official-source",
+      "lessons": [
+        "eco-model-rviz",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "id": "iter6-model-xacro-pipeline",
+      "title": "Xacro展开与版本化参数行为",
+      "url": "https://github.com/ros/xacro/blob/390772abfe1e068f54aed674ce43873229a7db4e/xacro/__init__.py",
+      "sourceUrl": "https://raw.githubusercontent.com/ros/xacro/390772abfe1e068f54aed674ce43873229a7db4e/xacro/__init__.py",
+      "category": "模型、关节状态与TF",
+      "version": "2.1.1",
+      "versionNote": "安装/tag2.1.1与同版参考快照在动态arg名求值有一行差异；本例字面arg名不依赖该补丁。",
+      "description": "实际文件与字面参数展开为XML，安装2.1.1与同版参考在动态arg名求值有一行差异；不自动验证URDF物理合同。",
+      "verification": "只读固定官方源字节/行号，不启动DDS或运行上游工程；此来源核读不构成DDS/GUI/动力学实测。",
+      "checkedAt": "2026-11-07T06:23:51+08:00",
+      "type": "official-source",
+      "lessons": [
+        "eco-model-rviz",
+        "eco-tf-frames"
+      ]
+    },
+    {
+      "id": "iter6-model-static-qos",
+      "title": "TF静态持久性与晚加入",
+      "url": "https://github.com/ros2/geometry2/blob/f702874b1c8535d6a038230ab2cda0ba5d521ebd/tf2_ros/include/tf2_ros/qos.hpp",
+      "sourceUrl": "https://github.com/ros2/geometry2/blob/f702874b1c8535d6a038230ab2cda0ba5d521ebd/tf2_ros/include/tf2_ros/qos.hpp",
+      "category": "模型、关节状态与TF",
+      "version": "0.36.23",
+      "versionNote": "安装tf2_ros0.36.23与所核固定QoS/header字节相同；有限历史以TFMessage为单位，writer生命周期另核。",
+      "description": "static broadcaster默认transient_local有限历史，listener也需请求；writer生存期与实际发现/查询分别验证。",
+      "verification": "只读已下载固定官方源；不启动DDS/GUI；此来源核读不构成DDS/GUI/动力学实测。",
+      "checkedAt": "2026-11-07T06:23:51+08:00",
+      "type": "official-source",
+      "lessons": [
+        "eco-model-rviz",
+        "eco-tf-frames"
+      ]
+    }
+  ],
+  "environment": {
+    "installedPackages": [
+      {
+        "package": "robot_state_publisher",
+        "version": "3.3.4",
+        "path": "/opt/ros/jazzy/share/robot_state_publisher/package.xml",
+        "sha256": "2a56b3b21ff70fbc0aa3252b57e7b782774ae41d875d02ddd66818d24f149153"
+      },
+      {
+        "package": "joint_state_publisher",
+        "version": "2.4.3",
+        "path": "/opt/ros/jazzy/share/joint_state_publisher/package.xml",
+        "sha256": "a2c2bdfb679bf9e4a0995d6b982dbd6bb13475e93a3962ad0fa3c01f541099bb"
+      },
+      {
+        "package": "xacro",
+        "version": "2.1.1",
+        "path": "/opt/ros/jazzy/share/xacro/package.xml",
+        "sha256": "609304c5615cfd35a6020e75b5d50829fc3dc27037318578fe81a44e128b9941"
+      },
+      {
+        "package": "urdf",
+        "version": "2.10.1",
+        "path": "/opt/ros/jazzy/share/urdf/package.xml",
+        "sha256": "5971d2d2dc18cae6893710b0cf99c048c26130975669acebeffdb6df2c3794d6"
+      },
+      {
+        "package": "urdfdom",
+        "version": "4.0.2",
+        "path": "/opt/ros/jazzy/share/urdfdom/package.xml",
+        "sha256": "02d1e182033d649afec3cdf4fc8cf4ae62022e21b119b1182eb85e3d40eff1d1"
+      },
+      {
+        "package": "kdl_parser",
+        "version": "2.11.0",
+        "path": "/opt/ros/jazzy/share/kdl_parser/package.xml",
+        "sha256": "8a6a969bf8b68b10ea201fe18cded38d595b4efe74acc35bb1707255b3722f1c"
+      },
+      {
+        "package": "orocos_kdl_vendor",
+        "version": "0.5.2",
+        "path": "/opt/ros/jazzy/share/orocos_kdl_vendor/package.xml",
+        "sha256": "82975e074ba1b4f6e845d8da2634f6928c2e3661afacb2f376487064985eec42"
+      },
+      {
+        "package": "tf2_ros",
+        "version": "0.36.23",
+        "path": "/opt/ros/jazzy/share/tf2_ros/package.xml",
+        "sha256": "4eada4cd940ae3d5d9ea4f37ac1c69bec8651b24adcee377391cd9b3b88209bc"
+      },
+      {
+        "package": "sensor_msgs",
+        "version": "5.3.8",
+        "path": "/opt/ros/jazzy/share/sensor_msgs/package.xml",
+        "sha256": "00cc932b8a1d2a9064c621bfacab56428a5175afe37269da38ba09361e8a4a5a"
+      },
+      {
+        "package": "rclpy",
+        "version": "7.1.12",
+        "path": "/opt/ros/jazzy/share/rclpy/package.xml",
+        "sha256": "6367e8f5f30e81867b246a8750ee900d7276f1f52253ba5140c188e360e6cb0f"
+      },
+      {
+        "package": "launch_ros",
+        "version": "0.26.13",
+        "path": "/opt/ros/jazzy/share/launch_ros/package.xml",
+        "sha256": "e48ffe66645d142f09a9a1654d14185260958c7ec00df4ae7e06b7c4874b8553"
+      }
+    ],
+    "additionalDebianVersions": {
+      "ros-jazzy-urdfdom-headers": "1.1.3-1noble.20260603.150728",
+      "liburdfdom-headers-dev": "1.0.5-3",
+      "liborocos-kdl-dev": "1.5.1-4build1"
+    },
+    "scope": "只读安装清单/源码；不因/usr另一份版本而替代/opt/ros/jazzy实际headers。"
+  },
+  "reviewedContent": {
+    "path": "dist/content.js",
+    "sha256": "bab93bbb04110c24c4a1f47d58e6ed04b899ae3f584ce25fea517a264281ef08",
+    "chapters": [
+      {
+        "id": "eco-tf-frames",
+        "title": "tf2：建立一致的坐标与时间关系",
+        "sectionTitles": [
+          "先把位置问题写成坐标问题",
+          "理解变换的方向和复合",
+          "给每条消息定义时间与发布合同",
+          "最小实验：定义一个雷达安装位置",
+          "把实验扩展成一棵真实机器人树",
+          "用现象定位失败层次"
+        ],
+        "chapterJsonSha256": "2cafd4653d1a7ec268a444865e973528be0a75c311e6e376a11ee2e311ccefde",
+        "validationStatement": "资料与本地源码已核对；命令为读者练习说明，本次未安装、编译或运行 ROS 节点，未连接硬件。"
+      },
+      {
+        "id": "eco-model-rviz",
+        "title": "URDF、Xacro 与 RViz：把机器人描述变成可检查模型",
+        "sectionTitles": [
+          "模型是多个模块共享的结构合同",
+          "理解关节原点、轴和状态的关系",
+          "先制作可独立打开的最小描述",
+          "按模型、状态、显示的顺序启动",
+          "用 Xacro 消除尺寸与重复结构的不一致",
+          "把模型验收分成四个层次",
+          "组织文件与保证安装后仍能打开"
+        ],
+        "chapterJsonSha256": "05048deb00324a48f6394cbba126ef27a8e970dba7fabab5c53f231c168191ae",
+        "validationStatement": "资料与本地源码已核对；命令为读者练习说明，本次未安装、编译或运行 ROS 节点，未连接硬件。"
+      }
+    ],
+    "readingDepth": "两章现有正文/命令/注释逐段；原章仅提供一个robot.urdf完整文件，未包含所引用的robot.urdf.xacro。根新增model_labs尚待正文整合。"
+  },
+  "versionDifferences": [
+    {
+      "component": "robot_state_publisher",
+      "installed": "3.3.4",
+      "reference": "3.3.4",
+      "releaseCommit": "d1b994d2d2eb19e4d2886be57211114134f25b50",
+      "difference": "固定快照就是3.3.4 tag同一提交；已核src/README字节相同，安装包版本单独记录，不反推出全部构建选项。"
+    },
+    {
+      "component": "xacro",
+      "installed": "2.1.1, tag390772abfe1e068f54aed674ce43873229a7db4e",
+      "reference": "2.1.1 atda4b3849f8320903d625250089f67f0632be86f2",
+      "difference": "参考__init__.py在xacro:arg解析后额外执行name=str(eval_text(name,symbols))，安装/tag没有；其他所核cli.py字节同。新模型使用字面arg名，未依赖该post-tag行为。"
+    },
+    {
+      "component": "kdl_parser",
+      "installed": "2.11.0",
+      "reference": "官方ROS发布仓库upstream/2.11.0 commit7caef414fed4694614276c4b6226f466e158eac3",
+      "difference": "ros2/kdl_parser主仓库查询未见2.11.0 tag，精确版本源码来自ros2-gbp/kdl_parser-release；没有混称成主仓库同名tag。"
+    },
+    {
+      "component": "URDF headers",
+      "installed": "ROS /opt headers1.1.3；/usr系统headers1.0.5",
+      "reference": "ros/urdfdom_headers1.1.3 commitaf0f9306bcb6b88dcc79d75f28f6c5257c883bfd",
+      "difference": "joint.h/pose.h安装ROS字节与1.1.3指定归档文件相同；明确采用/opt版本。"
+    },
+    {
+      "component": "TF2/JointState",
+      "installed": "tf2_ros0.36.23/sensor_msgs5.3.8",
+      "reference": "相同版本固定geometry2/common_interfaces快照",
+      "difference": "所核TF2 qos/static header与JointState.msg字节匹配安装；未把整套中间件默认行为泛化到任意配置。"
+    }
+  ],
+  "textbookMaterial": {
+    "geometry": {
+      "explanation": "关节origin给出父link到关节零位坐标的安装变换，axis在该关节局部坐标表达。转动时先在关节局部轴上施加q，再经origin转到父系；固定joint没有可变q。visual/collision/inertial各自还能有相对link的origin，这些不会自动把关节axis旋到相同位置。",
+      "equation": "T_parent_child(q)=T_origin*T_motion(axis_joint,q)",
+      "units": {
+        "xyz": "m",
+        "rpy/revolute/continuous position": "rad",
+        "prismatic position": "m",
+        "mass": "kg",
+        "inertia": "kg*m^2"
+      },
+      "handWorkedExample": {
+        "status": "手算建议，未ROS运行",
+        "originXyzM": [
+          0.2,
+          0,
+          0.1
+        ],
+        "originRpyRad": [
+          0,
+          0,
+          1.5707963267948966
+        ],
+        "axisJoint": [
+          1,
+          0,
+          0
+        ],
+        "qRad": 1.5707963267948966,
+        "expectedRotationRows": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            0
+          ]
+        ],
+        "pointChildM": [
+          0,
+          1,
+          0
+        ],
+        "pointParentM": [
+          0.2,
+          0,
+          1.1
+        ]
+      }
+    },
+    "contracts": {
+      "columns": [
+        "层次",
+        "输入/边界",
+        "正确验收"
+      ],
+      "rows": [
+        [
+          "Xacro",
+          "真实文件/宏参数→XML",
+          "源/安装文件齐全，默认与覆盖分别展开"
+        ],
+        [
+          "URDF树",
+          "links/joints/origin/axis/limits",
+          "真正parser检查；不当动力学认证"
+        ],
+        [
+          "RSP固定边",
+          "URDF fixed joints→/tf_static",
+          "发布者存活、晚加入listener请求历史并实际查询"
+        ],
+        [
+          "RSP活动边",
+          "原joint name与position→/tf",
+          "匹配后有效时戳更新，非法长度与缺位置分别检出"
+        ],
+        [
+          "frame_prefix",
+          "只前缀TF frame",
+          "joint键不变，topic namespace另配"
+        ],
+        [
+          "显示/动力学",
+          "外观/碰撞/惯量/控制是不同用途",
+          "无GUI TF实验不冒充RViz/物理仿真或硬件"
+        ]
+      ]
+    },
+    "physics": "本模型均匀盒体/圆柱的对角惯量可做有限数值核验：质量/主惯量正且有限、主惯量三角关系及轴向惯量方向正确；这些假设不证明真实机器人标定、接触、摩擦、驱动或仿真稳定。"
+  },
+  "onlineVerification": {
+    "method": "固定官方HTTP字节/本地固定源与安装headers优先，官方网页浏览辅助",
+    "limitations": [
+      "ros.org REP和docs.ros.org RSP页面Anubis拒绝未当核读成功；REP固定raw成功。",
+      "部分web raw Cache miss，使用只读HTTP/小型固定archive内指定文件SHA。",
+      "GitHub API tree rate limit403没有当文件不存在；URDF headers真实路径从固定小archive确定，未写参考目录。"
+    ],
+    "lineNumberBasis": "源码行号用真实HTTP/本地字节splitlines；web渲染行号会压缩空行，不冒充源码行号。"
+  },
+  "validationLimits": [
+    "approved只适用于所绑定两报告、8份资产和整合脚本的有限主张；不代表两章或原始参考所有细节已穷尽。",
+    "本代理未启动DDS、GUI、仿真或硬件；对已有运行做源码/指纹/日志/产物与数值独立复核，未重复实验。",
+    "无质量dummy root、正对角惯量与TF可查询不证明真实质量、碰撞、控制限位、动力学稳定、运动或停车。",
+    "活动joint origin rpy均为0；非零origin与axis复合、KDL根惯量运行警告、运行中prefix迁移、零/NaN频率、ROS时间回退/旧header未运行。",
+    "父driver SIGINT、原生挂起与升级信号分支未注入；正常单次向launch父PID发INT及记录子PID消失，不泛称完整故障清理覆盖。",
+    "4份普通安装副本及异cwd启动只证明当前依赖环境下资源定位，不证明跨机、ABI或依赖闭包；原urdf_tutorial/RViz命令仍未运行。",
+    "inspect_model仅限512KiB小型普通URDF、盒体/圆柱、对角惯量与当前树合同，不是通用URDF解析器或任意惯量特征值/物理检查。",
+    "静态晚加入仅测活着的RSP writer与默认相容TF Listener；不推广到任意QoS、已销毁writer或未知中间件配置。"
+  ],
+  "summary": {
+    "status": "approved_for_bounded_iteration6_assets_and_integration",
+    "approved": true,
+    "sourceRecords": 15,
+    "findings": 9,
+    "textbookResources": 7,
+    "reviewedReports": 3,
+    "uniqueBoundAssetFiles": 8,
+    "actualDdsRunsByReviewer": 0,
+    "blockingFindings": 0,
+    "scope": "两核心报告与整合脚本的无GUI模型/TF/有限惯量数值证据可进入教材，另绑定同主机源码ZIP解压复现；源码研究和未运行支路继续分别保留。",
+    "coreTeachingReports": 2,
+    "supplementaryPortableReports": 1
+  },
+  "assetReview": {
+    "status": "approved_bounded_runtime_artifacts",
+    "readScope": "8项README/纯标准库检查器/真实ROS driver/最小URDF/Xacro/launch/CMake/package逐份核读；3份Python和整合器用AST只读语法解析。",
+    "uniqueBoundAssetFiles": 8,
+    "reportedSourceFingerprintEntries": 10,
+    "allSourceHashesMatch": true,
+    "sourceHashes": [
+      {
+        "path": "examples/model_labs/README.md",
+        "sha256": "005aeb0053eedc469631555935cef8c447ef34529ac566a8c19f80c78c397547"
+      },
+      {
+        "path": "examples/model_labs/inspect_model.py",
+        "sha256": "b261d249c680cfb275acd269656bef53f30bddbc44f8c7c20dc2a99ac6a82ee1"
+      },
+      {
+        "path": "examples/model_labs/learning_description/CMakeLists.txt",
+        "sha256": "aeab37fd84340043300f90a583eeced421fa79f269665082eba9e3c4a3a2a424"
+      },
+      {
+        "path": "examples/model_labs/learning_description/launch/model.launch.py",
+        "sha256": "4b0845a38bbe0d25acf2a8dadb3f2cd10cd82de5c44244e46743f078fa0bf875"
+      },
+      {
+        "path": "examples/model_labs/learning_description/package.xml",
+        "sha256": "edd3cbb74cf6a8eda8e959ea7e391820e1656829137661ca78a49d306abab257"
+      },
+      {
+        "path": "examples/model_labs/learning_description/urdf/minimal.urdf",
+        "sha256": "3d1ea676267b903158dc0310d7b2aded561262f9d55b399dafa3aa013261149b"
+      },
+      {
+        "path": "examples/model_labs/learning_description/urdf/robot.urdf.xacro",
+        "sha256": "d9dbb396299d044d8f6c6f3d2a1c476f2045a2482d11c109dc3ab9f1da781bfc"
+      },
+      {
+        "path": "examples/model_labs/validate_model.py",
+        "sha256": "75537a1417d5f9c12b785fea8e70fad50fa57d76fc895536d9165270bed66e6d"
+      }
+    ],
+    "independentArtifactChecks": {
+      "normalInstalledCopies": 4,
+      "installedBytesEqualSource": true,
+      "rawLogFilesWithMatchingShaAndText": 10,
+      "recordedPidsNowAbsent": 12,
+      "parentExitCodes": {
+        "normal0": 8,
+        "expectedLaunchReject1": 2
+      },
+      "jointStatePhases": 6,
+      "opticalPoints": 6,
+      "wheelInertiaModels": 2,
+      "negativeFixtureOnlyIyyChanged": true,
+      "originalMinimalUrdfByteExact": true,
+      "quaternionNormAndAbsoluteDotChecks": true,
+      "runtimeSkipLogMarkersAndOldStampsConfirmed": true
+    },
+    "fixtureHistoryReview": "边界报告保留首次shell嵌套引号损坏XPath，且明确当时未运行负惯量探针；最终负Iyy文件真实SHA与双命令输出匹配。",
+    "cleanupReview": "10个父命令和2个RSP子PID的/proc均消失；两次正常launch各只有发父PID的SIGINT，无TERM/KILL；Context无效。此为正常收尾，不是父中断/挂起测试。"
+  },
+  "reviewedIntegrationScript": {
+    "path": "scripts/build_iteration6_material.py",
+    "sha256": "00c4e0868648375453c499e4f7921a01cba3014d8c876367678c8751b6cd47a3",
+    "approved": true,
+    "checkedAt": "2026-11-07T06:30:37.498153+08:00",
+    "scope": "只读完整正文/API/命令与报告门禁；不执行教材/API写出。",
+    "checks": [
+      "原缺失Xacro快捷步骤steps[2]与正文section[4]使用同一个已提供源路径。",
+      "主报告核全8项源/输入；边界只核实际2份Python，二者passed和独立批准报告SHA均检查。",
+      "4表由真实报告直接生成；3张仅主报告、负惯量表绑定边界报告。",
+      "velocity-only与非法数组分开；点含平移、方向仅旋转；活动局部轴与启动frame_prefix说明一致。",
+      "6新增完整文件、8练习与1模型API按有限证据表述，保留GUI/动力学/非零活动origin/根inertia/父中断未运行。"
+    ],
+    "readOnlyConstructionCheck": {
+      "passed": true,
+      "method": "AST仅执行main中api_path赋值前的读取、门禁和内存素材构造；断言前缀无write_text/write_bytes调用，前后API/覆层文件状态相同；未执行教材写出。",
+      "tableRows": [
+        2,
+        6,
+        2,
+        3
+      ],
+      "newCompleteSourceFiles": 6,
+      "newExercises": 8,
+      "shortcutMatchesProvidedXacro": true,
+      "evidenceTableHashesMatch": true,
+      "productionFilesWritten": 0
+    }
+  },
+  "supplementaryPortableReview": {
+    "reportFile": "validation-evidence/model-portable-current-validation.json",
+    "reportSha256": "e7fd0a48925fd5c7f7f85160af217cb9cf5a8db436224ae2a3699f699e1a6fd0",
+    "sourceArchive": "/tmp/ros2-model-source-download-xd4hfi9a/atlas_examples.zip",
+    "sourceArchiveSha256": "3e590a85c11fc0cf2a87ad81db4bf61f2fd63cfe77a07d539f23bdd716b5e1ac",
+    "sourceZipFileCount": 95,
+    "sourceFilesByteEqualAcrossOriginalZipExtracted": 8,
+    "embeddedRuntimeEqualsSavedReport": true,
+    "normalInstalledCopies": 4,
+    "rawLogHashes": 10,
+    "recordedPidsNowAbsent": 12,
+    "jointStatePhases": 6,
+    "opticalPoints": 6,
+    "domainId": 220,
+    "durationS": 3.8524416419968475,
+    "limits": "源码包复现依赖当前宿主已装ROS；不是跨机二进制、依赖闭包、GUI或动力学测试。首次错误cwd导致工具未启动进程已在原报告setupHistory保留。"
+  },
+  "reviewSelfChecks": {
+    "passed": true,
+    "localReferenceHashesMatched": 9,
+    "installedHeaderOrPythonHashesMatched": 7,
+    "assetPythonAndIntegrationAstParses": 4,
+    "textbookResourceIdsUnique": true,
+    "reviewedBaselineContentHashUnchanged": true,
+    "previousProbeCorrection": "额外本地参考重核初次把localPath误解为工作区根相对路径；实际为教材目录相对路径，纠正后9份本地源与7份安装文件全部匹配。该错误仅发生在审查探针，未运行ROS、未更改来源或实验数据。"
+  }
+}

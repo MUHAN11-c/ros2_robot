@@ -12,7 +12,8 @@ source /opt/ros/jazzy/setup.bash
 sudo apt install python3-colcon-common-extensions ros-jazzy-rclcpp ros-jazzy-rclpy \
   ros-jazzy-std-msgs ros-jazzy-launch-ros ros-jazzy-launch-xml ros-jazzy-launch-yaml
 sudo apt install ros-jazzy-example-interfaces
-colcon build --symlink-install
+# 本节只构建src下的通信两包；附加动作/组件实验在各自目录单独构建。
+colcon build --base-paths src --symlink-install
 source install/setup.bash
 ```
 
@@ -94,3 +95,38 @@ python3 offline_labs/dataset_manifest.py /path/to/your/data
 ```
 
 最后一个命令只读指定目录并输出清单；保存清单时请放在输入目录之外。详细原理、预期输出与练习答案已包含在离线教材中。
+
+## 看门狗、数学与机器人应用实验
+
+`offline_labs/watchdog_model.py` 是第五个基础离线模型，检查速度有限性、时间戳、过期与限幅；返回零不证明实际电机已停车。
+
+```bash
+python3 offline_labs/watchdog_model.py
+# 以下每个入口运行八个相互独立的标准库实验。
+python3 theory_labs/math_labs.py
+python3 theory_labs/applied_labs.py
+```
+
+数学实验包括线性代数、刚体、概率、估计、优化、运动学、动力学、控制；应用包括工程预算、位姿图、搜索、LQR、足式、无人机坐标、导航合同和机械臂轨迹。输入单位、前提、预期数值与边界见源码和 `theory_labs/` 内两个核查说明。
+
+`navigation/bounded_navigation.py` 是需要 Jazzy、rclpy 和 nav2_msgs 的完整单目标客户端。每个协议阶段使用单调软期限。准备、CLI、终态语义和 12 类隔离假服务端实验见 `navigation/README.md`。真实规划分段由下方台架覆盖，完整导航和实机另行验收。
+
+`nav2_labs/` 用 Gazebo 的固定激光接入真实 MapServer、AMCL 和 NavFn。输入配置和运行脚本见 [固定激光台架](nav2_labs/README.md)。检查占据图、晚加入 QoS、定位初值、实时标记、同目标重规划和故障码。台架没有新增 ROS 包，首次通信构建的范围仍是 `src`。
+
+`slam_labs/` 采集 Gazebo 在不同位姿的真实激光，以隔离回放钟和已知里程计偏差运行 SLAM Toolbox。实验保存占据栅格与位姿图，在新进程分别恢复，并核对短期定位缓冲对栅格的影响。参见 [运动扫描与位姿图实验](slam_labs/README.md)。
+
+`runtime_labs/` 保存QoS、时钟、tf2、异步轮询，以及慢消费者、执行器/Future、参数三阶段和服务迟到响应实验。它们使用真实Jazzy API与合成数据，输入、单位、报告路径、清理及未覆盖分支见 `runtime_labs/README.md`；不能用这些软件实验推断硬件行为。
+
+`action_labs/` 是独立Count故障扩展包及原/扩展服务端验收，复用另行构建的基础Count接口；`component_labs/` 是独立组件包与三容器对照。两者按各自README构建到专属安装前缀。上面的通信命令限定src，防止把需要额外接口的附加实验一起扫描进首次通信构建。
+
+`lifecycle_labs/` 提供真实生命周期API与软件假资源；`testing_labs/` 提供完整gtest/pytest/launch_testing注册包和受控失败变体，分别按README构建。`testing_policy/` 保留旧四测试的基线与修订整数纳秒策略，区分测试通过和合同覆盖。`deployment_labs/` 只读审计显式安装前缀，并另测宿主直接exec信号；复制安装副本和Docker未运行。实验新报告另存/tmp，避免覆盖教材绑定证据。
+
+`bag_labs/` 用标准合成消息完成真实CLI录制、关闭读回与暂停就绪后的筛选回放；另有不启动DDS的SQLite/MCAP字段探针。它不是新增ROS包，不改变首次构建的两包范围。按目录README准备rosbag2及两个存储插件，运行结果写独立/tmp；真实采集、GUI、性能、压缩/恢复及父中断注入未覆盖。
+
+`model_labs/` 提供一个完整learning_description资源包、Xacro/URDF/launch、数值自检与无GUI TF driver。普通复制安装后异目录启动，默认/覆盖尺寸、固定边晚加入、位置状态/非法长度/合法velocity-only及光学单位点分别检查。目录现在共7个ROS包，首次构建仍仅扫描src两包；新增包按自身README准备依赖。没有RViz、动力学、真实相机或硬件验收。
+
+只下载`atlas_examples.zip`时，解压后进入`atlas_examples/`，实验路径从该工程根目录计算。例如模型完整验收直接用`python3 model_labs/validate_model.py`；其README里的`python3 examples/model_labs/...`写法对应完整教材工作区，从独立工程运行时去掉开头`examples/`。模型driver用自身文件位置查找描述包，不要求下载目录改名为examples。
+
+## Nav2 行为树与差速车闭环
+
+`nav2_execution/` 读取前一轮 SLAM 的 PGM/YAML，在同一房间运行 Gazebo 差速车、NavFn、RPP、闭环速度平滑与安装版默认行为树。它保存到达、途中取消、两个失败分支和恢复有效控制器后的实际动作及世界位姿。地图输入来自验证记录，目录关系和复现步骤见 [台架说明](nav2_execution/README.md)。

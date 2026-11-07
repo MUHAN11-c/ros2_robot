@@ -1,0 +1,65 @@
+{
+  "checkedAt": "2026-11-07",
+  "sourceRelease": "peach_robot v1.0.0",
+  "sdkPackage": "@local/ros2-web-link",
+  "sdkVersion": "0.8.3",
+  "status": "reserved-not-integrated",
+  "verification": "仅只读核对本地源码和公有声明，未运行SDK、ROS或实时连接",
+  "sourceFiles": {
+    "package.json": "9fa5430abba22dba3b4f4c0b5e3e3d0ffe3c71eaeba259a425b208144c790b06",
+    "doc/integration.md": "000291ec9a8aa2f830efad72cef1a6cdb9be20ef4d3e19d21247a568ecf97173",
+    "doc/workbench.md": "48630a551f5d37e54c4d4e87201757f924059112c62a88b38272ad1cb78eff7d",
+    "scene/index.ts": "da8c1ad0e81dbadc5d49026ab9d091038056124fd74f4d47e2ab45377eafec2c",
+    "media/image.ts": "9b28e617a3aa0d3a18612688b98cabf28e89f3d337685978df6ebd9a45d29c04",
+    "media/plot.ts": "34ea8dfad70a7e3e278d172b14296ac81e60dd2f244865f72319d60dd43982c5",
+    "graph/view.ts": "eb2f486563c174615eb60ad56c551cacbf965ddab2e24f017940c87226d66654",
+    "workbench/index.ts": "5ceb127bf62ba9403415d73da93601741e8b4e0d7d2389af12bccf7bae177492"
+  },
+  "components": [
+    {
+      "name": "SceneView",
+      "entry": "@local/ros2-web-link/scene",
+      "purpose": "URDF、TF、轨迹、点云"
+    },
+    {
+      "name": "ImageView",
+      "entry": "@local/ros2-web-link/media",
+      "purpose": "图像与深度"
+    },
+    {
+      "name": "SeriesPlot",
+      "entry": "@local/ros2-web-link/media",
+      "purpose": "时间曲线"
+    },
+    {
+      "name": "GraphView",
+      "entry": "@local/ros2-web-link/graph",
+      "purpose": "ROS声明关系图"
+    },
+    {
+      "name": "WorkbenchController / WorkbenchView",
+      "entry": "@local/ros2-web-link/workbench",
+      "purpose": "后续组合工作台"
+    }
+  ],
+  "currentAdapterContract": {
+    "register": "register(id, {mount(root, options)})",
+    "mountOptions": [
+      "initialState",
+      "onStateChange"
+    ],
+    "instanceMethods": [
+      "resize()",
+      "getState()",
+      "dispose()"
+    ],
+    "dataModes": [
+      "当前：本地教学几何",
+      "计划：录制回放",
+      "计划：实时只读观测"
+    ],
+    "ownership": "父级拥有共享RosClient；每个显示释放自己的view；离开章节由父级释放最终客户端。当前没有创建RosClient。",
+    "wideMode": "同一挂载容器移动到dialog，返回后复位，避免复制实例与丢失事件引用。",
+    "futureAssets": "集成时将选用版本的自带依赖脚本、资源与第三方说明保存为站内文件；页面不运行时读取原工程绝对路径。"
+  }
+}

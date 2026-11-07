@@ -1,0 +1,237 @@
+{
+  "passed": true,
+  "domainId": 228,
+  "discovery": "LOCALHOST",
+  "output": "/tmp/ros2-gz-sensor-zjz3jf8u",
+  "gazeboPartition": "hub_zjz3jf8u",
+  "gazeboIp": "127.0.0.1",
+  "versions": {
+    "gzSim": "Gazebo Sim, version 8.15.0",
+    "opencv": "4.6.0",
+    "ros_gz_bridge": "1.0.24",
+    "ros_gz_interfaces": "1.0.24",
+    "gz_sensors_vendor": "0.0.6",
+    "cv_bridge": "4.1.0",
+    "rclpy": "7.1.12"
+  },
+  "sourceHashes": {
+    "validate_sensors.py": "e14314457e0c72608e057a6c2a1dea3c90c3e6e0efdf32bd1aa4c22e5d4990da",
+    "sensors.sdf": "9ffb1a6009a3fcf42f5035fc17342670f74ef175652e9523811274f269076047",
+    "bridge.yaml": "d20da535e9e7cb827486decc73a1ac23756fb52fa67a7504f412f5decf716a15"
+  },
+  "controlReplies": [
+    {
+      "pause": false,
+      "success": true
+    },
+    {
+      "pause": true,
+      "success": true
+    },
+    {
+      "pause": false,
+      "success": true
+    },
+    {
+      "pause": true,
+      "success": true
+    }
+  ],
+  "processes": [
+    {
+      "label": "gazebo",
+      "argv": [
+        "gz",
+        "sim",
+        "-s",
+        "--headless-rendering",
+        "-v",
+        "4",
+        "/tmp/ros2-gz-portable-WRHjI7/atlas_examples/gazebo_labs/sensors.sdf"
+      ],
+      "pid": 380295,
+      "logFile": "/tmp/ros2-gz-sensor-zjz3jf8u/gazebo.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "e35cfff3c6618d3f10c49be1c9a94f1d3a03f4c8845a03b61ad6122347731128",
+      "logTail": ";32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;36m[Dbg] [Physics.cc:1004] \u001b[0m\u001b[1;36mLoaded [\u001b[0m\u001b[1;36mgz::physics::dartsim::Plugin\u001b[0m\u001b[1;36m] from library [\u001b[0m\u001b[1;36m/opt/ros/jazzy/opt/gz_physics_vendor/lib/gz-physics-7/engine-plugins/libgz-physics-dartsim-plugin.so\u001b[0m\u001b[1;36m]\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [SystemManager.cc:80] \u001b[0m\u001b[1;36mLoaded system [\u001b[0m\u001b[1;36mgz::sim::systems::Physics\u001b[0m\u001b[1;36m] for entity [\u001b[0m\u001b[1;36m1\u001b[0m\u001b[1;36m]\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [Sensors.cc:697] \u001b[0m\u001b[1;36mConfiguring Sensors system\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [Sensors.cc:557] \u001b[0m\u001b[1;36mSensorsPrivate::Run\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [SystemManager.cc:80] \u001b[0m\u001b[1;36mLoaded system [\u001b[0m\u001b[1;36mgz::sim::systems::Sensors\u001b[0m\u001b[1;36m] for entity [\u001b[0m\u001b[1;36m1\u001b[0m\u001b[1;36m]\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [Sensors.cc:532] \u001b[0m\u001b[1;36mSensorsPrivate::RenderThread started\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [Sensors.cc:337] \u001b[0m\u001b[1;36mWaiting for init\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mLoaded level [\u001b[0m\u001b[1;32mdefault\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mServing world controls on [\u001b[0m\u001b[1;32m/world/hub_perception\u001b[0m\u001b[1;32m/control], [\u001b[0m\u001b[1;32m/world/hub_perception\u001b[0m\u001b[1;32m/control/state] and [\u001b[0m\u001b[1;32m/world/hub_perception\u001b[0m\u001b[1;32m/playback/control]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mServing GUI information on [\u001b[0m\u001b[1;32m/world/hub_perception\u001b[0m\u001b[1;32m/\u001b[0m\u001b[1;32mgui/info\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mWorld [\u001b[0m\u001b[1;32mhub_perception\u001b[0m\u001b[1;32m] initialized with [\u001b[0m\u001b[1;32mlab_step\u001b[0m\u001b[1;32m] physics profile.\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mServing world SDF generation service on [\u001b[0m\u001b[1;32m/world/hub_perception\u001b[0m\u001b[1;32m/\u001b[0m\u001b[1;32mgenerate_world_sdf\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mServing world names on [\u001b[0m\u001b[1;32m/gazebo/worlds\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mResource path add service on [\u001b[0m\u001b[1;32m/gazebo/resource_paths/add\u001b[0m\u001b[1;32m].\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mResource path get service on [\u001b[0m\u001b[1;32m/gazebo/resource_paths/get\u001b[0m\u001b[1;32m].\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mResource path resolve service on [\u001b[0m\u001b[1;32m/gazebo/resource_paths/resolve\u001b[0m\u001b[1;32m].\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mResource paths published on [\u001b[0m\u001b[1;32m/gazebo/resource_paths\u001b[0m\u001b[1;32m].\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mServer control service on [\u001b[0m\u001b[1;32m/server_control\u001b[0m\u001b[1;32m].\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mFound no publishers on /stats, adding root stats topic\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mFound no publishers on /clock, adding root clock topic\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;36m[Dbg] [SimulationRunner.cc:627] \u001b[0m\u001b[1;36mCreating PostUpdate worker threads: \u001b[0m\u001b[1;36m2\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [SimulationRunner.cc:638] \u001b[0m\u001b[1;36mCreating postupdate worker thread (\u001b[0m\u001b[1;36m0\u001b[0m\u001b[1;36m)\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [Sensors.cc:953] \u001b[0m\u001b[1;36mInitialization needed\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [Sensors.cc:349] \u001b[0m\u001b[1;36mInitializing render context\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mLoading plugin [\u001b[0m\u001b[1;32mgz-rendering-ogre2\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;36m[Dbg] [RenderUtil.cc:2646] \u001b[0m\u001b[1;36mCreate scene [\u001b[0m\u001b[1;36mscene\u001b[0m\u001b[1;36m]\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [Sensors.cc:391] \u001b[0m\u001b[1;36mRendering Thread initialized\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [Sensors.cc:953] \u001b[0m\u001b[1;36m[Dbg] [Sensors.cc:953] \u001b[0m\u001b[1;36mInitialization needed\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [CameraSensor.cc:405] \u001b[0m\u001b[1;36mCamera images for [\u001b[0m\u001b[1;36mrig::base::rgb\u001b[0m\u001b[1;36m] advertised on [\u001b[0m\u001b[1;36m/hub_sensors/image\u001b[0m\u001b[1;36m]\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [CameraSensor.cc:695] \u001b[0m\u001b[1;36mCamera info for [\u001b[0m\u001b[1;36mrig::base::rgb\u001b[0m\u001b[1;36m] advertised on [\u001b[0m\u001b[1;36m/hub_sensors/camera_info\u001b[0m\u001b[1;36m]\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [Lidar.cc:139] \u001b[0m\u001b[1;36mLaser scans for [\u001b[0m\u001b[1;36mrig::base::scan\u001b[0m\u001b[1;36m] advertised on [\u001b[0m\u001b[1;36m/hub_sensors/scan\u001b[0m\u001b[1;36m]\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [GpuLidarSensor.cc:164] \u001b[0m\u001b[1;36mLidar points for [\u001b[0m\u001b[1;36mrig::base::scan\u001b[0m\u001b[1;36m] advertised on [\u001b[0m\u001b[1;36m/hub_sensors/scan/points\u001b[0m\u001b[1;36m]\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [SimulationFeatures.cc:90] \u001b[0m\u001b[1;36mSimulation timestep set to: \u001b[0m\u001b[1;36m0.005\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [CameraSensor.cc:504] \u001b[0m\u001b[1;36mEnabling camera sensor: '\u001b[0m\u001b[1;36mrig::base::rgb\u001b[0m\u001b[1;36m' data \u001b[0m\u001b[1;36mgeneration.\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [SignalHandler.cc:142] \u001b[0m\u001b[1;36mReceived signal[\u001b[0m\u001b[1;36m2\u001b[0m\u001b[1;36m].\u001b[0m\n\u001b[1;36m[Dbg] [ServerPrivate.cc:122] \u001b[0m\u001b[1;36mServer received signal[\u001b[0m\u001b[1;36m2\u001b[0m\u001b[1;36m]\u001b[0m\n\u001b[1;36m[Dbg] [Sensors.cc:565] \u001b[0m\u001b[1;36mSensorsPrivate::Stop\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [Sensors.cc:551] \u001b[0m\u001b[1;36mSensorsPrivate::RenderThread stopped\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [gz.cc:434] \u001b[0m\u001b[1;36mShutting down gz-sim-server\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [SimulationRunner.cc:654] \u001b[0m\u001b[1;36mExiting postupdate worker thread (\u001b[0m\u001b[1;36m0\u001b[0m\u001b[1;36m)\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [Sensors.cc:565] \u001b[0m\u001b[1;36mSensorsPrivate::Stop\u001b[0m\u001b[1;36m\u001b[0m\n"
+    },
+    {
+      "label": "bridge",
+      "argv": [
+        "/opt/ros/jazzy/lib/ros_gz_bridge/parameter_bridge",
+        "/world/hub_perception/control@ros_gz_interfaces/srv/ControlWorld@gz.msgs.WorldControl@gz.msgs.Boolean",
+        "--ros-args",
+        "-r",
+        "__ns:=/gzlab_zjz3jf8u",
+        "-r",
+        "__node:=sensor_bridge",
+        "-p",
+        "config_file:=/tmp/ros2-gz-portable-WRHjI7/atlas_examples/gazebo_labs/bridge.yaml",
+        "-p",
+        "override_timestamps_with_wall_time:=false"
+      ],
+      "pid": 380370,
+      "logFile": "/tmp/ros2-gz-sensor-zjz3jf8u/bridge.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "88bee35e60119f2bb8b8e71f7ef56db0a70bebd247ca40297d4a76385d898610",
+      "logTail": "[INFO] [1794041638.826047049] [gzlab_zjz3jf8u.sensor_bridge]: Creating ROS->GZ service bridge [/world/hub_perception/control (ros_gz_interfaces/srv/ControlWorld -> gz.msgs.WorldControl/gz.msgs.Boolean)]\n[INFO] [1794041639.826504164] [gzlab_zjz3jf8u.sensor_bridge]: Creating GZ->ROS Bridge: [/world/hub_perception/clock (gz.msgs.Clock) -> /clock (rosgraph_msgs/msg/Clock)] (Lazy 0)\n[INFO] [1794041639.827564028] [gzlab_zjz3jf8u.sensor_bridge]: Creating GZ->ROS Bridge: [/hub_sensors/image (gz.msgs.Image) -> camera/image_raw (sensor_msgs/msg/Image)] (Lazy 0)\n[INFO] [1794041639.828791089] [gzlab_zjz3jf8u.sensor_bridge]: Creating GZ->ROS Bridge: [/hub_sensors/camera_info (gz.msgs.CameraInfo) -> camera/camera_info (sensor_msgs/msg/CameraInfo)] (Lazy 0)\n[INFO] [1794041639.829145453] [gzlab_zjz3jf8u.sensor_bridge]: Creating GZ->ROS Bridge: [/hub_sensors/scan (gz.msgs.LaserScan) -> scan (sensor_msgs/msg/LaserScan)] (Lazy 0)\n[INFO] [1794041639.829416739] [gzlab_zjz3jf8u.sensor_bridge]: Creating GZ->ROS Bridge: [/hub_sensors/scan/points (gz.msgs.PointCloudPacked) -> scan_points (sensor_msgs/msg/PointCloud2)] (Lazy 0)\n[WARN] [1794041639.829783054] [gzlab_zjz3jf8u.sensor_bridge]: New subscription discovered on topic '/gzlab_zjz3jf8u/scan', requesting incompatible QoS. No messages will be sent to it. Last incompatible policy: RELIABILITY_QOS_POLICY\n[INFO] [1794041641.513825575] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n"
+    }
+  ],
+  "namespace": "/gzlab_zjz3jf8u",
+  "eglVendor": "/usr/share/glvnd/egl_vendor.d/10_nvidia.json",
+  "renderMode": "server-only EGL Ogre2",
+  "gazeboWorldControlDiscovered": true,
+  "oneWayRosTopics": [
+    "/clock",
+    "/gzlab_zjz3jf8u/camera/image_raw",
+    "/gzlab_zjz3jf8u/camera/camera_info",
+    "/gzlab_zjz3jf8u/scan",
+    "/gzlab_zjz3jf8u/scan_points"
+  ],
+  "qos": {
+    "scanGraphPublishers": 1,
+    "offered": "BEST_EFFORT",
+    "bestEffortMatched": 1,
+    "reliableMatched": 0,
+    "bestEffortSamples": 6,
+    "reliableSamples": 0
+  },
+  "clock": {
+    "initialNs": 0,
+    "runningNs": 655000000,
+    "pausedNs": 660000000,
+    "pausedWindowSteadyS": 0.4,
+    "resumedNs": 700000000,
+    "pausedSensorStampsNs": {
+      "image": 600000000,
+      "info": 600000000,
+      "scan": 600000000,
+      "cloud": 600000000,
+      "edges": 600000000
+    },
+    "resumedSensorStampsNs": {
+      "image": 700000000,
+      "info": 700000000,
+      "scan": 700000000,
+      "cloud": 700000000,
+      "edges": 700000000
+    }
+  },
+  "camera": {
+    "sizePx": [
+      96,
+      64
+    ],
+    "encoding": "rgb8",
+    "rowBytes": 288,
+    "dataBytes": 18432,
+    "matchingTriplets": 7,
+    "stampNs": 700000000,
+    "frame": "camera_optical_frame",
+    "k": [
+      83.13844299316406,
+      0.0,
+      48.0,
+      0.0,
+      83.13843536376953,
+      32.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "centerRgb": [
+      210,
+      56,
+      50
+    ],
+    "edgeEncoding": "mono8",
+    "edgeRowBytes": 96,
+    "redEdgePixels": 128,
+    "grayEdgePixelsSameThreshold": 0,
+    "imageSha256": {
+      "camera.png": "f4ba84726279663a97a455eaafd2ebf7bcdd14361cf83bdcb6512e25fd08f034",
+      "edges.png": "5bb963bd65e51279df599f2c4be6d813392f0d4f220e35cd72be9056dbdc658b"
+    }
+  },
+  "scan": {
+    "stampNs": 700000000,
+    "frame": "laser_link",
+    "beams": 41,
+    "angleMinRad": -0.6000000238418579,
+    "angleStepRad": 0.029999999329447746,
+    "centerRangeM": 2.200134515762329,
+    "finiteRanges": 29,
+    "scanTimeS": 0.0,
+    "beamTimeIncrementS": 0.0,
+    "successiveHeaderIntervalsS": [
+      0.1,
+      0.1,
+      0.1,
+      0.1,
+      0.1,
+      0.1
+    ]
+  },
+  "cloud": {
+    "width": 41,
+    "height": 1,
+    "pointStep": 32,
+    "rowStep": 1312,
+    "xyzOffsets": [
+      0,
+      4,
+      8
+    ],
+    "bigEndian": false,
+    "finitePoints": 29,
+    "centerM": [
+      2.200134515762329,
+      -2.0490350038926408e-07,
+      0.0
+    ],
+    "stampNs": 700000000,
+    "frame": "laser_link"
+  },
+  "tf": [
+    {
+      "source": "camera_optical_frame",
+      "target": "rig_base",
+      "headerStampNs": 700000000,
+      "inputM": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "outputM": [
+        1.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "source": "laser_link",
+      "target": "rig_base",
+      "headerStampNs": 700000000,
+      "inputM": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "outputM": [
+        1.0,
+        0.0,
+        0.0
+      ]
+    }
+  ],
+  "sourceArchiveFiles": 105,
+  "sourceArchiveSha256": "e669a7aa447f256c430d5873a7b906290ffb6ed85cdc4c11e267c529ef4bfd05"
+}

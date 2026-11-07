@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-11-07",
+  "iteration": "2026-11-07-r7",
+  "passed": true,
+  "chapters": 60,
+  "comparisons": 12,
+  "mobileRoutes": 170,
+  "widths": [
+    390,
+    320
+  ],
+  "externalRequests": 0,
+  "errors": []
+}

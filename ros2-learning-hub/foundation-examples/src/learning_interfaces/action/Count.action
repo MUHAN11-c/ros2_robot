@@ -1,5 +1,12 @@
+# 【中文教学注释】 foundation-examples/src/learning_interfaces/action/Count.action
+# 输入输出：输入为 msg/srv/action 定义及生成配置；输出为两种语言可使用的类型和 wheel_feedback 测量。
+# 执行顺序与边界：接口必须先生成并加载再导入；轮速单位 rad/s，Header 指定采样时刻与坐标系，gain 无量纲，valid 不能被缺省数值替代。
+# 目标计数，无量纲uint32；本章服务端额外限制1..20，字段类型本身不表达该业务范围。
 uint32 target
+# 分隔目标/结果/反馈三个部分，顺序是Action接口协议的一部分。
 ---
+# 最终结果中的已完成步数，无量纲；取消或失败时可能小于目标。
 uint32 completed
 ---
+# 中间反馈计数，无量纲；反馈不是最终状态，客户端还需检查结果终态。
 uint32 current

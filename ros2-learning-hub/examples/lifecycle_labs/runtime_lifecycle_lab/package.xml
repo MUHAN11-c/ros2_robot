@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!-- 原创生命周期软件假资源包：只有内存资源和诊断计数，不接硬件。 -->
+<package format="3">
+  <name>runtime_lifecycle_lab</name>
+  <version>0.1.0</version>
+  <description>生命周期返回值、资源事务与消息门控的原创实验</description>
+  <maintainer email="learner@example.com">ROS 2 Learning Hub</maintainer>
+  <license>Apache-2.0</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_lifecycle</depend>
+  <depend>rcl_interfaces</depend>
+  <depend>lifecycle_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>std_srvs</depend>
+  <export><build_type>ament_cmake</build_type></export>
+</package>

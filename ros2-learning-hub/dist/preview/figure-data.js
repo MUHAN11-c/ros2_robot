@@ -1,4 +1,4 @@
-/* Original diagrams for the design-review preview. */
+/* 正式构建同步的原创图解清单；来源为source/design-figures.json。 */
 window.PreviewFigureData = [
   {
     "id": "architecture",
@@ -113,6 +113,238 @@ window.PreviewFigureData = [
       {
         "chapter": "eco-nav2-task-programming",
         "afterSection": 0
+      }
+    ]
+  },
+  {
+    "id": "rigid-composition",
+    "file": "preview/figures/rigid-composition.svg",
+    "title": "同一个点，两种坐标表达",
+    "kind": "原理图",
+    "alt": "车体B与旋转90度的传感器L坐标系，以及点坐标的旋转平移数值案例。",
+    "caption": "例中先将传感器坐标旋转90°，再加安装平移。图上两组坐标描述同一个点；改变表达坐标不改变物理点。",
+    "placements": [
+      {
+        "chapter": "math-rigid",
+        "afterSection": 0
+      },
+      {
+        "chapter": "math-kinematics",
+        "afterSection": 0
+      }
+    ]
+  },
+  {
+    "id": "tf2-static",
+    "file": "preview/figures/tf2-static.svg",
+    "title": "二维交互的静态数值案例",
+    "kind": "原理图",
+    "alt": "二维刚体变换的默认可手算案例，米为长度单位。",
+    "caption": "连续版保存一个静态参数案例；交互版可在相关章节调整平移与旋转。",
+    "placements": [
+      {
+        "chapter": "tf2",
+        "afterSection": 2
+      },
+      {
+        "chapter": "eco-tf-frames",
+        "afterSection": 1
+      }
+    ],
+    "bookOnly": true
+  },
+  {
+    "id": "estimation-loop",
+    "file": "preview/figures/estimation-loop.svg",
+    "title": "用预测和测量修正状态",
+    "kind": "原理图",
+    "alt": "运动预测、创新、测量校正和协方差递推的闭环。",
+    "caption": "预测与校正既要更新状态，也要处理不确定性、时间戳和观测坐标。图不意味着所有SLAM算法都采用EKF，也不保证所有状态都可观。",
+    "placements": [
+      {
+        "chapter": "math-estimation",
+        "afterSection": 1
+      },
+      {
+        "chapter": "eco-state-estimation",
+        "afterSection": 0
+      }
+    ]
+  },
+  {
+    "id": "planning-search",
+    "file": "preview/figures/planning-search.svg",
+    "title": "比较搜索时，先对齐同一个问题",
+    "kind": "原理图",
+    "alt": "网格、障碍、起终点和示意路径，以及Dijkstra和A星的优先级。",
+    "caption": "虚线是理想距离直觉，橙线是绕障示意路径，未把这条绘制路径标为算法最优输出。真实最优性要以相同图、非负代价和启发条件核查；机器人还需要运动学与碰撞约束。",
+    "placements": [
+      {
+        "chapter": "theory-planning",
+        "afterSection": 1
+      },
+      {
+        "chapter": "project-navigation",
+        "afterSection": 2
+      }
+    ]
+  },
+  {
+    "id": "receding-horizon",
+    "file": "preview/figures/receding-horizon.svg",
+    "title": "预测多步，执行一步，重新观测",
+    "kind": "原理图",
+    "alt": "模型预测控制的预测时域与滚动执行顺序。",
+    "caption": "示意轨迹没有替代具体模型或求解器结果。实际系统需检查约束可行性、终端条件、采样周期、求解上界和失败后的控制策略。",
+    "placements": [
+      {
+        "chapter": "theory-optimal-control",
+        "afterSection": 2
+      },
+      {
+        "chapter": "math-control",
+        "afterSection": 4
+      }
+    ]
+  },
+  {
+    "id": "slam-constraints",
+    "file": "preview/figures/slam-constraints.svg",
+    "title": "SLAM：状态由哪些约束连接？",
+    "kind": "原理图",
+    "alt": "三个机器人位姿、一个地标、运动与观测约束以及回环边。",
+    "caption": "方框是待估计变量，连接表示模型残差或测量约束。回环需要可靠的数据关联；固定一个参考自由度可消除相应规范歧义，但不能自动修复错误观测或保证地图准确。",
+    "placements": [
+      {
+        "chapter": "theory-slam",
+        "afterSection": 1
+      }
+    ]
+  },
+  {
+    "id": "robot-static",
+    "file": "preview/figures/robot-static.svg",
+    "title": "连杆、局部关节轴与末端位置",
+    "kind": "原理图",
+    "alt": "三关节机器人几何模型，显示与交互模型一致的默认关节角和末端坐标。",
+    "caption": "这是交互模型默认姿态的静态几何图，仅验证运动学关系，不包含质量、碰撞、接触、驱动或ROS连接。交互版可在正文中调整视角和关节。",
+    "placements": [
+      {
+        "chapter": "eco-model-rviz",
+        "afterSection": 1
+      },
+      {
+        "chapter": "eco-moveit-planning",
+        "afterSection": 1
+      },
+      {
+        "chapter": "math-kinematics",
+        "afterSection": 2
+      },
+      {
+        "chapter": "project-manipulation",
+        "afterSection": 2
+      }
+    ],
+    "bookOnly": true
+  },
+  {
+    "id": "component-options",
+    "file": "preview/figures/component-options.svg",
+    "title": "组件参数：来源、覆盖与实际值",
+    "kind": "原理图",
+    "alt": "Context全局CLI、管理节点当前参数和LoadNode局部覆盖分开；转发开关控制全局CLI，局部覆盖优先，三个实例输出0.20、0.36、0.30米每秒。",
+    "caption": "本图针对标准manager创建的组件options，数值取自第3轮真实Config实验。管理节点从1.8改为1.2不改写Context的启动CLI；局部加载参数优先。gain无量纲，输出按0.2m/s基值换算；不是硬件速度或任意NodeOptions默认值的示意。",
+    "placements": [
+      {
+        "chapter": "composition",
+        "afterSection": 6
+      }
+    ],
+    "evidenceFile": "validation-evidence/component-labs-current-validation.json",
+    "evidenceSha256": "3c44eddd36c25205bc11f0e1d43bc76e211a59ef5e21da851c00515dc1eea2a2"
+  },
+  {
+    "id": "gazebo-sensor-captures",
+    "title": "Gazebo 红板的真实相机帧与红通道边缘",
+    "alt": "同一采集时戳的96乘64像素红板图像和黑底白边Canny结果。两个结果并排，可看清红板的竖边。",
+    "file": "preview/figures/gazebo-sensor-captures.svg",
+    "kind": "实测图",
+    "caption": "左侧 RGB、右侧红通道 Canny 来自同一台架的实际软件仿真采样。阈值固定为 40/120，像素以最近邻放大。图像处理保留原 Header。",
+    "evidenceFile": "validation-evidence/gazebo-sensors-current-validation.json",
+    "evidenceSha256": "697c865879d240e7e9266488b308d7a6d7f88f5df9a3527230f03303d6b60686",
+    "assetSha256": "576143f5b1f611f4d5e750205f3950a21118c233f98369057579a56d96e9c430",
+    "placements": [
+      {
+        "chapter": "eco-gazebo-simulation",
+        "afterSection": 7
+      },
+      {
+        "chapter": "eco-perception-pipeline",
+        "afterSection": 7
+      }
+    ]
+  },
+  {
+    "id": "nav2-costmap-planning",
+    "title": "同一目标在障碍标记前后的 NavFn 路径",
+    "alt": "左侧的静态代价图上原路径横穿箱体所在区域。右侧的障碍层由实际激光标记箱体前缘，新路径从其侧面绕行。",
+    "file": "preview/figures/nav2-costmap-planning.svg",
+    "kind": "实测图",
+    "caption": "两幅底图来自真实 GetCostmap 主图，路径来自两个实际 ComputePathToPose 回执。箱体虚线是 SDF 几何，红格是扫描新增的可见面。两图比例相同。",
+    "evidenceFile": "validation-evidence/nav2-planning-current-validation.json",
+    "evidenceSha256": "4366cea60de4f7bfa8a1b8648562b41d2356ca6ee62ceff84dffc2389ae8a0a3",
+    "assetSha256": "ffba6f9902df9fbefbcb136614df047700d749fd17a08ebcf8e95d2dcea4d58a",
+    "placements": [
+      {
+        "chapter": "eco-nav2-stack",
+        "afterSection": 8
+      },
+      {
+        "chapter": "theory-planning",
+        "afterSection": 6
+      }
+    ]
+  },
+  {
+    "id": "slam-mapping-trajectory",
+    "title": "同一圈扫描的占据图、轨迹与误差",
+    "alt": "左侧为实测占据图叠加 Gazebo 参考路线、注入偏差的里程计和 SLAM 位姿。右侧比较每次接受扫描时的平面位置误差。",
+    "file": "preview/figures/slam-mapping-trajectory.svg",
+    "kind": "实测图",
+    "caption": "底图是 SLAM Toolbox 实际发布的占据栅格。路线取采集参考、注入偏差的里程计和接受扫描后的位姿回执。估计误差按采集参考位姿计算。",
+    "evidenceFile": "validation-evidence/slam-mapping-current-validation.json",
+    "evidenceSha256": "1d3a900208f6d9a8ec02b2c9c8f4da16397cfd19bc1513ce48b3263b5f76698e",
+    "assetSha256": "512c08e0516505aebfe270e5a346ce52525fcf5b1ce9961e280a5959e6e02f24",
+    "placements": [
+      {
+        "chapter": "eco-slam-mapping",
+        "afterSection": 9
+      },
+      {
+        "chapter": "theory-slam",
+        "afterSection": 6
+      }
+    ]
+  },
+  {
+    "id": "nav2-execution-stop",
+    "title": "真实行为树执行：到达、取消与停稳",
+    "alt": "左图叠加实际规划和 Gazebo 参考轨迹。右图比较同一取消场景的控制器、平滑器和世界速度。",
+    "kind": "实测图",
+    "file": "preview/figures/nav2-execution-stop.svg",
+    "caption": "左图底图为实际重载的 SLAM 栅格，线段来自首条 NavFn Path 与 Gazebo 世界位姿。右图用同一仿真时基对照控制器、平滑器和世界速度，停稳按连续采样判据。",
+    "evidenceFile": "validation-evidence/nav2-execution-current-validation.json",
+    "evidenceSha256": "d659b24d580e18d7b55d16037980e6068a006034ee31049229caf29560db0e7f",
+    "assetSha256": "a110a0e9d41a7c625afdec256bb4f0438bc313bb53a952956b00cfe14960d923",
+    "placements": [
+      {
+        "chapter": "eco-nav2-stack",
+        "afterSection": 9
+      },
+      {
+        "chapter": "eco-nav2-task-programming",
+        "afterSection": 8
       }
     ]
   }

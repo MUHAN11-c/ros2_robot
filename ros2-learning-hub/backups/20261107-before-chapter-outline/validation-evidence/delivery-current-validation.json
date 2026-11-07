@@ -1,0 +1,472 @@
+{
+  "checkedAt": "2026-11-07",
+  "iteration": "2026-11-07-r9",
+  "passed": true,
+  "artifact": "deliverables/ros2-learning-hub-offline.zip",
+  "verification": "实际解压候选教材并断网复核地图规划图解、便携原文边界、目录和无脚本连续版。原创工程包的同一字节从解压目录真实重跑 Nav2。",
+  "results": {
+    "portableMode": true,
+    "missingOriginalLinksDisabled": true,
+    "copyOrFallback": true,
+    "chapters": 60,
+    "equations": 49,
+    "svgInstances": 34,
+    "noJavaScriptBook": true,
+    "widths": [
+      390,
+      320
+    ],
+    "externalRequests": 0,
+    "scriptErrors": 0,
+    "exercises": 333,
+    "apiTables": 22,
+    "completeCodeFiles": 160,
+    "evidenceTables": 34
+  },
+  "command": "PORTABLE_SITE_DIR=<实际解压的ros2-learning-hub目录> PLAYWRIGHT_BROWSERS_PATH=<Chromium目录> node tests/delivery-checks.cjs",
+  "observedTest": {
+    "portable": true,
+    "chapters": 60,
+    "equations": 49,
+    "svgInstances": 34,
+    "evidenceTables": 34,
+    "noScript": true,
+    "widths": [
+      390,
+      320
+    ],
+    "externalRequests": 0,
+    "errors": [],
+    "exitCode": 0,
+    "candidateArchiveSha256": "fabea445aa3fcdf72bcd8416d707b8a55bc31f5e84728eca2c111a1b9540b13b"
+  },
+  "sourceArchiveRuntime": {
+    "passed": true,
+    "sha256": "32f7fb37c03c8b8bcc47110faa8d3ab727771c120b31b4f2434ed5c96508dd10",
+    "files": 110,
+    "report": "validation-evidence/nav2-planning-portable-current-validation.json",
+    "matchesActualTestedArchive": true
+  },
+  "reportPackagingNote": "收录报告后核当前核心文件及整个站点的归档字节，最终包再解压断网核对。不计算包含自身的递归SHA。",
+  "coreFingerprints": [
+    {
+      "file": "index.html",
+      "sha256": "9ae4d164d0b68cea1309bb94820fd3f562f4cd2ad136b6ecb4d775d747a5564e"
+    },
+    {
+      "file": "content.js",
+      "sha256": "5cc15af8b5022d8a603a4713ca839dbee785a62251b7f9eeacb42abe7ee0bfec"
+    },
+    {
+      "file": "reader.js",
+      "sha256": "4a60d90db1cf942c02001f6f9911548d03b606b67512dcaeb5554d81cba26510"
+    },
+    {
+      "file": "reader-library.js",
+      "sha256": "84df52e02671bf601e0eb99e99aadbc698044b19c69632a9167382cf9361d1ab"
+    },
+    {
+      "file": "reader.css",
+      "sha256": "9503aad974e9d57ff89242a1c055c88f0acb957217972f3362e35695d899a09d"
+    },
+    {
+      "file": "layout-preview.css",
+      "sha256": "74f043e054a9577609353a68ed0e443a2845137a6af8dce20bd425883b769608"
+    },
+    {
+      "file": "preview/figures.js",
+      "sha256": "dc367d6663e6c996c432af33182901b944187e7b1c26ff9ea8430a7ac45f8372"
+    },
+    {
+      "file": "preview/figure-data.js",
+      "sha256": "c30e4a7d02563db6c662df51a52a44fd7edb53555de05471376f2a2ea408f9b4"
+    },
+    {
+      "file": "book.html",
+      "sha256": "e0f111e723c045c040d66435fd9e3d36dbb6e639ce2f17c24e3bf6ae6f1f34b1"
+    },
+    {
+      "file": "environment.js",
+      "sha256": "6cd00d43469309a082adab7f5cab55a90e5526bf36cc7349dc7c01ddbc127dc3"
+    },
+    {
+      "file": "downloads/ros2-learning-guide.md",
+      "sha256": "23706e6ad2464c2bcaa61b16fef609a898236bc25d33b1cfc40223b34ba928b7"
+    },
+    {
+      "file": "downloads/chapter-code.zip",
+      "sha256": "c27c03a745cc17d8c32533ed41ce8e91bf4d9dde362a0e2e15de27968982a0dd"
+    },
+    {
+      "file": "downloads/atlas_examples.zip",
+      "sha256": "32f7fb37c03c8b8bcc47110faa8d3ab727771c120b31b4f2434ed5c96508dd10"
+    },
+    {
+      "file": "downloads/foundation_examples.zip",
+      "sha256": "c31bc6967f90dac34019a189876e5acf2bcab2f08712e09bed764f5612cc2c80"
+    },
+    {
+      "file": "preview/figures/component-options.svg",
+      "sha256": "87b66a8c39477cd7c9a624e11984d66474d15a86272495ff820eab37b66381e2"
+    },
+    {
+      "file": "preview/figures/gazebo-sensor-captures.svg",
+      "sha256": "576143f5b1f611f4d5e750205f3950a21118c233f98369057579a56d96e9c430"
+    },
+    {
+      "file": "preview/figures/nav2-costmap-planning.svg",
+      "sha256": "ffba6f9902df9fbefbcb136614df047700d749fd17a08ebcf8e95d2dcea4d58a"
+    }
+  ],
+  "previousIterations": [
+    {
+      "iteration": "2026-11-07-r3",
+      "passed": true,
+      "results": {
+        "portableMode": true,
+        "missingOriginalLinksDisabled": true,
+        "copyOrFallback": true,
+        "chapters": 60,
+        "equations": 49,
+        "svgInstances": 29,
+        "evidenceTables": 8,
+        "noJavaScriptBook": true,
+        "widths": [
+          390,
+          320
+        ],
+        "externalRequests": 0,
+        "scriptErrors": 0,
+        "exercises": 274,
+        "apiTables": 15,
+        "completeCodeFiles": 118
+      },
+      "coreFingerprintCount": 14
+    },
+    {
+      "iteration": "2026-11-07-r4",
+      "passed": true,
+      "results": {
+        "portableMode": true,
+        "missingOriginalLinksDisabled": true,
+        "copyOrFallback": true,
+        "chapters": 60,
+        "equations": 49,
+        "svgInstances": 30,
+        "noJavaScriptBook": true,
+        "widths": [
+          390,
+          320
+        ],
+        "externalRequests": 0,
+        "scriptErrors": 0,
+        "exercises": 292,
+        "apiTables": 18,
+        "completeCodeFiles": 136,
+        "evidenceTables": 16
+      },
+      "coreFingerprintCount": 15
+    },
+    {
+      "iteration": "2026-11-07-r5",
+      "passed": true,
+      "results": {
+        "portableMode": true,
+        "missingOriginalLinksDisabled": true,
+        "copyOrFallback": true,
+        "chapters": 60,
+        "equations": 49,
+        "svgInstances": 30,
+        "noJavaScriptBook": true,
+        "widths": [
+          390,
+          320
+        ],
+        "externalRequests": 0,
+        "scriptErrors": 0,
+        "exercises": 300,
+        "apiTables": 18,
+        "completeCodeFiles": 142,
+        "evidenceTables": 20
+      },
+      "coreFingerprintCount": 15
+    },
+    {
+      "iteration": "2026-11-07-r6",
+      "results": {
+        "portableMode": true,
+        "missingOriginalLinksDisabled": true,
+        "copyOrFallback": true,
+        "chapters": 60,
+        "equations": 49,
+        "svgInstances": 30,
+        "noJavaScriptBook": true,
+        "widths": [
+          390,
+          320
+        ],
+        "externalRequests": 0,
+        "scriptErrors": 0,
+        "exercises": 308,
+        "apiTables": 19,
+        "completeCodeFiles": 148,
+        "evidenceTables": 24
+      },
+      "sourceArchiveRuntime": {
+        "passed": true,
+        "sha256": "3e590a85c11fc0cf2a87ad81db4bf61f2fd63cfe77a07d539f23bdd716b5e1ac",
+        "files": 95,
+        "report": "validation-evidence/model-portable-current-validation.json",
+        "matchesActualTestedArchive": true
+      },
+      "coreFingerprints": [
+        {
+          "file": "index.html",
+          "sha256": "684e16ad64abbf3c654c53744fe02457bff5d0fd71ad5425a9d9399515af2878"
+        },
+        {
+          "file": "content.js",
+          "sha256": "00a5fcf19735a8054f472120da0f6964bfe821948c7860abaa50e70b5b1f24f2"
+        },
+        {
+          "file": "reader.js",
+          "sha256": "a474d8b3c9cb5525084a929a36b1c88c373e217e5150917bbb0c3ceb7d50ad5e"
+        },
+        {
+          "file": "reader-library.js",
+          "sha256": "84df52e02671bf601e0eb99e99aadbc698044b19c69632a9167382cf9361d1ab"
+        },
+        {
+          "file": "reader.css",
+          "sha256": "79e77ae5e6a1739e5c861a64b04a728ad40da317cada2d474a225ba13ff18ab6"
+        },
+        {
+          "file": "layout-preview.css",
+          "sha256": "74f043e054a9577609353a68ed0e443a2845137a6af8dce20bd425883b769608"
+        },
+        {
+          "file": "preview/figures.js",
+          "sha256": "dc367d6663e6c996c432af33182901b944187e7b1c26ff9ea8430a7ac45f8372"
+        },
+        {
+          "file": "preview/figure-data.js",
+          "sha256": "ff536d7777bbe8616203bdf1c158aa88f7428cad9523fbb151cf36591309949b"
+        },
+        {
+          "file": "book.html",
+          "sha256": "c2947f941e27cb31d35ec59487e7d12b7a24eae534c83d3cecd9e9587a0d0539"
+        },
+        {
+          "file": "environment.js",
+          "sha256": "b8cc935f6de18ea5839bf4965f53ff8515be538b3faa253edf6579f7040ab5cb"
+        },
+        {
+          "file": "downloads/ros2-learning-guide.md",
+          "sha256": "470c1a7fa2269014d4d276b6f82b563df9d47a25603b1d1f44fed927d086742c"
+        },
+        {
+          "file": "downloads/chapter-code.zip",
+          "sha256": "ff6054ed24f73cf91843240c963bf3ab912900fe99d3e7327bea82df7dc2496e"
+        },
+        {
+          "file": "downloads/atlas_examples.zip",
+          "sha256": "3e590a85c11fc0cf2a87ad81db4bf61f2fd63cfe77a07d539f23bdd716b5e1ac"
+        },
+        {
+          "file": "downloads/foundation_examples.zip",
+          "sha256": "c31bc6967f90dac34019a189876e5acf2bcab2f08712e09bed764f5612cc2c80"
+        },
+        {
+          "file": "preview/figures/component-options.svg",
+          "sha256": "87b66a8c39477cd7c9a624e11984d66474d15a86272495ff820eab37b66381e2"
+        }
+      ]
+    },
+    {
+      "iteration": "2026-11-07-r7",
+      "results": {
+        "portableMode": true,
+        "missingOriginalLinksDisabled": true,
+        "copyOrFallback": true,
+        "chapters": 60,
+        "equations": 49,
+        "svgInstances": 30,
+        "noJavaScriptBook": true,
+        "widths": [
+          390,
+          320
+        ],
+        "externalRequests": 0,
+        "scriptErrors": 0,
+        "exercises": 316,
+        "apiTables": 20,
+        "completeCodeFiles": 153,
+        "evidenceTables": 27
+      },
+      "sourceArchiveRuntime": {
+        "passed": true,
+        "sha256": "82f9ea3b7d26989d06fd5f5913892b8977c1c65f06518ac6a774c141dbcd52e5",
+        "files": 101,
+        "report": "validation-evidence/drive-portable-current-validation.json",
+        "matchesActualTestedArchive": true
+      },
+      "coreFingerprints": [
+        {
+          "file": "index.html",
+          "sha256": "9ae4d164d0b68cea1309bb94820fd3f562f4cd2ad136b6ecb4d775d747a5564e"
+        },
+        {
+          "file": "content.js",
+          "sha256": "e0be4cb69f9298337747852bca14465a5a8b4f5a6de3637a3a741f276e861fc4"
+        },
+        {
+          "file": "reader.js",
+          "sha256": "cb997782ee9412e338da61da0c600401d1fff695649fd1a875b18baed62180bc"
+        },
+        {
+          "file": "reader-library.js",
+          "sha256": "84df52e02671bf601e0eb99e99aadbc698044b19c69632a9167382cf9361d1ab"
+        },
+        {
+          "file": "reader.css",
+          "sha256": "9503aad974e9d57ff89242a1c055c88f0acb957217972f3362e35695d899a09d"
+        },
+        {
+          "file": "layout-preview.css",
+          "sha256": "74f043e054a9577609353a68ed0e443a2845137a6af8dce20bd425883b769608"
+        },
+        {
+          "file": "preview/figures.js",
+          "sha256": "dc367d6663e6c996c432af33182901b944187e7b1c26ff9ea8430a7ac45f8372"
+        },
+        {
+          "file": "preview/figure-data.js",
+          "sha256": "ff536d7777bbe8616203bdf1c158aa88f7428cad9523fbb151cf36591309949b"
+        },
+        {
+          "file": "book.html",
+          "sha256": "68cec60f11c9026a056310f6b0aef9a4601c6e483fcdfba7d656799485c201d6"
+        },
+        {
+          "file": "environment.js",
+          "sha256": "6cd00d43469309a082adab7f5cab55a90e5526bf36cc7349dc7c01ddbc127dc3"
+        },
+        {
+          "file": "downloads/ros2-learning-guide.md",
+          "sha256": "0561ff03066a61d600ebd2849a2f5a468557e312793b894ff9a9b3a9bcb332c8"
+        },
+        {
+          "file": "downloads/chapter-code.zip",
+          "sha256": "8afd9434bbbeb5d570f637f6913caa060cfd4d8936704158e59b209f25155997"
+        },
+        {
+          "file": "downloads/atlas_examples.zip",
+          "sha256": "82f9ea3b7d26989d06fd5f5913892b8977c1c65f06518ac6a774c141dbcd52e5"
+        },
+        {
+          "file": "downloads/foundation_examples.zip",
+          "sha256": "c31bc6967f90dac34019a189876e5acf2bcab2f08712e09bed764f5612cc2c80"
+        },
+        {
+          "file": "preview/figures/component-options.svg",
+          "sha256": "87b66a8c39477cd7c9a624e11984d66474d15a86272495ff820eab37b66381e2"
+        }
+      ]
+    },
+    {
+      "iteration": "2026-11-07-r8",
+      "results": {
+        "portableMode": true,
+        "missingOriginalLinksDisabled": true,
+        "copyOrFallback": true,
+        "chapters": 60,
+        "equations": 49,
+        "svgInstances": 32,
+        "noJavaScriptBook": true,
+        "widths": [
+          390,
+          320
+        ],
+        "externalRequests": 0,
+        "scriptErrors": 0,
+        "exercises": 325,
+        "apiTables": 21,
+        "completeCodeFiles": 156,
+        "evidenceTables": 30
+      },
+      "sourceArchiveRuntime": {
+        "passed": true,
+        "sha256": "e669a7aa447f256c430d5873a7b906290ffb6ed85cdc4c11e267c529ef4bfd05",
+        "files": 105,
+        "report": "validation-evidence/gazebo-sensors-portable-current-validation.json",
+        "matchesActualTestedArchive": true
+      },
+      "coreFingerprints": [
+        {
+          "file": "index.html",
+          "sha256": "9ae4d164d0b68cea1309bb94820fd3f562f4cd2ad136b6ecb4d775d747a5564e"
+        },
+        {
+          "file": "content.js",
+          "sha256": "01183ab91a03860a4b92b387300fc5cd203658d38d8f0bd21aae7d5265426d4d"
+        },
+        {
+          "file": "reader.js",
+          "sha256": "4a60d90db1cf942c02001f6f9911548d03b606b67512dcaeb5554d81cba26510"
+        },
+        {
+          "file": "reader-library.js",
+          "sha256": "84df52e02671bf601e0eb99e99aadbc698044b19c69632a9167382cf9361d1ab"
+        },
+        {
+          "file": "reader.css",
+          "sha256": "9503aad974e9d57ff89242a1c055c88f0acb957217972f3362e35695d899a09d"
+        },
+        {
+          "file": "layout-preview.css",
+          "sha256": "74f043e054a9577609353a68ed0e443a2845137a6af8dce20bd425883b769608"
+        },
+        {
+          "file": "preview/figures.js",
+          "sha256": "dc367d6663e6c996c432af33182901b944187e7b1c26ff9ea8430a7ac45f8372"
+        },
+        {
+          "file": "preview/figure-data.js",
+          "sha256": "c13ae9058f36162e1dd9ba52b8058d78b8295cf3b98ae0404a2998feb2df82fe"
+        },
+        {
+          "file": "book.html",
+          "sha256": "3e3fbe112e997669ec2a2347ea5d493481b1080279a103b5f7f5a4fc8f08c2ca"
+        },
+        {
+          "file": "environment.js",
+          "sha256": "6cd00d43469309a082adab7f5cab55a90e5526bf36cc7349dc7c01ddbc127dc3"
+        },
+        {
+          "file": "downloads/ros2-learning-guide.md",
+          "sha256": "bb1e1b00ec50ef467346ca81cd2f42e49a580149bcc7649654565b520a058dcb"
+        },
+        {
+          "file": "downloads/chapter-code.zip",
+          "sha256": "bc7c7c73e08ac1890dd580d9f17edd4b261b534025c9e88108ce45aea0b3ac0f"
+        },
+        {
+          "file": "downloads/atlas_examples.zip",
+          "sha256": "e669a7aa447f256c430d5873a7b906290ffb6ed85cdc4c11e267c529ef4bfd05"
+        },
+        {
+          "file": "downloads/foundation_examples.zip",
+          "sha256": "c31bc6967f90dac34019a189876e5acf2bcab2f08712e09bed764f5612cc2c80"
+        },
+        {
+          "file": "preview/figures/component-options.svg",
+          "sha256": "87b66a8c39477cd7c9a624e11984d66474d15a86272495ff820eab37b66381e2"
+        },
+        {
+          "file": "preview/figures/gazebo-sensor-captures.svg",
+          "sha256": "576143f5b1f611f4d5e750205f3950a21118c233f98369057579a56d96e9c430"
+        }
+      ]
+    }
+  ]
+}

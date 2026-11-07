@@ -1,0 +1,41 @@
+# GZ_TO_ROS 只把仿真输出转给 ROS。ROS 侧传感器话题由桥节点命名空间解析。
+# 使用世界专属的 Gazebo 时钟，ROS 侧保留绝对 /clock，供 use_sim_time 消费。
+- ros_topic_name: /clock
+  gz_topic_name: /world/hub_perception/clock
+  ros_type_name: rosgraph_msgs/msg/Clock
+  gz_type_name: gz.msgs.Clock
+  direction: GZ_TO_ROS
+  qos_profile: CLOCK
+
+# RGB 图像和内参来自同一相机。按采样 Header 配对，两个 ROS frame 名须相同。
+# frame_id 重标消息，不旋转几何；配套实验明确发布 camera_optical_frame 的静态 TF。
+- ros_topic_name: camera/image_raw
+  gz_topic_name: /hub_sensors/image
+  ros_type_name: sensor_msgs/msg/Image
+  gz_type_name: gz.msgs.Image
+  direction: GZ_TO_ROS
+  qos_profile: SENSOR_DATA
+  frame_id: camera_optical_frame
+- ros_topic_name: camera/camera_info
+  gz_topic_name: /hub_sensors/camera_info
+  ros_type_name: sensor_msgs/msg/CameraInfo
+  gz_type_name: gz.msgs.CameraInfo
+  direction: GZ_TO_ROS
+  qos_profile: SENSOR_DATA
+  frame_id: camera_optical_frame
+
+# 激光距离 m、扫描角 rad。点云用 fields、point_step 和 row_step 描述二进制布局。
+- ros_topic_name: scan
+  gz_topic_name: /hub_sensors/scan
+  ros_type_name: sensor_msgs/msg/LaserScan
+  gz_type_name: gz.msgs.LaserScan
+  direction: GZ_TO_ROS
+  qos_profile: SENSOR_DATA
+  frame_id: laser_link
+- ros_topic_name: scan_points
+  gz_topic_name: /hub_sensors/scan/points
+  ros_type_name: sensor_msgs/msg/PointCloud2
+  gz_type_name: gz.msgs.PointCloudPacked
+  direction: GZ_TO_ROS
+  qos_profile: SENSOR_DATA
+  frame_id: laser_link

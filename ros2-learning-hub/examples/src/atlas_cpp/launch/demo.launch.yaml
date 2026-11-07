@@ -1,7 +1,12 @@
+# 【中文教学注释】 examples/src/atlas_cpp/launch/demo.launch.yaml
+# 输入输出：输入为 launch 参数、包内文件路径和 YAML 配置；输出为具有指定命名空间、重映射和参数的节点进程。
+# 执行顺序与边界：launch 描述在启动阶段解释，动作书写顺序不等于应用已就绪；相对话题继承命名空间，参数文件顶层节点名必须匹配实际节点。
 launch:
+  # 创建节点启动动作；pkg/exec/name等为前端语法，不是任意ROS参数。
   - node:
       pkg: atlas_cpp
       exec: talker
+      # 相对节点/话题名称在此命名空间下解析；绝对话题名不会因此自动加前缀。
       namespace: atlas
       name: talker
       output: screen

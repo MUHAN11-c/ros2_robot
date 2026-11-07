@@ -1,0 +1,909 @@
+{
+  "meta": {
+    "checkedAt": "2026-11-07",
+    "report": "validation-evidence/slam-mapping-current-validation.json",
+    "reportSha256": "1d3a900208f6d9a8ec02b2c9c8f4da16397cfd19bc1513ce48b3263b5f76698e",
+    "portableReport": "validation-evidence/slam-mapping-portable-current-validation.json",
+    "portableReportSha256": "3859aa339f1b2862cb2840b53bf2dd09005d1b2b66b372b73e15cc3d2b6a62d4",
+    "finding": "validation-evidence/slam-localization-raster-finding.json",
+    "findingSha256": "2c75a54effee5306a7420786ce00afe358f8bd6a3479849409acf1e5c9b1fe4e",
+    "captureHashes": {
+      "learned.pgm": "becccea6107196349e72209d9783efe78a416785a1f27ed1011c50b851f04e3f",
+      "learned.yaml": "b5c9a2cde8525cd61f1685b26aa2721889f473d7887cd8acfc0a94b57889bf65",
+      "learned.posegraph": "92790a16fe8724300f949b4164701982db0e5f8c085f914d311d3e6896fc8a42",
+      "learned.data": "e2b40757f2123200a0bc24f03377e36c8204ffd9fb51cc69aca6ab96502084c8",
+      "learned.occupancy": "1b6e721eeca34ac2ab21afefdd2c64598e5ae29dcada90cda044b676bd5688e7",
+      "trajectory.json": "d5213de9d16e72d18535a1f619d19962d86b83b6cb2d1daaef2db8ed4d2d6042",
+      "mapping_room.sdf": "1a5015da05df4558eccf32ddd5bbf353f23519b5412285db47cacf876b144334"
+    },
+    "sourceReads": [
+      {
+        "sourceId": "gazebosim--ros_gz",
+        "commit": "3c15c8edeb747824066e86990f6a4ebfda913c50",
+        "path": "ros2-learning-hub/references/sources/ecosystem/gazebosim--ros_gz/jazzy--3c15c8edeb74/ros_gz_bridge/src/service_factories/ros_gz_interfaces.cpp",
+        "sha256": "6e83ac5ff6eeb525cd2f14ffe47d028447309e5c14625caf42c4dad63849416f"
+      },
+      {
+        "sourceId": "gazebosim--ros_gz",
+        "commit": "3c15c8edeb747824066e86990f6a4ebfda913c50",
+        "path": "ros2-learning-hub/references/sources/ecosystem/gazebosim--ros_gz/jazzy--3c15c8edeb74/ros_gz_interfaces/srv/SetEntityPose.srv",
+        "sha256": "801cfd897fcd8e9f8d6a859e0131dfc9cb1f1e203cd1001bc749ce064f1af6a9"
+      },
+      {
+        "sourceId": "gazebosim--ros_gz",
+        "commit": "3c15c8edeb747824066e86990f6a4ebfda913c50",
+        "path": "ros2-learning-hub/references/sources/ecosystem/gazebosim--ros_gz/jazzy--3c15c8edeb74/ros_gz_interfaces/msg/WorldControl.msg",
+        "sha256": "07013457c32bb764b2e67d77abad8fae1a96890fdcaa4f010df4e932d9561c45"
+      },
+      {
+        "sourceId": "gazebosim--ros_gz",
+        "commit": "3c15c8edeb747824066e86990f6a4ebfda913c50",
+        "path": "ros2-learning-hub/references/sources/ecosystem/gazebosim--ros_gz/jazzy--3c15c8edeb74/ros_gz_sim_demos/worlds/vehicle.sdf",
+        "sha256": "1807fccb6e4c916cdc5177e0620eb85d7de9e48004a65eb901e306f38bd14900"
+      },
+      {
+        "sourceId": "gazebosim--ros_gz",
+        "commit": "3c15c8edeb747824066e86990f6a4ebfda913c50",
+        "path": "ros2-learning-hub/references/sources/ecosystem/gazebosim--ros_gz/jazzy--3c15c8edeb74/ros_gz_sim_demos/README.md",
+        "sha256": "a1e12dfe61fe9653058e0393a0fd96347b750564fd651022b2fe4fdeb74f8899"
+      },
+      {
+        "sourceId": "gazebosim--ros_gz",
+        "commit": "3c15c8edeb747824066e86990f6a4ebfda913c50",
+        "path": "ros2-learning-hub/references/sources/ecosystem/gazebosim--ros_gz/jazzy--3c15c8edeb74/ros_gz_bridge/package.xml",
+        "sha256": "be80cb1abab88fa4ac4b3b09b2996d6b0dc4fb43579a515d7018d52153e8f3b4"
+      },
+      {
+        "sourceId": "ros2--common_interfaces",
+        "commit": "a941f14bb318d8d904505ed935ccbb97f24a70a4",
+        "path": "ros2-learning-hub/references/sources/official-core/ros2--common_interfaces/jazzy--a941f14bb318/sensor_msgs/msg/LaserScan.msg",
+        "sha256": "bb688599d8787fa1b48393e50064013e58449055eb60e501eb01a07e8bc03357"
+      },
+      {
+        "sourceId": "ros2--common_interfaces",
+        "commit": "a941f14bb318d8d904505ed935ccbb97f24a70a4",
+        "path": "ros2-learning-hub/references/sources/official-core/ros2--common_interfaces/jazzy--a941f14bb318/nav_msgs/msg/Odometry.msg",
+        "sha256": "bb00547ddf498cdbae46fd991d9d85a59f507e12e7cf01fb18a86f1111524f4f"
+      },
+      {
+        "sourceId": "ros2--geometry2",
+        "commit": "f702874b1c8535d6a038230ab2cda0ba5d521ebd",
+        "path": "ros2-learning-hub/references/sources/official-core/ros2--geometry2/jazzy--f702874b1c85/tf2_ros/include/tf2_ros/message_filter.hpp",
+        "sha256": "356ab8a83476f7c7b8a6ab33b21d1fdfe22518987e16a81d6e6986acf90f3f5d"
+      },
+      {
+        "sourceId": "SteveMacenski--slam_toolbox",
+        "commit": "f84dad92a6579aeff4fe0c2590bbc74d3348e5af",
+        "path": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/src/slam_toolbox_common.cpp",
+        "sha256": "b9383600d326446e2dd99a1ab556ba6f5b1790a0dc28f9a89baeaadaa8317754"
+      },
+      {
+        "sourceId": "SteveMacenski--slam_toolbox",
+        "commit": "f84dad92a6579aeff4fe0c2590bbc74d3348e5af",
+        "path": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/include/slam_toolbox/get_pose_helper.hpp",
+        "sha256": "69842dc74d131f03c4cc6289032f26757dbe31dfab18821b6106204aa773d064"
+      },
+      {
+        "sourceId": "SteveMacenski--slam_toolbox",
+        "commit": "f84dad92a6579aeff4fe0c2590bbc74d3348e5af",
+        "path": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/package.xml",
+        "sha256": "34cbdcee76b26a7709cc41f40ae6466e0edfb1a9fa97f35a173a8184075c6cb2"
+      },
+      {
+        "sourceId": "SteveMacenski--slam_toolbox",
+        "commit": "f84dad92a6579aeff4fe0c2590bbc74d3348e5af",
+        "path": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/src/slam_toolbox_sync.cpp",
+        "sha256": "fac278f34b5f332bf429c4fe0a93c04bc5b551383a81fb3266a840c3a82cf13a"
+      },
+      {
+        "sourceId": "SteveMacenski--slam_toolbox",
+        "commit": "f84dad92a6579aeff4fe0c2590bbc74d3348e5af",
+        "path": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/src/slam_toolbox_async.cpp",
+        "sha256": "a871f4d9e47728179ff4dbc23b822418151318b16d51ac6715da02f8878fe75d"
+      },
+      {
+        "sourceId": "SteveMacenski--slam_toolbox",
+        "commit": "f84dad92a6579aeff4fe0c2590bbc74d3348e5af",
+        "path": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/launch/online_sync_launch.py",
+        "sha256": "a24317e222af37bb31cbe7f05fff8baf63adb9420c472cb8b4543dad36abe3b0"
+      },
+      {
+        "sourceId": "SteveMacenski--slam_toolbox",
+        "commit": "f84dad92a6579aeff4fe0c2590bbc74d3348e5af",
+        "path": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/src/map_saver.cpp",
+        "sha256": "e92ff9a6a73f09b79cd9a62e47eac5b766ec7314cdfa4508d948f8679ee1141c"
+      },
+      {
+        "sourceId": "SteveMacenski--slam_toolbox",
+        "commit": "f84dad92a6579aeff4fe0c2590bbc74d3348e5af",
+        "path": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/srv/SaveMap.srv",
+        "sha256": "a5e6254b516c2fb0a3f3f68013b70aea145d439a2990048b20777114fa6dc741"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_map_server/src/map_saver/main_cli.cpp",
+        "sha256": "e33526c18701b0856d8f67fe1ff8e1d1a211c9588ad928d17807508b8e2ae607"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_map_server/src/map_saver/map_saver.cpp",
+        "sha256": "350d72ed785a968d67acc80e84689a1d427ea23b7b64a7f849cbb2c7b267dc22"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_map_server/src/map_io.cpp",
+        "sha256": "b021b4f9e14a0f113196e661c2c2f3ec85f689723a8d4b2d2fdf00aa68af2905"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_map_server/package.xml",
+        "sha256": "fba3cd5d14462e18cc7d2d52dd8f1dcbbe26b7f601d41b547b3ebf697abcfbe3"
+      },
+      {
+        "sourceId": "SteveMacenski--slam_toolbox",
+        "commit": "f84dad92a6579aeff4fe0c2590bbc74d3348e5af",
+        "path": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/include/slam_toolbox/serialization.hpp",
+        "sha256": "446b02996a4b1029008e791e4254c81b962c630bf1f38a0a5bb569f42de3d0a9"
+      },
+      {
+        "sourceId": "SteveMacenski--slam_toolbox",
+        "commit": "f84dad92a6579aeff4fe0c2590bbc74d3348e5af",
+        "path": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/srv/SerializePoseGraph.srv",
+        "sha256": "17fe283d24d2727b1518bced9bd3324f0fd3744e691091932ef3cce724efde84"
+      },
+      {
+        "sourceId": "SteveMacenski--slam_toolbox",
+        "commit": "f84dad92a6579aeff4fe0c2590bbc74d3348e5af",
+        "path": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/srv/DeserializePoseGraph.srv",
+        "sha256": "6c21806ad9987476d6ceea7b0fad0c746147ffe7247355950259478f1f275227"
+      },
+      {
+        "sourceId": "SteveMacenski--slam_toolbox",
+        "commit": "f84dad92a6579aeff4fe0c2590bbc74d3348e5af",
+        "path": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/src/slam_toolbox_localization.cpp",
+        "sha256": "d230175d823c9f9cc9a3bfc8001f719e1f6bf524e38e0091a4ebd759cd81240d"
+      },
+      {
+        "sourceId": "SteveMacenski--slam_toolbox",
+        "commit": "f84dad92a6579aeff4fe0c2590bbc74d3348e5af",
+        "path": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/config/mapper_params_localization.yaml",
+        "sha256": "e16a36fdb1089a07cd92ed393c8a669f7892fae568de41456db7e1edacc7f624"
+      },
+      {
+        "sourceId": "SteveMacenski--slam_toolbox",
+        "commit": "f84dad92a6579aeff4fe0c2590bbc74d3348e5af",
+        "path": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/lib/karto_sdk/src/Mapper.cpp",
+        "sha256": "ae7dbffdd5850e7f9d86bab65be2d16d0e0e6034090f93c27f095dac07db6816"
+      },
+      {
+        "sourceId": "SteveMacenski--slam_toolbox",
+        "commit": "f84dad92a6579aeff4fe0c2590bbc74d3348e5af",
+        "path": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/src/slam_mapper.cpp",
+        "sha256": "abc642d764760f5304f5d3d88abe8e61bde4a52fbcdb803f49342844cecbe0e2"
+      },
+      {
+        "sourceId": "SteveMacenski--slam_toolbox",
+        "commit": "f84dad92a6579aeff4fe0c2590bbc74d3348e5af",
+        "path": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/src/loop_closure_assistant.cpp",
+        "sha256": "5f4b71bcae2010f8d3ec4be305a610070db0c50c840e5ee7f861469325c60f32"
+      },
+      {
+        "sourceId": "SteveMacenski--slam_toolbox",
+        "commit": "f84dad92a6579aeff4fe0c2590bbc74d3348e5af",
+        "path": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/solvers/ceres_solver.cpp",
+        "sha256": "e55f6442834e9dc450b049570f34399d0654f86df956597af6eab700fcb7c118"
+      },
+      {
+        "sourceId": "SteveMacenski--slam_toolbox",
+        "commit": "f84dad92a6579aeff4fe0c2590bbc74d3348e5af",
+        "path": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/solvers/ceres_utils.h",
+        "sha256": "ed56f5d2a9843b3029ed85fa46db44de024e3c2a16036774a3c4dc73d0fde08a"
+      },
+      {
+        "sourceId": "existing--Robotics_Tutorial",
+        "commit": "7cb9e3d423196062c59dd346aae16285d962fb7c",
+        "path": "Robotics_Tutorial/03_SLAM/10_SLAM理论/10_SLAM理论基础.md",
+        "sha256": "5d39621c39b85abe56eb8cd86f414ea3667441c6e6f8df5c23a4070afeb658da"
+      },
+      {
+        "sourceId": "existing--ros2_tutorial",
+        "commit": "ae6703d73947442c5705350e88970b77089ab15a",
+        "path": "ros2_tutorial/chapter11.md",
+        "sha256": "eba884361ab1b0e8735d0eaed4937328bad9d863b3aa0721220fe5b4928ee304"
+      },
+      {
+        "sourceId": "existing--linorobot2",
+        "commit": "f6b0bd0350c4a9d6b815ef4bb5c701a1e5129711",
+        "path": "linorobot2/linorobot2_navigation/launch/slam.launch.py",
+        "sha256": "de6fe87d8865dbe3a4616dd875010abbaa12965eca5c622a7c4870f7eead99b9"
+      },
+      {
+        "sourceId": "existing--linorobot2",
+        "commit": "f6b0bd0350c4a9d6b815ef4bb5c701a1e5129711",
+        "path": "linorobot2/linorobot2_navigation/config/slam.yaml",
+        "sha256": "b0d401b0911c4888e73d2d950a3780a4c8e7988020224978bbb494305d09487a"
+      }
+    ]
+  },
+  "chapters": {
+    "eco-slam-mapping": {
+      "validation": "在本机 Jazzy SLAM Toolbox 2.8.5、Nav2 MapServer 1.3.13、Harmonic 8.15.0 和 ros_gz_bridge 1.0.24 实测。主试验域 231，解压原创示例包后在域 232 重跑。采集使用离散移位和静止采样窗。轮地运动、扫描运动畸变、强制回环、远处重定位和跨版本图文件兼容性待测。",
+      "appendSourceIds": [
+        "slam-lab-input-pipeline",
+        "slam-lab-sync",
+        "slam-lab-saver",
+        "slam-lab-map-writer",
+        "slam-lab-serialization",
+        "slam-lab-ros2-course",
+        "slam-lab-graph-markers"
+      ],
+      "appendSections": [
+        {
+          "title": "用真实仿真回波检验采集与回放合同",
+          "paragraphs": [
+            "台架按长方形路线设置多处位姿，总路程 13.60 m。每处先用世界服务移位，再推进 80 个 0.005 s 步长，在稳定窗口里配对激光与 Gazebo 位姿。俯视盒形场景另算射线交点，用相同角度和基座位姿核对距离。",
+            "原始位姿流只作测量参考。回放驱动先供独立时钟和 TF，再送原始 LaserScan 距离。每走 1 m 给里程计 x 加 0.014 m、给偏航加 0.002 rad，得到可单独核算的偏差。首轮保留采集时戳，ROS 的处理次序通过回执检查。",
+            "固定源码中，LaserScan 先经 Sensor Data QoS 与朝 odom 的 TF 消息过滤，回调再查询扫描时刻的基座位姿和传感器安装。同步实现把通过门限的帧排入队列，异步实现从回调走自己的处理路径。",
+            "首次测量允许通过。后续需同时看暂停、节流、最小时间间隔和预热逻辑。测试启用了精确距离与转角判定，距离与转角都低于各自阈值时跳过。错误帧和故意留出的静止预热用于核对这两类边界。"
+          ],
+          "bullets": [],
+          "tables": [
+            {
+              "title": "离散移位、采集时戳与扫描准入",
+              "columns": [
+                "检查",
+                "本次观测",
+                "解释"
+              ],
+              "rows": [
+                [
+                  "激光与参考位姿",
+                  "47/47 对同戳",
+                  "每对含 361 束距离，采集窗 0.40 s，激光高 0.30 m"
+                ],
+                [
+                  "盒形场景对照",
+                  "各帧绝对距离误差的 P95 最大为 0.02945 m",
+                  "解析射线与 GPU 激光比对，用于核对几何、角度和单位"
+                ],
+                [
+                  "错误扫描帧",
+                  "0.35 s 的 unlinked_laser 无位姿",
+                  "时钟和基座里程计已提供，扫描帧到目标 odom 仍缺变换"
+                ],
+                [
+                  "修正后的建图回放",
+                  "37/40 条扫描有位姿",
+                  "首帧通过，接下来的三条静止预热帧无新位姿，随后依次接收路线扫描"
+                ],
+                [
+                  "采集时钟隔离",
+                  "18.80 s",
+                  "采集结束后 Gazebo 保持暂停，SLAM 使用单独重映射的回放时钟"
+                ]
+              ],
+              "caption": "路线按离散位置采集，每个采样窗内台架静止。保留的 7 帧用于后续恢复和定位。",
+              "evidenceFile": "validation-evidence/slam-mapping-current-validation.json",
+              "evidenceSha256": "1d3a900208f6d9a8ec02b2c9c8f4da16397cfd19bc1513ce48b3263b5f76698e"
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "从有效位姿跟到实际发布的地图",
+          "paragraphs": [
+            "首帧后记录占据图，完成整圈后再记录地图和位姿图。整圈有 37 个位姿回执，图标记给出 37 个节点和 38 条建图约束。四个路线拐角都可在最终图上查到空闲格，四处已知墙面或障碍探针到最近占据格的最大距离约 0.0181 m。",
+            "固定同步节点在完成建图前已更新扫描 Header。驱动先等同戳位姿，再清空旧接收缓存并等一次地图发布，最后核对 dynamic_map 的数据和话题一致。固定实现要求地图发布端已激活且有订阅者，动态地图服务读取缓存。",
+            "最后一个扫描时刻是 16.00 s。restamp_tf 关闭时，map 到 odom 的发布时戳为 16.20 s，即扫描加 0.20 s。验收使用扫描时刻查询 map 到 laser_link，实际保留约 0.30 m 的激光安装高度。"
+          ],
+          "bullets": [],
+          "tables": [
+            {
+              "title": "首帧与整圈之后的实测占据图",
+              "columns": [
+                "阶段",
+                "尺寸（格）",
+                "空闲",
+                "占据",
+                "未知",
+                "原点 x / y（m）"
+              ],
+              "rows": [
+                [
+                  "首个有效扫描",
+                  "137 × 97",
+                  "1378",
+                  "86",
+                  "11825",
+                  "-3.41568 / -2.42917"
+                ],
+                [
+                  "最后一个建图扫描",
+                  "137 × 98",
+                  "12318",
+                  "659",
+                  "449",
+                  "-3.42765 / -2.45707"
+                ]
+              ],
+              "caption": "分辨率约 0.05 m/格。两张图的尺寸与原点发生变化，面积比较要先对齐到同一空间范围。",
+              "evidenceFile": "validation-evidence/slam-mapping-current-validation.json",
+              "evidenceSha256": "1d3a900208f6d9a8ec02b2c9c8f4da16397cfd19bc1513ce48b3263b5f76698e"
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "新进程分别重载栅格、恢复图并继续建图",
+          "paragraphs": [
+            "先用 SLAM Toolbox 的 SaveMap 保存 PGM/YAML。然后用 SerializePoseGraph 按一个路径前缀保存图和扫描数据。两份二进制文件来自固定版的 Boost 归档，复跑时保留原配对和生成版本。ROS2 教程第 11 章的 YAML 节点和边适合说明数据结构，工程运行依赖实际接口定义与二进制文件。",
+            "将 learned.yaml 单独交给新 MapServer。它重载的 13426 个占据值与原图逐格相等。YAML 保存平移原点时保留三位小数，本次 xy 差约 0.354 mm。下游复用时仍要检查分辨率、帧、原点和格值。",
+            "关闭原建图节点，启动新的同步建图节点。请求字段包含前缀、匹配类型与可选初始位姿。缺失前缀和误用图定位模式都给出空响应，只有首节点模式实际恢复地图。还未重放扫描时，恢复栅格的 Header 时间为零，其格值、原点和节点数已能独立检查。",
+            "继续提供 7 帧留存数据，4 帧产生新位姿。使用不同的 continued 前缀保存新图，保留旧图以复现初始条件。两种前缀各保留成对文件，回执之外再检查图标记与文件指纹。"
+          ],
+          "bullets": [],
+          "tables": [
+            {
+              "title": "同一张图的栅格重载与位姿图恢复",
+              "columns": [
+                "操作",
+                "回执与产物",
+                "后验检查"
+              ],
+              "rows": [
+                [
+                  "首图产生前 SaveMap",
+                  "result=1",
+                  "报告没有新文件"
+                ],
+                [
+                  "有图后 SaveMap",
+                  "result=0 · learned.pgm + learned.yaml",
+                  "新 MapServer 的 13426 格逐格一致，平移原点差 0.000354 m"
+                ],
+                [
+                  "SerializePoseGraph",
+                  "result=0 · learned.posegraph + learned.data",
+                  "37 个建图节点，38 条建图约束"
+                ],
+                [
+                  "恢复缺失前缀或匹配类型不符",
+                  "两次响应都没有字段",
+                  "新同步节点的地图仍为空"
+                ],
+                [
+                  "同步节点 START_AT_FIRST_NODE",
+                  "响应没有字段",
+                  "回放前已复原全部 13426 格和原位姿图"
+                ],
+                [
+                  "恢复后继续提供留存扫描",
+                  "4 条新增位姿",
+                  "新前缀保存 41 个建图节点和 46 条约束"
+                ]
+              ],
+              "caption": "用有效地图、位姿图标记与文件指纹验收。恢复前的空回执和成功后的空回执具有相同的消息结构。",
+              "evidenceFile": "validation-evidence/slam-mapping-current-validation.json",
+              "evidenceSha256": "1d3a900208f6d9a8ec02b2c9c8f4da16397cfd19bc1513ce48b3263b5f76698e"
+            }
+          ],
+          "codeBlocks": []
+        }
+      ],
+      "appendExercises": [
+        {
+          "question": "第一帧之前 SaveMap 已能调用，怎样确定有可发布的文件？",
+          "answer": "看 result。实测首图前返回 1 且没有新文件。收到有效 OccupancyGrid 后重试，核对 PGM/YAML 是否成对、再让新 MapServer 实际读取。"
+        },
+        {
+          "question": "同步建图节点收到了空的 DeserializePoseGraph 响应，该如何验收？",
+          "answer": "空响应是接口结构。确认生命周期与匹配类型，再等待有效栅格，核对图节点和格值。缺前缀、匹配类型不符、成功恢复三种情况都要分别观察。"
+        },
+        {
+          "question": "首帧和最后一帧图的未知格相差很多，能直接换算成新探索的面积吗？",
+          "answer": "先在共同坐标系与网格边界上对齐地图。原点和尺寸发生变化时，两次数组索引的空间含义不同。用重采样或同一范围的索引再比较。"
+        }
+      ]
+    },
+    "theory-slam": {
+      "validation": "Python 标准库数值实验及断言已执行。在本机 Jazzy SLAM Toolbox 2.8.5、Nav2 MapServer 1.3.13、Harmonic 8.15.0 和 ros_gz_bridge 1.0.24 实测。主试验域 231，解压原创示例包后在域 232 重跑。采集使用离散移位和静止采样窗。轮地运动、扫描运动畸变、强制回环、远处重定位和跨版本图文件兼容性待测。",
+      "appendSourceIds": [
+        "slam-lab-ceres",
+        "slam-lab-graph-markers",
+        "slam-lab-theory-course"
+      ],
+      "appendSections": [
+        {
+          "title": "在实际二维位姿图里区分约束、锚点与误差",
+          "paragraphs": [
+            "Robotics_Tutorial 用视觉里程计、关联、优化和回环来拆分 SLAM。放到二维激光案例，扫描匹配和里程计给相对状态估计，后端用约束联合调整位姿。固定版 Ceres 求解器取约束协方差的逆并作 Cholesky 分解，用上三角因子对白化残差；偏航误差先归一化。首个节点的 x、y 和偏航参数被固定以选定参考。",
+            "本次轨迹的首末 xy 接近重合，末帧偏航改变约 1.571 rad。MarkerArray 给出 37 个节点和 38 条建图约束。边数表示当前连接，若要把一条边归因为回环，还需记录约束类型或回环事件。",
+            "将每个接受帧的估计与独立采集位姿逐帧配对，再报告平面和偏航误差。图中的橙线输入是已知的注入偏差，青线是 ROS 位姿回执。结果反映这套几何和同一配置下的改正程度，初值、场景和走法会影响误差。"
+          ],
+          "bullets": [],
+          "tables": [
+            {
+              "title": "沿采集路线对照输入偏差与估计误差",
+              "columns": [
+                "观测",
+                "里程计输入",
+                "SLAM 输出"
+              ],
+              "rows": [
+                [
+                  "第一帧平面误差",
+                  "0.0000 m",
+                  "0.0000 m"
+                ],
+                [
+                  "终点平面误差",
+                  "0.1904 m",
+                  "0.0129 m"
+                ],
+                [
+                  "终点绝对偏航误差",
+                  "0.02720 rad",
+                  "0.00072 rad"
+                ],
+                [
+                  "已接收帧中最大平面误差",
+                  "0.1904 m",
+                  "0.0250 m"
+                ]
+              ],
+              "caption": "各误差均以同帧 Gazebo 参考位姿计算。位姿回执是每帧在线输出，图标记记录的是相应阶段发布的图节点。",
+              "evidenceFile": "validation-evidence/slam-mapping-current-validation.json",
+              "evidenceSha256": "1d3a900208f6d9a8ec02b2c9c8f4da16397cfd19bc1513ce48b3263b5f76698e"
+            }
+          ],
+          "codeBlocks": []
+        }
+      ],
+      "appendExercises": [
+        {
+          "question": "每走 1 m 在 x 方向注入 0.014 m 偏差。用本次路线计算末端平面误差，再比较实际估计。",
+          "answer": "13.60 × 0.014 = 0.1904 m。其余平移分量未加偏差，所以是本例平面误差。终点估计误差为 0.0129 m。"
+        },
+        {
+          "question": "图里有 37 个节点和 38 条约束，怎样确认回环？",
+          "answer": "先记录优化前后的位姿和新增边的两端。结合求解器或 SLAM 节点的约束类型、匹配事件与接受条件，区分邻接匹配和跨段回环。"
+        }
+      ]
+    },
+    "eco-state-estimation": {
+      "validation": "软件差速与局部 EKF 在域 225 实测。固定激光 AMCL 在域 229 及 230 实测，另核近真值初值、无运动更新和扫描时刻 TF。在本机 Jazzy SLAM Toolbox 2.8.5、Nav2 MapServer 1.3.13、Harmonic 8.15.0 和 ros_gz_bridge 1.0.24 实测。主试验域 231，解压原创示例包后在域 232 重跑。图定位从已知初值启动。IMU、GNSS、运动底盘和全局重定位精度各需独立验收。",
+      "appendSourceIds": [
+        "slam-lab-localization",
+        "slam-lab-rolling-buffer",
+        "slam-lab-graph-markers"
+      ],
+      "appendSections": [
+        {
+          "title": "图定位的短期扫描会进入实时栅格",
+          "paragraphs": [
+            "使用另一个定位进程，选择 LOCALIZE_AT_POSE，输入地图中的基座 x、y 和偏航。此例用接近已知的参考位姿启动。AMCL 的先验栅格与粒子分布另有上一节实测，局部 EKF 则继续负责局部状态。部署时为同一 map 到 odom 边选一个发布者。",
+            "定位进程先恢复原栅格，再回放留存帧。回放时钟、动态 TF 和扫描统一加 60 s，保留时间顺序。得到 4 个定位位姿，最大平面误差约 0.00496 m。",
+            "最初的夹具预期实时栅格始终和载入时一致，两轮均实际观察到 8 个差异格。由空闲到占据 2 格，由未知到占据 4 格，由未知到空闲 2 格。固定实现的短期扫描进入 Karto 的定位缓冲，栅格化使用当前处理过的扫描集合。",
+            "调用 clear_localization_buffer，再读取新图与 MarkerArray。定位节点与短期约束消失，13426 格恢复到载入时的数据，原始 .posegraph 和 .data 文件的 SHA 一致。地图时戳仍沿用上一帧扫描，清理结果要看栅格和图结构。"
+          ],
+          "bullets": [],
+          "tables": [
+            {
+              "title": "图定位加入短期扫描后再清空缓冲",
+              "columns": [
+                "阶段",
+                "建图节点",
+                "短期定位节点",
+                "短期约束",
+                "相对原图的差异格"
+              ],
+              "rows": [
+                [
+                  "以原图加载且还未回放",
+                  "37",
+                  "0",
+                  "0",
+                  "0"
+                ],
+                [
+                  "定位扫描已接受",
+                  "37",
+                  "4",
+                  "9",
+                  "8"
+                ],
+                [
+                  "清空定位缓冲后重读",
+                  "37",
+                  "0",
+                  "0",
+                  "0"
+                ]
+              ],
+              "caption": "比较覆盖原点和尺寸相同的整张图。两份原位姿图文件的 SHA 在定位过程前后相同。",
+              "evidenceFile": "validation-evidence/slam-mapping-current-validation.json",
+              "evidenceSha256": "1d3a900208f6d9a8ec02b2c9c8f4da16397cfd19bc1513ce48b3263b5f76698e"
+            }
+          ],
+          "codeBlocks": []
+        }
+      ],
+      "appendExercises": [
+        {
+          "question": "定位过程中发布的地图变了 8 格，哪些结果能说明发生了什么？",
+          "answer": "比较短期节点和边、三类格值转移、清空后的栅格以及原始文件 SHA。此实验定位缓冲可复原，持久图文件仍是原配对。"
+        }
+      ]
+    },
+    "project-navigation": {
+      "validation": "局部轮反馈与 EKF 在域 225、226 实测。NavigateToPose 客户端另有十二类假服务端协议验证。固定台架实测 MapServer、AMCL、全局代价地图和 NavFn。在本机 Jazzy SLAM Toolbox 2.8.5、Nav2 MapServer 1.3.13、Harmonic 8.15.0 和 ros_gz_bridge 1.0.24 实测。主试验域 231，解压原创示例包后在域 232 重跑。此建图台架按位姿采集并回放。完整行为树、控制器、车轮驱动与硬件待分别验收。",
+      "appendSourceIds": [
+        "slam-lab-linorobot-launch",
+        "slam-lab-sync",
+        "slam-lab-serialization"
+      ],
+      "appendSections": [
+        {
+          "title": "复跑采集、建图和图恢复，再接导航层",
+          "paragraphs": [
+            "在完整教材目录加载本机 Jazzy 环境，运行 `python3 examples/slam_labs/validate_slam.py --domain-id 231`。解压原创工程后从 atlas_examples 运行 `python3 slam_labs/validate_slam.py --domain-id 232`。域号是隔离示例，执行时选本机未使用的域。需要无窗口 Ogre2 EGL、SLAM Toolbox 与 Nav2 MapServer。",
+            "脚本复用同包 nav2_labs 的房间和服务辅助以及 gazebo_labs 的有界等待。它生成临时目录保存原始扫描、图和报告。Gazebo 默认时钟用于采集，回放时钟和实际算法节点同属隔离空间。回放提供 odom 到 base_link，静态发布安装边，SLAM 提供 map 到 odom。",
+            "Linorobot2 建图入口包含 online_async_launch.py 和 Nav2 navigation_launch.py。此台架使用同步节点和明确的分段生命周期。迁移时核对 sim 对 use_sim_time 的传递、基座与激光帧、scan 的实际话题、局部 TF 发布者和互斥的全局定位入口。",
+            "分开备份原始轨迹、PGM/YAML 与位姿图对。前两类便于重放与导航地图，位姿图供继续建图和图定位。先证明重载后地图坐标和格值，再以同一地图合同接入规划、控制和行为树。"
+          ],
+          "bullets": [],
+          "tables": [],
+          "codeBlocks": [
+            {
+              "label": "slam_labs/validate_slam.py",
+              "language": "python",
+              "type": "complete",
+              "sourceFile": "examples/slam_labs/validate_slam.py"
+            },
+            {
+              "label": "slam_labs/scan_run.py",
+              "language": "python",
+              "type": "complete",
+              "sourceFile": "examples/slam_labs/scan_run.py"
+            },
+            {
+              "label": "slam_labs/slam.yaml",
+              "language": "yaml",
+              "type": "complete",
+              "sourceFile": "examples/slam_labs/slam.yaml"
+            },
+            {
+              "label": "slam_labs/bridge.yaml",
+              "language": "yaml",
+              "type": "complete",
+              "sourceFile": "examples/slam_labs/bridge.yaml"
+            }
+          ]
+        }
+      ],
+      "appendExercises": [
+        {
+          "question": "如何让接手工程的同学分别重载地图、继续建图和回放原始观测？",
+          "answer": "交接 PGM/YAML、成对位姿图和扫描轨迹三组文件。附 ROS 包版本、命名空间、帧、时钟和校验值。分别让 MapServer、新同步节点和回放脚本验证各自输入。"
+        }
+      ]
+    },
+    "eco-gazebo-simulation": {
+      "validation": "固定相机与激光在 Harmonic 8.15.0 和 Jazzy ros_gz_bridge 1.0.24、域 227/228 实测。在本机 Jazzy SLAM Toolbox 2.8.5、Nav2 MapServer 1.3.13、Harmonic 8.15.0 和 ros_gz_bridge 1.0.24 实测。主试验域 231，解压原创示例包后在域 232 重跑。移动路径采用离散移位，GUI、轮地动力学与物理传感器待验收。",
+      "appendSourceIds": [
+        "slam-lab-gz-bridge",
+        "slam-lab-laserscan"
+      ],
+      "sections": {
+        "7": {
+          "appendParagraphs": [
+            "SLAM 实验另使用 UserCommands 的实体位姿服务与世界步进，验证服务应答后读取同戳激光和位姿。OdometryPublisher 的世界参考位姿经独立话题进入 ROS，桥只改激光帧标签，回放另提供实际安装 TF。每处先移位再在稳定窗口采样，采集期间保留仿真 Header。"
+          ]
+        }
+      }
+    },
+    "eco-tf-frames": {
+      "appendSourceIds": [
+        "slam-lab-message-filter",
+        "slam-lab-input-pipeline"
+      ],
+      "sections": {
+        "2": {
+          "appendParagraphs": [
+            "SLAM 台架把错误激光帧放在有效回放时间窗内，缺少该帧到 odom 的可用链时无位姿回执。随后以 laser_link 和真实安装关系恢复，最终用 16.00 s 的采集时刻查询到 map 到 laser_link。TF 消息过滤器按消息帧和时戳等待目标帧，算法还会另查基座运动边。"
+          ]
+        }
+      }
+    },
+    "time-bag": {
+      "appendSourceIds": [
+        "slam-lab-laserscan",
+        "slam-lab-input-pipeline"
+      ],
+      "sections": {
+        "8": {
+          "appendParagraphs": [
+            "SLAM 台架的 trajectory.json 是已记录扫描及参考位姿的实验输入。这里由驱动自行重放，时钟和 TF 与扫描明确配对，Gazebo 采集钟仍停在独立话题。本章前面的 SQLite/MCAP 实验提供 rosbag2 的存储和 CLI 证据，两条回放路线各有自己的格式与验证记录。"
+          ]
+        }
+      }
+    },
+    "eco-nav2-stack": {
+      "validation": "固定激光台架在 Jazzy Nav2 1.3.13 实测 MapServer、AMCL、全局代价地图和 NavFn。在本机 Jazzy SLAM Toolbox 2.8.5、Nav2 MapServer 1.3.13、Harmonic 8.15.0 和 ros_gz_bridge 1.0.24 实测。主试验域 231，解压原创示例包后在域 232 重跑。两个分段台架使用各自的地图与运行时序。完整 NavigateToPose 行为树、控制器、运动底盘和硬件待分别验收。",
+      "appendSourceIds": [
+        "slam-lab-saver",
+        "slam-lab-map-writer",
+        "slam-lab-serialization"
+      ],
+      "sections": {
+        "7": {
+          "appendParagraphs": [
+            "SLAM 章另把实际建图生成的 PGM/YAML 交给新 MapServer，验证 13426 格一致。此节 80 × 60 图来自固定房间的先验几何，后续 NavFn 对照仍使用该输入。迁移到实测地图时重新核对地图边界、初始位姿与代价地图各层。"
+          ]
+        }
+      }
+    },
+    "qos": {
+      "appendSourceIds": [
+        "slam-lab-input-pipeline"
+      ],
+      "sections": {
+        "4": {
+          "appendParagraphs": [
+            "SLAM Toolbox 固定版的 map 与 map_metadata 使用深度一的可靠、瞬态本地发布端。有效地图仍由已激活的发布端与扫描处理产生。重启后通过文件恢复地图是独立过程，可用新的进程、实际格值和原点检查。"
+          ]
+        }
+      },
+      "appendExercises": [
+        {
+          "question": "为什么位姿图恢复前后都有服务回执，而地图主题的行为不同？",
+          "answer": "服务发现、端点 QoS、地图是否已生成是三个检查。用相同的订阅策略，再看有效地图尺寸、内容与实际发布者。"
+        }
+      ]
+    }
+  },
+  "resources": [
+    {
+      "id": "slam-lab-gz-bridge",
+      "title": "Gazebo 世界控制、移位与里程计桥接",
+      "category": "SLAM 与图定位 · 固定参考",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/gazebosim--ros_gz/jazzy--3c15c8edeb74/ros_gz_bridge/src/service_factories/ros_gz_interfaces.cpp",
+      "url": "https://github.com/gazebosim/ros_gz/blob/3c15c8edeb747824066e86990f6a4ebfda913c50/ros_gz_bridge/src/service_factories/ros_gz_interfaces.cpp",
+      "version": "jazzy · 3c15c8edeb74",
+      "description": "桥接的实体位姿和世界步进走服务通道，激光和参考位姿走独立消息通道。里程计演示提供 OdometryPublisher 配置。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "slam-lab-laserscan",
+      "title": "激光扫描与里程计的坐标和时间字段",
+      "category": "SLAM 与图定位 · 固定参考",
+      "localPath": "ros2-learning-hub/references/sources/official-core/ros2--common_interfaces/jazzy--a941f14bb318/sensor_msgs/msg/LaserScan.msg",
+      "url": "https://github.com/ros2/common_interfaces/blob/a941f14bb318d8d904505ed935ccbb97f24a70a4/sensor_msgs/msg/LaserScan.msg",
+      "version": "jazzy · a941f14bb318",
+      "description": "LaserScan 的角度使用 rad、距离使用 m。Odometry 的 pose 和 twist 分别依照 header.frame_id 与 child_frame_id。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "slam-lab-message-filter",
+      "title": "TF 消息过滤器的等待与目标帧",
+      "category": "SLAM 与图定位 · 固定参考",
+      "localPath": "ros2-learning-hub/references/sources/official-core/ros2--geometry2/jazzy--f702874b1c85/tf2_ros/include/tf2_ros/message_filter.hpp",
+      "url": "https://github.com/ros2/geometry2/blob/f702874b1c8535d6a038230ab2cda0ba5d521ebd/tf2_ros/include/tf2_ros/message_filter.hpp",
+      "version": "jazzy · f702874b1c85",
+      "description": "消息过滤使用消息帧及采集时戳等待目标坐标系，过滤成功之后才进入算法回调。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "slam-lab-input-pipeline",
+      "title": "SLAM Toolbox 的输入过滤、地图发布和 TF 时戳",
+      "category": "SLAM 与图定位 · 固定参考",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/src/slam_toolbox_common.cpp",
+      "url": "https://github.com/SteveMacenski/slam_toolbox/blob/f84dad92a6579aeff4fe0c2590bbc74d3348e5af/src/slam_toolbox_common.cpp",
+      "version": "jazzy · f84dad92a657",
+      "description": "扫描订阅使用 Sensor Data QoS。消息过滤、基座位姿查询、门限、栅格缓存与 map 到 odom 的发布时间分别处理。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "slam-lab-sync",
+      "title": "同步建图队列、异步入口与启动生命周期",
+      "category": "SLAM 与图定位 · 固定参考",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/src/slam_toolbox_sync.cpp",
+      "url": "https://github.com/SteveMacenski/slam_toolbox/blob/f84dad92a6579aeff4fe0c2590bbc74d3348e5af/src/slam_toolbox_sync.cpp",
+      "version": "jazzy · f84dad92a657",
+      "description": "同步节点在通过输入检查后入队，由工作线程逐帧处理。对照异步回调和同步启动文件的生命周期选项。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "slam-lab-saver",
+      "title": "栅格保存服务和真实回执",
+      "category": "SLAM 与图定位 · 固定参考",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/src/map_saver.cpp",
+      "url": "https://github.com/SteveMacenski/slam_toolbox/blob/f84dad92a6579aeff4fe0c2590bbc74d3348e5af/src/map_saver.cpp",
+      "version": "jazzy · f84dad92a657",
+      "description": "SLAM Toolbox 等待已发布地图，再转交 Nav2 的地图保存命令。业务 result 与服务可见性分开。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "slam-lab-map-writer",
+      "title": "Nav2 MapSaver 的命令、阈值与地图原点",
+      "category": "SLAM 与图定位 · 固定参考",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_map_server/src/map_saver/main_cli.cpp",
+      "url": "https://github.com/ros-navigation/navigation2/blob/94d1c2a345dda6ff637e6a72c9101d927ee99f19/nav2_map_server/src/map_saver/main_cli.cpp",
+      "version": "jazzy · 94d1c2a345dd",
+      "description": "保存器按图像模式生成像素，并在 YAML 中写分辨率与三位小数的平移原点。地图重载仍要核对原点。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "slam-lab-serialization",
+      "title": "位姿图与扫描数据的二进制保存",
+      "category": "SLAM 与图定位 · 固定参考",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/include/slam_toolbox/serialization.hpp",
+      "url": "https://github.com/SteveMacenski/slam_toolbox/blob/f84dad92a6579aeff4fe0c2590bbc74d3348e5af/include/slam_toolbox/serialization.hpp",
+      "version": "jazzy · f84dad92a657",
+      "description": "序列化使用同一文件前缀写图和数据两份二进制文件，加载时分别读取。服务类型区分保存结果和空的恢复响应。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "slam-lab-localization",
+      "title": "图定位节点的加载模式和清理服务",
+      "category": "SLAM 与图定位 · 固定参考",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/src/slam_toolbox_localization.cpp",
+      "url": "https://github.com/SteveMacenski/slam_toolbox/blob/f84dad92a6579aeff4fe0c2590bbc74d3348e5af/src/slam_toolbox_localization.cpp",
+      "version": "jazzy · f84dad92a657",
+      "description": "定位节点检查匹配模式，按地图坐标中的初始位姿启动。定位缓冲可通过空服务清理。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "slam-lab-rolling-buffer",
+      "title": "Karto 的短期定位扫描与栅格重建",
+      "category": "SLAM 与图定位 · 固定参考",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/lib/karto_sdk/src/Mapper.cpp",
+      "url": "https://github.com/SteveMacenski/slam_toolbox/blob/f84dad92a6579aeff4fe0c2590bbc74d3348e5af/lib/karto_sdk/src/Mapper.cpp",
+      "version": "jazzy · f84dad92a657",
+      "description": "短期扫描进入 Karto 定位缓冲与活动图，清理时移除相应扫描和约束。占据图由当前已处理扫描集合栅格化。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "slam-lab-graph-markers",
+      "title": "位姿图节点与线列表标记",
+      "category": "SLAM 与图定位 · 固定参考",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/src/loop_closure_assistant.cpp",
+      "url": "https://github.com/SteveMacenski/slam_toolbox/blob/f84dad92a6579aeff4fe0c2590bbc74d3348e5af/src/loop_closure_assistant.cpp",
+      "version": "jazzy · f84dad92a657",
+      "description": "普通和短期定位节点有不同标记，边以两个端点表示。可用 MarkerArray 统计本次可见节点和约束。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "slam-lab-ceres",
+      "title": "Ceres 的二维位姿图残差与锚点",
+      "category": "SLAM 与图定位 · 固定参考",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/SteveMacenski--slam_toolbox/jazzy--f84dad92a657/solvers/ceres_solver.cpp",
+      "url": "https://github.com/SteveMacenski/slam_toolbox/blob/f84dad92a6579aeff4fe0c2590bbc74d3348e5af/solvers/ceres_solver.cpp",
+      "version": "jazzy · f84dad92a657",
+      "description": "用约束协方差的逆形成信息矩阵，对角误差做角度归一化，固定首节点的 x、y 和偏航。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "slam-lab-theory-course",
+      "title": "机器人教程的 SLAM 前端与后端",
+      "category": "SLAM 与图定位 · 固定参考",
+      "localPath": "Robotics_Tutorial/03_SLAM/10_SLAM理论/10_SLAM理论基础.md",
+      "url": "https://github.com/Michael-Jetson/Robotics_Tutorial/blob/7cb9e3d423196062c59dd346aae16285d962fb7c/03_SLAM/10_SLAM%E7%90%86%E8%AE%BA/10_SLAM%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80.md",
+      "version": "main · 7cb9e3d42319",
+      "description": "结合教程对观测、数据关联、残差和优化的划分，区分视觉里程计概念与本章的二维激光实现。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "slam-lab-ros2-course",
+      "title": "ROS2 教程的建图、地图管理与导航串联",
+      "category": "SLAM 与图定位 · 固定参考",
+      "localPath": "ros2_tutorial/chapter11.md",
+      "url": "https://github.com/zsc/ros2_tutorial/blob/ae6703d73947442c5705350e88970b77089ab15a/chapter11.md",
+      "version": "main · ae6703d73947",
+      "description": "保留课程组织与图约束示意。工程中的图文件和 ROS 服务以固定版本的二进制序列化与接口定义为准。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "slam-lab-linorobot-launch",
+      "title": "Linorobot2 异步建图的启动与参数",
+      "category": "SLAM 与图定位 · 固定参考",
+      "localPath": "linorobot2/linorobot2_navigation/launch/slam.launch.py",
+      "url": "https://github.com/linorobot/linorobot2/blob/f6b0bd0350c4a9d6b815ef4bb5c701a1e5129711/linorobot2_navigation/launch/slam.launch.py",
+      "version": "jazzy · f6b0bd0350c4",
+      "description": "建图入口包含 SLAM Toolbox 异步启动和 Nav2 navigation_launch。用实际包含文件和参数核时钟、帧与模式。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    }
+  ],
+  "apiReferences": [
+    {
+      "id": "api-slam-map-lifecycle",
+      "title": "SLAM Toolbox 的扫描、地图与位姿图接口",
+      "lessons": [
+        "eco-slam-mapping",
+        "eco-state-estimation",
+        "project-navigation"
+      ],
+      "columns": [
+        "接口",
+        "输入与单位",
+        "实际输出或检查",
+        "边界"
+      ],
+      "rows": [
+        [
+          "LaserScan 与 TF",
+          "距离 m，角度 rad，Header 为采集时刻",
+          "按扫描帧等目标 odom，再查基座运动",
+          "到达话题后仍可因缺 TF 或门限跳过"
+        ],
+        [
+          "map / dynamic_map",
+          "订阅可靠瞬态本地地图，GetMap 为空请求",
+          "OccupancyGrid 和地图元数据",
+          "固定实现读取缓存，空图与未发布要分开"
+        ],
+        [
+          "SaveMap",
+          "name 为栅格输出前缀",
+          "PGM/YAML，result 0 为成功",
+          "首图前本次 result=1"
+        ],
+        [
+          "SerializePoseGraph",
+          "filename 为图文件前缀",
+          ".posegraph + .data，result 0 为成功",
+          "两份文件一起备份，版本和来源随图记录"
+        ],
+        [
+          "DeserializePoseGraph",
+          "match_type 为 1、2 或 3，地图初值用 m、rad",
+          "固定版响应无字段",
+          "本次同步恢复用 1，图定位用 3。2 由接口定义列出"
+        ],
+        [
+          "clear_localization_buffer",
+          "std_srvs/Empty",
+          "短期图节点、边和栅格可重新观察",
+          "定位进程提供，回执无业务字段"
+        ]
+      ],
+      "notes": [
+        "命名空间用于 ROS 名称隔离。TF frame 字符串仍须按同一棵树规划。"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "scope": "定位缓冲实测与最初夹具断言修正",
+  "earlierReportSha256": "0bfdec1192b362b25537e7908fba20f24fbcb43768b515d6a3b8fc5cb2e73269",
+  "earlierSourceHashes": {
+    "slam_labs/validate_slam.py": "3be561bdf9b26378500e7d730ddf0388dd403adc476e45bf1c5cddfa2a27687e",
+    "slam_labs/scan_run.py": "a048e1b09b568b052bd507240117e39579bf98a92449b0804759fa9de2ad1a1d",
+    "slam_labs/slam.yaml": "bdcbf5e10dcc1418c053defaed10ea7b76ca894faddaa46db556d47303ad38c7",
+    "slam_labs/bridge.yaml": "6a7fed4a21662bb6d2845456376d94a03ad4a1d8c0566ae55b945dac86ffad93",
+    "nav2_labs/nav_room.sdf": "d57d32c1024a8675f37167d65a466d456f687b77abc8f28330928973489ec176",
+    "nav2_labs/validate_nav2.py": "ac913b3733fd6fba857a4fe6a3b18e7d286de64d5800d330df2415b0129d75de",
+    "gazebo_labs/validate_sensors.py": "e14314457e0c72608e057a6c2a1dea3c90c3e6e0efdf32bd1aa4c22e5d4990da"
+  },
+  "earlierAssertion": "AssertionError: {'cells': 13426, 'changedCells': 8, 'originDeltaM': 0.0}",
+  "originalExpectation": "定位时每次发布的栅格与加载时相等",
+  "observedAgain": {
+    "cells": 13426,
+    "changedCells": 8,
+    "originDeltaM": 0.0
+  },
+  "changedValues": {
+    "0→100": 2,
+    "-1→100": 4,
+    "-1→0": 2
+  },
+  "afterClearing": {
+    "cells": 13426,
+    "changedCells": 0,
+    "originDeltaM": 0.0
+  },
+  "originalGraphFilesIntact": true,
+  "currentReportSha256": "1d3a900208f6d9a8ec02b2c9c8f4da16397cfd19bc1513ce48b3263b5f76698e"
+}

@@ -1,0 +1,63 @@
+{
+  "checkedAt": "2026-11-07",
+  "reason": "独立内容审查后补齐实践依赖和客户端链；保留原稿及注释层的追溯关系。",
+  "chapters": {
+    "eco-perception-pipeline": {
+      "sections": {
+        "2": {
+          "appendParagraphs": [
+            "首次准备环境时，在 Ubuntu 24.04 / Jazzy 的系统 Python 中安装下列包，并执行导入预检。apt 提供的 cv_bridge 要与 ROS、Python 和 NumPy 的二进制接口匹配；看到 ImportError 或扩展 ABI 错误时先核对解释器和包来源，不能用重复 pip 升级替代诊断。依赖准备需要软件源，这与教材正文是否能离线阅读是两件事。"
+          ],
+          "prependCodeBlocks": [
+            {
+              "label": "首次依赖准备与导入预检",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 前提：Ubuntu 24.04 已配置 Jazzy 软件源；以下为读者准备步骤，本轮未执行 apt 安装。\n# 输入：软件源中的发行版包；输出：系统 Python 可导入图像转换/处理库。\n# cv_bridge 对应 ROS 消息桥，OpenCV 负责图像算法，NumPy 负责数组，rqt 用于显示。\nsudo apt update\nsudo apt install ros-jazzy-cv-bridge python3-opencv python3-numpy ros-jazzy-rqt-image-view\n# 必须先加载 Jazzy，让 Python 找到 ROS 的发行版模块；不要混用其他 ROS 版本的 overlay。\nsource /opt/ros/jazzy/setup.bash\n# -c 只作导入检查，不启动相机、ROS节点或设备。成功时输出依赖导入通过。\n/usr/bin/python3 -c 'import rclpy, cv2, numpy; from cv_bridge import CvBridge; from sensor_msgs.msg import Image; print(\"图像实验依赖导入通过\")'",
+              "explanation": "安装命令是读者首次准备环境时执行的步骤，本轮没有自动安装软件。成功导入只验证 Python 依赖可见性；随后仍需按正文启动合成节点并检查消息、编码、header 与显示。"
+            }
+          ]
+        }
+      }
+    },
+    "eco-microcontrollers": {
+      "sections": {
+        "2": {
+          "appendParagraphs": [
+            "只有 Agent 无法完成通信实验，还要创建并构建实际客户端。这里选择同一 Linux 主机的 host 目标，不涉及刷写板卡；在已构建 micro_ros_setup、且仍处于工作空间根目录时，先建立 host 客户端工作区并构建，再接着执行原有 Agent 的创建和构建步骤。旧站教程展示 Humble 命令，当前本地 Jazzy setup 的 host 配置对应 Jazzy demos；仍需以实际提交、依赖和构建日志验证，不能因为配置存在就标记已运行。"
+          ],
+          "codeBlocks": {
+            "0": {
+              "label": "完整准备顺序：工具、host 客户端、Agent",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 输入：已准备好的 ROS 2 Jazzy 与联网软件源；输出：同一工作区中的工具、Linux客户端与Agent。\n# 这不是板卡固件烧写流程；本节命令按本地官方host教程与Jazzy配置核对，本轮未构建。\nsource /opt/ros/jazzy/setup.bash\n# 工作区必须独立，目录没有物理单位；已有工作区不要重复克隆同名源码目录。\nmkdir -p \"$HOME/microros_learning_ws/src\"\ncd \"$HOME/microros_learning_ws\"\ngit clone -b jazzy https://github.com/micro-ROS/micro_ros_setup.git src/micro_ros_setup\nrosdep update\nrosdep install --from-paths src --ignore-src --rosdistro jazzy -y\n# 第一步仅构建setup工具，随后加载它提供的ros2 run入口。\ncolcon build --symlink-install\nsource install/local_setup.bash\n# 第二步创建并构建Linux host客户端；host目标不需要板卡交叉编译/刷写步骤。\nros2 run micro_ros_setup create_firmware_ws.sh host\nros2 run micro_ros_setup build_firmware.sh\nsource install/local_setup.bash\n# 第三步创建并构建Agent。必须与客户端使用一致的发行版、类型和传输合同。\nros2 run micro_ros_setup create_agent_ws.sh\nros2 run micro_ros_setup build_agent.sh\nsource install/local_setup.bash",
+              "explanation": "三个构建阶段具有依赖顺序：先使 setup 命令可见，再构建客户端和 Agent。host 目标在 Linux 上运行 micro-ROS 应用，用于先验证通信；不构成任何 MCU、串口设备或实时控制验证。已存在源码目录时从对应阶段续作，不能重复覆盖。"
+            }
+          }
+        },
+        "3": {
+          "appendParagraphs": [
+            "运行时使用独立终端：A 启动 UDP Agent；B、C 分别启动一个 ping_pong 客户端；D 用普通桌面 RMW 检查 ROS 图与话题。XRCE 客户端需要在自己的终端选择 rmw_microxrcedds；不能把这个环境变量不加区分地复制给 Agent 或观察终端。示例 host 配置使用与 Agent 对应的 UDP 通道，默认本机 Agent 端口为 8888；改成跨机时必须同时核对客户端实际构建的地址与传输配置。"
+          ],
+          "appendCodeBlocks": [
+            {
+              "label": "终端B、C：分别运行一个Linux客户端",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 先在终端A按上文运行UDP Agent，端口8888是UDP端口号，不是频率。\n# 以下在终端B执行；终端C另开一窗，重复同一组命令，以观察两个客户端互相ping/pong。\ncd \"$HOME/microros_learning_ws\"\nsource /opt/ros/jazzy/setup.bash\nsource install/local_setup.bash\n# 只为这个客户端进程选择XRCE适配；客户端通过Agent接入桌面ROS数据空间。\nexport RMW_IMPLEMENTATION=rmw_microxrcedds\nros2 run micro_ros_demos_rclc ping_pong",
+              "explanation": "预期 Agent 日志出现会话与实体创建，两个客户端输出 ping/pong 序号。单个客户端未看到其他节点返回 pong 不能立即判断传输失败；要结合客户端数量、Agent 日志和普通 ROS 观察终端核查。此步骤尚未在本机运行。"
+            },
+            {
+              "label": "终端D：普通ROS观察终端",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 此终端只观察桌面ROS图，不作为XRCE客户端，不接触任何电机或板卡。\nsource /opt/ros/jazzy/setup.bash\n# 明确选择已安装的桌面DDS后端；与Agent所在ROS_DOMAIN_ID保持一致。\nexport RMW_IMPLEMENTATION=rmw_fastrtps_cpp\nros2 daemon stop\nros2 node list\nros2 topic list -t\n# 找到实际ping/pong话题后再使用ros2 topic echo，不能凭猜测固定话题名称。",
+              "explanation": "区分工具链可见、XRCE会话成立、ROS实体出现和业务数据交换四层证据。真实硬件还需单独验证重连、新鲜度、急停与驱动状态，本主机实验不能替代这些检查。"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

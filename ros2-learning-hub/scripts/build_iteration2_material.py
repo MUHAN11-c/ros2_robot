@@ -1,0 +1,153 @@
+#!/usr/bin/env python3
+"""把第2轮已运行报告写入正文素材；报告失败/源码变更时拒绝生成。
+
+输入：四份本机验证JSON及其原创源码；输出source/iteration-2-revisions.json。
+表格数值保留报告单位；SHA绑定原始事件，不能只刷新标签冒充重新实测。
+说明正文限定同机软件模型，不能把参数事务/时间线/数据年龄推广成硬件保证。
+"""
+import hashlib
+import json
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+EVIDENCE = ROOT/'validation-evidence'
+
+
+def read_report(name, source, hash_field='sourceSha256'):
+    path = EVIDENCE/(name+'-current-validation.json')
+    data = json.loads(path.read_text())
+    passed = (data.get('passed') is True or
+              (data.get('execution', {}).get('exitCode') == 0 and data.get('results', {}).get('passed') is True))
+    if not passed:
+        raise ValueError('没有通过的实际证据：'+name)
+    if hashlib.sha256((ROOT/'examples/runtime_labs'/source).read_bytes()).hexdigest() != data[hash_field]:
+        raise ValueError('实际记录与当前源码不一致：'+source)
+    return data
+
+
+def table(title, columns, rows, report, caption):
+    file = EVIDENCE/(report+'-current-validation.json')
+    return dict(title=title, columns=columns, rows=rows, caption=caption,
+                evidenceFile=file.relative_to(ROOT).as_posix(),
+                evidenceSha256=hashlib.sha256(file.read_bytes()).hexdigest())
+
+
+def source_block(name, explanation):
+    return dict(label='runtime_labs/'+name, language='python', type='complete',
+                sourceFile='examples/runtime_labs/'+name, explanation=explanation)
+
+
+def command(name, code, explanation):
+    return dict(label=name, language='bash', type='commands', code=code, explanation=explanation)
+
+
+def vector(values):
+    return json.dumps([values[k] for k in ('lower_m', 'upper_m', 'span_m')])
+
+
+def main():
+    slow = read_report('slow-consumer', 'slow_consumer_lab.py')
+    ex = read_report('executor-group', 'executor_group_lab.py', 'scriptSha256')
+    param = read_report('parameter-transaction', 'parameter_transaction_lab.py')
+    service = read_report('service-deadline', 'service_deadline_lab.py')
+    # 正文的固定控制变量也属于证据合同；不能把另一组参数的报告只换SHA后套进来。
+    controls = dict(durationS=3.0, requestedRateHz=40.0, slowWorkMs=80.0, gateMaxAgeMs=120.0, drainS=1.2)
+    if any(slow['parameters'].get(key)!=value for key,value in controls.items()):
+        raise ValueError('慢消费者控制变量已变化，应先修订正文解释与表注')
+    if len(ex['summary'])!=4 or param['summary']['mainCasesPassed']!=11 or len(service['results'])!=8:
+        raise ValueError('正文需要完整执行器4场景、参数11组、服务含原客户端8项证据，不能用子集冒充')
+    names = {'normal':'正常处理，depth=1', 'slow-depth-1':'80ms处理，depth=1',
+             'slow-depth-10':'80ms处理，depth=10', 'slow-gated':'80ms，depth=10，双时刻门控'}
+    slow_rows = [[names[a['case']], str(a['sent']), str(a['callbacks']), str(a['acceptedSyntheticOutputs']),
+                  str(a['rejectedBeforeWork'])+'/'+str(a['rejectedAfterWork']),
+                  f"{a['acceptedAgeAtEndMs']['p95']:.3f}", str(a['acceptedBeyondAgeLimit'])] for a in slow['summary']]
+    slow_table = table('慢消费者的实际数据年龄', ['场景','发送数','进入回调','接受结果','处理前/后拒绝','结束年龄p95(ms)','接受过期数'], slow_rows, 'slow-consumer',
+                       '本机FastDDS、BEST_EFFORT、请求40Hz、发送3秒+排空1.2秒；p95包含尾部，不当跨RMW性能比。门限120ms，接受仅为合成结果决定。')
+    group_names = {'single_thread_distinct_groups':'单线程、不同互斥组', 'two_threads_same_group':'双线程、同互斥组', 'two_threads_distinct_groups':'双线程、不同互斥组'}
+    group_rows = [[group_names[a['case']], str(a['threads']), f"{a['windowElapsedS']:.3f}", str(a['maxConcurrency']), str(a['heartbeatWhileSlow'])]
+                  for a in ex['summary'] if a['case'] in group_names]
+    group_table = table('执行器与互斥组的实际对照', ['配置','工作线程','受控窗口(s)','最大并发','慢回调内heartbeat'], group_rows, 'executor-group',
+                        '相同门闩窗口；负例确认timer已ready，释放后可运行。Event.wait释放GIL，演示调度许可，不能解释为纯Python计算加速。')
+    future = next(a['result'] for a in ex['results'] if a['result']['case']=='client_future_continuation')
+    spans = {}
+    for event in future['timeline']['events']:
+        spans.setdefault(event['span'], {})[event['event']] = event
+    future_rows = [[v['start']['callback'], f"{1000*v['start']['elapsedS']:.3f}", f"{1000*v['end']['elapsedS']:.3f}", str(v['start']['nativeThreadId'])] for v in spans.values()]
+    future_table = table('真实服务Future完成后的回调时间线', ['回调','相对开始(ms)','相对结束(ms)','本机native线程ID'], future_rows, 'executor-group',
+                         '先收到sum=12，等响应handler释放client组，再启用同组timer；generic done与timer受控重叠。结论限记录版本rclpy，不推广为C++/Action所有回调。')
+    pr = {a['id']:a for a in param['results']['results']}
+    param_rows = []
+    for cid, title in [('legal_atomic_pre_on_post','合法整批'), ('invalid_cross_constraint_atomic_keeps_old','交叉约束拒绝'), ('partial_update_merges_old_fields','只改upper，合并旧lower')]:
+        a = pr[cid]
+        param_rows.append([title, '接受' if a['result']['successful'] else '拒绝', vector(a['actual']['store']), vector(a['actual']['snapshot']), a['actual']['application_state']])
+    for mode, title in [('set_parameters','逐项：第一项拒绝、第二项成功'), ('set_parameters_atomically','原子：完整合法批次')]:
+        a = pr['sequential_partial_success_vs_atomic_batch']['comparison'][mode]
+        param_rows.append([title, '部分成功' if mode=='set_parameters' else '接受', vector(a['actual']['store']), vector(a['actual']['snapshot']), a['actual']['application_state']])
+    for mode, title in [('bad_on','错误on副作用后被拒绝'), ('good_veto','纯校验被拒绝')]:
+        a = pr['validator_side_effect_pollution_vs_pure_check']['comparison'][mode]
+        param_rows.append([title, '拒绝', vector(a['actual']['store']), vector(a['actual']['snapshot']), a['actual']['application_state']])
+    for cid, title, outcome in [('post_return_false_cannot_veto','错误post返回拒绝','仍已提交'), ('post_exception_does_not_rollback_store','post受控异常','抛异常但已提交')]:
+        a = pr[cid]
+        param_rows.append([title, outcome, vector(a['actual']['store']), vector(a['actual']['snapshot']), a['actual']['application_state']])
+    param_table = table('参数存储与应用快照分别检查', ['场景','设置结果','存储[lower,upper,span](m)','快照[lower,upper,span](m)','应用状态'], param_rows, 'parameter-transaction',
+                        '11组Python同进程API、19节点清理。三参数为有限DOUBLE米；C++签名/句柄仅核源码，未运行C++三阶段实验。')
+    labels = {'discovery-absent':'未发现服务','success':'正常应答','late-kept':'超时后保留pending','late-detached':'超时后移除pending','cpp-late':'C++迟到应答','cpp-absent':'C++缺服务','python-late':'Python迟到应答','python-absent':'Python缺服务'}
+    service_rows = []
+    for a in service['results']:
+        done = [v for v in a['events'] if v['event']=='server_completed']
+        delta = done[0]['at_s']-a['clientFinishedAt_s'] if done else None
+        relation = ('晚'+f'{delta:.3f}秒' if delta is not None and delta>0 else '早'+f'{-delta:.3f}秒' if delta is not None else '未发请求')
+        service_rows.append([labels[a['case']], '是' if a['discovered'] else '否', str(a['clientExitCode']) if a.get('clientExitCode') is not None else 'probe', relation, str(done[0]['executed_count']) if done else '0', '完成' if a.get('futureDone') else '仍未完成' if a.get('futureDone') is False else '见场景'])
+    service_table = table('客户端结束等待后，服务是否仍执行', ['场景','已发现','客户端退出码','服务完成相对观察时刻','执行次数','保留Future'], service_rows, 'service-deadline',
+                          'probe为实验内状态；观察时刻指probe首次等待返回、或原客户端退出。两进程同机monotonic可比，IPC仅观察服务端，不是ROS服务取消。')
+    rev = dict(meta=dict(iteration='2026-11-07-r2', purpose='真实实验与正文表格、源码同源，保留未验证边界。'), chapters={})
+    rev['chapters']['qos'] = dict(appendSections=[dict(title='队列深度之外，还要测到处理结束的数据年龄', paragraphs=[
+        'slow_consumer_lab.py把发布者与消费者放在两个独立进程，避免慢回调连带压低发送timer频率，制造看似没有积压的伪负载。String中的合成JSON包含source_id、递增seq和monotonic_ns采样时刻；接收者记录进入回调与处理结束时刻。两端在同一主机共享单调时基，不能跨主机直接比较，也不能与ROS时间混减。',
+        '发布端用STEADY timer请求40Hz，同时保留实际生成/publish返回时刻。正常处理、80ms慢处理的depth1/depth10、depth10加双时刻门控四组分别运行，QoS明确为BEST_EFFORT/KeepLast。序号缺口只证明有限窗口没有进入该回调，不能单凭缺口断定具体哪一层丢弃。',
+        '入口年龄包含生成后传输、排队和调度；结束年龄再包含本次处理。表中更深队列保留较多样本，却不等于结果更新鲜。统计包含1.2秒排空尾部，不当纯稳态性能倍数，更不推出所有业务都该使用小队列：完整记录和在线新鲜度可能有不同目标。',
+        '门控拒绝非法、非有限/未来时刻，入口要求年龄加80ms预算不超过120ms，处理结束再复核。它只决定接受合成结果，不证明设备停车。自然负载的结束后拒绝未触发，不能把零次触发称为该运行分支已覆盖；年龄和有限性另有23项标准库边界断言。'], tables=[slow_table], codeBlocks=[
+        source_block('slow_consumer_lab.py','双进程受控负载；序号无量纲、时间戳整数纳秒、统计毫秒。域216/LOCALHOST，8个PID正常清理；不控制任何设备。'),
+        command('复现慢消费者与双时刻门控','source /opt/ros/jazzy/setup.bash\n# 4组发送+排空，报告另存/tmp；外层保护不由软件软期限替代。\ntimeout --signal=INT --kill-after=8s 90s /usr/bin/python3 examples/runtime_labs/slow_consumer_lab.py --report /tmp/slow-consumer-report.json\n# 只用标准库复算年龄边界。\n/usr/bin/python3 examples/runtime_labs/slow_consumer_lab.py --self-test','比较实际频率、序号和两种年龄，不要求下一次有相同丢序列/p95。')])], appendExercises=[
+        dict(question='为什么不能用同一单线程同时驱动40Hz发布timer和80ms订阅回调来测积压？',answer='慢回调也会压低发送频率，掩盖原来40Hz输入对消费者的压力。应给生产端独立进程或经过验证的独立执行资源，记录实际发送时刻。'),
+        dict(question='入口年龄90ms、处理80ms，入口仅检查age<=120ms能保证结束时仍新鲜吗？',answer='不能，结束可能到170ms。入口可预留工作预算，结束后还需复核实际年龄；预算与调度可能变化，门控不等于硬实时或硬件停车。')],
+        validation='2026-11-07 QoS七端点及慢消费者四组已运行；后者同机独立双进程、域216、BEST_EFFORT/KeepLast。49运行/23边界断言通过，8 PID正常清理；自然负载未触发处理后拒绝，跨机/设备未验证。')
+    rev['chapters']['executors'] = dict(appendSections=[dict(title='先控制并发条件，再解释测到的时间线', paragraphs=[
+        'executor_group_lab.py对照单线程不同互斥组、两线程同互斥组、两线程不同互斥组。慢回调用Event.wait保持运行，协调线程释放门闩；heartbeat已经就绪，比较它能否取得执行资源和组许可。等待释放GIL，不能解释成纯Python计算按核数加速。',
+        '两个负例确认timer已ready，慢回调释放后能执行，排除timer根本未触发的替代原因。三组最大并发1、1、2说明增加线程和划分组是独立条件，heartbeat次数则只是这次有限窗口的观察。原始记录保留成对span、起止单调时刻和线程ID，不由频率日志推断硬截止。',
+        '第四组使用真实AddTwoInts客户端Future。收到sum=12并进入用户done continuation后，先等响应handler释放client组，再启用与client同组的长timer。两者受控重叠，而timer占组时client实体仍不能执行：generic Task与ROS实体的组许可不是同一层，并非互斥组整体失效。',
+        '结论限记录版本Jazzy rclpy Client/Future，不推广到C++或所有Action回调。continuation可只向有界线程安全队列提交不可变结果，再由职责明确的回调消费。共享状态、线程数、组许可与数据锁分别设计，避免用一种机制替另外几种作保证。'], tables=[group_table,future_table], codeBlocks=[
+        source_block('executor_group_lab.py','4场景真实rclpy实验，有限门闩窗口、父进程期限与线程清理。只模拟等待及无副作用加法，默认域219/LOCALHOST。'),
+        command('复现执行器和真实Future对照','source /opt/ros/jazzy/setup.bash\ntimeout --signal=INT --kill-after=8s 90s /usr/bin/python3 examples/runtime_labs/executor_group_lab.py --report /tmp/executor-group-report.json','比较许可关系、时间线和清理，不以单次heartbeat次数声称严格实时频率。')])], appendExercises=[
+        dict(question='两线程同互斥组没有heartbeat，怎么排除timer还未ready？',answer='在慢回调仍活跃的窗口末确认timer已ready，释放后确认heartbeat能执行，再结合起止事件与线程ID定位组许可，而非只看零计数。'),
+        dict(question='为何同client组timer能与该Future的用户done continuation重叠？',answer='固定rclpy路径把用户continuation排为generic Task，不自动继承client组。实验先确认响应handler释放组再启用timer；ROS实体仍互斥，不能推广成所有回调都不受组限制。'),
+        dict(question='出现并发2能否证明纯Python算法性能翻倍？',answer='不能。Event.wait演示等待重叠并释放GIL。CPU算法、扩展库、锁与负载需要另测，调度许可不等于确定性能收益。')],
+        validation='2026-11-07异步暂停clock三场景和执行器/Future四场景已实测；最大并发1/1/2，真实client done与同client组timer在响应handler释放后受控重叠。未验证C++/Action continuation、CPU加速或硬实时。')
+    rev['chapters']['parameters'] = dict(appendSections=[dict(title='pre、on、post：存储提交不等于所有副作用事务', paragraphs=[
+        'parameter_transaction_lab.py设置合成lower_m、upper_m和派生span_m=upper_m-lower_m，均为有限DOUBLE米，要求-100<=lower<upper<=100。pre复制本次请求，与当前完整配置合并后补派生值；on只校验候选；post在存储提交后更新不可变内存快照，不操作硬件或文件。',
+        '从[0,1,1]米同时改lower=2、upper=3，原子提交得到[2,3,1]米；逐项先因lower与旧upper冲突被拒，再让upper成功，最终是[0,3,3]。只更新upper必须保留当前lower，未出现字段不能悄悄恢复默认值。注册校验器不自动使逐项API成为事务。',
+        '错误on先把缓存写成[2,3,1]，随后另一验证器拒绝：存储仍旧，缓存已经污染。纯校验版本被拒时两者才都保旧。后续拒绝不能替你撤销已发生的成员写入；原子参数表与应用副作用不是同一事务。',
+        'Python post合同返回None。故意返回SetParametersResult(false)的反例并未撤销已提交值；受控post异常传播给直接调用者后，存储也已更新，旧缓存却未更新，应用状态显式apply_failed。不能从设置抛异常推断存储仍旧，更不能把参数原子性当资源重配置或硬件动作事务。',
+        'Python pre返回修改后的List，C++ pre以void(vector&)就地修改；Python注册返回None、Node持有callable，C++需保留SharedPtr句柄。多个pre组合也有固定版本差异，本例每节点只有一个pre。C++签名/顺序/句柄只核源码，不冒称已运行C++三阶段实验。',
+        '11组还覆盖类型/非有限值/范围拒绝、回调持有与移除、空pre和遗漏return。19节点均销毁，Context关闭。未启动参数服务和执行器，但Node仍初始化RMW并创建parameter_events，不能称为完全无DDS实体；发现OFF，只调用本节点公开API，不向其他节点设置参数。'], tables=[param_table], codeBlocks=[
+        source_block('parameter_transaction_lab.py','11组Python阶段/反例；DOUBLE米、容差1e-12m，错误on/post仅操作合成内存缓存。C++仅源码核对，数据存储与应用状态分开验收。'),
+        command('复现参数提交和副作用','source /opt/ros/jazzy/setup.bash\n# 不启动参数服务；输出另存/tmp。\n/usr/bin/python3 examples/runtime_labs/parameter_transaction_lab.py --json > /tmp/parameter-transaction-result.json','默认域223、发现OFF；--help不加载ROS，-O拒绝。不要将同节点内存行为推广为跨线程/硬件事务。')])], appendExercises=[
+        dict(question='on提前改缓存，另一个验证器拒绝，原子参数设置能恢复缓存吗？',answer='不能自动撤销应用副作用。on应纯校验；在已提交的post或受控提交流程应用配置，同时定义失败状态。'),
+        dict(question='post返回拒绝或抛异常能可靠撤销存储吗？',answer='post不是否决接口，Python合同返回None。本机反例中错误返回未撤销，异常后存储也已改变而缓存未更新。必须分别检查存储、应用状态和恢复流程。'),
+        dict(question='为何两种语言不能照搬同一个pre签名与注册句柄写法？',answer='Python pre返回List、注册返回None，Node持有callable；C++ pre修改vector并返回void，注册SharedPtr句柄要保留。C++这里只核源码，多pre组合语义也须按版本核对。')],
+        validation='2026-11-07原gain/启动检查继续有效；新增Python11组pre/on/post及副作用实测通过，19节点清理。同进程API、发现OFF、无参数服务/执行器；仍有RMW和parameter_events。C++三阶段、跨节点/线程和硬件事务未验证。')
+    rev['chapters']['services'] = dict(appendSections=[dict(title='迟到应答：本地超时后服务可能已经执行', paragraphs=[
+        'service_deadline_lab.py为每例创建唯一服务名，父探针与spawn服务端在同一主机的不同进程。服务只做4+8，有限sleep模拟工作；IPC单独报告开始、完成次数和应答调度返回，它不是ROS服务自带的反馈或取消。每例只发一次业务请求，不自动重发掩盖未知状态。',
+        '默认四例为未发现、正常响应、超时后保留登记、超时后移除pending。慢服务在首次等待结束之后仍完成sum=12；保留登记并继续spin可收到迟到结果，移除登记后即使保留Future对象，它仍未完成。删除本地跟踪、销毁客户端或一次等待结束都不是撤销远端工作。',
+        '扩展模式运行工作区的C++/Python一次性客户端：服务延迟3秒而应答窗口2秒，两者以1退出后服务仍各完成一次加法；缺服务也都以1退出，阶段日志才区分原因。实验程序exit0只说明预期故障断言通过，不表示每个请求业务成功。真实副作用操作需要请求ID、幂等或外部确认，普通服务不提供通用任务取消。',
+        '表中观察时刻指probe首次等待返回或原客户端进程退出。之后继续观察服务端完成与发送应答路径返回，不声称客户端收到了被解除登记的响应。monotonic只在同机进程比较，软期限依赖调度，父进程和外层timeout另作保护。'], tables=[service_table], codeBlocks=[
+        source_block('service_deadline_lab.py','默认4真实协议场景，可选原客户端扩展4项。整数无量纲、期限/延迟秒；域221/LOCALHOST，只清理自己服务进程。'),
+        command('复现迟到响应与pending清理','source /opt/ros/jazzy/setup.bash\n# 默认4场景只依赖Jazzy/example_interfaces。\ntimeout --signal=INT --kill-after=5s 65s /usr/bin/python3 examples/runtime_labs/service_deadline_lab.py --output /tmp/service-deadline-report.json\n# 已构建基础工程时按实际路径增加原客户端4项；独立解压可另传--foundation-source。\n# /usr/bin/python3 examples/runtime_labs/service_deadline_lab.py --foundation-prefix /path/to/foundation/install --output /tmp/service-original-clients.json','扩展路径不存在会失败而不跳过。两个原客户端0/1码不独立区分缺服务与应答超时，必须结合阶段日志。')])], appendExercises=[
+        dict(question='超时后移除pending，能重发有副作用操作并假设旧请求未执行吗？',answer='不能。本例清理本地登记后服务仍完成加法。需业务请求ID、幂等/确认机制，不能由超时推断远端未执行。'),
+        dict(question='为何同为exit=1还要阶段日志和服务端证据？',answer='原客户端缺服务和应答超时都返回1。前者未发请求，后者实测仍后续执行；实验程序exit0又只表示预期断言成立，必须读具体场景结果。')],
+        validation='2026-11-07双向正常记录继续有效；域221默认四例加原C++/Python迟到/缺服务四例共8项通过。服务端超时后仍各完成一次加法，子进程自然清理；未实现跨机重试幂等或生产副作用取消。')
+    (ROOT/'source/iteration-2-revisions.json').write_text(json.dumps(rev,ensure_ascii=False,indent=2)+'\n')
+    print(json.dumps(dict(chapters=len(rev['chapters']),evidenceTables=5),ensure_ascii=False))
+
+
+if __name__ == '__main__':
+    main()

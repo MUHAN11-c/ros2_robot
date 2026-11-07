@@ -1,0 +1,525 @@
+{
+  "meta": {
+    "iteration": "2026-11-07-r5",
+    "sourceReviewFile": "validation-evidence/iteration5-bag-source-review.json",
+    "sourceReviewSha256": "dc6bc713298d9d6c5f0c496f987b87b7f21bd56de178327c873f92305c655489"
+  },
+  "resources": [
+    {
+      "id": "iter5-bag-recorder",
+      "title": "录制时间与仿真时钟门控",
+      "url": "https://github.com/ros2/rosbag2/blob/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_transport/src/rosbag2_transport/recorder.cpp",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_transport/src/rosbag2_transport/recorder.cpp",
+      "category": "时间、录包与数据复现",
+      "version": "0.26.11",
+      "description": "Linux普通录制直接取RMW received/source两个时戳，sim分支recv改node.now；等待正clock后才创建数据订阅；已订阅QoS不自动重建。",
+      "verification": "只读本地固定快照与官方0.26.11固定release HTTP字节；不运行DDS或上游代码；本研究本身未运行DDS。 根有限实测另见当前已绑定报告；仅其中列出的行为经过实际验证。",
+      "checkedAt": "2026-11-07T05:55:29+08:00",
+      "type": "official-source",
+      "lessons": [
+        "time-bag",
+        "eco-data-observability"
+      ],
+      "versionNote": "rosbag2安装/release0.26.11；固定reference仍标0.26.11但player.cpp含额外取消timer补丁，不能整包视同。"
+    },
+    {
+      "id": "iter5-bag-player-cli",
+      "title": "回放主题筛选、clock选项与覆盖",
+      "url": "https://github.com/ros2/rosbag2/blob/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/ros2bag/ros2bag/verb/play.py",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/ros2bag/ros2bag/verb/play.py",
+      "category": "时间、录包与数据复现",
+      "version": "0.26.11",
+      "description": "--clock可省频率，常量40Hz；默认不开。CLI仅固定频率--clock分支自动exclude原/clock，不把其他clock模式或C++API泛同。",
+      "verification": "只读本地固定快照与官方0.26.11固定release HTTP字节；不运行DDS或上游代码；本研究本身未运行DDS。 根有限实测另见当前已绑定报告；仅其中列出的行为经过实际验证。",
+      "checkedAt": "2026-11-07T05:55:29+08:00",
+      "type": "official-source",
+      "lessons": [
+        "time-bag",
+        "eco-data-observability"
+      ],
+      "versionNote": "rosbag2安装/release0.26.11；固定reference仍标0.26.11但player.cpp含额外取消timer补丁，不能整包视同。"
+    },
+    {
+      "id": "iter5-bag-storage-mcap",
+      "title": "MCAP时间字段与读取实现",
+      "url": "https://github.com/ros2/rosbag2/blob/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_storage_mcap/src/mcap_storage.cpp",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_storage_mcap/src/mcap_storage.cpp",
+      "category": "时间、录包与数据复现",
+      "version": "0.26.11",
+      "description": "MCAP logTime=recv、publishTime=send且读取保留两者；过滤可走linear reader；无index对时间排序支持有限，publish-time order未实现。",
+      "verification": "只读本地固定快照与官方0.26.11固定release HTTP字节；不运行DDS或上游代码；本研究本身未运行DDS。 根有限实测另见当前已绑定报告；仅其中列出的行为经过实际验证。",
+      "checkedAt": "2026-11-07T05:55:29+08:00",
+      "type": "official-source",
+      "lessons": [
+        "time-bag",
+        "eco-data-observability"
+      ],
+      "versionNote": "rosbag2安装/release0.26.11；固定reference仍标0.26.11但player.cpp含额外取消timer补丁，不能整包视同。"
+    },
+    {
+      "id": "iter5-bag-storage-sqlite",
+      "title": "SQLite当前时间字段与schema",
+      "url": "https://github.com/ros2/rosbag2/blob/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_storage_sqlite3/src/rosbag2_storage_sqlite3/sqlite_storage.cpp",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_storage_sqlite3/src/rosbag2_storage_sqlite3/sqlite_storage.cpp",
+      "category": "时间、录包与数据复现",
+      "version": "0.26.11",
+      "description": "messages只存timestamp=recv、topic_id和data；read_next只赋recv，不恢复独立send字段；时间排序并以message id作次级顺序。",
+      "verification": "只读本地固定快照与官方0.26.11固定release HTTP字节；不运行DDS或上游代码；本研究本身未运行DDS。 根有限实测另见当前已绑定报告；仅其中列出的行为经过实际验证。",
+      "checkedAt": "2026-11-07T05:55:29+08:00",
+      "type": "official-source",
+      "lessons": [
+        "time-bag",
+        "eco-data-observability"
+      ],
+      "versionNote": "rosbag2安装/release0.26.11；固定reference仍标0.26.11但player.cpp含额外取消timer补丁，不能整包视同。"
+    },
+    {
+      "id": "iter5-bag-qos",
+      "title": "录制/回放两个方向的QoS适配",
+      "url": "https://github.com/ros2/rosbag2/blob/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_storage/src/rosbag2_storage/qos.cpp",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_storage/src/rosbag2_storage/qos.cpp",
+      "category": "时间、录包与数据复现",
+      "version": "0.26.11",
+      "description": "record按已发现端点适配history/reliability/durability；play在记录profiles兼容同型时复制再重置history，否则警告回默认。",
+      "verification": "只读本地固定快照与官方0.26.11固定release HTTP字节；不运行DDS或上游代码；本研究本身未运行DDS。 根有限实测另见当前已绑定报告；仅其中列出的行为经过实际验证。",
+      "checkedAt": "2026-11-07T05:55:29+08:00",
+      "type": "official-source",
+      "lessons": [
+        "time-bag",
+        "eco-data-observability"
+      ],
+      "versionNote": "rosbag2安装/release0.26.11；固定reference仍标0.26.11但player.cpp含额外取消timer补丁，不能整包视同。"
+    },
+    {
+      "id": "iter5-bag-python-api",
+      "title": "Python显式接收/发送时间写入重载",
+      "url": "https://github.com/ros2/rosbag2/blob/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_py/src/rosbag2_py/_writer.cpp",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/cb8fa198b93bfed90e2417b52b8645fb9ef89c2b/rosbag2_py/src/rosbag2_py/_writer.cpp",
+      "category": "时间、录包与数据复现",
+      "version": "0.26.11",
+      "description": "导出三/四参数write；三参数把recv与send设为同一值，四参数可做无DDS元数据反例。",
+      "verification": "只读本地固定快照与官方0.26.11固定release HTTP字节；不运行DDS或上游代码；本研究本身未运行DDS。 根有限实测另见当前已绑定报告；仅其中列出的行为经过实际验证。",
+      "checkedAt": "2026-11-07T05:55:29+08:00",
+      "type": "official-source",
+      "lessons": [
+        "time-bag",
+        "eco-data-observability"
+      ],
+      "versionNote": "rosbag2安装/release0.26.11；固定reference仍标0.26.11但player.cpp含额外取消timer补丁，不能整包视同。"
+    },
+    {
+      "id": "iter5-bag-cdr-alignment",
+      "title": "Fast-CDR对齐字节与语义比较",
+      "url": "https://github.com/eProsima/Fast-CDR/blob/1bc9c919311ffce555b445560bf7ae062a4e1c72/include/fastcdr/Cdr.h",
+      "sourceUrl": "https://raw.githubusercontent.com/eProsima/Fast-CDR/1bc9c919311ffce555b445560bf7ae062a4e1c72/include/fastcdr/Cdr.h",
+      "category": "时间、录包与数据复现",
+      "version": "2.2.8",
+      "description": "固定版本实现核对；语义/原始字节身份分开，不把padding差异当消息字段变化。",
+      "verification": "只读官方固定release；未编译或运行序列化器；本研究本身未运行DDS。 根有限实测另见当前已绑定报告；仅其中列出的行为经过实际验证。",
+      "checkedAt": "2026-11-07T05:55:29+08:00",
+      "type": "official-source",
+      "lessons": [
+        "time-bag",
+        "eco-data-observability"
+      ],
+      "versionNote": "安装Fast-CDR2.2.8；所核header逐字节匹配官方v2.2.8固定提交，未扩成任意RMW序列化保证。"
+    },
+    {
+      "id": "iter5-bag-player-version-boundary",
+      "title": "播放器会话时钟与同版本补丁差异",
+      "url": "https://github.com/ros2/rosbag2/blob/12b5e8ba4eb5665501a16f0d9e050552a1149f56/rosbag2_transport/src/rosbag2_transport/player.cpp",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rosbag2/12b5e8ba4eb5665501a16f0d9e050552a1149f56/rosbag2_transport/src/rosbag2_transport/player.cpp",
+      "category": "时间、录包与数据复现",
+      "version": "参考0.26.11 post-tag快照",
+      "description": "该快照在会话循环结束后新增取消固定clock timer；精确0.26.11 release没有这一块。CLI退出与保活Player结束会话分别验收，不从新README反推安装行为。",
+      "versionNote": "reference12b5e8...与release cb8fa198...标称相同但player.cpp字节不同；差异及双方SHA在本审查保存。",
+      "verification": "只读固定两提交差异；当前实验仅验证CLI自然退出，未测保活Player会话停clock。",
+      "checkedAt": "2026-11-07T05:58:28+08:00",
+      "type": "official-source",
+      "lessons": [
+        "time-bag",
+        "eco-data-observability"
+      ]
+    },
+    {
+      "id": "iter5-bag-clock-positive",
+      "title": "RCL时钟启动要求正值",
+      "url": "https://github.com/ros2/rcl/blob/22c0b957140035c675f0a061daaab5fd6b2080e7/rcl/src/rcl/time.c#L76-L83",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rcl/22c0b957140035c675f0a061daaab5fd6b2080e7/rcl/src/rcl/time.c",
+      "category": "时间、录包与数据复现",
+      "version": "rcl9.2.11",
+      "versionNote": "本机安装rcl9.2.11；Clock.started底层用query_now>0判断，非零header措辞应以实现的正值条件细化。",
+      "description": "录制器调用wait_until_started，底层只有当前时间严格大于零才视为started；零clock到达仍等待。当前实验覆盖未到、零、正10s，不声称测试负时刻。",
+      "verification": "只读精确官方release源码及rclcpp调用链；零/正clock的实际数据订阅边界另由已绑定bag报告验证。",
+      "checkedAt": "2026-11-07T06:00:12+08:00",
+      "type": "official-source",
+      "lessons": [
+        "time-bag",
+        "eco-data-observability"
+      ]
+    }
+  ],
+  "chapters": {
+    "time-bag": {
+      "sourceIds": [
+        "core-bag",
+        "core-time",
+        "core-qos",
+        "iter5-bag-recorder",
+        "iter5-bag-player-cli",
+        "iter5-bag-storage-mcap",
+        "iter5-bag-storage-sqlite",
+        "iter5-bag-qos",
+        "iter5-bag-python-api",
+        "iter5-bag-cdr-alignment",
+        "iter5-bag-player-version-boundary",
+        "iter5-bag-clock-positive"
+      ],
+      "validation": "2026-11-07在本机Jazzy rosbag2 0.26.11、独立域231/LOCALHOST真实运行：3组CLI录制/关闭读回、2组暂停就绪后CLI回放及双后端显式字段探针通过；原始记录计数13/13/12，筛选回放6/0/0，常规自建节点/进程清理通过。6项帮助/非法参数及相对新路径双后端另验收；失败历史保留。未运行GUI海龟、真实传感器、Foxglove、tracing、压缩/性能/恢复、父中断注入或完整仿真。 既有软件clock/timer三阶段结果仍见前轮报告，本轮未重复。",
+      "commands": {
+        "1": {
+          "code": "# 【中文教学注释】 停止录制后检查与回放\n# 本例作用：停止录制后检查与回放\n# 输入输出：输入为话题数据、Header 时间戳与选定时钟；输出为 bag 文件、回放消息和时间观测值。\n# 执行顺序与边界：先录制再停止检查，回放前停掉同话题实时发布者；use_sim_time 需 /clock，暂停/跳转可能使 ROS 时间停住或倒退，QoS 覆盖不修复原始坏数据。\n# 只读检查bag话题、类型、时长和数量；有文件不代表数据覆盖完整或时钟可比。\nros2 bag info turtle_session\n# 重放选定消息；此命令未请求生成/clock。先停同话题实时输入源，避免竞争。\nros2 bag play turtle_session --topics /turtle1/cmd_vel"
+        }
+      },
+      "sections": {
+        "1": {
+          "paragraphs": [
+            "消息Header.stamp、录制接收时间与中间件source发送时间是三项不同证据。按本机Linux/Jazzy实现，普通录制取MessageInfo.received_timestamp与source_timestamp；--use-sim-time分支把接收记录时间改为节点ROS时间。录制器不自动解析任意消息Header，也不能据记录起止时刻反推采样同步精度。",
+            "use_sim_time是录制节点自己的配置。当前实现先wait_until_started，再建立数据订阅；ROS Clock.started要求当前值严格大于零，所以“收到了首条/clock”若其值恰为零，仍不放行。门前易失样本没有被订阅，之后不会自动补录；仍存活的transient_local发布者则可能在匹配后提供缓存，二者不能混为同一种丢包。"
+          ]
+        },
+        "2": {
+          "codeBlocks": {
+            "0": {
+              "code": "# 【中文教学注释】 按终端分别运行的录制与回放步骤\n# 本例作用：record 订阅并保存指定主题；info 检查实际录到什么；reset 恢复起点；play 的主题筛选避免旧姿态与新姿态竞争。该实验演示数据重放，不保证 GUI 模拟器在不同调度负载下逐浮点数完全一致。\n# 输入输出：输入为话题数据、Header 时间戳与选定时钟；输出为 bag 文件、回放消息和时间观测值。\n# 执行顺序与边界：先录制再停止检查，回放前停掉同话题实时发布者；use_sim_time 需 /clock，暂停/跳转可能使 ROS 时间停住或倒退，QoS 覆盖不修复原始坏数据。\n# 所有终端先加载 Jazzy 环境并使用同一实验域\n# 在当前shell加载/opt/ros/jazzy/setup.bash；它影响本终端的包索引/库路径，另一个终端必须单独加载。\nsource /opt/ros/jazzy/setup.bash\n# 设置ROS_DOMAIN_ID。Domain ID是无量纲发现域编号；相关端点需一致，它不是认证或网络加密。\nexport ROS_DOMAIN_ID=42\n# 终端甲\n# 从已安装包turtlesim启动turtlesim_node；此进程通常持续运行，另用新终端执行观察命令，Ctrl+C结束。\nros2 run turtlesim turtlesim_node\n# 终端乙：目录 turtle_trial 必须尚不存在\n# 录制指定话题到新目录；先确保消息/TF/QoS完整，-o目录应尚不存在，Ctrl+C后再检查关闭后的元数据。\nros2 bag record -o turtle_trial --topics /turtle1/cmd_vel /turtle1/pose\n# 终端丙：运行约十秒后 Ctrl+C\n# 按指定接口序列化消息并发布；--once只发一条，--rate单位Hz。Twist线速度m/s、角速度rad/s，不能把不同类型强行互发。\nros2 topic pub /turtle1/cmd_vel geometry_msgs/msg/Twist '{linear: {x: 1.0}, angular: {z: 0.5}}' --rate 2\n# 终端乙 Ctrl+C 停止录制后，在该目录检查\n# 只读检查bag话题、类型、时长和数量；有文件不代表数据覆盖完整或时钟可比。\nros2 bag info turtle_trial\n# 已停止实时速度发布者，再重置与回放\n# 发送一次类型匹配的请求并等待响应；无响应要区分未发现、回调阻塞和业务失败，重试可能重复远端副作用。\nros2 service call /reset std_srvs/srv/Empty '{}'\n# 重放选定消息；此命令未请求生成/clock。先停同话题实时输入源，避免竞争。\nros2 bag play turtle_trial --topics /turtle1/cmd_vel"
+            }
+          }
+        },
+        "5": {
+          "paragraphs": [
+            "可复查实验还包括代码提交、软件包/接口版本、参数、地图、标定、启动命令、时钟来源和初始状态。bag不自动封存固件、模型权重、外部服务或随机种子。同主题输入能够重放，不等于整个算法或硬件系统按同样行为重现。",
+            "先查实际消息、类型与数量，再查来源/QoS、时钟/TF，最后比较新计算的输出。循环或跳转可令时间倒退，需要按算法合同清理历史状态。旧turtlesim步骤保留为未运行练习；下方软件实验有独立实测证据。"
+          ]
+        },
+        "6": {
+          "paragraphs": [
+            "clock_timer_lab.py手动发布合成/clock，同时在目标节点创建周期0.1秒的默认ROS timer和显式STEADY timer。所有阶段由同一Context的单线程执行器和单调外层期限推进，不启动Gazebo、turtlesim或其他仿真。use_sim_time只是节点选择软件时钟的参数，不能据此记录仿真已运行。",
+            "第一阶段没有收到/clock，节点ROS时间保持零，0.8秒窗口中ROS timer不触发、STEADY timer继续计数。第二阶段先把时钟设为正值10秒，留出0.25秒处理跳变与已就绪事件，再单独测量0.8秒暂停窗口；不能把正值跳变引起的一次回调混入“暂停时持续运行”的结论。第三阶段以有限频率逐步推进clock，两种timer均应获得调度。",
+            "本机最终三个窗口的ROS/STEADY回调增量分别为0/8、0/8、8/8。计数依赖输入步长、观察窗口和调度，只对这次有限配置成立，不是任意机器的精确频率保证。该实验解释了为什么monotonic年龄公式还需要能推进的检查路径；异步服务的三项独立实验另外验证实际应答超时，不把两个实验的计数混为同一种证明。",
+            "海龟练习仍只回放cmd_vel，保留turtlesim为pose唯一来源；GUI流程尚未执行。第5轮下方已用标准合成消息实际录制、读回并筛选回放，验证其自身字段、计数和时钟，不把它称为海龟轨迹或完整算法重现。"
+          ]
+        }
+      },
+      "appendSections": [
+        {
+          "title": "真实录制：零值clock仍不是已启动时钟",
+          "paragraphs": [
+            "record_replay_lab启动独立CLI录制器。MCAP软件时间正例先发100/101而不发clock，再只发零clock并发200/201；两个有限阶段数据订阅均为零。正值10秒后等三个数据端点出现，才发送0..5；关闭读回只含这六个input，没有把之前四条补录。",
+            "每个有效Header从1000秒按10ms推进，记录ROS时间从10秒按250ms推进；原Header完整保留。此输入故意区分时间，不代表真实传感器存在990秒延迟。等待、总期限与观察窗口用monotonic，不会随软件钟暂停而失去检查。"
+          ],
+          "tables": [
+            {
+              "title": "正值时钟前：数据订阅与最终录入分别查",
+              "columns": [
+                "阶段",
+                "发送的input序号",
+                "数据订阅input/derived/static",
+                "最终录到这组input条数"
+              ],
+              "rows": [
+                [
+                  "no_clock",
+                  "100/101",
+                  "0/0/0",
+                  "0"
+                ],
+                [
+                  "zero_clock",
+                  "200/201",
+                  "0/0/0",
+                  "0"
+                ]
+              ],
+              "caption": "两个有限阶段中，三个数据订阅都尚未建立。正值10s后才等匹配并发送0..5，关闭后读回六条；这不是订阅已接收后再丢弃的证明。",
+              "evidenceFile": "validation-evidence/bag-current-validation.json",
+              "evidenceSha256": "99e8bbe699f8fc4666255f0d927535ceef1a63788fb31f1b537926b7d6c5b6e7"
+            }
+          ]
+        },
+        {
+          "title": "筛选回放：让输入与派生输出各有责任",
+          "paragraphs": [
+            "先关闭录制器、只读检查并销毁全部原发布者，再核图上input/derived/static/clock都没有发布者。播放器start-paused，等待实际订阅匹配与Resume服务，确认暂停未发数据后继续。端点存在、QoS已匹配、已收消息和进程退出分别记录。",
+            "SQLite完整回放得到6/6/1，但未加--clock；use_sim_time消费者仍为零，Header不会自动驱动ROS时钟。MCAP只筛选input并显式--clock 40、--rate 2.0，实际收到6/0/0与唯一clock来源。新的计算模块若要重算derived，应自行发布新输出；本实验只验数据责任，不冒称已经运行了该算法。",
+            "快照与安装包都标0.26.11，Player会话结束是否取消clock timer仍有补丁差异。这里实际测的是自然退出的CLI，不推广到Player节点保活或嵌入式会话。原始采集clock、播放器产生的clock与外部仿真器也须分开，不能靠选项替你关闭外部来源。"
+          ],
+          "tables": [
+            {
+              "title": "暂停就绪后回放：筛选、来源与ROS时间",
+              "columns": [
+                "场景",
+                "input",
+                "derived",
+                "static",
+                "/clock发布者",
+                "观测clock条数",
+                "消费者最终ROS时间"
+              ],
+              "rows": [
+                [
+                  "play_all_no_clock",
+                  "6",
+                  "6",
+                  "1",
+                  "0",
+                  "0",
+                  "0 ns"
+                ],
+                [
+                  "play_filtered_clock",
+                  "6",
+                  "0",
+                  "0",
+                  "1",
+                  "31",
+                  "11232125020 ns"
+                ]
+              ],
+              "caption": "Resume前实际等待选定订阅匹配并核唯一来源，暂停数据为零。31条clock只属于本次40Hz/2倍速的有限运行，不是固定频率或确定性保证。",
+              "evidenceFile": "validation-evidence/bag-current-validation.json",
+              "evidenceSha256": "99e8bbe699f8fc4666255f0d927535ceef1a63788fb31f1b537926b7d6c5b6e7"
+            }
+          ]
+        },
+        {
+          "title": "完整有界录放工程与配置",
+          "paragraphs": [
+            "下面driver与两份QoS输入直接来自实测源码；只读工具和字段探针在数据诊断章给出，全部同属bag_labs下载目录。"
+          ],
+          "codeBlocks": [
+            {
+              "label": "bag_labs/record_replay_lab.py",
+              "type": "complete",
+              "language": "python",
+              "sourceFile": "examples/bag_labs/record_replay_lab.py",
+              "explanation": "三个录制与两个暂停回放，记录失败、源码指纹和有限清理；父中断注入仍未运行。"
+            },
+            {
+              "label": "bag_labs/qos_transient.yaml",
+              "type": "complete",
+              "language": "yaml",
+              "sourceFile": "examples/bag_labs/qos_transient.yaml",
+              "explanation": "静态状态请求可靠/瞬态本地/深度1，发布者必须实际提供匹配缓存。"
+            },
+            {
+              "label": "bag_labs/qos_volatile.yaml",
+              "type": "complete",
+              "language": "yaml",
+              "sourceFile": "examples/bag_labs/qos_volatile.yaml",
+              "explanation": "故意请求易失历史的受控反例；相容不等于请求旧样本。"
+            },
+            {
+              "label": "运行完整录制/读回/回放实验",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 输入：Jazzy及两个存储插件；输出在独立/tmp目录，不连接硬件。\nsource /opt/ros/jazzy/setup.bash\n# 正常由有限输入和单调期限退出；外层timeout只作最后防护。\ntimeout --signal=INT --kill-after=8s 100s python3 examples/bag_labs/record_replay_lab.py\n# 用本次报告bagDirectory替换路径；仅只读已停止录制的小包。\npython3 examples/bag_labs/inspect_bag.py /tmp/本次实验/sim_mcap --storage mcap\n",
+              "explanation": "在教材目录执行；依赖、字段单位、输出、失败历史及未覆盖边界见bag_labs/README。默认不覆盖工作区验证报告。"
+            }
+          ]
+        }
+      ],
+      "appendExercises": [
+        {
+          "question": "录制器收到值为零的/clock，为什么仍没建立数据订阅？",
+          "answer": "本版等待Clock.started；当前值须严格大于零才放行。检查源码版本、clock值和实际数据端点，不能只看是否见过一条clock；本实验没有另外注入负时间。"
+        },
+        {
+          "question": "Header=1000秒而bag记录时间=10秒，能直接说网络延迟990秒吗？",
+          "answer": "不能。它们可能来自不同时间域，本实验还故意指定不同值。先说明每个时戳来源/单位/校时条件，再定义可比较的延迟。"
+        },
+        {
+          "question": "启用use_sim_time后回放收到带Header消息，ROS时间为何还是零？",
+          "answer": "Header是消息字段，不会自动发布/clock。需要明确时钟来源及消费者设置；本例未加--clock的回放真实观察ROS时间保持零。"
+        },
+        {
+          "question": "重算派生结果时为何只回放input？",
+          "answer": "避免原bag派生结果与新算法同时占用同名输出。先停止实时输入、筛选需要的主题，再区分参考输出与新结果并按算法合同比较。"
+        }
+      ]
+    },
+    "eco-data-observability": {
+      "sourceIds": [
+        "eco-rosbag",
+        "eco-mcap",
+        "eco-foxglove",
+        "eco-diagnostics",
+        "eco-tracing",
+        "iter5-bag-recorder",
+        "iter5-bag-player-cli",
+        "iter5-bag-storage-mcap",
+        "iter5-bag-storage-sqlite",
+        "iter5-bag-qos",
+        "iter5-bag-python-api",
+        "iter5-bag-cdr-alignment",
+        "iter5-bag-player-version-boundary",
+        "iter5-bag-clock-positive"
+      ],
+      "validation": "2026-11-07在本机Jazzy rosbag2 0.26.11、独立域231/LOCALHOST真实运行：3组CLI录制/关闭读回、2组暂停就绪后CLI回放及双后端显式字段探针通过；原始记录计数13/13/12，筛选回放6/0/0，常规自建节点/进程清理通过。6项帮助/非法参数及相对新路径双后端另验收；失败历史保留。未运行GUI海龟、真实传感器、Foxglove、tracing、压缩/性能/恢复、父中断注入或完整仿真。",
+      "sections": {
+        "2": {
+          "codeBlocks": {
+            "2": {
+              "code": "# 【中文教学注释】 停止原 talker 后回放\n# 本例作用：回放和观察分别运行；确认实时 talker 已经停止。\n# 输入输出：输入为已知话题数据和录制配置；输出为 bag/MCAP 元数据、回放与诊断信息。\n# 执行顺序与边界：先保留完整最小实验再对比；回放用原时钟须显式发布 /clock，端到端链路、存储和可视化各自可能丢失信息。\n# 重放选定消息；此命令未请求生成/clock。先停同话题实时输入源，避免竞争。\nros2 bag play learning_chatter\n# 另一个终端观察：\n# 临时创建订阅者观察消息；--once收到一条后退出，持续模式用Ctrl+C结束，其QoS也须匹配。\nros2 topic echo /chatter"
+            }
+          }
+        }
+      },
+      "appendSections": [
+        {
+          "title": "存储实测：两个时间字段不等于Header",
+          "paragraphs": [
+            "storage_fields把同一bytes写进两个插件：Header=7秒、recv=10秒、send=9秒。MCAP原始Message的logTime/publishTime保存10/9秒；当前SQLite messages只有id/topic_id/timestamp/data，保存接收10秒。格式差别除了性能和工具兼容，还包括这一版本的字段保留能力。",
+            "Python SequentialReader.read_next返回topic、bytes、recv三元组，不能凭它声称已经取到send。SQLite用只读SQL另核schema；MCAP只在本例noChunking单消息小文件内按v0结构核字段。普通大bag、分块/压缩仍使用正式库；本例不作通用解析器、磁盘恢复或跨版本schema保证。",
+            "这些值由Writer四参数显式指定，其差不是实际网络时延。普通record的RMW source时间也不自动等于传感器Header采样时间，时钟同步、设备驱动与接口合同仍需另查。"
+          ],
+          "tables": [
+            {
+              "title": "同一载荷：Header、recv与send的实际保存",
+              "columns": [
+                "插件",
+                "Header ns",
+                "recv/logTime ns",
+                "send/publishTime ns",
+                "Python read_next可见"
+              ],
+              "rows": [
+                [
+                  "sqlite3",
+                  "7000000000",
+                  "10000000000",
+                  "无单独发送时间列",
+                  "topic/bytes/recv三元组"
+                ],
+                [
+                  "mcap",
+                  "7000000000",
+                  "10000000000",
+                  "9000000000",
+                  "topic/bytes/recv三元组"
+                ]
+              ],
+              "caption": "四参数Writer显式输入Header=7s、recv=10s、send=9s；SQLite只读schema/数据和MCAP无分块Message字段分别检查。这些时间差不是网络测量。",
+              "evidenceFile": "validation-evidence/bag-current-validation.json",
+              "evidenceSha256": "99e8bbe699f8fc4666255f0d927535ceef1a63788fb31f1b537926b7d6c5b6e7"
+            }
+          ]
+        },
+        {
+          "title": "缓存反例：QoS相容仍可能没有早先静态样本",
+          "paragraphs": [
+            "三组录制都在Recorder启动前只发布一次静态String，并保持transient_local发布者存活。两个请求transient_local的正例读回静态1条；volatile反例仍能匹配，却没有请求旧历史，读回静态0条。它不证明MCAP损坏，也不代表真实/tf_static已测试；本例是相同持久性机制的合成状态。",
+            "元数据总数分别13/13/12，每主题计数、完整字段与原始载荷SHA分开记录。第一次夹具错误把另一次序列化的SHA当作DDS字节一致性：字段相同而CDR对齐padding不同。现比较完整Header/Point语义；原bag SHA只标识那次字节，显式同一bytes写入的探针才逐字节对照。",
+            "另一早期夹具误用了Jazzy不存在的qos_profile_clock名称；改为显式深度1/best_effort后再完整运行。两次失败和清理证据保留，不把它们算作录放功能通过。当前常规八个子进程均退出0且无升级信号；父SIGINT与原生挂起分支仍未注入。"
+          ],
+          "tables": [
+            {
+              "title": "录制读回：缓存请求与消息数",
+              "columns": [
+                "场景",
+                "插件",
+                "记录时基",
+                "静态订阅持久性",
+                "input",
+                "derived",
+                "static",
+                "元数据总数"
+              ],
+              "rows": [
+                [
+                  "system_sqlite",
+                  "sqlite3",
+                  "接收时间",
+                  "transient_local",
+                  "6",
+                  "6",
+                  "1",
+                  "13"
+                ],
+                [
+                  "sim_mcap",
+                  "mcap",
+                  "ROS软件钟",
+                  "transient_local",
+                  "6",
+                  "6",
+                  "1",
+                  "13"
+                ],
+                [
+                  "late_volatile_mcap",
+                  "mcap",
+                  "接收时间",
+                  "volatile",
+                  "6",
+                  "6",
+                  "0",
+                  "12"
+                ]
+              ],
+              "caption": "每组同样六条位置、六条派生序号，静态状态在录制器前仅发一次且发布者存活。不同时间录制，不作插件速度/大小性能对照。",
+              "evidenceFile": "validation-evidence/bag-current-validation.json",
+              "evidenceSha256": "99e8bbe699f8fc4666255f0d927535ceef1a63788fb31f1b537926b7d6c5b6e7"
+            }
+          ]
+        },
+        {
+          "title": "只读检查与显式字段探针的完整源码",
+          "paragraphs": [
+            "两个工具无需启动DDS，--help无需ROS导入；双后端探针还实际检查相对新输出路径。计数上限、类型白名单、文件大小与noChunking范围都在源码说明。"
+          ],
+          "codeBlocks": [
+            {
+              "label": "bag_labs/inspect_bag.py",
+              "type": "complete",
+              "language": "python",
+              "sourceFile": "examples/bag_labs/inspect_bag.py",
+              "explanation": "关闭后只读小包，保留记录时间、全部Point/Header字段及实际载荷SHA；不自动动态导入任意类型。"
+            },
+            {
+              "label": "bag_labs/storage_fields.py",
+              "type": "complete",
+              "language": "python",
+              "sourceFile": "examples/bag_labs/storage_fields.py",
+              "explanation": "同一序列化bytes的双后端字段探针，输出新目录且显式关闭资源；不是网络延迟实验。"
+            },
+            {
+              "label": "bag_labs/mcap_no_chunk.yaml",
+              "type": "complete",
+              "language": "yaml",
+              "sourceFile": "examples/bag_labs/mcap_no_chunk.yaml",
+              "explanation": "只用于单消息字段探针的无分块配置，不是普通录制的性能建议。"
+            }
+          ]
+        }
+      ],
+      "appendExercises": [
+        {
+          "question": "MCAP和SQLite都能读回Header，为何仍需单独核send字段？",
+          "answer": "Header在载荷里；recv/send在存储记录层。当前SQLite表只存recv，MCAP另存publishTime。保留同一消息不代表所有记录层信息都相同。"
+        },
+        {
+          "question": "Python read_next返回的第三个整数可以直接称作发送时间吗？",
+          "answer": "不可以，本机绑定返回recv时间。要核发送字段需对应后端/版本的实际读取接口或明确范围的原始字段检查，且仍不能把它当Header。"
+        },
+        {
+          "question": "晚加入volatile录制器与transient_local发布者相容，为什么静态计数仍为零？",
+          "answer": "相容只说明可通信，不等于订阅请求历史。样本在录制器之前发送、之后未重发，易失请求不会取得旧缓存；先核端点、历史和时间顺序。"
+        },
+        {
+          "question": "字段完全相同而两次CDR SHA不同，应先判断消息损坏吗？",
+          "answer": "先按类型检查全部语义字段及编码。对齐padding可不同；跨序列化比较用字段合同，原字节哈希用于标识实际bytes或验证同一bytes的传输/落盘。"
+        }
+      ]
+    }
+  }
+}

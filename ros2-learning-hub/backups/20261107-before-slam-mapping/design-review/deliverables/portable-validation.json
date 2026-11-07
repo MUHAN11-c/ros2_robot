@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "iteration": "2026-11-07-r9",
+  "scope": "最终解压审查包的字节、Nav2 目录与实测图、手机视口和全部截图",
+  "archiveSha256": "91fbafa66dafa0af40a6d4e94e819ac4ec31ff6befc3eb42fef8abfbf1edd254",
+  "extractedFilesMatched": 132,
+  "screenshotImages": 21,
+  "desktop": {
+    "id": "eco-nav2-stack",
+    "number": 45,
+    "numbered": 9,
+    "childEntries": 12,
+    "numberedChildren": 5,
+    "entries": 28,
+    "jumps": 28
+  },
+  "figureWidths": [
+    390,
+    320
+  ],
+  "errors": [],
+  "external": [],
+  "previousWriteValidation": "backups/20261107-before-nav2-planning/design-review/deliverables/portable-validation.json"
+}

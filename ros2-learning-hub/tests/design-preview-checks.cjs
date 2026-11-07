@@ -1,17 +1,18 @@
-const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'/home/mu/.local/lib/python3.10/site-packages/playwright/driver/package');
+const {chromium}=require('./browser-runtime.cjs');
 const assert=require('node:assert/strict');
 const fs=require('node:fs/promises');
 const path=require('node:path');
 (async()=>{
-  const root=path.resolve(__dirname,'..'),base='file://'+path.join(root,'dist/layout-preview.html');
+  const root=path.resolve(__dirname,'..'),base='file://'+path.join(root,'dist/index.html');
+  await fs.mkdir(path.join(root,'.qa'),{recursive:true});
   const browser=await chromium.launch({headless:true});
-  const context=await browser.newContext({offline:true,viewport:{width:1440,height:1050}});
+  const context=await browser.newContext({offline:true,viewport:{width:1440,height:1050},reducedMotion:'reduce'});
   const page=await context.newPage(),errors=[],external=[];
   page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(/^https?:/.test(r.url()))external.push(r.url())});
-  const screenshot=async name=>{await page.locator('.context-figure').first().waitFor({state:'visible'});await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));await page.screenshot({path:path.join(root,'.qa','design-'+name+'.png')})};
+  const screenshot=async name=>{await page.locator('.context-figure').first().waitFor({state:'visible'});await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));await page.screenshot({path:path.join(root,'.qa','design-'+name+'.png'),animations:'disabled'})};
   const change=async(selector,value)=>{await page.locator(selector).evaluate((el,v)=>{el.value=v;el.dispatchEvent(new Event('input',{bubbles:true}))},String(value));};
   try{
-    const metadata=JSON.parse(await fs.readFile(path.join(root,'source/design-figures.json'),'utf8')).figures;
+    const metadata=JSON.parse(await fs.readFile(path.join(root,'source/design-figures.json'),'utf8')).figures.filter(f=>!f.bookOnly);
     for(const figure of metadata){
       for(const placement of figure.placements){
         await page.goto(base+'#/'+placement.chapter+'/figure/'+figure.id);
@@ -56,7 +57,7 @@ const path=require('node:path');
     assert.deepEqual(duplicates,[]);await page.keyboard.press('Escape');
     for(const width of [390,320]){
       await page.setViewportSize({width,height:844});
-      for(const [chapter,id]of [['architecture','architecture'],['actions','action'],['tf2','tf2-transform'],['eco-model-rviz','robot-model'],['eco-control-framework','control'],['eco-nav2-stack','nav2']]){
+      for(const [chapter,id]of [['architecture','architecture'],['actions','action'],['tf2','tf2-transform'],['eco-model-rviz','robot-model'],['eco-control-framework','control'],['eco-nav2-stack','nav2'],['eco-nav2-stack','nav2-costmap-planning'],['eco-slam-mapping','slam-mapping-trajectory'],['composition','component-options']]){
         await page.goto(base+'#/'+chapter+'/figure/'+id);
         const size=await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth}));
         assert.ok(size.scroll<=size.width+1,`${chapter} ${JSON.stringify(size)}`);
@@ -68,6 +69,8 @@ const path=require('node:path');
     assert.equal(await page.locator('#design-dialog[open]').count(),0);
     await page.locator('#menu-button').click();await page.locator('#search-trigger').click();await page.locator('#search-input').fill('坐标');assert.ok(await page.locator('.search-result').count()>0);await page.keyboard.press('Escape');
     assert.deepEqual(errors,[]);assert.deepEqual(external,[]);
-    console.log(JSON.stringify({passed:true,staticFigures:metadata.length,contextPlacements:metadata.reduce((n,f)=>n+f.placements.length,0),interactiveFigures:2,offlineRequests:external.length,mobileWidths:[390,320],errors}));
+    const report={checkedAt:'2026-11-07',iteration:'2026-11-07-r10',passed:true,staticFigures:metadata.length,contextPlacements:metadata.reduce((n,f)=>n+f.placements.length,0),interactiveFigures:2,offlineRequests:external.length,mobileWidths:[390,320],errors};
+    await fs.writeFile(path.join(root,'validation-evidence/figures-current-validation.json'),JSON.stringify(report,null,2)+'\n');
+    console.log(JSON.stringify(report));
   }finally{await browser.close()}
 })().catch(error=>{console.error(error);process.exitCode=1});

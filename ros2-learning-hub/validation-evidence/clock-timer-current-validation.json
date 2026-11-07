@@ -1,0 +1,732 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-07T03:26:44+08:00",
+  "passed": true,
+  "script": "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/clock_timer_lab.py",
+  "invocation": [
+    "/usr/bin/python3",
+    "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/clock_timer_lab.py"
+  ],
+  "scriptSha256": "f1d7835bf48b4b8309eb8b5b673955bafd292c99d00b6ad1a43716be2bf241ce",
+  "parameters": {
+    "domain_id": 223,
+    "period_s": 0.1,
+    "window_s": 0.8,
+    "step_s": 0.05,
+    "publish_interval_s": 0.04,
+    "total_timeout_s": 15.0
+  },
+  "environment": {
+    "ROS_DOMAIN_ID": "223",
+    "ROS_AUTOMATIC_DISCOVERY_RANGE": "LOCALHOST",
+    "RMW_IMPLEMENTATION": "rmw_fastrtps_cpp",
+    "ROS_LOCALHOST_ONLY": "unset",
+    "legacyLocalhostVariableWasPresent": false
+  },
+  "scope": "真实rclpy与软件/clock实验，没有启动仿真器、没有硬件或设备命令。",
+  "limits": [
+    "计数只证明本机有限窗口的触发条件，不是精确频率、硬实时或任意负载保证。",
+    "正值设置后的跳变结算窗口与正式暂停窗口分开，不把一次跳变回调当持续推进。",
+    "仅软件ROS时间；use_sim_time参数名不表示本轮已经启动仿真。",
+    "单调软期限不能打断任意原生阻塞调用；执行命令另用进程级timeout。"
+  ],
+  "versions": {
+    "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+    "pythonExecutable": "/usr/bin/python3",
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+    "rosDistro": "jazzy",
+    "rclpy": "7.1.12",
+    "packages": {
+      "rclpy": "7.1.12",
+      "rclcpp": "28.1.22",
+      "rmw_fastrtps_cpp": "8.4.4",
+      "rosgraph_msgs": "2.0.4"
+    }
+  },
+  "runtimeSourceFingerprints": [
+    {
+      "api": "Node",
+      "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py",
+      "sha256": "8b7fe0ea64e0de12cc1d5d01ebf56c202fa6e153251eb71dfff93e35eb5b3c80"
+    },
+    {
+      "api": "Clock",
+      "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/clock.py",
+      "sha256": "ff541d1386ab52115ba23413eb0a9b3ca6773d15e06129a53ca3b657c4f934f6"
+    },
+    {
+      "api": "Timer",
+      "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/timer.py",
+      "sha256": "4f103b4016cc6378907caddb5cd92ddf0bc9cca839d616cb646dc44ee683becc"
+    },
+    {
+      "api": "SingleThreadedExecutor",
+      "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+      "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452"
+    },
+    {
+      "api": "TimeSource",
+      "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/time_source.py",
+      "sha256": "9aacb85102019116edc6eb74a6993ca7efa3296273bfa53c30cebbb792d446f5"
+    }
+  ],
+  "clockQoS": {
+    "history": "KEEP_LAST",
+    "depth": 1,
+    "reliability": "BEST_EFFORT",
+    "durability": "VOLATILE"
+  },
+  "namespace": "/clock_timer_lab/p170623",
+  "useSimTime": true,
+  "clockTopic": "/clock",
+  "phases": [
+    {
+      "name": "clock-not-received",
+      "requestedWindowS": 0.7999999999992724,
+      "actualElapsedS": 0.8000687289986672,
+      "rosTimeStartNs": 0,
+      "rosTimeEndNs": 0,
+      "countsBefore": {
+        "ros": 0,
+        "steady": 0
+      },
+      "countsAfter": {
+        "ros": 0,
+        "steady": 8
+      },
+      "delta": {
+        "ros": 0,
+        "steady": 8
+      },
+      "clockMessagesPublished": 0
+    },
+    {
+      "name": "positive-clock-paused",
+      "requestedWindowS": 0.7999999999992724,
+      "actualElapsedS": 0.8001305360012338,
+      "rosTimeStartNs": 10000000000,
+      "rosTimeEndNs": 10000000000,
+      "countsBefore": {
+        "ros": 1,
+        "steady": 10
+      },
+      "countsAfter": {
+        "ros": 1,
+        "steady": 18
+      },
+      "delta": {
+        "ros": 0,
+        "steady": 8
+      },
+      "clockMessagesPublished": 0
+    },
+    {
+      "name": "clock-advancing",
+      "requestedWindowS": 0.7999999999992724,
+      "actualElapsedS": 0.8001997490009671,
+      "rosTimeStartNs": 10000000000,
+      "rosTimeEndNs": 10850000000,
+      "countsBefore": {
+        "ros": 1,
+        "steady": 18
+      },
+      "countsAfter": {
+        "ros": 9,
+        "steady": 26
+      },
+      "delta": {
+        "ros": 8,
+        "steady": 8
+      },
+      "clockMessagesPublished": 17
+    }
+  ],
+  "positiveClockActivation": {
+    "valueNs": 10000000000,
+    "messagesPublished": 1,
+    "actualElapsedS": 0.0002832569989550393
+  },
+  "settling": {
+    "name": "settle-positive-clock",
+    "requestedWindowS": 0.25,
+    "actualElapsedS": 0.25012494400107244,
+    "rosTimeStartNs": 10000000000,
+    "rosTimeEndNs": 10000000000,
+    "countsBefore": {
+      "ros": 0,
+      "steady": 8
+    },
+    "countsAfter": {
+      "ros": 1,
+      "steady": 10
+    },
+    "delta": {
+      "ros": 1,
+      "steady": 2
+    },
+    "clockMessagesPublished": 0
+  },
+  "assertions": {
+    "noClockRosStoppedSteadyProgressed": true,
+    "positivePauseRosStoppedSteadyProgressed": true,
+    "advancingClockBothProgressed": true
+  },
+  "cleanup": {
+    "steps": [
+      "executor stopped"
+    ],
+    "nodesDestroyed": true,
+    "contextOkAfterCleanup": false
+  },
+  "totalElapsedS": 2.682120526998915,
+  "clockMessagesPublished": 18,
+  "timerCounts": {
+    "ros": 9,
+    "steady": 26
+  },
+  "events": {
+    "ros": [
+      {
+        "monotonicElapsedS": 0.8292861289992288,
+        "rosTimeNs": 10000000000
+      },
+      {
+        "monotonicElapsedS": 1.9202319389987679,
+        "rosTimeNs": 10100000000
+      },
+      {
+        "monotonicElapsedS": 2.009858286999588,
+        "rosTimeNs": 10200000000
+      },
+      {
+        "monotonicElapsedS": 2.109928713000045,
+        "rosTimeNs": 10300000000
+      },
+      {
+        "monotonicElapsedS": 2.2106710949992703,
+        "rosTimeNs": 10400000000
+      },
+      {
+        "monotonicElapsedS": 2.309851529998923,
+        "rosTimeNs": 10500000000
+      },
+      {
+        "monotonicElapsedS": 2.4097341090000555,
+        "rosTimeNs": 10600000000
+      },
+      {
+        "monotonicElapsedS": 2.510034803999588,
+        "rosTimeNs": 10700000000
+      },
+      {
+        "monotonicElapsedS": 2.6100706219986023,
+        "rosTimeNs": 10800000000
+      }
+    ],
+    "steady": [
+      {
+        "monotonicElapsedS": 0.12885826699857716,
+        "rosTimeNs": 0
+      },
+      {
+        "monotonicElapsedS": 0.22885371099982876,
+        "rosTimeNs": 0
+      },
+      {
+        "monotonicElapsedS": 0.3288469740000437,
+        "rosTimeNs": 0
+      },
+      {
+        "monotonicElapsedS": 0.42884766799943463,
+        "rosTimeNs": 0
+      },
+      {
+        "monotonicElapsedS": 0.5288755120000133,
+        "rosTimeNs": 0
+      },
+      {
+        "monotonicElapsedS": 0.6288623459986411,
+        "rosTimeNs": 0
+      },
+      {
+        "monotonicElapsedS": 0.7288568989988562,
+        "rosTimeNs": 0
+      },
+      {
+        "monotonicElapsedS": 0.8288657630000671,
+        "rosTimeNs": 0
+      },
+      {
+        "monotonicElapsedS": 0.9288740470001358,
+        "rosTimeNs": 10000000000
+      },
+      {
+        "monotonicElapsedS": 1.0288655909989757,
+        "rosTimeNs": 10000000000
+      },
+      {
+        "monotonicElapsedS": 1.1288673559993185,
+        "rosTimeNs": 10000000000
+      },
+      {
+        "monotonicElapsedS": 1.2288863119993039,
+        "rosTimeNs": 10000000000
+      },
+      {
+        "monotonicElapsedS": 1.3288919869992242,
+        "rosTimeNs": 10000000000
+      },
+      {
+        "monotonicElapsedS": 1.4288646730001346,
+        "rosTimeNs": 10000000000
+      },
+      {
+        "monotonicElapsedS": 1.5288609090002865,
+        "rosTimeNs": 10000000000
+      },
+      {
+        "monotonicElapsedS": 1.6288592649998463,
+        "rosTimeNs": 10000000000
+      },
+      {
+        "monotonicElapsedS": 1.7288695409988577,
+        "rosTimeNs": 10000000000
+      },
+      {
+        "monotonicElapsedS": 1.828865636998671,
+        "rosTimeNs": 10000000000
+      },
+      {
+        "monotonicElapsedS": 1.9288594429999648,
+        "rosTimeNs": 10100000000
+      },
+      {
+        "monotonicElapsedS": 2.0288634689986793,
+        "rosTimeNs": 10200000000
+      },
+      {
+        "monotonicElapsedS": 2.1288517159991898,
+        "rosTimeNs": 10300000000
+      },
+      {
+        "monotonicElapsedS": 2.228859973998624,
+        "rosTimeNs": 10400000000
+      },
+      {
+        "monotonicElapsedS": 2.3288571819994104,
+        "rosTimeNs": 10500000000
+      },
+      {
+        "monotonicElapsedS": 2.428843419998884,
+        "rosTimeNs": 10600000000
+      },
+      {
+        "monotonicElapsedS": 2.528841277999163,
+        "rosTimeNs": 10700000000
+      },
+      {
+        "monotonicElapsedS": 2.6288303370001813,
+        "rosTimeNs": 10800000000
+      }
+    ]
+  },
+  "previousAttempts": [
+    {
+      "schemaVersion": 1,
+      "checkedAt": "2026-11-07T03:25:12+08:00",
+      "passed": false,
+      "script": "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/clock_timer_lab.py",
+      "scriptSha256": "f0d89446f7f248220dbf57e6791d6d112dda4f4a66a11a72f7fc86351a07415d",
+      "parameters": {
+        "domain_id": 223,
+        "period_s": 0.1,
+        "window_s": 0.8,
+        "step_s": 0.05,
+        "publish_interval_s": 0.04,
+        "total_timeout_s": 15.0
+      },
+      "environment": {
+        "ROS_DOMAIN_ID": "223",
+        "ROS_AUTOMATIC_DISCOVERY_RANGE": "LOCALHOST",
+        "RMW_IMPLEMENTATION": "rmw_fastrtps_cpp",
+        "ROS_LOCALHOST_ONLY": "unset",
+        "legacyLocalhostVariableWasPresent": false
+      },
+      "scope": "真实rclpy与软件/clock实验，没有启动仿真器、没有硬件或设备命令。",
+      "limits": [
+        "计数只证明本机有限窗口的触发条件，不是精确频率、硬实时或任意负载保证。",
+        "正值设置后的跳变结算窗口与正式暂停窗口分开，不把一次跳变回调当持续推进。",
+        "仅软件ROS时间；use_sim_time参数名不表示本轮已经启动仿真。",
+        "单调软期限不能打断任意原生阻塞调用；执行命令另用进程级timeout。"
+      ],
+      "error": "Traceback (most recent call last):\n  File \"/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/clock_timer_lab.py\", line 280, in main\n    run(options,report)\n  File \"/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/clock_timer_lab.py\", line 84, in run\n    from rclpy.qos import qos_profile_clock\nImportError: cannot import name 'qos_profile_clock' from 'rclpy.qos' (/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/qos.py)\n"
+    },
+    {
+      "schemaVersion": 1,
+      "checkedAt": "2026-11-07T03:25:38+08:00",
+      "passed": true,
+      "script": "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/clock_timer_lab.py",
+      "scriptSha256": "4296e2278b9441f9c59ab0ebfbb425db93ce50f6c0b2bffb694837711c099fa8",
+      "parameters": {
+        "domain_id": 223,
+        "period_s": 0.1,
+        "window_s": 0.8,
+        "step_s": 0.05,
+        "publish_interval_s": 0.04,
+        "total_timeout_s": 15.0
+      },
+      "environment": {
+        "ROS_DOMAIN_ID": "223",
+        "ROS_AUTOMATIC_DISCOVERY_RANGE": "LOCALHOST",
+        "RMW_IMPLEMENTATION": "rmw_fastrtps_cpp",
+        "ROS_LOCALHOST_ONLY": "unset",
+        "legacyLocalhostVariableWasPresent": false
+      },
+      "scope": "真实rclpy与软件/clock实验，没有启动仿真器、没有硬件或设备命令。",
+      "limits": [
+        "计数只证明本机有限窗口的触发条件，不是精确频率、硬实时或任意负载保证。",
+        "正值设置后的跳变结算窗口与正式暂停窗口分开，不把一次跳变回调当持续推进。",
+        "仅软件ROS时间；use_sim_time参数名不表示本轮已经启动仿真。",
+        "单调软期限不能打断任意原生阻塞调用；执行命令另用进程级timeout。"
+      ],
+      "versions": {
+        "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+        "pythonExecutable": "/usr/bin/python3",
+        "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+        "rosDistro": "jazzy",
+        "rclpy": "7.1.12",
+        "packages": {
+          "rclpy": "7.1.12",
+          "rclcpp": "28.1.22",
+          "rmw_fastrtps_cpp": "8.4.4",
+          "rosgraph_msgs": "2.0.4"
+        }
+      },
+      "runtimeSourceFingerprints": [
+        {
+          "api": "Node",
+          "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py",
+          "sha256": "8b7fe0ea64e0de12cc1d5d01ebf56c202fa6e153251eb71dfff93e35eb5b3c80"
+        },
+        {
+          "api": "Clock",
+          "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/clock.py",
+          "sha256": "ff541d1386ab52115ba23413eb0a9b3ca6773d15e06129a53ca3b657c4f934f6"
+        },
+        {
+          "api": "Timer",
+          "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/timer.py",
+          "sha256": "4f103b4016cc6378907caddb5cd92ddf0bc9cca839d616cb646dc44ee683becc"
+        },
+        {
+          "api": "SingleThreadedExecutor",
+          "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+          "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452"
+        },
+        {
+          "api": "TimeSource",
+          "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/time_source.py",
+          "sha256": "9aacb85102019116edc6eb74a6993ca7efa3296273bfa53c30cebbb792d446f5"
+        }
+      ],
+      "namespace": "/clock_timer_lab/p170347",
+      "useSimTime": true,
+      "clockTopic": "/clock",
+      "phases": [
+        {
+          "name": "clock-not-received",
+          "requestedWindowS": 0.7999999999992724,
+          "actualElapsedS": 0.8001183279993711,
+          "rosTimeStartNs": 0,
+          "rosTimeEndNs": 0,
+          "countsBefore": {
+            "ros": 0,
+            "steady": 0
+          },
+          "countsAfter": {
+            "ros": 0,
+            "steady": 8
+          },
+          "delta": {
+            "ros": 0,
+            "steady": 8
+          },
+          "clockMessagesPublished": 0
+        },
+        {
+          "name": "positive-clock-paused",
+          "requestedWindowS": 0.7999999999992724,
+          "actualElapsedS": 0.800127946999055,
+          "rosTimeStartNs": 10000000000,
+          "rosTimeEndNs": 10000000000,
+          "countsBefore": {
+            "ros": 1,
+            "steady": 10
+          },
+          "countsAfter": {
+            "ros": 1,
+            "steady": 18
+          },
+          "delta": {
+            "ros": 0,
+            "steady": 8
+          },
+          "clockMessagesPublished": 0
+        },
+        {
+          "name": "clock-advancing",
+          "requestedWindowS": 0.7999999999992724,
+          "actualElapsedS": 0.8001214860014443,
+          "rosTimeStartNs": 10000000000,
+          "rosTimeEndNs": 10850000000,
+          "countsBefore": {
+            "ros": 1,
+            "steady": 18
+          },
+          "countsAfter": {
+            "ros": 9,
+            "steady": 26
+          },
+          "delta": {
+            "ros": 8,
+            "steady": 8
+          },
+          "clockMessagesPublished": 17
+        }
+      ],
+      "positiveClockActivation": {
+        "valueNs": 10000000000,
+        "messagesPublished": 1,
+        "actualElapsedS": 0.0003679960009321803
+      },
+      "settling": {
+        "name": "settle-positive-clock",
+        "requestedWindowS": 0.25,
+        "actualElapsedS": 0.2501257790008822,
+        "rosTimeStartNs": 10000000000,
+        "rosTimeEndNs": 10000000000,
+        "countsBefore": {
+          "ros": 0,
+          "steady": 8
+        },
+        "countsAfter": {
+          "ros": 1,
+          "steady": 10
+        },
+        "delta": {
+          "ros": 1,
+          "steady": 2
+        },
+        "clockMessagesPublished": 0
+      },
+      "assertions": {
+        "noClockRosStoppedSteadyProgressed": true,
+        "positivePauseRosStoppedSteadyProgressed": true,
+        "advancingClockBothProgressed": true
+      },
+      "cleanup": {
+        "steps": [
+          "executor stopped"
+        ],
+        "nodesDestroyed": true,
+        "contextOkAfterCleanup": false
+      },
+      "totalElapsedS": 2.6861759510011325,
+      "clockMessagesPublished": 18,
+      "timerCounts": {
+        "ros": 9,
+        "steady": 26
+      },
+      "events": {
+        "ros": [
+          {
+            "monotonicElapsedS": 0.8338096090010367,
+            "rosTimeNs": 10000000000
+          },
+          {
+            "monotonicElapsedS": 1.924819732999822,
+            "rosTimeNs": 10100000000
+          },
+          {
+            "monotonicElapsedS": 2.014279939001426,
+            "rosTimeNs": 10200000000
+          },
+          {
+            "monotonicElapsedS": 2.1142032770003425,
+            "rosTimeNs": 10300000000
+          },
+          {
+            "monotonicElapsedS": 2.2141475150001497,
+            "rosTimeNs": 10400000000
+          },
+          {
+            "monotonicElapsedS": 2.3141427830014436,
+            "rosTimeNs": 10500000000
+          },
+          {
+            "monotonicElapsedS": 2.41426557900013,
+            "rosTimeNs": 10600000000
+          },
+          {
+            "monotonicElapsedS": 2.5142014869998093,
+            "rosTimeNs": 10700000000
+          },
+          {
+            "monotonicElapsedS": 2.614260803000434,
+            "rosTimeNs": 10800000000
+          }
+        ],
+        "steady": [
+          {
+            "monotonicElapsedS": 0.13316648900035943,
+            "rosTimeNs": 0
+          },
+          {
+            "monotonicElapsedS": 0.23316434099979233,
+            "rosTimeNs": 0
+          },
+          {
+            "monotonicElapsedS": 0.33318260300075053,
+            "rosTimeNs": 0
+          },
+          {
+            "monotonicElapsedS": 0.4331674559998646,
+            "rosTimeNs": 0
+          },
+          {
+            "monotonicElapsedS": 0.5331603080012428,
+            "rosTimeNs": 0
+          },
+          {
+            "monotonicElapsedS": 0.6331575109998084,
+            "rosTimeNs": 0
+          },
+          {
+            "monotonicElapsedS": 0.7331566829998337,
+            "rosTimeNs": 0
+          },
+          {
+            "monotonicElapsedS": 0.833232715000122,
+            "rosTimeNs": 0
+          },
+          {
+            "monotonicElapsedS": 0.9331895880004595,
+            "rosTimeNs": 10000000000
+          },
+          {
+            "monotonicElapsedS": 1.0331674629996996,
+            "rosTimeNs": 10000000000
+          },
+          {
+            "monotonicElapsedS": 1.1331637380008033,
+            "rosTimeNs": 10000000000
+          },
+          {
+            "monotonicElapsedS": 1.2331640730008075,
+            "rosTimeNs": 10000000000
+          },
+          {
+            "monotonicElapsedS": 1.3331605170005787,
+            "rosTimeNs": 10000000000
+          },
+          {
+            "monotonicElapsedS": 1.4332399619997886,
+            "rosTimeNs": 10000000000
+          },
+          {
+            "monotonicElapsedS": 1.533166417000757,
+            "rosTimeNs": 10000000000
+          },
+          {
+            "monotonicElapsedS": 1.633230541001467,
+            "rosTimeNs": 10000000000
+          },
+          {
+            "monotonicElapsedS": 1.733171667001443,
+            "rosTimeNs": 10000000000
+          },
+          {
+            "monotonicElapsedS": 1.8331660720014042,
+            "rosTimeNs": 10000000000
+          },
+          {
+            "monotonicElapsedS": 1.9331952070006082,
+            "rosTimeNs": 10100000000
+          },
+          {
+            "monotonicElapsedS": 2.033164504000524,
+            "rosTimeNs": 10200000000
+          },
+          {
+            "monotonicElapsedS": 2.1331652620010573,
+            "rosTimeNs": 10300000000
+          },
+          {
+            "monotonicElapsedS": 2.2331842390012753,
+            "rosTimeNs": 10400000000
+          },
+          {
+            "monotonicElapsedS": 2.3331686760011507,
+            "rosTimeNs": 10500000000
+          },
+          {
+            "monotonicElapsedS": 2.433175083000606,
+            "rosTimeNs": 10600000000
+          },
+          {
+            "monotonicElapsedS": 2.533160171000418,
+            "rosTimeNs": 10700000000
+          },
+          {
+            "monotonicElapsedS": 2.6331719280005927,
+            "rosTimeNs": 10800000000
+          }
+        ]
+      }
+    }
+  ],
+  "execution": {
+    "cwd": "/home/wjz/ros2_robot/ros2-learning-hub",
+    "environmentPreparation": [
+      "source /opt/ros/jazzy/setup.bash"
+    ],
+    "command": [
+      "timeout",
+      "--signal=INT",
+      "--kill-after=5s",
+      "25s",
+      "/usr/bin/python3",
+      "examples/runtime_labs/clock_timer_lab.py"
+    ],
+    "context": "require_escalated已获自动批准，仅用于本机DDS套接字；不接硬件。"
+  },
+  "additionalChecks": [
+    {
+      "name": "无ROS环境帮助",
+      "command": [
+        "/usr/bin/python3",
+        "-I",
+        "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/clock_timer_lab.py",
+        "--help"
+      ],
+      "clearedEnvironmentVariables": [
+        "ROS_DISTRO",
+        "AMENT_PREFIX_PATH",
+        "COLCON_PREFIX_PATH",
+        "PYTHONPATH",
+        "LD_LIBRARY_PATH"
+      ],
+      "exitCode": 0,
+      "stderr": "",
+      "status": "passed"
+    },
+    {
+      "name": "最终源码与记录SHA一致",
+      "status": "passed"
+    },
+    {
+      "name": "JSON与Python语法",
+      "status": "passed"
+    }
+  ]
+}

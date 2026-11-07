@@ -1,10 +1,16 @@
 <?xml version="1.0"?>
+<!-- 【中文教学注释】 examples/src/atlas_py/package.xml -->
+<!-- 输入输出：输入为包名、版本、许可和依赖元数据；输出是ament/rosdep/发布工具可读取的包清单。 -->
+<!-- 执行顺序与边界：包名须与构建/安装配置一致，buildtool、depend、exec_depend作用不同；元数据本身不执行安装，版本字段不是物理量。 -->
+<!-- ROS包清单说明依赖和构建类型；包名、安装目录和实际源码工程需一致，不会自行编译/安装。 -->
 <package format="3">
   <name>atlas_py</name><version>0.1.0</version>
   <description>ROS 2 学习图谱：完整 Python 发布订阅示例</description>
   <maintainer email="learner@example.com">ROS 2 Atlas contributors</maintainer>
   <license>Apache-2.0</license>
+  <!-- 构建工具依赖，用于选择ament构建流程；不同于运行时消息/客户端库依赖。 -->
   <buildtool_depend>ament_python</buildtool_depend>
+  <!-- 声明安装后运行所需依赖，确保发布二进制包时能够解析；不会在打开XML时自动安装。 -->
   <exec_depend>rclpy</exec_depend><exec_depend>std_msgs</exec_depend>
   <exec_depend>example_interfaces</exec_depend>
   <export><build_type>ament_python</build_type></export>

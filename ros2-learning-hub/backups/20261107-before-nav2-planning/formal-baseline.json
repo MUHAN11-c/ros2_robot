@@ -1,0 +1,30 @@
+{
+  "scope": "当前正式教材审查基线。融合传感器前的七项产物及读取器源码备份单列。readerIntegration 是初次加入文件直存时的记录。",
+  "files": {
+    "reader-library.js": "84df52e02671bf601e0eb99e99aadbc698044b19c69632a9167382cf9361d1ab",
+    "content.js": "01183ab91a03860a4b92b387300fc5cd203658d38d8f0bd21aae7d5265426d4d",
+    "book.html": "3e3fbe112e997669ec2a2347ea5d493481b1080279a103b5f7f5a4fc8f08c2ca",
+    "preview/figures.js": "dc367d6663e6c996c432af33182901b944187e7b1c26ff9ea8430a7ac45f8372",
+    "preview/figure-data.js": "c13ae9058f36162e1dd9ba52b8058d78b8295cf3b98ae0404a2998feb2df82fe",
+    "downloads/atlas_examples.zip": "e669a7aa447f256c430d5873a7b906290ffb6ed85cdc4c11e267c529ef4bfd05",
+    "downloads/validation-evidence.zip": "9229936641a88ad8285d2ef344c5728c49be28fd2b43f6679252fa6d02b7e5c6"
+  },
+  "readerIntegration": {
+    "index.html": {
+      "previousSha256": "684e16ad64abbf3c654c53744fe02457bff5d0fd71ad5425a9d9399515af2878",
+      "currentSha256": "9ae4d164d0b68cea1309bb94820fd3f562f4cd2ad136b6ecb4d775d747a5564e",
+      "backup": "backups/20261107-before-file-saving/dist/index.html"
+    },
+    "reader.js": {
+      "previousSha256": "a474d8b3c9cb5525084a929a36b1c88c373e217e5150917bbb0c3ceb7d50ad5e",
+      "currentSha256": "cb997782ee9412e338da61da0c600401d1fff695649fd1a875b18baed62180bc",
+      "backup": "backups/20261107-before-file-saving/dist/reader.js"
+    },
+    "reader.css": {
+      "previousSha256": "79e77ae5e6a1739e5c861a64b04a728ad40da317cada2d474a225ba13ff18ab6",
+      "currentSha256": "9503aad974e9d57ff89242a1c055c88f0acb957217972f3362e35695d899a09d",
+      "backup": "backups/20261107-before-file-saving/dist/reader.css"
+    }
+  },
+  "previousBaseline": "backups/20261107-before-gazebo-sensors/formal-baseline.json"
+}

@@ -1,5 +1,12 @@
+# 【中文教学注释】 foundation-examples/src/learning_bringup/config/sim.yaml
+# 输入输出：输入为 launch 参数、包内文件路径和 YAML 配置；输出为具有指定命名空间、重映射和参数的节点进程。
+# 执行顺序与边界：launch 描述在启动阶段解释，动作书写顺序不等于应用已就绪；相对话题继承命名空间，参数文件顶层节点名必须匹配实际节点。
 /config_sim:
+  # ROS参数文件的固定层级名；其父节点名/通配选择器必须匹配实际启动名称。
   ros__parameters:
+    # turtlesim颜色分量是0..255整数、无量纲；本参数不控制机器人速度。
     background_r: 100
+    # 绿色通道0..255、无量纲；参数选择器应匹配重命名后的sim节点。
     background_g: 80
+    # 蓝色通道0..255、无量纲；颜色与实际控制接口分别验证。
     background_b: 40

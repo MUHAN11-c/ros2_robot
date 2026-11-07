@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-11-07",
+  "iteration": "2026-11-07-r8",
+  "passed": true,
+  "staticFigures": 13,
+  "contextPlacements": 26,
+  "interactiveFigures": 2,
+  "offlineRequests": 0,
+  "mobileWidths": [
+    390,
+    320
+  ],
+  "errors": []
+}

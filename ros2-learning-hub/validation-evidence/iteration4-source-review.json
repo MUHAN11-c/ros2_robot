@@ -1,0 +1,1066 @@
+{
+  "schemaVersion": 1,
+  "approved": true,
+  "status": "approved_for_iteration4_bounded_local_software_content",
+  "checkedAt": "2026-11-07T05:20:08+08:00",
+  "sourceRecords": [
+    {
+      "id": "rcl-default",
+      "repository": "ros2/rcl",
+      "commit": "22c0b957140035c675f0a061daaab5fd6b2080e7",
+      "path": "rcl_lifecycle/src/default_state_machine.c",
+      "version": "9.2.11",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rcl/22c0b957140035c675f0a061daaab5fd6b2080e7/rcl_lifecycle/src/default_state_machine.c",
+      "sha256": "e9af87b10d0000e49883e227cbd3ce9a17b7f244bfe197a93de442165c5a81c4",
+      "lineCount": 742,
+      "verification": "只读固定提交官方原文；HTTP字节SHA，不运行上游代码",
+      "lineRanges": [
+        {
+          "start": 603,
+          "end": 648
+        }
+      ],
+      "observation": "默认C状态机on_error SUCCESS到unconfigured；FAILURE及ERROR到finalized。"
+    },
+    {
+      "id": "rclcpp-lifecycle-installed-release",
+      "repository": "ros2/rclcpp",
+      "commit": "3aa906a2c7ad13d1623b31a55731993f56538e72",
+      "path": "rclcpp_lifecycle/src/lifecycle_node_interface_impl.cpp",
+      "version": "28.1.22",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rclcpp/3aa906a2c7ad13d1623b31a55731993f56538e72/rclcpp_lifecycle/src/lifecycle_node_interface_impl.cpp",
+      "sha256": "a1b186671150b14db6556f58dc0b43d151e219b49ded9c3d7de89d2d234030b2",
+      "lineCount": 613,
+      "verification": "只读固定提交官方原文；HTTP字节SHA，不运行上游代码",
+      "lineRanges": [
+        {
+          "start": 208,
+          "end": 248
+        },
+        {
+          "start": 447,
+          "end": 492
+        },
+        {
+          "start": 504,
+          "end": 524
+        }
+      ],
+      "observation": "与固定28.1.23该文件逐字节相同；服务依据原callback_return，错误恢复不把原ERROR改SUCCESS。",
+      "sameSnapshotBytes": true,
+      "snapshotSha256": "a1b186671150b14db6556f58dc0b43d151e219b49ded9c3d7de89d2d234030b2",
+      "snapshotVersion": "28.1.23"
+    },
+    {
+      "id": "ament-symlink-install",
+      "repository": "ament/ament_cmake",
+      "commit": "5741cff5b9f83253bf3521bd8f44108fde3504ad",
+      "path": "ament_cmake_core/cmake/symlink_install/install.cmake",
+      "version": "2.5.6",
+      "sourceUrl": "https://raw.githubusercontent.com/ament/ament_cmake/5741cff5b9f83253bf3521bd8f44108fde3504ad/ament_cmake_core/cmake/symlink_install/install.cmake",
+      "sha256": "7c12eaff0e772c5a5f41e0369d7ac52e4a2f2c1739d85411c2189ef1c79dba6f",
+      "lineCount": 44,
+      "verification": "只读固定提交官方原文；HTTP字节SHA，不运行上游代码",
+      "installedPath": "/opt/ros/jazzy/share/ament_cmake_core/cmake/symlink_install/install.cmake",
+      "sameInstalledBytes": true,
+      "lineRanges": [
+        {
+          "start": 15,
+          "end": 43
+        }
+      ],
+      "observation": "ament重写install签名尽可能改用symlink，不是把所有文件复制成自包含闭包。"
+    },
+    {
+      "id": "ament-symlink-files",
+      "repository": "ament/ament_cmake",
+      "commit": "5741cff5b9f83253bf3521bd8f44108fde3504ad",
+      "path": "ament_cmake_core/cmake/symlink_install/ament_cmake_symlink_install_files.cmake",
+      "version": "2.5.6",
+      "sourceUrl": "https://raw.githubusercontent.com/ament/ament_cmake/5741cff5b9f83253bf3521bd8f44108fde3504ad/ament_cmake_core/cmake/symlink_install/ament_cmake_symlink_install_files.cmake",
+      "sha256": "e49bf4565ddee93e8067f004f48e24b6034ab7fc2ab3993d9d7c5e93a4efac2c",
+      "lineCount": 50,
+      "verification": "只读固定提交官方原文；HTTP字节SHA，不运行上游代码",
+      "installedPath": "/opt/ros/jazzy/share/ament_cmake_core/cmake/symlink_install/ament_cmake_symlink_install_files.cmake",
+      "sameInstalledBytes": true,
+      "lineRanges": [
+        {
+          "start": 35,
+          "end": 49
+        }
+      ],
+      "observation": "files安装代码保存CMAKE_CURRENT_SOURCE_DIR；不支持的选项会退回普通安装。"
+    },
+    {
+      "id": "ament-symlink-targets",
+      "repository": "ament/ament_cmake",
+      "commit": "5741cff5b9f83253bf3521bd8f44108fde3504ad",
+      "path": "ament_cmake_core/cmake/symlink_install/ament_cmake_symlink_install_targets.cmake",
+      "version": "2.5.6",
+      "sourceUrl": "https://raw.githubusercontent.com/ament/ament_cmake/5741cff5b9f83253bf3521bd8f44108fde3504ad/ament_cmake_core/cmake/symlink_install/ament_cmake_symlink_install_targets.cmake",
+      "sha256": "dd6a62e9b8de516522a1ca7d47c84d61a34fd6ca8b0a4c5eeeb07d3d801a3909",
+      "lineCount": 116,
+      "verification": "只读固定提交官方原文；HTTP字节SHA，不运行上游代码",
+      "installedPath": "/opt/ros/jazzy/share/ament_cmake_core/cmake/symlink_install/ament_cmake_symlink_install_targets.cmake",
+      "sameInstalledBytes": true,
+      "lineRanges": [
+        {
+          "start": 63,
+          "end": 86
+        },
+        {
+          "start": 98,
+          "end": 113
+        }
+      ],
+      "observation": "TARGET_FILE来自构建目标，生成脚本位于CMAKE_CURRENT_BINARY_DIR；实际前缀需逐项审计。"
+    },
+    {
+      "id": "colcon-prefix-chain",
+      "repository": "colcon/colcon-core",
+      "commit": "898f40407f6fc1fde5f4cb94026d9887a97c3192",
+      "path": "colcon_core/shell/template/prefix_chain.sh.em",
+      "version": "0.21.3",
+      "sourceUrl": "https://raw.githubusercontent.com/colcon/colcon-core/898f40407f6fc1fde5f4cb94026d9887a97c3192/colcon_core/shell/template/prefix_chain.sh.em",
+      "sha256": "3df88c0ea723830dc0e537c357e0c09b11123e9713a6b9fad5bc6f7feea2105c",
+      "lineCount": 49,
+      "verification": "只读固定提交官方原文；HTTP字节SHA，不运行上游代码",
+      "installedPath": "/usr/lib/python3/dist-packages/colcon_core/shell/template/prefix_chain.sh.em",
+      "sameInstalledBytes": true,
+      "lineRanges": [
+        {
+          "start": 31,
+          "end": 49
+        }
+      ],
+      "observation": "setup链模板保存构建时underlay前缀，source链不复制underlay。"
+    },
+    {
+      "id": "colcon-test-core",
+      "repository": "colcon/colcon-core",
+      "commit": "898f40407f6fc1fde5f4cb94026d9887a97c3192",
+      "path": "colcon_core/verb/test.py",
+      "version": "0.21.3",
+      "sourceUrl": "https://raw.githubusercontent.com/colcon/colcon-core/898f40407f6fc1fde5f4cb94026d9887a97c3192/colcon_core/verb/test.py",
+      "sha256": "90106e048c5cd1576e4149a5b085216112f47bbac12d504a665d3eece28ab300",
+      "lineCount": 230,
+      "verification": "只读固定提交官方原文；HTTP字节SHA，不运行上游代码",
+      "installedPath": "/usr/lib/python3/dist-packages/colcon_core/verb/test.py",
+      "sameInstalledBytes": true,
+      "lineRanges": [
+        {
+          "start": 119,
+          "end": 127
+        },
+        {
+          "start": 156,
+          "end": 181
+        }
+      ],
+      "observation": "默认任务返回与TestFailure事件不同；strict选项将已记录失败映射成非零。"
+    },
+    {
+      "id": "docker-ros-base",
+      "repository": "osrf/docker_images",
+      "commit": "f2ee99a331072e116201141279f4e4b4477ddab5",
+      "path": "ros/jazzy/ubuntu/noble/ros-base/Dockerfile",
+      "version": "definition-commit",
+      "sourceUrl": "https://raw.githubusercontent.com/osrf/docker_images/f2ee99a331072e116201141279f4e4b4477ddab5/ros/jazzy/ubuntu/noble/ros-base/Dockerfile",
+      "sha256": "41381db401e595dc64df749b332c0e9ec6f2a92a753f558aa4469f098f6bcb9a",
+      "lineCount": 31,
+      "verification": "只读固定提交官方原文；HTTP字节SHA，不运行上游代码",
+      "lineRanges": [
+        {
+          "start": 6,
+          "end": 17
+        }
+      ],
+      "observation": "官方Jazzy ros-base定义含构建工具、colcon、rosdep/vcstool及rosdep初始化；不是已运行镜像的包清单。"
+    },
+    {
+      "id": "docker-ros-core",
+      "repository": "osrf/docker_images",
+      "commit": "f2ee99a331072e116201141279f4e4b4477ddab5",
+      "path": "ros/jazzy/ubuntu/noble/ros-core/Dockerfile",
+      "version": "definition-commit",
+      "sourceUrl": "https://raw.githubusercontent.com/osrf/docker_images/f2ee99a331072e116201141279f4e4b4477ddab5/ros/jazzy/ubuntu/noble/ros-core/Dockerfile",
+      "sha256": "fb6a0d48f00fdec98ec1f7447148672873ac1c911b2ca0b8ab9b352a89d27624",
+      "lineCount": 44,
+      "verification": "只读固定提交官方原文；HTTP字节SHA，不运行上游代码",
+      "lineRanges": [
+        {
+          "start": 33,
+          "end": 44
+        }
+      ],
+      "observation": "定义发行版和ENTRYPOINT/CMD；定义commit不是镜像registry摘要。"
+    },
+    {
+      "id": "docker-entrypoint",
+      "repository": "osrf/docker_images",
+      "commit": "f2ee99a331072e116201141279f4e4b4477ddab5",
+      "path": "ros/jazzy/ubuntu/noble/ros-core/ros_entrypoint.sh",
+      "version": "definition-commit",
+      "sourceUrl": "https://raw.githubusercontent.com/osrf/docker_images/f2ee99a331072e116201141279f4e4b4477ddab5/ros/jazzy/ubuntu/noble/ros-core/ros_entrypoint.sh",
+      "sha256": "32c3f27954ff2cf727598ed74c2b5dbfe2ebed40bd9e44a2e7113a527999a6ec",
+      "lineCount": 6,
+      "verification": "只读固定提交官方原文；HTTP字节SHA，不运行上游代码",
+      "lineRanges": [
+        {
+          "start": 1,
+          "end": 6
+        }
+      ],
+      "observation": "source发行版环境后exec收到的命令；最终PID是否叶子节点取决于该命令。"
+    },
+    {
+      "id": "launch-ready",
+      "repository": "ros2/launch",
+      "commit": "b63c1b82687038dad9a5d914c631f6681a550abe",
+      "path": "launch_testing/launch_testing/actions/ready.py",
+      "version": "3.4.12",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/launch/b63c1b82687038dad9a5d914c631f6681a550abe/launch_testing/launch_testing/actions/ready.py",
+      "sha256": "253b1f91cbb4ae7f91c4a26670c011585eec478587d119d4a28ecb15dc00f89b",
+      "lineCount": 42,
+      "verification": "只读官方release固定提交字节与安装文件/参考快照比较；未运行上游工程",
+      "installedPath": "/opt/ros/jazzy/lib/python3.12/site-packages/launch_testing/actions/ready.py",
+      "sameInstalledBytes": true,
+      "snapshotPath": "ros2-learning-hub/references/sources/official-core/ros2--launch/jazzy--ede227f7d0d0/launch_testing/launch_testing/actions/ready.py",
+      "sameSnapshotBytes": true,
+      "snapshotSha256": "253b1f91cbb4ae7f91c4a26670c011585eec478587d119d4a28ecb15dc00f89b",
+      "lineRanges": [
+        {
+          "start": 26,
+          "end": 42
+        }
+      ],
+      "observation": "execute仅调用测试开始回调，不检查业务端点、应用资源或DDS输入输出。"
+    },
+    {
+      "id": "launch-runner",
+      "repository": "ros2/launch",
+      "commit": "b63c1b82687038dad9a5d914c631f6681a550abe",
+      "path": "launch_testing/launch_testing/test_runner.py",
+      "version": "3.4.12",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/launch/b63c1b82687038dad9a5d914c631f6681a550abe/launch_testing/launch_testing/test_runner.py",
+      "sha256": "27ba60a24d1a87b7d4d398fcd372e7db91f06b3a3621c98fc69b25d4bef814a4",
+      "lineCount": 311,
+      "verification": "只读官方release固定提交字节与安装文件/参考快照比较；未运行上游工程",
+      "installedPath": "/opt/ros/jazzy/lib/python3.12/site-packages/launch_testing/test_runner.py",
+      "sameInstalledBytes": true,
+      "snapshotPath": "ros2-learning-hub/references/sources/official-core/ros2--launch/jazzy--ede227f7d0d0/launch_testing/launch_testing/test_runner.py",
+      "sameSnapshotBytes": true,
+      "snapshotSha256": "27ba60a24d1a87b7d4d398fcd372e7db91f06b3a3621c98fc69b25d4bef814a4",
+      "lineRanges": [
+        {
+          "start": 159,
+          "end": 203
+        }
+      ],
+      "observation": "pre-shutdown tests与post-shutdown tests在不同阶段执行；活动测试结束触发launch关闭。"
+    },
+    {
+      "id": "launch-register",
+      "repository": "ros2/launch",
+      "commit": "b63c1b82687038dad9a5d914c631f6681a550abe",
+      "path": "launch_testing_ament_cmake/cmake/add_launch_test.cmake",
+      "version": "3.4.12",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/launch/b63c1b82687038dad9a5d914c631f6681a550abe/launch_testing_ament_cmake/cmake/add_launch_test.cmake",
+      "sha256": "03dcbd2599a3f7827941edf6fcc3bcc9ed01829e47418486e0b1d9fd665dcdce",
+      "lineCount": 159,
+      "verification": "只读官方release固定提交字节与安装文件/参考快照比较；未运行上游工程",
+      "installedPath": "/opt/ros/jazzy/share/launch_testing_ament_cmake/cmake/add_launch_test.cmake",
+      "sameInstalledBytes": true,
+      "snapshotPath": "ros2-learning-hub/references/sources/official-core/ros2--launch/jazzy--ede227f7d0d0/launch_testing_ament_cmake/cmake/add_launch_test.cmake",
+      "sameSnapshotBytes": true,
+      "snapshotSha256": "03dcbd2599a3f7827941edf6fcc3bcc9ed01829e47418486e0b1d9fd665dcdce",
+      "lineRanges": [
+        {
+          "start": 58,
+          "end": 60
+        },
+        {
+          "start": 96,
+          "end": 96
+        },
+        {
+          "start": 115,
+          "end": 138
+        }
+      ],
+      "observation": "注册CTest，记录xunit目标，TIMEOUT单位秒；细分JUnit和注册包装不重复计覆盖。"
+    },
+    {
+      "id": "colcon-test-result",
+      "repository": "colcon/colcon-test-result",
+      "commit": "d551984cceee8927289b5463aaf21bf003cfd8b0",
+      "path": "colcon_test_result/verb/test_result.py",
+      "version": "0.3.8",
+      "sourceUrl": "https://raw.githubusercontent.com/colcon/colcon-test-result/d551984cceee8927289b5463aaf21bf003cfd8b0/colcon_test_result/verb/test_result.py",
+      "sha256": "0ab2f7b2ba84a93ce6ac520041dececf28ce05d61161f512c74e074da6cec772",
+      "lineCount": 128,
+      "verification": "只读官方release固定提交字节与安装文件/参考快照比较；未运行上游工程",
+      "installedPath": "/usr/lib/python3/dist-packages/colcon_test_result/verb/test_result.py",
+      "sameInstalledBytes": true,
+      "lineRanges": [
+        {
+          "start": 56,
+          "end": 62
+        },
+        {
+          "start": 99,
+          "end": 108
+        }
+      ],
+      "observation": "解析现有结果汇总决定失败退出；空集合可以exit0，必须独立查注册/案例和新XML。"
+    },
+    {
+      "id": "colcon-cmake-test",
+      "repository": "colcon/colcon-cmake",
+      "commit": "5d6bc11dae5d6f682b0e5e80e7c01204eb190833",
+      "path": "colcon_cmake/task/cmake/test.py",
+      "version": "0.2.30",
+      "sourceUrl": "https://raw.githubusercontent.com/colcon/colcon-cmake/5d6bc11dae5d6f682b0e5e80e7c01204eb190833/colcon_cmake/task/cmake/test.py",
+      "sha256": "5f5551f0a98aa0b16d308e91844fe9127b048539de925569c593b70297175220",
+      "lineCount": 157,
+      "verification": "只读官方release固定提交字节与安装文件/参考快照比较；未运行上游工程",
+      "installedPath": "/usr/lib/python3/dist-packages/colcon_cmake/task/cmake/test.py",
+      "sameInstalledBytes": true,
+      "lineRanges": [
+        {
+          "start": 97,
+          "end": 122
+        }
+      ],
+      "observation": "CTest return8转TestFailure事件并保留任务正常结束；不能只看默认colcon返回。"
+    },
+    {
+      "id": "rclcpp-publisher",
+      "repository": "ros2/rclcpp",
+      "commit": "3aa906a2c7ad13d1623b31a55731993f56538e72",
+      "path": "rclcpp_lifecycle/include/rclcpp_lifecycle/lifecycle_publisher.hpp",
+      "version": "28.1.22",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rclcpp/3aa906a2c7ad13d1623b31a55731993f56538e72/rclcpp_lifecycle/include/rclcpp_lifecycle/lifecycle_publisher.hpp",
+      "sha256": "76c6316c3c96ce89efc564864dc71ff810dfe3c48877ad80473d94d398863e81",
+      "lineCount": 148,
+      "verification": "只读官方release固定提交字节与安装文件/参考快照比较；未运行上游工程",
+      "installedPath": "/opt/ros/jazzy/include/rclcpp_lifecycle/rclcpp_lifecycle/lifecycle_publisher.hpp",
+      "sameInstalledBytes": true,
+      "snapshotPath": "ros2-learning-hub/references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp_lifecycle/include/rclcpp_lifecycle/lifecycle_publisher.hpp",
+      "sameSnapshotBytes": true,
+      "snapshotSha256": "76c6316c3c96ce89efc564864dc71ff810dfe3c48877ad80473d94d398863e81",
+      "lineRanges": [
+        {
+          "start": 65,
+          "end": 117
+        }
+      ],
+      "observation": "publish按is_activated标志门控；不是每次读取ROS state；基类on_activate控制管理实体。"
+    },
+    {
+      "id": "rclcpp-lifecycle-default",
+      "repository": "ros2/rclcpp",
+      "commit": "3aa906a2c7ad13d1623b31a55731993f56538e72",
+      "path": "rclcpp_lifecycle/src/lifecycle_node.cpp",
+      "version": "28.1.22",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rclcpp/3aa906a2c7ad13d1623b31a55731993f56538e72/rclcpp_lifecycle/src/lifecycle_node.cpp",
+      "sha256": "1b22ded7f7e6720ceb30fa9d5cbe0cc536238b2b0c51125d196496a643e39a38",
+      "lineCount": 720,
+      "verification": "只读官方release固定提交字节与安装文件/参考快照比较；未运行上游工程",
+      "snapshotPath": "ros2-learning-hub/references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp_lifecycle/src/lifecycle_node.cpp",
+      "sameSnapshotBytes": true,
+      "snapshotSha256": "1b22ded7f7e6720ceb30fa9d5cbe0cc536238b2b0c51125d196496a643e39a38",
+      "lineRanges": [
+        {
+          "start": 694,
+          "end": 707
+        }
+      ],
+      "observation": "默认activate/deactivate调用已管理实体的对应方法；覆写回调需明确保留所需基类行为。"
+    },
+    {
+      "id": "docs-integration",
+      "repository": "ros2/ros2_documentation",
+      "commit": "929e37c4c6d0746e75d10f1fd76f024743ff75ea",
+      "path": "source/Tutorials/Intermediate/Testing/Integration.rst",
+      "localPath": "references/sources/official-docs/ros2--ros2_documentation/jazzy--929e37c4c6d0/source/Tutorials/Intermediate/Testing/Integration.rst",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/929e37c4c6d0746e75d10f1fd76f024743ff75ea/source/Tutorials/Intermediate/Testing/Integration.rst",
+      "version": "Jazzy固定文档快照",
+      "sha256": "4bbb49403bdd1e99120d4f70b5585e58170a85a5041c48c6e34bb778166459e3",
+      "lineCount": 273,
+      "lineRanges": [
+        {
+          "start": 165,
+          "end": 183
+        },
+        {
+          "start": 256,
+          "end": 264
+        }
+      ],
+      "observation": "ReadyToTest仅放行活动测试；post-shutdown阶段独立；测试注册与域隔离另设。",
+      "verification": "逐段只读固定本地一手原文；文件实际字节SHA，不运行参考仓库"
+    },
+    {
+      "id": "ros2run-entry",
+      "repository": "ros2/ros2cli",
+      "commit": "221ce584a937ac234ae6337cac71c22d42e8b692",
+      "path": "ros2run/ros2run/api/__init__.py",
+      "localPath": "references/sources/official-core/ros2--ros2cli/jazzy--221ce584a937/ros2run/ros2run/api/__init__.py",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/ros2cli/221ce584a937ac234ae6337cac71c22d42e8b692/ros2run/ros2run/api/__init__.py",
+      "version": "参考0.32.14；安装ros2run0.32.13",
+      "sha256": "b56ea9fd7f86147dc8a72baf14887a607d12ee779e12f8a0ee6e64918beac008",
+      "lineCount": 94,
+      "lineRanges": [
+        {
+          "start": 54,
+          "end": 79
+        }
+      ],
+      "observation": "run_executable创建子进程并等待，KeyboardInterrupt处理依赖终端组信号；此函数未见SIGTERM转发，不是Docker实测。",
+      "verification": "逐段只读固定本地一手原文；文件实际字节SHA，不运行参考仓库",
+      "installedPath": "/opt/ros/jazzy/lib/python3.12/site-packages/ros2run/api/__init__.py",
+      "installedSha256": "b56ea9fd7f86147dc8a72baf14887a607d12ee779e12f8a0ee6e64918beac008",
+      "sameInstalledBytes": true
+    },
+    {
+      "id": "rclcpp-lifecycle-snapshot",
+      "repository": "ros2/rclcpp",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "path": "rclcpp_lifecycle/src/lifecycle_node_interface_impl.cpp",
+      "localPath": "references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp_lifecycle/src/lifecycle_node_interface_impl.cpp",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rclcpp/35b821a9fb1f937bfbd9c741b7e3353e101d9593/rclcpp_lifecycle/src/lifecycle_node_interface_impl.cpp",
+      "version": "参考28.1.23；安装28.1.22",
+      "sha256": "a1b186671150b14db6556f58dc0b43d151e219b49ded9c3d7de89d2d234030b2",
+      "lineCount": 613,
+      "lineRanges": [
+        {
+          "start": 208,
+          "end": 248
+        },
+        {
+          "start": 447,
+          "end": 492
+        },
+        {
+          "start": 503,
+          "end": 524
+        }
+      ],
+      "observation": "label优先id；服务success依据原回调返回，ERROR再执行on_error；std::exception捕获后转ERROR。",
+      "verification": "逐段只读固定本地一手原文；文件实际字节SHA，不运行参考仓库"
+    },
+    {
+      "id": "rosdep-condition-main",
+      "installedPath": "/usr/lib/python3/dist-packages/rosdep2/main.py",
+      "version": "0.27.0",
+      "sha256": "0631312ecd944b455218bcbaee60a7b3ec21ee2830145df7984e215775aec047",
+      "lineCount": 1134,
+      "lineRanges": [
+        {
+          "start": 286,
+          "end": 320
+        }
+      ],
+      "observation": "rosdep main会依据--rosdistro/MetaDatabase填ROS版本变量，不能只因Docker build尚未source就断言条件必错。",
+      "verification": "只读本机安装的一手Python实现；未调用rosdep install",
+      "sourceUrl": "https://github.com/ros-infrastructure/rosdep"
+    },
+    {
+      "id": "rosdep-condition-loader",
+      "installedPath": "/usr/lib/python3/dist-packages/rosdep2/rospkg_loader.py",
+      "version": "0.27.0",
+      "sha256": "976ab0741a9cf68dab57b803d859611d7107cb10fc0f8aa727a66261fff7a1d6",
+      "lineCount": 180,
+      "lineRanges": [
+        {
+          "start": 135,
+          "end": 146
+        }
+      ],
+      "observation": "package.xml条件按当前环境求值，环境仍是显式部署输入。",
+      "verification": "只读本机安装的一手Python实现；未调用rosdep install",
+      "sourceUrl": "https://github.com/ros-infrastructure/rosdep"
+    }
+  ],
+  "textbookResources": [
+    {
+      "id": "iter4-lifecycle-state-machine",
+      "title": "rcl默认生命周期错误处理状态机",
+      "url": "https://github.com/ros2/rcl/blob/22c0b957140035c675f0a061daaab5fd6b2080e7/rcl_lifecycle/src/default_state_machine.c",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rcl/22c0b957140035c675f0a061daaab5fd6b2080e7/rcl_lifecycle/src/default_state_machine.c",
+      "category": "生命周期",
+      "version": "9.2.11",
+      "description": "固定9.2.11：on_error成功回unconfigured，failure/error到finalized；与本机真实状态图分别核对。",
+      "verification": "只读固定提交官方原文；HTTP字节SHA，不运行上游代码；仅支持所述语义，不替代本站各章有限实测。",
+      "checkedAt": "2026-11-07T05:20:08+08:00",
+      "type": "official-source",
+      "lessons": [
+        "lifecycle"
+      ]
+    },
+    {
+      "id": "iter4-lifecycle-callback-result",
+      "title": "rclcpp生命周期转换应答与异常处理",
+      "url": "https://github.com/ros2/rclcpp/blob/3aa906a2c7ad13d1623b31a55731993f56538e72/rclcpp_lifecycle/src/lifecycle_node_interface_impl.cpp",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rclcpp/3aa906a2c7ad13d1623b31a55731993f56538e72/rclcpp_lifecycle/src/lifecycle_node_interface_impl.cpp",
+      "category": "生命周期",
+      "version": "28.1.22",
+      "description": "固定28.1.22：原转换回调返回、后续on_error和ChangeState.success分开；仅捕获std::exception路径。",
+      "verification": "只读固定提交官方原文；HTTP字节SHA，不运行上游代码；仅支持所述语义，不替代本站各章有限实测。",
+      "checkedAt": "2026-11-07T05:20:08+08:00",
+      "type": "official-source",
+      "lessons": [
+        "lifecycle"
+      ]
+    },
+    {
+      "id": "iter4-lifecycle-publisher",
+      "title": "LifecyclePublisher激活标志门控",
+      "url": "https://github.com/ros2/rclcpp/blob/3aa906a2c7ad13d1623b31a55731993f56538e72/rclcpp_lifecycle/include/rclcpp_lifecycle/lifecycle_publisher.hpp",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rclcpp/3aa906a2c7ad13d1623b31a55731993f56538e72/rclcpp_lifecycle/include/rclcpp_lifecycle/lifecycle_publisher.hpp",
+      "category": "生命周期",
+      "version": "28.1.22",
+      "description": "publish检查is_activated；普通timer/普通Publisher和外部资源需要应用明确控制。",
+      "verification": "只读官方release固定提交字节与安装文件/参考快照比较；未运行上游工程；仅支持所述语义，不替代本站各章有限实测。",
+      "checkedAt": "2026-11-07T05:20:08+08:00",
+      "type": "official-source",
+      "lessons": [
+        "lifecycle"
+      ]
+    },
+    {
+      "id": "iter4-testing-integration",
+      "title": "Jazzy官方集成测试教程固定快照",
+      "url": "https://github.com/ros2/ros2_documentation/blob/929e37c4c6d0746e75d10f1fd76f024743ff75ea/source/Tutorials/Intermediate/Testing/Integration.rst",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/929e37c4c6d0746e75d10f1fd76f024743ff75ea/source/Tutorials/Intermediate/Testing/Integration.rst",
+      "category": "测试",
+      "version": "Jazzy固定文档快照",
+      "description": "说明ReadyToTest、active与post-shutdown阶段及测试注册；本站完整包另用业务READY和真实消息。",
+      "verification": "逐段只读固定本地一手原文；文件实际字节SHA，不运行参考仓库；仅支持所述语义，不替代本站各章有限实测。",
+      "checkedAt": "2026-11-07T05:20:08+08:00",
+      "type": "official-documentation",
+      "lessons": [
+        "testing"
+      ]
+    },
+    {
+      "id": "iter4-testing-cli-status",
+      "title": "colcon测试失败退出选项实现",
+      "url": "https://github.com/colcon/colcon-core/blob/898f40407f6fc1fde5f4cb94026d9887a97c3192/colcon_core/verb/test.py",
+      "sourceUrl": "https://raw.githubusercontent.com/colcon/colcon-core/898f40407f6fc1fde5f4cb94026d9887a97c3192/colcon_core/verb/test.py",
+      "category": "测试",
+      "version": "0.21.3",
+      "description": "固定0.21.3：--return-code-on-test-failure与默认任务返回分开；结果数量/空目录仍需独立核对。",
+      "verification": "只读固定提交官方原文；HTTP字节SHA，不运行上游代码；仅支持所述语义，不替代本站各章有限实测。",
+      "checkedAt": "2026-11-07T05:20:08+08:00",
+      "type": "official-source",
+      "lessons": [
+        "testing"
+      ]
+    },
+    {
+      "id": "iter4-deployment-symlink",
+      "title": "ament_cmake符号链接安装实现",
+      "url": "https://github.com/ament/ament_cmake/blob/5741cff5b9f83253bf3521bd8f44108fde3504ad/ament_cmake_core/cmake/symlink_install/install.cmake",
+      "sourceUrl": "https://raw.githubusercontent.com/ament/ament_cmake/5741cff5b9f83253bf3521bd8f44108fde3504ad/ament_cmake_core/cmake/symlink_install/install.cmake",
+      "category": "部署",
+      "version": "2.5.6",
+      "description": "固定2.5.6：symlink-install可能保留source/build外部依赖；本站用有限清点和副本实际确认，未运行副本。",
+      "verification": "只读固定提交官方原文；HTTP字节SHA，不运行上游代码；仅支持所述语义，不替代本站各章有限实测。",
+      "checkedAt": "2026-11-07T05:20:08+08:00",
+      "type": "official-source",
+      "lessons": [
+        "deployment"
+      ]
+    },
+    {
+      "id": "iter4-deployment-image-definition",
+      "title": "ROS Jazzy ros-base官方镜像定义",
+      "url": "https://github.com/osrf/docker_images/blob/f2ee99a331072e116201141279f4e4b4477ddab5/ros/jazzy/ubuntu/noble/ros-base/Dockerfile",
+      "sourceUrl": "https://raw.githubusercontent.com/osrf/docker_images/f2ee99a331072e116201141279f4e4b4477ddab5/ros/jazzy/ubuntu/noble/ros-base/Dockerfile",
+      "category": "部署",
+      "version": "definition-commit",
+      "description": "固定定义commit包含构建工具/rosdep；定义版本、实际镜像摘要及后续apt结果分别记录，本机Docker未运行。",
+      "verification": "只读固定提交官方原文；HTTP字节SHA，不运行上游代码；仅支持所述语义，不替代本站各章有限实测。",
+      "checkedAt": "2026-11-07T05:20:08+08:00",
+      "type": "official-source",
+      "lessons": [
+        "deployment"
+      ]
+    },
+    {
+      "id": "iter4-deployment-cli-process",
+      "title": "ros2 run可执行进程入口实现",
+      "url": "https://github.com/ros2/ros2cli/blob/221ce584a937ac234ae6337cac71c22d42e8b692/ros2run/ros2run/api/__init__.py",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/ros2cli/221ce584a937ac234ae6337cac71c22d42e8b692/ros2run/ros2run/api/__init__.py",
+      "category": "部署",
+      "version": "参考0.32.14；安装ros2run0.32.13",
+      "description": "固定API通过Popen创建节点子进程并等待；exec ros2 run不直接证明叶子节点收到Docker TERM。",
+      "verification": "逐段只读固定本地一手原文；文件实际字节SHA，不运行参考仓库；仅支持所述语义，不替代本站各章有限实测。",
+      "checkedAt": "2026-11-07T05:20:08+08:00",
+      "type": "official-source",
+      "lessons": [
+        "deployment"
+      ]
+    }
+  ],
+  "reviewedReports": {
+    "lifecycle-current-validation.json": {
+      "sha256": "96ba26eb969defb00b61f5abd6f1837f4966711d1435b4df915dbfe8067da927",
+      "scope": "10组主场景、21有限消息窗口、17假句柄成对释放及父SIGINT正常清理；原ERROR恢复/响应分开；非设备验证。",
+      "sourceHashCount": 4,
+      "verifiedAt": "2026-11-07T05:23:19+08:00"
+    },
+    "testing-labs-current-validation.json": {
+      "sha256": "4f374c44c95fe5144c540afc7add734d6737a46cc95de2765c1a92066e8cfa79",
+      "scope": "完整包两变体构建，4阶段3CTest/13细分JUnit/16CLI聚合，缺READY失败、空结果拒绝和父SIGINT自建进程清理；故障配置未通过业务测试。",
+      "sourceHashCount": 10,
+      "verifiedAt": "2026-11-07T05:23:19+08:00"
+    },
+    "deployment-current-validation.json": {
+      "sha256": "4572704c568fa3a71543eba8e88dae027c766c0e9b2938afbb92a2d9d95a4019",
+      "scope": "有限安装清点/保留链接副本/9自建夹具/宿主原节点一次TERM；复制产物、Docker、跨机未运行。",
+      "sourceHashCount": 4,
+      "verifiedAt": "2026-11-07T05:23:19+08:00"
+    },
+    "testing-existing-current-validation.json": {
+      "sha256": "4da49a5ec5fe151fe6d004db0679a334bc83c1d3e0d28da8c0b2deee7bd24567",
+      "scope": "旧4pytest、6合同反例、新31pytest及旧talker2launch测试；辅助driver父中断/挂死保护未另注入。",
+      "sourceHashCount": 5,
+      "verifiedAt": "2026-11-07T05:23:19+08:00"
+    }
+  },
+  "scope": [
+    "本轮只读审当前部署/生命周期/测试正文与新原创资产；仅在deployment_labs及两个允许报告写入。",
+    "技术依据分为固定一手源码核读、安装字节比较及按现有报告的有限实测；不重复运行未变旧ROS实验。",
+    "本轮Docker、复制产物、跨机、仿真、设备及物理停车均未验证。"
+  ],
+  "versionDifferences": [
+    {
+      "component": "rclcpp_lifecycle",
+      "installed": "28.1.22",
+      "reference": "28.1.23",
+      "finding": "本轮核对的lifecycle_node_interface_impl.cpp、lifecycle_node.cpp、lifecycle_publisher.hpp与28.1.22固定release对应文件逐字节相同；不推出整包/二进制都相同。"
+    },
+    {
+      "component": "launch_testing",
+      "installed": "3.4.12",
+      "reference": "3.4.13",
+      "finding": "ReadyToTest、test_runner、add_launch_test三文件与3.4.12固定release/安装相同；不把参考包版本冒充安装版本。"
+    },
+    {
+      "component": "ros2run",
+      "installed": "0.32.13",
+      "reference": "0.32.14",
+      "finding": "run_executable所在API文件安装与固定快照字节相同；仅据该函数结构限定信号主张，Docker未运行。"
+    },
+    {
+      "component": "ament_cmake/colcon",
+      "installed": "ament_cmake2.5.6，colcon-core0.21.3/cmake0.2.30/test-result0.3.8",
+      "reference": "固定对应release提交",
+      "finding": "列出的安装实现逐字节匹配官方对应提交；不是所有插件/未来版本的保证。"
+    },
+    {
+      "component": "ros Docker定义",
+      "installed": "本机没有Docker命令，没有镜像摘要",
+      "reference": "osrf/docker_images固定commit f2ee99a331072e116201141279f4e4b4477ddab5",
+      "finding": "仅核定义，不声称拉到该定义构建的镜像，也未冻结后续apt软件源。"
+    }
+  ],
+  "onlineVerification": {
+    "methods": [
+      "本地固定源/安装headers优先",
+      "官方raw固定commit经只读HTTP取字节SHA，未写入第三方参考目录",
+      "web官方raw浏览及Docker官方ENTRYPOINT文档核读"
+    ],
+    "cacheBoundary": "web渲染原文的行数与HTTP源码行数可不同，部分固定raw返回Cache miss；本报告行号与SHA统一取真实HTTP字节或本地文件，未把网页渲染行号冒充源码行号。",
+    "dockerReferenceUrl": "https://docs.docker.com/reference/dockerfile/#entrypoint"
+  },
+  "findings": [
+    {
+      "id": "DEP-01",
+      "status": "resolved_by_bounded_asset",
+      "severity": "P2",
+      "issue": "开发symlink-install不能只复制install就称自包含",
+      "evidence": "实测24普通文件/18外链，保留链接副本仍18外链；15build/1source/2underlay",
+      "recommendation": "将文件一致性、链接目标、underlay/动态库和实际目标机运行拆开，正文保留未运行边界。"
+    },
+    {
+      "id": "DEP-02",
+      "status": "resolved_by_bounded_asset",
+      "severity": "P2",
+      "issue": "原环境清单缺显式prefix/少量环境/source与install指纹",
+      "evidence": "新审计显式路径allowlist/9环境变量/6指定包版本/逐项文件SHA与链接链，超限停止",
+      "recommendation": "清单是可追溯输入，不冒充完整依赖锁或可运行性认证。"
+    },
+    {
+      "id": "DEP-03",
+      "status": "resolved_in_reviewed_integration",
+      "severity": "P2",
+      "issue": "shell exec只替换到收到的命令，原CMD ros2 run多一层CLI",
+      "evidence": "固定/安装run_executable使用Popen；宿主直接节点同PID一次TERM exit0，但Docker未运行",
+      "recommendation": "默认CMD改镜像内固定/work/install直接节点，并独立保留Docker stop计划；不声称已证明CLI一定遗留。",
+      "verification": "最终脚本Docker默认CMD直达/work/install/lib/hub_component/hub_talker_node，正文保留Docker构建/stop未运行；未推广为ros2 CLI一定遗留。"
+    },
+    {
+      "id": "DEP-04",
+      "status": "not_a_defect_after_primary_source_check",
+      "severity": "P3",
+      "issue": "不能误报ros-base缺少构建工具或未初始化rosdep",
+      "evidence": "固定官方Docker定义明确包含所需工具与rosdep init/update",
+      "recommendation": "记录具体definition commit/image digest/架构；不得将本机未安装Docker写成镜像已验证。"
+    },
+    {
+      "id": "LIFE-01",
+      "status": "resolved_by_report",
+      "severity": "P2",
+      "issue": "回调返回、原转换应答、最终恢复状态与资源所有权是四类证据",
+      "evidence": "固定C源60/61/62映射1/4/4；C++保留原callback_return；新driver逐项查询/资源账本",
+      "recommendation": "on_error SUCCESS可恢复但原ERROR响应仍false；std异常不扩成任意异常/崩溃。",
+      "verification": "10/10结果；10份完整SDK图均60/61/62→1/4/4；17/17资源对等，21窗口消息均满足序号和接收时段边界，ELF/source/doc SHA匹配。"
+    },
+    {
+      "id": "LIFE-02",
+      "status": "resolved_by_report",
+      "severity": "P2",
+      "issue": "LifecyclePublisher检查activation flag，状态不自动停止普通timer或外部工作",
+      "evidence": "安装/固定publisher检查is_activated，示例显式on_error/on_shutdown撤销并关闭假资源",
+      "recommendation": "只在active发出是本例回调共同维持的合同；finalized不等于Context关闭/对象析构/物理停车。",
+      "verification": "普通全状态诊断与managed有限窗口分别验证；父INT退出130/native0、一次native信号日志、无worker附加信号/无harness强制清理，三PID复核消失；析构时cached active不冒充finalized。"
+    },
+    {
+      "id": "TEST-01",
+      "status": "resolved_by_report",
+      "severity": "P2",
+      "issue": "ReadyToTest和默认colcon RC0不能替代业务就绪/真实XML",
+      "evidence": "完整包4阶段均13细分；故障默认test0/result1，严格1/1，空结果result0",
+      "recommendation": "3CTest/13JUnit/16CLI聚合分开；缺READY故障自身未通过，实验正确捕获它。",
+      "verification": "12份细分XML快照SHA与4/7/2案例数核对；两故障都落在test_ready_and_known_twist的Waiting for output timed out；两ELF当前SHA匹配；原始日志SHA和自建PID清理记录匹配。"
+    },
+    {
+      "id": "TEST-02",
+      "status": "resolved_by_report",
+      "severity": "P2",
+      "issue": "旧4项全过仍漏NaN时刻/期限与bool/string策略",
+      "evidence": "6个基线反例记录旧表现，新31测试及旧talker2项实际过",
+      "recommendation": "正文替换为整数ns/有限速度合同；基线JSON只作已知缺口对照，31非全集。",
+      "verification": "三个baseline JSON code逐字节等于旧code-annotations测试章1:0/1:1/2:0；当前5源SHA匹配；JUnit4/31/2、六条反例原表现与合同吻合。"
+    },
+    {
+      "id": "INT-01",
+      "status": "resolved_in_reviewed_integration",
+      "severity": "P2",
+      "issue": "R4 measured()要求title但最终testing-labs两表没有title",
+      "evidence": "只读脚本直接original[title]，最终4f374报告表只有caption/columns/rows",
+      "recommendation": "在整合器使用标题fallback，不修改已绑定实测报告。",
+      "verification": "measured()按两张真实测试表给title fallback；只读调用四报告共8张表均有标题、行列匹配与实际报告SHA。"
+    },
+    {
+      "id": "INT-02",
+      "status": "resolved_in_reviewed_integration",
+      "severity": "P3",
+      "issue": "原entrypoint教学注释把构建I/O写成脚本实际I/O，并泛称exec传信号给ROS叶子节点",
+      "recommendation": "R4覆层同步修正2:1注释：可信环境+argv输入，stdio/命令退出码输出；exec只到指定命令，默认直达与包装器/Docker未测分开。",
+      "verification": "最终脚本覆写2:1真实输入/输出/顺序/exec指定命令/固定前缀与Docker未测说明；两setup以--隔离其位置参数，生成shell经bash -n通过。"
+    }
+  ],
+  "validationLimits": [
+    "部署审计与宿主exec为本代理实际执行，其他代理已执行实验通过报告/原XML/日志/源码独立核对，不声称由本代理再次运行。",
+    "批准仅绑定当前四报告与最终整合器SHA；后续源码/报告变化需重新审查，不能只更新hash标签。",
+    "没有Docker构建/容器停止、复制产物运行、跨机、仿真、设备或安全制动验证；有限窗口不保证硬实时/所有中间件。",
+    "testing_policy辅助driver正常退出有实测，父中断/挂死保护代码未另故障注入，不能因代码存在而声称已验证。"
+  ],
+  "assetReviews": [
+    {
+      "report": "lifecycle-current-validation.json",
+      "sourceHashesMatched": true,
+      "sourceFiles": [
+        {
+          "path": "examples/lifecycle_labs/runtime_lifecycle_lab/CMakeLists.txt",
+          "sha256": "957e5d9abd9a7346626c69408162dee8de805b2be5fc777fc161316446e17391"
+        },
+        {
+          "path": "examples/lifecycle_labs/runtime_lifecycle_lab/package.xml",
+          "sha256": "812481c97fb55a91787b4a6431bebbbabb2b09f6143fb0b44f5deafdce846131"
+        },
+        {
+          "path": "examples/lifecycle_labs/runtime_lifecycle_lab/src/fake_resource_node.cpp",
+          "sha256": "c4a48a141d69517da0ba1f2b613aecc800e1118fcddab0aef331b7ccfb158344"
+        },
+        {
+          "path": "examples/lifecycle_labs/validate_lifecycle.py",
+          "sha256": "8872d0571c77184e04e55b7e47f5fa78298522e10ef09f6ed1eec6d72d03315e"
+        },
+        {
+          "path": "examples/lifecycle_labs/README.md",
+          "sha256": "b7d5c81507a1a0f974f846852148f80dd672fa435c2c14867a1f212fad91f36f"
+        },
+        {
+          "path": "examples/lifecycle_labs/runtime_lifecycle_lab/LICENSE",
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+        }
+      ],
+      "inspection": "逐段只读源码/注释/完整构建配置与报告；检查原始结果和当前源指纹，不重新运行已通过ROS实验。",
+      "scope": "10组主场景、21有限消息窗口、17假句柄成对释放及父SIGINT正常清理；原ERROR恢复/响应分开；非设备验证。"
+    },
+    {
+      "report": "testing-labs-current-validation.json",
+      "sourceHashesMatched": true,
+      "sourceFiles": [
+        {
+          "path": "examples/testing_labs/README.md",
+          "sha256": "2533404f503d98c2f5a6f3882e47d404238f1c754effb56bf9a9a2afafa3550d"
+        },
+        {
+          "path": "examples/testing_labs/learning_testing_lab/CMakeLists.txt",
+          "sha256": "4b688ea1c0e7adf9e94ce822aefe05e07daf09a043f8c409433354ce13b36d39"
+        },
+        {
+          "path": "examples/testing_labs/learning_testing_lab/include/learning_testing_lab/wheel_rates.hpp",
+          "sha256": "01f0933f49430f2c2084e04c90dd276d95ccf42a64eeaec0ced75fbed1c9f577"
+        },
+        {
+          "path": "examples/testing_labs/learning_testing_lab/package.xml",
+          "sha256": "d5ccfab8a0696e02fba420ea371fcb4d3042ae6ee0af578a322fa6670fd78828"
+        },
+        {
+          "path": "examples/testing_labs/learning_testing_lab/python/wheel_reader.py",
+          "sha256": "f953d0bfed25ba4f662c99d4f0fe79ed96dbd321dd5271f127678a2636f50c9d"
+        },
+        {
+          "path": "examples/testing_labs/learning_testing_lab/src/wheel_processor.cpp",
+          "sha256": "4f52fd15cef359e1f1e317231424ba7f5920e86e015f50b43848e655bfde85ab"
+        },
+        {
+          "path": "examples/testing_labs/learning_testing_lab/test/test_rate_reader.py",
+          "sha256": "545dcb87855ca805f877c5b160cda5dc592199c3778fcd5697de33f49145f83c"
+        },
+        {
+          "path": "examples/testing_labs/learning_testing_lab/test/test_wheel_launch.py",
+          "sha256": "3ea9c2671111e6ad203acbe9f8b5b69b4b4e746e56c01d1cda2ca07db747794a"
+        },
+        {
+          "path": "examples/testing_labs/learning_testing_lab/test/test_wheel_math.cpp",
+          "sha256": "c971321559d58a3cc338ead30797329e2c0f6b1efa1cf5d8f3eeb4d97f87d79d"
+        },
+        {
+          "path": "examples/testing_labs/verify_testing_labs.py",
+          "sha256": "0f3ce00211b4a673eef8c6d5fc2efdfdce364d26c56c7312f434904f9bae8925"
+        }
+      ],
+      "inspection": "逐段只读源码/注释/完整构建配置与报告；检查原始结果和当前源指纹，不重新运行已通过ROS实验。",
+      "scope": "完整包两变体构建，4阶段3CTest/13细分JUnit/16CLI聚合，缺READY失败、空结果拒绝和父SIGINT自建进程清理；故障配置未通过业务测试。"
+    },
+    {
+      "report": "deployment-current-validation.json",
+      "sourceHashesMatched": true,
+      "sourceFiles": [
+        {
+          "path": "examples/deployment_labs/README.md",
+          "sha256": "3beb15dd2eea56c0501e169973be9bdb7c6a11fedb54652f7ce74d9bf25ab556"
+        },
+        {
+          "path": "examples/deployment_labs/audit_prefix.py",
+          "sha256": "035842511f90e2f0fd247e77684b617f352849b14c5f6c947dcc43d13e9aa622"
+        },
+        {
+          "path": "examples/deployment_labs/host_entrypoint.sh",
+          "sha256": "fbc1f6841b6d5c410dc062eb41442ffbc1b408c0be6fdd56da55489693a9929a"
+        },
+        {
+          "path": "examples/deployment_labs/host_exec_signal.py",
+          "sha256": "bdc52ec95d8a39e19202c161b2118ee738ad8e9a42ee20ff852094d1e65b8b02"
+        }
+      ],
+      "inspection": "逐段只读源码/注释/完整构建配置与报告；检查原始结果和当前源指纹，不重新运行已通过ROS实验。",
+      "scope": "有限安装清点/保留链接副本/9自建夹具/宿主原节点一次TERM；复制产物、Docker、跨机未运行。"
+    },
+    {
+      "report": "testing-existing-current-validation.json",
+      "sourceHashesMatched": true,
+      "sourceFiles": [
+        {
+          "path": "examples/testing_policy/README.md",
+          "sha256": "a3273649ccb46e15f4093d49c55e3e7f5516205afc316f62cf1046dacde0cd71"
+        },
+        {
+          "path": "examples/testing_policy/baseline_sources.json",
+          "sha256": "e81241b00a9d5ce9302d1342d467b9c280cd4acf9a4991af2de402538a5075d7"
+        },
+        {
+          "path": "examples/testing_policy/policy.py",
+          "sha256": "48ad35d2167af8ea947aef510da25e249de73e0d6ebcba0bb34d47d64f6282c3"
+        },
+        {
+          "path": "examples/testing_policy/test_policy.py",
+          "sha256": "b46c169253452409dbaad3795ec07da5a45a1aab4b9f9116f4301eb18299e8b5"
+        },
+        {
+          "path": "examples/testing_policy/verify_existing.py",
+          "sha256": "a5de6b5ab26492f109df2dc6edb1c0b8fe2a527337eb90f8a448e559e72931fe"
+        }
+      ],
+      "inspection": "逐段只读源码/注释/完整构建配置与报告；检查原始结果和当前源指纹，不重新运行已通过ROS实验。",
+      "scope": "旧4pytest、6合同反例、新31pytest及旧talker2launch测试；辅助driver父中断/挂死保护未另注入。"
+    }
+  ],
+  "textbookMaterial": {
+    "lifecycle": {
+      "explanation": "LifecycleNode的状态机、LifecyclePublisher的激活标志与应用资源是三个层次。成功configure后inactive，成功activate后active；FAILURE回到原先可恢复主状态；ERROR及捕获的标准异常进入on_error。默认C状态机将on_error SUCCESS送回unconfigured，FAILURE/ERROR送finalized。原回调ERROR仍使原ChangeState.success为false，后续恢复并不篡改原请求结果。",
+      "tableColumns": [
+        "原回调",
+        "on_error",
+        "最终状态",
+        "原请求success",
+        "资源责任"
+      ],
+      "tableRows": [
+        [
+          "configure FAILURE",
+          "不调用",
+          "unconfigured",
+          "false",
+          "候选释放/旧配置元数据由实现保留"
+        ],
+        [
+          "activate FAILURE",
+          "不调用",
+          "inactive",
+          "false",
+          "已配置资源由实现保留"
+        ],
+        [
+          "ERROR/std::exception",
+          "SUCCESS",
+          "unconfigured",
+          "false",
+          "on_error显式清理后才可重配"
+        ],
+        [
+          "ERROR/std::exception",
+          "FAILURE或ERROR",
+          "finalized",
+          "false",
+          "终结标签不代替清理"
+        ]
+      ],
+      "boundary": "本例显式撤销on_error/on_shutdown中的activation flag和假资源工作。普通timer/Publisher不自动暂停；进程SIGINT析构不是标准shutdown转换。"
+    },
+    "testing": {
+      "explanation": "ReadyToTest允许测试线程开始，不检查业务就绪。本包独立等待READY、输入端点及真实5/7→0/0输出，再在post-shutdown查exit0。CTest注册项、细分JUnit和CLI汇总包含包装层，分别记录3、13、16。已注册测试失败可让默认colcon test返回0，strict选项或test-result与当次XML另查；空结果查询0仍必须拒绝验收。",
+      "boundary": "预期故障被捕获表示教学实验有效，不代表故障软件通过。31策略测试只证明列出的整数纳秒/有限速度合同；未测helper异常清理分支不能用正常退出顶替。"
+    },
+    "deployment": {
+      "explanation": "显式安装前缀清点必须把普通文件SHA、symlink文本/目标和underlay分开。副本字节一致仍可引用原source/build/ROS前缀。ELF直接依赖清单不等于全部依赖闭包；没有外链也不推出ABI、架构、Python、配置满足。shell exec替换到指定命令；指定CLI仍可能再建节点子进程，应查实际PID、信号、退出和孩子。",
+      "boundary": "宿主一次TERM正例不替代Docker stop；当前没有Docker命令、没有拉镜像、没有运行副本/目标机。镜像定义commit、registry摘要、image ID和tarSHA各自记录。"
+    }
+  },
+  "minimumExperiments": [
+    {
+      "id": "life-retry",
+      "status": "executed_in_bound_report",
+      "checks": "configure/activate FAILURE与同实例重试，资源计数和旧版本元数据分开。"
+    },
+    {
+      "id": "life-error-handler",
+      "status": "executed_in_bound_report",
+      "checks": "ERROR/std::runtime_error及handler SUCCESS/FAILURE/ERROR/标准异常，Graph/响应/状态/资源分别验收。"
+    },
+    {
+      "id": "life-publisher-window",
+      "status": "executed_in_bound_report",
+      "checks": "已匹配订阅+普通新消息+managed尝试前进共同支撑负向；序号及接收时段滤旧。"
+    },
+    {
+      "id": "test-controlled-failure",
+      "status": "executed_in_bound_report",
+      "checks": "保持相同3注册/13JUnit，缺业务READY产生真实断言失败；默认/strict/result退出码与空结果对照。"
+    },
+    {
+      "id": "test-old-contract",
+      "status": "executed_in_bound_report",
+      "checks": "先跑旧4项，再观察六合同盲点，修订31和原talker2项独立。"
+    },
+    {
+      "id": "deployment-preserved-link-copy",
+      "status": "executed_by_reviewer",
+      "checks": "只复制自建/tmp，保留18外链且普通文件/链接/目标SHA一致；未移除原依赖，未运行副本。"
+    },
+    {
+      "id": "deployment-host-term",
+      "status": "executed_by_reviewer",
+      "checks": "原Config经可信source+exec，同PID成为节点，无孩子，一次单PID TERM、exit0、/proc消失。"
+    },
+    {
+      "id": "docker-build-stop",
+      "status": "not_run",
+      "checks": "需在实际镜像中记录平台/摘要、构建、PID1与叶子节点、stop信号/期限及退出；本机没有Docker。"
+    }
+  ],
+  "commandPitfalls": [
+    "查询get_available_transitions后用当前有效label请求；label非空优先id。本轮拒绝反例采用label，不把未测任意numeric id失败路径说成可靠拒绝。",
+    "callback return 97/98/99与on_error graph edge60/61/62不是同组枚举。",
+    "ros2 lifecycle set shutdown进入finalized与SIGINT关闭Context/析构不是同一事件；实际收到的服务结果与最终状态另查。",
+    "colcon --log-base是全局选项，置于test/test-result/build子命令前；build/test/result都指定自己的/tmp路径。",
+    "--abort-on-error不是--return-code-on-test-failure替代品；CTest测试失败与构建/任务错误分开。",
+    "不要仅运行colcon test-result就接受旧XML或零结果；核本次新结果/注册名/细分testcase/失败错误跳过。",
+    "source新overlay前先明确underlay，清点显式prefix；ros2 pkg prefix只定位包，不证明复制前缀自包含。",
+    "Docker普通--merge-install与开发--symlink-install不能混同；固定基础镜像摘要不冻结后续apt结果。",
+    "exec ros2 run先到CLI；终端Ctrl+C常为进程组信号，Docker TERM目标/转发需独立验收。"
+  ],
+  "additionalCommandReview": [
+    {
+      "subject": "第3轮参数来源新图",
+      "path": "scripts/build_theory_figures.py",
+      "lineStart": 118,
+      "lineEnd": 153,
+      "sha256": "002230f2390b77cb0c2e86d91aa288ffdf128c9235ce6d3c27ee6c933e14abfc",
+      "evidenceReport": "component-labs-current-validation.json",
+      "evidenceSha256": "3c44eddd36c25205bc11f0e1d43bc76e211a59ef5e21da851c00515dc1eea2a2",
+      "result": "已核0.2m/s基值×gain；Context1.8/manager当前1.2/local1.5与三种加载结果相符，图无不存在的管理当前值自动同步箭头；未重跑R3实验。"
+    }
+  ],
+  "summary": {
+    "primarySourceRecords": 22,
+    "textbookResources": 8,
+    "boundReports": 4,
+    "sourceHashEntries": 25,
+    "newRosExperimentsRepeatedByReviewer": 0,
+    "approval": "已批准四报告当前指纹及所列本地软件教学范围；网站重建/导出另由根代理验收。",
+    "integrationScriptSha256": "8382f0ddfec16ef2e4ec9e5a922c499d5d6041ab23156d355038794fabe3c1f3",
+    "teachingTables": 8,
+    "reportSourceHashes": 23,
+    "additionalDocumentationHashes": 2,
+    "unresolvedBlockingFindings": 0
+  },
+  "reviewedIntegrationScript": {
+    "path": "scripts/build_iteration4_material.py",
+    "sha256": "8382f0ddfec16ef2e4ec9e5a922c499d5d6041ab23156d355038794fabe3c1f3",
+    "approved": true,
+    "scope": "只读审生成逻辑和中文技术主张，未执行main、未生成正文、未改API源；最终输出/导出/UI由根代理验证。",
+    "checks": [
+      "AST解析通过",
+      "按同源加载器逐一验证4报告23运行源指纹",
+      "只读调用measured构造8张表，标题/行列/精度说明/报告SHA完整",
+      "只读blocks检查完整文件引用；未执行源文件或ROS",
+      "从AST提取新entrypoint并bash -n通过",
+      "approved===true与4份当前报告SHA门禁在写出前执行",
+      "Docker只替换已核唯一CMD，入口固定/work前提与未运行边界明确",
+      "原policy/test改sourceFile；基线反例、31测试与原talker2项分开",
+      "errorprocessing实际标签与label请求测试范围已修正"
+    ]
+  },
+  "approvalHistory": [
+    {
+      "at": "2026-11-07T05:24:16+08:00",
+      "event": "final_approval_after_integration_fixes",
+      "changes": [
+        "四报告23运行源+2生命周期文档指纹、实际ELF与原始结果核对",
+        "修正表title fallback、状态label及entrypoint I/O/信号注释",
+        "根整合器及新参数来源图只读审查；R3两报告SHA未改变"
+      ]
+    }
+  ],
+  "finalizedAt": "2026-11-07T05:24:16+08:00"
+}

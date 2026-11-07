@@ -1,0 +1,44 @@
+{
+  "checkedAt": "2026-11-07",
+  "passed": true,
+  "source": "examples/runtime_labs/async_poll.py",
+  "sourceSha256": "f115ff4213896b848e586af93b6831515a03f508c9cd57af81936208ad7babf6",
+  "testSha256": "d97e8d1962e62829c8fc9418daa3e49d76bbdae5f5fce7d127a89d506ed1fd84",
+  "domain": 215,
+  "discovery": "LOCALHOST",
+  "rmw": "rmw_fastrtps_cpp",
+  "results": [
+    {
+      "case": "no-clock-timeout",
+      "passed": true,
+      "rosTime_ns": 0,
+      "requestAge_s": 2.205938,
+      "serverCallbackCalls": 0,
+      "requestFutureDone": false,
+      "pendingCleared": true
+    },
+    {
+      "case": "paused-clock-timeout",
+      "passed": true,
+      "rosTime_ns": 1000000000,
+      "requestAge_s": 2.200602,
+      "serverCallbackCalls": 0,
+      "requestFutureDone": false,
+      "pendingCleared": true
+    },
+    {
+      "case": "paused-clock-response",
+      "passed": true,
+      "rosTime_ns": 1000000000,
+      "requestAge_s": 0.200607,
+      "serverCallbackCalls": 1,
+      "requestFutureDone": true,
+      "pendingCleared": true
+    }
+  ],
+  "limits": [
+    "软件/clock与真实ROS服务的受控实验，不是仿真或硬件验收。",
+    "服务超时是单调经过时间加STEADY轮询的软期限，仍受执行器调度影响。",
+    "本地pending清理不取消远端服务计算；本例只对无副作用整数加法演示重试。"
+  ]
+}

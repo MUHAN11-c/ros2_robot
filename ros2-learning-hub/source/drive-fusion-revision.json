@@ -1,0 +1,593 @@
+{
+  "meta": {
+    "report": "validation-evidence/drive-current-validation.json",
+    "reportSha256": "f3a8cb4e0ced25e9adc6345b6d4f7fe7898ab8f51046a2d6b674de707aa06666",
+    "sourceReads": [
+      {
+        "sourceId": "existing--ros2_control_demos",
+        "commit": "fbab026e147824971c97996f3789f97c2ee9e9ac",
+        "path": "ros2_control_demos/example_2/description/ros2_control/diffbot.ros2_control.xacro",
+        "sha256": "bac3c83abc269efc0809b15c1ddd6362e942ef78c9c72812fa3e8fe05879b930"
+      },
+      {
+        "sourceId": "existing--ros2_control_demos",
+        "commit": "fbab026e147824971c97996f3789f97c2ee9e9ac",
+        "path": "ros2_control_demos/example_2/bringup/config/diffbot_controllers.yaml",
+        "sha256": "a226e5a108c3b33a97017a2c267292b3194d1f67324ac9a20ca13e2f3a8a87e0"
+      },
+      {
+        "sourceId": "existing--ros2_control",
+        "commit": "f9e24287fc1d6996e5ba1656a9ee24e5f33adef7",
+        "path": "ros2_control/hardware_interface/src/mock_components/generic_system.cpp",
+        "sha256": "a49a9ccfe56fd3ea2d747df1660bfbc7cad07a5b26a24b2daf5609ad5146b107"
+      },
+      {
+        "sourceId": "existing--ros2_control",
+        "commit": "f9e24287fc1d6996e5ba1656a9ee24e5f33adef7",
+        "path": "ros2_control/hardware_interface/doc/mock_components_userdoc.rst",
+        "sha256": "33541153a7ca773338509607ff6d8a19d6858d6f1c1c2f8f4df80da042a8fee3"
+      },
+      {
+        "sourceId": "existing--ros2_control",
+        "commit": "f9e24287fc1d6996e5ba1656a9ee24e5f33adef7",
+        "path": "ros2_control/controller_manager/src/controller_manager.cpp",
+        "sha256": "b7d95f672ab781a73ae19add8a8c9a4aae6745a8dbe461d94cf952a7f18b2431"
+      },
+      {
+        "sourceId": "existing--ros2_controllers",
+        "commit": "bee185cbb98815116af9cfb00ff595b0b800e91a",
+        "path": "ros2_controllers/diff_drive_controller/src/diff_drive_controller.cpp",
+        "sha256": "6d19b817443ff1d12bc0bfd34603a9fb5eecf8b2fa4c09b4f6512eb5e902bb69"
+      },
+      {
+        "sourceId": "existing--ros2_controllers",
+        "commit": "bee185cbb98815116af9cfb00ff595b0b800e91a",
+        "path": "ros2_controllers/diff_drive_controller/src/diff_drive_controller_parameter.yaml",
+        "sha256": "9dd8c6a07a36ff598f25d21fba927da70b1ccfa97e8c6a8c2065e87da966458a"
+      },
+      {
+        "sourceId": "cra-ros-pkg--robot_localization",
+        "commit": "fea7fc3dcad81c533121e4aa2fb1087a0565d8cc",
+        "path": "ros2-learning-hub/references/sources/ecosystem/cra-ros-pkg--robot_localization/jazzy-devel--fea7fc3dcad8/doc/state_estimation_nodes.rst",
+        "sha256": "54e1ad6e06c9cbf1a311aaf7157ff2d07bba8c2d0f53f4b1632a66ec66a10a76"
+      },
+      {
+        "sourceId": "cra-ros-pkg--robot_localization",
+        "commit": "fea7fc3dcad81c533121e4aa2fb1087a0565d8cc",
+        "path": "ros2-learning-hub/references/sources/ecosystem/cra-ros-pkg--robot_localization/jazzy-devel--fea7fc3dcad8/src/ros_filter.cpp",
+        "sha256": "164b6ac643a9be92c72343fa010728a8486c72861460e45b7a9e798206b37f73"
+      },
+      {
+        "sourceId": "cra-ros-pkg--robot_localization",
+        "commit": "fea7fc3dcad81c533121e4aa2fb1087a0565d8cc",
+        "path": "ros2-learning-hub/references/sources/ecosystem/cra-ros-pkg--robot_localization/jazzy-devel--fea7fc3dcad8/params/ekf.yaml",
+        "sha256": "0c68fcd4345fc72d7d22e9f848101dd86bbc100db0a0e69e92dd0a2ddf7e2e1f"
+      },
+      {
+        "sourceId": "existing--linorobot2",
+        "commit": "f6b0bd0350c4a9d6b815ef4bb5c701a1e5129711",
+        "path": "linorobot2/linorobot2_base/config/ekf.yaml",
+        "sha256": "a946557f861bdaa276dd965c6399ee5c8baf7860ff95b320669de29d9a31ebd4"
+      },
+      {
+        "sourceId": "existing--linorobot2",
+        "commit": "f6b0bd0350c4a9d6b815ef4bb5c701a1e5129711",
+        "path": "linorobot2/linorobot2_bringup/launch/bringup.launch.py",
+        "sha256": "e868fe9a90684a8fd18a6e5028687c72fc07ce8aac537655ea1585a5d1b75f37"
+      },
+      {
+        "sourceId": "existing--AgroSenseBot",
+        "commit": "4ad700b090b9f3ddb8513c7519938bd7f0974709",
+        "path": "AgroSenseBot/asb_ros2_control/bringup/config/asb_controllers.yaml",
+        "sha256": "ae0e7a8a7c1b39b1db4958fcc47539bf01d0db4aaffc5ff231bf71e28596c754"
+      },
+      {
+        "sourceId": "existing--AgroSenseBot",
+        "commit": "4ad700b090b9f3ddb8513c7519938bd7f0974709",
+        "path": "AgroSenseBot/asb_track_controller/src/diff_drive_controller.cpp",
+        "sha256": "074c606a819cd8597413a5485ea84ca0d7986c15bfaa08b9cf06468faedfb30f"
+      },
+      {
+        "sourceId": "existing--bunker_ros2",
+        "commit": "f24f722b245eb1d2572c47d091fc847d9fd68cf4",
+        "path": "bunker_ros2/bunker_base/include/bunker_base/bunker_messenger.hpp",
+        "sha256": "7f7b97e1f703b46e72ef9b21ed101af7d9bfe2bc23c140a8f10153137828c0cf"
+      },
+      {
+        "sourceId": "existing--Robotics_Tutorial",
+        "commit": "7cb9e3d423196062c59dd346aae16285d962fb7c",
+        "path": "Robotics_Tutorial/05_运动控制/30_复合/60_轮式运动学与Pfaffian.md",
+        "sha256": "c197e72dc827639a5f62d0706c85d5e4c05914c485958945e96a8cfa1ad1f20e"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_bringup/params/nav2_params.yaml",
+        "sha256": "299f9002d6dcfbf661e532c99f32dda1766eab3afa3ab71a52378d80e7ef956f"
+      }
+    ]
+  },
+  "chapters": {
+    "eco-control-framework": {
+      "appendSourceIds": [
+        "drive-example2",
+        "drive-mock",
+        "drive-manager",
+        "drive-jazzy"
+      ],
+      "validation": "本机 Jazzy controller_manager 4.48.1、diff_drive_controller 4.42.1、robot_localization 3.8.3，独立 DDS 域 225/LOCALHOST 实测。实际检查严格切换、命令接口占用与正常退出。原上游 Example 2 独立练习仍需读者构建。同一 Xacro 的软件轮式模型，不接仿真器、设备、IMU 或 GNSS。观测不覆盖实时性、实机停车或地图定位。",
+      "appendSections": [
+        {
+          "title": "同一模型上的软件差速台架与资源切换",
+          "paragraphs": [
+            "这里把模型章的原始 Xacro 展开为同一份 URDF，再追加内存硬件声明。RSP 先通过 robot_description 提供模型，管理器收到后加载 GenericSystem。关节广播器把两个位置和速度发给 RSP，活动 TF 由位置算出。",
+            "Example 2 的原配置启用了 open_loop，原始里程计可从命令积分。这个实验显式用 open_loop=false、position_feedback=true，要求控制器从 mock 的位置状态读数计算里程计。两种配置要分别看输入来源，不能用里程计话题存在证明闭环。",
+            "先看硬件组件 active，再看两个轮速命令是否 available。drive 激活后才被 claimed。reserve 已配置为 inactive，竞争相同的硬件接口。单独请求激活 reserve 被严格切换拒绝，两个控制器与资源状态保持；显式给零速后在同一请求里停用 drive、激活 reserve，随后再查实际状态。",
+            "接口服务还列出 drive 和 reserve 各自导出的 linear/velocity、angular/velocity。这些是给上游控制器的链式参考，不是两轮的硬件速度通道。比较占用时用关节接口全名，读取 ListControllers 的 claimed_interfaces 确认持有者。"
+          ],
+          "bullets": [],
+          "tables": [
+            {
+              "title": "管理器实际资源回执",
+              "columns": [
+                "阶段",
+                "drive",
+                "reserve",
+                "占用的轮速接口"
+              ],
+              "rows": [
+                [
+                  "配置后",
+                  "inactive",
+                  "inactive",
+                  "0"
+                ],
+                [
+                  "激活 drive",
+                  "active",
+                  "inactive",
+                  "2"
+                ],
+                [
+                  "拒绝 reserve 后",
+                  "active",
+                  "inactive",
+                  "2"
+                ],
+                [
+                  "先释放后接管",
+                  "inactive",
+                  "active",
+                  "2"
+                ]
+              ],
+              "caption": "两轮速度接口始终可用。严格激活 reserve 的失败回执与查询快照分开保留；接管时使用同一个切换请求。",
+              "evidenceFile": "validation-evidence/drive-current-validation.json",
+              "evidenceSha256": "f3a8cb4e0ced25e9adc6345b6d4f7fe7898ab8f51046a2d6b674de707aa06666"
+            }
+          ],
+          "codeBlocks": [
+            {
+              "label": "运行本地软件台架",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 在 ros2-learning-hub 目录执行。先加载已安装的 Jazzy 和相关控制/定位包。\nsource /opt/ros/jazzy/setup.bash\n# 225 是独立本机 DDS 域。输入为同目录配置和固定合成速度，输出为 /tmp 新报告。\n# 本脚本按模型、控制器、观测顺序启动，只接 GenericSystem，结束回收其进程。\npython3 examples/drive_labs/validate_drive.py --domain-id 225\n# 解压原创示例 ZIP 时，从 atlas_examples 目录用 python3 drive_labs/validate_drive.py。",
+              "explanation": "先核包版本和 DDS 域，再读报告中的硬件、资源、速度、TF 与退出五部分。"
+            },
+            {
+              "label": "drive_labs/validate_drive.py",
+              "language": "python",
+              "type": "complete",
+              "sourceFile": "examples/drive_labs/validate_drive.py",
+              "explanation": "读取同目录配置和已有学习 Xacro，按实际服务与消息就绪推进。单调软期限只用于测试等待。"
+            },
+            {
+              "label": "drive_labs/mock_system.xml",
+              "language": "xml",
+              "type": "complete",
+              "sourceFile": "examples/drive_labs/mock_system.xml",
+              "explanation": "完整的硬件配置输入文件。脚本将它追加到展开的 robot 元素，再交给 RSP。"
+            },
+            {
+              "label": "drive_labs/manager.yaml",
+              "language": "yaml",
+              "type": "complete",
+              "sourceFile": "examples/drive_labs/manager.yaml",
+              "explanation": "管理器加载三种实例，广播器的话题限制在实验内。"
+            },
+            {
+              "label": "drive_labs/diff_drive.yaml",
+              "language": "yaml",
+              "type": "complete",
+              "sourceFile": "examples/drive_labs/diff_drive.yaml",
+              "explanation": "两个控制器使用相同轮接口。reserve 的 TF 开关由脚本在临时副本中打开。"
+            },
+            {
+              "label": "drive_labs/ekf.yaml",
+              "language": "yaml",
+              "type": "complete",
+              "sourceFile": "examples/drive_labs/ekf.yaml",
+              "explanation": "只用轮反馈推得的前向和偏航速度，输出局部里程计与指定 TF 边。"
+            }
+          ]
+        }
+      ],
+      "appendExercises": [
+        {
+          "question": "硬件 active 且两轮命令 available，为何 drive 仍可能没有轮速接口？",
+          "answer": "硬件可以提供接口，控制器还可能处于 inactive。先查配置状态，再执行明确的切换请求并核对 claimed_interfaces。"
+        },
+        {
+          "question": "为何接口列表中的 drive/linear/velocity 不能当左轮命令？",
+          "answer": "它属于控制器导出的车体参考入口，左轮硬件命令的资源名是 left_wheel_joint/velocity，物理单位和持有者也不同。"
+        }
+      ]
+    },
+    "eco-diff-drive-tracks": {
+      "appendSourceIds": [
+        "drive-jazzy",
+        "drive-rolling-constraint",
+        "drive-agro",
+        "drive-bunker"
+      ],
+      "validation": "本机 Jazzy controller_manager 4.48.1、diff_drive_controller 4.42.1、robot_localization 3.8.3，独立 DDS 域 225/LOCALHOST 实测。实测同一软件后端的直行、转弯、停发、旧命令及恢复。旧版手工 CLI 练习和履带硬件未执行。同一 Xacro 的软件轮式模型，不接仿真器、设备、IMU 或 GNSS。观测不覆盖实时性、实机停车或地图定位。",
+      "appendSections": [
+        {
+          "title": "用真实控制器观察轮反馈、命令过期与恢复",
+          "paragraphs": [
+            "轮半径 0.08 m，轮距 0.36 m。前向 0.16 m/s 且无偏航时，两轮应各为 2 rad/s。保留前向速度并加入 0.4 rad/s 的正偏航，按 (v ± ωL/2)/r 算得左 1.1、右 2.9 rad/s。运行控制框架章的台架，同步检查 JointState、原始里程计与局部 EKF。",
+            "发布端约每 0.05 秒填入新的系统 ROS 时间戳。停发后，本次在 0.329 秒的本机单调观测时延后首次同时看到两轮和原始里程计归零。0.30 秒是控制器的 ROS 时间阈值，实际观测还经过更新、反馈和消息传递。",
+            "保持零速后另发一条旧 1 秒的非零指令。随后 0.35 秒观测到 35 条轮反馈均为零，控制器日志记录了旧时间戳拒收。下一批新指令恢复 2/2 rad/s。过期拒收与停发后的控制器超时是两次不同检查。",
+            "AgroSenseBot 固定快照的 asb_track_controller 使用电机轴速度，配置中的等效半径按 0.151 m 除以减速比 40.61 计算。它启用的是该分支的无戳入口。BUNKER 包装节点直接接收 Twist。两者与本机 diff_drive_controller 的 TwistStamped 入口分别核对，轮滑移、驱动延迟和设备 watchdog 另有独立验收。"
+          ],
+          "bullets": [],
+          "tables": [
+            {
+              "title": "从车体指令到轮反馈与里程计",
+              "columns": [
+                "阶段",
+                "指令 v/ω",
+                "左/右 rad/s",
+                "原始 v/ω",
+                "EKF v/ω"
+              ],
+              "rows": [
+                [
+                  "直行",
+                  "0.16 / 0.00",
+                  "2.00 / 2.00",
+                  "0.1600 / 0.0000",
+                  "0.1600 / 0.0000"
+                ],
+                [
+                  "转弯",
+                  "0.16 / 0.40",
+                  "1.10 / 2.90",
+                  "0.1599 / 0.3998",
+                  "0.1600 / 0.3999"
+                ],
+                [
+                  "新指令恢复",
+                  "0.16 / 0.00",
+                  "2.00 / 2.00",
+                  "0.1599 / 0.0000",
+                  "0.1603 / 0.0000"
+                ],
+                [
+                  "显式零速",
+                  "0.00 / 0.00",
+                  "0.00 / 0.00",
+                  "0.0000 / 0.0000",
+                  "-0.0017 / 0.0000"
+                ]
+              ],
+              "caption": "v 为 m/s，ω 为 rad/s。各阶段末段取实际样本并显示四位小数。滤波输出可能在输入归零后有小残差。",
+              "evidenceFile": "validation-evidence/drive-current-validation.json",
+              "evidenceSha256": "f3a8cb4e0ced25e9adc6345b6d4f7fe7898ab8f51046a2d6b674de707aa06666"
+            }
+          ],
+          "codeBlocks": []
+        }
+      ],
+      "appendExercises": [
+        {
+          "question": "0.16 m/s、0.4 rad/s、轮距 0.36 m 的输入为何使右轮更快？",
+          "answer": "正偏航按本例坐标系向左转，左轮沿内侧走较短路径。左右线速度是 0.088 和 0.232 m/s，分别除以 0.08 m。"
+        },
+        {
+          "question": "旧指令回调拒收和命令更新循环超时，分别如何观察？",
+          "answer": "前者在已归零时发带旧时戳的非零输入并检查拒收日志，后者要从持续运动停发，观测新反馈归零。"
+        }
+      ]
+    },
+    "eco-hardware-integration": {
+      "appendSourceIds": [
+        "drive-bunker",
+        "drive-agro",
+        "drive-mock",
+        "drive-manager"
+      ],
+      "validation": "本机 Jazzy controller_manager 4.48.1、diff_drive_controller 4.42.1、robot_localization 3.8.3，独立 DDS 域 225/LOCALHOST 实测。软件台架验证通用控制器的轮接口所有权。BUNKER、AgroSenseBot、SDK 与设备接线仍仅核本地源码。同一 Xacro 的软件轮式模型，不接仿真器、设备、IMU 或 GNSS。观测不覆盖实时性、实机停车或地图定位。",
+      "sections": {
+        "0": {
+          "appendParagraphs": [
+            "BUNKER 固定源码的包装节点订阅 /cmd_vel 的 Twist，并将前向速度与角速度交给厂商 SDK。包装节点自己生成里程计和 odom 边。AgroSenseBot 的固定配置通过 controller_manager 加载自定义履带控制器，其轮接口及参数合同与包装节点不同。迁移时要先确认执行器的唯一控制路径，再逐项核对消息类型、里程计和 TF 的所有者。",
+            "通用硬件插件路线可以先复现控制框架章的 GenericSystem 台架。它只证明相同关节名的速度命令资源在两个控制器之间严格互斥。换成 CAN 或串口后还要证明编码器单位、反馈时间、总线中断与安全状态。"
+          ]
+        }
+      },
+      "appendExercises": [
+        {
+          "question": "用 EKF 接到会自行广播里程计 TF 的包装节点时，先查哪三项？",
+          "answer": "查原始 Odometry 的 frame_id/child_frame_id、包装节点实际广播的边，以及 EKF 的 world_frame 与 publish_tf，随后为每条边指定一个发布者。"
+        }
+      ]
+    },
+    "eco-state-estimation": {
+      "appendSourceIds": [
+        "drive-ekf",
+        "drive-lino",
+        "drive-jazzy"
+      ],
+      "validation": "本机 Jazzy controller_manager 4.48.1、diff_drive_controller 4.42.1、robot_localization 3.8.3，独立 DDS 域 225/LOCALHOST 实测。实际以软件原始里程计驱动局部 EKF，检查 TF 来源与输入停更后的预测。原 IMU/GNSS 练习仅作后续扩展。同一 Xacro 的软件轮式模型，不接仿真器、设备、IMU 或 GNSS。观测不覆盖实时性、实机停车或地图定位。",
+      "appendSections": [
+        {
+          "title": "把原始里程计、融合输出和 TF 的来源分开",
+          "paragraphs": [
+            "Linorobot2 的本地配置用轮式里程计和 IMU 融合，并让 EKF 发布局部边。本例先保留同样的职责划分，但只勾选 Odometry 中的 vx、vyaw。pose 在 odom 系，twist 在 child_frame_id 对应的 base_footprint 系。原始里程计保留，关闭 drive 的 enable_odom_tf。",
+            "控制器运行后，RSP 发布 base_footprint → base_link 等固定边和两条轮子活动边。先确认没有局部 odom 边，再启动 world_frame=odom 的 EKF。此时局部边出现，map → odom 仍无发布者，因为实验没有全局定位。",
+            "显式零速后将轮接口交给 reserve。原 drive 不再生成新原始测量，EKF 在随后 0.75 秒仍发出 3 条更新时戳的估计。保留消息时戳、输入活性和滤波输出三项，能区分传感器更新与预测。频率参数是更新定时配置，不能单凭输出持续来判断输入正常。",
+            "reserve 故意打开自己的里程计边，但将其 TF 重映射到独立话题。同一窗口内两处都有 odom → base_footprint，若接回同一 TF 总线就会出现重复责任。诊断时逐源隔离并观察实际边，单看整个 /tf 的发布者数量会把 RSP 发布的其他边也算进去。"
+          ],
+          "bullets": [],
+          "tables": [
+            {
+              "title": "轮速、原始里程计与 TF 的来源检查",
+              "columns": [
+                "阶段",
+                "原始里程计",
+                "观测到的 TF 职责"
+              ],
+              "rows": [
+                [
+                  "启动滤波前",
+                  "drive 有输出",
+                  "RSP 有轮子活动边，未见局部 odom 边"
+                ],
+                [
+                  "局部 EKF 就绪",
+                  "drive 有输出",
+                  "RSP 保留车体边，EKF 提供 odom → base_footprint"
+                ],
+                [
+                  "切到 reserve",
+                  "0 条新时戳原始输入",
+                  "3 条新时戳 EKF 输出，两个独立话题都出现 odom → base_footprint"
+                ]
+              ],
+              "caption": "切换后观察 0.75 秒，分别记录收到的消息头与本机接收窗口。两个同名边在隔离话题上观测，不将重复边注入正常 TF 树。",
+              "evidenceFile": "validation-evidence/drive-current-validation.json",
+              "evidenceSha256": "f3a8cb4e0ced25e9adc6345b6d4f7fe7898ab8f51046a2d6b674de707aa06666"
+            }
+          ],
+          "codeBlocks": []
+        }
+      ],
+      "appendExercises": [
+        {
+          "question": "收到更新时戳的融合里程计，能否说明轮编码器仍在刷新？",
+          "answer": "不能。分别检查原始消息时戳、测量入口活性和滤波是否已进入只预测阶段。"
+        },
+        {
+          "question": "一个 TF 话题上有两个发布者，如何判定是否有重复边？",
+          "answer": "按父子 frame 分别记录实际边和来源。两个发布者可以负责不同边，同一父子边在两个独立输出都出现才是接线冲突证据。"
+        }
+      ]
+    },
+    "project-navigation": {
+      "appendSourceIds": [
+        "drive-nav2",
+        "drive-ekf"
+      ],
+      "validation": "本机 Jazzy controller_manager 4.48.1、diff_drive_controller 4.42.1、robot_localization 3.8.3，独立 DDS 域 225/LOCALHOST 实测。软件台架只验证导航前的局部轮反馈、Odometry 和 TF 合同。此前另以独立域217的假动作端点实测十二类导航动作协议，见 navigation-current-validation.json。未运行 Nav2、Gazebo、地图定位、规划或真实硬件。",
+      "sections": {
+        "1": {
+          "appendParagraphs": [
+            "先复现控制框架章的差速台架，确认轮反馈和原始里程计更新，局部 EKF 只发布 odom → base_footprint，RSP 负责 base_footprint → base_link。它只完成局部合同，地图定位仍须另提供 map → odom。",
+            "接真实 Nav2 配置前，逐模块核 odom_topic、global_frame 和 robot_base_frame。固定 Jazzy 默认参数中，BT 导航器用 map、base_link 和 /odom，局部代价地图用 odom，模块未必共用完全相同的参数写法。若采用本例命名空间，须让订阅目标和 TF 入口匹配实际 EKF，并核查启动后的有效参数。"
+          ]
+        }
+      },
+      "appendExercises": [
+        {
+          "question": "软件台架的 odom 到 base_footprint 已通过，可以据此下发地图导航目标吗？",
+          "answer": "仍需建立 map 到 odom 的全局关系、验证地图和传感器、激活导航服务器，再验收目标与控制输出。局部链路通过只完成启动前的一项。"
+        }
+      ]
+    },
+    "eco-model-rviz": {
+      "appendSourceIds": [
+        "drive-example2",
+        "drive-mock"
+      ],
+      "sections": {
+        "10": {
+          "appendParagraphs": [
+            "后续控制框架章直接复用这个默认 Xacro，并在运行时追加独立的 GenericSystem 标签。实验会先核两轮的半径、轮距和关节名，再让关节广播器替代手发 JointState，保留原模型的车体与光学 TF。模型几何验证和控制资源验证由各自报告记录。"
+          ]
+        }
+      }
+    }
+  },
+  "resources": [
+    {
+      "id": "drive-example2",
+      "title": "Example 2 的内存后端与轮接口",
+      "category": "控制与定位 · 固定源码",
+      "localPath": "ros2_control_demos/example_2/description/ros2_control/diffbot.ros2_control.xacro",
+      "url": "https://github.com/ros-controls/ros2_control_demos/blob/fbab026e147824971c97996f3789f97c2ee9e9ac/example_2/description/ros2_control/diffbot.ros2_control.xacro",
+      "version": "jazzy · fbab026e1478",
+      "description": "官方模型用参数区分模拟插件与设备插件。教材复用结构，模型尺寸、状态反馈、TF 职责重新显式配置。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "drive-mock",
+      "title": "GenericSystem 的速度与位置反馈",
+      "category": "控制与定位 · 固定源码",
+      "localPath": "ros2_control/hardware_interface/src/mock_components/generic_system.cpp",
+      "url": "https://github.com/ros-controls/ros2_control/blob/f9e24287fc1d6996e5ba1656a9ee24e5f33adef7/hardware_interface/src/mock_components/generic_system.cpp",
+      "version": "jazzy · f9e24287fc1d",
+      "description": "速度命令回写速度状态，并按周期积分位置。这个软件状态没有接触、滑移和真实编码器。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "drive-manager",
+      "title": "控制器管理服务与命令资源",
+      "category": "控制与定位 · 固定源码",
+      "localPath": "ros2_control/controller_manager/src/controller_manager.cpp",
+      "url": "https://github.com/ros-controls/ros2_control/blob/f9e24287fc1d6996e5ba1656a9ee24e5f33adef7/controller_manager/src/controller_manager.cpp",
+      "version": "jazzy · f9e24287fc1d",
+      "description": "严格切换、资源持有及接口列表由管理器检查；控制器参考接口与轮子硬件接口分开判读。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "drive-jazzy",
+      "title": "差速控制器的命令、位置反馈与里程计",
+      "category": "控制与定位 · 固定源码",
+      "localPath": "ros2_controllers/diff_drive_controller/src/diff_drive_controller.cpp",
+      "url": "https://github.com/ros-controls/ros2_controllers/blob/bee185cbb98815116af9cfb00ff595b0b800e91a/diff_drive_controller/src/diff_drive_controller.cpp",
+      "version": "jazzy · bee185cbb988",
+      "description": "按安装版本核对私有速度输入、时间戳、左右轮反馈和 TF 开关。快照版本与本机运行版本有差异。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "drive-ekf",
+      "title": "局部 EKF 的帧、测量和无测量预测",
+      "category": "控制与定位 · 固定源码",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/cra-ros-pkg--robot_localization/jazzy-devel--fea7fc3dcad8/doc/state_estimation_nodes.rst",
+      "url": "https://github.com/cra-ros-pkg/robot_localization/blob/fea7fc3dcad81c533121e4aa2fb1087a0565d8cc/doc/state_estimation_nodes.rst",
+      "version": "jazzy-devel · fea7fc3dcad8",
+      "description": "world_frame 选 odom 时输出局部边。按 child_frame_id 解释 Odometry 的 twist，并在传感器超时后预测。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "drive-lino",
+      "title": "Linorobot2 的局部融合职责",
+      "category": "控制与定位 · 固定源码",
+      "localPath": "linorobot2/linorobot2_base/config/ekf.yaml",
+      "url": "https://github.com/linorobot/linorobot2/blob/f6b0bd0350c4a9d6b815ef4bb5c701a1e5129711/linorobot2_base/config/ekf.yaml",
+      "version": "jazzy · f6b0bd0350c4",
+      "description": "配置由里程计与 IMU 供输入，EKF 输出局部边。教材借鉴职责划分，用单一合成轮反馈隔离变量。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "drive-agro",
+      "title": "AgroSenseBot 的履带控制器与电机侧接口",
+      "category": "控制与定位 · 固定源码",
+      "localPath": "AgroSenseBot/asb_ros2_control/bringup/config/asb_controllers.yaml",
+      "url": "https://github.com/AIRLab-POLIMI/AgroSenseBot/blob/4ad700b090b9f3ddb8513c7519938bd7f0974709/asb_ros2_control/bringup/config/asb_controllers.yaml",
+      "version": "jazzy · 4ad700b090b9",
+      "description": "该项目使用自有分支、无戳入口与按减速比换算的等效半径。参数、轮地约束和驱动不能迁移到软件轮式实验。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "drive-bunker",
+      "title": "BUNKER 包装节点的消息和里程计职责",
+      "category": "控制与定位 · 固定源码",
+      "localPath": "bunker_ros2/bunker_base/include/bunker_base/bunker_messenger.hpp",
+      "url": "https://github.com/agilexrobotics/bunker_ros2/blob/f24f722b245eb1d2572c47d091fc847d9fd68cf4/bunker_base/include/bunker_base/bunker_messenger.hpp",
+      "version": "jazzy · f24f722b245e",
+      "description": "固定源码使用 Twist 输入，经 SDK 发车体速度，包装节点发布 Odometry 与 TF。属于整车命令边界。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "drive-rolling-constraint",
+      "title": "轮式非完整约束与差速理想模型",
+      "category": "控制与定位 · 固定源码",
+      "localPath": "Robotics_Tutorial/05_运动控制/30_复合/60_轮式运动学与Pfaffian.md",
+      "url": "https://github.com/Michael-Jetson/Robotics_Tutorial/blob/7cb9e3d423196062c59dd346aae16285d962fb7c/05_%E8%BF%90%E5%8A%A8%E6%8E%A7%E5%88%B6/30_%E5%A4%8D%E5%90%88/60_%E8%BD%AE%E5%BC%8F%E8%BF%90%E5%8A%A8%E5%AD%A6%E4%B8%8EPfaffian.md",
+      "version": "main · 7cb9e3d42319",
+      "description": "核读轮式运动学的速度约束；实验用无侧滑的平面模型推导轮速，保留真实履带滑移边界。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "drive-nav2",
+      "title": "Nav2 默认帧与里程计入口",
+      "category": "控制与定位 · 固定源码",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_bringup/params/nav2_params.yaml",
+      "url": "https://github.com/ros-navigation/navigation2/blob/94d1c2a345dda6ff637e6a72c9101d927ee99f19/nav2_bringup/params/nav2_params.yaml",
+      "version": "jazzy · 94d1c2a345dd",
+      "description": "配置中的 global_frame、robot_base_frame 与 odom_topic 必须和底盘/定位契约一起核查。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    }
+  ],
+  "apiReferences": [
+    {
+      "id": "api-drive-feedback",
+      "title": "差速软件链的消息、资源和 TF",
+      "lessons": [
+        "eco-control-framework",
+        "eco-diff-drive-tracks",
+        "eco-state-estimation"
+      ],
+      "columns": [
+        "接口",
+        "输入与单位",
+        "输出或观察",
+        "关键边界"
+      ],
+      "rows": [
+        [
+          "~/cmd_vel",
+          "TwistStamped，m/s 与 rad/s",
+          "车体前向与偏航目标",
+          "检查类型、命名空间和命令时戳；不要用话题名猜消息类型。"
+        ],
+        [
+          "两轮 velocity",
+          "硬件目标 rad/s；反馈位置 rad",
+          "GenericSystem 回显速度并积分位置",
+          "同名 command/state 含义不同；链式参考也不是轮速资源。"
+        ],
+        [
+          "SwitchController",
+          "激活/停用列表、STRICT、超时秒",
+          "ok 与 message",
+          "随后查状态和 claimed_interfaces；软件切换不证明物理停机。"
+        ],
+        [
+          "原始 Odometry",
+          "轮位置差、几何与时戳",
+          "pose 在 odom，twist 在子帧",
+          "关 TF 仍可保留消息；同一轮反馈派生量有关联。"
+        ],
+        [
+          "局部 EKF",
+          "vx、vyaw 与各自方差",
+          "滤波 Odometry 与 odom 边",
+          "分开核新测量与预测输出，同一 TF 边只指定一个来源。"
+        ]
+      ]
+    }
+  ]
+}

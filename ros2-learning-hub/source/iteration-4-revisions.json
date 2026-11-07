@@ -1,0 +1,915 @@
+{
+  "meta": {
+    "iteration": "2026-11-07-r4",
+    "sourceReviewFile": "validation-evidence/iteration4-source-review.json",
+    "sourceReviewSha256": "8558eefe586db405911e7c4fa8d2e22b10a0c905f164028366235c49fe9aa6bc"
+  },
+  "resources": [
+    {
+      "id": "iter4-lifecycle-state-machine",
+      "title": "rcl默认生命周期错误处理状态机",
+      "url": "https://github.com/ros2/rcl/blob/22c0b957140035c675f0a061daaab5fd6b2080e7/rcl_lifecycle/src/default_state_machine.c",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rcl/22c0b957140035c675f0a061daaab5fd6b2080e7/rcl_lifecycle/src/default_state_machine.c",
+      "category": "生命周期",
+      "version": "9.2.11",
+      "description": "固定9.2.11：on_error成功回unconfigured，failure/error到finalized；与本机真实状态图分别核对。",
+      "verification": "只读固定提交官方原文；HTTP字节SHA，不运行上游代码；仅支持所述语义，不替代本站各章有限实测。",
+      "checkedAt": "2026-11-07T05:20:08+08:00",
+      "type": "official-source",
+      "lessons": [
+        "lifecycle"
+      ]
+    },
+    {
+      "id": "iter4-lifecycle-callback-result",
+      "title": "rclcpp生命周期转换应答与异常处理",
+      "url": "https://github.com/ros2/rclcpp/blob/3aa906a2c7ad13d1623b31a55731993f56538e72/rclcpp_lifecycle/src/lifecycle_node_interface_impl.cpp",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rclcpp/3aa906a2c7ad13d1623b31a55731993f56538e72/rclcpp_lifecycle/src/lifecycle_node_interface_impl.cpp",
+      "category": "生命周期",
+      "version": "28.1.22",
+      "description": "固定28.1.22：原转换回调返回、后续on_error和ChangeState.success分开；仅捕获std::exception路径。",
+      "verification": "只读固定提交官方原文；HTTP字节SHA，不运行上游代码；仅支持所述语义，不替代本站各章有限实测。",
+      "checkedAt": "2026-11-07T05:20:08+08:00",
+      "type": "official-source",
+      "lessons": [
+        "lifecycle"
+      ]
+    },
+    {
+      "id": "iter4-lifecycle-publisher",
+      "title": "LifecyclePublisher激活标志门控",
+      "url": "https://github.com/ros2/rclcpp/blob/3aa906a2c7ad13d1623b31a55731993f56538e72/rclcpp_lifecycle/include/rclcpp_lifecycle/lifecycle_publisher.hpp",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/rclcpp/3aa906a2c7ad13d1623b31a55731993f56538e72/rclcpp_lifecycle/include/rclcpp_lifecycle/lifecycle_publisher.hpp",
+      "category": "生命周期",
+      "version": "28.1.22",
+      "description": "publish检查is_activated；普通timer/普通Publisher和外部资源需要应用明确控制。",
+      "verification": "只读官方release固定提交字节与安装文件/参考快照比较；未运行上游工程；仅支持所述语义，不替代本站各章有限实测。",
+      "checkedAt": "2026-11-07T05:20:08+08:00",
+      "type": "official-source",
+      "lessons": [
+        "lifecycle"
+      ]
+    },
+    {
+      "id": "iter4-testing-integration",
+      "title": "Jazzy官方集成测试教程固定快照",
+      "url": "https://github.com/ros2/ros2_documentation/blob/929e37c4c6d0746e75d10f1fd76f024743ff75ea/source/Tutorials/Intermediate/Testing/Integration.rst",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/ros2_documentation/929e37c4c6d0746e75d10f1fd76f024743ff75ea/source/Tutorials/Intermediate/Testing/Integration.rst",
+      "category": "测试",
+      "version": "Jazzy固定文档快照",
+      "description": "说明ReadyToTest、active与post-shutdown阶段及测试注册；本站完整包另用业务READY和真实消息。",
+      "verification": "逐段只读固定本地一手原文；文件实际字节SHA，不运行参考仓库；仅支持所述语义，不替代本站各章有限实测。",
+      "checkedAt": "2026-11-07T05:20:08+08:00",
+      "type": "official-documentation",
+      "lessons": [
+        "testing"
+      ]
+    },
+    {
+      "id": "iter4-testing-cli-status",
+      "title": "colcon测试失败退出选项实现",
+      "url": "https://github.com/colcon/colcon-core/blob/898f40407f6fc1fde5f4cb94026d9887a97c3192/colcon_core/verb/test.py",
+      "sourceUrl": "https://raw.githubusercontent.com/colcon/colcon-core/898f40407f6fc1fde5f4cb94026d9887a97c3192/colcon_core/verb/test.py",
+      "category": "测试",
+      "version": "0.21.3",
+      "description": "固定0.21.3：--return-code-on-test-failure与默认任务返回分开；结果数量/空目录仍需独立核对。",
+      "verification": "只读固定提交官方原文；HTTP字节SHA，不运行上游代码；仅支持所述语义，不替代本站各章有限实测。",
+      "checkedAt": "2026-11-07T05:20:08+08:00",
+      "type": "official-source",
+      "lessons": [
+        "testing"
+      ]
+    },
+    {
+      "id": "iter4-deployment-symlink",
+      "title": "ament_cmake符号链接安装实现",
+      "url": "https://github.com/ament/ament_cmake/blob/5741cff5b9f83253bf3521bd8f44108fde3504ad/ament_cmake_core/cmake/symlink_install/install.cmake",
+      "sourceUrl": "https://raw.githubusercontent.com/ament/ament_cmake/5741cff5b9f83253bf3521bd8f44108fde3504ad/ament_cmake_core/cmake/symlink_install/install.cmake",
+      "category": "部署",
+      "version": "2.5.6",
+      "description": "固定2.5.6：symlink-install可能保留source/build外部依赖；本站用有限清点和副本实际确认，未运行副本。",
+      "verification": "只读固定提交官方原文；HTTP字节SHA，不运行上游代码；仅支持所述语义，不替代本站各章有限实测。",
+      "checkedAt": "2026-11-07T05:20:08+08:00",
+      "type": "official-source",
+      "lessons": [
+        "deployment"
+      ]
+    },
+    {
+      "id": "iter4-deployment-image-definition",
+      "title": "ROS Jazzy ros-base官方镜像定义",
+      "url": "https://github.com/osrf/docker_images/blob/f2ee99a331072e116201141279f4e4b4477ddab5/ros/jazzy/ubuntu/noble/ros-base/Dockerfile",
+      "sourceUrl": "https://raw.githubusercontent.com/osrf/docker_images/f2ee99a331072e116201141279f4e4b4477ddab5/ros/jazzy/ubuntu/noble/ros-base/Dockerfile",
+      "category": "部署",
+      "version": "definition-commit",
+      "description": "固定定义commit包含构建工具/rosdep；定义版本、实际镜像摘要及后续apt结果分别记录，本机Docker未运行。",
+      "verification": "只读固定提交官方原文；HTTP字节SHA，不运行上游代码；仅支持所述语义，不替代本站各章有限实测。",
+      "checkedAt": "2026-11-07T05:20:08+08:00",
+      "type": "official-source",
+      "lessons": [
+        "deployment"
+      ]
+    },
+    {
+      "id": "iter4-deployment-cli-process",
+      "title": "ros2 run可执行进程入口实现",
+      "url": "https://github.com/ros2/ros2cli/blob/221ce584a937ac234ae6337cac71c22d42e8b692/ros2run/ros2run/api/__init__.py",
+      "sourceUrl": "https://raw.githubusercontent.com/ros2/ros2cli/221ce584a937ac234ae6337cac71c22d42e8b692/ros2run/ros2run/api/__init__.py",
+      "category": "部署",
+      "version": "参考0.32.14；安装ros2run0.32.13",
+      "description": "固定API通过Popen创建节点子进程并等待；exec ros2 run不直接证明叶子节点收到Docker TERM。",
+      "verification": "逐段只读固定本地一手原文；文件实际字节SHA，不运行参考仓库；仅支持所述语义，不替代本站各章有限实测。",
+      "checkedAt": "2026-11-07T05:20:08+08:00",
+      "type": "official-source",
+      "lessons": [
+        "deployment"
+      ]
+    }
+  ],
+  "chapters": {
+    "lifecycle": {
+      "sourceIds": [
+        "core-lifecycle",
+        "core-demos",
+        "iter4-lifecycle-state-machine",
+        "iter4-lifecycle-callback-result",
+        "iter4-lifecycle-publisher"
+      ],
+      "validation": "真实构建原创rclcpp_lifecycle C++包，10组主场景和21个有限消息窗口通过，17个FakeHandle全部释放；分别核对ChangeState响应、ROS状态、回调/异常、资源与普通/生命周期发布。父SIGINT附测也通过；仅软件假资源，无硬件或仿真。",
+      "appendSections": [
+        {
+          "title": "假资源实测：回调返回不等于最终恢复状态",
+          "paragraphs": [
+            "新增lifecycle_labs以真实LifecycleNode管理合成资源，不打开硬件。configure先申请候选资源，校验成功再提交；FAILURE释放本次候选并保留历史配置代数，重新配置可以成功。资源快照、回调事件和GetState分别读取，不能只凭一条成功日志判断资源已提交。",
+            "ERROR或受控标准异常进入错误处理。on_error返回SUCCESS可恢复unconfigured，但最初ChangeState仍可能报告false；恢复成功与原请求成功是不同结果。handler返回FAILURE、ERROR或本例受控异常时走finalized，具体路径以安装版本和实际GetTransitionGraph为准。",
+            "activate FAILURE后回到inactive，仍持有已配置资源；错误处理或shutdown则由本例显式撤销发布者与资源。状态机不负责释放你的任意外部资源，也不会自动回滚应用的副作用。本轮非法转换用label请求并查询可用label，没有把任意numeric id的行为算入已测范围。"
+          ],
+          "tables": [
+            {
+              "columns": [
+                "场景",
+                "原回调",
+                "ChangeState.success",
+                "落点",
+                "on_error",
+                "当时FakeHandle数"
+              ],
+              "rows": [
+                [
+                  "normal_roundtrip：合法往返/重配",
+                  "SUCCESS roundtrip",
+                  "True",
+                  "finalized",
+                  "not called",
+                  "0"
+                ],
+                [
+                  "未配置时activate",
+                  "callback not invoked",
+                  "False",
+                  "unconfigured",
+                  "not called",
+                  "0"
+                ],
+                [
+                  "finalized后configure",
+                  "callback not invoked",
+                  "False",
+                  "finalized",
+                  "not called",
+                  "0"
+                ],
+                [
+                  "configure_failure_retry",
+                  "configure FAILURE",
+                  "False",
+                  "unconfigured",
+                  "not called",
+                  "0"
+                ],
+                [
+                  "activate_failure_retry",
+                  "activate FAILURE",
+                  "False",
+                  "inactive",
+                  "not called",
+                  "1"
+                ],
+                [
+                  "configure_error_recover",
+                  "configure ERROR",
+                  "False",
+                  "unconfigured",
+                  "SUCCESS",
+                  "0"
+                ],
+                [
+                  "configure_exception_recover",
+                  "configure THROW_STD_RUNTIME_ERROR",
+                  "False",
+                  "unconfigured",
+                  "SUCCESS",
+                  "0"
+                ],
+                [
+                  "configure_error_handler_failure",
+                  "configure ERROR",
+                  "False",
+                  "finalized",
+                  "FAILURE",
+                  "0"
+                ],
+                [
+                  "configure_error_handler_error",
+                  "configure ERROR",
+                  "False",
+                  "finalized",
+                  "ERROR",
+                  "0"
+                ],
+                [
+                  "configure_and_handler_exception",
+                  "configure THROW_STD_RUNTIME_ERROR",
+                  "False",
+                  "finalized",
+                  "THROW_STD_RUNTIME_ERROR",
+                  "0"
+                ],
+                [
+                  "activate_error_recover",
+                  "activate ERROR",
+                  "False",
+                  "unconfigured",
+                  "SUCCESS",
+                  "0"
+                ],
+                [
+                  "deactivate_error_recover",
+                  "deactivate ERROR",
+                  "False",
+                  "unconfigured",
+                  "SUCCESS",
+                  "0"
+                ]
+              ],
+              "caption": "每行聚焦故障发生后的实际落点；恢复场景随后另做重配与shutdown。原ERROR经on_error SUCCESS恢复，也不使原转换响应变true。 资源列只计16字节FakeHandle，不统计诊断ROS实体；原回调异常没有返回枚举值，由框架捕获后按ERROR处理。",
+              "title": "回调返回、服务响应、最终状态与资源",
+              "evidenceFile": "validation-evidence/lifecycle-current-validation.json",
+              "evidenceSha256": "96ba26eb969defb00b61f5abd6f1837f4966711d1435b4df915dbfe8067da927"
+            },
+            {
+              "columns": [
+                "窗口",
+                "ROS状态",
+                "timer新增tick",
+                "managed尝试",
+                "普通新增消息",
+                "managed新增消息",
+                "FakeHandle数"
+              ],
+              "rows": [
+                [
+                  "unconfigured",
+                  "unconfigured",
+                  "6",
+                  "6",
+                  "6",
+                  "0",
+                  "0"
+                ],
+                [
+                  "inactive_after_configure",
+                  "inactive",
+                  "6",
+                  "6",
+                  "6",
+                  "0",
+                  "1"
+                ],
+                [
+                  "active",
+                  "active",
+                  "6",
+                  "6",
+                  "6",
+                  "6",
+                  "1"
+                ],
+                [
+                  "inactive_after_deactivate",
+                  "inactive",
+                  "6",
+                  "6",
+                  "6",
+                  "0",
+                  "1"
+                ],
+                [
+                  "unconfigured_after_cleanup",
+                  "unconfigured",
+                  "6",
+                  "6",
+                  "6",
+                  "0",
+                  "0"
+                ],
+                [
+                  "finalized_diagnostic_still_runs",
+                  "finalized",
+                  "6",
+                  "6",
+                  "6",
+                  "0",
+                  "0"
+                ]
+              ],
+              "caption": "同一序号与接收经过时间共同限定窗口，过滤旧DDS消息；发布端先匹配订阅。窗口长度记录在输入和原始数据中，不是精确频率或实时保证；finalized诊断timer继续是本例明确选择。 LifecyclePublisher检查is_activated标志，本例on_error/on_shutdown显式撤销，不是单凭ROS状态自动门控。",
+              "title": "普通timer和生命周期发布者分别验收",
+              "evidenceFile": "validation-evidence/lifecycle-current-validation.json",
+              "evidenceSha256": "96ba26eb969defb00b61f5abd6f1837f4966711d1435b4df915dbfe8067da927"
+            }
+          ]
+        },
+        {
+          "title": "普通回调、发布门控与进程生死分别观察",
+          "paragraphs": [
+            "本例构造时创建50ms普通timer，持续递增无量纲序号并发布普通诊断；LifecyclePublisher按实际激活状态发送受管输出。inactive或unconfigured时普通计数继续，有限窗口内受管新消息为零；active窗口两种消息都能观察。请求周期和一次窗口计数不等于实时频率保证。",
+            "finalized终结的是本实例的生命周期转换。本例普通timer、快照服务和Context仍可存在，直到进程被关闭；同实例不能再次configure，需要管理者销毁并新建。不要把生命周期shutdown、ROS Context关闭、操作系统进程退出或设备停车当同一事件。",
+            "转换响应到达与DDS中旧样本排空也不同。脚本用序号和有限观察窗口记录新消息，并将资源清理、回调关闭及父进程中断作为各自范围，不把“未看到”扩为任意负载下永远没有。"
+          ]
+        },
+        {
+          "title": "生命周期完整工程与复现",
+          "paragraphs": [
+            "完整CMake/package、节点和driver与实测指纹一致；按README构建独立包，不覆盖已有示例。"
+          ],
+          "codeBlocks": [
+            {
+              "label": "lifecycle_labs/runtime_lifecycle_lab/CMakeLists.txt",
+              "language": "cmake",
+              "type": "complete",
+              "sourceFile": "examples/lifecycle_labs/runtime_lifecycle_lab/CMakeLists.txt",
+              "explanation": "完整原创文件与报告指纹同源，依赖及复现顺序见同目录README；输入、单位、保护期限和清理范围见中文注释。"
+            },
+            {
+              "label": "lifecycle_labs/runtime_lifecycle_lab/package.xml",
+              "language": "xml",
+              "type": "complete",
+              "sourceFile": "examples/lifecycle_labs/runtime_lifecycle_lab/package.xml",
+              "explanation": "完整原创文件与报告指纹同源，依赖及复现顺序见同目录README；输入、单位、保护期限和清理范围见中文注释。"
+            },
+            {
+              "label": "lifecycle_labs/runtime_lifecycle_lab/src/fake_resource_node.cpp",
+              "language": "cpp",
+              "type": "complete",
+              "sourceFile": "examples/lifecycle_labs/runtime_lifecycle_lab/src/fake_resource_node.cpp",
+              "explanation": "完整原创文件与报告指纹同源，依赖及复现顺序见同目录README；输入、单位、保护期限和清理范围见中文注释。"
+            },
+            {
+              "label": "lifecycle_labs/validate_lifecycle.py",
+              "language": "python",
+              "type": "complete",
+              "sourceFile": "examples/lifecycle_labs/validate_lifecycle.py",
+              "explanation": "完整原创文件与报告指纹同源，依赖及复现顺序见同目录README；输入、单位、保护期限和清理范围见中文注释。"
+            },
+            {
+              "label": "按本轮已记录命令复现",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 在ros2-learning-hub目录执行；报告另存/tmp，不覆盖教材绑定证据。\nsource /opt/ros/jazzy/setup.bash\ncolcon --log-base /tmp/ros2-lifecycle-labs/log build --base-paths examples/lifecycle_labs/runtime_lifecycle_lab --build-base /tmp/ros2-lifecycle-labs/build --install-base /tmp/ros2-lifecycle-labs/install --merge-install --symlink-install\nsource /tmp/ros2-lifecycle-labs/install/setup.bash\nLIFECYCLE_LABS_INSTALL_PREFIX=/tmp/ros2-lifecycle-labs/install timeout --signal=INT --kill-after=10s 180s /usr/bin/python3 examples/lifecycle_labs/validate_lifecycle.py --build-root /tmp/ros2-lifecycle-labs --report /tmp/lifecycle-local-result.json",
+              "explanation": "源码路径相对教材根目录；构建和新报告放/tmp。服务期限依赖执行器推进，不能抢占长原生回调；worker与外层timeout另保护退出。普通诊断timer全状态持续是本例合同，不代表业务资源应继续运行。"
+            }
+          ]
+        }
+      ],
+      "appendExercises": [
+        {
+          "question": "on_error恢复到了unconfigured，原ChangeState=false是否矛盾？",
+          "answer": "不矛盾。原转换失败与后续错误恢复分别记结果；查询最终状态、回调事件和资源，不能用一个success布尔替代全部证据。"
+        },
+        {
+          "question": "inactive普通tick继续增长能证明停用失败吗？",
+          "answer": "不能。普通timer和诊断未必受生命周期自动控制，应按节点合同另行取消或门控；受管发布者与资源状态分别检查。"
+        },
+        {
+          "question": "configure失败后为什么还再次configure并核资源计数？",
+          "answer": "状态回到unconfigured不证明候选资源已释放；重试、申请/释放次数与配置代数能发现旧占用或部分提交。"
+        },
+        {
+          "question": "finalized后进程仍在运行，能原地再次configure吗？",
+          "answer": "不能把进程存在当作生命周期重新可用；本实例协议已终结。需要销毁重建，普通接口是否还活另按实现观察。"
+        },
+        {
+          "question": "LifecyclePublisher停发是否自动停止采样线程？",
+          "answer": "不会。发布门控与普通回调/资源工作是不同机制；停止工作与等待线程退出必须由实现负责。"
+        },
+        {
+          "question": "0.3秒内没看到新消息能证明所有网络下永远停发吗？",
+          "answer": "不能。结论限定输入、序号筛选、观察窗口和中间件；残留样本、调度和跨机条件需要另测。"
+        }
+      ]
+    },
+    "testing": {
+      "sourceIds": [
+        "core-testing",
+        "core-colcon",
+        "core-doctor",
+        "iter4-testing-integration",
+        "iter4-testing-cli-status"
+      ],
+      "validation": "旧策略4项通过但6个新合同反例暴露缺口，修订策略31项已实测；原talker活动/退出2项按本机有限范围实测。无硬件或制动验证。 独立ament_cmake包真实构建；gtest4、pytest7、launch active/post-shutdown各1，共13个细分JUnit案例。受控缺失业务ready保持相同注册数量但实际失败；比较默认/严格colcon退出码与test-result。使用软件Twist输入和5/7rad/s手算值，不运行仿真或硬件；是否通过以passed和各阶段原始XML为准。",
+      "sections": {
+        "1": {
+          "paragraphs": [
+            "策略速度单位m/s，时刻和期限单位ns。修订合同限定内置整数纳秒，bool不作时刻；正整数期限是配置，非法时抛ValueError。缺失、格式错误、未来或过期运行观测返回0.0；速度需为可表示的有限int/float，bool及字符串不作速度。",
+            "age==timeout仍有效，超过一个纳秒才归零。整数相减保留精度，不先转float或舍入；带符号同一时基也按整数年龄处理。函数不识别不同时间域、不限制速度幅值，更不证明真实制动。旧4项通过而NaN时戳/期限绕过比较的基线已保留，新增31项验证明确合同。"
+          ],
+          "codeBlocks": {
+            "0": {
+              "label": "testing_policy/policy.py",
+              "sourceFile": "examples/testing_policy/policy.py",
+              "explanation": "严格整数纳秒与有限速度的修订策略；非法配置抛ValueError，非法运行观测归零，幅值及时基来源由调用者约束。"
+            },
+            "1": {
+              "label": "testing_policy/test_policy.py",
+              "sourceFile": "examples/testing_policy/test_policy.py",
+              "explanation": "31项参数化测试以本次JUnit为准，包含一个纳秒边界、畸形类型和大整数精度；不把有限样本称全集覆盖。"
+            }
+          }
+        },
+        "2": {
+          "appendParagraphs": [
+            "这里保留的原talker完整文件已在本机域230/LOCALHOST实际运行：活动阶段观察消息，post-shutdown核退出，两项通过。它使用固定命名空间，只按独立专用域范围验收；下方新包再演示完整注册与受控失败。"
+          ]
+        },
+        "5": {
+          "paragraphs": [
+            "关键路径应验证缺失输入、参数非法、消息过期、进程退出和时间异常，故障要对应具体断言。先用假设备或受控输入明确预期，再核失败原因，不能把任意异常都当预期反例。",
+            "旧原例和新增注册包的实际运行分开记录，数值、消息、就绪、XML与退出分别验收。源码能解析或构建成功不能替代这些行为证据；本轮没有硬件或安全制动测试。"
+          ]
+        }
+      },
+      "appendSections": [
+        {
+          "title": "旧测试全过，为什么新反例仍暴露缺口？",
+          "paragraphs": [
+            "第3轮原policy的四项pytest先实际通过。它只对speed做有限性检查，NaN的now/last/timeout参与比较时，两边判断都可能为false，于是过期判断没有阻断输出；bool和字符串也没有完整输入策略。六个新合同反例保留原表现，说明绿色数量必须结合输入范围。",
+            "新policy按显式合同验证配置与运行数据；31项和原talker两阶段分别保存JUnit。基线JSON用于反例，不能当推荐策略；修订31项同样不代表任意速度、时钟或设备已验证。"
+          ],
+          "tables": [
+            {
+              "columns": [
+                "阶段",
+                "实际测试/反例",
+                "结果",
+                "能说明什么"
+              ],
+              "rows": [
+                [
+                  "历史基线pytest",
+                  "4项",
+                  "通过",
+                  "原4项没有覆盖畸形时戳与期限"
+                ],
+                [
+                  "新增合同反例",
+                  "6项",
+                  "暴露原覆盖缺口",
+                  "NaN时戳/期限、bool、字符串另查"
+                ],
+                [
+                  "修订策略pytest",
+                  "31项",
+                  "通过",
+                  "整数纳秒、有限速度与配置/数据错误分开"
+                ],
+                [
+                  "原talker launch_test",
+                  "2项",
+                  "通过",
+                  "实际消息和post-shutdown退出码分别检查"
+                ]
+              ],
+              "caption": "真实pytest/launch_test与JUnit记录；原基线保留在JSON，只作已知缺口对照。31项是本次参数化测试计数，不代表输入全集。",
+              "title": "同一策略：通过旧测试之后仍需核对输入合同",
+              "evidenceFile": "validation-evidence/testing-existing-current-validation.json",
+              "evidenceSha256": "4da49a5ec5fe151fe6d004db0679a334bc83c1d3e0d28da8c0b2deee7bd24567"
+            }
+          ],
+          "codeBlocks": [
+            {
+              "label": "testing_policy/baseline_sources.json",
+              "language": "json",
+              "type": "complete",
+              "sourceFile": "examples/testing_policy/baseline_sources.json",
+              "explanation": "历史基线输入数据，保留原策略的已知合同缺口，只用于反例对照；推荐策略为同目录policy.py。"
+            },
+            {
+              "label": "testing_policy/verify_existing.py",
+              "language": "python",
+              "type": "complete",
+              "sourceFile": "examples/testing_policy/verify_existing.py",
+              "explanation": "完整原创文件与报告指纹同源，依赖及复现顺序见同目录README；输入、单位、保护期限和清理范围见中文注释。"
+            },
+            {
+              "label": "按本轮已记录命令复现",
+              "language": "bash",
+              "type": "commands",
+              "code": "source /opt/ros/jazzy/setup.bash\n/usr/bin/python3 examples/testing_policy/verify_existing.py --output /tmp/testing-existing-result.json",
+              "explanation": "从ros2-learning-hub目录运行；需要pytest、launch_testing、launch_ros、rclpy、std_msgs和demo_nodes_cpp。默认域230/LOCALHOST，子进程保护20或40秒，不当硬实时界限。"
+            }
+          ]
+        },
+        {
+          "title": "完整注册包：业务就绪、受控失败与结果清单",
+          "paragraphs": [
+            "新增testing_labs是独立ament_cmake包，以差速轮速合同、消息解释和真实软件进程验证gtest、pytest与launch_testing的分工。输入速度/角速度和几何单位在源码中定义，实测话题输出与改零输入分别检查；不是只复制实现公式再比较一次。",
+            "ReadyToTest只放行测试阶段，业务就绪需要实际条件。受控变体保留启动标记而隐藏READY，确保失败来自预期就绪断言；早期NoMatchingProcess夹具错误与修正过程原样保存，未冒充同一种业务失败。",
+            "本机正常注册3个CTest，细分JUnit为4+7+2=13；test-result还汇总3个包装项，显示16。一次内部失败也可被包装层再次计数。把注册、细分和聚合分开，不能把16称为16种独立功能验证。",
+            "受控缺READY时默认colcon test可退出0，但同次细分XML失败、test-result退出1；启用return-code-on-test-failure后测试CLI也退出1。空结果查询CLI0仍没有执行证据，验收需要本次新XML、预期数量及失败/错误/跳过，不单看一行finished。"
+          ],
+          "tables": [
+            {
+              "columns": [
+                "阶段",
+                "JUnit案例/失败",
+                "colcon test退出码",
+                "test-result退出码",
+                "判定"
+              ],
+              "rows": [
+                [
+                  "good_default",
+                  "13 / 0",
+                  "0",
+                  "0",
+                  "软件测试通过"
+                ],
+                [
+                  "fault_default",
+                  "13 / 1",
+                  "0",
+                  "1",
+                  "预期故障已被测试捕获；该配置没有通过软件测试"
+                ],
+                [
+                  "fault_strict",
+                  "13 / 1",
+                  "1",
+                  "1",
+                  "预期故障已被测试捕获；该配置没有通过软件测试"
+                ],
+                [
+                  "good_final_strict",
+                  "13 / 0",
+                  "0",
+                  "0",
+                  "软件测试通过"
+                ],
+                [
+                  "empty_results",
+                  "0 / 未执行",
+                  "未运行test",
+                  "0",
+                  "拒绝验收：没有预期结果"
+                ]
+              ],
+              "caption": "本机真实colcon/JUnit结果；13个细分案例与3个CTest注册项分开计数。",
+              "title": "受控就绪失败与CLI退出码",
+              "evidenceFile": "validation-evidence/testing-labs-current-validation.json",
+              "evidenceSha256": "4f374c44c95fe5144c540afc7add734d6737a46cc95de2765c1a92066e8cfa79"
+            },
+            {
+              "columns": [
+                "层次",
+                "CTest注册项",
+                "细分JUnit案例"
+              ],
+              "rows": [
+                [
+                  "gtest物理合同",
+                  "test_wheel_math",
+                  "4"
+                ],
+                [
+                  "pytest消息边界",
+                  "test_rate_reader",
+                  "7"
+                ],
+                [
+                  "launch真实话题/退出",
+                  "test_wheel_launch",
+                  "2"
+                ]
+              ],
+              "caption": "预期注册数必须与XML一致；数量不是每条测试内部assert的条数。",
+              "title": "测试注册与细分结果的实际数量",
+              "evidenceFile": "validation-evidence/testing-labs-current-validation.json",
+              "evidenceSha256": "4f374c44c95fe5144c540afc7add734d6737a46cc95de2765c1a92066e8cfa79"
+            }
+          ]
+        },
+        {
+          "title": "完整测试工程与构建/运行命令",
+          "paragraphs": [
+            "正常与故障变体使用各自/tmp构建和结果目录，保留日志/版本/清理，最后的正常结果与故障结果不覆盖混用。"
+          ],
+          "codeBlocks": [
+            {
+              "label": "testing_labs/learning_testing_lab/CMakeLists.txt",
+              "language": "cmake",
+              "type": "complete",
+              "sourceFile": "examples/testing_labs/learning_testing_lab/CMakeLists.txt",
+              "explanation": "完整原创文件与报告指纹同源，依赖及复现顺序见同目录README；输入、单位、保护期限和清理范围见中文注释。"
+            },
+            {
+              "label": "testing_labs/learning_testing_lab/include/learning_testing_lab/wheel_rates.hpp",
+              "language": "cpp",
+              "type": "complete",
+              "sourceFile": "examples/testing_labs/learning_testing_lab/include/learning_testing_lab/wheel_rates.hpp",
+              "explanation": "完整原创文件与报告指纹同源，依赖及复现顺序见同目录README；输入、单位、保护期限和清理范围见中文注释。"
+            },
+            {
+              "label": "testing_labs/learning_testing_lab/package.xml",
+              "language": "xml",
+              "type": "complete",
+              "sourceFile": "examples/testing_labs/learning_testing_lab/package.xml",
+              "explanation": "完整原创文件与报告指纹同源，依赖及复现顺序见同目录README；输入、单位、保护期限和清理范围见中文注释。"
+            },
+            {
+              "label": "testing_labs/learning_testing_lab/python/wheel_reader.py",
+              "language": "python",
+              "type": "complete",
+              "sourceFile": "examples/testing_labs/learning_testing_lab/python/wheel_reader.py",
+              "explanation": "完整原创文件与报告指纹同源，依赖及复现顺序见同目录README；输入、单位、保护期限和清理范围见中文注释。"
+            },
+            {
+              "label": "testing_labs/learning_testing_lab/src/wheel_processor.cpp",
+              "language": "cpp",
+              "type": "complete",
+              "sourceFile": "examples/testing_labs/learning_testing_lab/src/wheel_processor.cpp",
+              "explanation": "完整原创文件与报告指纹同源，依赖及复现顺序见同目录README；输入、单位、保护期限和清理范围见中文注释。"
+            },
+            {
+              "label": "testing_labs/learning_testing_lab/test/test_rate_reader.py",
+              "language": "python",
+              "type": "complete",
+              "sourceFile": "examples/testing_labs/learning_testing_lab/test/test_rate_reader.py",
+              "explanation": "完整原创文件与报告指纹同源，依赖及复现顺序见同目录README；输入、单位、保护期限和清理范围见中文注释。"
+            },
+            {
+              "label": "testing_labs/learning_testing_lab/test/test_wheel_launch.py",
+              "language": "python",
+              "type": "complete",
+              "sourceFile": "examples/testing_labs/learning_testing_lab/test/test_wheel_launch.py",
+              "explanation": "完整原创文件与报告指纹同源，依赖及复现顺序见同目录README；输入、单位、保护期限和清理范围见中文注释。"
+            },
+            {
+              "label": "testing_labs/learning_testing_lab/test/test_wheel_math.cpp",
+              "language": "cpp",
+              "type": "complete",
+              "sourceFile": "examples/testing_labs/learning_testing_lab/test/test_wheel_math.cpp",
+              "explanation": "完整原创文件与报告指纹同源，依赖及复现顺序见同目录README；输入、单位、保护期限和清理范围见中文注释。"
+            },
+            {
+              "label": "testing_labs/verify_testing_labs.py",
+              "language": "python",
+              "type": "complete",
+              "sourceFile": "examples/testing_labs/verify_testing_labs.py",
+              "explanation": "完整原创文件与报告指纹同源，依赖及复现顺序见同目录README；输入、单位、保护期限和清理范围见中文注释。"
+            },
+            {
+              "label": "按本轮已记录命令复现",
+              "language": "bash",
+              "type": "commands",
+              "code": "source /opt/ros/jazzy/setup.bash\n/usr/bin/python3 examples/testing_labs/verify_testing_labs.py --build-root /tmp/ros2-hub-testing-labs --domain-id 231 --output /tmp/testing-labs-rerun.json",
+              "explanation": "从ros2-learning-hub运行；构建、故障版、日志在专属/tmp目录。报告另存/tmp不覆盖教材证据；只清理本驱动创建且startTicks匹配的进程。colcon退出0与零测试都不能独立证明通过；案例XML数量和失败数必须核对。"
+            }
+          ]
+        }
+      ],
+      "appendExercises": [
+        {
+          "question": "四项测试通过后，为何NaN时戳仍可能让旧策略输出速度？",
+          "answer": "旧测试未覆盖该输入，NaN比较不按普通大小关系进入过期分支。先定义整数纳秒合同，再验证非法运行数据与非法配置的各自策略。"
+        },
+        {
+          "question": "3注册、13细分、16聚合能相加成32个用例吗？",
+          "answer": "不能。这些是结果层次的重复包装，应保留注册项和真实testcase的对应关系；聚合不是新增覆盖。"
+        },
+        {
+          "question": "缺READY反例因NoMatchingProcess异常失败，能算就绪断言有效吗？",
+          "answer": "不能。那是夹具没有匹配到进程，需独立启动标记与正确目标，再证明预期业务断言失败。"
+        },
+        {
+          "question": "默认colcon test为0，test-result为1，该采用哪个作验收？",
+          "answer": "结合当次XML、预期数量和失败原因。可启用return-code-on-test-failure让CLI反映失败，但仍检查无结果、跳过和旧XML。"
+        },
+        {
+          "question": "空结果目录查询返回0，是否已经通过？",
+          "answer": "没有测试执行证据，应按预期用例数拒绝验收。CLI正常返回只说明查询本身完成。"
+        },
+        {
+          "question": "为什么旧talker正例与新注册包分别记录？",
+          "answer": "旧文件验证的是它自己的消息和退出路径；新包验证注册、物理合同和受控失败。一个通过不能替代另一个源码/配置的行为。"
+        }
+      ]
+    },
+    "deployment": {
+      "sourceIds": [
+        "extra-docker",
+        "eco-rosdistro",
+        "iter4-deployment-symlink",
+        "iter4-deployment-image-definition",
+        "iter4-deployment-cli-process"
+      ],
+      "validation": "已实际清点显式安装前缀，复制并核对保留链接的临时副本；另引用原节点宿主exec/TERM实测。Docker、复制产物及跨机运行未执行。",
+      "sections": {
+        "2": {
+          "codeBlocks": {
+            "0": {
+              "code": "# 【中文教学注释】 Dockerfile 完整示例\n# 本例作用：基础 ros-base 镜像提供构建与依赖工具；COPY 只复制本项目源码；rosdep 读取 package.xml，随后生成合并安装目录。删除 apt 索引减少无用体积，不等于删除已安装依赖。\n# 输入输出：输入为已验证源码、依赖和镜像构建上下文；输出为安装产物、容器镜像及归档摘要。\n# 执行顺序与边界：先固定版本再构建验证；容器仍共享主机内核和网络条件。entrypoint 应 exec 传递信号，镜像可加载不代表架构、设备与实时能力相容。\n# 声明构建时可覆盖的镜像参数；为复现应记录实际镜像摘要，标签本身可移动。\nARG ROS_IMAGE=ros:jazzy-ros-base\n# 选择目标ROS/Jazzy基础镜像及架构；基础镜像不包含所有应用依赖。\nFROM ${ROS_IMAGE}\n# 后续RUN使用bash并启用pipefail；只是构建shell策略，不是运行时节点执行器。\nSHELL [\"/bin/bash\", \"-o\", \"pipefail\", \"-c\"]\n# 建立后续COPY/RUN的工作目录，所有相对路径在此解析。\nWORKDIR /work\n# 仅复制构建上下文内本行指定文件；源码、安装产物和运行数据的职责分别核对。\nCOPY src/ src/\n# 构建阶段准备依赖并编译，&&保证前一步成功才继续；反斜杠连接属于同一逻辑指令，不能插入破坏续行的内容。\nRUN apt-get update && \\\n    rosdep update --rosdistro jazzy && \\\n    rosdep install --from-paths src --ignore-src --rosdistro jazzy -y && \\\n    source /opt/ros/jazzy/setup.bash && \\\n    colcon build --merge-install --cmake-args -DCMAKE_BUILD_TYPE=Release && \\\n    rm -rf /var/lib/apt/lists/*\nCOPY entrypoint.sh /entrypoint.sh\nRUN chmod +x /entrypoint.sh\n# 运行时入口负责source安装环境并exec目标程序，让退出信号/退出码传给ROS进程。\nENTRYPOINT [\"/entrypoint.sh\"]\n# 提供默认运行命令，可由docker run参数替换；镜像构建成功并不等于此节点已通过运行验证。\n# 镜像内使用固定merge-install前缀，直接启动CMake生成的节点入口。\n# shell exec后是节点本身；本例Docker镜像尚未构建，停机仍需按下方计划验收。\nCMD [\"/work/install/lib/hub_component/hub_talker_node\"]",
+              "explanation": "完整教学Dockerfile使用镜像内固定/work/install前缀与直接节点CMD；没有把宿主exec测试当Docker构建/停机已通过。"
+            },
+            "1": {
+              "code": "#!/usr/bin/env bash\n# 输入：可信的ROS/应用setup脚本与命令argv；两个绝对前缀是Dockerfile内约定。\n# 输出：exec目标的stdout/stderr和退出状态；不构建镜像或产生归档摘要。\n# 顺序：启用错误退出→加载ROS underlay→加载应用overlay→替换当前shell。\n# source末尾的--传给setup脚本，避免它把应用argv当作自身选项；返回后原argv保留。\nset -e\nsource /opt/ros/jazzy/setup.bash --\nsource /work/install/setup.bash --\n# exec只替换成指定命令；默认CMD直接到节点，自定义包装器的信号合同需另验收。\n# Docker构建/停机未运行，宿主source+exec正例的范围独立记录。\nexec \"$@\"\n",
+              "explanation": "入口只加载可信环境并exec命令，输出来自目标stdout/stderr与退出状态；镜像内路径前提和自定义包装器信号边界已写明。"
+            }
+          }
+        },
+        "3": {
+          "paragraphs": [
+            "镜像标签可能变化，应记录实际仓库摘要、平台、后续apt来源与最终产物。固定基础摘要也没有自动固定所有软件包解析；保留结果、包清单和配置能说明运行的具体输入。",
+            "下列Docker步骤仍待执行，需核对PID1、叶子节点、停止信号、退出码与资源。exec通用命令只替换到该命令；默认CMD已直达固定前缀的节点。宿主source+exec正例单独实测，不能替代Docker内运行、跨容器或硬件验收。"
+          ]
+        }
+      },
+      "appendSections": [
+        {
+          "title": "安装目录审计：复制成功不等于自包含",
+          "paragraphs": [
+            "新增deployment_labs只读显式安装前缀，记录普通文件SHA、符号链接文本/目标、允许路径边界和包来源。只收集有限环境allowlist，不扫描家目录或凭据；扫描数量、文件大小和链接解析有上限，未展开部分明确列出。",
+            "真实symlink-install前缀及保留链接的自建/tmp副本分别审计。副本可保持文件SHA和链接文本一致，却仍指向原source、build和underlay；原目录存在时看起来正常，不代表复制到另一台机器仍可用。本轮没有移走原目录，也没有执行复制产物。",
+            "安装文件齐全、依赖闭包、ABI、架构、驱动和运行配置是不同证据。审计器输出是可追溯清单，不是可运行性认证；Docker示例采用正常merge-install，也仍要考虑underlay和动态库。"
+          ],
+          "tables": [
+            {
+              "columns": [
+                "范围",
+                "普通文件",
+                "符号链接",
+                "前缀外链接",
+                "未解析链接",
+                "验证层次"
+              ],
+              "rows": [
+                [
+                  "原安装前缀",
+                  "24",
+                  "18",
+                  "18",
+                  "0",
+                  "仅文件清点"
+                ],
+                [
+                  "保留链接的临时副本",
+                  "24",
+                  "18",
+                  "18",
+                  "0",
+                  "未运行副本"
+                ]
+              ],
+              "caption": "条数来自有限清点；SHA/链接文本一致不证明独立部署或跨机可运行。",
+              "title": "实际安装前缀与保留链接的副本",
+              "evidenceFile": "validation-evidence/deployment-current-validation.json",
+              "evidenceSha256": "4572704c568fa3a71543eba8e88dae027c766c0e9b2938afbb92a2d9d95a4019"
+            },
+            {
+              "columns": [
+                "目标根",
+                "链接数",
+                "相对安装入口举例（最多3项）"
+              ],
+              "rows": [
+                [
+                  "/tmp/ros2-component-labs/build/runtime_lab_components",
+                  "15",
+                  "share/runtime_lab_components/local_setup.bash, share/runtime_lab_components/local_setup.dsv, share/runtime_lab_components/local_setup.sh"
+                ],
+                [
+                  "/home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components",
+                  "1",
+                  "share/runtime_lab_components/package.xml"
+                ],
+                [
+                  "/opt/ros/jazzy",
+                  "2",
+                  "share/runtime_lab_components/environment/ament_prefix_path.sh, share/runtime_lab_components/environment/path.sh"
+                ]
+              ],
+              "caption": "仅归类已解析的直接清点条目；不递归展开underlay，也不证明全部传递依赖。",
+              "title": "外部链接实际解析到的显式允许根",
+              "evidenceFile": "validation-evidence/deployment-current-validation.json",
+              "evidenceSha256": "4572704c568fa3a71543eba8e88dae027c766c0e9b2938afbb92a2d9d95a4019"
+            },
+            {
+              "columns": [
+                "PID",
+                "同PID成为节点",
+                "信号前孩子数",
+                "发送信号",
+                "退出码",
+                "回收耗时（秒）"
+              ],
+              "rows": [
+                [
+                  "240317",
+                  "True",
+                  "0",
+                  "SIGTERM",
+                  "0",
+                  "0.113426"
+                ]
+              ],
+              "caption": "耗时为该次宿主观测；未运行Docker或副本，不构成设备停车验证。 小数显示6位有效数字，完整数值保留在报告。",
+              "title": "原安装节点的宿主直接exec信号正例",
+              "evidenceFile": "validation-evidence/deployment-current-validation.json",
+              "evidenceSha256": "4572704c568fa3a71543eba8e88dae027c766c0e9b2938afbb92a2d9d95a4019"
+            }
+          ]
+        },
+        {
+          "title": "入口与信号：宿主正例和Docker计划分开",
+          "paragraphs": [
+            "entrypoint先加载ROS与应用环境，再exec默认节点。直接节点正例跟踪同一PID完成shell到可执行的替换，只向该PID发送TERM，核对退出和后代；该结果限定本机原安装前缀，复制产物没有运行。",
+            "exec ros2 run替换的是CLI，叶子节点仍由它创建。终端Ctrl+C进程组与Docker发给PID1的停机信号不同，固定CLI源码中未见TERM转发不能替代实际容器实验；这里通过直接默认CMD减少一层包装，保留Docker未验证边界。",
+            "如果自定义命令重新引入包装器，应明确其信号、等待与清理合同。进程退出也不证明设备停车；镜像归档校验与宿主TERM正例不扩大为跨机部署或真实驱动已验收。"
+          ]
+        },
+        {
+          "title": "只读审计与宿主信号实验的完整文件",
+          "paragraphs": [
+            "按README指定目标前缀和允许根，仅操作自建/tmp副本；不要把工作区中的开发链接当发布工件。"
+          ],
+          "codeBlocks": [
+            {
+              "label": "deployment_labs/audit_prefix.py",
+              "language": "python",
+              "type": "complete",
+              "sourceFile": "examples/deployment_labs/audit_prefix.py",
+              "explanation": "完整原创文件与报告指纹同源，依赖及复现顺序见同目录README；输入、单位、保护期限和清理范围见中文注释。"
+            },
+            {
+              "label": "deployment_labs/host_entrypoint.sh",
+              "language": "bash",
+              "type": "complete",
+              "sourceFile": "examples/deployment_labs/host_entrypoint.sh",
+              "explanation": "完整原创文件与报告指纹同源，依赖及复现顺序见同目录README；输入、单位、保护期限和清理范围见中文注释。"
+            },
+            {
+              "label": "deployment_labs/host_exec_signal.py",
+              "language": "python",
+              "type": "complete",
+              "sourceFile": "examples/deployment_labs/host_exec_signal.py",
+              "explanation": "完整原创文件与报告指纹同源，依赖及复现顺序见同目录README；输入、单位、保护期限和清理范围见中文注释。"
+            },
+            {
+              "label": "按本轮已记录命令复现",
+              "language": "bash",
+              "type": "commands",
+              "code": "/usr/bin/python3 ros2-learning-hub/examples/deployment_labs/audit_prefix.py --prefix /tmp/ros2-component-labs/install --allow-root /tmp/ros2-component-labs/build/runtime_lab_components --allow-root /home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components --allow-root /opt/ros/jazzy --underlay /opt/ros/jazzy --package runtime_lab_components --package rclcpp --package rclcpp_components --package rcl_interfaces --package std_msgs --package std_srvs --source-file /home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components/src/components.cpp --source-file /home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components/src/observable_manager.cpp --source-file /home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components/CMakeLists.txt --source-file /home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components/package.xml --copy-demo --host-signal-report /tmp/host-exec-signal.json --report /tmp/deployment-local-audit.json",
+              "explanation": "路径是本机原构建记录；换机须先构建组件实验并替换明确前缀。报告另存/tmp；若没有宿主报告，去掉--host-signal-report，不能补称信号已验证。"
+            }
+          ]
+        }
+      ],
+      "appendExercises": [
+        {
+          "question": "复制install后SHA相同，为什么换机仍可能失败？",
+          "answer": "保留的链接仍可外指原source/build/underlay，当前机器可能偶然满足它们；还要核对依赖、ABI、配置并实际运行。"
+        },
+        {
+          "question": "环境allowlist和包版本清单等于完整锁文件吗？",
+          "answer": "不等于。它记录本次可见输入，未自动固定软件源、依赖闭包、编译选项、驱动和平台。"
+        },
+        {
+          "question": "exec ros2 run后PID1一定是叶子节点吗？",
+          "answer": "exec替换到ROS CLI，节点通常由CLI另建；需要直接入口或明确信号转发方案，并核对真实PID与退出。"
+        },
+        {
+          "question": "宿主TERM正例能证明docker stop已完成清理吗？",
+          "answer": "不能。Docker的PID1、命名空间、停机超时和资源边界不同，本轮Docker未运行，需独立验收。"
+        },
+        {
+          "question": "为什么审计副本保留外链而不先删原source/build？",
+          "answer": "为了只读证明依赖关系，避免破坏原工作空间。外链存在已足以说明不是自包含，运行迁移另设环境。"
+        },
+        {
+          "question": "检查器达到扫描上限后可以输出完整清单吗？",
+          "answer": "不能，应标出未扫描/未哈希范围及原因。部分清点不是全部依赖或可运行性证明。"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="鸣神主题 ROS 2 文档笔记站：离线教材、章节笔记与交互图解的独立设计审查样稿。">
+  <meta name="color-scheme" content="light dark">
+  <title>鸣神 · ROS 2 学习手册</title>
+  <link rel="icon" type="image/svg+xml" href="assets/theme/narukami.svg">
+  <link rel="stylesheet" href="styles.css">
+  <script src="../dist/content.js" defer></script>
+  <script src="../dist/local-edits.js" defer></script>
+  <script src="../dist/environment.js" defer></script>
+  <script src="../dist/reference-data.js" defer></script>
+  <script src="../dist/preview/geometry.js" defer></script>
+  <script src="assets-data.js" defer></script>
+  <script src="review-evidence.js" defer></script>
+  <script src="logic.js" defer></script>
+  <script src="editor.js" defer></script>
+  <script src="visual-editor.js" defer></script>
+  <script src="file-store.js" defer></script>
+  <script src="service-config.js" defer></script>
+  <script src="labs.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body data-theme="light">
+  <a class="skip-link" href="#reading">跳到正文</a>
+  <header class="site-header">
+    <div class="site-brand">
+      <button class="icon-button mobile-menu" id="menu-button" data-action="menu" aria-label="打开学习目录" aria-expanded="false" aria-controls="sidebar"><span data-icon="menu"></span></button>
+      <a class="brand" href="#/home"><img src="assets/theme/narukami.svg" width="30" height="30" alt=""><span>ROS 2 学习手册<small>紫樱 · 离线学习笔记</small></span></a>
+    </div>
+    <nav class="site-nav" aria-label="主要页面">
+      <a href="#/home">首页</a>
+      <a href="#/courses">全书目录</a>
+      <a href="#/visuals">图解与实验</a>
+      <a href="#/notes">我的笔记</a>
+      <a href="#/resources">资料与工程</a>
+      <a href="#/gallery">紫樱素材</a>
+      <a href="#/review">设计审查</a>
+    </nav>
+    <div class="header-tools">
+      <button class="icon-button header-search" data-action="search" aria-label="搜索手册（Ctrl / Cmd + K）" title="搜索手册 · Ctrl / Cmd + K"><span data-icon="search"></span></button>
+      <button class="icon-button theme-button" data-action="theme" aria-label="切换深浅主题" title="切换深浅主题"><span data-icon="moon"></span></button>
+      <a class="companion" id="companion" href="#/saved" aria-label="收藏与阅读进度"></a>
+      <label class="mode-switch"><span class="sr-only">页面模式</span><select id="view-mode" aria-label="页面模式"><option value="read">阅读模式</option><option value="edit">编辑模式</option></select></label>
+    </div>
+  </header>
+  <aside class="sidebar" id="sidebar" aria-label="学习目录">
+    <div class="tree-heading"><span>学习目录</span><button data-action="collapse-tree" title="收起其他阶段" aria-label="收起其他阶段">−</button></div>
+    <nav id="chapter-tree" class="chapter-tree" aria-label="分阶段章节"></nav>
+  </aside>
+  <button class="mobile-shade" id="mobile-shade" aria-label="关闭目录" hidden></button>
+  <div class="page-shell">
+    <header class="topbar">
+      <nav id="breadcrumb" class="breadcrumb" aria-label="当前位置"></nav>
+      <div class="topbar-actions"><button class="toolbar-button" id="toc-trigger" data-action="toc" hidden><span data-icon="list"></span><span>本章目录</span></button><button class="toolbar-button" id="note-trigger" data-action="note" hidden><span data-icon="pen"></span><span>本章笔记</span><i id="note-dot" hidden></i></button></div>
+    </header>
+    <main id="reading" tabindex="-1"></main>
+    <footer class="page-footer"><span>紫樱 · ROS 2 学习手册</span><a href="#/review">关于这份设计样稿 ↗</a></footer>
+  </div>
+  <dialog id="search-dialog" class="search-dialog" aria-labelledby="search-title">
+    <header class="search-heading"><span data-icon="search"></span><label class="sr-only" id="search-title" for="search-input">搜索教材、代码、图解与笔记</label><input id="search-input" type="search" placeholder="搜索概念、API、代码或笔记…" autocomplete="off"><button class="key-close" data-close="search-dialog" aria-label="关闭搜索">Esc</button></header>
+    <div class="search-filters" id="search-filters" aria-label="搜索范围"></div>
+    <div id="search-results" class="search-results" aria-live="polite"></div>
+    <footer class="dialog-footer"><span>本地全文搜索 · 不需要联网</span><span>↑↓ 选择　↵ 打开</span></footer>
+  </dialog>
+  <dialog id="toc-dialog" class="toc-dialog" aria-labelledby="toc-title"><header class="panel-header"><div><small>ON THIS PAGE</small><h2 id="toc-title">本章目录</h2></div><button class="icon-button" data-close="toc-dialog" aria-label="关闭本章目录">×</button></header><nav id="toc-list"></nav></dialog>
+  <dialog id="note-dialog" class="note-dialog" aria-labelledby="note-title">
+    <header class="panel-header"><div><small>MY CHAPTER NOTE</small><h2 id="note-title">本章笔记</h2></div><button class="icon-button" data-close="note-dialog" aria-label="关闭笔记">×</button></header>
+    <p id="note-chapter" class="note-chapter"></p><div class="note-toolbar"><div class="segmented"><button data-note-mode="edit" aria-pressed="true">编辑</button><button data-note-mode="preview" aria-pressed="false">预览</button></div><span id="note-status" role="status">自动保存到当前浏览器</span></div>
+    <label class="sr-only" for="note-editor">Markdown章节笔记</label><textarea id="note-editor" maxlength="50000" placeholder="记下你的理解、疑问和实验结果…&#10;&#10;支持 Markdown：## 标题、- 列表、`代码`。"></textarea><div id="note-preview" class="markdown-preview" hidden></div>
+    <footer class="note-bottom"><span id="note-count">0 字</span><button data-action="export-note">导出本章 .md ↗</button></footer>
+  </dialog>
+  <dialog id="wide-dialog" class="wide-dialog" aria-labelledby="wide-title"><header class="panel-header"><div><small>INTERACTIVE LAB</small><h2 id="wide-title">交互实验</h2></div><button class="button secondary" data-close="wide-dialog">返回正文 <span aria-hidden="true">↙</span></button></header><div id="wide-body"></div></dialog>
+  <dialog id="asset-dialog" class="asset-dialog" aria-labelledby="asset-title"><header class="panel-header"><h2 id="asset-title">素材详情</h2><button class="icon-button" data-close="asset-dialog" aria-label="关闭素材详情">×</button></header><div id="asset-detail"></div></dialog>
+  <dialog id="source-dialog" class="source-dialog" aria-labelledby="source-title"><header class="panel-header"><div><small>可选源码</small><h2 id="source-title">Markdown 源码</h2></div><button class="icon-button" data-close="source-dialog" aria-label="关闭源码">×</button></header><p class="source-help">日常修改直接在正文中完成。需要调整源码时，在这里修改并应用。</p><label class="sr-only" for="chapter-source">本章 Markdown 源码</label><textarea id="chapter-source" maxlength="500000" spellcheck="false"></textarea><footer class="source-footer"><span id="source-status">关闭后返回正文；点击应用保存源码修改。</span><button class="button" data-action="apply-source">应用并返回正文</button></footer></dialog>
+  <dialog id="file-help-dialog" class="file-help-dialog" aria-labelledby="file-help-title"><header class="panel-header"><h2 id="file-help-title">保存到教材文件</h2><button class="icon-button" data-close="file-help-dialog" aria-label="关闭保存说明">×</button></header><div class="file-help-body"><p>点击“选择教材目录”并选中 <code>ros2-learning-hub</code>，保存前会备份原文，随后写入章节文件。</p><button class="button" data-action="choose-textbook-directory">选择教材目录</button><p class="small-note">浏览器不支持目录写入时，可在教材目录的终端启动本机编辑服务：</p><pre>python3 scripts/serve_local.py --editable</pre><a class="text-link" href="http://127.0.0.1:8766/design-review/" target="_blank" rel="noopener">打开本机编辑服务 ↗</a><p class="small-note">文件页面与本机服务的浏览器记录相互独立。可先导出草稿，再在服务页面的“我的笔记”中导入。</p><button class="button secondary" data-action="export-draft-transfer">导出当前草稿与笔记</button></div></dialog>
+  <dialog id="copy-dialog" class="copy-dialog" aria-labelledby="copy-title"><header class="panel-header"><h2 id="copy-title">复制代码</h2><button class="icon-button" data-close="copy-dialog" aria-label="关闭复制">×</button></header><p>按 Ctrl / Cmd + C 复制选中的代码。</p><textarea id="copy-text" readonly aria-label="代码内容"></textarea></dialog>
+  <div id="toast" class="toast" role="status"></div>
+  <input id="backup-input" type="file" accept="application/json,.json" hidden>
+  <noscript>此交互审查版需要 JavaScript。可直接阅读<a href="../dist/book.html">无脚本连续教材</a>。</noscript>
+</body>
+</html>

@@ -1,0 +1,990 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-11-07T03:21:43+08:00",
+  "scope": {
+    "chapters": [
+      "parameters",
+      "executors",
+      "composition"
+    ],
+    "basis": "当前正式dist/content.js，已包含注释/修订覆层；不是只读早期源JSON。",
+    "apiReferences": [
+      "api-timer-clock",
+      "api-service-future",
+      "api-parameters",
+      "api-executor-groups"
+    ],
+    "foundationPackages": 10,
+    "writeBoundary": "审查仅写本报告；父任务随后追加仅两个软件clock实验资产。未改正文、构建器或其他示例，未启动仿真/硬件。"
+  },
+  "overallConclusion": "未发现gain校验、逐项/原子语义、组件NodeOptions传递或单/多线程基本结论错误。确认一处异步超时检查路径的时钟边界需补限定；其余为可落地的小型实验/API细节扩展，明确区分建议与现有缺陷。",
+  "artifactFingerprints": [
+    {
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/dist/content.js",
+      "sha256": "ead17272c0777387cb5b51a94d0bd2319994aafa646cf2df8eb0bb185b306334"
+    },
+    {
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/source/api-reference.json",
+      "sha256": "66476a9c5d0f1ff0c657c1698ea518d9a20cab7220e70f566acdac2f89f33a7a"
+    },
+    {
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/source/content-revisions.json",
+      "sha256": "cfab1bb3bab38cd6e93392ab106314fc0189805f1e7288ccb3cb4a8243a8c3e2"
+    },
+    {
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/tests/test_foundation_examples.py",
+      "sha256": "3f5a7520a65ffa3783c39ef09e41a9ab776a5fc4e3e1dd7e825533f5fe847491"
+    },
+    {
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/validation-evidence/foundation-current-validation.json",
+      "sha256": "fb75851092c1cb15698e1f564f3c61de86e2c288742ef4eb226b1b252fabec41"
+    }
+  ],
+  "officialSources": [
+    {
+      "id": "component-cli",
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--ros2cli/jazzy--221ce584a937/ros2component/ros2component/api/__init__.py",
+      "sha256": "acffbc963d2713414b63f0214685cccaa04316add436caa9d54a679e695521cc",
+      "repository": "ros2/ros2cli",
+      "ref": "jazzy",
+      "commit": "221ce584a937ac234ae6337cac71c22d42e8b692",
+      "snapshotRoot": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--ros2cli/jazzy--221ce584a937"
+    },
+    {
+      "id": "component-manager",
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp_components/src/component_manager.cpp",
+      "sha256": "c960af7e68a669157b9812a51eb5162d87211d1bd2e5c0c59c31f0102fe56f87",
+      "repository": "ros2/rclcpp",
+      "ref": "jazzy",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "snapshotRoot": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f"
+    },
+    {
+      "id": "container-isolated",
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp_components/src/component_container_isolated.cpp",
+      "sha256": "7a5d13bff8195cae904edc3a7e319be07e5f10c9469044c57b571d23fbef8627",
+      "repository": "ros2/rclcpp",
+      "ref": "jazzy",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "snapshotRoot": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f"
+    },
+    {
+      "id": "container-multi",
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp_components/src/component_container_mt.cpp",
+      "sha256": "49f785c8fe0ed8b13970d275d351c9d34ebd69b3f280661c6e2cc3f023e61143",
+      "repository": "ros2/rclcpp",
+      "ref": "jazzy",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "snapshotRoot": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f"
+    },
+    {
+      "id": "container-single",
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp_components/src/component_container.cpp",
+      "sha256": "625a273f7b27506cd81012424c87f70f27d08b02e22e86dfb143df8a4c20ae2e",
+      "repository": "ros2/rclcpp",
+      "ref": "jazzy",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "snapshotRoot": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f"
+    },
+    {
+      "id": "cpp-client",
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp/include/rclcpp/client.hpp",
+      "sha256": "1e0ceff9c36df3e3f950451a55a709951f0ccd58a742208a3e347dd459c667d2",
+      "repository": "ros2/rclcpp",
+      "ref": "jazzy",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "snapshotRoot": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f"
+    },
+    {
+      "id": "cpp-executor",
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp/src/rclcpp/executor.cpp",
+      "sha256": "34ea2ef1998a83dfa383bbb90fc2c133198436afe72793b2f8485100bc6d0876",
+      "repository": "ros2/rclcpp",
+      "ref": "jazzy",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "snapshotRoot": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f"
+    },
+    {
+      "id": "cpp-param-api",
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp/include/rclcpp/node.hpp",
+      "sha256": "8c3d4a637f143b815c56bd389b70351e8c2c89a57d64a2df31f3c4d4cd15f33a",
+      "repository": "ros2/rclcpp",
+      "ref": "jazzy",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "snapshotRoot": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f"
+    },
+    {
+      "id": "cpp-param-types",
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp/include/rclcpp/node_interfaces/node_parameters_interface.hpp",
+      "sha256": "ce986454969419119b7e9a89d746655ed67d2008983087f5b4958657fb5c6703",
+      "repository": "ros2/rclcpp",
+      "ref": "jazzy",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "snapshotRoot": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f"
+    },
+    {
+      "id": "cpp-parameters",
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp/src/rclcpp/node_interfaces/node_parameters.cpp",
+      "sha256": "eb20218b4052d0d41932d346e75f1783134de90f45b696bde16f5001e178918e",
+      "repository": "ros2/rclcpp",
+      "ref": "jazzy",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "snapshotRoot": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f"
+    },
+    {
+      "id": "manager-isolated",
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp_components/include/rclcpp_components/component_manager_isolated.hpp",
+      "sha256": "4899355b35ef04da4df8238a444e8ee5a0173018b97064e0e98b764c1ab0044a",
+      "repository": "ros2/rclcpp",
+      "ref": "jazzy",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "snapshotRoot": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f"
+    },
+    {
+      "id": "py-executor",
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2/rclpy/rclpy/executors.py",
+      "sha256": "c0c62cf17fa30fd62330e04bcb6bf8d8e032c202bc87f5a2c09ffbfe696ed429",
+      "repository": "ros2/rclpy",
+      "ref": "jazzy",
+      "commit": "521012e60ba21319ef29141f8f521a0e072fe652",
+      "snapshotRoot": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2"
+    },
+    {
+      "id": "py-future",
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2/rclpy/rclpy/task.py",
+      "sha256": "4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77",
+      "repository": "ros2/rclpy",
+      "ref": "jazzy",
+      "commit": "521012e60ba21319ef29141f8f521a0e072fe652",
+      "snapshotRoot": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2"
+    },
+    {
+      "id": "py-init",
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2/rclpy/rclpy/__init__.py",
+      "sha256": "15b5665a97a688645545e704a6111a5be5f5b2d147cfcf099e2f92aabcbdf00f",
+      "repository": "ros2/rclpy",
+      "ref": "jazzy",
+      "commit": "521012e60ba21319ef29141f8f521a0e072fe652",
+      "snapshotRoot": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2"
+    },
+    {
+      "id": "py-node",
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2/rclpy/rclpy/node.py",
+      "sha256": "8b7fe0ea64e0de12cc1d5d01ebf56c202fa6e153251eb71dfff93e35eb5b3c80",
+      "repository": "ros2/rclpy",
+      "ref": "jazzy",
+      "commit": "521012e60ba21319ef29141f8f521a0e072fe652",
+      "snapshotRoot": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2"
+    },
+    {
+      "id": "py-time-source",
+      "file": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2/rclpy/rclpy/time_source.py",
+      "sha256": "9aacb85102019116edc6eb74a6993ca7efa3296273bfa53c30cebbb792d446f5",
+      "repository": "ros2/rclpy",
+      "ref": "jazzy",
+      "commit": "521012e60ba21319ef29141f8f521a0e072fe652",
+      "snapshotRoot": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2"
+    }
+  ],
+  "existingRuntimeEvidence": {
+    "file": "/home/wjz/ros2_robot/ros2-learning-hub/validation-evidence/foundation-current-validation.json",
+    "checkedAt": "2026-11-07T02:54:46+08:00",
+    "passed": true,
+    "testsRun": 15,
+    "interpretation": "读取此前本轮真实15项记录，没有在本次审查重跑。其参数测试和原子性实验不涵盖所有新候选场景。",
+    "atomicity": {
+      "individual": {
+        "accepted": [
+          true,
+          false
+        ],
+        "stored": [
+          1.0,
+          0.0
+        ],
+        "callbackParameterBatches": [
+          [
+            "alpha"
+          ],
+          [
+            "beta"
+          ]
+        ]
+      },
+      "atomic": {
+        "accepted": [
+          false
+        ],
+        "stored": [
+          0.0,
+          0.0
+        ],
+        "callbackParameterBatches": [
+          [
+            "alpha",
+            "beta"
+          ]
+        ]
+      }
+    },
+    "contextFailureHistory": "previousAttempts中的第二轮参数夹具错误及随后同Context Executor修复保留，不作为教材节点错误。"
+  },
+  "checks": [
+    {
+      "name": "正式章节解析",
+      "status": "passed",
+      "chapters": 3,
+      "apiTablesReviewed": 4
+    },
+    {
+      "name": "async_poll检查路径AST核对",
+      "status": "confirmed",
+      "createTimerCalls": 1,
+      "explicitClockKeyword": false,
+      "hasMonotonicAge": true,
+      "note": "原先AST核对；后续仅软件clock实验实测见followUpValidation，不是完整async_poll服务端测试。"
+    },
+    {
+      "name": "参数/执行器/组件固定源码核对",
+      "status": "read-and-cross-checked",
+      "note": "每条发现保留精确API和行范围；没有将源码核对等同运行证明。"
+    }
+  ],
+  "findings": [
+    {
+      "id": "runtime-review-clock-check-path",
+      "kind": "correctness-boundary",
+      "priority": "P2",
+      "status": "confirmed-by-pinned-source-and-software-clock-experiment",
+      "title": "异步轮询的单调年龄不等于暂停ROS时间时仍有超时检查",
+      "locations": [
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/dist/content.js",
+          "chapterId": "executors",
+          "jsonPointer": "/lessons/20/sections/3/codeBlocks/0",
+          "physicalLine": 6119
+        },
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/dist/content.js",
+          "apiId": "api-timer-clock",
+          "jsonPointer": "/apiReferences/2/rows/1"
+        }
+      ],
+      "observation": "async_poll.py用time.monotonic计算两秒年龄，但唯一检查入口是self.create_timer(0.2,self.tick)，未显式传clock。注释称单调超时不受仿真暂停影响，应限定为年龄计算；use_sim_time=true且/clock暂停时，检查回调本身也会停止。默认未启用use_sim_time的演示仍可前进。",
+      "evidence": [
+        {
+          "sourceId": "py-node",
+          "lineStart": 1750,
+          "lineEnd": 1785,
+          "api": "Node.create_timer",
+          "meaning": "clock=None时使用self._clock，而非独立稳态钟。"
+        },
+        {
+          "sourceId": "py-node",
+          "lineStart": 220,
+          "lineEnd": 239,
+          "api": "Node.__init__/TimeSource",
+          "meaning": "节点使用ROSClock并绑定TimeSource。"
+        },
+        {
+          "sourceId": "py-time-source",
+          "lineStart": 115,
+          "lineEnd": 128,
+          "api": "TimeSource.attach_clock/clock_callback",
+          "meaning": "活动ROSClock只由收到的clock消息更新覆盖值。"
+        }
+      ],
+      "recommendation": "如果希望仿真时间暂停时也检查超时，用显式Clock(clock_type=ClockType.STEADY_TIME)驱动检查timer，或以同Context执行器的有界外层循环检查monotonic deadline；同时说明线程/回调组阻塞仍可推迟软期限。不要把年龄时钟的单调性等同于检查路径的调度保证。",
+      "experiment": {
+        "status": "executed-software-clock-lab",
+        "environment": {
+          "ROS_DOMAIN_ID": "223",
+          "ROS_AUTOMATIC_DISCOVERY_RANGE": "LOCALHOST",
+          "RMW_IMPLEMENTATION": "rmw_fastrtps_cpp",
+          "ROS_LOCALHOST_ONLY": "unset"
+        },
+        "isolation": "每例唯一命名空间；使用软件消息及短回调，外层timeout和单调截止，退出只清理自己创建的节点/进程。",
+        "id": "clock-timer-lab",
+        "title": "手动软件/clock与ROS/STEADY计时器三阶段对照",
+        "implementationSizeEstimate": "约100–160行Python；父任务已追加该实验素材委派",
+        "implementationSteps": [
+          "同进程建立Clock发布节点和use_sim_time=true的被测节点，确认软件参数生效。",
+          "分别创建默认ROS timer和显式STEADY timer；计数而不逐次打印。",
+          "以单调外层循环处理clock未到、正值暂停、逐步推进；期间没有Gazebo或其他仿真器。"
+        ],
+        "acceptanceAssertions": [
+          "未到和正值暂停时ROS计数不增长，STEADY计数增长。",
+          "逐步推进ROS时间时两个计数均增长。",
+          "每阶段和整轮都有有限monotonic上限，节点/执行器/上下文均清理。"
+        ],
+        "whatItCanVerify": [
+          "检查路径是否依赖ROS时间前进。",
+          "在本机实际调度下两种计时器的不同触发条件。"
+        ],
+        "whatItCannotVerify": [
+          "硬实时保证或任意线程阻塞下的精确超时。",
+          "真实仿真/机器人行为。"
+        ],
+        "actualAsset": "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/clock_timer_lab.py",
+        "actualEvidence": "/home/wjz/ros2_robot/ros2-learning-hub/validation-evidence/clock-timer-current-validation.json"
+      }
+    },
+    {
+      "id": "runtime-review-parameter-stages",
+      "kind": "teaching-gap",
+      "priority": "P2",
+      "status": "recommended-extension",
+      "title": "参数三阶段、候选配置及提交后副作用尚缺完整可运行对照",
+      "locations": [
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/dist/content.js",
+          "chapterId": "parameters",
+          "jsonPointer": "/lessons/16/sections/1",
+          "physicalLine": 4872
+        },
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/dist/content.js",
+          "chapterId": "parameters",
+          "jsonPointer": "/lessons/16/sections/3",
+          "physicalLine": 4926
+        },
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/dist/content.js",
+          "chapterId": "parameters",
+          "jsonPointer": "/lessons/16/sections/5",
+          "physicalLine": 4980
+        },
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/dist/content.js",
+          "apiId": "api-parameters",
+          "jsonPointer": "/apiReferences/5/rows/2"
+        },
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/dist/content.js",
+          "apiId": "api-parameters",
+          "jsonPointer": "/apiReferences/5/rows/5"
+        }
+      ],
+      "observation": "正文正确要求on-set无副作用、跨字段候选配置及原子更新，但主例只校验单个gain。API表把后置阶段写为概念描述，没有add_pre_set_parameters_callback/add_post_set_parameters_callback的签名、顺序或失败边界。基础15项证明独立标量逐项/原子差异，没有覆盖多个校验者、候选上下限或后置异常。",
+      "evidence": [
+        {
+          "sourceId": "cpp-param-types",
+          "lineStart": 37,
+          "lineEnd": 68,
+          "api": "PreSet/OnSet/PostSetParametersCallbackType",
+          "meaning": "C++ pre返回void且可变vector引用；on返回SetParametersResult且const引用；post返回void。"
+        },
+        {
+          "sourceId": "py-node",
+          "lineStart": 1052,
+          "lineEnd": 1133,
+          "api": "Node.add_pre/on/post_set_parameters_callback",
+          "meaning": "Python pre接收并返回列表；on返回结果；post接收已成功列表且不返回接纳结果。新注册校验者放在列表前。"
+        },
+        {
+          "sourceId": "cpp-parameters",
+          "lineStart": 353,
+          "lineEnd": 426,
+          "api": "__call_on_set_parameters_callbacks/__set_parameters_atomically_common",
+          "meaning": "任一on-set拒绝即停止；全部通过后写入参数存储，然后调用post。"
+        },
+        {
+          "sourceId": "cpp-parameters",
+          "lineStart": 1163,
+          "lineEnd": 1185,
+          "api": "NodeParameters.add_on/post_set_parameters_callback",
+          "meaning": "C++最新注册先运行，句柄须保留。"
+        },
+        {
+          "sourceId": "py-node",
+          "lineStart": 907,
+          "lineEnd": 962,
+          "api": "Node._set_parameters_atomically_common",
+          "meaning": "Python先验证，写存储并发布事件后调用post；post异常不是回滚协议。"
+        },
+        {
+          "sourceId": "cpp-param-api",
+          "lineStart": 1124,
+          "lineEnd": 1150,
+          "api": "Node.add_on_set_parameters_callback",
+          "meaning": "声明也可触发on-set；校验者不得递归set/declare；拒绝后后续校验者不调用。"
+        }
+      ],
+      "recommendation": "补一个只修改内存缓存的反例与正确post提交例；给出min/max候选配置合并的完整实现；明确pre的C++/Python返回约定不同，post用于已提交后的应用动作，不能返回false撤销参数。可能失败的昂贵资源创建应有受控配置/错误状态流程，不能把参数原子提交宣传成硬件或资源事务。",
+      "experiment": {
+        "status": "proposed-not-run-in-this-review",
+        "environment": {
+          "ROS_DOMAIN_ID": "223",
+          "ROS_AUTOMATIC_DISCOVERY_RANGE": "LOCALHOST",
+          "RMW_IMPLEMENTATION": "rmw_fastrtps_cpp",
+          "ROS_LOCALHOST_ONLY": "unset"
+        },
+        "isolation": "每例唯一命名空间；使用软件消息及短回调，外层timeout和单调截止，退出只清理自己创建的节点/进程。",
+        "id": "parameter-transaction-lab",
+        "title": "两个校验者、候选上下限和提交缓存",
+        "implementationSizeEstimate": "约100–150行Python；另给C++签名/句柄对应表",
+        "implementationSteps": [
+          "仅在内存中演示错误on-set先改cache、后一个validator拒绝；保留执行顺序记录，禁止硬件副作用。",
+          "正确版validator纯检查，post只在接受后切换完整不可变快照。",
+          "从min=0,max=1请求min=2,max=3：以旧值合并全部候选后做min<max检查。",
+          "对post中的受控异常单独捕获并读取存储，说明异常发生在写入之后。"
+        ],
+        "acceptanceAssertions": [
+          "错误版被拒绝后参数仍旧、cache已变，暴露不一致。",
+          "正确版拒绝时存储/cache都不变，接受时一起切到新候选。",
+          "逐项[min=2,max=3]可得到[拒绝,接受]并停在[0,3]；原子批次可得到[2,3]。",
+          "受控post异常之后不得声称参数已经自动回滚。"
+        ],
+        "whatItCanVerify": [
+          "参数校验与应用提交的不同阶段。",
+          "跨字段不变量为何需要候选合并而非只看传入单项。"
+        ],
+        "whatItCannotVerify": [
+          "跨节点分布式事务。",
+          "设备重配置成功或不可回滚副作用可安全恢复。"
+        ]
+      }
+    },
+    {
+      "id": "runtime-review-group-matrix",
+      "kind": "teaching-gap",
+      "priority": "P2",
+      "status": "recommended-extension",
+      "title": "回调组章节的三配置时间线目前是案例推演，未有完整对照实验",
+      "locations": [
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/dist/content.js",
+          "chapterId": "executors",
+          "jsonPointer": "/lessons/20/sections/1",
+          "physicalLine": 6093
+        },
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/dist/content.js",
+          "chapterId": "executors",
+          "jsonPointer": "/lessons/20/sections/4",
+          "physicalLine": 6137
+        },
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/dist/content.js",
+          "chapterId": "executors",
+          "jsonPointer": "/lessons/20/sections/5",
+          "physicalLine": 6146
+        },
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/dist/content.js",
+          "apiId": "api-executor-groups",
+          "jsonPointer": "/apiReferences/8/rows/1"
+        },
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/dist/content.js",
+          "apiId": "api-executor-groups",
+          "jsonPointer": "/apiReferences/8/rows/2"
+        }
+      ],
+      "observation": "现有唯一完整executor脚本选择单线程异步轮询，能解释不阻塞；组划分、相同回调重入及多线程对照仅有片段与workedExample。基础Count Python服务器虽使用Reentrant和两线程，但其通过不能验证“同组多线程仍串行”和不同组允许重叠。",
+      "evidence": [
+        {
+          "sourceId": "py-node",
+          "lineStart": 1664,
+          "lineEnd": 1695,
+          "api": "Node.create_client",
+          "meaning": "默认客户端进入默认组，显式callback_group才改变归属。"
+        },
+        {
+          "sourceId": "py-node",
+          "lineStart": 1750,
+          "lineEnd": 1785,
+          "api": "Node.create_timer",
+          "meaning": "timer默认归属节点默认组，组引用由实体持有并参与调度。"
+        },
+        {
+          "sourceId": "py-executor",
+          "lineStart": 583,
+          "lineEnd": 615,
+          "api": "Executor._make_handler",
+          "meaning": "ROS实体执行前调用beginning_execution，finally释放组。"
+        },
+        {
+          "sourceId": "py-executor",
+          "lineStart": 993,
+          "lineEnd": 1020,
+          "api": "MultiThreadedExecutor._spin_once_impl",
+          "meaning": "工作分配到线程池，线程数本身不绕过实体组许可。"
+        }
+      ],
+      "recommendation": "补单线程、两线程同互斥组、两线程分互斥组三模式的完整脚本；可加Reentrant重入模式。打印最终时间线/最大并发数，保留线程ID与start/end，避免无限日志。实验允许观察并发，不把线程数或一次测量变成确定时限证明。",
+      "experiment": {
+        "status": "proposed-not-run-in-this-review",
+        "environment": {
+          "ROS_DOMAIN_ID": "223",
+          "ROS_AUTOMATIC_DISCOVERY_RANGE": "LOCALHOST",
+          "RMW_IMPLEMENTATION": "rmw_fastrtps_cpp",
+          "ROS_LOCALHOST_ONLY": "unset"
+        },
+        "isolation": "每例唯一命名空间；使用软件消息及短回调，外层timeout和单调截止，退出只清理自己创建的节点/进程。",
+        "id": "callback-group-matrix",
+        "title": "一个短timer和一个可中断慢回调的三模式对照",
+        "implementationSizeEstimate": "约100–140行Python；可复用基础工程服务类型",
+        "implementationSteps": [
+          "固定输入与sleep型慢工作（会释放GIL），分别配置执行器和组。",
+          "每回调用短锁维护active计数、记录单调进入/退出与线程ID；锁外执行慢工作。",
+          "用有限Event等待或总体期限保证“被阻塞”模式也会退出。"
+        ],
+        "acceptanceAssertions": [
+          "单线程与同MutuallyExclusive组的active最大值不得超过1。",
+          "分组且至少两个工作线程的运行应记录可解释的重叠证据；未观察到时报告负载/调度，不能推断API禁止重叠。",
+          "每个回调事件均配对结束，所有线程/执行器有限退出。"
+        ],
+        "whatItCanVerify": [
+          "组许可与执行线程是独立条件。",
+          "等待型负载在本机是否实际重叠。"
+        ],
+        "whatItCannotVerify": [
+          "纯Python CPU任务等比例加速。",
+          "任何负载下的实时截止保证。"
+        ]
+      }
+    },
+    {
+      "id": "runtime-review-future-continuation",
+      "kind": "api-detail-gap",
+      "priority": "P2",
+      "status": "pinned-source-inference-not-runtime-verified",
+      "title": "Future完成回调的执行路径不能机械套用ROS实体回调组",
+      "locations": [
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/dist/content.js",
+          "chapterId": "executors",
+          "jsonPointer": "/lessons/20/sections/2",
+          "physicalLine": 6102
+        },
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/dist/content.js",
+          "apiId": "api-service-future",
+          "jsonPointer": "/apiReferences/3/rows/5"
+        },
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/dist/content.js",
+          "apiId": "api-executor-groups",
+          "jsonPointer": "/apiReferences/8/rows/2"
+        }
+      ],
+      "observation": "API表推荐Future完成回调或状态机，但未解释完成回调的执行位置。固定rclpy中Future有executor时将done callback排为generic Task；无executor时可在完成/注册线程立即调用。这与client接收响应的ROS实体handler不同。固定rclcpp async_send_request带callback重载则在Client.handle_response中直接调用continuation。",
+      "evidence": [
+        {
+          "sourceId": "py-future",
+          "lineStart": 146,
+          "lineEnd": 202,
+          "api": "Future._schedule_or_invoke_done_callbacks/add_done_callback",
+          "meaning": "有executor使用create_task；没有executor直接调用，已完成future的注册也可立即执行。"
+        },
+        {
+          "sourceId": "py-executor",
+          "lineStart": 249,
+          "lineEnd": 261,
+          "api": "Executor.create_task",
+          "meaning": "泛型任务使用默认TaskData，不带source_entity/source_node。"
+        },
+        {
+          "sourceId": "py-executor",
+          "lineStart": 655,
+          "lineEnd": 677,
+          "api": "Executor._wait_for_ready_callbacks",
+          "meaning": "就绪generic任务直接入调度队列；该路径不同于实体handler的group beginning/ending检查。"
+        },
+        {
+          "sourceId": "py-executor",
+          "lineStart": 500,
+          "lineEnd": 518,
+          "api": "Executor._take_client",
+          "meaning": "收到客户端响应后关联executor并完成future。"
+        },
+        {
+          "sourceId": "cpp-client",
+          "lineStart": 575,
+          "lineEnd": 604,
+          "api": "Client.handle_response",
+          "meaning": "C++设置promise并在响应处理路径直接调用注册callback。"
+        },
+        {
+          "sourceId": "cpp-executor",
+          "lineStart": 470,
+          "lineEnd": 502,
+          "api": "Executor.execute_any_executable",
+          "meaning": "client处理位于当前实体callback_group被占用到释放之间。"
+        }
+      ],
+      "recommendation": "将“客户端响应处理”和“应用注册的done continuation”分开说明；不要承诺rclpy generic Task自动继承client互斥组。continuation保持短小，显式保护共享状态或只入有界队列，由统一组的timer消费。说明这是固定Jazzy实现路径，若要依赖调度细节应有版本测试。",
+      "experiment": {
+        "status": "proposed-not-run-in-this-review",
+        "environment": {
+          "ROS_DOMAIN_ID": "223",
+          "ROS_AUTOMATIC_DISCOVERY_RANGE": "LOCALHOST",
+          "RMW_IMPLEMENTATION": "rmw_fastrtps_cpp",
+          "ROS_LOCALHOST_ONLY": "unset"
+        },
+        "isolation": "每例唯一命名空间；使用软件消息及短回调，外层timeout和单调截止，退出只清理自己创建的节点/进程。",
+        "id": "future-continuation-context",
+        "title": "立即调用、执行器Task与共享状态保护",
+        "implementationSizeEstimate": "约80–120行Python；本轮仅源码推断，未运行",
+        "implementationSteps": [
+          "构造无executor且已完成的Future，记录add_done_callback调用前后及线程ID。",
+          "构造关联两线程executor的Future；在默认互斥timer内set_result并有限等待done Event，记录done是否与timer重叠。",
+          "正确版done只投递消息，默认互斥timer统一更新业务状态。"
+        ],
+        "acceptanceAssertions": [
+          "无executor已完成Future可同步在注册调用路径执行。",
+          "关联executor时done应由执行器推进；记录与ROS实体回调时间线的关系。",
+          "正确版业务状态仅有一个受控写入者，队列有容量/过期策略。"
+        ],
+        "whatItCanVerify": [
+          "generic Future/Task的调度机制及调用时机。"
+        ],
+        "whatItCannotVerify": [
+          "该手动完成Future实验不能单独证明所有真实Service/Action响应路径；端到端须另加受控服务端。",
+          "不能从GIL推导数据更新天然安全。"
+        ]
+      }
+    },
+    {
+      "id": "runtime-review-context-executor",
+      "kind": "api-detail-gap",
+      "priority": "P3",
+      "status": "existing-runtime-evidence-available",
+      "title": "自建Context必须显式匹配Executor，默认spin辅助函数有隐式全局状态",
+      "locations": [
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/dist/content.js",
+          "chapterId": "executors",
+          "jsonPointer": "/lessons/20/sections/3",
+          "physicalLine": 6111
+        },
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/dist/content.js",
+          "apiId": "api-executor-groups",
+          "jsonPointer": "/apiReferences/8"
+        },
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/dist/content.js",
+          "apiId": "api-service-future",
+          "jsonPointer": "/apiReferences/3/rows/3"
+        }
+      ],
+      "observation": "本轮基础测试夹具曾真实踩到该边界：自建Context的Node调用未指定executor的rclpy.spin_once，触发未初始化默认Context的全局执行器错误；已修复夹具并全部通过。当前三章未给此边界的最小正例。默认Context的现有教学代码不受此问题影响。",
+      "evidence": [
+        {
+          "sourceId": "py-init",
+          "lineStart": 101,
+          "lineEnd": 114,
+          "api": "rclpy.get_global_executor",
+          "meaning": "默认全局执行器绑定默认Context。"
+        },
+        {
+          "sourceId": "py-init",
+          "lineStart": 198,
+          "lineEnd": 226,
+          "api": "rclpy.spin_once",
+          "meaning": "executor=None使用global executor；不可在多个线程对同Node/Executor并行调用。"
+        },
+        {
+          "sourceId": "py-executor",
+          "lineStart": 188,
+          "lineEnd": 200,
+          "api": "Executor.__init__",
+          "meaning": "context=None选择默认Context，否则用显式Context。"
+        }
+      ],
+      "recommendation": "在executor/API边界说明中补Context→Node→Executor同源、只由一个线程推进spin、先停executor再销毁node/context的最小模式；可直接整理基础测试现有probe夹具作为教学正例，避免新增重复大型工程。",
+      "experiment": {
+        "status": "proposed-not-run-in-this-review",
+        "environment": {
+          "ROS_DOMAIN_ID": "223",
+          "ROS_AUTOMATIC_DISCOVERY_RANGE": "LOCALHOST",
+          "RMW_IMPLEMENTATION": "rmw_fastrtps_cpp",
+          "ROS_LOCALHOST_ONLY": "unset"
+        },
+        "isolation": "每例唯一命名空间；使用软件消息及短回调，外层timeout和单调截止，退出只清理自己创建的节点/进程。",
+        "id": "context-executor-smoke",
+        "title": "显式Context的有界timer烟雾实验",
+        "implementationSizeEstimate": "约40–60行Python；已有foundation fixture可复用",
+        "implementationSteps": [
+          "创建Context并init(context=...)，创建Node(context=...)和SingleThreadedExecutor(context=...)。",
+          "add_node后用executor.spin_once(timeout_sec=0.1)有界推进，直到收到计数或monotonic总期限。",
+          "remove_node、shutdown executor、destroy_node、shutdown context。"
+        ],
+        "acceptanceAssertions": [
+          "指定次数回调完成且无默认Context依赖。",
+          "清理后context不再ok，程序有限退出。"
+        ],
+        "whatItCanVerify": [
+          "显式Context生命周期与Executor归属。"
+        ],
+        "whatItCannotVerify": [
+          "任意多线程/嵌套spin正确性。"
+        ]
+      }
+    },
+    {
+      "id": "runtime-review-component-parameters",
+      "kind": "teaching-gap",
+      "priority": "P2",
+      "status": "recommended-extension",
+      "title": "组件章节尚缺能观察NodeOptions参数边界的原创配置组件",
+      "locations": [
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/dist/content.js",
+          "chapterId": "composition",
+          "jsonPointer": "/lessons/22/sections/1",
+          "physicalLine": 6572
+        },
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/dist/content.js",
+          "chapterId": "composition",
+          "jsonPointer": "/lessons/22/sections/2",
+          "physicalLine": 6606
+        },
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/dist/content.js",
+          "chapterId": "composition",
+          "jsonPointer": "/lessons/22/sections/3",
+          "physicalLine": 6624
+        },
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/dist/content.js",
+          "chapterId": "parameters",
+          "jsonPointer": "/lessons/16/sections/2",
+          "physicalLine": 4891
+        },
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/dist/content.js",
+          "apiId": "api-parameters",
+          "jsonPointer": "/apiReferences/5/rows/0"
+        }
+      ],
+      "observation": "hub::Talker正确接收并传递NodeOptions，但没有自定义参数；gain完整节点是独立可执行类，基础10包也无组件包。读者尚不能用已有一组完整代码直接对照“独立gain节点”和“加载gain组件”在同样外部接口下的配置。容器CLI参数与加载请求参数并非天然等价。",
+      "evidence": [
+        {
+          "sourceId": "component-manager",
+          "lineStart": 141,
+          "lineEnd": 195,
+          "api": "ComponentManager.create_node_options",
+          "meaning": "默认use_global_arguments(false)，从LoadNode.parameters和remap_rules构建options；use_intra_process_comms等来自extra_arguments，forward_global_arguments为显式选择。"
+        },
+        {
+          "sourceId": "component-manager",
+          "lineStart": 255,
+          "lineEnd": 285,
+          "api": "ComponentManager.on_load_node",
+          "meaning": "构造异常会转为加载失败响应；加载成功返回full_node_name与unique_id。"
+        },
+        {
+          "sourceId": "component-cli",
+          "lineStart": 343,
+          "lineEnd": 370,
+          "api": "ros2component.add_component_arguments",
+          "meaning": "CLI分别暴露--node-name、--node-namespace、-p/--parameter和-e/--extra-argument。"
+        }
+      ],
+      "recommendation": "增加一个保留gain校验/输出合同的ConfigComponent，构造接NodeOptions且转交Node；给完整CMake/package、独立入口和加载命令。用实际返回的名称/ID检查参数和卸载，明确容器管理节点的-p gain不会默认给每个组件传同名gain。默认不启用forward_global_arguments，避免无意受容器全局参数影响。",
+      "experiment": {
+        "status": "proposed-not-run-in-this-review",
+        "environment": {
+          "ROS_DOMAIN_ID": "223",
+          "ROS_AUTOMATIC_DISCOVERY_RANGE": "LOCALHOST",
+          "RMW_IMPLEMENTATION": "rmw_fastrtps_cpp",
+          "ROS_LOCALHOST_ONLY": "unset"
+        },
+        "isolation": "每例唯一命名空间；使用软件消息及短回调，外层timeout和单调截止，退出只清理自己创建的节点/进程。",
+        "id": "component-config-lab",
+        "title": "同一gain功能的独立入口与动态组件",
+        "implementationSizeEstimate": "约120–180行C++/CMake/XML加小型验收脚本；建议独立runtime_lab_components包",
+        "implementationSteps": [
+          "以NodeOptions构造可加载ConfigComponent，声明gain并复用有限double校验，参数行为与基础ConfigNode一致。",
+          "独立入口gain=1.5与组件LoadNode.parameters gain=1.5分别验收输出0.3。",
+          "容器只设管理节点gain，与组件加载-p gain分开观察；在指定组件命名空间下get参数。",
+          "加载gain=3.0的组件应失败；管理容器仍能列出已有有效组件。"
+        ],
+        "acceptanceAssertions": [
+          "相同有效配置得到相同消息类型与数值输出。",
+          "容器参数、组件参数、extra_arguments的作用对象不同。",
+          "无效构造加载失败不被计为组件已运行；已加载组件ID/名称可核对并正确卸载。"
+        ],
+        "whatItCanVerify": [
+          "NodeOptions是否被构造函数真正采用。",
+          "组件配置与独立节点配置的可观察等价性。"
+        ],
+        "whatItCannotVerify": [
+          "所有性能或零复制收益。",
+          "组件崩溃隔离或真实硬件重配置。"
+        ]
+      }
+    },
+    {
+      "id": "runtime-review-container-models",
+      "kind": "optional-depth",
+      "priority": "P3",
+      "status": "recommended-extension",
+      "title": "可补isolated容器与只读thread_num，避免把执行器隔离当进程隔离",
+      "locations": [
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/dist/content.js",
+          "chapterId": "composition",
+          "jsonPointer": "/lessons/22/sections/3",
+          "physicalLine": 6624
+        },
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/dist/content.js",
+          "chapterId": "composition",
+          "jsonPointer": "/lessons/22/sections/5",
+          "physicalLine": 6651
+        },
+        {
+          "file": "/home/wjz/ros2_robot/ros2-learning-hub/dist/content.js",
+          "apiId": "api-executor-groups",
+          "jsonPointer": "/apiReferences/8/rows/4"
+        }
+      ],
+      "observation": "现有single/mt与共享故障边界说明正确。固定Jazzy另有component_container_isolated：每组件专属executor/thread，仍共享进程；mt容器的thread_num为管理节点只读参数。适合作为运行机制进阶，而非宣称现有基础组件步骤错误。",
+      "evidence": [
+        {
+          "sourceId": "container-single",
+          "lineStart": 21,
+          "lineEnd": 32,
+          "api": "component_container main",
+          "meaning": "单一SingleThreadedExecutor承载组件管理及所加载节点。"
+        },
+        {
+          "sourceId": "container-multi",
+          "lineStart": 21,
+          "lineEnd": 40,
+          "api": "component_container_mt main",
+          "meaning": "读取thread_num后创建共享MultiThreadedExecutor。"
+        },
+        {
+          "sourceId": "component-manager",
+          "lineStart": 52,
+          "lineEnd": 62,
+          "api": "ComponentManager.thread_num",
+          "meaning": "只读整型参数，范围与硬件并发数关联。"
+        },
+        {
+          "sourceId": "container-isolated",
+          "lineStart": 23,
+          "lineEnd": 51,
+          "api": "component_container_isolated main",
+          "meaning": "默认每组件单线程执行器，--use_multi_threaded_executor改为每组件多线程执行器。"
+        },
+        {
+          "sourceId": "manager-isolated",
+          "lineStart": 65,
+          "lineEnd": 97,
+          "api": "ComponentManagerIsolated.add_node_to_executor/remove_node_from_executor",
+          "meaning": "每组件创建专属executor和thread，卸载时取消并回收对应执行线程。"
+        }
+      ],
+      "recommendation": "加一个三容器对照表和短实验：shared single、shared mt、per-component executor，分别记录线程ID和slow回调期间heartbeat；明确isolated不是进程/内存/故障隔离。thread_num应在启动时配置，并验证运行时修改因read_only被拒绝；不依赖固定机器核心数或宣称精确频率。",
+      "experiment": {
+        "status": "proposed-not-run-in-this-review",
+        "environment": {
+          "ROS_DOMAIN_ID": "223",
+          "ROS_AUTOMATIC_DISCOVERY_RANGE": "LOCALHOST",
+          "RMW_IMPLEMENTATION": "rmw_fastrtps_cpp",
+          "ROS_LOCALHOST_ONLY": "unset"
+        },
+        "isolation": "每例唯一命名空间；使用软件消息及短回调，外层timeout和单调截止，退出只清理自己创建的节点/进程。",
+        "id": "container-scheduling-lab",
+        "title": "两个软件组件的容器线程模型对照",
+        "implementationSizeEstimate": "在组件配置实验基础上增加约60–100行与三条运行命令",
+        "implementationSteps": [
+          "沿用同一个完整组件包构建heartbeat与短时slow组件，保持相同话题合同。",
+          "分别启动三种容器，使用本次实际管理节点名称与加载ID。",
+          "记录PID、线程ID与callback start/end，尝试动态修改thread_num并核对拒绝。"
+        ],
+        "acceptanceAssertions": [
+          "同一容器内组件PID相同；isolated的专属线程不变成独立进程。",
+          "single下slow占用共享执行资源；mt/isolated可记录允许的跨组件重叠。",
+          "thread_num只读且启动值满足该机器允许范围。"
+        ],
+        "whatItCanVerify": [
+          "组件部署与执行资源分配的区别。"
+        ],
+        "whatItCannotVerify": [
+          "崩溃隔离或CPU独占。",
+          "任意负载下的延迟和实时性保证。"
+        ]
+      }
+    }
+  ],
+  "suggestedImplementationOrder": [
+    "clock-timer-lab",
+    "parameter-transaction-lab",
+    "callback-group-matrix",
+    "component-config-lab",
+    "future-continuation-context",
+    "context-executor-smoke",
+    "container-scheduling-lab"
+  ],
+  "limits": [
+    "本轮只审查指定三章与四组API表，不等于全部60章再次审查。",
+    "固定官方源码的commit与apt实际安装版本是不同证据；新增实验仍需记录实际运行库版本。",
+    "Future generic Task与客户端响应处理的区别来自固定实现推断；无端到端实测前不声称所有服务/Action continuation在某组外必定并行。",
+    "候选实验尚未创建/运行；软件clock实验已按追加委派独立运行并记录，只有这一候选完成实测，不属于启动真实仿真。",
+    "小型调度实验只能证明指定输入和机器下的可观察行为，不形成硬实时、任意重试幂等或设备停车证明。"
+  ],
+  "followUpValidation": {
+    "status": "passed",
+    "reason": "父任务在审查后追加有边界软件clock实验委派。",
+    "file": "/home/wjz/ros2_robot/ros2-learning-hub/validation-evidence/clock-timer-current-validation.json",
+    "sha256": "5d0ac041915afb6883c11d98483466171f873563e362e5cf1a981d1305cdf675",
+    "script": "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/clock_timer_lab.py",
+    "scriptSha256": "f1d7835bf48b4b8309eb8b5b673955bafd292c99d00b6ad1a43716be2bf241ce",
+    "periodS": 0.1,
+    "requestedWindowS": 0.8,
+    "phases": [
+      {
+        "name": "clock-not-received",
+        "actualElapsedS": 0.8000687289986672,
+        "delta": {
+          "ros": 0,
+          "steady": 8
+        },
+        "rosTimeStartNs": 0,
+        "rosTimeEndNs": 0
+      },
+      {
+        "name": "positive-clock-paused",
+        "actualElapsedS": 0.8001305360012338,
+        "delta": {
+          "ros": 0,
+          "steady": 8
+        },
+        "rosTimeStartNs": 10000000000,
+        "rosTimeEndNs": 10000000000
+      },
+      {
+        "name": "clock-advancing",
+        "actualElapsedS": 0.8001997490009671,
+        "delta": {
+          "ros": 8,
+          "steady": 8
+        },
+        "rosTimeStartNs": 10000000000,
+        "rosTimeEndNs": 10850000000
+      }
+    ],
+    "versions": {
+      "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+      "pythonExecutable": "/usr/bin/python3",
+      "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+      "rosDistro": "jazzy",
+      "rclpy": "7.1.12",
+      "packages": {
+        "rclpy": "7.1.12",
+        "rclcpp": "28.1.22",
+        "rmw_fastrtps_cpp": "8.4.4",
+        "rosgraph_msgs": "2.0.4"
+      }
+    },
+    "scope": "真实rclpy+手动软件/clock；两个节点、本机域223/LOCALHOST，未运行仿真或硬件。其余六个研究候选未运行。"
+  }
+}

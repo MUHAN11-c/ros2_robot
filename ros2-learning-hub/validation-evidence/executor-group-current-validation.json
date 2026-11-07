@@ -1,0 +1,3209 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-07T03:50:18+08:00",
+  "passed": true,
+  "script": "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/executor_group_lab.py",
+  "scriptSha256": "485b88a9dc02ae18d3289e9aab57e99c603e381fdaca145e0c2d8ed7a522f73c",
+  "invocation": [
+    "/usr/bin/python3",
+    "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/executor_group_lab.py"
+  ],
+  "parameters": {
+    "case": "all",
+    "domain_id": 219,
+    "period_s": 0.02,
+    "observe_s": 0.35,
+    "start_timeout_s": 3.0,
+    "callback_cap_s": 5.0,
+    "cleanup_timeout_s": 3.0,
+    "worker_timeout_s": 20.0
+  },
+  "environment": {
+    "ROS_DOMAIN_ID": "219",
+    "ROS_AUTOMATIC_DISCOVERY_RANGE": "LOCALHOST",
+    "RMW_IMPLEMENTATION": "rmw_fastrtps_cpp",
+    "ROS_LOCALHOST_ONLY": "unset",
+    "ROS_STATIC_PEERS": "unset"
+  },
+  "casesRequested": [
+    "single_thread_distinct_groups",
+    "two_threads_same_group",
+    "two_threads_distinct_groups",
+    "client_future_continuation"
+  ],
+  "results": [
+    {
+      "case": "single_thread_distinct_groups",
+      "command": [
+        "/usr/bin/python3",
+        "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/executor_group_lab.py",
+        "--worker",
+        "single_thread_distinct_groups",
+        "--domain-id",
+        "219",
+        "--period-s",
+        "0.02",
+        "--observe-s",
+        "0.35",
+        "--start-timeout-s",
+        "3.0",
+        "--callback-cap-s",
+        "5.0",
+        "--cleanup-timeout-s",
+        "3.0",
+        "--worker-timeout-s",
+        "20.0"
+      ],
+      "workerDeadlineS": 20.0,
+      "exitCode": 0,
+      "stdout": "EXECUTOR_GROUP_RESULT={\"case\": \"single_thread_distinct_groups\", \"passed\": true, \"pid\": 221819, \"scriptSha256\": \"485b88a9dc02ae18d3289e9aab57e99c603e381fdaca145e0c2d8ed7a522f73c\", \"provenance\": {\"versions\": {\"python\": \"3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]\", \"pythonExecutable\": \"/usr/bin/python3\", \"platform\": \"Linux-7.0.0-38-generic-x86_64-with-glibc2.39\", \"rosDistro\": \"jazzy\", \"rclpy\": \"7.1.12\", \"packages\": {\"rclpy\": \"7.1.12\", \"rclcpp\": \"28.1.22\", \"rmw_fastrtps_cpp\": \"8.4.4\", \"example_interfaces\": \"0.12.1\"}}, \"runtimeSource\": [{\"api\": \"Future._schedule_or_invoke_done_callbacks\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py\", \"sha256\": \"4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77\", \"lineStart\": 146, \"lineEnd\": 168, \"explanation\": \"Future完成后有executor时排generic Task\"}, {\"api\": \"Future.add_done_callback\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py\", \"sha256\": \"4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77\", \"lineStart\": 178, \"lineEnd\": 202, \"explanation\": \"已完成Future也可立即调用或排Task，依是否关联executor\"}, {\"api\": \"Executor.create_task\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 241, \"lineEnd\": 253, \"explanation\": \"generic Task不附带ROS source_entity回调组\"}, {\"api\": \"Executor._take_client\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 492, \"lineEnd\": 519, \"explanation\": \"真实响应先关联executor，再完成Future\"}, {\"api\": \"Executor._make_handler\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 559, \"lineEnd\": 612, \"explanation\": \"ROS实体handler另行执行组beginning/ending检查\"}, {\"api\": \"MutuallyExclusiveCallbackGroup\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/callback_groups.py\", \"sha256\": \"da1314ac295f427aa8191ae8a86425bbfe62e512fa3678d3d401375b369cf557\", \"lineStart\": 93, \"lineEnd\": 117, \"explanation\": \"互斥许可只覆盖归属于本组的实体执行\"}], \"pinnedReference\": {\"commit\": \"521012e60ba21319ef29141f8f521a0e072fe652\", \"root\": \"/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2\", \"note\": \"下载快照是解释依据；本次行为以runtimeSource和实际版本为准。\"}}, \"threads\": 1, \"groupLayout\": \"distinct MutuallyExclusive\", \"namespace\": \"/executor_group_lab/p221819/single_thread_distinct_groups\", \"slowWork\": \"Event.wait：释放GIL的模拟IO门闩，不是CPU基准\", \"heldWindow\": {\"startMonotonicS\": 10408.182099848, \"endMonotonicS\": 10408.532188154, \"maximumObservationS\": 0.35, \"actualElapsedS\": 0.3500883060005435, \"slowStillActive\": true, \"heartbeatObservedInside\": false, \"heartbeatTimerReadyAtWindowEnd\": true, \"countsAtWindowEnd\": {\"heartbeat\": 0, \"heartbeatWhileSlow\": 0}, \"spinThreadAlive\": true}, \"counts\": {\"heartbeat\": 1, \"heartbeatWhileSlow\": 0}, \"assertions\": {\"controlledSlowStart\": true, \"heldWindowValid\": true, \"expectedOverlap\": false, \"observedOverlap\": false, \"heartbeatEventuallyRan\": true, \"callbackCapExpired\": false}, \"cleanup\": {\"errors\": [], \"spinThreadJoined\": true, \"executorShutdownReturned\": true, \"contextOkAfterCleanup\": false, \"remainingNewPythonThreads\": [], \"spinErrors\": []}, \"timeline\": {\"events\": [{\"event\": \"start\", \"span\": 1, \"callback\": \"slow\", \"monotonicS\": 10408.182082438, \"elapsedS\": 0.05244295299962687, \"threadId\": 135857935742656, \"nativeThreadId\": 221834, \"activeCallbacks\": [\"slow\"]}, {\"event\": \"end\", \"span\": 1, \"callback\": \"slow\", \"monotonicS\": 10408.532235684, \"elapsedS\": 0.4025963289986976, \"threadId\": 135857935742656, \"nativeThreadId\": 221834, \"activeCallbacks\": []}, {\"event\": \"start\", \"span\": 2, \"callback\": \"heartbeat\", \"monotonicS\": 10408.532412434, \"elapsedS\": 0.40277295899977617, \"threadId\": 135857935742656, \"nativeThreadId\": 221834, \"activeCallbacks\": [\"heartbeat\"], \"slowWasActiveAtEntry\": false}, {\"event\": \"end\", \"span\": 2, \"callback\": \"heartbeat\", \"monotonicS\": 10408.532417164, \"elapsedS\": 0.4027777089995652, \"threadId\": 135857935742656, \"nativeThreadId\": 221834, \"activeCallbacks\": []}], \"maxConcurrency\": 1, \"activeCallbacksAtEnd\": []}, \"durationS\": 0.532228985999609}\n",
+      "stderr": "",
+      "result": {
+        "case": "single_thread_distinct_groups",
+        "passed": true,
+        "pid": 221819,
+        "scriptSha256": "485b88a9dc02ae18d3289e9aab57e99c603e381fdaca145e0c2d8ed7a522f73c",
+        "provenance": {
+          "versions": {
+            "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+            "pythonExecutable": "/usr/bin/python3",
+            "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+            "rosDistro": "jazzy",
+            "rclpy": "7.1.12",
+            "packages": {
+              "rclpy": "7.1.12",
+              "rclcpp": "28.1.22",
+              "rmw_fastrtps_cpp": "8.4.4",
+              "example_interfaces": "0.12.1"
+            }
+          },
+          "runtimeSource": [
+            {
+              "api": "Future._schedule_or_invoke_done_callbacks",
+              "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py",
+              "sha256": "4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77",
+              "lineStart": 146,
+              "lineEnd": 168,
+              "explanation": "Future完成后有executor时排generic Task"
+            },
+            {
+              "api": "Future.add_done_callback",
+              "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py",
+              "sha256": "4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77",
+              "lineStart": 178,
+              "lineEnd": 202,
+              "explanation": "已完成Future也可立即调用或排Task，依是否关联executor"
+            },
+            {
+              "api": "Executor.create_task",
+              "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+              "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+              "lineStart": 241,
+              "lineEnd": 253,
+              "explanation": "generic Task不附带ROS source_entity回调组"
+            },
+            {
+              "api": "Executor._take_client",
+              "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+              "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+              "lineStart": 492,
+              "lineEnd": 519,
+              "explanation": "真实响应先关联executor，再完成Future"
+            },
+            {
+              "api": "Executor._make_handler",
+              "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+              "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+              "lineStart": 559,
+              "lineEnd": 612,
+              "explanation": "ROS实体handler另行执行组beginning/ending检查"
+            },
+            {
+              "api": "MutuallyExclusiveCallbackGroup",
+              "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/callback_groups.py",
+              "sha256": "da1314ac295f427aa8191ae8a86425bbfe62e512fa3678d3d401375b369cf557",
+              "lineStart": 93,
+              "lineEnd": 117,
+              "explanation": "互斥许可只覆盖归属于本组的实体执行"
+            }
+          ],
+          "pinnedReference": {
+            "commit": "521012e60ba21319ef29141f8f521a0e072fe652",
+            "root": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2",
+            "note": "下载快照是解释依据；本次行为以runtimeSource和实际版本为准。"
+          }
+        },
+        "threads": 1,
+        "groupLayout": "distinct MutuallyExclusive",
+        "namespace": "/executor_group_lab/p221819/single_thread_distinct_groups",
+        "slowWork": "Event.wait：释放GIL的模拟IO门闩，不是CPU基准",
+        "heldWindow": {
+          "startMonotonicS": 10408.182099848,
+          "endMonotonicS": 10408.532188154,
+          "maximumObservationS": 0.35,
+          "actualElapsedS": 0.3500883060005435,
+          "slowStillActive": true,
+          "heartbeatObservedInside": false,
+          "heartbeatTimerReadyAtWindowEnd": true,
+          "countsAtWindowEnd": {
+            "heartbeat": 0,
+            "heartbeatWhileSlow": 0
+          },
+          "spinThreadAlive": true
+        },
+        "counts": {
+          "heartbeat": 1,
+          "heartbeatWhileSlow": 0
+        },
+        "assertions": {
+          "controlledSlowStart": true,
+          "heldWindowValid": true,
+          "expectedOverlap": false,
+          "observedOverlap": false,
+          "heartbeatEventuallyRan": true,
+          "callbackCapExpired": false
+        },
+        "cleanup": {
+          "errors": [],
+          "spinThreadJoined": true,
+          "executorShutdownReturned": true,
+          "contextOkAfterCleanup": false,
+          "remainingNewPythonThreads": [],
+          "spinErrors": []
+        },
+        "timeline": {
+          "events": [
+            {
+              "event": "start",
+              "span": 1,
+              "callback": "slow",
+              "monotonicS": 10408.182082438,
+              "elapsedS": 0.05244295299962687,
+              "threadId": 135857935742656,
+              "nativeThreadId": 221834,
+              "activeCallbacks": [
+                "slow"
+              ]
+            },
+            {
+              "event": "end",
+              "span": 1,
+              "callback": "slow",
+              "monotonicS": 10408.532235684,
+              "elapsedS": 0.4025963289986976,
+              "threadId": 135857935742656,
+              "nativeThreadId": 221834,
+              "activeCallbacks": []
+            },
+            {
+              "event": "start",
+              "span": 2,
+              "callback": "heartbeat",
+              "monotonicS": 10408.532412434,
+              "elapsedS": 0.40277295899977617,
+              "threadId": 135857935742656,
+              "nativeThreadId": 221834,
+              "activeCallbacks": [
+                "heartbeat"
+              ],
+              "slowWasActiveAtEntry": false
+            },
+            {
+              "event": "end",
+              "span": 2,
+              "callback": "heartbeat",
+              "monotonicS": 10408.532417164,
+              "elapsedS": 0.4027777089995652,
+              "threadId": 135857935742656,
+              "nativeThreadId": 221834,
+              "activeCallbacks": []
+            }
+          ],
+          "maxConcurrency": 1,
+          "activeCallbacksAtEnd": []
+        },
+        "durationS": 0.532228985999609
+      },
+      "outerError": null,
+      "interrupted": false,
+      "durationS": 0.6973442399994383,
+      "passed": true
+    },
+    {
+      "case": "two_threads_same_group",
+      "command": [
+        "/usr/bin/python3",
+        "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/executor_group_lab.py",
+        "--worker",
+        "two_threads_same_group",
+        "--domain-id",
+        "219",
+        "--period-s",
+        "0.02",
+        "--observe-s",
+        "0.35",
+        "--start-timeout-s",
+        "3.0",
+        "--callback-cap-s",
+        "5.0",
+        "--cleanup-timeout-s",
+        "3.0",
+        "--worker-timeout-s",
+        "20.0"
+      ],
+      "workerDeadlineS": 20.0,
+      "exitCode": 0,
+      "stdout": "EXECUTOR_GROUP_RESULT={\"case\": \"two_threads_same_group\", \"passed\": true, \"pid\": 221836, \"scriptSha256\": \"485b88a9dc02ae18d3289e9aab57e99c603e381fdaca145e0c2d8ed7a522f73c\", \"provenance\": {\"versions\": {\"python\": \"3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]\", \"pythonExecutable\": \"/usr/bin/python3\", \"platform\": \"Linux-7.0.0-38-generic-x86_64-with-glibc2.39\", \"rosDistro\": \"jazzy\", \"rclpy\": \"7.1.12\", \"packages\": {\"rclpy\": \"7.1.12\", \"rclcpp\": \"28.1.22\", \"rmw_fastrtps_cpp\": \"8.4.4\", \"example_interfaces\": \"0.12.1\"}}, \"runtimeSource\": [{\"api\": \"Future._schedule_or_invoke_done_callbacks\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py\", \"sha256\": \"4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77\", \"lineStart\": 146, \"lineEnd\": 168, \"explanation\": \"Future完成后有executor时排generic Task\"}, {\"api\": \"Future.add_done_callback\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py\", \"sha256\": \"4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77\", \"lineStart\": 178, \"lineEnd\": 202, \"explanation\": \"已完成Future也可立即调用或排Task，依是否关联executor\"}, {\"api\": \"Executor.create_task\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 241, \"lineEnd\": 253, \"explanation\": \"generic Task不附带ROS source_entity回调组\"}, {\"api\": \"Executor._take_client\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 492, \"lineEnd\": 519, \"explanation\": \"真实响应先关联executor，再完成Future\"}, {\"api\": \"Executor._make_handler\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 559, \"lineEnd\": 612, \"explanation\": \"ROS实体handler另行执行组beginning/ending检查\"}, {\"api\": \"MutuallyExclusiveCallbackGroup\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/callback_groups.py\", \"sha256\": \"da1314ac295f427aa8191ae8a86425bbfe62e512fa3678d3d401375b369cf557\", \"lineStart\": 93, \"lineEnd\": 117, \"explanation\": \"互斥许可只覆盖归属于本组的实体执行\"}], \"pinnedReference\": {\"commit\": \"521012e60ba21319ef29141f8f521a0e072fe652\", \"root\": \"/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2\", \"note\": \"下载快照是解释依据；本次行为以runtimeSource和实际版本为准。\"}}, \"threads\": 2, \"groupLayout\": \"same MutuallyExclusive\", \"namespace\": \"/executor_group_lab/p221836/two_threads_same_group\", \"slowWork\": \"Event.wait：释放GIL的模拟IO门闩，不是CPU基准\", \"heldWindow\": {\"startMonotonicS\": 10408.847222285, \"endMonotonicS\": 10409.197305711, \"maximumObservationS\": 0.35, \"actualElapsedS\": 0.3500834260012198, \"slowStillActive\": true, \"heartbeatObservedInside\": false, \"heartbeatTimerReadyAtWindowEnd\": true, \"countsAtWindowEnd\": {\"heartbeat\": 0, \"heartbeatWhileSlow\": 0}, \"spinThreadAlive\": true}, \"counts\": {\"heartbeat\": 1, \"heartbeatWhileSlow\": 0}, \"assertions\": {\"controlledSlowStart\": true, \"heldWindowValid\": true, \"expectedOverlap\": false, \"observedOverlap\": false, \"heartbeatEventuallyRan\": true, \"callbackCapExpired\": false}, \"cleanup\": {\"errors\": [], \"spinThreadJoined\": true, \"executorShutdownReturned\": true, \"contextOkAfterCleanup\": false, \"remainingNewPythonThreads\": [], \"spinErrors\": []}, \"timeline\": {\"events\": [{\"event\": \"start\", \"span\": 1, \"callback\": \"slow\", \"monotonicS\": 10408.847127195, \"elapsedS\": 0.042704279001554823, \"threadId\": 138175840249536, \"nativeThreadId\": 221853, \"activeCallbacks\": [\"slow\"]}, {\"event\": \"end\", \"span\": 1, \"callback\": \"slow\", \"monotonicS\": 10409.197351741, \"elapsedS\": 0.39292870500139543, \"threadId\": 138175840249536, \"nativeThreadId\": 221853, \"activeCallbacks\": []}, {\"event\": \"start\", \"span\": 2, \"callback\": \"heartbeat\", \"monotonicS\": 10409.197603641, \"elapsedS\": 0.3931804550011293, \"threadId\": 138175840249536, \"nativeThreadId\": 221853, \"activeCallbacks\": [\"heartbeat\"], \"slowWasActiveAtEntry\": false}, {\"event\": \"end\", \"span\": 2, \"callback\": \"heartbeat\", \"monotonicS\": 10409.197608361, \"elapsedS\": 0.39318518500112987, \"threadId\": 138175840249536, \"nativeThreadId\": 221853, \"activeCallbacks\": []}], \"maxConcurrency\": 1, \"activeCallbacksAtEnd\": []}, \"durationS\": 0.5030817850001768}\n",
+      "stderr": "",
+      "result": {
+        "case": "two_threads_same_group",
+        "passed": true,
+        "pid": 221836,
+        "scriptSha256": "485b88a9dc02ae18d3289e9aab57e99c603e381fdaca145e0c2d8ed7a522f73c",
+        "provenance": {
+          "versions": {
+            "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+            "pythonExecutable": "/usr/bin/python3",
+            "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+            "rosDistro": "jazzy",
+            "rclpy": "7.1.12",
+            "packages": {
+              "rclpy": "7.1.12",
+              "rclcpp": "28.1.22",
+              "rmw_fastrtps_cpp": "8.4.4",
+              "example_interfaces": "0.12.1"
+            }
+          },
+          "runtimeSource": [
+            {
+              "api": "Future._schedule_or_invoke_done_callbacks",
+              "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py",
+              "sha256": "4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77",
+              "lineStart": 146,
+              "lineEnd": 168,
+              "explanation": "Future完成后有executor时排generic Task"
+            },
+            {
+              "api": "Future.add_done_callback",
+              "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py",
+              "sha256": "4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77",
+              "lineStart": 178,
+              "lineEnd": 202,
+              "explanation": "已完成Future也可立即调用或排Task，依是否关联executor"
+            },
+            {
+              "api": "Executor.create_task",
+              "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+              "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+              "lineStart": 241,
+              "lineEnd": 253,
+              "explanation": "generic Task不附带ROS source_entity回调组"
+            },
+            {
+              "api": "Executor._take_client",
+              "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+              "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+              "lineStart": 492,
+              "lineEnd": 519,
+              "explanation": "真实响应先关联executor，再完成Future"
+            },
+            {
+              "api": "Executor._make_handler",
+              "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+              "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+              "lineStart": 559,
+              "lineEnd": 612,
+              "explanation": "ROS实体handler另行执行组beginning/ending检查"
+            },
+            {
+              "api": "MutuallyExclusiveCallbackGroup",
+              "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/callback_groups.py",
+              "sha256": "da1314ac295f427aa8191ae8a86425bbfe62e512fa3678d3d401375b369cf557",
+              "lineStart": 93,
+              "lineEnd": 117,
+              "explanation": "互斥许可只覆盖归属于本组的实体执行"
+            }
+          ],
+          "pinnedReference": {
+            "commit": "521012e60ba21319ef29141f8f521a0e072fe652",
+            "root": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2",
+            "note": "下载快照是解释依据；本次行为以runtimeSource和实际版本为准。"
+          }
+        },
+        "threads": 2,
+        "groupLayout": "same MutuallyExclusive",
+        "namespace": "/executor_group_lab/p221836/two_threads_same_group",
+        "slowWork": "Event.wait：释放GIL的模拟IO门闩，不是CPU基准",
+        "heldWindow": {
+          "startMonotonicS": 10408.847222285,
+          "endMonotonicS": 10409.197305711,
+          "maximumObservationS": 0.35,
+          "actualElapsedS": 0.3500834260012198,
+          "slowStillActive": true,
+          "heartbeatObservedInside": false,
+          "heartbeatTimerReadyAtWindowEnd": true,
+          "countsAtWindowEnd": {
+            "heartbeat": 0,
+            "heartbeatWhileSlow": 0
+          },
+          "spinThreadAlive": true
+        },
+        "counts": {
+          "heartbeat": 1,
+          "heartbeatWhileSlow": 0
+        },
+        "assertions": {
+          "controlledSlowStart": true,
+          "heldWindowValid": true,
+          "expectedOverlap": false,
+          "observedOverlap": false,
+          "heartbeatEventuallyRan": true,
+          "callbackCapExpired": false
+        },
+        "cleanup": {
+          "errors": [],
+          "spinThreadJoined": true,
+          "executorShutdownReturned": true,
+          "contextOkAfterCleanup": false,
+          "remainingNewPythonThreads": [],
+          "spinErrors": []
+        },
+        "timeline": {
+          "events": [
+            {
+              "event": "start",
+              "span": 1,
+              "callback": "slow",
+              "monotonicS": 10408.847127195,
+              "elapsedS": 0.042704279001554823,
+              "threadId": 138175840249536,
+              "nativeThreadId": 221853,
+              "activeCallbacks": [
+                "slow"
+              ]
+            },
+            {
+              "event": "end",
+              "span": 1,
+              "callback": "slow",
+              "monotonicS": 10409.197351741,
+              "elapsedS": 0.39292870500139543,
+              "threadId": 138175840249536,
+              "nativeThreadId": 221853,
+              "activeCallbacks": []
+            },
+            {
+              "event": "start",
+              "span": 2,
+              "callback": "heartbeat",
+              "monotonicS": 10409.197603641,
+              "elapsedS": 0.3931804550011293,
+              "threadId": 138175840249536,
+              "nativeThreadId": 221853,
+              "activeCallbacks": [
+                "heartbeat"
+              ],
+              "slowWasActiveAtEntry": false
+            },
+            {
+              "event": "end",
+              "span": 2,
+              "callback": "heartbeat",
+              "monotonicS": 10409.197608361,
+              "elapsedS": 0.39318518500112987,
+              "threadId": 138175840249536,
+              "nativeThreadId": 221853,
+              "activeCallbacks": []
+            }
+          ],
+          "maxConcurrency": 1,
+          "activeCallbacksAtEnd": []
+        },
+        "durationS": 0.5030817850001768
+      },
+      "outerError": null,
+      "interrupted": false,
+      "durationS": 0.6587560730004043,
+      "passed": true
+    },
+    {
+      "case": "two_threads_distinct_groups",
+      "command": [
+        "/usr/bin/python3",
+        "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/executor_group_lab.py",
+        "--worker",
+        "two_threads_distinct_groups",
+        "--domain-id",
+        "219",
+        "--period-s",
+        "0.02",
+        "--observe-s",
+        "0.35",
+        "--start-timeout-s",
+        "3.0",
+        "--callback-cap-s",
+        "5.0",
+        "--cleanup-timeout-s",
+        "3.0",
+        "--worker-timeout-s",
+        "20.0"
+      ],
+      "workerDeadlineS": 20.0,
+      "exitCode": 0,
+      "stdout": "EXECUTOR_GROUP_RESULT={\"case\": \"two_threads_distinct_groups\", \"passed\": true, \"pid\": 221856, \"scriptSha256\": \"485b88a9dc02ae18d3289e9aab57e99c603e381fdaca145e0c2d8ed7a522f73c\", \"provenance\": {\"versions\": {\"python\": \"3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]\", \"pythonExecutable\": \"/usr/bin/python3\", \"platform\": \"Linux-7.0.0-38-generic-x86_64-with-glibc2.39\", \"rosDistro\": \"jazzy\", \"rclpy\": \"7.1.12\", \"packages\": {\"rclpy\": \"7.1.12\", \"rclcpp\": \"28.1.22\", \"rmw_fastrtps_cpp\": \"8.4.4\", \"example_interfaces\": \"0.12.1\"}}, \"runtimeSource\": [{\"api\": \"Future._schedule_or_invoke_done_callbacks\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py\", \"sha256\": \"4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77\", \"lineStart\": 146, \"lineEnd\": 168, \"explanation\": \"Future完成后有executor时排generic Task\"}, {\"api\": \"Future.add_done_callback\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py\", \"sha256\": \"4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77\", \"lineStart\": 178, \"lineEnd\": 202, \"explanation\": \"已完成Future也可立即调用或排Task，依是否关联executor\"}, {\"api\": \"Executor.create_task\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 241, \"lineEnd\": 253, \"explanation\": \"generic Task不附带ROS source_entity回调组\"}, {\"api\": \"Executor._take_client\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 492, \"lineEnd\": 519, \"explanation\": \"真实响应先关联executor，再完成Future\"}, {\"api\": \"Executor._make_handler\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 559, \"lineEnd\": 612, \"explanation\": \"ROS实体handler另行执行组beginning/ending检查\"}, {\"api\": \"MutuallyExclusiveCallbackGroup\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/callback_groups.py\", \"sha256\": \"da1314ac295f427aa8191ae8a86425bbfe62e512fa3678d3d401375b369cf557\", \"lineStart\": 93, \"lineEnd\": 117, \"explanation\": \"互斥许可只覆盖归属于本组的实体执行\"}], \"pinnedReference\": {\"commit\": \"521012e60ba21319ef29141f8f521a0e072fe652\", \"root\": \"/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2\", \"note\": \"下载快照是解释依据；本次行为以runtimeSource和实际版本为准。\"}}, \"threads\": 2, \"groupLayout\": \"distinct MutuallyExclusive\", \"namespace\": \"/executor_group_lab/p221856/two_threads_distinct_groups\", \"slowWork\": \"Event.wait：释放GIL的模拟IO门闩，不是CPU基准\", \"heldWindow\": {\"startMonotonicS\": 10409.50913043, \"endMonotonicS\": 10409.859196927, \"maximumObservationS\": 0.35, \"actualElapsedS\": 0.35006649699971604, \"slowStillActive\": true, \"heartbeatObservedInside\": true, \"heartbeatTimerReadyAtWindowEnd\": false, \"countsAtWindowEnd\": {\"heartbeat\": 17, \"heartbeatWhileSlow\": 17}, \"spinThreadAlive\": true}, \"counts\": {\"heartbeat\": 17, \"heartbeatWhileSlow\": 17}, \"assertions\": {\"controlledSlowStart\": true, \"heldWindowValid\": true, \"expectedOverlap\": true, \"observedOverlap\": true, \"heartbeatEventuallyRan\": true, \"callbackCapExpired\": false}, \"cleanup\": {\"errors\": [], \"spinThreadJoined\": true, \"executorShutdownReturned\": true, \"contextOkAfterCleanup\": false, \"remainingNewPythonThreads\": [], \"spinErrors\": []}, \"timeline\": {\"events\": [{\"event\": \"start\", \"span\": 1, \"callback\": \"slow\", \"monotonicS\": 10409.50902981, \"elapsedS\": 0.04395898000075249, \"threadId\": 131071645574848, \"nativeThreadId\": 221872, \"activeCallbacks\": [\"slow\"]}, {\"event\": \"start\", \"span\": 2, \"callback\": \"heartbeat\", \"monotonicS\": 10409.529341169, \"elapsedS\": 0.06427031900057045, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\", \"heartbeat\"], \"slowWasActiveAtEntry\": true}, {\"event\": \"end\", \"span\": 2, \"callback\": \"heartbeat\", \"monotonicS\": 10409.529348819, \"elapsedS\": 0.06427797899959842, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\"]}, {\"event\": \"start\", \"span\": 3, \"callback\": \"heartbeat\", \"monotonicS\": 10409.549395248, \"elapsedS\": 0.08432462800010398, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\", \"heartbeat\"], \"slowWasActiveAtEntry\": true}, {\"event\": \"end\", \"span\": 3, \"callback\": \"heartbeat\", \"monotonicS\": 10409.549408028, \"elapsedS\": 0.08433730800061312, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\"]}, {\"event\": \"start\", \"span\": 4, \"callback\": \"heartbeat\", \"monotonicS\": 10409.569434087, \"elapsedS\": 0.10436336699967796, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\", \"heartbeat\"], \"slowWasActiveAtEntry\": true}, {\"event\": \"end\", \"span\": 4, \"callback\": \"heartbeat\", \"monotonicS\": 10409.569443717, \"elapsedS\": 0.10437281700069434, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\"]}, {\"event\": \"start\", \"span\": 5, \"callback\": \"heartbeat\", \"monotonicS\": 10409.589407296, \"elapsedS\": 0.12433655600034399, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\", \"heartbeat\"], \"slowWasActiveAtEntry\": true}, {\"event\": \"end\", \"span\": 5, \"callback\": \"heartbeat\", \"monotonicS\": 10409.589416196, \"elapsedS\": 0.12434529600068345, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\"]}, {\"event\": \"start\", \"span\": 6, \"callback\": \"heartbeat\", \"monotonicS\": 10409.609440465, \"elapsedS\": 0.1443699049996212, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\", \"heartbeat\"], \"slowWasActiveAtEntry\": true}, {\"event\": \"end\", \"span\": 6, \"callback\": \"heartbeat\", \"monotonicS\": 10409.609451655, \"elapsedS\": 0.14438078499915719, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\"]}, {\"event\": \"start\", \"span\": 7, \"callback\": \"heartbeat\", \"monotonicS\": 10409.629390244, \"elapsedS\": 0.16431955400003062, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\", \"heartbeat\"], \"slowWasActiveAtEntry\": true}, {\"event\": \"end\", \"span\": 7, \"callback\": \"heartbeat\", \"monotonicS\": 10409.629399134, \"elapsedS\": 0.1643282339991856, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\"]}, {\"event\": \"start\", \"span\": 8, \"callback\": \"heartbeat\", \"monotonicS\": 10409.649420103, \"elapsedS\": 0.18434959300066112, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\", \"heartbeat\"], \"slowWasActiveAtEntry\": true}, {\"event\": \"end\", \"span\": 8, \"callback\": \"heartbeat\", \"monotonicS\": 10409.649432343, \"elapsedS\": 0.18436143299913965, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\"]}, {\"event\": \"start\", \"span\": 9, \"callback\": \"heartbeat\", \"monotonicS\": 10409.669353432, \"elapsedS\": 0.2042827320001379, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\", \"heartbeat\"], \"slowWasActiveAtEntry\": true}, {\"event\": \"end\", \"span\": 9, \"callback\": \"heartbeat\", \"monotonicS\": 10409.669361002, \"elapsedS\": 0.2042901320000965, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\"]}, {\"event\": \"start\", \"span\": 10, \"callback\": \"heartbeat\", \"monotonicS\": 10409.689363861, \"elapsedS\": 0.224293110999497, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\", \"heartbeat\"], \"slowWasActiveAtEntry\": true}, {\"event\": \"end\", \"span\": 10, \"callback\": \"heartbeat\", \"monotonicS\": 10409.689370201, \"elapsedS\": 0.22429930100042839, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\"]}, {\"event\": \"start\", \"span\": 11, \"callback\": \"heartbeat\", \"monotonicS\": 10409.70933415, \"elapsedS\": 0.2442633200007549, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\", \"heartbeat\"], \"slowWasActiveAtEntry\": true}, {\"event\": \"end\", \"span\": 11, \"callback\": \"heartbeat\", \"monotonicS\": 10409.70933921, \"elapsedS\": 0.24426829000003636, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\"]}, {\"event\": \"start\", \"span\": 12, \"callback\": \"heartbeat\", \"monotonicS\": 10409.729325799, \"elapsedS\": 0.26425493900023866, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\", \"heartbeat\"], \"slowWasActiveAtEntry\": true}, {\"event\": \"end\", \"span\": 12, \"callback\": \"heartbeat\", \"monotonicS\": 10409.729331599, \"elapsedS\": 0.264260698999351, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\"]}, {\"event\": \"start\", \"span\": 13, \"callback\": \"heartbeat\", \"monotonicS\": 10409.749414648, \"elapsedS\": 0.2843439179996494, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\", \"heartbeat\"], \"slowWasActiveAtEntry\": true}, {\"event\": \"end\", \"span\": 13, \"callback\": \"heartbeat\", \"monotonicS\": 10409.749424668, \"elapsedS\": 0.2843537879998621, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\"]}, {\"event\": \"start\", \"span\": 14, \"callback\": \"heartbeat\", \"monotonicS\": 10409.769363567, \"elapsedS\": 0.30429275700043945, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\", \"heartbeat\"], \"slowWasActiveAtEntry\": true}, {\"event\": \"end\", \"span\": 14, \"callback\": \"heartbeat\", \"monotonicS\": 10409.769370587, \"elapsedS\": 0.30429967700001725, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\"]}, {\"event\": \"start\", \"span\": 15, \"callback\": \"heartbeat\", \"monotonicS\": 10409.789313706, \"elapsedS\": 0.32424293599979137, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\", \"heartbeat\"], \"slowWasActiveAtEntry\": true}, {\"event\": \"end\", \"span\": 15, \"callback\": \"heartbeat\", \"monotonicS\": 10409.789319746, \"elapsedS\": 0.32424885599903064, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\"]}, {\"event\": \"start\", \"span\": 16, \"callback\": \"heartbeat\", \"monotonicS\": 10409.809324615, \"elapsedS\": 0.34425377499974275, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\", \"heartbeat\"], \"slowWasActiveAtEntry\": true}, {\"event\": \"end\", \"span\": 16, \"callback\": \"heartbeat\", \"monotonicS\": 10409.809331805, \"elapsedS\": 0.34426091500063194, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\"]}, {\"event\": \"start\", \"span\": 17, \"callback\": \"heartbeat\", \"monotonicS\": 10409.829346974, \"elapsedS\": 0.36427616400033, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\", \"heartbeat\"], \"slowWasActiveAtEntry\": true}, {\"event\": \"end\", \"span\": 17, \"callback\": \"heartbeat\", \"monotonicS\": 10409.829352654, \"elapsedS\": 0.3642817540003307, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\"]}, {\"event\": \"start\", \"span\": 18, \"callback\": \"heartbeat\", \"monotonicS\": 10409.849332183, \"elapsedS\": 0.38426143300057447, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\", \"heartbeat\"], \"slowWasActiveAtEntry\": true}, {\"event\": \"end\", \"span\": 18, \"callback\": \"heartbeat\", \"monotonicS\": 10409.849338503, \"elapsedS\": 0.38426759299909463, \"threadId\": 131071637182144, \"nativeThreadId\": 221873, \"activeCallbacks\": [\"slow\"]}, {\"event\": \"end\", \"span\": 1, \"callback\": \"slow\", \"monotonicS\": 10409.859226447, \"elapsedS\": 0.3941556469999341, \"threadId\": 131071645574848, \"nativeThreadId\": 221872, \"activeCallbacks\": []}], \"maxConcurrency\": 2, \"activeCallbacksAtEnd\": []}, \"durationS\": 0.5047467760014115}\n",
+      "stderr": "",
+      "result": {
+        "case": "two_threads_distinct_groups",
+        "passed": true,
+        "pid": 221856,
+        "scriptSha256": "485b88a9dc02ae18d3289e9aab57e99c603e381fdaca145e0c2d8ed7a522f73c",
+        "provenance": {
+          "versions": {
+            "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+            "pythonExecutable": "/usr/bin/python3",
+            "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+            "rosDistro": "jazzy",
+            "rclpy": "7.1.12",
+            "packages": {
+              "rclpy": "7.1.12",
+              "rclcpp": "28.1.22",
+              "rmw_fastrtps_cpp": "8.4.4",
+              "example_interfaces": "0.12.1"
+            }
+          },
+          "runtimeSource": [
+            {
+              "api": "Future._schedule_or_invoke_done_callbacks",
+              "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py",
+              "sha256": "4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77",
+              "lineStart": 146,
+              "lineEnd": 168,
+              "explanation": "Future完成后有executor时排generic Task"
+            },
+            {
+              "api": "Future.add_done_callback",
+              "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py",
+              "sha256": "4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77",
+              "lineStart": 178,
+              "lineEnd": 202,
+              "explanation": "已完成Future也可立即调用或排Task，依是否关联executor"
+            },
+            {
+              "api": "Executor.create_task",
+              "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+              "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+              "lineStart": 241,
+              "lineEnd": 253,
+              "explanation": "generic Task不附带ROS source_entity回调组"
+            },
+            {
+              "api": "Executor._take_client",
+              "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+              "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+              "lineStart": 492,
+              "lineEnd": 519,
+              "explanation": "真实响应先关联executor，再完成Future"
+            },
+            {
+              "api": "Executor._make_handler",
+              "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+              "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+              "lineStart": 559,
+              "lineEnd": 612,
+              "explanation": "ROS实体handler另行执行组beginning/ending检查"
+            },
+            {
+              "api": "MutuallyExclusiveCallbackGroup",
+              "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/callback_groups.py",
+              "sha256": "da1314ac295f427aa8191ae8a86425bbfe62e512fa3678d3d401375b369cf557",
+              "lineStart": 93,
+              "lineEnd": 117,
+              "explanation": "互斥许可只覆盖归属于本组的实体执行"
+            }
+          ],
+          "pinnedReference": {
+            "commit": "521012e60ba21319ef29141f8f521a0e072fe652",
+            "root": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2",
+            "note": "下载快照是解释依据；本次行为以runtimeSource和实际版本为准。"
+          }
+        },
+        "threads": 2,
+        "groupLayout": "distinct MutuallyExclusive",
+        "namespace": "/executor_group_lab/p221856/two_threads_distinct_groups",
+        "slowWork": "Event.wait：释放GIL的模拟IO门闩，不是CPU基准",
+        "heldWindow": {
+          "startMonotonicS": 10409.50913043,
+          "endMonotonicS": 10409.859196927,
+          "maximumObservationS": 0.35,
+          "actualElapsedS": 0.35006649699971604,
+          "slowStillActive": true,
+          "heartbeatObservedInside": true,
+          "heartbeatTimerReadyAtWindowEnd": false,
+          "countsAtWindowEnd": {
+            "heartbeat": 17,
+            "heartbeatWhileSlow": 17
+          },
+          "spinThreadAlive": true
+        },
+        "counts": {
+          "heartbeat": 17,
+          "heartbeatWhileSlow": 17
+        },
+        "assertions": {
+          "controlledSlowStart": true,
+          "heldWindowValid": true,
+          "expectedOverlap": true,
+          "observedOverlap": true,
+          "heartbeatEventuallyRan": true,
+          "callbackCapExpired": false
+        },
+        "cleanup": {
+          "errors": [],
+          "spinThreadJoined": true,
+          "executorShutdownReturned": true,
+          "contextOkAfterCleanup": false,
+          "remainingNewPythonThreads": [],
+          "spinErrors": []
+        },
+        "timeline": {
+          "events": [
+            {
+              "event": "start",
+              "span": 1,
+              "callback": "slow",
+              "monotonicS": 10409.50902981,
+              "elapsedS": 0.04395898000075249,
+              "threadId": 131071645574848,
+              "nativeThreadId": 221872,
+              "activeCallbacks": [
+                "slow"
+              ]
+            },
+            {
+              "event": "start",
+              "span": 2,
+              "callback": "heartbeat",
+              "monotonicS": 10409.529341169,
+              "elapsedS": 0.06427031900057045,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow",
+                "heartbeat"
+              ],
+              "slowWasActiveAtEntry": true
+            },
+            {
+              "event": "end",
+              "span": 2,
+              "callback": "heartbeat",
+              "monotonicS": 10409.529348819,
+              "elapsedS": 0.06427797899959842,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow"
+              ]
+            },
+            {
+              "event": "start",
+              "span": 3,
+              "callback": "heartbeat",
+              "monotonicS": 10409.549395248,
+              "elapsedS": 0.08432462800010398,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow",
+                "heartbeat"
+              ],
+              "slowWasActiveAtEntry": true
+            },
+            {
+              "event": "end",
+              "span": 3,
+              "callback": "heartbeat",
+              "monotonicS": 10409.549408028,
+              "elapsedS": 0.08433730800061312,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow"
+              ]
+            },
+            {
+              "event": "start",
+              "span": 4,
+              "callback": "heartbeat",
+              "monotonicS": 10409.569434087,
+              "elapsedS": 0.10436336699967796,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow",
+                "heartbeat"
+              ],
+              "slowWasActiveAtEntry": true
+            },
+            {
+              "event": "end",
+              "span": 4,
+              "callback": "heartbeat",
+              "monotonicS": 10409.569443717,
+              "elapsedS": 0.10437281700069434,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow"
+              ]
+            },
+            {
+              "event": "start",
+              "span": 5,
+              "callback": "heartbeat",
+              "monotonicS": 10409.589407296,
+              "elapsedS": 0.12433655600034399,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow",
+                "heartbeat"
+              ],
+              "slowWasActiveAtEntry": true
+            },
+            {
+              "event": "end",
+              "span": 5,
+              "callback": "heartbeat",
+              "monotonicS": 10409.589416196,
+              "elapsedS": 0.12434529600068345,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow"
+              ]
+            },
+            {
+              "event": "start",
+              "span": 6,
+              "callback": "heartbeat",
+              "monotonicS": 10409.609440465,
+              "elapsedS": 0.1443699049996212,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow",
+                "heartbeat"
+              ],
+              "slowWasActiveAtEntry": true
+            },
+            {
+              "event": "end",
+              "span": 6,
+              "callback": "heartbeat",
+              "monotonicS": 10409.609451655,
+              "elapsedS": 0.14438078499915719,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow"
+              ]
+            },
+            {
+              "event": "start",
+              "span": 7,
+              "callback": "heartbeat",
+              "monotonicS": 10409.629390244,
+              "elapsedS": 0.16431955400003062,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow",
+                "heartbeat"
+              ],
+              "slowWasActiveAtEntry": true
+            },
+            {
+              "event": "end",
+              "span": 7,
+              "callback": "heartbeat",
+              "monotonicS": 10409.629399134,
+              "elapsedS": 0.1643282339991856,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow"
+              ]
+            },
+            {
+              "event": "start",
+              "span": 8,
+              "callback": "heartbeat",
+              "monotonicS": 10409.649420103,
+              "elapsedS": 0.18434959300066112,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow",
+                "heartbeat"
+              ],
+              "slowWasActiveAtEntry": true
+            },
+            {
+              "event": "end",
+              "span": 8,
+              "callback": "heartbeat",
+              "monotonicS": 10409.649432343,
+              "elapsedS": 0.18436143299913965,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow"
+              ]
+            },
+            {
+              "event": "start",
+              "span": 9,
+              "callback": "heartbeat",
+              "monotonicS": 10409.669353432,
+              "elapsedS": 0.2042827320001379,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow",
+                "heartbeat"
+              ],
+              "slowWasActiveAtEntry": true
+            },
+            {
+              "event": "end",
+              "span": 9,
+              "callback": "heartbeat",
+              "monotonicS": 10409.669361002,
+              "elapsedS": 0.2042901320000965,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow"
+              ]
+            },
+            {
+              "event": "start",
+              "span": 10,
+              "callback": "heartbeat",
+              "monotonicS": 10409.689363861,
+              "elapsedS": 0.224293110999497,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow",
+                "heartbeat"
+              ],
+              "slowWasActiveAtEntry": true
+            },
+            {
+              "event": "end",
+              "span": 10,
+              "callback": "heartbeat",
+              "monotonicS": 10409.689370201,
+              "elapsedS": 0.22429930100042839,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow"
+              ]
+            },
+            {
+              "event": "start",
+              "span": 11,
+              "callback": "heartbeat",
+              "monotonicS": 10409.70933415,
+              "elapsedS": 0.2442633200007549,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow",
+                "heartbeat"
+              ],
+              "slowWasActiveAtEntry": true
+            },
+            {
+              "event": "end",
+              "span": 11,
+              "callback": "heartbeat",
+              "monotonicS": 10409.70933921,
+              "elapsedS": 0.24426829000003636,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow"
+              ]
+            },
+            {
+              "event": "start",
+              "span": 12,
+              "callback": "heartbeat",
+              "monotonicS": 10409.729325799,
+              "elapsedS": 0.26425493900023866,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow",
+                "heartbeat"
+              ],
+              "slowWasActiveAtEntry": true
+            },
+            {
+              "event": "end",
+              "span": 12,
+              "callback": "heartbeat",
+              "monotonicS": 10409.729331599,
+              "elapsedS": 0.264260698999351,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow"
+              ]
+            },
+            {
+              "event": "start",
+              "span": 13,
+              "callback": "heartbeat",
+              "monotonicS": 10409.749414648,
+              "elapsedS": 0.2843439179996494,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow",
+                "heartbeat"
+              ],
+              "slowWasActiveAtEntry": true
+            },
+            {
+              "event": "end",
+              "span": 13,
+              "callback": "heartbeat",
+              "monotonicS": 10409.749424668,
+              "elapsedS": 0.2843537879998621,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow"
+              ]
+            },
+            {
+              "event": "start",
+              "span": 14,
+              "callback": "heartbeat",
+              "monotonicS": 10409.769363567,
+              "elapsedS": 0.30429275700043945,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow",
+                "heartbeat"
+              ],
+              "slowWasActiveAtEntry": true
+            },
+            {
+              "event": "end",
+              "span": 14,
+              "callback": "heartbeat",
+              "monotonicS": 10409.769370587,
+              "elapsedS": 0.30429967700001725,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow"
+              ]
+            },
+            {
+              "event": "start",
+              "span": 15,
+              "callback": "heartbeat",
+              "monotonicS": 10409.789313706,
+              "elapsedS": 0.32424293599979137,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow",
+                "heartbeat"
+              ],
+              "slowWasActiveAtEntry": true
+            },
+            {
+              "event": "end",
+              "span": 15,
+              "callback": "heartbeat",
+              "monotonicS": 10409.789319746,
+              "elapsedS": 0.32424885599903064,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow"
+              ]
+            },
+            {
+              "event": "start",
+              "span": 16,
+              "callback": "heartbeat",
+              "monotonicS": 10409.809324615,
+              "elapsedS": 0.34425377499974275,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow",
+                "heartbeat"
+              ],
+              "slowWasActiveAtEntry": true
+            },
+            {
+              "event": "end",
+              "span": 16,
+              "callback": "heartbeat",
+              "monotonicS": 10409.809331805,
+              "elapsedS": 0.34426091500063194,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow"
+              ]
+            },
+            {
+              "event": "start",
+              "span": 17,
+              "callback": "heartbeat",
+              "monotonicS": 10409.829346974,
+              "elapsedS": 0.36427616400033,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow",
+                "heartbeat"
+              ],
+              "slowWasActiveAtEntry": true
+            },
+            {
+              "event": "end",
+              "span": 17,
+              "callback": "heartbeat",
+              "monotonicS": 10409.829352654,
+              "elapsedS": 0.3642817540003307,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow"
+              ]
+            },
+            {
+              "event": "start",
+              "span": 18,
+              "callback": "heartbeat",
+              "monotonicS": 10409.849332183,
+              "elapsedS": 0.38426143300057447,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow",
+                "heartbeat"
+              ],
+              "slowWasActiveAtEntry": true
+            },
+            {
+              "event": "end",
+              "span": 18,
+              "callback": "heartbeat",
+              "monotonicS": 10409.849338503,
+              "elapsedS": 0.38426759299909463,
+              "threadId": 131071637182144,
+              "nativeThreadId": 221873,
+              "activeCallbacks": [
+                "slow"
+              ]
+            },
+            {
+              "event": "end",
+              "span": 1,
+              "callback": "slow",
+              "monotonicS": 10409.859226447,
+              "elapsedS": 0.3941556469999341,
+              "threadId": 131071645574848,
+              "nativeThreadId": 221872,
+              "activeCallbacks": []
+            }
+          ],
+          "maxConcurrency": 2,
+          "activeCallbacksAtEnd": []
+        },
+        "durationS": 0.5047467760014115
+      },
+      "outerError": null,
+      "interrupted": false,
+      "durationS": 0.6617117960013275,
+      "passed": true
+    },
+    {
+      "case": "client_future_continuation",
+      "command": [
+        "/usr/bin/python3",
+        "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/executor_group_lab.py",
+        "--worker",
+        "client_future_continuation",
+        "--domain-id",
+        "219",
+        "--period-s",
+        "0.02",
+        "--observe-s",
+        "0.35",
+        "--start-timeout-s",
+        "3.0",
+        "--callback-cap-s",
+        "5.0",
+        "--cleanup-timeout-s",
+        "3.0",
+        "--worker-timeout-s",
+        "20.0"
+      ],
+      "workerDeadlineS": 20.0,
+      "exitCode": 0,
+      "stdout": "EXECUTOR_GROUP_RESULT={\"case\": \"client_future_continuation\", \"passed\": true, \"pid\": 221901, \"scriptSha256\": \"485b88a9dc02ae18d3289e9aab57e99c603e381fdaca145e0c2d8ed7a522f73c\", \"provenance\": {\"versions\": {\"python\": \"3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]\", \"pythonExecutable\": \"/usr/bin/python3\", \"platform\": \"Linux-7.0.0-38-generic-x86_64-with-glibc2.39\", \"rosDistro\": \"jazzy\", \"rclpy\": \"7.1.12\", \"packages\": {\"rclpy\": \"7.1.12\", \"rclcpp\": \"28.1.22\", \"rmw_fastrtps_cpp\": \"8.4.4\", \"example_interfaces\": \"0.12.1\"}}, \"runtimeSource\": [{\"api\": \"Future._schedule_or_invoke_done_callbacks\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py\", \"sha256\": \"4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77\", \"lineStart\": 146, \"lineEnd\": 168, \"explanation\": \"Future完成后有executor时排generic Task\"}, {\"api\": \"Future.add_done_callback\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py\", \"sha256\": \"4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77\", \"lineStart\": 178, \"lineEnd\": 202, \"explanation\": \"已完成Future也可立即调用或排Task，依是否关联executor\"}, {\"api\": \"Executor.create_task\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 241, \"lineEnd\": 253, \"explanation\": \"generic Task不附带ROS source_entity回调组\"}, {\"api\": \"Executor._take_client\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 492, \"lineEnd\": 519, \"explanation\": \"真实响应先关联executor，再完成Future\"}, {\"api\": \"Executor._make_handler\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 559, \"lineEnd\": 612, \"explanation\": \"ROS实体handler另行执行组beginning/ending检查\"}, {\"api\": \"MutuallyExclusiveCallbackGroup\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/callback_groups.py\", \"sha256\": \"da1314ac295f427aa8191ae8a86425bbfe62e512fa3678d3d401375b369cf557\", \"lineStart\": 93, \"lineEnd\": 117, \"explanation\": \"互斥许可只覆盖归属于本组的实体执行\"}], \"pinnedReference\": {\"commit\": \"521012e60ba21319ef29141f8f521a0e072fe652\", \"root\": \"/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2\", \"note\": \"下载快照是解释依据；本次行为以runtimeSource和实际版本为准。\"}}, \"threads\": 2, \"namespace\": \"/executor_group_lab/p221901/client_future_continuation\", \"futureKind\": \"真实Client.call_async(AddTwoInts)，不是手动set_result的Future\", \"phaseTimes\": {\"requestSubmittedMonotonicS\": 10410.167332795, \"doneStartedWithResultMonotonicS\": 10410.167890446, \"responseGroupFreeMonotonicS\": 10410.167923036, \"sameGroupTimerEnabledMonotonicS\": 10410.167924436, \"bothActiveObservedMonotonicS\": 10410.518015973}, \"futureDoneAtRegistration\": false, \"heldWindow\": {\"startMonotonicS\": 10410.167924436, \"endMonotonicS\": 10410.518004423, \"maximumObservationS\": 0.35, \"actualElapsedS\": 0.35007998699984455, \"doneStillActive\": true, \"sameGroupTimerObserved\": true}, \"assertions\": {\"actualServiceSum12\": true, \"clientAndTimerSameGroup\": true, \"responseHandlerGroupReleasedBeforeTimerEnabled\": true, \"genericDoneOverlappedSameGroupTimer\": true, \"bothCallbacksHeldByControlledGates\": true, \"mutualExclusionStillAppliesToClientEntity\": true}, \"details\": {\"responseSum\": 12, \"holderWhileDone\": true, \"callbackCapExpired\": false, \"holderCapExpired\": false, \"groupAllowsClientWhileTimerActive\": false}, \"cleanup\": {\"errors\": [], \"spinThreadJoined\": true, \"executorShutdownReturned\": true, \"contextOkAfterCleanup\": false, \"remainingNewPythonThreads\": [], \"spinErrors\": []}, \"timeline\": {\"events\": [{\"event\": \"start\", \"span\": 1, \"callback\": \"server\", \"monotonicS\": 10410.167614895, \"elapsedS\": 0.025558720999470097, \"threadId\": 134145634199232, \"nativeThreadId\": 221918, \"activeCallbacks\": [\"server\"]}, {\"event\": \"end\", \"span\": 1, \"callback\": \"server\", \"monotonicS\": 10410.167619285, \"elapsedS\": 0.025563051000062842, \"threadId\": 134145634199232, \"nativeThreadId\": 221918, \"activeCallbacks\": []}, {\"event\": \"start\", \"span\": 2, \"callback\": \"done\", \"monotonicS\": 10410.167886016, \"elapsedS\": 0.02582984199943894, \"threadId\": 134145634199232, \"nativeThreadId\": 221918, \"activeCallbacks\": [\"done\"]}, {\"event\": \"start\", \"span\": 3, \"callback\": \"same_client_group_timer\", \"monotonicS\": 10410.188123924, \"elapsedS\": 0.04606774000058067, \"threadId\": 134145625806528, \"nativeThreadId\": 221919, \"activeCallbacks\": [\"done\", \"same_client_group_timer\"], \"doneWasActiveAtEntry\": true}, {\"event\": \"end\", \"span\": 2, \"callback\": \"done\", \"monotonicS\": 10410.518040183, \"elapsedS\": 0.37598397900001146, \"threadId\": 134145634199232, \"nativeThreadId\": 221918, \"activeCallbacks\": [\"same_client_group_timer\"]}, {\"event\": \"end\", \"span\": 3, \"callback\": \"same_client_group_timer\", \"monotonicS\": 10410.518076883, \"elapsedS\": 0.3760208589992544, \"threadId\": 134145625806528, \"nativeThreadId\": 221919, \"activeCallbacks\": []}], \"maxConcurrency\": 2, \"activeCallbacksAtEnd\": []}, \"durationS\": 0.49854506400151877}\n",
+      "stderr": "",
+      "result": {
+        "case": "client_future_continuation",
+        "passed": true,
+        "pid": 221901,
+        "scriptSha256": "485b88a9dc02ae18d3289e9aab57e99c603e381fdaca145e0c2d8ed7a522f73c",
+        "provenance": {
+          "versions": {
+            "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+            "pythonExecutable": "/usr/bin/python3",
+            "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+            "rosDistro": "jazzy",
+            "rclpy": "7.1.12",
+            "packages": {
+              "rclpy": "7.1.12",
+              "rclcpp": "28.1.22",
+              "rmw_fastrtps_cpp": "8.4.4",
+              "example_interfaces": "0.12.1"
+            }
+          },
+          "runtimeSource": [
+            {
+              "api": "Future._schedule_or_invoke_done_callbacks",
+              "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py",
+              "sha256": "4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77",
+              "lineStart": 146,
+              "lineEnd": 168,
+              "explanation": "Future完成后有executor时排generic Task"
+            },
+            {
+              "api": "Future.add_done_callback",
+              "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py",
+              "sha256": "4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77",
+              "lineStart": 178,
+              "lineEnd": 202,
+              "explanation": "已完成Future也可立即调用或排Task，依是否关联executor"
+            },
+            {
+              "api": "Executor.create_task",
+              "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+              "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+              "lineStart": 241,
+              "lineEnd": 253,
+              "explanation": "generic Task不附带ROS source_entity回调组"
+            },
+            {
+              "api": "Executor._take_client",
+              "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+              "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+              "lineStart": 492,
+              "lineEnd": 519,
+              "explanation": "真实响应先关联executor，再完成Future"
+            },
+            {
+              "api": "Executor._make_handler",
+              "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+              "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+              "lineStart": 559,
+              "lineEnd": 612,
+              "explanation": "ROS实体handler另行执行组beginning/ending检查"
+            },
+            {
+              "api": "MutuallyExclusiveCallbackGroup",
+              "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/callback_groups.py",
+              "sha256": "da1314ac295f427aa8191ae8a86425bbfe62e512fa3678d3d401375b369cf557",
+              "lineStart": 93,
+              "lineEnd": 117,
+              "explanation": "互斥许可只覆盖归属于本组的实体执行"
+            }
+          ],
+          "pinnedReference": {
+            "commit": "521012e60ba21319ef29141f8f521a0e072fe652",
+            "root": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2",
+            "note": "下载快照是解释依据；本次行为以runtimeSource和实际版本为准。"
+          }
+        },
+        "threads": 2,
+        "namespace": "/executor_group_lab/p221901/client_future_continuation",
+        "futureKind": "真实Client.call_async(AddTwoInts)，不是手动set_result的Future",
+        "phaseTimes": {
+          "requestSubmittedMonotonicS": 10410.167332795,
+          "doneStartedWithResultMonotonicS": 10410.167890446,
+          "responseGroupFreeMonotonicS": 10410.167923036,
+          "sameGroupTimerEnabledMonotonicS": 10410.167924436,
+          "bothActiveObservedMonotonicS": 10410.518015973
+        },
+        "futureDoneAtRegistration": false,
+        "heldWindow": {
+          "startMonotonicS": 10410.167924436,
+          "endMonotonicS": 10410.518004423,
+          "maximumObservationS": 0.35,
+          "actualElapsedS": 0.35007998699984455,
+          "doneStillActive": true,
+          "sameGroupTimerObserved": true
+        },
+        "assertions": {
+          "actualServiceSum12": true,
+          "clientAndTimerSameGroup": true,
+          "responseHandlerGroupReleasedBeforeTimerEnabled": true,
+          "genericDoneOverlappedSameGroupTimer": true,
+          "bothCallbacksHeldByControlledGates": true,
+          "mutualExclusionStillAppliesToClientEntity": true
+        },
+        "details": {
+          "responseSum": 12,
+          "holderWhileDone": true,
+          "callbackCapExpired": false,
+          "holderCapExpired": false,
+          "groupAllowsClientWhileTimerActive": false
+        },
+        "cleanup": {
+          "errors": [],
+          "spinThreadJoined": true,
+          "executorShutdownReturned": true,
+          "contextOkAfterCleanup": false,
+          "remainingNewPythonThreads": [],
+          "spinErrors": []
+        },
+        "timeline": {
+          "events": [
+            {
+              "event": "start",
+              "span": 1,
+              "callback": "server",
+              "monotonicS": 10410.167614895,
+              "elapsedS": 0.025558720999470097,
+              "threadId": 134145634199232,
+              "nativeThreadId": 221918,
+              "activeCallbacks": [
+                "server"
+              ]
+            },
+            {
+              "event": "end",
+              "span": 1,
+              "callback": "server",
+              "monotonicS": 10410.167619285,
+              "elapsedS": 0.025563051000062842,
+              "threadId": 134145634199232,
+              "nativeThreadId": 221918,
+              "activeCallbacks": []
+            },
+            {
+              "event": "start",
+              "span": 2,
+              "callback": "done",
+              "monotonicS": 10410.167886016,
+              "elapsedS": 0.02582984199943894,
+              "threadId": 134145634199232,
+              "nativeThreadId": 221918,
+              "activeCallbacks": [
+                "done"
+              ]
+            },
+            {
+              "event": "start",
+              "span": 3,
+              "callback": "same_client_group_timer",
+              "monotonicS": 10410.188123924,
+              "elapsedS": 0.04606774000058067,
+              "threadId": 134145625806528,
+              "nativeThreadId": 221919,
+              "activeCallbacks": [
+                "done",
+                "same_client_group_timer"
+              ],
+              "doneWasActiveAtEntry": true
+            },
+            {
+              "event": "end",
+              "span": 2,
+              "callback": "done",
+              "monotonicS": 10410.518040183,
+              "elapsedS": 0.37598397900001146,
+              "threadId": 134145634199232,
+              "nativeThreadId": 221918,
+              "activeCallbacks": [
+                "same_client_group_timer"
+              ]
+            },
+            {
+              "event": "end",
+              "span": 3,
+              "callback": "same_client_group_timer",
+              "monotonicS": 10410.518076883,
+              "elapsedS": 0.3760208589992544,
+              "threadId": 134145625806528,
+              "nativeThreadId": 221919,
+              "activeCallbacks": []
+            }
+          ],
+          "maxConcurrency": 2,
+          "activeCallbacksAtEnd": []
+        },
+        "durationS": 0.49854506400151877
+      },
+      "outerError": null,
+      "interrupted": false,
+      "durationS": 0.6634548479996738,
+      "passed": true
+    }
+  ],
+  "durationS": 2.681854968999687,
+  "scope": "真实Jazzy/rclpy调度；稳态timer与真实AddTwoInts服务。无设备、硬件或仿真。",
+  "interpretation": [
+    "负例确认slow已开始、heartbeat已ready且门闩仍持有；零heartbeat由执行资源/组约束观察得到。",
+    "Event.wait是释放GIL的模拟IO等待；并发证据不表示纯Python CPU任务加速。",
+    "client Future场景仅在实际重叠断言通过时计为完成；不以源码推断替代运行证据。"
+  ],
+  "limits": [
+    "只断言这些受控回调的并发关系，不保证精确频率、严格实时期限或任意负载调度。",
+    "时间线只统计本实验业务回调，不统计DDS后台线程或所有内部响应handler。",
+    "回调组不是保护任意线程/Task共享数据的通用锁，仍需显式状态同步。",
+    "Future结论属于记录的rclpy实现；不泛化为所有Action、C++ continuation或后续版本。",
+    "软期限不能抢占长原生调用；每例父进程期限与外部timeout分别保护退出。"
+  ],
+  "previousAttempts": [
+    {
+      "schemaVersion": 1,
+      "checkedAt": "2026-11-07T03:47:43+08:00",
+      "passed": true,
+      "script": "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/executor_group_lab.py",
+      "scriptSha256": "960bf4fdd98ee101a1fc8de6731956ebbb3c5ef6cecaec4e0cb6e137ad3a1279",
+      "invocation": [
+        "/usr/bin/python3",
+        "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/executor_group_lab.py"
+      ],
+      "parameters": {
+        "case": "all",
+        "domain_id": 219,
+        "period_s": 0.02,
+        "observe_s": 0.35,
+        "start_timeout_s": 3.0,
+        "callback_cap_s": 5.0,
+        "cleanup_timeout_s": 3.0,
+        "worker_timeout_s": 20.0
+      },
+      "environment": {
+        "ROS_DOMAIN_ID": "219",
+        "ROS_AUTOMATIC_DISCOVERY_RANGE": "LOCALHOST",
+        "RMW_IMPLEMENTATION": "rmw_fastrtps_cpp",
+        "ROS_LOCALHOST_ONLY": "unset",
+        "ROS_STATIC_PEERS": "unset"
+      },
+      "casesRequested": [
+        "single_thread_distinct_groups",
+        "two_threads_same_group",
+        "two_threads_distinct_groups",
+        "client_future_continuation"
+      ],
+      "results": [
+        {
+          "case": "single_thread_distinct_groups",
+          "command": [
+            "/usr/bin/python3",
+            "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/executor_group_lab.py",
+            "--worker",
+            "single_thread_distinct_groups",
+            "--domain-id",
+            "219",
+            "--period-s",
+            "0.02",
+            "--observe-s",
+            "0.35",
+            "--start-timeout-s",
+            "3.0",
+            "--callback-cap-s",
+            "5.0",
+            "--cleanup-timeout-s",
+            "3.0",
+            "--worker-timeout-s",
+            "20.0"
+          ],
+          "workerDeadlineS": 20.0,
+          "exitCode": 0,
+          "stdout": "EXECUTOR_GROUP_RESULT={\"case\": \"single_thread_distinct_groups\", \"passed\": true, \"pid\": 217446, \"scriptSha256\": \"960bf4fdd98ee101a1fc8de6731956ebbb3c5ef6cecaec4e0cb6e137ad3a1279\", \"provenance\": {\"versions\": {\"python\": \"3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]\", \"pythonExecutable\": \"/usr/bin/python3\", \"platform\": \"Linux-7.0.0-38-generic-x86_64-with-glibc2.39\", \"rosDistro\": \"jazzy\", \"rclpy\": \"7.1.12\", \"packages\": {\"rclpy\": \"7.1.12\", \"rclcpp\": \"28.1.22\", \"rmw_fastrtps_cpp\": \"8.4.4\", \"example_interfaces\": \"0.12.1\"}}, \"runtimeSource\": [{\"api\": \"Future._schedule_or_invoke_done_callbacks\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py\", \"sha256\": \"4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77\", \"lineStart\": 146, \"lineEnd\": 168, \"explanation\": \"Future完成后有executor时排generic Task\"}, {\"api\": \"Future.add_done_callback\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py\", \"sha256\": \"4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77\", \"lineStart\": 178, \"lineEnd\": 202, \"explanation\": \"已完成Future也可立即调用或排Task，依是否关联executor\"}, {\"api\": \"Executor.create_task\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 241, \"lineEnd\": 253, \"explanation\": \"generic Task不附带ROS source_entity回调组\"}, {\"api\": \"Executor._take_client\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 492, \"lineEnd\": 519, \"explanation\": \"真实响应先关联executor，再完成Future\"}, {\"api\": \"Executor._make_handler\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 559, \"lineEnd\": 612, \"explanation\": \"ROS实体handler另行执行组beginning/ending检查\"}, {\"api\": \"MutuallyExclusiveCallbackGroup\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/callback_groups.py\", \"sha256\": \"da1314ac295f427aa8191ae8a86425bbfe62e512fa3678d3d401375b369cf557\", \"lineStart\": 93, \"lineEnd\": 117, \"explanation\": \"互斥许可只覆盖归属于本组的实体执行\"}], \"pinnedReference\": {\"commit\": \"521012e60ba21319ef29141f8f521a0e072fe652\", \"root\": \"/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2\", \"note\": \"下载快照是解释依据；本次行为以runtimeSource和实际版本为准。\"}}, \"threads\": 1, \"groupLayout\": \"distinct MutuallyExclusive\", \"namespace\": \"/executor_group_lab/p217446/single_thread_distinct_groups\", \"slowWork\": \"Event.wait：释放GIL的模拟IO门闩，不是CPU基准\", \"heldWindow\": {\"startMonotonicS\": 10253.816082869, \"endMonotonicS\": 10254.166168823, \"maximumObservationS\": 0.35, \"actualElapsedS\": 0.350085953999951, \"slowStillActive\": true, \"heartbeatObservedInside\": false, \"heartbeatTimerReadyAtWindowEnd\": true, \"countsAtWindowEnd\": {\"heartbeat\": 0, \"heartbeatWhileSlow\": 0}, \"spinThreadAlive\": true}, \"counts\": {\"heartbeat\": 1, \"heartbeatWhileSlow\": 0}, \"assertions\": {\"controlledSlowStart\": true, \"heldWindowValid\": true, \"expectedOverlap\": false, \"observedOverlap\": false, \"heartbeatEventuallyRan\": true, \"callbackCapExpired\": false}, \"cleanup\": {\"errors\": [], \"spinThreadJoined\": true, \"executorShutdownReturned\": true, \"contextOkAfterCleanup\": false, \"remainingNewPythonThreads\": [], \"spinErrors\": []}, \"timeline\": {\"events\": [{\"event\": \"start\", \"span\": 1, \"callback\": \"slow\", \"monotonicS\": 10253.816066229, \"elapsedS\": 0.04393828299907909, \"threadId\": 136856303826624, \"nativeThreadId\": 217463, \"activeCallbacks\": [\"slow\"]}, {\"event\": \"end\", \"span\": 1, \"callback\": \"slow\", \"monotonicS\": 10254.166227003, \"elapsedS\": 0.39409908699963125, \"threadId\": 136856303826624, \"nativeThreadId\": 217463, \"activeCallbacks\": []}, {\"event\": \"start\", \"span\": 2, \"callback\": \"heartbeat\", \"monotonicS\": 10254.166413283, \"elapsedS\": 0.3942852870004572, \"threadId\": 136856303826624, \"nativeThreadId\": 217463, \"activeCallbacks\": [\"heartbeat\"], \"slowWasActiveAtEntry\": false}, {\"event\": \"end\", \"span\": 2, \"callback\": \"heartbeat\", \"monotonicS\": 10254.166418223, \"elapsedS\": 0.3942902269991464, \"threadId\": 136856303826624, \"nativeThreadId\": 217463, \"activeCallbacks\": []}], \"maxConcurrency\": 1, \"activeCallbacksAtEnd\": []}, \"durationS\": 0.5126438759998564}\n",
+          "stderr": "",
+          "result": {
+            "case": "single_thread_distinct_groups",
+            "passed": true,
+            "pid": 217446,
+            "scriptSha256": "960bf4fdd98ee101a1fc8de6731956ebbb3c5ef6cecaec4e0cb6e137ad3a1279",
+            "provenance": {
+              "versions": {
+                "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+                "pythonExecutable": "/usr/bin/python3",
+                "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+                "rosDistro": "jazzy",
+                "rclpy": "7.1.12",
+                "packages": {
+                  "rclpy": "7.1.12",
+                  "rclcpp": "28.1.22",
+                  "rmw_fastrtps_cpp": "8.4.4",
+                  "example_interfaces": "0.12.1"
+                }
+              },
+              "runtimeSource": [
+                {
+                  "api": "Future._schedule_or_invoke_done_callbacks",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py",
+                  "sha256": "4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77",
+                  "lineStart": 146,
+                  "lineEnd": 168,
+                  "explanation": "Future完成后有executor时排generic Task"
+                },
+                {
+                  "api": "Future.add_done_callback",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py",
+                  "sha256": "4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77",
+                  "lineStart": 178,
+                  "lineEnd": 202,
+                  "explanation": "已完成Future也可立即调用或排Task，依是否关联executor"
+                },
+                {
+                  "api": "Executor.create_task",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+                  "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+                  "lineStart": 241,
+                  "lineEnd": 253,
+                  "explanation": "generic Task不附带ROS source_entity回调组"
+                },
+                {
+                  "api": "Executor._take_client",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+                  "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+                  "lineStart": 492,
+                  "lineEnd": 519,
+                  "explanation": "真实响应先关联executor，再完成Future"
+                },
+                {
+                  "api": "Executor._make_handler",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+                  "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+                  "lineStart": 559,
+                  "lineEnd": 612,
+                  "explanation": "ROS实体handler另行执行组beginning/ending检查"
+                },
+                {
+                  "api": "MutuallyExclusiveCallbackGroup",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/callback_groups.py",
+                  "sha256": "da1314ac295f427aa8191ae8a86425bbfe62e512fa3678d3d401375b369cf557",
+                  "lineStart": 93,
+                  "lineEnd": 117,
+                  "explanation": "互斥许可只覆盖归属于本组的实体执行"
+                }
+              ],
+              "pinnedReference": {
+                "commit": "521012e60ba21319ef29141f8f521a0e072fe652",
+                "root": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2",
+                "note": "下载快照是解释依据；本次行为以runtimeSource和实际版本为准。"
+              }
+            },
+            "threads": 1,
+            "groupLayout": "distinct MutuallyExclusive",
+            "namespace": "/executor_group_lab/p217446/single_thread_distinct_groups",
+            "slowWork": "Event.wait：释放GIL的模拟IO门闩，不是CPU基准",
+            "heldWindow": {
+              "startMonotonicS": 10253.816082869,
+              "endMonotonicS": 10254.166168823,
+              "maximumObservationS": 0.35,
+              "actualElapsedS": 0.350085953999951,
+              "slowStillActive": true,
+              "heartbeatObservedInside": false,
+              "heartbeatTimerReadyAtWindowEnd": true,
+              "countsAtWindowEnd": {
+                "heartbeat": 0,
+                "heartbeatWhileSlow": 0
+              },
+              "spinThreadAlive": true
+            },
+            "counts": {
+              "heartbeat": 1,
+              "heartbeatWhileSlow": 0
+            },
+            "assertions": {
+              "controlledSlowStart": true,
+              "heldWindowValid": true,
+              "expectedOverlap": false,
+              "observedOverlap": false,
+              "heartbeatEventuallyRan": true,
+              "callbackCapExpired": false
+            },
+            "cleanup": {
+              "errors": [],
+              "spinThreadJoined": true,
+              "executorShutdownReturned": true,
+              "contextOkAfterCleanup": false,
+              "remainingNewPythonThreads": [],
+              "spinErrors": []
+            },
+            "timeline": {
+              "events": [
+                {
+                  "event": "start",
+                  "span": 1,
+                  "callback": "slow",
+                  "monotonicS": 10253.816066229,
+                  "elapsedS": 0.04393828299907909,
+                  "threadId": 136856303826624,
+                  "nativeThreadId": 217463,
+                  "activeCallbacks": [
+                    "slow"
+                  ]
+                },
+                {
+                  "event": "end",
+                  "span": 1,
+                  "callback": "slow",
+                  "monotonicS": 10254.166227003,
+                  "elapsedS": 0.39409908699963125,
+                  "threadId": 136856303826624,
+                  "nativeThreadId": 217463,
+                  "activeCallbacks": []
+                },
+                {
+                  "event": "start",
+                  "span": 2,
+                  "callback": "heartbeat",
+                  "monotonicS": 10254.166413283,
+                  "elapsedS": 0.3942852870004572,
+                  "threadId": 136856303826624,
+                  "nativeThreadId": 217463,
+                  "activeCallbacks": [
+                    "heartbeat"
+                  ],
+                  "slowWasActiveAtEntry": false
+                },
+                {
+                  "event": "end",
+                  "span": 2,
+                  "callback": "heartbeat",
+                  "monotonicS": 10254.166418223,
+                  "elapsedS": 0.3942902269991464,
+                  "threadId": 136856303826624,
+                  "nativeThreadId": 217463,
+                  "activeCallbacks": []
+                }
+              ],
+              "maxConcurrency": 1,
+              "activeCallbacksAtEnd": []
+            },
+            "durationS": 0.5126438759998564
+          },
+          "outerError": null,
+          "interrupted": false,
+          "durationS": 0.6702342730004602,
+          "passed": true
+        },
+        {
+          "case": "two_threads_same_group",
+          "command": [
+            "/usr/bin/python3",
+            "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/executor_group_lab.py",
+            "--worker",
+            "two_threads_same_group",
+            "--domain-id",
+            "219",
+            "--period-s",
+            "0.02",
+            "--observe-s",
+            "0.35",
+            "--start-timeout-s",
+            "3.0",
+            "--callback-cap-s",
+            "5.0",
+            "--cleanup-timeout-s",
+            "3.0",
+            "--worker-timeout-s",
+            "20.0"
+          ],
+          "workerDeadlineS": 20.0,
+          "exitCode": 0,
+          "stdout": "EXECUTOR_GROUP_RESULT={\"case\": \"two_threads_same_group\", \"passed\": true, \"pid\": 217490, \"scriptSha256\": \"960bf4fdd98ee101a1fc8de6731956ebbb3c5ef6cecaec4e0cb6e137ad3a1279\", \"provenance\": {\"versions\": {\"python\": \"3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]\", \"pythonExecutable\": \"/usr/bin/python3\", \"platform\": \"Linux-7.0.0-38-generic-x86_64-with-glibc2.39\", \"rosDistro\": \"jazzy\", \"rclpy\": \"7.1.12\", \"packages\": {\"rclpy\": \"7.1.12\", \"rclcpp\": \"28.1.22\", \"rmw_fastrtps_cpp\": \"8.4.4\", \"example_interfaces\": \"0.12.1\"}}, \"runtimeSource\": [{\"api\": \"Future._schedule_or_invoke_done_callbacks\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py\", \"sha256\": \"4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77\", \"lineStart\": 146, \"lineEnd\": 168, \"explanation\": \"Future完成后有executor时排generic Task\"}, {\"api\": \"Future.add_done_callback\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py\", \"sha256\": \"4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77\", \"lineStart\": 178, \"lineEnd\": 202, \"explanation\": \"已完成Future也可立即调用或排Task，依是否关联executor\"}, {\"api\": \"Executor.create_task\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 241, \"lineEnd\": 253, \"explanation\": \"generic Task不附带ROS source_entity回调组\"}, {\"api\": \"Executor._take_client\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 492, \"lineEnd\": 519, \"explanation\": \"真实响应先关联executor，再完成Future\"}, {\"api\": \"Executor._make_handler\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 559, \"lineEnd\": 612, \"explanation\": \"ROS实体handler另行执行组beginning/ending检查\"}, {\"api\": \"MutuallyExclusiveCallbackGroup\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/callback_groups.py\", \"sha256\": \"da1314ac295f427aa8191ae8a86425bbfe62e512fa3678d3d401375b369cf557\", \"lineStart\": 93, \"lineEnd\": 117, \"explanation\": \"互斥许可只覆盖归属于本组的实体执行\"}], \"pinnedReference\": {\"commit\": \"521012e60ba21319ef29141f8f521a0e072fe652\", \"root\": \"/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2\", \"note\": \"下载快照是解释依据；本次行为以runtimeSource和实际版本为准。\"}}, \"threads\": 2, \"groupLayout\": \"same MutuallyExclusive\", \"namespace\": \"/executor_group_lab/p217490/two_threads_same_group\", \"slowWork\": \"Event.wait：释放GIL的模拟IO门闩，不是CPU基准\", \"heldWindow\": {\"startMonotonicS\": 10254.488085914, \"endMonotonicS\": 10254.838175859, \"maximumObservationS\": 0.35, \"actualElapsedS\": 0.3500899450009456, \"slowStillActive\": true, \"heartbeatObservedInside\": false, \"heartbeatTimerReadyAtWindowEnd\": true, \"countsAtWindowEnd\": {\"heartbeat\": 0, \"heartbeatWhileSlow\": 0}, \"spinThreadAlive\": true}, \"counts\": {\"heartbeat\": 1, \"heartbeatWhileSlow\": 0}, \"assertions\": {\"controlledSlowStart\": true, \"heldWindowValid\": true, \"expectedOverlap\": false, \"observedOverlap\": false, \"heartbeatEventuallyRan\": true, \"callbackCapExpired\": false}, \"cleanup\": {\"errors\": [], \"spinThreadJoined\": true, \"executorShutdownReturned\": true, \"contextOkAfterCleanup\": false, \"remainingNewPythonThreads\": [], \"spinErrors\": []}, \"timeline\": {\"events\": [{\"event\": \"start\", \"span\": 1, \"callback\": \"slow\", \"monotonicS\": 10254.488070664, \"elapsedS\": 0.04442477299926395, \"threadId\": 135560926586560, \"nativeThreadId\": 217508, \"activeCallbacks\": [\"slow\"]}, {\"event\": \"end\", \"span\": 1, \"callback\": \"slow\", \"monotonicS\": 10254.838236099, \"elapsedS\": 0.39459043799979554, \"threadId\": 135560926586560, \"nativeThreadId\": 217508, \"activeCallbacks\": []}, {\"event\": \"start\", \"span\": 2, \"callback\": \"heartbeat\", \"monotonicS\": 10254.838542389, \"elapsedS\": 0.3948965079998743, \"threadId\": 135560926586560, \"nativeThreadId\": 217508, \"activeCallbacks\": [\"heartbeat\"], \"slowWasActiveAtEntry\": false}, {\"event\": \"end\", \"span\": 2, \"callback\": \"heartbeat\", \"monotonicS\": 10254.838549859, \"elapsedS\": 0.39490400800059433, \"threadId\": 135560926586560, \"nativeThreadId\": 217508, \"activeCallbacks\": []}], \"maxConcurrency\": 1, \"activeCallbacksAtEnd\": []}, \"durationS\": 0.5121828760002245}\n",
+          "stderr": "",
+          "result": {
+            "case": "two_threads_same_group",
+            "passed": true,
+            "pid": 217490,
+            "scriptSha256": "960bf4fdd98ee101a1fc8de6731956ebbb3c5ef6cecaec4e0cb6e137ad3a1279",
+            "provenance": {
+              "versions": {
+                "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+                "pythonExecutable": "/usr/bin/python3",
+                "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+                "rosDistro": "jazzy",
+                "rclpy": "7.1.12",
+                "packages": {
+                  "rclpy": "7.1.12",
+                  "rclcpp": "28.1.22",
+                  "rmw_fastrtps_cpp": "8.4.4",
+                  "example_interfaces": "0.12.1"
+                }
+              },
+              "runtimeSource": [
+                {
+                  "api": "Future._schedule_or_invoke_done_callbacks",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py",
+                  "sha256": "4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77",
+                  "lineStart": 146,
+                  "lineEnd": 168,
+                  "explanation": "Future完成后有executor时排generic Task"
+                },
+                {
+                  "api": "Future.add_done_callback",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py",
+                  "sha256": "4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77",
+                  "lineStart": 178,
+                  "lineEnd": 202,
+                  "explanation": "已完成Future也可立即调用或排Task，依是否关联executor"
+                },
+                {
+                  "api": "Executor.create_task",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+                  "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+                  "lineStart": 241,
+                  "lineEnd": 253,
+                  "explanation": "generic Task不附带ROS source_entity回调组"
+                },
+                {
+                  "api": "Executor._take_client",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+                  "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+                  "lineStart": 492,
+                  "lineEnd": 519,
+                  "explanation": "真实响应先关联executor，再完成Future"
+                },
+                {
+                  "api": "Executor._make_handler",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+                  "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+                  "lineStart": 559,
+                  "lineEnd": 612,
+                  "explanation": "ROS实体handler另行执行组beginning/ending检查"
+                },
+                {
+                  "api": "MutuallyExclusiveCallbackGroup",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/callback_groups.py",
+                  "sha256": "da1314ac295f427aa8191ae8a86425bbfe62e512fa3678d3d401375b369cf557",
+                  "lineStart": 93,
+                  "lineEnd": 117,
+                  "explanation": "互斥许可只覆盖归属于本组的实体执行"
+                }
+              ],
+              "pinnedReference": {
+                "commit": "521012e60ba21319ef29141f8f521a0e072fe652",
+                "root": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2",
+                "note": "下载快照是解释依据；本次行为以runtimeSource和实际版本为准。"
+              }
+            },
+            "threads": 2,
+            "groupLayout": "same MutuallyExclusive",
+            "namespace": "/executor_group_lab/p217490/two_threads_same_group",
+            "slowWork": "Event.wait：释放GIL的模拟IO门闩，不是CPU基准",
+            "heldWindow": {
+              "startMonotonicS": 10254.488085914,
+              "endMonotonicS": 10254.838175859,
+              "maximumObservationS": 0.35,
+              "actualElapsedS": 0.3500899450009456,
+              "slowStillActive": true,
+              "heartbeatObservedInside": false,
+              "heartbeatTimerReadyAtWindowEnd": true,
+              "countsAtWindowEnd": {
+                "heartbeat": 0,
+                "heartbeatWhileSlow": 0
+              },
+              "spinThreadAlive": true
+            },
+            "counts": {
+              "heartbeat": 1,
+              "heartbeatWhileSlow": 0
+            },
+            "assertions": {
+              "controlledSlowStart": true,
+              "heldWindowValid": true,
+              "expectedOverlap": false,
+              "observedOverlap": false,
+              "heartbeatEventuallyRan": true,
+              "callbackCapExpired": false
+            },
+            "cleanup": {
+              "errors": [],
+              "spinThreadJoined": true,
+              "executorShutdownReturned": true,
+              "contextOkAfterCleanup": false,
+              "remainingNewPythonThreads": [],
+              "spinErrors": []
+            },
+            "timeline": {
+              "events": [
+                {
+                  "event": "start",
+                  "span": 1,
+                  "callback": "slow",
+                  "monotonicS": 10254.488070664,
+                  "elapsedS": 0.04442477299926395,
+                  "threadId": 135560926586560,
+                  "nativeThreadId": 217508,
+                  "activeCallbacks": [
+                    "slow"
+                  ]
+                },
+                {
+                  "event": "end",
+                  "span": 1,
+                  "callback": "slow",
+                  "monotonicS": 10254.838236099,
+                  "elapsedS": 0.39459043799979554,
+                  "threadId": 135560926586560,
+                  "nativeThreadId": 217508,
+                  "activeCallbacks": []
+                },
+                {
+                  "event": "start",
+                  "span": 2,
+                  "callback": "heartbeat",
+                  "monotonicS": 10254.838542389,
+                  "elapsedS": 0.3948965079998743,
+                  "threadId": 135560926586560,
+                  "nativeThreadId": 217508,
+                  "activeCallbacks": [
+                    "heartbeat"
+                  ],
+                  "slowWasActiveAtEntry": false
+                },
+                {
+                  "event": "end",
+                  "span": 2,
+                  "callback": "heartbeat",
+                  "monotonicS": 10254.838549859,
+                  "elapsedS": 0.39490400800059433,
+                  "threadId": 135560926586560,
+                  "nativeThreadId": 217508,
+                  "activeCallbacks": []
+                }
+              ],
+              "maxConcurrency": 1,
+              "activeCallbacksAtEnd": []
+            },
+            "durationS": 0.5121828760002245
+          },
+          "outerError": null,
+          "interrupted": false,
+          "durationS": 0.6726158969995595,
+          "passed": true
+        },
+        {
+          "case": "two_threads_distinct_groups",
+          "command": [
+            "/usr/bin/python3",
+            "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/executor_group_lab.py",
+            "--worker",
+            "two_threads_distinct_groups",
+            "--domain-id",
+            "219",
+            "--period-s",
+            "0.02",
+            "--observe-s",
+            "0.35",
+            "--start-timeout-s",
+            "3.0",
+            "--callback-cap-s",
+            "5.0",
+            "--cleanup-timeout-s",
+            "3.0",
+            "--worker-timeout-s",
+            "20.0"
+          ],
+          "workerDeadlineS": 20.0,
+          "exitCode": 0,
+          "stdout": "EXECUTOR_GROUP_RESULT={\"case\": \"two_threads_distinct_groups\", \"passed\": true, \"pid\": 217517, \"scriptSha256\": \"960bf4fdd98ee101a1fc8de6731956ebbb3c5ef6cecaec4e0cb6e137ad3a1279\", \"provenance\": {\"versions\": {\"python\": \"3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]\", \"pythonExecutable\": \"/usr/bin/python3\", \"platform\": \"Linux-7.0.0-38-generic-x86_64-with-glibc2.39\", \"rosDistro\": \"jazzy\", \"rclpy\": \"7.1.12\", \"packages\": {\"rclpy\": \"7.1.12\", \"rclcpp\": \"28.1.22\", \"rmw_fastrtps_cpp\": \"8.4.4\", \"example_interfaces\": \"0.12.1\"}}, \"runtimeSource\": [{\"api\": \"Future._schedule_or_invoke_done_callbacks\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py\", \"sha256\": \"4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77\", \"lineStart\": 146, \"lineEnd\": 168, \"explanation\": \"Future完成后有executor时排generic Task\"}, {\"api\": \"Future.add_done_callback\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py\", \"sha256\": \"4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77\", \"lineStart\": 178, \"lineEnd\": 202, \"explanation\": \"已完成Future也可立即调用或排Task，依是否关联executor\"}, {\"api\": \"Executor.create_task\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 241, \"lineEnd\": 253, \"explanation\": \"generic Task不附带ROS source_entity回调组\"}, {\"api\": \"Executor._take_client\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 492, \"lineEnd\": 519, \"explanation\": \"真实响应先关联executor，再完成Future\"}, {\"api\": \"Executor._make_handler\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 559, \"lineEnd\": 612, \"explanation\": \"ROS实体handler另行执行组beginning/ending检查\"}, {\"api\": \"MutuallyExclusiveCallbackGroup\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/callback_groups.py\", \"sha256\": \"da1314ac295f427aa8191ae8a86425bbfe62e512fa3678d3d401375b369cf557\", \"lineStart\": 93, \"lineEnd\": 117, \"explanation\": \"互斥许可只覆盖归属于本组的实体执行\"}], \"pinnedReference\": {\"commit\": \"521012e60ba21319ef29141f8f521a0e072fe652\", \"root\": \"/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2\", \"note\": \"下载快照是解释依据；本次行为以runtimeSource和实际版本为准。\"}}, \"threads\": 2, \"groupLayout\": \"distinct MutuallyExclusive\", \"namespace\": \"/executor_group_lab/p217517/two_threads_distinct_groups\", \"slowWork\": \"Event.wait：释放GIL的模拟IO门闩，不是CPU基准\", \"heldWindow\": {\"startMonotonicS\": 10255.155131545, \"endMonotonicS\": 10255.175520989, \"maximumObservationS\": 0.35, \"actualElapsedS\": 0.02038944400010223, \"slowStillActive\": true, \"heartbeatObservedInside\": true, \"heartbeatTimerReadyAtWindowEnd\": false, \"countsAtWindowEnd\": {\"heartbeat\": 1, \"heartbeatWhileSlow\": 1}, \"spinThreadAlive\": true}, \"counts\": {\"heartbeat\": 1, \"heartbeatWhileSlow\": 1}, \"assertions\": {\"controlledSlowStart\": true, \"heldWindowValid\": true, \"expectedOverlap\": true, \"observedOverlap\": true, \"heartbeatEventuallyRan\": true, \"callbackCapExpired\": false}, \"cleanup\": {\"errors\": [], \"spinThreadJoined\": true, \"executorShutdownReturned\": true, \"contextOkAfterCleanup\": false, \"remainingNewPythonThreads\": [], \"spinErrors\": []}, \"timeline\": {\"events\": [{\"event\": \"start\", \"span\": 1, \"callback\": \"slow\", \"monotonicS\": 10255.155043015, \"elapsedS\": 0.04530030400019314, \"threadId\": 125782175246016, \"nativeThreadId\": 217535, \"activeCallbacks\": [\"slow\"]}, {\"event\": \"start\", \"span\": 2, \"callback\": \"heartbeat\", \"monotonicS\": 10255.175385269, \"elapsedS\": 0.06564258799880918, \"threadId\": 125782166853312, \"nativeThreadId\": 217536, \"activeCallbacks\": [\"slow\", \"heartbeat\"], \"slowWasActiveAtEntry\": true}, {\"event\": \"end\", \"span\": 2, \"callback\": \"heartbeat\", \"monotonicS\": 10255.175393889, \"elapsedS\": 0.0656511879988102, \"threadId\": 125782166853312, \"nativeThreadId\": 217536, \"activeCallbacks\": [\"slow\"]}, {\"event\": \"end\", \"span\": 1, \"callback\": \"slow\", \"monotonicS\": 10255.175543139, \"elapsedS\": 0.0658005579989549, \"threadId\": 125782175246016, \"nativeThreadId\": 217535, \"activeCallbacks\": []}], \"maxConcurrency\": 2, \"activeCallbacksAtEnd\": []}, \"durationS\": 0.176101198001561}\n",
+          "stderr": "",
+          "result": {
+            "case": "two_threads_distinct_groups",
+            "passed": true,
+            "pid": 217517,
+            "scriptSha256": "960bf4fdd98ee101a1fc8de6731956ebbb3c5ef6cecaec4e0cb6e137ad3a1279",
+            "provenance": {
+              "versions": {
+                "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+                "pythonExecutable": "/usr/bin/python3",
+                "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+                "rosDistro": "jazzy",
+                "rclpy": "7.1.12",
+                "packages": {
+                  "rclpy": "7.1.12",
+                  "rclcpp": "28.1.22",
+                  "rmw_fastrtps_cpp": "8.4.4",
+                  "example_interfaces": "0.12.1"
+                }
+              },
+              "runtimeSource": [
+                {
+                  "api": "Future._schedule_or_invoke_done_callbacks",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py",
+                  "sha256": "4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77",
+                  "lineStart": 146,
+                  "lineEnd": 168,
+                  "explanation": "Future完成后有executor时排generic Task"
+                },
+                {
+                  "api": "Future.add_done_callback",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py",
+                  "sha256": "4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77",
+                  "lineStart": 178,
+                  "lineEnd": 202,
+                  "explanation": "已完成Future也可立即调用或排Task，依是否关联executor"
+                },
+                {
+                  "api": "Executor.create_task",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+                  "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+                  "lineStart": 241,
+                  "lineEnd": 253,
+                  "explanation": "generic Task不附带ROS source_entity回调组"
+                },
+                {
+                  "api": "Executor._take_client",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+                  "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+                  "lineStart": 492,
+                  "lineEnd": 519,
+                  "explanation": "真实响应先关联executor，再完成Future"
+                },
+                {
+                  "api": "Executor._make_handler",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+                  "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+                  "lineStart": 559,
+                  "lineEnd": 612,
+                  "explanation": "ROS实体handler另行执行组beginning/ending检查"
+                },
+                {
+                  "api": "MutuallyExclusiveCallbackGroup",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/callback_groups.py",
+                  "sha256": "da1314ac295f427aa8191ae8a86425bbfe62e512fa3678d3d401375b369cf557",
+                  "lineStart": 93,
+                  "lineEnd": 117,
+                  "explanation": "互斥许可只覆盖归属于本组的实体执行"
+                }
+              ],
+              "pinnedReference": {
+                "commit": "521012e60ba21319ef29141f8f521a0e072fe652",
+                "root": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2",
+                "note": "下载快照是解释依据；本次行为以runtimeSource和实际版本为准。"
+              }
+            },
+            "threads": 2,
+            "groupLayout": "distinct MutuallyExclusive",
+            "namespace": "/executor_group_lab/p217517/two_threads_distinct_groups",
+            "slowWork": "Event.wait：释放GIL的模拟IO门闩，不是CPU基准",
+            "heldWindow": {
+              "startMonotonicS": 10255.155131545,
+              "endMonotonicS": 10255.175520989,
+              "maximumObservationS": 0.35,
+              "actualElapsedS": 0.02038944400010223,
+              "slowStillActive": true,
+              "heartbeatObservedInside": true,
+              "heartbeatTimerReadyAtWindowEnd": false,
+              "countsAtWindowEnd": {
+                "heartbeat": 1,
+                "heartbeatWhileSlow": 1
+              },
+              "spinThreadAlive": true
+            },
+            "counts": {
+              "heartbeat": 1,
+              "heartbeatWhileSlow": 1
+            },
+            "assertions": {
+              "controlledSlowStart": true,
+              "heldWindowValid": true,
+              "expectedOverlap": true,
+              "observedOverlap": true,
+              "heartbeatEventuallyRan": true,
+              "callbackCapExpired": false
+            },
+            "cleanup": {
+              "errors": [],
+              "spinThreadJoined": true,
+              "executorShutdownReturned": true,
+              "contextOkAfterCleanup": false,
+              "remainingNewPythonThreads": [],
+              "spinErrors": []
+            },
+            "timeline": {
+              "events": [
+                {
+                  "event": "start",
+                  "span": 1,
+                  "callback": "slow",
+                  "monotonicS": 10255.155043015,
+                  "elapsedS": 0.04530030400019314,
+                  "threadId": 125782175246016,
+                  "nativeThreadId": 217535,
+                  "activeCallbacks": [
+                    "slow"
+                  ]
+                },
+                {
+                  "event": "start",
+                  "span": 2,
+                  "callback": "heartbeat",
+                  "monotonicS": 10255.175385269,
+                  "elapsedS": 0.06564258799880918,
+                  "threadId": 125782166853312,
+                  "nativeThreadId": 217536,
+                  "activeCallbacks": [
+                    "slow",
+                    "heartbeat"
+                  ],
+                  "slowWasActiveAtEntry": true
+                },
+                {
+                  "event": "end",
+                  "span": 2,
+                  "callback": "heartbeat",
+                  "monotonicS": 10255.175393889,
+                  "elapsedS": 0.0656511879988102,
+                  "threadId": 125782166853312,
+                  "nativeThreadId": 217536,
+                  "activeCallbacks": [
+                    "slow"
+                  ]
+                },
+                {
+                  "event": "end",
+                  "span": 1,
+                  "callback": "slow",
+                  "monotonicS": 10255.175543139,
+                  "elapsedS": 0.0658005579989549,
+                  "threadId": 125782175246016,
+                  "nativeThreadId": 217535,
+                  "activeCallbacks": []
+                }
+              ],
+              "maxConcurrency": 2,
+              "activeCallbacksAtEnd": []
+            },
+            "durationS": 0.176101198001561
+          },
+          "outerError": null,
+          "interrupted": false,
+          "durationS": 0.3356183169998985,
+          "passed": true
+        },
+        {
+          "case": "client_future_continuation",
+          "command": [
+            "/usr/bin/python3",
+            "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/executor_group_lab.py",
+            "--worker",
+            "client_future_continuation",
+            "--domain-id",
+            "219",
+            "--period-s",
+            "0.02",
+            "--observe-s",
+            "0.35",
+            "--start-timeout-s",
+            "3.0",
+            "--callback-cap-s",
+            "5.0",
+            "--cleanup-timeout-s",
+            "3.0",
+            "--worker-timeout-s",
+            "20.0"
+          ],
+          "workerDeadlineS": 20.0,
+          "exitCode": 0,
+          "stdout": "EXECUTOR_GROUP_RESULT={\"case\": \"client_future_continuation\", \"passed\": true, \"pid\": 217537, \"scriptSha256\": \"960bf4fdd98ee101a1fc8de6731956ebbb3c5ef6cecaec4e0cb6e137ad3a1279\", \"provenance\": {\"versions\": {\"python\": \"3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]\", \"pythonExecutable\": \"/usr/bin/python3\", \"platform\": \"Linux-7.0.0-38-generic-x86_64-with-glibc2.39\", \"rosDistro\": \"jazzy\", \"rclpy\": \"7.1.12\", \"packages\": {\"rclpy\": \"7.1.12\", \"rclcpp\": \"28.1.22\", \"rmw_fastrtps_cpp\": \"8.4.4\", \"example_interfaces\": \"0.12.1\"}}, \"runtimeSource\": [{\"api\": \"Future._schedule_or_invoke_done_callbacks\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py\", \"sha256\": \"4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77\", \"lineStart\": 146, \"lineEnd\": 168, \"explanation\": \"Future完成后有executor时排generic Task\"}, {\"api\": \"Future.add_done_callback\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py\", \"sha256\": \"4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77\", \"lineStart\": 178, \"lineEnd\": 202, \"explanation\": \"已完成Future也可立即调用或排Task，依是否关联executor\"}, {\"api\": \"Executor.create_task\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 241, \"lineEnd\": 253, \"explanation\": \"generic Task不附带ROS source_entity回调组\"}, {\"api\": \"Executor._take_client\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 492, \"lineEnd\": 519, \"explanation\": \"真实响应先关联executor，再完成Future\"}, {\"api\": \"Executor._make_handler\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 559, \"lineEnd\": 612, \"explanation\": \"ROS实体handler另行执行组beginning/ending检查\"}, {\"api\": \"MutuallyExclusiveCallbackGroup\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/callback_groups.py\", \"sha256\": \"da1314ac295f427aa8191ae8a86425bbfe62e512fa3678d3d401375b369cf557\", \"lineStart\": 93, \"lineEnd\": 117, \"explanation\": \"互斥许可只覆盖归属于本组的实体执行\"}], \"pinnedReference\": {\"commit\": \"521012e60ba21319ef29141f8f521a0e072fe652\", \"root\": \"/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2\", \"note\": \"下载快照是解释依据；本次行为以runtimeSource和实际版本为准。\"}}, \"threads\": 2, \"namespace\": \"/executor_group_lab/p217537/client_future_continuation\", \"futureKind\": \"真实Client.call_async(AddTwoInts)，不是手动set_result的Future\", \"futureDoneAtRegistration\": false, \"heldWindow\": {\"startMonotonicS\": 10255.474114543, \"endMonotonicS\": 10255.494474877, \"maximumObservationS\": 0.35, \"actualElapsedS\": 0.02036033399963344, \"doneStillActive\": true, \"sameGroupTimerObserved\": true}, \"assertions\": {\"actualServiceSum12\": true, \"clientAndTimerSameGroup\": true, \"genericDoneOverlappedSameGroupTimer\": true, \"mutualExclusionStillAppliesToClientEntity\": true}, \"details\": {\"responseSum\": 12, \"holderWhileDone\": true, \"callbackCapExpired\": false, \"groupAllowsClientWhileTimerActive\": false}, \"cleanup\": {\"errors\": [], \"spinThreadJoined\": true, \"executorShutdownReturned\": true, \"contextOkAfterCleanup\": false, \"remainingNewPythonThreads\": [], \"spinErrors\": []}, \"timeline\": {\"events\": [{\"event\": \"start\", \"span\": 1, \"callback\": \"server\", \"monotonicS\": 10255.473784373, \"elapsedS\": 0.025534491000144044, \"threadId\": 139294427571904, \"nativeThreadId\": 217553, \"activeCallbacks\": [\"server\"]}, {\"event\": \"end\", \"span\": 1, \"callback\": \"server\", \"monotonicS\": 10255.473789353, \"elapsedS\": 0.025539381000271533, \"threadId\": 139294427571904, \"nativeThreadId\": 217553, \"activeCallbacks\": []}, {\"event\": \"start\", \"span\": 2, \"callback\": \"done\", \"monotonicS\": 10255.474098913, \"elapsedS\": 0.025849031000689138, \"threadId\": 139294427571904, \"nativeThreadId\": 217553, \"activeCallbacks\": [\"done\"]}, {\"event\": \"start\", \"span\": 3, \"callback\": \"same_client_group_timer\", \"monotonicS\": 10255.494361677, \"elapsedS\": 0.046111815001495415, \"threadId\": 139294419179200, \"nativeThreadId\": 217554, \"activeCallbacks\": [\"done\", \"same_client_group_timer\"], \"doneWasActiveAtEntry\": true}, {\"event\": \"end\", \"span\": 3, \"callback\": \"same_client_group_timer\", \"monotonicS\": 10255.494370747, \"elapsedS\": 0.046120825001708, \"threadId\": 139294419179200, \"nativeThreadId\": 217554, \"activeCallbacks\": [\"done\"]}, {\"event\": \"end\", \"span\": 2, \"callback\": \"done\", \"monotonicS\": 10255.494488897, \"elapsedS\": 0.04623893500138365, \"threadId\": 139294427571904, \"nativeThreadId\": 217553, \"activeCallbacks\": []}], \"maxConcurrency\": 2, \"activeCallbacksAtEnd\": []}, \"durationS\": 0.1624655529994925}\n",
+          "stderr": "",
+          "result": {
+            "case": "client_future_continuation",
+            "passed": true,
+            "pid": 217537,
+            "scriptSha256": "960bf4fdd98ee101a1fc8de6731956ebbb3c5ef6cecaec4e0cb6e137ad3a1279",
+            "provenance": {
+              "versions": {
+                "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+                "pythonExecutable": "/usr/bin/python3",
+                "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+                "rosDistro": "jazzy",
+                "rclpy": "7.1.12",
+                "packages": {
+                  "rclpy": "7.1.12",
+                  "rclcpp": "28.1.22",
+                  "rmw_fastrtps_cpp": "8.4.4",
+                  "example_interfaces": "0.12.1"
+                }
+              },
+              "runtimeSource": [
+                {
+                  "api": "Future._schedule_or_invoke_done_callbacks",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py",
+                  "sha256": "4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77",
+                  "lineStart": 146,
+                  "lineEnd": 168,
+                  "explanation": "Future完成后有executor时排generic Task"
+                },
+                {
+                  "api": "Future.add_done_callback",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py",
+                  "sha256": "4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77",
+                  "lineStart": 178,
+                  "lineEnd": 202,
+                  "explanation": "已完成Future也可立即调用或排Task，依是否关联executor"
+                },
+                {
+                  "api": "Executor.create_task",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+                  "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+                  "lineStart": 241,
+                  "lineEnd": 253,
+                  "explanation": "generic Task不附带ROS source_entity回调组"
+                },
+                {
+                  "api": "Executor._take_client",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+                  "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+                  "lineStart": 492,
+                  "lineEnd": 519,
+                  "explanation": "真实响应先关联executor，再完成Future"
+                },
+                {
+                  "api": "Executor._make_handler",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+                  "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+                  "lineStart": 559,
+                  "lineEnd": 612,
+                  "explanation": "ROS实体handler另行执行组beginning/ending检查"
+                },
+                {
+                  "api": "MutuallyExclusiveCallbackGroup",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/callback_groups.py",
+                  "sha256": "da1314ac295f427aa8191ae8a86425bbfe62e512fa3678d3d401375b369cf557",
+                  "lineStart": 93,
+                  "lineEnd": 117,
+                  "explanation": "互斥许可只覆盖归属于本组的实体执行"
+                }
+              ],
+              "pinnedReference": {
+                "commit": "521012e60ba21319ef29141f8f521a0e072fe652",
+                "root": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2",
+                "note": "下载快照是解释依据；本次行为以runtimeSource和实际版本为准。"
+              }
+            },
+            "threads": 2,
+            "namespace": "/executor_group_lab/p217537/client_future_continuation",
+            "futureKind": "真实Client.call_async(AddTwoInts)，不是手动set_result的Future",
+            "futureDoneAtRegistration": false,
+            "heldWindow": {
+              "startMonotonicS": 10255.474114543,
+              "endMonotonicS": 10255.494474877,
+              "maximumObservationS": 0.35,
+              "actualElapsedS": 0.02036033399963344,
+              "doneStillActive": true,
+              "sameGroupTimerObserved": true
+            },
+            "assertions": {
+              "actualServiceSum12": true,
+              "clientAndTimerSameGroup": true,
+              "genericDoneOverlappedSameGroupTimer": true,
+              "mutualExclusionStillAppliesToClientEntity": true
+            },
+            "details": {
+              "responseSum": 12,
+              "holderWhileDone": true,
+              "callbackCapExpired": false,
+              "groupAllowsClientWhileTimerActive": false
+            },
+            "cleanup": {
+              "errors": [],
+              "spinThreadJoined": true,
+              "executorShutdownReturned": true,
+              "contextOkAfterCleanup": false,
+              "remainingNewPythonThreads": [],
+              "spinErrors": []
+            },
+            "timeline": {
+              "events": [
+                {
+                  "event": "start",
+                  "span": 1,
+                  "callback": "server",
+                  "monotonicS": 10255.473784373,
+                  "elapsedS": 0.025534491000144044,
+                  "threadId": 139294427571904,
+                  "nativeThreadId": 217553,
+                  "activeCallbacks": [
+                    "server"
+                  ]
+                },
+                {
+                  "event": "end",
+                  "span": 1,
+                  "callback": "server",
+                  "monotonicS": 10255.473789353,
+                  "elapsedS": 0.025539381000271533,
+                  "threadId": 139294427571904,
+                  "nativeThreadId": 217553,
+                  "activeCallbacks": []
+                },
+                {
+                  "event": "start",
+                  "span": 2,
+                  "callback": "done",
+                  "monotonicS": 10255.474098913,
+                  "elapsedS": 0.025849031000689138,
+                  "threadId": 139294427571904,
+                  "nativeThreadId": 217553,
+                  "activeCallbacks": [
+                    "done"
+                  ]
+                },
+                {
+                  "event": "start",
+                  "span": 3,
+                  "callback": "same_client_group_timer",
+                  "monotonicS": 10255.494361677,
+                  "elapsedS": 0.046111815001495415,
+                  "threadId": 139294419179200,
+                  "nativeThreadId": 217554,
+                  "activeCallbacks": [
+                    "done",
+                    "same_client_group_timer"
+                  ],
+                  "doneWasActiveAtEntry": true
+                },
+                {
+                  "event": "end",
+                  "span": 3,
+                  "callback": "same_client_group_timer",
+                  "monotonicS": 10255.494370747,
+                  "elapsedS": 0.046120825001708,
+                  "threadId": 139294419179200,
+                  "nativeThreadId": 217554,
+                  "activeCallbacks": [
+                    "done"
+                  ]
+                },
+                {
+                  "event": "end",
+                  "span": 2,
+                  "callback": "done",
+                  "monotonicS": 10255.494488897,
+                  "elapsedS": 0.04623893500138365,
+                  "threadId": 139294427571904,
+                  "nativeThreadId": 217553,
+                  "activeCallbacks": []
+                }
+              ],
+              "maxConcurrency": 2,
+              "activeCallbacksAtEnd": []
+            },
+            "durationS": 0.1624655529994925
+          },
+          "outerError": null,
+          "interrupted": false,
+          "durationS": 0.3192639289991348,
+          "passed": true
+        }
+      ],
+      "durationS": 1.998345927999253,
+      "scope": "真实Jazzy/rclpy调度；稳态timer与真实AddTwoInts服务。无设备、硬件或仿真。",
+      "interpretation": [
+        "负例确认slow已开始、heartbeat已ready且门闩仍持有；零heartbeat由执行资源/组约束观察得到。",
+        "Event.wait是释放GIL的模拟IO等待；并发证据不表示纯Python CPU任务加速。",
+        "client Future场景仅在实际重叠断言通过时计为完成；不以源码推断替代运行证据。"
+      ],
+      "limits": [
+        "只断言这些受控回调的并发关系，不保证精确频率、严格实时期限或任意负载调度。",
+        "时间线只统计本实验业务回调，不统计DDS后台线程或所有内部响应handler。",
+        "回调组不是保护任意线程/Task共享数据的通用锁，仍需显式状态同步。",
+        "Future结论属于记录的rclpy实现；不泛化为所有Action、C++ continuation或后续版本。",
+        "软期限不能抢占长原生调用；每例父进程期限与外部timeout分别保护退出。"
+      ]
+    },
+    {
+      "schemaVersion": 1,
+      "checkedAt": "2026-11-07T03:49:27+08:00",
+      "passed": true,
+      "script": "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/executor_group_lab.py",
+      "scriptSha256": "6b2c2f30c75b72e1b3731b26e32a55a5481fdeb668d518078ea79a43e46e547e",
+      "invocation": [
+        "/usr/bin/python3",
+        "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/executor_group_lab.py"
+      ],
+      "parameters": {
+        "case": "all",
+        "domain_id": 219,
+        "period_s": 0.02,
+        "observe_s": 0.35,
+        "start_timeout_s": 3.0,
+        "callback_cap_s": 5.0,
+        "cleanup_timeout_s": 3.0,
+        "worker_timeout_s": 20.0
+      },
+      "environment": {
+        "ROS_DOMAIN_ID": "219",
+        "ROS_AUTOMATIC_DISCOVERY_RANGE": "LOCALHOST",
+        "RMW_IMPLEMENTATION": "rmw_fastrtps_cpp",
+        "ROS_LOCALHOST_ONLY": "unset",
+        "ROS_STATIC_PEERS": "unset"
+      },
+      "casesRequested": [
+        "single_thread_distinct_groups",
+        "two_threads_same_group",
+        "two_threads_distinct_groups",
+        "client_future_continuation"
+      ],
+      "results": [
+        {
+          "case": "single_thread_distinct_groups",
+          "command": [
+            "/usr/bin/python3",
+            "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/executor_group_lab.py",
+            "--worker",
+            "single_thread_distinct_groups",
+            "--domain-id",
+            "219",
+            "--period-s",
+            "0.02",
+            "--observe-s",
+            "0.35",
+            "--start-timeout-s",
+            "3.0",
+            "--callback-cap-s",
+            "5.0",
+            "--cleanup-timeout-s",
+            "3.0",
+            "--worker-timeout-s",
+            "20.0"
+          ],
+          "workerDeadlineS": 20.0,
+          "exitCode": 0,
+          "stdout": "EXECUTOR_GROUP_RESULT={\"case\": \"single_thread_distinct_groups\", \"passed\": true, \"pid\": 220377, \"scriptSha256\": \"6b2c2f30c75b72e1b3731b26e32a55a5481fdeb668d518078ea79a43e46e547e\", \"provenance\": {\"versions\": {\"python\": \"3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]\", \"pythonExecutable\": \"/usr/bin/python3\", \"platform\": \"Linux-7.0.0-38-generic-x86_64-with-glibc2.39\", \"rosDistro\": \"jazzy\", \"rclpy\": \"7.1.12\", \"packages\": {\"rclpy\": \"7.1.12\", \"rclcpp\": \"28.1.22\", \"rmw_fastrtps_cpp\": \"8.4.4\", \"example_interfaces\": \"0.12.1\"}}, \"runtimeSource\": [{\"api\": \"Future._schedule_or_invoke_done_callbacks\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py\", \"sha256\": \"4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77\", \"lineStart\": 146, \"lineEnd\": 168, \"explanation\": \"Future完成后有executor时排generic Task\"}, {\"api\": \"Future.add_done_callback\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py\", \"sha256\": \"4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77\", \"lineStart\": 178, \"lineEnd\": 202, \"explanation\": \"已完成Future也可立即调用或排Task，依是否关联executor\"}, {\"api\": \"Executor.create_task\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 241, \"lineEnd\": 253, \"explanation\": \"generic Task不附带ROS source_entity回调组\"}, {\"api\": \"Executor._take_client\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 492, \"lineEnd\": 519, \"explanation\": \"真实响应先关联executor，再完成Future\"}, {\"api\": \"Executor._make_handler\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 559, \"lineEnd\": 612, \"explanation\": \"ROS实体handler另行执行组beginning/ending检查\"}, {\"api\": \"MutuallyExclusiveCallbackGroup\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/callback_groups.py\", \"sha256\": \"da1314ac295f427aa8191ae8a86425bbfe62e512fa3678d3d401375b369cf557\", \"lineStart\": 93, \"lineEnd\": 117, \"explanation\": \"互斥许可只覆盖归属于本组的实体执行\"}], \"pinnedReference\": {\"commit\": \"521012e60ba21319ef29141f8f521a0e072fe652\", \"root\": \"/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2\", \"note\": \"下载快照是解释依据；本次行为以runtimeSource和实际版本为准。\"}}, \"threads\": 1, \"groupLayout\": \"distinct MutuallyExclusive\", \"namespace\": \"/executor_group_lab/p220377/single_thread_distinct_groups\", \"slowWork\": \"Event.wait：释放GIL的模拟IO门闩，不是CPU基准\", \"heldWindow\": {\"startMonotonicS\": 10357.580979876, \"endMonotonicS\": 10357.931023572, \"maximumObservationS\": 0.35, \"actualElapsedS\": 0.3500436960002844, \"slowStillActive\": true, \"heartbeatObservedInside\": false, \"heartbeatTimerReadyAtWindowEnd\": true, \"countsAtWindowEnd\": {\"heartbeat\": 0, \"heartbeatWhileSlow\": 0}, \"spinThreadAlive\": true}, \"counts\": {\"heartbeat\": 1, \"heartbeatWhileSlow\": 0}, \"assertions\": {\"controlledSlowStart\": true, \"heldWindowValid\": true, \"expectedOverlap\": false, \"observedOverlap\": false, \"heartbeatEventuallyRan\": true, \"callbackCapExpired\": false}, \"cleanup\": {\"errors\": [], \"spinThreadJoined\": true, \"executorShutdownReturned\": true, \"contextOkAfterCleanup\": false, \"remainingNewPythonThreads\": [], \"spinErrors\": []}, \"timeline\": {\"events\": [{\"event\": \"start\", \"span\": 1, \"callback\": \"slow\", \"monotonicS\": 10357.580956436, \"elapsedS\": 0.04660620499998913, \"threadId\": 136748099172032, \"nativeThreadId\": 220392, \"activeCallbacks\": [\"slow\"]}, {\"event\": \"end\", \"span\": 1, \"callback\": \"slow\", \"monotonicS\": 10357.931071142, \"elapsedS\": 0.3967207909990975, \"threadId\": 136748099172032, \"nativeThreadId\": 220392, \"activeCallbacks\": []}, {\"event\": \"start\", \"span\": 2, \"callback\": \"heartbeat\", \"monotonicS\": 10357.931249622, \"elapsedS\": 0.3968992209993303, \"threadId\": 136748099172032, \"nativeThreadId\": 220392, \"activeCallbacks\": [\"heartbeat\"], \"slowWasActiveAtEntry\": false}, {\"event\": \"end\", \"span\": 2, \"callback\": \"heartbeat\", \"monotonicS\": 10357.931254532, \"elapsedS\": 0.396904180999627, \"threadId\": 136748099172032, \"nativeThreadId\": 220392, \"activeCallbacks\": []}], \"maxConcurrency\": 1, \"activeCallbacksAtEnd\": []}, \"durationS\": 0.5217352079998818}\n",
+          "stderr": "",
+          "result": {
+            "case": "single_thread_distinct_groups",
+            "passed": true,
+            "pid": 220377,
+            "scriptSha256": "6b2c2f30c75b72e1b3731b26e32a55a5481fdeb668d518078ea79a43e46e547e",
+            "provenance": {
+              "versions": {
+                "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+                "pythonExecutable": "/usr/bin/python3",
+                "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+                "rosDistro": "jazzy",
+                "rclpy": "7.1.12",
+                "packages": {
+                  "rclpy": "7.1.12",
+                  "rclcpp": "28.1.22",
+                  "rmw_fastrtps_cpp": "8.4.4",
+                  "example_interfaces": "0.12.1"
+                }
+              },
+              "runtimeSource": [
+                {
+                  "api": "Future._schedule_or_invoke_done_callbacks",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py",
+                  "sha256": "4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77",
+                  "lineStart": 146,
+                  "lineEnd": 168,
+                  "explanation": "Future完成后有executor时排generic Task"
+                },
+                {
+                  "api": "Future.add_done_callback",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py",
+                  "sha256": "4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77",
+                  "lineStart": 178,
+                  "lineEnd": 202,
+                  "explanation": "已完成Future也可立即调用或排Task，依是否关联executor"
+                },
+                {
+                  "api": "Executor.create_task",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+                  "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+                  "lineStart": 241,
+                  "lineEnd": 253,
+                  "explanation": "generic Task不附带ROS source_entity回调组"
+                },
+                {
+                  "api": "Executor._take_client",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+                  "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+                  "lineStart": 492,
+                  "lineEnd": 519,
+                  "explanation": "真实响应先关联executor，再完成Future"
+                },
+                {
+                  "api": "Executor._make_handler",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+                  "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+                  "lineStart": 559,
+                  "lineEnd": 612,
+                  "explanation": "ROS实体handler另行执行组beginning/ending检查"
+                },
+                {
+                  "api": "MutuallyExclusiveCallbackGroup",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/callback_groups.py",
+                  "sha256": "da1314ac295f427aa8191ae8a86425bbfe62e512fa3678d3d401375b369cf557",
+                  "lineStart": 93,
+                  "lineEnd": 117,
+                  "explanation": "互斥许可只覆盖归属于本组的实体执行"
+                }
+              ],
+              "pinnedReference": {
+                "commit": "521012e60ba21319ef29141f8f521a0e072fe652",
+                "root": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2",
+                "note": "下载快照是解释依据；本次行为以runtimeSource和实际版本为准。"
+              }
+            },
+            "threads": 1,
+            "groupLayout": "distinct MutuallyExclusive",
+            "namespace": "/executor_group_lab/p220377/single_thread_distinct_groups",
+            "slowWork": "Event.wait：释放GIL的模拟IO门闩，不是CPU基准",
+            "heldWindow": {
+              "startMonotonicS": 10357.580979876,
+              "endMonotonicS": 10357.931023572,
+              "maximumObservationS": 0.35,
+              "actualElapsedS": 0.3500436960002844,
+              "slowStillActive": true,
+              "heartbeatObservedInside": false,
+              "heartbeatTimerReadyAtWindowEnd": true,
+              "countsAtWindowEnd": {
+                "heartbeat": 0,
+                "heartbeatWhileSlow": 0
+              },
+              "spinThreadAlive": true
+            },
+            "counts": {
+              "heartbeat": 1,
+              "heartbeatWhileSlow": 0
+            },
+            "assertions": {
+              "controlledSlowStart": true,
+              "heldWindowValid": true,
+              "expectedOverlap": false,
+              "observedOverlap": false,
+              "heartbeatEventuallyRan": true,
+              "callbackCapExpired": false
+            },
+            "cleanup": {
+              "errors": [],
+              "spinThreadJoined": true,
+              "executorShutdownReturned": true,
+              "contextOkAfterCleanup": false,
+              "remainingNewPythonThreads": [],
+              "spinErrors": []
+            },
+            "timeline": {
+              "events": [
+                {
+                  "event": "start",
+                  "span": 1,
+                  "callback": "slow",
+                  "monotonicS": 10357.580956436,
+                  "elapsedS": 0.04660620499998913,
+                  "threadId": 136748099172032,
+                  "nativeThreadId": 220392,
+                  "activeCallbacks": [
+                    "slow"
+                  ]
+                },
+                {
+                  "event": "end",
+                  "span": 1,
+                  "callback": "slow",
+                  "monotonicS": 10357.931071142,
+                  "elapsedS": 0.3967207909990975,
+                  "threadId": 136748099172032,
+                  "nativeThreadId": 220392,
+                  "activeCallbacks": []
+                },
+                {
+                  "event": "start",
+                  "span": 2,
+                  "callback": "heartbeat",
+                  "monotonicS": 10357.931249622,
+                  "elapsedS": 0.3968992209993303,
+                  "threadId": 136748099172032,
+                  "nativeThreadId": 220392,
+                  "activeCallbacks": [
+                    "heartbeat"
+                  ],
+                  "slowWasActiveAtEntry": false
+                },
+                {
+                  "event": "end",
+                  "span": 2,
+                  "callback": "heartbeat",
+                  "monotonicS": 10357.931254532,
+                  "elapsedS": 0.396904180999627,
+                  "threadId": 136748099172032,
+                  "nativeThreadId": 220392,
+                  "activeCallbacks": []
+                }
+              ],
+              "maxConcurrency": 1,
+              "activeCallbacksAtEnd": []
+            },
+            "durationS": 0.5217352079998818
+          },
+          "outerError": null,
+          "interrupted": false,
+          "durationS": 0.6786979159987823,
+          "passed": true
+        },
+        {
+          "case": "two_threads_same_group",
+          "command": [
+            "/usr/bin/python3",
+            "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/executor_group_lab.py",
+            "--worker",
+            "two_threads_same_group",
+            "--domain-id",
+            "219",
+            "--period-s",
+            "0.02",
+            "--observe-s",
+            "0.35",
+            "--start-timeout-s",
+            "3.0",
+            "--callback-cap-s",
+            "5.0",
+            "--cleanup-timeout-s",
+            "3.0",
+            "--worker-timeout-s",
+            "20.0"
+          ],
+          "workerDeadlineS": 20.0,
+          "exitCode": 0,
+          "stdout": "EXECUTOR_GROUP_RESULT={\"case\": \"two_threads_same_group\", \"passed\": true, \"pid\": 220442, \"scriptSha256\": \"6b2c2f30c75b72e1b3731b26e32a55a5481fdeb668d518078ea79a43e46e547e\", \"provenance\": {\"versions\": {\"python\": \"3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]\", \"pythonExecutable\": \"/usr/bin/python3\", \"platform\": \"Linux-7.0.0-38-generic-x86_64-with-glibc2.39\", \"rosDistro\": \"jazzy\", \"rclpy\": \"7.1.12\", \"packages\": {\"rclpy\": \"7.1.12\", \"rclcpp\": \"28.1.22\", \"rmw_fastrtps_cpp\": \"8.4.4\", \"example_interfaces\": \"0.12.1\"}}, \"runtimeSource\": [{\"api\": \"Future._schedule_or_invoke_done_callbacks\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py\", \"sha256\": \"4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77\", \"lineStart\": 146, \"lineEnd\": 168, \"explanation\": \"Future完成后有executor时排generic Task\"}, {\"api\": \"Future.add_done_callback\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py\", \"sha256\": \"4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77\", \"lineStart\": 178, \"lineEnd\": 202, \"explanation\": \"已完成Future也可立即调用或排Task，依是否关联executor\"}, {\"api\": \"Executor.create_task\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 241, \"lineEnd\": 253, \"explanation\": \"generic Task不附带ROS source_entity回调组\"}, {\"api\": \"Executor._take_client\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 492, \"lineEnd\": 519, \"explanation\": \"真实响应先关联executor，再完成Future\"}, {\"api\": \"Executor._make_handler\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 559, \"lineEnd\": 612, \"explanation\": \"ROS实体handler另行执行组beginning/ending检查\"}, {\"api\": \"MutuallyExclusiveCallbackGroup\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/callback_groups.py\", \"sha256\": \"da1314ac295f427aa8191ae8a86425bbfe62e512fa3678d3d401375b369cf557\", \"lineStart\": 93, \"lineEnd\": 117, \"explanation\": \"互斥许可只覆盖归属于本组的实体执行\"}], \"pinnedReference\": {\"commit\": \"521012e60ba21319ef29141f8f521a0e072fe652\", \"root\": \"/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2\", \"note\": \"下载快照是解释依据；本次行为以runtimeSource和实际版本为准。\"}}, \"threads\": 2, \"groupLayout\": \"same MutuallyExclusive\", \"namespace\": \"/executor_group_lab/p220442/two_threads_same_group\", \"slowWork\": \"Event.wait：释放GIL的模拟IO门闩，不是CPU基准\", \"heldWindow\": {\"startMonotonicS\": 10358.246570858, \"endMonotonicS\": 10358.596657755, \"maximumObservationS\": 0.35, \"actualElapsedS\": 0.3500868970004376, \"slowStillActive\": true, \"heartbeatObservedInside\": false, \"heartbeatTimerReadyAtWindowEnd\": true, \"countsAtWindowEnd\": {\"heartbeat\": 0, \"heartbeatWhileSlow\": 0}, \"spinThreadAlive\": true}, \"counts\": {\"heartbeat\": 1, \"heartbeatWhileSlow\": 0}, \"assertions\": {\"controlledSlowStart\": true, \"heldWindowValid\": true, \"expectedOverlap\": false, \"observedOverlap\": false, \"heartbeatEventuallyRan\": true, \"callbackCapExpired\": false}, \"cleanup\": {\"errors\": [], \"spinThreadJoined\": true, \"executorShutdownReturned\": true, \"contextOkAfterCleanup\": false, \"remainingNewPythonThreads\": [], \"spinErrors\": []}, \"timeline\": {\"events\": [{\"event\": \"start\", \"span\": 1, \"callback\": \"slow\", \"monotonicS\": 10358.246558328, \"elapsedS\": 0.04405357399991772, \"threadId\": 139325987616448, \"nativeThreadId\": 220461, \"activeCallbacks\": [\"slow\"]}, {\"event\": \"end\", \"span\": 1, \"callback\": \"slow\", \"monotonicS\": 10358.596708485, \"elapsedS\": 0.3942039610010397, \"threadId\": 139325987616448, \"nativeThreadId\": 220461, \"activeCallbacks\": []}, {\"event\": \"start\", \"span\": 2, \"callback\": \"heartbeat\", \"monotonicS\": 10358.596987815, \"elapsedS\": 0.3944830109994655, \"threadId\": 139325987616448, \"nativeThreadId\": 220461, \"activeCallbacks\": [\"heartbeat\"], \"slowWasActiveAtEntry\": false}, {\"event\": \"end\", \"span\": 2, \"callback\": \"heartbeat\", \"monotonicS\": 10358.596992585, \"elapsedS\": 0.394487821000439, \"threadId\": 139325987616448, \"nativeThreadId\": 220461, \"activeCallbacks\": []}], \"maxConcurrency\": 1, \"activeCallbacksAtEnd\": []}, \"durationS\": 0.5061430440000549}\n",
+          "stderr": "",
+          "result": {
+            "case": "two_threads_same_group",
+            "passed": true,
+            "pid": 220442,
+            "scriptSha256": "6b2c2f30c75b72e1b3731b26e32a55a5481fdeb668d518078ea79a43e46e547e",
+            "provenance": {
+              "versions": {
+                "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+                "pythonExecutable": "/usr/bin/python3",
+                "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+                "rosDistro": "jazzy",
+                "rclpy": "7.1.12",
+                "packages": {
+                  "rclpy": "7.1.12",
+                  "rclcpp": "28.1.22",
+                  "rmw_fastrtps_cpp": "8.4.4",
+                  "example_interfaces": "0.12.1"
+                }
+              },
+              "runtimeSource": [
+                {
+                  "api": "Future._schedule_or_invoke_done_callbacks",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py",
+                  "sha256": "4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77",
+                  "lineStart": 146,
+                  "lineEnd": 168,
+                  "explanation": "Future完成后有executor时排generic Task"
+                },
+                {
+                  "api": "Future.add_done_callback",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py",
+                  "sha256": "4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77",
+                  "lineStart": 178,
+                  "lineEnd": 202,
+                  "explanation": "已完成Future也可立即调用或排Task，依是否关联executor"
+                },
+                {
+                  "api": "Executor.create_task",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+                  "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+                  "lineStart": 241,
+                  "lineEnd": 253,
+                  "explanation": "generic Task不附带ROS source_entity回调组"
+                },
+                {
+                  "api": "Executor._take_client",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+                  "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+                  "lineStart": 492,
+                  "lineEnd": 519,
+                  "explanation": "真实响应先关联executor，再完成Future"
+                },
+                {
+                  "api": "Executor._make_handler",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+                  "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+                  "lineStart": 559,
+                  "lineEnd": 612,
+                  "explanation": "ROS实体handler另行执行组beginning/ending检查"
+                },
+                {
+                  "api": "MutuallyExclusiveCallbackGroup",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/callback_groups.py",
+                  "sha256": "da1314ac295f427aa8191ae8a86425bbfe62e512fa3678d3d401375b369cf557",
+                  "lineStart": 93,
+                  "lineEnd": 117,
+                  "explanation": "互斥许可只覆盖归属于本组的实体执行"
+                }
+              ],
+              "pinnedReference": {
+                "commit": "521012e60ba21319ef29141f8f521a0e072fe652",
+                "root": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2",
+                "note": "下载快照是解释依据；本次行为以runtimeSource和实际版本为准。"
+              }
+            },
+            "threads": 2,
+            "groupLayout": "same MutuallyExclusive",
+            "namespace": "/executor_group_lab/p220442/two_threads_same_group",
+            "slowWork": "Event.wait：释放GIL的模拟IO门闩，不是CPU基准",
+            "heldWindow": {
+              "startMonotonicS": 10358.246570858,
+              "endMonotonicS": 10358.596657755,
+              "maximumObservationS": 0.35,
+              "actualElapsedS": 0.3500868970004376,
+              "slowStillActive": true,
+              "heartbeatObservedInside": false,
+              "heartbeatTimerReadyAtWindowEnd": true,
+              "countsAtWindowEnd": {
+                "heartbeat": 0,
+                "heartbeatWhileSlow": 0
+              },
+              "spinThreadAlive": true
+            },
+            "counts": {
+              "heartbeat": 1,
+              "heartbeatWhileSlow": 0
+            },
+            "assertions": {
+              "controlledSlowStart": true,
+              "heldWindowValid": true,
+              "expectedOverlap": false,
+              "observedOverlap": false,
+              "heartbeatEventuallyRan": true,
+              "callbackCapExpired": false
+            },
+            "cleanup": {
+              "errors": [],
+              "spinThreadJoined": true,
+              "executorShutdownReturned": true,
+              "contextOkAfterCleanup": false,
+              "remainingNewPythonThreads": [],
+              "spinErrors": []
+            },
+            "timeline": {
+              "events": [
+                {
+                  "event": "start",
+                  "span": 1,
+                  "callback": "slow",
+                  "monotonicS": 10358.246558328,
+                  "elapsedS": 0.04405357399991772,
+                  "threadId": 139325987616448,
+                  "nativeThreadId": 220461,
+                  "activeCallbacks": [
+                    "slow"
+                  ]
+                },
+                {
+                  "event": "end",
+                  "span": 1,
+                  "callback": "slow",
+                  "monotonicS": 10358.596708485,
+                  "elapsedS": 0.3942039610010397,
+                  "threadId": 139325987616448,
+                  "nativeThreadId": 220461,
+                  "activeCallbacks": []
+                },
+                {
+                  "event": "start",
+                  "span": 2,
+                  "callback": "heartbeat",
+                  "monotonicS": 10358.596987815,
+                  "elapsedS": 0.3944830109994655,
+                  "threadId": 139325987616448,
+                  "nativeThreadId": 220461,
+                  "activeCallbacks": [
+                    "heartbeat"
+                  ],
+                  "slowWasActiveAtEntry": false
+                },
+                {
+                  "event": "end",
+                  "span": 2,
+                  "callback": "heartbeat",
+                  "monotonicS": 10358.596992585,
+                  "elapsedS": 0.394487821000439,
+                  "threadId": 139325987616448,
+                  "nativeThreadId": 220461,
+                  "activeCallbacks": []
+                }
+              ],
+              "maxConcurrency": 1,
+              "activeCallbacksAtEnd": []
+            },
+            "durationS": 0.5061430440000549
+          },
+          "outerError": null,
+          "interrupted": false,
+          "durationS": 0.6649486730002536,
+          "passed": true
+        },
+        {
+          "case": "two_threads_distinct_groups",
+          "command": [
+            "/usr/bin/python3",
+            "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/executor_group_lab.py",
+            "--worker",
+            "two_threads_distinct_groups",
+            "--domain-id",
+            "219",
+            "--period-s",
+            "0.02",
+            "--observe-s",
+            "0.35",
+            "--start-timeout-s",
+            "3.0",
+            "--callback-cap-s",
+            "5.0",
+            "--cleanup-timeout-s",
+            "3.0",
+            "--worker-timeout-s",
+            "20.0"
+          ],
+          "workerDeadlineS": 20.0,
+          "exitCode": 0,
+          "stdout": "EXECUTOR_GROUP_RESULT={\"case\": \"two_threads_distinct_groups\", \"passed\": true, \"pid\": 220510, \"scriptSha256\": \"6b2c2f30c75b72e1b3731b26e32a55a5481fdeb668d518078ea79a43e46e547e\", \"provenance\": {\"versions\": {\"python\": \"3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]\", \"pythonExecutable\": \"/usr/bin/python3\", \"platform\": \"Linux-7.0.0-38-generic-x86_64-with-glibc2.39\", \"rosDistro\": \"jazzy\", \"rclpy\": \"7.1.12\", \"packages\": {\"rclpy\": \"7.1.12\", \"rclcpp\": \"28.1.22\", \"rmw_fastrtps_cpp\": \"8.4.4\", \"example_interfaces\": \"0.12.1\"}}, \"runtimeSource\": [{\"api\": \"Future._schedule_or_invoke_done_callbacks\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py\", \"sha256\": \"4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77\", \"lineStart\": 146, \"lineEnd\": 168, \"explanation\": \"Future完成后有executor时排generic Task\"}, {\"api\": \"Future.add_done_callback\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py\", \"sha256\": \"4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77\", \"lineStart\": 178, \"lineEnd\": 202, \"explanation\": \"已完成Future也可立即调用或排Task，依是否关联executor\"}, {\"api\": \"Executor.create_task\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 241, \"lineEnd\": 253, \"explanation\": \"generic Task不附带ROS source_entity回调组\"}, {\"api\": \"Executor._take_client\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 492, \"lineEnd\": 519, \"explanation\": \"真实响应先关联executor，再完成Future\"}, {\"api\": \"Executor._make_handler\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 559, \"lineEnd\": 612, \"explanation\": \"ROS实体handler另行执行组beginning/ending检查\"}, {\"api\": \"MutuallyExclusiveCallbackGroup\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/callback_groups.py\", \"sha256\": \"da1314ac295f427aa8191ae8a86425bbfe62e512fa3678d3d401375b369cf557\", \"lineStart\": 93, \"lineEnd\": 117, \"explanation\": \"互斥许可只覆盖归属于本组的实体执行\"}], \"pinnedReference\": {\"commit\": \"521012e60ba21319ef29141f8f521a0e072fe652\", \"root\": \"/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2\", \"note\": \"下载快照是解释依据；本次行为以runtimeSource和实际版本为准。\"}}, \"threads\": 2, \"groupLayout\": \"distinct MutuallyExclusive\", \"namespace\": \"/executor_group_lab/p220510/two_threads_distinct_groups\", \"slowWork\": \"Event.wait：释放GIL的模拟IO门闩，不是CPU基准\", \"heldWindow\": {\"startMonotonicS\": 10358.90587754, \"endMonotonicS\": 10358.926219406, \"maximumObservationS\": 0.35, \"actualElapsedS\": 0.020341865998489084, \"slowStillActive\": true, \"heartbeatObservedInside\": true, \"heartbeatTimerReadyAtWindowEnd\": false, \"countsAtWindowEnd\": {\"heartbeat\": 1, \"heartbeatWhileSlow\": 1}, \"spinThreadAlive\": true}, \"counts\": {\"heartbeat\": 1, \"heartbeatWhileSlow\": 1}, \"assertions\": {\"controlledSlowStart\": true, \"heldWindowValid\": true, \"expectedOverlap\": true, \"observedOverlap\": true, \"heartbeatEventuallyRan\": true, \"callbackCapExpired\": false}, \"cleanup\": {\"errors\": [], \"spinThreadJoined\": true, \"executorShutdownReturned\": true, \"contextOkAfterCleanup\": false, \"remainingNewPythonThreads\": [], \"spinErrors\": []}, \"timeline\": {\"events\": [{\"event\": \"start\", \"span\": 1, \"callback\": \"slow\", \"monotonicS\": 10358.905776619, \"elapsedS\": 0.043247243000223534, \"threadId\": 130454330013376, \"nativeThreadId\": 220526, \"activeCallbacks\": [\"slow\"]}, {\"event\": \"start\", \"span\": 2, \"callback\": \"heartbeat\", \"monotonicS\": 10358.926087656, \"elapsedS\": 0.06355828000050678, \"threadId\": 130454321620672, \"nativeThreadId\": 220527, \"activeCallbacks\": [\"slow\", \"heartbeat\"], \"slowWasActiveAtEntry\": true}, {\"event\": \"end\", \"span\": 2, \"callback\": \"heartbeat\", \"monotonicS\": 10358.926094406, \"elapsedS\": 0.06356500000038068, \"threadId\": 130454321620672, \"nativeThreadId\": 220527, \"activeCallbacks\": [\"slow\"]}, {\"event\": \"end\", \"span\": 1, \"callback\": \"slow\", \"monotonicS\": 10358.926244476, \"elapsedS\": 0.06371515000137151, \"threadId\": 130454330013376, \"nativeThreadId\": 220526, \"activeCallbacks\": []}], \"maxConcurrency\": 2, \"activeCallbacksAtEnd\": []}, \"durationS\": 0.1721847720000369}\n",
+          "stderr": "",
+          "result": {
+            "case": "two_threads_distinct_groups",
+            "passed": true,
+            "pid": 220510,
+            "scriptSha256": "6b2c2f30c75b72e1b3731b26e32a55a5481fdeb668d518078ea79a43e46e547e",
+            "provenance": {
+              "versions": {
+                "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+                "pythonExecutable": "/usr/bin/python3",
+                "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+                "rosDistro": "jazzy",
+                "rclpy": "7.1.12",
+                "packages": {
+                  "rclpy": "7.1.12",
+                  "rclcpp": "28.1.22",
+                  "rmw_fastrtps_cpp": "8.4.4",
+                  "example_interfaces": "0.12.1"
+                }
+              },
+              "runtimeSource": [
+                {
+                  "api": "Future._schedule_or_invoke_done_callbacks",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py",
+                  "sha256": "4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77",
+                  "lineStart": 146,
+                  "lineEnd": 168,
+                  "explanation": "Future完成后有executor时排generic Task"
+                },
+                {
+                  "api": "Future.add_done_callback",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py",
+                  "sha256": "4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77",
+                  "lineStart": 178,
+                  "lineEnd": 202,
+                  "explanation": "已完成Future也可立即调用或排Task，依是否关联executor"
+                },
+                {
+                  "api": "Executor.create_task",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+                  "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+                  "lineStart": 241,
+                  "lineEnd": 253,
+                  "explanation": "generic Task不附带ROS source_entity回调组"
+                },
+                {
+                  "api": "Executor._take_client",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+                  "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+                  "lineStart": 492,
+                  "lineEnd": 519,
+                  "explanation": "真实响应先关联executor，再完成Future"
+                },
+                {
+                  "api": "Executor._make_handler",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+                  "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+                  "lineStart": 559,
+                  "lineEnd": 612,
+                  "explanation": "ROS实体handler另行执行组beginning/ending检查"
+                },
+                {
+                  "api": "MutuallyExclusiveCallbackGroup",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/callback_groups.py",
+                  "sha256": "da1314ac295f427aa8191ae8a86425bbfe62e512fa3678d3d401375b369cf557",
+                  "lineStart": 93,
+                  "lineEnd": 117,
+                  "explanation": "互斥许可只覆盖归属于本组的实体执行"
+                }
+              ],
+              "pinnedReference": {
+                "commit": "521012e60ba21319ef29141f8f521a0e072fe652",
+                "root": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2",
+                "note": "下载快照是解释依据；本次行为以runtimeSource和实际版本为准。"
+              }
+            },
+            "threads": 2,
+            "groupLayout": "distinct MutuallyExclusive",
+            "namespace": "/executor_group_lab/p220510/two_threads_distinct_groups",
+            "slowWork": "Event.wait：释放GIL的模拟IO门闩，不是CPU基准",
+            "heldWindow": {
+              "startMonotonicS": 10358.90587754,
+              "endMonotonicS": 10358.926219406,
+              "maximumObservationS": 0.35,
+              "actualElapsedS": 0.020341865998489084,
+              "slowStillActive": true,
+              "heartbeatObservedInside": true,
+              "heartbeatTimerReadyAtWindowEnd": false,
+              "countsAtWindowEnd": {
+                "heartbeat": 1,
+                "heartbeatWhileSlow": 1
+              },
+              "spinThreadAlive": true
+            },
+            "counts": {
+              "heartbeat": 1,
+              "heartbeatWhileSlow": 1
+            },
+            "assertions": {
+              "controlledSlowStart": true,
+              "heldWindowValid": true,
+              "expectedOverlap": true,
+              "observedOverlap": true,
+              "heartbeatEventuallyRan": true,
+              "callbackCapExpired": false
+            },
+            "cleanup": {
+              "errors": [],
+              "spinThreadJoined": true,
+              "executorShutdownReturned": true,
+              "contextOkAfterCleanup": false,
+              "remainingNewPythonThreads": [],
+              "spinErrors": []
+            },
+            "timeline": {
+              "events": [
+                {
+                  "event": "start",
+                  "span": 1,
+                  "callback": "slow",
+                  "monotonicS": 10358.905776619,
+                  "elapsedS": 0.043247243000223534,
+                  "threadId": 130454330013376,
+                  "nativeThreadId": 220526,
+                  "activeCallbacks": [
+                    "slow"
+                  ]
+                },
+                {
+                  "event": "start",
+                  "span": 2,
+                  "callback": "heartbeat",
+                  "monotonicS": 10358.926087656,
+                  "elapsedS": 0.06355828000050678,
+                  "threadId": 130454321620672,
+                  "nativeThreadId": 220527,
+                  "activeCallbacks": [
+                    "slow",
+                    "heartbeat"
+                  ],
+                  "slowWasActiveAtEntry": true
+                },
+                {
+                  "event": "end",
+                  "span": 2,
+                  "callback": "heartbeat",
+                  "monotonicS": 10358.926094406,
+                  "elapsedS": 0.06356500000038068,
+                  "threadId": 130454321620672,
+                  "nativeThreadId": 220527,
+                  "activeCallbacks": [
+                    "slow"
+                  ]
+                },
+                {
+                  "event": "end",
+                  "span": 1,
+                  "callback": "slow",
+                  "monotonicS": 10358.926244476,
+                  "elapsedS": 0.06371515000137151,
+                  "threadId": 130454330013376,
+                  "nativeThreadId": 220526,
+                  "activeCallbacks": []
+                }
+              ],
+              "maxConcurrency": 2,
+              "activeCallbacksAtEnd": []
+            },
+            "durationS": 0.1721847720000369
+          },
+          "outerError": null,
+          "interrupted": false,
+          "durationS": 0.33068291199924715,
+          "passed": true
+        },
+        {
+          "case": "client_future_continuation",
+          "command": [
+            "/usr/bin/python3",
+            "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/executor_group_lab.py",
+            "--worker",
+            "client_future_continuation",
+            "--domain-id",
+            "219",
+            "--period-s",
+            "0.02",
+            "--observe-s",
+            "0.35",
+            "--start-timeout-s",
+            "3.0",
+            "--callback-cap-s",
+            "5.0",
+            "--cleanup-timeout-s",
+            "3.0",
+            "--worker-timeout-s",
+            "20.0"
+          ],
+          "workerDeadlineS": 20.0,
+          "exitCode": 0,
+          "stdout": "EXECUTOR_GROUP_RESULT={\"case\": \"client_future_continuation\", \"passed\": true, \"pid\": 220528, \"scriptSha256\": \"6b2c2f30c75b72e1b3731b26e32a55a5481fdeb668d518078ea79a43e46e547e\", \"provenance\": {\"versions\": {\"python\": \"3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]\", \"pythonExecutable\": \"/usr/bin/python3\", \"platform\": \"Linux-7.0.0-38-generic-x86_64-with-glibc2.39\", \"rosDistro\": \"jazzy\", \"rclpy\": \"7.1.12\", \"packages\": {\"rclpy\": \"7.1.12\", \"rclcpp\": \"28.1.22\", \"rmw_fastrtps_cpp\": \"8.4.4\", \"example_interfaces\": \"0.12.1\"}}, \"runtimeSource\": [{\"api\": \"Future._schedule_or_invoke_done_callbacks\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py\", \"sha256\": \"4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77\", \"lineStart\": 146, \"lineEnd\": 168, \"explanation\": \"Future完成后有executor时排generic Task\"}, {\"api\": \"Future.add_done_callback\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py\", \"sha256\": \"4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77\", \"lineStart\": 178, \"lineEnd\": 202, \"explanation\": \"已完成Future也可立即调用或排Task，依是否关联executor\"}, {\"api\": \"Executor.create_task\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 241, \"lineEnd\": 253, \"explanation\": \"generic Task不附带ROS source_entity回调组\"}, {\"api\": \"Executor._take_client\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 492, \"lineEnd\": 519, \"explanation\": \"真实响应先关联executor，再完成Future\"}, {\"api\": \"Executor._make_handler\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py\", \"sha256\": \"46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452\", \"lineStart\": 559, \"lineEnd\": 612, \"explanation\": \"ROS实体handler另行执行组beginning/ending检查\"}, {\"api\": \"MutuallyExclusiveCallbackGroup\", \"file\": \"/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/callback_groups.py\", \"sha256\": \"da1314ac295f427aa8191ae8a86425bbfe62e512fa3678d3d401375b369cf557\", \"lineStart\": 93, \"lineEnd\": 117, \"explanation\": \"互斥许可只覆盖归属于本组的实体执行\"}], \"pinnedReference\": {\"commit\": \"521012e60ba21319ef29141f8f521a0e072fe652\", \"root\": \"/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2\", \"note\": \"下载快照是解释依据；本次行为以runtimeSource和实际版本为准。\"}}, \"threads\": 2, \"namespace\": \"/executor_group_lab/p220528/client_future_continuation\", \"futureKind\": \"真实Client.call_async(AddTwoInts)，不是手动set_result的Future\", \"phaseTimes\": {\"requestSubmittedMonotonicS\": 10359.217486175, \"doneStartedWithResultMonotonicS\": 10359.218024305, \"responseGroupFreeMonotonicS\": 10359.218048165, \"sameGroupTimerEnabledMonotonicS\": 10359.218050165, \"bothActiveObservedMonotonicS\": 10359.238315952}, \"futureDoneAtRegistration\": false, \"heldWindow\": {\"startMonotonicS\": 10359.218050165, \"endMonotonicS\": 10359.238310682, \"maximumObservationS\": 0.35, \"actualElapsedS\": 0.020260516999769607, \"doneStillActive\": true, \"sameGroupTimerObserved\": true}, \"assertions\": {\"actualServiceSum12\": true, \"clientAndTimerSameGroup\": true, \"responseHandlerGroupReleasedBeforeTimerEnabled\": true, \"genericDoneOverlappedSameGroupTimer\": true, \"bothCallbacksHeldByControlledGates\": true, \"mutualExclusionStillAppliesToClientEntity\": true}, \"details\": {\"responseSum\": 12, \"holderWhileDone\": true, \"callbackCapExpired\": false, \"holderCapExpired\": false, \"groupAllowsClientWhileTimerActive\": false}, \"cleanup\": {\"errors\": [], \"spinThreadJoined\": true, \"executorShutdownReturned\": true, \"contextOkAfterCleanup\": false, \"remainingNewPythonThreads\": [], \"spinErrors\": []}, \"timeline\": {\"events\": [{\"event\": \"start\", \"span\": 1, \"callback\": \"server\", \"monotonicS\": 10359.217746755, \"elapsedS\": 0.02422656699854997, \"threadId\": 133406463616704, \"nativeThreadId\": 220545, \"activeCallbacks\": [\"server\"]}, {\"event\": \"end\", \"span\": 1, \"callback\": \"server\", \"monotonicS\": 10359.217750635, \"elapsedS\": 0.024230356999396463, \"threadId\": 133406463616704, \"nativeThreadId\": 220545, \"activeCallbacks\": []}, {\"event\": \"start\", \"span\": 2, \"callback\": \"done\", \"monotonicS\": 10359.218019325, \"elapsedS\": 0.024499166998793953, \"threadId\": 133406463616704, \"nativeThreadId\": 220545, \"activeCallbacks\": [\"done\"]}, {\"event\": \"start\", \"span\": 3, \"callback\": \"same_client_group_timer\", \"monotonicS\": 10359.238248562, \"elapsedS\": 0.044728443999701994, \"threadId\": 133406247614144, \"nativeThreadId\": 220546, \"activeCallbacks\": [\"done\", \"same_client_group_timer\"], \"doneWasActiveAtEntry\": true}, {\"event\": \"end\", \"span\": 3, \"callback\": \"same_client_group_timer\", \"monotonicS\": 10359.238328482, \"elapsedS\": 0.04480833399975381, \"threadId\": 133406247614144, \"nativeThreadId\": 220546, \"activeCallbacks\": [\"done\"]}, {\"event\": \"end\", \"span\": 2, \"callback\": \"done\", \"monotonicS\": 10359.238354082, \"elapsedS\": 0.044833893998657004, \"threadId\": 133406463616704, \"nativeThreadId\": 220545, \"activeCallbacks\": []}], \"maxConcurrency\": 2, \"activeCallbacksAtEnd\": []}, \"durationS\": 0.15564113799882762}\n",
+          "stderr": "",
+          "result": {
+            "case": "client_future_continuation",
+            "passed": true,
+            "pid": 220528,
+            "scriptSha256": "6b2c2f30c75b72e1b3731b26e32a55a5481fdeb668d518078ea79a43e46e547e",
+            "provenance": {
+              "versions": {
+                "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+                "pythonExecutable": "/usr/bin/python3",
+                "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+                "rosDistro": "jazzy",
+                "rclpy": "7.1.12",
+                "packages": {
+                  "rclpy": "7.1.12",
+                  "rclcpp": "28.1.22",
+                  "rmw_fastrtps_cpp": "8.4.4",
+                  "example_interfaces": "0.12.1"
+                }
+              },
+              "runtimeSource": [
+                {
+                  "api": "Future._schedule_or_invoke_done_callbacks",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py",
+                  "sha256": "4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77",
+                  "lineStart": 146,
+                  "lineEnd": 168,
+                  "explanation": "Future完成后有executor时排generic Task"
+                },
+                {
+                  "api": "Future.add_done_callback",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py",
+                  "sha256": "4b645fa767a61f11279150fa169d1eb7f99cfa706ea4afc5f23a211b3b034a77",
+                  "lineStart": 178,
+                  "lineEnd": 202,
+                  "explanation": "已完成Future也可立即调用或排Task，依是否关联executor"
+                },
+                {
+                  "api": "Executor.create_task",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+                  "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+                  "lineStart": 241,
+                  "lineEnd": 253,
+                  "explanation": "generic Task不附带ROS source_entity回调组"
+                },
+                {
+                  "api": "Executor._take_client",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+                  "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+                  "lineStart": 492,
+                  "lineEnd": 519,
+                  "explanation": "真实响应先关联executor，再完成Future"
+                },
+                {
+                  "api": "Executor._make_handler",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py",
+                  "sha256": "46f052cf43e1fa1040af235f3508a0a8c00d98a2ab59b8dcaed9aceb3921a452",
+                  "lineStart": 559,
+                  "lineEnd": 612,
+                  "explanation": "ROS实体handler另行执行组beginning/ending检查"
+                },
+                {
+                  "api": "MutuallyExclusiveCallbackGroup",
+                  "file": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/callback_groups.py",
+                  "sha256": "da1314ac295f427aa8191ae8a86425bbfe62e512fa3678d3d401375b369cf557",
+                  "lineStart": 93,
+                  "lineEnd": 117,
+                  "explanation": "互斥许可只覆盖归属于本组的实体执行"
+                }
+              ],
+              "pinnedReference": {
+                "commit": "521012e60ba21319ef29141f8f521a0e072fe652",
+                "root": "/home/wjz/ros2_robot/ros2-learning-hub/references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2",
+                "note": "下载快照是解释依据；本次行为以runtimeSource和实际版本为准。"
+              }
+            },
+            "threads": 2,
+            "namespace": "/executor_group_lab/p220528/client_future_continuation",
+            "futureKind": "真实Client.call_async(AddTwoInts)，不是手动set_result的Future",
+            "phaseTimes": {
+              "requestSubmittedMonotonicS": 10359.217486175,
+              "doneStartedWithResultMonotonicS": 10359.218024305,
+              "responseGroupFreeMonotonicS": 10359.218048165,
+              "sameGroupTimerEnabledMonotonicS": 10359.218050165,
+              "bothActiveObservedMonotonicS": 10359.238315952
+            },
+            "futureDoneAtRegistration": false,
+            "heldWindow": {
+              "startMonotonicS": 10359.218050165,
+              "endMonotonicS": 10359.238310682,
+              "maximumObservationS": 0.35,
+              "actualElapsedS": 0.020260516999769607,
+              "doneStillActive": true,
+              "sameGroupTimerObserved": true
+            },
+            "assertions": {
+              "actualServiceSum12": true,
+              "clientAndTimerSameGroup": true,
+              "responseHandlerGroupReleasedBeforeTimerEnabled": true,
+              "genericDoneOverlappedSameGroupTimer": true,
+              "bothCallbacksHeldByControlledGates": true,
+              "mutualExclusionStillAppliesToClientEntity": true
+            },
+            "details": {
+              "responseSum": 12,
+              "holderWhileDone": true,
+              "callbackCapExpired": false,
+              "holderCapExpired": false,
+              "groupAllowsClientWhileTimerActive": false
+            },
+            "cleanup": {
+              "errors": [],
+              "spinThreadJoined": true,
+              "executorShutdownReturned": true,
+              "contextOkAfterCleanup": false,
+              "remainingNewPythonThreads": [],
+              "spinErrors": []
+            },
+            "timeline": {
+              "events": [
+                {
+                  "event": "start",
+                  "span": 1,
+                  "callback": "server",
+                  "monotonicS": 10359.217746755,
+                  "elapsedS": 0.02422656699854997,
+                  "threadId": 133406463616704,
+                  "nativeThreadId": 220545,
+                  "activeCallbacks": [
+                    "server"
+                  ]
+                },
+                {
+                  "event": "end",
+                  "span": 1,
+                  "callback": "server",
+                  "monotonicS": 10359.217750635,
+                  "elapsedS": 0.024230356999396463,
+                  "threadId": 133406463616704,
+                  "nativeThreadId": 220545,
+                  "activeCallbacks": []
+                },
+                {
+                  "event": "start",
+                  "span": 2,
+                  "callback": "done",
+                  "monotonicS": 10359.218019325,
+                  "elapsedS": 0.024499166998793953,
+                  "threadId": 133406463616704,
+                  "nativeThreadId": 220545,
+                  "activeCallbacks": [
+                    "done"
+                  ]
+                },
+                {
+                  "event": "start",
+                  "span": 3,
+                  "callback": "same_client_group_timer",
+                  "monotonicS": 10359.238248562,
+                  "elapsedS": 0.044728443999701994,
+                  "threadId": 133406247614144,
+                  "nativeThreadId": 220546,
+                  "activeCallbacks": [
+                    "done",
+                    "same_client_group_timer"
+                  ],
+                  "doneWasActiveAtEntry": true
+                },
+                {
+                  "event": "end",
+                  "span": 3,
+                  "callback": "same_client_group_timer",
+                  "monotonicS": 10359.238328482,
+                  "elapsedS": 0.04480833399975381,
+                  "threadId": 133406247614144,
+                  "nativeThreadId": 220546,
+                  "activeCallbacks": [
+                    "done"
+                  ]
+                },
+                {
+                  "event": "end",
+                  "span": 2,
+                  "callback": "done",
+                  "monotonicS": 10359.238354082,
+                  "elapsedS": 0.044833893998657004,
+                  "threadId": 133406463616704,
+                  "nativeThreadId": 220545,
+                  "activeCallbacks": []
+                }
+              ],
+              "maxConcurrency": 2,
+              "activeCallbacksAtEnd": []
+            },
+            "durationS": 0.15564113799882762
+          },
+          "outerError": null,
+          "interrupted": false,
+          "durationS": 0.3083638450007129,
+          "passed": true
+        }
+      ],
+      "durationS": 1.9832871859998704,
+      "scope": "真实Jazzy/rclpy调度；稳态timer与真实AddTwoInts服务。无设备、硬件或仿真。",
+      "interpretation": [
+        "负例确认slow已开始、heartbeat已ready且门闩仍持有；零heartbeat由执行资源/组约束观察得到。",
+        "Event.wait是释放GIL的模拟IO等待；并发证据不表示纯Python CPU任务加速。",
+        "client Future场景仅在实际重叠断言通过时计为完成；不以源码推断替代运行证据。"
+      ],
+      "limits": [
+        "只断言这些受控回调的并发关系，不保证精确频率、严格实时期限或任意负载调度。",
+        "时间线只统计本实验业务回调，不统计DDS后台线程或所有内部响应handler。",
+        "回调组不是保护任意线程/Task共享数据的通用锁，仍需显式状态同步。",
+        "Future结论属于记录的rclpy实现；不泛化为所有Action、C++ continuation或后续版本。",
+        "软期限不能抢占长原生调用；每例父进程期限与外部timeout分别保护退出。"
+      ]
+    }
+  ],
+  "postRunChecks": {
+    "clearedEnvironmentVariables": [
+      "ROS_DISTRO",
+      "AMENT_PREFIX_PATH",
+      "COLCON_PREFIX_PATH",
+      "PYTHONPATH",
+      "LD_LIBRARY_PATH"
+    ],
+    "checks": [
+      {
+        "name": "无ROS帮助",
+        "arguments": [
+          "--help"
+        ],
+        "command": [
+          "/usr/bin/python3",
+          "-I",
+          "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/executor_group_lab.py",
+          "--help"
+        ],
+        "expectedExitCode": 0,
+        "actualExitCode": 0,
+        "status": "passed"
+      },
+      {
+        "name": "无ROS参数拒绝",
+        "arguments": [
+          "--period-s",
+          "nan"
+        ],
+        "command": [
+          "/usr/bin/python3",
+          "-I",
+          "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/executor_group_lab.py",
+          "--period-s",
+          "nan"
+        ],
+        "expectedExitCode": 2,
+        "actualExitCode": 2,
+        "status": "passed"
+      },
+      {
+        "name": "无ROS参数拒绝",
+        "arguments": [
+          "--observe-s",
+          "inf"
+        ],
+        "command": [
+          "/usr/bin/python3",
+          "-I",
+          "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/executor_group_lab.py",
+          "--observe-s",
+          "inf"
+        ],
+        "expectedExitCode": 2,
+        "actualExitCode": 2,
+        "status": "passed"
+      },
+      {
+        "name": "无ROS参数拒绝",
+        "arguments": [
+          "--callback-cap-s",
+          "0"
+        ],
+        "command": [
+          "/usr/bin/python3",
+          "-I",
+          "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/executor_group_lab.py",
+          "--callback-cap-s",
+          "0"
+        ],
+        "expectedExitCode": 2,
+        "actualExitCode": 2,
+        "status": "passed"
+      },
+      {
+        "name": "无ROS参数拒绝",
+        "arguments": [
+          "--worker-timeout-s",
+          "1"
+        ],
+        "command": [
+          "/usr/bin/python3",
+          "-I",
+          "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/executor_group_lab.py",
+          "--worker-timeout-s",
+          "1"
+        ],
+        "expectedExitCode": 2,
+        "actualExitCode": 2,
+        "status": "passed"
+      },
+      {
+        "name": "无ROS参数拒绝",
+        "arguments": [
+          "--domain-id",
+          "-1"
+        ],
+        "command": [
+          "/usr/bin/python3",
+          "-I",
+          "/home/wjz/ros2_robot/ros2-learning-hub/examples/runtime_labs/executor_group_lab.py",
+          "--domain-id",
+          "-1"
+        ],
+        "expectedExitCode": 2,
+        "actualExitCode": 2,
+        "status": "passed"
+      }
+    ],
+    "sourceShaMatches": true,
+    "allTimelineSpansPaired": true,
+    "allWorkerProcessesReaped": true,
+    "allOwnedPythonThreadsJoined": true
+  },
+  "summary": [
+    {
+      "case": "single_thread_distinct_groups",
+      "threads": 1,
+      "maxConcurrency": 1,
+      "windowElapsedS": 0.3500883060005435,
+      "timelineEvents": 4,
+      "threadsCleaned": true,
+      "groupLayout": "distinct MutuallyExclusive",
+      "heartbeat": 1,
+      "heartbeatWhileSlow": 0,
+      "heartbeatReadyAtHeldWindowEnd": true
+    },
+    {
+      "case": "two_threads_same_group",
+      "threads": 2,
+      "maxConcurrency": 1,
+      "windowElapsedS": 0.3500834260012198,
+      "timelineEvents": 4,
+      "threadsCleaned": true,
+      "groupLayout": "same MutuallyExclusive",
+      "heartbeat": 1,
+      "heartbeatWhileSlow": 0,
+      "heartbeatReadyAtHeldWindowEnd": true
+    },
+    {
+      "case": "two_threads_distinct_groups",
+      "threads": 2,
+      "maxConcurrency": 2,
+      "windowElapsedS": 0.35006649699971604,
+      "timelineEvents": 36,
+      "threadsCleaned": true,
+      "groupLayout": "distinct MutuallyExclusive",
+      "heartbeat": 17,
+      "heartbeatWhileSlow": 17,
+      "heartbeatReadyAtHeldWindowEnd": false
+    },
+    {
+      "case": "client_future_continuation",
+      "threads": 2,
+      "maxConcurrency": 2,
+      "windowElapsedS": 0.35007998699984455,
+      "timelineEvents": 6,
+      "threadsCleaned": true,
+      "actualServiceSum": 12,
+      "genericDoneAndClientGroupTimerOverlapS": 0.32991625900103827,
+      "differentNativeThreadIds": true,
+      "responseHandlerGroupReleasedBeforeTimer": true
+    }
+  ],
+  "execution": {
+    "cwd": "/home/wjz/ros2_robot/ros2-learning-hub",
+    "environmentPreparation": [
+      "source /opt/ros/jazzy/setup.bash"
+    ],
+    "command": [
+      "timeout",
+      "--signal=INT",
+      "--kill-after=5s",
+      "100s",
+      "/usr/bin/python3",
+      "examples/runtime_labs/executor_group_lab.py"
+    ],
+    "context": "require_escalated自动批准后本机DDS；父进程逐worker单独总期限，未操作用户节点。"
+  },
+  "findingsCovered": [
+    {
+      "id": "runtime-review-group-matrix",
+      "status": "verified-controlled-three-case-matrix"
+    },
+    {
+      "id": "runtime-review-future-continuation",
+      "status": "verified-for-recorded-rclpy-client-future-path",
+      "limit": "仅固定Jazzy rclpy真实Client Future的generic Task场景；不推广所有Action或C++。"
+    }
+  ]
+}

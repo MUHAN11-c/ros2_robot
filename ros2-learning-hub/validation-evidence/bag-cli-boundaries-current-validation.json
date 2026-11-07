@@ -1,0 +1,62 @@
+{
+  "checkedAt": "2026-11-07",
+  "passed": true,
+  "checks": [
+    {
+      "name": "inspect-help",
+      "returnCode": 0,
+      "expected": 0
+    },
+    {
+      "name": "storage-help",
+      "returnCode": 0,
+      "expected": 0
+    },
+    {
+      "name": "record-help",
+      "returnCode": 0,
+      "expected": 0
+    },
+    {
+      "name": "domain-rejected",
+      "returnCode": 2,
+      "expected": 2
+    },
+    {
+      "name": "nan-timeout-rejected",
+      "returnCode": 2,
+      "expected": 2
+    },
+    {
+      "name": "reader-zero-limit-rejected",
+      "returnCode": 2,
+      "expected": 2
+    }
+  ],
+  "relativeOutput": {
+    "argvOutput": "fields",
+    "workingDirectory": "/tmp/ros2-bag-relative-check-vxcq1dg7",
+    "returnCode": 0,
+    "storages": [
+      "sqlite3",
+      "mcap"
+    ],
+    "explicitReceivedNs": 10000000000,
+    "explicitSentNs": 9000000000
+  },
+  "sourceHashes": [
+    {
+      "path": "examples/bag_labs/inspect_bag.py",
+      "sha256": "9be0688fb2ba1b7191e490152e528c707a21e58412423fbf79c8ba7f6ced04e8"
+    },
+    {
+      "path": "examples/bag_labs/record_replay_lab.py",
+      "sha256": "276591ff7dc7a6282e1888f9671ebbf71c79ec6cc69c58929d188319bd4c629c"
+    },
+    {
+      "path": "examples/bag_labs/storage_fields.py",
+      "sha256": "d951e5747b14a29fee33b6f8299ef75b1b256e41d288b8563e78c682ad557b7d"
+    }
+  ],
+  "scope": "帮助/非法CLI参数与无DDS的相对新路径双后端探针；不包括父SIGINT、原生挂起或任意路径沙箱。"
+}

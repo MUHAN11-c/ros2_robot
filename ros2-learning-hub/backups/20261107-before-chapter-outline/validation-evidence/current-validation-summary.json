@@ -1,0 +1,1447 @@
+{
+  "checkedAt": "2026-11-07",
+  "passed": true,
+  "environment": "Ubuntu24.04 / ROS2 Jazzy / Python3.12.3 / Node",
+  "observedResults": {
+    "frontendUnits": {
+      "logic": 8,
+      "legacyTextbook": 3,
+      "geometry": 6,
+      "markdownTables": 1
+    },
+    "pythonUnits": {
+      "mathExport": 2,
+      "offlineLabs": 4,
+      "watchdog": 7,
+      "markdownTables": 2
+    },
+    "numericalLabs": {
+      "math": 8,
+      "applied": 8
+    },
+    "rosBuilds": {
+      "atlasPackages": 2,
+      "foundationPackages": 10,
+      "countFaultLabPackages": 1,
+      "componentLabPackages": 1,
+      "lifecycleLabPackages": 1,
+      "testingLabPackages": 1,
+      "modelDescriptionPackages": 1
+    },
+    "atlasIntegration": 5,
+    "foundationIntegration": 15,
+    "navigationProtocolCases": 12,
+    "browser": {
+      "httpMobileRoutes": 170,
+      "widths": [
+        390,
+        320
+      ],
+      "chaptersFileOffline": 60,
+      "equationsNoScript": 49,
+      "svgInstancesNoScript": 34,
+      "externalRequests": 0,
+      "scriptErrors": 0,
+      "evidenceTablesNoScript": 34,
+      "staticFigureFiles": 16,
+      "normalStaticFigures": 14,
+      "normalFigurePlacements": 28
+    },
+    "portableArchive": {
+      "portableMode": true,
+      "missingOriginalLinksDisabled": true,
+      "copyOrFallback": true,
+      "chapters": 60,
+      "equations": 49,
+      "svgInstances": 34,
+      "noJavaScriptBook": true,
+      "widths": [
+        390,
+        320
+      ],
+      "externalRequests": 0,
+      "scriptErrors": 0,
+      "exercises": 333,
+      "apiTables": 22,
+      "completeCodeFiles": 160,
+      "evidenceTables": 34
+    },
+    "runtimeLabs": {
+      "qosCases": 7,
+      "asyncClockCases": 3,
+      "tfBufferChecks": 8,
+      "clockTimerPhases": 3,
+      "qosCliCases": 6,
+      "slowConsumerCases": 4,
+      "slowConsumerRuntimeAssertions": 49,
+      "slowConsumerAgeBoundaryChecks": 23,
+      "executorAndFutureCases": 4,
+      "parameterMainCases": 11,
+      "serviceDeadlineCases": 8,
+      "countActionMainCases": 10,
+      "countActionGoalUuids": 24,
+      "componentMainCases": 5,
+      "componentDynamicGainCases": 11,
+      "componentLoadConfigurations": 7,
+      "componentFailedLoads": 4,
+      "officialContainerModels": 3,
+      "parentInterruptCleanupChecks": 2
+    },
+    "lifecycleLab": {
+      "mainCases": 10,
+      "finiteMessageWindows": 21,
+      "fakeHandlesReleased": 17,
+      "fakeHandlesCreated": 17,
+      "ordinaryTimerContinuesInFinalized": true,
+      "parentInterruptCheck": "passed",
+      "interruptIsLifecycleShutdown": false
+    },
+    "registeredTestingLab": {
+      "ctestRegistrations": 3,
+      "fineJUnitCases": 13,
+      "testResultAggregateCases": 16,
+      "controlledMissingReadyFineFailures": 1,
+      "controlledMissingReadyAggregateFailures": 2,
+      "normalStrictTestReturnCode": 0,
+      "normalTestResultReturnCode": 0,
+      "missingReadyDefaultTestReturnCode": 0,
+      "missingReadyStrictTestReturnCode": 1,
+      "missingReadyTestResultReturnCode": 1,
+      "emptyResultRejectedByGuard": true,
+      "parentInterruptCheck": "passed",
+      "countNote": "16聚合项包括3个CTest包装；故障的2个聚合失败包含同一细分失败的包装，不能算2个独立案例。"
+    },
+    "existingTestingPolicy": {
+      "oldPytestCasesPassed": 4,
+      "newContractGapsInOldPolicy": 6,
+      "revisedPolicyCasesPassed": 31,
+      "originalTalkerActiveAndPostShutdownCasesPassed": 2,
+      "unitOnly": false,
+      "helperParentInterruptInjected": false
+    },
+    "deploymentAudit": {
+      "regularFiles": 24,
+      "symlinks": 18,
+      "externalSymlinks": 18,
+      "externalLinkRoots": {
+        "build": 15,
+        "source": 1,
+        "underlay": 2
+      },
+      "selfTestFixtures": 9,
+      "exactConsistencyAssertions": 5,
+      "preservedLinkCopyMatchesOriginal": true,
+      "copyExecuted": false,
+      "hostSourceExecTermReturnCode": 0,
+      "hostSourceExecTermSent": 1,
+      "dockerBuildOrRun": false
+    },
+    "bagLab": {
+      "recordings": 3,
+      "readbackMessageCounts": [
+        13,
+        13,
+        12
+      ],
+      "playbacks": 2,
+      "fullReplayCounts": [
+        6,
+        6,
+        1
+      ],
+      "filteredReplayCounts": [
+        6,
+        0,
+        0
+      ],
+      "zeroClockDataSubscriptions": [
+        0,
+        0,
+        0
+      ],
+      "noClockObserverRosTimeNs": 0,
+      "explicitStorageFieldProbes": 2,
+      "cliBoundaryChecks": 6,
+      "relativePathStorages": [
+        "sqlite3",
+        "mcap"
+      ],
+      "normalChildProcesses": 8,
+      "normalChildExitCodes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sourceInputFingerprints": 7,
+      "failedRuntimeAttempts": 2,
+      "parentInterruptInjected": false
+    },
+    "modelLab": {
+      "descriptionPackagesBuilt": 1,
+      "normalCopyInstalledResources": 4,
+      "expandedConfigurations": 2,
+      "linksPerConfiguration": 7,
+      "fixedJointsPerConfiguration": 4,
+      "continuousJointsPerConfiguration": 2,
+      "inertialBodiesPerConfiguration": 5,
+      "runtimeConfigurations": 2,
+      "jointStatePhases": 6,
+      "validPositionPhases": 4,
+      "invalidLengthPhases": 1,
+      "legalVelocityOnlyIgnoredPhases": 1,
+      "opticalPointChecks": 6,
+      "rejectedLaunchInputs": 2,
+      "negativeInertia": {
+        "checkUrdfReturnCode": 0,
+        "numericCheckReturnCode": 1
+      },
+      "cliChecks": 3,
+      "portableSourceZipRun": true,
+      "sourceFilesInZip": 95,
+      "sourceInputFingerprints": 8,
+      "parentInterruptInjected": false,
+      "guiOrPhysics": false
+    },
+    "driveLab": {
+      "domains": [
+        225,
+        226
+      ],
+      "versions": {
+        "xacro": "2.1.1",
+        "robot_state_publisher": "3.3.4",
+        "controller_manager": "4.48.1",
+        "hardware_interface": "4.48.1",
+        "joint_state_broadcaster": "4.42.1",
+        "diff_drive_controller": "4.42.1",
+        "robot_localization": "3.8.3",
+        "rclpy": "7.1.12"
+      },
+      "straightWheelRadS": [
+        2.0,
+        2.0
+      ],
+      "turnWheelRadS": [
+        1.1,
+        2.9
+      ],
+      "strictConflictRejected": true,
+      "timeoutObservedSteadySeconds": 0.32907784499548143,
+      "oldStampRejected": true,
+      "newRawAtHandoff": 0,
+      "newFusedAtHandoff": 3,
+      "directProcessesPerRun": 7,
+      "pinnedReferenceFiles": 17,
+      "integratedChapters": 6,
+      "verifiedExtractedSource": true
+    },
+    "gazeboSensorLab": {
+      "domains": [
+        227,
+        228
+      ],
+      "versions": {
+        "gzSim": "Gazebo Sim, version 8.15.0",
+        "opencv": "4.6.0",
+        "ros_gz_bridge": "1.0.24",
+        "ros_gz_interfaces": "1.0.24",
+        "gz_sensors_vendor": "0.0.6",
+        "cv_bridge": "4.1.0",
+        "rclpy": "7.1.12"
+      },
+      "oneWayMappings": 5,
+      "controlReplies": 4,
+      "pauseWindowSteadyS": 0.4,
+      "exactImageTriplets": 7,
+      "centerRangeM": 2.200134515762329,
+      "finiteScanRanges": 29,
+      "reliableSamples": 0,
+      "twoSourceCaptures": 2,
+      "pinnedReferenceFiles": 25,
+      "integratedChapters": 7,
+      "verifiedExtractedSource": true
+    },
+    "nav2PlanningLab": {
+      "versions": {
+        "gzSim": "Gazebo Sim, version 8.15.0",
+        "ros_gz_bridge": "1.0.24",
+        "nav2_map_server": "1.3.13",
+        "nav2_amcl": "1.3.13",
+        "nav2_planner": "1.3.13",
+        "nav2_costmap_2d": "1.3.13",
+        "nav2_navfn_planner": "1.3.13",
+        "nav2_msgs": "1.3.13",
+        "rclpy": "7.1.12"
+      },
+      "domains": [
+        229,
+        230
+      ],
+      "checkedMapCells": 4800,
+      "mapFailureCodes": [
+        1,
+        3,
+        2
+      ],
+      "wrongFramePoseSamples": 0,
+      "positionErrorM": 0.005095510900612287,
+      "actionCodes": {
+        "from-tf": 0,
+        "static": 0,
+        "occupied": 206,
+        "outside": 204,
+        "unknown": 208,
+        "bad-planner": 201,
+        "bad-frame": 202,
+        "marked": 0
+      },
+      "lifecycleTransitions": 12,
+      "pathLengthsM": {
+        "static": 4.54999997317793,
+        "marked": 4.930230340162908
+      },
+      "pathValidity": {
+        "static": true,
+        "oldAfterMarking": false,
+        "detour": true
+      },
+      "newObstacleLethalCells": 8,
+      "processesPerRun": 5,
+      "portableSourceArchiveSha256": "32f7fb37c03c8b8bcc47110faa8d3ab727771c120b31b4f2434ed5c96508dd10",
+      "checkedFixedFiles": 39,
+      "chaptersUpdated": 9
+    }
+  },
+  "limits": [
+    "未运行完整Nav2/Gazebo/MoveIt仿真、Docker、跨机或硬件；原始第三方工程未批量构建。",
+    "论文和教程核读范围见每项来源；下载、目录映射和本文统计不证明正文逐段穷尽。",
+    "原22项独立审查按各自范围修订；C++参数三阶段、扩展Count取消业务、isolated额外MT及生命周期未列出的失败组合仍未实测。",
+    "进程信号与回收不证明动作业务终态、生命周期on_shutdown已执行或物理停车；生命周期SIGINT资源析构时缓存状态仍为active。",
+    "测试注册数、细分JUnit与CLI聚合数分别列示；colcon test默认0和空结果查询0不能独立证明测试通过。",
+    "保留外链的安装副本仍依赖source/build/underlay；宿主source+exec正例不证明Docker PID1行为。",
+    "testing_policy的31项与talker两阶段已运行；其复现辅助脚本未注入父SIGINT或挂起，不借其他脚本清理结果扩大此结论。",
+    "本轮bag为有限合成数据；原海龟、真实采集、Foxglove/tracing、压缩/吞吐/恢复、保活Player与bag父中断/原生挂起未运行。",
+    "同版0.26.11快照仍有Player补丁差异；CDR原字节身份与完整字段语义分开，不用显式Writer输入时间差充当网络测量。",
+    "本轮模型只有两个活动joint且其origin旋转为零；非零origin复合与根惯量警告反例仅核固定源码。",
+    "velocity-only符合JointState可选数组协议，但RSP不据其计算位置；有限旧TF不证明物理停车。",
+    "无RViz、相机图像、动力学/碰撞/控制、模型父中断/原生挂起；源码独立解压通过仍依赖本机ROS安装。",
+    "Nav2 为固定台架与近真值初值，验证地图、定位和全局规划。运动中定位、建图与位姿图恢复、行为树、控制及连续足印扫掠另验。"
+  ],
+  "references": [
+    "VALIDATION.md",
+    "validation-evidence/browser-current-validation.json",
+    "validation-evidence/foundation-current-validation.json",
+    "validation-evidence/navigation-current-validation.json",
+    "validation-evidence/review-resolutions.json",
+    "validation-evidence/delivery-current-validation.json",
+    "validation-evidence/iteration-worklist.json",
+    "validation-evidence/qos-contract-current-validation.json",
+    "validation-evidence/async-poll-clock-current-validation.json",
+    "validation-evidence/tf-buffer-current-validation.json",
+    "validation-evidence/clock-timer-current-validation.json",
+    "validation-evidence/offline-reader-current-validation.json",
+    "validation-evidence/qos-cli-current-validation.json",
+    "validation-evidence/slow-consumer-current-validation.json",
+    "validation-evidence/executor-group-current-validation.json",
+    "validation-evidence/parameter-transaction-current-validation.json",
+    "validation-evidence/service-deadline-current-validation.json",
+    "tests/test_markdown_tables.py",
+    "tests/markdown-tables.test.cjs",
+    "validation-evidence/count-action-current-validation.json",
+    "validation-evidence/component-labs-current-validation.json",
+    "validation-evidence/iteration3-source-review.json",
+    "validation-evidence/package-scope-current-validation.json",
+    "validation-evidence/lifecycle-current-validation.json",
+    "validation-evidence/testing-labs-current-validation.json",
+    "validation-evidence/testing-existing-current-validation.json",
+    "validation-evidence/deployment-current-validation.json",
+    "validation-evidence/iteration4-source-review.json",
+    "validation-evidence/iteration4-ui-findings.json",
+    "validation-evidence/figures-current-validation.json",
+    "validation-evidence/bag-current-validation.json",
+    "validation-evidence/bag-cli-boundaries-current-validation.json",
+    "validation-evidence/iteration5-bag-source-review.json",
+    "validation-evidence/iteration5-bag-findings.json",
+    "validation-evidence/model-current-validation.json",
+    "validation-evidence/model-boundaries-current-validation.json",
+    "validation-evidence/model-portable-current-validation.json",
+    "validation-evidence/iteration6-model-source-review.json",
+    "validation-evidence/iteration6-model-findings.json",
+    "validation-evidence/drive-current-validation.json",
+    "validation-evidence/drive-portable-current-validation.json",
+    "validation-evidence/gazebo-sensors-current-validation.json",
+    "validation-evidence/gazebo-sensors-portable-current-validation.json",
+    "validation-evidence/nav2-planning-current-validation.json",
+    "validation-evidence/nav2-planning-portable-current-validation.json"
+  ],
+  "iteration": "2026-11-07-r9",
+  "previousIterations": [
+    {
+      "iteration": "2026-11-07-r3",
+      "scope": "第3轮交付统计由独立交付历史恢复；原共享字典误带后轮实验指标已纠正，实验原报告保持独立。",
+      "portableDelivery": {
+        "portableMode": true,
+        "missingOriginalLinksDisabled": true,
+        "copyOrFallback": true,
+        "chapters": 60,
+        "equations": 49,
+        "svgInstances": 29,
+        "evidenceTables": 8,
+        "noJavaScriptBook": true,
+        "widths": [
+          390,
+          320
+        ],
+        "externalRequests": 0,
+        "scriptErrors": 0,
+        "exercises": 274,
+        "apiTables": 15,
+        "completeCodeFiles": 118
+      }
+    },
+    {
+      "iteration": "2026-11-07-r4",
+      "observedResults": {
+        "frontendUnits": {
+          "logic": 8,
+          "legacyTextbook": 3,
+          "geometry": 6,
+          "markdownTables": 1
+        },
+        "pythonUnits": {
+          "mathExport": 2,
+          "offlineLabs": 4,
+          "watchdog": 7,
+          "markdownTables": 2
+        },
+        "numericalLabs": {
+          "math": 8,
+          "applied": 8
+        },
+        "rosBuilds": {
+          "atlasPackages": 2,
+          "foundationPackages": 10,
+          "countFaultLabPackages": 1,
+          "componentLabPackages": 1,
+          "lifecycleLabPackages": 1,
+          "testingLabPackages": 1
+        },
+        "atlasIntegration": 5,
+        "foundationIntegration": 15,
+        "navigationProtocolCases": 12,
+        "browser": {
+          "httpMobileRoutes": 170,
+          "widths": [
+            390,
+            320
+          ],
+          "chaptersFileOffline": 60,
+          "equationsNoScript": 49,
+          "svgInstancesNoScript": 30,
+          "externalRequests": 0,
+          "scriptErrors": 0,
+          "evidenceTablesNoScript": 16,
+          "staticFigureFiles": 14,
+          "normalStaticFigures": 12,
+          "normalFigurePlacements": 24
+        },
+        "portableArchive": {
+          "portableMode": true,
+          "missingOriginalLinksDisabled": true,
+          "copyOrFallback": true,
+          "chapters": 60,
+          "equations": 49,
+          "svgInstances": 30,
+          "noJavaScriptBook": true,
+          "widths": [
+            390,
+            320
+          ],
+          "externalRequests": 0,
+          "scriptErrors": 0,
+          "exercises": 292,
+          "apiTables": 18,
+          "completeCodeFiles": 136,
+          "evidenceTables": 16
+        },
+        "runtimeLabs": {
+          "qosCases": 7,
+          "asyncClockCases": 3,
+          "tfBufferChecks": 8,
+          "clockTimerPhases": 3,
+          "qosCliCases": 6,
+          "slowConsumerCases": 4,
+          "slowConsumerRuntimeAssertions": 49,
+          "slowConsumerAgeBoundaryChecks": 23,
+          "executorAndFutureCases": 4,
+          "parameterMainCases": 11,
+          "serviceDeadlineCases": 8,
+          "countActionMainCases": 10,
+          "countActionGoalUuids": 24,
+          "componentMainCases": 5,
+          "componentDynamicGainCases": 11,
+          "componentLoadConfigurations": 7,
+          "componentFailedLoads": 4,
+          "officialContainerModels": 3,
+          "parentInterruptCleanupChecks": 2
+        },
+        "lifecycleLab": {
+          "mainCases": 10,
+          "finiteMessageWindows": 21,
+          "fakeHandlesReleased": 17,
+          "fakeHandlesCreated": 17,
+          "ordinaryTimerContinuesInFinalized": true,
+          "parentInterruptCheck": "passed",
+          "interruptIsLifecycleShutdown": false
+        },
+        "registeredTestingLab": {
+          "ctestRegistrations": 3,
+          "fineJUnitCases": 13,
+          "testResultAggregateCases": 16,
+          "controlledMissingReadyFineFailures": 1,
+          "controlledMissingReadyAggregateFailures": 2,
+          "normalStrictTestReturnCode": 0,
+          "normalTestResultReturnCode": 0,
+          "missingReadyDefaultTestReturnCode": 0,
+          "missingReadyStrictTestReturnCode": 1,
+          "missingReadyTestResultReturnCode": 1,
+          "emptyResultRejectedByGuard": true,
+          "parentInterruptCheck": "passed",
+          "countNote": "16聚合项包括3个CTest包装；故障的2个聚合失败包含同一细分失败的包装，不能算2个独立案例。"
+        },
+        "existingTestingPolicy": {
+          "oldPytestCasesPassed": 4,
+          "newContractGapsInOldPolicy": 6,
+          "revisedPolicyCasesPassed": 31,
+          "originalTalkerActiveAndPostShutdownCasesPassed": 2,
+          "unitOnly": false,
+          "helperParentInterruptInjected": false
+        },
+        "deploymentAudit": {
+          "regularFiles": 24,
+          "symlinks": 18,
+          "externalSymlinks": 18,
+          "externalLinkRoots": {
+            "build": 15,
+            "source": 1,
+            "underlay": 2
+          },
+          "selfTestFixtures": 9,
+          "exactConsistencyAssertions": 5,
+          "preservedLinkCopyMatchesOriginal": true,
+          "copyExecuted": false,
+          "hostSourceExecTermReturnCode": 0,
+          "hostSourceExecTermSent": 1,
+          "dockerBuildOrRun": false
+        }
+      }
+    },
+    {
+      "iteration": "2026-11-07-r5",
+      "observedResults": {
+        "frontendUnits": {
+          "logic": 8,
+          "legacyTextbook": 3,
+          "geometry": 6,
+          "markdownTables": 1
+        },
+        "pythonUnits": {
+          "mathExport": 2,
+          "offlineLabs": 4,
+          "watchdog": 7,
+          "markdownTables": 2
+        },
+        "numericalLabs": {
+          "math": 8,
+          "applied": 8
+        },
+        "rosBuilds": {
+          "atlasPackages": 2,
+          "foundationPackages": 10,
+          "countFaultLabPackages": 1,
+          "componentLabPackages": 1,
+          "lifecycleLabPackages": 1,
+          "testingLabPackages": 1
+        },
+        "atlasIntegration": 5,
+        "foundationIntegration": 15,
+        "navigationProtocolCases": 12,
+        "browser": {
+          "httpMobileRoutes": 170,
+          "widths": [
+            390,
+            320
+          ],
+          "chaptersFileOffline": 60,
+          "equationsNoScript": 49,
+          "svgInstancesNoScript": 30,
+          "externalRequests": 0,
+          "scriptErrors": 0,
+          "evidenceTablesNoScript": 20,
+          "staticFigureFiles": 14,
+          "normalStaticFigures": 12,
+          "normalFigurePlacements": 24
+        },
+        "portableArchive": {
+          "portableMode": true,
+          "missingOriginalLinksDisabled": true,
+          "copyOrFallback": true,
+          "chapters": 60,
+          "equations": 49,
+          "svgInstances": 30,
+          "noJavaScriptBook": true,
+          "widths": [
+            390,
+            320
+          ],
+          "externalRequests": 0,
+          "scriptErrors": 0,
+          "exercises": 300,
+          "apiTables": 18,
+          "completeCodeFiles": 142,
+          "evidenceTables": 20
+        },
+        "runtimeLabs": {
+          "qosCases": 7,
+          "asyncClockCases": 3,
+          "tfBufferChecks": 8,
+          "clockTimerPhases": 3,
+          "qosCliCases": 6,
+          "slowConsumerCases": 4,
+          "slowConsumerRuntimeAssertions": 49,
+          "slowConsumerAgeBoundaryChecks": 23,
+          "executorAndFutureCases": 4,
+          "parameterMainCases": 11,
+          "serviceDeadlineCases": 8,
+          "countActionMainCases": 10,
+          "countActionGoalUuids": 24,
+          "componentMainCases": 5,
+          "componentDynamicGainCases": 11,
+          "componentLoadConfigurations": 7,
+          "componentFailedLoads": 4,
+          "officialContainerModels": 3,
+          "parentInterruptCleanupChecks": 2
+        },
+        "lifecycleLab": {
+          "mainCases": 10,
+          "finiteMessageWindows": 21,
+          "fakeHandlesReleased": 17,
+          "fakeHandlesCreated": 17,
+          "ordinaryTimerContinuesInFinalized": true,
+          "parentInterruptCheck": "passed",
+          "interruptIsLifecycleShutdown": false
+        },
+        "registeredTestingLab": {
+          "ctestRegistrations": 3,
+          "fineJUnitCases": 13,
+          "testResultAggregateCases": 16,
+          "controlledMissingReadyFineFailures": 1,
+          "controlledMissingReadyAggregateFailures": 2,
+          "normalStrictTestReturnCode": 0,
+          "normalTestResultReturnCode": 0,
+          "missingReadyDefaultTestReturnCode": 0,
+          "missingReadyStrictTestReturnCode": 1,
+          "missingReadyTestResultReturnCode": 1,
+          "emptyResultRejectedByGuard": true,
+          "parentInterruptCheck": "passed",
+          "countNote": "16聚合项包括3个CTest包装；故障的2个聚合失败包含同一细分失败的包装，不能算2个独立案例。"
+        },
+        "existingTestingPolicy": {
+          "oldPytestCasesPassed": 4,
+          "newContractGapsInOldPolicy": 6,
+          "revisedPolicyCasesPassed": 31,
+          "originalTalkerActiveAndPostShutdownCasesPassed": 2,
+          "unitOnly": false,
+          "helperParentInterruptInjected": false
+        },
+        "deploymentAudit": {
+          "regularFiles": 24,
+          "symlinks": 18,
+          "externalSymlinks": 18,
+          "externalLinkRoots": {
+            "build": 15,
+            "source": 1,
+            "underlay": 2
+          },
+          "selfTestFixtures": 9,
+          "exactConsistencyAssertions": 5,
+          "preservedLinkCopyMatchesOriginal": true,
+          "copyExecuted": false,
+          "hostSourceExecTermReturnCode": 0,
+          "hostSourceExecTermSent": 1,
+          "dockerBuildOrRun": false
+        },
+        "bagLab": {
+          "recordings": 3,
+          "readbackMessageCounts": [
+            13,
+            13,
+            12
+          ],
+          "playbacks": 2,
+          "fullReplayCounts": [
+            6,
+            6,
+            1
+          ],
+          "filteredReplayCounts": [
+            6,
+            0,
+            0
+          ],
+          "zeroClockDataSubscriptions": [
+            0,
+            0,
+            0
+          ],
+          "noClockObserverRosTimeNs": 0,
+          "explicitStorageFieldProbes": 2,
+          "cliBoundaryChecks": 6,
+          "relativePathStorages": [
+            "sqlite3",
+            "mcap"
+          ],
+          "normalChildProcesses": 8,
+          "normalChildExitCodes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "sourceInputFingerprints": 7,
+          "failedRuntimeAttempts": 2,
+          "parentInterruptInjected": false
+        }
+      }
+    },
+    {
+      "iteration": "2026-11-07-r6",
+      "observedResults": {
+        "frontendUnits": {
+          "logic": 8,
+          "legacyTextbook": 3,
+          "geometry": 6,
+          "markdownTables": 1
+        },
+        "pythonUnits": {
+          "mathExport": 2,
+          "offlineLabs": 4,
+          "watchdog": 7,
+          "markdownTables": 2
+        },
+        "numericalLabs": {
+          "math": 8,
+          "applied": 8
+        },
+        "rosBuilds": {
+          "atlasPackages": 2,
+          "foundationPackages": 10,
+          "countFaultLabPackages": 1,
+          "componentLabPackages": 1,
+          "lifecycleLabPackages": 1,
+          "testingLabPackages": 1,
+          "modelDescriptionPackages": 1
+        },
+        "atlasIntegration": 5,
+        "foundationIntegration": 15,
+        "navigationProtocolCases": 12,
+        "browser": {
+          "httpMobileRoutes": 170,
+          "widths": [
+            390,
+            320
+          ],
+          "chaptersFileOffline": 60,
+          "equationsNoScript": 49,
+          "svgInstancesNoScript": 30,
+          "externalRequests": 0,
+          "scriptErrors": 0,
+          "evidenceTablesNoScript": 24,
+          "staticFigureFiles": 14,
+          "normalStaticFigures": 12,
+          "normalFigurePlacements": 24
+        },
+        "portableArchive": {
+          "portableMode": true,
+          "missingOriginalLinksDisabled": true,
+          "copyOrFallback": true,
+          "chapters": 60,
+          "equations": 49,
+          "svgInstances": 30,
+          "noJavaScriptBook": true,
+          "widths": [
+            390,
+            320
+          ],
+          "externalRequests": 0,
+          "scriptErrors": 0,
+          "exercises": 308,
+          "apiTables": 19,
+          "completeCodeFiles": 148,
+          "evidenceTables": 24
+        },
+        "runtimeLabs": {
+          "qosCases": 7,
+          "asyncClockCases": 3,
+          "tfBufferChecks": 8,
+          "clockTimerPhases": 3,
+          "qosCliCases": 6,
+          "slowConsumerCases": 4,
+          "slowConsumerRuntimeAssertions": 49,
+          "slowConsumerAgeBoundaryChecks": 23,
+          "executorAndFutureCases": 4,
+          "parameterMainCases": 11,
+          "serviceDeadlineCases": 8,
+          "countActionMainCases": 10,
+          "countActionGoalUuids": 24,
+          "componentMainCases": 5,
+          "componentDynamicGainCases": 11,
+          "componentLoadConfigurations": 7,
+          "componentFailedLoads": 4,
+          "officialContainerModels": 3,
+          "parentInterruptCleanupChecks": 2
+        },
+        "lifecycleLab": {
+          "mainCases": 10,
+          "finiteMessageWindows": 21,
+          "fakeHandlesReleased": 17,
+          "fakeHandlesCreated": 17,
+          "ordinaryTimerContinuesInFinalized": true,
+          "parentInterruptCheck": "passed",
+          "interruptIsLifecycleShutdown": false
+        },
+        "registeredTestingLab": {
+          "ctestRegistrations": 3,
+          "fineJUnitCases": 13,
+          "testResultAggregateCases": 16,
+          "controlledMissingReadyFineFailures": 1,
+          "controlledMissingReadyAggregateFailures": 2,
+          "normalStrictTestReturnCode": 0,
+          "normalTestResultReturnCode": 0,
+          "missingReadyDefaultTestReturnCode": 0,
+          "missingReadyStrictTestReturnCode": 1,
+          "missingReadyTestResultReturnCode": 1,
+          "emptyResultRejectedByGuard": true,
+          "parentInterruptCheck": "passed",
+          "countNote": "16聚合项包括3个CTest包装；故障的2个聚合失败包含同一细分失败的包装，不能算2个独立案例。"
+        },
+        "existingTestingPolicy": {
+          "oldPytestCasesPassed": 4,
+          "newContractGapsInOldPolicy": 6,
+          "revisedPolicyCasesPassed": 31,
+          "originalTalkerActiveAndPostShutdownCasesPassed": 2,
+          "unitOnly": false,
+          "helperParentInterruptInjected": false
+        },
+        "deploymentAudit": {
+          "regularFiles": 24,
+          "symlinks": 18,
+          "externalSymlinks": 18,
+          "externalLinkRoots": {
+            "build": 15,
+            "source": 1,
+            "underlay": 2
+          },
+          "selfTestFixtures": 9,
+          "exactConsistencyAssertions": 5,
+          "preservedLinkCopyMatchesOriginal": true,
+          "copyExecuted": false,
+          "hostSourceExecTermReturnCode": 0,
+          "hostSourceExecTermSent": 1,
+          "dockerBuildOrRun": false
+        },
+        "bagLab": {
+          "recordings": 3,
+          "readbackMessageCounts": [
+            13,
+            13,
+            12
+          ],
+          "playbacks": 2,
+          "fullReplayCounts": [
+            6,
+            6,
+            1
+          ],
+          "filteredReplayCounts": [
+            6,
+            0,
+            0
+          ],
+          "zeroClockDataSubscriptions": [
+            0,
+            0,
+            0
+          ],
+          "noClockObserverRosTimeNs": 0,
+          "explicitStorageFieldProbes": 2,
+          "cliBoundaryChecks": 6,
+          "relativePathStorages": [
+            "sqlite3",
+            "mcap"
+          ],
+          "normalChildProcesses": 8,
+          "normalChildExitCodes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "sourceInputFingerprints": 7,
+          "failedRuntimeAttempts": 2,
+          "parentInterruptInjected": false
+        },
+        "modelLab": {
+          "descriptionPackagesBuilt": 1,
+          "normalCopyInstalledResources": 4,
+          "expandedConfigurations": 2,
+          "linksPerConfiguration": 7,
+          "fixedJointsPerConfiguration": 4,
+          "continuousJointsPerConfiguration": 2,
+          "inertialBodiesPerConfiguration": 5,
+          "runtimeConfigurations": 2,
+          "jointStatePhases": 6,
+          "validPositionPhases": 4,
+          "invalidLengthPhases": 1,
+          "legalVelocityOnlyIgnoredPhases": 1,
+          "opticalPointChecks": 6,
+          "rejectedLaunchInputs": 2,
+          "negativeInertia": {
+            "checkUrdfReturnCode": 0,
+            "numericCheckReturnCode": 1
+          },
+          "cliChecks": 3,
+          "portableSourceZipRun": true,
+          "sourceFilesInZip": 95,
+          "sourceInputFingerprints": 8,
+          "parentInterruptInjected": false,
+          "guiOrPhysics": false
+        }
+      }
+    },
+    {
+      "iteration": "2026-11-07-r7",
+      "observedResults": {
+        "frontendUnits": {
+          "logic": 8,
+          "legacyTextbook": 3,
+          "geometry": 6,
+          "markdownTables": 1
+        },
+        "pythonUnits": {
+          "mathExport": 2,
+          "offlineLabs": 4,
+          "watchdog": 7,
+          "markdownTables": 2
+        },
+        "numericalLabs": {
+          "math": 8,
+          "applied": 8
+        },
+        "rosBuilds": {
+          "atlasPackages": 2,
+          "foundationPackages": 10,
+          "countFaultLabPackages": 1,
+          "componentLabPackages": 1,
+          "lifecycleLabPackages": 1,
+          "testingLabPackages": 1,
+          "modelDescriptionPackages": 1
+        },
+        "atlasIntegration": 5,
+        "foundationIntegration": 15,
+        "navigationProtocolCases": 12,
+        "browser": {
+          "httpMobileRoutes": 170,
+          "widths": [
+            390,
+            320
+          ],
+          "chaptersFileOffline": 60,
+          "equationsNoScript": 49,
+          "svgInstancesNoScript": 30,
+          "externalRequests": 0,
+          "scriptErrors": 0,
+          "evidenceTablesNoScript": 27,
+          "staticFigureFiles": 14,
+          "normalStaticFigures": 12,
+          "normalFigurePlacements": 24
+        },
+        "portableArchive": {
+          "portableMode": true,
+          "missingOriginalLinksDisabled": true,
+          "copyOrFallback": true,
+          "chapters": 60,
+          "equations": 49,
+          "svgInstances": 30,
+          "noJavaScriptBook": true,
+          "widths": [
+            390,
+            320
+          ],
+          "externalRequests": 0,
+          "scriptErrors": 0,
+          "exercises": 316,
+          "apiTables": 20,
+          "completeCodeFiles": 153,
+          "evidenceTables": 27
+        },
+        "runtimeLabs": {
+          "qosCases": 7,
+          "asyncClockCases": 3,
+          "tfBufferChecks": 8,
+          "clockTimerPhases": 3,
+          "qosCliCases": 6,
+          "slowConsumerCases": 4,
+          "slowConsumerRuntimeAssertions": 49,
+          "slowConsumerAgeBoundaryChecks": 23,
+          "executorAndFutureCases": 4,
+          "parameterMainCases": 11,
+          "serviceDeadlineCases": 8,
+          "countActionMainCases": 10,
+          "countActionGoalUuids": 24,
+          "componentMainCases": 5,
+          "componentDynamicGainCases": 11,
+          "componentLoadConfigurations": 7,
+          "componentFailedLoads": 4,
+          "officialContainerModels": 3,
+          "parentInterruptCleanupChecks": 2
+        },
+        "lifecycleLab": {
+          "mainCases": 10,
+          "finiteMessageWindows": 21,
+          "fakeHandlesReleased": 17,
+          "fakeHandlesCreated": 17,
+          "ordinaryTimerContinuesInFinalized": true,
+          "parentInterruptCheck": "passed",
+          "interruptIsLifecycleShutdown": false
+        },
+        "registeredTestingLab": {
+          "ctestRegistrations": 3,
+          "fineJUnitCases": 13,
+          "testResultAggregateCases": 16,
+          "controlledMissingReadyFineFailures": 1,
+          "controlledMissingReadyAggregateFailures": 2,
+          "normalStrictTestReturnCode": 0,
+          "normalTestResultReturnCode": 0,
+          "missingReadyDefaultTestReturnCode": 0,
+          "missingReadyStrictTestReturnCode": 1,
+          "missingReadyTestResultReturnCode": 1,
+          "emptyResultRejectedByGuard": true,
+          "parentInterruptCheck": "passed",
+          "countNote": "16聚合项包括3个CTest包装；故障的2个聚合失败包含同一细分失败的包装，不能算2个独立案例。"
+        },
+        "existingTestingPolicy": {
+          "oldPytestCasesPassed": 4,
+          "newContractGapsInOldPolicy": 6,
+          "revisedPolicyCasesPassed": 31,
+          "originalTalkerActiveAndPostShutdownCasesPassed": 2,
+          "unitOnly": false,
+          "helperParentInterruptInjected": false
+        },
+        "deploymentAudit": {
+          "regularFiles": 24,
+          "symlinks": 18,
+          "externalSymlinks": 18,
+          "externalLinkRoots": {
+            "build": 15,
+            "source": 1,
+            "underlay": 2
+          },
+          "selfTestFixtures": 9,
+          "exactConsistencyAssertions": 5,
+          "preservedLinkCopyMatchesOriginal": true,
+          "copyExecuted": false,
+          "hostSourceExecTermReturnCode": 0,
+          "hostSourceExecTermSent": 1,
+          "dockerBuildOrRun": false
+        },
+        "bagLab": {
+          "recordings": 3,
+          "readbackMessageCounts": [
+            13,
+            13,
+            12
+          ],
+          "playbacks": 2,
+          "fullReplayCounts": [
+            6,
+            6,
+            1
+          ],
+          "filteredReplayCounts": [
+            6,
+            0,
+            0
+          ],
+          "zeroClockDataSubscriptions": [
+            0,
+            0,
+            0
+          ],
+          "noClockObserverRosTimeNs": 0,
+          "explicitStorageFieldProbes": 2,
+          "cliBoundaryChecks": 6,
+          "relativePathStorages": [
+            "sqlite3",
+            "mcap"
+          ],
+          "normalChildProcesses": 8,
+          "normalChildExitCodes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "sourceInputFingerprints": 7,
+          "failedRuntimeAttempts": 2,
+          "parentInterruptInjected": false
+        },
+        "modelLab": {
+          "descriptionPackagesBuilt": 1,
+          "normalCopyInstalledResources": 4,
+          "expandedConfigurations": 2,
+          "linksPerConfiguration": 7,
+          "fixedJointsPerConfiguration": 4,
+          "continuousJointsPerConfiguration": 2,
+          "inertialBodiesPerConfiguration": 5,
+          "runtimeConfigurations": 2,
+          "jointStatePhases": 6,
+          "validPositionPhases": 4,
+          "invalidLengthPhases": 1,
+          "legalVelocityOnlyIgnoredPhases": 1,
+          "opticalPointChecks": 6,
+          "rejectedLaunchInputs": 2,
+          "negativeInertia": {
+            "checkUrdfReturnCode": 0,
+            "numericCheckReturnCode": 1
+          },
+          "cliChecks": 3,
+          "portableSourceZipRun": true,
+          "sourceFilesInZip": 95,
+          "sourceInputFingerprints": 8,
+          "parentInterruptInjected": false,
+          "guiOrPhysics": false
+        },
+        "driveLab": {
+          "domains": [
+            225,
+            226
+          ],
+          "versions": {
+            "xacro": "2.1.1",
+            "robot_state_publisher": "3.3.4",
+            "controller_manager": "4.48.1",
+            "hardware_interface": "4.48.1",
+            "joint_state_broadcaster": "4.42.1",
+            "diff_drive_controller": "4.42.1",
+            "robot_localization": "3.8.3",
+            "rclpy": "7.1.12"
+          },
+          "straightWheelRadS": [
+            2.0,
+            2.0
+          ],
+          "turnWheelRadS": [
+            1.1,
+            2.9
+          ],
+          "strictConflictRejected": true,
+          "timeoutObservedSteadySeconds": 0.32907784499548143,
+          "oldStampRejected": true,
+          "newRawAtHandoff": 0,
+          "newFusedAtHandoff": 3,
+          "directProcessesPerRun": 7,
+          "pinnedReferenceFiles": 17,
+          "integratedChapters": 6,
+          "verifiedExtractedSource": true
+        }
+      }
+    },
+    {
+      "iteration": "2026-11-07-r8",
+      "observedResults": {
+        "frontendUnits": {
+          "logic": 8,
+          "legacyTextbook": 3,
+          "geometry": 6,
+          "markdownTables": 1
+        },
+        "pythonUnits": {
+          "mathExport": 2,
+          "offlineLabs": 4,
+          "watchdog": 7,
+          "markdownTables": 2
+        },
+        "numericalLabs": {
+          "math": 8,
+          "applied": 8
+        },
+        "rosBuilds": {
+          "atlasPackages": 2,
+          "foundationPackages": 10,
+          "countFaultLabPackages": 1,
+          "componentLabPackages": 1,
+          "lifecycleLabPackages": 1,
+          "testingLabPackages": 1,
+          "modelDescriptionPackages": 1
+        },
+        "atlasIntegration": 5,
+        "foundationIntegration": 15,
+        "navigationProtocolCases": 12,
+        "browser": {
+          "httpMobileRoutes": 170,
+          "widths": [
+            390,
+            320
+          ],
+          "chaptersFileOffline": 60,
+          "equationsNoScript": 49,
+          "svgInstancesNoScript": 32,
+          "externalRequests": 0,
+          "scriptErrors": 0,
+          "evidenceTablesNoScript": 30,
+          "staticFigureFiles": 15,
+          "normalStaticFigures": 13,
+          "normalFigurePlacements": 26
+        },
+        "portableArchive": {
+          "portableMode": true,
+          "missingOriginalLinksDisabled": true,
+          "copyOrFallback": true,
+          "chapters": 60,
+          "equations": 49,
+          "svgInstances": 32,
+          "noJavaScriptBook": true,
+          "widths": [
+            390,
+            320
+          ],
+          "externalRequests": 0,
+          "scriptErrors": 0,
+          "exercises": 325,
+          "apiTables": 21,
+          "completeCodeFiles": 156,
+          "evidenceTables": 30
+        },
+        "runtimeLabs": {
+          "qosCases": 7,
+          "asyncClockCases": 3,
+          "tfBufferChecks": 8,
+          "clockTimerPhases": 3,
+          "qosCliCases": 6,
+          "slowConsumerCases": 4,
+          "slowConsumerRuntimeAssertions": 49,
+          "slowConsumerAgeBoundaryChecks": 23,
+          "executorAndFutureCases": 4,
+          "parameterMainCases": 11,
+          "serviceDeadlineCases": 8,
+          "countActionMainCases": 10,
+          "countActionGoalUuids": 24,
+          "componentMainCases": 5,
+          "componentDynamicGainCases": 11,
+          "componentLoadConfigurations": 7,
+          "componentFailedLoads": 4,
+          "officialContainerModels": 3,
+          "parentInterruptCleanupChecks": 2
+        },
+        "lifecycleLab": {
+          "mainCases": 10,
+          "finiteMessageWindows": 21,
+          "fakeHandlesReleased": 17,
+          "fakeHandlesCreated": 17,
+          "ordinaryTimerContinuesInFinalized": true,
+          "parentInterruptCheck": "passed",
+          "interruptIsLifecycleShutdown": false
+        },
+        "registeredTestingLab": {
+          "ctestRegistrations": 3,
+          "fineJUnitCases": 13,
+          "testResultAggregateCases": 16,
+          "controlledMissingReadyFineFailures": 1,
+          "controlledMissingReadyAggregateFailures": 2,
+          "normalStrictTestReturnCode": 0,
+          "normalTestResultReturnCode": 0,
+          "missingReadyDefaultTestReturnCode": 0,
+          "missingReadyStrictTestReturnCode": 1,
+          "missingReadyTestResultReturnCode": 1,
+          "emptyResultRejectedByGuard": true,
+          "parentInterruptCheck": "passed",
+          "countNote": "16聚合项包括3个CTest包装；故障的2个聚合失败包含同一细分失败的包装，不能算2个独立案例。"
+        },
+        "existingTestingPolicy": {
+          "oldPytestCasesPassed": 4,
+          "newContractGapsInOldPolicy": 6,
+          "revisedPolicyCasesPassed": 31,
+          "originalTalkerActiveAndPostShutdownCasesPassed": 2,
+          "unitOnly": false,
+          "helperParentInterruptInjected": false
+        },
+        "deploymentAudit": {
+          "regularFiles": 24,
+          "symlinks": 18,
+          "externalSymlinks": 18,
+          "externalLinkRoots": {
+            "build": 15,
+            "source": 1,
+            "underlay": 2
+          },
+          "selfTestFixtures": 9,
+          "exactConsistencyAssertions": 5,
+          "preservedLinkCopyMatchesOriginal": true,
+          "copyExecuted": false,
+          "hostSourceExecTermReturnCode": 0,
+          "hostSourceExecTermSent": 1,
+          "dockerBuildOrRun": false
+        },
+        "bagLab": {
+          "recordings": 3,
+          "readbackMessageCounts": [
+            13,
+            13,
+            12
+          ],
+          "playbacks": 2,
+          "fullReplayCounts": [
+            6,
+            6,
+            1
+          ],
+          "filteredReplayCounts": [
+            6,
+            0,
+            0
+          ],
+          "zeroClockDataSubscriptions": [
+            0,
+            0,
+            0
+          ],
+          "noClockObserverRosTimeNs": 0,
+          "explicitStorageFieldProbes": 2,
+          "cliBoundaryChecks": 6,
+          "relativePathStorages": [
+            "sqlite3",
+            "mcap"
+          ],
+          "normalChildProcesses": 8,
+          "normalChildExitCodes": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "sourceInputFingerprints": 7,
+          "failedRuntimeAttempts": 2,
+          "parentInterruptInjected": false
+        },
+        "modelLab": {
+          "descriptionPackagesBuilt": 1,
+          "normalCopyInstalledResources": 4,
+          "expandedConfigurations": 2,
+          "linksPerConfiguration": 7,
+          "fixedJointsPerConfiguration": 4,
+          "continuousJointsPerConfiguration": 2,
+          "inertialBodiesPerConfiguration": 5,
+          "runtimeConfigurations": 2,
+          "jointStatePhases": 6,
+          "validPositionPhases": 4,
+          "invalidLengthPhases": 1,
+          "legalVelocityOnlyIgnoredPhases": 1,
+          "opticalPointChecks": 6,
+          "rejectedLaunchInputs": 2,
+          "negativeInertia": {
+            "checkUrdfReturnCode": 0,
+            "numericCheckReturnCode": 1
+          },
+          "cliChecks": 3,
+          "portableSourceZipRun": true,
+          "sourceFilesInZip": 95,
+          "sourceInputFingerprints": 8,
+          "parentInterruptInjected": false,
+          "guiOrPhysics": false
+        },
+        "driveLab": {
+          "domains": [
+            225,
+            226
+          ],
+          "versions": {
+            "xacro": "2.1.1",
+            "robot_state_publisher": "3.3.4",
+            "controller_manager": "4.48.1",
+            "hardware_interface": "4.48.1",
+            "joint_state_broadcaster": "4.42.1",
+            "diff_drive_controller": "4.42.1",
+            "robot_localization": "3.8.3",
+            "rclpy": "7.1.12"
+          },
+          "straightWheelRadS": [
+            2.0,
+            2.0
+          ],
+          "turnWheelRadS": [
+            1.1,
+            2.9
+          ],
+          "strictConflictRejected": true,
+          "timeoutObservedSteadySeconds": 0.32907784499548143,
+          "oldStampRejected": true,
+          "newRawAtHandoff": 0,
+          "newFusedAtHandoff": 3,
+          "directProcessesPerRun": 7,
+          "pinnedReferenceFiles": 17,
+          "integratedChapters": 6,
+          "verifiedExtractedSource": true
+        },
+        "gazeboSensorLab": {
+          "domains": [
+            227,
+            228
+          ],
+          "versions": {
+            "gzSim": "Gazebo Sim, version 8.15.0",
+            "opencv": "4.6.0",
+            "ros_gz_bridge": "1.0.24",
+            "ros_gz_interfaces": "1.0.24",
+            "gz_sensors_vendor": "0.0.6",
+            "cv_bridge": "4.1.0",
+            "rclpy": "7.1.12"
+          },
+          "oneWayMappings": 5,
+          "controlReplies": 4,
+          "pauseWindowSteadyS": 0.4,
+          "exactImageTriplets": 7,
+          "centerRangeM": 2.200134515762329,
+          "finiteScanRanges": 29,
+          "reliableSamples": 0,
+          "twoSourceCaptures": 2,
+          "pinnedReferenceFiles": 25,
+          "integratedChapters": 7,
+          "verifiedExtractedSource": true
+        }
+      }
+    }
+  ],
+  "scope": "第9轮实测固定激光、MapServer、AMCL、主代价图与全局 NavFn。另验正式站 HTTP、断网连续版、独立审查版目录和实际解压包。先前未改动的运行证据沿用原报告。"
+}

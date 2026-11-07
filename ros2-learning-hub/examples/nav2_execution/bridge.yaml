@@ -1,0 +1,12 @@
+# 世界钟是本次域中的唯一 ROS 仿真时钟。输出不覆盖原始 Header。
+- {ros_topic_name: /clock, gz_topic_name: /world/hub_navigation_execution/clock, ros_type_name: rosgraph_msgs/msg/Clock, gz_type_name: gz.msgs.Clock, direction: GZ_TO_ROS, qos_profile: CLOCK}
+# 传感器帧由桥标记。真实安装边由驱动根据 SDF 在 TF 中发布。
+- {ros_topic_name: scan, gz_topic_name: /hub_execute/scan, ros_type_name: sensor_msgs/msg/LaserScan, gz_type_name: gz.msgs.LaserScan, direction: GZ_TO_ROS, qos_profile: SENSOR_DATA, frame_id: laser_link}
+# 轮速积分的里程计给控制器与速度平滑器，另从同源桥接动态 odom → base_link。
+- {ros_topic_name: odom, gz_topic_name: /hub_execute/wheel_odom, ros_type_name: nav_msgs/msg/Odometry, gz_type_name: gz.msgs.Odometry, direction: GZ_TO_ROS}
+- {ros_topic_name: /tf, gz_topic_name: /hub_execute/wheel_tf, ros_type_name: tf2_msgs/msg/TFMessage, gz_type_name: gz.msgs.Pose_V, direction: GZ_TO_ROS}
+# 下列两路仅用于独立验收。world_pose 为世界参考，joints 提供实际关节角与速度。
+- {ros_topic_name: world_pose, gz_topic_name: /hub_execute/world_pose, ros_type_name: nav_msgs/msg/Odometry, gz_type_name: gz.msgs.Odometry, direction: GZ_TO_ROS, qos_profile: SENSOR_DATA}
+- {ros_topic_name: wheel_joints, gz_topic_name: /hub_execute/joints, ros_type_name: sensor_msgs/msg/JointState, gz_type_name: gz.msgs.Model, direction: GZ_TO_ROS, qos_profile: SENSOR_DATA}
+# Jazzy 此工程各速度端显式采用 Twist。只把平滑后的指令送入隔离 Gazebo。
+- {ros_topic_name: cmd_vel_smoothed, gz_topic_name: /hub_execute/cmd, ros_type_name: geometry_msgs/msg/Twist, gz_type_name: gz.msgs.Twist, direction: ROS_TO_GZ}

@@ -1,0 +1,505 @@
+{
+  "checkedAt": "2026-11-07",
+  "passed": true,
+  "sourceFile": "qos_contract_lab.py",
+  "sourceSha256": "8413248f56faa8e2eb63af7a8faba606fe056fd72920345eb1adf3781632f1cb",
+  "rclpyVersion": "7.1.12",
+  "domain": 213,
+  "rmw": "rmw_fastrtps_cpp",
+  "discovery": "LOCALHOST",
+  "processCount": 1,
+  "nodeCountPerCase": 2,
+  "results": [
+    {
+      "case": "reliability-mismatch",
+      "passed": true,
+      "elapsed_s": 0.624775,
+      "topic": "/qos_contract_f7222d0b7e",
+      "declaredOffered": {
+        "reliability": "BEST_EFFORT",
+        "durability": "VOLATILE",
+        "history": "KEEP_LAST",
+        "depth": 1
+      },
+      "declaredRequested": {
+        "reliability": "RELIABLE",
+        "durability": "VOLATILE",
+        "history": "KEEP_LAST",
+        "depth": 1
+      },
+      "discoveredOffered": {
+        "reliability": "BEST_EFFORT",
+        "durability": "VOLATILE",
+        "history": "UNKNOWN",
+        "depth": 0
+      },
+      "discoveredRequested": {
+        "reliability": "RELIABLE",
+        "durability": "VOLATILE",
+        "history": "UNKNOWN",
+        "depth": 0
+      },
+      "compatibility": "ERROR",
+      "compatibilityReason": "ERROR: Best effort publisher and reliable subscription;",
+      "discoveredPublishers": 1,
+      "discoveredSubscriptions": 1,
+      "matchedSubscriptions": 0,
+      "matchedPublishers": 0,
+      "sent": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "received": []
+    },
+    {
+      "case": "reliability-fixed",
+      "passed": true,
+      "elapsed_s": 0.603589,
+      "topic": "/qos_contract_750563327b",
+      "declaredOffered": {
+        "reliability": "BEST_EFFORT",
+        "durability": "VOLATILE",
+        "history": "KEEP_LAST",
+        "depth": 1
+      },
+      "declaredRequested": {
+        "reliability": "BEST_EFFORT",
+        "durability": "VOLATILE",
+        "history": "KEEP_LAST",
+        "depth": 1
+      },
+      "discoveredOffered": {
+        "reliability": "BEST_EFFORT",
+        "durability": "VOLATILE",
+        "history": "UNKNOWN",
+        "depth": 0
+      },
+      "discoveredRequested": {
+        "reliability": "BEST_EFFORT",
+        "durability": "VOLATILE",
+        "history": "UNKNOWN",
+        "depth": 0
+      },
+      "compatibility": "OK",
+      "compatibilityReason": "",
+      "discoveredPublishers": 1,
+      "discoveredSubscriptions": 1,
+      "matchedSubscriptions": 1,
+      "matchedPublishers": 1,
+      "sent": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "received": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "case": "reliable-to-best-effort",
+      "passed": true,
+      "elapsed_s": 0.60388,
+      "topic": "/qos_contract_0b9a9f880a",
+      "declaredOffered": {
+        "reliability": "RELIABLE",
+        "durability": "VOLATILE",
+        "history": "KEEP_LAST",
+        "depth": 1
+      },
+      "declaredRequested": {
+        "reliability": "BEST_EFFORT",
+        "durability": "VOLATILE",
+        "history": "KEEP_LAST",
+        "depth": 1
+      },
+      "discoveredOffered": {
+        "reliability": "RELIABLE",
+        "durability": "VOLATILE",
+        "history": "UNKNOWN",
+        "depth": 0
+      },
+      "discoveredRequested": {
+        "reliability": "BEST_EFFORT",
+        "durability": "VOLATILE",
+        "history": "UNKNOWN",
+        "depth": 0
+      },
+      "compatibility": "OK",
+      "compatibilityReason": "",
+      "discoveredPublishers": 1,
+      "discoveredSubscriptions": 1,
+      "matchedSubscriptions": 1,
+      "matchedPublishers": 1,
+      "sent": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "received": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ]
+    },
+    {
+      "case": "durability-mismatch",
+      "passed": true,
+      "elapsed_s": 0.604005,
+      "topic": "/qos_contract_e5e0343a9f",
+      "declaredOffered": {
+        "reliability": "RELIABLE",
+        "durability": "VOLATILE",
+        "history": "KEEP_LAST",
+        "depth": 1
+      },
+      "declaredRequested": {
+        "reliability": "RELIABLE",
+        "durability": "TRANSIENT_LOCAL",
+        "history": "KEEP_LAST",
+        "depth": 1
+      },
+      "discoveredOffered": {
+        "reliability": "RELIABLE",
+        "durability": "VOLATILE",
+        "history": "UNKNOWN",
+        "depth": 0
+      },
+      "discoveredRequested": {
+        "reliability": "RELIABLE",
+        "durability": "TRANSIENT_LOCAL",
+        "history": "UNKNOWN",
+        "depth": 0
+      },
+      "compatibility": "ERROR",
+      "compatibilityReason": "ERROR: Volatile publisher and transient local subscription;",
+      "discoveredPublishers": 1,
+      "discoveredSubscriptions": 1,
+      "matchedSubscriptions": 0,
+      "matchedPublishers": 0,
+      "sent": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "received": []
+    },
+    {
+      "case": "transient-history",
+      "passed": true,
+      "elapsed_s": 0.074131,
+      "topic": "/qos_contract_f729a54cc2",
+      "declaredOffered": {
+        "reliability": "RELIABLE",
+        "durability": "TRANSIENT_LOCAL",
+        "history": "KEEP_LAST",
+        "depth": 1
+      },
+      "declaredRequested": {
+        "reliability": "RELIABLE",
+        "durability": "TRANSIENT_LOCAL",
+        "history": "KEEP_LAST",
+        "depth": 1
+      },
+      "discoveredOffered": {
+        "reliability": "RELIABLE",
+        "durability": "TRANSIENT_LOCAL",
+        "history": "UNKNOWN",
+        "depth": 0
+      },
+      "discoveredRequested": {
+        "reliability": "RELIABLE",
+        "durability": "TRANSIENT_LOCAL",
+        "history": "UNKNOWN",
+        "depth": 0
+      },
+      "compatibility": "OK",
+      "compatibilityReason": "",
+      "discoveredPublishers": 1,
+      "discoveredSubscriptions": 1,
+      "matchedSubscriptions": 1,
+      "matchedPublishers": 1,
+      "sent": [
+        41,
+        42
+      ],
+      "received": [
+        42
+      ]
+    },
+    {
+      "case": "volatile-late",
+      "passed": true,
+      "elapsed_s": 0.603493,
+      "topic": "/qos_contract_8743a50337",
+      "declaredOffered": {
+        "reliability": "RELIABLE",
+        "durability": "VOLATILE",
+        "history": "KEEP_LAST",
+        "depth": 1
+      },
+      "declaredRequested": {
+        "reliability": "RELIABLE",
+        "durability": "VOLATILE",
+        "history": "KEEP_LAST",
+        "depth": 1
+      },
+      "discoveredOffered": {
+        "reliability": "RELIABLE",
+        "durability": "VOLATILE",
+        "history": "UNKNOWN",
+        "depth": 0
+      },
+      "discoveredRequested": {
+        "reliability": "RELIABLE",
+        "durability": "VOLATILE",
+        "history": "UNKNOWN",
+        "depth": 0
+      },
+      "compatibility": "OK",
+      "compatibilityReason": "",
+      "discoveredPublishers": 1,
+      "discoveredSubscriptions": 1,
+      "matchedSubscriptions": 1,
+      "matchedPublishers": 1,
+      "sent": [
+        41,
+        42,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99
+      ],
+      "received": [
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99
+      ]
+    },
+    {
+      "case": "writer-recreated",
+      "passed": true,
+      "elapsed_s": 0.603866,
+      "topic": "/qos_contract_eb439800b7",
+      "declaredOffered": {
+        "reliability": "RELIABLE",
+        "durability": "TRANSIENT_LOCAL",
+        "history": "KEEP_LAST",
+        "depth": 1
+      },
+      "declaredRequested": {
+        "reliability": "RELIABLE",
+        "durability": "TRANSIENT_LOCAL",
+        "history": "KEEP_LAST",
+        "depth": 1
+      },
+      "discoveredOffered": {
+        "reliability": "RELIABLE",
+        "durability": "TRANSIENT_LOCAL",
+        "history": "UNKNOWN",
+        "depth": 0
+      },
+      "discoveredRequested": {
+        "reliability": "RELIABLE",
+        "durability": "TRANSIENT_LOCAL",
+        "history": "UNKNOWN",
+        "depth": 0
+      },
+      "compatibility": "OK",
+      "compatibilityReason": "",
+      "discoveredPublishers": 1,
+      "discoveredSubscriptions": 1,
+      "matchedSubscriptions": 1,
+      "matchedPublishers": 1,
+      "sent": [
+        41,
+        42,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99
+      ],
+      "received": [
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99,
+        99
+      ]
+    }
+  ],
+  "limits": [
+    "单进程本机ROS端点实验，未验证跨进程/跨机网络、性能或硬实时。",
+    "未运行机器人、传感器或执行器；负向观察窗口为0.6秒。",
+    "发现元数据可能缺少history/depth；本例用预发布41/42的实际交付检验有限历史行为。",
+    "不兼容事件回调支持随RMW而异，本例不把日志或事件是否出现作为唯一断言。"
+  ]
+}

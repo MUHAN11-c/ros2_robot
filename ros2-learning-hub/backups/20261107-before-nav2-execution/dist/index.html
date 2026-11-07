@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ROS 2 学习手册 · 理论与实践</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="layout-preview.css">
+  <link rel="stylesheet" href="preview/figures.css">
+  <script src="content.js" defer></script>
+  <script src="chapter-outline.js" defer></script>
+  <script src="local-edits.js" defer></script>
+  <script src="environment.js" defer></script>
+  <script src="reference-data.js" defer></script>
+  <script src="preview/figure-data.js" defer></script>
+  <script src="preview/geometry.js" defer></script>
+  <script src="preview/figures.js" defer></script>
+  <link rel="stylesheet" href="reader.css">
+  <script src="logic.js" defer></script>
+  <script src="reader-library.js" defer></script>
+  <script src="reader.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#reading">跳到正文</a>
+  <header class="topbar reader-topbar">
+    <div class="reader-identity">
+      <button class="mobile-menu icon-button" id="menu-button" aria-label="打开章节目录" aria-controls="sidebar" aria-expanded="false"><span data-icon="menu"></span></button>
+      <a class="brand" href="#/home"><span class="brand-symbol" aria-hidden="true">⠿</span><span>ROS 2 <strong>学习手册</strong></span></a>
+    </div>
+    <nav class="library-nav" aria-label="学习工具">
+      <div class="library-primary"><a href="#/home">开始学习</a><a href="#/courses">全书目录</a><a href="#/saved">我的进度</a><a href="#/downloads">离线下载</a></div>
+      <details id="library-menu"><summary>资料与实践</summary><div class="library-dropdown">
+        <a href="#/compare">不同写法对照</a><a href="#/api">API 对照与边界</a><a href="#/examples">完整示例工程</a>
+        <a href="#/projects">综合实践项目</a><a href="#/resources">参考资料库</a><a href="#/coverage">参考内容对应表</a>
+        <a href="#/library">本地原文与源码</a><a href="#/ecosystem">生态与工具</a><a href="#/troubleshoot">排错与术语</a>
+        <a href="book.html">连续阅读与打印 ↗</a><a href="control-lab/index.html">ros2_control 工坊 ↗</a>
+      </div></details>
+    </nav>
+    <div class="reader-tools">
+      <button class="search-trigger" id="search-trigger" aria-label="搜索教材"><span data-icon="search"></span><span>搜索</span></button>
+      <button class="review-trigger icon-button" id="design-trigger" aria-label="图解导览" title="图解导览"><span data-icon="book"></span></button>
+      <button class="theme-switch icon-button" data-theme aria-label="切换明暗配色" title="切换明暗配色"><span data-icon="theme"></span></button>
+      <a id="edit-link" hidden>编辑模式</a>
+    </div>
+  </header>
+  <aside class="sidebar" id="sidebar" aria-label="学习目录">
+    <div class="reader-tree-heading"><strong>学习目录</strong><span id="reading-progress"></span></div>
+    <nav id="chapter-tree" aria-label="章节树"></nav>
+  </aside>
+  <button class="shade" id="shade" aria-label="关闭章节目录" hidden></button>
+  <div class="page-shell">
+    <div class="breadcrumbs reader-breadcrumbs"><span>学习手册</span><span class="separator">/</span><span id="breadcrumb-stage">通信与开发</span><span id="breadcrumb-chapter" hidden></span></div>
+    <main id="reading" tabindex="-1"></main>
+    <footer class="page-footer"><span>ROS 2 学习手册</span><span>Jazzy · Ubuntu 24.04</span></footer>
+  </div>
+  <dialog id="search-dialog" aria-labelledby="search-title">
+    <div class="search-heading"><span data-icon="search"></span><label class="sr-only" id="search-title" for="search-input">搜索教材</label><input id="search-input" placeholder="搜索概念、代码或章节…" autocomplete="off"><button class="icon-button" data-close="search-dialog" aria-label="关闭搜索">×</button></div>
+    <div id="search-results"></div>
+    <div class="search-footer">在本地全文中查找<span>Esc 关闭</span></div>
+  </dialog>
+  <dialog id="copy-dialog" aria-labelledby="copy-title"><div class="copy-heading"><h2 id="copy-title">复制代码</h2><button class="icon-button" data-close="copy-dialog" aria-label="关闭复制面板">×</button></div><p>选中下方代码，按 Ctrl / Cmd + C 复制。</p><textarea id="copy-text" readonly aria-label="代码内容"></textarea></dialog>
+  <dialog id="figure-dialog" aria-labelledby="figure-dialog-title"><div class="figure-dialog-heading"><h2 id="figure-dialog-title">图解</h2><button class="icon-button" data-close="figure-dialog" aria-label="关闭图解">×</button></div><div class="figure-dialog-body"></div><div class="figure-dialog-caption"></div></dialog>
+  <dialog id="design-dialog" aria-labelledby="design-title"><div class="design-guide"><header><h2 id="design-title">图解如何融入阅读</h2><button class="icon-button" data-close="design-dialog" aria-label="关闭图解导览">×</button></header><p>每张图紧邻它解释的概念。选一个示例，查看上下文、图注和交互方式。</p><div class="design-guide-grid"><a href="#/architecture/figure/architecture"><span>01 · 分层关系</span><strong>ROS 2 架构图 →</strong></a><a href="#/pubsub/figure/pubsub"><span>02 · 数据流向</span><strong>发布订阅流程 →</strong></a><a href="#/actions/figure/action"><span>03 · 交互顺序</span><strong>Action 时序图 →</strong></a><a href="#/lifecycle/figure/lifecycle"><span>04 · 状态与转换</span><strong>生命周期状态图 →</strong></a><a href="#/tf2/figure/tf2-transform"><span>05 · 拖动滑块</span><strong>二维坐标变换 →</strong></a><a href="#/eco-model-rviz/figure/robot-model"><span>06 · 旋转与关节</span><strong>三维机器人模型 →</strong></a><a href="#/eco-control-framework/figure/control"><span>07 · 反馈与控制</span><strong>控制循环架构 →</strong></a><a href="#/eco-nav2-stack/figure/nav2"><span>08 · 系统关系</span><strong>导航系统架构 →</strong></a><a href="#/composition/figure/component-options"><span>09 · 参数来源</span><strong>组件参数覆盖 →</strong></a></div><small>图解为原创教学示意。二维／三维交互无需联网，连续阅读版包含静态图。</small></div></dialog>
+  <div class="toast" id="toast" role="status"></div>
+  <noscript>请打开 <a href="book.html">连续阅读版</a>，无需 JavaScript。</noscript>
+</body>
+</html>

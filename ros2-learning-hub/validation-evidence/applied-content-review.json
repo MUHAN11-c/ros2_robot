@@ -1,0 +1,284 @@
+{
+  "reviewedAt": "2026-11-07",
+  "reviewer": "独立应用教材内容审查",
+  "status": "发现问题；等待主代理修订与重新验证",
+  "scope": {
+    "inputs": [
+      "source/applied-robotics.json",
+      "source/api-reference.json"
+    ],
+    "reviewMethod": "逐章阅读全部八章正文、公式、实验与十一组 API 表；对数学推导、坐标单位、异步状态和项目流程中的关键断言，核对本地固定提交的一手源码。",
+    "runtimeBoundary": "原稿中的 Nav2/MoveIt/PX4/Gazebo 客户端与工程未运行，且未连接机器人。后续原生有界替代客户端的隔离假服务端协议验证另见 source/navigation-revision.json，不能反推原稿代码已通过。",
+    "coverageBoundary": "已核实下方列出的具体命题，不能据此宣称每一种配置、所有 API 重载或整个工程均正确。"
+  },
+  "summary": {
+    "openFindings": 5,
+    "byPriority": {
+      "P1": 1,
+      "P2": 3,
+      "P3": 1
+    },
+    "recommendation": "首先替换导航客户端中的无界等待及带隐式初始位姿发布的调用，再补齐服务超时清理、参数批量设置和时钟精确语义。"
+  },
+  "findings": [
+    {
+      "id": "APPLIED-NAV-001",
+      "priority": "P1",
+      "severity": "高",
+      "location": {
+        "file": "source/applied-robotics.json",
+        "chapterId": "project-navigation",
+        "jsonPointer": "/chapters/6/sections/3/codeBlocks/0",
+        "sectionTitle": "同一导航目标的三种入口与 API 差异",
+        "codeLabel": "project_navigation_client.py"
+      },
+      "title": "外层六十秒与取消后五秒检查无法约束内部阻塞调用",
+      "problem": "代码在导航期限到达后同步调用 nav.cancelTask()，而该固定 Jazzy 实现内部无 timeout 地 spin_until_future_complete。取消应答丢失时，流程永远到不了后面的 deadline+5 检查。goToPose 的服务器发现循环和目标应答等待也无总期限，且六十秒 deadline 在这些调用返回后才建立。正文却称客户端处理六十秒墙钟超时及取消后终态，读者会误以为退出路径有界。",
+      "trigger": "导航服务器不可用；目标发送后未应答；或导航超时后取消服务不响应。",
+      "impact": "客户端可以永久挂起；外部监督无法按文中期限得到确定结果。取消请求和客户端返回均不能作为机器人已经停止的证据。",
+      "evidence": [
+        {
+          "kind": "local-upstream-source",
+          "path": "references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_simple_commander/nav2_simple_commander/robot_navigator.py",
+          "lines": [
+            185,
+            205
+          ],
+          "observed": "goToPose 在 wait_for_server(timeout_sec=1.0) 外无限循环，发送目标后调用没有 timeout 的 spin_until_future_complete。"
+        },
+        {
+          "kind": "local-upstream-source",
+          "path": "references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_simple_commander/nav2_simple_commander/robot_navigator.py",
+          "lines": [
+            454,
+            467
+          ],
+          "observed": "cancelTask 的取消 future 等待没有 timeout；isTaskComplete 的 0.10 秒只限制它自身的结果查询，不会限制此前阻塞的 cancelTask。"
+        }
+      ],
+      "recommendedChange": [
+        "用公开 ActionClient 的异步操作和 monotonic 墙钟状态机，分别限制服务器发现、目标应答、导航、取消应答和终态等待。",
+        "目标应答超时时保留已发送 UUID，明确记录接受状态未知；可用公开 CancelGoal 服务按该 UUID 有界请求取消，并区分取消应答与最终结果。",
+        "客户端失联或超时退出时报告未知状态及监督处置，不声称硬件已经停车。"
+      ],
+      "validationSuggestion": [
+        "隔离 ROS_DOMAIN_ID 的假服务器覆盖：服务不可用、拒绝目标、目标应答不完成、取消应答不完成、取消已受理但结果不完成。",
+        "仿真 /clock 暂停时，各期限仍应由 monotonic 推进；每阶段耗时应有记录。"
+      ],
+      "confidence": "高"
+    },
+    {
+      "id": "APPLIED-NAV-002",
+      "priority": "P2",
+      "severity": "中",
+      "location": {
+        "file": "source/applied-robotics.json",
+        "chapterId": "project-navigation",
+        "jsonPointer": "/chapters/6/sections/3",
+        "codeLabel": "project_navigation_client.py"
+      },
+      "title": "只等待既有定位的客户端仍可能发布未初始化 initial_pose",
+      "problem": "正文要求用户先用 RViz 完成定位，代码随后新建 BasicNavigator、未调用 setInitialPose，却调用 waitUntilNav2Active。这个高层方法并非纯生命周期等待：本地 amcl_pose 回调尚未运行时，它先把 BasicNavigator 默认 PoseStamped 发布到 initialpose。该默认位置为零、姿态四元数全零。即使存在 transient-local AMCL 样本，也不能保证先处理回调再发布。",
+      "trigger": "新客户端首次调用 waitUntilNav2Active(localizer='amcl')，且其 initial_pose_received 仍为 False。",
+      "impact": "产生与教材合同不符的隐式定位输入，可能导致无效四元数告警或与用户既有定位发生竞争。不能笼统断言 AMCL 一定接受或覆盖，因为其行为还取决于输入验证和消息时序。",
+      "evidence": [
+        {
+          "kind": "local-upstream-source",
+          "path": "references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_simple_commander/nav2_simple_commander/robot_navigator.py",
+          "lines": [
+            58,
+            74
+          ],
+          "observed": "initial_pose 初始化为默认 PoseStamped，frame_id='map'，initial_pose_received=False。"
+        },
+        {
+          "kind": "local-upstream-source",
+          "path": "references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_simple_commander/nav2_simple_commander/robot_navigator.py",
+          "lines": [
+            495,
+            501
+          ],
+          "observed": "waitUntilNav2Active 在 AMCL 激活后调用 _waitForInitialPose。"
+        },
+        {
+          "kind": "local-upstream-source",
+          "path": "references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_simple_commander/nav2_simple_commander/robot_navigator.py",
+          "lines": [
+            795,
+            819
+          ],
+          "observed": "_waitForInitialPose 在 spin_once 之前调用 _setInitialPose；后者将 self.initial_pose.pose 拷贝并发布。"
+        }
+      ],
+      "recommendedChange": [
+        "若初始化姿态由用户在客户端运行前设置，改用不创建 initialpose 发布器的原生 ActionClient，生命周期与定位检查独立进行。",
+        "若选择由 Commander 初始化，则必须明确让用户提供可信初始位姿、构造合法单位四元数并调用 setInitialPose，不能同时宣称客户端只等待既有定位。"
+      ],
+      "validationSuggestion": [
+        "在隔离仿真中延迟 AMCL 样本，确认替代客户端从不发布 initialpose；用户已完成定位时不应产生额外初始化输入。"
+      ],
+      "confidence": "高"
+    },
+    {
+      "id": "APPLIED-API-001",
+      "priority": "P2",
+      "severity": "中",
+      "location": {
+        "file": "source/api-reference.json",
+        "apiId": "api-service-future",
+        "rowLabel": "等待与取值"
+      },
+      "title": "服务超时路径缺少 C++ pending request 清理步骤",
+      "problem": "表格正确区分超时和服务端撤销，但未说明 rclcpp async_send_request 的超时请求要从客户端待处理表中移除。读者据此实现长期运行的超时重试客户端，会保留每个永不返回的请求并持续增加内存。",
+      "trigger": "同一个 rclcpp::Client 反复发送请求，部分请求无响应，外层 spin_until_future_complete 超时后直接重试。",
+      "impact": "客户端待处理请求持续积累；表格声称介绍调用顺序与失败条件，却缺少此必需收尾。",
+      "evidence": [
+        {
+          "kind": "local-upstream-source",
+          "path": "references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp/include/rclcpp/client.hpp",
+          "lines": [
+            608,
+            630
+          ],
+          "observed": "上游文档明确要求 future 不完成时调用 remove_pending_request，否则每次无应答增加内存；附有 TIMEOUT 后清理的示例。"
+        }
+      ],
+      "recommendedChange": [
+        "新增超时收尾行：保留 FutureAndRequestId，请求不再等待时调用 client->remove_pending_request(future)，或按公开 prune API 统一清理。",
+        "同时写清移除客户端登记不撤销服务端计算，重试仍需业务幂等性。Python 的 Future.cancel/remove_pending_request 语义应另按其实际实现说明，不机械套用 C++ 接口。"
+      ],
+      "validationSuggestion": [
+        "用不会应答的隔离测试服务验证有界退出，并源码或受控计数核对待处理登记得到清理。"
+      ],
+      "confidence": "高"
+    },
+    {
+      "id": "APPLIED-API-002",
+      "priority": "P2",
+      "severity": "中",
+      "location": {
+        "file": "source/api-reference.json",
+        "apiId": "api-parameters",
+        "rowLabel": "设置前校验"
+      },
+      "title": "整批组合约束必须区分逐项设置与原子设置 API",
+      "problem": "表中直接把 add_on_set_parameters_callback 描述为检查整批参数组合约束，却没有给出 set_parameters 与 set_parameters_atomically 的差别。在固定 Jazzy C++ 与 Python 中，set_parameters 会逐个设置参数并逐个调用校验；注册回调本身不会把一组设置变成事务。",
+      "trigger": "上下限等相互依赖参数由 [0,1] 一次意图改成 [2,3]，调用 set_parameters([lower=2, upper=3]) 并假定校验只看到完整新组合。",
+      "impact": "可能因中间状态而拒绝本来合法的新配置，也可能造成部分参数已更新、部分失败；依赖对象的副作用也会难以保持一致。",
+      "evidence": [
+        {
+          "kind": "local-upstream-source",
+          "path": "references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp/src/rclcpp/node_interfaces/node_parameters.cpp",
+          "lines": [
+            668,
+            679
+          ],
+          "observed": "set_parameters 对每个 p 单独调用 set_parameters_atomically({{p}})。"
+        },
+        {
+          "kind": "local-upstream-source",
+          "path": "references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2/rclpy/rclpy/node.py",
+          "lines": [
+            746,
+            823
+          ],
+          "observed": "set_parameters 明确每参数触发回调，源码逐项设置；set_parameters_atomically 明确全成全败且整批只调用一次回调。"
+        }
+      ],
+      "recommendedChange": [
+        "增设逐项与原子设置 API 对照，说明需要跨参数不变量时使用 set_parameters_atomically；服务层同样区分 SetParameters 与 SetParametersAtomically。",
+        "校验函数应把传入的新值合并到当前完整配置形成候选，再校验组合约束；未出现的参数保持原值，验证阶段避免不可回滚副作用。"
+      ],
+      "validationSuggestion": [
+        "用 lower/upper 示例验证逐项调用可能部分失败，而原子调用要么完整提交合法配置、要么保留全部旧值。"
+      ],
+      "confidence": "高"
+    },
+    {
+      "id": "APPLIED-API-003",
+      "priority": "P3",
+      "severity": "低",
+      "location": {
+        "file": "source/api-reference.json",
+        "apiId": "api-timer-clock",
+        "rowLabel": "默认时钟"
+      },
+      "title": "create_wall_timer 应精确写成稳态时钟",
+      "problem": "C++ 一列使用“墙钟/稳态计时路径”，容易把系统日期时钟和单调稳态时钟当成可互换概念。固定 Jazzy WallTimer 实际构造 RCL_STEADY_TIME，系统校时跳变与它的周期推进不同。",
+      "evidence": [
+        {
+          "kind": "local-upstream-source",
+          "path": "references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp/include/rclcpp/timer.hpp",
+          "lines": [
+            374,
+            380
+          ],
+          "observed": "WallTimer 构造使用 std::make_shared<Clock>(RCL_STEADY_TIME)。"
+        }
+      ],
+      "recommendedChange": [
+        "将该单元格改成“使用 RCL_STEADY_TIME 稳态时钟，不随 ROS 仿真时间暂停”；可补充它也不是会因 NTP 校时跳变的系统日期时钟。"
+      ],
+      "confidence": "高"
+    }
+  ],
+  "verifiedClaims": [
+    {
+      "chapterId": "theory-slam",
+      "checked": "固定首节点的一维三节点图，残差、正规方程 [[2,-1],[-1,2]]、右端 [0,3.1]、解 [1.033333,2.066667] 与未固定时规范自由度相符；独立高斯/权重及数据关联前提已有说明。"
+    },
+    {
+      "chapterId": "theory-planning",
+      "checked": "四邻接单位代价 A* 的 Manhattan 启发一致；示例障碍布局最短路径为 14 步、分辨率 0.1 m 时为 1.4 m；过期堆条目与不可达返回路径合理。"
+    },
+    {
+      "chapterId": "theory-optimal-control",
+      "checked": "标量有限时域 LQR 的 Riccati 递推、反馈与代价恒等式相符；状态/控制归一化及无约束前提明确，限幅未冒充受约束 MPC 最优解。"
+    },
+    {
+      "chapterId": "theory-legged",
+      "checked": "恒高、平地、无显著角动量变化条件下 LIPM、ZMP、捕获点方程与双曲函数解相符；没有把 ZMP 在支撑域内等同于任意系统闭环稳定。"
+    },
+    {
+      "chapterId": "theory-aerial",
+      "checked": "共原点 ENU→NED 与机体 FLU→FRD 矩阵、推力单位、1.5 kg 悬停算例和归一化推力边界相符；当前 PX4 main 官方指南的 Jazzy/Ubuntu24.04 支持声明已核实。"
+    },
+    {
+      "chapterId": "project-manipulation",
+      "checked": "五次时间缩放最大一阶导数 1.875、最大二阶导数 10/sqrt(3) 与给定持续时间相符；Panda SRDF 中 panda_arm、ready 与示例规划名匹配；MoveGroupInterface 示例仅规划且有独立执行器线程。"
+    },
+    {
+      "chapterId": "cpp-engineering",
+      "checked": "VelocityCache 对速度与时间戳使用同一 mutex 形成一致快照；finite、时间倒退和过期边界已区分，没有宣称 mutex 等于硬实时保证。"
+    },
+    {
+      "apiIds": [
+        "api-action-state",
+        "api-executor-groups",
+        "api-tf2-time",
+        "api-rosbag-qos"
+      ],
+      "checked": "目标接受、取消应答与结果终态区分；同组同步等待死锁条件、TF 目标源方向/查询时刻以及 rosbag 时钟/QoS 的主要条件表述合理。此为所述命题核实，不是完整协议运行认证。"
+    },
+    {
+      "chapterId": "project-navigation",
+      "checked": "固定 Jazzy Nav2 的 tb3_simulation_launch.py 和 package.xml 中存在 nav2_minimal_tb3_sim、默认 sandbox 世界/地图及现代 gz sim 路径；本轮未执行安装和仿真。"
+    }
+  ],
+  "unverifiedOrLimited": [
+    "原稿工程没有进行 ROS 2 构建、原稿客户端跨进程交互、Nav2/Gazebo 仿真、MoveIt 规划或硬件停车验证；后续替代客户端仅完成隔离假服务端协议验证。",
+    "未逐个运行所有章节命令，也未用本机二进制包确认每个 launch 参数；固定源码存在该接口不等于用户机器安装版本完全一致。",
+    "PX4 Offboard 必须先建立控制存活流、检查模式切换和失联参数；本章离线模型没有验证飞控模式转换、SITL 或飞机响应。",
+    "公式正确性核对限于教材声明的模型前提，不能推广为非线性、接触切换、噪声非高斯或任意代价权重下的保证。"
+  ],
+  "inputSnapshots": [
+    {
+      "path": "source/applied-robotics.json",
+      "sha256": "671731089eac4d8f2470df95f8895695e34a57d3f35eeada8f02ece8c76be7d1"
+    },
+    {
+      "path": "source/api-reference.json",
+      "sha256": "0630542e7357b16c6c46c50129539a69be5537c03eff79744121c2023c3a3569"
+    }
+  ]
+}

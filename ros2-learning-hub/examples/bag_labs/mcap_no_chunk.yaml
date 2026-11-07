@@ -1,0 +1,3 @@
+# 只给一个消息的存储字段探针使用，让标准库能够直接核对Message记录。
+# noChunking关闭分块，不代表常规录制的推荐性能/压缩配置。
+noChunking: true

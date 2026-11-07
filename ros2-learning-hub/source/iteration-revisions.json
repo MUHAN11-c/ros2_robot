@@ -1,0 +1,308 @@
+{
+  "meta": {
+    "iteration": "2026-11-07-r1",
+    "purpose": "依据当前有效教材独立审查，补实际端点/时钟/TF实验和精确API边界；不改第三方原文。",
+    "reviews": [
+      "iteration-communication-review.json",
+      "iteration-runtime-review.json",
+      "iteration-tf-time-review.json"
+    ]
+  },
+  "chapters": {
+    "pubsub": {
+      "sections": {
+        "3": {
+          "appendParagraphs": [
+            "对象所有权要按客户端库区分。C++的Publisher/Subscription通常要由应用持有SharedPtr，回调组内的弱引用不能替代强所有权。Jazzy rclpy的Node同时在内部列表保留发布者和订阅者；只丢掉调用者的局部Python变量，不等于该端点立即销毁。保存self.subscription仍便于显式管理、读取属性和调用destroy_subscription，但不是Python端点存活的唯一条件。销毁端点、销毁Node和丢掉一个变量名是三个不同操作。"
+          ]
+        }
+      },
+      "exercises": [
+        {
+          "question": "将 create_publisher 的 10 改成 100，会把发送频率改成多少？",
+          "answer": "不会直接改变发送频率。该数值是 KeepLast 历史深度；频率仍由定时器的 0.5 秒周期决定。"
+        },
+        {
+          "question": "Python 发布者能否执行 self.publisher.publish(\"hello\")？",
+          "answer": "不能把普通 str 当作 std_msgs.msg.String 消息。应创建 String 对象并设置 data，然后 publish 该对象。"
+        },
+        {
+          "question": "为什么构造函数中创建订阅后要保存 self.subscription 或 subscription_？",
+          "answer": "C++需保留Subscription::SharedPtr等强所有权，短生命周期局部变量结束可能销毁端点。Jazzy Python的Node内部也保留订阅，Node有效且未显式destroy_subscription时，丢调用者局部变量并不立即销毁端点；self.subscription便于后续访问与明确管理。不要把C++所有权理由原样套到Python，也不要把del一个变量当作取消订阅的通用API。"
+        },
+        {
+          "question": "两个发布者各从零计数，订阅输出出现 0、0、1、1，是否一定是重传重复？",
+          "answer": "不是。它可能来自两个独立发布者。应先检查端点数量和消息来源，再分析传输层重复或应用逻辑。"
+        }
+      ],
+      "validation": "2026-11-07已在本机Jazzy重建atlas通信2包与基础10包，C++→Python和Python→C++话题互通通过。此记录不涵盖所有正文变体、跨机网络或硬件；QoS故障/历史实验另按本章关联实验记录。"
+    },
+    "services": {
+      "workedExample": {
+        "title": "服务可用与不可用都能得到明确结论",
+        "scenario": "你要写一个自动化脚本，调用服务计算结果，失败时停止后续步骤。",
+        "steps": [
+          "先启动 C++ 服务端，运行 Python 客户端，确认输出十二且退出码为零。",
+          "停止服务端，再运行同一客户端，确认发现等待后返回非零码。",
+          "改用 Python 服务端重复成功路径，验证语言可替换。",
+          "把服务名故意写错一次，观察失败发生在发现阶段，而不是响应计算阶段。"
+        ],
+        "result": "正常请求得到sum=12且退出0；失败退出非零。本章两个客户端的发现失败和应答超时都可能退出1，需根据阶段日志分因。服务端可能已执行而客户端尚未得到应答，不能从exit=1推断远端没有执行。"
+      },
+      "validation": "2026-11-07本机Jazzy通信/基础工程的C++服务端→Python客户端及反向正常加法请求通过；异步轮询另有独立域的应答缺失与暂停时钟测试。两个完整一次性客户端仍为0/1退出码，未运行跨机断网、业务重试幂等或任意故障恢复。"
+    },
+    "actions": {
+      "validation": "2026-11-07基础工作空间的C++和Python Count服务端分别配合保留Python客户端，成功及取消终态检查通过；没有C++客户端验证。本文忙碌目标拒绝、ABORTED故障注入与真实执行器停止仍未实测；Nav2假服务端12类协议场景独立记录，不替代本Count工程的测试。"
+    },
+    "parameters": {
+      "validation": "2026-11-07本机Jazzy基础C++/Python参数节点动态gain范围、有限性/类型拒绝、拒绝后保值及启动覆盖检查通过；另用独立rclpy节点验证逐项设置可部分成功、原子设置全成全败。尚未以完整工程验证pre/on/post回调中的资源重建或跨参数硬件事务。"
+    },
+    "qos": {
+      "sections": {
+        "5": {
+          "paragraphs": [
+            "对传感器流，可从尽力、易失、小深度开始，再以可接受丢帧率和数据年龄检验；对最新配置，可选可靠、瞬态本地、深度一；对带副作用的服务，通常使用可靠且易失，避免重启后把陈旧请求当作新事务。以上是有条件的起点，最终取舍应写出负载和容许故障，而非只记录一个预设名称。",
+            "验收记录至少保留两端声明策略、发现字段、实际匹配数、发送/接收序号和观察窗口。重连、晚加入、慢消费者分别测试。下面新增的真实rclpy端点实验已在本机独立域验证7个场景；原有手工CLI与durable_once脚本没有因此自动获得同等运行证据，跨机网络和真实设备仍须另测。"
+          ]
+        }
+      },
+      "appendSections": [
+        {
+          "title": "用七个真实端点场景把规则变成证据",
+          "paragraphs": [
+            "新增qos_contract_lab.py是完整可运行文件，只创建两个本机教学Node，使用std_msgs/Int32无量纲标记，不向机器人发送命令。每个场景使用唯一话题，避免旧节点和观察工具混入。程序同时保存代码声明的QoS、图发现元数据、匹配端点数、发送值与接收值；单进程经RMW通信，不能把它当跨进程或跨机网络验收。",
+            "先比较reliability-mismatch与reliability-fixed：前者发布端BEST_EFFORT、订阅端RELIABLE，两个端点均被发现而匹配数为零；后者重建为BEST_EFFORT订阅，其他关键策略相同，便可收到递增样本。它不是修改既有QoSProfile对象后自动重配置DDS端点。实际工程需按客户端库支持方式重新创建端点并核对生效。reliable-to-best-effort则验证反方向允许匹配。",
+            "durability-mismatch单独让VOLATILE发布端面对TRANSIENT_LOCAL请求。不要仅因暂时无数据就下结论：实验先确认双方发现、静态兼容检查为ERROR，再在0.6秒窗口持续发送约33Hz样本，最后核对匹配为零和无收样。有限窗口仍不是任意时间或任意RMW的全局证明；不兼容警告和事件支持也不是唯一判据。",
+            "三个晚加入场景先在订阅创建前依次发送41、42。transient-history使用可靠、瞬态本地、KeepLast深度1，writer继续存活而且不补发旧值，晚加入仅收到42。volatile-late不应收到41/42，但随后新标记99应可交付；writer-recreated销毁旧writer再创建新writer，用99证明新链路正常，同时核对旧缓存没有被继承。先证明新链路可用，负向历史结论才有解释力。"
+          ],
+          "bullets": [
+            "本机已完成7个场景；不兼容两组各发送20条、收到0条，匹配0；修复与反向可靠性两组均收到20条。",
+            "瞬态历史场景只发送[41,42]，晚加入收到[42]；易失晚加入与writer重建仅收到后续99。发送条数取决于调度，代码只对有依据的性质断言。",
+            "运行前需source Jazzy；本例固定FastDDS、ROS_DOMAIN_ID默认213、发现范围LOCALHOST。测试域并非访问控制。"
+          ],
+          "codeBlocks": [
+            {
+              "label": "runtime_labs/qos_contract_lab.py",
+              "language": "python",
+              "type": "complete",
+              "sourceFile": "examples/runtime_labs/qos_contract_lab.py",
+              "explanation": "输入为场景、独立域和每阶段单调秒期限；输出完整JSON证据。Int32仅作无量纲标记，depth为条数。各应用轮询使用单调软期限；不抢占回调或原生RMW阻塞，程序退出清理自己创建的节点/执行器；没有传感器、机器人或仿真。"
+            },
+            {
+              "label": "运行全部或单个QoS场景",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 从ros2-learning-hub目录运行；首次准备ROS依赖需要软件源。\nsource /opt/ros/jazzy/setup.bash\n# 每阶段默认最多5个单调秒，场景内部观察窗口为0.6秒。\n/usr/bin/python3 examples/runtime_labs/qos_contract_lab.py --case all\n# 可单独复算历史边界，输出JSON到自己选择的新文件。\n/usr/bin/python3 examples/runtime_labs/qos_contract_lab.py --case transient-history --output /tmp/qos-history.json",
+              "explanation": "失败返回非零，不使用“没看到日志”代替断言；代码中assert用于检查，运行时不要加-O。"
+            }
+          ]
+        },
+        {
+          "title": "发现信息、静态兼容检查与工具自身的端点",
+          "paragraphs": [
+            "ROS图返回的字段不一定是完整的运行配置。本机FastDDS端点信息准确返回RELIABILITY/DURABILITY，却把history显示为UNKNOWN、depth显示为0；RMW公开契约明确允许无法可靠发现的QoS字段返回UNKNOWN。这不证明实际KeepLast深度被改成0，也不能从UNKNOWN反推历史容量。本实验保留声明与发现两个表，并用41→42的真实交付行为核对这个限定算例。",
+            "qos_check_compatible检查两个profile，返回兼容级别和reason。SYSTEM_DEFAULT或UNKNOWN可能使结果为WARNING，表示无法确定；它不是已经证明能匹配，也不是已经证明不能匹配。程序对明确冲突要求ERROR，对其他组合还要等真实匹配数并验证样本。网络、实体存活和执行器是否调度不由静态profile检查证明。",
+            "ros2 topic echo自身也创建订阅者，会改变图中的端点数量。固定Jazzy实现中，未显式提供QoS选项时可依据发现的发布者适配可靠性和持久性；显式选项则按预设加覆盖构造。echo能收到不代表你的应用请求相同策略，更不能拿echo新增的端点当应用订阅者。对照实验应显式记录四个关键选项，并检查应用自己的端点名称与策略。"
+          ],
+          "codeBlocks": [
+            {
+              "label": "把观察订阅者的策略写清楚",
+              "language": "bash",
+              "type": "commands",
+              "code": "# /qos_lab是手工实验话题，必须与发布者一致；echo也是额外订阅端点。\nros2 topic echo /qos_lab std_msgs/msg/String --qos-reliability best_effort --qos-durability volatile --qos-history keep_last --qos-depth 1\n# 在另一终端查看应用与工具端点，不能只看话题是否存在。\nros2 topic info /qos_lab --verbose",
+              "explanation": "此命令对应原手工实验；新增自动实验话题带随机后缀，不能把/qos_lab直接套过去。完整应用配置和发现信息分别保留。"
+            }
+          ]
+        },
+        {
+          "title": "租约、默认持续时间与传感器预设的具体值",
+          "paragraphs": [
+            "Deadline与liveliness lease duration都按请求与提供比较持续时间：发布端承诺的最大间隔应小于或等于订阅者允许的间隔。对有限数x、y，可列成六类：Default→Default兼容，Default→x不兼容，x→Default兼容，x→x兼容，x→更大的y兼容，x→更小的y不兼容。Default是未指定持续时间，通常由中间件解释为无限，不应把打印出的默认零字段直接当零秒强保证。该矩阵解释兼容合同，不声称本例已动态注入所有deadline/liveliness事件。",
+            "Liveliness种类同样有方向：AUTOMATIC→AUTOMATIC兼容，AUTOMATIC→MANUAL_BY_TOPIC不兼容，MANUAL_BY_TOPIC可满足两种请求。实际活性丢失、消息间隔异常和应用处理过慢是不同症状；事件产生后仍须由业务监督决定如何降级，不能以QoS设置替代停车链。",
+            "固定Jazzy一手预设中，sensor_data的关键字段为KEEP_LAST、深度5、BEST_EFFORT、VOLATILE；普通发布订阅默认关键字段为KEEP_LAST、深度10、RELIABLE、VOLATILE。deadline/lifespan/lease使用默认持续时间，liveliness为SYSTEM_DEFAULT。它们是当前已核对预设，不是所有发行版和RMW永远不变的保证；深度5也不表示5Hz、5毫秒或端到端仅排队5帧。"
+          ],
+          "bullets": [
+            "持续时间矩阵（提供→请求）：Default→Default兼容；Default→有限x不兼容；有限x→Default兼容。",
+            "持续时间矩阵（提供→请求）：x→x兼容；x→更大y兼容；x→更小y不兼容。单位是秒，比较offered≤requested。",
+            "活性种类（提供→请求）：Automatic→Automatic兼容；Automatic→ManualByTopic不兼容；ManualByTopic可满足两种请求。"
+          ]
+        }
+      ],
+      "appendExercises": [
+        {
+          "question": "topic info显示history UNKNOWN和depth 0，能否推断应用已没有缓存？",
+          "answer": "不能。RMW发现元数据可能未提供history/depth，UNKNOWN不是实际配置。分别保存应用声明、发现字段和真实样本交付；本例以预发布41/42后晚加入只收42核对有限历史这一具体行为。"
+        },
+        {
+          "question": "瞬态本地晚加入只收到42，怎样排除是周期重发而非历史交付？",
+          "answer": "先在无订阅时发送41、42，之后保持writer存活但不再publish，等读者创建并匹配；确认sent仍为[41,42]而received为[42]。若期间重发42，就失去区分历史与新发布的证据。"
+        },
+        {
+          "question": "为什么负向历史实验还要发送新标记99？",
+          "answer": "仅未收到旧值可能源于发现失败、类型/QoS不匹配或执行器未运行。匹配后收到新标记99证明当前链路可交付，再观察41/42缺失，才能对限定窗口内的历史行为作解释。"
+        }
+      ],
+      "validation": "2026-11-07已在本机Jazzy/rclpy7.1.12、FastDDS、独立域213/LOCALHOST下运行qos_contract_lab的7个真实端点场景。单进程两Node经RMW，明确发现/匹配/收样与UNKNOWN元数据边界；未测试跨进程/跨机网络、所有deadline/liveliness事件、真实设备或原手工CLI脚本。",
+      "sourceIds": [
+        "core-qos",
+        "core-topics-cli",
+        "core-examples",
+        "iteration-rmw-endpoint-info"
+      ]
+    },
+    "executors": {
+      "sections": {
+        "3": {
+          "codeBlocks": {
+            "0": {
+              "sourceFile": "examples/runtime_labs/async_poll.py",
+              "explanation": "完整异步轮询节点：STEADY定时器每0.2秒推进一次，monotonic测量已发请求年龄；使用单线程执行器，等待服务发现时不阻塞。2秒为请求软期限，不是进程总运行期限；长回调和调度仍可延迟检查。2026-11-07已验证ROS时钟为0或固定1秒时应答缺失均约2.2秒收尾，暂停时钟下正常响应为12。"
+            }
+          },
+          "appendParagraphs": [
+            "超时检查有两层时钟：年龄用monotonic还不够，执行检查的timer也必须能继续触发。当前完整文件显式使用Clock(STEADY_TIME)，避免use_sim_time开启而/clock未到或暂停后连检查路径也停住。它仍依赖执行器获得调度，2秒加0.2秒轮询节奏只是软期限，不能承诺任意负载下硬截止。发现服务之前本节点持续轻量轮询；不要把已发请求期限误读为整个进程总期限。"
+          ]
+        }
+      },
+      "appendSections": [
+        {
+          "title": "Context、执行器与完成回调的实际边界",
+          "paragraphs": [
+            "自建Context时，Node与Executor必须指向同一个Context。不要创建Node(context=ctx)后，随手调用依赖默认全局Context的rclpy.spin_once(node)来推进；应构造SingleThreadedExecutor(context=ctx)，add_node后由这个执行器显式spin_once。一个执行器的spin_once也不能由多个线程同时调用；需要多线程调度时使用其线程模型，而不是并发驱动同一个入口。",
+            "ROS客户端处理响应与用户给Future注册的完成continuation不是同一个层次。固定Jazzy rclpy实现把已绑定executor的Future.add_done_callback回调提交为通用Task；这类Task没有自动继承client实体的互斥回调组。不能因为客户端在互斥组，就断言用户continuation对共享成员也被该组串行保护。C++相应回调路径不同，不把某个客户端库的实现细节通用化。",
+            "一种容易验证的结构是continuation只把不可变结果放入有界、线程安全的队列，再由职责明确的timer消费；也可显式使用锁保护共享状态，但锁不能覆盖网络或磁盘等待。先停止新任务并让执行器不再访问节点，再销毁节点和Context。下面是局部初始化/收尾模式；真实等待循环还需按业务给出单调期限。"
+          ],
+          "codeBlocks": [
+            {
+              "label": "局部模式：同一个Context管理Node与Executor",
+              "language": "python",
+              "type": "snippet",
+              "code": "# 这是主程序中的局部模式；需先导入rclpy、Context、Node和SingleThreadedExecutor。\ncontext = Context()\nrclpy.init(args=None, context=context)\nnode = Node(\"owned_context_example\", context=context)\nexecutor = SingleThreadedExecutor(context=context)\nexecutor.add_node(node)\n# 后续只通过executor.spin_once(timeout_sec=...)推进，真实循环另设monotonic总期限。\n# 收尾应位于finally；先停止调度，再释放Node，最后关闭仍有效的Context。\nexecutor.remove_node(node)\nexecutor.shutdown(timeout_sec=0.0)\nnode.destroy_node()\nif context.ok():\n    rclpy.shutdown(context=context)",
+              "explanation": "Context、Node、Executor的归属一致；片段不创建传感器/设备，也不自行证明并发安全或业务期限。"
+            }
+          ]
+        }
+      ],
+      "appendExercises": [
+        {
+          "question": "年龄用monotonic，为何默认ROS timer仍可能让超时检查在仿真暂停时失效？",
+          "answer": "年龄只是计算经过多久；检查函数是否运行取决于触发timer及执行器。ROS时间暂停可使默认timer不再触发，因此选择显式STEADY timer或有界外层循环。即使如此，长回调、锁等待和CPU饥饿仍可能推迟软件检查。"
+        }
+      ],
+      "validation": "2026-11-07已用当前async_poll.py与真实AddTwoInts端点完成3个隔离场景：无/clock超时、正值/clock暂停超时、暂停时钟但正常响应。软件时钟、单进程独立域215/LOCALHOST；超时约2.2s，正常sum12。未证明任意负载硬期限、泛型continuation并发边界或三执行器配置矩阵，后两项保持源码核对与后续实验范围。"
+    },
+    "time-bag": {
+      "sections": {
+        "3": {
+          "codeBlocks": {
+            "0": {
+              "code": "# 【中文教学注释】 clock_probe.py 完整脚本\n# 本例作用：单调时钟只负责一秒一次的观察节奏；node.get_clock 返回节点选定的 ROS 时钟。两种时钟用于不同目的，不在同一个时间差公式中相减。\n# 输入输出：输入为话题数据、Header 时间戳与选定时钟；输出为 bag 文件、回放消息和时间观测值。\n# 执行顺序与边界：先录制再停止检查，回放前停掉同话题实时发布者；use_sim_time 需 /clock，暂停/跳转可能使 ROS 时间停住或倒退，QoS 覆盖不修复原始坏数据。\nimport rclpy\nfrom rclpy.node import Node\nfrom rclpy.clock import Clock, ClockType\n\n# 程序入口按本章顺序组织资源；本例仅在 __main__ 下运行，import 时不应启动节点或连接硬件。\ndef main():\n    # 初始化当前进程的 ROS 上下文并解析传入 ROS 参数；在创建节点/端点之前调用。\n    rclpy.init()\n    # 创建并持有节点对象；本进程退出前应显式 destroy_node，创建节点本身不会自动处理回调。\n    node = Node('clock_probe')\n    steady = Clock(clock_type=ClockType.STEADY_TIME)\n    # 定时周期单位为秒，回调由执行器调度而非自动新建独占线程；显式clock=steady驱动观察节奏；/clock暂停不暂停此timer，回调读取的节点ROS时间仍可能停止。\n    timer = node.create_timer(\n        # 输出可观测日志用于核对状态；日志成功写出不等于对端收到消息或任务执行成功。\n        1.0, lambda: node.get_logger().info(\n            # 时间字段中的 sec 为秒、nanosec 为纳秒，1秒=10^9纳秒；二者不是相互独立的任意整数。\n            f'ros_time_ns={node.get_clock().now().nanoseconds}'),\n        clock=steady)\n    try:\n        # 进入执行器事件循环，定时器、订阅、服务和 Future 回调在这里才被推进；通常阻塞到中断或上下文关闭。\n        rclpy.spin(node)\n    except KeyboardInterrupt:\n        pass\n    finally:\n        node.destroy_timer(timer)\n        # 显式释放节点所属端点与定时器；应在相关执行器不再访问节点后执行。\n        node.destroy_node()\n        # 检查 ROS 上下文仍有效，避免退出流程重复 shutdown；它不表示节点业务健康。\n        if rclpy.ok():\n            # 关闭本进程 ROS 上下文；先停止执行器、销毁端点/节点，再在上下文仍有效时调用。\n            rclpy.shutdown()\n\nif __name__ == '__main__':\n    main()"
+            }
+          }
+        }
+      },
+      "commands": {
+        "1": {
+          "code": "# 【中文教学注释】 停止录制后检查与回放\n# 本例作用：停止录制后检查与回放\n# 输入输出：输入为话题数据、Header 时间戳与选定时钟；输出为 bag 文件、回放消息和时间观测值。\n# 执行顺序与边界：先录制再停止检查，回放前停掉同话题实时发布者；use_sim_time 需 /clock，暂停/跳转可能使 ROS 时间停住或倒退，QoS 覆盖不修复原始坏数据。\n# 只读检查bag话题、类型、时长和数量；有文件不代表数据覆盖完整或时钟可比。\nros2 bag info turtle_session\n# 重放记录的数据；--clock发布回放时钟，依赖节点需use_sim_time。先停同话题实时发布者，防止双来源混入。\nros2 bag play turtle_session --topics /turtle1/cmd_vel",
+          "explanation": "保持turtlesim为/turtle1/pose的唯一实时来源，只回放/turtle1/cmd_vel；先停止该命令话题的实时输入源并重置场景。退出码和端点检查不能代替轨迹对照。"
+        },
+        "2": {
+          "code": "# 【中文教学注释】 对依赖仿真时间的重放系统\n# 本例作用：对依赖仿真时间的重放系统\n# 输入输出：输入为话题数据、Header 时间戳与选定时钟；输出为 bag 文件、回放消息和时间观测值。\n# 执行顺序与边界：先录制再停止检查，回放前停掉同话题实时发布者；use_sim_time 需 /clock，暂停/跳转可能使 ROS 时间停住或倒退，QoS 覆盖不修复原始坏数据。\n# 重放记录的数据；--clock发布回放时钟，依赖节点需use_sim_time。先停同话题实时发布者，防止双来源混入。\nros2 bag play turtle_session --clock --topics /turtle1/cmd_vel\n# 消费节点须配置 use_sim_time=true；勿同时启动竞争的 /clock 发布者。",
+          "explanation": "保持turtlesim为/turtle1/pose的唯一实时来源，只回放/turtle1/cmd_vel；先停止该命令话题的实时输入源并重置场景。退出码和端点检查不能代替轨迹对照。"
+        }
+      },
+      "appendExercises": [
+        {
+          "question": "检查期限的ROS timer与被观察的ROS时间都停住时，仅换monotonic年龄公式足够吗？",
+          "answer": "不够。还需让检查路径由独立STEADY timer或有界外层循环推进，同时保留ROS时间作为数据时间轴，不能混合两种时钟做同一个时间差。执行器负载仍可能推迟检查。"
+        }
+      ],
+      "appendSections": [
+        {
+          "title": "受控软件时钟：把未初始化、暂停和推进分开",
+          "paragraphs": [
+            "clock_timer_lab.py手动发布合成/clock，同时在目标节点创建周期0.1秒的默认ROS timer和显式STEADY timer。所有阶段由同一Context的单线程执行器和单调外层期限推进，不启动Gazebo、turtlesim或其他仿真。use_sim_time只是节点选择软件时钟的参数，不能据此记录仿真已运行。",
+            "第一阶段没有收到/clock，节点ROS时间保持零，0.8秒窗口中ROS timer不触发、STEADY timer继续计数。第二阶段先把时钟设为正值10秒，留出0.25秒处理跳变与已就绪事件，再单独测量0.8秒暂停窗口；不能把正值跳变引起的一次回调混入“暂停时持续运行”的结论。第三阶段以有限频率逐步推进clock，两种timer均应获得调度。",
+            "本机最终三个窗口的ROS/STEADY回调增量分别为0/8、0/8、8/8。计数依赖输入步长、观察窗口和调度，只对这次有限配置成立，不是任意机器的精确频率保证。该实验解释了为什么monotonic年龄公式还需要能推进的检查路径；异步服务的三项独立实验另外验证实际应答超时，不把两个实验的计数混为同一种证明。",
+            "录包重放还要保留唯一数据来源：海龟实验录入cmd_vel和pose，但重放仅筛选cmd_vel，保留存活turtlesim作为pose唯一来源。若需要对照原pose，应发布到单独参考主题；不能把旧轨迹混回当前pose，再把任意消息当作复现成功。完整录制/重放流程仍未在本轮运行，只有快捷命令已与正文统一。"
+          ],
+          "codeBlocks": [
+            {
+              "label": "runtime_labs/clock_timer_lab.py",
+              "language": "python",
+              "type": "complete",
+              "sourceFile": "examples/runtime_labs/clock_timer_lab.py",
+              "explanation": "完整受控软件时钟实验；输入周期/窗口/推进步长均为秒，输出三阶段计数、时间和源码版本证据。默认域223、LOCALHOST、FastDDS；有界spin和总软期限，另外建议进程级timeout防护原生调用卡住。"
+            },
+            {
+              "label": "运行时钟对照实验",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 从ros2-learning-hub执行；--help不需要加载ROS。\nsource /opt/ros/jazzy/setup.bash\n# 仅本机软件/clock；报告另存/tmp，避免覆盖随教材保留的原始验证记录。\ntimeout --signal=INT --kill-after=5s 25s /usr/bin/python3 examples/runtime_labs/clock_timer_lab.py --report /tmp/clock-timer-validation.json",
+              "explanation": "25秒为外层进程保护；程序内15秒总软期限与各观察窗口分开。该程序只发布合成clock，不代表启动仿真。"
+            }
+          ]
+        }
+      ],
+      "validation": "2026-11-07已在独立域223/LOCALHOST使用真实rclpy与合成/clock验证未到、暂停、推进三个timer窗口，增量0/8、0/8、8/8；约2.682秒，含单独跳变结算。未执行正文turtlesim录包/回放、真实数据采集或完整仿真；回放主题筛选与时钟条件由固定Jazzy源码核对。"
+    },
+    "tf2": {
+      "sections": {
+        "2": {
+          "codeBlocks": {
+            "0": {
+              "code": "# 【中文教学注释】 建立并检查固定安装关系\n# 本例作用：前两个 frame 参数决定查询方向；view_frames 汇总一段观察窗口内收到的树，生成的图可用来找断链和重复责任，但图形连通并不自动证明每个历史时刻均有可用数据。\n# 输入输出：输入是带 source frame 和采样时间的 PointStamped 及 TF 缓存；输出为 base_link 中的点。\n# 执行顺序与边界：平移单位 m、旋转 rad；按输入消息时刻查变换，缺失/外推失败时丢弃并记录。Time(0) 与消息时间不是同一语义，不在单线程回调中长期阻塞等 TF。\n# 终端甲，先 source /opt/ros/jazzy/setup.bash\n# 从已安装包tf2_ros启动static_transform_publisher；此进程通常持续运行，另用新终端执行观察命令，Ctrl+C结束。 静态平移为m、roll/pitch/yaw为rad；父/子方向必须与后续查询一致。\nros2 run tf2_ros static_transform_publisher --x 0.2 --y 0 --z 0.3 --roll 0 --pitch 0 --yaw 0 --frame-id base_link --child-frame-id laser\n# 终端乙：分别运行并观察，Ctrl+C 后切换下一条\n# 从已安装包tf2_ros启动tf2_echo；此进程通常持续运行，另用新终端执行观察命令，Ctrl+C结束。 静态平移为m、roll/pitch/yaw为rad；父/子方向必须与后续查询一致。\nros2 run tf2_ros tf2_echo base_link laser\nros2 run tf2_ros tf2_echo laser base_link\n# view_frames默认收集约5秒后生成当前目录中的图文件并退出；不是持续广播器。可用-o tf_snapshot固定前缀，需Graphviz的dot，正常等待完成。\nros2 run tf2_tools view_frames"
+            }
+          }
+        }
+      },
+      "commands": {
+        "1": {
+          "code": "# 【中文教学注释】 终端 B：检查\n# 本例作用：终端 B：检查\n# 输入输出：输入是带 source frame 和采样时间的 PointStamped 及 TF 缓存；输出为 base_link 中的点。\n# 执行顺序与边界：平移单位 m、旋转 rad；按输入消息时刻查变换，缺失/外推失败时丢弃并记录。Time(0) 与消息时间不是同一语义，不在单线程回调中长期阻塞等 TF。\n# 从已安装包tf2_ros启动tf2_echo；此进程通常持续运行，另用新终端执行观察命令，Ctrl+C结束。 静态平移为m、roll/pitch/yaw为rad；父/子方向必须与后续查询一致。\nros2 run tf2_ros tf2_echo base_link laser\n# view_frames默认收集约5秒后生成当前目录中的图文件并退出；不是持续广播器。可用-o tf_snapshot固定前缀，需Graphviz的dot，正常等待完成。\nros2 run tf2_tools view_frames"
+        }
+      },
+      "appendSections": [
+        {
+          "title": "把时间查询和非零旋转做成可复算实验",
+          "paragraphs": [
+            "新增tf_buffer_lab.py只向本进程Buffer写入合成变换，不创建Node、TransformListener或DDS端点。它使用安装的Jazzy公开API和明确的绝对容差，适合先把方向、时间和数值算清，再进入ROS图排错。缓存中直接写入变换不等于已经发布/tf；成功结果不能证明网络接收、时钟同步或真实外参正确。",
+            "静态例子让laser在base_link中平移(0.2,0,0.3)米并绕正Z旋转90度。laser点(1,0,0)变为(0.2,1,0.3)米，逆平移为(0,0.2,-0.3)米，不能简单把原平移取负。脚本把结果再变回laser并检查单位四元数；相同静态关系在0、1、10.5和1000000秒查询保持同一几何结果，零时刻仍按latest语义使用。",
+            "动态例子仅放两条数据：10秒时平移零、yaw零，12秒时平移(2,0,0)米、yaw为π/2。11秒观测点(1,0,0)应先插值平移为1米、旋转为π/4，得到(1+√0.5,√0.5,0)米；错误地使用Time(0)会得到12秒的(2,1,0)米，位置差约0.414213562米。这个差来自时间错位，不是浮点舍入，也不能靠改header标签修复。",
+            "查询数据范围外的过去/未来应抛外推异常，缺frame应抛查询异常；延长等待不能制造不存在的历史。tf2同步timeout还有语言与时钟前提：固定Jazzy C++等待按Buffer构造clock推进，冻结ROS时间时不能自动当墙钟上界；该版本Python同步路径用SYSTEM_TIME且会sleep，也不是monotonic抢占机制。需要业务期限时，用有界队列和非阻塞查询配单调监督，并保证执行器能接收后续TF。"
+          ],
+          "codeBlocks": [
+            {
+              "label": "runtime_labs/tf_buffer_lab.py",
+              "language": "python",
+              "type": "complete",
+              "sourceFile": "examples/runtime_labs/tf_buffer_lab.py",
+              "explanation": "8组实际tf2数值/异常检查；位置米、yaw弧度、时间秒/整数纳秒，默认绝对容差1e-9。只写进程内Buffer，无Node、网络、仿真或硬件；不设置同步等待timeout。"
+            },
+            {
+              "label": "运行进程内tf2实验",
+              "language": "bash",
+              "type": "commands",
+              "code": "# 从ros2-learning-hub运行；实际计算需要Jazzy Python包。\nsource /opt/ros/jazzy/setup.bash\n/usr/bin/python3 examples/runtime_labs/tf_buffer_lab.py --json",
+              "explanation": "--help无需加载ROS包；非法容差和-O被拒绝，不能用放宽容差或关闭断言伪造通过。"
+            }
+          ]
+        }
+      ],
+      "validation": "2026-11-07已用已安装Jazzy tf2公开Buffer API完成8组进程内数值/异常检查，另有CLI/容差/无通信检查；没有rclpy.init、Node、DDS或机器人。原始跨终端静态广播/point_transform/view_frames流程仍未运行；C++冻结时钟下timeout风险为固定源码推断，不宣称已执行该挂起实验。"
+    }
+  },
+  "resources": [
+    {
+      "id": "iteration-rmw-endpoint-info",
+      "title": "RMW端点发现信息与不可用QoS字段的公开契约",
+      "url": "https://github.com/ros2/rmw/blob/jazzy/rmw/include/rmw/get_topic_endpoint_info.h",
+      "category": "通信与中间件",
+      "version": "Jazzy",
+      "description": "解释图发现并不保证所有QoS字段可用；UNKNOWN不等于真实策略，history/depth须结合配置与行为核对。",
+      "verification": "读取本机已安装get_topic_endpoint_info.h第36–43行并记录于iteration-communication-review.json；同时核对官方Jazzy仓库源页。不是RMW源码构建或跨机网络实测。",
+      "checkedAt": "2026-11-07",
+      "type": "官方公开接口源码",
+      "versionNote": "在线jazzy分支可能继续变化；本机安装头文件摘要与行范围保留于审查证据，运行行为只按实际实验记录。"
+    }
+  ]
+}

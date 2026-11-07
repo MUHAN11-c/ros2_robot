@@ -1,0 +1,1047 @@
+{
+  "meta": {
+    "checkedAt": "2026-11-07",
+    "report": "validation-evidence/nav2-execution-current-validation.json",
+    "reportSha256": "d659b24d580e18d7b55d16037980e6068a006034ee31049229caf29560db0e7f",
+    "portableReport": "validation-evidence/nav2-execution-portable-current-validation.json",
+    "portableReportSha256": "a901bff1873caa666e0cf5c54888b64deefbb35b9fb82e8e431ae056ba13882c",
+    "findingHashes": {
+      "validation-evidence/nav2-execution-readiness-finding.json": "0f62e864da28df2fb3550e34871cdbc5bf0900a4343ef2e9751ee00a7935bf0d",
+      "validation-evidence/nav2-execution-stop-finding.json": "a467e53cadcae78fca016b5cb85f9c875592af4caf783b8ec8fb4375fac1adb8"
+    },
+    "captureHashes": {
+      "navigation_room.sdf": "ed9503474d0beac7d98baf2910f1dedec8345c1edb1eee14ab599d29d5ccbd85",
+      "telemetry.json": "1d5178e34e3cdedfb645ae6ba03d7147933c1ca19053e9cf8f9956072ccbf3cd",
+      "map.occupancy": "1b6e721eeca34ac2ab21afefdd2c64598e5ae29dcada90cda044b676bd5688e7"
+    },
+    "sourceReads": [
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_bt_navigator/behavior_trees/navigate_to_pose_w_replanning_and_recovery.xml",
+        "sha256": "5895b63840d54c6d7eee3d3b3f3ee177680af9e58a14cbf61c4df39fe5db2a90"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_behavior_tree/plugins/control/pipeline_sequence.cpp",
+        "sha256": "c15dab6f8083f4ccc4bf69a937a2e1382df33843b897130145380a9b42659bbb"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_behavior_tree/plugins/decorator/rate_controller.cpp",
+        "sha256": "01ab8a2be7983df8211ce450721ec156894a19d281dd49f5e40c2aa37cf0ba97"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_behavior_tree/include/nav2_behavior_tree/bt_action_server_impl.hpp",
+        "sha256": "e4bd040bf2a1efc84f54d552b3d2e6ae6bd8238c24aa26e78743b88d82e7537e"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_bt_navigator/src/bt_navigator.cpp",
+        "sha256": "41c1cc5436f8e645eef4bfb393f41f7bc2a8da01f6fd2753e126b069b7a60c36"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_bt_navigator/src/navigators/navigate_to_pose.cpp",
+        "sha256": "c210e41f4d466512f7f5eb29abb8dc28078e1db052c047af7d115524152a0dc3"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_behavior_tree/include/nav2_behavior_tree/ros_topic_logger.hpp",
+        "sha256": "32cd3bc1e2cd8eb6096b7b9edbb9fef9ea4de316a9860459e838fe92294bf22a"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_util/src/robot_utils.cpp",
+        "sha256": "d011e512dfc829921fccf5e19eb59e53ebe990ccd5f493ef8b77aa4af4a03c57"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_behavior_tree/include/nav2_behavior_tree/bt_action_node.hpp",
+        "sha256": "753012cb4739d382302577cdf16263ce714d9f1d037c77f7fc3a9ebc3fd2bceb"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_behavior_tree/plugins/action/compute_path_to_pose_action.cpp",
+        "sha256": "c84f1384d730a52c7a78b8851d6468d0d5adb58575809ab120ed35c88296739c"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_behavior_tree/plugins/action/follow_path_action.cpp",
+        "sha256": "4e2919597279b434db55999af902844aaa514e6777573156fea997c42f76a537"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_msgs/action/NavigateToPose.action",
+        "sha256": "656fdf8f14c825b0fe6419d8a647793ea78564442c9ca2a026238bbf7f7e8f91"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_msgs/action/ComputePathToPose.action",
+        "sha256": "2a1bdad4de1f0308c51f154d39a7c6aad1919bf9cfa848fe621557c7f8a33060"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_msgs/action/FollowPath.action",
+        "sha256": "8c29c7286c5ee0616d19d15d1eec1aefb810a292e7c956499349b294232078ad"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_msgs/msg/BehaviorTreeLog.msg",
+        "sha256": "dfdec41db311f6a3de4cdba3cd8b0c7a17c7763159afb477fbd6cd417f2747a1"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_msgs/msg/BehaviorTreeStatusChange.msg",
+        "sha256": "b2e78d4d03efab173eff5786d9a6485ad69878e371e20654d5f67c363638e7a5"
+      },
+      {
+        "sourceId": "ros2--rcl_interfaces",
+        "commit": "7aa3caf43377ea6ad615bc1040832e2c7566bfbe",
+        "path": "ros2-learning-hub/references/sources/official-core/ros2--rcl_interfaces/jazzy--7aa3caf43377/action_msgs/msg/GoalStatus.msg",
+        "sha256": "ddb3235e748a10610150145746a2a51d05f1486a89636c86dec0c86c392332f9"
+      },
+      {
+        "sourceId": "ros2--rcl_interfaces",
+        "commit": "7aa3caf43377ea6ad615bc1040832e2c7566bfbe",
+        "path": "ros2-learning-hub/references/sources/official-core/ros2--rcl_interfaces/jazzy--7aa3caf43377/action_msgs/msg/GoalStatusArray.msg",
+        "sha256": "8de5358cc8184f466a7681885cf21c61a6f19f7c2e9c5ec39deb3dbc20cbb31c"
+      },
+      {
+        "sourceId": "ros2--rcl_interfaces",
+        "commit": "7aa3caf43377ea6ad615bc1040832e2c7566bfbe",
+        "path": "ros2-learning-hub/references/sources/official-core/ros2--rcl_interfaces/jazzy--7aa3caf43377/action_msgs/srv/CancelGoal.srv",
+        "sha256": "5f4dc57f41cab2fd1987a61d5821282ece5075e38e5044f90126ab62c98fac20"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_behavior_tree/plugins/action/controller_selector_node.cpp",
+        "sha256": "c141512901b9e439a93c2db124768ba861ab8ec960c5b79a38af130b20a3683e"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_behavior_tree/plugins/condition/would_a_controller_recovery_help_condition.cpp",
+        "sha256": "dd89b639fcb591b6d1c605aed5937983946d2deddb14cab43adf24690aa86351"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_behavior_tree/plugins/condition/would_a_planner_recovery_help_condition.cpp",
+        "sha256": "8c9ff8241fa19f13f690b73dcc9e02a7bee699f17eac3ec60558ba12656c6e14"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_controller/src/controller_server.cpp",
+        "sha256": "444eb721b8a90de346061897e3a1f28aa6972b376697c8929e31d8412661c1a0"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_controller/plugins/simple_goal_checker.cpp",
+        "sha256": "aebed7edd5f991b4b37ec3e8c9b7596bab80f68eebe7d4798c9fe2cc39b0ba06"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_controller/plugins/simple_progress_checker.cpp",
+        "sha256": "f6b4e30b6d223cb1513db9ff1fcd71df511ebb6d3c1f7dac5c7cf6e8b874cee1"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_regulated_pure_pursuit_controller/src/regulated_pure_pursuit_controller.cpp",
+        "sha256": "9f5f23dc174e2bfae10c502fdebecc37b65d5397039d0c2c4504404557101d85"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_regulated_pure_pursuit_controller/src/parameter_handler.cpp",
+        "sha256": "19c6af2e3308868a034d869f8dc2ca3333a625349fcc4f11eb2c33e98cd22969"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_regulated_pure_pursuit_controller/src/path_handler.cpp",
+        "sha256": "d44f57fb6a1c277ca378196ce4675a5f6377bb3fdcff162cdbe96842874d71b1"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_regulated_pure_pursuit_controller/src/collision_checker.cpp",
+        "sha256": "d56d3938b7f2f6b303f7e865d4c9e3db03015b0369efba8a9836fdac07655f04"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_velocity_smoother/src/velocity_smoother.cpp",
+        "sha256": "e037160fe25723f81d2abff68205abeebdc619acdbe62398e902217f9cdfc209"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_util/src/odometry_utils.cpp",
+        "sha256": "aa4a6d29b33f60a23ce2cdb595e1c28a7f30723c4bf0da39c60db0bd83a294b0"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_util/include/nav2_util/twist_publisher.hpp",
+        "sha256": "97e99f8304b3fea9c3e0fc85c57b8e7683b1a46430e1f84896367a790f629386"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_bringup/launch/navigation_launch.py",
+        "sha256": "0eb701c5f309134b030bc59ea5bb64b87d9e5d30f5a3cda238dda4abdb2a31c7"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_lifecycle_manager/src/lifecycle_manager.cpp",
+        "sha256": "b1e5de048982ebb4796114c9c82630277193d80e4ed98220c65460f26abc4a3a"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_costmap_2d/src/costmap_2d_ros.cpp",
+        "sha256": "c4e49339a0d17979fdd773fd8bbf189c5aaadc3d77744be907bc1aec115de583"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_costmap_2d/plugins/static_layer.cpp",
+        "sha256": "81606bf320d682901f661fa83223da42d5c631add5eb98e0055aee29cd1ac4ac"
+      },
+      {
+        "sourceId": "ros-navigation--navigation2",
+        "commit": "94d1c2a345dda6ff637e6a72c9101d927ee99f19",
+        "path": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_costmap_2d/plugins/obstacle_layer.cpp",
+        "sha256": "e2e6e56b04d6ade1ded6f17b08667dba220f453b6000c122ece638cee1839caf"
+      },
+      {
+        "sourceId": "gazebosim--ros_gz_project_template",
+        "commit": "045e981d03aac1cc3712ab6bb086f52ea79aebf9",
+        "path": "ros2-learning-hub/references/sources/official-examples/gazebosim--ros_gz_project_template/main--045e981d03aa/ros_gz_example_description/models/diff_drive/model.sdf",
+        "sha256": "6ca6071ba3cd2dc230bc55f2356997de35890af97e54b765c2a5497a69b9daea"
+      },
+      {
+        "sourceId": "gazebosim--ros_gz_project_template",
+        "commit": "045e981d03aac1cc3712ab6bb086f52ea79aebf9",
+        "path": "ros2-learning-hub/references/sources/official-examples/gazebosim--ros_gz_project_template/main--045e981d03aa/ros_gz_example_gazebo/worlds/diff_drive.sdf",
+        "sha256": "30f49ee4f6d6f09adcb487db2244dde748289bb0c92ab5693f44de1b80b34876"
+      },
+      {
+        "sourceId": "gazebosim--ros_gz",
+        "commit": "3c15c8edeb747824066e86990f6a4ebfda913c50",
+        "path": "ros2-learning-hub/references/sources/ecosystem/gazebosim--ros_gz/jazzy--3c15c8edeb74/ros_gz_bridge/src/convert/nav_msgs.cpp",
+        "sha256": "f6b59f9ccf99a008f594be69cf5ef6adbf9a705acccc5ddf769ef52f22656e2b"
+      },
+      {
+        "sourceId": "gazebosim--ros_gz",
+        "commit": "3c15c8edeb747824066e86990f6a4ebfda913c50",
+        "path": "ros2-learning-hub/references/sources/ecosystem/gazebosim--ros_gz/jazzy--3c15c8edeb74/ros_gz_bridge/src/convert/sensor_msgs.cpp",
+        "sha256": "cf6653658f483062a70b1b0e881f3880a47d430736323b4c8d8e726249664024"
+      },
+      {
+        "sourceId": "gazebosim--ros_gz",
+        "commit": "3c15c8edeb747824066e86990f6a4ebfda913c50",
+        "path": "ros2-learning-hub/references/sources/ecosystem/gazebosim--ros_gz/jazzy--3c15c8edeb74/ros_gz_bridge/src/convert/geometry_msgs.cpp",
+        "sha256": "70e8c37b45af45f4b58991dfd9f7cdeb993864c46845a983779c7bf27525ca80"
+      },
+      {
+        "sourceId": "gazebosim--ros_gz",
+        "commit": "3c15c8edeb747824066e86990f6a4ebfda913c50",
+        "path": "ros2-learning-hub/references/sources/ecosystem/gazebosim--ros_gz/jazzy--3c15c8edeb74/ros_gz_bridge/src/convert/tf2_msgs.cpp",
+        "sha256": "ba7e81bc7276368434c99f3f6857eab3a4fb76e94ea2f93f9b559a187b03f754"
+      },
+      {
+        "sourceId": "existing--linorobot2",
+        "commit": "f6b0bd0350c4a9d6b815ef4bb5c701a1e5129711",
+        "path": "linorobot2/linorobot2_navigation/config/navigation.yaml",
+        "sha256": "cba6c13344d43148bd78db8cfb06dc5bcc6e5173c140e06b70d4dc7b2fc64ea4"
+      },
+      {
+        "sourceId": "existing--AgroSenseBot",
+        "commit": "4ad700b090b9f3ddb8513c7519938bd7f0974709",
+        "path": "AgroSenseBot/asb_regulated_pure_pursuit_controller/src/path_handler.cpp",
+        "sha256": "898c298b74fbc1ccf800924ebef541c06ffa2a6916599dbdf0fca6d8165d5ce2"
+      },
+      {
+        "sourceId": "existing--AgroSenseBot",
+        "commit": "4ad700b090b9f3ddb8513c7519938bd7f0974709",
+        "path": "AgroSenseBot/asb_regulated_pure_pursuit_controller/src/collision_checker.cpp",
+        "sha256": "61952993592f935853f10f1889367cec5ca82364a6e52c5827648494a8bfb93f"
+      },
+      {
+        "sourceId": "existing--AgroSenseBot",
+        "commit": "4ad700b090b9f3ddb8513c7519938bd7f0974709",
+        "path": "AgroSenseBot/asb_regulated_pure_pursuit_controller/README.md",
+        "sha256": "b5520d634d66f2290f7e3df8d801d9cc2d05d3b96a5d12704d99d4e0a8555e62"
+      },
+      {
+        "sourceId": "existing--AgroSenseBot",
+        "commit": "4ad700b090b9f3ddb8513c7519938bd7f0974709",
+        "path": "AgroSenseBot/asb_nav/config/nav2_params/nav2_params.yaml",
+        "sha256": "15dfb4760ee98a31df61dd1dd75ff671166f0a5f76a5a9ef4f2865a289c09ae3"
+      },
+      {
+        "sourceId": "existing--ros2_tutorial",
+        "commit": "ae6703d73947442c5705350e88970b77089ab15a",
+        "path": "ros2_tutorial/chapter12.md",
+        "sha256": "01763ac3d1a471d05728ec9d08a861797aeca26b7cc80a21d4e403855f8ba0b1"
+      }
+    ]
+  },
+  "chapters": {
+    "eco-nav2-stack": {
+      "validation": "先前固定激光台架独立核对 MapServer、AMCL、主代价图和 NavFn。本机 Jazzy Nav2 1.3.13、Harmonic 8.15.0、ros_gz_bridge 1.0.24 实测。主试验域 223，实际解压示例和地图后在域 224 重跑。范围为静态房间的单机器人仿真。本轮安装树实际执行到达、取消、两种失败和恢复到达。动态障碍、实机与跨版本待验。",
+      "appendSourceIds": [
+        "navexec-default-tree",
+        "navexec-bringup",
+        "navexec-bt-runtime",
+        "navexec-smoother"
+      ],
+      "appendSections": [
+        {
+          "title": "把已保存的 SLAM 地图接入真实导航执行",
+          "paragraphs": [
+            "前面的固定台架将地图、扫描与规划分段验收。本次从同一房间的 learned.yaml 加载已保存地图，接入具有关节、地面接触和实时激光的 Gazebo 差速车。AMCL 使用地图系近参考初值，发布 map 到 odom，轮速积分另供 odom 到 base_link。",
+            "地图和定位就绪后再激活规划、平滑、控制、恢复行为与导航器。全局代价图用先验栅格，局部滚动图从实时扫描标记障碍。此固定版本在嵌套代价地图中解析明确指定的相对话题，驱动按实际节点名重映射到父命名空间，并从图上核对订阅。",
+            "首轮误将全局地图入口留在子命名空间。导航器仍接受目标，最后报规划超时 207，收到 15 次恢复计数和约 0.35 m 的世界位移，期间没有实际规划路径。修复后先等完整栅格、局部障碍标记和导航器的共同 TF 时间窗再发目标。",
+            "安装版默认树把规划和跟踪放进可流水推进的序列，规划由 1 Hz 装饰器节流。上游产生的新路径可更新正在执行的 FollowPath。恢复分支按错误类型选择清图、旋转、等待和后退等动作。"
+          ],
+          "bullets": [],
+          "tables": [
+            {
+              "title": "启动检查与实际连接的代价图输入",
+              "columns": [
+                "阶段",
+                "观测",
+                "通过条件"
+              ],
+              "rows": [
+                [
+                  "MapServer",
+                  "13426 格",
+                  "重载前一轮 PGM/YAML，与原始占据数组逐格一致"
+                ],
+                [
+                  "全局代价图",
+                  "13426 格，map 系",
+                  "内嵌节点订阅本实验的 map"
+                ],
+                [
+                  "局部代价图",
+                  "3600 格，odom 系",
+                  "内嵌节点订阅本实验的 scan，已有扫描标记"
+                ],
+                [
+                  "导航器的 TF 启动窗",
+                  "0.100 s 重叠",
+                  "实际监听端已发现，启动后的 map → odom 与 odom → base_link 在相同时刻可查"
+                ],
+                [
+                  "速度链",
+                  "cmd_vel → velocity_smoother → cmd_vel_smoothed",
+                  "单一平滑器发布，桥与旁路监听分别接收"
+                ]
+              ],
+              "caption": "Action 服务发现只是启动的一步。通过话题、坐标系与时间窗后才送入实际目标。",
+              "evidenceFile": "validation-evidence/nav2-execution-current-validation.json",
+              "evidenceSha256": "d659b24d580e18d7b55d16037980e6068a006034ee31049229caf29560db0e7f"
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "同时验收动作成功、终点误差与停稳",
+          "paragraphs": [
+            "首条规划绕开中心箱体。到达阶段实际观察 14 条规划和 1394 条上层反馈，独立世界位姿测得路线 4.95 m。规划路径、车辆轨迹和停车位置分别记录。",
+            "目标检查器根据局部坐标中的估计位姿和配置容差判定到达。行为树终态、控制器置零和车轮稳定有不同触发点。验收先等实际终态，再分别比对两级速度与世界位姿。",
+            "世界坐标的中心净距只在观测到的参考点上计算。局部控制器自身使用代价图足迹检查。若更改机器人外形、地图或采样频率，需重新评估运动几何与停稳。"
+          ],
+          "bullets": [],
+          "tables": [
+            {
+              "title": "成功回执与停稳后的世界坐标",
+              "columns": [
+                "场景",
+                "成功规划路径条数",
+                "实际行驶（m）",
+                "停稳位置误差（m）",
+                "停稳偏航误差（rad）"
+              ],
+              "rows": [
+                [
+                  "正常到达",
+                  "14",
+                  "4.952",
+                  "0.071",
+                  "0.026"
+                ],
+                [
+                  "切回有效控制器后到达",
+                  "9",
+                  "1.371",
+                  "0.128",
+                  "0.113"
+                ]
+              ],
+              "caption": "正常到达路线采样点的最小基座中心净距为 0.554 m。误差来自世界位姿，净距按房间盒形几何计算。",
+              "evidenceFile": "validation-evidence/nav2-execution-current-validation.json",
+              "evidenceSha256": "d659b24d580e18d7b55d16037980e6068a006034ee31049229caf29560db0e7f"
+            }
+          ],
+          "codeBlocks": []
+        }
+      ],
+      "appendExercises": [
+        {
+          "question": "动作服务已可调用，为什么还要验证代价地图和 TF 后再发目标？",
+          "answer": "服务就绪证明目标通道已发现。用有效栅格、实际订阅和两条动态边的共同时间窗检查执行输入，才能排除本实验的规划超时与初始位姿失败。"
+        },
+        {
+          "question": "全局图和局部图为什么使用不同帧？",
+          "answer": "全局图对齐已保存地图并服务整段路径。局部滚动图在 odom 中保持短程运动连续，由扫描更新附近障碍。通过带时戳的 map 到 odom 将两者接起来。"
+        }
+      ]
+    },
+    "eco-nav2-task-programming": {
+      "validation": "有界客户端仍有独立假服务端验证。实际行为树与下级动作：本机 Jazzy Nav2 1.3.13、Harmonic 8.15.0、ros_gz_bridge 1.0.24 实测。主试验域 223，实际解压示例和地图后在域 224 重跑。范围为静态房间的单机器人仿真。本轮验证五个任务分支和停稳。多目标调度、抢占及硬件待验。",
+      "appendSourceIds": [
+        "navexec-action-fields",
+        "navexec-status",
+        "navexec-selector",
+        "navexec-bt-actions",
+        "navexec-community"
+      ],
+      "appendSections": [
+        {
+          "title": "按目标 UUID 核对上层、下级和取消回执",
+          "paragraphs": [
+            "发送标准 NavigateToPose 目标，behavior_tree 字段留空以使用安装版默认树。记录目标响应、持续反馈、取消响应和最终业务结果。上层有自己的目标 UUID，规划器和控制器的子目标也各自有独立 UUID。",
+            "取消试验先通过世界位姿确认车辆平移，再按当前目标 UUID 发送取消。上层终态在请求后约 0.025 s 收到。下级 FollowPath 的最后终态也是 CANCELED。停止证据来自后续轮反馈与世界位姿。",
+            "越界目标在规划阶段返回 204，无效控制器在成功规划后由 FollowPath 返回 101。恢复有效控制器 ID 后，同一地图系目标可重新到达。目标是否被接受、动作状态和业务码需要分别记录。",
+            "本章的通用有界客户端只依赖公开动作协议。台架为诊断订阅子动作状态主题，从真实 UUID 读取最近一次终态的详细结果。行为树事件的发布批次和内部时间分别保留。"
+          ],
+          "bullets": [],
+          "tables": [
+            {
+              "title": "上层动作与下级动作的实测终态",
+              "columns": [
+                "场景",
+                "目标响应",
+                "上层终态",
+                "上层业务码",
+                "下级终态与业务码"
+              ],
+              "rows": [
+                [
+                  "正常到达",
+                  "接受",
+                  "SUCCEEDED",
+                  "0",
+                  "compute_path_to_pose SUCCEEDED / 0；follow_path SUCCEEDED / 0"
+                ],
+                [
+                  "途中取消",
+                  "接受",
+                  "CANCELED",
+                  "0",
+                  "compute_path_to_pose SUCCEEDED / 0；follow_path CANCELED / 0"
+                ],
+                [
+                  "越界目标",
+                  "接受",
+                  "ABORTED",
+                  "204",
+                  "compute_path_to_pose ABORTED / 204"
+                ],
+                [
+                  "无效控制器",
+                  "接受",
+                  "ABORTED",
+                  "101",
+                  "compute_path_to_pose SUCCEEDED / 0；follow_path ABORTED / 101"
+                ],
+                [
+                  "恢复控制器后到达",
+                  "接受",
+                  "SUCCEEDED",
+                  "0",
+                  "compute_path_to_pose SUCCEEDED / 0；follow_path SUCCEEDED / 0"
+                ]
+              ],
+              "caption": "下级最近终态按状态消息中的 UUID 读取结果。两次失败先接受目标，随后在不同阶段中止。",
+              "evidenceFile": "validation-evidence/nav2-execution-current-validation.json",
+              "evidenceSha256": "d659b24d580e18d7b55d16037980e6068a006034ee31049229caf29560db0e7f"
+            }
+          ],
+          "codeBlocks": []
+        },
+        {
+          "title": "结合恢复条件解释同为 ABORTED 的结果",
+          "paragraphs": [
+            "ROS2 教程第 12 章先用规划、跟踪和恢复把流程分层。固定 Jazzy 默认树中的条件会按黑板错误码判断是否值得恢复。越界目标和无效控制器在本次直接中止，未产生非零底盘命令。",
+            "另一次启动反例中，两张代价图已收到，导航器自己的 TF 历史尚缺共同时间。目标先被接受，随后因初始位姿不可用而中止，业务码为 0，行为树尚未进入规划与跟踪。此时查看顶层状态、节点日志和事件数。",
+            "向可靠、瞬态本地的 controller_selector 发布错误 ID 可以受控复现实验。再发布有效的 FollowPath 后新目标恢复。此路径只操作隔离仿真内的选择器。实际部署将选择权限与业务取消权限分开。"
+          ],
+          "bullets": [],
+          "tables": [],
+          "codeBlocks": []
+        }
+      ],
+      "appendExercises": [
+        {
+          "question": "取消服务返回 0 后，哪几项证据分别对应协议和车辆？",
+          "answer": "核对 goals_canceling 的 UUID、上层 CANCELED、对应下级终态。然后核对平滑后速度、轮速和世界位姿在停稳窗口的变化。"
+        },
+        {
+          "question": "业务码为 0 时，怎样区分成功、取消和初始化失败？",
+          "answer": "读动作状态，再看业务码、最早执行事件与日志。实测成功与取消都可报 0，启动 TF 不可用也出现过 ABORTED 与 0。"
+        },
+        {
+          "question": "越界与无效控制器如何从子动作诊断？",
+          "answer": "越界的 ComputePathToPose 为 ABORTED / 204。无效 ID 已取得路径，FollowPath 为 ABORTED / 101。分别核对地图边界和已配置控制器名称。"
+        }
+      ]
+    },
+    "eco-control-framework": {
+      "validation": "GenericSystem 差速和局部 EKF 仍按软件台架独立验证。本机 Jazzy Nav2 1.3.13、Harmonic 8.15.0、ros_gz_bridge 1.0.24 实测。主试验域 223，实际解压示例和地图后在域 224 重跑。范围为静态房间的单机器人仿真。本轮测 Gazebo 关节、轮速里程计及独立世界参考，实机停机和故障制动待验。",
+      "appendSourceIds": [
+        "navexec-controller",
+        "navexec-rpp",
+        "navexec-smoother"
+      ],
+      "appendSections": [
+        {
+          "title": "从速度置零追到仿真车实际停稳",
+          "paragraphs": [
+            "ControllerServer 用 RPP 计算 Twist，恢复行为有同一个原始速度入口。平滑器闭环读取轮积分里程计，根据加减速参数和速度上限发布下游命令。桥只把平滑后的速度送给 Gazebo DiffDrive，旁路同时记录前后两路。",
+            "最早的 0.85 rad/s 终点转向使动作已成功时车辆仍在减速，最终偏航误差 0.413 rad，超过 0.28 rad 的台架判据。调整为 0.45 rad/s 后重新实测，并为较慢的原地转向保留进度时间。当前主试验停稳偏航误差 0.026 rad。",
+            "行驶中取消后，按世界参考取平移速度不超过 0.018 m/s、偏航速度不超过 0.055 rad/s 的连续窗口。本次取消后的停稳窗口采到 26 帧，并独立核对两个关节速度。",
+            "取消终态、零速度消息、车体速度下降与停止距离应使用各自的测量量。无 Header 的速度消息只记录接收时钟。里程计和世界位姿保留发布端采样时戳，端到端通讯延迟需要另设同步测量。"
+          ],
+          "bullets": [],
+          "tables": [
+            {
+              "title": "一次真实行驶中的取消与停稳时间线",
+              "columns": [
+                "事件",
+                "相对请求的仿真时间",
+                "证据"
+              ],
+              "rows": [
+                [
+                  "发送取消",
+                  "+0.000 s",
+                  "独立世界位姿已记录可辨认的平移，取消使用同一目标 UUID"
+                ],
+                [
+                  "取消服务回执",
+                  "+0.000 s",
+                  "return_code=0，返回同一 UUID"
+                ],
+                [
+                  "上层取消终态",
+                  "+0.025 s",
+                  "NavigateToPose 为 CANCELED，FollowPath 也已取消"
+                ],
+                [
+                  "控制器最近一次运动后首次零速",
+                  "+0.045 s",
+                  "旁路收到 Twist"
+                ],
+                [
+                  "平滑器最近一次运动后首次零速",
+                  "+1.510 s",
+                  "旁路收到送往 Gazebo 桥的 Twist"
+                ],
+                [
+                  "停稳采样窗开始",
+                  "+1.500 s",
+                  "持续 0.500 s，并检查实际两轮速度"
+                ]
+              ],
+              "caption": "从发出请求到停稳观测结束，世界坐标累计行驶 0.340 m。命令使用旁路接收时刻，世界位姿使用采样时刻。",
+              "evidenceFile": "validation-evidence/nav2-execution-current-validation.json",
+              "evidenceSha256": "d659b24d580e18d7b55d16037980e6068a006034ee31049229caf29560db0e7f"
+            }
+          ],
+          "codeBlocks": []
+        }
+      ],
+      "appendExercises": [
+        {
+          "question": "如果导航已经返回成功，但停稳偏航超差，优先对照哪些曲线？",
+          "answer": "在同一仿真时基对照终点转向命令、平滑器角速度、世界偏航与轮速。检查目标容差、转向速度和减速余量后复验停稳角度。"
+        }
+      ]
+    },
+    "eco-state-estimation": {
+      "validation": "软件 EKF、固定激光 AMCL 与 SLAM 图定位分别有原报告。本机 Jazzy Nav2 1.3.13、Harmonic 8.15.0、ros_gz_bridge 1.0.24 实测。主试验域 223，实际解压示例和地图后在域 224 重跑。范围为静态房间的单机器人仿真。本轮移动 AMCL 从近参考初值启动。远处重定位、IMU/GNSS 与实机精度另验。",
+      "appendSourceIds": [
+        "navexec-bt-runtime",
+        "navexec-bridge"
+      ],
+      "appendSections": [
+        {
+          "title": "用世界采样对照移动时的 AMCL 导航反馈",
+          "paragraphs": [
+            "仿真车轮关节生成里程计和 odom 到基座，AMCL 结合地图与实际扫描发布 map 到 odom。世界位姿只作旁路参考。导航器反馈的地图位姿来自它自己的 TF 缓存，记录时保留采样时戳。",
+            "把重复反馈按位姿时戳去重，再与 Gazebo 世界位姿配对。相同帧名的坐标值可能由多个模块获得，比较前须核实采样时基、参考原点和相同的基座点。",
+            "初始 TF 误差约 0.0064 m。导航器晚启动时再核两条动态边的重叠窗口。在这套静态房间和近参考初值下测得的误差，和上一节加载原图后用短期扫描定位的配置各自记录。"
+          ],
+          "bullets": [],
+          "tables": [
+            {
+              "title": "移动中用同戳的世界位姿对照导航反馈",
+              "columns": [
+                "阶段",
+                "去重后的地图位姿",
+                "同戳配对",
+                "最大平面误差（m）"
+              ],
+              "rows": [
+                [
+                  "到达",
+                  "697",
+                  "697",
+                  "0.0834"
+                ],
+                [
+                  "取消前后任务反馈",
+                  "294",
+                  "294",
+                  "0.0895"
+                ],
+                [
+                  "恢复后到达",
+                  "412",
+                  "412",
+                  "0.0723"
+                ]
+              ],
+              "caption": "反馈为导航器的 map 系基座位姿，Gazebo 世界参考另由实体系统输出。只比较相同测量时戳。",
+              "evidenceFile": "validation-evidence/nav2-execution-current-validation.json",
+              "evidenceSha256": "d659b24d580e18d7b55d16037980e6068a006034ee31049229caf29560db0e7f"
+            }
+          ],
+          "codeBlocks": []
+        }
+      ],
+      "appendExercises": [
+        {
+          "question": "为什么要按位姿 Header 去重，不能直接用反馈消息数量代表定位更新频率？",
+          "answer": "行为树反馈循环可以重复使用最近一次 TF 位姿。按位姿采样时戳去重，配对同戳世界参考，再统计定位误差与有效样本数。"
+        }
+      ]
+    },
+    "theory-planning": {
+      "appendSourceIds": [
+        "navexec-rpp",
+        "navexec-community",
+        "navexec-agro"
+      ],
+      "appendSections": [
+        {
+          "title": "把全局路径转成差速车前视控制量",
+          "paragraphs": [
+            "ROS2 教程的车式纯追踪用轴距和转向角描述同一转弯几何。对平面差速车，把前视点转到基座坐标系，设其坐标为 x、y，曲率 `κ = 2y / (x² + y²)`，单位为 1/m。分母趋近零时实际实现使用边界检查。",
+            "差速运动用 `ω = vκ`，角速度为 rad/s，线速度为 m/s。RPP 会按配置裁剪前视距离并用曲率、障碍代价和趋近目标的速度限制重新决定 v，还根据局部代价图检查有限投影轨迹。",
+            "固定版 RPP 的路径处理与 AgroSenseBot 自带的前视和碰撞实现都可以在章末打开。实际导航测试使用 Nav2 安装版的 RPP，农业工程另按其路径、外形和插件配置检验。",
+            "本次 Gazebo 到达路线实测 4.95 m，期间发布了 14 条规划。全局几何提供跟踪参考，控制器和平滑器通过反馈决定每次速度，最终路线应以世界采样复核。"
+          ],
+          "bullets": [],
+          "tables": [],
+          "codeBlocks": []
+        }
+      ],
+      "appendExercises": [
+        {
+          "question": "前视点位于基座 (0.4, 0.2) m，若 v=0.30 m/s，差速车该有多大角速度？",
+          "answer": "曲率为 2×0.2/(0.4²+0.2²)=2 1/m，角速度为 0.60 rad/s。实际控制还会按速度和碰撞检查调整。"
+        }
+      ]
+    },
+    "project-navigation": {
+      "validation": "固定图、SLAM 与假服务端协议均保留独立记录。本机 Jazzy Nav2 1.3.13、Harmonic 8.15.0、ros_gz_bridge 1.0.24 实测。主试验域 223，实际解压示例和地图后在域 224 重跑。范围为静态房间的单机器人仿真。已跑从地图与定位到导航器、控制器、平滑器和差速车反馈的完整链路。实物与跨版本执行待验。",
+      "appendSourceIds": [
+        "navexec-bringup",
+        "navexec-gazebo-model",
+        "navexec-linorobot",
+        "navexec-agro"
+      ],
+      "appendSections": [
+        {
+          "title": "复跑已保存地图上的导航与停车",
+          "paragraphs": [
+            "在教材目录加载 Jazzy，运行 `python3 examples/nav2_execution/validate_execution.py --map-yaml validation-evidence/slam-mapping-captures/learned.yaml --domain-id 223`。从下载区分别解压原创示例和验证记录时，脚本路径改为 nav2_execution/validate_execution.py，地图指向实际解压目录。环境和 EGL 参数见工程说明。",
+            "启动时先通过真实消息确认时钟、激光、关节与里程计，再配置导航。两次运行分别核对七份运行源码和三个地图输入。报告带已安装的默认行为树指纹，XML 与固定源码一致。",
+            "Linorobot2 的控制器配置使用旋转包装器组合 RPP。本实验直接加载 RPP，并观察原始速度与闭环平滑后的速度。移植到项目时逐项核对包装层、坐标基座、Twist 类型、滤波和停稳验收。",
+            "所有等待都以单调墙钟设置上界，取仿真时戳做行为对照。停用顺序让控制器先于平滑器退出。读取生命周期状态超时时可再读一次，修改状态及发送目标不自动重复。"
+          ],
+          "bullets": [],
+          "tables": [],
+          "codeBlocks": [
+            {
+              "label": "nav2_execution/validate_execution.py",
+              "language": "python",
+              "type": "complete",
+              "sourceFile": "examples/nav2_execution/validate_execution.py"
+            },
+            {
+              "label": "nav2_execution/mobile_base.sdf",
+              "language": "xml",
+              "type": "complete",
+              "sourceFile": "examples/nav2_execution/mobile_base.sdf"
+            },
+            {
+              "label": "nav2_execution/navigation.yaml",
+              "language": "yaml",
+              "type": "complete",
+              "sourceFile": "examples/nav2_execution/navigation.yaml"
+            },
+            {
+              "label": "nav2_execution/bridge.yaml",
+              "language": "yaml",
+              "type": "complete",
+              "sourceFile": "examples/nav2_execution/bridge.yaml"
+            }
+          ]
+        }
+      ],
+      "appendExercises": [
+        {
+          "question": "怎样在换机后确认实跑仍使用同一地图和同一棵行为树？",
+          "answer": "对照输入 PGM/YAML/占据数组、安装版 XML 和运行源码指纹。然后在本机独立域重新采样，核实地图、动作终态、坐标误差与停车边界。"
+        }
+      ]
+    },
+    "eco-diff-drive-tracks": {
+      "appendSourceIds": [
+        "navexec-gazebo-model",
+        "navexec-bridge",
+        "navexec-smoother"
+      ],
+      "sections": {
+        "6": {
+          "appendParagraphs": [
+            "导航执行台架的两轮半径为 0.09 m、间距 0.32 m。真实仿真轮关节随平滑后 Twist 转动，DiffDrive 用两轮积分发布 odom，独立 Gazebo 系统发布世界参考。前者可与差速方程对照，后者包含轮地接触后的实际仿真运动。",
+            "本节软件控制器的命令过期机制有独立试验。导航执行里的停稳来自控制器置零、平滑器减速与仿真反馈，验收分别看两路 Twist 与轮速。正式底盘的制动和急停仍按其驱动协议测试。"
+          ]
+        }
+      }
+    },
+    "eco-gazebo-simulation": {
+      "validation": "固定相机、激光桥接和 SLAM 离散扫描各有独立报告。本机 Jazzy Nav2 1.3.13、Harmonic 8.15.0、ros_gz_bridge 1.0.24 实测。主试验域 223，实际解压示例和地图后在域 224 重跑。范围为静态房间的单机器人仿真。本轮加入仿真差速关节与地面。GUI、硬件和动态人车环境另验。",
+      "appendSourceIds": [
+        "navexec-gazebo-model",
+        "navexec-bridge"
+      ],
+      "sections": {
+        "7": {
+          "appendParagraphs": [
+            "导航运行台架保留六个房间障碍的碰撞和视觉尺寸，给车辆加入地面、驱动轮、随动球与 GPU 激光。桥从 Gazebo 单向传时钟、扫描、两类里程计与关节，从 ROS 单向传平滑速度。控制运行阶段靠轮关节驱动车体。"
+          ]
+        }
+      }
+    },
+    "eco-slam-mapping": {
+      "appendSourceIds": [
+        "navexec-bringup"
+      ],
+      "sections": {
+        "10": {
+          "appendParagraphs": [
+            "完整导航台架沿用这一对 PGM/YAML，在同一房间里让实际差速车执行任务。启动后再按原 OccupancyGrid 核 13426 格，并用地图系初值启动 AMCL。导航运行使用栅格，留存的位姿图仍供本章的继续建图与图定位。"
+          ]
+        }
+      }
+    },
+    "actions": {
+      "appendSourceIds": [
+        "navexec-status",
+        "navexec-action-fields"
+      ],
+      "sections": {
+        "6": {
+          "appendParagraphs": [
+            "真实 NavigateToPose 台架中，按当前目标 UUID 取消后收到取消应答和上层终态，随后还能测到平滑指令与车辆继续移动。取消响应说明协议状态推进，停稳需另等世界位姿或实际反馈。机器人任务章节给出三个时刻与额外位移的原始对照。"
+          ]
+        }
+      }
+    },
+    "lifecycle": {
+      "appendSourceIds": [
+        "navexec-bringup"
+      ],
+      "sections": {
+        "8": {
+          "appendParagraphs": [
+            "导航台架按依赖手动配置和激活七个生命周期节点，按相反顺序停用清理。活跃状态之后再核实际传感器、代价图和 TF。官方启动文件的生命周期管理器还涉及绑定与故障处理，这部分由固定源码说明，台架记录的是本次手动切换。"
+          ]
+        }
+      }
+    }
+  },
+  "resources": [
+    {
+      "id": "navexec-default-tree",
+      "title": "默认导航行为树的重规划与分级恢复",
+      "category": "导航执行 · 固定参考",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_bt_navigator/behavior_trees/navigate_to_pose_w_replanning_and_recovery.xml",
+      "url": "https://github.com/ros-navigation/navigation2/blob/94d1c2a345dda6ff637e6a72c9101d927ee99f19/nav2_bt_navigator/behavior_trees/navigate_to_pose_w_replanning_and_recovery.xml",
+      "version": "jazzy · 94d1c2a345dd",
+      "description": "安装树与固定源码的 XML 指纹相同。树中分开运行规划、跟踪、局部恢复和通用恢复，动作节点通过黑板传递路径及错误码。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "navexec-bt-runtime",
+      "title": "行为树执行、终态与事件时间",
+      "category": "导航执行 · 固定参考",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_behavior_tree/include/nav2_behavior_tree/bt_action_server_impl.hpp",
+      "url": "https://github.com/ros-navigation/navigation2/blob/94d1c2a345dda6ff637e6a72c9101d927ee99f19/nav2_behavior_tree/include/nav2_behavior_tree/bt_action_server_impl.hpp",
+      "version": "jazzy · 94d1c2a345dd",
+      "description": "导航器使用自身 TF 缓存初始化，树结束后汇总黑板错误码。行为树批次时间和内部事件时间由不同层提供。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "navexec-bt-actions",
+      "title": "规划与跟踪 Action 节点及取消路径",
+      "category": "导航执行 · 固定参考",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_behavior_tree/include/nav2_behavior_tree/bt_action_node.hpp",
+      "url": "https://github.com/ros-navigation/navigation2/blob/94d1c2a345dda6ff637e6a72c9101d927ee99f19/nav2_behavior_tree/include/nav2_behavior_tree/bt_action_node.hpp",
+      "version": "jazzy · 94d1c2a345dd",
+      "description": "跟踪节点可以在上游更新路径时更新子目标。行为树停下动作节点时使用相应子目标的取消路径。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "navexec-action-fields",
+      "title": "NavigateToPose、子动作与事件消息字段",
+      "category": "导航执行 · 固定参考",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_msgs/action/NavigateToPose.action",
+      "url": "https://github.com/ros-navigation/navigation2/blob/94d1c2a345dda6ff637e6a72c9101d927ee99f19/nav2_msgs/action/NavigateToPose.action",
+      "version": "jazzy · 94d1c2a345dd",
+      "description": "上层结果、下级业务码、当前位姿反馈和事件批次分属不同消息。跟踪反馈中的 speed 由控制命令计算。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "navexec-status",
+      "title": "动作状态与按 UUID 取消",
+      "category": "导航执行 · 固定参考",
+      "localPath": "ros2-learning-hub/references/sources/official-core/ros2--rcl_interfaces/jazzy--7aa3caf43377/action_msgs/msg/GoalStatus.msg",
+      "url": "https://github.com/ros2/rcl_interfaces/blob/7aa3caf43377ea6ad615bc1040832e2c7566bfbe/action_msgs/msg/GoalStatus.msg",
+      "version": "jazzy · 7aa3caf43377",
+      "description": "状态列表可观察终态和目标 ID。CancelGoal 的应答确认哪些目标已进入取消流程。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "navexec-selector",
+      "title": "控制器选择与恢复条件",
+      "category": "导航执行 · 固定参考",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_behavior_tree/plugins/action/controller_selector_node.cpp",
+      "url": "https://github.com/ros-navigation/navigation2/blob/94d1c2a345dda6ff637e6a72c9101d927ee99f19/nav2_behavior_tree/plugins/action/controller_selector_node.cpp",
+      "version": "jazzy · 94d1c2a345dd",
+      "description": "ControllerSelector 的输入可靠且瞬态本地。无效控制器 ID 与规划越界分别可通过下级回执确认，默认树按错误码决定恢复。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "navexec-controller",
+      "title": "控制器循环、进度与到达检查",
+      "category": "导航执行 · 固定参考",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_controller/src/controller_server.cpp",
+      "url": "https://github.com/ros-navigation/navigation2/blob/94d1c2a345dda6ff637e6a72c9101d927ee99f19/nav2_controller/src/controller_server.cpp",
+      "version": "jazzy · 94d1c2a345dd",
+      "description": "ControllerServer 负责选插件、更新路径、计算反馈、终态和置零。进度与目标容差由不同插件处理。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "navexec-rpp",
+      "title": "调节型纯追踪的前视、曲率和碰撞投影",
+      "category": "导航执行 · 固定参考",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_regulated_pure_pursuit_controller/src/regulated_pure_pursuit_controller.cpp",
+      "url": "https://github.com/ros-navigation/navigation2/blob/94d1c2a345dda6ff637e6a72c9101d927ee99f19/nav2_regulated_pure_pursuit_controller/src/regulated_pure_pursuit_controller.cpp",
+      "version": "jazzy · 94d1c2a345dd",
+      "description": "截取并变换路径，按前视点计算曲率，再按曲率、代价、趋近阶段和局部代价图限制速度。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "navexec-smoother",
+      "title": "速度平滑器的闭环反馈与限速",
+      "category": "导航执行 · 固定参考",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_velocity_smoother/src/velocity_smoother.cpp",
+      "url": "https://github.com/ros-navigation/navigation2/blob/94d1c2a345dda6ff637e6a72c9101d927ee99f19/nav2_velocity_smoother/src/velocity_smoother.cpp",
+      "version": "jazzy · 94d1c2a345dd",
+      "description": "输入为控制器或恢复行为的速度，闭环读取里程计，按加减速限制生成下游速度。超时基于节点时钟。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "navexec-bringup",
+      "title": "导航启动文件、命名空间与生命周期",
+      "category": "导航执行 · 固定参考",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/ros-navigation--navigation2/jazzy--94d1c2a345dd/nav2_bringup/launch/navigation_launch.py",
+      "url": "https://github.com/ros-navigation/navigation2/blob/94d1c2a345dda6ff637e6a72c9101d927ee99f19/nav2_bringup/launch/navigation_launch.py",
+      "version": "jazzy · 94d1c2a345dd",
+      "description": "标准启动文件包含速度重映射及生命周期管理。内嵌地图节点在各自子空间，需要核对实际输入和就绪状态。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "navexec-gazebo-model",
+      "title": "官方模板的差速模型与世界结构",
+      "category": "导航执行 · 固定参考",
+      "localPath": "ros2-learning-hub/references/sources/official-examples/gazebosim--ros_gz_project_template/main--045e981d03aa/ros_gz_example_description/models/diff_drive/model.sdf",
+      "url": "https://github.com/gazebosim/ros_gz_project_template/blob/045e981d03aac1cc3712ab6bb086f52ea79aebf9/ros_gz_example_description/models/diff_drive/model.sdf",
+      "version": "main · 045e981d03aa",
+      "description": "参考模型的轮轴、差速插件和世界装配。本文小车为独立 SDF，只使用本地几何和已有系统插件。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "navexec-bridge",
+      "title": "速度、里程计、关节与 TF 的桥接",
+      "category": "导航执行 · 固定参考",
+      "localPath": "ros2-learning-hub/references/sources/ecosystem/gazebosim--ros_gz/jazzy--3c15c8edeb74/ros_gz_bridge/src/convert/nav_msgs.cpp",
+      "url": "https://github.com/gazebosim/ros_gz/blob/3c15c8edeb747824066e86990f6a4ebfda913c50/ros_gz_bridge/src/convert/nav_msgs.cpp",
+      "version": "jazzy · 3c15c8edeb74",
+      "description": "Twist、Odometry、Model 关节数据和 Pose_V 通过各自类型转换。轮积分数据与仿真世界参考按不同话题采集。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "navexec-linorobot",
+      "title": "Linorobot2 的旋转包装器与速度配置",
+      "category": "导航执行 · 固定参考",
+      "localPath": "linorobot2/linorobot2_navigation/config/navigation.yaml",
+      "url": "https://github.com/linorobot/linorobot2/blob/f6b0bd0350c4a9d6b815ef4bb5c701a1e5129711/linorobot2_navigation/config/navigation.yaml",
+      "version": "jazzy · f6b0bd0350c4",
+      "description": "导航工程用 RotationShimController 包装 RPP。参数与本台架不同，移植时核查基座帧、速度链及目标容差。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "navexec-agro",
+      "title": "AgroSenseBot 对前视和碰撞检查的工程实现",
+      "category": "导航执行 · 固定参考",
+      "localPath": "AgroSenseBot/asb_regulated_pure_pursuit_controller/src/path_handler.cpp",
+      "url": "https://github.com/AIRLab-POLIMI/AgroSenseBot/blob/4ad700b090b9f3ddb8513c7519938bd7f0974709/asb_regulated_pure_pursuit_controller/src/path_handler.cpp",
+      "version": "jazzy · 4ad700b090b9",
+      "description": "农业工程有自己的路径处理与碰撞检查，可与本次原生 Nav2 RPP 对照阅读。运行范围各自记录。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    },
+    {
+      "id": "navexec-community",
+      "title": "ROS2 教程的导航树、纯追踪与恢复",
+      "category": "导航执行 · 固定参考",
+      "localPath": "ros2_tutorial/chapter12.md",
+      "url": "https://github.com/zsc/ros2_tutorial/blob/ae6703d73947442c5705350e88970b77089ab15a/chapter12.md",
+      "version": "main · ae6703d73947",
+      "description": "教程用车式转向角说明纯追踪，并分类讲解恢复。本实验对照差速车的曲率与角速度关系和 Jazzy 安装树。",
+      "checkedAt": "2026-11-07",
+      "verification": "核读本地固定文件并核对清点 SHA。运行数据来自本机原创软件实验。",
+      "type": "上游原始资料"
+    }
+  ],
+  "apiReferences": [
+    {
+      "id": "api-nav2-execution",
+      "title": "真实导航执行中的回执、路径与反馈",
+      "lessons": [
+        "eco-nav2-stack",
+        "eco-nav2-task-programming",
+        "project-navigation"
+      ],
+      "columns": [
+        "接口",
+        "数据与单位",
+        "观察结果",
+        "边界"
+      ],
+      "rows": [
+        [
+          "NavigateToPose",
+          "地图 PoseStamped，位置 m、偏航 rad",
+          "目标响应、反馈、动作状态、error_code",
+          "默认树由空 behavior_tree 字段选用"
+        ],
+        [
+          "ComputePathToPose",
+          "起终点和 planner_id",
+          "实际 Path，例中越界码 204",
+          "路径本身无法表达已行驶或已停"
+        ],
+        [
+          "FollowPath",
+          "Path、controller_id 与检查器 ID",
+          "控制终态，例中无效控制器码 101",
+          "反馈 speed 源自计算的速度指令"
+        ],
+        [
+          "取消目标",
+          "当前目标 UUID",
+          "CancelGoal 响应与对应终态",
+          "用车体和关节观测验收停车"
+        ],
+        [
+          "BehaviorTreeLog",
+          "发布批次与内部事件各有时钟字段",
+          "节点 ID、旧状态与新状态",
+          "两层时钟分别解释"
+        ],
+        [
+          "控制与平滑速度",
+          "Twist，线 m/s、角 rad/s",
+          "原始命令、平滑输出",
+          "实际车体与轮速另用同一仿真时基对照"
+        ]
+      ],
+      "notes": [
+        "本台架控制与桥接都显式选择 Twist，迁移其他版本时以各端实际消息类型为准。"
+      ]
+    }
+  ]
+}

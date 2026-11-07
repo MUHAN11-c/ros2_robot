@@ -1,0 +1,345 @@
+{
+  "checkedAt": "2026-11-07",
+  "goal": "基于所有参考内容，融合完善内容",
+  "goalStatus": "active",
+  "iteration": "2026-11-07-r10",
+  "findings": [
+    {
+      "id": "COMM-01",
+      "title": "Python与C++实体所有权不应共用同一个销毁理由",
+      "priority": "P2",
+      "status": "resolved",
+      "review": "iteration-communication-review.json",
+      "evidence": [
+        "source/iteration-revisions.json",
+        "source/api-reference.json"
+      ],
+      "note": "已修订正文/代码并按对应范围核对；未运行场景继续明确标记。"
+    },
+    {
+      "id": "COMM-02",
+      "title": "服务示例的0/1退出码不能独立区分两类失败",
+      "priority": "P2",
+      "status": "resolved",
+      "review": "iteration-communication-review.json",
+      "evidence": [
+        "source/iteration-revisions.json"
+      ],
+      "note": "已修订正文/代码并按对应范围核对；未运行场景继续明确标记。"
+    },
+    {
+      "id": "COMM-03",
+      "title": "租约及默认持续时间的匹配规则仍需在正文给出",
+      "priority": "P2",
+      "status": "resolved",
+      "review": "iteration-communication-review.json",
+      "evidence": [
+        "source/iteration-revisions.json"
+      ],
+      "note": "已修订正文/代码并按对应范围核对；未运行场景继续明确标记。"
+    },
+    {
+      "id": "COMM-04",
+      "title": "晚加入正例已有完整脚本，负例仍缺有界步骤与判据",
+      "priority": "P2",
+      "status": "resolved",
+      "review": "iteration-communication-review.json",
+      "evidence": [
+        "examples/runtime_labs/qos_contract_lab.py",
+        "validation-evidence/qos-contract-current-validation.json"
+      ],
+      "note": "已修订正文/代码并按对应范围核对；未运行场景继续明确标记。"
+    },
+    {
+      "id": "COMM-05",
+      "title": "慢消费者和队列新鲜度只有文字方案，缺完整测量例子",
+      "priority": "P2",
+      "status": "resolved",
+      "review": "iteration-communication-review.json",
+      "evidence": [
+        "examples/runtime_labs/slow_consumer_lab.py",
+        "validation-evidence/slow-consumer-current-validation.json",
+        "source/iteration-2-revisions.json"
+      ],
+      "note": "独立发布/消费进程4组，49运行与23边界断言；自然负载处理后拒绝为0次，p95含排空尾部。"
+    },
+    {
+      "id": "COMM-06",
+      "title": "发现返回的UNKNOWN及depth=0不能当作真实端点配置",
+      "priority": "P2",
+      "status": "resolved",
+      "review": "iteration-communication-review.json",
+      "evidence": [
+        "source/api-reference.json",
+        "validation-evidence/qos-contract-current-validation.json"
+      ],
+      "note": "已修订正文/代码并按对应范围核对；未运行场景继续明确标记。"
+    },
+    {
+      "id": "COMM-07",
+      "title": "echo省略QoS与显式QoS的选择路径不同",
+      "priority": "P3",
+      "status": "resolved",
+      "review": "iteration-communication-review.json",
+      "evidence": [
+        "source/iteration-revisions.json"
+      ],
+      "note": "已修订正文/代码并按对应范围核对；未运行场景继续明确标记。"
+    },
+    {
+      "id": "COMM-08",
+      "title": "服务响应超时需要与发现失败分开的可复现注入",
+      "priority": "P2",
+      "status": "resolved",
+      "review": "iteration-communication-review.json",
+      "evidence": [
+        "examples/runtime_labs/service_deadline_lab.py",
+        "validation-evidence/service-deadline-current-validation.json",
+        "source/iteration-2-revisions.json"
+      ],
+      "note": "默认4探针及原C++/Python各迟到/缺服务2项实测；服务端在本地收尾后仍执行一次，IPC独立观察。"
+    },
+    {
+      "id": "COMM-09",
+      "title": "动作主路径自足，但忙碌拒绝和ABORTED未形成实验闭环",
+      "priority": "P3",
+      "status": "resolved",
+      "review": "iteration-communication-review.json",
+      "evidence": [
+        "examples/action_labs/",
+        "validation-evidence/count-action-current-validation.json",
+        "source/iteration-3-revisions.json"
+      ],
+      "note": "原两语言busy后取消/自然完成与恢复、非法边界及扩展两语言默认/ABORTED后恢复共10组24目标；SIGINT进程清理另列，不作业务终态或硬件证明。"
+    },
+    {
+      "id": "COMM-10",
+      "title": "四章通用未运行声明与部分真实验证证据冲突",
+      "priority": "P2",
+      "status": "resolved",
+      "review": "iteration-communication-review.json",
+      "evidence": [
+        "source/iteration-revisions.json",
+        "validation-evidence/foundation-current-validation.json"
+      ],
+      "note": "已修订正文/代码并按对应范围核对；未运行场景继续明确标记。"
+    },
+    {
+      "id": "COMM-11",
+      "title": "传感器预设可直接列出Jazzy关键字段而不要求外跳",
+      "priority": "P3",
+      "status": "resolved",
+      "review": "iteration-communication-review.json",
+      "evidence": [
+        "source/iteration-revisions.json"
+      ],
+      "note": "已修订正文/代码并按对应范围核对；未运行场景继续明确标记。"
+    },
+    {
+      "id": "runtime-review-clock-check-path",
+      "title": "异步轮询的单调年龄不等于暂停ROS时间时仍有超时检查",
+      "priority": "P2",
+      "status": "resolved",
+      "review": "iteration-runtime-review.json",
+      "evidence": [
+        "examples/runtime_labs/async_poll.py",
+        "validation-evidence/async-poll-clock-current-validation.json"
+      ],
+      "note": "已修订正文/代码并按对应范围核对；未运行场景继续明确标记。"
+    },
+    {
+      "id": "runtime-review-parameter-stages",
+      "title": "参数三阶段、候选配置及提交后副作用尚缺完整可运行对照",
+      "priority": "P2",
+      "status": "resolved",
+      "review": "iteration-runtime-review.json",
+      "evidence": [
+        "examples/runtime_labs/parameter_transaction_lab.py",
+        "validation-evidence/parameter-transaction-current-validation.json",
+        "source/iteration-2-revisions.json"
+      ],
+      "note": "Python11组直接API实测，19节点清理；逐项/原子、pre/on/post、缓存污染与post异常分别验收。C++三阶段仅源码核对。"
+    },
+    {
+      "id": "runtime-review-group-matrix",
+      "title": "回调组章节的三配置时间线目前是案例推演，未有完整对照实验",
+      "priority": "P2",
+      "status": "resolved",
+      "review": "iteration-runtime-review.json",
+      "evidence": [
+        "examples/runtime_labs/executor_group_lab.py",
+        "validation-evidence/executor-group-current-validation.json",
+        "source/iteration-2-revisions.json"
+      ],
+      "note": "真实rclpy单线程分组/双线程同组/双线程分组最大并发1/1/2；Event.wait释放GIL，不代表CPU加速。"
+    },
+    {
+      "id": "runtime-review-future-continuation",
+      "title": "Future完成回调的执行路径不能机械套用ROS实体回调组",
+      "priority": "P2",
+      "status": "resolved",
+      "review": "iteration-runtime-review.json",
+      "evidence": [
+        "examples/runtime_labs/executor_group_lab.py",
+        "validation-evidence/executor-group-current-validation.json",
+        "source/iteration-2-revisions.json"
+      ],
+      "note": "真实AddTwoInts Future；响应handler释放组后，generic done与同client组timer受控重叠；限本机记录版本。"
+    },
+    {
+      "id": "runtime-review-context-executor",
+      "title": "自建Context必须显式匹配Executor，默认spin辅助函数有隐式全局状态",
+      "priority": "P3",
+      "status": "resolved",
+      "review": "iteration-runtime-review.json",
+      "evidence": [
+        "source/iteration-revisions.json",
+        "examples/runtime_labs/clock_timer_lab.py"
+      ],
+      "note": "已修订正文/代码并按对应范围核对；未运行场景继续明确标记。"
+    },
+    {
+      "id": "runtime-review-component-parameters",
+      "title": "组件章节尚缺能观察NodeOptions参数边界的原创配置组件",
+      "priority": "P2",
+      "status": "resolved",
+      "review": "iteration-runtime-review.json",
+      "evidence": [
+        "examples/component_labs/",
+        "validation-evidence/component-labs-current-validation.json",
+        "source/iteration-3-revisions.json"
+      ],
+      "note": "同类独立/加载入口、11动态gain、7配置与4失败加载；Context全局、管理当前和本地override分开验收，未知extra不启用NodeOptions功能。"
+    },
+    {
+      "id": "runtime-review-container-models",
+      "title": "可补isolated容器与只读thread_num，避免把执行器隔离当进程隔离",
+      "priority": "P3",
+      "status": "resolved",
+      "review": "iteration-runtime-review.json",
+      "evidence": [
+        "validation-evidence/component-labs-current-validation.json",
+        "validation-evidence/iteration3-source-review.json",
+        "source/api-reference.json"
+      ],
+      "note": "官方single/mt2/isolated默认ST实测并发1/2/2；同PID/线程/span保留。管理参数服务默认关闭，wrapper显式开启后thread_num只读拒绝另验收。"
+    },
+    {
+      "id": "TF-TIME-001",
+      "title": "快捷回放命令重放 pose，与正文的唯一输出来源合同冲突",
+      "priority": "P2",
+      "status": "resolved",
+      "review": "iteration-tf-time-review.json",
+      "evidence": [
+        "source/iteration-revisions.json",
+        "tests/check_content.py"
+      ],
+      "note": "已修订正文/代码并按对应范围核对；未运行场景继续明确标记。"
+    },
+    {
+      "id": "TF-TIME-002",
+      "title": "tf2 超时说明遗漏计时来源，不能据此承诺墙钟等待上界",
+      "priority": "P2",
+      "status": "resolved",
+      "review": "iteration-tf-time-review.json",
+      "evidence": [
+        "source/api-reference.json",
+        "source/iteration-revisions.json"
+      ],
+      "note": "已修订正文/代码并按对应范围核对；未运行场景继续明确标记。"
+    },
+    {
+      "id": "TF-TIME-003",
+      "title": "clock_probe 的通用注释与实际稳态定时器相反",
+      "priority": "P3",
+      "status": "resolved",
+      "review": "iteration-tf-time-review.json",
+      "evidence": [
+        "source/iteration-revisions.json"
+      ],
+      "note": "已修订正文/代码并按对应范围核对；未运行场景继续明确标记。"
+    },
+    {
+      "id": "TF-TIME-004",
+      "title": "view_frames 被误注释成需要 Ctrl+C 结束的持续观察进程",
+      "priority": "P3",
+      "status": "resolved",
+      "review": "iteration-tf-time-review.json",
+      "evidence": [
+        "source/iteration-revisions.json"
+      ],
+      "note": "已修订正文/代码并按对应范围核对；未运行场景继续明确标记。"
+    }
+  ],
+  "nextFocus": [
+    "沿真实 NavigateToPose 行为树与控制器连接可观测的 Gazebo 运动台架，分段验证路径跟随、真实反馈、终态、取消和停止。",
+    "继续核读机械臂规划与执行、控制器适配和嵌入式通信，结合本机可用依赖进行可重复验证。",
+    "对其余官方和社区参考逐项区分仅登记、核读融入和已运行，保留本地原文和许可。"
+  ],
+  "limits": [
+    "本轮修订和实验不是原始资料逐段穷尽",
+    "明确待办不因下载或静态检查被算作实测",
+    "完整仿真和硬件仍未运行"
+  ],
+  "additionalCompletedDetails": [
+    "长章节树自动在自身滚动容器内定位当前章，不改变正文位置；浏览器断网检查包含可见范围断言。",
+    "所有118条完整代码从章节ZIP读回，与正文逐字节比对；新增4个API源码由sourceFile统一加载。",
+    "Markdown全文补齐逐章验证范围；便携README统计自动取自有效教材数据。",
+    "第2轮四份源码从sourceFile加载；5张实测表绑定报告SHA，源码及报告漂移会停止构建。",
+    "Markdown表格修复行间空行与管道/换行转义；Python2项、JavaScript1项和真实单章下载比对通过。",
+    "第3轮两报告、15份源指纹与独立approved审查绑定；新增11个完整文件、3张实测表和2组API表。",
+    "修复父进程自动重复SIGINT与320px练习长API名称溢出，原始失败记录及未获业务终态边界保留。",
+    "首次通信构建实际确认只发现atlas两包；新增动作/组件包单独构建，基础独立下载补许可证。",
+    "第4轮四份报告及23项源文件/输入指纹由独立approved审查绑定；新增18个完整文件、8张实测表、3组API和18道练习。",
+    "生命周期实测10场景/21窗口/17假资源释放，区分回调结果、ERROR恢复、原请求success、发布激活及finalized/进程状态。",
+    "注册测试实测3个CTest/13细分/16聚合，受控缺READY保留默认test为0与严格test/result为1的差异，零结果另设拒绝。",
+    "旧策略4项通过仍暴露6个新合同缺口；保留逐字节基线，修订整数ns/有限速度策略31项与原talker活动/退出2项通过。",
+    "部署审计24普通文件与18外链，保留链接副本同SHA仍依赖原路径；宿主TERM正例与Docker未运行分开。",
+    "新增组件参数来源原创SVG；图解QA实际发现旧交互清单漏图，构建改为同源生成并加入相等检查，失败与修复见iteration4-ui-findings。",
+    "第5轮真实3录制/2回放/双后端字段探针：13/13/12与筛选6/0/0；正值clock、QoS历史和Header/recv/send分别验证。",
+    "新增4张实测表、6完整文件和8练习，修3个未带clock命令旁注；当前142完整文件/20表/300练习。",
+    "保留CDR padding与不存在QoS常量两次实际失败；6项CLI及相对新目录通过，不扩大父中断/性能/恢复结论。",
+    "独立审查绑定两份报告与生成器SHA，24一手sourceRecords/9教材出处；同0.26.11快照Player补丁差异独立说明。",
+    "纠正历史汇总浅拷贝误将r4指标带入r3的问题，r3交付118文件/274练习/8表由独立交付快照恢复；写入新历史采用deepcopy。",
+    "第6轮修正文与快捷步骤引用缺失Xacro；完整描述资源包普通复制安装并异目录实际启动，默认/覆盖模型结构及真实TF核对。",
+    "四位置阶段、一非法长度、一合法velocity-only跳过分别记录；六光学点和负Iyy结构/数值反例通过，不扩大动力学或物理停车。",
+    "新增4张表、6完整文件、8练习和1API；URDF/Xacro进入XML索引，当前148文件/24表/308练习。",
+    "95文件独立源码ZIP实际解压运行通过，8源与原文逐字节相同，正式SOURCEZIP与被测原包逐字节相同。",
+    "独立审查绑定主/边界/portable三报告及生成器，15一手来源/7教材出处；保留同版xacro补丁与未测分支。",
+    "在 Jazzy 本机与解压源码两次运行软件差速和局部EKF。核17个固定文件、资源互斥、过期、实际里程计和TF，同步修订6章。",
+    "Harmonic固定相机与激光从本地SDF经五条单向桥接入ROS，实测四次世界控制、同戳字段、静态TF、QoS和两路真实图像；按25份固定文件融入7章。",
+    "核对 39 个固定版本文件。域 229 和实际解压工程后的域 230 分别验证地图、初始位姿、扫描标记和 NavFn 路径及五类失败，融合 9 章。",
+    "核对 35 份固定参考，将本机域 231 与解压重跑域 232 的 SLAM 采集、建图、栅格重载、图恢复与短期定位缓冲融入 9 章。"
+  ],
+  "verification": {
+    "httpMobileRoutes": 170,
+    "offlineChapters": 60,
+    "externalRequests": 0,
+    "scriptErrors": 0,
+    "portableDelivery": "passed",
+    "contentExport": "passed",
+    "evidenceTables": 39,
+    "svgInstancesNoScript": 36,
+    "completeCodeFiles": 164,
+    "apiTables": 23,
+    "exercises": 341,
+    "normalFigures": 15,
+    "normalFigurePlacements": 30,
+    "reviewDesktopOutlineJumps": 1129,
+    "formalDesktopOutlineJumps": 1132
+  },
+  "statusCounts": {
+    "resolved": 22,
+    "planned": 0
+  },
+  "findingsScope": "findings与statusCounts仅指最初22项独立审查；后续新增内容与本轮实际UI发现另列，不由22项已修订推断所有内容已穷尽。",
+  "currentIterationEvidence": [
+    "slam-mapping-current-validation.json",
+    "slam-mapping-portable-current-validation.json",
+    "slam-localization-raster-finding.json",
+    "browser-current-validation.json",
+    "offline-reader-current-validation.json",
+    "figures-current-validation.json",
+    "delivery-current-validation.json"
+  ]
+}

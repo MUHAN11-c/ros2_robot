@@ -1,0 +1,1440 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-07T04:26:09+08:00",
+  "status": "approved_for_iteration3_bounded_local_software_content",
+  "scope": {
+    "writeBoundary": "仅新增/更新本JSON，其他文件只读。",
+    "runtimeExecutedByThisReviewer": false,
+    "oldPassedExperimentsRepeated": false,
+    "hardwareOrSimulationConnected": false
+  },
+  "sourceRecords": [
+    {
+      "id": "manager",
+      "kind": "固定本地一手快照",
+      "repository": "ros2/rclcpp",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "path": "rclcpp_components/src/component_manager.cpp",
+      "localPath": "references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp_components/src/component_manager.cpp",
+      "sha256": "c960af7e68a669157b9812a51eb5162d87211d1bd2e5c0c59c31f0102fe56f87",
+      "lineRanges": [
+        [
+          34,
+          63
+        ],
+        [
+          141,
+          197
+        ]
+      ],
+      "url": "https://github.com/ros2/rclcpp/blob/35b821a9fb1f937bfbd9c741b7e3353e101d9593/rclcpp_components/src/component_manager.cpp"
+    },
+    {
+      "id": "manager-default",
+      "kind": "固定本地一手快照",
+      "repository": "ros2/rclcpp",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "path": "rclcpp_components/include/rclcpp_components/component_manager.hpp",
+      "localPath": "references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp_components/include/rclcpp_components/component_manager.hpp",
+      "sha256": "d9fba0fdaa0ee57af5c04f36c0f0f776e5f8774ec8d6537202c41960310bf8c1",
+      "lineRanges": [
+        [
+          100,
+          107
+        ]
+      ],
+      "url": "https://github.com/ros2/rclcpp/blob/35b821a9fb1f937bfbd9c741b7e3353e101d9593/rclcpp_components/include/rclcpp_components/component_manager.hpp"
+    },
+    {
+      "id": "options",
+      "kind": "固定本地一手快照",
+      "repository": "ros2/rclcpp",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "path": "rclcpp/include/rclcpp/node_options.hpp",
+      "localPath": "references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp/include/rclcpp/node_options.hpp",
+      "sha256": "2f2330bda923ebfbe71b54e6b4b8a912c605fbf8dcd385f7971d32cdaa322384",
+      "lineRanges": [
+        [
+          38,
+          61
+        ],
+        [
+          157,
+          173
+        ],
+        [
+          363,
+          404
+        ]
+      ],
+      "url": "https://github.com/ros2/rclcpp/blob/35b821a9fb1f937bfbd9c741b7e3353e101d9593/rclcpp/include/rclcpp/node_options.hpp"
+    },
+    {
+      "id": "factory",
+      "kind": "固定本地一手快照",
+      "repository": "ros2/rclcpp",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "path": "rclcpp_components/include/rclcpp_components/node_factory_template.hpp",
+      "localPath": "references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp_components/include/rclcpp_components/node_factory_template.hpp",
+      "sha256": "496cfba6bca0b9ffc4e572a44f9125d7372089339c9d9a3c1baea30397214c1d",
+      "lineRanges": [
+        [
+          39,
+          52
+        ]
+      ],
+      "url": "https://github.com/ros2/rclcpp/blob/35b821a9fb1f937bfbd9c741b7e3353e101d9593/rclcpp_components/include/rclcpp_components/node_factory_template.hpp"
+    },
+    {
+      "id": "parameter-resolution",
+      "kind": "固定本地一手快照",
+      "repository": "ros2/rclcpp",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "path": "rclcpp/src/rclcpp/detail/resolve_parameter_overrides.cpp",
+      "localPath": "references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp/src/rclcpp/detail/resolve_parameter_overrides.cpp",
+      "sha256": "8289b31072135ef6acceb6960e46a79745560ae5d7997c656d7108735e14c9c2",
+      "lineRanges": [
+        [
+          27,
+          71
+        ]
+      ],
+      "url": "https://github.com/ros2/rclcpp/blob/35b821a9fb1f937bfbd9c741b7e3353e101d9593/rclcpp/src/rclcpp/detail/resolve_parameter_overrides.cpp"
+    },
+    {
+      "id": "parameters",
+      "kind": "固定本地一手快照",
+      "repository": "ros2/rclcpp",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "path": "rclcpp/src/rclcpp/node_interfaces/node_parameters.cpp",
+      "localPath": "references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp/src/rclcpp/node_interfaces/node_parameters.cpp",
+      "sha256": "eb20218b4052d0d41932d346e75f1783134de90f45b696bde16f5001e178918e",
+      "lineRanges": [
+        [
+          44,
+          66
+        ],
+        [
+          115,
+          140
+        ],
+        [
+          919,
+          938
+        ]
+      ],
+      "url": "https://github.com/ros2/rclcpp/blob/35b821a9fb1f937bfbd9c741b7e3353e101d9593/rclcpp/src/rclcpp/node_interfaces/node_parameters.cpp"
+    },
+    {
+      "id": "single",
+      "kind": "固定本地一手快照",
+      "repository": "ros2/rclcpp",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "path": "rclcpp_components/src/component_container.cpp",
+      "localPath": "references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp_components/src/component_container.cpp",
+      "sha256": "625a273f7b27506cd81012424c87f70f27d08b02e22e86dfb143df8a4c20ae2e",
+      "lineRanges": [
+        [
+          19,
+          33
+        ]
+      ],
+      "url": "https://github.com/ros2/rclcpp/blob/35b821a9fb1f937bfbd9c741b7e3353e101d9593/rclcpp_components/src/component_container.cpp"
+    },
+    {
+      "id": "mt",
+      "kind": "固定本地一手快照",
+      "repository": "ros2/rclcpp",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "path": "rclcpp_components/src/component_container_mt.cpp",
+      "localPath": "references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp_components/src/component_container_mt.cpp",
+      "sha256": "49f785c8fe0ed8b13970d275d351c9d34ebd69b3f280661c6e2cc3f023e61143",
+      "lineRanges": [
+        [
+          21,
+          41
+        ]
+      ],
+      "url": "https://github.com/ros2/rclcpp/blob/35b821a9fb1f937bfbd9c741b7e3353e101d9593/rclcpp_components/src/component_container_mt.cpp"
+    },
+    {
+      "id": "isolated",
+      "kind": "固定本地一手快照",
+      "repository": "ros2/rclcpp",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "path": "rclcpp_components/src/component_container_isolated.cpp",
+      "localPath": "references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp_components/src/component_container_isolated.cpp",
+      "sha256": "7a5d13bff8195cae904edc3a7e319be07e5f10c9469044c57b571d23fbef8627",
+      "lineRanges": [
+        [
+          24,
+          52
+        ]
+      ],
+      "url": "https://github.com/ros2/rclcpp/blob/35b821a9fb1f937bfbd9c741b7e3353e101d9593/rclcpp_components/src/component_container_isolated.cpp"
+    },
+    {
+      "id": "isolated-factory",
+      "kind": "固定本地一手快照",
+      "repository": "ros2/rclcpp",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "path": "rclcpp_components/include/rclcpp_components/component_manager_isolated.hpp",
+      "localPath": "references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp_components/include/rclcpp_components/component_manager_isolated.hpp",
+      "sha256": "4899355b35ef04da4df8238a444e8ee5a0173018b97064e0e98b764c1ab0044a",
+      "lineRanges": [
+        [
+          65,
+          98
+        ],
+        [
+          111,
+          136
+        ]
+      ],
+      "url": "https://github.com/ros2/rclcpp/blob/35b821a9fb1f937bfbd9c741b7e3353e101d9593/rclcpp_components/include/rclcpp_components/component_manager_isolated.hpp"
+    },
+    {
+      "id": "mt-constructor",
+      "kind": "固定本地一手快照",
+      "repository": "ros2/rclcpp",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "path": "rclcpp/src/rclcpp/executors/multi_threaded_executor.cpp",
+      "localPath": "references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp/src/rclcpp/executors/multi_threaded_executor.cpp",
+      "sha256": "72fc87557c50bba22935facf33b9dcd3737bb1abafcb228a783c051686e2b7d7",
+      "lineRanges": [
+        [
+          29,
+          48
+        ]
+      ],
+      "url": "https://github.com/ros2/rclcpp/blob/35b821a9fb1f937bfbd9c741b7e3353e101d9593/rclcpp/src/rclcpp/executors/multi_threaded_executor.cpp"
+    },
+    {
+      "id": "launch-load",
+      "kind": "固定本地一手快照",
+      "repository": "ros2/launch_ros",
+      "commit": "97b758478d8bf343a1e83ab419210d790da53d80",
+      "path": "launch_ros/launch_ros/actions/load_composable_nodes.py",
+      "localPath": "references/sources/official-core/ros2--launch_ros/jazzy--97b758478d8b/launch_ros/launch_ros/actions/load_composable_nodes.py",
+      "sha256": "806dcb368a1f4e3b5838fbba0559e93e8091cfeec739c37b42a80e3f04fbf257",
+      "lineRanges": [
+        [
+          281,
+          347
+        ]
+      ],
+      "url": "https://github.com/ros2/launch_ros/blob/97b758478d8bf343a1e83ab419210d790da53d80/launch_ros/launch_ros/actions/load_composable_nodes.py"
+    },
+    {
+      "id": "component-cli",
+      "kind": "固定本地一手快照",
+      "repository": "ros2/ros2cli",
+      "commit": "221ce584a937ac234ae6337cac71c22d42e8b692",
+      "path": "ros2component/ros2component/api/__init__.py",
+      "localPath": "references/sources/official-core/ros2--ros2cli/jazzy--221ce584a937/ros2component/ros2component/api/__init__.py",
+      "sha256": "acffbc963d2713414b63f0214685cccaa04316add436caa9d54a679e695521cc",
+      "lineRanges": [
+        [
+          221,
+          248
+        ],
+        [
+          354,
+          369
+        ]
+      ],
+      "url": "https://github.com/ros2/ros2cli/blob/221ce584a937ac234ae6337cac71c22d42e8b692/ros2component/ros2component/api/__init__.py"
+    },
+    {
+      "id": "tutorial",
+      "kind": "固定本地一手快照",
+      "repository": "ros2/ros2_documentation",
+      "commit": "929e37c4c6d0746e75d10f1fd76f024743ff75ea",
+      "path": "source/Tutorials/Intermediate/Composition.rst",
+      "localPath": "references/sources/official-docs/ros2--ros2_documentation/jazzy--929e37c4c6d0/source/Tutorials/Intermediate/Composition.rst",
+      "sha256": "cf79be98a689df7cb3ea778a2f6372c58c6dafc39b4ff868c8eddd671eef94ee",
+      "lineRanges": [
+        [
+          194,
+          219
+        ],
+        [
+          334,
+          372
+        ]
+      ],
+      "url": "https://github.com/ros2/ros2_documentation/blob/929e37c4c6d0746e75d10f1fd76f024743ff75ea/source/Tutorials/Intermediate/Composition.rst"
+    },
+    {
+      "id": "cpp-goal",
+      "kind": "固定本地一手快照",
+      "repository": "ros2/rclcpp",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "path": "rclcpp_action/src/server.cpp",
+      "localPath": "references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp_action/src/server.cpp",
+      "sha256": "0b140ed382ae0fb7f41157afdb19e62bcdedca6829b31d8ccf2a3fcacea042ae",
+      "lineRanges": [
+        [
+          539,
+          605
+        ],
+        [
+          726,
+          750
+        ]
+      ],
+      "url": "https://github.com/ros2/rclcpp/blob/35b821a9fb1f937bfbd9c741b7e3353e101d9593/rclcpp_action/src/server.cpp"
+    },
+    {
+      "id": "cpp-cancel",
+      "kind": "固定本地一手快照",
+      "repository": "ros2/rclcpp",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "path": "rclcpp_action/include/rclcpp_action/server.hpp",
+      "localPath": "references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp_action/include/rclcpp_action/server.hpp",
+      "sha256": "e913793a2f58fce1e5dc644368d922b27bc0b8f040e3856e12ef1122f9209484",
+      "lineRanges": [
+        [
+          425,
+          462
+        ]
+      ],
+      "url": "https://github.com/ros2/rclcpp/blob/35b821a9fb1f937bfbd9c741b7e3353e101d9593/rclcpp_action/include/rclcpp_action/server.hpp"
+    },
+    {
+      "id": "cpp-result",
+      "kind": "固定本地一手快照",
+      "repository": "ros2/rclcpp",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "path": "rclcpp_action/include/rclcpp_action/server_goal_handle.hpp",
+      "localPath": "references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp_action/include/rclcpp_action/server_goal_handle.hpp",
+      "sha256": "165c7a04417946124f2244241832fba11d04f0bfb9a580f21723309f9bdc027f",
+      "lineRanges": [
+        [
+          157,
+          217
+        ]
+      ],
+      "url": "https://github.com/ros2/rclcpp/blob/35b821a9fb1f937bfbd9c741b7e3353e101d9593/rclcpp_action/include/rclcpp_action/server_goal_handle.hpp"
+    },
+    {
+      "id": "cpp-parameter-service",
+      "kind": "固定本地一手快照",
+      "repository": "ros2/rclcpp",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "path": "rclcpp/src/rclcpp/parameter_service.cpp",
+      "localPath": "references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp/src/rclcpp/parameter_service.cpp",
+      "sha256": "6a875b85e1df9efe614cad6cfb1c0424eaa842ce9a407b530d684b39f88e1ae7",
+      "lineRanges": [
+        [
+          37,
+          56
+        ]
+      ],
+      "url": "https://github.com/ros2/rclcpp/blob/35b821a9fb1f937bfbd9c741b7e3353e101d9593/rclcpp/src/rclcpp/parameter_service.cpp"
+    },
+    {
+      "id": "installed-options",
+      "kind": "本机安装一手文件",
+      "package": "rclcpp",
+      "version": "28.1.22",
+      "path": "/opt/ros/jazzy/include/rclcpp/rclcpp/node_options.hpp",
+      "localPath": "/opt/ros/jazzy/include/rclcpp/rclcpp/node_options.hpp",
+      "sha256": "2f2330bda923ebfbe71b54e6b4b8a912c605fbf8dcd385f7971d32cdaa322384",
+      "lineRanges": [
+        [
+          38,
+          61
+        ],
+        [
+          363,
+          404
+        ]
+      ]
+    },
+    {
+      "id": "installed-manager",
+      "kind": "本机安装一手文件",
+      "package": "rclcpp_components",
+      "version": "28.1.22",
+      "path": "/opt/ros/jazzy/include/rclcpp_components/rclcpp_components/component_manager.hpp",
+      "localPath": "/opt/ros/jazzy/include/rclcpp_components/rclcpp_components/component_manager.hpp",
+      "sha256": "d9fba0fdaa0ee57af5c04f36c0f0f776e5f8774ec8d6537202c41960310bf8c1",
+      "lineRanges": [
+        [
+          100,
+          107
+        ]
+      ]
+    },
+    {
+      "id": "installed-isolated",
+      "kind": "本机安装一手文件",
+      "package": "rclcpp_components",
+      "version": "28.1.22",
+      "path": "/opt/ros/jazzy/include/rclcpp_components/rclcpp_components/component_manager_isolated.hpp",
+      "localPath": "/opt/ros/jazzy/include/rclcpp_components/rclcpp_components/component_manager_isolated.hpp",
+      "sha256": "4899355b35ef04da4df8238a444e8ee5a0173018b97064e0e98b764c1ab0044a",
+      "lineRanges": [
+        [
+          65,
+          98
+        ],
+        [
+          111,
+          136
+        ]
+      ]
+    },
+    {
+      "id": "installed-py-action",
+      "kind": "本机安装一手文件",
+      "package": "rclpy",
+      "version": "7.1.12",
+      "path": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/action/server.py",
+      "localPath": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/action/server.py",
+      "sha256": "0fca48f56058906b421dcdedcdf5ae41bfa85946ab460e6a47feb127c4cb0f03",
+      "lineRanges": [
+        [
+          292,
+          352
+        ],
+        [
+          354,
+          445
+        ]
+      ]
+    },
+    {
+      "id": "installed-py-parameter-service",
+      "kind": "本机安装一手文件",
+      "package": "rclpy",
+      "version": "7.1.12",
+      "path": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/parameter_service.py",
+      "localPath": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/parameter_service.py",
+      "sha256": "f7546866ac5e9443b5524f1ec0e63eeb8bdca1041e7392d2390d5f5b68396aaa",
+      "lineRanges": [
+        [
+          79,
+          90
+        ]
+      ]
+    },
+    {
+      "id": "installed-py-node",
+      "kind": "本机安装一手文件",
+      "package": "rclpy",
+      "version": "7.1.12",
+      "path": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py",
+      "localPath": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py",
+      "sha256": "8b7fe0ea64e0de12cc1d5d01ebf56c202fa6e153251eb71dfff93e35eb5b3c80",
+      "lineRanges": [
+        [
+          648,
+          716
+        ]
+      ]
+    },
+    {
+      "id": "status",
+      "kind": "本机安装一手文件",
+      "package": "action_msgs",
+      "version": "2.0.4",
+      "path": "/opt/ros/jazzy/share/action_msgs/msg/GoalStatus.msg",
+      "localPath": "/opt/ros/jazzy/share/action_msgs/msg/GoalStatus.msg",
+      "sha256": "ddb3235e748a10610150145746a2a51d05f1486a89636c86dec0c86c392332f9",
+      "lineRanges": [
+        [
+          1,
+          32
+        ]
+      ]
+    },
+    {
+      "id": "cancel",
+      "kind": "本机安装一手文件",
+      "package": "action_msgs",
+      "version": "2.0.4",
+      "path": "/opt/ros/jazzy/share/action_msgs/srv/CancelGoal.srv",
+      "localPath": "/opt/ros/jazzy/share/action_msgs/srv/CancelGoal.srv",
+      "sha256": "5f4dc57f41cab2fd1987a61d5821282ece5075e38e5044f90126ab62c98fac20",
+      "lineRanges": [
+        [
+          1,
+          46
+        ]
+      ]
+    },
+    {
+      "id": "release-manager",
+      "kind": "本次在线只读取得的官方固定提交",
+      "repository": "ros2/rclcpp",
+      "commit": "3aa906a2c7ad13d1623b31a55731993f56538e72",
+      "path": "rclcpp_components/src/component_manager.cpp",
+      "url": "https://raw.githubusercontent.com/ros2/rclcpp/3aa906a2c7ad13d1623b31a55731993f56538e72/rclcpp_components/src/component_manager.cpp",
+      "sha256": "c960af7e68a669157b9812a51eb5162d87211d1bd2e5c0c59c31f0102fe56f87",
+      "lineRanges": [
+        [
+          141,
+          197
+        ]
+      ],
+      "version": "28.1.22",
+      "localPath": null
+    },
+    {
+      "id": "release-mt",
+      "kind": "本次在线只读取得的官方固定提交",
+      "repository": "ros2/rclcpp",
+      "commit": "3aa906a2c7ad13d1623b31a55731993f56538e72",
+      "path": "rclcpp_components/src/component_container_mt.cpp",
+      "url": "https://raw.githubusercontent.com/ros2/rclcpp/3aa906a2c7ad13d1623b31a55731993f56538e72/rclcpp_components/src/component_container_mt.cpp",
+      "sha256": "5a77b324bf5d79ab3e36150b06974b8f37dcd3bf2a397c4495f22ebcc8614a4a",
+      "lineRanges": [
+        [
+          21,
+          38
+        ]
+      ],
+      "version": "28.1.22",
+      "localPath": null
+    },
+    {
+      "id": "release-isolated",
+      "kind": "本次在线只读取得的官方固定提交",
+      "repository": "ros2/rclcpp",
+      "commit": "3aa906a2c7ad13d1623b31a55731993f56538e72",
+      "path": "rclcpp_components/src/component_container_isolated.cpp",
+      "url": "https://raw.githubusercontent.com/ros2/rclcpp/3aa906a2c7ad13d1623b31a55731993f56538e72/rclcpp_components/src/component_container_isolated.cpp",
+      "sha256": "0c85b2a5178cd3019f837a297a5cfe817987e230e6eb31c587e4d9a6b6e57e09",
+      "lineRanges": [
+        [
+          23,
+          49
+        ]
+      ],
+      "version": "28.1.22",
+      "localPath": null
+    },
+    {
+      "id": "rcl-state-map",
+      "kind": "本次在线只读取得的官方固定提交",
+      "repository": "ros2/rcl",
+      "commit": "18d96c9c2b98e616324ae9a2c7701dd0b0886ff0",
+      "path": "rcl_action/src/rcl_action/goal_state_machine.c",
+      "url": "https://raw.githubusercontent.com/ros2/rcl/18d96c9c2b98e616324ae9a2c7701dd0b0886ff0/rcl_action/src/rcl_action/goal_state_machine.c",
+      "sha256": "9de1bb0ea1a122c27daa64bad47ca77fdc43db8ee4a9ca4a32d698189b7cb24a",
+      "lineRanges": [
+        [
+          43,
+          79
+        ],
+        [
+          82,
+          98
+        ]
+      ],
+      "version": "9.2.11",
+      "localPath": null
+    },
+    {
+      "id": "cpp-action-state-calls",
+      "kind": "固定本地一手快照",
+      "repository": "ros2/rclcpp",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "path": "rclcpp_action/src/server_goal_handle.cpp",
+      "localPath": "references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp_action/src/server_goal_handle.cpp",
+      "sha256": "a0214a37b69cde9db68467d957c0632673b624e99137df9abc26f45731d72841",
+      "lineRanges": [
+        [
+          61,
+          104
+        ]
+      ],
+      "url": "https://github.com/ros2/rclcpp/blob/35b821a9fb1f937bfbd9c741b7e3353e101d9593/rclcpp_action/src/server_goal_handle.cpp",
+      "readingResult": "C++ _succeed/_abort/_canceled直接调用RCL相应状态事件，没有另用is_executing拒绝CANCELING的前置检查；终态判断仍按实际协议状态机。"
+    }
+  ],
+  "versionDifferences": [
+    {
+      "family": "rclcpp/components/action",
+      "installed": "28.1.22",
+      "snapshot": "28.1.23",
+      "snapshotCommit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "releaseTagCommit": "3aa906a2c7ad13d1623b31a55731993f56538e72",
+      "sameSelectedBytes": [
+        "NodeOptions header",
+        "ComponentManager header",
+        "ComponentManager implementation",
+        "isolated factory header",
+        "action ServerGoalHandle header"
+      ],
+      "differentSelectedBytes": [
+        "component_container_mt.cpp",
+        "component_container_isolated.cpp"
+      ],
+      "note": "只说明选中文件字节与所述行为，不能称整个版本相同。"
+    },
+    {
+      "family": "rclpy",
+      "installed": "7.1.12",
+      "snapshot": "7.1.13",
+      "snapshotCommit": "521012e60ba21319ef29141f8f521a0e072fe652",
+      "sameSelectedBytes": [
+        "action/server.py"
+      ],
+      "note": "安装Python实现实际读取；未推断整个快照等于安装版本。"
+    },
+    {
+      "family": "launch_ros",
+      "installed": "0.26.13",
+      "snapshot": "0.26.13",
+      "snapshotCommit": "97b758478d8bf343a1e83ab419210d790da53d80"
+    },
+    {
+      "family": "rcl_action",
+      "installed": "9.2.11",
+      "onlinePinnedPackageVersion": "9.2.11",
+      "onlinePinnedCommit": "18d96c9c2b98e616324ae9a2c7701dd0b0886ff0",
+      "releaseTagCommit": "22c0b957140035c675f0a061daaab5fd6b2080e7",
+      "note": "固定分支提交package.xml实际核对9.2.11；未重新构建安装二进制。"
+    }
+  ],
+  "onlineVerification": {
+    "officialUrls": [
+      "https://docs.ros.org/en/jazzy/Tutorials/Intermediate/Composition.html",
+      "https://raw.githubusercontent.com/ros2/ros2_documentation/jazzy/source/Tutorials/Intermediate/Composition.rst",
+      "https://design.ros2.org/articles/actions.html"
+    ],
+    "accessLimits": [
+      "docs.ros.org Composition被Anubis拒绝，未把拒绝页当正文。",
+      "GitHub API标签接口403限流；只读git ls-remote解析官方tag/branch后读取固定raw并计算字节SHA。"
+    ],
+    "versionBoundary": "当前Jazzy网页可变，最终证据以明确commit/path/SHA或安装文件为准。"
+  },
+  "findings": [
+    {
+      "id": "I3-S01",
+      "kind": "上游教程与实现差异",
+      "status": "confirmed",
+      "evidenceIds": [
+        "tutorial",
+        "manager",
+        "release-mt",
+        "release-isolated"
+      ],
+      "finding": "固定Composition教程及当前Jazzy文字中固定4线程、isolated默认MT、forward默认True均不能直接推广。对应实现按thread_num选共享MT，isolated默认每组件STE，标准加载组件forward默认false。"
+    },
+    {
+      "id": "I3-S02",
+      "kind": "extra_arguments支持边界",
+      "status": "confirmed",
+      "evidenceIds": [
+        "manager",
+        "release-manager",
+        "launch-load",
+        "component-cli"
+      ],
+      "finding": "标准manager只将两个布尔键use_intra_process_comms/forward_global_arguments映射为NodeOptions；已识别键类型错会加载失败，未知键被忽略不代表生效。launch可序列化任意字典键不构成manager支持证明。"
+    },
+    {
+      "id": "I3-S03",
+      "kind": "参数来源",
+      "status": "confirmed",
+      "evidenceIds": [
+        "parameter-resolution",
+        "parameters",
+        "launch-load"
+      ],
+      "finding": "Context全局ROS参数、launch作用域global_params、LoadNode.parameters和manager当前参数状态属于不同来源。forward只控制Context参数；显式request.parameters经NodeOptions overrides可覆盖同名Context值，并不复制manager动态更新后的值。"
+    },
+    {
+      "id": "I3-S04",
+      "kind": "声明策略",
+      "status": "confirmed_source_only_for_custom_enabled_flags",
+      "evidenceIds": [
+        "options",
+        "parameters",
+        "installed-options"
+      ],
+      "finding": "allow_undeclared允许以后set；auto-declare在基类构造中声明overrides。只开前者不会使全部启动overrides出现；开后者后再无条件declare同名可能AlreadyDeclared。标准extra不支持这两个setter，自定义代码可使用API。自定义两个flag=true的正例未在本轮资产中实测。"
+    },
+    {
+      "id": "I3-S05",
+      "kind": "管理节点可观察接口",
+      "status": "confirmed",
+      "evidenceIds": [
+        "manager-default",
+        "installed-manager"
+      ],
+      "finding": "标准ComponentManager默认关闭自己的参数服务/事件；内部thread_num可在构造时接受CLI override，但默认不能据此假设ros2 param get/set可用。加载组件有独立NodeOptions，默认参数服务未随manager关闭。"
+    },
+    {
+      "id": "I3-S06",
+      "kind": "线程与进程模型",
+      "status": "confirmed",
+      "evidenceIds": [
+        "manager",
+        "release-mt",
+        "release-isolated",
+        "installed-isolated",
+        "mt-constructor"
+      ],
+      "finding": "mt入口启动读取只读thread_num，不是固定4线程或动态线程池重配。isolated默认每组件STE；非ROS开关切成每组件默认MT，manager的thread_num未传给专用executor。isolated仍同PID/内存/故障范围。"
+    },
+    {
+      "id": "I3-S07",
+      "kind": "未知参数服务回应",
+      "status": "confirmed",
+      "evidenceIds": [
+        "cpp-parameter-service",
+        "parameters",
+        "installed-py-parameter-service",
+        "installed-py-node"
+      ],
+      "finding": "严格配置下C++ GetParameters混入一个未知/未初始化名可返回整个空values；本机Python服务也会在同类异常时清空values返回。NOT_SET要看allow_undeclared或get_parameter_or等API，不能写成Python语言必然逐项NOT_SET。要检查响应长度、单独查已知值，并以ListParameters/设置拒绝验证未知项。"
+    },
+    {
+      "id": "I3-S08",
+      "kind": "拒绝不是执行失败",
+      "status": "confirmed",
+      "evidenceIds": [
+        "cpp-goal",
+        "installed-py-action",
+        "status"
+      ],
+      "finding": "SendGoal accepted=false不进入本次执行；GoalStatus无REJECTED，拒绝无本次业务Result。对拒绝/未知UUID强制GetResult得UNKNOWN与默认结构也不是completed=0的执行证据。"
+    },
+    {
+      "id": "I3-S09",
+      "kind": "通用状态与业务进度",
+      "status": "confirmed",
+      "evidenceIds": [
+        "cpp-result",
+        "installed-py-action",
+        "status"
+      ],
+      "finding": "ABORTED是已接纳目标的失败终态，可带0或部分业务进度。Count.completed不是错误码，原Result无reason；扩展abort_after=N后ABORTED/completed=N与日志原因必须分别标来源。"
+    },
+    {
+      "id": "I3-S10",
+      "kind": "取消与忙碌竞态",
+      "status": "confirmed",
+      "evidenceIds": [
+        "cpp-cancel",
+        "installed-py-action",
+        "rcl-state-map",
+        "cancel",
+        "cpp-action-state-calls"
+      ],
+      "finding": "CANCELING可转SUCCEEDED/ABORTED/CANCELED；应用取消回调ACCEPT与协议最终列表也可能遭遇状态刚完成的竞态。busy释放是应用策略；应等最终Result后再验新目标恢复，中途受控取消不推广为协议强制CANCELED。"
+    },
+    {
+      "id": "I3-A01",
+      "kind": "新增动作驱动清理缺口",
+      "status": "resolved_and_retested",
+      "location": "examples/action_labs/verify_count_actions.py/main/process.communicate",
+      "finding": "父进程只捕获TimeoutExpired，未捕获KeyboardInterrupt；worker另起session，父Ctrl+C可能不清理当前自建worker/server组。已通知作者复用受保护组清理。",
+      "resolution": "父communicate和outer finally均清理自建组；独立控制器只SIGINT父driver，实际触发parent_keyboard_interrupt并验证Context/server/三proc消失，控制器无应急信号。",
+      "evidenceFile": "validation-evidence/count-action-current-validation.json",
+      "evidenceSha256": "49aecc05a5c72eed04bd4cdbac8aa2c0682a22ac2bf5cdbd9e81e251689fe688"
+    },
+    {
+      "id": "I3-A02",
+      "kind": "新增取消日志字段",
+      "status": "resolved_with_unrun_branch_explicit",
+      "location": "examples/action_labs/learning_count_fault_lab/scripts/count_fault_server.py/on_cancel",
+      "finding": "扩展Python取消接纳日志用completed=0占位，回调未持可靠进度快照；作者拟改null。原版两语言取消已实测，扩展取消未实测，应分开。",
+      "resolution": "未知进度日志已改null；报告限制明确扩展取消未作为业务场景运行，未冒充覆盖。",
+      "evidenceFile": "validation-evidence/count-action-current-validation.json",
+      "evidenceSha256": "49aecc05a5c72eed04bd4cdbac8aa2c0682a22ac2bf5cdbd9e81e251689fe688"
+    },
+    {
+      "id": "I3-GATE",
+      "kind": "审查与报告绑定",
+      "status": "resolved",
+      "location": "scripts/build_iteration3_material.py",
+      "finding": "仅检测review文件存在不能证明当前源码/报告已经审查。主代理接受approved===true及reviewedReports文件名→完整SHA比对；本审查最终会提供该结构。",
+      "resolution": "最终集成器核对approved和两份完整报告SHA；表题fallback、原始浮点保留与显示精度说明已核读。"
+    },
+    {
+      "id": "I3-A03",
+      "kind": "父SIGINT与worker清理可能重复信号",
+      "status": "resolved_and_strictly_retested",
+      "finding": "根审查发现受中断server退出-2且executor.shutdown join中KeyboardInterrupt；父进程对worker组INT后worker close可能再次INT同一server。需先判断/等待既有清理窗口，再必要升级，避免把自造二次INT异常当普通单次中断的必然。当前无遗留证据仍有效。",
+      "resolution": "确认原父组INT+worker再次INT会打断shutdown/join；worker现在先有界等待2s并只在需要时升级TERM/KILL，父首阶段等待5s覆盖清理窗口。严格控制器只INT父一次，worker没有追加信号，server exit0，无KeyboardInterrupt/Traceback，三proc消失且无控制器应急清理。",
+      "evidenceFile": "validation-evidence/count-action-current-validation.json",
+      "evidenceSha256": "49aecc05a5c72eed04bd4cdbac8aa2c0682a22ac2bf5cdbd9e81e251689fe688",
+      "scopeNote": "Context失效相关警告仍原样保留；不证明受中断目标获得CANCELED/ABORTED或硬件停车。"
+    }
+  ],
+  "textbookMaterial": {
+    "parameterSourceParagraphs": [
+      "进程Context中的ROS命令行、launch作用域参数、加载请求parameters、管理节点当前参数值是不同来源。标准ComponentManager为组件新建NodeOptions并关闭global arguments；给容器启动时的gain不会自然成为每个组件的gain。forward_global_arguments=true允许组件读取适用的Context参数，不表示复制管理节点后来动态修改的参数。",
+      "ComposableNode(parameters=...)及launch的global_params会被序列化到LoadNode.parameters；这条路径不受use_global_arguments=false一并屏蔽。参数归并先Context全局CLI、后节点本地CLI，最后programmatic parameter_overrides覆盖；LoadNode.parameters进入最后这一类。组件仍需把NodeOptions转交Node并声明、校验参数。",
+      "extra_arguments只暴露该版本manager明确实现的选项。两个已识别键必须是BOOL；未知键可能加载成功却被忽略。因此不能通过同名extra启用所有NodeOptions setter，或以LoadNode.success=true证明每个字典项都生效。",
+      "允许以后设置未声明参数与构造时自动声明overrides是两项策略；自动声明使用默认descriptor，不能替代业务范围与有限性校验。自动声明后再次无条件声明同名参数可能抛异常。自定义启用应明确标为组件/工厂代码策略，本轮没有宣称这种正例已经实测。",
+      "标准管理节点自身默认不开放参数服务，但仍能在构造时读取启动覆盖。显式开放服务的observable_manager可用于查询描述符和验证thread_num只读；应与官方默认容器的服务缺失区别。对加载组件的参数服务可用性另行核查。"
+    ],
+    "optionsTable": {
+      "columns": [
+        "对象/API",
+        "普通NodeOptions默认",
+        "标准加载入口",
+        "关键边界"
+      ],
+      "rows": [
+        [
+          "parameter_overrides",
+          "空列表",
+          "LoadNode.parameters / CLI -p",
+          "参数覆盖候选需声明后才能读取；数值类型匹配声明。"
+        ],
+        [
+          "use_global_arguments",
+          "true",
+          "组件加载默认false；extra forward_global_arguments（BOOL）",
+          "Context参数不是manager当前参数服务状态。"
+        ],
+        [
+          "use_intra_process_comms",
+          "false",
+          "同名extra（BOOL）",
+          "不保证所有路径零拷贝。"
+        ],
+        [
+          "allow_undeclared_parameters",
+          "false",
+          "标准extra不支持；自定义C++ setter",
+          "允许后续隐式声明/设置，不自动materialize所有启动overrides。"
+        ],
+        [
+          "automatically_declare_parameters_from_overrides",
+          "false",
+          "标准extra不支持；自定义C++ setter",
+          "基类构造阶段声明；再次declare同名和启动校验须处理。"
+        ],
+        [
+          "start_parameter_services",
+          "true",
+          "标准manager自身显式false；组件另建默认true",
+          "启动覆盖与远程get/set可用性不同。"
+        ]
+      ]
+    },
+    "containerTable": {
+      "columns": [
+        "官方入口",
+        "manager执行器",
+        "组件执行器",
+        "thread_num及开关"
+      ],
+      "rows": [
+        [
+          "component_container",
+          "共享STE",
+          "同一个STE",
+          "参数不改变此入口选择。"
+        ],
+        [
+          "component_container_mt",
+          "共享MT",
+          "同一个MT",
+          "启动时thread_num；默认通常硬件并发数，不是固定4；只读、非动态重配。"
+        ],
+        [
+          "component_container_isolated默认",
+          "外层STE",
+          "每组件专用STE及线程",
+          "不传manager thread_num；仍同一进程。"
+        ],
+        [
+          "isolated --use_multi_threaded_executor",
+          "外层STE",
+          "每组件默认MT",
+          "非ROS参数段开关；本轮只核源码，未纳入三个官方容器的时间线实测。"
+        ]
+      ]
+    },
+    "unknownParameterParagraph": "未知参数的表现取决于节点策略和API。严格C++节点的GetParameters中一个未知名可使整个values为空，本机严格Python服务也可能这样处理。应先检查响应数量再索引，单独查询已知gain，以ListParameters不包含未知名及动态设置拒绝作佐证。NOT_SET不是所有未知参数查询的统一结果，get_parameter_or也不等于远程服务的失败合同。",
+    "actionParagraphs": [
+      "拒绝只发生在接纳阶段。accepted=false的目标没有本次执行Result，GoalStatus也没有REJECTED枚举。强制查询未知UUID得到UNKNOWN及默认字段不能成为业务执行完成证据。",
+      "客户端同时核对GetResult.status与Count.completed。ABORTED可以保留0或部分进度；completed不是错误码。原接口没有原因字段，扩展故障的UUID原因日志与ROS Result属于不同证据。",
+      "busy是示例自己的单任务策略。C++基础实现依赖单线程/默认互斥组；Python用锁原子检查/更新busy，并在执行退出时释放。更换线程与回调组模型后需要重新审查状态竞争。",
+      "取消请求、取消应答、最终结果分开等待。CANCELING允许SUCCEEDED/ABORTED/CANCELED；受控中途取消留出目标余量并等待CANCELED，可验证该场景，不能推广为所有边界竞态都能强制停止。"
+    ],
+    "actionTable": {
+      "columns": [
+        "阶段",
+        "协议证据",
+        "业务数据",
+        "边界"
+      ],
+      "rows": [
+        [
+          "拒绝",
+          "SendGoal accepted=false",
+          "无本次执行Result",
+          "不是STATUS_REJECTED，也不是ABORTED。"
+        ],
+        [
+          "成功",
+          "SUCCEEDED=4",
+          "completed应符合目标合同",
+          "反馈/Future完成不能单独替代它。"
+        ],
+        [
+          "失败",
+          "ABORTED=6",
+          "0或部分completed",
+          "Count无reason，原因另查日志。"
+        ],
+        [
+          "正在取消",
+          "取消响应包含对应UUID",
+          "尚未得到最终Result",
+          "busy可能仍占用；不能立即要求新目标接受。"
+        ],
+        [
+          "取消终态",
+          "CANCELED=5",
+          "保留已完成进度",
+          "软件终态不证明物理停车。"
+        ]
+      ]
+    }
+  },
+  "minimumExperiments": [
+    {
+      "id": "COMP-MIN-01",
+      "test": "default/forward=true/forward+local/manager动态改后再加载forward组件",
+      "requiredEvidence": "同一来源、FLOAT/DOUBLE类型、实际gain/输出和NodeOptions；区分Context与manager当前值。",
+      "state": "最终组件报告已读并按所列范围通过；见assetReviews/component_labs"
+    },
+    {
+      "id": "COMP-MIN-02",
+      "test": "未知allow/auto extra及已识别extra错误类型",
+      "requiredEvidence": "NodeOptions实际false/LoadNode失败+原因/旧实例仍在；source-only与实测分开。",
+      "state": "最终组件报告已读并按所列范围通过；见assetReviews/component_labs"
+    },
+    {
+      "id": "COMP-MIN-03",
+      "test": "官方共享STE、MT2、isolated默认STE",
+      "requiredEvidence": "同PID、线程ID、成对start/end、受控慢回调窗口、正负调度对照；不要求固定倍率。",
+      "state": "最终组件报告已读并按所列范围通过；见assetReviews/component_labs"
+    },
+    {
+      "id": "COMP-MIN-04",
+      "test": "标准manager参数服务缺失、observable_manager thread_num只读",
+      "requiredEvidence": "有效加载服务正例；只读尝试值在合法范围内，收到明确拒绝；不把缺服务当拒绝。",
+      "state": "最终组件报告已读并按所列范围通过；见assetReviews/component_labs"
+    },
+    {
+      "id": "ACTION-MIN-01",
+      "test": "两语言原版目标活动时busy拒绝、0/21拒绝",
+      "requiredEvidence": "独立UUID、accepted=false、无Result/反馈/状态；原目标未被覆盖。",
+      "state": "最终动作报告已读并按所列范围通过；见assetReviews/action_labs"
+    },
+    {
+      "id": "ACTION-MIN-02",
+      "test": "原版中途取消/自然完成后一次新目标恢复",
+      "requiredEvidence": "取消列表UUID、终态、completed、后续成功；不用重试掩盖busy。",
+      "state": "最终动作报告已读并按所列范围通过；见assetReviews/action_labs"
+    },
+    {
+      "id": "ACTION-MIN-03",
+      "test": "扩展默认故障关闭、显式after6 ABORTED6后短目标成功",
+      "requiredEvidence": "故障输入、通用status与业务completed及独立UUID原因日志。",
+      "state": "最终动作报告已读并按所列范围通过；见assetReviews/action_labs"
+    }
+  ],
+  "commandPitfalls": [
+    "容器启动--ros-args -p gain:=1.8不是每个组件的加载参数；组件-p与extra -e进入不同字段。",
+    "gain声明DOUBLE时3与3.0类型不同；已有extra布尔键也必须传BOOL，不能用字符串true冒充。",
+    "NodeOptions API存在不表示标准extra暴露它；未知键加载成功可能仅被忽略。",
+    "ros2 param get /ComponentManager thread_num默认可能缺服务；先检查服务，不能把超时当只读拒绝。",
+    "thread_num只读不禁止构造时启动override，也不支持运行时重配MT线程池。",
+    "isolated默认不是MT；--use_multi_threaded_executor是非ROS参数，不能随意放在--ros-args内部；manager的thread_num不传给每个专用executor。",
+    "GetParameters含未知名时先查响应长度；严格C++及本机Python服务都可能整体返回空values，不是统一逐项NOT_SET。",
+    "accepted=false后不要等待本次执行Result或伪造REJECTED状态码；UNKNOWN默认结构也不证明执行。",
+    "取消应答出现UUID不意味着busy已经释放；等终态，再验后续目标。",
+    "原始CancelGoal零UUID/零时间表示取消全部目标；隔离教学使用具体GoalHandle/UUID。"
+  ],
+  "assetReviews": [
+    {
+      "asset": "action_labs",
+      "approved": true,
+      "checkedAt": "2026-11-07T04:42:04+08:00",
+      "reportFile": "validation-evidence/count-action-current-validation.json",
+      "reportSha256": "49aecc05a5c72eed04bd4cdbac8aa2c0682a22ac2bf5cdbd9e81e251689fe688",
+      "sourceFiles": [
+        {
+          "path": "examples/action_labs/README.md",
+          "sha256": "3dc956f16950eb900b1d344e69c61a614c34a018254edcd5f63f781f320a5b97"
+        },
+        {
+          "path": "examples/action_labs/learning_count_fault_lab/CMakeLists.txt",
+          "sha256": "50cffb8992c32693dc1fbde9d2b21968e5cb1852e7982883105f4a04f23bf7ac"
+        },
+        {
+          "path": "examples/action_labs/learning_count_fault_lab/package.xml",
+          "sha256": "30c0bf2f8966a19c12319a8069a013064c58c1b2a16e0e05366b33e90ee57bf6"
+        },
+        {
+          "path": "examples/action_labs/learning_count_fault_lab/scripts/count_fault_server.py",
+          "sha256": "177328bbb7c0f8895f1b4d3939ff756b65f9670dc4cacd3ac8ade748d6ec3067"
+        },
+        {
+          "path": "examples/action_labs/learning_count_fault_lab/src/count_fault_server.cpp",
+          "sha256": "56be95ebf1f2fd64fb989f17b50d3f728e0490e61b8dce80fecedc0262677f68"
+        },
+        {
+          "path": "examples/action_labs/verify_count_actions.py",
+          "sha256": "390b756b4426e6bb7d10e885bf5b915f41df47ed5fdd2e8c67d58a1739481ec2"
+        },
+        {
+          "path": "examples/action_labs/verify_interrupt_cleanup.py",
+          "sha256": "5d461fe1fee1f1a2a8e21bb7812f8859fe744874605c3d0223efc2408f0637e8"
+        },
+        {
+          "path": "foundation-examples/lessons/actions/server.py",
+          "sha256": "920b28286a7c85be89d417d32a525450de632a654b463408628b78667dce3d79"
+        },
+        {
+          "path": "foundation-examples/src/learning_action_cpp/src/server.cpp",
+          "sha256": "b393650c0d30c4a680167d613068fb0c363e55732f5bfa1349ffa1d0c3f27c5e"
+        },
+        {
+          "path": "foundation-examples/src/learning_count_interfaces/action/Count.action",
+          "sha256": "deea8cf938faf9157db4d404a323038c2bae4d385f0a9b55b406b8260e679366"
+        }
+      ],
+      "sourceHashesMatched": 10,
+      "methods": [
+        "只读完整C++/Python服务端与验收/中断控制器源码、清单和README",
+        "独立核对24个goal的接纳/反馈/结果/取消关联",
+        "核对10个worker与server退出、Context关闭及有界中断/proc证据",
+        "Python AST与XML清单只读解析；不运行ROS或重编译"
+      ],
+      "goalConsistencyChecks": [
+        {
+          "case": "cpp_original_busy_cancel_recovery",
+          "uuid": "b8d2b0a2f1d143a099074c433a3d5775",
+          "accepted": true,
+          "terminalStatus": "CANCELED",
+          "result": {
+            "completed": 1
+          },
+          "consistent": true
+        },
+        {
+          "case": "cpp_original_busy_cancel_recovery",
+          "uuid": "e4bfcdf8980f44c38a6e2555a67ba097",
+          "accepted": false,
+          "terminalStatus": null,
+          "result": null,
+          "consistent": true
+        },
+        {
+          "case": "cpp_original_busy_cancel_recovery",
+          "uuid": "65f73f23748a40c7b19441b423d83d2b",
+          "accepted": true,
+          "terminalStatus": "SUCCEEDED",
+          "result": {
+            "completed": 2
+          },
+          "consistent": true
+        },
+        {
+          "case": "cpp_original_busy_complete_recovery",
+          "uuid": "2c9f56bef85e435dafb097f0d34a92d5",
+          "accepted": true,
+          "terminalStatus": "SUCCEEDED",
+          "result": {
+            "completed": 4
+          },
+          "consistent": true
+        },
+        {
+          "case": "cpp_original_busy_complete_recovery",
+          "uuid": "e45b212a95e840dba56f174dda67bbba",
+          "accepted": false,
+          "terminalStatus": null,
+          "result": null,
+          "consistent": true
+        },
+        {
+          "case": "cpp_original_busy_complete_recovery",
+          "uuid": "2ca8d082a1a046439c150a66bb359321",
+          "accepted": true,
+          "terminalStatus": "SUCCEEDED",
+          "result": {
+            "completed": 2
+          },
+          "consistent": true
+        },
+        {
+          "case": "cpp_original_invalid_bounds",
+          "uuid": "ec430676d5684195beb3fd87fa8be723",
+          "accepted": false,
+          "terminalStatus": null,
+          "result": null,
+          "consistent": true
+        },
+        {
+          "case": "cpp_original_invalid_bounds",
+          "uuid": "c9f74ae0ae2644f9a769cb7692af80c3",
+          "accepted": false,
+          "terminalStatus": null,
+          "result": null,
+          "consistent": true
+        },
+        {
+          "case": "cpp_extended_fault_disabled",
+          "uuid": "5e4507d6e61040b08a966e827e80af3a",
+          "accepted": true,
+          "terminalStatus": "SUCCEEDED",
+          "result": {
+            "completed": 8
+          },
+          "consistent": true
+        },
+        {
+          "case": "cpp_extended_abort_and_recovery",
+          "uuid": "a098092103c54eacb8bfd8adb62a7c47",
+          "accepted": true,
+          "terminalStatus": "ABORTED",
+          "result": {
+            "completed": 6
+          },
+          "consistent": true
+        },
+        {
+          "case": "cpp_extended_abort_and_recovery",
+          "uuid": "3e5f415f88d843cfacfa8abbaf065c18",
+          "accepted": false,
+          "terminalStatus": null,
+          "result": null,
+          "consistent": true
+        },
+        {
+          "case": "cpp_extended_abort_and_recovery",
+          "uuid": "a1b1eaf2e9414281ba81b437d8273896",
+          "accepted": true,
+          "terminalStatus": "SUCCEEDED",
+          "result": {
+            "completed": 2
+          },
+          "consistent": true
+        },
+        {
+          "case": "py_original_busy_cancel_recovery",
+          "uuid": "bfd776c88dd7474ab9776da6db335d1c",
+          "accepted": true,
+          "terminalStatus": "CANCELED",
+          "result": {
+            "completed": 1
+          },
+          "consistent": true
+        },
+        {
+          "case": "py_original_busy_cancel_recovery",
+          "uuid": "7148cd17d9094020b8fd0b1fd9a49102",
+          "accepted": false,
+          "terminalStatus": null,
+          "result": null,
+          "consistent": true
+        },
+        {
+          "case": "py_original_busy_cancel_recovery",
+          "uuid": "b301ccf374d14b3198f949a708ee73a0",
+          "accepted": true,
+          "terminalStatus": "SUCCEEDED",
+          "result": {
+            "completed": 2
+          },
+          "consistent": true
+        },
+        {
+          "case": "py_original_busy_complete_recovery",
+          "uuid": "2a577d58e3964ee1845e352991fd0978",
+          "accepted": true,
+          "terminalStatus": "SUCCEEDED",
+          "result": {
+            "completed": 4
+          },
+          "consistent": true
+        },
+        {
+          "case": "py_original_busy_complete_recovery",
+          "uuid": "dd503961c2984adda0a35f1c431a4053",
+          "accepted": false,
+          "terminalStatus": null,
+          "result": null,
+          "consistent": true
+        },
+        {
+          "case": "py_original_busy_complete_recovery",
+          "uuid": "6e005d34581d41469713a9a896d8ba17",
+          "accepted": true,
+          "terminalStatus": "SUCCEEDED",
+          "result": {
+            "completed": 2
+          },
+          "consistent": true
+        },
+        {
+          "case": "py_original_invalid_bounds",
+          "uuid": "20039dfc852547d79bd36511ec1ac56e",
+          "accepted": false,
+          "terminalStatus": null,
+          "result": null,
+          "consistent": true
+        },
+        {
+          "case": "py_original_invalid_bounds",
+          "uuid": "8d32722ae53c46558aa15f1ce858536b",
+          "accepted": false,
+          "terminalStatus": null,
+          "result": null,
+          "consistent": true
+        },
+        {
+          "case": "py_extended_fault_disabled",
+          "uuid": "41085ecd67d74cfc9a678149dcd475d2",
+          "accepted": true,
+          "terminalStatus": "SUCCEEDED",
+          "result": {
+            "completed": 8
+          },
+          "consistent": true
+        },
+        {
+          "case": "py_extended_abort_and_recovery",
+          "uuid": "0531d6c6f0f046c59730b029ad885977",
+          "accepted": true,
+          "terminalStatus": "ABORTED",
+          "result": {
+            "completed": 6
+          },
+          "consistent": true
+        },
+        {
+          "case": "py_extended_abort_and_recovery",
+          "uuid": "a4ee9feee8064a7c97bb0a1b8e41241a",
+          "accepted": false,
+          "terminalStatus": null,
+          "result": null,
+          "consistent": true
+        },
+        {
+          "case": "py_extended_abort_and_recovery",
+          "uuid": "792d23991e274d198e08311add1d5e3f",
+          "accepted": true,
+          "terminalStatus": "SUCCEEDED",
+          "result": {
+            "completed": 2
+          },
+          "consistent": true
+        }
+      ],
+      "mainCasesPassed": 10,
+      "goalsReviewed": 24,
+      "lifecycle": {
+        "passed": true,
+        "shutdownElapsedS": 0.661554,
+        "driverOnlySigint": true,
+        "parentGroupSignals": [
+          "SIGINT"
+        ],
+        "workerAdditionalSignals": [],
+        "initialServerGraceS": 2.0,
+        "interruptedServerExitCode": 0,
+        "serverShutdownTraceback": false,
+        "emergencySignals": [],
+        "allThreeProcEntriesAbsent": true,
+        "warningsObserved": [
+          "Context关闭后ActionServer默认abort/rosout无效上下文警告",
+          "未回收的目标状态读取异常由日志保留"
+        ],
+        "interpretation": "只证明单次父INT路径不重复INT且自建进程正常回收；受中断目标没有收到终态/Result，日志警告也不作为ABORTED或取消完成证据。"
+      },
+      "limits": [
+        "业务取消主场景只覆盖原两语言；扩展取消没有实测。",
+        "父SIGINT生命周期check不等同任何业务终态。",
+        "CANCELING边界竞态仅核官方状态机，主场景受控中途取消均为CANCELED；没有注入所有竞态。",
+        "原服务端忙碌原因由合法第二目标和活动首目标条件/源码推断，无结构化reason字段；Python扩展公开拒绝callback没有UUID，日志null如实保留。",
+        "受中断server新记录exit0、无shutdown/join的KeyboardInterrupt栈，但保留Context失效警告；没有声称所有退出路径无日志错误。"
+      ],
+      "historyPreserved": 2
+    },
+    {
+      "asset": "component_labs",
+      "approved": true,
+      "checkedAt": "2026-11-07T04:37:03+08:00",
+      "reportFile": "validation-evidence/component-labs-current-validation.json",
+      "reportSha256": "3c44eddd36c25205bc11f0e1d43bc76e211a59ef5e21da851c00515dc1eea2a2",
+      "sourceFiles": [
+        {
+          "path": "examples/component_labs/runtime_lab_components/CMakeLists.txt",
+          "sha256": "7dd7e1d89b3d4a97b37f728e5e8d1717d406958256c51518aa2b0eda71fedc09"
+        },
+        {
+          "path": "examples/component_labs/runtime_lab_components/package.xml",
+          "sha256": "3ea1082e94652ea8d5fac229e661f5d9ac7bd0310e73aea6a650341e81092144"
+        },
+        {
+          "path": "examples/component_labs/runtime_lab_components/src/components.cpp",
+          "sha256": "ac945b2d5bcf7dc30bdaefc66c92615acad4422952954d0c0b5adc14808633d4"
+        },
+        {
+          "path": "examples/component_labs/runtime_lab_components/src/observable_manager.cpp",
+          "sha256": "92f963e2eeb4d69973f5521954d6e1e40b43f5d673a4f1943092aab6adc1697c"
+        },
+        {
+          "path": "examples/component_labs/validate_components.py",
+          "sha256": "a31412e85a1ed0e10e56fd509170b62b494419dfe4c4cc05a468d533cd09610f"
+        }
+      ],
+      "sourceHashesMatched": 5,
+      "compiledArtifactHashesMatched": 3,
+      "methods": [
+        "只读完整组件/observable manager/驱动源码、CMake、XML和README",
+        "核对最终报告5组原始参数响应、输出、PID/TID/span及失败历史",
+        "Python AST/XML解析及源/构建产物SHA核对；没有运行ROS、重编译或重跑通过的旧实验"
+      ],
+      "observed": {
+        "mainCases": 5,
+        "dynamicGainChecks": 11,
+        "acceptedConfigurations": 7,
+        "rejectedLoads": 4,
+        "sourcePrecedenceGain": [
+          1.0,
+          1.5,
+          1.8,
+          1.5,
+          1.8
+        ],
+        "threadNumWrapper": "startup=2，合法范围内尝试1被read_only明确拒绝；官方默认管理服务缺失单列。",
+        "officialContainerMaxConcurrency": [
+          1,
+          2,
+          2
+        ],
+        "officialHeartbeatDuringSlow": [
+          0,
+          17,
+          17
+        ],
+        "unknownExtraIgnoredWithActualFlagsFalse": true,
+        "knownExtraWrongTypeLoadRejected": true,
+        "strictUnknownGetValuesCount": 0
+      },
+      "interrupt": {
+        "passed": true,
+        "parentOnlySigint": true,
+        "exitCode": 130,
+        "subsequentCasesStopped": true,
+        "trackedProcessesGone": true,
+        "signalToExitS": 0.5159289189996343,
+        "interpretation": "有意中断报告passed=false，属于生命周期清理通过，不是该场景业务完成。"
+      },
+      "historyPreserved": 4,
+      "limits": [
+        "标准容器默认关闭管理参数服务；readonly拒绝来自observable_manager真实Describe/Set接口，不能混称标准容器参数接口。",
+        "mt本轮显式2线程，不把文档固定4线程写成默认；isolated默认每组件ST，本轮不测试--use_multi_threaded_executor分支。",
+        "forward_global_arguments只控制Context全局ROS CLI；不会屏蔽已进入LoadNode.parameters的值。",
+        "未知extra键被忽略属于记录的实现行为，不是可用的NodeOptions setter或未来版本保证。",
+        "sleep和/tmp门闩是模拟IO；只比较业务span重叠，不推导CPU加速、严格实时期限、零复制或故障隔离。",
+        "本例只做先取消timer再卸载的受控路径，不证明任意持有外部线程/资源组件可安全动态卸载。",
+        "自定义allow/auto=true的C++ API正例仅核源码，未作为本轮运行场景。",
+        "Python严格参数服务整批空values分支只核安装源码，不算本轮C++组件实测。",
+        "组件中断控制器的复现步骤/原始结果由作者记录，本审查只读核对未再次执行。"
+      ]
+    }
+  ],
+  "reviewedReports": {
+    "count-action-current-validation.json": {
+      "sha256": "49aecc05a5c72eed04bd4cdbac8aa2c0682a22ac2bf5cdbd9e81e251689fe688",
+      "scope": "10组Count/24目标及单次父SIGINT清理；等待既有组INT后无额外INT，server正常exit0，无业务终态保证。"
+    },
+    "component-labs-current-validation.json": {
+      "sha256": "3c44eddd36c25205bc11f0e1d43bc76e211a59ef5e21da851c00515dc1eea2a2",
+      "scope": "5组组件主场景、11动态gain、7有效配置/4失败、3官方容器时间线及父driver SIGINT生命周期；未扩展到isolated MT分支/零复制/硬件。"
+    }
+  },
+  "validationLimits": [
+    "此审批仅对应reviewedReports的两个精确文件SHA和记录的源码/集成器；报告或源码改变必须重新审查。",
+    "本审查没有运行ROS、构建实验、重跑旧实验或连接仿真/硬件；运行结论来自已读取且与源码匹配的独立作者报告。",
+    "isolated显式MT分支、自定义allow/auto=true正例、Python严格参数服务行为、临界取消竞态按一手源码核对，未混称本轮已运行。",
+    "Count扩展取消未纳入十组主场景；两个父SIGINT检查都是清理证据，不是Action取消或物理停车。",
+    "局部文件字节一致不意味着整个发行版、源码快照或安装二进制相同；安装28.1.22/7.1.12与快照28.1.23/7.1.13分层保留。",
+    "官方教程三处默认表述冲突已记录；本文建议按对应安装版本、固定实现和有限实测范围说明，不改写上游原文。",
+    "Count父INT实测的新记录server exit0、无重复INT，仍有Context关闭后的ActionServer/rosout警告；清理通过不等于受中断任务获得协议终态。"
+  ],
+  "approved": true,
+  "releaseEntryPointDiffs": [
+    {
+      "path": "rclcpp_components/src/component_container_mt.cpp",
+      "releaseCommit": "3aa906a2c7ad13d1623b31a55731993f56538e72",
+      "releaseSha256": "5a77b324bf5d79ab3e36150b06974b8f37dcd3bf2a397c4495f22ebcc8614a4a",
+      "snapshotSha256": "49f785c8fe0ed8b13970d275d351c9d34ebd69b3f280661c6e2cc3f023e61143",
+      "unifiedDiff": "--- release28.1.22/rclcpp_components/src/component_container_mt.cpp\n+++ snapshot28.1.23/rclcpp_components/src/component_container_mt.cpp\n@@ -23,8 +23,11 @@\n   /// Component container with a multi-threaded executor.\n   rclcpp::init(argc, argv);\n \n+  const auto node = std::make_shared<rclcpp_components::ComponentManager>();\n+  // Declare the executor after the manager, so on destruction the executor is\n+  // destroyed first. Otherwise, the executor could release component entities\n+  // after the manager has unloaded their libraries.\n   rclcpp::executors::MultiThreadedExecutor::SharedPtr exec = nullptr;\n-  const auto node = std::make_shared<rclcpp_components::ComponentManager>();\n   if (node->has_parameter(\"thread_num\")) {\n     const auto thread_num = node->get_parameter(\"thread_num\").as_int();\n     exec = std::make_shared<rclcpp::executors::MultiThreadedExecutor>(\n",
+      "conclusion": "选项与执行器选择逻辑一致；后快照仅调整manager与executor声明顺序并加析构顺序解释。"
+    },
+    {
+      "path": "rclcpp_components/src/component_container_isolated.cpp",
+      "releaseCommit": "3aa906a2c7ad13d1623b31a55731993f56538e72",
+      "releaseSha256": "0c85b2a5178cd3019f837a297a5cfe817987e230e6eb31c587e4d9a6b6e57e09",
+      "snapshotSha256": "7a5d13bff8195cae904edc3a7e319be07e5f10c9469044c57b571d23fbef8627",
+      "unifiedDiff": "--- release28.1.22/rclcpp_components/src/component_container_isolated.cpp\n+++ snapshot28.1.23/rclcpp_components/src/component_container_isolated.cpp\n@@ -33,8 +33,11 @@\n     }\n   }\n   // create executor and component manager\n+  rclcpp::Node::SharedPtr node;\n+  // Declare the executor after the manager, so on destruction the executor is\n+  // destroyed first. Otherwise, the executor could release component entities\n+  // after the manager has unloaded their libraries.\n   auto exec = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();\n-  rclcpp::Node::SharedPtr node;\n   if (use_multi_threaded_executor) {\n     using ComponentManagerIsolated =\n       rclcpp_components::ComponentManagerIsolated<rclcpp::executors::MultiThreadedExecutor>;\n",
+      "conclusion": "选项与执行器选择逻辑一致；后快照仅调整manager与executor声明顺序并加析构顺序解释。"
+    }
+  ],
+  "reviewedIntegrationScript": {
+    "path": "scripts/build_iteration3_material.py",
+    "sha256": "a7227e507bbaff89a59cb3ee7176e0f1c051f3de6abb8963df8ef625536dcae6",
+    "reviewScope": "只读技术解释、API表、固定资源入口、来源/报告SHA gate及表格范围；不调用main或修改生成物。",
+    "approved": true,
+    "checkedItems": [
+      "Context CLI与manager当前值/LoadNode override区分",
+      "C++/Python严格参数服务整批失败及Python仅核源码范围",
+      "标准管理服务默认关闭、wrapper显式启用与只读拒绝",
+      "28.1.22官方mt读取thread_num与isolated默认STE的精确入口",
+      "拒绝无执行Result、ABORTED零/部分进度、取消竞态及原因日志边界",
+      "固定7条一手资源URL与版本/逐文件SHA分层",
+      "sourceFile/源SHA和报告SHA绑定、表格标题fallback、6位有效数字显示保留raw"
+    ]
+  },
+  "additionalCommandReview": {
+    "path": "validation-evidence/package-scope-current-validation.json",
+    "sha256": "9760d2c6ace8b3d5759fa4f06fad034dcf6562321cd7a4511eaf0ef50ce24797",
+    "meaning": "仅阅读主任务实际colcon list证据，不重跑；examples/src限定通信两包，整个examples还含两个新实验包，发现不等于重新构建。",
+    "passed": true
+  },
+  "finalizedAt": "2026-11-07T04:42:04+08:00",
+  "summary": {
+    "officialSourceRecords": 31,
+    "localOrInstalledSourceHashChecks": 27,
+    "assetSourcesHashChecked": 15,
+    "componentMainCases": 5,
+    "actionMainCases": 10,
+    "actionGoals": 24,
+    "independentParentSigintChecks": 2,
+    "reviewerRanRos": false,
+    "outstandingBlockingFindings": 0
+  },
+  "approvalSuspendedAt": "2026-11-07T04:37:20+08:00",
+  "approvalHistory": [
+    {
+      "state": "暂缓",
+      "reason": "根审查要求复核父组INT与worker重复INT引发的清理异常；原/proc无遗留事实保留。",
+      "at": "2026-11-07T04:37:20+08:00"
+    },
+    {
+      "state": "按有限范围通过",
+      "reason": "最终完整十组+严格单父INT实测重跑，绑定新完整报告SHA；Context失效警告和无业务终态范围均保留。",
+      "at": "2026-11-07T04:42:04+08:00"
+    }
+  ]
+}

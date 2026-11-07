@@ -1,0 +1,1726 @@
+{
+  "checkedAt": "2026-11-07",
+  "iteration": "2026-11-07-r10",
+  "passed": true,
+  "chapters": 60,
+  "outlineAudit": [
+    {
+      "width": 1440,
+      "numbered": 451,
+      "childEntries": 271,
+      "numberedChildren": 77,
+      "entries": 1132,
+      "paragraphs": 1135,
+      "jumps": 1132,
+      "chapters": [
+        {
+          "id": "architecture",
+          "number": 1,
+          "numbered": 7,
+          "childEntries": 2,
+          "numberedChildren": 1,
+          "entries": 16,
+          "paragraphs": 21,
+          "jumps": 16
+        },
+        {
+          "id": "installation",
+          "number": 2,
+          "numbered": 7,
+          "childEntries": 0,
+          "numberedChildren": 0,
+          "entries": 13,
+          "paragraphs": 21,
+          "jumps": 13
+        },
+        {
+          "id": "workspace",
+          "number": 3,
+          "numbered": 7,
+          "childEntries": 3,
+          "numberedChildren": 0,
+          "entries": 18,
+          "paragraphs": 21,
+          "jumps": 18
+        },
+        {
+          "id": "graph-cli",
+          "number": 4,
+          "numbered": 7,
+          "childEntries": 0,
+          "numberedChildren": 0,
+          "entries": 13,
+          "paragraphs": 21,
+          "jumps": 13
+        },
+        {
+          "id": "math-linear",
+          "number": 5,
+          "numbered": 7,
+          "childEntries": 3,
+          "numberedChildren": 0,
+          "entries": 16,
+          "paragraphs": 16,
+          "jumps": 16
+        },
+        {
+          "id": "math-rigid",
+          "number": 6,
+          "numbered": 7,
+          "childEntries": 6,
+          "numberedChildren": 2,
+          "entries": 20,
+          "paragraphs": 16,
+          "jumps": 20
+        },
+        {
+          "id": "math-probability",
+          "number": 7,
+          "numbered": 7,
+          "childEntries": 3,
+          "numberedChildren": 0,
+          "entries": 16,
+          "paragraphs": 16,
+          "jumps": 16
+        },
+        {
+          "id": "math-estimation",
+          "number": 8,
+          "numbered": 7,
+          "childEntries": 4,
+          "numberedChildren": 1,
+          "entries": 17,
+          "paragraphs": 16,
+          "jumps": 17
+        },
+        {
+          "id": "math-optimization",
+          "number": 9,
+          "numbered": 7,
+          "childEntries": 3,
+          "numberedChildren": 0,
+          "entries": 16,
+          "paragraphs": 16,
+          "jumps": 16
+        },
+        {
+          "id": "math-kinematics",
+          "number": 10,
+          "numbered": 7,
+          "childEntries": 7,
+          "numberedChildren": 3,
+          "entries": 21,
+          "paragraphs": 16,
+          "jumps": 21
+        },
+        {
+          "id": "math-dynamics",
+          "number": 11,
+          "numbered": 7,
+          "childEntries": 3,
+          "numberedChildren": 0,
+          "entries": 16,
+          "paragraphs": 16,
+          "jumps": 16
+        },
+        {
+          "id": "math-control",
+          "number": 12,
+          "numbered": 7,
+          "childEntries": 4,
+          "numberedChildren": 1,
+          "entries": 17,
+          "paragraphs": 16,
+          "jumps": 17
+        },
+        {
+          "id": "pubsub",
+          "number": 13,
+          "numbered": 7,
+          "childEntries": 5,
+          "numberedChildren": 1,
+          "entries": 21,
+          "paragraphs": 22,
+          "jumps": 21
+        },
+        {
+          "id": "interfaces",
+          "number": 14,
+          "numbered": 7,
+          "childEntries": 1,
+          "numberedChildren": 0,
+          "entries": 15,
+          "paragraphs": 21,
+          "jumps": 15
+        },
+        {
+          "id": "services",
+          "number": 15,
+          "numbered": 8,
+          "childEntries": 2,
+          "numberedChildren": 1,
+          "entries": 18,
+          "paragraphs": 25,
+          "jumps": 18
+        },
+        {
+          "id": "actions",
+          "number": 16,
+          "numbered": 9,
+          "childEntries": 3,
+          "numberedChildren": 2,
+          "entries": 20,
+          "paragraphs": 28,
+          "jumps": 20
+        },
+        {
+          "id": "parameters",
+          "number": 17,
+          "numbered": 8,
+          "childEntries": 4,
+          "numberedChildren": 1,
+          "entries": 20,
+          "paragraphs": 27,
+          "jumps": 20
+        },
+        {
+          "id": "launch",
+          "number": 18,
+          "numbered": 8,
+          "childEntries": 1,
+          "numberedChildren": 0,
+          "entries": 17,
+          "paragraphs": 24,
+          "jumps": 17
+        },
+        {
+          "id": "qos",
+          "number": 19,
+          "numbered": 11,
+          "childEntries": 4,
+          "numberedChildren": 2,
+          "entries": 24,
+          "paragraphs": 30,
+          "jumps": 24
+        },
+        {
+          "id": "cpp-engineering",
+          "number": 20,
+          "numbered": 6,
+          "childEntries": 5,
+          "numberedChildren": 0,
+          "entries": 18,
+          "paragraphs": 18,
+          "jumps": 18
+        },
+        {
+          "id": "executors",
+          "number": 21,
+          "numbered": 8,
+          "childEntries": 7,
+          "numberedChildren": 3,
+          "entries": 24,
+          "paragraphs": 20,
+          "jumps": 24
+        },
+        {
+          "id": "lifecycle",
+          "number": 22,
+          "numbered": 9,
+          "childEntries": 4,
+          "numberedChildren": 3,
+          "entries": 20,
+          "paragraphs": 19,
+          "jumps": 20
+        },
+        {
+          "id": "composition",
+          "number": 23,
+          "numbered": 9,
+          "childEntries": 7,
+          "numberedChildren": 3,
+          "entries": 24,
+          "paragraphs": 25,
+          "jumps": 24
+        },
+        {
+          "id": "time-bag",
+          "number": 24,
+          "numbered": 10,
+          "childEntries": 5,
+          "numberedChildren": 2,
+          "entries": 22,
+          "paragraphs": 24,
+          "jumps": 22
+        },
+        {
+          "id": "testing",
+          "number": 25,
+          "numbered": 9,
+          "childEntries": 6,
+          "numberedChildren": 3,
+          "entries": 22,
+          "paragraphs": 20,
+          "jumps": 22
+        },
+        {
+          "id": "network",
+          "number": 26,
+          "numbered": 6,
+          "childEntries": 1,
+          "numberedChildren": 1,
+          "entries": 13,
+          "paragraphs": 12,
+          "jumps": 13
+        },
+        {
+          "id": "security",
+          "number": 27,
+          "numbered": 6,
+          "childEntries": 0,
+          "numberedChildren": 0,
+          "entries": 12,
+          "paragraphs": 12,
+          "jumps": 12
+        },
+        {
+          "id": "performance",
+          "number": 28,
+          "numbered": 6,
+          "childEntries": 2,
+          "numberedChildren": 0,
+          "entries": 15,
+          "paragraphs": 12,
+          "jumps": 15
+        },
+        {
+          "id": "deployment",
+          "number": 29,
+          "numbered": 9,
+          "childEntries": 15,
+          "numberedChildren": 3,
+          "entries": 31,
+          "paragraphs": 19,
+          "jumps": 31
+        },
+        {
+          "id": "migration",
+          "number": 30,
+          "numbered": 6,
+          "childEntries": 5,
+          "numberedChildren": 0,
+          "entries": 18,
+          "paragraphs": 12,
+          "jumps": 18
+        },
+        {
+          "id": "tf2",
+          "number": 31,
+          "numbered": 7,
+          "childEntries": 2,
+          "numberedChildren": 1,
+          "entries": 16,
+          "paragraphs": 16,
+          "jumps": 16
+        },
+        {
+          "id": "eco-tf-frames",
+          "number": 32,
+          "numbered": 7,
+          "childEntries": 8,
+          "numberedChildren": 2,
+          "entries": 22,
+          "paragraphs": 19,
+          "jumps": 22
+        },
+        {
+          "id": "eco-model-rviz",
+          "number": 33,
+          "numbered": 11,
+          "childEntries": 9,
+          "numberedChildren": 4,
+          "entries": 28,
+          "paragraphs": 25,
+          "jumps": 28
+        },
+        {
+          "id": "eco-gazebo-simulation",
+          "number": 34,
+          "numbered": 8,
+          "childEntries": 8,
+          "numberedChildren": 2,
+          "entries": 23,
+          "paragraphs": 19,
+          "jumps": 23
+        },
+        {
+          "id": "eco-perception-pipeline",
+          "number": 35,
+          "numbered": 8,
+          "childEntries": 8,
+          "numberedChildren": 3,
+          "entries": 23,
+          "paragraphs": 19,
+          "jumps": 23
+        },
+        {
+          "id": "eco-data-observability",
+          "number": 36,
+          "numbered": 10,
+          "childEntries": 7,
+          "numberedChildren": 2,
+          "entries": 24,
+          "paragraphs": 21,
+          "jumps": 24
+        },
+        {
+          "id": "eco-control-framework",
+          "number": 37,
+          "numbered": 8,
+          "childEntries": 7,
+          "numberedChildren": 2,
+          "entries": 22,
+          "paragraphs": 19,
+          "jumps": 22
+        },
+        {
+          "id": "eco-diff-drive-tracks",
+          "number": 38,
+          "numbered": 7,
+          "childEntries": 8,
+          "numberedChildren": 2,
+          "entries": 23,
+          "paragraphs": 17,
+          "jumps": 23
+        },
+        {
+          "id": "eco-hardware-integration",
+          "number": 39,
+          "numbered": 6,
+          "childEntries": 5,
+          "numberedChildren": 1,
+          "entries": 18,
+          "paragraphs": 15,
+          "jumps": 18
+        },
+        {
+          "id": "theory-slam",
+          "number": 40,
+          "numbered": 7,
+          "childEntries": 4,
+          "numberedChildren": 3,
+          "entries": 17,
+          "paragraphs": 21,
+          "jumps": 17
+        },
+        {
+          "id": "eco-slam-mapping",
+          "number": 41,
+          "numbered": 11,
+          "childEntries": 9,
+          "numberedChildren": 4,
+          "entries": 27,
+          "paragraphs": 29,
+          "jumps": 27
+        },
+        {
+          "id": "eco-state-estimation",
+          "number": 42,
+          "numbered": 10,
+          "childEntries": 10,
+          "numberedChildren": 4,
+          "entries": 27,
+          "paragraphs": 25,
+          "jumps": 27
+        },
+        {
+          "id": "theory-planning",
+          "number": 43,
+          "numbered": 7,
+          "childEntries": 3,
+          "numberedChildren": 2,
+          "entries": 16,
+          "paragraphs": 21,
+          "jumps": 16
+        },
+        {
+          "id": "theory-optimal-control",
+          "number": 44,
+          "numbered": 6,
+          "childEntries": 2,
+          "numberedChildren": 1,
+          "entries": 14,
+          "paragraphs": 18,
+          "jumps": 14
+        },
+        {
+          "id": "eco-nav2-stack",
+          "number": 45,
+          "numbered": 9,
+          "childEntries": 12,
+          "numberedChildren": 5,
+          "entries": 28,
+          "paragraphs": 22,
+          "jumps": 28
+        },
+        {
+          "id": "eco-nav2-task-programming",
+          "number": 46,
+          "numbered": 8,
+          "childEntries": 9,
+          "numberedChildren": 3,
+          "entries": 24,
+          "paragraphs": 20,
+          "jumps": 24
+        },
+        {
+          "id": "project-navigation",
+          "number": 47,
+          "numbered": 9,
+          "childEntries": 9,
+          "numberedChildren": 1,
+          "entries": 25,
+          "paragraphs": 33,
+          "jumps": 25
+        },
+        {
+          "id": "eco-moveit-planning",
+          "number": 48,
+          "numbered": 7,
+          "childEntries": 6,
+          "numberedChildren": 1,
+          "entries": 20,
+          "paragraphs": 14,
+          "jumps": 20
+        },
+        {
+          "id": "eco-manipulation-tasks",
+          "number": 49,
+          "numbered": 7,
+          "childEntries": 4,
+          "numberedChildren": 0,
+          "entries": 17,
+          "paragraphs": 14,
+          "jumps": 17
+        },
+        {
+          "id": "project-manipulation",
+          "number": 50,
+          "numbered": 8,
+          "childEntries": 4,
+          "numberedChildren": 1,
+          "entries": 19,
+          "paragraphs": 24,
+          "jumps": 19
+        },
+        {
+          "id": "eco-microcontrollers",
+          "number": 51,
+          "numbered": 7,
+          "childEntries": 4,
+          "numberedChildren": 0,
+          "entries": 17,
+          "paragraphs": 16,
+          "jumps": 17
+        },
+        {
+          "id": "eco-multi-robot",
+          "number": 52,
+          "numbered": 7,
+          "childEntries": 4,
+          "numberedChildren": 0,
+          "entries": 17,
+          "paragraphs": 14,
+          "jumps": 17
+        },
+        {
+          "id": "eco-network-security",
+          "number": 53,
+          "numbered": 7,
+          "childEntries": 4,
+          "numberedChildren": 0,
+          "entries": 17,
+          "paragraphs": 14,
+          "jumps": 17
+        },
+        {
+          "id": "eco-accelerated-robotics",
+          "number": 54,
+          "numbered": 7,
+          "childEntries": 4,
+          "numberedChildren": 0,
+          "entries": 17,
+          "paragraphs": 14,
+          "jumps": 17
+        },
+        {
+          "id": "theory-legged",
+          "number": 55,
+          "numbered": 6,
+          "childEntries": 1,
+          "numberedChildren": 0,
+          "entries": 13,
+          "paragraphs": 18,
+          "jumps": 13
+        },
+        {
+          "id": "theory-aerial",
+          "number": 56,
+          "numbered": 6,
+          "childEntries": 1,
+          "numberedChildren": 0,
+          "entries": 13,
+          "paragraphs": 18,
+          "jumps": 13
+        },
+        {
+          "id": "learning-rl",
+          "number": 57,
+          "numbered": 6,
+          "childEntries": 1,
+          "numberedChildren": 0,
+          "entries": 13,
+          "paragraphs": 12,
+          "jumps": 13
+        },
+        {
+          "id": "learning-embodied",
+          "number": 58,
+          "numbered": 6,
+          "childEntries": 1,
+          "numberedChildren": 0,
+          "entries": 13,
+          "paragraphs": 12,
+          "jumps": 13
+        },
+        {
+          "id": "learning-policy",
+          "number": 59,
+          "numbered": 6,
+          "childEntries": 1,
+          "numberedChildren": 0,
+          "entries": 13,
+          "paragraphs": 12,
+          "jumps": 13
+        },
+        {
+          "id": "cloud-mlops",
+          "number": 60,
+          "numbered": 6,
+          "childEntries": 1,
+          "numberedChildren": 0,
+          "entries": 13,
+          "paragraphs": 12,
+          "jumps": 13
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "numbered": 451,
+      "childEntries": 271,
+      "numberedChildren": 77,
+      "entries": 1132,
+      "paragraphs": 1135,
+      "jumps": 0,
+      "chapters": [
+        {
+          "id": "architecture",
+          "number": 1,
+          "numbered": 7,
+          "childEntries": 2,
+          "numberedChildren": 1,
+          "entries": 16,
+          "paragraphs": 21
+        },
+        {
+          "id": "installation",
+          "number": 2,
+          "numbered": 7,
+          "childEntries": 0,
+          "numberedChildren": 0,
+          "entries": 13,
+          "paragraphs": 21
+        },
+        {
+          "id": "workspace",
+          "number": 3,
+          "numbered": 7,
+          "childEntries": 3,
+          "numberedChildren": 0,
+          "entries": 18,
+          "paragraphs": 21
+        },
+        {
+          "id": "graph-cli",
+          "number": 4,
+          "numbered": 7,
+          "childEntries": 0,
+          "numberedChildren": 0,
+          "entries": 13,
+          "paragraphs": 21
+        },
+        {
+          "id": "math-linear",
+          "number": 5,
+          "numbered": 7,
+          "childEntries": 3,
+          "numberedChildren": 0,
+          "entries": 16,
+          "paragraphs": 16
+        },
+        {
+          "id": "math-rigid",
+          "number": 6,
+          "numbered": 7,
+          "childEntries": 6,
+          "numberedChildren": 2,
+          "entries": 20,
+          "paragraphs": 16
+        },
+        {
+          "id": "math-probability",
+          "number": 7,
+          "numbered": 7,
+          "childEntries": 3,
+          "numberedChildren": 0,
+          "entries": 16,
+          "paragraphs": 16
+        },
+        {
+          "id": "math-estimation",
+          "number": 8,
+          "numbered": 7,
+          "childEntries": 4,
+          "numberedChildren": 1,
+          "entries": 17,
+          "paragraphs": 16
+        },
+        {
+          "id": "math-optimization",
+          "number": 9,
+          "numbered": 7,
+          "childEntries": 3,
+          "numberedChildren": 0,
+          "entries": 16,
+          "paragraphs": 16
+        },
+        {
+          "id": "math-kinematics",
+          "number": 10,
+          "numbered": 7,
+          "childEntries": 7,
+          "numberedChildren": 3,
+          "entries": 21,
+          "paragraphs": 16
+        },
+        {
+          "id": "math-dynamics",
+          "number": 11,
+          "numbered": 7,
+          "childEntries": 3,
+          "numberedChildren": 0,
+          "entries": 16,
+          "paragraphs": 16
+        },
+        {
+          "id": "math-control",
+          "number": 12,
+          "numbered": 7,
+          "childEntries": 4,
+          "numberedChildren": 1,
+          "entries": 17,
+          "paragraphs": 16
+        },
+        {
+          "id": "pubsub",
+          "number": 13,
+          "numbered": 7,
+          "childEntries": 5,
+          "numberedChildren": 1,
+          "entries": 21,
+          "paragraphs": 22
+        },
+        {
+          "id": "interfaces",
+          "number": 14,
+          "numbered": 7,
+          "childEntries": 1,
+          "numberedChildren": 0,
+          "entries": 15,
+          "paragraphs": 21
+        },
+        {
+          "id": "services",
+          "number": 15,
+          "numbered": 8,
+          "childEntries": 2,
+          "numberedChildren": 1,
+          "entries": 18,
+          "paragraphs": 25
+        },
+        {
+          "id": "actions",
+          "number": 16,
+          "numbered": 9,
+          "childEntries": 3,
+          "numberedChildren": 2,
+          "entries": 20,
+          "paragraphs": 28
+        },
+        {
+          "id": "parameters",
+          "number": 17,
+          "numbered": 8,
+          "childEntries": 4,
+          "numberedChildren": 1,
+          "entries": 20,
+          "paragraphs": 27
+        },
+        {
+          "id": "launch",
+          "number": 18,
+          "numbered": 8,
+          "childEntries": 1,
+          "numberedChildren": 0,
+          "entries": 17,
+          "paragraphs": 24
+        },
+        {
+          "id": "qos",
+          "number": 19,
+          "numbered": 11,
+          "childEntries": 4,
+          "numberedChildren": 2,
+          "entries": 24,
+          "paragraphs": 30
+        },
+        {
+          "id": "cpp-engineering",
+          "number": 20,
+          "numbered": 6,
+          "childEntries": 5,
+          "numberedChildren": 0,
+          "entries": 18,
+          "paragraphs": 18
+        },
+        {
+          "id": "executors",
+          "number": 21,
+          "numbered": 8,
+          "childEntries": 7,
+          "numberedChildren": 3,
+          "entries": 24,
+          "paragraphs": 20
+        },
+        {
+          "id": "lifecycle",
+          "number": 22,
+          "numbered": 9,
+          "childEntries": 4,
+          "numberedChildren": 3,
+          "entries": 20,
+          "paragraphs": 19
+        },
+        {
+          "id": "composition",
+          "number": 23,
+          "numbered": 9,
+          "childEntries": 7,
+          "numberedChildren": 3,
+          "entries": 24,
+          "paragraphs": 25
+        },
+        {
+          "id": "time-bag",
+          "number": 24,
+          "numbered": 10,
+          "childEntries": 5,
+          "numberedChildren": 2,
+          "entries": 22,
+          "paragraphs": 24
+        },
+        {
+          "id": "testing",
+          "number": 25,
+          "numbered": 9,
+          "childEntries": 6,
+          "numberedChildren": 3,
+          "entries": 22,
+          "paragraphs": 20
+        },
+        {
+          "id": "network",
+          "number": 26,
+          "numbered": 6,
+          "childEntries": 1,
+          "numberedChildren": 1,
+          "entries": 13,
+          "paragraphs": 12
+        },
+        {
+          "id": "security",
+          "number": 27,
+          "numbered": 6,
+          "childEntries": 0,
+          "numberedChildren": 0,
+          "entries": 12,
+          "paragraphs": 12
+        },
+        {
+          "id": "performance",
+          "number": 28,
+          "numbered": 6,
+          "childEntries": 2,
+          "numberedChildren": 0,
+          "entries": 15,
+          "paragraphs": 12
+        },
+        {
+          "id": "deployment",
+          "number": 29,
+          "numbered": 9,
+          "childEntries": 15,
+          "numberedChildren": 3,
+          "entries": 31,
+          "paragraphs": 19
+        },
+        {
+          "id": "migration",
+          "number": 30,
+          "numbered": 6,
+          "childEntries": 5,
+          "numberedChildren": 0,
+          "entries": 18,
+          "paragraphs": 12
+        },
+        {
+          "id": "tf2",
+          "number": 31,
+          "numbered": 7,
+          "childEntries": 2,
+          "numberedChildren": 1,
+          "entries": 16,
+          "paragraphs": 16
+        },
+        {
+          "id": "eco-tf-frames",
+          "number": 32,
+          "numbered": 7,
+          "childEntries": 8,
+          "numberedChildren": 2,
+          "entries": 22,
+          "paragraphs": 19
+        },
+        {
+          "id": "eco-model-rviz",
+          "number": 33,
+          "numbered": 11,
+          "childEntries": 9,
+          "numberedChildren": 4,
+          "entries": 28,
+          "paragraphs": 25
+        },
+        {
+          "id": "eco-gazebo-simulation",
+          "number": 34,
+          "numbered": 8,
+          "childEntries": 8,
+          "numberedChildren": 2,
+          "entries": 23,
+          "paragraphs": 19
+        },
+        {
+          "id": "eco-perception-pipeline",
+          "number": 35,
+          "numbered": 8,
+          "childEntries": 8,
+          "numberedChildren": 3,
+          "entries": 23,
+          "paragraphs": 19
+        },
+        {
+          "id": "eco-data-observability",
+          "number": 36,
+          "numbered": 10,
+          "childEntries": 7,
+          "numberedChildren": 2,
+          "entries": 24,
+          "paragraphs": 21
+        },
+        {
+          "id": "eco-control-framework",
+          "number": 37,
+          "numbered": 8,
+          "childEntries": 7,
+          "numberedChildren": 2,
+          "entries": 22,
+          "paragraphs": 19
+        },
+        {
+          "id": "eco-diff-drive-tracks",
+          "number": 38,
+          "numbered": 7,
+          "childEntries": 8,
+          "numberedChildren": 2,
+          "entries": 23,
+          "paragraphs": 17
+        },
+        {
+          "id": "eco-hardware-integration",
+          "number": 39,
+          "numbered": 6,
+          "childEntries": 5,
+          "numberedChildren": 1,
+          "entries": 18,
+          "paragraphs": 15
+        },
+        {
+          "id": "theory-slam",
+          "number": 40,
+          "numbered": 7,
+          "childEntries": 4,
+          "numberedChildren": 3,
+          "entries": 17,
+          "paragraphs": 21
+        },
+        {
+          "id": "eco-slam-mapping",
+          "number": 41,
+          "numbered": 11,
+          "childEntries": 9,
+          "numberedChildren": 4,
+          "entries": 27,
+          "paragraphs": 29
+        },
+        {
+          "id": "eco-state-estimation",
+          "number": 42,
+          "numbered": 10,
+          "childEntries": 10,
+          "numberedChildren": 4,
+          "entries": 27,
+          "paragraphs": 25
+        },
+        {
+          "id": "theory-planning",
+          "number": 43,
+          "numbered": 7,
+          "childEntries": 3,
+          "numberedChildren": 2,
+          "entries": 16,
+          "paragraphs": 21
+        },
+        {
+          "id": "theory-optimal-control",
+          "number": 44,
+          "numbered": 6,
+          "childEntries": 2,
+          "numberedChildren": 1,
+          "entries": 14,
+          "paragraphs": 18
+        },
+        {
+          "id": "eco-nav2-stack",
+          "number": 45,
+          "numbered": 9,
+          "childEntries": 12,
+          "numberedChildren": 5,
+          "entries": 28,
+          "paragraphs": 22
+        },
+        {
+          "id": "eco-nav2-task-programming",
+          "number": 46,
+          "numbered": 8,
+          "childEntries": 9,
+          "numberedChildren": 3,
+          "entries": 24,
+          "paragraphs": 20
+        },
+        {
+          "id": "project-navigation",
+          "number": 47,
+          "numbered": 9,
+          "childEntries": 9,
+          "numberedChildren": 1,
+          "entries": 25,
+          "paragraphs": 33
+        },
+        {
+          "id": "eco-moveit-planning",
+          "number": 48,
+          "numbered": 7,
+          "childEntries": 6,
+          "numberedChildren": 1,
+          "entries": 20,
+          "paragraphs": 14
+        },
+        {
+          "id": "eco-manipulation-tasks",
+          "number": 49,
+          "numbered": 7,
+          "childEntries": 4,
+          "numberedChildren": 0,
+          "entries": 17,
+          "paragraphs": 14
+        },
+        {
+          "id": "project-manipulation",
+          "number": 50,
+          "numbered": 8,
+          "childEntries": 4,
+          "numberedChildren": 1,
+          "entries": 19,
+          "paragraphs": 24
+        },
+        {
+          "id": "eco-microcontrollers",
+          "number": 51,
+          "numbered": 7,
+          "childEntries": 4,
+          "numberedChildren": 0,
+          "entries": 17,
+          "paragraphs": 16
+        },
+        {
+          "id": "eco-multi-robot",
+          "number": 52,
+          "numbered": 7,
+          "childEntries": 4,
+          "numberedChildren": 0,
+          "entries": 17,
+          "paragraphs": 14
+        },
+        {
+          "id": "eco-network-security",
+          "number": 53,
+          "numbered": 7,
+          "childEntries": 4,
+          "numberedChildren": 0,
+          "entries": 17,
+          "paragraphs": 14
+        },
+        {
+          "id": "eco-accelerated-robotics",
+          "number": 54,
+          "numbered": 7,
+          "childEntries": 4,
+          "numberedChildren": 0,
+          "entries": 17,
+          "paragraphs": 14
+        },
+        {
+          "id": "theory-legged",
+          "number": 55,
+          "numbered": 6,
+          "childEntries": 1,
+          "numberedChildren": 0,
+          "entries": 13,
+          "paragraphs": 18
+        },
+        {
+          "id": "theory-aerial",
+          "number": 56,
+          "numbered": 6,
+          "childEntries": 1,
+          "numberedChildren": 0,
+          "entries": 13,
+          "paragraphs": 18
+        },
+        {
+          "id": "learning-rl",
+          "number": 57,
+          "numbered": 6,
+          "childEntries": 1,
+          "numberedChildren": 0,
+          "entries": 13,
+          "paragraphs": 12
+        },
+        {
+          "id": "learning-embodied",
+          "number": 58,
+          "numbered": 6,
+          "childEntries": 1,
+          "numberedChildren": 0,
+          "entries": 13,
+          "paragraphs": 12
+        },
+        {
+          "id": "learning-policy",
+          "number": 59,
+          "numbered": 6,
+          "childEntries": 1,
+          "numberedChildren": 0,
+          "entries": 13,
+          "paragraphs": 12
+        },
+        {
+          "id": "cloud-mlops",
+          "number": 60,
+          "numbered": 6,
+          "childEntries": 1,
+          "numberedChildren": 0,
+          "entries": 13,
+          "paragraphs": 12
+        }
+      ]
+    },
+    {
+      "width": 320,
+      "numbered": 451,
+      "childEntries": 271,
+      "numberedChildren": 77,
+      "entries": 1132,
+      "paragraphs": 1135,
+      "jumps": 0,
+      "chapters": [
+        {
+          "id": "architecture",
+          "number": 1,
+          "numbered": 7,
+          "childEntries": 2,
+          "numberedChildren": 1,
+          "entries": 16,
+          "paragraphs": 21
+        },
+        {
+          "id": "installation",
+          "number": 2,
+          "numbered": 7,
+          "childEntries": 0,
+          "numberedChildren": 0,
+          "entries": 13,
+          "paragraphs": 21
+        },
+        {
+          "id": "workspace",
+          "number": 3,
+          "numbered": 7,
+          "childEntries": 3,
+          "numberedChildren": 0,
+          "entries": 18,
+          "paragraphs": 21
+        },
+        {
+          "id": "graph-cli",
+          "number": 4,
+          "numbered": 7,
+          "childEntries": 0,
+          "numberedChildren": 0,
+          "entries": 13,
+          "paragraphs": 21
+        },
+        {
+          "id": "math-linear",
+          "number": 5,
+          "numbered": 7,
+          "childEntries": 3,
+          "numberedChildren": 0,
+          "entries": 16,
+          "paragraphs": 16
+        },
+        {
+          "id": "math-rigid",
+          "number": 6,
+          "numbered": 7,
+          "childEntries": 6,
+          "numberedChildren": 2,
+          "entries": 20,
+          "paragraphs": 16
+        },
+        {
+          "id": "math-probability",
+          "number": 7,
+          "numbered": 7,
+          "childEntries": 3,
+          "numberedChildren": 0,
+          "entries": 16,
+          "paragraphs": 16
+        },
+        {
+          "id": "math-estimation",
+          "number": 8,
+          "numbered": 7,
+          "childEntries": 4,
+          "numberedChildren": 1,
+          "entries": 17,
+          "paragraphs": 16
+        },
+        {
+          "id": "math-optimization",
+          "number": 9,
+          "numbered": 7,
+          "childEntries": 3,
+          "numberedChildren": 0,
+          "entries": 16,
+          "paragraphs": 16
+        },
+        {
+          "id": "math-kinematics",
+          "number": 10,
+          "numbered": 7,
+          "childEntries": 7,
+          "numberedChildren": 3,
+          "entries": 21,
+          "paragraphs": 16
+        },
+        {
+          "id": "math-dynamics",
+          "number": 11,
+          "numbered": 7,
+          "childEntries": 3,
+          "numberedChildren": 0,
+          "entries": 16,
+          "paragraphs": 16
+        },
+        {
+          "id": "math-control",
+          "number": 12,
+          "numbered": 7,
+          "childEntries": 4,
+          "numberedChildren": 1,
+          "entries": 17,
+          "paragraphs": 16
+        },
+        {
+          "id": "pubsub",
+          "number": 13,
+          "numbered": 7,
+          "childEntries": 5,
+          "numberedChildren": 1,
+          "entries": 21,
+          "paragraphs": 22
+        },
+        {
+          "id": "interfaces",
+          "number": 14,
+          "numbered": 7,
+          "childEntries": 1,
+          "numberedChildren": 0,
+          "entries": 15,
+          "paragraphs": 21
+        },
+        {
+          "id": "services",
+          "number": 15,
+          "numbered": 8,
+          "childEntries": 2,
+          "numberedChildren": 1,
+          "entries": 18,
+          "paragraphs": 25
+        },
+        {
+          "id": "actions",
+          "number": 16,
+          "numbered": 9,
+          "childEntries": 3,
+          "numberedChildren": 2,
+          "entries": 20,
+          "paragraphs": 28
+        },
+        {
+          "id": "parameters",
+          "number": 17,
+          "numbered": 8,
+          "childEntries": 4,
+          "numberedChildren": 1,
+          "entries": 20,
+          "paragraphs": 27
+        },
+        {
+          "id": "launch",
+          "number": 18,
+          "numbered": 8,
+          "childEntries": 1,
+          "numberedChildren": 0,
+          "entries": 17,
+          "paragraphs": 24
+        },
+        {
+          "id": "qos",
+          "number": 19,
+          "numbered": 11,
+          "childEntries": 4,
+          "numberedChildren": 2,
+          "entries": 24,
+          "paragraphs": 30
+        },
+        {
+          "id": "cpp-engineering",
+          "number": 20,
+          "numbered": 6,
+          "childEntries": 5,
+          "numberedChildren": 0,
+          "entries": 18,
+          "paragraphs": 18
+        },
+        {
+          "id": "executors",
+          "number": 21,
+          "numbered": 8,
+          "childEntries": 7,
+          "numberedChildren": 3,
+          "entries": 24,
+          "paragraphs": 20
+        },
+        {
+          "id": "lifecycle",
+          "number": 22,
+          "numbered": 9,
+          "childEntries": 4,
+          "numberedChildren": 3,
+          "entries": 20,
+          "paragraphs": 19
+        },
+        {
+          "id": "composition",
+          "number": 23,
+          "numbered": 9,
+          "childEntries": 7,
+          "numberedChildren": 3,
+          "entries": 24,
+          "paragraphs": 25
+        },
+        {
+          "id": "time-bag",
+          "number": 24,
+          "numbered": 10,
+          "childEntries": 5,
+          "numberedChildren": 2,
+          "entries": 22,
+          "paragraphs": 24
+        },
+        {
+          "id": "testing",
+          "number": 25,
+          "numbered": 9,
+          "childEntries": 6,
+          "numberedChildren": 3,
+          "entries": 22,
+          "paragraphs": 20
+        },
+        {
+          "id": "network",
+          "number": 26,
+          "numbered": 6,
+          "childEntries": 1,
+          "numberedChildren": 1,
+          "entries": 13,
+          "paragraphs": 12
+        },
+        {
+          "id": "security",
+          "number": 27,
+          "numbered": 6,
+          "childEntries": 0,
+          "numberedChildren": 0,
+          "entries": 12,
+          "paragraphs": 12
+        },
+        {
+          "id": "performance",
+          "number": 28,
+          "numbered": 6,
+          "childEntries": 2,
+          "numberedChildren": 0,
+          "entries": 15,
+          "paragraphs": 12
+        },
+        {
+          "id": "deployment",
+          "number": 29,
+          "numbered": 9,
+          "childEntries": 15,
+          "numberedChildren": 3,
+          "entries": 31,
+          "paragraphs": 19
+        },
+        {
+          "id": "migration",
+          "number": 30,
+          "numbered": 6,
+          "childEntries": 5,
+          "numberedChildren": 0,
+          "entries": 18,
+          "paragraphs": 12
+        },
+        {
+          "id": "tf2",
+          "number": 31,
+          "numbered": 7,
+          "childEntries": 2,
+          "numberedChildren": 1,
+          "entries": 16,
+          "paragraphs": 16
+        },
+        {
+          "id": "eco-tf-frames",
+          "number": 32,
+          "numbered": 7,
+          "childEntries": 8,
+          "numberedChildren": 2,
+          "entries": 22,
+          "paragraphs": 19
+        },
+        {
+          "id": "eco-model-rviz",
+          "number": 33,
+          "numbered": 11,
+          "childEntries": 9,
+          "numberedChildren": 4,
+          "entries": 28,
+          "paragraphs": 25
+        },
+        {
+          "id": "eco-gazebo-simulation",
+          "number": 34,
+          "numbered": 8,
+          "childEntries": 8,
+          "numberedChildren": 2,
+          "entries": 23,
+          "paragraphs": 19
+        },
+        {
+          "id": "eco-perception-pipeline",
+          "number": 35,
+          "numbered": 8,
+          "childEntries": 8,
+          "numberedChildren": 3,
+          "entries": 23,
+          "paragraphs": 19
+        },
+        {
+          "id": "eco-data-observability",
+          "number": 36,
+          "numbered": 10,
+          "childEntries": 7,
+          "numberedChildren": 2,
+          "entries": 24,
+          "paragraphs": 21
+        },
+        {
+          "id": "eco-control-framework",
+          "number": 37,
+          "numbered": 8,
+          "childEntries": 7,
+          "numberedChildren": 2,
+          "entries": 22,
+          "paragraphs": 19
+        },
+        {
+          "id": "eco-diff-drive-tracks",
+          "number": 38,
+          "numbered": 7,
+          "childEntries": 8,
+          "numberedChildren": 2,
+          "entries": 23,
+          "paragraphs": 17
+        },
+        {
+          "id": "eco-hardware-integration",
+          "number": 39,
+          "numbered": 6,
+          "childEntries": 5,
+          "numberedChildren": 1,
+          "entries": 18,
+          "paragraphs": 15
+        },
+        {
+          "id": "theory-slam",
+          "number": 40,
+          "numbered": 7,
+          "childEntries": 4,
+          "numberedChildren": 3,
+          "entries": 17,
+          "paragraphs": 21
+        },
+        {
+          "id": "eco-slam-mapping",
+          "number": 41,
+          "numbered": 11,
+          "childEntries": 9,
+          "numberedChildren": 4,
+          "entries": 27,
+          "paragraphs": 29
+        },
+        {
+          "id": "eco-state-estimation",
+          "number": 42,
+          "numbered": 10,
+          "childEntries": 10,
+          "numberedChildren": 4,
+          "entries": 27,
+          "paragraphs": 25
+        },
+        {
+          "id": "theory-planning",
+          "number": 43,
+          "numbered": 7,
+          "childEntries": 3,
+          "numberedChildren": 2,
+          "entries": 16,
+          "paragraphs": 21
+        },
+        {
+          "id": "theory-optimal-control",
+          "number": 44,
+          "numbered": 6,
+          "childEntries": 2,
+          "numberedChildren": 1,
+          "entries": 14,
+          "paragraphs": 18
+        },
+        {
+          "id": "eco-nav2-stack",
+          "number": 45,
+          "numbered": 9,
+          "childEntries": 12,
+          "numberedChildren": 5,
+          "entries": 28,
+          "paragraphs": 22
+        },
+        {
+          "id": "eco-nav2-task-programming",
+          "number": 46,
+          "numbered": 8,
+          "childEntries": 9,
+          "numberedChildren": 3,
+          "entries": 24,
+          "paragraphs": 20
+        },
+        {
+          "id": "project-navigation",
+          "number": 47,
+          "numbered": 9,
+          "childEntries": 9,
+          "numberedChildren": 1,
+          "entries": 25,
+          "paragraphs": 33
+        },
+        {
+          "id": "eco-moveit-planning",
+          "number": 48,
+          "numbered": 7,
+          "childEntries": 6,
+          "numberedChildren": 1,
+          "entries": 20,
+          "paragraphs": 14
+        },
+        {
+          "id": "eco-manipulation-tasks",
+          "number": 49,
+          "numbered": 7,
+          "childEntries": 4,
+          "numberedChildren": 0,
+          "entries": 17,
+          "paragraphs": 14
+        },
+        {
+          "id": "project-manipulation",
+          "number": 50,
+          "numbered": 8,
+          "childEntries": 4,
+          "numberedChildren": 1,
+          "entries": 19,
+          "paragraphs": 24
+        },
+        {
+          "id": "eco-microcontrollers",
+          "number": 51,
+          "numbered": 7,
+          "childEntries": 4,
+          "numberedChildren": 0,
+          "entries": 17,
+          "paragraphs": 16
+        },
+        {
+          "id": "eco-multi-robot",
+          "number": 52,
+          "numbered": 7,
+          "childEntries": 4,
+          "numberedChildren": 0,
+          "entries": 17,
+          "paragraphs": 14
+        },
+        {
+          "id": "eco-network-security",
+          "number": 53,
+          "numbered": 7,
+          "childEntries": 4,
+          "numberedChildren": 0,
+          "entries": 17,
+          "paragraphs": 14
+        },
+        {
+          "id": "eco-accelerated-robotics",
+          "number": 54,
+          "numbered": 7,
+          "childEntries": 4,
+          "numberedChildren": 0,
+          "entries": 17,
+          "paragraphs": 14
+        },
+        {
+          "id": "theory-legged",
+          "number": 55,
+          "numbered": 6,
+          "childEntries": 1,
+          "numberedChildren": 0,
+          "entries": 13,
+          "paragraphs": 18
+        },
+        {
+          "id": "theory-aerial",
+          "number": 56,
+          "numbered": 6,
+          "childEntries": 1,
+          "numberedChildren": 0,
+          "entries": 13,
+          "paragraphs": 18
+        },
+        {
+          "id": "learning-rl",
+          "number": 57,
+          "numbered": 6,
+          "childEntries": 1,
+          "numberedChildren": 0,
+          "entries": 13,
+          "paragraphs": 12
+        },
+        {
+          "id": "learning-embodied",
+          "number": 58,
+          "numbered": 6,
+          "childEntries": 1,
+          "numberedChildren": 0,
+          "entries": 13,
+          "paragraphs": 12
+        },
+        {
+          "id": "learning-policy",
+          "number": 59,
+          "numbered": 6,
+          "childEntries": 1,
+          "numberedChildren": 0,
+          "entries": 13,
+          "paragraphs": 12
+        },
+        {
+          "id": "cloud-mlops",
+          "number": 60,
+          "numbered": 6,
+          "childEntries": 1,
+          "numberedChildren": 0,
+          "entries": 13,
+          "paragraphs": 12
+        }
+      ]
+    }
+  ],
+  "math": 49,
+  "figures": 36,
+  "evidenceTables": 39,
+  "offlineRequests": 0,
+  "errors": []
+}

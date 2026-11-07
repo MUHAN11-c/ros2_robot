@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "archive": "narukami-design-review.zip",
+  "bytes": 9239834,
+  "sha256": "408a0791af252b86f6388801a9dd9d41fe0a4b12e4b7c96c1446e5c7f00df898",
+  "files": 115,
+  "assets": 7,
+  "screenshots": 15,
+  "formalBaselineFilesUnchanged": 10,
+  "validationHashes": {
+    "browser-report.json": "0be1e4d9017591b1382f53173e7b23e516de78e84daffc88c1973b3b1a6a4bf9",
+    "logic-report.json": "bfbe0d2a9e97d9d21c1a8a3e14e460dd4f58a38bff5f6acd49b0807437708449",
+    "viewport-report.json": "72c5909af976bbe4c2d8fb29ab9322135c5538ec26a7caff9b2b2e2b9cd9ebf6"
+  },
+  "scope": "便携网页设计审查包；未包含原始参考仓库、ROS/SDK安装或用户浏览器个人笔记/正文草稿。"
+}

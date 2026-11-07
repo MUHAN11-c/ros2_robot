@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!-- 原创软件测试教材包，不运行电机、仿真器或原始参考仓库中的节点。 -->
+<package format="3">
+  <name>learning_testing_lab</name>
+  <version>0.0.1</version>
+  <description>Contract based unit and launch integration testing examples</description>
+  <maintainer email="learner@example.com">ROS 2 Learning Hub</maintainer>
+  <license>Apache-2.0</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>rclcpp</depend>
+  <depend>geometry_msgs</depend>
+  <depend>std_msgs</depend>
+  <test_depend>ament_cmake_gtest</test_depend>
+  <test_depend>ament_cmake_pytest</test_depend>
+  <test_depend>launch_testing</test_depend>
+  <test_depend>launch_testing_ament_cmake</test_depend>
+  <test_depend>launch</test_depend>
+  <test_depend>launch_ros</test_depend>
+  <test_depend>rclpy</test_depend>
+  <test_depend>python3-pytest</test_depend>
+  <export><build_type>ament_cmake</build_type></export>
+</package>

@@ -1,0 +1,1930 @@
+{
+  "validatedAt": "2026-11-06T19:50:13.832580+00:00",
+  "workItem": "runtime-review-parameter-stages",
+  "status": "passed-with-explicit-scope",
+  "sourceFile": "examples/runtime_labs/parameter_transaction_lab.py",
+  "sourceSha256": "00f6c7c4be65b421fd155f97bf91900e43e2a656a2b020b63cde691bcf1aac37",
+  "sourceBytes": 24369,
+  "execution": {
+    "workingDirectory": "ros2-learning-hub",
+    "command": "source /opt/ros/jazzy/setup.bash\npython3 examples/runtime_labs/parameter_transaction_lab.py --json",
+    "exitCode": 0,
+    "stdoutSha256": "4ac1da6fd790991fa19bd71effbc777e0987e0098e4e1bdc7369e40780faefb1",
+    "pythonExecutable": "/usr/bin/python3",
+    "pythonVersion": "3.12.3",
+    "rosDistribution": "Jazzy",
+    "installedPackages": {
+      "ros-jazzy-rcl-interfaces": "2.0.4-1noble.20260911.093433",
+      "ros-jazzy-rclcpp": "28.1.22-1noble.20260911.105434",
+      "ros-jazzy-rclpy": "7.1.12-1noble.20260912.162354"
+    },
+    "importPaths": {
+      "rclpy": "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py",
+      "rcl_interfaces": "/opt/ros/jazzy/lib/python3.12/site-packages/rcl_interfaces/__init__.py"
+    },
+    "installedPublicSignatures": {
+      "add_pre_set_parameters_callback": "(self, callback: Callable[[List[rclpy.parameter.Parameter]], List[rclpy.parameter.Parameter]]) -> None",
+      "add_on_set_parameters_callback": "(self, callback: Callable[[List[rclpy.parameter.Parameter]], rcl_interfaces.msg._set_parameters_result.SetParametersResult]) -> None",
+      "add_post_set_parameters_callback": "(self, callback: Callable[[List[rclpy.parameter.Parameter]], NoneType]) -> None",
+      "set_parameters": "(self, parameter_list: List[rclpy.parameter.Parameter]) -> List[rcl_interfaces.msg._set_parameters_result.SetParametersResult]",
+      "set_parameters_atomically": "(self, parameter_list: List[rclpy.parameter.Parameter]) -> rcl_interfaces.msg._set_parameters_result.SetParametersResult",
+      "remove_pre_set_parameters_callback": "(self, callback: Callable[[List[rclpy.parameter.Parameter]], List[rclpy.parameter.Parameter]]) -> None",
+      "remove_on_set_parameters_callback": "(self, callback: Callable[[List[rclpy.parameter.Parameter]], rcl_interfaces.msg._set_parameters_result.SetParametersResult]) -> None",
+      "remove_post_set_parameters_callback": "(self, callback: Callable[[List[rclpy.parameter.Parameter]], NoneType]) -> None"
+    },
+    "domainId": 223,
+    "discoveryRange": "OFF",
+    "rmw": "rmw_fastrtps_cpp",
+    "loggingInitialization": false,
+    "parameterServices": false,
+    "rosout": false,
+    "executor": false
+  },
+  "summary": {
+    "mainCasesPassed": 11,
+    "testNodesCreated": 19,
+    "testNodesDestroyed": 19,
+    "contextShutdown": true,
+    "criticalObservedResults": [
+      "合法整批lower=2、upper=3经过pre→on→post；pre补span=1，原请求未被就地追加，存储和快照均为[2,3,1]米。",
+      "非法lower>=upper的原子请求拒绝，旧[0,1,1]米存储与快照均保持。",
+      "只把upper从3改为4米时，旧lower=2米被保留，span更新为2米。",
+      "整数、布尔、字符串、NaN、+Inf、-Inf及超出教学范围的有限值均拒绝，post未运行。",
+      "相同[lower=2,upper=3]逐项得到[拒绝,成功]、最终[0,3,3]米；原子得到成功、最终[2,3,1]米。",
+      "错误on先改缓存、后一个校验者拒绝：存储仍[0,1,1]米，缓存已污染为[2,3,1]米；纯校验版二者均保旧。",
+      "错误post返回SetParametersResult(false)未撤销提交，公开post合同应返回None。",
+      "受控post异常传播给直接调用者，但参数已是[0.25,0.75,0.5]米，旧缓存仍[0,1,1]米，应用状态显式apply_failed。",
+      "Python注册返回None，丢弃外部callable强引用后Node仍持有；remove后可释放。空pre列表拒绝，遗漏列表return的pre抛TypeError且参数保旧。"
+    ]
+  },
+  "results": {
+    "lab": "parameter_transaction_lab",
+    "passed": true,
+    "cases": 11,
+    "results": [
+      {
+        "id": "legal_atomic_pre_on_post",
+        "passed": true,
+        "expected": {
+          "lower_m": 2.0,
+          "upper_m": 3.0,
+          "span_m": 1.0
+        },
+        "actual": {
+          "store": {
+            "lower_m": 2.0,
+            "upper_m": 3.0,
+            "span_m": 1.0
+          },
+          "snapshot": {
+            "lower_m": 2.0,
+            "upper_m": 3.0,
+            "span_m": 1.0
+          },
+          "application_state": "ready"
+        },
+        "result": {
+          "successful": true,
+          "reason": ""
+        },
+        "events": [
+          {
+            "stage": "pre",
+            "received": [
+              {
+                "name": "lower_m",
+                "type": "DOUBLE",
+                "value": 2.0
+              },
+              {
+                "name": "upper_m",
+                "type": "DOUBLE",
+                "value": 3.0
+              }
+            ],
+            "forwarded": [
+              {
+                "name": "lower_m",
+                "type": "DOUBLE",
+                "value": 2.0
+              },
+              {
+                "name": "upper_m",
+                "type": "DOUBLE",
+                "value": 3.0
+              },
+              {
+                "name": "span_m",
+                "type": "DOUBLE",
+                "value": 1.0
+              }
+            ],
+            "store_before": {
+              "lower_m": 0.0,
+              "upper_m": 1.0,
+              "span_m": 1.0
+            }
+          },
+          {
+            "stage": "on_validate",
+            "candidate": {
+              "lower_m": 2.0,
+              "upper_m": 3.0,
+              "span_m": 1.0
+            },
+            "store_before": {
+              "lower_m": 0.0,
+              "upper_m": 1.0,
+              "span_m": 1.0
+            },
+            "snapshot_before": {
+              "lower_m": 0.0,
+              "upper_m": 1.0,
+              "span_m": 1.0
+            }
+          },
+          {
+            "stage": "post_commit",
+            "committed_store": {
+              "lower_m": 2.0,
+              "upper_m": 3.0,
+              "span_m": 1.0
+            },
+            "snapshot_before": {
+              "lower_m": 0.0,
+              "upper_m": 1.0,
+              "span_m": 1.0
+            },
+            "snapshot_after": {
+              "lower_m": 2.0,
+              "upper_m": 3.0,
+              "span_m": 1.0
+            }
+          }
+        ]
+      },
+      {
+        "id": "invalid_cross_constraint_atomic_keeps_old",
+        "passed": true,
+        "expected": {
+          "lower_m": 0.0,
+          "upper_m": 1.0,
+          "span_m": 1.0
+        },
+        "actual": {
+          "store": {
+            "lower_m": 0.0,
+            "upper_m": 1.0,
+            "span_m": 1.0
+          },
+          "snapshot": {
+            "lower_m": 0.0,
+            "upper_m": 1.0,
+            "span_m": 1.0
+          },
+          "application_state": "ready"
+        },
+        "result": {
+          "successful": false,
+          "reason": "require -100 <= lower_m < upper_m <= 100"
+        },
+        "events": [
+          {
+            "stage": "pre",
+            "received": [
+              {
+                "name": "lower_m",
+                "type": "DOUBLE",
+                "value": 2.0
+              },
+              {
+                "name": "upper_m",
+                "type": "DOUBLE",
+                "value": 1.0
+              }
+            ],
+            "forwarded": [
+              {
+                "name": "lower_m",
+                "type": "DOUBLE",
+                "value": 2.0
+              },
+              {
+                "name": "upper_m",
+                "type": "DOUBLE",
+                "value": 1.0
+              },
+              {
+                "name": "span_m",
+                "type": "DOUBLE",
+                "value": -1.0
+              }
+            ],
+            "store_before": {
+              "lower_m": 0.0,
+              "upper_m": 1.0,
+              "span_m": 1.0
+            }
+          },
+          {
+            "stage": "on_validate",
+            "candidate": {
+              "lower_m": 2.0,
+              "upper_m": 1.0,
+              "span_m": -1.0
+            },
+            "store_before": {
+              "lower_m": 0.0,
+              "upper_m": 1.0,
+              "span_m": 1.0
+            },
+            "snapshot_before": {
+              "lower_m": 0.0,
+              "upper_m": 1.0,
+              "span_m": 1.0
+            }
+          }
+        ]
+      },
+      {
+        "id": "partial_update_merges_old_fields",
+        "passed": true,
+        "expected": {
+          "lower_m": 2.0,
+          "upper_m": 4.0,
+          "span_m": 2.0
+        },
+        "actual": {
+          "store": {
+            "lower_m": 2.0,
+            "upper_m": 4.0,
+            "span_m": 2.0
+          },
+          "snapshot": {
+            "lower_m": 2.0,
+            "upper_m": 4.0,
+            "span_m": 2.0
+          },
+          "application_state": "ready"
+        },
+        "result": {
+          "successful": true,
+          "reason": ""
+        },
+        "events": [
+          {
+            "stage": "pre",
+            "received": [
+              {
+                "name": "upper_m",
+                "type": "DOUBLE",
+                "value": 4.0
+              }
+            ],
+            "forwarded": [
+              {
+                "name": "upper_m",
+                "type": "DOUBLE",
+                "value": 4.0
+              },
+              {
+                "name": "span_m",
+                "type": "DOUBLE",
+                "value": 2.0
+              }
+            ],
+            "store_before": {
+              "lower_m": 2.0,
+              "upper_m": 3.0,
+              "span_m": 1.0
+            }
+          },
+          {
+            "stage": "on_validate",
+            "candidate": {
+              "lower_m": 2.0,
+              "upper_m": 4.0,
+              "span_m": 2.0
+            },
+            "store_before": {
+              "lower_m": 2.0,
+              "upper_m": 3.0,
+              "span_m": 1.0
+            },
+            "snapshot_before": {
+              "lower_m": 2.0,
+              "upper_m": 3.0,
+              "span_m": 1.0
+            }
+          },
+          {
+            "stage": "post_commit",
+            "committed_store": {
+              "lower_m": 2.0,
+              "upper_m": 4.0,
+              "span_m": 2.0
+            },
+            "snapshot_before": {
+              "lower_m": 2.0,
+              "upper_m": 3.0,
+              "span_m": 1.0
+            },
+            "snapshot_after": {
+              "lower_m": 2.0,
+              "upper_m": 4.0,
+              "span_m": 2.0
+            }
+          }
+        ]
+      },
+      {
+        "id": "type_nonfinite_and_range_rejections",
+        "passed": true,
+        "cases": [
+          {
+            "case": "integer",
+            "input": [
+              {
+                "name": "lower_m",
+                "type": "INTEGER",
+                "value": 1
+              }
+            ],
+            "result": {
+              "successful": false,
+              "reason": "Wrong parameter type, expected 'Type.DOUBLE' got 'Type.INTEGER'"
+            },
+            "expected_unchanged": {
+              "lower_m": 0.0,
+              "upper_m": 1.0,
+              "span_m": 1.0
+            },
+            "actual": {
+              "store": {
+                "lower_m": 0.0,
+                "upper_m": 1.0,
+                "span_m": 1.0
+              },
+              "snapshot": {
+                "lower_m": 0.0,
+                "upper_m": 1.0,
+                "span_m": 1.0
+              },
+              "application_state": "ready"
+            },
+            "events": [
+              {
+                "stage": "pre",
+                "received": [
+                  {
+                    "name": "lower_m",
+                    "type": "INTEGER",
+                    "value": 1
+                  }
+                ],
+                "forwarded": [
+                  {
+                    "name": "lower_m",
+                    "type": "INTEGER",
+                    "value": 1
+                  }
+                ],
+                "store_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                }
+              }
+            ]
+          },
+          {
+            "case": "boolean",
+            "input": [
+              {
+                "name": "lower_m",
+                "type": "BOOL",
+                "value": true
+              }
+            ],
+            "result": {
+              "successful": false,
+              "reason": "Wrong parameter type, expected 'Type.DOUBLE' got 'Type.BOOL'"
+            },
+            "expected_unchanged": {
+              "lower_m": 0.0,
+              "upper_m": 1.0,
+              "span_m": 1.0
+            },
+            "actual": {
+              "store": {
+                "lower_m": 0.0,
+                "upper_m": 1.0,
+                "span_m": 1.0
+              },
+              "snapshot": {
+                "lower_m": 0.0,
+                "upper_m": 1.0,
+                "span_m": 1.0
+              },
+              "application_state": "ready"
+            },
+            "events": [
+              {
+                "stage": "pre",
+                "received": [
+                  {
+                    "name": "lower_m",
+                    "type": "BOOL",
+                    "value": true
+                  }
+                ],
+                "forwarded": [
+                  {
+                    "name": "lower_m",
+                    "type": "BOOL",
+                    "value": true
+                  }
+                ],
+                "store_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                }
+              }
+            ]
+          },
+          {
+            "case": "string",
+            "input": [
+              {
+                "name": "lower_m",
+                "type": "STRING",
+                "value": "0.5"
+              }
+            ],
+            "result": {
+              "successful": false,
+              "reason": "Wrong parameter type, expected 'Type.DOUBLE' got 'Type.STRING'"
+            },
+            "expected_unchanged": {
+              "lower_m": 0.0,
+              "upper_m": 1.0,
+              "span_m": 1.0
+            },
+            "actual": {
+              "store": {
+                "lower_m": 0.0,
+                "upper_m": 1.0,
+                "span_m": 1.0
+              },
+              "snapshot": {
+                "lower_m": 0.0,
+                "upper_m": 1.0,
+                "span_m": 1.0
+              },
+              "application_state": "ready"
+            },
+            "events": [
+              {
+                "stage": "pre",
+                "received": [
+                  {
+                    "name": "lower_m",
+                    "type": "STRING",
+                    "value": "0.5"
+                  }
+                ],
+                "forwarded": [
+                  {
+                    "name": "lower_m",
+                    "type": "STRING",
+                    "value": "0.5"
+                  }
+                ],
+                "store_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                }
+              }
+            ]
+          },
+          {
+            "case": "nan",
+            "input": [
+              {
+                "name": "lower_m",
+                "type": "DOUBLE",
+                "value": "nan"
+              }
+            ],
+            "result": {
+              "successful": false,
+              "reason": "all fields require finite DOUBLE metres"
+            },
+            "expected_unchanged": {
+              "lower_m": 0.0,
+              "upper_m": 1.0,
+              "span_m": 1.0
+            },
+            "actual": {
+              "store": {
+                "lower_m": 0.0,
+                "upper_m": 1.0,
+                "span_m": 1.0
+              },
+              "snapshot": {
+                "lower_m": 0.0,
+                "upper_m": 1.0,
+                "span_m": 1.0
+              },
+              "application_state": "ready"
+            },
+            "events": [
+              {
+                "stage": "pre",
+                "received": [
+                  {
+                    "name": "lower_m",
+                    "type": "DOUBLE",
+                    "value": "nan"
+                  }
+                ],
+                "forwarded": [
+                  {
+                    "name": "lower_m",
+                    "type": "DOUBLE",
+                    "value": "nan"
+                  }
+                ],
+                "store_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                }
+              },
+              {
+                "stage": "on_validate",
+                "candidate": {
+                  "lower_m": "nan",
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                },
+                "store_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                },
+                "snapshot_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                }
+              }
+            ]
+          },
+          {
+            "case": "positive_inf",
+            "input": [
+              {
+                "name": "lower_m",
+                "type": "DOUBLE",
+                "value": "inf"
+              }
+            ],
+            "result": {
+              "successful": false,
+              "reason": "all fields require finite DOUBLE metres"
+            },
+            "expected_unchanged": {
+              "lower_m": 0.0,
+              "upper_m": 1.0,
+              "span_m": 1.0
+            },
+            "actual": {
+              "store": {
+                "lower_m": 0.0,
+                "upper_m": 1.0,
+                "span_m": 1.0
+              },
+              "snapshot": {
+                "lower_m": 0.0,
+                "upper_m": 1.0,
+                "span_m": 1.0
+              },
+              "application_state": "ready"
+            },
+            "events": [
+              {
+                "stage": "pre",
+                "received": [
+                  {
+                    "name": "lower_m",
+                    "type": "DOUBLE",
+                    "value": "inf"
+                  }
+                ],
+                "forwarded": [
+                  {
+                    "name": "lower_m",
+                    "type": "DOUBLE",
+                    "value": "inf"
+                  }
+                ],
+                "store_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                }
+              },
+              {
+                "stage": "on_validate",
+                "candidate": {
+                  "lower_m": "inf",
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                },
+                "store_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                },
+                "snapshot_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                }
+              }
+            ]
+          },
+          {
+            "case": "negative_inf",
+            "input": [
+              {
+                "name": "lower_m",
+                "type": "DOUBLE",
+                "value": "-inf"
+              }
+            ],
+            "result": {
+              "successful": false,
+              "reason": "all fields require finite DOUBLE metres"
+            },
+            "expected_unchanged": {
+              "lower_m": 0.0,
+              "upper_m": 1.0,
+              "span_m": 1.0
+            },
+            "actual": {
+              "store": {
+                "lower_m": 0.0,
+                "upper_m": 1.0,
+                "span_m": 1.0
+              },
+              "snapshot": {
+                "lower_m": 0.0,
+                "upper_m": 1.0,
+                "span_m": 1.0
+              },
+              "application_state": "ready"
+            },
+            "events": [
+              {
+                "stage": "pre",
+                "received": [
+                  {
+                    "name": "lower_m",
+                    "type": "DOUBLE",
+                    "value": "-inf"
+                  }
+                ],
+                "forwarded": [
+                  {
+                    "name": "lower_m",
+                    "type": "DOUBLE",
+                    "value": "-inf"
+                  }
+                ],
+                "store_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                }
+              },
+              {
+                "stage": "on_validate",
+                "candidate": {
+                  "lower_m": "-inf",
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                },
+                "store_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                },
+                "snapshot_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                }
+              }
+            ]
+          },
+          {
+            "case": "finite_outside_range",
+            "input": [
+              {
+                "name": "lower_m",
+                "type": "DOUBLE",
+                "value": 101.0
+              }
+            ],
+            "result": {
+              "successful": false,
+              "reason": "require -100 <= lower_m < upper_m <= 100"
+            },
+            "expected_unchanged": {
+              "lower_m": 0.0,
+              "upper_m": 1.0,
+              "span_m": 1.0
+            },
+            "actual": {
+              "store": {
+                "lower_m": 0.0,
+                "upper_m": 1.0,
+                "span_m": 1.0
+              },
+              "snapshot": {
+                "lower_m": 0.0,
+                "upper_m": 1.0,
+                "span_m": 1.0
+              },
+              "application_state": "ready"
+            },
+            "events": [
+              {
+                "stage": "pre",
+                "received": [
+                  {
+                    "name": "lower_m",
+                    "type": "DOUBLE",
+                    "value": 101.0
+                  }
+                ],
+                "forwarded": [
+                  {
+                    "name": "lower_m",
+                    "type": "DOUBLE",
+                    "value": 101.0
+                  }
+                ],
+                "store_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                }
+              },
+              {
+                "stage": "on_validate",
+                "candidate": {
+                  "lower_m": 101.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                },
+                "store_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                },
+                "snapshot_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "sequential_partial_success_vs_atomic_batch",
+        "passed": true,
+        "comparison": {
+          "set_parameters": {
+            "expected": {
+              "lower_m": 0.0,
+              "upper_m": 3.0,
+              "span_m": 3.0
+            },
+            "actual": {
+              "store": {
+                "lower_m": 0.0,
+                "upper_m": 3.0,
+                "span_m": 3.0
+              },
+              "snapshot": {
+                "lower_m": 0.0,
+                "upper_m": 3.0,
+                "span_m": 3.0
+              },
+              "application_state": "ready"
+            },
+            "result": [
+              {
+                "successful": false,
+                "reason": "require -100 <= lower_m < upper_m <= 100"
+              },
+              {
+                "successful": true,
+                "reason": ""
+              }
+            ],
+            "events": [
+              {
+                "stage": "pre",
+                "received": [
+                  {
+                    "name": "lower_m",
+                    "type": "DOUBLE",
+                    "value": 2.0
+                  }
+                ],
+                "forwarded": [
+                  {
+                    "name": "lower_m",
+                    "type": "DOUBLE",
+                    "value": 2.0
+                  },
+                  {
+                    "name": "span_m",
+                    "type": "DOUBLE",
+                    "value": -1.0
+                  }
+                ],
+                "store_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                }
+              },
+              {
+                "stage": "on_validate",
+                "candidate": {
+                  "lower_m": 2.0,
+                  "upper_m": 1.0,
+                  "span_m": -1.0
+                },
+                "store_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                },
+                "snapshot_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                }
+              },
+              {
+                "stage": "pre",
+                "received": [
+                  {
+                    "name": "upper_m",
+                    "type": "DOUBLE",
+                    "value": 3.0
+                  }
+                ],
+                "forwarded": [
+                  {
+                    "name": "upper_m",
+                    "type": "DOUBLE",
+                    "value": 3.0
+                  },
+                  {
+                    "name": "span_m",
+                    "type": "DOUBLE",
+                    "value": 3.0
+                  }
+                ],
+                "store_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                }
+              },
+              {
+                "stage": "on_validate",
+                "candidate": {
+                  "lower_m": 0.0,
+                  "upper_m": 3.0,
+                  "span_m": 3.0
+                },
+                "store_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                },
+                "snapshot_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                }
+              },
+              {
+                "stage": "post_commit",
+                "committed_store": {
+                  "lower_m": 0.0,
+                  "upper_m": 3.0,
+                  "span_m": 3.0
+                },
+                "snapshot_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                },
+                "snapshot_after": {
+                  "lower_m": 0.0,
+                  "upper_m": 3.0,
+                  "span_m": 3.0
+                }
+              }
+            ]
+          },
+          "set_parameters_atomically": {
+            "expected": {
+              "lower_m": 2.0,
+              "upper_m": 3.0,
+              "span_m": 1.0
+            },
+            "actual": {
+              "store": {
+                "lower_m": 2.0,
+                "upper_m": 3.0,
+                "span_m": 1.0
+              },
+              "snapshot": {
+                "lower_m": 2.0,
+                "upper_m": 3.0,
+                "span_m": 1.0
+              },
+              "application_state": "ready"
+            },
+            "result": {
+              "successful": true,
+              "reason": ""
+            },
+            "events": [
+              {
+                "stage": "pre",
+                "received": [
+                  {
+                    "name": "lower_m",
+                    "type": "DOUBLE",
+                    "value": 2.0
+                  },
+                  {
+                    "name": "upper_m",
+                    "type": "DOUBLE",
+                    "value": 3.0
+                  }
+                ],
+                "forwarded": [
+                  {
+                    "name": "lower_m",
+                    "type": "DOUBLE",
+                    "value": 2.0
+                  },
+                  {
+                    "name": "upper_m",
+                    "type": "DOUBLE",
+                    "value": 3.0
+                  },
+                  {
+                    "name": "span_m",
+                    "type": "DOUBLE",
+                    "value": 1.0
+                  }
+                ],
+                "store_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                }
+              },
+              {
+                "stage": "on_validate",
+                "candidate": {
+                  "lower_m": 2.0,
+                  "upper_m": 3.0,
+                  "span_m": 1.0
+                },
+                "store_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                },
+                "snapshot_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                }
+              },
+              {
+                "stage": "post_commit",
+                "committed_store": {
+                  "lower_m": 2.0,
+                  "upper_m": 3.0,
+                  "span_m": 1.0
+                },
+                "snapshot_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                },
+                "snapshot_after": {
+                  "lower_m": 2.0,
+                  "upper_m": 3.0,
+                  "span_m": 1.0
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "validator_side_effect_pollution_vs_pure_check",
+        "passed": true,
+        "comparison": {
+          "bad_on": {
+            "expected_store": {
+              "lower_m": 0.0,
+              "upper_m": 1.0,
+              "span_m": 1.0
+            },
+            "expected_snapshot": {
+              "lower_m": 2.0,
+              "upper_m": 3.0,
+              "span_m": 1.0
+            },
+            "actual": {
+              "store": {
+                "lower_m": 0.0,
+                "upper_m": 1.0,
+                "span_m": 1.0
+              },
+              "snapshot": {
+                "lower_m": 2.0,
+                "upper_m": 3.0,
+                "span_m": 1.0
+              },
+              "application_state": "ready"
+            },
+            "result": {
+              "successful": false,
+              "reason": "deliberate second-validator veto"
+            },
+            "events": [
+              {
+                "stage": "pre",
+                "received": [
+                  {
+                    "name": "lower_m",
+                    "type": "DOUBLE",
+                    "value": 2.0
+                  },
+                  {
+                    "name": "upper_m",
+                    "type": "DOUBLE",
+                    "value": 3.0
+                  }
+                ],
+                "forwarded": [
+                  {
+                    "name": "lower_m",
+                    "type": "DOUBLE",
+                    "value": 2.0
+                  },
+                  {
+                    "name": "upper_m",
+                    "type": "DOUBLE",
+                    "value": 3.0
+                  },
+                  {
+                    "name": "span_m",
+                    "type": "DOUBLE",
+                    "value": 1.0
+                  }
+                ],
+                "store_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                }
+              },
+              {
+                "stage": "on_bad_validate",
+                "candidate": {
+                  "lower_m": 2.0,
+                  "upper_m": 3.0,
+                  "span_m": 1.0
+                },
+                "store_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                },
+                "snapshot_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                }
+              },
+              {
+                "stage": "on_bad_cache_write",
+                "polluted_snapshot": {
+                  "lower_m": 2.0,
+                  "upper_m": 3.0,
+                  "span_m": 1.0
+                }
+              },
+              {
+                "stage": "on_late_reject",
+                "request": [
+                  {
+                    "name": "lower_m",
+                    "type": "DOUBLE",
+                    "value": 2.0
+                  },
+                  {
+                    "name": "upper_m",
+                    "type": "DOUBLE",
+                    "value": 3.0
+                  },
+                  {
+                    "name": "span_m",
+                    "type": "DOUBLE",
+                    "value": 1.0
+                  }
+                ],
+                "store_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                }
+              }
+            ]
+          },
+          "good_veto": {
+            "expected_store": {
+              "lower_m": 0.0,
+              "upper_m": 1.0,
+              "span_m": 1.0
+            },
+            "expected_snapshot": {
+              "lower_m": 0.0,
+              "upper_m": 1.0,
+              "span_m": 1.0
+            },
+            "actual": {
+              "store": {
+                "lower_m": 0.0,
+                "upper_m": 1.0,
+                "span_m": 1.0
+              },
+              "snapshot": {
+                "lower_m": 0.0,
+                "upper_m": 1.0,
+                "span_m": 1.0
+              },
+              "application_state": "ready"
+            },
+            "result": {
+              "successful": false,
+              "reason": "deliberate second-validator veto"
+            },
+            "events": [
+              {
+                "stage": "pre",
+                "received": [
+                  {
+                    "name": "lower_m",
+                    "type": "DOUBLE",
+                    "value": 2.0
+                  },
+                  {
+                    "name": "upper_m",
+                    "type": "DOUBLE",
+                    "value": 3.0
+                  }
+                ],
+                "forwarded": [
+                  {
+                    "name": "lower_m",
+                    "type": "DOUBLE",
+                    "value": 2.0
+                  },
+                  {
+                    "name": "upper_m",
+                    "type": "DOUBLE",
+                    "value": 3.0
+                  },
+                  {
+                    "name": "span_m",
+                    "type": "DOUBLE",
+                    "value": 1.0
+                  }
+                ],
+                "store_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                }
+              },
+              {
+                "stage": "on_validate",
+                "candidate": {
+                  "lower_m": 2.0,
+                  "upper_m": 3.0,
+                  "span_m": 1.0
+                },
+                "store_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                },
+                "snapshot_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                }
+              },
+              {
+                "stage": "on_late_reject",
+                "request": [
+                  {
+                    "name": "lower_m",
+                    "type": "DOUBLE",
+                    "value": 2.0
+                  },
+                  {
+                    "name": "upper_m",
+                    "type": "DOUBLE",
+                    "value": 3.0
+                  },
+                  {
+                    "name": "span_m",
+                    "type": "DOUBLE",
+                    "value": 1.0
+                  }
+                ],
+                "store_before": {
+                  "lower_m": 0.0,
+                  "upper_m": 1.0,
+                  "span_m": 1.0
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "post_return_false_cannot_veto",
+        "passed": true,
+        "expected": {
+          "lower_m": 0.25,
+          "upper_m": 0.75,
+          "span_m": 0.5
+        },
+        "actual": {
+          "store": {
+            "lower_m": 0.25,
+            "upper_m": 0.75,
+            "span_m": 0.5
+          },
+          "snapshot": {
+            "lower_m": 0.25,
+            "upper_m": 0.75,
+            "span_m": 0.5
+          },
+          "application_state": "ready"
+        },
+        "result": {
+          "successful": true,
+          "reason": ""
+        },
+        "events": [
+          {
+            "stage": "pre",
+            "received": [
+              {
+                "name": "lower_m",
+                "type": "DOUBLE",
+                "value": 0.25
+              },
+              {
+                "name": "upper_m",
+                "type": "DOUBLE",
+                "value": 0.75
+              }
+            ],
+            "forwarded": [
+              {
+                "name": "lower_m",
+                "type": "DOUBLE",
+                "value": 0.25
+              },
+              {
+                "name": "upper_m",
+                "type": "DOUBLE",
+                "value": 0.75
+              },
+              {
+                "name": "span_m",
+                "type": "DOUBLE",
+                "value": 0.5
+              }
+            ],
+            "store_before": {
+              "lower_m": 0.0,
+              "upper_m": 1.0,
+              "span_m": 1.0
+            }
+          },
+          {
+            "stage": "on_validate",
+            "candidate": {
+              "lower_m": 0.25,
+              "upper_m": 0.75,
+              "span_m": 0.5
+            },
+            "store_before": {
+              "lower_m": 0.0,
+              "upper_m": 1.0,
+              "span_m": 1.0
+            },
+            "snapshot_before": {
+              "lower_m": 0.0,
+              "upper_m": 1.0,
+              "span_m": 1.0
+            }
+          },
+          {
+            "stage": "post_commit",
+            "committed_store": {
+              "lower_m": 0.25,
+              "upper_m": 0.75,
+              "span_m": 0.5
+            },
+            "snapshot_before": {
+              "lower_m": 0.0,
+              "upper_m": 1.0,
+              "span_m": 1.0
+            },
+            "snapshot_after": {
+              "lower_m": 0.25,
+              "upper_m": 0.75,
+              "span_m": 0.5
+            }
+          },
+          {
+            "stage": "post_attempted_veto",
+            "detail": "错误返回值；公开post合同应返回None"
+          }
+        ]
+      },
+      {
+        "id": "post_exception_does_not_rollback_store",
+        "passed": true,
+        "expected_store": {
+          "lower_m": 0.25,
+          "upper_m": 0.75,
+          "span_m": 0.5
+        },
+        "expected_snapshot": {
+          "lower_m": 0.0,
+          "upper_m": 1.0,
+          "span_m": 1.0
+        },
+        "actual": {
+          "store": {
+            "lower_m": 0.25,
+            "upper_m": 0.75,
+            "span_m": 0.5
+          },
+          "snapshot": {
+            "lower_m": 0.0,
+            "upper_m": 1.0,
+            "span_m": 1.0
+          },
+          "application_state": "apply_failed"
+        },
+        "raised": "ControlledPostFailure",
+        "message": "deliberate failure after parameter-store commit",
+        "events": [
+          {
+            "stage": "pre",
+            "received": [
+              {
+                "name": "lower_m",
+                "type": "DOUBLE",
+                "value": 0.25
+              },
+              {
+                "name": "upper_m",
+                "type": "DOUBLE",
+                "value": 0.75
+              }
+            ],
+            "forwarded": [
+              {
+                "name": "lower_m",
+                "type": "DOUBLE",
+                "value": 0.25
+              },
+              {
+                "name": "upper_m",
+                "type": "DOUBLE",
+                "value": 0.75
+              },
+              {
+                "name": "span_m",
+                "type": "DOUBLE",
+                "value": 0.5
+              }
+            ],
+            "store_before": {
+              "lower_m": 0.0,
+              "upper_m": 1.0,
+              "span_m": 1.0
+            }
+          },
+          {
+            "stage": "on_validate",
+            "candidate": {
+              "lower_m": 0.25,
+              "upper_m": 0.75,
+              "span_m": 0.5
+            },
+            "store_before": {
+              "lower_m": 0.0,
+              "upper_m": 1.0,
+              "span_m": 1.0
+            },
+            "snapshot_before": {
+              "lower_m": 0.0,
+              "upper_m": 1.0,
+              "span_m": 1.0
+            }
+          },
+          {
+            "stage": "post_failure",
+            "committed_store": {
+              "lower_m": 0.25,
+              "upper_m": 0.75,
+              "span_m": 0.5
+            },
+            "unchanged_snapshot": {
+              "lower_m": 0.0,
+              "upper_m": 1.0,
+              "span_m": 1.0
+            }
+          }
+        ]
+      },
+      {
+        "id": "python_callback_ownership_and_removal",
+        "passed": true,
+        "expected": {
+          "registration": null,
+          "retained_until_remove": true,
+          "calls": 1,
+          "released": true
+        },
+        "actual": {
+          "registration": null,
+          "calls": 1,
+          "released": true
+        }
+      },
+      {
+        "id": "empty_pre_list_rejected_before_on",
+        "passed": true,
+        "expected": {
+          "lower_m": 0.0,
+          "upper_m": 1.0,
+          "span_m": 1.0
+        },
+        "actual": {
+          "store": {
+            "lower_m": 0.0,
+            "upper_m": 1.0,
+            "span_m": 1.0
+          },
+          "snapshot": {
+            "lower_m": 0.0,
+            "upper_m": 1.0,
+            "span_m": 1.0
+          },
+          "application_state": "ready"
+        },
+        "result": {
+          "successful": false,
+          "reason": "parameter list cannot be empty, this might be due to pre_set_parameters_callback modifying the original parameters list."
+        },
+        "events": [
+          {
+            "stage": "pre_empty",
+            "received": [
+              {
+                "name": "lower_m",
+                "type": "DOUBLE",
+                "value": 0.25
+              },
+              {
+                "name": "upper_m",
+                "type": "DOUBLE",
+                "value": 0.75
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "python_pre_requires_list_return",
+        "passed": true,
+        "expected": {
+          "lower_m": 0.0,
+          "upper_m": 1.0,
+          "span_m": 1.0
+        },
+        "actual": {
+          "store": {
+            "lower_m": 0.0,
+            "upper_m": 1.0,
+            "span_m": 1.0
+          },
+          "snapshot": {
+            "lower_m": 0.0,
+            "upper_m": 1.0,
+            "span_m": 1.0
+          },
+          "application_state": "ready"
+        },
+        "raised": "TypeError",
+        "message": "'NoneType' object is not iterable",
+        "events": [
+          {
+            "stage": "pre_missing_return",
+            "received": [
+              {
+                "name": "lower_m",
+                "type": "DOUBLE",
+                "value": 0.25
+              },
+              {
+                "name": "upper_m",
+                "type": "DOUBLE",
+                "value": 0.75
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "units": {
+      "lower_m": "m",
+      "upper_m": "m",
+      "span_m": "m",
+      "derived_relation": "span_m=upper_m-lower_m"
+    },
+    "comparison_absolute_tolerance_m": 1e-12,
+    "runtime": {
+      "domain_id": 223,
+      "discovery_range": "OFF",
+      "rmw": "rmw_fastrtps_cpp",
+      "parameter_services_started": false,
+      "rosout_enabled": false,
+      "executor_started": false,
+      "parameter_calls": "同进程公开Node API；没有DDS参数请求/应答",
+      "framework_entities": "真实Node仍初始化RMW并创建默认parameter_events发布器"
+    },
+    "cleanup": {
+      "nodes_created": 19,
+      "nodes_destroyed": 19,
+      "all_node_names": [
+        "/parameter_transaction_218046/parameter_case_1",
+        "/parameter_transaction_218046/parameter_case_2",
+        "/parameter_transaction_218046/parameter_case_3",
+        "/parameter_transaction_218046/parameter_case_4",
+        "/parameter_transaction_218046/parameter_case_5",
+        "/parameter_transaction_218046/parameter_case_6",
+        "/parameter_transaction_218046/parameter_case_7",
+        "/parameter_transaction_218046/parameter_case_8",
+        "/parameter_transaction_218046/parameter_case_9",
+        "/parameter_transaction_218046/parameter_case_10",
+        "/parameter_transaction_218046/parameter_case_11",
+        "/parameter_transaction_218046/parameter_case_12",
+        "/parameter_transaction_218046/parameter_case_13",
+        "/parameter_transaction_218046/parameter_case_14",
+        "/parameter_transaction_218046/parameter_case_15",
+        "/parameter_transaction_218046/parameter_case_16",
+        "/parameter_transaction_218046/parameter_case_17",
+        "/parameter_transaction_218046/parameter_case_18",
+        "/parameter_transaction_218046/parameter_case_19"
+      ],
+      "destroyed_node_names": [
+        "/parameter_transaction_218046/parameter_case_1",
+        "/parameter_transaction_218046/parameter_case_2",
+        "/parameter_transaction_218046/parameter_case_3",
+        "/parameter_transaction_218046/parameter_case_4",
+        "/parameter_transaction_218046/parameter_case_5",
+        "/parameter_transaction_218046/parameter_case_6",
+        "/parameter_transaction_218046/parameter_case_7",
+        "/parameter_transaction_218046/parameter_case_8",
+        "/parameter_transaction_218046/parameter_case_9",
+        "/parameter_transaction_218046/parameter_case_10",
+        "/parameter_transaction_218046/parameter_case_11",
+        "/parameter_transaction_218046/parameter_case_12",
+        "/parameter_transaction_218046/parameter_case_13",
+        "/parameter_transaction_218046/parameter_case_14",
+        "/parameter_transaction_218046/parameter_case_15",
+        "/parameter_transaction_218046/parameter_case_16",
+        "/parameter_transaction_218046/parameter_case_17",
+        "/parameter_transaction_218046/parameter_case_18",
+        "/parameter_transaction_218046/parameter_case_19"
+      ],
+      "context_shutdown": true
+    },
+    "cpp_python_contract": {
+      "python_pre": "Callable[[List[Parameter]], List[Parameter]]；返回修改后的列表",
+      "cpp_pre": "std::function<void(std::vector<rclcpp::Parameter>&)>；就地修改可变vector，返回void",
+      "on": "两种语言均返回SetParametersResult；全部on通过才提交参数存储",
+      "post": "Python返回None，C++返回void；存储提交后运行，不是撤销接口",
+      "python_registration": "返回None；Node强引用callable；用同一个callable的remove_*注销",
+      "cpp_registration": "返回SharedPtr回调句柄，必须保留；实现保存weak_ptr，句柄释放后失效",
+      "validation_boundary": "Python行为已运行；C++签名/顺序/句柄仅核对固定Jazzy源码，未编译运行C++"
+    },
+    "limits": [
+      "只演示单线程、本节点参数存储及内存快照，不提供跨节点/跨线程事务。",
+      "参数原子设置不保证post成功，不涵盖硬件资源重配置、文件或网络副作用。",
+      "pre/on/post中的业务副作用均无法靠参数拒绝或post异常自动撤销。"
+    ]
+  },
+  "additionalChecks": [
+    {
+      "case": "help_before_ros_import",
+      "command": [
+        "python3",
+        "-I",
+        "examples/runtime_labs/parameter_transaction_lab.py",
+        "--help"
+      ],
+      "passed": true,
+      "exitCode": 0
+    },
+    {
+      "case": "invalid_domain_rejected",
+      "input": "-1",
+      "passed": true,
+      "exitCode": 2
+    },
+    {
+      "case": "invalid_domain_rejected",
+      "input": "233",
+      "passed": true,
+      "exitCode": 2
+    },
+    {
+      "case": "optimized_assertions_disabled_rejected",
+      "passed": true,
+      "exitCode": 2,
+      "message": "本实验必须启用assert，不能使用-O/PYTHONOPTIMIZE。"
+    },
+    {
+      "case": "ast_syntax",
+      "passed": true
+    }
+  ],
+  "cppPythonComparison": [
+    {
+      "phase": "pre",
+      "python": "Callable[[List[Parameter]], List[Parameter]]，返回修改列表",
+      "cpp": "void(std::vector<rclcpp::Parameter>&)，就地修改vector",
+      "verification": "Python已执行；C++仅固定源码核对。"
+    },
+    {
+      "phase": "on",
+      "python": "返回SetParametersResult；不应用业务副作用",
+      "cpp": "返回SetParametersResult，输入const vector&",
+      "verification": "Python多验证者拒绝及污染反例已执行；C++顺序仅源码核对。"
+    },
+    {
+      "phase": "post",
+      "python": "List[Parameter]→None，已提交后调用",
+      "cpp": "void(const vector&)，已提交后调用",
+      "verification": "Python错误返回与异常反例已执行；C++未运行。"
+    },
+    {
+      "phase": "registration/lifetime",
+      "python": "注册返回None；Node强引用callable；remove_*使用同一callable",
+      "cpp": "注册返回SharedPtr handle；容器保存WeakPtr，必须保留handle",
+      "verification": "Python强引用存活/移除已执行；C++未编译运行。"
+    },
+    {
+      "phase": "multiple pre callbacks",
+      "python": "固定Jazzy实现分别对原请求调用多个pre并拼接返回列表，不应臆定为逐个管线改写",
+      "cpp": "固定源码将同一个可变vector依次传给pre",
+      "verification": "只读源码比较；本实验每个节点始终只保留一个pre，没有运行多pre组合或C++示例。"
+    }
+  ],
+  "sources": [
+    {
+      "id": "python-node",
+      "path": "references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2/rclpy/rclpy/node.py",
+      "sha256": "8b7fe0ea64e0de12cc1d5d01ebf56c202fa6e153251eb71dfff93e35eb5b3c80",
+      "claims": [
+        {
+          "lines": [
+            746,
+            839
+          ],
+          "meaning": "set_parameters逐项提交；原子接口整批调用pre/on/post。逐项业务拒绝仍可继续后项，异常的中止语义需另看具体异常。"
+        },
+        {
+          "lines": [
+            896,
+            962
+          ],
+          "meaning": "描述符检查先于on；on任一拒绝不写存储；写参数/发布事件后调用post，没有post回滚协议。"
+        },
+        {
+          "lines": [
+            1042,
+            1133
+          ],
+          "meaning": "Python pre返回列表；on返回SetParametersResult；post无接纳返回；注册返回None并把callable插入列表首。"
+        },
+        {
+          "lines": [
+            1135,
+            1177
+          ],
+          "meaning": "Python remove_*接受注册的同一callable。"
+        }
+      ],
+      "verification": "只读固定Jazzy源码，并与本机公开API实际实验对照。"
+    },
+    {
+      "id": "cpp-types",
+      "path": "references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp/include/rclcpp/node_interfaces/node_parameters_interface.hpp",
+      "sha256": "ce986454969419119b7e9a89d746655ed67d2008983087f5b4958657fb5c6703",
+      "claims": [
+        {
+          "lines": [
+            37,
+            68
+          ],
+          "meaning": "C++ pre void(vector&)，on SetParametersResult(const vector&)，post void(const vector&)。"
+        }
+      ],
+      "verification": "只读固定Jazzy源码；C++部分未编译或运行。"
+    },
+    {
+      "id": "cpp-lifetime-public-doc",
+      "path": "references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp/include/rclcpp/node.hpp",
+      "sha256": "8c3d4a637f143b815c56bd389b70351e8c2c89a57d64a2df31f3c4d4cd15f33a",
+      "claims": [
+        {
+          "lines": [
+            1044,
+            1085
+          ],
+          "meaning": "C++ pre注册返回SharedPtr；文档要求保留句柄，只有其存活时回调有效。"
+        },
+        {
+          "lines": [
+            1196,
+            1220
+          ],
+          "meaning": "C++ post在设置后运行，不修改参数，注册句柄同样必须保留。"
+        }
+      ],
+      "verification": "只读固定Jazzy源码；C++部分未编译或运行。"
+    },
+    {
+      "id": "cpp-weak-container",
+      "path": "references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp/include/rclcpp/node_interfaces/node_parameters.hpp",
+      "sha256": "3d1d66dde9921d10a29af1e8453c0135e23edeaaf884973b1220105ad5d672ca",
+      "claims": [
+        {
+          "lines": [
+            217,
+            219
+          ],
+          "meaning": "pre/on/post容器存储WeakPtr，区别于Python Node保留callable强引用。"
+        }
+      ],
+      "verification": "只读固定Jazzy源码；C++部分未编译或运行。"
+    },
+    {
+      "id": "cpp-phase-implementation",
+      "path": "references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp/src/rclcpp/node_interfaces/node_parameters.cpp",
+      "sha256": "eb20218b4052d0d41932d346e75f1783134de90f45b696bde16f5001e178918e",
+      "claims": [
+        {
+          "lines": [
+            330,
+            426
+          ],
+          "meaning": "pre就地修改vector；on逐个可拒绝；全部通过后写参数存储，再调用post。"
+        },
+        {
+          "lines": [
+            1151,
+            1191
+          ],
+          "meaning": "新注册回调放在容器前部，返回可持有的shared handle。"
+        }
+      ],
+      "verification": "只读固定Jazzy源码；C++部分未编译或运行。"
+    }
+  ],
+  "dataAndAssumptions": [
+    "lower_m、upper_m、span_m均为米；本例合成区间要求-100<=lower<upper<=100且span=upper-lower；这些上限不是硬件安全参数。",
+    "默认数值为可精确二进制表示的0、1、2、3、4、0.25和0.75；配置状态断言用精确比较，span业务约束使用绝对容差1e-12米、相对容差0。",
+    "非法NaN/Inf在证据JSON中以字符串记录，实际传给rclpy Parameter的仍是float NaN/Inf；JSON不包含非标准数值。",
+    "先声明参数再注册回调，避免把声明时的on/post行为混入设置阶段；没有声称pre参与声明。",
+    "on中的事件列表仅用于教学观测；正确版不修改业务快照、对象资源或递归set/declare。",
+    "post正常路径仅替换单线程不可变内存快照；没有锁或线程事务承诺。"
+  ],
+  "verificationBoundary": {
+    "actuallyExecuted": [
+      "本机Jazzy公开Python Node参数API的11组主案例",
+      "七种类型/非有限/范围拒绝子案例",
+      "19个节点的逐个销毁与专属Context关闭",
+      "隔离模式帮助、域范围输入检查、禁用assert模式拒绝和AST语法"
+    ],
+    "noExternalOperations": "所有参数设置为同进程直接方法调用；未启动执行器/参数服务或发送DDS参数请求，没有硬件、仿真或文件资源重配置。真实Node默认parameter_events发布器和RMW资源仍存在，不能称为零DDS端点或完全无中间件。",
+    "notExecuted": [
+      "C++程序构建或执行",
+      "跨节点参数服务/分布式事务",
+      "多线程参数修改与业务读取竞争",
+      "硬件或昂贵资源重配置/失败恢复",
+      "多个pre组合、未声明参数异常中断链及所有Descriptor类型"
+    ],
+    "atomicityLimit": "原子设置的保证针对该节点参数存储的校验与提交；不保证post成功，不撤销已发生的on/post业务副作用，不构成硬件资源事务。post异常案例只证明本进程调用行为，没有验证外部参数服务如何传播异常。"
+  },
+  "cleanup": {
+    "nodes_created": 19,
+    "nodes_destroyed": 19,
+    "all_node_names": [
+      "/parameter_transaction_218046/parameter_case_1",
+      "/parameter_transaction_218046/parameter_case_2",
+      "/parameter_transaction_218046/parameter_case_3",
+      "/parameter_transaction_218046/parameter_case_4",
+      "/parameter_transaction_218046/parameter_case_5",
+      "/parameter_transaction_218046/parameter_case_6",
+      "/parameter_transaction_218046/parameter_case_7",
+      "/parameter_transaction_218046/parameter_case_8",
+      "/parameter_transaction_218046/parameter_case_9",
+      "/parameter_transaction_218046/parameter_case_10",
+      "/parameter_transaction_218046/parameter_case_11",
+      "/parameter_transaction_218046/parameter_case_12",
+      "/parameter_transaction_218046/parameter_case_13",
+      "/parameter_transaction_218046/parameter_case_14",
+      "/parameter_transaction_218046/parameter_case_15",
+      "/parameter_transaction_218046/parameter_case_16",
+      "/parameter_transaction_218046/parameter_case_17",
+      "/parameter_transaction_218046/parameter_case_18",
+      "/parameter_transaction_218046/parameter_case_19"
+    ],
+    "destroyed_node_names": [
+      "/parameter_transaction_218046/parameter_case_1",
+      "/parameter_transaction_218046/parameter_case_2",
+      "/parameter_transaction_218046/parameter_case_3",
+      "/parameter_transaction_218046/parameter_case_4",
+      "/parameter_transaction_218046/parameter_case_5",
+      "/parameter_transaction_218046/parameter_case_6",
+      "/parameter_transaction_218046/parameter_case_7",
+      "/parameter_transaction_218046/parameter_case_8",
+      "/parameter_transaction_218046/parameter_case_9",
+      "/parameter_transaction_218046/parameter_case_10",
+      "/parameter_transaction_218046/parameter_case_11",
+      "/parameter_transaction_218046/parameter_case_12",
+      "/parameter_transaction_218046/parameter_case_13",
+      "/parameter_transaction_218046/parameter_case_14",
+      "/parameter_transaction_218046/parameter_case_15",
+      "/parameter_transaction_218046/parameter_case_16",
+      "/parameter_transaction_218046/parameter_case_17",
+      "/parameter_transaction_218046/parameter_case_18",
+      "/parameter_transaction_218046/parameter_case_19"
+    ],
+    "context_shutdown": true
+  },
+  "preliminaryProbe": {
+    "scope": "完整实验前先在受限沙箱检查Node直接参数API",
+    "observed": "参数内存设置与Context清理可完成，但RMW报告本地UDP/getifaddrs权限限制；最终完整11组实验在允许本地RMW初始化的隔离进程执行，发现范围OFF。",
+    "claim": "没有把受限RMW探针当网络通信成功证据。"
+  }
+}

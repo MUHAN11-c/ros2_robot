@@ -1,0 +1,43 @@
+{
+  "checkedAt": "2026-11-07",
+  "iteration": "2026-11-07-r6",
+  "findings": [
+    {
+      "id": "I6-MODEL-01",
+      "status": "resolved",
+      "title": "模型章缺少被展开命令引用的Xacro",
+      "resolution": "提供完整安装资源包，正文与快捷步骤使用同一明确路径；原最小URDF保留同源副本，GUI练习仍标未运行。"
+    },
+    {
+      "id": "I6-MODEL-02",
+      "status": "resolved",
+      "title": "原型说明把合法velocity-only与非法长度混称错误",
+      "resolution": "按JointState协议区分，并以RSP日志与有限TF窗口解释模块输入合同；说明修订后重新完整运行。"
+    },
+    {
+      "id": "I6-MODEL-03",
+      "status": "resolved",
+      "title": "URDF与Xacro未进入完整源码文件索引",
+      "resolution": "将两后缀按XML索引并做文件字节/正文/章节ZIP/工程ZIP同源检查。"
+    },
+    {
+      "id": "I6-MODEL-04",
+      "status": "resolved",
+      "title": "独立工程根与完整工作区命令前缀不同",
+      "resolution": "工程README给出独立model_labs路径；正式打包函数的源码ZIP实际解压运行通过，最终原包字节一致。"
+    },
+    {
+      "id": "I6-MODEL-05",
+      "status": "teaching_example_verified",
+      "title": "结构解析不等于惯量物理数值验收",
+      "evidence": "同一负Iyy文件check_urdf0、数值自检1；不是修改上游解析器或宣称动力学已测。"
+    }
+  ],
+  "limits": [
+    "非零活动joint origin、根惯量运行、父中断/原生挂起、GUI、动力学与硬件未运行。"
+  ],
+  "setupHistory": [
+    "辅助负惯量命令最初嵌套引号破坏XPath，未执行到探针，已改固定迭代。",
+    "首次独立工程命令误填临时cwd，工具未启动进程；按实际记录路径执行通过。"
+  ]
+}

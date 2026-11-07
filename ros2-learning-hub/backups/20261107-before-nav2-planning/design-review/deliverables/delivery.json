@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "archive": "narukami-design-review.zip",
+  "bytes": 10792217,
+  "sha256": "5a7ddebf5c5452f70d81a17769c3b507b15fd60183b883ae5b9fe80ad4a61491",
+  "files": 132,
+  "assets": 7,
+  "screenshots": 20,
+  "formalBaselineFilesUnchanged": 7,
+  "validationHashes": {
+    "browser-report.json": "d046350de557155542767362cd3e31aef1ce2f6d4508e348a2745db49851537d",
+    "logic-report.json": "bfbe0d2a9e97d9d21c1a8a3e14e460dd4f58a38bff5f6acd49b0807437708449",
+    "viewport-report.json": "72c5909af976bbe4c2d8fb29ab9322135c5538ec26a7caff9b2b2e2b9cd9ebf6",
+    "file-save-report.json": "e2c678d811cf064a2c4420cc67621d166a3279802439f69fc2181c3d094e598e"
+  },
+  "scope": "便携审查站与本机编辑服务；初始修订为空，不含第三方参考仓库、ROS安装、个人草稿或备份。"
+}

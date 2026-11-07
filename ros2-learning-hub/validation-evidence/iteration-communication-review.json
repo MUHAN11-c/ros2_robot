@@ -1,0 +1,1132 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-07T03:23:15+08:00",
+  "scope": {
+    "content": "dist/content.js中的qos/pubsub/services/actions四章及其相关API表、compare-qos",
+    "writeBoundary": "只新增本文件；未修改正文、代码、页面、构建器或第三方资料。",
+    "readMethod": [
+      "读取最终构建数据，按章节/节/码块定位",
+      "对照本地固定提交Jazzy官方文档与客户端/CLI源码",
+      "补充读取本机安装RMW公开头文件",
+      "读取既有验证记录，区分他人已经实测与本审查未运行"
+    ],
+    "webAccess": "未使用外网；本地一手快照和已安装公开API足以支持这些结论。",
+    "runtimeExecutedByThisReview": false,
+    "hardwareOrSimulationConnected": false
+  },
+  "reviewedSnapshot": {
+    "path": "dist/content.js",
+    "sha256": "ead17272c0777387cb5b51a94d0bd2319994aafa646cf2df8eb0bb185b306334",
+    "lessonHashes": {
+      "pubsub": "133e440b2dd8b2b12fa3ac21eab7759f66e3b349bc0c012785438c1af613baed",
+      "services": "d6ffd668650561b537cab43d20a6de5e681fe0096fe1ceab55a3ab2e557078e9",
+      "actions": "6bae6f9ece8293956d070c0facad7a2ade5c87285f1d1c3c1c6058e506dfa40d",
+      "qos": "3f7d404a83ef39d1f0b2e8bf2928c8a55404ef947ed929b779b6d025583a0fda"
+    },
+    "hashDefinition": "lessonHashes使用UTF-8、ensure_ascii=false、sort_keys=true、separators=(comma,colon)的紧凑JSON计算。",
+    "sectionsReviewed": 27,
+    "sectionCodeBlocksReviewed": 40,
+    "relatedApiTables": [
+      "api-node-lifetime",
+      "api-publish-subscribe",
+      "api-timer-clock",
+      "api-service-future",
+      "api-action-state"
+    ],
+    "comparison": "compare-qos"
+  },
+  "priorityMeaning": {
+    "P2": "需要修正明确文意，或补足当前教学目标的关键自足性/实验闭环；不代表已发现生产事故。",
+    "P3": "可以加深的诊断或额外验收范围；现有例子已明确局限，不视为未声明功能的实现故障。"
+  },
+  "summary": {
+    "chapters": 4,
+    "findings": 11,
+    "byPriority": {
+      "P2": 8,
+      "P3": 3
+    },
+    "confirmedWordingErrors": [
+      "COMM-01",
+      "COMM-02"
+    ],
+    "importantExistingCorrectness": [
+      "不把depth解释成Hz",
+      "不把Reliable当成业务完成确认",
+      "不把TL当作跨writer重启数据库",
+      "不把取消接受或客户端退出当成设备停止",
+      "不把单线程wall timer和Python节点时钟在仿真时间下称完全等价"
+    ],
+    "mainNextWork": [
+      "修正文意及验证元数据",
+      "补足租约/默认分支与graph诊断边界",
+      "完成QoS有界历史对照和慢消费者测量",
+      "分离服务发现失败和已发现后的响应超时实验"
+    ]
+  },
+  "chapterAssessments": [
+    {
+      "lesson": "pubsub",
+      "conclusion": "核心链路自足；需修正Python实体所有权解释。",
+      "strengths": [
+        "C++/Python发布与订阅完整文件、清单、入口与构建运行步骤齐全",
+        "名称/类型/QoS、单位、队列深度和500ms/.5s的区别清楚",
+        "API表明确墙钟稳态与Python默认节点时钟在仿真时间下不等价",
+        "已存在双向本机真实接收证据"
+      ],
+      "findingIds": [
+        "COMM-01",
+        "COMM-10"
+      ]
+    },
+    {
+      "lesson": "services",
+      "conclusion": "核心请求响应自足；失败分类文意和响应超时实验需要补齐。",
+      "strengths": [
+        "完整C++包及独立Python服务端/客户端",
+        "发现与响应等待分阶段，Future及执行器作用清楚",
+        "同步死锁、超时不等于远端撤销、幂等性及pending清理边界已说明",
+        "双向小整数加法正常路径有本机实测证据"
+      ],
+      "findingIds": [
+        "COMM-02",
+        "COMM-08",
+        "COMM-10"
+      ]
+    },
+    {
+      "lesson": "actions",
+      "conclusion": "成功/拒绝/反馈/取消主路径自足，生产故障与抢占策略的适用界限清楚。",
+      "strengths": [
+        "独立Count接口及构建文件完整",
+        "两种server的调度结构、busy锁及单线程假设清楚",
+        "客户端分开发现、目标接受、取消响应与最终结果",
+        "已明确客户端退出、取消接受、物理停止不同；不应回退这些边界",
+        "两种server的成功与取消有本机实测证据"
+      ],
+      "findingIds": [
+        "COMM-09",
+        "COMM-10"
+      ]
+    },
+    {
+      "lesson": "qos",
+      "conclusion": "核心方向正确，已有reliability故障→诊断→修复及晚加入正例；高级匹配规则、负例和新鲜度测量尚不完全自足。",
+      "strengths": [
+        "reliability四格、durability方向、deadline有限值方向正确",
+        "depth为条数、可靠性非应用确认、过载不靠加深队列修复均解释清楚",
+        "现有CLI可靠性故障实验有修复操作和端点诊断",
+        "一次发布保活的历史正例明确writer缓存非数据库"
+      ],
+      "findingIds": [
+        "COMM-03",
+        "COMM-04",
+        "COMM-05",
+        "COMM-06",
+        "COMM-07",
+        "COMM-10",
+        "COMM-11"
+      ]
+    }
+  ],
+  "qosCompatibilityAudit": {
+    "sourceEvidenceIds": [
+      "qos-doc",
+      "cpp-qos",
+      "py-qos",
+      "rmw-profile"
+    ],
+    "expectedRules": {
+      "orientation": "每行均为publisher offered → subscription requested；全体影响匹配的策略都兼容才连接。",
+      "reliability": [
+        {
+          "offered": "BEST_EFFORT",
+          "requested": "BEST_EFFORT",
+          "compatible": true
+        },
+        {
+          "offered": "BEST_EFFORT",
+          "requested": "RELIABLE",
+          "compatible": false
+        },
+        {
+          "offered": "RELIABLE",
+          "requested": "BEST_EFFORT",
+          "compatible": true
+        },
+        {
+          "offered": "RELIABLE",
+          "requested": "RELIABLE",
+          "compatible": true
+        }
+      ],
+      "durability": [
+        {
+          "offered": "VOLATILE",
+          "requested": "VOLATILE",
+          "compatible": true,
+          "delivery": "只接收新消息"
+        },
+        {
+          "offered": "VOLATILE",
+          "requested": "TRANSIENT_LOCAL",
+          "compatible": false,
+          "delivery": "不通信"
+        },
+        {
+          "offered": "TRANSIENT_LOCAL",
+          "requested": "VOLATILE",
+          "compatible": true,
+          "delivery": "只接收新消息，不要求历史"
+        },
+        {
+          "offered": "TRANSIENT_LOCAL",
+          "requested": "TRANSIENT_LOCAL",
+          "compatible": true,
+          "delivery": "新消息及仍可用的历史；受writer存活、history/depth、资源与过期条件约束"
+        }
+      ],
+      "durationRuleForDeadlineAndLease": {
+        "rule": "有限值offered <= requested",
+        "rows": [
+          {
+            "offered": "Default",
+            "requested": "Default",
+            "compatible": true
+          },
+          {
+            "offered": "Default",
+            "requested": "有限x",
+            "compatible": false
+          },
+          {
+            "offered": "有限x",
+            "requested": "Default",
+            "compatible": true
+          },
+          {
+            "offered": "有限x",
+            "requested": "有限x",
+            "compatible": true
+          },
+          {
+            "offered": "有限x",
+            "requested": "有限y且y>x",
+            "compatible": true
+          },
+          {
+            "offered": "有限x",
+            "requested": "有限y且y<x",
+            "compatible": false
+          }
+        ],
+        "defaultNote": "Default为未指定，底层通常解释为无限持续时间；不要当作0秒。"
+      },
+      "liveliness": [
+        {
+          "offered": "AUTOMATIC",
+          "requested": "AUTOMATIC",
+          "compatible": true
+        },
+        {
+          "offered": "AUTOMATIC",
+          "requested": "MANUAL_BY_TOPIC",
+          "compatible": false
+        },
+        {
+          "offered": "MANUAL_BY_TOPIC",
+          "requested": "AUTOMATIC",
+          "compatible": true
+        },
+        {
+          "offered": "MANUAL_BY_TOPIC",
+          "requested": "MANUAL_BY_TOPIC",
+          "compatible": true
+        }
+      ],
+      "historyDepth": {
+        "mustBeEqualForMatch": false,
+        "KEEP_LAST": "最多保留N条，单位为样本条数",
+        "KEEP_ALL": "保留所有样本仍受中间件资源限制",
+        "notEquivalentTo": [
+          "发布频率Hz",
+          "回调线程数",
+          "硬实时保证",
+          "应用完成确认",
+          "整个端到端系统的精确积压总数"
+        ],
+        "reviewedContent": "当前正文这些核心解释正确。"
+      },
+      "sensorPresetInReviewedJazzy": {
+        "history": "KEEP_LAST",
+        "depth": 5,
+        "reliability": "BEST_EFFORT",
+        "durability": "VOLATILE",
+        "deadline": "DEFAULT",
+        "lifespan": "DEFAULT",
+        "liveliness": "SYSTEM_DEFAULT",
+        "leaseDuration": "DEFAULT",
+        "sourceEvidenceIds": [
+          "cpp-qos",
+          "py-qos",
+          "rmw-profile"
+        ]
+      },
+      "uncertainValues": "SYSTEM_DEFAULT或UNKNOWN可使静态兼容性检查返回WARNING；本表针对明确给定的策略值，不替代目标RMW上的实际交付验证。"
+    },
+    "currentCoverage": {
+      "reliability": "完整四格文字，方向正确。",
+      "durability": "方向及历史边界正确，建议四格显式列结果。",
+      "deadline": "有限值方向及无限默认概念正确，缺完整Default分支。",
+      "liveliness": "有严格性提示，缺四格。",
+      "leaseDuration": "仅提参与兼容，缺持续时间方向和Default分支。",
+      "historyDepth": "条数/吞吐/容量说明正确。",
+      "sensorPreset": "显式对照有5条，正文可再列完整已核对预设。"
+    }
+  },
+  "experimentAudit": [
+    {
+      "id": "qos-reliability-cli",
+      "lesson": "qos",
+      "present": "三终端故意不匹配、topic info诊断、Ctrl+C后改best_effort恢复",
+      "currentRuntimeEvidence": "审查快照声明未运行；不抹去已有实验文本。",
+      "needs": [
+        "明确有限观察窗口",
+        "记录自己的观察者端点及实际应用QoS"
+      ]
+    },
+    {
+      "id": "qos-late-joiner",
+      "lesson": "qos",
+      "present": "durable_once.py加双方TL的晚加入正例",
+      "currentRuntimeEvidence": "本审查未运行；主代理已通知计划单进程双节点验证，尚未在此认领完成。",
+      "needs": [
+        "volatile/不兼容对照",
+        "writer重建与新样本恢复",
+        "声明/发现/实际交付分开",
+        "负向与正向共同证据"
+      ]
+    },
+    {
+      "id": "qos-slow-consumer",
+      "lesson": "qos",
+      "present": "概念推导和workedExample步骤",
+      "currentRuntimeEvidence": "没有看到此正文对应的实际数值测量记录。",
+      "needs": [
+        "完整采样时间/序号/处理耗时代码",
+        "同一时基",
+        "数据年龄指标",
+        "修复后门限与统计"
+      ]
+    },
+    {
+      "id": "service-failure-stages",
+      "lesson": "services",
+      "present": "成功、无server、错名和2s响应等待代码",
+      "currentRuntimeEvidence": "既有报告确认双向成功调用；未看到本例已发现后延迟响应的测试项。",
+      "needs": [
+        "受控延迟server",
+        "阶段耗时与退出码合同",
+        "迟到结果/副作用边界"
+      ]
+    },
+    {
+      "id": "action-main-paths",
+      "lesson": "actions",
+      "present": "成功、非法目标、反馈、取消完整命令",
+      "currentRuntimeEvidence": "既有报告确认两种server成功和取消；本审查没有重跑。",
+      "needs": [
+        "可选busy拒绝闭环",
+        "ABORTED故障注入或明确其为扩展范围"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "COMM-01",
+      "priority": "P2",
+      "kind": "已确认的API表述错误",
+      "title": "Python与C++实体所有权不应共用同一个销毁理由",
+      "lesson": "pubsub",
+      "locations": [
+        "/exercises/2/answer",
+        "/sections/3/paragraphs/2",
+        "apiReferences/api-publish-subscribe/rows/3"
+      ],
+      "currentEvidence": "练习把self.subscription与C++ subscription_并列，答案说丢临时引用可能销毁；C++段落的强引用理由成立，但Jazzy rclpy Node实际通过_subscriptions列表持有订阅。",
+      "sourceEvidenceIds": [
+        "py-node-ownership",
+        "cpp-subscription-ownership"
+      ],
+      "recommendation": [
+        "分别说明：C++保存SharedPtr承担强所有权；Python保存self.subscription便于后续访问、显式destroy和管理，但Node本身也持有端点。",
+        "保留“Node和通信对象必须有效”的共同原则，不把Python调用者局部变量丢失直接当成订阅消失的诊断结论。"
+      ],
+      "verificationPlan": [
+        "静态核对rclpy Node.create_subscription的append和destroy_subscription的remove路径。",
+        "可选本机无硬件实验：保持Node和执行器存活，不给返回订阅赋self成员；确认有样本，再显式destroy_subscription确认移除；与C++局部SharedPtr示例分开观察。"
+      ],
+      "status": "审查快照中的建议，尚未由本审查修改或复测",
+      "confidence": "高"
+    },
+    {
+      "id": "COMM-02",
+      "priority": "P2",
+      "kind": "已确认的结果表述与代码不一致",
+      "title": "服务示例的0/1退出码不能独立区分两类失败",
+      "lesson": "services",
+      "locations": [
+        "/workedExample/result",
+        "/sections/2/codeBlocks/0",
+        "/sections/3/codeBlocks/2"
+      ],
+      "currentEvidence": "workedExample结果声称“依据结果与退出码区分成功、依赖不存在和响应超时”；完整C++/Python客户端均只采用成功0、失败1，发现失败和响应超时都返回1。两类失败目前由日志文字区分。",
+      "sourceEvidenceIds": [],
+      "recommendation": [
+        "把结果改为“退出码区分成功/失败，阶段日志区分发现失败和响应等待失败”；或者定义并实现不同失败码/结构化状态。",
+        "若保留0/1，明确脚本不可只凭exit=1推断服务没执行。"
+      ],
+      "verificationPlan": [
+        "静态枚举两个main中的退出值，核对文案。",
+        "用成功、没有server、已发现但延迟响应三场景记录退出码和日志；断言其分类与公开合同一致。"
+      ],
+      "status": "审查快照中的建议，尚未由本审查修改或复测",
+      "confidence": "高"
+    },
+    {
+      "id": "COMM-03",
+      "priority": "P2",
+      "kind": "自足性缺口",
+      "title": "租约及默认持续时间的匹配规则仍需在正文给出",
+      "lesson": "qos",
+      "locations": [
+        "/sections/1/paragraphs/1",
+        "/sections/1/bullets"
+      ],
+      "currentEvidence": "正文已正确覆盖reliability四格、durability方向、deadline有限值方向及history/depth无需相同；但对liveliness只写manual-by-topic更严格，对lease只写参与判断，读者无法仅凭本章计算租约20ms/50ms或Default/有限值的兼容结论。",
+      "sourceEvidenceIds": [
+        "qos-doc",
+        "py-qos"
+      ],
+      "recommendation": [
+        "补一张request/offered矩阵：liveliness四格；deadline与lease的Default/有限值六分支。",
+        "注明比较的是持续时间，offered<=requested；Default表示未指定，通常由中间件解释为无限，而不是0秒。",
+        "强调任一参与匹配的策略不兼容都阻止该对端点通信；SYSTEM_DEFAULT/UNKNOWN的静态检查可能仅得WARNING。"
+      ],
+      "verificationPlan": [
+        "用本文件qosCompatibilityAudit.expectedRules逐格校对正文。",
+        "若运行实验，先用确定值配置其余策略，再分别改变一项；对不支持相关事件的RMW如实记录，不用缺失事件反推兼容。"
+      ],
+      "status": "审查快照中的建议，尚未由本审查修改或复测",
+      "confidence": "高"
+    },
+    {
+      "id": "COMM-04",
+      "priority": "P2",
+      "kind": "实验闭环缺口",
+      "title": "晚加入正例已有完整脚本，负例仍缺有界步骤与判据",
+      "lesson": "qos",
+      "locations": [
+        "/sections/4",
+        "/sections/5/paragraphs/1"
+      ],
+      "currentEvidence": "已有只发布一次且spin保活的durable_once.py和双方transient_local的--once订阅命令；已解释volatile晚加入和writer退出边界。但没有可直接执行的volatile晚加入、writer重建前后历史对照步骤；--once在没有数据时可能一直等待，初学者易把预期负例误判为卡死。",
+      "sourceEvidenceIds": [
+        "qos-doc",
+        "cli-echo"
+      ],
+      "recommendation": [
+        "保留当前正例，补相同topic/type、隔离命名空间、有限等待的负例与恢复步骤。",
+        "先确认发现完成与正向标记消息可交付，再观察预发布历史是否出现；负例不能仅靠“等了几秒没输出”判定。",
+        "深度1场景先发41再发42，晚加入只要求收到42；writer退出后新writer不自动继承旧历史，重新发布43再恢复。"
+      ],
+      "verificationPlan": [
+        "分别记录端点声明、可用发现元数据、兼容检查、实际匹配数、观察窗口与接收序列。",
+        "场景包括TL/TL历史正例、TL/volatile晚加入无旧样本、volatile/TL不匹配、重建writer后旧样本不继承；所有等待设上限。"
+      ],
+      "status": "审查快照中的建议，尚未由本审查修改或复测",
+      "confidence": "高",
+      "coordination": "主代理已明确计划新增qos_contract_lab.py覆盖此组边界；本审查未把计划或开发中实验视作已验证，也未修改该实验。"
+    },
+    {
+      "id": "COMM-05",
+      "priority": "P2",
+      "kind": "实验闭环缺口",
+      "title": "慢消费者和队列新鲜度只有文字方案，缺完整测量例子",
+      "lesson": "qos",
+      "locations": [
+        "/sections/2",
+        "/sections/3",
+        "/workedExample/steps/1",
+        "/workedExample/steps/2"
+      ],
+      "currentEvidence": "正文正确给出80ms回调最多约12.5Hz、深度不是频率、增深度不能修复持续40Hz过载；workedExample要求记录扫描时间并人为增加耗时，但没有配套可运行代码、计时基准、数据年龄输出或验收阈值。",
+      "sourceEvidenceIds": [
+        "qos-doc",
+        "cpp-qos",
+        "py-node-ownership"
+      ],
+      "recommendation": [
+        "补一个纯软件受控负载实验，消息含source_id、seq、采样时间，订阅记录接收/处理时间及年龄。",
+        "明确同一时基和单位；单进程可用monotonic_ns，跨进程须约定同机时钟/同步，不能混ROS时间与steady时间相减。",
+        "控制变量比较正常处理、80ms处理延迟、有限深度变化及应用丢弃过旧样本；不要承诺RMW无关的固定精确丢帧序列。"
+      ],
+      "verificationPlan": [
+        "在隔离本机环境发布40Hz、处理80ms，保留每阶段发送/处理计数、seq缺口及年龄分位数。",
+        "故障诊断须证明端点已匹配且有数据，定位为处理吞吐不足；修复后用预定数据年龄门限与处理吞吐判据验收。",
+        "明确这是调度/缓存软件实验，不能推出硬实时或机器人避障安全结论。"
+      ],
+      "status": "审查快照中的建议，尚未由本审查修改或复测",
+      "confidence": "高"
+    },
+    {
+      "id": "COMM-06",
+      "priority": "P2",
+      "kind": "诊断API边界缺口",
+      "title": "发现返回的UNKNOWN及depth=0不能当作真实端点配置",
+      "lesson": "qos",
+      "locations": [
+        "/steps/0",
+        "/sections/3/paragraphs/0",
+        "/sections/5/paragraphs/1"
+      ],
+      "currentEvidence": "本章建议topic info --verbose读取两端QoS，但没有解释DDS图发现并不可靠共享history/depth；本机RMW公共契约明确这些字段可能不可读取。",
+      "sourceEvidenceIds": [
+        "rmw-graph-contract",
+        "py-qos"
+      ],
+      "recommendation": [
+        "分开保存“代码/参数声明的QoS”“图发现返回的字段”“实际交付行为”。",
+        "图中history=UNKNOWN或相应depth=0不构成KeepLast深度被改成0的证明；UNKNOWN也不能作为实际历史容量。",
+        "对静态兼容检查的WARNING保留reason，结合matched数量和接收序列判断，不将WARNING硬转为通过或不通过。"
+      ],
+      "verificationPlan": [
+        "将本机RMW header版本、hash、返回值原样收入实验报告。",
+        "用声明depth=1且预发布41→42、晚加入只收42的行为验证有限历史；这是该环境实测行为，不能声称所有RMW发现字段都完整。"
+      ],
+      "status": "审查快照中的建议，尚未由本审查修改或复测",
+      "confidence": "高",
+      "coordination": "主代理已观察本机FastDDS发现元数据history=UNKNOWN/depth=0并准备区分声明与发现字段；这里提供公开RMW契约的一手依据，未自行运行节点。"
+    },
+    {
+      "id": "COMM-07",
+      "priority": "P3",
+      "kind": "诊断工具边界加深",
+      "title": "echo省略QoS与显式QoS的选择路径不同",
+      "lesson": "qos",
+      "locations": [
+        "/sections/3/paragraphs/1",
+        "/sections/4/codeBlocks/1"
+      ],
+      "currentEvidence": "现有实验显式reliability，能控制被测策略；但正文尚未说明Jazzy echo无显式QoS时会依据发现发布者适配可靠性/持久性，而显式任一QoS参数会走预设加覆盖路径。只凭默认echo能收样，不能证明应用订阅者同样兼容。",
+      "sourceEvidenceIds": [
+        "cli-echo"
+      ],
+      "recommendation": [
+        "说明echo也是一个新的订阅者，并可能改变端点数量；应用端故障要检查应用自己的端点。",
+        "对照实验显式给出history/depth/reliability/durability并记录命令；普通快速观察可用默认，但不将其当成应用配置复现。"
+      ],
+      "verificationPlan": [
+        "静态核对echo.choose_qos两个分支。",
+        "可选比较默认echo与显式reliable echo对同一个best_effort发布者的行为；保存端点详情并说明观察者自身。"
+      ],
+      "status": "审查快照中的建议，尚未由本审查修改或复测",
+      "confidence": "高"
+    },
+    {
+      "id": "COMM-08",
+      "priority": "P2",
+      "kind": "实验闭环缺口",
+      "title": "服务响应超时需要与发现失败分开的可复现注入",
+      "lesson": "services",
+      "locations": [
+        "/sections/0/paragraphs/1",
+        "/sections/2",
+        "/sections/4",
+        "/workedExample"
+      ],
+      "currentEvidence": "客户端代码有两秒响应等待与错误日志，正文也准确说明超时不撤销远端副作用；实验只给成功、没有server和错名，不能证明已发现服务后的响应等待上限与迟到结果处理。",
+      "sourceEvidenceIds": [
+        "sync-async-guide",
+        "cpp-service-pending",
+        "py-service-pending"
+      ],
+      "recommendation": [
+        "新增仅本机的延迟应答测试server或明确延迟参数，让服务在发现完成后超过2s才回应。",
+        "记录discovery elapsed、response elapsed、退出码与server最终处理记录，展示本地超时后服务仍可能已执行。",
+        "长期节点另示范最多一个pending请求以及超时清理；保留当前主函数一次性程序的边界，不把它误说成泄漏的长期运行实现。"
+      ],
+      "verificationPlan": [
+        "无server应失败在发现阶段；延迟server应先发现成功再失败在响应阶段；正常server应返回sum=12。",
+        "测量总时长允许发现等待和调度余量，不把2s参数当作整个进程的硬截止时间。",
+        "重试实验使用无副作用加法或明确请求ID，不启动设备服务。"
+      ],
+      "status": "审查快照中的建议，尚未由本审查修改或复测",
+      "confidence": "高"
+    },
+    {
+      "id": "COMM-09",
+      "priority": "P3",
+      "kind": "扩展验收建议",
+      "title": "动作主路径自足，但忙碌拒绝和ABORTED未形成实验闭环",
+      "lesson": "actions",
+      "locations": [
+        "/sections/5",
+        "/sections/6/paragraphs/2"
+      ],
+      "currentEvidence": "本章已有独立Count接口、完整两种server和完整client，成功/非法目标/取消命令齐全；foundation报告实际验证两种server的成功/取消。忙碌拒绝只在代码/正文解释，故障abort只作为真实任务设计要求，没有该Count例可触发的故障参数。",
+      "sourceEvidenceIds": [
+        "py-action-client",
+        "action-concepts",
+        "action-python-tutorial"
+      ],
+      "recommendation": [
+        "补一个双终端同时目标的busy拒绝实验：长目标执行期间发第二个合法目标，随后首目标终态后再发送合法目标成功。",
+        "若希望将ABORTED纳入本章验收，提供受控纯计数故障注入与明确结果原因；否则说明此Count示例只完整覆盖成功/拒绝/取消，故障恢复为后续扩展。",
+        "保持取消响应、最终CANCELED和物理停止三者分离；本章已经这样表述，应保留。"
+      ],
+      "verificationPlan": [
+        "对C++和Python server分别测试busy拒绝后仍能继续接收新目标。",
+        "受控故障应输出ABORTED而非只返回Result；同一客户端检查通用status和业务completed/原因。",
+        "不以客户端退出、结果Future超时或client.destroy作为服务端目标已取消的证明。"
+      ],
+      "status": "审查快照中的建议，尚未由本审查修改或复测",
+      "confidence": "高"
+    },
+    {
+      "id": "COMM-10",
+      "priority": "P2",
+      "kind": "验证元数据不一致",
+      "title": "四章通用未运行声明与部分真实验证证据冲突",
+      "lesson": [
+        "qos",
+        "pubsub",
+        "services",
+        "actions"
+      ],
+      "locations": [
+        "/validation",
+        "services/sections/4/codeBlocks/2/explanation",
+        "actions/sections/5/paragraphs/2"
+      ],
+      "currentEvidence": "四章validation均为“依据官方Jazzy文档与示例核对；本研究未运行ROS节点”；但services/actions正文和foundation-current-validation.json已明确同机Jazzy双向话题/服务及两种Count成功/取消通过。QoS在本审查快照确实仍声明未运行，应与其他三章分开。",
+      "sourceEvidenceIds": [],
+      "recommendation": [
+        "按章或实验写验证范围：pubsub双向，services双向正常请求，actions两种server成功/取消；保留尚未执行的故障路径。",
+        "链接既有验证记录，保留环境、时间、源码哈希与本机LOCALHOST范围。",
+        "新QoS实验完成后仅将其真实场景标已验证，不顺带宣称跨进程网络、跨机、完整仿真、驱动或硬件已验收。"
+      ],
+      "verificationPlan": [
+        "比对章validation、正文、下载README和current-validation-summary的实际测试项。",
+        "对照foundation报告的sourceFingerprints及postValidationDocumentationChanges确认正文/工程同源；不要求重跑无变化的全部测试。"
+      ],
+      "status": "审查快照中的建议，尚未由本审查修改或复测",
+      "confidence": "高"
+    },
+    {
+      "id": "COMM-11",
+      "priority": "P3",
+      "kind": "自足性加深",
+      "title": "传感器预设可直接列出Jazzy关键字段而不要求外跳",
+      "lesson": "qos",
+      "locations": [
+        "/pitfalls",
+        "comparisons/compare-qos/variants",
+        "comparisons/compare-qos/notes"
+      ],
+      "currentEvidence": "本章正确说传感器用尽力/易失/小深度，对照显式给depth=5，也提醒不是所有语言都depth10；但预设的具体字段主要让读者按当前API另查，缺少一张可直接核对的Jazzy表。",
+      "sourceEvidenceIds": [
+        "cpp-qos",
+        "py-qos",
+        "rmw-profile"
+      ],
+      "recommendation": [
+        "正文给出本地Jazzy已核对的sensor_data：KEEP_LAST、5条、BEST_EFFORT、VOLATILE；常用默认pub/sub：KEEP_LAST、10条、RELIABLE、VOLATILE。",
+        "列出deadline/lifespan/lease为默认持续时间、liveliness为SYSTEM_DEFAULT；明确这不是任意RMW任意版本的冻结保证。",
+        "解释深度5是每个实体的历史条数限制，并不保证端到端只排5帧、5Hz、5ms或永不积压。"
+      ],
+      "verificationPlan": [
+        "静态对照固定提交rclcpp文档、rclpy预设来源及本机rmw_qos_profile_sensor_data。",
+        "若增加运行打印，记录本机包版本；图发现UNKNOWN不代替本地预设/actual QoS核对。"
+      ],
+      "status": "审查快照中的建议，尚未由本审查修改或复测",
+      "confidence": "高"
+    }
+  ],
+  "officialEvidence": [
+    {
+      "id": "qos-doc",
+      "kind": "固定提交的一手源码或官方教程",
+      "repository": "ros2/ros2_documentation",
+      "ref": "jazzy",
+      "commit": "929e37c4c6d0746e75d10f1fd76f024743ff75ea",
+      "localPath": "references/sources/official-docs/ros2--ros2_documentation/jazzy--929e37c4c6d0/source/Concepts/Intermediate/About-Quality-of-Service-Settings.rst",
+      "sha256": "dacf14cb84e15c0ca3710468202d09e52606b959c28fe618f652d8debcf962fe",
+      "lineRanges": [
+        [
+          30,
+          70
+        ],
+        [
+          89,
+          123
+        ],
+        [
+          127,
+          279
+        ],
+        [
+          281,
+          335
+        ]
+      ],
+      "upstreamUrl": "https://github.com/ros2/ros2_documentation/blob/929e37c4c6d0746e75d10f1fd76f024743ff75ea/source/Concepts/Intermediate/About-Quality-of-Service-Settings.rst",
+      "readingResult": "实际读取完整QoS概念页；核对history/depth、服务易失性、可靠性/持久性/截止间隔/活性/租约五种兼容矩阵、QoS事件与matched事件。",
+      "runtimeExecutedByThisReview": false
+    },
+    {
+      "id": "cpp-qos",
+      "kind": "固定提交的一手源码或官方教程",
+      "repository": "ros2/rclcpp",
+      "ref": "jazzy",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "localPath": "references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp/include/rclcpp/qos.hpp",
+      "sha256": "ca6440a04d56c133c0fe1b5b6ebbc7386023ecabb85fc8bcd513ab2e13925137",
+      "lineRanges": [
+        [
+          99,
+          146
+        ],
+        [
+          314,
+          347
+        ],
+        [
+          372,
+          391
+        ]
+      ],
+      "upstreamUrl": "https://github.com/ros2/rclcpp/blob/35b821a9fb1f937bfbd9c741b7e3353e101d9593/rclcpp/include/rclcpp/qos.hpp",
+      "readingResult": "整数深度转换为KeepLast；SensorDataQoS文档列depth=5、BEST_EFFORT、VOLATILE；兼容检查在未知/默认策略下可能Warning。未复制该头文件示例代码。",
+      "runtimeExecutedByThisReview": false
+    },
+    {
+      "id": "py-qos",
+      "kind": "固定提交的一手源码或官方教程",
+      "repository": "ros2/rclpy",
+      "ref": "jazzy",
+      "commit": "521012e60ba21319ef29141f8f521a0e072fe652",
+      "localPath": "references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2/rclpy/rclpy/qos.py",
+      "sha256": "0fba9cda7e15dd40f3ed32a0b3d8e60ef9060040e201e886aa1cebb2a61745f6",
+      "lineRanges": [
+        [
+          76,
+          108
+        ],
+        [
+          449,
+          457
+        ],
+        [
+          514,
+          532
+        ]
+      ],
+      "upstreamUrl": "https://github.com/ros2/rclpy/blob/521012e60ba21319ef29141f8f521a0e072fe652/rclpy/rclpy/qos.py",
+      "readingResult": "显式depth自动补KEEP_LAST；Python传感器预设来自rmw预设；qos_check_compatible存在WARNING，不能把未知解释为确定匹配。",
+      "runtimeExecutedByThisReview": false
+    },
+    {
+      "id": "rmw-profile",
+      "kind": "本机安装的一手公开头文件",
+      "package": "ros-jazzy-rmw",
+      "packageVersion": "7.3.4-1noble.20260911.050254",
+      "localPath": "/opt/ros/jazzy/include/rmw/rmw/qos_profiles.h",
+      "sha256": "0502801c68adbd61bc884aafea5c5bbfa4deb326aacb4d0fdbab3a32aab3539c",
+      "lineRanges": [
+        [
+          24,
+          38
+        ],
+        [
+          51,
+          81
+        ]
+      ],
+      "readingResult": "本机sensor_data为KEEP_LAST/5/BEST_EFFORT/VOLATILE；默认pub/sub及services_default为KEEP_LAST/10/RELIABLE/VOLATILE。其余字段保持各自预设的default/system_default。",
+      "runtimeExecutedByThisReview": false
+    },
+    {
+      "id": "rmw-graph-contract",
+      "kind": "本机安装的一手公开头文件",
+      "package": "ros-jazzy-rmw",
+      "packageVersion": "7.3.4-1noble.20260911.050254",
+      "localPath": "/opt/ros/jazzy/include/rmw/rmw/get_topic_endpoint_info.h",
+      "sha256": "254a2c6c03795ea2d6101b8b90de4a0ebd04caa19da514ee13bea7d90d61db07",
+      "lineRanges": [
+        [
+          25,
+          43
+        ],
+        [
+          114,
+          124
+        ]
+      ],
+      "readingResult": "发现是异步快照；返回QoS可能包含无效字段；RMW必须用UNKNOWN标记无效策略。DDS发现不保证共享history和history_depth。不能由graph中UNKNOWN/0推断端点声明已改成0。",
+      "runtimeExecutedByThisReview": false
+    },
+    {
+      "id": "cli-echo",
+      "kind": "固定提交的一手源码或官方教程",
+      "repository": "ros2/ros2cli",
+      "ref": "jazzy",
+      "commit": "221ce584a937ac234ae6337cac71c22d42e8b692",
+      "localPath": "references/sources/official-core/ros2--ros2cli/jazzy--221ce584a937/ros2topic/ros2topic/verb/echo.py",
+      "sha256": "9e048dd85779ab44b55878506439c7dfddfeb1e8734e70121c6e07677c7591f1",
+      "lineRanges": [
+        [
+          58,
+          62
+        ],
+        [
+          105,
+          108
+        ],
+        [
+          111,
+          170
+        ],
+        [
+          236,
+          262
+        ]
+      ],
+      "upstreamUrl": "https://github.com/ros2/ros2cli/blob/221ce584a937ac234ae6337cac71c22d42e8b692/ros2topic/ros2topic/verb/echo.py",
+      "readingResult": "echo创建实际订阅端；显式任意所列QoS参数时走预设加覆盖分支；未指定时按发现端点自动选择reliability/durability。--timeout可给观察窗口设置秒数；--once本身不是无数据时的退出期限。",
+      "runtimeExecutedByThisReview": false
+    },
+    {
+      "id": "py-node-ownership",
+      "kind": "固定提交的一手源码或官方教程",
+      "repository": "ros2/rclpy",
+      "ref": "jazzy",
+      "commit": "521012e60ba21319ef29141f8f521a0e072fe652",
+      "localPath": "references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2/rclpy/rclpy/node.py",
+      "sha256": "8b7fe0ea64e0de12cc1d5d01ebf56c202fa6e153251eb71dfff93e35eb5b3c80",
+      "lineRanges": [
+        [
+          1523,
+          1534
+        ],
+        [
+          1571,
+          1581
+        ],
+        [
+          1653,
+          1664
+        ],
+        [
+          1750,
+          1788
+        ],
+        [
+          1843,
+          1859
+        ],
+        [
+          1952,
+          1964
+        ]
+      ],
+      "upstreamUrl": "https://github.com/ros2/rclpy/blob/521012e60ba21319ef29141f8f521a0e072fe652/rclpy/rclpy/node.py",
+      "readingResult": "Node分别把Publisher、Subscription、Timer放入自身列表；保持Node存活时，调用者丢局部变量不等同于销毁这些实体。create_timer未传clock时采用self._clock；destroy_subscription/destroy_node负责显式释放。",
+      "runtimeExecutedByThisReview": false
+    },
+    {
+      "id": "cpp-subscription-ownership",
+      "kind": "固定提交的一手源码或官方教程",
+      "repository": "ros2/rclcpp",
+      "ref": "jazzy",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "localPath": "references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp/include/rclcpp/callback_group.hpp",
+      "sha256": "f0dab8427fd528f21e777436c184b41285c11fa87884f541aa8b582feaf73d4b",
+      "lineRanges": [
+        [
+          292,
+          308
+        ]
+      ],
+      "upstreamUrl": "https://github.com/ros2/rclcpp/blob/35b821a9fb1f937bfbd9c741b7e3353e101d9593/rclcpp/include/rclcpp/callback_group.hpp",
+      "readingResult": "C++回调组的subscription_ptrs_是WeakPtr列表，与rclpy Node的强引用列表有区别。",
+      "runtimeExecutedByThisReview": false
+    },
+    {
+      "id": "cpp-wall-timer",
+      "kind": "固定提交的一手源码或官方教程",
+      "repository": "ros2/rclcpp",
+      "ref": "jazzy",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "localPath": "references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp/include/rclcpp/timer.hpp",
+      "sha256": "71af6e055210fa2ee21c96925ec9c47758f2807c18669632fe7c4ae4866e1bd1",
+      "lineRanges": [
+        [
+          362,
+          383
+        ]
+      ],
+      "upstreamUrl": "https://github.com/ros2/rclcpp/blob/35b821a9fb1f937bfbd9c741b7e3353e101d9593/rclcpp/include/rclcpp/timer.hpp",
+      "readingResult": "WallTimer构造明确使用Clock(RCL_STEADY_TIME)，不由ROS仿真时钟暂停驱动。",
+      "runtimeExecutedByThisReview": false
+    },
+    {
+      "id": "sync-async-guide",
+      "kind": "固定提交的一手源码或官方教程",
+      "repository": "ros2/ros2_documentation",
+      "ref": "jazzy",
+      "commit": "929e37c4c6d0746e75d10f1fd76f024743ff75ea",
+      "localPath": "references/sources/official-docs/ros2--ros2_documentation/jazzy--929e37c4c6d0/source/How-To-Guides/Sync-Vs-Async.rst",
+      "sha256": "5e0c0b2b6066ccdf1cb7a59542149562459ba07fcfa1a006f297aa15460d3f34",
+      "lineRanges": [
+        [
+          94,
+          119
+        ],
+        [
+          121,
+          142
+        ]
+      ],
+      "upstreamUrl": "https://github.com/ros2/ros2_documentation/blob/929e37c4c6d0746e75d10f1fd76f024743ff75ea/source/How-To-Guides/Sync-Vs-Async.rst",
+      "readingResult": "在回调内同步等待会阻塞处理响应的spin；官方推荐call_async并由执行器推进Future。",
+      "runtimeExecutedByThisReview": false
+    },
+    {
+      "id": "cpp-service-pending",
+      "kind": "固定提交的一手源码或官方教程",
+      "repository": "ros2/rclcpp",
+      "ref": "jazzy",
+      "commit": "35b821a9fb1f937bfbd9c741b7e3353e101d9593",
+      "localPath": "references/sources/official-core/ros2--rclcpp/jazzy--35b821a9fb1f/rclcpp/include/rclcpp/client.hpp",
+      "sha256": "1e0ceff9c36df3e3f950451a55a709951f0ccd58a742208a3e347dd459c667d2",
+      "lineRanges": [
+        [
+          608,
+          631
+        ],
+        [
+          651,
+          655
+        ],
+        [
+          720,
+          745
+        ]
+      ],
+      "upstreamUrl": "https://github.com/ros2/rclcpp/blob/35b821a9fb1f937bfbd9c741b7e3353e101d9593/rclcpp/include/rclcpp/client.hpp",
+      "readingResult": "C++长期客户端超时后需清理pending请求；不清理可持续增加内存。一次性客户端退出与长期反复调用需要分开解释。",
+      "runtimeExecutedByThisReview": false
+    },
+    {
+      "id": "py-service-pending",
+      "kind": "固定提交的一手源码或官方教程",
+      "repository": "ros2/rclpy",
+      "ref": "jazzy",
+      "commit": "521012e60ba21319ef29141f8f521a0e072fe652",
+      "localPath": "references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2/rclpy/rclpy/client.py",
+      "sha256": "ab3523d5b99998d71ce5990ec9babcb4ba9d352a73899e03ede55cf727ca5d5f",
+      "lineRanges": [
+        [
+          112,
+          136
+        ],
+        [
+          149,
+          162
+        ]
+      ],
+      "upstreamUrl": "https://github.com/ros2/rclpy/blob/521012e60ba21319ef29141f8f521a0e072fe652/rclpy/rclpy/client.py",
+      "readingResult": "call_async返回Future并登记未完成请求；公开remove_pending_request会防止该Future接收响应/执行done回调，不是远端撤销接口。",
+      "runtimeExecutedByThisReview": false
+    },
+    {
+      "id": "py-action-client",
+      "kind": "固定提交的一手源码或官方教程",
+      "repository": "ros2/rclpy",
+      "ref": "jazzy",
+      "commit": "521012e60ba21319ef29141f8f521a0e072fe652",
+      "localPath": "references/sources/official-core/ros2--rclpy/jazzy--521012e60ba2/rclpy/rclpy/action/client.py",
+      "sha256": "559457ec784f3d186607e37ec37dcbea46b27fce40ced9ae094ac9c0e3400a02",
+      "lineRanges": [
+        [
+          82,
+          110
+        ],
+        [
+          492,
+          523
+        ],
+        [
+          545,
+          579
+        ],
+        [
+          605,
+          608
+        ]
+      ],
+      "upstreamUrl": "https://github.com/ros2/rclpy/blob/521012e60ba21319ef29141f8f521a0e072fe652/rclpy/rclpy/action/client.py",
+      "readingResult": "取消Future表示服务端取消响应，get_result_async才获取最终结果；destroy只销毁本地客户端句柄并移除waitable，不会替代取消目标。",
+      "runtimeExecutedByThisReview": false
+    },
+    {
+      "id": "action-concepts",
+      "kind": "固定提交的一手源码或官方教程",
+      "repository": "ros2/ros2_documentation",
+      "ref": "jazzy",
+      "commit": "929e37c4c6d0746e75d10f1fd76f024743ff75ea",
+      "localPath": "references/sources/official-docs/ros2--ros2_documentation/jazzy--929e37c4c6d0/source/Concepts/Basic/About-Actions.rst",
+      "sha256": "a17af2b5f44c799b5615b3a9295700e56a2312ec096a7242bc0078d9e878c94c",
+      "lineRanges": [
+        [
+          5,
+          10
+        ],
+        [
+          26,
+          34
+        ]
+      ],
+      "upstreamUrl": "https://github.com/ros2/ros2_documentation/blob/929e37c4c6d0746e75d10f1fd76f024743ff75ea/source/Concepts/Basic/About-Actions.rst",
+      "readingResult": "Action是带反馈和取消/抢占能力的长期远程调用，服务端仍负责执行、反馈和对取消作出反应。",
+      "runtimeExecutedByThisReview": false
+    },
+    {
+      "id": "action-python-tutorial",
+      "kind": "固定提交的一手源码或官方教程",
+      "repository": "ros2/ros2_documentation",
+      "ref": "jazzy",
+      "commit": "929e37c4c6d0746e75d10f1fd76f024743ff75ea",
+      "localPath": "references/sources/official-docs/ros2--ros2_documentation/jazzy--929e37c4c6d0/source/Tutorials/Intermediate/Writing-an-Action-Server-Client/Py.rst",
+      "sha256": "7beaeb2b3683a90173eb97b7aa090a1d3b2deac4e044e42bda07a9a7cd98383f",
+      "lineRanges": [
+        [
+          103,
+          117
+        ]
+      ],
+      "upstreamUrl": "https://github.com/ros2/ros2_documentation/blob/929e37c4c6d0746e75d10f1fd76f024743ff75ea/source/Tutorials/Intermediate/Writing-an-Action-Server-Client/Py.rst",
+      "readingResult": "execute_callback需要设置相应终态；未设置时默认为ABORTED，不能仅返回Result就声称成功。",
+      "runtimeExecutedByThisReview": false
+    }
+  ],
+  "existingRuntimeEvidence": {
+    "path": "validation-evidence/foundation-current-validation.json",
+    "sha256": "fb75851092c1cb15698e1f564f3c61de86e2c288742ef4eb226b1b252fabec41",
+    "checkedAt": "2026-11-07T02:54:46+08:00",
+    "passed": true,
+    "reviewedRelevantPassedCases": [
+      "topic_cpp_to_python",
+      "topic_python_to_cpp",
+      "service_cpp_to_python",
+      "service_python_to_cpp",
+      "action_cpp_success",
+      "action_cpp_cancel",
+      "action_python_success",
+      "action_python_cancel"
+    ],
+    "environment": {
+      "ROS_DOMAIN_ID": "211",
+      "ROS_AUTOMATIC_DISCOVERY_RANGE": "LOCALHOST",
+      "ROS_LOCALHOST_ONLY": "1",
+      "RMW_IMPLEMENTATION": "rmw_fastrtps_cpp"
+    },
+    "interpretation": "这些是既有主任务实际运行记录，不是本次审查执行；不能扩大到未列出的QoS/超时故障、跨机、设备或仿真。"
+  },
+  "staticVerification": {
+    "passed": true,
+    "completePythonBlocksParsed": 8,
+    "checks": [
+      {
+        "lesson": "pubsub",
+        "pointer": "/sections/4/codeBlocks/0",
+        "label": "src/learning_topic_py/learning_topic_py/talker.py",
+        "check": "Python ast.parse",
+        "passed": true,
+        "meaning": "只证明语法可解析，未导入ROS、未创建节点、未运行该代码。"
+      },
+      {
+        "lesson": "pubsub",
+        "pointer": "/sections/4/codeBlocks/1",
+        "label": "src/learning_topic_py/learning_topic_py/listener.py",
+        "check": "Python ast.parse",
+        "passed": true,
+        "meaning": "只证明语法可解析，未导入ROS、未创建节点、未运行该代码。"
+      },
+      {
+        "lesson": "pubsub",
+        "pointer": "/sections/5/codeBlocks/0",
+        "label": "src/learning_topic_py/setup.py",
+        "check": "Python ast.parse",
+        "passed": true,
+        "meaning": "只证明语法可解析，未导入ROS、未创建节点、未运行该代码。"
+      },
+      {
+        "lesson": "services",
+        "pointer": "/sections/3/codeBlocks/1",
+        "label": "lessons/services/server.py",
+        "check": "Python ast.parse",
+        "passed": true,
+        "meaning": "只证明语法可解析，未导入ROS、未创建节点、未运行该代码。"
+      },
+      {
+        "lesson": "services",
+        "pointer": "/sections/3/codeBlocks/2",
+        "label": "lessons/services/client.py",
+        "check": "Python ast.parse",
+        "passed": true,
+        "meaning": "只证明语法可解析，未导入ROS、未创建节点、未运行该代码。"
+      },
+      {
+        "lesson": "actions",
+        "pointer": "/sections/3/codeBlocks/0",
+        "label": "lessons/actions/server.py",
+        "check": "Python ast.parse",
+        "passed": true,
+        "meaning": "只证明语法可解析，未导入ROS、未创建节点、未运行该代码。"
+      },
+      {
+        "lesson": "actions",
+        "pointer": "/sections/4/codeBlocks/0",
+        "label": "lessons/actions/client.py",
+        "check": "Python ast.parse",
+        "passed": true,
+        "meaning": "只证明语法可解析，未导入ROS、未创建节点、未运行该代码。"
+      },
+      {
+        "lesson": "qos",
+        "pointer": "/sections/4/codeBlocks/0",
+        "label": "durable_once.py 完整脚本",
+        "check": "Python ast.parse",
+        "passed": true,
+        "meaning": "只证明语法可解析，未导入ROS、未创建节点、未运行该代码。"
+      }
+    ],
+    "limits": [
+      "ast.parse不导入ROS，不证明API链接、发现、通信或时间约束。",
+      "C++未在本审查重编译；相关成功路径证据由既有验证记录提供。"
+    ],
+    "sourcePathsHashesAndLineRanges": {
+      "passed": true,
+      "count": 15
+    }
+  },
+  "validationLimits": [
+    "本文件审查固定内容hash；后续正文重建需逐项复核并更新解决状态，不能把本报告当作新快照自动通过。",
+    "只读核查不证明所有QoS策略在所有RMW上的事件/资源限制一致。",
+    "原始官方示例源码只核读与本审查有关的部分，未批量构建或运行第三方资料。",
+    "负向无数据需要发现、匹配/兼容性与正向对照等共同证据，单独没有日志不构成机制证明。",
+    "本任务未连接硬件、完整仿真或跨机网络。"
+  ]
+}

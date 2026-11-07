@@ -1,0 +1,16 @@
+# 输入：Jazzy客户端库及原创fake_resource_node.cpp；输出一个独立软件节点。
+# 构建/安装根目录由colcon命令放到/tmp，不改已有14包或第三方参考。
+cmake_minimum_required(VERSION 3.8)
+project(runtime_lifecycle_lab)
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rclcpp_lifecycle REQUIRED)
+find_package(rcl_interfaces REQUIRED)
+find_package(lifecycle_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
+add_executable(fake_resource_node src/fake_resource_node.cpp)
+target_compile_features(fake_resource_node PUBLIC cxx_std_17)
+ament_target_dependencies(fake_resource_node rclcpp rclcpp_lifecycle rcl_interfaces lifecycle_msgs std_msgs std_srvs)
+install(TARGETS fake_resource_node DESTINATION lib/${PROJECT_NAME})
+ament_package()

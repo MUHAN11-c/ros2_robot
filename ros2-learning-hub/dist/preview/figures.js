@@ -20,11 +20,11 @@
   }
 
   function transformFigure(number){
-    return frame('tf2-transform','同一个点，在两个坐标系中是什么坐标？','二维 · 交互图',`<div class="lab-stage tf-stage" role="img" aria-label="二维坐标变换图"></div><div class="lab-result"><span><i class="legend-dot source-dot"></i>雷达坐标 <code>p_L = [1, 0] m</code></span><span><i class="legend-dot world-dot"></i>车体坐标 <output data-transform-result></output></span></div><div class="lab-controls">${slider('x','平移 x',-.8,1.4,.05,.8,' m')}${slider('y','平移 y',-.4,1.2,.05,.4,' m')}${slider('angle','旋转 θ',-180,180,1,30,'°')}</div><div class="lab-bottom"><code>p_B = R(θ) · p_L + t</code><div class="lab-presets"><button data-transform-preset="translation">只看平移</button><button data-transform-preset="quarter">旋转 90°</button></div></div>`,'橙色坐标轴随雷达安装姿态变化，蓝色点表示它观测到的同一个点在车体中的位置。先旋转再平移；图中只展示平面刚体变换，不涉及时间缓存。试着将旋转设为 90°，再检查结果。',number,true);
+    return frame('tf2-transform','同一个点，两种坐标表达','二维 · 交互图',`<div class="lab-stage tf-stage" role="img" aria-label="二维坐标变换图"></div><div class="lab-result"><span><i class="legend-dot source-dot"></i>雷达坐标 <code>p_L = [1, 0] m</code></span><span><i class="legend-dot world-dot"></i>车体坐标 <output data-transform-result></output></span></div><div class="lab-controls">${slider('x','平移 x',-.8,1.4,.05,.8,' m')}${slider('y','平移 y',-.4,1.2,.05,.4,' m')}${slider('angle','旋转 θ',-180,180,1,30,'°')}</div><div class="lab-bottom"><code>p_B = R(θ) · p_L + t</code><div class="lab-presets"><button data-transform-preset="translation">只看平移</button><button data-transform-preset="quarter">旋转 90°</button></div></div>`,'橙色坐标轴随雷达安装姿态变化，蓝色点表示它观测到的同一个点在车体中的位置。先旋转再平移；图中只展示平面刚体变换，不涉及时间缓存。试着将旋转设为 90°，再检查结果。',number,true);
   }
 
   function robotFigure(number){
-    return frame('robot-model','从 link 与 joint，看懂机器人的三维结构','三维 · 可旋转模型',`<div class="model-toolbar"><span>拖动旋转 · 键盘方向键调整视角</span><div class="lab-presets"><button data-camera="iso" aria-pressed="true">斜视</button><button data-camera="front" aria-pressed="false">正视</button><button data-camera="top" aria-pressed="false">俯视</button></div></div><div class="lab-stage robot-stage" tabindex="0" role="img" aria-label="可旋转的三维关节模型。用方向键调整视角，Home 复位视角；下方滑块调整关节角。"></div><div class="lab-result robot-result"><span>末端位置 <output data-robot-result></output></span><label><input type="checkbox" data-model-frames>显示连杆坐标系</label></div><div class="lab-controls">${slider('q1','底座 q₁ · Z 轴',-150,150,1,25,'°')}${slider('q2','肩关节 q₂ · Y 轴',-80,20,1,-40,'°')}${slider('q3','肘关节 q₃ · Y 轴',-100,100,1,70,'°')}</div><div class="lab-bottom"><span class="axis-legend"><b class="axis-x">X</b><b class="axis-y">Y</b><b class="axis-z">Z</b>右手坐标系</span><span>正交投影 · 单位 m</span></div>`,'连杆是刚体，关节规定父子连杆的相对运动。旋转视角不会改变模型姿态；调整关节角才会改变末端位置。本图是三关节几何教学模型，使用局部关节轴和右手定则，不包含碰撞检测、物理仿真或 ROS 连接。',number,true);
+    return frame('robot-model','从关节角到末端位置','三维 · 可旋转模型',`<div class="model-toolbar"><span>拖动旋转 · 键盘方向键调整视角</span><div class="lab-presets"><button data-camera="iso" aria-pressed="true">斜视</button><button data-camera="front" aria-pressed="false">正视</button><button data-camera="top" aria-pressed="false">俯视</button></div></div><div class="lab-stage robot-stage" tabindex="0" role="img" aria-label="可旋转的三维关节模型。用方向键调整视角，Home 复位视角；下方滑块调整关节角。"></div><div class="lab-result robot-result"><span>末端位置 <output data-robot-result></output></span><label><input type="checkbox" data-model-frames>显示连杆坐标系</label></div><div class="lab-controls">${slider('q1','底座 q₁ · Z 轴',-150,150,1,25,'°')}${slider('q2','肩关节 q₂ · Y 轴',-80,20,1,-40,'°')}${slider('q3','肘关节 q₃ · Y 轴',-100,100,1,70,'°')}</div><div class="lab-bottom"><span class="axis-legend"><b class="axis-x">X</b><b class="axis-y">Y</b><b class="axis-z">Z</b>右手坐标系</span><span>正交投影 · 单位 m</span></div>`,'连杆是刚体，关节规定父子连杆的相对运动。旋转视角不会改变模型姿态；调整关节角才会改变末端位置。本图是三关节几何教学模型，使用局部关节轴和右手定则，不包含碰撞检测、物理仿真或 ROS 连接。',number,true);
   }
 
   function renderTransform(el){
@@ -145,19 +145,26 @@
   }
 
   function mount(chapter){
-    let number=0;
-    const chapterNumber=window.ROS2Hub.lessons.findIndex(c=>c.id===chapter.id)+1;
-    const insert=(html,index)=>{const section=document.getElementById('part-'+index);if(section)section.insertAdjacentHTML('beforeend',html)};
-    const matched=(window.PreviewFigureData||[]).map(item=>({item,placement:item.placements.find(x=>x.chapter===chapter.id)})).filter(x=>x.placement).sort((a,b)=>a.placement.afterSection-b.placement.afterSection);
-    for(const {item,placement} of matched){
-      insert(staticFigure(item,`${chapterNumber}.${++number}`),placement.afterSection);
-    }
-    if(['tf2','eco-tf-frames'].includes(chapter.id)){
-      insert(transformFigure(`${chapterNumber}.${++number}`),chapter.id==='tf2'?2:1);
-      mountTransform(document.getElementById('fig-tf2-transform'));
-    }
-    if(['eco-model-rviz','eco-moveit-planning'].includes(chapter.id)){
-      insert(robotFigure(`${chapterNumber}.${++number}`),1);mountRobot(document.getElementById('fig-robot-model'));
+    const chapterNumber = window.ROS2Hub.lessons.findIndex(c => c.id === chapter.id) + 1;
+    const placements = (window.PreviewFigureData || []).flatMap(item =>
+      item.placements.filter(placement => placement.chapter === chapter.id).map(placement => ({item, index: placement.afterSection})),
+    );
+    // 两个数学章节已有单独的变换演示。其余交互图沿用教材回退图所在小节。
+    if (['math-rigid', 'math-kinematics'].includes(chapter.id)) placements.push({item: {id: 'tf2-static'}, index: 1});
+    let order = 0;
+    for (const {item, index} of placements.sort((a, b) => a.index - b.index)) {
+      const section = document.getElementById('part-' + index);
+      if (!section) continue;
+      const number = `${chapterNumber}.${++order}`;
+      if (item.id === 'tf2-static') {
+        section.insertAdjacentHTML('beforeend', transformFigure(number));
+        mountTransform(document.getElementById('fig-tf2-transform'));
+      } else if (item.id === 'robot-static') {
+        section.insertAdjacentHTML('beforeend', robotFigure(number));
+        mountRobot(document.getElementById('fig-robot-model'));
+      } else if (!item.bookOnly) {
+        section.insertAdjacentHTML('beforeend', staticFigure(item, number));
+      }
     }
   }
 

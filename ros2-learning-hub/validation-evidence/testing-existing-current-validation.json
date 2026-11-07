@@ -1,0 +1,410 @@
+{
+  "checkedAt": "2026-11-07",
+  "passed": true,
+  "unitOnly": false,
+  "domain": 230,
+  "sourceHashes": [
+    {
+      "path": "examples/testing_policy/README.md",
+      "sha256": "a3273649ccb46e15f4093d49c55e3e7f5516205afc316f62cf1046dacde0cd71"
+    },
+    {
+      "path": "examples/testing_policy/baseline_sources.json",
+      "sha256": "e81241b00a9d5ce9302d1342d467b9c280cd4acf9a4991af2de402538a5075d7"
+    },
+    {
+      "path": "examples/testing_policy/policy.py",
+      "sha256": "48ad35d2167af8ea947aef510da25e249de73e0d6ebcba0bb34d47d64f6282c3"
+    },
+    {
+      "path": "examples/testing_policy/test_policy.py",
+      "sha256": "b46c169253452409dbaad3795ec07da5a45a1aab4b9f9116f4301eb18299e8b5"
+    },
+    {
+      "path": "examples/testing_policy/verify_existing.py",
+      "sha256": "a5de6b5ab26492f109df2dc6edb1c0b8fe2a527337eb90f8a448e559e72931fe"
+    }
+  ],
+  "results": {
+    "originalFourTests": {
+      "command": [
+        "/usr/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "test_policy.py",
+        "--junitxml",
+        "/tmp/ros2-existing-testing-n31q47rf/baseline/pytest.xml"
+      ],
+      "exitCode": 0,
+      "elapsedS": 0.22164650199920288,
+      "pid": 243326,
+      "signalsSent": [],
+      "reaped": true,
+      "output": "....                                                                     [100%]\n- generated xml file: /tmp/ros2-existing-testing-n31q47rf/baseline/pytest.xml --\n4 passed in 0.01s\n",
+      "junit": {
+        "testcases": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?><testsuites><testsuite name=\"pytest\" errors=\"0\" failures=\"0\" skipped=\"0\" tests=\"4\" time=\"0.010\" timestamp=\"2026-11-07T05:13:23.155412\" hostname=\"wjz-vpc\"><testcase classname=\"test_policy\" name=\"test_fresh_command\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_timeout_boundary\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_missing_future_and_nonfinite\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_timeout\" time=\"0.000\" /></testsuite></testsuites>"
+      }
+    },
+    "coverageGaps": [
+      {
+        "case": "nonfinite-now",
+        "inputRepr": "(0.4, 100, nan, 100)",
+        "expected": "0.0",
+        "observed": "0.4",
+        "exposesUncoveredContract": true
+      },
+      {
+        "case": "nonfinite-last",
+        "inputRepr": "(0.4, nan, 150, 100)",
+        "expected": "0.0",
+        "observed": "0.4",
+        "exposesUncoveredContract": true
+      },
+      {
+        "case": "nonfinite-timeout",
+        "inputRepr": "(0.4, 100, 150, nan)",
+        "expected": "ValueError",
+        "observed": "0.4",
+        "exposesUncoveredContract": true
+      },
+      {
+        "case": "bool-timeout",
+        "inputRepr": "(0.4, 100, 150, True)",
+        "expected": "ValueError",
+        "observed": "0.0",
+        "exposesUncoveredContract": true
+      },
+      {
+        "case": "bool-speed",
+        "inputRepr": "(True, 100, 150, 100)",
+        "expected": "0.0",
+        "observed": "True",
+        "exposesUncoveredContract": true
+      },
+      {
+        "case": "string-speed",
+        "inputRepr": "('0.4', 100, 150, 100)",
+        "expected": "0.0",
+        "observed": "TypeError",
+        "exposesUncoveredContract": true
+      }
+    ],
+    "revisedPolicy": {
+      "command": [
+        "/usr/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "test_policy.py",
+        "--junitxml",
+        "/tmp/ros2-existing-testing-n31q47rf/revised/pytest.xml"
+      ],
+      "exitCode": 0,
+      "elapsedS": 0.18518523700004152,
+      "pid": 243327,
+      "signalsSent": [],
+      "reaped": true,
+      "output": "...............................                                          [100%]\n-- generated xml file: /tmp/ros2-existing-testing-n31q47rf/revised/pytest.xml --\n31 passed in 0.02s\n",
+      "junit": {
+        "testcases": 31,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?><testsuites><testsuite name=\"pytest\" errors=\"0\" failures=\"0\" skipped=\"0\" tests=\"31\" time=\"0.017\" timestamp=\"2026-11-07T05:13:23.338518\" hostname=\"wjz-vpc\"><testcase classname=\"test_policy\" name=\"test_fresh_command\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_timeout_boundary\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_missing_and_future_sample\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_speed[nan]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_speed[inf]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_speed[-inf]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_speed[True]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_speed[None]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_speed[0.4]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_timestamp[True-last_seen_ns]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_timestamp[True-now_ns]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_timestamp[150.0-last_seen_ns]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_timestamp[150.0-now_ns]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_timestamp[nan-last_seen_ns]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_timestamp[nan-now_ns]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_timestamp[inf-last_seen_ns]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_timestamp[inf-now_ns]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_timestamp[150-last_seen_ns]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_timestamp[150-now_ns]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_timestamp[None-last_seen_ns]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_timestamp[None-now_ns]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_timeout_is_configuration_error[0]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_timeout_is_configuration_error[-1]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_timeout_is_configuration_error[True]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_timeout_is_configuration_error[100.0]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_timeout_is_configuration_error[nan]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_timeout_is_configuration_error[inf]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_timeout_is_configuration_error[100]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_timeout_is_configuration_error[None]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_large_integer_timestamp_keeps_one_ns_boundary\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_unrepresentable_integer_speed_is_rejected\" time=\"0.000\" /></testsuite></testsuites>"
+      }
+    },
+    "originalTalker": {
+      "command": [
+        "launch_test",
+        "test_talker.py",
+        "--junit-xml",
+        "/tmp/ros2-existing-testing-n31q47rf/baseline/launch.xml"
+      ],
+      "exitCode": 0,
+      "elapsedS": 1.3940227599996433,
+      "pid": 243328,
+      "signalsSent": [],
+      "reaped": true,
+      "output": "[INFO] [launch]: All log files can be found below /tmp/ros2-existing-testing-n31q47rf/ros-logs/2026-11-07-05-13-23-509672-wjz-vpc-243328\n[INFO] [launch]: Default logging verbosity is set to INFO\ntest_nonempty_message (test_talker.TestMessages.test_nonempty_message) ... [INFO] [talker-1]: process started with pid [243334]\n[talker-1] [INFO] [1793999604.532395045] [integration_case.talker]: Publishing: 'Hello World: 1'\nok\n\n----------------------------------------------------------------------\nRan 1 test in 1.014s\n\nOK\n[INFO] [talker-1]: sending signal 'SIGINT' to process[talker-1]\n[talker-1] [INFO] [1793999604.535282681] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[INFO] [talker-1]: process has finished cleanly [pid 243334]\ntest_exit_code (test_talker.TestExit.test_exit_code) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nOK\n",
+      "junit": {
+        "testcases": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "xml": "<?xml version='1.0' encoding='utf-8'?>\n<testsuites name=\"test_talker.test_talker\" tests=\"2\" failures=\"0\" errors=\"0\" time=\"1.014\"><testsuite name=\"test_talker.test_talker.launch_tests\" tests=\"2\" failures=\"0\" errors=\"0\" skipped=\"0\" time=\"1.014\"><testcase classname=\"test_talker.TestMessages\" name=\"test_nonempty_message\" time=\"1.014\" /><testcase classname=\"test_talker.TestExit\" name=\"test_exit_code\" time=\"0.0\" /></testsuite></testsuites>"
+      }
+    }
+  },
+  "baselineSnippetHashes": {
+    "policy.py": "67479e7576ba9d50fa27dbae9126a350d0dd62b271bd315a349227d73152ea10",
+    "test_policy.py": "d358e644d1719ea33c6d0a4b8817a29b0922200c35e3d48da2e85f2ea1be90fb",
+    "test_talker.py": "74b70515ddd932ed583c4d3d2f1bcf2bcb0ab1b7d5af929e90e241ca51d21c22"
+  },
+  "versions": {
+    "python": "3.12.3",
+    "pythonExecutable": "/usr/bin/python3",
+    "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+    "pytest": "7.4.4",
+    "rclpy": "7.1.12",
+    "launch_testing": "3.4.12",
+    "launch_ros": "0.26.13"
+  },
+  "environment": {
+    "ROS_DOMAIN_ID": "230",
+    "ROS_AUTOMATIC_DISCOVERY_RANGE": "LOCALHOST",
+    "RMW_IMPLEMENTATION": "rmw_fastrtps_cpp",
+    "ROS_LOG_DIR": "/tmp/ros2-existing-testing-n31q47rf/ros-logs"
+  },
+  "teachingTables": [
+    {
+      "title": "同一策略：通过旧测试之后仍需核对输入合同",
+      "columns": [
+        "阶段",
+        "实际测试/反例",
+        "结果",
+        "能说明什么"
+      ],
+      "rows": [
+        [
+          "历史基线pytest",
+          "4项",
+          "通过",
+          "原4项没有覆盖畸形时戳与期限"
+        ],
+        [
+          "新增合同反例",
+          "6项",
+          "暴露原覆盖缺口",
+          "NaN时戳/期限、bool、字符串另查"
+        ],
+        [
+          "修订策略pytest",
+          "31项",
+          "通过",
+          "整数纳秒、有限速度与配置/数据错误分开"
+        ],
+        [
+          "原talker launch_test",
+          "2项",
+          "通过",
+          "实际消息和post-shutdown退出码分别检查"
+        ]
+      ],
+      "caption": "真实pytest/launch_test与JUnit记录；原基线保留在JSON，只作已知缺口对照。31项是本次参数化测试计数，不代表输入全集。"
+    }
+  ],
+  "teachingValidation": "旧策略4项通过但6个新合同反例暴露缺口，修订策略31项已实测；原talker活动/退出2项按本机有限范围实测。无硬件或制动验证。",
+  "teachingCommand": "source /opt/ros/jazzy/setup.bash\n/usr/bin/python3 examples/testing_policy/verify_existing.py --output /tmp/testing-existing-result.json",
+  "teachingCommandNote": "从ros2-learning-hub目录运行；需要pytest、launch_testing、launch_ros、rclpy、std_msgs和demo_nodes_cpp。默认域230/LOCALHOST，子进程保护20或40秒，不当硬实时界限。",
+  "limits": [
+    "只验证列出的有限输入和本机talker软件协议；未运行机器人或安全制动。",
+    "旧4项通过与新增反例暴露缺口可以同时成立；JSON基线不是推荐策略。",
+    "策略不限制速度幅值、不转换时间域、不代替超时节点或设备停止。",
+    "本辅助driver的父中断/挂死保护未另作故障注入；原talker正常退出由post-shutdown例核对。"
+  ],
+  "previousAttempts": [
+    {
+      "checkedAt": "2026-11-07",
+      "passed": true,
+      "unitOnly": false,
+      "domain": 230,
+      "sourceHashes": [
+        {
+          "path": "examples/testing_policy/README.md",
+          "sha256": "a3273649ccb46e15f4093d49c55e3e7f5516205afc316f62cf1046dacde0cd71"
+        },
+        {
+          "path": "examples/testing_policy/baseline_sources.json",
+          "sha256": "e81241b00a9d5ce9302d1342d467b9c280cd4acf9a4991af2de402538a5075d7"
+        },
+        {
+          "path": "examples/testing_policy/policy.py",
+          "sha256": "48ad35d2167af8ea947aef510da25e249de73e0d6ebcba0bb34d47d64f6282c3"
+        },
+        {
+          "path": "examples/testing_policy/test_policy.py",
+          "sha256": "b46c169253452409dbaad3795ec07da5a45a1aab4b9f9116f4301eb18299e8b5"
+        },
+        {
+          "path": "examples/testing_policy/verify_existing.py",
+          "sha256": "994147b6f6182a881f311451e12637f107f460203156b2bd65e2cf085b01e7f3"
+        }
+      ],
+      "results": {
+        "originalFourTests": {
+          "command": [
+            "/usr/bin/python3",
+            "-m",
+            "pytest",
+            "-q",
+            "test_policy.py",
+            "--junitxml",
+            "/tmp/ros2-existing-testing-6v3ze90b/baseline/pytest.xml"
+          ],
+          "exitCode": 0,
+          "elapsedS": 0.23333233099947392,
+          "pid": 239599,
+          "signalsSent": [],
+          "reaped": true,
+          "output": "....                                                                     [100%]\n- generated xml file: /tmp/ros2-existing-testing-6v3ze90b/baseline/pytest.xml --\n4 passed in 0.01s\n",
+          "junit": {
+            "testcases": 4,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0,
+            "xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?><testsuites><testsuite name=\"pytest\" errors=\"0\" failures=\"0\" skipped=\"0\" tests=\"4\" time=\"0.010\" timestamp=\"2026-11-07T05:02:20.321090\" hostname=\"wjz-vpc\"><testcase classname=\"test_policy\" name=\"test_fresh_command\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_timeout_boundary\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_missing_future_and_nonfinite\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_timeout\" time=\"0.000\" /></testsuite></testsuites>"
+          }
+        },
+        "coverageGaps": [
+          {
+            "case": "nonfinite-now",
+            "inputRepr": "(0.4, 100, nan, 100)",
+            "expected": "0.0",
+            "observed": "0.4",
+            "exposesUncoveredContract": true
+          },
+          {
+            "case": "nonfinite-last",
+            "inputRepr": "(0.4, nan, 150, 100)",
+            "expected": "0.0",
+            "observed": "0.4",
+            "exposesUncoveredContract": true
+          },
+          {
+            "case": "nonfinite-timeout",
+            "inputRepr": "(0.4, 100, 150, nan)",
+            "expected": "ValueError",
+            "observed": "0.4",
+            "exposesUncoveredContract": true
+          },
+          {
+            "case": "bool-timeout",
+            "inputRepr": "(0.4, 100, 150, True)",
+            "expected": "ValueError",
+            "observed": "0.0",
+            "exposesUncoveredContract": true
+          },
+          {
+            "case": "bool-speed",
+            "inputRepr": "(True, 100, 150, 100)",
+            "expected": "0.0",
+            "observed": "True",
+            "exposesUncoveredContract": true
+          },
+          {
+            "case": "string-speed",
+            "inputRepr": "('0.4', 100, 150, 100)",
+            "expected": "0.0",
+            "observed": "TypeError",
+            "exposesUncoveredContract": true
+          }
+        ],
+        "revisedPolicy": {
+          "command": [
+            "/usr/bin/python3",
+            "-m",
+            "pytest",
+            "-q",
+            "test_policy.py",
+            "--junitxml",
+            "/tmp/ros2-existing-testing-6v3ze90b/revised/pytest.xml"
+          ],
+          "exitCode": 0,
+          "elapsedS": 0.18452050499945472,
+          "pid": 239600,
+          "signalsSent": [],
+          "reaped": true,
+          "output": "...............................                                          [100%]\n-- generated xml file: /tmp/ros2-existing-testing-6v3ze90b/revised/pytest.xml --\n31 passed in 0.02s\n",
+          "junit": {
+            "testcases": 31,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0,
+            "xml": "<?xml version=\"1.0\" encoding=\"utf-8\"?><testsuites><testsuite name=\"pytest\" errors=\"0\" failures=\"0\" skipped=\"0\" tests=\"31\" time=\"0.017\" timestamp=\"2026-11-07T05:02:20.500880\" hostname=\"wjz-vpc\"><testcase classname=\"test_policy\" name=\"test_fresh_command\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_timeout_boundary\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_missing_and_future_sample\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_speed[nan]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_speed[inf]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_speed[-inf]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_speed[True]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_speed[None]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_speed[0.4]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_timestamp[True-last_seen_ns]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_timestamp[True-now_ns]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_timestamp[150.0-last_seen_ns]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_timestamp[150.0-now_ns]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_timestamp[nan-last_seen_ns]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_timestamp[nan-now_ns]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_timestamp[inf-last_seen_ns]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_timestamp[inf-now_ns]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_timestamp[150-last_seen_ns]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_timestamp[150-now_ns]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_timestamp[None-last_seen_ns]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_runtime_timestamp[None-now_ns]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_timeout_is_configuration_error[0]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_timeout_is_configuration_error[-1]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_timeout_is_configuration_error[True]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_timeout_is_configuration_error[100.0]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_timeout_is_configuration_error[nan]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_timeout_is_configuration_error[inf]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_timeout_is_configuration_error[100]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_invalid_timeout_is_configuration_error[None]\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_large_integer_timestamp_keeps_one_ns_boundary\" time=\"0.000\" /><testcase classname=\"test_policy\" name=\"test_unrepresentable_integer_speed_is_rejected\" time=\"0.000\" /></testsuite></testsuites>"
+          }
+        },
+        "originalTalker": {
+          "command": [
+            "launch_test",
+            "test_talker.py",
+            "--junit-xml",
+            "/tmp/ros2-existing-testing-6v3ze90b/baseline/launch.xml"
+          ],
+          "exitCode": 0,
+          "elapsedS": 1.4007472749999579,
+          "pid": 239601,
+          "signalsSent": [],
+          "reaped": true,
+          "output": "[INFO] [launch]: All log files can be found below /home/wjz/.ros/log/2026-11-07-05-02-20-677651-wjz-vpc-239601\n[INFO] [launch]: Default logging verbosity is set to INFO\ntest_nonempty_message (test_talker.TestMessages.test_nonempty_message) ... [INFO] [talker-1]: process started with pid [239607]\n[talker-1] [INFO] [1793998941.701157851] [integration_case.talker]: Publishing: 'Hello World: 1'\nok\n\n----------------------------------------------------------------------\nRan 1 test in 1.015s\n\nOK\n[INFO] [talker-1]: sending signal 'SIGINT' to process[talker-1]\n[talker-1] [INFO] [1793998941.704095265] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[INFO] [talker-1]: process has finished cleanly [pid 239607]\ntest_exit_code (test_talker.TestExit.test_exit_code) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nOK\n",
+          "junit": {
+            "testcases": 2,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0,
+            "xml": "<?xml version='1.0' encoding='utf-8'?>\n<testsuites name=\"test_talker.test_talker\" tests=\"2\" failures=\"0\" errors=\"0\" time=\"1.015\"><testsuite name=\"test_talker.test_talker.launch_tests\" tests=\"2\" failures=\"0\" errors=\"0\" skipped=\"0\" time=\"1.015\"><testcase classname=\"test_talker.TestMessages\" name=\"test_nonempty_message\" time=\"1.015\" /><testcase classname=\"test_talker.TestExit\" name=\"test_exit_code\" time=\"0.0\" /></testsuite></testsuites>"
+          }
+        }
+      },
+      "baselineSnippetHashes": {
+        "policy.py": "67479e7576ba9d50fa27dbae9126a350d0dd62b271bd315a349227d73152ea10",
+        "test_policy.py": "d358e644d1719ea33c6d0a4b8817a29b0922200c35e3d48da2e85f2ea1be90fb",
+        "test_talker.py": "74b70515ddd932ed583c4d3d2f1bcf2bcb0ab1b7d5af929e90e241ca51d21c22"
+      },
+      "versions": {
+        "python": "3.12.3",
+        "pytest": "7.4.4"
+      },
+      "teachingTables": [
+        {
+          "title": "同一策略：通过旧测试之后仍需核对输入合同",
+          "columns": [
+            "阶段",
+            "实际测试/反例",
+            "结果",
+            "能说明什么"
+          ],
+          "rows": [
+            [
+              "历史基线pytest",
+              "4项",
+              "通过",
+              "原4项没有覆盖畸形时戳与期限"
+            ],
+            [
+              "新增合同反例",
+              "6项",
+              "暴露原覆盖缺口",
+              "NaN时戳/期限、bool、字符串另查"
+            ],
+            [
+              "修订策略pytest",
+              "31项",
+              "通过",
+              "整数纳秒、有限速度与配置/数据错误分开"
+            ],
+            [
+              "原talker launch_test",
+              "2项",
+              "通过",
+              "实际消息和post-shutdown退出码分别检查"
+            ]
+          ],
+          "caption": "真实pytest/launch_test与JUnit记录；原基线保留在JSON，只作已知缺口对照。31项是本次参数化测试计数，不代表输入全集。"
+        }
+      ],
+      "teachingValidation": "旧策略4项通过但6个新合同反例暴露缺口；修订策略31项及原talker活动/退出2项按本机有限范围实测。是否包含ROS例以unitOnly为准；无硬件或制动验证。",
+      "teachingCommand": "source /opt/ros/jazzy/setup.bash\n/usr/bin/python3 examples/testing_policy/verify_existing.py --output /tmp/testing-existing-result.json",
+      "teachingCommandNote": "从ros2-learning-hub目录运行；需要pytest、launch_testing、launch_ros、rclpy、std_msgs和demo_nodes_cpp。默认域230/LOCALHOST，子进程保护20或40秒，不当硬实时界限。",
+      "limits": [
+        "只验证列出的有限输入和本机talker软件协议；未运行机器人或安全制动。",
+        "旧4项通过与新增反例暴露缺口可以同时成立；JSON基线不是推荐策略。",
+        "策略不限制速度幅值、不转换时间域、不代替超时节点或设备停止。"
+      ]
+    }
+  ]
+}

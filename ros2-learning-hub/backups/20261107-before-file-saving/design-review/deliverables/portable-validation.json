@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "scope": "本机实际解压后的完全断网直观编辑验证",
+  "archiveSha256": "408a0791af252b86f6388801a9dd9d41fe0a4b12e4b7c96c1446e5c7f00df898",
+  "extractedFilesMatched": 113,
+  "retiredArtworkAssetsExcluded": 32,
+  "mascot": "紫樱",
+  "galleryImages": 7,
+  "screenshotImages": 15,
+  "checks": [
+    "实际解压版保持顶部导航、目录和机器人交互图解",
+    "完全断网直接编辑、自动保存、刷新恢复并保持原正文字号",
+    "排版草稿可搜索，与章节笔记分开恢复",
+    "390/320px直接编辑无整页溢出，可选源码含当前修改",
+    "7张紫樱素材和15张最新审查截图完整解码"
+  ],
+  "errors": [],
+  "external": []
+}

@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "scope": "独立副本实际文件保存、备份、断网和重建",
+  "checks": [
+    "Ctrl+S 真实写入章节HTML、Markdown和源修订，磁盘原教材与章节原文独立保存",
+    "过期页面保存被拒绝，较新章节文件保留",
+    "二次保存保留上一版，原文备份逐字节相同，重复保存不新增版本",
+    "异源、越界章节和非本地图片请求不写文件",
+    "目录写入协议与本机服务文件兼容，末尾写入失败回滚；备份失败不改教材",
+    "空白浏览器断网读取磁盘修订，两个入口的修改后标题、目录、编号与原锚点均一致",
+    "Chromium 隔离目录句柄实际写入与原文备份，未自动化原生目录选择",
+    "实际重建保留源修订，并同步全文Markdown和无脚本连续版的公式与内嵌图解"
+  ],
+  "errors": [],
+  "fixtureRoot": "/tmp/ros2-textbook-save-r10-x4JeDVef",
+  "build": {
+    "lessons": 60,
+    "expandedChapters": 60,
+    "comparisons": 12,
+    "sources": 244,
+    "tutorialPages": 169,
+    "guideBytes": 3316993,
+    "bookBytes": 4290468,
+    "completeCodeFiles": 164
+  }
+}

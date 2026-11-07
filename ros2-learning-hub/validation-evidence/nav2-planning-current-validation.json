@@ -1,0 +1,1750 @@
+{
+  "passed": true,
+  "domainId": 229,
+  "discovery": "LOCALHOST",
+  "output": "/tmp/ros2-nav2-lab-9ksuy4to",
+  "namespace": "/navlab_9ksuy4to",
+  "gazeboPartition": "hub_nav_9ksuy4to",
+  "versions": {
+    "gzSim": "Gazebo Sim, version 8.15.0",
+    "ros_gz_bridge": "1.0.24",
+    "nav2_map_server": "1.3.13",
+    "nav2_amcl": "1.3.13",
+    "nav2_planner": "1.3.13",
+    "nav2_costmap_2d": "1.3.13",
+    "nav2_navfn_planner": "1.3.13",
+    "nav2_msgs": "1.3.13",
+    "rclpy": "7.1.12"
+  },
+  "sourceHashes": {
+    "nav2_labs/validate_nav2.py": "ac913b3733fd6fba857a4fe6a3b18e7d286de64d5800d330df2415b0129d75de",
+    "nav2_labs/nav_room.sdf": "d57d32c1024a8675f37167d65a466d456f687b77abc8f28330928973489ec176",
+    "nav2_labs/bridge.yaml": "6ea1856e696dd2ef2903f32eaf220adbbe8e1951e4e9338162ff302bb3996f07",
+    "nav2_labs/nav2.yaml": "a46a1a5475ce4e7852ec4b4d29f480fa9995159195b878f0ad63792b364f831b",
+    "gazebo_labs/validate_sensors.py": "e14314457e0c72608e057a6c2a1dea3c90c3e6e0efdf32bd1aa4c22e5d4990da"
+  },
+  "lifecycle": [
+    {
+      "node": "map_server",
+      "transition": 1,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "map_server",
+      "transition": 3,
+      "success": true,
+      "state": "active"
+    },
+    {
+      "node": "amcl",
+      "transition": 1,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "amcl",
+      "transition": 3,
+      "success": true,
+      "state": "active"
+    },
+    {
+      "node": "planner_server",
+      "transition": 1,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "planner_server",
+      "transition": 3,
+      "success": true,
+      "state": "active"
+    },
+    {
+      "node": "planner_server",
+      "transition": 4,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "planner_server",
+      "transition": 2,
+      "success": true,
+      "state": "unconfigured"
+    },
+    {
+      "node": "amcl",
+      "transition": 4,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "amcl",
+      "transition": 2,
+      "success": true,
+      "state": "unconfigured"
+    },
+    {
+      "node": "map_server",
+      "transition": 4,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "map_server",
+      "transition": 2,
+      "success": true,
+      "state": "unconfigured"
+    }
+  ],
+  "processes": [
+    {
+      "label": "gazebo",
+      "argv": [
+        "gz",
+        "sim",
+        "-s",
+        "-r",
+        "--headless-rendering",
+        "-v",
+        "4",
+        "/home/wjz/ros2_robot/ros2-learning-hub/examples/nav2_labs/nav_room.sdf"
+      ],
+      "pid": 394090,
+      "logFile": "/tmp/ros2-nav2-lab-9ksuy4to/gazebo.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "ab8326c496a773c9f83833bbe3d1780d39f43c31675b4c45a1ecee8c902a21da",
+      "logTail": "\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mGazebo Sim Server v\u001b[0m\u001b[1;32m8.15.0\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mLoading SDF world file[\u001b[0m\u001b[1;32m/home/wjz/ros2_robot/ros2-learning-hub/examples/nav2_labs/nav_room.sdf\u001b[0m\u001b[1;32m].\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mServing entity system service on [\u001b[0m\u001b[1;32m/\u001b[0m\u001b[1;32mentity/system/add\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;36m[Dbg] [Physics.cc:1004] \u001b[0m\u001b[1;36mLoaded [\u001b[0m\u001b[1;36mgz::physics::dartsim::Plugin\u001b[0m\u001b[1;36m] from library [\u001b[0m\u001b[1;36m/opt/ros/jazzy/opt/gz_physics_vendor/lib/gz-physics-7/engine-plugins/libgz-physics-dartsim-plugin.so\u001b[0m\u001b[1;36m]\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [SystemManager.cc:80] \u001b[0m\u001b[1;36mLoaded system [\u001b[0m\u001b[1;36mgz::sim::systems::Physics\u001b[0m\u001b[1;36m] for entity [\u001b[0m\u001b[1;36m1\u001b[0m\u001b[1;36m]\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [Sensors.cc:697] \u001b[0m\u001b[1;36mConfiguring Sensors system\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [Sensors.cc:557] \u001b[0m\u001b[1;36mSensorsPrivate::Run\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [SystemManager.cc:80] \u001b[0m\u001b[1;36mLoaded system [\u001b[0m\u001b[1;36mgz::sim::systems::Sensors\u001b[0m\u001b[1;36m] for entity [\u001b[0m\u001b[1;36m1\u001b[0m\u001b[1;36m]\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [Sensors.cc:532] \u001b[0m\u001b[1;36mSensorsPrivate::RenderThread started\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [Sensors.cc:337] \u001b[0m\u001b[1;36mWaiting for init\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mLoaded level [\u001b[0m\u001b[1;32mdefault\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mServing world controls on [\u001b[0m\u001b[1;32m/world/hub_nav_room\u001b[0m\u001b[1;32m/control], [\u001b[0m\u001b[1;32m/world/hub_nav_room\u001b[0m\u001b[1;32m/control/state] and [\u001b[0m\u001b[1;32m/world/hub_nav_room\u001b[0m\u001b[1;32m/playback/control]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mServing GUI information on [\u001b[0m\u001b[1;32m/world/hub_nav_room\u001b[0m\u001b[1;32m/\u001b[0m\u001b[1;32mgui/info\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mWorld [\u001b[0m\u001b[1;32mhub_nav_room\u001b[0m\u001b[1;32m] initialized with [\u001b[0m\u001b[1;32mlab_step\u001b[0m\u001b[1;32m] physics profile.\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mServing world SDF generation service on [\u001b[0m\u001b[1;32m/world/hub_nav_room\u001b[0m\u001b[1;32m/\u001b[0m\u001b[1;32mgenerate_world_sdf\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mServing world names on [\u001b[0m\u001b[1;32m/gazebo/worlds\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mResource path add service on [\u001b[0m\u001b[1;32m/gazebo/resource_paths/add\u001b[0m\u001b[1;32m].\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mResource path get service on [\u001b[0m\u001b[1;32m/gazebo/resource_paths/get\u001b[0m\u001b[1;32m].\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mResource path resolve service on [\u001b[0m\u001b[1;32m/gazebo/resource_paths/resolve\u001b[0m\u001b[1;32m].\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mResource paths published on [\u001b[0m\u001b[1;32m/gazebo/resource_paths\u001b[0m\u001b[1;32m].\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mServer control service on [\u001b[0m\u001b[1;32m/server_control\u001b[0m\u001b[1;32m].\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mFound no publishers on /stats, adding root stats topic\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mFound no publishers on /clock, adding root clock topic\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;36m[Dbg] [SimulationRunner.cc:627] \u001b[0m\u001b[1;36mCreating PostUpdate worker threads: \u001b[0m\u001b[1;36m2\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [SimulationRunner.cc:638] \u001b[0m\u001b[1;36mCreating postupdate worker thread (\u001b[0m\u001b[1;36m0\u001b[0m\u001b[1;36m)\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [SimulationFeatures.cc:90] \u001b[0m\u001b[1;36mSimulation timestep set to: \u001b[0m\u001b[1;36m0.005\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [Sensors.cc:953] \u001b[0m\u001b[1;36mInitialization needed\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [Sensors.cc:349] \u001b[0m\u001b[1;36mInitializing render context\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mLoading plugin [\u001b[0m\u001b[1;32mgz-rendering-ogre2\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;36m[Dbg] [RenderUtil.cc:2646] \u001b[0m\u001b[1;36mCreate scene [\u001b[0m\u001b[1;36mscene\u001b[0m\u001b[1;36m]\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [Sensors.cc:391] [Dbg] [Sensors.cc:953] \u001b[0m\u001b[1;36m[Dbg] [Sensors.cc:391] \u001b[0m\u001b[1;36mRendering Thread initialized\u001b[0m\u001b[1;36mInitialization needed\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [Lidar.cc:139] \u001b[0m\u001b[1;36mLaser scans for [\u001b[0m\u001b[1;36mscan_rig::laser::room_scan\u001b[0m\u001b[1;36m] advertised on [\u001b[0m\u001b[1;36m/hub_nav/scan\u001b[0m\u001b[1;36m]\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [GpuLidarSensor.cc:164] \u001b[0m\u001b[1;36mLidar points for [\u001b[0m\u001b[1;36mscan_rig::laser::room_scan\u001b[0m\u001b[1;36m] advertised on [\u001b[0m\u001b[1;36m/hub_nav/scan/points\u001b[0m\u001b[1;36m]\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [SignalHandler.cc:142] \u001b[0m\u001b[1;36mReceived signal[\u001b[0m\u001b[1;36m2\u001b[0m\u001b[1;36m].\u001b[0m\n\u001b[1;36m[Dbg] [ServerPrivate.cc:122] \u001b[0m\u001b[1;36mServer received signal[\u001b[0m\u001b[1;36m2\u001b[0m\u001b[1;36m]\u001b[0m\n\u001b[1;36m[Dbg] [Sensors.cc:565] \u001b[0m\u001b[1;36mSensorsPrivate::Stop\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [Sensors.cc:551] \u001b[0m\u001b[1;36mSensorsPrivate::RenderThread stopped\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [gz.cc:434] \u001b[0m\u001b[1;36mShutting down gz-sim-server\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [SimulationRunner.cc:654] \u001b[0m\u001b[1;36mExiting postupdate worker thread (\u001b[0m\u001b[1;36m0\u001b[0m\u001b[1;36m)\u001b[0m\u001b[1;36m\u001b[0m\n\u001b[1;36m[Dbg] [Sensors.cc:565] \u001b[0m\u001b[1;36mSensorsPrivate::Stop\u001b[0m\u001b[1;36m\u001b[0m\n"
+    },
+    {
+      "label": "bridge",
+      "argv": [
+        "/opt/ros/jazzy/lib/ros_gz_bridge/parameter_bridge",
+        "--ros-args",
+        "-r",
+        "__ns:=/navlab_9ksuy4to",
+        "-r",
+        "__node:=nav_bridge",
+        "-p",
+        "config_file:=/home/wjz/ros2_robot/ros2-learning-hub/examples/nav2_labs/bridge.yaml",
+        "-p",
+        "override_timestamps_with_wall_time:=false"
+      ],
+      "pid": 394091,
+      "logFile": "/tmp/ros2-nav2-lab-9ksuy4to/bridge.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "2a35e2d439f2dd2c16bae82a72ccf64694e3cb267a512d75a6f15173f8323837",
+      "logTail": "[INFO] [1794043965.500192801] [navlab_9ksuy4to.nav_bridge]: Creating GZ->ROS Bridge: [/world/hub_nav_room/clock (gz.msgs.Clock) -> /clock (rosgraph_msgs/msg/Clock)] (Lazy 0)\n[INFO] [1794043965.501036124] [navlab_9ksuy4to.nav_bridge]: Creating GZ->ROS Bridge: [/hub_nav/scan (gz.msgs.LaserScan) -> scan (sensor_msgs/msg/LaserScan)] (Lazy 0)\n[INFO] [1794043970.674379530] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n"
+    },
+    {
+      "label": "map_server",
+      "argv": [
+        "/opt/ros/jazzy/lib/nav2_map_server/map_server",
+        "--ros-args",
+        "-r",
+        "__ns:=/navlab_9ksuy4to",
+        "--params-file",
+        "/home/wjz/ros2_robot/ros2-learning-hub/examples/nav2_labs/nav2.yaml",
+        "-p",
+        "yaml_filename:=/tmp/ros2-nav2-lab-9ksuy4to/room.yaml"
+      ],
+      "pid": 394189,
+      "logFile": "/tmp/ros2-nav2-lab-9ksuy4to/map_server.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "f2db83adb532f446d286d0b957deabbfcfe100ba54be5d6b7bb987e203229e07",
+      "logTail": "[INFO] [1794043966.969052751] [navlab_9ksuy4to.map_server]: \n\tmap_server lifecycle node launched. \n\tWaiting on external lifecycle transitions to activate\n\tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[INFO] [1794043966.969101153] [navlab_9ksuy4to.map_server]: Creating\n[INFO] [1794043967.155013893] [navlab_9ksuy4to.map_server]: Configuring\n[INFO] [1794043967.155067906] [map_io]: Loading yaml file: /tmp/ros2-nav2-lab-9ksuy4to/room.yaml\n[INFO] [1794043967.155242192] [map_io]: resolution: 0.1\n[INFO] [1794043967.155249233] [map_io]: origin[0]: -4\n[INFO] [1794043967.155252253] [map_io]: origin[1]: -3\n[INFO] [1794043967.155254353] [map_io]: origin[2]: 0\n[INFO] [1794043967.155257113] [map_io]: free_thresh: 0.196\n[INFO] [1794043967.155259503] [map_io]: occupied_thresh: 0.65\n[INFO] [1794043967.155262643] [map_io]: mode: trinary\n[INFO] [1794043967.155265713] [map_io]: negate: 0\n[INFO] [1794043967.164416560] [map_io]: Loading image_file: /tmp/ros2-nav2-lab-9ksuy4to/room.pgm\n[INFO] [1794043967.165777233] [map_io]: Read map /tmp/ros2-nav2-lab-9ksuy4to/room.pgm: 80 X 60 map @ 0.1 m/cell\n[WARN] [1794043967.173804076] [navlab_9ksuy4to.map_server]: Received GetMap request but not in ACTIVE state, ignoring!\n[INFO] [1794043967.174276594] [navlab_9ksuy4to.map_server]: Activating\n[INFO] [1794043967.174294985] [navlab_9ksuy4to.map_server]: Creating bond (map_server) to lifecycle manager.\n[INFO] [1794043967.540706042] [navlab_9ksuy4to.map_server]: Handling GetMap request\n[INFO] [1794043967.557545818] [navlab_9ksuy4to.map_server]: Handling LoadMap request\n[ERROR] [1794043967.557570029] [map_io]: YAML file name is empty, can't load!\n[INFO] [1794043967.558382931] [navlab_9ksuy4to.map_server]: Handling GetMap request\n[INFO] [1794043967.558999705] [navlab_9ksuy4to.map_server]: Handling LoadMap request\n[INFO] [1794043967.559021666] [map_io]: Loading yaml file: /tmp/ros2-nav2-lab-9ksuy4to/nonexistent.yaml\n[ERROR] [1794043967.559079448] [map_io]: Failed processing YAML file /tmp/ros2-nav2-lab-9ksuy4to/nonexistent.yaml at position (-1:-1) for reason: bad file: /tmp/ros2-nav2-lab-9ksuy4to/nonexistent.yaml\n[INFO] [1794043967.559810956] [navlab_9ksuy4to.map_server]: Handling GetMap request\n[INFO] [1794043967.560487753] [navlab_9ksuy4to.map_server]: Handling LoadMap request\n[INFO] [1794043967.560495333] [map_io]: Loading yaml file: /tmp/ros2-nav2-lab-9ksuy4to/missing-image.yaml\n[INFO] [1794043967.560564576] [map_io]: resolution: 0.1\n[INFO] [1794043967.560567106] [map_io]: origin[0]: -4\n[INFO] [1794043967.560568906] [map_io]: origin[1]: -3\n[INFO] [1794043967.560570336] [map_io]: origin[2]: 0\n[INFO] [1794043967.560572136] [map_io]: free_thresh: 0.196\n[INFO] [1794043967.560573846] [map_io]: occupied_thresh: 0.65\n[INFO] [1794043967.560575256] [map_io]: mode: trinary\n[INFO] [1794043967.560576846] [map_io]: negate: 0\n[INFO] [1794043967.560582466] [map_io]: Loading image_file: /tmp/ros2-nav2-lab-9ksuy4to/nonexistent.pgm\n[ERROR] [1794043967.560769554] [map_io]: Failed to load image file /tmp/ros2-nav2-lab-9ksuy4to/nonexistent.pgm for reason: Magick: Unable to open file (/tmp/ros2-nav2-lab-9ksuy4to/nonexistent.pgm) reported by magick/blob.c:3118 (OpenBlob)\n[INFO] [1794043967.561275023] [navlab_9ksuy4to.map_server]: Handling GetMap request\n[INFO] [1794043967.765680713] [navlab_9ksuy4to.map_server]: Handling LoadMap request\n[INFO] [1794043967.765727025] [map_io]: Loading yaml file: /tmp/ros2-nav2-lab-9ksuy4to/room.yaml\n[INFO] [1794043967.765845180] [map_io]: resolution: 0.1\n[INFO] [1794043967.765849910] [map_io]: origin[0]: -4\n[INFO] [1794043967.765853130] [map_io]: origin[1]: -3\n[INFO] [1794043967.765855940] [map_io]: origin[2]: 0\n[INFO] [1794043967.765859600] [map_io]: free_thresh: 0.196\n[INFO] [1794043967.765862950] [map_io]: occupied_thresh: 0.65\n[INFO] [1794043967.765865820] [map_io]: mode: trinary\n[INFO] [1794043967.765869101] [map_io]: negate: 0\n[INFO] [1794043967.765878661] [map_io]: Loading image_file: /tmp/ros2-nav2-lab-9ksuy4to/room.pgm\n[INFO] [1794043967.766036817] [map_io]: Read map /tmp/ros2-nav2-lab-9ksuy4to/room.pgm: 80 X 60 map @ 0.1 m/cell\n[INFO] [1794043970.318932696] [navlab_9ksuy4to.map_server]: Deactivating\n[INFO] [1794043970.318954476] [navlab_9ksuy4to.map_server]: Destroying bond (map_server) to lifecycle manager.\n[INFO] [1794043970.330472143] [navlab_9ksuy4to.map_server]: Cleaning up\n[INFO] [1794043970.560768721] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[INFO] [1794043970.560816993] [navlab_9ksuy4to.map_server]: Running Nav2 LifecycleNode rcl preshutdown (map_server)\n[INFO] [1794043970.560836914] [navlab_9ksuy4to.map_server]: Destroying bond (map_server) to lifecycle manager.\n[INFO] [1794043970.561050812] [navlab_9ksuy4to.map_server]: Destroying\n"
+    },
+    {
+      "label": "amcl",
+      "argv": [
+        "/opt/ros/jazzy/lib/nav2_amcl/amcl",
+        "--ros-args",
+        "-r",
+        "__ns:=/navlab_9ksuy4to",
+        "--params-file",
+        "/home/wjz/ros2_robot/ros2-learning-hub/examples/nav2_labs/nav2.yaml"
+      ],
+      "pid": 394212,
+      "logFile": "/tmp/ros2-nav2-lab-9ksuy4to/amcl.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "96e02719268011bc9b859736f7846a0d16e81c51360a4c9c242c7c1c1f4e2f75",
+      "logTail": "[INFO] [1794043967.800648647] [navlab_9ksuy4to.amcl]: \n\tamcl lifecycle node launched. \n\tWaiting on external lifecycle transitions to activate\n\tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[INFO] [1794043967.801229889] [navlab_9ksuy4to.amcl]: Creating\n[INFO] [1794043967.986819975] [navlab_9ksuy4to.amcl]: Configuring\n[INFO] [1794043967.987024173] [navlab_9ksuy4to.amcl]: initTransforms\n[INFO] [1794043967.989854554] [navlab_9ksuy4to.amcl]: initPubSub\n[INFO] [1794043967.996300495] [navlab_9ksuy4to.amcl]: Subscribed to map topic.\n[INFO] [1794043967.998596795] [navlab_9ksuy4to.amcl]: Activating\n[INFO] [1794043967.998612155] [navlab_9ksuy4to.amcl]: Creating bond (amcl) to lifecycle manager.\n[INFO] [1794043968.000402645] [navlab_9ksuy4to.amcl]: initialPoseReceived\n[WARN] [1794043968.000419556] [navlab_9ksuy4to.amcl]: Ignoring initial pose in frame \"odom\"; initial poses must be in the global frame, \"map\"\n[INFO] [1794043968.006528334] [navlab_9ksuy4to.amcl]: Received a 80 X 60 map @ 0.100 m/pix\n[INFO] [1794043968.086594700] [navlab_9ksuy4to.amcl]: createLaserObject\n[INFO] [1794043968.288034262] [navlab_9ksuy4to.amcl]: initialPoseReceived\n[INFO] [1794043968.288068964] [navlab_9ksuy4to.amcl]: Setting pose (1.600000): -2.200 0.000 0.000\n[INFO] [1794043968.389554765] [navlab_9ksuy4to.amcl]: Requesting no-motion update\n[INFO] [1794043970.305549196] [navlab_9ksuy4to.amcl]: Deactivating\n[INFO] [1794043970.305573737] [navlab_9ksuy4to.amcl]: Destroying bond (amcl) to lifecycle manager.\n[INFO] [1794043970.316906197] [navlab_9ksuy4to.amcl]: Cleaning up\n[INFO] [1794043970.447238325] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[INFO] [1794043970.447290747] [navlab_9ksuy4to.amcl]: Running Nav2 LifecycleNode rcl preshutdown (amcl)\n[INFO] [1794043970.447315708] [navlab_9ksuy4to.amcl]: Destroying bond (amcl) to lifecycle manager.\n[INFO] [1794043970.447586828] [navlab_9ksuy4to.amcl]: Destroying\n"
+    },
+    {
+      "label": "planner_server",
+      "argv": [
+        "/opt/ros/jazzy/lib/nav2_planner/planner_server",
+        "--ros-args",
+        "-r",
+        "__ns:=/navlab_9ksuy4to",
+        "--params-file",
+        "/home/wjz/ros2_robot/ros2-learning-hub/examples/nav2_labs/nav2.yaml",
+        "-r",
+        "global_costmap:map:=/navlab_9ksuy4to/map",
+        "-r",
+        "global_costmap:scan:=/navlab_9ksuy4to/scan"
+      ],
+      "pid": 394242,
+      "logFile": "/tmp/ros2-nav2-lab-9ksuy4to/planner_server.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "312fc0f69c76c6c3d59a0aaa5ede69e541b9197f68219e18e78d6cf3152c8ec9",
+      "logTail": "373250567] [navlab_9ksuy4to.global_costmap.global_costmap]: Using plugin \"obstacle_layer\"\n[INFO] [1794043969.374197574] [navlab_9ksuy4to.global_costmap.global_costmap]: Subscribed to Topics: lidar\n[INFO] [1794043969.375410671] [navlab_9ksuy4to.global_costmap.global_costmap]: Initialized plugin \"obstacle_layer\"\n[INFO] [1794043969.375426402] [navlab_9ksuy4to.global_costmap.global_costmap]: Using plugin \"inflation_layer\"\n[INFO] [1794043969.375525316] [navlab_9ksuy4to.global_costmap.global_costmap]: Initialized plugin \"inflation_layer\"\n[INFO] [1794043969.383468724] [navlab_9ksuy4to.global_costmap.global_costmap]: StaticLayer: Resizing costmap to 80 X 60 at 0.100000 m/pix\n[INFO] [1794043969.383665912] [navlab_9ksuy4to.planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner::NavfnPlanner\n[INFO] [1794043969.383684162] [navlab_9ksuy4to.planner_server]: Configuring plugin GridBased of type NavfnPlanner\n[INFO] [1794043969.383768246] [navlab_9ksuy4to.planner_server]: Planner Server has GridBased  planners available.\n[INFO] [1794043969.388049752] [navlab_9ksuy4to.planner_server]: Activating\n[INFO] [1794043969.388067323] [navlab_9ksuy4to.global_costmap.global_costmap]: Activating\n[INFO] [1794043969.388069943] [navlab_9ksuy4to.global_costmap.global_costmap]: Checking transform\n[INFO] [1794043969.388115245] [navlab_9ksuy4to.global_costmap.global_costmap]: start\n[INFO] [1794043969.538393856] [navlab_9ksuy4to.planner_server]: Activating plugin GridBased of type NavfnPlanner\n[INFO] [1794043969.538887555] [navlab_9ksuy4to.planner_server]: Creating bond (planner_server) to lifecycle manager.\n[WARN] [1794043969.565921526] [navlab_9ksuy4to.planner_server]: GridBased plugin failed to plan from (-2.21, 0.00) to (1.65, 1.55): \"Goal Coordinates of(1.650000, 1.550000) was in lethal cost\"\n[WARN] [1794043969.565953307] [navlab_9ksuy4to.planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.\n[WARN] [1794043969.566380964] [navlab_9ksuy4to.planner_server]: GridBased plugin failed to plan from (-2.21, 0.00) to (4.60, 0.00): \"Goal Coordinates of(4.600000, 0.000000) was outside bounds\"\n[WARN] [1794043969.566390124] [navlab_9ksuy4to.planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.\n[WARN] [1794043969.566830941] [navlab_9ksuy4to.planner_server]: GridBased plugin failed to plan from (-2.21, 0.00) to (3.85, 2.85): \"Failed to create plan with tolerance of: 0.000000\"\n[WARN] [1794043969.566845542] [navlab_9ksuy4to.planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.\n[ERROR] [1794043969.567120573] [navlab_9ksuy4to.planner_server]: planner NotConfigured is not a valid planner. Planner names are: GridBased \n[WARN] [1794043969.567144283] [navlab_9ksuy4to.planner_server]: NotConfigured plugin failed to plan from (-2.21, 0.00) to (2.35, 0.00): \"Planner id NotConfigured is invalid\"\n[WARN] [1794043969.567147374] [navlab_9ksuy4to.planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.\n[INFO] [1794043969.735280439] [navlab_9ksuy4to.global_costmap.global_costmap]: Message Filter dropping message: frame 'laser_link' at time 2.800 for reason 'the timestamp on the message is earlier than all the data in the transform cache'\n[ERROR] [1794043969.819003703] [transformPoseInTargetFrame]: No Transform available Error looking up target frame: \"missing_goal_frame\" passed to lookupTransform argument source_frame does not exist. \n\n[WARN] [1794043969.819049435] [navlab_9ksuy4to.planner_server]: GridBased plugin failed to plan from (-2.21, 0.00) to (2.35, 0.00): \"Unable to transform poses to global frame\"\n[WARN] [1794043969.819069396] [navlab_9ksuy4to.planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.\n[INFO] [1794043970.235893903] [navlab_9ksuy4to.planner_server]: Deactivating\n[INFO] [1794043970.235923364] [navlab_9ksuy4to.global_costmap.global_costmap]: Deactivating\n[INFO] [1794043970.288244325] [navlab_9ksuy4to.planner_server]: Deactivating plugin GridBased of type NavfnPlanner\n[INFO] [1794043970.288279646] [navlab_9ksuy4to.planner_server]: Destroying bond (planner_server) to lifecycle manager.\n[INFO] [1794043970.299962949] [navlab_9ksuy4to.planner_server]: Cleaning up\n[INFO] [1794043970.301593653] [navlab_9ksuy4to.global_costmap.global_costmap]: Cleaning up\n[INFO] [1794043970.302258838] [navlab_9ksuy4to.planner_server]: Cleaning up plugin GridBased of type NavfnPlanner\n[INFO] [1794043970.302367383] [navlab_9ksuy4to.planner_server]: Destroying plugin GridBased of type NavfnPlanner\n[INFO] [1794043970.333609215] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[INFO] [1794043970.333640926] [navlab_9ksuy4to.planner_server]: Running Nav2 LifecycleNode rcl preshutdown (planner_server)\n[INFO] [1794043970.333653397] [navlab_9ksuy4to.planner_server]: Destroying bond (planner_server) to lifecycle manager.\n[INFO] [1794043970.334306782] [navlab_9ksuy4to.global_costmap.global_costmap]: Destroying\n[INFO] [1794043970.335708127] [navlab_9ksuy4to.planner_server]: Destroying\n"
+    }
+  ],
+  "geometry": {
+    "pillar": [
+      [
+        1.65,
+        1.55,
+        0.5
+      ],
+      [
+        0.6,
+        0.7,
+        1.0
+      ]
+    ],
+    "obstacle": [
+      [
+        0.05,
+        0.0,
+        0.5
+      ],
+      [
+        0.6,
+        0.8,
+        1.0
+      ]
+    ],
+    "rig": [
+      -2.2,
+      0.0,
+      0.3
+    ]
+  },
+  "eglVendor": "/usr/share/glvnd/egl_vendor.d/10_nvidia.json",
+  "scan": {
+    "frame": "laser_link",
+    "stampNs": 200000000,
+    "beams": 361,
+    "finiteRanges": 361,
+    "centerRangeM": 1.9501192569732666,
+    "expectedRangeM": 1.9500000000000002,
+    "frameStepS": 0.1,
+    "clockPublishers": [
+      "nav_bridge"
+    ],
+    "reliability": "BEST_EFFORT"
+  },
+  "map": {
+    "frame": "map",
+    "size": [
+      80,
+      60
+    ],
+    "originM": [
+      -4.0,
+      -3.0
+    ],
+    "resolutionM": 0.10000000149011612,
+    "cells": {
+      "-1": 1056,
+      "100": 529,
+      "0": 3215
+    },
+    "probes": [
+      [
+        -2.2,
+        0.0,
+        0
+      ],
+      [
+        1.65,
+        1.55,
+        100
+      ],
+      [
+        1.65,
+        -1.55,
+        0
+      ],
+      [
+        0.0,
+        0.0,
+        0
+      ],
+      [
+        3.85,
+        2.85,
+        -1
+      ]
+    ],
+    "checkedCells": 4800,
+    "inactiveCells": 0,
+    "lateTransientLocal": true,
+    "lateVolatileBeforeReload": 0,
+    "volatileAfterReload": 1,
+    "failedLoads": [
+      {
+        "case": "empty-url",
+        "code": 1,
+        "unchanged": true
+      },
+      {
+        "case": "missing-yaml",
+        "code": 3,
+        "unchanged": true
+      },
+      {
+        "case": "missing-image",
+        "code": 2,
+        "unchanged": true
+      }
+    ],
+    "reloadCode": 0,
+    "mapStampNs": 480000000,
+    "reloadedStampNs": 1080000000,
+    "files": {
+      "room.pgm": "79eabccf4bbe012d26e34abedbed1dccca9f6553631d92d17d398351aeb2deae",
+      "room.yaml": "2c9dc4dff680b6273bb11417febbce4a6454387ed6d784b7bc03e79a4a907ab5"
+    }
+  },
+  "amcl": {
+    "wrongFrame": "odom",
+    "wrongFrameServiceReplied": true,
+    "wrongFramePoseSamples": 0,
+    "wrongFrameMapToBase": false,
+    "wrongFrameScanWindowS": 0.3,
+    "validFrame": "map",
+    "initialM": [
+      -2.2,
+      0.0
+    ],
+    "covarianceDiag": [
+      0.0025,
+      0.0025,
+      0.0025
+    ],
+    "positionM": [
+      -2.205049989001043,
+      0.0006795898966319068
+    ],
+    "yawRad": 0.0008029296654923251,
+    "errorM": 0.005095510900612287,
+    "initialUpdateStampNs": 1700000000,
+    "noMotionUpdateStampNs": 1800000000,
+    "transformStampNs": 2250000000,
+    "scanLookupStampNs": 2000000000,
+    "laserOriginAtScanM": [
+      -2.203321205242333,
+      0.0022097897798387936,
+      0.29999999999999993
+    ],
+    "tfPublishers": {
+      "/tf": [
+        "amcl"
+      ],
+      "/tf_static": [
+        "nav_probe"
+      ]
+    }
+  },
+  "actions": {
+    "from-tf": {
+      "goalM": [
+        2.35,
+        0.0
+      ],
+      "goalFrame": "map",
+      "plugin": "GridBased",
+      "useStart": false,
+      "explicitStartM": null,
+      "accepted": true,
+      "status": 4,
+      "code": 0,
+      "error": "",
+      "pathFrame": "map",
+      "planningNs": 0,
+      "pathStampNs": 2875000000,
+      "poseCount": 89,
+      "pointsM": [
+        [
+          -2.19999997317791,
+          4.470348358154297e-08
+        ],
+        [
+          -2.0999999716877937,
+          4.470348358154297e-08
+        ],
+        [
+          -2.0499999709427357,
+          4.470348358154297e-08
+        ],
+        [
+          -1.9999999701976776,
+          4.470348358154297e-08
+        ],
+        [
+          -1.9499999694526196,
+          4.470348358154297e-08
+        ],
+        [
+          -1.8999999687075615,
+          4.470348358154297e-08
+        ],
+        [
+          -1.8499999679625034,
+          4.470348358154297e-08
+        ],
+        [
+          -1.7999999672174454,
+          4.470348358154297e-08
+        ],
+        [
+          -1.7499999664723873,
+          4.470348358154297e-08
+        ],
+        [
+          -1.6999999657273293,
+          4.470348358154297e-08
+        ],
+        [
+          -1.6499999649822712,
+          4.470348358154297e-08
+        ],
+        [
+          -1.5999999642372131,
+          4.470348358154297e-08
+        ],
+        [
+          -1.549999963492155,
+          4.470348358154297e-08
+        ],
+        [
+          -1.499999962747097,
+          4.470348358154297e-08
+        ],
+        [
+          -1.449999962002039,
+          4.470348358154297e-08
+        ],
+        [
+          -1.399999961256981,
+          4.470348358154297e-08
+        ],
+        [
+          -1.3499999605119228,
+          4.470348358154297e-08
+        ],
+        [
+          -1.2999999597668648,
+          4.470348358154297e-08
+        ],
+        [
+          -1.2499999590218067,
+          4.470348358154297e-08
+        ],
+        [
+          -1.1999999582767487,
+          4.470348358154297e-08
+        ],
+        [
+          -1.1499999575316906,
+          4.470348358154297e-08
+        ],
+        [
+          -1.0999999567866325,
+          4.470348358154297e-08
+        ],
+        [
+          -1.0499999560415745,
+          4.470348358154297e-08
+        ],
+        [
+          -0.9999999552965164,
+          4.470348358154297e-08
+        ],
+        [
+          -0.9499999545514584,
+          4.470348358154297e-08
+        ],
+        [
+          -0.8999999538064003,
+          4.470348358154297e-08
+        ],
+        [
+          -0.8499999530613422,
+          4.470348358154297e-08
+        ],
+        [
+          -0.7999999523162842,
+          4.470348358154297e-08
+        ],
+        [
+          -0.7499999515712261,
+          4.470348358154297e-08
+        ],
+        [
+          -0.6999999508261681,
+          4.470348358154297e-08
+        ],
+        [
+          -0.64999995008111,
+          4.470348358154297e-08
+        ],
+        [
+          -0.5999999493360519,
+          4.470348358154297e-08
+        ],
+        [
+          -0.5499999485909939,
+          4.470348358154297e-08
+        ],
+        [
+          -0.4999999478459358,
+          4.470348358154297e-08
+        ],
+        [
+          -0.44999994710087776,
+          4.470348358154297e-08
+        ],
+        [
+          -0.3999999463558197,
+          4.470348358154297e-08
+        ],
+        [
+          -0.34999994561076164,
+          4.470348358154297e-08
+        ],
+        [
+          -0.2999999448657036,
+          4.470348358154297e-08
+        ],
+        [
+          -0.24999994412064552,
+          4.470348358154297e-08
+        ],
+        [
+          -0.19999994337558746,
+          4.470348358154297e-08
+        ],
+        [
+          -0.1499999426305294,
+          4.470348358154297e-08
+        ],
+        [
+          -0.09999994188547134,
+          4.470348358154297e-08
+        ],
+        [
+          -0.049999941140413284,
+          4.470348358154297e-08
+        ],
+        [
+          5.960464477539063e-08,
+          4.470348358154297e-08
+        ],
+        [
+          0.050000060349702835,
+          4.470348358154297e-08
+        ],
+        [
+          0.1000000610947609,
+          4.470348358154297e-08
+        ],
+        [
+          0.15000006183981895,
+          4.470348358154297e-08
+        ],
+        [
+          0.20000006258487701,
+          4.470348358154297e-08
+        ],
+        [
+          0.2500000633299351,
+          4.470348358154297e-08
+        ],
+        [
+          0.30000006407499313,
+          4.470348358154297e-08
+        ],
+        [
+          0.3500000648200512,
+          4.470348358154297e-08
+        ],
+        [
+          0.40000006556510925,
+          4.470348358154297e-08
+        ],
+        [
+          0.4500000663101673,
+          4.470348358154297e-08
+        ],
+        [
+          0.5000000670552254,
+          4.470348358154297e-08
+        ],
+        [
+          0.5500000678002834,
+          4.470348358154297e-08
+        ],
+        [
+          0.6000000685453415,
+          4.470348358154297e-08
+        ],
+        [
+          0.6500000692903996,
+          4.470348358154297e-08
+        ],
+        [
+          0.7000000700354576,
+          4.470348358154297e-08
+        ],
+        [
+          0.7500000707805157,
+          4.470348358154297e-08
+        ],
+        [
+          0.8000000715255737,
+          4.470348358154297e-08
+        ],
+        [
+          0.8500000722706318,
+          4.470348358154297e-08
+        ],
+        [
+          0.9000000730156898,
+          4.470348358154297e-08
+        ],
+        [
+          0.9500000737607479,
+          4.470348358154297e-08
+        ],
+        [
+          1.000000074505806,
+          4.470348358154297e-08
+        ],
+        [
+          1.050000075250864,
+          4.470348358154297e-08
+        ],
+        [
+          1.100000075995922,
+          4.470348358154297e-08
+        ],
+        [
+          1.1500000767409801,
+          4.470348358154297e-08
+        ],
+        [
+          1.2000000774860382,
+          4.470348358154297e-08
+        ],
+        [
+          1.2500000782310963,
+          4.470348358154297e-08
+        ],
+        [
+          1.3000000789761543,
+          4.470348358154297e-08
+        ],
+        [
+          1.3500000797212124,
+          4.470348358154297e-08
+        ],
+        [
+          1.4000000804662704,
+          4.470348358154297e-08
+        ],
+        [
+          1.4500000812113285,
+          4.470348358154297e-08
+        ],
+        [
+          1.5000000819563866,
+          4.470348358154297e-08
+        ],
+        [
+          1.5500000827014446,
+          4.470348358154297e-08
+        ],
+        [
+          1.6000000834465027,
+          4.470348358154297e-08
+        ],
+        [
+          1.6500000841915607,
+          4.470348358154297e-08
+        ],
+        [
+          1.7000000849366188,
+          4.470348358154297e-08
+        ],
+        [
+          1.7500000856816769,
+          4.470348358154297e-08
+        ],
+        [
+          1.800000086426735,
+          4.470348358154297e-08
+        ],
+        [
+          1.850000087171793,
+          4.470348358154297e-08
+        ],
+        [
+          1.900000087916851,
+          4.470348358154297e-08
+        ],
+        [
+          1.950000088661909,
+          4.470348358154297e-08
+        ],
+        [
+          2.000000089406967,
+          4.470348358154297e-08
+        ],
+        [
+          2.0500000901520252,
+          4.470348358154297e-08
+        ],
+        [
+          2.1000000908970833,
+          4.470348358154297e-08
+        ],
+        [
+          2.2000000923871994,
+          4.470348358154297e-08
+        ],
+        [
+          2.3000000938773155,
+          4.470348358154297e-08
+        ],
+        [
+          2.35,
+          0.0
+        ]
+      ],
+      "lengthM": 4.54999997317793
+    },
+    "static": {
+      "goalM": [
+        2.35,
+        0.0
+      ],
+      "goalFrame": "map",
+      "plugin": "GridBased",
+      "useStart": true,
+      "explicitStartM": [
+        -2.2050499890010435,
+        0.0006795898966319072
+      ],
+      "accepted": true,
+      "status": 4,
+      "code": 0,
+      "error": "",
+      "pathFrame": "map",
+      "planningNs": 0,
+      "pathStampNs": 2875000000,
+      "poseCount": 89,
+      "pointsM": [
+        [
+          -2.19999997317791,
+          4.470348358154297e-08
+        ],
+        [
+          -2.0999999716877937,
+          4.470348358154297e-08
+        ],
+        [
+          -2.0499999709427357,
+          4.470348358154297e-08
+        ],
+        [
+          -1.9999999701976776,
+          4.470348358154297e-08
+        ],
+        [
+          -1.9499999694526196,
+          4.470348358154297e-08
+        ],
+        [
+          -1.8999999687075615,
+          4.470348358154297e-08
+        ],
+        [
+          -1.8499999679625034,
+          4.470348358154297e-08
+        ],
+        [
+          -1.7999999672174454,
+          4.470348358154297e-08
+        ],
+        [
+          -1.7499999664723873,
+          4.470348358154297e-08
+        ],
+        [
+          -1.6999999657273293,
+          4.470348358154297e-08
+        ],
+        [
+          -1.6499999649822712,
+          4.470348358154297e-08
+        ],
+        [
+          -1.5999999642372131,
+          4.470348358154297e-08
+        ],
+        [
+          -1.549999963492155,
+          4.470348358154297e-08
+        ],
+        [
+          -1.499999962747097,
+          4.470348358154297e-08
+        ],
+        [
+          -1.449999962002039,
+          4.470348358154297e-08
+        ],
+        [
+          -1.399999961256981,
+          4.470348358154297e-08
+        ],
+        [
+          -1.3499999605119228,
+          4.470348358154297e-08
+        ],
+        [
+          -1.2999999597668648,
+          4.470348358154297e-08
+        ],
+        [
+          -1.2499999590218067,
+          4.470348358154297e-08
+        ],
+        [
+          -1.1999999582767487,
+          4.470348358154297e-08
+        ],
+        [
+          -1.1499999575316906,
+          4.470348358154297e-08
+        ],
+        [
+          -1.0999999567866325,
+          4.470348358154297e-08
+        ],
+        [
+          -1.0499999560415745,
+          4.470348358154297e-08
+        ],
+        [
+          -0.9999999552965164,
+          4.470348358154297e-08
+        ],
+        [
+          -0.9499999545514584,
+          4.470348358154297e-08
+        ],
+        [
+          -0.8999999538064003,
+          4.470348358154297e-08
+        ],
+        [
+          -0.8499999530613422,
+          4.470348358154297e-08
+        ],
+        [
+          -0.7999999523162842,
+          4.470348358154297e-08
+        ],
+        [
+          -0.7499999515712261,
+          4.470348358154297e-08
+        ],
+        [
+          -0.6999999508261681,
+          4.470348358154297e-08
+        ],
+        [
+          -0.64999995008111,
+          4.470348358154297e-08
+        ],
+        [
+          -0.5999999493360519,
+          4.470348358154297e-08
+        ],
+        [
+          -0.5499999485909939,
+          4.470348358154297e-08
+        ],
+        [
+          -0.4999999478459358,
+          4.470348358154297e-08
+        ],
+        [
+          -0.44999994710087776,
+          4.470348358154297e-08
+        ],
+        [
+          -0.3999999463558197,
+          4.470348358154297e-08
+        ],
+        [
+          -0.34999994561076164,
+          4.470348358154297e-08
+        ],
+        [
+          -0.2999999448657036,
+          4.470348358154297e-08
+        ],
+        [
+          -0.24999994412064552,
+          4.470348358154297e-08
+        ],
+        [
+          -0.19999994337558746,
+          4.470348358154297e-08
+        ],
+        [
+          -0.1499999426305294,
+          4.470348358154297e-08
+        ],
+        [
+          -0.09999994188547134,
+          4.470348358154297e-08
+        ],
+        [
+          -0.049999941140413284,
+          4.470348358154297e-08
+        ],
+        [
+          5.960464477539063e-08,
+          4.470348358154297e-08
+        ],
+        [
+          0.050000060349702835,
+          4.470348358154297e-08
+        ],
+        [
+          0.1000000610947609,
+          4.470348358154297e-08
+        ],
+        [
+          0.15000006183981895,
+          4.470348358154297e-08
+        ],
+        [
+          0.20000006258487701,
+          4.470348358154297e-08
+        ],
+        [
+          0.2500000633299351,
+          4.470348358154297e-08
+        ],
+        [
+          0.30000006407499313,
+          4.470348358154297e-08
+        ],
+        [
+          0.3500000648200512,
+          4.470348358154297e-08
+        ],
+        [
+          0.40000006556510925,
+          4.470348358154297e-08
+        ],
+        [
+          0.4500000663101673,
+          4.470348358154297e-08
+        ],
+        [
+          0.5000000670552254,
+          4.470348358154297e-08
+        ],
+        [
+          0.5500000678002834,
+          4.470348358154297e-08
+        ],
+        [
+          0.6000000685453415,
+          4.470348358154297e-08
+        ],
+        [
+          0.6500000692903996,
+          4.470348358154297e-08
+        ],
+        [
+          0.7000000700354576,
+          4.470348358154297e-08
+        ],
+        [
+          0.7500000707805157,
+          4.470348358154297e-08
+        ],
+        [
+          0.8000000715255737,
+          4.470348358154297e-08
+        ],
+        [
+          0.8500000722706318,
+          4.470348358154297e-08
+        ],
+        [
+          0.9000000730156898,
+          4.470348358154297e-08
+        ],
+        [
+          0.9500000737607479,
+          4.470348358154297e-08
+        ],
+        [
+          1.000000074505806,
+          4.470348358154297e-08
+        ],
+        [
+          1.050000075250864,
+          4.470348358154297e-08
+        ],
+        [
+          1.100000075995922,
+          4.470348358154297e-08
+        ],
+        [
+          1.1500000767409801,
+          4.470348358154297e-08
+        ],
+        [
+          1.2000000774860382,
+          4.470348358154297e-08
+        ],
+        [
+          1.2500000782310963,
+          4.470348358154297e-08
+        ],
+        [
+          1.3000000789761543,
+          4.470348358154297e-08
+        ],
+        [
+          1.3500000797212124,
+          4.470348358154297e-08
+        ],
+        [
+          1.4000000804662704,
+          4.470348358154297e-08
+        ],
+        [
+          1.4500000812113285,
+          4.470348358154297e-08
+        ],
+        [
+          1.5000000819563866,
+          4.470348358154297e-08
+        ],
+        [
+          1.5500000827014446,
+          4.470348358154297e-08
+        ],
+        [
+          1.6000000834465027,
+          4.470348358154297e-08
+        ],
+        [
+          1.6500000841915607,
+          4.470348358154297e-08
+        ],
+        [
+          1.7000000849366188,
+          4.470348358154297e-08
+        ],
+        [
+          1.7500000856816769,
+          4.470348358154297e-08
+        ],
+        [
+          1.800000086426735,
+          4.470348358154297e-08
+        ],
+        [
+          1.850000087171793,
+          4.470348358154297e-08
+        ],
+        [
+          1.900000087916851,
+          4.470348358154297e-08
+        ],
+        [
+          1.950000088661909,
+          4.470348358154297e-08
+        ],
+        [
+          2.000000089406967,
+          4.470348358154297e-08
+        ],
+        [
+          2.0500000901520252,
+          4.470348358154297e-08
+        ],
+        [
+          2.1000000908970833,
+          4.470348358154297e-08
+        ],
+        [
+          2.2000000923871994,
+          4.470348358154297e-08
+        ],
+        [
+          2.3000000938773155,
+          4.470348358154297e-08
+        ],
+        [
+          2.35,
+          0.0
+        ]
+      ],
+      "lengthM": 4.54999997317793
+    },
+    "occupied": {
+      "goalM": [
+        1.65,
+        1.55
+      ],
+      "goalFrame": "map",
+      "plugin": "GridBased",
+      "useStart": true,
+      "explicitStartM": [
+        -2.2050499890010435,
+        0.0006795898966319072
+      ],
+      "accepted": true,
+      "status": 6,
+      "code": 206,
+      "error": "",
+      "pathFrame": "",
+      "planningNs": 0,
+      "pathStampNs": 0,
+      "poseCount": 0,
+      "pointsM": [],
+      "lengthM": 0.0
+    },
+    "outside": {
+      "goalM": [
+        4.6,
+        0.0
+      ],
+      "goalFrame": "map",
+      "plugin": "GridBased",
+      "useStart": true,
+      "explicitStartM": [
+        -2.2050499890010435,
+        0.0006795898966319072
+      ],
+      "accepted": true,
+      "status": 6,
+      "code": 204,
+      "error": "",
+      "pathFrame": "",
+      "planningNs": 0,
+      "pathStampNs": 0,
+      "poseCount": 0,
+      "pointsM": [],
+      "lengthM": 0.0
+    },
+    "unknown": {
+      "goalM": [
+        3.85,
+        2.85
+      ],
+      "goalFrame": "map",
+      "plugin": "GridBased",
+      "useStart": true,
+      "explicitStartM": [
+        -2.2050499890010435,
+        0.0006795898966319072
+      ],
+      "accepted": true,
+      "status": 6,
+      "code": 208,
+      "error": "",
+      "pathFrame": "",
+      "planningNs": 0,
+      "pathStampNs": 0,
+      "poseCount": 0,
+      "pointsM": [],
+      "lengthM": 0.0
+    },
+    "bad-planner": {
+      "goalM": [
+        2.35,
+        0.0
+      ],
+      "goalFrame": "map",
+      "plugin": "NotConfigured",
+      "useStart": true,
+      "explicitStartM": [
+        -2.2050499890010435,
+        0.0006795898966319072
+      ],
+      "accepted": true,
+      "status": 6,
+      "code": 201,
+      "error": "",
+      "pathFrame": "",
+      "planningNs": 0,
+      "pathStampNs": 0,
+      "poseCount": 0,
+      "pointsM": [],
+      "lengthM": 0.0
+    },
+    "bad-frame": {
+      "goalM": [
+        2.35,
+        0.0
+      ],
+      "goalFrame": "missing_goal_frame",
+      "plugin": "GridBased",
+      "useStart": true,
+      "explicitStartM": [
+        -2.2050499890010435,
+        0.0006795898966319072
+      ],
+      "accepted": true,
+      "status": 6,
+      "code": 202,
+      "error": "",
+      "pathFrame": "",
+      "planningNs": 0,
+      "pathStampNs": 0,
+      "poseCount": 0,
+      "pointsM": [],
+      "lengthM": 0.0
+    },
+    "marked": {
+      "goalM": [
+        2.35,
+        0.0
+      ],
+      "goalFrame": "map",
+      "plugin": "GridBased",
+      "useStart": true,
+      "explicitStartM": [
+        -2.2050499890010435,
+        0.0006795898966319072
+      ],
+      "accepted": true,
+      "status": 4,
+      "code": 0,
+      "error": "",
+      "pathFrame": "map",
+      "planningNs": 0,
+      "pathStampNs": 3545000000,
+      "poseCount": 97,
+      "pointsM": [
+        [
+          -2.19999997317791,
+          4.470348358154297e-08
+        ],
+        [
+          -2.1122806267780163,
+          -0.013870004026145466
+        ],
+        [
+          -2.06264512036212,
+          -0.019896081386448827
+        ],
+        [
+          -2.0184470835096704,
+          0.0034817189497005074
+        ],
+        [
+          -1.9736493762381286,
+          0.02568917014731653
+        ],
+        [
+          -1.928927581443304,
+          0.04804901850296517
+        ],
+        [
+          -1.8839061421737995,
+          0.06979908749161723
+        ],
+        [
+          -1.8390460646010354,
+          0.09188008147299342
+        ],
+        [
+          -1.7947915702282131,
+          0.11515126101897977
+        ],
+        [
+          -1.7505931519060312,
+          0.13852867988539685
+        ],
+        [
+          -1.7064344064360029,
+          0.16198086681933432
+        ],
+        [
+          -1.6621633181298279,
+          0.18522038437754418
+        ],
+        [
+          -1.6183692577238276,
+          0.2093464375934957
+        ],
+        [
+          -1.5749295826990846,
+          0.23410534909524472
+        ],
+        [
+          -1.5312419523483811,
+          0.25842366305624864
+        ],
+        [
+          -1.48666759560507,
+          0.2810760986965306
+        ],
+        [
+          -1.4434379196679288,
+          0.3061996952623076
+        ],
+        [
+          -1.3988605111667596,
+          0.32884602738687363
+        ],
+        [
+          -1.3540565096446358,
+          0.35104031787872714
+        ],
+        [
+          -1.3090589122333967,
+          0.3728401686674374
+        ],
+        [
+          -1.2637239048439852,
+          0.3939285784055073
+        ],
+        [
+          -1.2189801755395564,
+          0.4162445577419476
+        ],
+        [
+          -1.1740090902747085,
+          0.43809895870236915
+        ],
+        [
+          -1.128992419376857,
+          0.4598587551691935
+        ],
+        [
+          -1.083841852602987,
+          0.4813396972617454
+        ],
+        [
+          -1.039054635749082,
+          0.5035683200295011
+        ],
+        [
+          -0.9941459207854564,
+          0.5255501318804932
+        ],
+        [
+          -0.9492185138049507,
+          0.5474941782279927
+        ],
+        [
+          -0.9042739406864939,
+          0.5694023664206611
+        ],
+        [
+          -0.8594726094524958,
+          0.5916023789584983
+        ],
+        [
+          -0.8147113325403836,
+          0.6138832630795719
+        ],
+        [
+          -0.7706763739984694,
+          0.6375671928758493
+        ],
+        [
+          -0.7260245788995121,
+          0.6600658962140358
+        ],
+        [
+          -0.6940104945601604,
+          0.6984730317961123
+        ],
+        [
+          -0.6496596790799458,
+          0.7215595799916912
+        ],
+        [
+          -0.6047820538994984,
+          0.7436050972879684
+        ],
+        [
+          -0.559383722534534,
+          0.764556940861894
+        ],
+        [
+          -0.5137214141148547,
+          0.7849281875033398
+        ],
+        [
+          -0.47621798032847096,
+          0.8179958912431573
+        ],
+        [
+          -0.4330092852266034,
+          0.8431557274334978
+        ],
+        [
+          -0.38330225323591094,
+          0.8377499198578278
+        ],
+        [
+          -0.33371500274114396,
+          0.8313397024771518
+        ],
+        [
+          -0.28389848893729663,
+          0.82705923061161
+        ],
+        [
+          -0.2341292773802479,
+          0.822260722849677
+        ],
+        [
+          -0.18429216421085926,
+          0.8182297321890246
+        ],
+        [
+          -0.13449396095415977,
+          0.8137413593194083
+        ],
+        [
+          -0.08467668421084795,
+          0.8094696612577081
+        ],
+        [
+          -0.03490289501701227,
+          0.8047199816215027
+        ],
+        [
+          0.014864409191375216,
+          0.7999031633124218
+        ],
+        [
+          0.064534820087772,
+          0.7941689102972873
+        ],
+        [
+          0.11413427761397088,
+          0.7878548232891376
+        ],
+        [
+          0.16359449868789966,
+          0.7805264082629435
+        ],
+        [
+          0.2129437120697446,
+          0.7724861707163768
+        ],
+        [
+          0.2621002832368049,
+          0.7633400524160265
+        ],
+        [
+          0.3110966371163215,
+          0.753373011251881
+        ],
+        [
+          0.359837787744965,
+          0.7422237953875026
+        ],
+        [
+          0.4083641709143535,
+          0.7301746924247539
+        ],
+        [
+          0.45656744922052894,
+          0.7168915348781866
+        ],
+        [
+          0.5044991210773446,
+          0.7026596621075214
+        ],
+        [
+          0.5522568427362557,
+          0.6878536773898247
+        ],
+        [
+          0.5998955458387059,
+          0.6726700376372037
+        ],
+        [
+          0.6474758840721222,
+          0.6573040553525686
+        ],
+        [
+          0.6949413999161322,
+          0.6415867394445343
+        ],
+        [
+          0.7423500767700375,
+          0.6256989065661855
+        ],
+        [
+          0.7896485088713234,
+          0.6094856800062303
+        ],
+        [
+          0.8369091754691169,
+          0.5931633531028524
+        ],
+        [
+          0.8841004145756415,
+          0.5766418989992417
+        ],
+        [
+          0.9312710543166247,
+          0.5600597912082037
+        ],
+        [
+          0.978369214808481,
+          0.5432743600498782
+        ],
+        [
+          1.0254395280098834,
+          0.5264111090661743
+        ],
+        [
+          1.0724373619621588,
+          0.5093456791243796
+        ],
+        [
+          1.1194092559726414,
+          0.49221044022158367
+        ],
+        [
+          1.1663388068428446,
+          0.47495847158072024
+        ],
+        [
+          1.213259202439474,
+          0.457682088876993
+        ],
+        [
+          1.2601330587287691,
+          0.44027905822215985
+        ],
+        [
+          1.3069928006379712,
+          0.4228386435335665
+        ],
+        [
+          1.3538002811938554,
+          0.4052597553321675
+        ],
+        [
+          1.4005909770815208,
+          0.38763432782343443
+        ],
+        [
+          1.4473538256787322,
+          0.3699360395958422
+        ],
+        [
+          1.4940907343341507,
+          0.3521694682861778
+        ],
+        [
+          1.5407605043166939,
+          0.33422665796021533
+        ],
+        [
+          1.5874447701490624,
+          0.3163216131377453
+        ],
+        [
+          1.634484565771885,
+          0.2993732944037504
+        ],
+        [
+          1.681304253359201,
+          0.28182568672039565
+        ],
+        [
+          1.7280499358184613,
+          0.2640816221249338
+        ],
+        [
+          1.7747246649075237,
+          0.24615254470933223
+        ],
+        [
+          1.8213826093283672,
+          0.22817921680479003
+        ],
+        [
+          1.8680306355361722,
+          0.21017994895845504
+        ],
+        [
+          1.914740078370869,
+          0.19234089839966373
+        ],
+        [
+          1.961581128263191,
+          0.1748503204412799
+        ],
+        [
+          2.00866784466308,
+          0.1580324643557134
+        ],
+        [
+          2.056014341950629,
+          0.14196114453615394
+        ],
+        [
+          2.10370072876961,
+          0.12692685018370753
+        ],
+        [
+          2.1516938172533173,
+          0.11290364135658137
+        ],
+        [
+          2.2000000923871994,
+          0.1000000461935997
+        ],
+        [
+          2.3000000938773155,
+          4.470348358154297e-08
+        ],
+        [
+          2.35,
+          0.0
+        ]
+      ],
+      "lengthM": 4.930230340162908
+    }
+  },
+  "costmap": {
+    "frame": "map",
+    "layer": "master",
+    "inputs": {
+      "map": "/navlab_9ksuy4to/map",
+      "scan": "/navlab_9ksuy4to/scan"
+    },
+    "service": "/navlab_9ksuy4to/global_costmap/get_costmap",
+    "originM": [
+      -4.0,
+      -3.0
+    ],
+    "resolutionM": 0.10000000149011612,
+    "size": [
+      80,
+      60
+    ],
+    "goalM": [
+      2.35,
+      0.0
+    ],
+    "frozenStartM": [
+      -2.2050499890010435,
+      0.0006795898966319072
+    ],
+    "obstacleCenterM": [
+      0.05,
+      0.0
+    ],
+    "obstacleSizeM": [
+      0.6,
+      0.8
+    ],
+    "addedLethalCellIndices": [
+      2117,
+      2197,
+      2277,
+      2357,
+      2437,
+      2517,
+      2597,
+      2677
+    ],
+    "oldPathNewLethalCellIndices": [
+      2437
+    ],
+    "detourRejectedCells": [],
+    "isPathValid": {
+      "static": true,
+      "oldAfterMarking": false,
+      "detour": true
+    },
+    "sampledStepM": 0.025,
+    "snapshots": {
+      "static": {
+        "file": "static.raw",
+        "sha256": "908a3318585b65f9f05c9b6e22e25ed3c8c34a707b54d27341f27f7da138768e",
+        "valueCounts": {
+          "255": 804,
+          "253": 512,
+          "254": 529,
+          "235": 248,
+          "142": 233,
+          "86": 212,
+          "0": 2238,
+          "105": 6,
+          "131": 6,
+          "155": 4,
+          "209": 8
+        },
+        "sampleStampNs": 2870000000
+      },
+      "marked": {
+        "file": "marked.raw",
+        "sha256": "a52b254722e7ae90c9176c7be0577e026afda50ca00904bea849df83032a67b2",
+        "valueCounts": {
+          "255": 804,
+          "253": 585,
+          "254": 621,
+          "235": 207,
+          "209": 69,
+          "155": 30,
+          "142": 172,
+          "131": 63,
+          "105": 31,
+          "86": 163,
+          "0": 2055
+        },
+        "sampleStampNs": 3545000000
+      }
+    }
+  }
+}

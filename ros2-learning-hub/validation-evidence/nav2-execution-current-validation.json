@@ -1,0 +1,892 @@
+{
+  "passed": true,
+  "output": "/tmp/ros2-nav-execution-6g9vfn9v",
+  "domainId": 223,
+  "discovery": "LOCALHOST",
+  "namespace": "/navexec_6g9vfn9v",
+  "gazeboPartition": "hub_execute_6g9vfn9v",
+  "versions": {
+    "gazebo": "Gazebo Sim, version 8.15.0",
+    "ros_gz_bridge": "1.0.24",
+    "nav2_map_server": "1.3.13",
+    "nav2_amcl": "1.3.13",
+    "nav2_planner": "1.3.13",
+    "nav2_navfn_planner": "1.3.13",
+    "nav2_controller": "1.3.13",
+    "nav2_regulated_pure_pursuit_controller": "1.3.13",
+    "nav2_velocity_smoother": "1.3.13",
+    "nav2_behaviors": "1.3.13",
+    "nav2_bt_navigator": "1.3.13",
+    "nav2_msgs": "1.3.13",
+    "rclpy": "7.1.12"
+  },
+  "scenarios": {
+    "arrival": {
+      "goalM": [
+        2.2,
+        0.7
+      ],
+      "goalYawRad": 0.0,
+      "sentRosNs": 17120000000,
+      "accepted": true,
+      "uuid": "7f9d38b76dd346fcbaf5db8ca69cf0c9",
+      "resultRosNs": 31070000000,
+      "status": 4,
+      "errorCode": 0,
+      "errorMessage": "",
+      "windowEndRosNs": 32100000000,
+      "truthStop": {
+        "stillFromNs": 31600000000,
+        "stillUntilNs": 32100000000,
+        "samples": 26,
+        "maxLinearMps": 3.614471854418914e-06,
+        "maxAngularRadps": 0.046315060656514584
+      },
+      "endM": [
+        2.1636365427135678,
+        0.6394807770614552
+      ],
+      "endYawRad": -0.026071693517942942,
+      "positionErrorM": 0.07060366400483387,
+      "yawErrorRad": 0.026071693517942945,
+      "worldTravelM": 4.951624977606982,
+      "displacementM": 4.704958057824769,
+      "minimumCenterClearanceM": 0.5543687135910254,
+      "controller": {
+        "samples": 279,
+        "nonzero": 278,
+        "firstZeroAfterMotionNs": 31040000000,
+        "maxLinearMps": 0.45,
+        "maxAngularRadps": 0.45
+      },
+      "smoothed": {
+        "samples": 440,
+        "nonzero": 438,
+        "firstZeroAfterMotionNs": 31605000000,
+        "maxLinearMps": 0.45,
+        "maxAngularRadps": 0.45
+      },
+      "wheelStopMaxRadps": 7.336162302640226e-10,
+      "feedbackSamples": 1394,
+      "recoveries": 0,
+      "btTransitions": 133,
+      "plans": 14,
+      "nestedResults": [
+        {
+          "action": "compute_path_to_pose",
+          "uuid": "200496f49461924872f09b32dbee3872",
+          "status": 4,
+          "errorCode": 0,
+          "errorMessage": ""
+        },
+        {
+          "action": "follow_path",
+          "uuid": "01a3245142b64746c46e15f2456ad783",
+          "status": 4,
+          "errorCode": 0,
+          "errorMessage": ""
+        }
+      ]
+    },
+    "cancel": {
+      "goalM": [
+        -2.15,
+        -1.15
+      ],
+      "goalYawRad": 3.141592653589793,
+      "sentRosNs": 32100000000,
+      "accepted": true,
+      "uuid": "b5b5a84f97d04f9780067c90fc499565",
+      "cancelRequestedRosNs": 37980000000,
+      "cancelPoseM": [
+        1.8452359619879677,
+        0.36100482962880354
+      ],
+      "cancelAckRosNs": 37980000000,
+      "cancelCode": 0,
+      "cancelingIds": [
+        "b5b5a84f97d04f9780067c90fc499565"
+      ],
+      "resultRosNs": 38005000000,
+      "status": 5,
+      "errorCode": 0,
+      "errorMessage": "",
+      "windowEndRosNs": 39980000000,
+      "truthStop": {
+        "stillFromNs": 39480000000,
+        "stillUntilNs": 39980000000,
+        "samples": 26,
+        "maxLinearMps": 0.016756317837623956,
+        "maxAngularRadps": 1.8637482827961033e-10
+      },
+      "endM": [
+        1.6181111698706239,
+        0.1081019093407334
+      ],
+      "endYawRad": -2.2819240423056972,
+      "positionErrorM": 3.972591371232455,
+      "yawErrorRad": 0.8596686112840966,
+      "worldTravelM": 0.765581669103523,
+      "displacementM": 0.7615519900017262,
+      "minimumCenterClearanceM": 0.5998519581248662,
+      "controller": {
+        "samples": 119,
+        "nonzero": 118,
+        "firstZeroAfterMotionNs": 38025000000,
+        "maxLinearMps": 0.45,
+        "maxAngularRadps": 0.7500000000000001
+      },
+      "smoothed": {
+        "samples": 225,
+        "nonzero": 223,
+        "firstZeroAfterMotionNs": 39490000000,
+        "maxLinearMps": 0.4484064551674126,
+        "maxAngularRadps": 0.7134306847254837
+      },
+      "wheelStopMaxRadps": 0.14114293479160905,
+      "feedbackSamples": 588,
+      "recoveries": 0,
+      "btTransitions": 74,
+      "plans": 6,
+      "nestedResults": [
+        {
+          "action": "compute_path_to_pose",
+          "uuid": "197c8578a240c481641c321158a89546",
+          "status": 4,
+          "errorCode": 0,
+          "errorMessage": ""
+        },
+        {
+          "action": "follow_path",
+          "uuid": "ed8650afad40e9c44fe81c4b8a1c994c",
+          "status": 5,
+          "errorCode": 0,
+          "errorMessage": ""
+        }
+      ],
+      "travelAfterCancelM": 0.34006651050427406
+    },
+    "outside_map": {
+      "goalM": [
+        5.0,
+        0.0
+      ],
+      "goalYawRad": 0.0,
+      "sentRosNs": 39980000000,
+      "accepted": true,
+      "uuid": "18e6677a14ba438b886420524064ad2d",
+      "resultRosNs": 40015000000,
+      "status": 6,
+      "errorCode": 204,
+      "errorMessage": "",
+      "windowEndRosNs": 40520000000,
+      "truthStop": {
+        "stillFromNs": 40020000000,
+        "stillUntilNs": 40520000000,
+        "samples": 26,
+        "maxLinearMps": 4.131791369333933e-06,
+        "maxAngularRadps": 2.3308773998221844e-13
+      },
+      "endM": [
+        1.6181105108623124,
+        0.10810114487478197
+      ],
+      "endYawRad": -2.281924042305779,
+      "positionErrorM": 3.383616759366109,
+      "yawErrorRad": 2.281924042305779,
+      "worldTravelM": 1.0093067648102901e-06,
+      "displacementM": 1.0093067648102901e-06,
+      "minimumCenterClearanceM": 1.0918980906592668,
+      "controller": {
+        "samples": 0,
+        "nonzero": 0,
+        "firstZeroAfterMotionNs": null,
+        "maxLinearMps": 0.0,
+        "maxAngularRadps": 0.0
+      },
+      "smoothed": {
+        "samples": 0,
+        "nonzero": 0,
+        "firstZeroAfterMotionNs": null,
+        "maxLinearMps": 0.0,
+        "maxAngularRadps": 0.0
+      },
+      "wheelStopMaxRadps": 6.12142569271837e-15,
+      "feedbackSamples": 2,
+      "recoveries": 0,
+      "btTransitions": 14,
+      "plans": 0,
+      "nestedResults": [
+        {
+          "action": "compute_path_to_pose",
+          "uuid": "1e4d775f19bea806f7e460f4992b7456",
+          "status": 6,
+          "errorCode": 204,
+          "errorMessage": ""
+        }
+      ]
+    },
+    "invalid_controller": {
+      "goalM": [
+        1.85,
+        -1.35
+      ],
+      "goalYawRad": 0.0,
+      "sentRosNs": 40725000000,
+      "accepted": true,
+      "uuid": "cb09312dda184b5ba35813b6d554371d",
+      "resultRosNs": 40775000000,
+      "status": 6,
+      "errorCode": 101,
+      "errorMessage": "",
+      "windowEndRosNs": 41280000000,
+      "truthStop": {
+        "stillFromNs": 40780000000,
+        "stillUntilNs": 41280000000,
+        "samples": 26,
+        "maxLinearMps": 3.983259572500073e-06,
+        "maxAngularRadps": 2.895529402948791e-14
+      },
+      "endM": [
+        1.618110251453124,
+        0.10810084395370514
+      ],
+      "endYawRad": -2.2819240423057856,
+      "positionErrorM": 1.476425049441942,
+      "yawErrorRad": 2.2819240423057856,
+      "worldTravelM": 1.991629781997314e-07,
+      "displacementM": 1.991629781997314e-07,
+      "minimumCenterClearanceM": 1.0918990051969,
+      "controller": {
+        "samples": 1,
+        "nonzero": 0,
+        "firstZeroAfterMotionNs": 40750000000,
+        "maxLinearMps": 0.0,
+        "maxAngularRadps": 0.0
+      },
+      "smoothed": {
+        "samples": 12,
+        "nonzero": 0,
+        "firstZeroAfterMotionNs": 40780000000,
+        "maxLinearMps": 0.0,
+        "maxAngularRadps": 0.0
+      },
+      "wheelStopMaxRadps": 1.380694677825318e-15,
+      "feedbackSamples": 4,
+      "recoveries": 0,
+      "btTransitions": 45,
+      "plans": 1,
+      "nestedResults": [
+        {
+          "action": "compute_path_to_pose",
+          "uuid": "90d9d49a23ded67902807c7ded7a4a1d",
+          "status": 4,
+          "errorCode": 0,
+          "errorMessage": ""
+        },
+        {
+          "action": "follow_path",
+          "uuid": "723aafabb4d2b6b3d11c556364b09b63",
+          "status": 6,
+          "errorCode": 101,
+          "errorMessage": ""
+        }
+      ]
+    },
+    "restored_controller": {
+      "goalM": [
+        1.85,
+        -1.35
+      ],
+      "goalYawRad": 0.0,
+      "sentRosNs": 41485000000,
+      "accepted": true,
+      "uuid": "659872d8dc964bdfb4853067cb0d9fd7",
+      "resultRosNs": 49735000000,
+      "status": 4,
+      "errorCode": 0,
+      "errorMessage": "",
+      "windowEndRosNs": 50780000000,
+      "truthStop": {
+        "stillFromNs": 50280000000,
+        "stillUntilNs": 50780000000,
+        "samples": 26,
+        "maxLinearMps": 9.056742837196624e-08,
+        "maxAngularRadps": 0.04636591118335383
+      },
+      "endM": [
+        1.8919968774189935,
+        -1.2290284209866227
+      ],
+      "endYawRad": 0.11258015423112556,
+      "positionErrorM": 0.1280541316863137,
+      "yawErrorRad": 0.11258015423112556,
+      "worldTravelM": 1.3709051215171066,
+      "displacementM": 1.3648914077840881,
+      "minimumCenterClearanceM": 1.091899156046295,
+      "controller": {
+        "samples": 166,
+        "nonzero": 164,
+        "firstZeroAfterMotionNs": 49705000000,
+        "maxLinearMps": 0.45,
+        "maxAngularRadps": 0.7500000000000002
+      },
+      "smoothed": {
+        "samples": 267,
+        "nonzero": 266,
+        "firstZeroAfterMotionNs": 50280000000,
+        "maxLinearMps": 0.45,
+        "maxAngularRadps": 0.7500000000000001
+      },
+      "wheelStopMaxRadps": 4.5690679836425245e-14,
+      "feedbackSamples": 824,
+      "recoveries": 0,
+      "btTransitions": 116,
+      "plans": 9,
+      "nestedResults": [
+        {
+          "action": "compute_path_to_pose",
+          "uuid": "91f104f494cb0ad6bf26514689c3a459",
+          "status": 4,
+          "errorCode": 0,
+          "errorMessage": ""
+        },
+        {
+          "action": "follow_path",
+          "uuid": "b6ac051bfb739996d5954a26d56b19d0",
+          "status": 4,
+          "errorCode": 0,
+          "errorMessage": ""
+        }
+      ]
+    }
+  },
+  "lifecycle": [
+    {
+      "node": "map_server",
+      "transition": 1,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "map_server",
+      "transition": 3,
+      "success": true,
+      "state": "active"
+    },
+    {
+      "node": "amcl",
+      "transition": 1,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "amcl",
+      "transition": 3,
+      "success": true,
+      "state": "active"
+    },
+    {
+      "node": "planner_server",
+      "transition": 1,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "planner_server",
+      "transition": 3,
+      "success": true,
+      "state": "active"
+    },
+    {
+      "node": "velocity_smoother",
+      "transition": 1,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "velocity_smoother",
+      "transition": 3,
+      "success": true,
+      "state": "active"
+    },
+    {
+      "node": "controller_server",
+      "transition": 1,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "controller_server",
+      "transition": 3,
+      "success": true,
+      "state": "active"
+    },
+    {
+      "node": "behavior_server",
+      "transition": 1,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "behavior_server",
+      "transition": 3,
+      "success": true,
+      "state": "active"
+    },
+    {
+      "node": "bt_navigator",
+      "transition": 1,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "bt_navigator",
+      "transition": 3,
+      "success": true,
+      "state": "active"
+    },
+    {
+      "node": "bt_navigator",
+      "transition": 4,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "bt_navigator",
+      "transition": 2,
+      "success": true,
+      "state": "unconfigured"
+    },
+    {
+      "node": "behavior_server",
+      "transition": 4,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "behavior_server",
+      "transition": 2,
+      "success": true,
+      "state": "unconfigured"
+    },
+    {
+      "node": "controller_server",
+      "transition": 4,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "controller_server",
+      "transition": 2,
+      "success": true,
+      "state": "unconfigured"
+    },
+    {
+      "node": "velocity_smoother",
+      "transition": 4,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "velocity_smoother",
+      "transition": 2,
+      "success": true,
+      "state": "unconfigured"
+    },
+    {
+      "node": "planner_server",
+      "transition": 4,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "planner_server",
+      "transition": 2,
+      "success": true,
+      "state": "unconfigured"
+    },
+    {
+      "node": "amcl",
+      "transition": 4,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "amcl",
+      "transition": 2,
+      "success": true,
+      "state": "unconfigured"
+    },
+    {
+      "node": "map_server",
+      "transition": 4,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "map_server",
+      "transition": 2,
+      "success": true,
+      "state": "unconfigured"
+    }
+  ],
+  "processes": [
+    {
+      "label": "gazebo",
+      "argv": [
+        "gz",
+        "sim",
+        "-s",
+        "-r",
+        "--headless-rendering",
+        "-v",
+        "3",
+        "/tmp/ros2-nav-execution-6g9vfn9v/navigation_room.sdf"
+      ],
+      "pid": 429044,
+      "logFile": "/tmp/ros2-nav-execution-6g9vfn9v/gazebo.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "0185a95e762e9b2f9e3f3f1082cf2db64f9e3131b01bb8a1a3ef58c3f89713a3",
+      "logTail": "\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mGazebo Sim Server v\u001b[0m\u001b[1;32m8.15.0\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mLoading SDF world file[\u001b[0m\u001b[1;32m/tmp/ros2-nav-execution-6g9vfn9v/navigation_room.sdf\u001b[0m\u001b[1;32m].\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mServing entity system service on [\u001b[0m\u001b[1;32m/\u001b[0m\u001b[1;32mentity/system/add\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mDiffDrive subscribing to twist messages on [\u001b[0m\u001b[1;32m/hub_execute/cmd\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mOdometryPublisher publishing odometry on [\u001b[0m\u001b[1;32m/hub_execute/world_pose\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mOdometryPublisher publishing odometry with covariance on [\u001b[0m\u001b[1;32m/model/nav_cart/odometry_with_covariance\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mOdometryPublisher publishing Pose_V (TF) on [\u001b[0m\u001b[1;32m/model/nav_cart/pose\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mLoaded level [\u001b[0m\u001b[1;32mdefault\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mServing world controls on [\u001b[0m\u001b[1;32m/world/hub_navigation_execution\u001b[0m\u001b[1;32m/control], [\u001b[0m\u001b[1;32m/world/hub_navigation_execution\u001b[0m\u001b[1;32m/control/state] and [\u001b[0m\u001b[1;32m/world/hub_navigation_execution\u001b[0m\u001b[1;32m/playback/control]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mServing GUI information on [\u001b[0m\u001b[1;32m/world/hub_navigation_execution\u001b[0m\u001b[1;32m/\u001b[0m\u001b[1;32mgui/info\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mWorld [\u001b[0m\u001b[1;32mhub_navigation_execution\u001b[0m\u001b[1;32m] initialized with [\u001b[0m\u001b[1;32mlab_step\u001b[0m\u001b[1;32m] physics profile.\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mServing world SDF generation service on [\u001b[0m\u001b[1;32m/world/hub_navigation_execution\u001b[0m\u001b[1;32m/\u001b[0m\u001b[1;32mgenerate_world_sdf\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mServing world names on [\u001b[0m\u001b[1;32m/gazebo/worlds\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mResource path add service on [\u001b[0m\u001b[1;32m/gazebo/resource_paths/add\u001b[0m\u001b[1;32m].\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mResource path get service on [\u001b[0m\u001b[1;32m/gazebo/resource_paths/get\u001b[0m\u001b[1;32m].\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mResource path resolve service on [\u001b[0m\u001b[1;32m/gazebo/resource_paths/resolve\u001b[0m\u001b[1;32m].\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mResource paths published on [\u001b[0m\u001b[1;32m/gazebo/resource_paths\u001b[0m\u001b[1;32m].\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mServer control service on [\u001b[0m\u001b[1;32m/server_control\u001b[0m\u001b[1;32m].\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mFound no publishers on /stats, adding root stats topic\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mFound no publishers on /clock, adding root clock topic\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mLoading plugin [\u001b[0m\u001b[1;32mgz-rendering-ogre2\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n"
+    },
+    {
+      "label": "bridge",
+      "argv": [
+        "/opt/ros/jazzy/lib/ros_gz_bridge/parameter_bridge",
+        "--ros-args",
+        "-r",
+        "__ns:=/navexec_6g9vfn9v",
+        "-r",
+        "__node:=execution_bridge",
+        "-p",
+        "config_file:=/home/wjz/ros2_robot/ros2-learning-hub/examples/nav2_execution/bridge.yaml",
+        "-p",
+        "override_timestamps_with_wall_time:=false"
+      ],
+      "pid": 429045,
+      "logFile": "/tmp/ros2-nav-execution-6g9vfn9v/bridge.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "f0385cd65c0daae50649892b233f43c45e57eaa426becd51afda21cfc93fb494",
+      "logTail": "[INFO] [1794050198.343351870] [navexec_6g9vfn9v.execution_bridge]: Creating GZ->ROS Bridge: [/world/hub_navigation_execution/clock (gz.msgs.Clock) -> /clock (rosgraph_msgs/msg/Clock)] (Lazy 0)\n[INFO] [1794050198.344271037] [navexec_6g9vfn9v.execution_bridge]: Creating GZ->ROS Bridge: [/hub_execute/scan (gz.msgs.LaserScan) -> scan (sensor_msgs/msg/LaserScan)] (Lazy 0)\n[INFO] [1794050198.345625670] [navexec_6g9vfn9v.execution_bridge]: Creating GZ->ROS Bridge: [/hub_execute/wheel_odom (gz.msgs.Odometry) -> odom (nav_msgs/msg/Odometry)] (Lazy 0)\n[INFO] [1794050198.346652566] [navexec_6g9vfn9v.execution_bridge]: Creating GZ->ROS Bridge: [/hub_execute/wheel_tf (gz.msgs.Pose_V) -> /tf (tf2_msgs/msg/TFMessage)] (Lazy 0)\n[INFO] [1794050198.347475935] [navexec_6g9vfn9v.execution_bridge]: Creating GZ->ROS Bridge: [/hub_execute/world_pose (gz.msgs.Odometry) -> world_pose (nav_msgs/msg/Odometry)] (Lazy 0)\n[INFO] [1794050198.347662533] [navexec_6g9vfn9v.execution_bridge]: Creating GZ->ROS Bridge: [/hub_execute/joints (gz.msgs.Model) -> wheel_joints (sensor_msgs/msg/JointState)] (Lazy 0)\n[INFO] [1794050198.347865700] [navexec_6g9vfn9v.execution_bridge]: Creating ROS->GZ Bridge: [cmd_vel_smoothed (geometry_msgs/msg/Twist) -> /hub_execute/cmd (gz.msgs.Twist)] (Lazy 0)\n[INFO] [1794050216.656808466] [navexec_6g9vfn9v.execution_bridge]: Passing message from ROS geometry_msgs/msg/Twist to Gazebo gz.msgs.Twist (showing msg only once per type)\n[INFO] [1794050251.221106328] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n"
+    },
+    {
+      "label": "map_server",
+      "argv": [
+        "/opt/ros/jazzy/lib/nav2_map_server/map_server",
+        "--ros-args",
+        "-r",
+        "__ns:=/navexec_6g9vfn9v",
+        "--params-file",
+        "/home/wjz/ros2_robot/ros2-learning-hub/examples/nav2_execution/navigation.yaml",
+        "-p",
+        "yaml_filename:=/home/wjz/ros2_robot/ros2-learning-hub/validation-evidence/slam-mapping-captures/learned.yaml"
+      ],
+      "pid": 429105,
+      "logFile": "/tmp/ros2-nav-execution-6g9vfn9v/map_server.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "dcd7da9f2dfdeb585facd42f304b49eb0e6b2033f13d8c09727536f735ee4041",
+      "logTail": "[INFO] [1794050199.776125772] [navexec_6g9vfn9v.map_server]: \n\tmap_server lifecycle node launched. \n\tWaiting on external lifecycle transitions to activate\n\tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[INFO] [1794050199.776173291] [navexec_6g9vfn9v.map_server]: Creating\n[INFO] [1794050201.083656853] [navexec_6g9vfn9v.map_server]: Configuring\n[INFO] [1794050201.083710832] [map_io]: Loading yaml file: /home/wjz/ros2_robot/ros2-learning-hub/validation-evidence/slam-mapping-captures/learned.yaml\n[INFO] [1794050201.083875600] [map_io]: resolution: 0.05\n[INFO] [1794050201.083880140] [map_io]: origin[0]: -3.428\n[INFO] [1794050201.083883080] [map_io]: origin[1]: -2.457\n[INFO] [1794050201.083885110] [map_io]: origin[2]: 0\n[INFO] [1794050201.083887510] [map_io]: free_thresh: 0.196\n[INFO] [1794050201.083889480] [map_io]: occupied_thresh: 0.65\n[INFO] [1794050201.083892210] [map_io]: mode: trinary\n[INFO] [1794050201.083894790] [map_io]: negate: 0\n[INFO] [1794050201.083988389] [map_io]: Loading image_file: /home/wjz/ros2_robot/ros2-learning-hub/validation-evidence/slam-mapping-captures/learned.pgm\n[INFO] [1794050201.084186236] [map_io]: Read map /home/wjz/ros2_robot/ros2-learning-hub/validation-evidence/slam-mapping-captures/learned.pgm: 137 X 98 map @ 0.05 m/cell\n[INFO] [1794050201.088388651] [navexec_6g9vfn9v.map_server]: Activating\n[INFO] [1794050201.088448990] [navexec_6g9vfn9v.map_server]: Creating bond (map_server) to lifecycle manager.\n[INFO] [1794050201.090577072] [navexec_6g9vfn9v.map_server]: Handling GetMap request\n[INFO] [1794050250.409201128] [navexec_6g9vfn9v.map_server]: Deactivating\n[INFO] [1794050250.409221678] [navexec_6g9vfn9v.map_server]: Destroying bond (map_server) to lifecycle manager.\n[INFO] [1794050250.420926108] [navexec_6g9vfn9v.map_server]: Cleaning up\n[INFO] [1794050251.107561402] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[INFO] [1794050251.107603522] [navexec_6g9vfn9v.map_server]: Running Nav2 LifecycleNode rcl preshutdown (map_server)\n[INFO] [1794050251.107619461] [navexec_6g9vfn9v.map_server]: Destroying bond (map_server) to lifecycle manager.\n[INFO] [1794050251.107971657] [navexec_6g9vfn9v.map_server]: Destroying\n"
+    },
+    {
+      "label": "amcl",
+      "argv": [
+        "/opt/ros/jazzy/lib/nav2_amcl/amcl",
+        "--ros-args",
+        "-r",
+        "__ns:=/navexec_6g9vfn9v",
+        "--params-file",
+        "/home/wjz/ros2_robot/ros2-learning-hub/examples/nav2_execution/navigation.yaml"
+      ],
+      "pid": 429121,
+      "logFile": "/tmp/ros2-nav-execution-6g9vfn9v/amcl.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "4d73ed2ac25d0a77767a7665083f994a99a779eeb3f45d241455156b8ad1575b",
+      "logTail": "[INFO] [1794050201.113822697] [navexec_6g9vfn9v.amcl]: \n\tamcl lifecycle node launched. \n\tWaiting on external lifecycle transitions to activate\n\tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[INFO] [1794050201.114004984] [navexec_6g9vfn9v.amcl]: Creating\n[INFO] [1794050204.082618226] [navexec_6g9vfn9v.amcl]: Configuring\n[INFO] [1794050204.082676216] [navexec_6g9vfn9v.amcl]: initTransforms\n[INFO] [1794050204.085400120] [navexec_6g9vfn9v.amcl]: initPubSub\n[INFO] [1794050204.088514609] [navexec_6g9vfn9v.amcl]: Subscribed to map topic.\n[INFO] [1794050204.090480563] [navexec_6g9vfn9v.amcl]: Activating\n[INFO] [1794050204.090496053] [navexec_6g9vfn9v.amcl]: Creating bond (amcl) to lifecycle manager.\n[INFO] [1794050204.092116022] [navexec_6g9vfn9v.amcl]: initialPoseReceived\n[INFO] [1794050204.092168452] [navexec_6g9vfn9v.amcl]: Setting pose (4.585000): -2.100 -1.350 0.000\n[INFO] [1794050204.098766115] [navexec_6g9vfn9v.amcl]: Received a 137 X 98 map @ 0.050 m/pix\n[INFO] [1794050204.105788214] [navexec_6g9vfn9v.amcl]: createLaserObject\n[INFO] [1794050250.394507153] [navexec_6g9vfn9v.amcl]: Deactivating\n[INFO] [1794050250.394533663] [navexec_6g9vfn9v.amcl]: Destroying bond (amcl) to lifecycle manager.\n[INFO] [1794050250.406812136] [navexec_6g9vfn9v.amcl]: Cleaning up\n[INFO] [1794050250.994059026] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[INFO] [1794050250.994093696] [navexec_6g9vfn9v.amcl]: Running Nav2 LifecycleNode rcl preshutdown (amcl)\n[INFO] [1794050250.994112306] [navexec_6g9vfn9v.amcl]: Destroying bond (amcl) to lifecycle manager.\n[INFO] [1794050250.994370593] [navexec_6g9vfn9v.amcl]: Destroying\n"
+    },
+    {
+      "label": "planner_server",
+      "argv": [
+        "/opt/ros/jazzy/lib/nav2_planner/planner_server",
+        "--ros-args",
+        "-r",
+        "__ns:=/navexec_6g9vfn9v",
+        "--params-file",
+        "/home/wjz/ros2_robot/ros2-learning-hub/examples/nav2_execution/navigation.yaml",
+        "-r",
+        "global_costmap:map:=/navexec_6g9vfn9v/map"
+      ],
+      "pid": 429140,
+      "logFile": "/tmp/ros2-nav-execution-6g9vfn9v/planner_server.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "1f0510d2857aa4d8ce90b2dd81348f3dfdb2638068c77a69ea0d88588c669e76",
+      "logTail": "[INFO] [1794050204.443954225] [navexec_6g9vfn9v.planner_server]: \n\tplanner_server lifecycle node launched. \n\tWaiting on external lifecycle transitions to activate\n\tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[INFO] [1794050204.444474679] [navexec_6g9vfn9v.planner_server]: Creating\n[INFO] [1794050204.446375934] [navexec_6g9vfn9v.global_costmap.global_costmap]: \n\tglobal_costmap lifecycle node launched. \n\tWaiting on external lifecycle transitions to activate\n\tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[INFO] [1794050204.446518522] [navexec_6g9vfn9v.global_costmap.global_costmap]: Creating Costmap\n[INFO] [1794050204.661268246] [navexec_6g9vfn9v.planner_server]: Configuring\n[INFO] [1794050204.661335795] [navexec_6g9vfn9v.global_costmap.global_costmap]: Configuring\n[INFO] [1794050204.663905882] [navexec_6g9vfn9v.global_costmap.global_costmap]: Using plugin \"static_layer\"\n[INFO] [1794050204.665571680] [navexec_6g9vfn9v.global_costmap.global_costmap]: Subscribing to the map topic (map) with transient local durability\n[INFO] [1794050204.666166962] [navexec_6g9vfn9v.global_costmap.global_costmap]: Initialized plugin \"static_layer\"\n[INFO] [1794050204.666174672] [navexec_6g9vfn9v.global_costmap.global_costmap]: Using plugin \"inflation_layer\"\n[INFO] [1794050204.666268061] [navexec_6g9vfn9v.global_costmap.global_costmap]: Initialized plugin \"inflation_layer\"\n[INFO] [1794050204.671730410] [navexec_6g9vfn9v.planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner::NavfnPlanner\n[INFO] [1794050204.671745869] [navexec_6g9vfn9v.planner_server]: Configuring plugin GridBased of type NavfnPlanner\n[INFO] [1794050204.671821198] [navexec_6g9vfn9v.planner_server]: Planner Server has GridBased  planners available.\n[INFO] [1794050204.676095593] [navexec_6g9vfn9v.planner_server]: Activating\n[INFO] [1794050204.676113662] [navexec_6g9vfn9v.global_costmap.global_costmap]: Activating\n[INFO] [1794050204.676116462] [navexec_6g9vfn9v.global_costmap.global_costmap]: Checking transform\n[INFO] [1794050204.676133372] [navexec_6g9vfn9v.global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID \"map\" passed to canTransform argument target_frame - frame does not exist\n[INFO] [1794050204.676333559] [navexec_6g9vfn9v.global_costmap.global_costmap]: StaticLayer: Resizing costmap to 137 X 98 at 0.050000 m/pix\n[INFO] [1794050205.176237643] [navexec_6g9vfn9v.global_costmap.global_costmap]: start\n[INFO] [1794050205.426319292] [navexec_6g9vfn9v.planner_server]: Activating plugin GridBased of type NavfnPlanner\n[INFO] [1794050205.426795065] [navexec_6g9vfn9v.planner_server]: Creating bond (planner_server) to lifecycle manager.\n[WARN] [1794050239.490345460] [navexec_6g9vfn9v.planner_server]: GridBased plugin failed to plan from (1.56, 0.09) to (5.00, 0.00): \"Goal Coordinates of(5.000000, 0.000000) was outside bounds\"\n[WARN] [1794050239.490376589] [navexec_6g9vfn9v.planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.\n[INFO] [1794050250.359348964] [navexec_6g9vfn9v.planner_server]: Deactivating\n[INFO] [1794050250.359374394] [navexec_6g9vfn9v.global_costmap.global_costmap]: Deactivating\n[INFO] [1794050250.376315971] [navexec_6g9vfn9v.planner_server]: Deactivating plugin GridBased of type NavfnPlanner\n[INFO] [1794050250.376331351] [navexec_6g9vfn9v.planner_server]: Destroying bond (planner_server) to lifecycle manager.\n[INFO] [1794050250.388006641] [navexec_6g9vfn9v.planner_server]: Cleaning up\n[INFO] [1794050250.390273174] [navexec_6g9vfn9v.global_costmap.global_costmap]: Cleaning up\n[INFO] [1794050250.391224343] [navexec_6g9vfn9v.planner_server]: Cleaning up plugin GridBased of type NavfnPlanner\n[INFO] [1794050250.391253682] [navexec_6g9vfn9v.planner_server]: Destroying plugin GridBased of type NavfnPlanner\n[INFO] [1794050250.880502654] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[INFO] [1794050250.880540833] [navexec_6g9vfn9v.planner_server]: Running Nav2 LifecycleNode rcl preshutdown (planner_server)\n[INFO] [1794050250.880563823] [navexec_6g9vfn9v.planner_server]: Destroying bond (planner_server) to lifecycle manager.\n[INFO] [1794050250.881388723] [navexec_6g9vfn9v.global_costmap.global_costmap]: Destroying\n[INFO] [1794050250.882736287] [navexec_6g9vfn9v.planner_server]: Destroying\n"
+    },
+    {
+      "label": "velocity_smoother",
+      "argv": [
+        "/opt/ros/jazzy/lib/nav2_velocity_smoother/velocity_smoother",
+        "--ros-args",
+        "-r",
+        "__ns:=/navexec_6g9vfn9v",
+        "--params-file",
+        "/home/wjz/ros2_robot/ros2-learning-hub/examples/nav2_execution/navigation.yaml"
+      ],
+      "pid": 429162,
+      "logFile": "/tmp/ros2-nav-execution-6g9vfn9v/velocity_smoother.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "2cf4757fb215ab106fbdecbb5f43fe986fbfeeb6a755ba873e87392501e10a09",
+      "logTail": "[INFO] [1794050205.444232048] [navexec_6g9vfn9v.velocity_smoother]: \n\tvelocity_smoother lifecycle node launched. \n\tWaiting on external lifecycle transitions to activate\n\tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[INFO] [1794050207.083079318] [navexec_6g9vfn9v.velocity_smoother]: Configuring velocity smoother\n[INFO] [1794050207.086587872] [navexec_6g9vfn9v.velocity_smoother]: Activating\n[INFO] [1794050207.086622672] [navexec_6g9vfn9v.velocity_smoother]: Creating bond (velocity_smoother) to lifecycle manager.\n[INFO] [1794050250.346392089] [navexec_6g9vfn9v.velocity_smoother]: Deactivating\n[INFO] [1794050250.346428558] [navexec_6g9vfn9v.velocity_smoother]: Destroying bond (velocity_smoother) to lifecycle manager.\n[INFO] [1794050250.357997440] [navexec_6g9vfn9v.velocity_smoother]: Cleaning up\n[INFO] [1794050250.766988641] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[INFO] [1794050250.767040090] [navexec_6g9vfn9v.velocity_smoother]: Running Nav2 LifecycleNode rcl preshutdown (velocity_smoother)\n[INFO] [1794050250.767059000] [navexec_6g9vfn9v.velocity_smoother]: Destroying bond (velocity_smoother) to lifecycle manager.\n[INFO] [1794050250.767322347] [navexec_6g9vfn9v.velocity_smoother]: Destroying\n"
+    },
+    {
+      "label": "controller_server",
+      "argv": [
+        "/opt/ros/jazzy/lib/nav2_controller/controller_server",
+        "--ros-args",
+        "-r",
+        "__ns:=/navexec_6g9vfn9v",
+        "--params-file",
+        "/home/wjz/ros2_robot/ros2-learning-hub/examples/nav2_execution/navigation.yaml",
+        "-r",
+        "local_costmap:scan:=/navexec_6g9vfn9v/scan"
+      ],
+      "pid": 429178,
+      "logFile": "/tmp/ros2-nav-execution-6g9vfn9v/controller_server.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "c30781e7dcf7a8bb065267ca0060a0f72561f297e64297b62c591e7f499fbd97",
+      "logTail": "controller_server]: Passing new path to controller.\n[INFO] [1794050220.796552937] [navexec_6g9vfn9v.controller_server]: Passing new path to controller.\n[INFO] [1794050221.796555829] [navexec_6g9vfn9v.controller_server]: Passing new path to controller.\n[INFO] [1794050222.846553885] [navexec_6g9vfn9v.controller_server]: Passing new path to controller.\n[INFO] [1794050223.846557677] [navexec_6g9vfn9v.controller_server]: Passing new path to controller.\n[INFO] [1794050224.896558646] [navexec_6g9vfn9v.controller_server]: Passing new path to controller.\n[INFO] [1794050225.896553538] [navexec_6g9vfn9v.controller_server]: Passing new path to controller.\n[INFO] [1794050226.946554648] [navexec_6g9vfn9v.controller_server]: Passing new path to controller.\n[INFO] [1794050227.946559230] [navexec_6g9vfn9v.controller_server]: Passing new path to controller.\n[INFO] [1794050228.996553242] [navexec_6g9vfn9v.controller_server]: Passing new path to controller.\n[INFO] [1794050229.996556213] [navexec_6g9vfn9v.controller_server]: Passing new path to controller.\n[INFO] [1794050230.546573720] [navexec_6g9vfn9v.controller_server]: Reached the goal!\n[INFO] [1794050231.629527129] [navexec_6g9vfn9v.controller_server]: Received a goal, begin computing control effort.\n[INFO] [1794050232.679627424] [navexec_6g9vfn9v.controller_server]: Passing new path to controller.\n[INFO] [1794050233.729622105] [navexec_6g9vfn9v.controller_server]: Passing new path to controller.\n[INFO] [1794050234.729623280] [navexec_6g9vfn9v.controller_server]: Passing new path to controller.\n[INFO] [1794050235.779621163] [navexec_6g9vfn9v.controller_server]: Passing new path to controller.\n[INFO] [1794050236.779622866] [navexec_6g9vfn9v.controller_server]: Passing new path to controller.\n[INFO] [1794050237.529623507] [navexec_6g9vfn9v.controller_server]: Cancellation was successful. Stopping the robot.\n[INFO] [1794050237.529648497] [navexec_6g9vfn9v.controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.\n[INFO] [1794050240.250193138] [navexec_6g9vfn9v.controller_server]: Received a goal, begin computing control effort.\n[ERROR] [1794050240.250240857] [navexec_6g9vfn9v.controller_server]: FollowPath called with controller name unknown_controller_for_lab, which does not exist. Available controllers are: FollowPath .\n[ERROR] [1794050240.256022516] [navexec_6g9vfn9v.controller_server]: Failed to find controller name: unknown_controller_for_lab\n[WARN] [1794050240.256060046] [navexec_6g9vfn9v.controller_server]: [follow_path] [ActionServer] Aborting handle.\n[INFO] [1794050241.010229276] [navexec_6g9vfn9v.controller_server]: Received a goal, begin computing control effort.\n[INFO] [1794050242.060302674] [navexec_6g9vfn9v.controller_server]: Passing new path to controller.\n[INFO] [1794050243.110293910] [navexec_6g9vfn9v.controller_server]: Passing new path to controller.\n[INFO] [1794050244.110293536] [navexec_6g9vfn9v.controller_server]: Passing new path to controller.\n[INFO] [1794050245.160295662] [navexec_6g9vfn9v.controller_server]: Passing new path to controller.\n[INFO] [1794050246.160293926] [navexec_6g9vfn9v.controller_server]: Passing new path to controller.\n[INFO] [1794050247.210294612] [navexec_6g9vfn9v.controller_server]: Passing new path to controller.\n[INFO] [1794050248.210300413] [navexec_6g9vfn9v.controller_server]: Passing new path to controller.\n[INFO] [1794050249.210307417] [navexec_6g9vfn9v.controller_server]: Reached the goal!\n[INFO] [1794050249.220198499] [navexec_6g9vfn9v.controller_server]: Received a goal, begin computing control effort.\n[INFO] [1794050249.220240429] [navexec_6g9vfn9v.controller_server]: Reached the goal!\n[INFO] [1794050250.326307799] [navexec_6g9vfn9v.controller_server]: Deactivating\n[INFO] [1794050250.326328639] [navexec_6g9vfn9v.controller_server]: Deactivating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController\n[INFO] [1794050250.326342438] [navexec_6g9vfn9v.local_costmap.local_costmap]: Deactivating\n[INFO] [1794050250.328529292] [navexec_6g9vfn9v.controller_server]: Destroying bond (controller_server) to lifecycle manager.\n[INFO] [1794050250.340424070] [navexec_6g9vfn9v.controller_server]: Cleaning up\n[INFO] [1794050250.340436800] [navexec_6g9vfn9v.controller_server]: Cleaning up controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController\n[INFO] [1794050250.341063952] [navexec_6g9vfn9v.local_costmap.local_costmap]: Cleaning up\n[INFO] [1794050250.653403289] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[INFO] [1794050250.653444818] [navexec_6g9vfn9v.controller_server]: Running Nav2 LifecycleNode rcl preshutdown (controller_server)\n[INFO] [1794050250.653463598] [navexec_6g9vfn9v.controller_server]: Destroying bond (controller_server) to lifecycle manager.\n[INFO] [1794050250.654319248] [navexec_6g9vfn9v.local_costmap.local_costmap]: Destroying\n[INFO] [1794050250.655920539] [navexec_6g9vfn9v.controller_server]: Destroying\n"
+    },
+    {
+      "label": "behavior_server",
+      "argv": [
+        "/opt/ros/jazzy/lib/nav2_behaviors/behavior_server",
+        "--ros-args",
+        "-r",
+        "__ns:=/navexec_6g9vfn9v",
+        "--params-file",
+        "/home/wjz/ros2_robot/ros2-learning-hub/examples/nav2_execution/navigation.yaml"
+      ],
+      "pid": 429205,
+      "logFile": "/tmp/ros2-nav-execution-6g9vfn9v/behavior_server.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "16109b250bddd2f4d95184553b364faf275166e270e0841f17b6662d9b95d889",
+      "logTail": "[INFO] [1794050212.250706755] [navexec_6g9vfn9v.behavior_server]: \n\tbehavior_server lifecycle node launched. \n\tWaiting on external lifecycle transitions to activate\n\tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[INFO] [1794050213.083247546] [navexec_6g9vfn9v.behavior_server]: Configuring\n[INFO] [1794050213.084949505] [navexec_6g9vfn9v.behavior_server]: Creating behavior plugin spin of type nav2_behaviors::Spin\n[INFO] [1794050213.085394889] [navexec_6g9vfn9v.behavior_server]: Creating behavior plugin backup of type nav2_behaviors::BackUp\n[INFO] [1794050213.085712605] [navexec_6g9vfn9v.behavior_server]: Creating behavior plugin wait of type nav2_behaviors::Wait\n[INFO] [1794050213.088903494] [navexec_6g9vfn9v.behavior_server]: Configuring spin\n[INFO] [1794050213.090276946] [navexec_6g9vfn9v.behavior_server]: Configuring backup\n[INFO] [1794050213.091028237] [navexec_6g9vfn9v.behavior_server]: Configuring wait\n[INFO] [1794050213.093153269] [navexec_6g9vfn9v.behavior_server]: Activating\n[INFO] [1794050213.093165659] [navexec_6g9vfn9v.behavior_server]: Activating spin\n[INFO] [1794050213.093168879] [navexec_6g9vfn9v.behavior_server]: Activating backup\n[INFO] [1794050213.093174389] [navexec_6g9vfn9v.behavior_server]: Activating wait\n[INFO] [1794050213.093178479] [navexec_6g9vfn9v.behavior_server]: Creating bond (behavior_server) to lifecycle manager.\n[INFO] [1794050250.310699895] [navexec_6g9vfn9v.behavior_server]: Deactivating\n[INFO] [1794050250.310729775] [navexec_6g9vfn9v.behavior_server]: Destroying bond (behavior_server) to lifecycle manager.\n[INFO] [1794050250.322419235] [navexec_6g9vfn9v.behavior_server]: Cleaning up\n[INFO] [1794050250.539839606] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[INFO] [1794050250.539874026] [navexec_6g9vfn9v.behavior_server]: Running Nav2 LifecycleNode rcl preshutdown (behavior_server)\n[INFO] [1794050250.539890436] [navexec_6g9vfn9v.behavior_server]: Destroying bond (behavior_server) to lifecycle manager.\n[INFO] [1794050250.540120143] [navexec_6g9vfn9v.behavior_server]: Destroying\n"
+    },
+    {
+      "label": "bt_navigator",
+      "argv": [
+        "/opt/ros/jazzy/lib/nav2_bt_navigator/bt_navigator",
+        "--ros-args",
+        "-r",
+        "__ns:=/navexec_6g9vfn9v",
+        "--params-file",
+        "/home/wjz/ros2_robot/ros2-learning-hub/examples/nav2_execution/navigation.yaml",
+        "-p",
+        "default_nav_to_pose_bt_xml:=/opt/ros/jazzy/share/nav2_bt_navigator/behavior_trees/navigate_to_pose_w_replanning_and_recovery.xml"
+      ],
+      "pid": 429222,
+      "logFile": "/tmp/ros2-nav-execution-6g9vfn9v/bt_navigator.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "8a6e2a0f1725433d9b5117080bd62199cc3b9932bd983a80ce8e8e7413898e79",
+      "logTail": "[INFO] [1794050213.113539088] [navexec_6g9vfn9v.bt_navigator]: \n\tbt_navigator lifecycle node launched. \n\tWaiting on external lifecycle transitions to activate\n\tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[INFO] [1794050213.113978012] [navexec_6g9vfn9v.bt_navigator]: Creating\n[INFO] [1794050216.082859773] [navexec_6g9vfn9v.bt_navigator]: Configuring\n[INFO] [1794050216.085284052] [navexec_6g9vfn9v.bt_navigator]: Creating navigator id navigate_to_pose of type nav2_bt_navigator::NavigateToPoseNavigator\n[WARN] [1794050216.087129548] [navexec_6g9vfn9v.bt_navigator]: Error_code parameters were not set. Using default values of: follow_path_error_code compute_path_error_code\nMake sure these match your BT and there are not other sources of error codes youreported to your application\n[INFO] [1794050216.109852018] [navexec_6g9vfn9v.bt_navigator]: Activating\n[INFO] [1794050216.116650362] [navexec_6g9vfn9v.bt_navigator]: Creating bond (bt_navigator) to lifecycle manager.\n[INFO] [1794050216.625938620] [navexec_6g9vfn9v.bt_navigator]: Begin navigating from current location (-2.10, -1.36) to (2.20, 0.70)\n[INFO] [1794050230.576150142] [navexec_6g9vfn9v.bt_navigator]: Goal succeeded\n[INFO] [1794050231.609144972] [navexec_6g9vfn9v.bt_navigator]: Begin navigating from current location (2.10, 0.60) to (-2.15, -1.15)\n[ERROR] [1794050237.509479844] [navexec_6g9vfn9v.bt_navigator_navigate_to_pose_rclcpp_node]: Failed to get result for follow_path in node halt!\n[INFO] [1794050237.509544154] [navexec_6g9vfn9v.bt_navigator]: [navigate_to_pose] [ActionServer] Client requested to cancel the goal. Cancelling.\n[INFO] [1794050237.509594433] [navexec_6g9vfn9v.bt_navigator]: Goal canceled\n[INFO] [1794050239.489977694] [navexec_6g9vfn9v.bt_navigator]: Begin navigating from current location (1.56, 0.09) to (5.00, 0.00)\n[WARN] [1794050239.520091387] [navexec_6g9vfn9v.bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.\n[ERROR] [1794050239.520150596] [navexec_6g9vfn9v.bt_navigator]: Goal failed\n[INFO] [1794050240.229818696] [navexec_6g9vfn9v.bt_navigator]: Begin navigating from current location (1.56, 0.09) to (1.85, -1.35)\n[WARN] [1794050240.279930685] [navexec_6g9vfn9v.bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.\n[ERROR] [1794050240.279985425] [navexec_6g9vfn9v.bt_navigator]: Goal failed\n[INFO] [1794050240.989873223] [navexec_6g9vfn9v.bt_navigator]: Begin navigating from current location (1.56, 0.09) to (1.85, -1.35)\n[INFO] [1794050249.240047131] [navexec_6g9vfn9v.bt_navigator]: Goal succeeded\n[INFO] [1794050250.288119485] [navexec_6g9vfn9v.bt_navigator]: Deactivating\n[INFO] [1794050250.288157975] [navexec_6g9vfn9v.bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.\n[INFO] [1794050250.300367619] [navexec_6g9vfn9v.bt_navigator]: Cleaning up\n[INFO] [1794050250.309284892] [navexec_6g9vfn9v.bt_navigator]: Completed Cleaning up\n[INFO] [1794050250.426278314] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[INFO] [1794050250.426313063] [navexec_6g9vfn9v.bt_navigator]: Running Nav2 LifecycleNode rcl preshutdown (bt_navigator)\n[INFO] [1794050250.426328053] [navexec_6g9vfn9v.bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.\n[INFO] [1794050250.426701879] [navexec_6g9vfn9v.bt_navigator]: Destroying\n"
+    }
+  ],
+  "sourceHashes": {
+    "nav2_execution/validate_execution.py": "9a632ae299fda065ed20a7c89477b38303199b393571241fa944a9c09129a2aa",
+    "nav2_execution/mobile_base.sdf": "38f850ee69d96e016a3803067dcbb6bb9b0de773671f3b604c24875810dffdbe",
+    "nav2_execution/bridge.yaml": "833a79f9d5c16c1a9f6c54b5b9d34a2d59aab4a77d4350cb513c21ff1bc6d339",
+    "nav2_execution/navigation.yaml": "4196c243bd5fbda1168166b1f9326e1555af21104f6c4d2a210f1983b591a5fc",
+    "nav2_labs/nav_room.sdf": "d57d32c1024a8675f37167d65a466d456f687b77abc8f28330928973489ec176",
+    "nav2_labs/validate_nav2.py": "ac913b3733fd6fba857a4fe6a3b18e7d286de64d5800d330df2415b0129d75de",
+    "gazebo_labs/validate_sensors.py": "e14314457e0c72608e057a6c2a1dea3c90c3e6e0efdf32bd1aa4c22e5d4990da"
+  },
+  "scene": {
+    "file": "navigation_room.sdf",
+    "sha256": "ed9503474d0beac7d98baf2910f1dedec8345c1edb1eee14ab599d29d5ccbd85",
+    "boxBoundsM": [
+      [
+        -3.6,
+        -3.4,
+        -2.6,
+        2.6
+      ],
+      [
+        3.4,
+        3.6,
+        -2.6,
+        2.6
+      ],
+      [
+        -3.6,
+        3.6,
+        2.4,
+        2.6
+      ],
+      [
+        -3.6,
+        3.6,
+        -2.6,
+        -2.4
+      ],
+      [
+        1.3499999999999999,
+        1.95,
+        1.2000000000000002,
+        1.9
+      ],
+      [
+        -0.25,
+        0.35,
+        -0.4,
+        0.4
+      ]
+    ],
+    "sensorOffsetM": [
+      0.0,
+      0.0,
+      0.21
+    ]
+  },
+  "behaviorTree": {
+    "file": "navigate_to_pose_w_replanning_and_recovery.xml",
+    "installedSha256": "5895b63840d54c6d7eee3d3b3f3ee177680af9e58a14cbf61c4df39fe5db2a90",
+    "usesDefaultGoalField": true
+  },
+  "map": {
+    "files": {
+      "learned.yaml": "b5c9a2cde8525cd61f1685b26aa2721889f473d7887cd8acfc0a94b57889bf65",
+      "learned.pgm": "becccea6107196349e72209d9783efe78a416785a1f27ed1011c50b851f04e3f",
+      "learned.occupancy": "1b6e721eeca34ac2ab21afefdd2c64598e5ae29dcada90cda044b676bd5688e7"
+    },
+    "size": [
+      137,
+      98
+    ],
+    "resolutionM": 0.05000000074505806,
+    "originM": [
+      -3.428,
+      -2.457
+    ],
+    "receivedBytes": 13426,
+    "dataSha256": "1b6e721eeca34ac2ab21afefdd2c64598e5ae29dcada90cda044b676bd5688e7",
+    "comparedRaw": true
+  },
+  "initialPose": {
+    "expectedM": [
+      -2.1,
+      -1.35
+    ],
+    "tfM": [
+      -2.0965863250862107,
+      -1.3554184744215325
+    ],
+    "positionErrorM": 0.006404142524478691
+  },
+  "stateReadRetries": [
+    {
+      "node": "controller_server",
+      "reason": "服务无回应：controller_server/get_state"
+    }
+  ],
+  "navigationTfWarmup": {
+    "mapToOdomNs": [
+      17020000000,
+      17420000000
+    ],
+    "odomToBaseNs": [
+      16620000000,
+      17120000000
+    ],
+    "sharedRangeNs": [
+      17020000000,
+      17120000000
+    ]
+  },
+  "endpointRoles": {
+    "clock": [
+      "execution_bridge"
+    ],
+    "controllerTopicPublishers": [
+      "behavior_server",
+      "behavior_server",
+      "behavior_server",
+      "controller_server"
+    ],
+    "smootherPublishers": [
+      "velocity_smoother"
+    ],
+    "simulatorCommandSubscribers": [
+      "execution_bridge",
+      "execution_probe"
+    ],
+    "global_costmap": {
+      "topic": "/navexec_6g9vfn9v/map",
+      "receivedCells": 13426,
+      "frame": "map"
+    },
+    "local_costmap": {
+      "topic": "/navexec_6g9vfn9v/scan",
+      "receivedCells": 3600,
+      "frame": "odom"
+    }
+  },
+  "limits": {
+    "positionToleranceM": 0.27,
+    "stillLinearMps": 0.018,
+    "stillAngularRadps": 0.055,
+    "stillWindowNs": 500000000
+  },
+  "traceCounts": {
+    "scans": 508,
+    "truth": 2539,
+    "odometry": 2539,
+    "wheels": 2538,
+    "controller": 565,
+    "smoothed": 944,
+    "plans": 30,
+    "status": 129,
+    "bt": 382,
+    "feedback": 2812,
+    "tf": 3001
+  },
+  "telemetry": {
+    "file": "telemetry.json",
+    "sha256": "1d5178e34e3cdedfb645ae6ba03d7147933c1ca19053e9cf8f9956072ccbf3cd"
+  }
+}

@@ -1,0 +1,892 @@
+{
+  "passed": true,
+  "output": "/tmp/ros2-nav-execution-kupivw3m",
+  "domainId": 224,
+  "discovery": "LOCALHOST",
+  "namespace": "/navexec_kupivw3m",
+  "gazeboPartition": "hub_execute_kupivw3m",
+  "versions": {
+    "gazebo": "Gazebo Sim, version 8.15.0",
+    "ros_gz_bridge": "1.0.24",
+    "nav2_map_server": "1.3.13",
+    "nav2_amcl": "1.3.13",
+    "nav2_planner": "1.3.13",
+    "nav2_navfn_planner": "1.3.13",
+    "nav2_controller": "1.3.13",
+    "nav2_regulated_pure_pursuit_controller": "1.3.13",
+    "nav2_velocity_smoother": "1.3.13",
+    "nav2_behaviors": "1.3.13",
+    "nav2_bt_navigator": "1.3.13",
+    "nav2_msgs": "1.3.13",
+    "rclpy": "7.1.12"
+  },
+  "scenarios": {
+    "arrival": {
+      "goalM": [
+        2.2,
+        0.7
+      ],
+      "goalYawRad": 0.0,
+      "sentRosNs": 14320000000,
+      "accepted": true,
+      "uuid": "8b875860d771421d852ed0c03e2dc653",
+      "resultRosNs": 28570000000,
+      "status": 4,
+      "errorCode": 0,
+      "errorMessage": "",
+      "windowEndRosNs": 29600000000,
+      "truthStop": {
+        "stillFromNs": 29100000000,
+        "stillUntilNs": 29600000000,
+        "samples": 26,
+        "maxLinearMps": 3.6213977189648694e-06,
+        "maxAngularRadps": 0.04902548570317718
+      },
+      "endM": [
+        2.1679232486979245,
+        0.6178485761018738
+      ],
+      "endYawRad": -0.050247316345064436,
+      "positionErrorM": 0.08819169134666158,
+      "yawErrorRad": 0.050247316345064436,
+      "worldTravelM": 4.93630301499259,
+      "displacementM": 4.699744340968803,
+      "minimumCenterClearanceM": 0.5535550150749637,
+      "controller": {
+        "samples": 285,
+        "nonzero": 284,
+        "firstZeroAfterMotionNs": 28540000000,
+        "maxLinearMps": 0.45,
+        "maxAngularRadps": 0.45
+      },
+      "smoothed": {
+        "samples": 449,
+        "nonzero": 447,
+        "firstZeroAfterMotionNs": 29115000000,
+        "maxLinearMps": 0.45,
+        "maxAngularRadps": 0.45
+      },
+      "wheelStopMaxRadps": 0.04135591932892958,
+      "feedbackSamples": 1424,
+      "recoveries": 0,
+      "btTransitions": 133,
+      "plans": 14,
+      "nestedResults": [
+        {
+          "action": "compute_path_to_pose",
+          "uuid": "5fe678db0f86dca8f0c0c97da774a9dd",
+          "status": 4,
+          "errorCode": 0,
+          "errorMessage": ""
+        },
+        {
+          "action": "follow_path",
+          "uuid": "ffd7eff6f6ca78a312702dc2871c0722",
+          "status": 4,
+          "errorCode": 0,
+          "errorMessage": ""
+        }
+      ]
+    },
+    "cancel": {
+      "goalM": [
+        -2.15,
+        -1.15
+      ],
+      "goalYawRad": 3.141592653589793,
+      "sentRosNs": 29605000000,
+      "accepted": true,
+      "uuid": "8ca04997a0da45218dadfc2118e1690f",
+      "cancelRequestedRosNs": 35300000000,
+      "cancelPoseM": [
+        1.8333993827539632,
+        0.3613592891446288
+      ],
+      "cancelAckRosNs": 35300000000,
+      "cancelCode": 0,
+      "cancelingIds": [
+        "8ca04997a0da45218dadfc2118e1690f"
+      ],
+      "resultRosNs": 35325000000,
+      "status": 5,
+      "errorCode": 0,
+      "errorMessage": "",
+      "windowEndRosNs": 37300000000,
+      "truthStop": {
+        "stillFromNs": 36800000000,
+        "stillUntilNs": 37300000000,
+        "samples": 26,
+        "maxLinearMps": 0.00955976274451128,
+        "maxAngularRadps": 5.196701491096365e-10
+      },
+      "endM": [
+        1.5695035131999813,
+        0.16392424989773946
+      ],
+      "endYawRad": -2.4920423205783124,
+      "positionErrorM": 3.9447564334412766,
+      "yawErrorRad": 0.6495503330114815,
+      "worldTravelM": 0.7566818293862234,
+      "displacementM": 0.7511015069571527,
+      "minimumCenterClearanceM": 0.6216034287788907,
+      "controller": {
+        "samples": 115,
+        "nonzero": 114,
+        "firstZeroAfterMotionNs": 35325000000,
+        "maxLinearMps": 0.45,
+        "maxAngularRadps": 0.7500000000000001
+      },
+      "smoothed": {
+        "samples": 218,
+        "nonzero": 216,
+        "firstZeroAfterMotionNs": 36770000000,
+        "maxLinearMps": 0.4441125435902304,
+        "maxAngularRadps": 0.7500000000000001
+      },
+      "wheelStopMaxRadps": 1.3247663903815166e-14,
+      "feedbackSamples": 570,
+      "recoveries": 0,
+      "btTransitions": 74,
+      "plans": 6,
+      "nestedResults": [
+        {
+          "action": "compute_path_to_pose",
+          "uuid": "7c447187f458bbae4e660d5666cb9745",
+          "status": 4,
+          "errorCode": 0,
+          "errorMessage": ""
+        },
+        {
+          "action": "follow_path",
+          "uuid": "476bfe9f24943313cd9e383e6fbb45f7",
+          "status": 5,
+          "errorCode": 0,
+          "errorMessage": ""
+        }
+      ],
+      "travelAfterCancelM": 0.3296053172467178
+    },
+    "outside_map": {
+      "goalM": [
+        5.0,
+        0.0
+      ],
+      "goalYawRad": 0.0,
+      "sentRosNs": 37305000000,
+      "accepted": true,
+      "uuid": "dce73360d6d1400ba3989f7cf49c5605",
+      "resultRosNs": 37335000000,
+      "status": 6,
+      "errorCode": 204,
+      "errorMessage": "",
+      "windowEndRosNs": 37840000000,
+      "truthStop": {
+        "stillFromNs": 37340000000,
+        "stillUntilNs": 37840000000,
+        "samples": 26,
+        "maxLinearMps": 3.925550064522589e-06,
+        "maxAngularRadps": 1.0654841376639276e-13
+      },
+      "endM": [
+        1.5695030539918222,
+        0.1639239012809352
+      ],
+      "endYawRad": -2.4920423205783377,
+      "positionErrorM": 3.434411207468115,
+      "yawErrorRad": 2.4920423205783377,
+      "worldTravelM": 5.765464504724514e-07,
+      "displacementM": 5.765464504724514e-07,
+      "minimumCenterClearanceM": 1.0360757501022606,
+      "controller": {
+        "samples": 0,
+        "nonzero": 0,
+        "firstZeroAfterMotionNs": null,
+        "maxLinearMps": 0.0,
+        "maxAngularRadps": 0.0
+      },
+      "smoothed": {
+        "samples": 0,
+        "nonzero": 0,
+        "firstZeroAfterMotionNs": null,
+        "maxLinearMps": 0.0,
+        "maxAngularRadps": 0.0
+      },
+      "wheelStopMaxRadps": 4.479711557762074e-15,
+      "feedbackSamples": 2,
+      "recoveries": 0,
+      "btTransitions": 14,
+      "plans": 0,
+      "nestedResults": [
+        {
+          "action": "compute_path_to_pose",
+          "uuid": "f3f59c874615b1ac1932da8399630e17",
+          "status": 6,
+          "errorCode": 204,
+          "errorMessage": ""
+        }
+      ]
+    },
+    "invalid_controller": {
+      "goalM": [
+        1.85,
+        -1.35
+      ],
+      "goalYawRad": 0.0,
+      "sentRosNs": 38045000000,
+      "accepted": true,
+      "uuid": "3070aaf538f547aab4c10516483f0219",
+      "resultRosNs": 38085000000,
+      "status": 6,
+      "errorCode": 101,
+      "errorMessage": "",
+      "windowEndRosNs": 38600000000,
+      "truthStop": {
+        "stillFromNs": 38100000000,
+        "stillUntilNs": 38600000000,
+        "samples": 26,
+        "maxLinearMps": 3.812391672630117e-06,
+        "maxAngularRadps": 3.102944892938099e-14
+      },
+      "endM": [
+        1.5695027507617787,
+        0.16392367107794856
+      ],
+      "endYawRad": -2.492042320578341,
+      "positionErrorM": 1.5396894455312544,
+      "yawErrorRad": 2.492042320578341,
+      "worldTravelM": 1.906195833561815e-07,
+      "displacementM": 1.906195833561815e-07,
+      "minimumCenterClearanceM": 1.0360762136612773,
+      "controller": {
+        "samples": 1,
+        "nonzero": 0,
+        "firstZeroAfterMotionNs": 38065000000,
+        "maxLinearMps": 0.0,
+        "maxAngularRadps": 0.0
+      },
+      "smoothed": {
+        "samples": 12,
+        "nonzero": 0,
+        "firstZeroAfterMotionNs": 38090000000,
+        "maxLinearMps": 0.0,
+        "maxAngularRadps": 0.0
+      },
+      "wheelStopMaxRadps": 1.0081905547234017e-15,
+      "feedbackSamples": 3,
+      "recoveries": 0,
+      "btTransitions": 45,
+      "plans": 1,
+      "nestedResults": [
+        {
+          "action": "compute_path_to_pose",
+          "uuid": "84d05f7ce0885e0e5704b808032573e3",
+          "status": 4,
+          "errorCode": 0,
+          "errorMessage": ""
+        },
+        {
+          "action": "follow_path",
+          "uuid": "2b07febaa5b52322fe9809caf3c43152",
+          "status": 6,
+          "errorCode": 101,
+          "errorMessage": ""
+        }
+      ]
+    },
+    "restored_controller": {
+      "goalM": [
+        1.85,
+        -1.35
+      ],
+      "goalYawRad": 0.0,
+      "sentRosNs": 38805000000,
+      "accepted": true,
+      "uuid": "b06b6e1a370b46a79323c4ec3eee8846",
+      "resultRosNs": 47405000000,
+      "status": 4,
+      "errorCode": 0,
+      "errorMessage": "",
+      "windowEndRosNs": 48440000000,
+      "truthStop": {
+        "stillFromNs": 47940000000,
+        "stillUntilNs": 48440000000,
+        "samples": 26,
+        "maxLinearMps": 8.627478240011838e-08,
+        "maxAngularRadps": 0.05362825173954074
+      },
+      "endM": [
+        1.9126309158013735,
+        -1.2147434286243315
+      ],
+      "endYawRad": 0.09758132206601862,
+      "positionErrorM": 0.14905358672108515,
+      "yawErrorRad": 0.09758132206601862,
+      "worldTravelM": 1.4297871997842055,
+      "displacementM": 1.420725135078892,
+      "minimumCenterClearanceM": 1.0360763289220516,
+      "controller": {
+        "samples": 172,
+        "nonzero": 171,
+        "firstZeroAfterMotionNs": 47375000000,
+        "maxLinearMps": 0.45,
+        "maxAngularRadps": 0.7500000000000002
+      },
+      "smoothed": {
+        "samples": 278,
+        "nonzero": 276,
+        "firstZeroAfterMotionNs": 47955000000,
+        "maxLinearMps": 0.45,
+        "maxAngularRadps": 0.7500000000000001
+      },
+      "wheelStopMaxRadps": 0.03997340970355156,
+      "feedbackSamples": 859,
+      "recoveries": 0,
+      "btTransitions": 116,
+      "plans": 9,
+      "nestedResults": [
+        {
+          "action": "compute_path_to_pose",
+          "uuid": "11a33dd658f5eadb1de13cc37410d41b",
+          "status": 4,
+          "errorCode": 0,
+          "errorMessage": ""
+        },
+        {
+          "action": "follow_path",
+          "uuid": "a654f7ed373254cac5585a5c5c70b56e",
+          "status": 4,
+          "errorCode": 0,
+          "errorMessage": ""
+        }
+      ]
+    }
+  },
+  "lifecycle": [
+    {
+      "node": "map_server",
+      "transition": 1,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "map_server",
+      "transition": 3,
+      "success": true,
+      "state": "active"
+    },
+    {
+      "node": "amcl",
+      "transition": 1,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "amcl",
+      "transition": 3,
+      "success": true,
+      "state": "active"
+    },
+    {
+      "node": "planner_server",
+      "transition": 1,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "planner_server",
+      "transition": 3,
+      "success": true,
+      "state": "active"
+    },
+    {
+      "node": "velocity_smoother",
+      "transition": 1,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "velocity_smoother",
+      "transition": 3,
+      "success": true,
+      "state": "active"
+    },
+    {
+      "node": "controller_server",
+      "transition": 1,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "controller_server",
+      "transition": 3,
+      "success": true,
+      "state": "active"
+    },
+    {
+      "node": "behavior_server",
+      "transition": 1,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "behavior_server",
+      "transition": 3,
+      "success": true,
+      "state": "active"
+    },
+    {
+      "node": "bt_navigator",
+      "transition": 1,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "bt_navigator",
+      "transition": 3,
+      "success": true,
+      "state": "active"
+    },
+    {
+      "node": "bt_navigator",
+      "transition": 4,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "bt_navigator",
+      "transition": 2,
+      "success": true,
+      "state": "unconfigured"
+    },
+    {
+      "node": "behavior_server",
+      "transition": 4,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "behavior_server",
+      "transition": 2,
+      "success": true,
+      "state": "unconfigured"
+    },
+    {
+      "node": "controller_server",
+      "transition": 4,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "controller_server",
+      "transition": 2,
+      "success": true,
+      "state": "unconfigured"
+    },
+    {
+      "node": "velocity_smoother",
+      "transition": 4,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "velocity_smoother",
+      "transition": 2,
+      "success": true,
+      "state": "unconfigured"
+    },
+    {
+      "node": "planner_server",
+      "transition": 4,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "planner_server",
+      "transition": 2,
+      "success": true,
+      "state": "unconfigured"
+    },
+    {
+      "node": "amcl",
+      "transition": 4,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "amcl",
+      "transition": 2,
+      "success": true,
+      "state": "unconfigured"
+    },
+    {
+      "node": "map_server",
+      "transition": 4,
+      "success": true,
+      "state": "inactive"
+    },
+    {
+      "node": "map_server",
+      "transition": 2,
+      "success": true,
+      "state": "unconfigured"
+    }
+  ],
+  "processes": [
+    {
+      "label": "gazebo",
+      "argv": [
+        "gz",
+        "sim",
+        "-s",
+        "-r",
+        "--headless-rendering",
+        "-v",
+        "3",
+        "/tmp/ros2-nav-execution-kupivw3m/navigation_room.sdf"
+      ],
+      "pid": 430214,
+      "logFile": "/tmp/ros2-nav-execution-kupivw3m/gazebo.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "687d61efb14aca6783210aa6799da398eee9a19536569accd06eb847cac17960",
+      "logTail": "\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mGazebo Sim Server v\u001b[0m\u001b[1;32m8.15.0\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mLoading SDF world file[\u001b[0m\u001b[1;32m/tmp/ros2-nav-execution-kupivw3m/navigation_room.sdf\u001b[0m\u001b[1;32m].\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mServing entity system service on [\u001b[0m\u001b[1;32m/\u001b[0m\u001b[1;32mentity/system/add\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mDiffDrive subscribing to twist messages on [\u001b[0m\u001b[1;32m/hub_execute/cmd\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mOdometryPublisher publishing odometry on [\u001b[0m\u001b[1;32m/hub_execute/world_pose\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mOdometryPublisher publishing odometry with covariance on [\u001b[0m\u001b[1;32m/model/nav_cart/odometry_with_covariance\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mOdometryPublisher publishing Pose_V (TF) on [\u001b[0m\u001b[1;32m/model/nav_cart/pose\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mLoaded level [\u001b[0m\u001b[1;32mdefault\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mServing world controls on [\u001b[0m\u001b[1;32m/world/hub_navigation_execution\u001b[0m\u001b[1;32m/control], [\u001b[0m\u001b[1;32m/world/hub_navigation_execution\u001b[0m\u001b[1;32m/control/state] and [\u001b[0m\u001b[1;32m/world/hub_navigation_execution\u001b[0m\u001b[1;32m/playback/control]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mServing GUI information on [\u001b[0m\u001b[1;32m/world/hub_navigation_execution\u001b[0m\u001b[1;32m/\u001b[0m\u001b[1;32mgui/info\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mWorld [\u001b[0m\u001b[1;32mhub_navigation_execution\u001b[0m\u001b[1;32m] initialized with [\u001b[0m\u001b[1;32mlab_step\u001b[0m\u001b[1;32m] physics profile.\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mServing world SDF generation service on [\u001b[0m\u001b[1;32m/world/hub_navigation_execution\u001b[0m\u001b[1;32m/\u001b[0m\u001b[1;32mgenerate_world_sdf\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mServing world names on [\u001b[0m\u001b[1;32m/gazebo/worlds\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mResource path add service on [\u001b[0m\u001b[1;32m/gazebo/resource_paths/add\u001b[0m\u001b[1;32m].\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mResource path get service on [\u001b[0m\u001b[1;32m/gazebo/resource_paths/get\u001b[0m\u001b[1;32m].\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mResource path resolve service on [\u001b[0m\u001b[1;32m/gazebo/resource_paths/resolve\u001b[0m\u001b[1;32m].\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mResource paths published on [\u001b[0m\u001b[1;32m/gazebo/resource_paths\u001b[0m\u001b[1;32m].\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mServer control service on [\u001b[0m\u001b[1;32m/server_control\u001b[0m\u001b[1;32m].\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mFound no publishers on /stats, adding root stats topic\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mFound no publishers on /clock, adding root clock topic\u001b[0m\u001b[1;32m\u001b[0m\n\u001b[1;32m[Msg] \u001b[0m\u001b[1;32mLoading plugin [\u001b[0m\u001b[1;32mgz-rendering-ogre2\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m\n"
+    },
+    {
+      "label": "bridge",
+      "argv": [
+        "/opt/ros/jazzy/lib/ros_gz_bridge/parameter_bridge",
+        "--ros-args",
+        "-r",
+        "__ns:=/navexec_kupivw3m",
+        "-r",
+        "__node:=execution_bridge",
+        "-p",
+        "config_file:=/tmp/ros2-nav-execution-portable-JOQZlsaK/atlas_examples/nav2_execution/bridge.yaml",
+        "-p",
+        "override_timestamps_with_wall_time:=false"
+      ],
+      "pid": 430215,
+      "logFile": "/tmp/ros2-nav-execution-kupivw3m/bridge.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "f2d6a74bb9d1d7fb4c708ab3b89557d74b368ae3b1770fd09c7e5678879e614e",
+      "logTail": "[INFO] [1794050425.094883198] [navexec_kupivw3m.execution_bridge]: Creating GZ->ROS Bridge: [/world/hub_navigation_execution/clock (gz.msgs.Clock) -> /clock (rosgraph_msgs/msg/Clock)] (Lazy 0)\n[INFO] [1794050425.095708161] [navexec_kupivw3m.execution_bridge]: Creating GZ->ROS Bridge: [/hub_execute/scan (gz.msgs.LaserScan) -> scan (sensor_msgs/msg/LaserScan)] (Lazy 0)\n[INFO] [1794050425.096782752] [navexec_kupivw3m.execution_bridge]: Creating GZ->ROS Bridge: [/hub_execute/wheel_odom (gz.msgs.Odometry) -> odom (nav_msgs/msg/Odometry)] (Lazy 0)\n[INFO] [1794050425.097593265] [navexec_kupivw3m.execution_bridge]: Creating GZ->ROS Bridge: [/hub_execute/wheel_tf (gz.msgs.Pose_V) -> /tf (tf2_msgs/msg/TFMessage)] (Lazy 0)\n[INFO] [1794050425.098267389] [navexec_kupivw3m.execution_bridge]: Creating GZ->ROS Bridge: [/hub_execute/world_pose (gz.msgs.Odometry) -> world_pose (nav_msgs/msg/Odometry)] (Lazy 0)\n[INFO] [1794050425.098430138] [navexec_kupivw3m.execution_bridge]: Creating GZ->ROS Bridge: [/hub_execute/joints (gz.msgs.Model) -> wheel_joints (sensor_msgs/msg/JointState)] (Lazy 0)\n[INFO] [1794050425.098602416] [navexec_kupivw3m.execution_bridge]: Creating ROS->GZ Bridge: [cmd_vel_smoothed (geometry_msgs/msg/Twist) -> /hub_execute/cmd (gz.msgs.Twist)] (Lazy 0)\n[INFO] [1794050440.604522168] [navexec_kupivw3m.execution_bridge]: Passing message from ROS geometry_msgs/msg/Twist to Gazebo gz.msgs.Twist (showing msg only once per type)\n[INFO] [1794050475.792563061] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n"
+    },
+    {
+      "label": "map_server",
+      "argv": [
+        "/opt/ros/jazzy/lib/nav2_map_server/map_server",
+        "--ros-args",
+        "-r",
+        "__ns:=/navexec_kupivw3m",
+        "--params-file",
+        "/tmp/ros2-nav-execution-portable-JOQZlsaK/atlas_examples/nav2_execution/navigation.yaml",
+        "-p",
+        "yaml_filename:=/tmp/ros2-nav-execution-portable-JOQZlsaK/validation-evidence/slam-mapping-captures/learned.yaml"
+      ],
+      "pid": 430326,
+      "logFile": "/tmp/ros2-nav-execution-kupivw3m/map_server.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "d38b3a7c5fa2532aa896149439da9eb5af5f81444e706b49c471bc37da101fa5",
+      "logTail": "[INFO] [1794050426.500920649] [navexec_kupivw3m.map_server]: \n\tmap_server lifecycle node launched. \n\tWaiting on external lifecycle transitions to activate\n\tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[INFO] [1794050426.500966218] [navexec_kupivw3m.map_server]: Creating\n[INFO] [1794050426.686912635] [navexec_kupivw3m.map_server]: Configuring\n[INFO] [1794050426.686958414] [map_io]: Loading yaml file: /tmp/ros2-nav-execution-portable-JOQZlsaK/validation-evidence/slam-mapping-captures/learned.yaml\n[INFO] [1794050426.687097823] [map_io]: resolution: 0.05\n[INFO] [1794050426.687101793] [map_io]: origin[0]: -3.428\n[INFO] [1794050426.687105513] [map_io]: origin[1]: -2.457\n[INFO] [1794050426.687107253] [map_io]: origin[2]: 0\n[INFO] [1794050426.687109133] [map_io]: free_thresh: 0.196\n[INFO] [1794050426.687110643] [map_io]: occupied_thresh: 0.65\n[INFO] [1794050426.687113023] [map_io]: mode: trinary\n[INFO] [1794050426.687115393] [map_io]: negate: 0\n[INFO] [1794050426.687196732] [map_io]: Loading image_file: /tmp/ros2-nav-execution-portable-JOQZlsaK/validation-evidence/slam-mapping-captures/learned.pgm\n[INFO] [1794050426.687380541] [map_io]: Read map /tmp/ros2-nav-execution-portable-JOQZlsaK/validation-evidence/slam-mapping-captures/learned.pgm: 137 X 98 map @ 0.05 m/cell\n[INFO] [1794050426.690796642] [navexec_kupivw3m.map_server]: Activating\n[INFO] [1794050426.690845761] [navexec_kupivw3m.map_server]: Creating bond (map_server) to lifecycle manager.\n[INFO] [1794050426.692524547] [navexec_kupivw3m.map_server]: Handling GetMap request\n[INFO] [1794050474.980856814] [navexec_kupivw3m.map_server]: Deactivating\n[INFO] [1794050474.980877434] [navexec_kupivw3m.map_server]: Destroying bond (map_server) to lifecycle manager.\n[INFO] [1794050474.992456604] [navexec_kupivw3m.map_server]: Cleaning up\n[INFO] [1794050475.679051291] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[INFO] [1794050475.679101891] [navexec_kupivw3m.map_server]: Running Nav2 LifecycleNode rcl preshutdown (map_server)\n[INFO] [1794050475.679118491] [navexec_kupivw3m.map_server]: Destroying bond (map_server) to lifecycle manager.\n[INFO] [1794050475.679519698] [navexec_kupivw3m.map_server]: Destroying\n"
+    },
+    {
+      "label": "amcl",
+      "argv": [
+        "/opt/ros/jazzy/lib/nav2_amcl/amcl",
+        "--ros-args",
+        "-r",
+        "__ns:=/navexec_kupivw3m",
+        "--params-file",
+        "/tmp/ros2-nav-execution-portable-JOQZlsaK/atlas_examples/nav2_execution/navigation.yaml"
+      ],
+      "pid": 430341,
+      "logFile": "/tmp/ros2-nav-execution-kupivw3m/amcl.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "79f695593cbf536f59d7da901a82be658c98e2502b4ec7581e68c3a96ea9ea3b",
+      "logTail": "[INFO] [1794050426.711898842] [navexec_kupivw3m.amcl]: \n\tamcl lifecycle node launched. \n\tWaiting on external lifecycle transitions to activate\n\tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[INFO] [1794050426.712048571] [navexec_kupivw3m.amcl]: Creating\n[INFO] [1794050426.897834888] [navexec_kupivw3m.amcl]: Configuring\n[INFO] [1794050426.897871498] [navexec_kupivw3m.amcl]: initTransforms\n[INFO] [1794050426.900216298] [navexec_kupivw3m.amcl]: initPubSub\n[INFO] [1794050426.903247622] [navexec_kupivw3m.amcl]: Subscribed to map topic.\n[INFO] [1794050426.905036187] [navexec_kupivw3m.amcl]: Activating\n[INFO] [1794050426.905049327] [navexec_kupivw3m.amcl]: Creating bond (amcl) to lifecycle manager.\n[INFO] [1794050426.906827022] [navexec_kupivw3m.amcl]: initialPoseReceived\n[INFO] [1794050426.906878852] [navexec_kupivw3m.amcl]: Setting pose (0.665000): -2.100 -1.350 0.000\n[INFO] [1794050427.056042992] [navexec_kupivw3m.amcl]: Received a 137 X 98 map @ 0.050 m/pix\n[INFO] [1794050427.141309677] [navexec_kupivw3m.amcl]: createLaserObject\n[INFO] [1794050474.966426336] [navexec_kupivw3m.amcl]: Deactivating\n[INFO] [1794050474.966449366] [navexec_kupivw3m.amcl]: Destroying bond (amcl) to lifecycle manager.\n[INFO] [1794050474.978176405] [navexec_kupivw3m.amcl]: Cleaning up\n[INFO] [1794050475.565539451] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[INFO] [1794050475.565574451] [navexec_kupivw3m.amcl]: Running Nav2 LifecycleNode rcl preshutdown (amcl)\n[INFO] [1794050475.565591181] [navexec_kupivw3m.amcl]: Destroying bond (amcl) to lifecycle manager.\n[INFO] [1794050475.565835069] [navexec_kupivw3m.amcl]: Destroying\n"
+    },
+    {
+      "label": "planner_server",
+      "argv": [
+        "/opt/ros/jazzy/lib/nav2_planner/planner_server",
+        "--ros-args",
+        "-r",
+        "__ns:=/navexec_kupivw3m",
+        "--params-file",
+        "/tmp/ros2-nav-execution-portable-JOQZlsaK/atlas_examples/nav2_execution/navigation.yaml",
+        "-r",
+        "global_costmap:map:=/navexec_kupivw3m/map"
+      ],
+      "pid": 430358,
+      "logFile": "/tmp/ros2-nav-execution-kupivw3m/planner_server.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "c4813a72c15b8443a34d58bf18622d966afc80a7271f6d275f110861418cbef5",
+      "logTail": "[INFO] [1794050427.481818273] [navexec_kupivw3m.planner_server]: \n\tplanner_server lifecycle node launched. \n\tWaiting on external lifecycle transitions to activate\n\tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[INFO] [1794050427.482263219] [navexec_kupivw3m.planner_server]: Creating\n[INFO] [1794050427.484228572] [navexec_kupivw3m.global_costmap.global_costmap]: \n\tglobal_costmap lifecycle node launched. \n\tWaiting on external lifecycle transitions to activate\n\tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[INFO] [1794050427.484382211] [navexec_kupivw3m.global_costmap.global_costmap]: Creating Costmap\n[INFO] [1794050428.032337204] [navexec_kupivw3m.planner_server]: Configuring\n[INFO] [1794050428.032361214] [navexec_kupivw3m.global_costmap.global_costmap]: Configuring\n[INFO] [1794050428.034940852] [navexec_kupivw3m.global_costmap.global_costmap]: Using plugin \"static_layer\"\n[INFO] [1794050428.036783496] [navexec_kupivw3m.global_costmap.global_costmap]: Subscribing to the map topic (map) with transient local durability\n[INFO] [1794050428.037519920] [navexec_kupivw3m.global_costmap.global_costmap]: Initialized plugin \"static_layer\"\n[INFO] [1794050428.037532050] [navexec_kupivw3m.global_costmap.global_costmap]: Using plugin \"inflation_layer\"\n[INFO] [1794050428.037664599] [navexec_kupivw3m.global_costmap.global_costmap]: Initialized plugin \"inflation_layer\"\n[INFO] [1794050428.044272123] [navexec_kupivw3m.planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner::NavfnPlanner\n[INFO] [1794050428.044295953] [navexec_kupivw3m.planner_server]: Configuring plugin GridBased of type NavfnPlanner\n[INFO] [1794050428.044397132] [navexec_kupivw3m.planner_server]: Planner Server has GridBased  planners available.\n[INFO] [1794050428.047652804] [navexec_kupivw3m.global_costmap.global_costmap]: StaticLayer: Resizing costmap to 137 X 98 at 0.050000 m/pix\n[INFO] [1794050428.048034311] [navexec_kupivw3m.planner_server]: Activating\n[INFO] [1794050428.048048791] [navexec_kupivw3m.global_costmap.global_costmap]: Activating\n[INFO] [1794050428.048051771] [navexec_kupivw3m.global_costmap.global_costmap]: Checking transform\n[INFO] [1794050428.048080490] [navexec_kupivw3m.global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Lookup would require extrapolation at time 1.800000, but only time 2.120000 is in the buffer, when looking up transform from frame [base_link] to frame [map]\n[INFO] [1794050428.548171548] [navexec_kupivw3m.global_costmap.global_costmap]: start\n[INFO] [1794050428.598284452] [navexec_kupivw3m.planner_server]: Activating plugin GridBased of type NavfnPlanner\n[INFO] [1794050428.598773918] [navexec_kupivw3m.planner_server]: Creating bond (planner_server) to lifecycle manager.\n[WARN] [1794050463.547282206] [navexec_kupivw3m.planner_server]: GridBased plugin failed to plan from (1.51, 0.15) to (5.00, 0.00): \"Goal Coordinates of(5.000000, 0.000000) was outside bounds\"\n[WARN] [1794050463.547325176] [navexec_kupivw3m.planner_server]: [compute_path_to_pose] [ActionServer] Aborting handle.\n[INFO] [1794050474.850136219] [navexec_kupivw3m.planner_server]: Deactivating\n[INFO] [1794050474.850162299] [navexec_kupivw3m.global_costmap.global_costmap]: Deactivating\n[INFO] [1794050474.948289437] [navexec_kupivw3m.planner_server]: Deactivating plugin GridBased of type NavfnPlanner\n[INFO] [1794050474.948319696] [navexec_kupivw3m.planner_server]: Destroying bond (planner_server) to lifecycle manager.\n[INFO] [1794050474.960173975] [navexec_kupivw3m.planner_server]: Cleaning up\n[INFO] [1794050474.962251698] [navexec_kupivw3m.global_costmap.global_costmap]: Cleaning up\n[INFO] [1794050474.963038712] [navexec_kupivw3m.planner_server]: Cleaning up plugin GridBased of type NavfnPlanner\n[INFO] [1794050474.963067322] [navexec_kupivw3m.planner_server]: Destroying plugin GridBased of type NavfnPlanner\n[INFO] [1794050475.452067941] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[INFO] [1794050475.452106821] [navexec_kupivw3m.planner_server]: Running Nav2 LifecycleNode rcl preshutdown (planner_server)\n[INFO] [1794050475.452130060] [navexec_kupivw3m.planner_server]: Destroying bond (planner_server) to lifecycle manager.\n[INFO] [1794050475.453094103] [navexec_kupivw3m.global_costmap.global_costmap]: Destroying\n[INFO] [1794050475.454886989] [navexec_kupivw3m.planner_server]: Destroying\n"
+    },
+    {
+      "label": "velocity_smoother",
+      "argv": [
+        "/opt/ros/jazzy/lib/nav2_velocity_smoother/velocity_smoother",
+        "--ros-args",
+        "-r",
+        "__ns:=/navexec_kupivw3m",
+        "--params-file",
+        "/tmp/ros2-nav-execution-portable-JOQZlsaK/atlas_examples/nav2_execution/navigation.yaml"
+      ],
+      "pid": 430381,
+      "logFile": "/tmp/ros2-nav-execution-kupivw3m/velocity_smoother.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "98a519f4ae17357a8d0c19255b3ee93b4e4968b35d93db7c7b7abb3f996126c8",
+      "logTail": "[INFO] [1794050428.620714632] [navexec_kupivw3m.velocity_smoother]: \n\tvelocity_smoother lifecycle node launched. \n\tWaiting on external lifecycle transitions to activate\n\tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[INFO] [1794050430.833453733] [navexec_kupivw3m.velocity_smoother]: Configuring velocity smoother\n[INFO] [1794050430.836303129] [navexec_kupivw3m.velocity_smoother]: Activating\n[INFO] [1794050430.836338629] [navexec_kupivw3m.velocity_smoother]: Creating bond (velocity_smoother) to lifecycle manager.\n[INFO] [1794050474.836924752] [navexec_kupivw3m.velocity_smoother]: Deactivating\n[INFO] [1794050474.836961331] [navexec_kupivw3m.velocity_smoother]: Destroying bond (velocity_smoother) to lifecycle manager.\n[INFO] [1794050474.848539862] [navexec_kupivw3m.velocity_smoother]: Cleaning up\n[INFO] [1794050475.338549901] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[INFO] [1794050475.338593860] [navexec_kupivw3m.velocity_smoother]: Running Nav2 LifecycleNode rcl preshutdown (velocity_smoother)\n[INFO] [1794050475.338610390] [navexec_kupivw3m.velocity_smoother]: Destroying bond (velocity_smoother) to lifecycle manager.\n[INFO] [1794050475.338827179] [navexec_kupivw3m.velocity_smoother]: Destroying\n"
+    },
+    {
+      "label": "controller_server",
+      "argv": [
+        "/opt/ros/jazzy/lib/nav2_controller/controller_server",
+        "--ros-args",
+        "-r",
+        "__ns:=/navexec_kupivw3m",
+        "--params-file",
+        "/tmp/ros2-nav-execution-portable-JOQZlsaK/atlas_examples/nav2_execution/navigation.yaml",
+        "-r",
+        "local_costmap:scan:=/navexec_kupivw3m/scan"
+      ],
+      "pid": 430435,
+      "logFile": "/tmp/ros2-nav-execution-kupivw3m/controller_server.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "13ff77eba6a582cc74def38c6f42f7f843778433a92e9cc86c2c0873658eb143",
+      "logTail": "3m.controller_server]: Passing new path to controller.\n[INFO] [1794050443.682537100] [navexec_kupivw3m.controller_server]: Passing new path to controller.\n[INFO] [1794050444.732540877] [navexec_kupivw3m.controller_server]: Passing new path to controller.\n[INFO] [1794050445.732540801] [navexec_kupivw3m.controller_server]: Passing new path to controller.\n[INFO] [1794050446.782536831] [navexec_kupivw3m.controller_server]: Passing new path to controller.\n[INFO] [1794050447.782536288] [navexec_kupivw3m.controller_server]: Passing new path to controller.\n[INFO] [1794050448.832536732] [navexec_kupivw3m.controller_server]: Passing new path to controller.\n[INFO] [1794050449.832541091] [navexec_kupivw3m.controller_server]: Passing new path to controller.\n[INFO] [1794050450.882537049] [navexec_kupivw3m.controller_server]: Passing new path to controller.\n[INFO] [1794050451.882536820] [navexec_kupivw3m.controller_server]: Passing new path to controller.\n[INFO] [1794050452.932537221] [navexec_kupivw3m.controller_server]: Passing new path to controller.\n[INFO] [1794050453.932536244] [navexec_kupivw3m.controller_server]: Passing new path to controller.\n[INFO] [1794050454.782549083] [navexec_kupivw3m.controller_server]: Reached the goal!\n[INFO] [1794050455.866927655] [navexec_kupivw3m.controller_server]: Received a goal, begin computing control effort.\n[INFO] [1794050456.917015820] [navexec_kupivw3m.controller_server]: Passing new path to controller.\n[INFO] [1794050457.967016113] [navexec_kupivw3m.controller_server]: Passing new path to controller.\n[INFO] [1794050458.967016344] [navexec_kupivw3m.controller_server]: Passing new path to controller.\n[INFO] [1794050460.017015761] [navexec_kupivw3m.controller_server]: Passing new path to controller.\n[INFO] [1794050461.017016613] [navexec_kupivw3m.controller_server]: Passing new path to controller.\n[INFO] [1794050461.567017163] [navexec_kupivw3m.controller_server]: Cancellation was successful. Stopping the robot.\n[INFO] [1794050461.567040133] [navexec_kupivw3m.controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.\n[INFO] [1794050464.306147581] [navexec_kupivw3m.controller_server]: Received a goal, begin computing control effort.\n[ERROR] [1794050464.306177171] [navexec_kupivw3m.controller_server]: FollowPath called with controller name unknown_controller_for_lab, which does not exist. Available controllers are: FollowPath .\n[ERROR] [1794050464.306199691] [navexec_kupivw3m.controller_server]: Failed to find controller name: unknown_controller_for_lab\n[WARN] [1794050464.306224521] [navexec_kupivw3m.controller_server]: [follow_path] [ActionServer] Aborting handle.\n[INFO] [1794050465.066051906] [navexec_kupivw3m.controller_server]: Received a goal, begin computing control effort.\n[INFO] [1794050466.116141700] [navexec_kupivw3m.controller_server]: Passing new path to controller.\n[INFO] [1794050467.116141295] [navexec_kupivw3m.controller_server]: Passing new path to controller.\n[INFO] [1794050468.166142052] [navexec_kupivw3m.controller_server]: Passing new path to controller.\n[INFO] [1794050469.166141448] [navexec_kupivw3m.controller_server]: Passing new path to controller.\n[INFO] [1794050470.216141717] [navexec_kupivw3m.controller_server]: Passing new path to controller.\n[INFO] [1794050471.216142174] [navexec_kupivw3m.controller_server]: Passing new path to controller.\n[INFO] [1794050472.266142255] [navexec_kupivw3m.controller_server]: Passing new path to controller.\n[INFO] [1794050473.266145393] [navexec_kupivw3m.controller_server]: Passing new path to controller.\n[INFO] [1794050473.616153689] [navexec_kupivw3m.controller_server]: Reached the goal!\n[INFO] [1794050474.721785836] [navexec_kupivw3m.controller_server]: Deactivating\n[INFO] [1794050474.721807646] [navexec_kupivw3m.controller_server]: Deactivating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController\n[INFO] [1794050474.721816816] [navexec_kupivw3m.local_costmap.local_costmap]: Deactivating\n[INFO] [1794050474.819164450] [navexec_kupivw3m.controller_server]: Destroying bond (controller_server) to lifecycle manager.\n[INFO] [1794050474.831009708] [navexec_kupivw3m.controller_server]: Cleaning up\n[INFO] [1794050474.831023497] [navexec_kupivw3m.controller_server]: Cleaning up controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController\n[INFO] [1794050474.831655673] [navexec_kupivw3m.local_costmap.local_costmap]: Cleaning up\n[INFO] [1794050475.225109650] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[INFO] [1794050475.225153930] [navexec_kupivw3m.controller_server]: Running Nav2 LifecycleNode rcl preshutdown (controller_server)\n[INFO] [1794050475.225173370] [navexec_kupivw3m.controller_server]: Destroying bond (controller_server) to lifecycle manager.\n[INFO] [1794050475.226019243] [navexec_kupivw3m.local_costmap.local_costmap]: Destroying\n[INFO] [1794050475.227566141] [navexec_kupivw3m.controller_server]: Destroying\n"
+    },
+    {
+      "label": "behavior_server",
+      "argv": [
+        "/opt/ros/jazzy/lib/nav2_behaviors/behavior_server",
+        "--ros-args",
+        "-r",
+        "__ns:=/navexec_kupivw3m",
+        "--params-file",
+        "/tmp/ros2-nav-execution-portable-JOQZlsaK/atlas_examples/nav2_execution/navigation.yaml"
+      ],
+      "pid": 430467,
+      "logFile": "/tmp/ros2-nav-execution-kupivw3m/behavior_server.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "3dce4d41013e6a93cbbb021f4ef7ea4f10ab12e866e2362d5c42cc9544b26109",
+      "logTail": "[INFO] [1794050434.745856074] [navexec_kupivw3m.behavior_server]: \n\tbehavior_server lifecycle node launched. \n\tWaiting on external lifecycle transitions to activate\n\tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[INFO] [1794050437.098126299] [navexec_kupivw3m.behavior_server]: Configuring\n[INFO] [1794050437.099976234] [navexec_kupivw3m.behavior_server]: Creating behavior plugin spin of type nav2_behaviors::Spin\n[INFO] [1794050437.100549869] [navexec_kupivw3m.behavior_server]: Creating behavior plugin backup of type nav2_behaviors::BackUp\n[INFO] [1794050437.100991465] [navexec_kupivw3m.behavior_server]: Creating behavior plugin wait of type nav2_behaviors::Wait\n[INFO] [1794050437.105335649] [navexec_kupivw3m.behavior_server]: Configuring spin\n[INFO] [1794050437.107348612] [navexec_kupivw3m.behavior_server]: Configuring backup\n[INFO] [1794050437.108237125] [navexec_kupivw3m.behavior_server]: Configuring wait\n[INFO] [1794050437.110886253] [navexec_kupivw3m.behavior_server]: Activating\n[INFO] [1794050437.110900752] [navexec_kupivw3m.behavior_server]: Activating spin\n[INFO] [1794050437.110904802] [navexec_kupivw3m.behavior_server]: Activating backup\n[INFO] [1794050437.110907652] [navexec_kupivw3m.behavior_server]: Activating wait\n[INFO] [1794050437.110912072] [navexec_kupivw3m.behavior_server]: Creating bond (behavior_server) to lifecycle manager.\n[INFO] [1794050474.705839020] [navexec_kupivw3m.behavior_server]: Deactivating\n[INFO] [1794050474.705866700] [navexec_kupivw3m.behavior_server]: Destroying bond (behavior_server) to lifecycle manager.\n[INFO] [1794050474.717592029] [navexec_kupivw3m.behavior_server]: Cleaning up\n[INFO] [1794050475.111598850] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[INFO] [1794050475.111628510] [navexec_kupivw3m.behavior_server]: Running Nav2 LifecycleNode rcl preshutdown (behavior_server)\n[INFO] [1794050475.111645200] [navexec_kupivw3m.behavior_server]: Destroying bond (behavior_server) to lifecycle manager.\n[INFO] [1794050475.111866148] [navexec_kupivw3m.behavior_server]: Destroying\n"
+    },
+    {
+      "label": "bt_navigator",
+      "argv": [
+        "/opt/ros/jazzy/lib/nav2_bt_navigator/bt_navigator",
+        "--ros-args",
+        "-r",
+        "__ns:=/navexec_kupivw3m",
+        "--params-file",
+        "/tmp/ros2-nav-execution-portable-JOQZlsaK/atlas_examples/nav2_execution/navigation.yaml",
+        "-p",
+        "default_nav_to_pose_bt_xml:=/opt/ros/jazzy/share/nav2_bt_navigator/behavior_trees/navigate_to_pose_w_replanning_and_recovery.xml"
+      ],
+      "pid": 430484,
+      "logFile": "/tmp/ros2-nav-execution-kupivw3m/bt_navigator.log",
+      "signals": [
+        "SIGINT"
+      ],
+      "returnCode": 0,
+      "pidGone": true,
+      "logSha256": "dd1323d7ec7799a3de1702e8dde79e4fd5e07be208866dd714f8054e39eaf617",
+      "logTail": "[INFO] [1794050437.135891244] [navexec_kupivw3m.bt_navigator]: \n\tbt_navigator lifecycle node launched. \n\tWaiting on external lifecycle transitions to activate\n\tSee https://design.ros2.org/articles/node_lifecycle.html for more information.\n[INFO] [1794050437.136434469] [navexec_kupivw3m.bt_navigator]: Creating\n[INFO] [1794050440.097535801] [navexec_kupivw3m.bt_navigator]: Configuring\n[INFO] [1794050440.100487117] [navexec_kupivw3m.bt_navigator]: Creating navigator id navigate_to_pose of type nav2_bt_navigator::NavigateToPoseNavigator\n[WARN] [1794050440.102670569] [navexec_kupivw3m.bt_navigator]: Error_code parameters were not set. Using default values of: follow_path_error_code compute_path_error_code\nMake sure these match your BT and there are not other sources of error codes youreported to your application\n[INFO] [1794050440.131086083] [navexec_kupivw3m.bt_navigator]: Activating\n[INFO] [1794050440.140050239] [navexec_kupivw3m.bt_navigator]: Creating bond (bt_navigator) to lifecycle manager.\n[INFO] [1794050440.561846282] [navexec_kupivw3m.bt_navigator]: Begin navigating from current location (-2.10, -1.36) to (2.20, 0.70)\n[INFO] [1794050454.812048225] [navexec_kupivw3m.bt_navigator]: Goal succeeded\n[INFO] [1794050455.846520309] [navexec_kupivw3m.bt_navigator]: Begin navigating from current location (2.12, 0.58) to (-2.15, -1.15)\n[ERROR] [1794050461.566859945] [navexec_kupivw3m.bt_navigator_navigate_to_pose_rclcpp_node]: Failed to get result for follow_path in node halt!\n[INFO] [1794050461.566920684] [navexec_kupivw3m.bt_navigator]: [navigate_to_pose] [ActionServer] Client requested to cancel the goal. Cancelling.\n[INFO] [1794050461.566965324] [navexec_kupivw3m.bt_navigator]: Goal canceled\n[INFO] [1794050463.546903139] [navexec_kupivw3m.bt_navigator]: Begin navigating from current location (1.51, 0.15) to (5.00, 0.00)\n[WARN] [1794050463.577023400] [navexec_kupivw3m.bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.\n[ERROR] [1794050463.577094640] [navexec_kupivw3m.bt_navigator]: Goal failed\n[INFO] [1794050464.285780023] [navexec_kupivw3m.bt_navigator]: Begin navigating from current location (1.51, 0.15) to (1.85, -1.35)\n[WARN] [1794050464.325921675] [navexec_kupivw3m.bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.\n[ERROR] [1794050464.325974474] [navexec_kupivw3m.bt_navigator]: Goal failed\n[INFO] [1794050465.045684547] [navexec_kupivw3m.bt_navigator]: Begin navigating from current location (1.51, 0.15) to (1.85, -1.35)\n[INFO] [1794050473.645835478] [navexec_kupivw3m.bt_navigator]: Goal succeeded\n[INFO] [1794050474.684056079] [navexec_kupivw3m.bt_navigator]: Deactivating\n[INFO] [1794050474.684087439] [navexec_kupivw3m.bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.\n[INFO] [1794050474.696059386] [navexec_kupivw3m.bt_navigator]: Cleaning up\n[INFO] [1794050474.704523640] [navexec_kupivw3m.bt_navigator]: Completed Cleaning up\n[INFO] [1794050474.998041890] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[INFO] [1794050474.998071340] [navexec_kupivw3m.bt_navigator]: Running Nav2 LifecycleNode rcl preshutdown (bt_navigator)\n[INFO] [1794050474.998085350] [navexec_kupivw3m.bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.\n[INFO] [1794050474.998433567] [navexec_kupivw3m.bt_navigator]: Destroying\n"
+    }
+  ],
+  "sourceHashes": {
+    "nav2_execution/validate_execution.py": "9a632ae299fda065ed20a7c89477b38303199b393571241fa944a9c09129a2aa",
+    "nav2_execution/mobile_base.sdf": "38f850ee69d96e016a3803067dcbb6bb9b0de773671f3b604c24875810dffdbe",
+    "nav2_execution/bridge.yaml": "833a79f9d5c16c1a9f6c54b5b9d34a2d59aab4a77d4350cb513c21ff1bc6d339",
+    "nav2_execution/navigation.yaml": "4196c243bd5fbda1168166b1f9326e1555af21104f6c4d2a210f1983b591a5fc",
+    "nav2_labs/nav_room.sdf": "d57d32c1024a8675f37167d65a466d456f687b77abc8f28330928973489ec176",
+    "nav2_labs/validate_nav2.py": "ac913b3733fd6fba857a4fe6a3b18e7d286de64d5800d330df2415b0129d75de",
+    "gazebo_labs/validate_sensors.py": "e14314457e0c72608e057a6c2a1dea3c90c3e6e0efdf32bd1aa4c22e5d4990da"
+  },
+  "scene": {
+    "file": "navigation_room.sdf",
+    "sha256": "ed9503474d0beac7d98baf2910f1dedec8345c1edb1eee14ab599d29d5ccbd85",
+    "boxBoundsM": [
+      [
+        -3.6,
+        -3.4,
+        -2.6,
+        2.6
+      ],
+      [
+        3.4,
+        3.6,
+        -2.6,
+        2.6
+      ],
+      [
+        -3.6,
+        3.6,
+        2.4,
+        2.6
+      ],
+      [
+        -3.6,
+        3.6,
+        -2.6,
+        -2.4
+      ],
+      [
+        1.3499999999999999,
+        1.95,
+        1.2000000000000002,
+        1.9
+      ],
+      [
+        -0.25,
+        0.35,
+        -0.4,
+        0.4
+      ]
+    ],
+    "sensorOffsetM": [
+      0.0,
+      0.0,
+      0.21
+    ]
+  },
+  "behaviorTree": {
+    "file": "navigate_to_pose_w_replanning_and_recovery.xml",
+    "installedSha256": "5895b63840d54c6d7eee3d3b3f3ee177680af9e58a14cbf61c4df39fe5db2a90",
+    "usesDefaultGoalField": true
+  },
+  "map": {
+    "files": {
+      "learned.yaml": "b5c9a2cde8525cd61f1685b26aa2721889f473d7887cd8acfc0a94b57889bf65",
+      "learned.pgm": "becccea6107196349e72209d9783efe78a416785a1f27ed1011c50b851f04e3f",
+      "learned.occupancy": "1b6e721eeca34ac2ab21afefdd2c64598e5ae29dcada90cda044b676bd5688e7"
+    },
+    "size": [
+      137,
+      98
+    ],
+    "resolutionM": 0.05000000074505806,
+    "originM": [
+      -3.428,
+      -2.457
+    ],
+    "receivedBytes": 13426,
+    "dataSha256": "1b6e721eeca34ac2ab21afefdd2c64598e5ae29dcada90cda044b676bd5688e7",
+    "comparedRaw": true
+  },
+  "initialPose": {
+    "expectedM": [
+      -2.1,
+      -1.35
+    ],
+    "tfM": [
+      -2.0965863250862107,
+      -1.3554184744215325
+    ],
+    "positionErrorM": 0.006404142524478691
+  },
+  "navigationTfWarmup": {
+    "mapToOdomNs": [
+      14220000000,
+      14620000000
+    ],
+    "odomToBaseNs": [
+      13920000000,
+      14320000000
+    ],
+    "sharedRangeNs": [
+      14220000000,
+      14320000000
+    ]
+  },
+  "endpointRoles": {
+    "clock": [
+      "execution_bridge"
+    ],
+    "controllerTopicPublishers": [
+      "behavior_server",
+      "behavior_server",
+      "behavior_server",
+      "controller_server"
+    ],
+    "smootherPublishers": [
+      "velocity_smoother"
+    ],
+    "simulatorCommandSubscribers": [
+      "execution_bridge",
+      "execution_probe"
+    ],
+    "global_costmap": {
+      "topic": "/navexec_kupivw3m/map",
+      "receivedCells": 13426,
+      "frame": "map"
+    },
+    "local_costmap": {
+      "topic": "/navexec_kupivw3m/scan",
+      "receivedCells": 3600,
+      "frame": "odom"
+    }
+  },
+  "limits": {
+    "positionToleranceM": 0.27,
+    "stillLinearMps": 0.018,
+    "stillAngularRadps": 0.055,
+    "stillWindowNs": 500000000
+  },
+  "traceCounts": {
+    "scans": 485,
+    "truth": 2402,
+    "odometry": 2402,
+    "wheels": 2395,
+    "controller": 573,
+    "smoothed": 957,
+    "plans": 30,
+    "status": 129,
+    "bt": 382,
+    "feedback": 2858,
+    "tf": 2898
+  },
+  "telemetry": {
+    "file": "telemetry.json",
+    "sha256": "1b7f032d52d177b4184c132ed22d1889022dd98cf9b07674bb9d01505c4e39d0"
+  },
+  "sourceArchive": {
+    "sha256": "b034684ca09ccf3b58d7a48089f40b0fe53868029dba9855f501a2158273ef44",
+    "files": 120,
+    "verifiedSourceFiles": 7,
+    "verifiedMapFiles": 3
+  }
+}

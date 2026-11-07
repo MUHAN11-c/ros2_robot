@@ -1,0 +1,138 @@
+{
+  "checkedAt": "2026-11-07",
+  "status": "全部已报告的内容缺陷均已修订并复核；未运行的完整环境保留为验证边界",
+  "findingCount": 12,
+  "resolutions": [
+    {
+      "findingIds": [
+        "APPLIED-NAV-001",
+        "review-nav2-cancel-wait"
+      ],
+      "status": "resolved",
+      "changedFile": "examples/navigation/bounded_navigation.py",
+      "change": "两个章节通过navigation-revision共用完整异步源码；发现、接受、执行、取消和终态等待各设monotonic软期限，未知接受状态按发送UUID取消并保留unknown语义。",
+      "verification": "12类隔离假服务端场景、18项阶段耗时断言通过；最终正文/章节ZIP与canonical源码同源检查通过。",
+      "limits": "未运行完整Nav2/Gazebo或硬件；软期限不能当硬实时制动保证。"
+    },
+    {
+      "findingIds": [
+        "APPLIED-NAV-002"
+      ],
+      "status": "resolved",
+      "changedFile": "examples/navigation/bounded_navigation.py",
+      "change": "不创建initialpose发布者、不调用waitUntilNav2Active；用户先明确完成初始定位并核对状态。",
+      "verification": "AST/本地Jazzy调用链核对，假服务端测试和代码同源检查。",
+      "limits": "不自动证明定位收敛、TF或目标自由空间。"
+    },
+    {
+      "findingIds": [
+        "APPLIED-API-001"
+      ],
+      "status": "resolved",
+      "changedFile": "source/api-reference.json",
+      "change": "api-service-future加入FutureAndRequestId、remove_pending_request与重试幂等边界。",
+      "verification": "对照固定Jazzy rclcpp/client.hpp公开接口说明，检查最终API表及导出存在此说明。",
+      "limits": "该文档修订未新增内存压力测试。"
+    },
+    {
+      "findingIds": [
+        "APPLIED-API-002"
+      ],
+      "status": "resolved",
+      "changedFile": "source/api-reference.json",
+      "change": "区分set_parameters逐项/部分成功与set_parameters_atomically整批提交；校验候选配置并避免不可回滚副作用。",
+      "verification": "基础集成test覆盖逐项结果[True,False]保留[1,0]，原子拒绝保留[0,0]。",
+      "limits": "一个节点的原子参数设置不构成跨节点分布式事务。"
+    },
+    {
+      "findingIds": [
+        "APPLIED-API-003",
+        "review-walltimer-clock-name"
+      ],
+      "status": "resolved",
+      "changedFile": "source/api-reference.json",
+      "change": "准确使用RCL_STEADY_TIME稳态时钟术语，解释与ROS时间及系统日期时钟差别。",
+      "verification": "固定Jazzy timer.hpp源码核对；最终API表包含准确Clock类型。",
+      "limits": "未运行两类timer在暂停clock下的对比实验；导航暂停clock测试是另一项。"
+    },
+    {
+      "findingIds": [
+        "review-watchdog-nonfinite"
+      ],
+      "status": "resolved",
+      "changedFile": "source/code-annotations.json",
+      "change": "限幅前拒绝NaN、Inf、非法类型、无效期限/限速及未来/过期时间戳；正文附独立watchdog模型。",
+      "verification": "7项标准库边界测试通过，涵盖精确边界和下一个浮点时刻；正文模型断言通过。",
+      "limits": "输出0仅为数值拒绝值，未证明硬件停车。"
+    },
+    {
+      "findingIds": [
+        "review-control-joint-comment"
+      ],
+      "status": "resolved",
+      "changedFile": "source/code-annotations.json",
+      "change": "ros2_control内joint注释改为引用URDF已存在关节、声明state/command接口，说明rad/s与m/s差别。",
+      "verification": "逐个核对生成代码和非注释语义；原始注释生成器可幂等重建。",
+      "limits": "未运行真实硬件接口。"
+    },
+    {
+      "findingIds": [
+        "review-perception-prerequisites"
+      ],
+      "status": "resolved",
+      "changedFile": "source/content-revisions.json",
+      "change": "补充cv_bridge/OpenCV/NumPy/rqt依赖、系统Python导入预检及执行顺序。",
+      "verification": "最终章节包含全部包名和导入命令，完整Python文件通过AST；源码接口核对。",
+      "limits": "本轮未apt安装、未运行图像链；依赖准备已写入，不冒充执行成功。"
+    },
+    {
+      "findingIds": [
+        "review-microros-host-client-chain"
+      ],
+      "status": "resolved",
+      "changedFile": "source/content-revisions.json",
+      "change": "补齐setup→host客户端构建→Agent构建以及独立终端的XRCE客户端/普通DDS观察链。",
+      "verification": "对照本地官方Linux教程与Jazzy host配置，最终正文命令及版本边界检查。",
+      "limits": "本轮未构建或运行micro-ROS链，不把Humble旧教程标为Jazzy实测。"
+    },
+    {
+      "findingIds": [
+        "review-pd-position-wording"
+      ],
+      "status": "resolved",
+      "changedFile": "source/math-foundations.json",
+      "change": "比例项改为位置误差反馈，与u=-kp*e-kd*edot及N/m单位一致。",
+      "verification": "数学控制标准库实验通过，正文与控制律核对。",
+      "limits": "仅质点理想模型，不证明实际执行器稳定性。"
+    }
+  ],
+  "currentFingerprints": [
+    {
+      "file": "examples/navigation/bounded_navigation.py",
+      "sha256": "1121390d73f9d9bf15caf69e6771ab29d3c33cffe60cc24be55edf764d63b959"
+    },
+    {
+      "file": "source/api-reference.json",
+      "sha256": "66476a9c5d0f1ff0c657c1698ea518d9a20cab7220e70f566acdac2f89f33a7a"
+    },
+    {
+      "file": "source/code-annotations.json",
+      "sha256": "36c6c6b4490b80c51394d059dd428712cf9b8025a934603ff44256a59ad04c19"
+    },
+    {
+      "file": "source/content-revisions.json",
+      "sha256": "cfab1bb3bab38cd6e93392ab106314fc0189805f1e7288ccb3cb4a8243a8c3e2"
+    },
+    {
+      "file": "source/math-foundations.json",
+      "sha256": "7c86adfa2adf3d15b42448c2d5846e15c8e0a45a00bc5e8bd8f12e1c1eedd5e8"
+    },
+    {
+      "file": "source/navigation-revision.json",
+      "sha256": "fefc77fa109ddf21f760fca9ac55039d515044255a5122906fd23831dce88e26"
+    }
+  ],
+  "historyNote": "原审查文件保留发现时版本、状态与指纹；以本文件及最终构建产物判断修订。",
+  "scope": "初轮12个发现的修订记录；后续迭代以iteration-worklist.json为准。",
+  "fingerprintsNote": "这些指纹保留初轮验收时快照，不伪装为后续文件未变。"
+}

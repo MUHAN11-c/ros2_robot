@@ -1,4 +1,10 @@
+# 【中文教学注释】 foundation-examples/lessons/parameters/config.yaml
+# 输入输出：输入为启动覆盖值或动态参数请求；输出为 gain/enabled 的验证结果和 configured_value。
+# 执行顺序与边界：gain 为有限无量纲 double，范围 [0,2]；先验证启动值，再注册动态验证器。回调通过后才应提交配置，参数回调不能阻塞执行器。
 /learning_config:
+  # ROS参数文件的固定层级名；其父节点名/通配选择器必须匹配实际启动名称。
   ros__parameters:
+    # 无量纲增益，必须是有限浮点数并处于[0,2]；1.0与整数1在参数类型层面不同。
     gain: 1.5
+    # 布尔开关，决定是否输出教学值；禁用时输出0不等于真实硬件制动。
     enabled: true

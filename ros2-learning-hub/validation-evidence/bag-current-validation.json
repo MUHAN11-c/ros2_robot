@@ -1,0 +1,4364 @@
+{
+  "checkedAt": "2026-11-06T21:59:56.100903+00:00",
+  "passed": true,
+  "outputDirectory": "/tmp/ros2-bag-lab-t4b66f6l",
+  "environment": {
+    "ROS_DOMAIN_ID": "231",
+    "ROS_AUTOMATIC_DISCOVERY_RANGE": "LOCALHOST",
+    "RMW_IMPLEMENTATION": "rmw_fastrtps_cpp"
+  },
+  "python": "3.12.3",
+  "parameters": {
+    "inputCount": 6,
+    "clockStepNs": 250000000
+  },
+  "sourceHashes": [
+    {
+      "path": "examples/bag_labs/README.md",
+      "sha256": "9b87cbbedf845e7abd5a3701cbce0f18bc3845cbe21ba55d3c2d6eed02cded02"
+    },
+    {
+      "path": "examples/bag_labs/inspect_bag.py",
+      "sha256": "9be0688fb2ba1b7191e490152e528c707a21e58412423fbf79c8ba7f6ced04e8"
+    },
+    {
+      "path": "examples/bag_labs/mcap_no_chunk.yaml",
+      "sha256": "edd632e29373c428ce3780dd800f9b4d2d096b82794d5460be8e9c8291237af5"
+    },
+    {
+      "path": "examples/bag_labs/qos_transient.yaml",
+      "sha256": "76aaaaf537ecdf6b8992f227d353d626998f2537f82e0afc6788b21dabddb2cc"
+    },
+    {
+      "path": "examples/bag_labs/qos_volatile.yaml",
+      "sha256": "ab8ba5c7566fed287566a3f0949763c83b94961b2774da3e41485996e6cdfc00"
+    },
+    {
+      "path": "examples/bag_labs/record_replay_lab.py",
+      "sha256": "276591ff7dc7a6282e1888f9671ebbf71c79ec6cc69c58929d188319bd4c629c"
+    },
+    {
+      "path": "examples/bag_labs/storage_fields.py",
+      "sha256": "d951e5747b14a29fee33b6f8299ef75b1b256e41d288b8563e78c682ad557b7d"
+    }
+  ],
+  "limits": [
+    "本机有限合成输入，无真实采集、GUI海龟或完整仿真。",
+    "不是吞吐/压缩/磁盘恢复、网络校时、跨机或安全证明。",
+    "存储字段探针为显式Writer输入；send/source时间不是Header采样时间或已测网络时延。",
+    "父SIGINT/原生挂起清理分支尚未注入；常规子进程退出与节点清理另列。"
+  ],
+  "versions": {
+    "rosbag2_transport": "0.26.11",
+    "rosbag2_py": "0.26.11",
+    "ros2bag": "0.26.11",
+    "rosbag2_storage_mcap": "0.26.11",
+    "rosbag2_storage_sqlite3": "0.26.11",
+    "rclpy": "7.1.12"
+  },
+  "processes": [
+    {
+      "name": "system_sqlite",
+      "argv": [
+        "ros2",
+        "bag",
+        "record",
+        "--storage",
+        "sqlite3",
+        "--output",
+        "/tmp/ros2-bag-lab-t4b66f6l/system_sqlite",
+        "--node-name",
+        "bag_lab_recorder",
+        "--disable-keyboard-controls",
+        "--max-cache-size",
+        "0",
+        "--qos-profile-overrides-path",
+        "/home/wjz/ros2_robot/ros2-learning-hub/examples/bag_labs/qos_transient.yaml",
+        "--topics",
+        "/bag_lab/input",
+        "/bag_lab/derived",
+        "/bag_lab/static"
+      ],
+      "pid": 249931,
+      "signals": [
+        "SIGINT"
+      ],
+      "logFile": "/tmp/ros2-bag-lab-t4b66f6l/system_sqlite.log",
+      "returnCode": 0,
+      "logBytes": 1323,
+      "logSha256": "062b6222c8b01de4ff23107f97035e3c6516c6051a4f7122b59d59a1f03eef7b",
+      "logTail": "[INFO] [1794002396.581825553] [bag_lab_recorder]: Event publisher thread: Started\n[INFO] [1794002396.583712590] [bag_lab_recorder]: Starting recording to '/tmp/ros2-bag-lab-t4b66f6l/system_sqlite'\n[INFO] [1794002396.584388575] [rosbag2_storage]: Opened database '/tmp/ros2-bag-lab-t4b66f6l/system_sqlite/system_sqlite_0.db3' for READ_WRITE.\n[INFO] [1794002396.584605553] [bag_lab_recorder]: Listening for topics...\n[INFO] [1794002396.584614833] [bag_lab_recorder]: Recording...\n[INFO] [1794002396.584648313] [bag_lab_recorder]: Topics discovery started.\n[INFO] [1794002396.690363637] [bag_lab_recorder]: Subscribed to topic '/bag_lab/input'\n[INFO] [1794002396.690796964] [bag_lab_recorder]: Subscribed to topic '/bag_lab/derived'\n[INFO] [1794002396.690938523] [bag_lab_recorder]: Overriding subscription profile for /bag_lab/static\n[INFO] [1794002396.691097622] [bag_lab_recorder]: Subscribed to topic '/bag_lab/static'\n[INFO] [1794002396.691103752] [bag_lab_recorder]: All requested topics are subscribed. Stopping discovery...\n[INFO] [1794002396.691105482] [bag_lab_recorder]: Topics discovery stopped.\n[INFO] [1794002397.725254094] [bag_lab_recorder]: Pausing recording.\n[INFO] [1794002397.726381606] [bag_lab_recorder]: Recording stopped\n[INFO] [1794002397.727144070] [bag_lab_recorder]: Event publisher thread: Exited\n",
+      "pidGone": true
+    },
+    {
+      "name": "system_sqlite_info",
+      "argv": [
+        "ros2",
+        "bag",
+        "info",
+        "/tmp/ros2-bag-lab-t4b66f6l/system_sqlite"
+      ],
+      "pid": 249949,
+      "signals": [],
+      "logFile": "/tmp/ros2-bag-lab-t4b66f6l/system_sqlite_info.log",
+      "returnCode": 0,
+      "logBytes": 700,
+      "logSha256": "447e87cc1b15b97a6aea780f5eff45cd1aa8e2d3d3dca53fb21abe36e9dddc7c",
+      "logTail": "\nFiles:             system_sqlite_0.db3\nBag size:          30.7 KiB\nStorage id:        sqlite3\nROS Distro:        jazzy\nDuration:          0.603668359s\nStart:             Nov  7 2026 05:59:56.701253568 (1794002396.701253568)\nEnd:               Nov  7 2026 05:59:57.304921927 (1794002397.304921927)\nMessages:          13\nTopic information: Topic: /bag_lab/derived | Type: std_msgs/msg/Int32 | Count: 6 | Serialization Format: cdr\n                   Topic: /bag_lab/input | Type: geometry_msgs/msg/PointStamped | Count: 6 | Serialization Format: cdr\n                   Topic: /bag_lab/static | Type: std_msgs/msg/String | Count: 1 | Serialization Format: cdr\nService:           0\nService information: \n",
+      "pidGone": true
+    },
+    {
+      "name": "sim_mcap",
+      "argv": [
+        "ros2",
+        "bag",
+        "record",
+        "--storage",
+        "mcap",
+        "--output",
+        "/tmp/ros2-bag-lab-t4b66f6l/sim_mcap",
+        "--node-name",
+        "bag_lab_recorder",
+        "--disable-keyboard-controls",
+        "--max-cache-size",
+        "0",
+        "--qos-profile-overrides-path",
+        "/home/wjz/ros2_robot/ros2-learning-hub/examples/bag_labs/qos_transient.yaml",
+        "--use-sim-time",
+        "--topics",
+        "/bag_lab/input",
+        "/bag_lab/derived",
+        "/bag_lab/static"
+      ],
+      "pid": 249962,
+      "signals": [
+        "SIGINT"
+      ],
+      "logFile": "/tmp/ros2-bag-lab-t4b66f6l/sim_mcap.log",
+      "returnCode": 0,
+      "logBytes": 1383,
+      "logSha256": "100695fbf693314cb33144c64d527f2d7dc333d3c30ea137a8077699ad8ffb95",
+      "logTail": "[INFO] [1794002398.397626969] [bag_lab_recorder]: Event publisher thread: Started\n[INFO] [1794002398.399483626] [bag_lab_recorder]: Starting recording to '/tmp/ros2-bag-lab-t4b66f6l/sim_mcap'\n[INFO] [1794002398.400087342] [bag_lab_recorder]: Listening for topics...\n[INFO] [1794002398.400100232] [bag_lab_recorder]: Recording...\n[INFO] [1794002398.400105412] [bag_lab_recorder]: Topics discovery started.\n[INFO] [1794002398.400112031] [bag_lab_recorder]: use_sim_time set, waiting for /clock before starting recording...\n[INFO] [1794002398.930593985] [bag_lab_recorder]: Sim time /clock found, starting recording.\n[INFO] [1794002398.931417639] [bag_lab_recorder]: Subscribed to topic '/bag_lab/derived'\n[INFO] [1794002398.932211083] [bag_lab_recorder]: Subscribed to topic '/bag_lab/input'\n[INFO] [1794002398.932353012] [bag_lab_recorder]: Overriding subscription profile for /bag_lab/static\n[INFO] [1794002398.932546681] [bag_lab_recorder]: Subscribed to topic '/bag_lab/static'\n[INFO] [1794002398.932554691] [bag_lab_recorder]: All requested topics are subscribed. Stopping discovery...\n[INFO] [1794002398.932556901] [bag_lab_recorder]: Topics discovery stopped.\n[INFO] [1794002400.446095187] [bag_lab_recorder]: Pausing recording.\n[INFO] [1794002400.447201629] [bag_lab_recorder]: Recording stopped\n[INFO] [1794002400.448030853] [bag_lab_recorder]: Event publisher thread: Exited\n",
+      "pidGone": true
+    },
+    {
+      "name": "sim_mcap_info",
+      "argv": [
+        "ros2",
+        "bag",
+        "info",
+        "/tmp/ros2-bag-lab-t4b66f6l/sim_mcap"
+      ],
+      "pid": 249984,
+      "signals": [],
+      "logFile": "/tmp/ros2-bag-lab-t4b66f6l/sim_mcap_info.log",
+      "returnCode": 0,
+      "logBytes": 677,
+      "logSha256": "8d451a398f5247826e7163585ac0e3df4a6373e920d1626f47c8be1f68b92210",
+      "logTail": "\nFiles:             sim_mcap_0.mcap\nBag size:          13.9 KiB\nStorage id:        mcap\nROS Distro:        jazzy\nDuration:          1.250000000s\nStart:             Jan  1 1970 08:00:10.000000000 (10.000000000)\nEnd:               Jan  1 1970 08:00:11.250000000 (11.250000000)\nMessages:          13\nTopic information: Topic: /bag_lab/derived | Type: std_msgs/msg/Int32 | Count: 6 | Serialization Format: cdr\n                   Topic: /bag_lab/input | Type: geometry_msgs/msg/PointStamped | Count: 6 | Serialization Format: cdr\n                   Topic: /bag_lab/static | Type: std_msgs/msg/String | Count: 1 | Serialization Format: cdr\nService:           0\nService information: \n",
+      "pidGone": true
+    },
+    {
+      "name": "late_volatile_mcap",
+      "argv": [
+        "ros2",
+        "bag",
+        "record",
+        "--storage",
+        "mcap",
+        "--output",
+        "/tmp/ros2-bag-lab-t4b66f6l/late_volatile_mcap",
+        "--node-name",
+        "bag_lab_recorder",
+        "--disable-keyboard-controls",
+        "--max-cache-size",
+        "0",
+        "--qos-profile-overrides-path",
+        "/home/wjz/ros2_robot/ros2-learning-hub/examples/bag_labs/qos_volatile.yaml",
+        "--topics",
+        "/bag_lab/input",
+        "/bag_lab/derived",
+        "/bag_lab/static"
+      ],
+      "pid": 249995,
+      "signals": [
+        "SIGINT"
+      ],
+      "logFile": "/tmp/ros2-bag-lab-t4b66f6l/late_volatile_mcap.log",
+      "returnCode": 0,
+      "logBytes": 1184,
+      "logSha256": "e8212baf6126323b4629fae39d2968fa75b897b7f421a65689bebeb6091738fb",
+      "logTail": "[INFO] [1794002401.112463127] [bag_lab_recorder]: Event publisher thread: Started\n[INFO] [1794002401.114305804] [bag_lab_recorder]: Starting recording to '/tmp/ros2-bag-lab-t4b66f6l/late_volatile_mcap'\n[INFO] [1794002401.114885210] [bag_lab_recorder]: Listening for topics...\n[INFO] [1794002401.114895470] [bag_lab_recorder]: Recording...\n[INFO] [1794002401.114906780] [bag_lab_recorder]: Topics discovery started.\n[INFO] [1794002401.220729116] [bag_lab_recorder]: Subscribed to topic '/bag_lab/input'\n[INFO] [1794002401.221116684] [bag_lab_recorder]: Subscribed to topic '/bag_lab/derived'\n[INFO] [1794002401.221227243] [bag_lab_recorder]: Overriding subscription profile for /bag_lab/static\n[INFO] [1794002401.221581390] [bag_lab_recorder]: Subscribed to topic '/bag_lab/static'\n[INFO] [1794002401.221607490] [bag_lab_recorder]: All requested topics are subscribed. Stopping discovery...\n[INFO] [1794002401.221611390] [bag_lab_recorder]: Topics discovery stopped.\n[INFO] [1794002402.259805703] [bag_lab_recorder]: Pausing recording.\n[INFO] [1794002402.260974395] [bag_lab_recorder]: Recording stopped\n[INFO] [1794002402.261726980] [bag_lab_recorder]: Event publisher thread: Exited\n",
+      "pidGone": true
+    },
+    {
+      "name": "late_volatile_mcap_info",
+      "argv": [
+        "ros2",
+        "bag",
+        "info",
+        "/tmp/ros2-bag-lab-t4b66f6l/late_volatile_mcap"
+      ],
+      "pid": 250013,
+      "signals": [],
+      "logFile": "/tmp/ros2-bag-lab-t4b66f6l/late_volatile_mcap_info.log",
+      "returnCode": 0,
+      "logBytes": 703,
+      "logSha256": "672acc0cbb73c30a06cfd582ae525acb89a2b32d2997484783e50e39d3801c90",
+      "logTail": "\nFiles:             late_volatile_mcap_0.mcap\nBag size:          13.1 KiB\nStorage id:        mcap\nROS Distro:        jazzy\nDuration:          0.601044485s\nStart:             Nov  7 2026 06:00:01.238511158 (1794002401.238511158)\nEnd:               Nov  7 2026 06:00:01.839555643 (1794002401.839555643)\nMessages:          12\nTopic information: Topic: /bag_lab/derived | Type: std_msgs/msg/Int32 | Count: 6 | Serialization Format: cdr\n                   Topic: /bag_lab/input | Type: geometry_msgs/msg/PointStamped | Count: 6 | Serialization Format: cdr\n                   Topic: /bag_lab/static | Type: std_msgs/msg/String | Count: 0 | Serialization Format: cdr\nService:           0\nService information: \n",
+      "pidGone": true
+    },
+    {
+      "name": "play_all_no_clock",
+      "argv": [
+        "ros2",
+        "bag",
+        "play",
+        "/tmp/ros2-bag-lab-t4b66f6l/system_sqlite",
+        "--start-paused",
+        "--disable-keyboard-controls",
+        "--qos-profile-overrides-path",
+        "/home/wjz/ros2_robot/ros2-learning-hub/examples/bag_labs/qos_transient.yaml",
+        "--wait-for-all-acked",
+        "1000"
+      ],
+      "pid": 250024,
+      "signals": [],
+      "logFile": "/tmp/ros2-bag-lab-t4b66f6l/play_all_no_clock.log",
+      "returnCode": 0,
+      "logBytes": 442,
+      "logSha256": "298a1e148812b61c82413fd463e708847042e18f53e2a011211624c416d83051",
+      "logTail": "[INFO] [1794002402.816765670] [rosbag2_storage]: Opened database '/tmp/ros2-bag-lab-t4b66f6l/system_sqlite/system_sqlite_0.db3' for READ_ONLY.\n[INFO] [1794002402.816830629] [rosbag2_player]: Set rate to 1\n[INFO] [1794002402.816856519] [rosbag2_player]: Overriding QoS profile for topic /bag_lab/static\n[INFO] [1794002402.820120496] [rosbag2_player]: Playback until timestamp: -1\n[INFO] [1794002403.089115818] [rosbag2_player]: Resuming play.\n",
+      "pidGone": true
+    },
+    {
+      "name": "play_filtered_clock",
+      "argv": [
+        "ros2",
+        "bag",
+        "play",
+        "/tmp/ros2-bag-lab-t4b66f6l/sim_mcap",
+        "--start-paused",
+        "--disable-keyboard-controls",
+        "--qos-profile-overrides-path",
+        "/home/wjz/ros2_robot/ros2-learning-hub/examples/bag_labs/qos_transient.yaml",
+        "--wait-for-all-acked",
+        "1000",
+        "--clock",
+        "40",
+        "--rate",
+        "2.0",
+        "--topics",
+        "/bag_lab/input"
+      ],
+      "pid": 250048,
+      "signals": [],
+      "logFile": "/tmp/ros2-bag-lab-t4b66f6l/play_filtered_clock.log",
+      "returnCode": 0,
+      "logBytes": 202,
+      "logSha256": "88c105a6a2c9a3bdc883298ccd2838ade0456098d4bd768244c03eff06ce1326",
+      "logTail": "[INFO] [1794002404.311622957] [rosbag2_player]: Set rate to 2\n[INFO] [1794002404.314979473] [rosbag2_player]: Playback until timestamp: -1\n[INFO] [1794002404.575158971] [rosbag2_player]: Resuming play.\n",
+      "pidGone": true
+    }
+  ],
+  "recordings": [
+    {
+      "name": "system_sqlite",
+      "storage": "sqlite3",
+      "useSimTime": false,
+      "requestCachedStatic": true,
+      "bagDirectory": "/tmp/ros2-bag-lab-t4b66f6l/system_sqlite",
+      "beforeClock": [],
+      "expectedInputFields": {
+        "0": {
+          "headerNs": 1000000000000,
+          "frameId": "synthetic_frame",
+          "xM": 0.0,
+          "yM": 0.0,
+          "zM": 0.0
+        },
+        "1": {
+          "headerNs": 1000010000000,
+          "frameId": "synthetic_frame",
+          "xM": 1.0,
+          "yM": 0.0,
+          "zM": 0.0
+        },
+        "2": {
+          "headerNs": 1000020000000,
+          "frameId": "synthetic_frame",
+          "xM": 2.0,
+          "yM": 0.0,
+          "zM": 0.0
+        },
+        "3": {
+          "headerNs": 1000030000000,
+          "frameId": "synthetic_frame",
+          "xM": 3.0,
+          "yM": 0.0,
+          "zM": 0.0
+        },
+        "4": {
+          "headerNs": 1000040000000,
+          "frameId": "synthetic_frame",
+          "xM": 4.0,
+          "yM": 0.0,
+          "zM": 0.0
+        },
+        "5": {
+          "headerNs": 1000050000000,
+          "frameId": "synthetic_frame",
+          "xM": 5.0,
+          "yM": 0.0,
+          "zM": 0.0
+        }
+      },
+      "readback": {
+        "storageId": "sqlite3",
+        "metadataCount": 13,
+        "startNs": 1794002396701253568,
+        "durationNs": 603668359,
+        "metadataTopics": {
+          "/bag_lab/static": 1,
+          "/bag_lab/derived": 6,
+          "/bag_lab/input": 6
+        },
+        "files": [
+          "system_sqlite_0.db3"
+        ],
+        "counts": {
+          "/bag_lab/static": 1,
+          "/bag_lab/input": 6,
+          "/bag_lab/derived": 6
+        },
+        "records": [
+          {
+            "topic": "/bag_lab/static",
+            "receivedNs": 1794002396701253568,
+            "payloadSha256": "6f8d09c674cb98b9fffa7ca91a8f0d89ed05deee1be63fafa0abf7eda7a7b564",
+            "data": "calibration:v1"
+          },
+          {
+            "topic": "/bag_lab/input",
+            "receivedNs": 1794002396703858729,
+            "payloadSha256": "9430e57a63b797c189958e67523587871c15deec2556512885344e74981610fe",
+            "sequence": 0,
+            "xM": 0.0,
+            "yM": 0.0,
+            "zM": 0.0,
+            "headerNs": 1000000000000,
+            "frameId": "synthetic_frame"
+          },
+          {
+            "topic": "/bag_lab/derived",
+            "receivedNs": 1794002396703862989,
+            "payloadSha256": "2e22fd435060cd5d3cf5e3ef39f79e198b35bd2c4af31974db36601b3a2f4c91",
+            "data": 0
+          },
+          {
+            "topic": "/bag_lab/input",
+            "receivedNs": 1794002396824104518,
+            "payloadSha256": "827645058831ee16de79e07441a95ec6b1f977b4ed52045e534ab528929aefde",
+            "sequence": 1,
+            "xM": 1.0,
+            "yM": 0.0,
+            "zM": 0.0,
+            "headerNs": 1000010000000,
+            "frameId": "synthetic_frame"
+          },
+          {
+            "topic": "/bag_lab/derived",
+            "receivedNs": 1794002396824112128,
+            "payloadSha256": "93a8eaf79354c84442ac0e10c2062c53887deb79944f89aef71d679fd7a88b07",
+            "data": 1
+          },
+          {
+            "topic": "/bag_lab/input",
+            "receivedNs": 1794002396944304137,
+            "payloadSha256": "ccfa98a722f069767311765670b03c9d06acfc8ddcbbb465207cb3d4e51f843e",
+            "sequence": 2,
+            "xM": 2.0,
+            "yM": 0.0,
+            "zM": 0.0,
+            "headerNs": 1000020000000,
+            "frameId": "synthetic_frame"
+          },
+          {
+            "topic": "/bag_lab/derived",
+            "receivedNs": 1794002396944314137,
+            "payloadSha256": "eacc08d79cc677584e2c59931de7d5aa6f12dddf9ca40eda868130711dc83461",
+            "data": 2
+          },
+          {
+            "topic": "/bag_lab/input",
+            "receivedNs": 1794002397064459737,
+            "payloadSha256": "6c982e3b1e5bc70bb24cd855fe63845438494b28a507c5d049210ac1792d93a3",
+            "sequence": 3,
+            "xM": 3.0,
+            "yM": 0.0,
+            "zM": 0.0,
+            "headerNs": 1000030000000,
+            "frameId": "synthetic_frame"
+          },
+          {
+            "topic": "/bag_lab/derived",
+            "receivedNs": 1794002397064465607,
+            "payloadSha256": "e846f644a9c250ea43b054aa2d6678836fccacf9367f26bb645c3c8e9e7ab874",
+            "data": 3
+          },
+          {
+            "topic": "/bag_lab/input",
+            "receivedNs": 1794002397184742726,
+            "payloadSha256": "066d689477e8f9eae7ed4b170b1d5c68a6145ced3a9c6cb6813439a2ce7f01f3",
+            "sequence": 4,
+            "xM": 4.0,
+            "yM": 0.0,
+            "zM": 0.0,
+            "headerNs": 1000040000000,
+            "frameId": "synthetic_frame"
+          },
+          {
+            "topic": "/bag_lab/derived",
+            "receivedNs": 1794002397184752176,
+            "payloadSha256": "50525845aa0fa94968819a3e7bfc2d01a599ca14f4ce92de225c4d206189cf9b",
+            "data": 4
+          },
+          {
+            "topic": "/bag_lab/input",
+            "receivedNs": 1794002397304911887,
+            "payloadSha256": "cccc23661e5ed7950f958deb001d370c8e3dbac4ffad2c36098979bd2edbf6eb",
+            "sequence": 5,
+            "xM": 5.0,
+            "yM": 0.0,
+            "zM": 0.0,
+            "headerNs": 1000050000000,
+            "frameId": "synthetic_frame"
+          },
+          {
+            "topic": "/bag_lab/derived",
+            "receivedNs": 1794002397304921927,
+            "payloadSha256": "8076970a7e5a672e4a22ec446626938d4ef8d16569a0050ccf38496578a92d24",
+            "data": 5
+          }
+        ]
+      },
+      "passed": true
+    },
+    {
+      "name": "sim_mcap",
+      "storage": "mcap",
+      "useSimTime": true,
+      "requestCachedStatic": true,
+      "bagDirectory": "/tmp/ros2-bag-lab-t4b66f6l/sim_mcap",
+      "beforeClock": [
+        {
+          "stage": "no_clock",
+          "sentSequences": [
+            100,
+            101
+          ],
+          "dataSubscriptions": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "stage": "zero_clock",
+          "sentSequences": [
+            200,
+            201
+          ],
+          "dataSubscriptions": [
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "expectedInputFields": {
+        "0": {
+          "headerNs": 1000000000000,
+          "frameId": "synthetic_frame",
+          "xM": 0.0,
+          "yM": 0.0,
+          "zM": 0.0
+        },
+        "1": {
+          "headerNs": 1000010000000,
+          "frameId": "synthetic_frame",
+          "xM": 1.0,
+          "yM": 0.0,
+          "zM": 0.0
+        },
+        "2": {
+          "headerNs": 1000020000000,
+          "frameId": "synthetic_frame",
+          "xM": 2.0,
+          "yM": 0.0,
+          "zM": 0.0
+        },
+        "3": {
+          "headerNs": 1000030000000,
+          "frameId": "synthetic_frame",
+          "xM": 3.0,
+          "yM": 0.0,
+          "zM": 0.0
+        },
+        "4": {
+          "headerNs": 1000040000000,
+          "frameId": "synthetic_frame",
+          "xM": 4.0,
+          "yM": 0.0,
+          "zM": 0.0
+        },
+        "5": {
+          "headerNs": 1000050000000,
+          "frameId": "synthetic_frame",
+          "xM": 5.0,
+          "yM": 0.0,
+          "zM": 0.0
+        }
+      },
+      "readback": {
+        "storageId": "mcap",
+        "metadataCount": 13,
+        "startNs": 10000000000,
+        "durationNs": 1250000000,
+        "metadataTopics": {
+          "/bag_lab/static": 1,
+          "/bag_lab/input": 6,
+          "/bag_lab/derived": 6
+        },
+        "files": [
+          "sim_mcap_0.mcap"
+        ],
+        "counts": {
+          "/bag_lab/static": 1,
+          "/bag_lab/derived": 6,
+          "/bag_lab/input": 6
+        },
+        "records": [
+          {
+            "topic": "/bag_lab/static",
+            "receivedNs": 10000000000,
+            "payloadSha256": "6f8d09c674cb98b9fffa7ca91a8f0d89ed05deee1be63fafa0abf7eda7a7b564",
+            "data": "calibration:v1"
+          },
+          {
+            "topic": "/bag_lab/derived",
+            "receivedNs": 10000000000,
+            "payloadSha256": "2e22fd435060cd5d3cf5e3ef39f79e198b35bd2c4af31974db36601b3a2f4c91",
+            "data": 0
+          },
+          {
+            "topic": "/bag_lab/input",
+            "receivedNs": 10000000000,
+            "payloadSha256": "9430e57a63b797c189958e67523587871c15deec2556512885344e74981610fe",
+            "sequence": 0,
+            "xM": 0.0,
+            "yM": 0.0,
+            "zM": 0.0,
+            "headerNs": 1000000000000,
+            "frameId": "synthetic_frame"
+          },
+          {
+            "topic": "/bag_lab/derived",
+            "receivedNs": 10250000000,
+            "payloadSha256": "93a8eaf79354c84442ac0e10c2062c53887deb79944f89aef71d679fd7a88b07",
+            "data": 1
+          },
+          {
+            "topic": "/bag_lab/input",
+            "receivedNs": 10250000000,
+            "payloadSha256": "827645058831ee16de79e07441a95ec6b1f977b4ed52045e534ab528929aefde",
+            "sequence": 1,
+            "xM": 1.0,
+            "yM": 0.0,
+            "zM": 0.0,
+            "headerNs": 1000010000000,
+            "frameId": "synthetic_frame"
+          },
+          {
+            "topic": "/bag_lab/derived",
+            "receivedNs": 10500000000,
+            "payloadSha256": "eacc08d79cc677584e2c59931de7d5aa6f12dddf9ca40eda868130711dc83461",
+            "data": 2
+          },
+          {
+            "topic": "/bag_lab/input",
+            "receivedNs": 10500000000,
+            "payloadSha256": "ccfa98a722f069767311765670b03c9d06acfc8ddcbbb465207cb3d4e51f843e",
+            "sequence": 2,
+            "xM": 2.0,
+            "yM": 0.0,
+            "zM": 0.0,
+            "headerNs": 1000020000000,
+            "frameId": "synthetic_frame"
+          },
+          {
+            "topic": "/bag_lab/derived",
+            "receivedNs": 10750000000,
+            "payloadSha256": "e846f644a9c250ea43b054aa2d6678836fccacf9367f26bb645c3c8e9e7ab874",
+            "data": 3
+          },
+          {
+            "topic": "/bag_lab/input",
+            "receivedNs": 10750000000,
+            "payloadSha256": "6c982e3b1e5bc70bb24cd855fe63845438494b28a507c5d049210ac1792d93a3",
+            "sequence": 3,
+            "xM": 3.0,
+            "yM": 0.0,
+            "zM": 0.0,
+            "headerNs": 1000030000000,
+            "frameId": "synthetic_frame"
+          },
+          {
+            "topic": "/bag_lab/derived",
+            "receivedNs": 11000000000,
+            "payloadSha256": "50525845aa0fa94968819a3e7bfc2d01a599ca14f4ce92de225c4d206189cf9b",
+            "data": 4
+          },
+          {
+            "topic": "/bag_lab/input",
+            "receivedNs": 11000000000,
+            "payloadSha256": "066d689477e8f9eae7ed4b170b1d5c68a6145ced3a9c6cb6813439a2ce7f01f3",
+            "sequence": 4,
+            "xM": 4.0,
+            "yM": 0.0,
+            "zM": 0.0,
+            "headerNs": 1000040000000,
+            "frameId": "synthetic_frame"
+          },
+          {
+            "topic": "/bag_lab/derived",
+            "receivedNs": 11250000000,
+            "payloadSha256": "8076970a7e5a672e4a22ec446626938d4ef8d16569a0050ccf38496578a92d24",
+            "data": 5
+          },
+          {
+            "topic": "/bag_lab/input",
+            "receivedNs": 11250000000,
+            "payloadSha256": "cccc23661e5ed7950f958deb001d370c8e3dbac4ffad2c36098979bd2edbf6eb",
+            "sequence": 5,
+            "xM": 5.0,
+            "yM": 0.0,
+            "zM": 0.0,
+            "headerNs": 1000050000000,
+            "frameId": "synthetic_frame"
+          }
+        ]
+      },
+      "passed": true
+    },
+    {
+      "name": "late_volatile_mcap",
+      "storage": "mcap",
+      "useSimTime": false,
+      "requestCachedStatic": false,
+      "bagDirectory": "/tmp/ros2-bag-lab-t4b66f6l/late_volatile_mcap",
+      "beforeClock": [],
+      "expectedInputFields": {
+        "0": {
+          "headerNs": 1000000000000,
+          "frameId": "synthetic_frame",
+          "xM": 0.0,
+          "yM": 0.0,
+          "zM": 0.0
+        },
+        "1": {
+          "headerNs": 1000010000000,
+          "frameId": "synthetic_frame",
+          "xM": 1.0,
+          "yM": 0.0,
+          "zM": 0.0
+        },
+        "2": {
+          "headerNs": 1000020000000,
+          "frameId": "synthetic_frame",
+          "xM": 2.0,
+          "yM": 0.0,
+          "zM": 0.0
+        },
+        "3": {
+          "headerNs": 1000030000000,
+          "frameId": "synthetic_frame",
+          "xM": 3.0,
+          "yM": 0.0,
+          "zM": 0.0
+        },
+        "4": {
+          "headerNs": 1000040000000,
+          "frameId": "synthetic_frame",
+          "xM": 4.0,
+          "yM": 0.0,
+          "zM": 0.0
+        },
+        "5": {
+          "headerNs": 1000050000000,
+          "frameId": "synthetic_frame",
+          "xM": 5.0,
+          "yM": 0.0,
+          "zM": 0.0
+        }
+      },
+      "readback": {
+        "storageId": "mcap",
+        "metadataCount": 12,
+        "startNs": 1794002401238511158,
+        "durationNs": 601044485,
+        "metadataTopics": {
+          "/bag_lab/static": 0,
+          "/bag_lab/derived": 6,
+          "/bag_lab/input": 6
+        },
+        "files": [
+          "late_volatile_mcap_0.mcap"
+        ],
+        "counts": {
+          "/bag_lab/input": 6,
+          "/bag_lab/derived": 6
+        },
+        "records": [
+          {
+            "topic": "/bag_lab/input",
+            "receivedNs": 1794002401238511158,
+            "payloadSha256": "9430e57a63b797c189958e67523587871c15deec2556512885344e74981610fe",
+            "sequence": 0,
+            "xM": 0.0,
+            "yM": 0.0,
+            "zM": 0.0,
+            "headerNs": 1000000000000,
+            "frameId": "synthetic_frame"
+          },
+          {
+            "topic": "/bag_lab/derived",
+            "receivedNs": 1794002401238520308,
+            "payloadSha256": "2e22fd435060cd5d3cf5e3ef39f79e198b35bd2c4af31974db36601b3a2f4c91",
+            "data": 0
+          },
+          {
+            "topic": "/bag_lab/input",
+            "receivedNs": 1794002401358696961,
+            "payloadSha256": "827645058831ee16de79e07441a95ec6b1f977b4ed52045e534ab528929aefde",
+            "sequence": 1,
+            "xM": 1.0,
+            "yM": 0.0,
+            "zM": 0.0,
+            "headerNs": 1000010000000,
+            "frameId": "synthetic_frame"
+          },
+          {
+            "topic": "/bag_lab/derived",
+            "receivedNs": 1794002401358708041,
+            "payloadSha256": "93a8eaf79354c84442ac0e10c2062c53887deb79944f89aef71d679fd7a88b07",
+            "data": 1
+          },
+          {
+            "topic": "/bag_lab/input",
+            "receivedNs": 1794002401478929764,
+            "payloadSha256": "ccfa98a722f069767311765670b03c9d06acfc8ddcbbb465207cb3d4e51f843e",
+            "sequence": 2,
+            "xM": 2.0,
+            "yM": 0.0,
+            "zM": 0.0,
+            "headerNs": 1000020000000,
+            "frameId": "synthetic_frame"
+          },
+          {
+            "topic": "/bag_lab/derived",
+            "receivedNs": 1794002401478939564,
+            "payloadSha256": "eacc08d79cc677584e2c59931de7d5aa6f12dddf9ca40eda868130711dc83461",
+            "data": 2
+          },
+          {
+            "topic": "/bag_lab/input",
+            "receivedNs": 1794002401599123967,
+            "payloadSha256": "6c982e3b1e5bc70bb24cd855fe63845438494b28a507c5d049210ac1792d93a3",
+            "sequence": 3,
+            "xM": 3.0,
+            "yM": 0.0,
+            "zM": 0.0,
+            "headerNs": 1000030000000,
+            "frameId": "synthetic_frame"
+          },
+          {
+            "topic": "/bag_lab/derived",
+            "receivedNs": 1794002401599135377,
+            "payloadSha256": "e846f644a9c250ea43b054aa2d6678836fccacf9367f26bb645c3c8e9e7ab874",
+            "data": 3
+          },
+          {
+            "topic": "/bag_lab/input",
+            "receivedNs": 1794002401719283650,
+            "payloadSha256": "066d689477e8f9eae7ed4b170b1d5c68a6145ced3a9c6cb6813439a2ce7f01f3",
+            "sequence": 4,
+            "xM": 4.0,
+            "yM": 0.0,
+            "zM": 0.0,
+            "headerNs": 1000040000000,
+            "frameId": "synthetic_frame"
+          },
+          {
+            "topic": "/bag_lab/derived",
+            "receivedNs": 1794002401719296020,
+            "payloadSha256": "50525845aa0fa94968819a3e7bfc2d01a599ca14f4ce92de225c4d206189cf9b",
+            "data": 4
+          },
+          {
+            "topic": "/bag_lab/input",
+            "receivedNs": 1794002401839546833,
+            "payloadSha256": "cccc23661e5ed7950f958deb001d370c8e3dbac4ffad2c36098979bd2edbf6eb",
+            "sequence": 5,
+            "xM": 5.0,
+            "yM": 0.0,
+            "zM": 0.0,
+            "headerNs": 1000050000000,
+            "frameId": "synthetic_frame"
+          },
+          {
+            "topic": "/bag_lab/derived",
+            "receivedNs": 1794002401839555643,
+            "payloadSha256": "8076970a7e5a672e4a22ec446626938d4ef8d16569a0050ccf38496578a92d24",
+            "data": 5
+          }
+        ]
+      },
+      "passed": true
+    }
+  ],
+  "playbacks": [
+    {
+      "name": "play_all_no_clock",
+      "filterInputOnly": false,
+      "generatedClock": false,
+      "pausedDataCount": 0,
+      "publishers": {
+        "/bag_lab/input": 1,
+        "/bag_lab/derived": 1,
+        "/bag_lab/static": 1,
+        "/clock": 0
+      },
+      "matchedSubscriptionsAtResume": {
+        "/bag_lab/input": 1,
+        "/bag_lab/derived": 1,
+        "/bag_lab/static": 1
+      },
+      "received": {
+        "/bag_lab/input": [
+          {
+            "sequence": 0,
+            "headerNs": 1000000000000,
+            "frameId": "synthetic_frame",
+            "xM": 0.0,
+            "yM": 0.0,
+            "zM": 0.0
+          },
+          {
+            "sequence": 1,
+            "headerNs": 1000010000000,
+            "frameId": "synthetic_frame",
+            "xM": 1.0,
+            "yM": 0.0,
+            "zM": 0.0
+          },
+          {
+            "sequence": 2,
+            "headerNs": 1000020000000,
+            "frameId": "synthetic_frame",
+            "xM": 2.0,
+            "yM": 0.0,
+            "zM": 0.0
+          },
+          {
+            "sequence": 3,
+            "headerNs": 1000030000000,
+            "frameId": "synthetic_frame",
+            "xM": 3.0,
+            "yM": 0.0,
+            "zM": 0.0
+          },
+          {
+            "sequence": 4,
+            "headerNs": 1000040000000,
+            "frameId": "synthetic_frame",
+            "xM": 4.0,
+            "yM": 0.0,
+            "zM": 0.0
+          },
+          {
+            "sequence": 5,
+            "headerNs": 1000050000000,
+            "frameId": "synthetic_frame",
+            "xM": 5.0,
+            "yM": 0.0,
+            "zM": 0.0
+          }
+        ],
+        "/bag_lab/derived": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "/bag_lab/static": [
+          "calibration:v1"
+        ]
+      },
+      "clocksNs": [],
+      "observerRosTimeNs": 0,
+      "passed": true
+    },
+    {
+      "name": "play_filtered_clock",
+      "filterInputOnly": true,
+      "generatedClock": true,
+      "pausedDataCount": 0,
+      "publishers": {
+        "/bag_lab/input": 1,
+        "/bag_lab/derived": 0,
+        "/bag_lab/static": 0,
+        "/clock": 1
+      },
+      "matchedSubscriptionsAtResume": {
+        "/bag_lab/input": 1,
+        "/bag_lab/derived": 0,
+        "/bag_lab/static": 0
+      },
+      "received": {
+        "/bag_lab/input": [
+          {
+            "sequence": 0,
+            "headerNs": 1000000000000,
+            "frameId": "synthetic_frame",
+            "xM": 0.0,
+            "yM": 0.0,
+            "zM": 0.0
+          },
+          {
+            "sequence": 1,
+            "headerNs": 1000010000000,
+            "frameId": "synthetic_frame",
+            "xM": 1.0,
+            "yM": 0.0,
+            "zM": 0.0
+          },
+          {
+            "sequence": 2,
+            "headerNs": 1000020000000,
+            "frameId": "synthetic_frame",
+            "xM": 2.0,
+            "yM": 0.0,
+            "zM": 0.0
+          },
+          {
+            "sequence": 3,
+            "headerNs": 1000030000000,
+            "frameId": "synthetic_frame",
+            "xM": 3.0,
+            "yM": 0.0,
+            "zM": 0.0
+          },
+          {
+            "sequence": 4,
+            "headerNs": 1000040000000,
+            "frameId": "synthetic_frame",
+            "xM": 4.0,
+            "yM": 0.0,
+            "zM": 0.0
+          },
+          {
+            "sequence": 5,
+            "headerNs": 1000050000000,
+            "frameId": "synthetic_frame",
+            "xM": 5.0,
+            "yM": 0.0,
+            "zM": 0.0
+          }
+        ],
+        "/bag_lab/derived": [],
+        "/bag_lab/static": []
+      },
+      "clocksNs": [
+        10000000000,
+        10000000000,
+        10000000000,
+        10000000000,
+        10000000000,
+        10000000000,
+        10032157408,
+        10082176988,
+        10132212168,
+        10182169390,
+        10232123690,
+        10282151790,
+        10332136950,
+        10382122412,
+        10432121292,
+        10482115192,
+        10532103232,
+        10582113372,
+        10632129012,
+        10682127994,
+        10732136314,
+        10782120754,
+        10832114954,
+        10882101794,
+        10932112414,
+        10982119396,
+        11032113196,
+        11082115138,
+        11132113598,
+        11182115018,
+        11232125020
+      ],
+      "observerRosTimeNs": 11232125020,
+      "passed": true
+    }
+  ],
+  "storageFields": {
+    "headerNs": 7000000000,
+    "explicitReceivedNs": 10000000000,
+    "explicitSentNs": 9000000000,
+    "payloadSha256": "e15f4b028d63539c7f7e6c87c216c30b34da88764a93be638a71b573b296b580",
+    "storages": {
+      "sqlite3": {
+        "readback": {
+          "storageId": "sqlite3",
+          "metadataCount": 1,
+          "startNs": 10000000000,
+          "durationNs": 0,
+          "metadataTopics": {
+            "/bag_lab/input": 1
+          },
+          "files": [
+            "sqlite3_0.db3"
+          ],
+          "counts": {
+            "/bag_lab/input": 1
+          },
+          "records": [
+            {
+              "topic": "/bag_lab/input",
+              "receivedNs": 10000000000,
+              "payloadSha256": "e15f4b028d63539c7f7e6c87c216c30b34da88764a93be638a71b573b296b580",
+              "sequence": 1,
+              "xM": 1.0,
+              "yM": 0.0,
+              "zM": 0.0,
+              "headerNs": 7000000000,
+              "frameId": "synthetic_frame"
+            }
+          ]
+        },
+        "columns": [
+          "id",
+          "topic_id",
+          "timestamp",
+          "data"
+        ],
+        "storedTimestampNs": 10000000000,
+        "hasSeparateSentColumn": false
+      },
+      "mcap": {
+        "readback": {
+          "storageId": "mcap",
+          "metadataCount": 1,
+          "startNs": 10000000000,
+          "durationNs": 0,
+          "metadataTopics": {
+            "/bag_lab/input": 1
+          },
+          "files": [
+            "mcap_0.mcap"
+          ],
+          "counts": {
+            "/bag_lab/input": 1
+          },
+          "records": [
+            {
+              "topic": "/bag_lab/input",
+              "receivedNs": 10000000000,
+              "payloadSha256": "e15f4b028d63539c7f7e6c87c216c30b34da88764a93be638a71b573b296b580",
+              "sequence": 1,
+              "xM": 1.0,
+              "yM": 0.0,
+              "zM": 0.0,
+              "headerNs": 7000000000,
+              "frameId": "synthetic_frame"
+            }
+          ]
+        },
+        "messages": [
+          {
+            "channel": 1,
+            "sequence": 0,
+            "logTimeNs": 10000000000,
+            "publishTimeNs": 9000000000,
+            "payloadSha256": "e15f4b028d63539c7f7e6c87c216c30b34da88764a93be638a71b573b296b580"
+          }
+        ]
+      }
+    }
+  },
+  "cleanup": {
+    "nodesRemaining": 0,
+    "contextValid": false,
+    "processPidsGone": true,
+    "escalatedSignals": []
+  },
+  "durationS": 9.509629038999265,
+  "previousAttempts": [
+    {
+      "checkedAt": "2026-11-06T21:50:06.798424+00:00",
+      "passed": false,
+      "outputDirectory": "/tmp/ros2-bag-lab-o_wtvq30",
+      "environment": {
+        "ROS_DOMAIN_ID": "231",
+        "ROS_AUTOMATIC_DISCOVERY_RANGE": "LOCALHOST",
+        "RMW_IMPLEMENTATION": "rmw_fastrtps_cpp"
+      },
+      "python": "3.12.3",
+      "parameters": {
+        "inputCount": 6,
+        "clockStepNs": 250000000
+      },
+      "sourceHashes": [
+        {
+          "path": "examples/bag_labs/README.md",
+          "sha256": "300cf10a89c200e9301ffedd3a67e9bf3af98675586603489d33ff9faf70d42e"
+        },
+        {
+          "path": "examples/bag_labs/inspect_bag.py",
+          "sha256": "2d4ca9ef7b6b473df35e363404fafbdad9d1ad0ae2d65dacae7b47c79052b884"
+        },
+        {
+          "path": "examples/bag_labs/mcap_no_chunk.yaml",
+          "sha256": "edd632e29373c428ce3780dd800f9b4d2d096b82794d5460be8e9c8291237af5"
+        },
+        {
+          "path": "examples/bag_labs/qos_transient.yaml",
+          "sha256": "76aaaaf537ecdf6b8992f227d353d626998f2537f82e0afc6788b21dabddb2cc"
+        },
+        {
+          "path": "examples/bag_labs/qos_volatile.yaml",
+          "sha256": "ab8ba5c7566fed287566a3f0949763c83b94961b2774da3e41485996e6cdfc00"
+        },
+        {
+          "path": "examples/bag_labs/record_replay_lab.py",
+          "sha256": "26c975107fc516577d9f81f3b5a5479317d5740e8adfea63d2218355cf8192e2"
+        },
+        {
+          "path": "examples/bag_labs/storage_fields.py",
+          "sha256": "0a110bc9741ccdbcac2cad6747cca6d870e9cea1dd7eb214d5222113c967ea48"
+        }
+      ],
+      "limits": [
+        "本机有限合成输入，无真实采集、GUI海龟或完整仿真。",
+        "不是吞吐/压缩/磁盘恢复、网络校时、跨机或安全证明。",
+        "存储字段探针为显式Writer输入；send/source时间不是Header采样时间或已测网络时延。",
+        "父SIGINT/原生挂起清理分支尚未注入；常规子进程退出与节点清理另列。"
+      ],
+      "versions": {
+        "rosbag2_transport": "0.26.11",
+        "rosbag2_py": "0.26.11",
+        "ros2bag": "0.26.11",
+        "rosbag2_storage_mcap": "0.26.11",
+        "rosbag2_storage_sqlite3": "0.26.11",
+        "rclpy": "7.1.12"
+      },
+      "processes": [
+        {
+          "name": "system_sqlite",
+          "argv": [
+            "ros2",
+            "bag",
+            "record",
+            "--storage",
+            "sqlite3",
+            "--output",
+            "/tmp/ros2-bag-lab-o_wtvq30/system_sqlite",
+            "--node-name",
+            "bag_lab_recorder",
+            "--disable-keyboard-controls",
+            "--max-cache-size",
+            "0",
+            "--qos-profile-overrides-path",
+            "/home/wjz/ros2_robot/ros2-learning-hub/examples/bag_labs/qos_transient.yaml",
+            "--topics",
+            "/bag_lab/input",
+            "/bag_lab/derived",
+            "/bag_lab/static"
+          ],
+          "pid": 248334,
+          "signals": [
+            "SIGINT"
+          ],
+          "logFile": "/tmp/ros2-bag-lab-o_wtvq30/system_sqlite.log",
+          "returnCode": 0,
+          "logBytes": 1323,
+          "logSha256": "575947480ffd572571ba1b7bcbad6de7aad4e51aef02972f0a24b6b7d9929476",
+          "logTail": "[INFO] [1794001807.287474275] [bag_lab_recorder]: Event publisher thread: Started\n[INFO] [1794001807.289906040] [bag_lab_recorder]: Starting recording to '/tmp/ros2-bag-lab-o_wtvq30/system_sqlite'\n[INFO] [1794001807.290583040] [rosbag2_storage]: Opened database '/tmp/ros2-bag-lab-o_wtvq30/system_sqlite/system_sqlite_0.db3' for READ_WRITE.\n[INFO] [1794001807.290793587] [bag_lab_recorder]: Listening for topics...\n[INFO] [1794001807.290802207] [bag_lab_recorder]: Recording...\n[INFO] [1794001807.290822757] [bag_lab_recorder]: Topics discovery started.\n[INFO] [1794001807.393570084] [bag_lab_recorder]: Subscribed to topic '/bag_lab/derived'\n[INFO] [1794001807.394236044] [bag_lab_recorder]: Subscribed to topic '/bag_lab/input'\n[INFO] [1794001807.394553860] [bag_lab_recorder]: Overriding subscription profile for /bag_lab/static\n[INFO] [1794001807.394738527] [bag_lab_recorder]: Subscribed to topic '/bag_lab/static'\n[INFO] [1794001807.394745007] [bag_lab_recorder]: All requested topics are subscribed. Stopping discovery...\n[INFO] [1794001807.394746817] [bag_lab_recorder]: Topics discovery stopped.\n[INFO] [1794001808.422950878] [bag_lab_recorder]: Pausing recording.\n[INFO] [1794001808.424233259] [bag_lab_recorder]: Recording stopped\n[INFO] [1794001808.425268095] [bag_lab_recorder]: Event publisher thread: Exited\n",
+          "pidGone": true
+        }
+      ],
+      "recordings": [
+        {
+          "name": "system_sqlite",
+          "storage": "sqlite3",
+          "useSimTime": false,
+          "requestCachedStatic": true,
+          "bagDirectory": "/tmp/ros2-bag-lab-o_wtvq30/system_sqlite",
+          "beforeClock": [],
+          "expectedInputPayloads": {
+            "0": "8a8d38b670394b8d418f76efc45d11a9aa5a77edf74810b14a3cebf093d70d83",
+            "1": "ecb4e660c8518b8e22c70203f9a366da48def3cfd947c78e3eb29bbe6c1436b9",
+            "2": "f088ea694b0154b56c9d69c8da9180e988bcc5dcb40710dd6e71fafe4a7d3fc1",
+            "3": "f08d48995102aae3fc7566b492511f99b3579679f618f78ed8aa5ed2e3c39df4",
+            "4": "47725f61fa0b5c5746effd7e6db2ce9aececc4a9f766f83eecd974abbf05b8d9",
+            "5": "a4372c020b8bc1a3612761f9165b3953c6b14a0e652af551de113f53bf2ee04b"
+          },
+          "readback": {
+            "storageId": "sqlite3",
+            "metadataCount": 13,
+            "startNs": 1794001807401408041,
+            "durationNs": 601150195,
+            "metadataTopics": {
+              "/bag_lab/static": 1,
+              "/bag_lab/input": 6,
+              "/bag_lab/derived": 6
+            },
+            "files": [
+              "system_sqlite_0.db3"
+            ],
+            "counts": {
+              "/bag_lab/input": 6,
+              "/bag_lab/derived": 6,
+              "/bag_lab/static": 1
+            },
+            "records": [
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001807401408041,
+                "payloadSha256": "9430e57a63b797c189958e67523587871c15deec2556512885344e74981610fe",
+                "sequence": 0,
+                "xM": 0.0,
+                "headerNs": 1000000000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001807401414721,
+                "payloadSha256": "2e22fd435060cd5d3cf5e3ef39f79e198b35bd2c4af31974db36601b3a2f4c91",
+                "data": 0
+              },
+              {
+                "topic": "/bag_lab/static",
+                "receivedNs": 1794001807404903221,
+                "payloadSha256": "6f8d09c674cb98b9fffa7ca91a8f0d89ed05deee1be63fafa0abf7eda7a7b564",
+                "data": "calibration:v1"
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001807521614756,
+                "payloadSha256": "827645058831ee16de79e07441a95ec6b1f977b4ed52045e534ab528929aefde",
+                "sequence": 1,
+                "xM": 1.0,
+                "headerNs": 1000010000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001807521618986,
+                "payloadSha256": "93a8eaf79354c84442ac0e10c2062c53887deb79944f89aef71d679fd7a88b07",
+                "data": 1
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001807641882491,
+                "payloadSha256": "ccfa98a722f069767311765670b03c9d06acfc8ddcbbb465207cb3d4e51f843e",
+                "sequence": 2,
+                "xM": 2.0,
+                "headerNs": 1000020000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001807641887781,
+                "payloadSha256": "eacc08d79cc677584e2c59931de7d5aa6f12dddf9ca40eda868130711dc83461",
+                "data": 2
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001807762066356,
+                "payloadSha256": "6c982e3b1e5bc70bb24cd855fe63845438494b28a507c5d049210ac1792d93a3",
+                "sequence": 3,
+                "xM": 3.0,
+                "headerNs": 1000030000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001807762072776,
+                "payloadSha256": "e846f644a9c250ea43b054aa2d6678836fccacf9367f26bb645c3c8e9e7ab874",
+                "data": 3
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001807882262872,
+                "payloadSha256": "066d689477e8f9eae7ed4b170b1d5c68a6145ced3a9c6cb6813439a2ce7f01f3",
+                "sequence": 4,
+                "xM": 4.0,
+                "headerNs": 1000040000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001807882272101,
+                "payloadSha256": "50525845aa0fa94968819a3e7bfc2d01a599ca14f4ce92de225c4d206189cf9b",
+                "data": 4
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001808002553066,
+                "payloadSha256": "cccc23661e5ed7950f958deb001d370c8e3dbac4ffad2c36098979bd2edbf6eb",
+                "sequence": 5,
+                "xM": 5.0,
+                "headerNs": 1000050000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001808002558236,
+                "payloadSha256": "8076970a7e5a672e4a22ec446626938d4ef8d16569a0050ccf38496578a92d24",
+                "data": 5
+              }
+            ]
+          }
+        }
+      ],
+      "error": "Traceback (most recent call last):\n  File \"/home/wjz/ros2_robot/ros2-learning-hub/examples/bag_labs/record_replay_lab.py\", line 312, in main\n    normal = experiment.record('system_sqlite', 'sqlite3', False, True)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/wjz/ros2_robot/ros2-learning-hub/examples/bag_labs/record_replay_lab.py\", line 213, in record\n    assert item['payloadSha256'] == result['expectedInputPayloads'][str(item['sequence'])]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "cleanup": {
+        "nodesRemaining": 0,
+        "contextValid": false,
+        "processPidsGone": true,
+        "escalatedSignals": []
+      },
+      "durationS": 1.7982462079999095
+    },
+    {
+      "checkedAt": "2026-11-06T21:51:30.548728+00:00",
+      "passed": false,
+      "outputDirectory": "/tmp/ros2-bag-lab-xiiu41du",
+      "environment": {
+        "ROS_DOMAIN_ID": "231",
+        "ROS_AUTOMATIC_DISCOVERY_RANGE": "LOCALHOST",
+        "RMW_IMPLEMENTATION": "rmw_fastrtps_cpp"
+      },
+      "python": "3.12.3",
+      "parameters": {
+        "inputCount": 6,
+        "clockStepNs": 250000000
+      },
+      "sourceHashes": [
+        {
+          "path": "examples/bag_labs/README.md",
+          "sha256": "9b87cbbedf845e7abd5a3701cbce0f18bc3845cbe21ba55d3c2d6eed02cded02"
+        },
+        {
+          "path": "examples/bag_labs/inspect_bag.py",
+          "sha256": "9be0688fb2ba1b7191e490152e528c707a21e58412423fbf79c8ba7f6ced04e8"
+        },
+        {
+          "path": "examples/bag_labs/mcap_no_chunk.yaml",
+          "sha256": "edd632e29373c428ce3780dd800f9b4d2d096b82794d5460be8e9c8291237af5"
+        },
+        {
+          "path": "examples/bag_labs/qos_transient.yaml",
+          "sha256": "76aaaaf537ecdf6b8992f227d353d626998f2537f82e0afc6788b21dabddb2cc"
+        },
+        {
+          "path": "examples/bag_labs/qos_volatile.yaml",
+          "sha256": "ab8ba5c7566fed287566a3f0949763c83b94961b2774da3e41485996e6cdfc00"
+        },
+        {
+          "path": "examples/bag_labs/record_replay_lab.py",
+          "sha256": "b812300ccf85c76f10fe4430872db7ffc48018aa4211787bfd129c680186c2c6"
+        },
+        {
+          "path": "examples/bag_labs/storage_fields.py",
+          "sha256": "0a110bc9741ccdbcac2cad6747cca6d870e9cea1dd7eb214d5222113c967ea48"
+        }
+      ],
+      "limits": [
+        "本机有限合成输入，无真实采集、GUI海龟或完整仿真。",
+        "不是吞吐/压缩/磁盘恢复、网络校时、跨机或安全证明。",
+        "存储字段探针为显式Writer输入；send/source时间不是Header采样时间或已测网络时延。",
+        "父SIGINT/原生挂起清理分支尚未注入；常规子进程退出与节点清理另列。"
+      ],
+      "versions": {
+        "rosbag2_transport": "0.26.11",
+        "rosbag2_py": "0.26.11",
+        "ros2bag": "0.26.11",
+        "rosbag2_storage_mcap": "0.26.11",
+        "rosbag2_storage_sqlite3": "0.26.11",
+        "rclpy": "7.1.12"
+      },
+      "processes": [
+        {
+          "name": "system_sqlite",
+          "argv": [
+            "ros2",
+            "bag",
+            "record",
+            "--storage",
+            "sqlite3",
+            "--output",
+            "/tmp/ros2-bag-lab-xiiu41du/system_sqlite",
+            "--node-name",
+            "bag_lab_recorder",
+            "--disable-keyboard-controls",
+            "--max-cache-size",
+            "0",
+            "--qos-profile-overrides-path",
+            "/home/wjz/ros2_robot/ros2-learning-hub/examples/bag_labs/qos_transient.yaml",
+            "--topics",
+            "/bag_lab/input",
+            "/bag_lab/derived",
+            "/bag_lab/static"
+          ],
+          "pid": 248587,
+          "signals": [
+            "SIGINT"
+          ],
+          "logFile": "/tmp/ros2-bag-lab-xiiu41du/system_sqlite.log",
+          "returnCode": 0,
+          "logBytes": 1323,
+          "logSha256": "89b4e9b14778f8bde017a9bc4a6bcc0953f6de7bb290db3fa386c5efc907b5a2",
+          "logTail": "[INFO] [1794001891.034966032] [bag_lab_recorder]: Event publisher thread: Started\n[INFO] [1794001891.036841288] [bag_lab_recorder]: Starting recording to '/tmp/ros2-bag-lab-xiiu41du/system_sqlite'\n[INFO] [1794001891.037522000] [rosbag2_storage]: Opened database '/tmp/ros2-bag-lab-xiiu41du/system_sqlite/system_sqlite_0.db3' for READ_WRITE.\n[INFO] [1794001891.037735167] [bag_lab_recorder]: Listening for topics...\n[INFO] [1794001891.037743587] [bag_lab_recorder]: Recording...\n[INFO] [1794001891.037760927] [bag_lab_recorder]: Topics discovery started.\n[INFO] [1794001891.143246552] [bag_lab_recorder]: Subscribed to topic '/bag_lab/input'\n[INFO] [1794001891.143717216] [bag_lab_recorder]: Subscribed to topic '/bag_lab/derived'\n[INFO] [1794001891.143877244] [bag_lab_recorder]: Overriding subscription profile for /bag_lab/static\n[INFO] [1794001891.144066202] [bag_lab_recorder]: Subscribed to topic '/bag_lab/static'\n[INFO] [1794001891.144075282] [bag_lab_recorder]: All requested topics are subscribed. Stopping discovery...\n[INFO] [1794001891.144077792] [bag_lab_recorder]: Topics discovery stopped.\n[INFO] [1794001892.174166829] [bag_lab_recorder]: Pausing recording.\n[INFO] [1794001892.175283005] [bag_lab_recorder]: Recording stopped\n[INFO] [1794001892.176084415] [bag_lab_recorder]: Event publisher thread: Exited\n",
+          "pidGone": true
+        },
+        {
+          "name": "system_sqlite_info",
+          "argv": [
+            "ros2",
+            "bag",
+            "info",
+            "/tmp/ros2-bag-lab-xiiu41du/system_sqlite"
+          ],
+          "pid": 248606,
+          "signals": [],
+          "logFile": "/tmp/ros2-bag-lab-xiiu41du/system_sqlite_info.log",
+          "returnCode": 0,
+          "logBytes": 700,
+          "logSha256": "00fbcdaa3258e8b2c2333d8bc3308ee76181ed68b44b9226eb3fe3ec4d1122f0",
+          "logTail": "\nFiles:             system_sqlite_0.db3\nBag size:          30.7 KiB\nStorage id:        sqlite3\nROS Distro:        jazzy\nDuration:          0.600914285s\nStart:             Nov  7 2026 05:51:31.153004927 (1794001891.153004927)\nEnd:               Nov  7 2026 05:51:31.753919212 (1794001891.753919212)\nMessages:          13\nTopic information: Topic: /bag_lab/derived | Type: std_msgs/msg/Int32 | Count: 6 | Serialization Format: cdr\n                   Topic: /bag_lab/input | Type: geometry_msgs/msg/PointStamped | Count: 6 | Serialization Format: cdr\n                   Topic: /bag_lab/static | Type: std_msgs/msg/String | Count: 1 | Serialization Format: cdr\nService:           0\nService information: \n",
+          "pidGone": true
+        },
+        {
+          "name": "sim_mcap",
+          "argv": [
+            "ros2",
+            "bag",
+            "record",
+            "--storage",
+            "mcap",
+            "--output",
+            "/tmp/ros2-bag-lab-xiiu41du/sim_mcap",
+            "--node-name",
+            "bag_lab_recorder",
+            "--disable-keyboard-controls",
+            "--max-cache-size",
+            "0",
+            "--qos-profile-overrides-path",
+            "/home/wjz/ros2_robot/ros2-learning-hub/examples/bag_labs/qos_transient.yaml",
+            "--use-sim-time",
+            "--topics",
+            "/bag_lab/input",
+            "/bag_lab/derived",
+            "/bag_lab/static"
+          ],
+          "pid": 248619,
+          "signals": [
+            "SIGINT"
+          ],
+          "logFile": "/tmp/ros2-bag-lab-xiiu41du/sim_mcap.log",
+          "returnCode": 0,
+          "logBytes": 1383,
+          "logSha256": "222bf6e6c596feac3e39abe91af30e64181d93f937ff2907b6bc4c9eb08d50b6",
+          "logTail": "[INFO] [1794001892.845619340] [bag_lab_recorder]: Event publisher thread: Started\n[INFO] [1794001892.847477046] [bag_lab_recorder]: Starting recording to '/tmp/ros2-bag-lab-xiiu41du/sim_mcap'\n[INFO] [1794001892.848051459] [bag_lab_recorder]: Listening for topics...\n[INFO] [1794001892.848061359] [bag_lab_recorder]: Recording...\n[INFO] [1794001892.848070449] [bag_lab_recorder]: Topics discovery started.\n[INFO] [1794001892.848087188] [bag_lab_recorder]: use_sim_time set, waiting for /clock before starting recording...\n[INFO] [1794001893.378545233] [bag_lab_recorder]: Sim time /clock found, starting recording.\n[INFO] [1794001893.379362163] [bag_lab_recorder]: Subscribed to topic '/bag_lab/derived'\n[INFO] [1794001893.380001505] [bag_lab_recorder]: Subscribed to topic '/bag_lab/input'\n[INFO] [1794001893.380109173] [bag_lab_recorder]: Overriding subscription profile for /bag_lab/static\n[INFO] [1794001893.380278931] [bag_lab_recorder]: Subscribed to topic '/bag_lab/static'\n[INFO] [1794001893.380292671] [bag_lab_recorder]: All requested topics are subscribed. Stopping discovery...\n[INFO] [1794001893.380296441] [bag_lab_recorder]: Topics discovery stopped.\n[INFO] [1794001894.899895299] [bag_lab_recorder]: Pausing recording.\n[INFO] [1794001894.905964601] [bag_lab_recorder]: Recording stopped\n[INFO] [1794001894.907161166] [bag_lab_recorder]: Event publisher thread: Exited\n",
+          "pidGone": true
+        },
+        {
+          "name": "sim_mcap_info",
+          "argv": [
+            "ros2",
+            "bag",
+            "info",
+            "/tmp/ros2-bag-lab-xiiu41du/sim_mcap"
+          ],
+          "pid": 248639,
+          "signals": [],
+          "logFile": "/tmp/ros2-bag-lab-xiiu41du/sim_mcap_info.log",
+          "returnCode": 0,
+          "logBytes": 677,
+          "logSha256": "8d451a398f5247826e7163585ac0e3df4a6373e920d1626f47c8be1f68b92210",
+          "logTail": "\nFiles:             sim_mcap_0.mcap\nBag size:          13.9 KiB\nStorage id:        mcap\nROS Distro:        jazzy\nDuration:          1.250000000s\nStart:             Jan  1 1970 08:00:10.000000000 (10.000000000)\nEnd:               Jan  1 1970 08:00:11.250000000 (11.250000000)\nMessages:          13\nTopic information: Topic: /bag_lab/derived | Type: std_msgs/msg/Int32 | Count: 6 | Serialization Format: cdr\n                   Topic: /bag_lab/input | Type: geometry_msgs/msg/PointStamped | Count: 6 | Serialization Format: cdr\n                   Topic: /bag_lab/static | Type: std_msgs/msg/String | Count: 1 | Serialization Format: cdr\nService:           0\nService information: \n",
+          "pidGone": true
+        },
+        {
+          "name": "late_volatile_mcap",
+          "argv": [
+            "ros2",
+            "bag",
+            "record",
+            "--storage",
+            "mcap",
+            "--output",
+            "/tmp/ros2-bag-lab-xiiu41du/late_volatile_mcap",
+            "--node-name",
+            "bag_lab_recorder",
+            "--disable-keyboard-controls",
+            "--max-cache-size",
+            "0",
+            "--qos-profile-overrides-path",
+            "/home/wjz/ros2_robot/ros2-learning-hub/examples/bag_labs/qos_volatile.yaml",
+            "--topics",
+            "/bag_lab/input",
+            "/bag_lab/derived",
+            "/bag_lab/static"
+          ],
+          "pid": 248650,
+          "signals": [
+            "SIGINT"
+          ],
+          "logFile": "/tmp/ros2-bag-lab-xiiu41du/late_volatile_mcap.log",
+          "returnCode": 0,
+          "logBytes": 1184,
+          "logSha256": "1cd0d18f86fb4233506508b6a11d6ed708296181b32e1e5945f185f89f8c5853",
+          "logTail": "[INFO] [1794001895.558679785] [bag_lab_recorder]: Event publisher thread: Started\n[INFO] [1794001895.560624770] [bag_lab_recorder]: Starting recording to '/tmp/ros2-bag-lab-xiiu41du/late_volatile_mcap'\n[INFO] [1794001895.561203883] [bag_lab_recorder]: Listening for topics...\n[INFO] [1794001895.561213562] [bag_lab_recorder]: Recording...\n[INFO] [1794001895.561214572] [bag_lab_recorder]: Topics discovery started.\n[INFO] [1794001895.667345167] [bag_lab_recorder]: Subscribed to topic '/bag_lab/input'\n[INFO] [1794001895.667724432] [bag_lab_recorder]: Subscribed to topic '/bag_lab/derived'\n[INFO] [1794001895.667825791] [bag_lab_recorder]: Overriding subscription profile for /bag_lab/static\n[INFO] [1794001895.667974139] [bag_lab_recorder]: Subscribed to topic '/bag_lab/static'\n[INFO] [1794001895.667980439] [bag_lab_recorder]: All requested topics are subscribed. Stopping discovery...\n[INFO] [1794001895.667982219] [bag_lab_recorder]: Topics discovery stopped.\n[INFO] [1794001896.713964064] [bag_lab_recorder]: Pausing recording.\n[INFO] [1794001896.715008301] [bag_lab_recorder]: Recording stopped\n[INFO] [1794001896.715971588] [bag_lab_recorder]: Event publisher thread: Exited\n",
+          "pidGone": true
+        },
+        {
+          "name": "late_volatile_mcap_info",
+          "argv": [
+            "ros2",
+            "bag",
+            "info",
+            "/tmp/ros2-bag-lab-xiiu41du/late_volatile_mcap"
+          ],
+          "pid": 248670,
+          "signals": [],
+          "logFile": "/tmp/ros2-bag-lab-xiiu41du/late_volatile_mcap_info.log",
+          "returnCode": 0,
+          "logBytes": 703,
+          "logSha256": "6a46ea7c530eb597c38fed1033f092e81b17e3f8a6a6f27e37481863652c964f",
+          "logTail": "\nFiles:             late_volatile_mcap_0.mcap\nBag size:          13.1 KiB\nStorage id:        mcap\nROS Distro:        jazzy\nDuration:          0.600922901s\nStart:             Nov  7 2026 05:51:35.692776462 (1794001895.692776462)\nEnd:               Nov  7 2026 05:51:36.293699363 (1794001896.293699363)\nMessages:          12\nTopic information: Topic: /bag_lab/derived | Type: std_msgs/msg/Int32 | Count: 6 | Serialization Format: cdr\n                   Topic: /bag_lab/input | Type: geometry_msgs/msg/PointStamped | Count: 6 | Serialization Format: cdr\n                   Topic: /bag_lab/static | Type: std_msgs/msg/String | Count: 0 | Serialization Format: cdr\nService:           0\nService information: \n",
+          "pidGone": true
+        }
+      ],
+      "recordings": [
+        {
+          "name": "system_sqlite",
+          "storage": "sqlite3",
+          "useSimTime": false,
+          "requestCachedStatic": true,
+          "bagDirectory": "/tmp/ros2-bag-lab-xiiu41du/system_sqlite",
+          "beforeClock": [],
+          "expectedInputFields": {
+            "0": {
+              "headerNs": 1000000000000,
+              "frameId": "synthetic_frame",
+              "xM": 0.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "1": {
+              "headerNs": 1000010000000,
+              "frameId": "synthetic_frame",
+              "xM": 1.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "2": {
+              "headerNs": 1000020000000,
+              "frameId": "synthetic_frame",
+              "xM": 2.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "3": {
+              "headerNs": 1000030000000,
+              "frameId": "synthetic_frame",
+              "xM": 3.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "4": {
+              "headerNs": 1000040000000,
+              "frameId": "synthetic_frame",
+              "xM": 4.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "5": {
+              "headerNs": 1000050000000,
+              "frameId": "synthetic_frame",
+              "xM": 5.0,
+              "yM": 0.0,
+              "zM": 0.0
+            }
+          },
+          "readback": {
+            "storageId": "sqlite3",
+            "metadataCount": 13,
+            "startNs": 1794001891153004927,
+            "durationNs": 600914285,
+            "metadataTopics": {
+              "/bag_lab/static": 1,
+              "/bag_lab/derived": 6,
+              "/bag_lab/input": 6
+            },
+            "files": [
+              "system_sqlite_0.db3"
+            ],
+            "counts": {
+              "/bag_lab/input": 6,
+              "/bag_lab/derived": 6,
+              "/bag_lab/static": 1
+            },
+            "records": [
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001891153004927,
+                "payloadSha256": "9430e57a63b797c189958e67523587871c15deec2556512885344e74981610fe",
+                "sequence": 0,
+                "xM": 0.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000000000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001891153010857,
+                "payloadSha256": "2e22fd435060cd5d3cf5e3ef39f79e198b35bd2c4af31974db36601b3a2f4c91",
+                "data": 0
+              },
+              {
+                "topic": "/bag_lab/static",
+                "receivedNs": 1794001891154231751,
+                "payloadSha256": "6f8d09c674cb98b9fffa7ca91a8f0d89ed05deee1be63fafa0abf7eda7a7b564",
+                "data": "calibration:v1"
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001891273217764,
+                "payloadSha256": "827645058831ee16de79e07441a95ec6b1f977b4ed52045e534ab528929aefde",
+                "sequence": 1,
+                "xM": 1.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000010000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001891273224834,
+                "payloadSha256": "93a8eaf79354c84442ac0e10c2062c53887deb79944f89aef71d679fd7a88b07",
+                "data": 1
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001891393430000,
+                "payloadSha256": "ccfa98a722f069767311765670b03c9d06acfc8ddcbbb465207cb3d4e51f843e",
+                "sequence": 2,
+                "xM": 2.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000020000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001891393439130,
+                "payloadSha256": "eacc08d79cc677584e2c59931de7d5aa6f12dddf9ca40eda868130711dc83461",
+                "data": 2
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001891513581007,
+                "payloadSha256": "6c982e3b1e5bc70bb24cd855fe63845438494b28a507c5d049210ac1792d93a3",
+                "sequence": 3,
+                "xM": 3.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000030000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001891513592937,
+                "payloadSha256": "e846f644a9c250ea43b054aa2d6678836fccacf9367f26bb645c3c8e9e7ab874",
+                "data": 3
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001891633718205,
+                "payloadSha256": "066d689477e8f9eae7ed4b170b1d5c68a6145ced3a9c6cb6813439a2ce7f01f3",
+                "sequence": 4,
+                "xM": 4.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000040000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001891633723555,
+                "payloadSha256": "50525845aa0fa94968819a3e7bfc2d01a599ca14f4ce92de225c4d206189cf9b",
+                "data": 4
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001891753910292,
+                "payloadSha256": "cccc23661e5ed7950f958deb001d370c8e3dbac4ffad2c36098979bd2edbf6eb",
+                "sequence": 5,
+                "xM": 5.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000050000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001891753919212,
+                "payloadSha256": "8076970a7e5a672e4a22ec446626938d4ef8d16569a0050ccf38496578a92d24",
+                "data": 5
+              }
+            ]
+          },
+          "passed": true
+        },
+        {
+          "name": "sim_mcap",
+          "storage": "mcap",
+          "useSimTime": true,
+          "requestCachedStatic": true,
+          "bagDirectory": "/tmp/ros2-bag-lab-xiiu41du/sim_mcap",
+          "beforeClock": [
+            {
+              "stage": "no_clock",
+              "sentSequences": [
+                100,
+                101
+              ],
+              "dataSubscriptions": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "stage": "zero_clock",
+              "sentSequences": [
+                200,
+                201
+              ],
+              "dataSubscriptions": [
+                0,
+                0,
+                0
+              ]
+            }
+          ],
+          "expectedInputFields": {
+            "0": {
+              "headerNs": 1000000000000,
+              "frameId": "synthetic_frame",
+              "xM": 0.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "1": {
+              "headerNs": 1000010000000,
+              "frameId": "synthetic_frame",
+              "xM": 1.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "2": {
+              "headerNs": 1000020000000,
+              "frameId": "synthetic_frame",
+              "xM": 2.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "3": {
+              "headerNs": 1000030000000,
+              "frameId": "synthetic_frame",
+              "xM": 3.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "4": {
+              "headerNs": 1000040000000,
+              "frameId": "synthetic_frame",
+              "xM": 4.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "5": {
+              "headerNs": 1000050000000,
+              "frameId": "synthetic_frame",
+              "xM": 5.0,
+              "yM": 0.0,
+              "zM": 0.0
+            }
+          },
+          "readback": {
+            "storageId": "mcap",
+            "metadataCount": 13,
+            "startNs": 10000000000,
+            "durationNs": 1250000000,
+            "metadataTopics": {
+              "/bag_lab/static": 1,
+              "/bag_lab/input": 6,
+              "/bag_lab/derived": 6
+            },
+            "files": [
+              "sim_mcap_0.mcap"
+            ],
+            "counts": {
+              "/bag_lab/static": 1,
+              "/bag_lab/derived": 6,
+              "/bag_lab/input": 6
+            },
+            "records": [
+              {
+                "topic": "/bag_lab/static",
+                "receivedNs": 10000000000,
+                "payloadSha256": "6f8d09c674cb98b9fffa7ca91a8f0d89ed05deee1be63fafa0abf7eda7a7b564",
+                "data": "calibration:v1"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 10000000000,
+                "payloadSha256": "2e22fd435060cd5d3cf5e3ef39f79e198b35bd2c4af31974db36601b3a2f4c91",
+                "data": 0
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 10000000000,
+                "payloadSha256": "9430e57a63b797c189958e67523587871c15deec2556512885344e74981610fe",
+                "sequence": 0,
+                "xM": 0.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000000000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 10250000000,
+                "payloadSha256": "93a8eaf79354c84442ac0e10c2062c53887deb79944f89aef71d679fd7a88b07",
+                "data": 1
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 10250000000,
+                "payloadSha256": "827645058831ee16de79e07441a95ec6b1f977b4ed52045e534ab528929aefde",
+                "sequence": 1,
+                "xM": 1.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000010000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 10500000000,
+                "payloadSha256": "eacc08d79cc677584e2c59931de7d5aa6f12dddf9ca40eda868130711dc83461",
+                "data": 2
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 10500000000,
+                "payloadSha256": "ccfa98a722f069767311765670b03c9d06acfc8ddcbbb465207cb3d4e51f843e",
+                "sequence": 2,
+                "xM": 2.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000020000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 10750000000,
+                "payloadSha256": "e846f644a9c250ea43b054aa2d6678836fccacf9367f26bb645c3c8e9e7ab874",
+                "data": 3
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 10750000000,
+                "payloadSha256": "6c982e3b1e5bc70bb24cd855fe63845438494b28a507c5d049210ac1792d93a3",
+                "sequence": 3,
+                "xM": 3.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000030000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 11000000000,
+                "payloadSha256": "50525845aa0fa94968819a3e7bfc2d01a599ca14f4ce92de225c4d206189cf9b",
+                "data": 4
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 11000000000,
+                "payloadSha256": "066d689477e8f9eae7ed4b170b1d5c68a6145ced3a9c6cb6813439a2ce7f01f3",
+                "sequence": 4,
+                "xM": 4.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000040000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 11250000000,
+                "payloadSha256": "8076970a7e5a672e4a22ec446626938d4ef8d16569a0050ccf38496578a92d24",
+                "data": 5
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 11250000000,
+                "payloadSha256": "cccc23661e5ed7950f958deb001d370c8e3dbac4ffad2c36098979bd2edbf6eb",
+                "sequence": 5,
+                "xM": 5.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000050000000,
+                "frameId": "synthetic_frame"
+              }
+            ]
+          },
+          "passed": true
+        },
+        {
+          "name": "late_volatile_mcap",
+          "storage": "mcap",
+          "useSimTime": false,
+          "requestCachedStatic": false,
+          "bagDirectory": "/tmp/ros2-bag-lab-xiiu41du/late_volatile_mcap",
+          "beforeClock": [],
+          "expectedInputFields": {
+            "0": {
+              "headerNs": 1000000000000,
+              "frameId": "synthetic_frame",
+              "xM": 0.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "1": {
+              "headerNs": 1000010000000,
+              "frameId": "synthetic_frame",
+              "xM": 1.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "2": {
+              "headerNs": 1000020000000,
+              "frameId": "synthetic_frame",
+              "xM": 2.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "3": {
+              "headerNs": 1000030000000,
+              "frameId": "synthetic_frame",
+              "xM": 3.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "4": {
+              "headerNs": 1000040000000,
+              "frameId": "synthetic_frame",
+              "xM": 4.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "5": {
+              "headerNs": 1000050000000,
+              "frameId": "synthetic_frame",
+              "xM": 5.0,
+              "yM": 0.0,
+              "zM": 0.0
+            }
+          },
+          "readback": {
+            "storageId": "mcap",
+            "metadataCount": 12,
+            "startNs": 1794001895692776462,
+            "durationNs": 600922901,
+            "metadataTopics": {
+              "/bag_lab/static": 0,
+              "/bag_lab/derived": 6,
+              "/bag_lab/input": 6
+            },
+            "files": [
+              "late_volatile_mcap_0.mcap"
+            ],
+            "counts": {
+              "/bag_lab/input": 6,
+              "/bag_lab/derived": 6
+            },
+            "records": [
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001895692776462,
+                "payloadSha256": "9430e57a63b797c189958e67523587871c15deec2556512885344e74981610fe",
+                "sequence": 0,
+                "xM": 0.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000000000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001895692781442,
+                "payloadSha256": "2e22fd435060cd5d3cf5e3ef39f79e198b35bd2c4af31974db36601b3a2f4c91",
+                "data": 0
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001895813033757,
+                "payloadSha256": "827645058831ee16de79e07441a95ec6b1f977b4ed52045e534ab528929aefde",
+                "sequence": 1,
+                "xM": 1.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000010000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001895813042157,
+                "payloadSha256": "93a8eaf79354c84442ac0e10c2062c53887deb79944f89aef71d679fd7a88b07",
+                "data": 1
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001895933200312,
+                "payloadSha256": "ccfa98a722f069767311765670b03c9d06acfc8ddcbbb465207cb3d4e51f843e",
+                "sequence": 2,
+                "xM": 2.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000020000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001895933205762,
+                "payloadSha256": "eacc08d79cc677584e2c59931de7d5aa6f12dddf9ca40eda868130711dc83461",
+                "data": 2
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001896053371418,
+                "payloadSha256": "6c982e3b1e5bc70bb24cd855fe63845438494b28a507c5d049210ac1792d93a3",
+                "sequence": 3,
+                "xM": 3.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000030000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001896053376868,
+                "payloadSha256": "e846f644a9c250ea43b054aa2d6678836fccacf9367f26bb645c3c8e9e7ab874",
+                "data": 3
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001896173532456,
+                "payloadSha256": "066d689477e8f9eae7ed4b170b1d5c68a6145ced3a9c6cb6813439a2ce7f01f3",
+                "sequence": 4,
+                "xM": 4.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000040000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001896173538406,
+                "payloadSha256": "50525845aa0fa94968819a3e7bfc2d01a599ca14f4ce92de225c4d206189cf9b",
+                "data": 4
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001896293693894,
+                "payloadSha256": "cccc23661e5ed7950f958deb001d370c8e3dbac4ffad2c36098979bd2edbf6eb",
+                "sequence": 5,
+                "xM": 5.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000050000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001896293699363,
+                "payloadSha256": "8076970a7e5a672e4a22ec446626938d4ef8d16569a0050ccf38496578a92d24",
+                "data": 5
+              }
+            ]
+          },
+          "passed": true
+        }
+      ],
+      "error": "Traceback (most recent call last):\n  File \"/home/wjz/ros2_robot/ros2-learning-hub/examples/bag_labs/record_replay_lab.py\", line 317, in main\n    experiment.replay(normal, filtered=False, with_clock=False)\n  File \"/home/wjz/ros2_robot/ros2-learning-hub/examples/bag_labs/record_replay_lab.py\", line 231, in replay\n    from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy, qos_profile_clock\nImportError: cannot import name 'qos_profile_clock' from 'rclpy.qos' (/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/qos.py)\n",
+      "cleanup": {
+        "nodesRemaining": 0,
+        "contextValid": false,
+        "processPidsGone": true,
+        "escalatedSignals": []
+      },
+      "durationS": 6.508032240999455
+    },
+    {
+      "checkedAt": "2026-11-06T21:52:29.531817+00:00",
+      "passed": true,
+      "outputDirectory": "/tmp/ros2-bag-lab-zn9n9p50",
+      "environment": {
+        "ROS_DOMAIN_ID": "231",
+        "ROS_AUTOMATIC_DISCOVERY_RANGE": "LOCALHOST",
+        "RMW_IMPLEMENTATION": "rmw_fastrtps_cpp"
+      },
+      "python": "3.12.3",
+      "parameters": {
+        "inputCount": 6,
+        "clockStepNs": 250000000
+      },
+      "sourceHashes": [
+        {
+          "path": "examples/bag_labs/README.md",
+          "sha256": "9b87cbbedf845e7abd5a3701cbce0f18bc3845cbe21ba55d3c2d6eed02cded02"
+        },
+        {
+          "path": "examples/bag_labs/inspect_bag.py",
+          "sha256": "9be0688fb2ba1b7191e490152e528c707a21e58412423fbf79c8ba7f6ced04e8"
+        },
+        {
+          "path": "examples/bag_labs/mcap_no_chunk.yaml",
+          "sha256": "edd632e29373c428ce3780dd800f9b4d2d096b82794d5460be8e9c8291237af5"
+        },
+        {
+          "path": "examples/bag_labs/qos_transient.yaml",
+          "sha256": "76aaaaf537ecdf6b8992f227d353d626998f2537f82e0afc6788b21dabddb2cc"
+        },
+        {
+          "path": "examples/bag_labs/qos_volatile.yaml",
+          "sha256": "ab8ba5c7566fed287566a3f0949763c83b94961b2774da3e41485996e6cdfc00"
+        },
+        {
+          "path": "examples/bag_labs/record_replay_lab.py",
+          "sha256": "20a0542306dfab1fe080cc42a689fca8ee9e74b29bd3f942875a6a5fd3f7ba24"
+        },
+        {
+          "path": "examples/bag_labs/storage_fields.py",
+          "sha256": "0a110bc9741ccdbcac2cad6747cca6d870e9cea1dd7eb214d5222113c967ea48"
+        }
+      ],
+      "limits": [
+        "本机有限合成输入，无真实采集、GUI海龟或完整仿真。",
+        "不是吞吐/压缩/磁盘恢复、网络校时、跨机或安全证明。",
+        "存储字段探针为显式Writer输入；send/source时间不是Header采样时间或已测网络时延。",
+        "父SIGINT/原生挂起清理分支尚未注入；常规子进程退出与节点清理另列。"
+      ],
+      "versions": {
+        "rosbag2_transport": "0.26.11",
+        "rosbag2_py": "0.26.11",
+        "ros2bag": "0.26.11",
+        "rosbag2_storage_mcap": "0.26.11",
+        "rosbag2_storage_sqlite3": "0.26.11",
+        "rclpy": "7.1.12"
+      },
+      "processes": [
+        {
+          "name": "system_sqlite",
+          "argv": [
+            "ros2",
+            "bag",
+            "record",
+            "--storage",
+            "sqlite3",
+            "--output",
+            "/tmp/ros2-bag-lab-zn9n9p50/system_sqlite",
+            "--node-name",
+            "bag_lab_recorder",
+            "--disable-keyboard-controls",
+            "--max-cache-size",
+            "0",
+            "--qos-profile-overrides-path",
+            "/home/wjz/ros2_robot/ros2-learning-hub/examples/bag_labs/qos_transient.yaml",
+            "--topics",
+            "/bag_lab/input",
+            "/bag_lab/derived",
+            "/bag_lab/static"
+          ],
+          "pid": 248870,
+          "signals": [
+            "SIGINT"
+          ],
+          "logFile": "/tmp/ros2-bag-lab-zn9n9p50/system_sqlite.log",
+          "returnCode": 0,
+          "logBytes": 1323,
+          "logSha256": "b19fe8fcbd8fbcbcf165165f36382c2a859d3efebf5e104bff53235d618dcfbf",
+          "logTail": "[INFO] [1794001950.013036809] [bag_lab_recorder]: Event publisher thread: Started\n[INFO] [1794001950.015003426] [bag_lab_recorder]: Starting recording to '/tmp/ros2-bag-lab-zn9n9p50/system_sqlite'\n[INFO] [1794001950.015667988] [rosbag2_storage]: Opened database '/tmp/ros2-bag-lab-zn9n9p50/system_sqlite/system_sqlite_0.db3' for READ_WRITE.\n[INFO] [1794001950.015883966] [bag_lab_recorder]: Listening for topics...\n[INFO] [1794001950.015892816] [bag_lab_recorder]: Recording...\n[INFO] [1794001950.015900975] [bag_lab_recorder]: Topics discovery started.\n[INFO] [1794001950.121783999] [bag_lab_recorder]: Subscribed to topic '/bag_lab/input'\n[INFO] [1794001950.122217434] [bag_lab_recorder]: Subscribed to topic '/bag_lab/derived'\n[INFO] [1794001950.122364792] [bag_lab_recorder]: Overriding subscription profile for /bag_lab/static\n[INFO] [1794001950.122536020] [bag_lab_recorder]: Subscribed to topic '/bag_lab/static'\n[INFO] [1794001950.122542480] [bag_lab_recorder]: All requested topics are subscribed. Stopping discovery...\n[INFO] [1794001950.122544300] [bag_lab_recorder]: Topics discovery stopped.\n[INFO] [1794001951.154169709] [bag_lab_recorder]: Pausing recording.\n[INFO] [1794001951.155257796] [bag_lab_recorder]: Recording stopped\n[INFO] [1794001951.156098146] [bag_lab_recorder]: Event publisher thread: Exited\n",
+          "pidGone": true
+        },
+        {
+          "name": "system_sqlite_info",
+          "argv": [
+            "ros2",
+            "bag",
+            "info",
+            "/tmp/ros2-bag-lab-zn9n9p50/system_sqlite"
+          ],
+          "pid": 248888,
+          "signals": [],
+          "logFile": "/tmp/ros2-bag-lab-zn9n9p50/system_sqlite_info.log",
+          "returnCode": 0,
+          "logBytes": 700,
+          "logSha256": "e3d55d54671f6594dc590612ca9994b514f7e454867e072499f7822510374bfd",
+          "logTail": "\nFiles:             system_sqlite_0.db3\nBag size:          30.7 KiB\nStorage id:        sqlite3\nROS Distro:        jazzy\nDuration:          0.601145526s\nStart:             Nov  7 2026 05:52:30.132690969 (1794001950.132690969)\nEnd:               Nov  7 2026 05:52:30.733836495 (1794001950.733836495)\nMessages:          13\nTopic information: Topic: /bag_lab/derived | Type: std_msgs/msg/Int32 | Count: 6 | Serialization Format: cdr\n                   Topic: /bag_lab/input | Type: geometry_msgs/msg/PointStamped | Count: 6 | Serialization Format: cdr\n                   Topic: /bag_lab/static | Type: std_msgs/msg/String | Count: 1 | Serialization Format: cdr\nService:           0\nService information: \n",
+          "pidGone": true
+        },
+        {
+          "name": "sim_mcap",
+          "argv": [
+            "ros2",
+            "bag",
+            "record",
+            "--storage",
+            "mcap",
+            "--output",
+            "/tmp/ros2-bag-lab-zn9n9p50/sim_mcap",
+            "--node-name",
+            "bag_lab_recorder",
+            "--disable-keyboard-controls",
+            "--max-cache-size",
+            "0",
+            "--qos-profile-overrides-path",
+            "/home/wjz/ros2_robot/ros2-learning-hub/examples/bag_labs/qos_transient.yaml",
+            "--use-sim-time",
+            "--topics",
+            "/bag_lab/input",
+            "/bag_lab/derived",
+            "/bag_lab/static"
+          ],
+          "pid": 248901,
+          "signals": [
+            "SIGINT"
+          ],
+          "logFile": "/tmp/ros2-bag-lab-zn9n9p50/sim_mcap.log",
+          "returnCode": 0,
+          "logBytes": 1383,
+          "logSha256": "0aee6cf95e555e9580c96984faf56186b1d8c9a40d5c8c73b9b01dafcb38e930",
+          "logTail": "[INFO] [1794001951.823015701] [bag_lab_recorder]: Event publisher thread: Started\n[INFO] [1794001951.824864640] [bag_lab_recorder]: Starting recording to '/tmp/ros2-bag-lab-zn9n9p50/sim_mcap'\n[INFO] [1794001951.825444253] [bag_lab_recorder]: Listening for topics...\n[INFO] [1794001951.825454583] [bag_lab_recorder]: Topics discovery started.\n[INFO] [1794001951.825461113] [bag_lab_recorder]: use_sim_time set, waiting for /clock before starting recording...\n[INFO] [1794001951.825454853] [bag_lab_recorder]: Recording...\n[INFO] [1794001952.355955800] [bag_lab_recorder]: Sim time /clock found, starting recording.\n[INFO] [1794001952.357268675] [bag_lab_recorder]: Subscribed to topic '/bag_lab/derived'\n[INFO] [1794001952.358117595] [bag_lab_recorder]: Subscribed to topic '/bag_lab/input'\n[INFO] [1794001952.358263373] [bag_lab_recorder]: Overriding subscription profile for /bag_lab/static\n[INFO] [1794001952.358478070] [bag_lab_recorder]: Subscribed to topic '/bag_lab/static'\n[INFO] [1794001952.358488870] [bag_lab_recorder]: All requested topics are subscribed. Stopping discovery...\n[INFO] [1794001952.358491100] [bag_lab_recorder]: Topics discovery stopped.\n[INFO] [1794001953.875602356] [bag_lab_recorder]: Pausing recording.\n[INFO] [1794001953.876680933] [bag_lab_recorder]: Recording stopped\n[INFO] [1794001953.877552093] [bag_lab_recorder]: Event publisher thread: Exited\n",
+          "pidGone": true
+        },
+        {
+          "name": "sim_mcap_info",
+          "argv": [
+            "ros2",
+            "bag",
+            "info",
+            "/tmp/ros2-bag-lab-zn9n9p50/sim_mcap"
+          ],
+          "pid": 248922,
+          "signals": [],
+          "logFile": "/tmp/ros2-bag-lab-zn9n9p50/sim_mcap_info.log",
+          "returnCode": 0,
+          "logBytes": 677,
+          "logSha256": "8d451a398f5247826e7163585ac0e3df4a6373e920d1626f47c8be1f68b92210",
+          "logTail": "\nFiles:             sim_mcap_0.mcap\nBag size:          13.9 KiB\nStorage id:        mcap\nROS Distro:        jazzy\nDuration:          1.250000000s\nStart:             Jan  1 1970 08:00:10.000000000 (10.000000000)\nEnd:               Jan  1 1970 08:00:11.250000000 (11.250000000)\nMessages:          13\nTopic information: Topic: /bag_lab/derived | Type: std_msgs/msg/Int32 | Count: 6 | Serialization Format: cdr\n                   Topic: /bag_lab/input | Type: geometry_msgs/msg/PointStamped | Count: 6 | Serialization Format: cdr\n                   Topic: /bag_lab/static | Type: std_msgs/msg/String | Count: 1 | Serialization Format: cdr\nService:           0\nService information: \n",
+          "pidGone": true
+        },
+        {
+          "name": "late_volatile_mcap",
+          "argv": [
+            "ros2",
+            "bag",
+            "record",
+            "--storage",
+            "mcap",
+            "--output",
+            "/tmp/ros2-bag-lab-zn9n9p50/late_volatile_mcap",
+            "--node-name",
+            "bag_lab_recorder",
+            "--disable-keyboard-controls",
+            "--max-cache-size",
+            "0",
+            "--qos-profile-overrides-path",
+            "/home/wjz/ros2_robot/ros2-learning-hub/examples/bag_labs/qos_volatile.yaml",
+            "--topics",
+            "/bag_lab/input",
+            "/bag_lab/derived",
+            "/bag_lab/static"
+          ],
+          "pid": 248933,
+          "signals": [
+            "SIGINT"
+          ],
+          "logFile": "/tmp/ros2-bag-lab-zn9n9p50/late_volatile_mcap.log",
+          "returnCode": 0,
+          "logBytes": 1184,
+          "logSha256": "6f314166fcc54718a005ca5f33eab3aca02b657f3b080d42e004241686833d50",
+          "logTail": "[INFO] [1794001954.504066885] [bag_lab_recorder]: Event publisher thread: Started\n[INFO] [1794001954.505954012] [bag_lab_recorder]: Starting recording to '/tmp/ros2-bag-lab-zn9n9p50/late_volatile_mcap'\n[INFO] [1794001954.506575625] [bag_lab_recorder]: Listening for topics...\n[INFO] [1794001954.506589435] [bag_lab_recorder]: Recording...\n[INFO] [1794001954.506620194] [bag_lab_recorder]: Topics discovery started.\n[INFO] [1794001954.611745713] [bag_lab_recorder]: Subscribed to topic '/bag_lab/derived'\n[INFO] [1794001954.612403086] [bag_lab_recorder]: Subscribed to topic '/bag_lab/input'\n[INFO] [1794001954.612554344] [bag_lab_recorder]: Overriding subscription profile for /bag_lab/static\n[INFO] [1794001954.612719942] [bag_lab_recorder]: Subscribed to topic '/bag_lab/static'\n[INFO] [1794001954.612726802] [bag_lab_recorder]: All requested topics are subscribed. Stopping discovery...\n[INFO] [1794001954.612728552] [bag_lab_recorder]: Topics discovery stopped.\n[INFO] [1794001955.639385871] [bag_lab_recorder]: Pausing recording.\n[INFO] [1794001955.645743126] [bag_lab_recorder]: Recording stopped\n[INFO] [1794001955.646942272] [bag_lab_recorder]: Event publisher thread: Exited\n",
+          "pidGone": true
+        },
+        {
+          "name": "late_volatile_mcap_info",
+          "argv": [
+            "ros2",
+            "bag",
+            "info",
+            "/tmp/ros2-bag-lab-zn9n9p50/late_volatile_mcap"
+          ],
+          "pid": 248953,
+          "signals": [],
+          "logFile": "/tmp/ros2-bag-lab-zn9n9p50/late_volatile_mcap_info.log",
+          "returnCode": 0,
+          "logBytes": 703,
+          "logSha256": "b629de7f6807a56d7c28141411e9668d000bdff91505077e2eda7171141ed841",
+          "logTail": "\nFiles:             late_volatile_mcap_0.mcap\nBag size:          13.1 KiB\nStorage id:        mcap\nROS Distro:        jazzy\nDuration:          0.601269365s\nStart:             Nov  7 2026 05:52:34.617771782 (1794001954.617771782)\nEnd:               Nov  7 2026 05:52:35.219041147 (1794001955.219041147)\nMessages:          12\nTopic information: Topic: /bag_lab/derived | Type: std_msgs/msg/Int32 | Count: 6 | Serialization Format: cdr\n                   Topic: /bag_lab/input | Type: geometry_msgs/msg/PointStamped | Count: 6 | Serialization Format: cdr\n                   Topic: /bag_lab/static | Type: std_msgs/msg/String | Count: 0 | Serialization Format: cdr\nService:           0\nService information: \n",
+          "pidGone": true
+        },
+        {
+          "name": "play_all_no_clock",
+          "argv": [
+            "ros2",
+            "bag",
+            "play",
+            "/tmp/ros2-bag-lab-zn9n9p50/system_sqlite",
+            "--start-paused",
+            "--disable-keyboard-controls",
+            "--qos-profile-overrides-path",
+            "/home/wjz/ros2_robot/ros2-learning-hub/examples/bag_labs/qos_transient.yaml",
+            "--wait-for-all-acked",
+            "1000"
+          ],
+          "pid": 248964,
+          "signals": [],
+          "logFile": "/tmp/ros2-bag-lab-zn9n9p50/play_all_no_clock.log",
+          "returnCode": 0,
+          "logBytes": 442,
+          "logSha256": "a562e81300f868b32d3b31d3252a9919d8b86638dbe84446c931b47e58bf8bae",
+          "logTail": "[INFO] [1794001956.169097208] [rosbag2_storage]: Opened database '/tmp/ros2-bag-lab-zn9n9p50/system_sqlite/system_sqlite_0.db3' for READ_ONLY.\n[INFO] [1794001956.169154897] [rosbag2_player]: Set rate to 1\n[INFO] [1794001956.169177767] [rosbag2_player]: Overriding QoS profile for topic /bag_lab/static\n[INFO] [1794001956.172493708] [rosbag2_player]: Playback until timestamp: -1\n[INFO] [1794001956.452298943] [rosbag2_player]: Resuming play.\n",
+          "pidGone": true
+        },
+        {
+          "name": "play_filtered_clock",
+          "argv": [
+            "ros2",
+            "bag",
+            "play",
+            "/tmp/ros2-bag-lab-zn9n9p50/sim_mcap",
+            "--start-paused",
+            "--disable-keyboard-controls",
+            "--qos-profile-overrides-path",
+            "/home/wjz/ros2_robot/ros2-learning-hub/examples/bag_labs/qos_transient.yaml",
+            "--wait-for-all-acked",
+            "1000",
+            "--clock",
+            "40",
+            "--rate",
+            "2.0",
+            "--topics",
+            "/bag_lab/input"
+          ],
+          "pid": 248990,
+          "signals": [],
+          "logFile": "/tmp/ros2-bag-lab-zn9n9p50/play_filtered_clock.log",
+          "returnCode": 0,
+          "logBytes": 202,
+          "logSha256": "7d3ecc8705ede3efe8511b97dd183472b68f2c8001d68aacbf593ca9a06a2377",
+          "logTail": "[INFO] [1794001957.670394779] [rosbag2_player]: Set rate to 2\n[INFO] [1794001957.673798449] [rosbag2_player]: Playback until timestamp: -1\n[INFO] [1794001957.938493597] [rosbag2_player]: Resuming play.\n",
+          "pidGone": true
+        }
+      ],
+      "recordings": [
+        {
+          "name": "system_sqlite",
+          "storage": "sqlite3",
+          "useSimTime": false,
+          "requestCachedStatic": true,
+          "bagDirectory": "/tmp/ros2-bag-lab-zn9n9p50/system_sqlite",
+          "beforeClock": [],
+          "expectedInputFields": {
+            "0": {
+              "headerNs": 1000000000000,
+              "frameId": "synthetic_frame",
+              "xM": 0.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "1": {
+              "headerNs": 1000010000000,
+              "frameId": "synthetic_frame",
+              "xM": 1.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "2": {
+              "headerNs": 1000020000000,
+              "frameId": "synthetic_frame",
+              "xM": 2.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "3": {
+              "headerNs": 1000030000000,
+              "frameId": "synthetic_frame",
+              "xM": 3.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "4": {
+              "headerNs": 1000040000000,
+              "frameId": "synthetic_frame",
+              "xM": 4.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "5": {
+              "headerNs": 1000050000000,
+              "frameId": "synthetic_frame",
+              "xM": 5.0,
+              "yM": 0.0,
+              "zM": 0.0
+            }
+          },
+          "readback": {
+            "storageId": "sqlite3",
+            "metadataCount": 13,
+            "startNs": 1794001950132690969,
+            "durationNs": 601145526,
+            "metadataTopics": {
+              "/bag_lab/static": 1,
+              "/bag_lab/derived": 6,
+              "/bag_lab/input": 6
+            },
+            "files": [
+              "system_sqlite_0.db3"
+            ],
+            "counts": {
+              "/bag_lab/static": 1,
+              "/bag_lab/input": 6,
+              "/bag_lab/derived": 6
+            },
+            "records": [
+              {
+                "topic": "/bag_lab/static",
+                "receivedNs": 1794001950132690969,
+                "payloadSha256": "6f8d09c674cb98b9fffa7ca91a8f0d89ed05deee1be63fafa0abf7eda7a7b564",
+                "data": "calibration:v1"
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001950132729199,
+                "payloadSha256": "9430e57a63b797c189958e67523587871c15deec2556512885344e74981610fe",
+                "sequence": 0,
+                "xM": 0.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000000000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001950132741739,
+                "payloadSha256": "2e22fd435060cd5d3cf5e3ef39f79e198b35bd2c4af31974db36601b3a2f4c91",
+                "data": 0
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001950252955822,
+                "payloadSha256": "827645058831ee16de79e07441a95ec6b1f977b4ed52045e534ab528929aefde",
+                "sequence": 1,
+                "xM": 1.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000010000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001950252962492,
+                "payloadSha256": "93a8eaf79354c84442ac0e10c2062c53887deb79944f89aef71d679fd7a88b07",
+                "data": 1
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001950373120666,
+                "payloadSha256": "ccfa98a722f069767311765670b03c9d06acfc8ddcbbb465207cb3d4e51f843e",
+                "sequence": 2,
+                "xM": 2.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000020000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001950373126106,
+                "payloadSha256": "eacc08d79cc677584e2c59931de7d5aa6f12dddf9ca40eda868130711dc83461",
+                "data": 2
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001950493286660,
+                "payloadSha256": "6c982e3b1e5bc70bb24cd855fe63845438494b28a507c5d049210ac1792d93a3",
+                "sequence": 3,
+                "xM": 3.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000030000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001950493291880,
+                "payloadSha256": "e846f644a9c250ea43b054aa2d6678836fccacf9367f26bb645c3c8e9e7ab874",
+                "data": 3
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001950613551613,
+                "payloadSha256": "066d689477e8f9eae7ed4b170b1d5c68a6145ced3a9c6cb6813439a2ce7f01f3",
+                "sequence": 4,
+                "xM": 4.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000040000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001950613564202,
+                "payloadSha256": "50525845aa0fa94968819a3e7bfc2d01a599ca14f4ce92de225c4d206189cf9b",
+                "data": 4
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001950733822825,
+                "payloadSha256": "cccc23661e5ed7950f958deb001d370c8e3dbac4ffad2c36098979bd2edbf6eb",
+                "sequence": 5,
+                "xM": 5.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000050000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001950733836495,
+                "payloadSha256": "8076970a7e5a672e4a22ec446626938d4ef8d16569a0050ccf38496578a92d24",
+                "data": 5
+              }
+            ]
+          },
+          "passed": true
+        },
+        {
+          "name": "sim_mcap",
+          "storage": "mcap",
+          "useSimTime": true,
+          "requestCachedStatic": true,
+          "bagDirectory": "/tmp/ros2-bag-lab-zn9n9p50/sim_mcap",
+          "beforeClock": [
+            {
+              "stage": "no_clock",
+              "sentSequences": [
+                100,
+                101
+              ],
+              "dataSubscriptions": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "stage": "zero_clock",
+              "sentSequences": [
+                200,
+                201
+              ],
+              "dataSubscriptions": [
+                0,
+                0,
+                0
+              ]
+            }
+          ],
+          "expectedInputFields": {
+            "0": {
+              "headerNs": 1000000000000,
+              "frameId": "synthetic_frame",
+              "xM": 0.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "1": {
+              "headerNs": 1000010000000,
+              "frameId": "synthetic_frame",
+              "xM": 1.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "2": {
+              "headerNs": 1000020000000,
+              "frameId": "synthetic_frame",
+              "xM": 2.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "3": {
+              "headerNs": 1000030000000,
+              "frameId": "synthetic_frame",
+              "xM": 3.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "4": {
+              "headerNs": 1000040000000,
+              "frameId": "synthetic_frame",
+              "xM": 4.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "5": {
+              "headerNs": 1000050000000,
+              "frameId": "synthetic_frame",
+              "xM": 5.0,
+              "yM": 0.0,
+              "zM": 0.0
+            }
+          },
+          "readback": {
+            "storageId": "mcap",
+            "metadataCount": 13,
+            "startNs": 10000000000,
+            "durationNs": 1250000000,
+            "metadataTopics": {
+              "/bag_lab/static": 1,
+              "/bag_lab/input": 6,
+              "/bag_lab/derived": 6
+            },
+            "files": [
+              "sim_mcap_0.mcap"
+            ],
+            "counts": {
+              "/bag_lab/static": 1,
+              "/bag_lab/derived": 6,
+              "/bag_lab/input": 6
+            },
+            "records": [
+              {
+                "topic": "/bag_lab/static",
+                "receivedNs": 10000000000,
+                "payloadSha256": "6f8d09c674cb98b9fffa7ca91a8f0d89ed05deee1be63fafa0abf7eda7a7b564",
+                "data": "calibration:v1"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 10000000000,
+                "payloadSha256": "2e22fd435060cd5d3cf5e3ef39f79e198b35bd2c4af31974db36601b3a2f4c91",
+                "data": 0
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 10000000000,
+                "payloadSha256": "9430e57a63b797c189958e67523587871c15deec2556512885344e74981610fe",
+                "sequence": 0,
+                "xM": 0.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000000000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 10250000000,
+                "payloadSha256": "93a8eaf79354c84442ac0e10c2062c53887deb79944f89aef71d679fd7a88b07",
+                "data": 1
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 10250000000,
+                "payloadSha256": "827645058831ee16de79e07441a95ec6b1f977b4ed52045e534ab528929aefde",
+                "sequence": 1,
+                "xM": 1.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000010000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 10500000000,
+                "payloadSha256": "eacc08d79cc677584e2c59931de7d5aa6f12dddf9ca40eda868130711dc83461",
+                "data": 2
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 10500000000,
+                "payloadSha256": "ccfa98a722f069767311765670b03c9d06acfc8ddcbbb465207cb3d4e51f843e",
+                "sequence": 2,
+                "xM": 2.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000020000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 10750000000,
+                "payloadSha256": "e846f644a9c250ea43b054aa2d6678836fccacf9367f26bb645c3c8e9e7ab874",
+                "data": 3
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 10750000000,
+                "payloadSha256": "6c982e3b1e5bc70bb24cd855fe63845438494b28a507c5d049210ac1792d93a3",
+                "sequence": 3,
+                "xM": 3.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000030000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 11000000000,
+                "payloadSha256": "50525845aa0fa94968819a3e7bfc2d01a599ca14f4ce92de225c4d206189cf9b",
+                "data": 4
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 11000000000,
+                "payloadSha256": "066d689477e8f9eae7ed4b170b1d5c68a6145ced3a9c6cb6813439a2ce7f01f3",
+                "sequence": 4,
+                "xM": 4.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000040000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 11250000000,
+                "payloadSha256": "8076970a7e5a672e4a22ec446626938d4ef8d16569a0050ccf38496578a92d24",
+                "data": 5
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 11250000000,
+                "payloadSha256": "cccc23661e5ed7950f958deb001d370c8e3dbac4ffad2c36098979bd2edbf6eb",
+                "sequence": 5,
+                "xM": 5.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000050000000,
+                "frameId": "synthetic_frame"
+              }
+            ]
+          },
+          "passed": true
+        },
+        {
+          "name": "late_volatile_mcap",
+          "storage": "mcap",
+          "useSimTime": false,
+          "requestCachedStatic": false,
+          "bagDirectory": "/tmp/ros2-bag-lab-zn9n9p50/late_volatile_mcap",
+          "beforeClock": [],
+          "expectedInputFields": {
+            "0": {
+              "headerNs": 1000000000000,
+              "frameId": "synthetic_frame",
+              "xM": 0.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "1": {
+              "headerNs": 1000010000000,
+              "frameId": "synthetic_frame",
+              "xM": 1.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "2": {
+              "headerNs": 1000020000000,
+              "frameId": "synthetic_frame",
+              "xM": 2.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "3": {
+              "headerNs": 1000030000000,
+              "frameId": "synthetic_frame",
+              "xM": 3.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "4": {
+              "headerNs": 1000040000000,
+              "frameId": "synthetic_frame",
+              "xM": 4.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "5": {
+              "headerNs": 1000050000000,
+              "frameId": "synthetic_frame",
+              "xM": 5.0,
+              "yM": 0.0,
+              "zM": 0.0
+            }
+          },
+          "readback": {
+            "storageId": "mcap",
+            "metadataCount": 12,
+            "startNs": 1794001954617771782,
+            "durationNs": 601269365,
+            "metadataTopics": {
+              "/bag_lab/static": 0,
+              "/bag_lab/input": 6,
+              "/bag_lab/derived": 6
+            },
+            "files": [
+              "late_volatile_mcap_0.mcap"
+            ],
+            "counts": {
+              "/bag_lab/input": 6,
+              "/bag_lab/derived": 6
+            },
+            "records": [
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001954617771782,
+                "payloadSha256": "9430e57a63b797c189958e67523587871c15deec2556512885344e74981610fe",
+                "sequence": 0,
+                "xM": 0.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000000000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001954617779482,
+                "payloadSha256": "2e22fd435060cd5d3cf5e3ef39f79e198b35bd2c4af31974db36601b3a2f4c91",
+                "data": 0
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001954737951333,
+                "payloadSha256": "827645058831ee16de79e07441a95ec6b1f977b4ed52045e534ab528929aefde",
+                "sequence": 1,
+                "xM": 1.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000010000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001954737962523,
+                "payloadSha256": "93a8eaf79354c84442ac0e10c2062c53887deb79944f89aef71d679fd7a88b07",
+                "data": 1
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001954858176014,
+                "payloadSha256": "ccfa98a722f069767311765670b03c9d06acfc8ddcbbb465207cb3d4e51f843e",
+                "sequence": 2,
+                "xM": 2.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000020000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001954858185774,
+                "payloadSha256": "eacc08d79cc677584e2c59931de7d5aa6f12dddf9ca40eda868130711dc83461",
+                "data": 2
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001954978465334,
+                "payloadSha256": "6c982e3b1e5bc70bb24cd855fe63845438494b28a507c5d049210ac1792d93a3",
+                "sequence": 3,
+                "xM": 3.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000030000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001954978474604,
+                "payloadSha256": "e846f644a9c250ea43b054aa2d6678836fccacf9367f26bb645c3c8e9e7ab874",
+                "data": 3
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001955098738465,
+                "payloadSha256": "066d689477e8f9eae7ed4b170b1d5c68a6145ced3a9c6cb6813439a2ce7f01f3",
+                "sequence": 4,
+                "xM": 4.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000040000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001955098747645,
+                "payloadSha256": "50525845aa0fa94968819a3e7bfc2d01a599ca14f4ce92de225c4d206189cf9b",
+                "data": 4
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794001955219030047,
+                "payloadSha256": "cccc23661e5ed7950f958deb001d370c8e3dbac4ffad2c36098979bd2edbf6eb",
+                "sequence": 5,
+                "xM": 5.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000050000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794001955219041147,
+                "payloadSha256": "8076970a7e5a672e4a22ec446626938d4ef8d16569a0050ccf38496578a92d24",
+                "data": 5
+              }
+            ]
+          },
+          "passed": true
+        }
+      ],
+      "playbacks": [
+        {
+          "name": "play_all_no_clock",
+          "filterInputOnly": false,
+          "generatedClock": false,
+          "pausedDataCount": 0,
+          "publishers": {
+            "/bag_lab/input": 1,
+            "/bag_lab/derived": 1,
+            "/bag_lab/static": 1,
+            "/clock": 0
+          },
+          "matchedSubscriptions": {
+            "/bag_lab/input": 0,
+            "/bag_lab/derived": 0,
+            "/bag_lab/static": 0
+          },
+          "received": {
+            "/bag_lab/input": [
+              {
+                "sequence": 0,
+                "headerNs": 1000000000000,
+                "frameId": "synthetic_frame",
+                "xM": 0.0,
+                "yM": 0.0,
+                "zM": 0.0
+              },
+              {
+                "sequence": 1,
+                "headerNs": 1000010000000,
+                "frameId": "synthetic_frame",
+                "xM": 1.0,
+                "yM": 0.0,
+                "zM": 0.0
+              },
+              {
+                "sequence": 2,
+                "headerNs": 1000020000000,
+                "frameId": "synthetic_frame",
+                "xM": 2.0,
+                "yM": 0.0,
+                "zM": 0.0
+              },
+              {
+                "sequence": 3,
+                "headerNs": 1000030000000,
+                "frameId": "synthetic_frame",
+                "xM": 3.0,
+                "yM": 0.0,
+                "zM": 0.0
+              },
+              {
+                "sequence": 4,
+                "headerNs": 1000040000000,
+                "frameId": "synthetic_frame",
+                "xM": 4.0,
+                "yM": 0.0,
+                "zM": 0.0
+              },
+              {
+                "sequence": 5,
+                "headerNs": 1000050000000,
+                "frameId": "synthetic_frame",
+                "xM": 5.0,
+                "yM": 0.0,
+                "zM": 0.0
+              }
+            ],
+            "/bag_lab/derived": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            "/bag_lab/static": [
+              "calibration:v1"
+            ]
+          },
+          "clocksNs": [],
+          "observerRosTimeNs": 0,
+          "passed": true
+        },
+        {
+          "name": "play_filtered_clock",
+          "filterInputOnly": true,
+          "generatedClock": true,
+          "pausedDataCount": 0,
+          "publishers": {
+            "/bag_lab/input": 1,
+            "/bag_lab/derived": 0,
+            "/bag_lab/static": 0,
+            "/clock": 1
+          },
+          "matchedSubscriptions": {
+            "/bag_lab/input": 0,
+            "/bag_lab/derived": 0,
+            "/bag_lab/static": 0
+          },
+          "received": {
+            "/bag_lab/input": [
+              {
+                "sequence": 0,
+                "headerNs": 1000000000000,
+                "frameId": "synthetic_frame",
+                "xM": 0.0,
+                "yM": 0.0,
+                "zM": 0.0
+              },
+              {
+                "sequence": 1,
+                "headerNs": 1000010000000,
+                "frameId": "synthetic_frame",
+                "xM": 1.0,
+                "yM": 0.0,
+                "zM": 0.0
+              },
+              {
+                "sequence": 2,
+                "headerNs": 1000020000000,
+                "frameId": "synthetic_frame",
+                "xM": 2.0,
+                "yM": 0.0,
+                "zM": 0.0
+              },
+              {
+                "sequence": 3,
+                "headerNs": 1000030000000,
+                "frameId": "synthetic_frame",
+                "xM": 3.0,
+                "yM": 0.0,
+                "zM": 0.0
+              },
+              {
+                "sequence": 4,
+                "headerNs": 1000040000000,
+                "frameId": "synthetic_frame",
+                "xM": 4.0,
+                "yM": 0.0,
+                "zM": 0.0
+              },
+              {
+                "sequence": 5,
+                "headerNs": 1000050000000,
+                "frameId": "synthetic_frame",
+                "xM": 5.0,
+                "yM": 0.0,
+                "zM": 0.0
+              }
+            ],
+            "/bag_lab/derived": [],
+            "/bag_lab/static": []
+          },
+          "clocksNs": [
+            10000000000,
+            10000000000,
+            10000000000,
+            10000000000,
+            10000000000,
+            10000000000,
+            10023224546,
+            10073258178,
+            10123255390,
+            10173207864,
+            10223235736,
+            10273255348,
+            10323252382,
+            10373250954,
+            10423245168,
+            10473251060,
+            10523227572,
+            10573224046,
+            10623244258,
+            10673197712,
+            10723211464,
+            10773196998,
+            10823235430,
+            10873228762,
+            10923219016,
+            10973199108,
+            11023187620,
+            11073179894,
+            11123189746,
+            11173185100,
+            11223225752
+          ],
+          "observerRosTimeNs": 11223225752,
+          "passed": true
+        }
+      ],
+      "storageFields": {
+        "headerNs": 7000000000,
+        "explicitReceivedNs": 10000000000,
+        "explicitSentNs": 9000000000,
+        "payloadSha256": "e15f4b028d63539c7f7e6c87c216c30b34da88764a93be638a71b573b296b580",
+        "storages": {
+          "sqlite3": {
+            "readback": {
+              "storageId": "sqlite3",
+              "metadataCount": 1,
+              "startNs": 10000000000,
+              "durationNs": 0,
+              "metadataTopics": {
+                "/bag_lab/input": 1
+              },
+              "files": [
+                "sqlite3_0.db3"
+              ],
+              "counts": {
+                "/bag_lab/input": 1
+              },
+              "records": [
+                {
+                  "topic": "/bag_lab/input",
+                  "receivedNs": 10000000000,
+                  "payloadSha256": "e15f4b028d63539c7f7e6c87c216c30b34da88764a93be638a71b573b296b580",
+                  "sequence": 1,
+                  "xM": 1.0,
+                  "yM": 0.0,
+                  "zM": 0.0,
+                  "headerNs": 7000000000,
+                  "frameId": "synthetic_frame"
+                }
+              ]
+            },
+            "columns": [
+              "id",
+              "topic_id",
+              "timestamp",
+              "data"
+            ],
+            "storedTimestampNs": 10000000000,
+            "hasSeparateSentColumn": false
+          },
+          "mcap": {
+            "readback": {
+              "storageId": "mcap",
+              "metadataCount": 1,
+              "startNs": 10000000000,
+              "durationNs": 0,
+              "metadataTopics": {
+                "/bag_lab/input": 1
+              },
+              "files": [
+                "mcap_0.mcap"
+              ],
+              "counts": {
+                "/bag_lab/input": 1
+              },
+              "records": [
+                {
+                  "topic": "/bag_lab/input",
+                  "receivedNs": 10000000000,
+                  "payloadSha256": "e15f4b028d63539c7f7e6c87c216c30b34da88764a93be638a71b573b296b580",
+                  "sequence": 1,
+                  "xM": 1.0,
+                  "yM": 0.0,
+                  "zM": 0.0,
+                  "headerNs": 7000000000,
+                  "frameId": "synthetic_frame"
+                }
+              ]
+            },
+            "messages": [
+              {
+                "channel": 1,
+                "sequence": 0,
+                "logTimeNs": 10000000000,
+                "publishTimeNs": 9000000000,
+                "payloadSha256": "e15f4b028d63539c7f7e6c87c216c30b34da88764a93be638a71b573b296b580"
+              }
+            ]
+          }
+        }
+      },
+      "cleanup": {
+        "nodesRemaining": 0,
+        "contextValid": false,
+        "processPidsGone": true,
+        "escalatedSignals": []
+      },
+      "durationS": 9.417443816000741
+    },
+    {
+      "checkedAt": "2026-11-06T21:53:32.665134+00:00",
+      "passed": true,
+      "outputDirectory": "/tmp/ros2-bag-lab-ioamcszk",
+      "environment": {
+        "ROS_DOMAIN_ID": "231",
+        "ROS_AUTOMATIC_DISCOVERY_RANGE": "LOCALHOST",
+        "RMW_IMPLEMENTATION": "rmw_fastrtps_cpp"
+      },
+      "python": "3.12.3",
+      "parameters": {
+        "inputCount": 6,
+        "clockStepNs": 250000000
+      },
+      "sourceHashes": [
+        {
+          "path": "examples/bag_labs/README.md",
+          "sha256": "9b87cbbedf845e7abd5a3701cbce0f18bc3845cbe21ba55d3c2d6eed02cded02"
+        },
+        {
+          "path": "examples/bag_labs/inspect_bag.py",
+          "sha256": "9be0688fb2ba1b7191e490152e528c707a21e58412423fbf79c8ba7f6ced04e8"
+        },
+        {
+          "path": "examples/bag_labs/mcap_no_chunk.yaml",
+          "sha256": "edd632e29373c428ce3780dd800f9b4d2d096b82794d5460be8e9c8291237af5"
+        },
+        {
+          "path": "examples/bag_labs/qos_transient.yaml",
+          "sha256": "76aaaaf537ecdf6b8992f227d353d626998f2537f82e0afc6788b21dabddb2cc"
+        },
+        {
+          "path": "examples/bag_labs/qos_volatile.yaml",
+          "sha256": "ab8ba5c7566fed287566a3f0949763c83b94961b2774da3e41485996e6cdfc00"
+        },
+        {
+          "path": "examples/bag_labs/record_replay_lab.py",
+          "sha256": "52457ebb7c051b346ce9b4956dad4d298650ff0112788af2a13c3dc55db18e6e"
+        },
+        {
+          "path": "examples/bag_labs/storage_fields.py",
+          "sha256": "d951e5747b14a29fee33b6f8299ef75b1b256e41d288b8563e78c682ad557b7d"
+        }
+      ],
+      "limits": [
+        "本机有限合成输入，无真实采集、GUI海龟或完整仿真。",
+        "不是吞吐/压缩/磁盘恢复、网络校时、跨机或安全证明。",
+        "存储字段探针为显式Writer输入；send/source时间不是Header采样时间或已测网络时延。",
+        "父SIGINT/原生挂起清理分支尚未注入；常规子进程退出与节点清理另列。"
+      ],
+      "versions": {
+        "rosbag2_transport": "0.26.11",
+        "rosbag2_py": "0.26.11",
+        "ros2bag": "0.26.11",
+        "rosbag2_storage_mcap": "0.26.11",
+        "rosbag2_storage_sqlite3": "0.26.11",
+        "rclpy": "7.1.12"
+      },
+      "processes": [
+        {
+          "name": "system_sqlite",
+          "argv": [
+            "ros2",
+            "bag",
+            "record",
+            "--storage",
+            "sqlite3",
+            "--output",
+            "/tmp/ros2-bag-lab-ioamcszk/system_sqlite",
+            "--node-name",
+            "bag_lab_recorder",
+            "--disable-keyboard-controls",
+            "--max-cache-size",
+            "0",
+            "--qos-profile-overrides-path",
+            "/home/wjz/ros2_robot/ros2-learning-hub/examples/bag_labs/qos_transient.yaml",
+            "--topics",
+            "/bag_lab/input",
+            "/bag_lab/derived",
+            "/bag_lab/static"
+          ],
+          "pid": 249132,
+          "signals": [
+            "SIGINT"
+          ],
+          "logFile": "/tmp/ros2-bag-lab-ioamcszk/system_sqlite.log",
+          "returnCode": 0,
+          "logBytes": 1323,
+          "logSha256": "5cdcaa6c770757d424ba00092bf10d51761402909174a92ae4fcba644a957184",
+          "logTail": "[INFO] [1794002013.148381020] [bag_lab_recorder]: Event publisher thread: Started\n[INFO] [1794002013.150253939] [bag_lab_recorder]: Starting recording to '/tmp/ros2-bag-lab-ioamcszk/system_sqlite'\n[INFO] [1794002013.150929812] [rosbag2_storage]: Opened database '/tmp/ros2-bag-lab-ioamcszk/system_sqlite/system_sqlite_0.db3' for READ_WRITE.\n[INFO] [1794002013.151149169] [bag_lab_recorder]: Listening for topics...\n[INFO] [1794002013.151157919] [bag_lab_recorder]: Recording...\n[INFO] [1794002013.151166019] [bag_lab_recorder]: Topics discovery started.\n[INFO] [1794002013.256788993] [bag_lab_recorder]: Subscribed to topic '/bag_lab/input'\n[INFO] [1794002013.257248348] [bag_lab_recorder]: Subscribed to topic '/bag_lab/derived'\n[INFO] [1794002013.257402356] [bag_lab_recorder]: Overriding subscription profile for /bag_lab/static\n[INFO] [1794002013.257573354] [bag_lab_recorder]: Subscribed to topic '/bag_lab/static'\n[INFO] [1794002013.257579824] [bag_lab_recorder]: All requested topics are subscribed. Stopping discovery...\n[INFO] [1794002013.257581614] [bag_lab_recorder]: Topics discovery stopped.\n[INFO] [1794002014.291050945] [bag_lab_recorder]: Pausing recording.\n[INFO] [1794002014.292167333] [bag_lab_recorder]: Recording stopped\n[INFO] [1794002014.293357370] [bag_lab_recorder]: Event publisher thread: Exited\n",
+          "pidGone": true
+        },
+        {
+          "name": "system_sqlite_info",
+          "argv": [
+            "ros2",
+            "bag",
+            "info",
+            "/tmp/ros2-bag-lab-ioamcszk/system_sqlite"
+          ],
+          "pid": 249149,
+          "signals": [],
+          "logFile": "/tmp/ros2-bag-lab-ioamcszk/system_sqlite_info.log",
+          "returnCode": 0,
+          "logBytes": 700,
+          "logSha256": "3ab470310dbd8919476520927142892f59a4ea7fc744ecb04f980a648e93f0ee",
+          "logTail": "\nFiles:             system_sqlite_0.db3\nBag size:          30.7 KiB\nStorage id:        sqlite3\nROS Distro:        jazzy\nDuration:          0.603012040s\nStart:             Nov  7 2026 05:53:33.267707933 (1794002013.267707933)\nEnd:               Nov  7 2026 05:53:33.870719973 (1794002013.870719973)\nMessages:          13\nTopic information: Topic: /bag_lab/derived | Type: std_msgs/msg/Int32 | Count: 6 | Serialization Format: cdr\n                   Topic: /bag_lab/input | Type: geometry_msgs/msg/PointStamped | Count: 6 | Serialization Format: cdr\n                   Topic: /bag_lab/static | Type: std_msgs/msg/String | Count: 1 | Serialization Format: cdr\nService:           0\nService information: \n",
+          "pidGone": true
+        },
+        {
+          "name": "sim_mcap",
+          "argv": [
+            "ros2",
+            "bag",
+            "record",
+            "--storage",
+            "mcap",
+            "--output",
+            "/tmp/ros2-bag-lab-ioamcszk/sim_mcap",
+            "--node-name",
+            "bag_lab_recorder",
+            "--disable-keyboard-controls",
+            "--max-cache-size",
+            "0",
+            "--qos-profile-overrides-path",
+            "/home/wjz/ros2_robot/ros2-learning-hub/examples/bag_labs/qos_transient.yaml",
+            "--use-sim-time",
+            "--topics",
+            "/bag_lab/input",
+            "/bag_lab/derived",
+            "/bag_lab/static"
+          ],
+          "pid": 249163,
+          "signals": [
+            "SIGINT"
+          ],
+          "logFile": "/tmp/ros2-bag-lab-ioamcszk/sim_mcap.log",
+          "returnCode": 0,
+          "logBytes": 1383,
+          "logSha256": "cab993231cc997767bde2e14ab8bbe9d6a5aa64f2f38565bec3e2d8d715aa96c",
+          "logTail": "[INFO] [1794002014.920256256] [bag_lab_recorder]: Event publisher thread: Started\n[INFO] [1794002014.922145176] [bag_lab_recorder]: Starting recording to '/tmp/ros2-bag-lab-ioamcszk/sim_mcap'\n[INFO] [1794002014.922723699] [bag_lab_recorder]: Listening for topics...\n[INFO] [1794002014.922735059] [bag_lab_recorder]: Recording...\n[INFO] [1794002014.922772079] [bag_lab_recorder]: Topics discovery started.\n[INFO] [1794002014.922800448] [bag_lab_recorder]: use_sim_time set, waiting for /clock before starting recording...\n[INFO] [1794002015.463429283] [bag_lab_recorder]: Sim time /clock found, starting recording.\n[INFO] [1794002015.464556551] [bag_lab_recorder]: Subscribed to topic '/bag_lab/derived'\n[INFO] [1794002015.465350222] [bag_lab_recorder]: Subscribed to topic '/bag_lab/input'\n[INFO] [1794002015.465518950] [bag_lab_recorder]: Overriding subscription profile for /bag_lab/static\n[INFO] [1794002015.465765168] [bag_lab_recorder]: Subscribed to topic '/bag_lab/static'\n[INFO] [1794002015.465774258] [bag_lab_recorder]: All requested topics are subscribed. Stopping discovery...\n[INFO] [1794002015.465776648] [bag_lab_recorder]: Topics discovery stopped.\n[INFO] [1794002016.987422616] [bag_lab_recorder]: Pausing recording.\n[INFO] [1794002016.988483074] [bag_lab_recorder]: Recording stopped\n[INFO] [1794002016.989555253] [bag_lab_recorder]: Event publisher thread: Exited\n",
+          "pidGone": true
+        },
+        {
+          "name": "sim_mcap_info",
+          "argv": [
+            "ros2",
+            "bag",
+            "info",
+            "/tmp/ros2-bag-lab-ioamcszk/sim_mcap"
+          ],
+          "pid": 249186,
+          "signals": [],
+          "logFile": "/tmp/ros2-bag-lab-ioamcszk/sim_mcap_info.log",
+          "returnCode": 0,
+          "logBytes": 677,
+          "logSha256": "8d451a398f5247826e7163585ac0e3df4a6373e920d1626f47c8be1f68b92210",
+          "logTail": "\nFiles:             sim_mcap_0.mcap\nBag size:          13.9 KiB\nStorage id:        mcap\nROS Distro:        jazzy\nDuration:          1.250000000s\nStart:             Jan  1 1970 08:00:10.000000000 (10.000000000)\nEnd:               Jan  1 1970 08:00:11.250000000 (11.250000000)\nMessages:          13\nTopic information: Topic: /bag_lab/derived | Type: std_msgs/msg/Int32 | Count: 6 | Serialization Format: cdr\n                   Topic: /bag_lab/input | Type: geometry_msgs/msg/PointStamped | Count: 6 | Serialization Format: cdr\n                   Topic: /bag_lab/static | Type: std_msgs/msg/String | Count: 1 | Serialization Format: cdr\nService:           0\nService information: \n",
+          "pidGone": true
+        },
+        {
+          "name": "late_volatile_mcap",
+          "argv": [
+            "ros2",
+            "bag",
+            "record",
+            "--storage",
+            "mcap",
+            "--output",
+            "/tmp/ros2-bag-lab-ioamcszk/late_volatile_mcap",
+            "--node-name",
+            "bag_lab_recorder",
+            "--disable-keyboard-controls",
+            "--max-cache-size",
+            "0",
+            "--qos-profile-overrides-path",
+            "/home/wjz/ros2_robot/ros2-learning-hub/examples/bag_labs/qos_volatile.yaml",
+            "--topics",
+            "/bag_lab/input",
+            "/bag_lab/derived",
+            "/bag_lab/static"
+          ],
+          "pid": 249197,
+          "signals": [
+            "SIGINT"
+          ],
+          "logFile": "/tmp/ros2-bag-lab-ioamcszk/late_volatile_mcap.log",
+          "returnCode": 0,
+          "logBytes": 1184,
+          "logSha256": "31a5d0f16287675d77f0b958eda57aa6ac39658a463b857b9ccad8fbb4cc2d7f",
+          "logTail": "[INFO] [1794002017.652935914] [bag_lab_recorder]: Event publisher thread: Started\n[INFO] [1794002017.654848943] [bag_lab_recorder]: Starting recording to '/tmp/ros2-bag-lab-ioamcszk/late_volatile_mcap'\n[INFO] [1794002017.655468746] [bag_lab_recorder]: Listening for topics...\n[INFO] [1794002017.655482886] [bag_lab_recorder]: Recording...\n[INFO] [1794002017.655499856] [bag_lab_recorder]: Topics discovery started.\n[INFO] [1794002017.761067366] [bag_lab_recorder]: Subscribed to topic '/bag_lab/input'\n[INFO] [1794002017.761498671] [bag_lab_recorder]: Subscribed to topic '/bag_lab/derived'\n[INFO] [1794002017.761610280] [bag_lab_recorder]: Overriding subscription profile for /bag_lab/static\n[INFO] [1794002017.761770418] [bag_lab_recorder]: Subscribed to topic '/bag_lab/static'\n[INFO] [1794002017.761778168] [bag_lab_recorder]: All requested topics are subscribed. Stopping discovery...\n[INFO] [1794002017.761780698] [bag_lab_recorder]: Topics discovery stopped.\n[INFO] [1794002018.801528684] [bag_lab_recorder]: Pausing recording.\n[INFO] [1794002018.802595313] [bag_lab_recorder]: Recording stopped\n[INFO] [1794002018.803435774] [bag_lab_recorder]: Event publisher thread: Exited\n",
+          "pidGone": true
+        },
+        {
+          "name": "late_volatile_mcap_info",
+          "argv": [
+            "ros2",
+            "bag",
+            "info",
+            "/tmp/ros2-bag-lab-ioamcszk/late_volatile_mcap"
+          ],
+          "pid": 249215,
+          "signals": [],
+          "logFile": "/tmp/ros2-bag-lab-ioamcszk/late_volatile_mcap_info.log",
+          "returnCode": 0,
+          "logBytes": 703,
+          "logSha256": "fd62a3574e5bfa2309f312ade3b0d7695337a7edfe67e5fa0d7629990b7eadda",
+          "logTail": "\nFiles:             late_volatile_mcap_0.mcap\nBag size:          13.1 KiB\nStorage id:        mcap\nROS Distro:        jazzy\nDuration:          0.601343416s\nStart:             Nov  7 2026 05:53:37.779899161 (1794002017.779899161)\nEnd:               Nov  7 2026 05:53:38.381242577 (1794002018.381242577)\nMessages:          12\nTopic information: Topic: /bag_lab/derived | Type: std_msgs/msg/Int32 | Count: 6 | Serialization Format: cdr\n                   Topic: /bag_lab/input | Type: geometry_msgs/msg/PointStamped | Count: 6 | Serialization Format: cdr\n                   Topic: /bag_lab/static | Type: std_msgs/msg/String | Count: 0 | Serialization Format: cdr\nService:           0\nService information: \n",
+          "pidGone": true
+        },
+        {
+          "name": "play_all_no_clock",
+          "argv": [
+            "ros2",
+            "bag",
+            "play",
+            "/tmp/ros2-bag-lab-ioamcszk/system_sqlite",
+            "--start-paused",
+            "--disable-keyboard-controls",
+            "--qos-profile-overrides-path",
+            "/home/wjz/ros2_robot/ros2-learning-hub/examples/bag_labs/qos_transient.yaml",
+            "--wait-for-all-acked",
+            "1000"
+          ],
+          "pid": 249226,
+          "signals": [],
+          "logFile": "/tmp/ros2-bag-lab-ioamcszk/play_all_no_clock.log",
+          "returnCode": 0,
+          "logBytes": 442,
+          "logSha256": "68d03df7b403f2384dee62d5ed243aa8407006fdb2854114f05d2c575f310c4e",
+          "logTail": "[INFO] [1794002019.356739699] [rosbag2_storage]: Opened database '/tmp/ros2-bag-lab-ioamcszk/system_sqlite/system_sqlite_0.db3' for READ_ONLY.\n[INFO] [1794002019.356799488] [rosbag2_player]: Set rate to 1\n[INFO] [1794002019.356825468] [rosbag2_player]: Overriding QoS profile for topic /bag_lab/static\n[INFO] [1794002019.360137792] [rosbag2_player]: Playback until timestamp: -1\n[INFO] [1794002019.630266817] [rosbag2_player]: Resuming play.\n",
+          "pidGone": true
+        },
+        {
+          "name": "play_filtered_clock",
+          "argv": [
+            "ros2",
+            "bag",
+            "play",
+            "/tmp/ros2-bag-lab-ioamcszk/sim_mcap",
+            "--start-paused",
+            "--disable-keyboard-controls",
+            "--qos-profile-overrides-path",
+            "/home/wjz/ros2_robot/ros2-learning-hub/examples/bag_labs/qos_transient.yaml",
+            "--wait-for-all-acked",
+            "1000",
+            "--clock",
+            "40",
+            "--rate",
+            "2.0",
+            "--topics",
+            "/bag_lab/input"
+          ],
+          "pid": 249251,
+          "signals": [],
+          "logFile": "/tmp/ros2-bag-lab-ioamcszk/play_filtered_clock.log",
+          "returnCode": 0,
+          "logBytes": 202,
+          "logSha256": "f97fefd8b70acedc256830bfa34ae3f3939f0d294f5795c4e8b9529445d992b3",
+          "logTail": "[INFO] [1794002020.848027097] [rosbag2_player]: Set rate to 2\n[INFO] [1794002020.851294782] [rosbag2_player]: Playback until timestamp: -1\n[INFO] [1794002021.116227308] [rosbag2_player]: Resuming play.\n",
+          "pidGone": true
+        }
+      ],
+      "recordings": [
+        {
+          "name": "system_sqlite",
+          "storage": "sqlite3",
+          "useSimTime": false,
+          "requestCachedStatic": true,
+          "bagDirectory": "/tmp/ros2-bag-lab-ioamcszk/system_sqlite",
+          "beforeClock": [],
+          "expectedInputFields": {
+            "0": {
+              "headerNs": 1000000000000,
+              "frameId": "synthetic_frame",
+              "xM": 0.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "1": {
+              "headerNs": 1000010000000,
+              "frameId": "synthetic_frame",
+              "xM": 1.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "2": {
+              "headerNs": 1000020000000,
+              "frameId": "synthetic_frame",
+              "xM": 2.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "3": {
+              "headerNs": 1000030000000,
+              "frameId": "synthetic_frame",
+              "xM": 3.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "4": {
+              "headerNs": 1000040000000,
+              "frameId": "synthetic_frame",
+              "xM": 4.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "5": {
+              "headerNs": 1000050000000,
+              "frameId": "synthetic_frame",
+              "xM": 5.0,
+              "yM": 0.0,
+              "zM": 0.0
+            }
+          },
+          "readback": {
+            "storageId": "sqlite3",
+            "metadataCount": 13,
+            "startNs": 1794002013267707933,
+            "durationNs": 603012040,
+            "metadataTopics": {
+              "/bag_lab/static": 1,
+              "/bag_lab/derived": 6,
+              "/bag_lab/input": 6
+            },
+            "files": [
+              "system_sqlite_0.db3"
+            ],
+            "counts": {
+              "/bag_lab/static": 1,
+              "/bag_lab/input": 6,
+              "/bag_lab/derived": 6
+            },
+            "records": [
+              {
+                "topic": "/bag_lab/static",
+                "receivedNs": 1794002013267707933,
+                "payloadSha256": "6f8d09c674cb98b9fffa7ca91a8f0d89ed05deee1be63fafa0abf7eda7a7b564",
+                "data": "calibration:v1"
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794002013269574303,
+                "payloadSha256": "9430e57a63b797c189958e67523587871c15deec2556512885344e74981610fe",
+                "sequence": 0,
+                "xM": 0.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000000000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794002013269584633,
+                "payloadSha256": "2e22fd435060cd5d3cf5e3ef39f79e198b35bd2c4af31974db36601b3a2f4c91",
+                "data": 0
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794002013389765027,
+                "payloadSha256": "827645058831ee16de79e07441a95ec6b1f977b4ed52045e534ab528929aefde",
+                "sequence": 1,
+                "xM": 1.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000010000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794002013389771907,
+                "payloadSha256": "93a8eaf79354c84442ac0e10c2062c53887deb79944f89aef71d679fd7a88b07",
+                "data": 1
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794002013510013871,
+                "payloadSha256": "ccfa98a722f069767311765670b03c9d06acfc8ddcbbb465207cb3d4e51f843e",
+                "sequence": 2,
+                "xM": 2.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000020000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794002013510020501,
+                "payloadSha256": "eacc08d79cc677584e2c59931de7d5aa6f12dddf9ca40eda868130711dc83461",
+                "data": 2
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794002013630193486,
+                "payloadSha256": "6c982e3b1e5bc70bb24cd855fe63845438494b28a507c5d049210ac1792d93a3",
+                "sequence": 3,
+                "xM": 3.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000030000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794002013630199736,
+                "payloadSha256": "e846f644a9c250ea43b054aa2d6678836fccacf9367f26bb645c3c8e9e7ab874",
+                "data": 3
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794002013750473879,
+                "payloadSha256": "066d689477e8f9eae7ed4b170b1d5c68a6145ced3a9c6cb6813439a2ce7f01f3",
+                "sequence": 4,
+                "xM": 4.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000040000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794002013750483419,
+                "payloadSha256": "50525845aa0fa94968819a3e7bfc2d01a599ca14f4ce92de225c4d206189cf9b",
+                "data": 4
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794002013870706953,
+                "payloadSha256": "cccc23661e5ed7950f958deb001d370c8e3dbac4ffad2c36098979bd2edbf6eb",
+                "sequence": 5,
+                "xM": 5.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000050000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794002013870719973,
+                "payloadSha256": "8076970a7e5a672e4a22ec446626938d4ef8d16569a0050ccf38496578a92d24",
+                "data": 5
+              }
+            ]
+          },
+          "passed": true
+        },
+        {
+          "name": "sim_mcap",
+          "storage": "mcap",
+          "useSimTime": true,
+          "requestCachedStatic": true,
+          "bagDirectory": "/tmp/ros2-bag-lab-ioamcszk/sim_mcap",
+          "beforeClock": [
+            {
+              "stage": "no_clock",
+              "sentSequences": [
+                100,
+                101
+              ],
+              "dataSubscriptions": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "stage": "zero_clock",
+              "sentSequences": [
+                200,
+                201
+              ],
+              "dataSubscriptions": [
+                0,
+                0,
+                0
+              ]
+            }
+          ],
+          "expectedInputFields": {
+            "0": {
+              "headerNs": 1000000000000,
+              "frameId": "synthetic_frame",
+              "xM": 0.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "1": {
+              "headerNs": 1000010000000,
+              "frameId": "synthetic_frame",
+              "xM": 1.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "2": {
+              "headerNs": 1000020000000,
+              "frameId": "synthetic_frame",
+              "xM": 2.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "3": {
+              "headerNs": 1000030000000,
+              "frameId": "synthetic_frame",
+              "xM": 3.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "4": {
+              "headerNs": 1000040000000,
+              "frameId": "synthetic_frame",
+              "xM": 4.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "5": {
+              "headerNs": 1000050000000,
+              "frameId": "synthetic_frame",
+              "xM": 5.0,
+              "yM": 0.0,
+              "zM": 0.0
+            }
+          },
+          "readback": {
+            "storageId": "mcap",
+            "metadataCount": 13,
+            "startNs": 10000000000,
+            "durationNs": 1250000000,
+            "metadataTopics": {
+              "/bag_lab/static": 1,
+              "/bag_lab/input": 6,
+              "/bag_lab/derived": 6
+            },
+            "files": [
+              "sim_mcap_0.mcap"
+            ],
+            "counts": {
+              "/bag_lab/static": 1,
+              "/bag_lab/derived": 6,
+              "/bag_lab/input": 6
+            },
+            "records": [
+              {
+                "topic": "/bag_lab/static",
+                "receivedNs": 10000000000,
+                "payloadSha256": "6f8d09c674cb98b9fffa7ca91a8f0d89ed05deee1be63fafa0abf7eda7a7b564",
+                "data": "calibration:v1"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 10000000000,
+                "payloadSha256": "2e22fd435060cd5d3cf5e3ef39f79e198b35bd2c4af31974db36601b3a2f4c91",
+                "data": 0
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 10000000000,
+                "payloadSha256": "9430e57a63b797c189958e67523587871c15deec2556512885344e74981610fe",
+                "sequence": 0,
+                "xM": 0.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000000000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 10250000000,
+                "payloadSha256": "93a8eaf79354c84442ac0e10c2062c53887deb79944f89aef71d679fd7a88b07",
+                "data": 1
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 10250000000,
+                "payloadSha256": "827645058831ee16de79e07441a95ec6b1f977b4ed52045e534ab528929aefde",
+                "sequence": 1,
+                "xM": 1.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000010000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 10500000000,
+                "payloadSha256": "eacc08d79cc677584e2c59931de7d5aa6f12dddf9ca40eda868130711dc83461",
+                "data": 2
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 10500000000,
+                "payloadSha256": "ccfa98a722f069767311765670b03c9d06acfc8ddcbbb465207cb3d4e51f843e",
+                "sequence": 2,
+                "xM": 2.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000020000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 10750000000,
+                "payloadSha256": "e846f644a9c250ea43b054aa2d6678836fccacf9367f26bb645c3c8e9e7ab874",
+                "data": 3
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 10750000000,
+                "payloadSha256": "6c982e3b1e5bc70bb24cd855fe63845438494b28a507c5d049210ac1792d93a3",
+                "sequence": 3,
+                "xM": 3.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000030000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 11000000000,
+                "payloadSha256": "50525845aa0fa94968819a3e7bfc2d01a599ca14f4ce92de225c4d206189cf9b",
+                "data": 4
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 11000000000,
+                "payloadSha256": "066d689477e8f9eae7ed4b170b1d5c68a6145ced3a9c6cb6813439a2ce7f01f3",
+                "sequence": 4,
+                "xM": 4.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000040000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 11250000000,
+                "payloadSha256": "8076970a7e5a672e4a22ec446626938d4ef8d16569a0050ccf38496578a92d24",
+                "data": 5
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 11250000000,
+                "payloadSha256": "cccc23661e5ed7950f958deb001d370c8e3dbac4ffad2c36098979bd2edbf6eb",
+                "sequence": 5,
+                "xM": 5.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000050000000,
+                "frameId": "synthetic_frame"
+              }
+            ]
+          },
+          "passed": true
+        },
+        {
+          "name": "late_volatile_mcap",
+          "storage": "mcap",
+          "useSimTime": false,
+          "requestCachedStatic": false,
+          "bagDirectory": "/tmp/ros2-bag-lab-ioamcszk/late_volatile_mcap",
+          "beforeClock": [],
+          "expectedInputFields": {
+            "0": {
+              "headerNs": 1000000000000,
+              "frameId": "synthetic_frame",
+              "xM": 0.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "1": {
+              "headerNs": 1000010000000,
+              "frameId": "synthetic_frame",
+              "xM": 1.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "2": {
+              "headerNs": 1000020000000,
+              "frameId": "synthetic_frame",
+              "xM": 2.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "3": {
+              "headerNs": 1000030000000,
+              "frameId": "synthetic_frame",
+              "xM": 3.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "4": {
+              "headerNs": 1000040000000,
+              "frameId": "synthetic_frame",
+              "xM": 4.0,
+              "yM": 0.0,
+              "zM": 0.0
+            },
+            "5": {
+              "headerNs": 1000050000000,
+              "frameId": "synthetic_frame",
+              "xM": 5.0,
+              "yM": 0.0,
+              "zM": 0.0
+            }
+          },
+          "readback": {
+            "storageId": "mcap",
+            "metadataCount": 12,
+            "startNs": 1794002017779899161,
+            "durationNs": 601343416,
+            "metadataTopics": {
+              "/bag_lab/static": 0,
+              "/bag_lab/derived": 6,
+              "/bag_lab/input": 6
+            },
+            "files": [
+              "late_volatile_mcap_0.mcap"
+            ],
+            "counts": {
+              "/bag_lab/input": 6,
+              "/bag_lab/derived": 6
+            },
+            "records": [
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794002017779899161,
+                "payloadSha256": "9430e57a63b797c189958e67523587871c15deec2556512885344e74981610fe",
+                "sequence": 0,
+                "xM": 0.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000000000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794002017779903551,
+                "payloadSha256": "2e22fd435060cd5d3cf5e3ef39f79e198b35bd2c4af31974db36601b3a2f4c91",
+                "data": 0
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794002017900198841,
+                "payloadSha256": "827645058831ee16de79e07441a95ec6b1f977b4ed52045e534ab528929aefde",
+                "sequence": 1,
+                "xM": 1.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000010000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794002017900208621,
+                "payloadSha256": "93a8eaf79354c84442ac0e10c2062c53887deb79944f89aef71d679fd7a88b07",
+                "data": 1
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794002018020498681,
+                "payloadSha256": "ccfa98a722f069767311765670b03c9d06acfc8ddcbbb465207cb3d4e51f843e",
+                "sequence": 2,
+                "xM": 2.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000020000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794002018020510041,
+                "payloadSha256": "eacc08d79cc677584e2c59931de7d5aa6f12dddf9ca40eda868130711dc83461",
+                "data": 2
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794002018140746333,
+                "payloadSha256": "6c982e3b1e5bc70bb24cd855fe63845438494b28a507c5d049210ac1792d93a3",
+                "sequence": 3,
+                "xM": 3.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000030000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794002018140754463,
+                "payloadSha256": "e846f644a9c250ea43b054aa2d6678836fccacf9367f26bb645c3c8e9e7ab874",
+                "data": 3
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794002018261028514,
+                "payloadSha256": "066d689477e8f9eae7ed4b170b1d5c68a6145ced3a9c6cb6813439a2ce7f01f3",
+                "sequence": 4,
+                "xM": 4.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000040000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794002018261036474,
+                "payloadSha256": "50525845aa0fa94968819a3e7bfc2d01a599ca14f4ce92de225c4d206189cf9b",
+                "data": 4
+              },
+              {
+                "topic": "/bag_lab/input",
+                "receivedNs": 1794002018381231077,
+                "payloadSha256": "cccc23661e5ed7950f958deb001d370c8e3dbac4ffad2c36098979bd2edbf6eb",
+                "sequence": 5,
+                "xM": 5.0,
+                "yM": 0.0,
+                "zM": 0.0,
+                "headerNs": 1000050000000,
+                "frameId": "synthetic_frame"
+              },
+              {
+                "topic": "/bag_lab/derived",
+                "receivedNs": 1794002018381242577,
+                "payloadSha256": "8076970a7e5a672e4a22ec446626938d4ef8d16569a0050ccf38496578a92d24",
+                "data": 5
+              }
+            ]
+          },
+          "passed": true
+        }
+      ],
+      "playbacks": [
+        {
+          "name": "play_all_no_clock",
+          "filterInputOnly": false,
+          "generatedClock": false,
+          "pausedDataCount": 0,
+          "publishers": {
+            "/bag_lab/input": 1,
+            "/bag_lab/derived": 1,
+            "/bag_lab/static": 1,
+            "/clock": 0
+          },
+          "matchedSubscriptionsAtResume": {
+            "/bag_lab/input": 1,
+            "/bag_lab/derived": 1,
+            "/bag_lab/static": 1
+          },
+          "received": {
+            "/bag_lab/input": [
+              {
+                "sequence": 0,
+                "headerNs": 1000000000000,
+                "frameId": "synthetic_frame",
+                "xM": 0.0,
+                "yM": 0.0,
+                "zM": 0.0
+              },
+              {
+                "sequence": 1,
+                "headerNs": 1000010000000,
+                "frameId": "synthetic_frame",
+                "xM": 1.0,
+                "yM": 0.0,
+                "zM": 0.0
+              },
+              {
+                "sequence": 2,
+                "headerNs": 1000020000000,
+                "frameId": "synthetic_frame",
+                "xM": 2.0,
+                "yM": 0.0,
+                "zM": 0.0
+              },
+              {
+                "sequence": 3,
+                "headerNs": 1000030000000,
+                "frameId": "synthetic_frame",
+                "xM": 3.0,
+                "yM": 0.0,
+                "zM": 0.0
+              },
+              {
+                "sequence": 4,
+                "headerNs": 1000040000000,
+                "frameId": "synthetic_frame",
+                "xM": 4.0,
+                "yM": 0.0,
+                "zM": 0.0
+              },
+              {
+                "sequence": 5,
+                "headerNs": 1000050000000,
+                "frameId": "synthetic_frame",
+                "xM": 5.0,
+                "yM": 0.0,
+                "zM": 0.0
+              }
+            ],
+            "/bag_lab/derived": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            "/bag_lab/static": [
+              "calibration:v1"
+            ]
+          },
+          "clocksNs": [],
+          "observerRosTimeNs": 0,
+          "passed": true
+        },
+        {
+          "name": "play_filtered_clock",
+          "filterInputOnly": true,
+          "generatedClock": true,
+          "pausedDataCount": 0,
+          "publishers": {
+            "/bag_lab/input": 1,
+            "/bag_lab/derived": 0,
+            "/bag_lab/static": 0,
+            "/clock": 1
+          },
+          "matchedSubscriptionsAtResume": {
+            "/bag_lab/input": 1,
+            "/bag_lab/derived": 0,
+            "/bag_lab/static": 0
+          },
+          "received": {
+            "/bag_lab/input": [
+              {
+                "sequence": 0,
+                "headerNs": 1000000000000,
+                "frameId": "synthetic_frame",
+                "xM": 0.0,
+                "yM": 0.0,
+                "zM": 0.0
+              },
+              {
+                "sequence": 1,
+                "headerNs": 1000010000000,
+                "frameId": "synthetic_frame",
+                "xM": 1.0,
+                "yM": 0.0,
+                "zM": 0.0
+              },
+              {
+                "sequence": 2,
+                "headerNs": 1000020000000,
+                "frameId": "synthetic_frame",
+                "xM": 2.0,
+                "yM": 0.0,
+                "zM": 0.0
+              },
+              {
+                "sequence": 3,
+                "headerNs": 1000030000000,
+                "frameId": "synthetic_frame",
+                "xM": 3.0,
+                "yM": 0.0,
+                "zM": 0.0
+              },
+              {
+                "sequence": 4,
+                "headerNs": 1000040000000,
+                "frameId": "synthetic_frame",
+                "xM": 4.0,
+                "yM": 0.0,
+                "zM": 0.0
+              },
+              {
+                "sequence": 5,
+                "headerNs": 1000050000000,
+                "frameId": "synthetic_frame",
+                "xM": 5.0,
+                "yM": 0.0,
+                "zM": 0.0
+              }
+            ],
+            "/bag_lab/derived": [],
+            "/bag_lab/static": []
+          },
+          "clocksNs": [
+            10000000000,
+            10000000000,
+            10000000000,
+            10000000000,
+            10000000000,
+            10000000000,
+            10021562706,
+            10071546684,
+            10121530262,
+            10171543662,
+            10221551718,
+            10271546938,
+            10321530516,
+            10371545694,
+            10421583332,
+            10471566550,
+            10521586888,
+            10571565666,
+            10621527884,
+            10671536122,
+            10721576220,
+            10771569198,
+            10821582016,
+            10871544114,
+            10921577032,
+            10971549890,
+            11021572808,
+            11071569706,
+            11121558204,
+            11171567522,
+            11221574020
+          ],
+          "observerRosTimeNs": 11221574020,
+          "passed": true
+        }
+      ],
+      "storageFields": {
+        "headerNs": 7000000000,
+        "explicitReceivedNs": 10000000000,
+        "explicitSentNs": 9000000000,
+        "payloadSha256": "e15f4b028d63539c7f7e6c87c216c30b34da88764a93be638a71b573b296b580",
+        "storages": {
+          "sqlite3": {
+            "readback": {
+              "storageId": "sqlite3",
+              "metadataCount": 1,
+              "startNs": 10000000000,
+              "durationNs": 0,
+              "metadataTopics": {
+                "/bag_lab/input": 1
+              },
+              "files": [
+                "sqlite3_0.db3"
+              ],
+              "counts": {
+                "/bag_lab/input": 1
+              },
+              "records": [
+                {
+                  "topic": "/bag_lab/input",
+                  "receivedNs": 10000000000,
+                  "payloadSha256": "e15f4b028d63539c7f7e6c87c216c30b34da88764a93be638a71b573b296b580",
+                  "sequence": 1,
+                  "xM": 1.0,
+                  "yM": 0.0,
+                  "zM": 0.0,
+                  "headerNs": 7000000000,
+                  "frameId": "synthetic_frame"
+                }
+              ]
+            },
+            "columns": [
+              "id",
+              "topic_id",
+              "timestamp",
+              "data"
+            ],
+            "storedTimestampNs": 10000000000,
+            "hasSeparateSentColumn": false
+          },
+          "mcap": {
+            "readback": {
+              "storageId": "mcap",
+              "metadataCount": 1,
+              "startNs": 10000000000,
+              "durationNs": 0,
+              "metadataTopics": {
+                "/bag_lab/input": 1
+              },
+              "files": [
+                "mcap_0.mcap"
+              ],
+              "counts": {
+                "/bag_lab/input": 1
+              },
+              "records": [
+                {
+                  "topic": "/bag_lab/input",
+                  "receivedNs": 10000000000,
+                  "payloadSha256": "e15f4b028d63539c7f7e6c87c216c30b34da88764a93be638a71b573b296b580",
+                  "sequence": 1,
+                  "xM": 1.0,
+                  "yM": 0.0,
+                  "zM": 0.0,
+                  "headerNs": 7000000000,
+                  "frameId": "synthetic_frame"
+                }
+              ]
+            },
+            "messages": [
+              {
+                "channel": 1,
+                "sequence": 0,
+                "logTimeNs": 10000000000,
+                "publishTimeNs": 9000000000,
+                "payloadSha256": "e15f4b028d63539c7f7e6c87c216c30b34da88764a93be638a71b573b296b580"
+              }
+            ]
+          }
+        }
+      },
+      "cleanup": {
+        "nodesRemaining": 0,
+        "contextValid": false,
+        "processPidsGone": true,
+        "escalatedSignals": []
+      },
+      "durationS": 9.46185301999867
+    }
+  ]
+}

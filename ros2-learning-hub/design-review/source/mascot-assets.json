@@ -1,0 +1,113 @@
+{
+  "version": 2,
+  "mascot": "紫樱",
+  "sourceCommit": "266791959045aadc4331755ac6312fdc94da6706",
+  "assets": [
+    {
+      "id": "mascot-hero",
+      "file": "assets/mascots/hero.webp",
+      "title": "紫樱 · 读书",
+      "category": "illustration",
+      "width": 360,
+      "height": 368,
+      "placements": [
+        "首页"
+      ],
+      "sourceUrl": "https://github.com/MUHAN11-c/ros2_robot/blob/266791959045aadc4331755ac6312fdc94da6706/assets/mascots/hero.webp",
+      "author": "Pengfei Guo / DAMIAO Technology（来源仓库署名）",
+      "rights": "CC BY-NC 4.0，见 source/history/LICENSE。",
+      "sha256": "5c3f5b297c4464149bd5efa9f602872ad2238f0f6acb5286be72f18686c5b456"
+    },
+    {
+      "id": "mascot-avatar",
+      "file": "assets/mascots/avatar-128.webp",
+      "title": "紫樱 · 头像",
+      "category": "avatar",
+      "width": 128,
+      "height": 128,
+      "placements": [
+        "顶部导航栏"
+      ],
+      "sourceUrl": "https://github.com/MUHAN11-c/ros2_robot/blob/266791959045aadc4331755ac6312fdc94da6706/assets/mascots/avatar-128.webp",
+      "author": "Pengfei Guo / DAMIAO Technology（来源仓库署名）",
+      "rights": "CC BY-NC 4.0，见 source/history/LICENSE。",
+      "sha256": "d87b9401ccd1014febaca710e431863accd11e3451d162608a8bcdcf42444f24"
+    },
+    {
+      "id": "mascot-wave",
+      "file": "assets/mascots/kmap-guide.webp",
+      "title": "紫樱 · 招手",
+      "category": "sticker",
+      "width": 336,
+      "height": 340,
+      "placements": [
+        "笔记空态"
+      ],
+      "sourceUrl": "https://github.com/MUHAN11-c/ros2_robot/blob/266791959045aadc4331755ac6312fdc94da6706/assets/mascots/kmap-guide.webp",
+      "author": "Pengfei Guo / DAMIAO Technology（来源仓库署名）",
+      "rights": "CC BY-NC 4.0，见 source/history/LICENSE。",
+      "sha256": "26fc8ef3a6bfc47082f3253cacb70fc030923a156e8f1c6693148455d7f865c7"
+    },
+    {
+      "id": "mascot-guide",
+      "file": "assets/mascots/404.webp",
+      "title": "紫樱 · 白板讲解",
+      "category": "sticker",
+      "width": 412,
+      "height": 300,
+      "placements": [
+        "搜索空态",
+        "目录筛选空态"
+      ],
+      "sourceUrl": "https://github.com/MUHAN11-c/ros2_robot/blob/266791959045aadc4331755ac6312fdc94da6706/assets/mascots/404.webp",
+      "author": "Pengfei Guo / DAMIAO Technology（来源仓库署名）",
+      "rights": "CC BY-NC 4.0，见 source/history/LICENSE。",
+      "sha256": "a6274cb83c961c3ae51558a4b4861d32a022488bdd67ecbbdf92e8f7914cc92b"
+    },
+    {
+      "id": "mascot-tip",
+      "file": "assets/mascots/tip.webp",
+      "title": "紫樱 · 提醒",
+      "category": "sticker",
+      "width": 348,
+      "height": 344,
+      "placements": [
+        "笔记搜索空态"
+      ],
+      "sourceUrl": "https://github.com/MUHAN11-c/ros2_robot/blob/266791959045aadc4331755ac6312fdc94da6706/assets/mascots/tip.webp",
+      "author": "Pengfei Guo / DAMIAO Technology（来源仓库署名）",
+      "rights": "CC BY-NC 4.0，见 source/history/LICENSE。",
+      "sha256": "562c0afdce209606419c2ed5b18ee72ad6115fb09ca6e00ba2db433f66144081"
+    },
+    {
+      "id": "mascot-complete",
+      "file": "assets/mascots/complete.webp",
+      "title": "紫樱 · 眨眼指路",
+      "category": "sticker",
+      "width": 396,
+      "height": 336,
+      "placements": [
+        "完成章节提示"
+      ],
+      "sourceUrl": "https://github.com/MUHAN11-c/ros2_robot/blob/266791959045aadc4331755ac6312fdc94da6706/assets/mascots/complete.webp",
+      "author": "Pengfei Guo / DAMIAO Technology（来源仓库署名）",
+      "rights": "CC BY-NC 4.0，见 source/history/LICENSE。",
+      "sha256": "9c889f59ae007f8d90d27f0bb95c9af14e0a411341ad94c0e97338e396130b2e"
+    },
+    {
+      "id": "mascot-badge",
+      "file": "assets/mascots/sleep.webp",
+      "title": "紫樱 · 樱花圆框",
+      "category": "sticker",
+      "width": 362,
+      "height": 338,
+      "placements": [
+        "收藏空态"
+      ],
+      "sourceUrl": "https://github.com/MUHAN11-c/ros2_robot/blob/266791959045aadc4331755ac6312fdc94da6706/assets/mascots/sleep.webp",
+      "author": "Pengfei Guo / DAMIAO Technology（来源仓库署名）",
+      "rights": "CC BY-NC 4.0，见 source/history/LICENSE。",
+      "sha256": "977d70df5a9228af0a0c9583bd931e5b0778853dab63d1241c03a0ca9ba763dc"
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "scope": "行为树已成功但世界坐标偏航尚超出停稳验收门限",
+  "earlierReportSha256": "a5b8967afccb845dd3b3c7530a0d2af6234209d47aa06352a42a5fe3d8418f24",
+  "domainId": 222,
+  "sourceHashes": {
+    "nav2_execution/validate_execution.py": "9a632ae299fda065ed20a7c89477b38303199b393571241fa944a9c09129a2aa",
+    "nav2_execution/mobile_base.sdf": "38f850ee69d96e016a3803067dcbb6bb9b0de773671f3b604c24875810dffdbe",
+    "nav2_execution/bridge.yaml": "833a79f9d5c16c1a9f6c54b5b9d34a2d59aab4a77d4350cb513c21ff1bc6d339",
+    "nav2_execution/navigation.yaml": "18b8453f982e5147d73239782d278efd1eec899fc2977c53adbdf3b75aa292db",
+    "nav2_labs/nav_room.sdf": "d57d32c1024a8675f37167d65a466d456f687b77abc8f28330928973489ec176",
+    "nav2_labs/validate_nav2.py": "ac913b3733fd6fba857a4fe6a3b18e7d286de64d5800d330df2415b0129d75de",
+    "gazebo_labs/validate_sensors.py": "e14314457e0c72608e057a6c2a1dea3c90c3e6e0efdf32bd1aa4c22e5d4990da"
+  },
+  "earlierTelemetrySha256": "552b5a3de174da7634ee1cb96fa219a688d37edc261d74c448093c2b190aa1f0",
+  "goalCheckerYawToleranceRad": 0.18,
+  "stopAcceptanceYawRad": 0.28,
+  "nearestWorldAtResult": {
+    "stampNs": 31960000000,
+    "yawRad": 0.10547040732209038,
+    "wRadps": -0.9637983675779414
+  },
+  "earlier": {
+    "status": 4,
+    "errorCode": 0,
+    "worldTravelM": 4.93601188479902,
+    "positionErrorM": 0.08312422520588128,
+    "yawErrorRad": 0.41258470179781254,
+    "resultRosNs": 31970000000,
+    "truthStop": {
+      "stillFromNs": 33060000000,
+      "stillUntilNs": 33560000000,
+      "samples": 26,
+      "maxLinearMps": 3.710539125894465e-06,
+      "maxAngularRadps": 0.05136405497640741
+    },
+    "controller": {
+      "samples": 273,
+      "nonzero": 272,
+      "firstZeroAfterMotionNs": 31940000000,
+      "maxLinearMps": 0.45,
+      "maxAngularRadps": 0.85
+    },
+    "smoothed": {
+      "samples": 448,
+      "nonzero": 446,
+      "firstZeroAfterMotionNs": 33060000000,
+      "maxLinearMps": 0.45,
+      "maxAngularRadps": 0.85
+    }
+  },
+  "updatedConfiguration": {
+    "rotateToHeadingAngularRadps": [
+      0.85,
+      0.45
+    ],
+    "movementTimeAllowanceS": [
+      8.0,
+      12.0
+    ]
+  },
+  "reasoning": "保持原停稳偏航验收门限，降低终点旋转速度以减小置零后的积分角度，并给慢转后的平移留出进度检查窗口。",
+  "currentReportSha256": "d659b24d580e18d7b55d16037980e6068a006034ee31049229caf29560db0e7f",
+  "after": {
+    "status": 4,
+    "errorCode": 0,
+    "positionErrorM": 0.07060366400483387,
+    "yawErrorRad": 0.026071693517942945,
+    "resultRosNs": 31070000000,
+    "truthStop": {
+      "stillFromNs": 31600000000,
+      "stillUntilNs": 32100000000,
+      "samples": 26,
+      "maxLinearMps": 3.614471854418914e-06,
+      "maxAngularRadps": 0.046315060656514584
+    },
+    "controller": {
+      "samples": 279,
+      "nonzero": 278,
+      "firstZeroAfterMotionNs": 31040000000,
+      "maxLinearMps": 0.45,
+      "maxAngularRadps": 0.45
+    },
+    "smoothed": {
+      "samples": 440,
+      "nonzero": 438,
+      "firstZeroAfterMotionNs": 31605000000,
+      "maxLinearMps": 0.45,
+      "maxAngularRadps": 0.45
+    }
+  }
+}

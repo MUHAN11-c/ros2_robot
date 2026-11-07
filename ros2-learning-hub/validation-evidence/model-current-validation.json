@@ -1,0 +1,2530 @@
+{
+  "checkedAt": "2026-11-06T22:23:52.013741+00:00",
+  "passed": true,
+  "outputDirectory": "/tmp/ros2-model-lab-s3dcyqx6",
+  "domainId": 219,
+  "sourceHashes": [
+    {
+      "path": "examples/model_labs/README.md",
+      "sha256": "005aeb0053eedc469631555935cef8c447ef34529ac566a8c19f80c78c397547"
+    },
+    {
+      "path": "examples/model_labs/inspect_model.py",
+      "sha256": "b261d249c680cfb275acd269656bef53f30bddbc44f8c7c20dc2a99ac6a82ee1"
+    },
+    {
+      "path": "examples/model_labs/learning_description/CMakeLists.txt",
+      "sha256": "aeab37fd84340043300f90a583eeced421fa79f269665082eba9e3c4a3a2a424"
+    },
+    {
+      "path": "examples/model_labs/learning_description/launch/model.launch.py",
+      "sha256": "4b0845a38bbe0d25acf2a8dadb3f2cd10cd82de5c44244e46743f078fa0bf875"
+    },
+    {
+      "path": "examples/model_labs/learning_description/package.xml",
+      "sha256": "edd3cbb74cf6a8eda8e959ea7e391820e1656829137661ca78a49d306abab257"
+    },
+    {
+      "path": "examples/model_labs/learning_description/urdf/minimal.urdf",
+      "sha256": "3d1ea676267b903158dc0310d7b2aded561262f9d55b399dafa3aa013261149b"
+    },
+    {
+      "path": "examples/model_labs/learning_description/urdf/robot.urdf.xacro",
+      "sha256": "d9dbb396299d044d8f6c6f3d2a1c476f2045a2482d11c109dc3ab9f1da781bfc"
+    },
+    {
+      "path": "examples/model_labs/validate_model.py",
+      "sha256": "75537a1417d5f9c12b785fea8e70fad50fa57d76fc895536d9165270bed66e6d"
+    }
+  ],
+  "limits": [
+    "本例无GUI、无图像、无物理仿真、无硬件或真实标定；正惯量数值不等于动力学已验证。",
+    "正常子进程退出与PID检查不覆盖父SIGINT/原生挂起；TF静止不证明物理停车。",
+    "复制安装与异目录启动不证明跨机、ABI或依赖闭包；原urdf_tutorial显示命令未运行。"
+  ],
+  "versions": {
+    "robot_state_publisher": "3.3.4",
+    "xacro": "2.1.1",
+    "urdf": "2.10.1",
+    "kdl_parser": "2.11.0",
+    "rclpy": "7.1.12",
+    "launch_ros": "0.26.13"
+  },
+  "processes": [
+    {
+      "label": "build",
+      "argv": [
+        "colcon",
+        "--log-base",
+        "/tmp/ros2-model-lab-s3dcyqx6/log",
+        "build",
+        "--base-paths",
+        "/home/wjz/ros2_robot/ros2-learning-hub/examples/model_labs/learning_description",
+        "--build-base",
+        "/tmp/ros2-model-lab-s3dcyqx6/build",
+        "--install-base",
+        "/tmp/ros2-model-lab-s3dcyqx6/install",
+        "--merge-install"
+      ],
+      "cwd": "/home/wjz/ros2_robot/ros2-learning-hub",
+      "pid": 253296,
+      "logFile": "/tmp/ros2-model-lab-s3dcyqx6/build.log",
+      "signals": [],
+      "returnCode": 0,
+      "logSha256": "e070f7f28b079cbc112365824938dfb9d3b70e4e6597114935a49579249da9b3",
+      "logText": "Starting >>> learning_description\nFinished <<< learning_description [0.35s]\n\nSummary: 1 package finished [0.42s]\n",
+      "launchedChildPids": [],
+      "allRecordedPidsGone": true
+    },
+    {
+      "label": "check_minimal",
+      "argv": [
+        "check_urdf",
+        "/tmp/ros2-model-lab-s3dcyqx6/install/share/learning_description/urdf/minimal.urdf"
+      ],
+      "cwd": "/home/wjz/ros2_robot/ros2-learning-hub",
+      "pid": 253385,
+      "logFile": "/tmp/ros2-model-lab-s3dcyqx6/check_minimal.log",
+      "signals": [],
+      "returnCode": 0,
+      "logSha256": "9555e1154481e719d5d06094e0fb1625e5764d253e2ca11b4842f022159f3c7b",
+      "logText": "robot name is: learning_base\n---------- Successfully Parsed XML ---------------\nroot Link: base_link has 1 child(ren)\n    child(1):  laser\n",
+      "launchedChildPids": [],
+      "allRecordedPidsGone": true
+    },
+    {
+      "label": "expand_default",
+      "argv": [
+        "xacro",
+        "/tmp/ros2-model-lab-s3dcyqx6/install/share/learning_description/urdf/robot.urdf.xacro",
+        "-o",
+        "/tmp/ros2-model-lab-s3dcyqx6/default.urdf"
+      ],
+      "cwd": "/home/wjz/ros2_robot/ros2-learning-hub",
+      "pid": 253386,
+      "logFile": "/tmp/ros2-model-lab-s3dcyqx6/expand_default.log",
+      "signals": [],
+      "returnCode": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "logText": "",
+      "launchedChildPids": [],
+      "allRecordedPidsGone": true
+    },
+    {
+      "label": "check_default",
+      "argv": [
+        "check_urdf",
+        "/tmp/ros2-model-lab-s3dcyqx6/default.urdf"
+      ],
+      "cwd": "/home/wjz/ros2_robot/ros2-learning-hub",
+      "pid": 253387,
+      "logFile": "/tmp/ros2-model-lab-s3dcyqx6/check_default.log",
+      "signals": [],
+      "returnCode": 0,
+      "logSha256": "65f4e245383e569473352d219a751223b00c4acaa5c30ddd61f74e687aa6f039",
+      "logText": "robot name is: learning_wheeled_model\n---------- Successfully Parsed XML ---------------\nroot Link: base_footprint has 1 child(ren)\n    child(1):  base_link\n        child(1):  camera_link\n            child(1):  camera_optical_frame\n        child(2):  laser\n        child(3):  left_wheel\n        child(4):  right_wheel\n",
+      "launchedChildPids": [],
+      "allRecordedPidsGone": true
+    },
+    {
+      "label": "expand_override",
+      "argv": [
+        "xacro",
+        "/tmp/ros2-model-lab-s3dcyqx6/install/share/learning_description/urdf/robot.urdf.xacro",
+        "wheel_radius:=0.10",
+        "wheel_separation:=0.40",
+        "-o",
+        "/tmp/ros2-model-lab-s3dcyqx6/override.urdf"
+      ],
+      "cwd": "/home/wjz/ros2_robot/ros2-learning-hub",
+      "pid": 253388,
+      "logFile": "/tmp/ros2-model-lab-s3dcyqx6/expand_override.log",
+      "signals": [],
+      "returnCode": 0,
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "logText": "",
+      "launchedChildPids": [],
+      "allRecordedPidsGone": true
+    },
+    {
+      "label": "check_override",
+      "argv": [
+        "check_urdf",
+        "/tmp/ros2-model-lab-s3dcyqx6/override.urdf"
+      ],
+      "cwd": "/home/wjz/ros2_robot/ros2-learning-hub",
+      "pid": 253389,
+      "logFile": "/tmp/ros2-model-lab-s3dcyqx6/check_override.log",
+      "signals": [],
+      "returnCode": 0,
+      "logSha256": "65f4e245383e569473352d219a751223b00c4acaa5c30ddd61f74e687aa6f039",
+      "logText": "robot name is: learning_wheeled_model\n---------- Successfully Parsed XML ---------------\nroot Link: base_footprint has 1 child(ren)\n    child(1):  base_link\n        child(1):  camera_link\n            child(1):  camera_optical_frame\n        child(2):  laser\n        child(3):  left_wheel\n        child(4):  right_wheel\n",
+      "launchedChildPids": [],
+      "allRecordedPidsGone": true
+    },
+    {
+      "label": "launch_default",
+      "argv": [
+        "bash",
+        "-c",
+        "source \"$1\" --; cd \"$2\"; exec ros2 launch learning_description model.launch.py \"${@:3}\"",
+        "model-lab",
+        "/tmp/ros2-model-lab-s3dcyqx6/install/setup.bash",
+        "/tmp/ros2-model-lab-s3dcyqx6/empty-cwd"
+      ],
+      "cwd": "/home/wjz/ros2_robot/ros2-learning-hub",
+      "pid": 253403,
+      "logFile": "/tmp/ros2-model-lab-s3dcyqx6/launch_default.log",
+      "signals": [
+        {
+          "signal": "SIGINT",
+          "target": "pid"
+        }
+      ],
+      "returnCode": 0,
+      "logSha256": "a93c8b719981d62f323ace412db015f1fd14a37dfbbbbeae2cc3342d8989d268",
+      "logText": "[INFO] [launch]: All log files can be found below /tmp/ros2-model-lab-s3dcyqx6/ros-logs/2026-11-07-06-23-53-161700-wjz-vpc-253403\n[INFO] [launch]: Default logging verbosity is set to INFO\n[INFO] [robot_state_publisher-1]: process started with pid [253417]\n[robot_state_publisher-1] [INFO] [1794003833.222127361] [model_lab.state_publisher]: Robot initialized\n[robot_state_publisher-1] [ERROR] [1794003833.541230906] [model_lab.state_publisher]: Robot state publisher ignored an invalid JointState message\n[robot_state_publisher-1] [WARN] [1794003833.816826891] [model_lab.state_publisher]: Robot state publisher ignored a JointState message about joint(s) \"left_wheel_joint\"(,...) whose position member was empty.\n[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)\n[INFO] [robot_state_publisher-1]: sending signal 'SIGINT' to process[robot_state_publisher-1]\n[robot_state_publisher-1] [INFO] [1794003834.189574760] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[INFO] [robot_state_publisher-1]: process has finished cleanly [pid 253417]\n",
+      "launchedChildPids": [
+        253417
+      ],
+      "allRecordedPidsGone": true
+    },
+    {
+      "label": "launch_override",
+      "argv": [
+        "bash",
+        "-c",
+        "source \"$1\" --; cd \"$2\"; exec ros2 launch learning_description model.launch.py \"${@:3}\"",
+        "model-lab",
+        "/tmp/ros2-model-lab-s3dcyqx6/install/setup.bash",
+        "/tmp/ros2-model-lab-s3dcyqx6/empty-cwd",
+        "wheel_radius:=0.10",
+        "wheel_separation:=0.40",
+        "frame_prefix:=alternate/"
+      ],
+      "cwd": "/home/wjz/ros2_robot/ros2-learning-hub",
+      "pid": 253434,
+      "logFile": "/tmp/ros2-model-lab-s3dcyqx6/launch_override.log",
+      "signals": [
+        {
+          "signal": "SIGINT",
+          "target": "pid"
+        }
+      ],
+      "returnCode": 0,
+      "logSha256": "28955373fa26b5db1ff9cc97a39195804f819ca2563336c85817344ed3847d8e",
+      "logText": "[INFO] [launch]: All log files can be found below /tmp/ros2-model-lab-s3dcyqx6/ros-logs/2026-11-07-06-23-54-633294-wjz-vpc-253434\n[INFO] [launch]: Default logging verbosity is set to INFO\n[INFO] [robot_state_publisher-1]: process started with pid [253445]\n[robot_state_publisher-1] [INFO] [1794003834.687453642] [model_lab.state_publisher]: Robot initialized\n[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)\n[INFO] [robot_state_publisher-1]: sending signal 'SIGINT' to process[robot_state_publisher-1]\n[robot_state_publisher-1] [INFO] [1794003835.098507179] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[INFO] [robot_state_publisher-1]: process has finished cleanly [pid 253445]\n",
+      "launchedChildPids": [
+        253445
+      ],
+      "allRecordedPidsGone": true
+    },
+    {
+      "label": "reject_negative_radius",
+      "argv": [
+        "bash",
+        "-c",
+        "source \"$1\" --; cd \"$2\"; exec ros2 launch learning_description model.launch.py \"${@:3}\"",
+        "model-lab",
+        "/tmp/ros2-model-lab-s3dcyqx6/install/setup.bash",
+        "/tmp/ros2-model-lab-s3dcyqx6/empty-cwd",
+        "wheel_radius:=-0.08"
+      ],
+      "cwd": "/home/wjz/ros2_robot/ros2-learning-hub",
+      "pid": 253459,
+      "logFile": "/tmp/ros2-model-lab-s3dcyqx6/reject_negative_radius.log",
+      "signals": [],
+      "returnCode": 1,
+      "logSha256": "e0b3defba29ef78eedeaa3f6d715e70853eb04ddf157fa7e33f2d4b25cf371f7",
+      "logText": "[INFO] [launch]: All log files can be found below /tmp/ros2-model-lab-s3dcyqx6/ros-logs/2026-11-07-06-23-55-528449-wjz-vpc-253459\n[INFO] [launch]: Default logging verbosity is set to INFO\n[ERROR] [launch]: Caught exception in launch (see debug for traceback): wheel_radius必须在[0.04,0.15]m内且有限\n",
+      "launchedChildPids": [],
+      "allRecordedPidsGone": true
+    },
+    {
+      "label": "reject_nan_separation",
+      "argv": [
+        "bash",
+        "-c",
+        "source \"$1\" --; cd \"$2\"; exec ros2 launch learning_description model.launch.py \"${@:3}\"",
+        "model-lab",
+        "/tmp/ros2-model-lab-s3dcyqx6/install/setup.bash",
+        "/tmp/ros2-model-lab-s3dcyqx6/empty-cwd",
+        "wheel_separation:=nan"
+      ],
+      "cwd": "/home/wjz/ros2_robot/ros2-learning-hub",
+      "pid": 253470,
+      "logFile": "/tmp/ros2-model-lab-s3dcyqx6/reject_nan_separation.log",
+      "signals": [],
+      "returnCode": 1,
+      "logSha256": "ebcec691a57683054fb97b3f9b586482aae65829fd24e7c7e5c04c323b318c7f",
+      "logText": "[INFO] [launch]: All log files can be found below /tmp/ros2-model-lab-s3dcyqx6/ros-logs/2026-11-07-06-23-55-823036-wjz-vpc-253470\n[INFO] [launch]: Default logging verbosity is set to INFO\n[ERROR] [launch]: Caught exception in launch (see debug for traceback): wheel_separation必须在[0.35,0.8]m内且有限\n",
+      "launchedChildPids": [],
+      "allRecordedPidsGone": true
+    }
+  ],
+  "installedResources": {
+    "share": "/tmp/ros2-model-lab-s3dcyqx6/install/share/learning_description",
+    "normalCopy": true,
+    "files": [
+      {
+        "file": "package.xml",
+        "sha256": "edd3cbb74cf6a8eda8e959ea7e391820e1656829137661ca78a49d306abab257"
+      },
+      {
+        "file": "urdf/minimal.urdf",
+        "sha256": "3d1ea676267b903158dc0310d7b2aded561262f9d55b399dafa3aa013261149b"
+      },
+      {
+        "file": "urdf/robot.urdf.xacro",
+        "sha256": "d9dbb396299d044d8f6c6f3d2a1c476f2045a2482d11c109dc3ab9f1da781bfc"
+      },
+      {
+        "file": "launch/model.launch.py",
+        "sha256": "4b0845a38bbe0d25acf2a8dadb3f2cd10cd82de5c44244e46743f078fa0bf875"
+      }
+    ]
+  },
+  "minimalModel": {
+    "root": "base_link",
+    "links": 2,
+    "joints": [
+      {
+        "name": "base_to_laser",
+        "type": "fixed",
+        "parent": "base_link",
+        "child": "laser",
+        "xyzM": [
+          0.15,
+          0.0,
+          0.1
+        ],
+        "rpyRad": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "axis": null
+      }
+    ],
+    "inertias": [],
+    "frameLinksWithoutInertia": [
+      "base_link",
+      "laser"
+    ],
+    "geometry": [
+      {
+        "link": "base_link",
+        "role": "visual",
+        "shape": "box",
+        "dimensionsM": [
+          0.4,
+          0.3,
+          0.12
+        ]
+      },
+      {
+        "link": "base_link",
+        "role": "collision",
+        "shape": "box",
+        "dimensionsM": [
+          0.4,
+          0.3,
+          0.12
+        ]
+      },
+      {
+        "link": "laser",
+        "role": "visual",
+        "shape": "cylinder",
+        "dimensionsM": [
+          0.04,
+          0.05
+        ]
+      }
+    ]
+  },
+  "expandedModels": [
+    {
+      "name": "default",
+      "file": "/tmp/ros2-model-lab-s3dcyqx6/default.urdf",
+      "summary": {
+        "root": "base_footprint",
+        "links": 7,
+        "joints": [
+          {
+            "name": "footprint_to_base",
+            "type": "fixed",
+            "parent": "base_footprint",
+            "child": "base_link",
+            "xyzM": [
+              0.0,
+              0.0,
+              0.14
+            ],
+            "rpyRad": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axis": null
+          },
+          {
+            "name": "left_wheel_joint",
+            "type": "continuous",
+            "parent": "base_link",
+            "child": "left_wheel",
+            "xyzM": [
+              0.0,
+              0.18,
+              -0.06
+            ],
+            "rpyRad": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axis": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "name": "right_wheel_joint",
+            "type": "continuous",
+            "parent": "base_link",
+            "child": "right_wheel",
+            "xyzM": [
+              0.0,
+              -0.18,
+              -0.06
+            ],
+            "rpyRad": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axis": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "name": "base_to_laser",
+            "type": "fixed",
+            "parent": "base_link",
+            "child": "laser",
+            "xyzM": [
+              0.15,
+              0.0,
+              0.1
+            ],
+            "rpyRad": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axis": null
+          },
+          {
+            "name": "base_to_camera",
+            "type": "fixed",
+            "parent": "base_link",
+            "child": "camera_link",
+            "xyzM": [
+              0.18,
+              0.0,
+              0.1
+            ],
+            "rpyRad": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axis": null
+          },
+          {
+            "name": "camera_to_optical",
+            "type": "fixed",
+            "parent": "camera_link",
+            "child": "camera_optical_frame",
+            "xyzM": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "rpyRad": [
+              -1.5707963267948966,
+              0.0,
+              -1.5707963267948966
+            ],
+            "axis": null
+          }
+        ],
+        "inertias": [
+          {
+            "link": "base_link",
+            "massKg": 3.0,
+            "diagonalKgM2": [
+              0.026099999999999998,
+              0.04360000000000001,
+              0.0625
+            ]
+          },
+          {
+            "link": "left_wheel",
+            "massKg": 0.2,
+            "diagonalKgM2": [
+              0.0003466666666666666,
+              0.00064,
+              0.0003466666666666666
+            ]
+          },
+          {
+            "link": "right_wheel",
+            "massKg": 0.2,
+            "diagonalKgM2": [
+              0.0003466666666666666,
+              0.00064,
+              0.0003466666666666666
+            ]
+          },
+          {
+            "link": "laser",
+            "massKg": 0.1,
+            "diagonalKgM2": [
+              6.083333333333334e-05,
+              6.083333333333334e-05,
+              8e-05
+            ]
+          },
+          {
+            "link": "camera_link",
+            "massKg": 0.1,
+            "diagonalKgM2": [
+              3.416666666666667e-05,
+              2.666666666666667e-05,
+              3.416666666666667e-05
+            ]
+          }
+        ],
+        "frameLinksWithoutInertia": [
+          "base_footprint",
+          "camera_optical_frame"
+        ],
+        "geometry": [
+          {
+            "link": "base_link",
+            "role": "visual",
+            "shape": "box",
+            "dimensionsM": [
+              0.4,
+              0.3,
+              0.12
+            ]
+          },
+          {
+            "link": "base_link",
+            "role": "collision",
+            "shape": "box",
+            "dimensionsM": [
+              0.4,
+              0.3,
+              0.12
+            ]
+          },
+          {
+            "link": "left_wheel",
+            "role": "visual",
+            "shape": "cylinder",
+            "dimensionsM": [
+              0.08,
+              0.04
+            ]
+          },
+          {
+            "link": "left_wheel",
+            "role": "collision",
+            "shape": "cylinder",
+            "dimensionsM": [
+              0.08,
+              0.04
+            ]
+          },
+          {
+            "link": "right_wheel",
+            "role": "visual",
+            "shape": "cylinder",
+            "dimensionsM": [
+              0.08,
+              0.04
+            ]
+          },
+          {
+            "link": "right_wheel",
+            "role": "collision",
+            "shape": "cylinder",
+            "dimensionsM": [
+              0.08,
+              0.04
+            ]
+          },
+          {
+            "link": "laser",
+            "role": "visual",
+            "shape": "cylinder",
+            "dimensionsM": [
+              0.04,
+              0.05
+            ]
+          },
+          {
+            "link": "laser",
+            "role": "collision",
+            "shape": "cylinder",
+            "dimensionsM": [
+              0.04,
+              0.05
+            ]
+          },
+          {
+            "link": "camera_link",
+            "role": "visual",
+            "shape": "box",
+            "dimensionsM": [
+              0.04,
+              0.05,
+              0.04
+            ]
+          },
+          {
+            "link": "camera_link",
+            "role": "collision",
+            "shape": "box",
+            "dimensionsM": [
+              0.04,
+              0.05,
+              0.04
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "override",
+      "file": "/tmp/ros2-model-lab-s3dcyqx6/override.urdf",
+      "summary": {
+        "root": "base_footprint",
+        "links": 7,
+        "joints": [
+          {
+            "name": "footprint_to_base",
+            "type": "fixed",
+            "parent": "base_footprint",
+            "child": "base_link",
+            "xyzM": [
+              0.0,
+              0.0,
+              0.16
+            ],
+            "rpyRad": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axis": null
+          },
+          {
+            "name": "left_wheel_joint",
+            "type": "continuous",
+            "parent": "base_link",
+            "child": "left_wheel",
+            "xyzM": [
+              0.0,
+              0.2,
+              -0.06
+            ],
+            "rpyRad": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axis": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "name": "right_wheel_joint",
+            "type": "continuous",
+            "parent": "base_link",
+            "child": "right_wheel",
+            "xyzM": [
+              0.0,
+              -0.2,
+              -0.06
+            ],
+            "rpyRad": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axis": [
+              0.0,
+              1.0,
+              0.0
+            ]
+          },
+          {
+            "name": "base_to_laser",
+            "type": "fixed",
+            "parent": "base_link",
+            "child": "laser",
+            "xyzM": [
+              0.15,
+              0.0,
+              0.1
+            ],
+            "rpyRad": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axis": null
+          },
+          {
+            "name": "base_to_camera",
+            "type": "fixed",
+            "parent": "base_link",
+            "child": "camera_link",
+            "xyzM": [
+              0.18,
+              0.0,
+              0.1
+            ],
+            "rpyRad": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axis": null
+          },
+          {
+            "name": "camera_to_optical",
+            "type": "fixed",
+            "parent": "camera_link",
+            "child": "camera_optical_frame",
+            "xyzM": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "rpyRad": [
+              -1.5707963267948966,
+              0.0,
+              -1.5707963267948966
+            ],
+            "axis": null
+          }
+        ],
+        "inertias": [
+          {
+            "link": "base_link",
+            "massKg": 3.0,
+            "diagonalKgM2": [
+              0.026099999999999998,
+              0.04360000000000001,
+              0.0625
+            ]
+          },
+          {
+            "link": "left_wheel",
+            "massKg": 0.2,
+            "diagonalKgM2": [
+              0.0005266666666666667,
+              0.0010000000000000002,
+              0.0005266666666666667
+            ]
+          },
+          {
+            "link": "right_wheel",
+            "massKg": 0.2,
+            "diagonalKgM2": [
+              0.0005266666666666667,
+              0.0010000000000000002,
+              0.0005266666666666667
+            ]
+          },
+          {
+            "link": "laser",
+            "massKg": 0.1,
+            "diagonalKgM2": [
+              6.083333333333334e-05,
+              6.083333333333334e-05,
+              8e-05
+            ]
+          },
+          {
+            "link": "camera_link",
+            "massKg": 0.1,
+            "diagonalKgM2": [
+              3.416666666666667e-05,
+              2.666666666666667e-05,
+              3.416666666666667e-05
+            ]
+          }
+        ],
+        "frameLinksWithoutInertia": [
+          "base_footprint",
+          "camera_optical_frame"
+        ],
+        "geometry": [
+          {
+            "link": "base_link",
+            "role": "visual",
+            "shape": "box",
+            "dimensionsM": [
+              0.4,
+              0.3,
+              0.12
+            ]
+          },
+          {
+            "link": "base_link",
+            "role": "collision",
+            "shape": "box",
+            "dimensionsM": [
+              0.4,
+              0.3,
+              0.12
+            ]
+          },
+          {
+            "link": "left_wheel",
+            "role": "visual",
+            "shape": "cylinder",
+            "dimensionsM": [
+              0.1,
+              0.04
+            ]
+          },
+          {
+            "link": "left_wheel",
+            "role": "collision",
+            "shape": "cylinder",
+            "dimensionsM": [
+              0.1,
+              0.04
+            ]
+          },
+          {
+            "link": "right_wheel",
+            "role": "visual",
+            "shape": "cylinder",
+            "dimensionsM": [
+              0.1,
+              0.04
+            ]
+          },
+          {
+            "link": "right_wheel",
+            "role": "collision",
+            "shape": "cylinder",
+            "dimensionsM": [
+              0.1,
+              0.04
+            ]
+          },
+          {
+            "link": "laser",
+            "role": "visual",
+            "shape": "cylinder",
+            "dimensionsM": [
+              0.04,
+              0.05
+            ]
+          },
+          {
+            "link": "laser",
+            "role": "collision",
+            "shape": "cylinder",
+            "dimensionsM": [
+              0.04,
+              0.05
+            ]
+          },
+          {
+            "link": "camera_link",
+            "role": "visual",
+            "shape": "box",
+            "dimensionsM": [
+              0.04,
+              0.05,
+              0.04
+            ]
+          },
+          {
+            "link": "camera_link",
+            "role": "collision",
+            "shape": "box",
+            "dimensionsM": [
+              0.04,
+              0.05,
+              0.04
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "runtimeModels": [
+    {
+      "name": "default",
+      "radiusM": 0.08,
+      "separationM": 0.36,
+      "framePrefix": "model/",
+      "lateJoinAfterParameterReply": true,
+      "dynamicAbsentBeforeStates": true,
+      "footprintToBase": {
+        "xyzM": [
+          0.0,
+          0.0,
+          0.14
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "parent": "model/base_footprint",
+        "child": "model/base_link",
+        "stampNs": 0
+      },
+      "phases": [
+        {
+          "kind": "valid_positions",
+          "positionsRad": [
+            0.0,
+            0.0
+          ],
+          "sentStampNs": 1794003833515716741,
+          "transforms": [
+            {
+              "xyzM": [
+                0.0,
+                0.18,
+                -0.06
+              ],
+              "quaternion": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ],
+              "parent": "model/base_link",
+              "child": "model/left_wheel",
+              "stampNs": 1794003833515716741
+            },
+            {
+              "xyzM": [
+                0.0,
+                -0.18,
+                -0.06
+              ],
+              "quaternion": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ],
+              "parent": "model/base_link",
+              "child": "model/right_wheel",
+              "stampNs": 1794003833515716741
+            }
+          ]
+        },
+        {
+          "kind": "unequal_arrays",
+          "sentStampNs": 1794003833541120364,
+          "logMarker": "ignored an invalid JointState message",
+          "unchangedTfStampsNs": [
+            1794003833515716741,
+            1794003833515716741
+          ],
+          "windowS": 0.25
+        },
+        {
+          "kind": "velocity_without_position",
+          "sentStampNs": 1794003833816691008,
+          "logMarker": "whose position member was empty",
+          "unchangedTfStampsNs": [
+            1794003833515716741,
+            1794003833515716741
+          ],
+          "windowS": 0.25
+        },
+        {
+          "kind": "valid_positions",
+          "positionsRad": [
+            1.5707963267948966,
+            -0.7853981633974483
+          ],
+          "sentStampNs": 1794003834162513557,
+          "transforms": [
+            {
+              "xyzM": [
+                0.0,
+                0.18,
+                -0.06
+              ],
+              "quaternion": [
+                0.0,
+                0.7071067811865475,
+                0.0,
+                0.7071067811865476
+              ],
+              "parent": "model/base_link",
+              "child": "model/left_wheel",
+              "stampNs": 1794003834162513557
+            },
+            {
+              "xyzM": [
+                0.0,
+                -0.18,
+                -0.06
+              ],
+              "quaternion": [
+                0.0,
+                -0.3826834323650899,
+                0.0,
+                0.9238795325112867
+              ],
+              "parent": "model/base_link",
+              "child": "model/right_wheel",
+              "stampNs": 1794003834162513557
+            }
+          ]
+        }
+      ],
+      "opticalPoints": [
+        {
+          "axis": "z",
+          "inputM": [
+            0,
+            0,
+            1
+          ],
+          "targetFrame": "model/base_link",
+          "outputM": [
+            1.18,
+            2.220446049250313e-16,
+            0.10000000000000023
+          ],
+          "expectedM": [
+            1.18,
+            0,
+            0.1
+          ]
+        },
+        {
+          "axis": "x",
+          "inputM": [
+            1,
+            0,
+            0
+          ],
+          "targetFrame": "model/base_link",
+          "outputM": [
+            0.18000000000000022,
+            -1.0,
+            0.1
+          ],
+          "expectedM": [
+            0.18,
+            -1,
+            0.1
+          ]
+        },
+        {
+          "axis": "y",
+          "inputM": [
+            0,
+            1,
+            0
+          ],
+          "targetFrame": "model/base_link",
+          "outputM": [
+            0.18000000000000022,
+            0.0,
+            -0.9
+          ],
+          "expectedM": [
+            0.18,
+            0,
+            -0.9
+          ]
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "override",
+      "radiusM": 0.1,
+      "separationM": 0.4,
+      "framePrefix": "alternate/",
+      "lateJoinAfterParameterReply": true,
+      "dynamicAbsentBeforeStates": true,
+      "footprintToBase": {
+        "xyzM": [
+          0.0,
+          0.0,
+          0.16
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "parent": "alternate/base_footprint",
+        "child": "alternate/base_link",
+        "stampNs": 0
+      },
+      "phases": [
+        {
+          "kind": "valid_positions",
+          "positionsRad": [
+            0.0,
+            0.0
+          ],
+          "sentStampNs": 1794003834976666216,
+          "transforms": [
+            {
+              "xyzM": [
+                0.0,
+                0.2,
+                -0.06
+              ],
+              "quaternion": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ],
+              "parent": "alternate/base_link",
+              "child": "alternate/left_wheel",
+              "stampNs": 1794003834976666216
+            },
+            {
+              "xyzM": [
+                0.0,
+                -0.2,
+                -0.06
+              ],
+              "quaternion": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ],
+              "parent": "alternate/base_link",
+              "child": "alternate/right_wheel",
+              "stampNs": 1794003834976666216
+            }
+          ]
+        },
+        {
+          "kind": "valid_positions",
+          "positionsRad": [
+            1.5707963267948966,
+            -0.7853981633974483
+          ],
+          "sentStampNs": 1794003835072065898,
+          "transforms": [
+            {
+              "xyzM": [
+                0.0,
+                0.2,
+                -0.06
+              ],
+              "quaternion": [
+                0.0,
+                0.7071067811865475,
+                0.0,
+                0.7071067811865476
+              ],
+              "parent": "alternate/base_link",
+              "child": "alternate/left_wheel",
+              "stampNs": 1794003835072065898
+            },
+            {
+              "xyzM": [
+                0.0,
+                -0.2,
+                -0.06
+              ],
+              "quaternion": [
+                0.0,
+                -0.3826834323650899,
+                0.0,
+                0.9238795325112867
+              ],
+              "parent": "alternate/base_link",
+              "child": "alternate/right_wheel",
+              "stampNs": 1794003835072065898
+            }
+          ]
+        }
+      ],
+      "opticalPoints": [
+        {
+          "axis": "z",
+          "inputM": [
+            0,
+            0,
+            1
+          ],
+          "targetFrame": "alternate/base_link",
+          "outputM": [
+            1.18,
+            2.220446049250313e-16,
+            0.10000000000000023
+          ],
+          "expectedM": [
+            1.18,
+            0,
+            0.1
+          ]
+        },
+        {
+          "axis": "x",
+          "inputM": [
+            1,
+            0,
+            0
+          ],
+          "targetFrame": "alternate/base_link",
+          "outputM": [
+            0.18000000000000022,
+            -1.0,
+            0.1
+          ],
+          "expectedM": [
+            0.18,
+            -1,
+            0.1
+          ]
+        },
+        {
+          "axis": "y",
+          "inputM": [
+            0,
+            1,
+            0
+          ],
+          "targetFrame": "alternate/base_link",
+          "outputM": [
+            0.18000000000000022,
+            0.0,
+            -0.9
+          ],
+          "expectedM": [
+            0.18,
+            0,
+            -0.9
+          ]
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "rejectedLaunchInputs": [
+    {
+      "name": "negative_radius",
+      "returnCode": 1,
+      "marker": "wheel_radius必须在",
+      "nodeStarted": false
+    },
+    {
+      "name": "nan_separation",
+      "returnCode": 1,
+      "marker": "wheel_separation必须在",
+      "nodeStarted": false
+    }
+  ],
+  "cleanup": {
+    "allRecordedPidsGone": true,
+    "contextValid": false,
+    "escalations": []
+  },
+  "durationS": 3.877144120000594,
+  "previousAttempts": [
+    {
+      "checkedAt": "2026-11-06T22:18:04.292325+00:00",
+      "passed": true,
+      "outputDirectory": "/tmp/ros2-model-lab-0yt35ib3",
+      "domainId": 219,
+      "sourceHashes": [
+        {
+          "path": "examples/model_labs/README.md",
+          "sha256": "e560e055d6f6dd5bf2061bf681118aac1313a5a00dd30e73a04e95c52ca1ec4c"
+        },
+        {
+          "path": "examples/model_labs/inspect_model.py",
+          "sha256": "b261d249c680cfb275acd269656bef53f30bddbc44f8c7c20dc2a99ac6a82ee1"
+        },
+        {
+          "path": "examples/model_labs/learning_description/CMakeLists.txt",
+          "sha256": "aeab37fd84340043300f90a583eeced421fa79f269665082eba9e3c4a3a2a424"
+        },
+        {
+          "path": "examples/model_labs/learning_description/launch/model.launch.py",
+          "sha256": "4b0845a38bbe0d25acf2a8dadb3f2cd10cd82de5c44244e46743f078fa0bf875"
+        },
+        {
+          "path": "examples/model_labs/learning_description/package.xml",
+          "sha256": "edd3cbb74cf6a8eda8e959ea7e391820e1656829137661ca78a49d306abab257"
+        },
+        {
+          "path": "examples/model_labs/learning_description/urdf/minimal.urdf",
+          "sha256": "3d1ea676267b903158dc0310d7b2aded561262f9d55b399dafa3aa013261149b"
+        },
+        {
+          "path": "examples/model_labs/learning_description/urdf/robot.urdf.xacro",
+          "sha256": "d9dbb396299d044d8f6c6f3d2a1c476f2045a2482d11c109dc3ab9f1da781bfc"
+        },
+        {
+          "path": "examples/model_labs/validate_model.py",
+          "sha256": "045b5d80112aef172a45829c23bb84ae09a14c065a1a43bc977e4b8f97c00863"
+        }
+      ],
+      "limits": [
+        "本例无GUI、无图像、无物理仿真、无硬件或真实标定；正惯量数值不等于动力学已验证。",
+        "正常子进程退出与PID检查不覆盖父SIGINT/原生挂起；TF静止不证明物理停车。",
+        "复制安装与异目录启动不证明跨机、ABI或依赖闭包；原urdf_tutorial显示命令未运行。"
+      ],
+      "versions": {
+        "robot_state_publisher": "3.3.4",
+        "xacro": "2.1.1",
+        "urdf": "2.10.1",
+        "kdl_parser": "2.11.0",
+        "rclpy": "7.1.12",
+        "launch_ros": "0.26.13"
+      },
+      "processes": [
+        {
+          "label": "build",
+          "argv": [
+            "colcon",
+            "--log-base",
+            "/tmp/ros2-model-lab-0yt35ib3/log",
+            "build",
+            "--base-paths",
+            "/home/wjz/ros2_robot/ros2-learning-hub/examples/model_labs/learning_description",
+            "--build-base",
+            "/tmp/ros2-model-lab-0yt35ib3/build",
+            "--install-base",
+            "/tmp/ros2-model-lab-0yt35ib3/install",
+            "--merge-install"
+          ],
+          "cwd": "/home/wjz/ros2_robot/ros2-learning-hub",
+          "pid": 252579,
+          "logFile": "/tmp/ros2-model-lab-0yt35ib3/build.log",
+          "signals": [],
+          "returnCode": 0,
+          "logSha256": "d3940c77a6a55764963705f644daf606bee65f58ab822f39ea377d90e8f22160",
+          "logText": "Starting >>> learning_description\nFinished <<< learning_description [0.35s]\n\nSummary: 1 package finished [0.43s]\n",
+          "launchedChildPids": [],
+          "allRecordedPidsGone": true
+        },
+        {
+          "label": "check_minimal",
+          "argv": [
+            "check_urdf",
+            "/tmp/ros2-model-lab-0yt35ib3/install/share/learning_description/urdf/minimal.urdf"
+          ],
+          "cwd": "/home/wjz/ros2_robot/ros2-learning-hub",
+          "pid": 252668,
+          "logFile": "/tmp/ros2-model-lab-0yt35ib3/check_minimal.log",
+          "signals": [],
+          "returnCode": 0,
+          "logSha256": "9555e1154481e719d5d06094e0fb1625e5764d253e2ca11b4842f022159f3c7b",
+          "logText": "robot name is: learning_base\n---------- Successfully Parsed XML ---------------\nroot Link: base_link has 1 child(ren)\n    child(1):  laser\n",
+          "launchedChildPids": [],
+          "allRecordedPidsGone": true
+        },
+        {
+          "label": "expand_default",
+          "argv": [
+            "xacro",
+            "/tmp/ros2-model-lab-0yt35ib3/install/share/learning_description/urdf/robot.urdf.xacro",
+            "-o",
+            "/tmp/ros2-model-lab-0yt35ib3/default.urdf"
+          ],
+          "cwd": "/home/wjz/ros2_robot/ros2-learning-hub",
+          "pid": 252669,
+          "logFile": "/tmp/ros2-model-lab-0yt35ib3/expand_default.log",
+          "signals": [],
+          "returnCode": 0,
+          "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "logText": "",
+          "launchedChildPids": [],
+          "allRecordedPidsGone": true
+        },
+        {
+          "label": "check_default",
+          "argv": [
+            "check_urdf",
+            "/tmp/ros2-model-lab-0yt35ib3/default.urdf"
+          ],
+          "cwd": "/home/wjz/ros2_robot/ros2-learning-hub",
+          "pid": 252670,
+          "logFile": "/tmp/ros2-model-lab-0yt35ib3/check_default.log",
+          "signals": [],
+          "returnCode": 0,
+          "logSha256": "65f4e245383e569473352d219a751223b00c4acaa5c30ddd61f74e687aa6f039",
+          "logText": "robot name is: learning_wheeled_model\n---------- Successfully Parsed XML ---------------\nroot Link: base_footprint has 1 child(ren)\n    child(1):  base_link\n        child(1):  camera_link\n            child(1):  camera_optical_frame\n        child(2):  laser\n        child(3):  left_wheel\n        child(4):  right_wheel\n",
+          "launchedChildPids": [],
+          "allRecordedPidsGone": true
+        },
+        {
+          "label": "expand_override",
+          "argv": [
+            "xacro",
+            "/tmp/ros2-model-lab-0yt35ib3/install/share/learning_description/urdf/robot.urdf.xacro",
+            "wheel_radius:=0.10",
+            "wheel_separation:=0.40",
+            "-o",
+            "/tmp/ros2-model-lab-0yt35ib3/override.urdf"
+          ],
+          "cwd": "/home/wjz/ros2_robot/ros2-learning-hub",
+          "pid": 252671,
+          "logFile": "/tmp/ros2-model-lab-0yt35ib3/expand_override.log",
+          "signals": [],
+          "returnCode": 0,
+          "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "logText": "",
+          "launchedChildPids": [],
+          "allRecordedPidsGone": true
+        },
+        {
+          "label": "check_override",
+          "argv": [
+            "check_urdf",
+            "/tmp/ros2-model-lab-0yt35ib3/override.urdf"
+          ],
+          "cwd": "/home/wjz/ros2_robot/ros2-learning-hub",
+          "pid": 252672,
+          "logFile": "/tmp/ros2-model-lab-0yt35ib3/check_override.log",
+          "signals": [],
+          "returnCode": 0,
+          "logSha256": "65f4e245383e569473352d219a751223b00c4acaa5c30ddd61f74e687aa6f039",
+          "logText": "robot name is: learning_wheeled_model\n---------- Successfully Parsed XML ---------------\nroot Link: base_footprint has 1 child(ren)\n    child(1):  base_link\n        child(1):  camera_link\n            child(1):  camera_optical_frame\n        child(2):  laser\n        child(3):  left_wheel\n        child(4):  right_wheel\n",
+          "launchedChildPids": [],
+          "allRecordedPidsGone": true
+        },
+        {
+          "label": "launch_default",
+          "argv": [
+            "bash",
+            "-c",
+            "source \"$1\" --; cd \"$2\"; exec ros2 launch learning_description model.launch.py \"${@:3}\"",
+            "model-lab",
+            "/tmp/ros2-model-lab-0yt35ib3/install/setup.bash",
+            "/tmp/ros2-model-lab-0yt35ib3/empty-cwd"
+          ],
+          "cwd": "/home/wjz/ros2_robot/ros2-learning-hub",
+          "pid": 252687,
+          "logFile": "/tmp/ros2-model-lab-0yt35ib3/launch_default.log",
+          "signals": [
+            {
+              "signal": "SIGINT",
+              "target": "pid"
+            }
+          ],
+          "returnCode": 0,
+          "logSha256": "ea48a37ce083a79ccb3698e5128fd30e3314c87d0e684401234a696e32ff732c",
+          "logText": "[INFO] [launch]: All log files can be found below /tmp/ros2-model-lab-0yt35ib3/ros-logs/2026-11-07-06-18-05-458835-wjz-vpc-252687\n[INFO] [launch]: Default logging verbosity is set to INFO\n[INFO] [robot_state_publisher-1]: process started with pid [252698]\n[robot_state_publisher-1] [INFO] [1794003485.524472577] [model_lab.state_publisher]: Robot initialized\n[robot_state_publisher-1] [ERROR] [1794003485.831264597] [model_lab.state_publisher]: Robot state publisher ignored an invalid JointState message\n[robot_state_publisher-1] [WARN] [1794003486.106758235] [model_lab.state_publisher]: Robot state publisher ignored a JointState message about joint(s) \"left_wheel_joint\"(,...) whose position member was empty.\n[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)\n[INFO] [robot_state_publisher-1]: sending signal 'SIGINT' to process[robot_state_publisher-1]\n[robot_state_publisher-1] [INFO] [1794003486.488705592] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[INFO] [robot_state_publisher-1]: process has finished cleanly [pid 252698]\n",
+          "launchedChildPids": [
+            252698
+          ],
+          "allRecordedPidsGone": true
+        },
+        {
+          "label": "launch_override",
+          "argv": [
+            "bash",
+            "-c",
+            "source \"$1\" --; cd \"$2\"; exec ros2 launch learning_description model.launch.py \"${@:3}\"",
+            "model-lab",
+            "/tmp/ros2-model-lab-0yt35ib3/install/setup.bash",
+            "/tmp/ros2-model-lab-0yt35ib3/empty-cwd",
+            "wheel_radius:=0.10",
+            "wheel_separation:=0.40",
+            "frame_prefix:=alternate/"
+          ],
+          "cwd": "/home/wjz/ros2_robot/ros2-learning-hub",
+          "pid": 252712,
+          "logFile": "/tmp/ros2-model-lab-0yt35ib3/launch_override.log",
+          "signals": [
+            {
+              "signal": "SIGINT",
+              "target": "pid"
+            }
+          ],
+          "returnCode": 0,
+          "logSha256": "41eabf9bcbf73e41f03918c081211dcc0b674d5d5a696941e74d9ebb199ebf69",
+          "logText": "[INFO] [launch]: All log files can be found below /tmp/ros2-model-lab-0yt35ib3/ros-logs/2026-11-07-06-18-06-933972-wjz-vpc-252712\n[INFO] [launch]: Default logging verbosity is set to INFO\n[INFO] [robot_state_publisher-1]: process started with pid [252724]\n[robot_state_publisher-1] [INFO] [1794003486.990194209] [model_lab.state_publisher]: Robot initialized\n[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)\n[INFO] [robot_state_publisher-1]: sending signal 'SIGINT' to process[robot_state_publisher-1]\n[robot_state_publisher-1] [INFO] [1794003487.397180595] [rclcpp]: signal_handler(SIGINT/SIGTERM)\n[INFO] [robot_state_publisher-1]: process has finished cleanly [pid 252724]\n",
+          "launchedChildPids": [
+            252724
+          ],
+          "allRecordedPidsGone": true
+        },
+        {
+          "label": "reject_negative_radius",
+          "argv": [
+            "bash",
+            "-c",
+            "source \"$1\" --; cd \"$2\"; exec ros2 launch learning_description model.launch.py \"${@:3}\"",
+            "model-lab",
+            "/tmp/ros2-model-lab-0yt35ib3/install/setup.bash",
+            "/tmp/ros2-model-lab-0yt35ib3/empty-cwd",
+            "wheel_radius:=-0.08"
+          ],
+          "cwd": "/home/wjz/ros2_robot/ros2-learning-hub",
+          "pid": 252739,
+          "logFile": "/tmp/ros2-model-lab-0yt35ib3/reject_negative_radius.log",
+          "signals": [],
+          "returnCode": 1,
+          "logSha256": "d48e07a7fc13f599e6dad028619d00a04a2ba16a5ae5c2874ee64b1707d4825d",
+          "logText": "[INFO] [launch]: All log files can be found below /tmp/ros2-model-lab-0yt35ib3/ros-logs/2026-11-07-06-18-07-816085-wjz-vpc-252739\n[INFO] [launch]: Default logging verbosity is set to INFO\n[ERROR] [launch]: Caught exception in launch (see debug for traceback): wheel_radius必须在[0.04,0.15]m内且有限\n",
+          "launchedChildPids": [],
+          "allRecordedPidsGone": true
+        },
+        {
+          "label": "reject_nan_separation",
+          "argv": [
+            "bash",
+            "-c",
+            "source \"$1\" --; cd \"$2\"; exec ros2 launch learning_description model.launch.py \"${@:3}\"",
+            "model-lab",
+            "/tmp/ros2-model-lab-0yt35ib3/install/setup.bash",
+            "/tmp/ros2-model-lab-0yt35ib3/empty-cwd",
+            "wheel_separation:=nan"
+          ],
+          "cwd": "/home/wjz/ros2_robot/ros2-learning-hub",
+          "pid": 252751,
+          "logFile": "/tmp/ros2-model-lab-0yt35ib3/reject_nan_separation.log",
+          "signals": [],
+          "returnCode": 1,
+          "logSha256": "11b5f2fff76f22ab889b15b607ba912211df707fa54a0435db827cc6c8f2c289",
+          "logText": "[INFO] [launch]: All log files can be found below /tmp/ros2-model-lab-0yt35ib3/ros-logs/2026-11-07-06-18-08-117837-wjz-vpc-252751\n[INFO] [launch]: Default logging verbosity is set to INFO\n[ERROR] [launch]: Caught exception in launch (see debug for traceback): wheel_separation必须在[0.35,0.8]m内且有限\n",
+          "launchedChildPids": [],
+          "allRecordedPidsGone": true
+        }
+      ],
+      "installedResources": {
+        "share": "/tmp/ros2-model-lab-0yt35ib3/install/share/learning_description",
+        "normalCopy": true,
+        "files": [
+          {
+            "file": "package.xml",
+            "sha256": "edd3cbb74cf6a8eda8e959ea7e391820e1656829137661ca78a49d306abab257"
+          },
+          {
+            "file": "urdf/minimal.urdf",
+            "sha256": "3d1ea676267b903158dc0310d7b2aded561262f9d55b399dafa3aa013261149b"
+          },
+          {
+            "file": "urdf/robot.urdf.xacro",
+            "sha256": "d9dbb396299d044d8f6c6f3d2a1c476f2045a2482d11c109dc3ab9f1da781bfc"
+          },
+          {
+            "file": "launch/model.launch.py",
+            "sha256": "4b0845a38bbe0d25acf2a8dadb3f2cd10cd82de5c44244e46743f078fa0bf875"
+          }
+        ]
+      },
+      "minimalModel": {
+        "root": "base_link",
+        "links": 2,
+        "joints": [
+          {
+            "name": "base_to_laser",
+            "type": "fixed",
+            "parent": "base_link",
+            "child": "laser",
+            "xyzM": [
+              0.15,
+              0.0,
+              0.1
+            ],
+            "rpyRad": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axis": null
+          }
+        ],
+        "inertias": [],
+        "frameLinksWithoutInertia": [
+          "base_link",
+          "laser"
+        ],
+        "geometry": [
+          {
+            "link": "base_link",
+            "role": "visual",
+            "shape": "box",
+            "dimensionsM": [
+              0.4,
+              0.3,
+              0.12
+            ]
+          },
+          {
+            "link": "base_link",
+            "role": "collision",
+            "shape": "box",
+            "dimensionsM": [
+              0.4,
+              0.3,
+              0.12
+            ]
+          },
+          {
+            "link": "laser",
+            "role": "visual",
+            "shape": "cylinder",
+            "dimensionsM": [
+              0.04,
+              0.05
+            ]
+          }
+        ]
+      },
+      "expandedModels": [
+        {
+          "name": "default",
+          "file": "/tmp/ros2-model-lab-0yt35ib3/default.urdf",
+          "summary": {
+            "root": "base_footprint",
+            "links": 7,
+            "joints": [
+              {
+                "name": "footprint_to_base",
+                "type": "fixed",
+                "parent": "base_footprint",
+                "child": "base_link",
+                "xyzM": [
+                  0.0,
+                  0.0,
+                  0.14
+                ],
+                "rpyRad": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "axis": null
+              },
+              {
+                "name": "left_wheel_joint",
+                "type": "continuous",
+                "parent": "base_link",
+                "child": "left_wheel",
+                "xyzM": [
+                  0.0,
+                  0.18,
+                  -0.06
+                ],
+                "rpyRad": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "axis": [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "name": "right_wheel_joint",
+                "type": "continuous",
+                "parent": "base_link",
+                "child": "right_wheel",
+                "xyzM": [
+                  0.0,
+                  -0.18,
+                  -0.06
+                ],
+                "rpyRad": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "axis": [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "name": "base_to_laser",
+                "type": "fixed",
+                "parent": "base_link",
+                "child": "laser",
+                "xyzM": [
+                  0.15,
+                  0.0,
+                  0.1
+                ],
+                "rpyRad": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "axis": null
+              },
+              {
+                "name": "base_to_camera",
+                "type": "fixed",
+                "parent": "base_link",
+                "child": "camera_link",
+                "xyzM": [
+                  0.18,
+                  0.0,
+                  0.1
+                ],
+                "rpyRad": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "axis": null
+              },
+              {
+                "name": "camera_to_optical",
+                "type": "fixed",
+                "parent": "camera_link",
+                "child": "camera_optical_frame",
+                "xyzM": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "rpyRad": [
+                  -1.5707963267948966,
+                  0.0,
+                  -1.5707963267948966
+                ],
+                "axis": null
+              }
+            ],
+            "inertias": [
+              {
+                "link": "base_link",
+                "massKg": 3.0,
+                "diagonalKgM2": [
+                  0.026099999999999998,
+                  0.04360000000000001,
+                  0.0625
+                ]
+              },
+              {
+                "link": "left_wheel",
+                "massKg": 0.2,
+                "diagonalKgM2": [
+                  0.0003466666666666666,
+                  0.00064,
+                  0.0003466666666666666
+                ]
+              },
+              {
+                "link": "right_wheel",
+                "massKg": 0.2,
+                "diagonalKgM2": [
+                  0.0003466666666666666,
+                  0.00064,
+                  0.0003466666666666666
+                ]
+              },
+              {
+                "link": "laser",
+                "massKg": 0.1,
+                "diagonalKgM2": [
+                  6.083333333333334e-05,
+                  6.083333333333334e-05,
+                  8e-05
+                ]
+              },
+              {
+                "link": "camera_link",
+                "massKg": 0.1,
+                "diagonalKgM2": [
+                  3.416666666666667e-05,
+                  2.666666666666667e-05,
+                  3.416666666666667e-05
+                ]
+              }
+            ],
+            "frameLinksWithoutInertia": [
+              "base_footprint",
+              "camera_optical_frame"
+            ],
+            "geometry": [
+              {
+                "link": "base_link",
+                "role": "visual",
+                "shape": "box",
+                "dimensionsM": [
+                  0.4,
+                  0.3,
+                  0.12
+                ]
+              },
+              {
+                "link": "base_link",
+                "role": "collision",
+                "shape": "box",
+                "dimensionsM": [
+                  0.4,
+                  0.3,
+                  0.12
+                ]
+              },
+              {
+                "link": "left_wheel",
+                "role": "visual",
+                "shape": "cylinder",
+                "dimensionsM": [
+                  0.08,
+                  0.04
+                ]
+              },
+              {
+                "link": "left_wheel",
+                "role": "collision",
+                "shape": "cylinder",
+                "dimensionsM": [
+                  0.08,
+                  0.04
+                ]
+              },
+              {
+                "link": "right_wheel",
+                "role": "visual",
+                "shape": "cylinder",
+                "dimensionsM": [
+                  0.08,
+                  0.04
+                ]
+              },
+              {
+                "link": "right_wheel",
+                "role": "collision",
+                "shape": "cylinder",
+                "dimensionsM": [
+                  0.08,
+                  0.04
+                ]
+              },
+              {
+                "link": "laser",
+                "role": "visual",
+                "shape": "cylinder",
+                "dimensionsM": [
+                  0.04,
+                  0.05
+                ]
+              },
+              {
+                "link": "laser",
+                "role": "collision",
+                "shape": "cylinder",
+                "dimensionsM": [
+                  0.04,
+                  0.05
+                ]
+              },
+              {
+                "link": "camera_link",
+                "role": "visual",
+                "shape": "box",
+                "dimensionsM": [
+                  0.04,
+                  0.05,
+                  0.04
+                ]
+              },
+              {
+                "link": "camera_link",
+                "role": "collision",
+                "shape": "box",
+                "dimensionsM": [
+                  0.04,
+                  0.05,
+                  0.04
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "override",
+          "file": "/tmp/ros2-model-lab-0yt35ib3/override.urdf",
+          "summary": {
+            "root": "base_footprint",
+            "links": 7,
+            "joints": [
+              {
+                "name": "footprint_to_base",
+                "type": "fixed",
+                "parent": "base_footprint",
+                "child": "base_link",
+                "xyzM": [
+                  0.0,
+                  0.0,
+                  0.16
+                ],
+                "rpyRad": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "axis": null
+              },
+              {
+                "name": "left_wheel_joint",
+                "type": "continuous",
+                "parent": "base_link",
+                "child": "left_wheel",
+                "xyzM": [
+                  0.0,
+                  0.2,
+                  -0.06
+                ],
+                "rpyRad": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "axis": [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "name": "right_wheel_joint",
+                "type": "continuous",
+                "parent": "base_link",
+                "child": "right_wheel",
+                "xyzM": [
+                  0.0,
+                  -0.2,
+                  -0.06
+                ],
+                "rpyRad": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "axis": [
+                  0.0,
+                  1.0,
+                  0.0
+                ]
+              },
+              {
+                "name": "base_to_laser",
+                "type": "fixed",
+                "parent": "base_link",
+                "child": "laser",
+                "xyzM": [
+                  0.15,
+                  0.0,
+                  0.1
+                ],
+                "rpyRad": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "axis": null
+              },
+              {
+                "name": "base_to_camera",
+                "type": "fixed",
+                "parent": "base_link",
+                "child": "camera_link",
+                "xyzM": [
+                  0.18,
+                  0.0,
+                  0.1
+                ],
+                "rpyRad": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "axis": null
+              },
+              {
+                "name": "camera_to_optical",
+                "type": "fixed",
+                "parent": "camera_link",
+                "child": "camera_optical_frame",
+                "xyzM": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "rpyRad": [
+                  -1.5707963267948966,
+                  0.0,
+                  -1.5707963267948966
+                ],
+                "axis": null
+              }
+            ],
+            "inertias": [
+              {
+                "link": "base_link",
+                "massKg": 3.0,
+                "diagonalKgM2": [
+                  0.026099999999999998,
+                  0.04360000000000001,
+                  0.0625
+                ]
+              },
+              {
+                "link": "left_wheel",
+                "massKg": 0.2,
+                "diagonalKgM2": [
+                  0.0005266666666666667,
+                  0.0010000000000000002,
+                  0.0005266666666666667
+                ]
+              },
+              {
+                "link": "right_wheel",
+                "massKg": 0.2,
+                "diagonalKgM2": [
+                  0.0005266666666666667,
+                  0.0010000000000000002,
+                  0.0005266666666666667
+                ]
+              },
+              {
+                "link": "laser",
+                "massKg": 0.1,
+                "diagonalKgM2": [
+                  6.083333333333334e-05,
+                  6.083333333333334e-05,
+                  8e-05
+                ]
+              },
+              {
+                "link": "camera_link",
+                "massKg": 0.1,
+                "diagonalKgM2": [
+                  3.416666666666667e-05,
+                  2.666666666666667e-05,
+                  3.416666666666667e-05
+                ]
+              }
+            ],
+            "frameLinksWithoutInertia": [
+              "base_footprint",
+              "camera_optical_frame"
+            ],
+            "geometry": [
+              {
+                "link": "base_link",
+                "role": "visual",
+                "shape": "box",
+                "dimensionsM": [
+                  0.4,
+                  0.3,
+                  0.12
+                ]
+              },
+              {
+                "link": "base_link",
+                "role": "collision",
+                "shape": "box",
+                "dimensionsM": [
+                  0.4,
+                  0.3,
+                  0.12
+                ]
+              },
+              {
+                "link": "left_wheel",
+                "role": "visual",
+                "shape": "cylinder",
+                "dimensionsM": [
+                  0.1,
+                  0.04
+                ]
+              },
+              {
+                "link": "left_wheel",
+                "role": "collision",
+                "shape": "cylinder",
+                "dimensionsM": [
+                  0.1,
+                  0.04
+                ]
+              },
+              {
+                "link": "right_wheel",
+                "role": "visual",
+                "shape": "cylinder",
+                "dimensionsM": [
+                  0.1,
+                  0.04
+                ]
+              },
+              {
+                "link": "right_wheel",
+                "role": "collision",
+                "shape": "cylinder",
+                "dimensionsM": [
+                  0.1,
+                  0.04
+                ]
+              },
+              {
+                "link": "laser",
+                "role": "visual",
+                "shape": "cylinder",
+                "dimensionsM": [
+                  0.04,
+                  0.05
+                ]
+              },
+              {
+                "link": "laser",
+                "role": "collision",
+                "shape": "cylinder",
+                "dimensionsM": [
+                  0.04,
+                  0.05
+                ]
+              },
+              {
+                "link": "camera_link",
+                "role": "visual",
+                "shape": "box",
+                "dimensionsM": [
+                  0.04,
+                  0.05,
+                  0.04
+                ]
+              },
+              {
+                "link": "camera_link",
+                "role": "collision",
+                "shape": "box",
+                "dimensionsM": [
+                  0.04,
+                  0.05,
+                  0.04
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "runtimeModels": [
+        {
+          "name": "default",
+          "radiusM": 0.08,
+          "separationM": 0.36,
+          "framePrefix": "model/",
+          "lateJoinAfterParameterReply": true,
+          "dynamicAbsentBeforeStates": true,
+          "footprintToBase": {
+            "xyzM": [
+              0.0,
+              0.0,
+              0.14
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "parent": "model/base_footprint",
+            "child": "model/base_link",
+            "stampNs": 0
+          },
+          "phases": [
+            {
+              "kind": "valid_positions",
+              "positionsRad": [
+                0.0,
+                0.0
+              ],
+              "sentStampNs": 1794003485805710780,
+              "transforms": [
+                {
+                  "xyzM": [
+                    0.0,
+                    0.18,
+                    -0.06
+                  ],
+                  "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ],
+                  "parent": "model/base_link",
+                  "child": "model/left_wheel",
+                  "stampNs": 1794003485805710780
+                },
+                {
+                  "xyzM": [
+                    0.0,
+                    -0.18,
+                    -0.06
+                  ],
+                  "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ],
+                  "parent": "model/base_link",
+                  "child": "model/right_wheel",
+                  "stampNs": 1794003485805710780
+                }
+              ]
+            },
+            {
+              "kind": "unequal_arrays",
+              "sentStampNs": 1794003485831187504,
+              "logMarker": "ignored an invalid JointState message",
+              "unchangedTfStampsNs": [
+                1794003485805710780,
+                1794003485805710780
+              ],
+              "windowS": 0.25
+            },
+            {
+              "kind": "velocity_without_position",
+              "sentStampNs": 1794003486106614481,
+              "logMarker": "whose position member was empty",
+              "unchangedTfStampsNs": [
+                1794003485805710780,
+                1794003485805710780
+              ],
+              "windowS": 0.25
+            },
+            {
+              "kind": "valid_positions",
+              "positionsRad": [
+                1.5707963267948966,
+                -0.7853981633974483
+              ],
+              "sentStampNs": 1794003486452358081,
+              "transforms": [
+                {
+                  "xyzM": [
+                    0.0,
+                    0.18,
+                    -0.06
+                  ],
+                  "quaternion": [
+                    0.0,
+                    0.7071067811865475,
+                    0.0,
+                    0.7071067811865476
+                  ],
+                  "parent": "model/base_link",
+                  "child": "model/left_wheel",
+                  "stampNs": 1794003486452358081
+                },
+                {
+                  "xyzM": [
+                    0.0,
+                    -0.18,
+                    -0.06
+                  ],
+                  "quaternion": [
+                    0.0,
+                    -0.3826834323650899,
+                    0.0,
+                    0.9238795325112867
+                  ],
+                  "parent": "model/base_link",
+                  "child": "model/right_wheel",
+                  "stampNs": 1794003486452358081
+                }
+              ]
+            }
+          ],
+          "opticalPoints": [
+            {
+              "axis": "z",
+              "inputM": [
+                0,
+                0,
+                1
+              ],
+              "targetFrame": "model/base_link",
+              "outputM": [
+                1.18,
+                2.220446049250313e-16,
+                0.10000000000000023
+              ],
+              "expectedM": [
+                1.18,
+                0,
+                0.1
+              ]
+            },
+            {
+              "axis": "x",
+              "inputM": [
+                1,
+                0,
+                0
+              ],
+              "targetFrame": "model/base_link",
+              "outputM": [
+                0.18000000000000022,
+                -1.0,
+                0.1
+              ],
+              "expectedM": [
+                0.18,
+                -1,
+                0.1
+              ]
+            },
+            {
+              "axis": "y",
+              "inputM": [
+                0,
+                1,
+                0
+              ],
+              "targetFrame": "model/base_link",
+              "outputM": [
+                0.18000000000000022,
+                0.0,
+                -0.9
+              ],
+              "expectedM": [
+                0.18,
+                0,
+                -0.9
+              ]
+            }
+          ],
+          "passed": true
+        },
+        {
+          "name": "override",
+          "radiusM": 0.1,
+          "separationM": 0.4,
+          "framePrefix": "alternate/",
+          "lateJoinAfterParameterReply": true,
+          "dynamicAbsentBeforeStates": true,
+          "footprintToBase": {
+            "xyzM": [
+              0.0,
+              0.0,
+              0.16
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ],
+            "parent": "alternate/base_footprint",
+            "child": "alternate/base_link",
+            "stampNs": 0
+          },
+          "phases": [
+            {
+              "kind": "valid_positions",
+              "positionsRad": [
+                0.0,
+                0.0
+              ],
+              "sentStampNs": 1794003487275339288,
+              "transforms": [
+                {
+                  "xyzM": [
+                    0.0,
+                    0.2,
+                    -0.06
+                  ],
+                  "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ],
+                  "parent": "alternate/base_link",
+                  "child": "alternate/left_wheel",
+                  "stampNs": 1794003487275339288
+                },
+                {
+                  "xyzM": [
+                    0.0,
+                    -0.2,
+                    -0.06
+                  ],
+                  "quaternion": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ],
+                  "parent": "alternate/base_link",
+                  "child": "alternate/right_wheel",
+                  "stampNs": 1794003487275339288
+                }
+              ]
+            },
+            {
+              "kind": "valid_positions",
+              "positionsRad": [
+                1.5707963267948966,
+                -0.7853981633974483
+              ],
+              "sentStampNs": 1794003487370682505,
+              "transforms": [
+                {
+                  "xyzM": [
+                    0.0,
+                    0.2,
+                    -0.06
+                  ],
+                  "quaternion": [
+                    0.0,
+                    0.7071067811865475,
+                    0.0,
+                    0.7071067811865476
+                  ],
+                  "parent": "alternate/base_link",
+                  "child": "alternate/left_wheel",
+                  "stampNs": 1794003487370682505
+                },
+                {
+                  "xyzM": [
+                    0.0,
+                    -0.2,
+                    -0.06
+                  ],
+                  "quaternion": [
+                    0.0,
+                    -0.3826834323650899,
+                    0.0,
+                    0.9238795325112867
+                  ],
+                  "parent": "alternate/base_link",
+                  "child": "alternate/right_wheel",
+                  "stampNs": 1794003487370682505
+                }
+              ]
+            }
+          ],
+          "opticalPoints": [
+            {
+              "axis": "z",
+              "inputM": [
+                0,
+                0,
+                1
+              ],
+              "targetFrame": "alternate/base_link",
+              "outputM": [
+                1.18,
+                2.220446049250313e-16,
+                0.10000000000000023
+              ],
+              "expectedM": [
+                1.18,
+                0,
+                0.1
+              ]
+            },
+            {
+              "axis": "x",
+              "inputM": [
+                1,
+                0,
+                0
+              ],
+              "targetFrame": "alternate/base_link",
+              "outputM": [
+                0.18000000000000022,
+                -1.0,
+                0.1
+              ],
+              "expectedM": [
+                0.18,
+                -1,
+                0.1
+              ]
+            },
+            {
+              "axis": "y",
+              "inputM": [
+                0,
+                1,
+                0
+              ],
+              "targetFrame": "alternate/base_link",
+              "outputM": [
+                0.18000000000000022,
+                0.0,
+                -0.9
+              ],
+              "expectedM": [
+                0.18,
+                0,
+                -0.9
+              ]
+            }
+          ],
+          "passed": true
+        }
+      ],
+      "rejectedLaunchInputs": [
+        {
+          "name": "negative_radius",
+          "returnCode": 1,
+          "marker": "wheel_radius必须在",
+          "nodeStarted": false
+        },
+        {
+          "name": "nan_separation",
+          "returnCode": 1,
+          "marker": "wheel_separation必须在",
+          "nodeStarted": false
+        }
+      ],
+      "cleanup": {
+        "allRecordedPidsGone": true,
+        "contextValid": false,
+        "escalations": []
+      },
+      "durationS": 3.8973492810000607
+    }
+  ]
+}

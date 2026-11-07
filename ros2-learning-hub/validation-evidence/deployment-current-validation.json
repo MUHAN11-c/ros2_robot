@@ -1,0 +1,2142 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-07T05:13:28+08:00",
+  "passed": true,
+  "invocation": [
+    "/usr/bin/python3",
+    "ros2-learning-hub/examples/deployment_labs/audit_prefix.py",
+    "--prefix",
+    "/tmp/ros2-component-labs/install",
+    "--allow-root",
+    "/tmp/ros2-component-labs/build/runtime_lab_components",
+    "--allow-root",
+    "/home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components",
+    "--allow-root",
+    "/opt/ros/jazzy",
+    "--underlay",
+    "/opt/ros/jazzy",
+    "--package",
+    "runtime_lab_components",
+    "--package",
+    "rclcpp",
+    "--package",
+    "rclcpp_components",
+    "--package",
+    "rcl_interfaces",
+    "--package",
+    "std_msgs",
+    "--package",
+    "std_srvs",
+    "--source-file",
+    "/home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components/src/components.cpp",
+    "--source-file",
+    "/home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components/src/observable_manager.cpp",
+    "--source-file",
+    "/home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components/CMakeLists.txt",
+    "--source-file",
+    "/home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components/package.xml",
+    "--copy-demo",
+    "--host-signal-report",
+    "/tmp/host-exec-signal.json",
+    "--report",
+    "/home/wjz/ros2_robot/ros2-learning-hub/validation-evidence/deployment-current-validation.json"
+  ],
+  "environmentAllowlist": {
+    "ROS_DISTRO": "jazzy",
+    "ROS_DOMAIN_ID": "",
+    "RMW_IMPLEMENTATION": "",
+    "ROS_AUTOMATIC_DISCOVERY_RANGE": "SUBNET",
+    "AMENT_PREFIX_PATH": "/opt/ros/jazzy",
+    "CMAKE_PREFIX_PATH": "/opt/ros/jazzy/opt/gz_sim_vendor:/opt/ros/jazzy/opt/gz_sensors_vendor:/opt/ros/jazzy/opt/gz_physics_vendor:/opt/ros/jazzy/opt/sdformat_vendor:/opt/ros/jazzy/opt/gz_gui_vendor:/opt/ros/jazzy/opt/gz_transport_vendor:/opt/ros/jazzy/opt/gz_rendering_vendor:/opt/ros/jazzy/opt/gz_plugin_vendor:/opt/ros/jazzy/opt/gz_fuel_tools_vendor:/opt/ros/jazzy/opt/gz_msgs_vendor:/opt/ros/jazzy/opt/gz_common_vendor:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_tools_vendor:/opt/ros/jazzy/opt/gz_ogre_next_vendor:/opt/ros/jazzy/opt/gz_dartsim_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor",
+    "COLCON_PREFIX_PATH": "",
+    "LD_LIBRARY_PATH": "/opt/ros/jazzy/opt/gz_sim_vendor/lib:/opt/ros/jazzy/opt/gz_sensors_vendor/lib:/opt/ros/jazzy/opt/gz_physics_vendor/lib:/opt/ros/jazzy/opt/sdformat_vendor/lib:/opt/ros/jazzy/opt/rviz_ogre_vendor/lib:/opt/ros/jazzy/lib/x86_64-linux-gnu:/opt/ros/jazzy/opt/libphidget22/lib:/opt/ros/jazzy/opt/gz_gui_vendor/lib:/opt/ros/jazzy/opt/gz_transport_vendor/lib:/opt/ros/jazzy/opt/gz_rendering_vendor/lib:/opt/ros/jazzy/opt/gz_plugin_vendor/lib:/opt/ros/jazzy/opt/gz_fuel_tools_vendor/lib:/opt/ros/jazzy/opt/gz_msgs_vendor/lib:/opt/ros/jazzy/opt/gz_common_vendor/lib:/opt/ros/jazzy/opt/gz_math_vendor/lib:/opt/ros/jazzy/opt/gz_utils_vendor/lib:/opt/ros/jazzy/opt/gz_tools_vendor/lib:/opt/ros/jazzy/opt/gz_ogre_next_vendor/lib:/opt/ros/jazzy/opt/gz_dartsim_vendor/lib:/opt/ros/jazzy/opt/gz_cmake_vendor/lib:/opt/ros/jazzy/lib",
+    "PYTHONPATH": "/opt/ros/jazzy/opt/gz_sim_vendor/lib/python:/opt/ros/jazzy/opt/sdformat_vendor/lib/python:/opt/ros/jazzy/opt/gz_transport_vendor/lib/python:/opt/ros/jazzy/opt/gz_msgs_vendor/lib/python:/opt/ros/jazzy/opt/gz_math_vendor/lib/python:/opt/ros/jazzy/lib/python3.12/site-packages"
+  },
+  "environmentKeysCollected": [
+    "ROS_DISTRO",
+    "ROS_DOMAIN_ID",
+    "RMW_IMPLEMENTATION",
+    "ROS_AUTOMATIC_DISCOVERY_RANGE",
+    "AMENT_PREFIX_PATH",
+    "CMAKE_PREFIX_PATH",
+    "COLCON_PREFIX_PATH",
+    "LD_LIBRARY_PATH",
+    "PYTHONPATH"
+  ],
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.39",
+  "selfTests": [
+    {
+      "case": "internal_external_and_sensitive_exclusion",
+      "passed": true
+    },
+    {
+      "case": "unallowed_target_not_read",
+      "passed": true
+    },
+    {
+      "case": "link_loop_hop_budget",
+      "passed": true
+    },
+    {
+      "case": "entry_budget",
+      "passed": true
+    },
+    {
+      "case": "file_byte_budget",
+      "passed": true
+    },
+    {
+      "case": "truncated_elf_not_dependency_free",
+      "passed": true
+    },
+    {
+      "case": "reject_broad_scope_wjz",
+      "passed": true
+    },
+    {
+      "case": "reject_broad_scope_root",
+      "passed": true
+    },
+    {
+      "case": "reject_broad_scope_etc",
+      "passed": true
+    }
+  ],
+  "docker": {
+    "commandAvailable": false,
+    "imageBuilt": false,
+    "containerRun": false
+  },
+  "parameters": {
+    "prefix": "/tmp/ros2-component-labs/install",
+    "allowRoots": [
+      "/tmp/ros2-component-labs/install",
+      "/tmp/ros2-component-labs/build/runtime_lab_components",
+      "/home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components",
+      "/opt/ros/jazzy"
+    ],
+    "underlays": [
+      "/opt/ros/jazzy"
+    ],
+    "budget": {
+      "entries": 1000,
+      "per_file": 16777216,
+      "total": 100663296,
+      "seconds": 10.0
+    }
+  },
+  "originalAudit": {
+    "prefix": "/tmp/ros2-component-labs/install",
+    "entries": [
+      {
+        "relativePath": ".colcon_install_layout",
+        "kind": "file",
+        "evidence": {
+          "path": "/tmp/ros2-component-labs/install/.colcon_install_layout",
+          "resolutionStatus": "resolved",
+          "linkChain": [],
+          "resolvedPath": "/tmp/ros2-component-labs/install/.colcon_install_layout",
+          "bytes": 7,
+          "sha256": "72d8264b97bee169d1844d054282694b68be7e91c8bd5d616540adf63ae7d4af"
+        }
+      },
+      {
+        "relativePath": "COLCON_IGNORE",
+        "kind": "file",
+        "evidence": {
+          "path": "/tmp/ros2-component-labs/install/COLCON_IGNORE",
+          "resolutionStatus": "resolved",
+          "linkChain": [],
+          "resolvedPath": "/tmp/ros2-component-labs/install/COLCON_IGNORE",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "relativePath": "_local_setup_util_ps1.py",
+        "kind": "file",
+        "evidence": {
+          "path": "/tmp/ros2-component-labs/install/_local_setup_util_ps1.py",
+          "resolutionStatus": "resolved",
+          "linkChain": [],
+          "resolvedPath": "/tmp/ros2-component-labs/install/_local_setup_util_ps1.py",
+          "bytes": 14818,
+          "sha256": "6bd62f5634832008b01eb0ccf38600512b7ee47c735ca53af22f92319f7e5a60"
+        }
+      },
+      {
+        "relativePath": "_local_setup_util_sh.py",
+        "kind": "file",
+        "evidence": {
+          "path": "/tmp/ros2-component-labs/install/_local_setup_util_sh.py",
+          "resolutionStatus": "resolved",
+          "linkChain": [],
+          "resolvedPath": "/tmp/ros2-component-labs/install/_local_setup_util_sh.py",
+          "bytes": 14872,
+          "sha256": "3f6e8b7fae1039cdc824678256f56160cb425ac6fd4e17e441b98d5cefab9f57"
+        }
+      },
+      {
+        "relativePath": "lib",
+        "kind": "directory"
+      },
+      {
+        "relativePath": "local_setup.bash",
+        "kind": "file",
+        "evidence": {
+          "path": "/tmp/ros2-component-labs/install/local_setup.bash",
+          "resolutionStatus": "resolved",
+          "linkChain": [],
+          "resolvedPath": "/tmp/ros2-component-labs/install/local_setup.bash",
+          "bytes": 3777,
+          "sha256": "d6bf7a9cf40c777ab9d13bdc5be4cf184f062cdba383e0c1e1c22f4d6648c20e"
+        }
+      },
+      {
+        "relativePath": "local_setup.ps1",
+        "kind": "file",
+        "evidence": {
+          "path": "/tmp/ros2-component-labs/install/local_setup.ps1",
+          "resolutionStatus": "resolved",
+          "linkChain": [],
+          "resolvedPath": "/tmp/ros2-component-labs/install/local_setup.ps1",
+          "bytes": 2062,
+          "sha256": "df3b99b2832d07e790fc7f064194f4badce9e571f30efdf11e4344174149a799"
+        }
+      },
+      {
+        "relativePath": "local_setup.sh",
+        "kind": "file",
+        "evidence": {
+          "path": "/tmp/ros2-component-labs/install/local_setup.sh",
+          "resolutionStatus": "resolved",
+          "linkChain": [],
+          "resolvedPath": "/tmp/ros2-component-labs/install/local_setup.sh",
+          "bytes": 4353,
+          "sha256": "c275fc6e7137bd8d125203da6434c1837e330efd5e930cec10d5d985e82fb6b3"
+        }
+      },
+      {
+        "relativePath": "local_setup.zsh",
+        "kind": "file",
+        "evidence": {
+          "path": "/tmp/ros2-component-labs/install/local_setup.zsh",
+          "resolutionStatus": "resolved",
+          "linkChain": [],
+          "resolvedPath": "/tmp/ros2-component-labs/install/local_setup.zsh",
+          "bytes": 4172,
+          "sha256": "52d862ae004eec563f8bec7d8b7da5abfcc1e76f92a61121aa88482a8861e279"
+        }
+      },
+      {
+        "relativePath": "setup.bash",
+        "kind": "file",
+        "evidence": {
+          "path": "/tmp/ros2-component-labs/install/setup.bash",
+          "resolutionStatus": "resolved",
+          "linkChain": [],
+          "resolvedPath": "/tmp/ros2-component-labs/install/setup.bash",
+          "bytes": 1139,
+          "sha256": "d1552370ac06943878b92be07f1ff59443d00a60275f687ddd08683f1cff795f"
+        }
+      },
+      {
+        "relativePath": "setup.ps1",
+        "kind": "file",
+        "evidence": {
+          "path": "/tmp/ros2-component-labs/install/setup.ps1",
+          "resolutionStatus": "resolved",
+          "linkChain": [],
+          "resolvedPath": "/tmp/ros2-component-labs/install/setup.ps1",
+          "bytes": 1165,
+          "sha256": "9e14de8573afa3d1254db86b2874f605b0602eb64f999ab58799cf36f9f6d128"
+        }
+      },
+      {
+        "relativePath": "setup.sh",
+        "kind": "file",
+        "evidence": {
+          "path": "/tmp/ros2-component-labs/install/setup.sh",
+          "resolutionStatus": "resolved",
+          "linkChain": [],
+          "resolvedPath": "/tmp/ros2-component-labs/install/setup.sh",
+          "bytes": 1908,
+          "sha256": "569afe15d9bd12c375b8a9b4a02faf0fac3268e3deb13f4f2a17c5fdf416bf9e"
+        }
+      },
+      {
+        "relativePath": "setup.zsh",
+        "kind": "file",
+        "evidence": {
+          "path": "/tmp/ros2-component-labs/install/setup.zsh",
+          "resolutionStatus": "resolved",
+          "linkChain": [],
+          "resolvedPath": "/tmp/ros2-component-labs/install/setup.zsh",
+          "bytes": 1127,
+          "sha256": "6bd5525dd74811468bee9af1bcc881fbd44acdc386911a96b065ece463087ebf"
+        }
+      },
+      {
+        "relativePath": "share",
+        "kind": "directory"
+      },
+      {
+        "relativePath": "share/ament_index",
+        "kind": "directory"
+      },
+      {
+        "relativePath": "share/colcon-core",
+        "kind": "directory"
+      },
+      {
+        "relativePath": "share/runtime_lab_components",
+        "kind": "directory"
+      },
+      {
+        "relativePath": "share/runtime_lab_components/cmake",
+        "kind": "directory"
+      },
+      {
+        "relativePath": "share/runtime_lab_components/environment",
+        "kind": "directory"
+      },
+      {
+        "relativePath": "share/runtime_lab_components/hook",
+        "kind": "directory"
+      },
+      {
+        "relativePath": "share/runtime_lab_components/local_setup.bash",
+        "kind": "symlink",
+        "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.bash",
+        "linkTextSha256": "d0a042f230f96d1e6c72f6d9e21bb0132d0ea6a0764954393b62b17ca3feffb7",
+        "targetOutsidePrefix": true,
+        "targetEvidence": {
+          "path": "/tmp/ros2-component-labs/install/share/runtime_lab_components/local_setup.bash",
+          "resolutionStatus": "resolved",
+          "linkChain": [
+            {
+              "link": "/tmp/ros2-component-labs/install/share/runtime_lab_components/local_setup.bash",
+              "text": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.bash",
+              "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.bash"
+            }
+          ],
+          "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.bash",
+          "bytes": 1594,
+          "sha256": "41b30b6c107da94a2478e43953b8cbd0d920f5e8fc1ea847c61a213623d623b0"
+        }
+      },
+      {
+        "relativePath": "share/runtime_lab_components/local_setup.dsv",
+        "kind": "symlink",
+        "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.dsv",
+        "linkTextSha256": "60592420581f622b8a1048321a27cdd6dec47bb8193e59fed86e9e8db19af1f0",
+        "targetOutsidePrefix": true,
+        "targetEvidence": {
+          "path": "/tmp/ros2-component-labs/install/share/runtime_lab_components/local_setup.dsv",
+          "resolutionStatus": "resolved",
+          "linkChain": [
+            {
+              "link": "/tmp/ros2-component-labs/install/share/runtime_lab_components/local_setup.dsv",
+              "text": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.dsv",
+              "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.dsv"
+            }
+          ],
+          "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.dsv",
+          "bytes": 125,
+          "sha256": "bad98fa4bb057eff1cfe4d59a6ca970c7b926bd102df14a3315c024ad8c8e456"
+        }
+      },
+      {
+        "relativePath": "share/runtime_lab_components/local_setup.sh",
+        "kind": "symlink",
+        "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.sh",
+        "linkTextSha256": "9ecb8495906bd1b77247786602acc89b3c4a95d5bb8936abfe0597c9bf99f994",
+        "targetOutsidePrefix": true,
+        "targetEvidence": {
+          "path": "/tmp/ros2-component-labs/install/share/runtime_lab_components/local_setup.sh",
+          "resolutionStatus": "resolved",
+          "linkChain": [
+            {
+              "link": "/tmp/ros2-component-labs/install/share/runtime_lab_components/local_setup.sh",
+              "text": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.sh",
+              "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.sh"
+            }
+          ],
+          "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.sh",
+          "bytes": 5026,
+          "sha256": "8ad0b047a268d00c7b6bb18ca9cbce1593930a23cb87e1ac15b8576e52c9df04"
+        }
+      },
+      {
+        "relativePath": "share/runtime_lab_components/local_setup.zsh",
+        "kind": "symlink",
+        "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.zsh",
+        "linkTextSha256": "a8852490956a6ada509acd22b344fe0b310084656bb38b84139ae27d1526f01f",
+        "targetOutsidePrefix": true,
+        "targetEvidence": {
+          "path": "/tmp/ros2-component-labs/install/share/runtime_lab_components/local_setup.zsh",
+          "resolutionStatus": "resolved",
+          "linkChain": [
+            {
+              "link": "/tmp/ros2-component-labs/install/share/runtime_lab_components/local_setup.zsh",
+              "text": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.zsh",
+              "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.zsh"
+            }
+          ],
+          "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.zsh",
+          "bytes": 1957,
+          "sha256": "56942873096201f4e7fe5e7b9bd87e56cc42ced33fadb53fbc25766fd9149c81"
+        }
+      },
+      {
+        "relativePath": "share/runtime_lab_components/package.bash",
+        "kind": "file",
+        "evidence": {
+          "path": "/tmp/ros2-component-labs/install/share/runtime_lab_components/package.bash",
+          "resolutionStatus": "resolved",
+          "linkChain": [],
+          "resolvedPath": "/tmp/ros2-component-labs/install/share/runtime_lab_components/package.bash",
+          "bytes": 1394,
+          "sha256": "ab05abfdeb54207ef4d326b986a414dd01b3f0dbbb096b9f8a8282f9fc8d9210"
+        }
+      },
+      {
+        "relativePath": "share/runtime_lab_components/package.dsv",
+        "kind": "file",
+        "evidence": {
+          "path": "/tmp/ros2-component-labs/install/share/runtime_lab_components/package.dsv",
+          "resolutionStatus": "resolved",
+          "linkChain": [],
+          "resolvedPath": "/tmp/ros2-component-labs/install/share/runtime_lab_components/package.dsv",
+          "bytes": 642,
+          "sha256": "a1f0510bfc78a113bb84ac32c47b00f9609a4889c18d84fea3e08d9f514f2b36"
+        }
+      },
+      {
+        "relativePath": "share/runtime_lab_components/package.ps1",
+        "kind": "file",
+        "evidence": {
+          "path": "/tmp/ros2-component-labs/install/share/runtime_lab_components/package.ps1",
+          "resolutionStatus": "resolved",
+          "linkChain": [],
+          "resolvedPath": "/tmp/ros2-component-labs/install/share/runtime_lab_components/package.ps1",
+          "bytes": 3400,
+          "sha256": "9b277d6531b7bfe37da7e8924d995b074e87b93df25349e3ec154c534165815a"
+        }
+      },
+      {
+        "relativePath": "share/runtime_lab_components/package.sh",
+        "kind": "file",
+        "evidence": {
+          "path": "/tmp/ros2-component-labs/install/share/runtime_lab_components/package.sh",
+          "resolutionStatus": "resolved",
+          "linkChain": [],
+          "resolvedPath": "/tmp/ros2-component-labs/install/share/runtime_lab_components/package.sh",
+          "bytes": 2987,
+          "sha256": "2426d7817ea9e51b0acc13e8fb70417d4e1cc02784b70a8b65d204dc1c52319d"
+        }
+      },
+      {
+        "relativePath": "share/runtime_lab_components/package.xml",
+        "kind": "symlink",
+        "linkText": "/home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components/package.xml",
+        "linkTextSha256": "aa6c9754629b0ee02a467fcce06f1e7642d1a49419a6f48cf433eb932de2a264",
+        "targetOutsidePrefix": true,
+        "targetEvidence": {
+          "path": "/tmp/ros2-component-labs/install/share/runtime_lab_components/package.xml",
+          "resolutionStatus": "resolved",
+          "linkChain": [
+            {
+              "link": "/tmp/ros2-component-labs/install/share/runtime_lab_components/package.xml",
+              "text": "/home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components/package.xml",
+              "nextPath": "/home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components/package.xml"
+            }
+          ],
+          "resolvedPath": "/home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components/package.xml",
+          "bytes": 738,
+          "sha256": "3ea1082e94652ea8d5fac229e661f5d9ac7bd0310e73aea6a650341e81092144"
+        }
+      },
+      {
+        "relativePath": "share/runtime_lab_components/package.zsh",
+        "kind": "file",
+        "evidence": {
+          "path": "/tmp/ros2-component-labs/install/share/runtime_lab_components/package.zsh",
+          "resolutionStatus": "resolved",
+          "linkChain": [],
+          "resolvedPath": "/tmp/ros2-component-labs/install/share/runtime_lab_components/package.zsh",
+          "bytes": 1678,
+          "sha256": "7743b01cbe6291d90df2af81b099b3d0c0bd1f555ae9e900a26b670187fa7629"
+        }
+      },
+      {
+        "relativePath": "share/runtime_lab_components/hook/cmake_prefix_path.dsv",
+        "kind": "file",
+        "evidence": {
+          "path": "/tmp/ros2-component-labs/install/share/runtime_lab_components/hook/cmake_prefix_path.dsv",
+          "resolutionStatus": "resolved",
+          "linkChain": [],
+          "resolvedPath": "/tmp/ros2-component-labs/install/share/runtime_lab_components/hook/cmake_prefix_path.dsv",
+          "bytes": 41,
+          "sha256": "7ab2eb0a25c282f9a5bf62596b4c098865cd3a8aa5740601a9efa8620acd69d3"
+        }
+      },
+      {
+        "relativePath": "share/runtime_lab_components/hook/cmake_prefix_path.ps1",
+        "kind": "file",
+        "evidence": {
+          "path": "/tmp/ros2-component-labs/install/share/runtime_lab_components/hook/cmake_prefix_path.ps1",
+          "resolutionStatus": "resolved",
+          "linkChain": [],
+          "resolvedPath": "/tmp/ros2-component-labs/install/share/runtime_lab_components/hook/cmake_prefix_path.ps1",
+          "bytes": 152,
+          "sha256": "0c7394c1d89765deec81cb10e59a36d0d98867690b4b8781d5bc9186fc67885a"
+        }
+      },
+      {
+        "relativePath": "share/runtime_lab_components/hook/cmake_prefix_path.sh",
+        "kind": "file",
+        "evidence": {
+          "path": "/tmp/ros2-component-labs/install/share/runtime_lab_components/hook/cmake_prefix_path.sh",
+          "resolutionStatus": "resolved",
+          "linkChain": [],
+          "resolvedPath": "/tmp/ros2-component-labs/install/share/runtime_lab_components/hook/cmake_prefix_path.sh",
+          "bytes": 142,
+          "sha256": "ee9849def404b669097010f38735aa521e0731366a319b6e1abe996c793494b2"
+        }
+      },
+      {
+        "relativePath": "share/runtime_lab_components/hook/ld_library_path_lib.dsv",
+        "kind": "file",
+        "evidence": {
+          "path": "/tmp/ros2-component-labs/install/share/runtime_lab_components/hook/ld_library_path_lib.dsv",
+          "resolutionStatus": "resolved",
+          "linkChain": [],
+          "resolvedPath": "/tmp/ros2-component-labs/install/share/runtime_lab_components/hook/ld_library_path_lib.dsv",
+          "bytes": 42,
+          "sha256": "038195297fbe5e22d78680bf0f2b1b182fea46aaececf77d84daadad1fdfa665"
+        }
+      },
+      {
+        "relativePath": "share/runtime_lab_components/hook/ld_library_path_lib.ps1",
+        "kind": "file",
+        "evidence": {
+          "path": "/tmp/ros2-component-labs/install/share/runtime_lab_components/hook/ld_library_path_lib.ps1",
+          "resolutionStatus": "resolved",
+          "linkChain": [],
+          "resolvedPath": "/tmp/ros2-component-labs/install/share/runtime_lab_components/hook/ld_library_path_lib.ps1",
+          "bytes": 154,
+          "sha256": "c6e5dc5fc7ca92a59dec3b4107c761602c03e4ca0b4211ec2634efc3b43ef84e"
+        }
+      },
+      {
+        "relativePath": "share/runtime_lab_components/hook/ld_library_path_lib.sh",
+        "kind": "file",
+        "evidence": {
+          "path": "/tmp/ros2-component-labs/install/share/runtime_lab_components/hook/ld_library_path_lib.sh",
+          "resolutionStatus": "resolved",
+          "linkChain": [],
+          "resolvedPath": "/tmp/ros2-component-labs/install/share/runtime_lab_components/hook/ld_library_path_lib.sh",
+          "bytes": 144,
+          "sha256": "535fe00314bc8acdb36d1057e32d60c215005141a8c30a99bf665a29fed4e222"
+        }
+      },
+      {
+        "relativePath": "share/runtime_lab_components/environment/ament_prefix_path.dsv",
+        "kind": "symlink",
+        "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/ament_prefix_path.dsv",
+        "linkTextSha256": "75fe82484b328165cd69cad043f094126a767c83abd0f8de79f1ba912e185278",
+        "targetOutsidePrefix": true,
+        "targetEvidence": {
+          "path": "/tmp/ros2-component-labs/install/share/runtime_lab_components/environment/ament_prefix_path.dsv",
+          "resolutionStatus": "resolved",
+          "linkChain": [
+            {
+              "link": "/tmp/ros2-component-labs/install/share/runtime_lab_components/environment/ament_prefix_path.dsv",
+              "text": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/ament_prefix_path.dsv",
+              "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/ament_prefix_path.dsv"
+            }
+          ],
+          "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/ament_prefix_path.dsv",
+          "bytes": 41,
+          "sha256": "c4797d0a0670c70b4d3bcb5b7d47563635c7950595603f3af66f70af546ad57e"
+        }
+      },
+      {
+        "relativePath": "share/runtime_lab_components/environment/ament_prefix_path.sh",
+        "kind": "symlink",
+        "linkText": "/opt/ros/jazzy/share/ament_cmake_core/cmake/environment_hooks/environment/ament_prefix_path.sh",
+        "linkTextSha256": "a4385e89cf280e308ac235f9f1336e0521b1de25bbb34221c7fecaa8c08336b9",
+        "targetOutsidePrefix": true,
+        "targetEvidence": {
+          "path": "/tmp/ros2-component-labs/install/share/runtime_lab_components/environment/ament_prefix_path.sh",
+          "resolutionStatus": "resolved",
+          "linkChain": [
+            {
+              "link": "/tmp/ros2-component-labs/install/share/runtime_lab_components/environment/ament_prefix_path.sh",
+              "text": "/opt/ros/jazzy/share/ament_cmake_core/cmake/environment_hooks/environment/ament_prefix_path.sh",
+              "nextPath": "/opt/ros/jazzy/share/ament_cmake_core/cmake/environment_hooks/environment/ament_prefix_path.sh"
+            }
+          ],
+          "resolvedPath": "/opt/ros/jazzy/share/ament_cmake_core/cmake/environment_hooks/environment/ament_prefix_path.sh",
+          "bytes": 160,
+          "sha256": "6658f14efe913e291c0bf2c74059a9e14fb8abdb5a31628bef61d3b41e206679"
+        }
+      },
+      {
+        "relativePath": "share/runtime_lab_components/environment/path.dsv",
+        "kind": "symlink",
+        "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/path.dsv",
+        "linkTextSha256": "6c7efa664a35390fbec76c91b575ec1f9ed587ee49ed044c4676f5a85bfe3b29",
+        "targetOutsidePrefix": true,
+        "targetEvidence": {
+          "path": "/tmp/ros2-component-labs/install/share/runtime_lab_components/environment/path.dsv",
+          "resolutionStatus": "resolved",
+          "linkChain": [
+            {
+              "link": "/tmp/ros2-component-labs/install/share/runtime_lab_components/environment/path.dsv",
+              "text": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/path.dsv",
+              "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/path.dsv"
+            }
+          ],
+          "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/path.dsv",
+          "bytes": 41,
+          "sha256": "3f2cdf6234ea2525c1670c140b6a03700d98a2408e7a232107791fa96c08b58b"
+        }
+      },
+      {
+        "relativePath": "share/runtime_lab_components/environment/path.sh",
+        "kind": "symlink",
+        "linkText": "/opt/ros/jazzy/share/ament_cmake_core/cmake/environment_hooks/environment/path.sh",
+        "linkTextSha256": "0dd28ca372714e1f047a5a0788af07e3cbaa456a42491214ef5ec98c68137d59",
+        "targetOutsidePrefix": true,
+        "targetEvidence": {
+          "path": "/tmp/ros2-component-labs/install/share/runtime_lab_components/environment/path.sh",
+          "resolutionStatus": "resolved",
+          "linkChain": [
+            {
+              "link": "/tmp/ros2-component-labs/install/share/runtime_lab_components/environment/path.sh",
+              "text": "/opt/ros/jazzy/share/ament_cmake_core/cmake/environment_hooks/environment/path.sh",
+              "nextPath": "/opt/ros/jazzy/share/ament_cmake_core/cmake/environment_hooks/environment/path.sh"
+            }
+          ],
+          "resolvedPath": "/opt/ros/jazzy/share/ament_cmake_core/cmake/environment_hooks/environment/path.sh",
+          "bytes": 185,
+          "sha256": "abe10a0452bc4b93f665fc343a7e6d32fe3f3a2b6beb90d338044a71d2583f18"
+        }
+      },
+      {
+        "relativePath": "share/runtime_lab_components/cmake/runtime_lab_componentsConfig-version.cmake",
+        "kind": "symlink",
+        "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_core/runtime_lab_componentsConfig-version.cmake",
+        "linkTextSha256": "ed1d199d6c589f3d610fd14097a70e693955fad1b0edccef1a0a597bba2aa7a0",
+        "targetOutsidePrefix": true,
+        "targetEvidence": {
+          "path": "/tmp/ros2-component-labs/install/share/runtime_lab_components/cmake/runtime_lab_componentsConfig-version.cmake",
+          "resolutionStatus": "resolved",
+          "linkChain": [
+            {
+              "link": "/tmp/ros2-component-labs/install/share/runtime_lab_components/cmake/runtime_lab_componentsConfig-version.cmake",
+              "text": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_core/runtime_lab_componentsConfig-version.cmake",
+              "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_core/runtime_lab_componentsConfig-version.cmake"
+            }
+          ],
+          "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_core/runtime_lab_componentsConfig-version.cmake",
+          "bytes": 432,
+          "sha256": "5df7fb3481e154840dd6ac6d1b6eb53c81ed9cadd5e7a00398962383332be7ea"
+        }
+      },
+      {
+        "relativePath": "share/runtime_lab_components/cmake/runtime_lab_componentsConfig.cmake",
+        "kind": "symlink",
+        "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_core/runtime_lab_componentsConfig.cmake",
+        "linkTextSha256": "53180a9d01ceb3e189ade771c445bcb0fa709fe1b619ae5d78fa2135c41ce591",
+        "targetOutsidePrefix": true,
+        "targetEvidence": {
+          "path": "/tmp/ros2-component-labs/install/share/runtime_lab_components/cmake/runtime_lab_componentsConfig.cmake",
+          "resolutionStatus": "resolved",
+          "linkChain": [
+            {
+              "link": "/tmp/ros2-component-labs/install/share/runtime_lab_components/cmake/runtime_lab_componentsConfig.cmake",
+              "text": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_core/runtime_lab_componentsConfig.cmake",
+              "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_core/runtime_lab_componentsConfig.cmake"
+            }
+          ],
+          "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_core/runtime_lab_componentsConfig.cmake",
+          "bytes": 1408,
+          "sha256": "9101319ce09063437c6585397575182899096f90e605754d64b43edabcb7c067"
+        }
+      },
+      {
+        "relativePath": "share/colcon-core/packages",
+        "kind": "directory"
+      },
+      {
+        "relativePath": "share/colcon-core/packages/runtime_lab_components",
+        "kind": "file",
+        "evidence": {
+          "path": "/tmp/ros2-component-labs/install/share/colcon-core/packages/runtime_lab_components",
+          "resolutionStatus": "resolved",
+          "linkChain": [],
+          "resolvedPath": "/tmp/ros2-component-labs/install/share/colcon-core/packages/runtime_lab_components",
+          "bytes": 80,
+          "sha256": "4dbf85cbacd814302bbdea6150479380447f41b312b7a3a47690796d63a5a287"
+        }
+      },
+      {
+        "relativePath": "share/ament_index/resource_index",
+        "kind": "directory"
+      },
+      {
+        "relativePath": "share/ament_index/resource_index/package_run_dependencies",
+        "kind": "directory"
+      },
+      {
+        "relativePath": "share/ament_index/resource_index/packages",
+        "kind": "directory"
+      },
+      {
+        "relativePath": "share/ament_index/resource_index/parent_prefix_path",
+        "kind": "directory"
+      },
+      {
+        "relativePath": "share/ament_index/resource_index/rclcpp_components",
+        "kind": "directory"
+      },
+      {
+        "relativePath": "share/ament_index/resource_index/rclcpp_components/runtime_lab_components",
+        "kind": "symlink",
+        "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/rclcpp_components/runtime_lab_components",
+        "linkTextSha256": "853354d98fffdb25b89ec1e575a54aa41c6fb8f66d293dd70728dd29203a468e",
+        "targetOutsidePrefix": true,
+        "targetEvidence": {
+          "path": "/tmp/ros2-component-labs/install/share/ament_index/resource_index/rclcpp_components/runtime_lab_components",
+          "resolutionStatus": "resolved",
+          "linkChain": [
+            {
+              "link": "/tmp/ros2-component-labs/install/share/ament_index/resource_index/rclcpp_components/runtime_lab_components",
+              "text": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/rclcpp_components/runtime_lab_components",
+              "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/rclcpp_components/runtime_lab_components"
+            }
+          ],
+          "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/rclcpp_components/runtime_lab_components",
+          "bytes": 208,
+          "sha256": "68b88549668ce45912a6257f0e378d0d24e2249df4208e581aa0a31c67bb0313"
+        }
+      },
+      {
+        "relativePath": "share/ament_index/resource_index/parent_prefix_path/runtime_lab_components",
+        "kind": "symlink",
+        "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/parent_prefix_path/runtime_lab_components",
+        "linkTextSha256": "b33fde400028b64566e6ea56504f87c0cc43701358be4160521b788e345949bb",
+        "targetOutsidePrefix": true,
+        "targetEvidence": {
+          "path": "/tmp/ros2-component-labs/install/share/ament_index/resource_index/parent_prefix_path/runtime_lab_components",
+          "resolutionStatus": "resolved",
+          "linkChain": [
+            {
+              "link": "/tmp/ros2-component-labs/install/share/ament_index/resource_index/parent_prefix_path/runtime_lab_components",
+              "text": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/parent_prefix_path/runtime_lab_components",
+              "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/parent_prefix_path/runtime_lab_components"
+            }
+          ],
+          "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/parent_prefix_path/runtime_lab_components",
+          "bytes": 14,
+          "sha256": "c935c0e21d789d00e95ddb4f96b9836332fb2151e8c1e11868f33245a21ff421"
+        }
+      },
+      {
+        "relativePath": "share/ament_index/resource_index/packages/runtime_lab_components",
+        "kind": "symlink",
+        "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/packages/runtime_lab_components",
+        "linkTextSha256": "1f5948d8bd37fe8fbdc300079fc16b918fd12b2cd4cf0c0fb5c53ea020507463",
+        "targetOutsidePrefix": true,
+        "targetEvidence": {
+          "path": "/tmp/ros2-component-labs/install/share/ament_index/resource_index/packages/runtime_lab_components",
+          "resolutionStatus": "resolved",
+          "linkChain": [
+            {
+              "link": "/tmp/ros2-component-labs/install/share/ament_index/resource_index/packages/runtime_lab_components",
+              "text": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/packages/runtime_lab_components",
+              "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/packages/runtime_lab_components"
+            }
+          ],
+          "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/packages/runtime_lab_components",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "relativePath": "share/ament_index/resource_index/package_run_dependencies/runtime_lab_components",
+        "kind": "symlink",
+        "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/runtime_lab_components",
+        "linkTextSha256": "f6f73e76b42e2b8d6c31cba9f3bd3683111c4e6e4ae28c93ae279814c102e544",
+        "targetOutsidePrefix": true,
+        "targetEvidence": {
+          "path": "/tmp/ros2-component-labs/install/share/ament_index/resource_index/package_run_dependencies/runtime_lab_components",
+          "resolutionStatus": "resolved",
+          "linkChain": [
+            {
+              "link": "/tmp/ros2-component-labs/install/share/ament_index/resource_index/package_run_dependencies/runtime_lab_components",
+              "text": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/runtime_lab_components",
+              "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/runtime_lab_components"
+            }
+          ],
+          "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/runtime_lab_components",
+          "bytes": 80,
+          "sha256": "8bcf5c3830c88ba22104dc1ee8d5e35572a3f707f46266afdd91a780955c4515"
+        }
+      },
+      {
+        "relativePath": "lib/libruntime_components.so",
+        "kind": "symlink",
+        "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/libruntime_components.so",
+        "linkTextSha256": "0d7b05d8310d3aa902258478ec7585fd4afb5c8bd7ff50e6d03124741f87aef2",
+        "targetOutsidePrefix": true,
+        "targetEvidence": {
+          "path": "/tmp/ros2-component-labs/install/lib/libruntime_components.so",
+          "resolutionStatus": "resolved",
+          "linkChain": [
+            {
+              "link": "/tmp/ros2-component-labs/install/lib/libruntime_components.so",
+              "text": "/tmp/ros2-component-labs/build/runtime_lab_components/libruntime_components.so",
+              "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/libruntime_components.so"
+            }
+          ],
+          "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/libruntime_components.so",
+          "bytes": 2448000,
+          "sha256": "7cfdf1af92a5037e7cbf0b426e8585c1df4b31764285ac0a5398fe44e5229917",
+          "elf": {
+            "format": "ELF",
+            "needed": [
+              "libstd_msgs__rosidl_typesupport_cpp.so",
+              "libstd_srvs__rosidl_typesupport_cpp.so",
+              "librclcpp.so",
+              "librcl.so",
+              "libtracetools.so",
+              "libclass_loader.so",
+              "libconsole_bridge.so.1.0",
+              "librmw.so",
+              "librcutils.so",
+              "libstdc++.so.6",
+              "libgcc_s.so.1",
+              "libc.so.6"
+            ],
+            "runpath": [
+              "/opt/ros/jazzy/lib"
+            ],
+            "rpath": [],
+            "transitiveResolutionPerformed": false,
+            "machine": "x86_64",
+            "scan": "dynamic_sections_read"
+          }
+        }
+      },
+      {
+        "relativePath": "lib/runtime_lab_components",
+        "kind": "directory"
+      },
+      {
+        "relativePath": "lib/runtime_lab_components/config_node",
+        "kind": "symlink",
+        "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/config_node",
+        "linkTextSha256": "e6874e6d27ac7dc03c46a0aa726898f2bf63cbf1d80bab220f6275660b618554",
+        "targetOutsidePrefix": true,
+        "targetEvidence": {
+          "path": "/tmp/ros2-component-labs/install/lib/runtime_lab_components/config_node",
+          "resolutionStatus": "resolved",
+          "linkChain": [
+            {
+              "link": "/tmp/ros2-component-labs/install/lib/runtime_lab_components/config_node",
+              "text": "/tmp/ros2-component-labs/build/runtime_lab_components/config_node",
+              "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/config_node"
+            }
+          ],
+          "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/config_node",
+          "bytes": 257952,
+          "sha256": "0f7153a59cb2c541855f639e994e34bf62f80d84d99b0be61b01a4f1d2188f12",
+          "elf": {
+            "format": "ELF",
+            "needed": [
+              "libclass_loader.so",
+              "libconsole_bridge.so.1.0",
+              "librclcpp.so",
+              "librcutils.so",
+              "libstdc++.so.6",
+              "libgcc_s.so.1",
+              "libc.so.6"
+            ],
+            "runpath": [
+              "/opt/ros/jazzy/lib"
+            ],
+            "rpath": [],
+            "transitiveResolutionPerformed": false,
+            "machine": "x86_64",
+            "scan": "dynamic_sections_read"
+          }
+        }
+      },
+      {
+        "relativePath": "lib/runtime_lab_components/observable_manager",
+        "kind": "symlink",
+        "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/observable_manager",
+        "linkTextSha256": "463d5b0d01d79923f0184f52d5eb6a391bf771ccdac36456c3decc753053488d",
+        "targetOutsidePrefix": true,
+        "targetEvidence": {
+          "path": "/tmp/ros2-component-labs/install/lib/runtime_lab_components/observable_manager",
+          "resolutionStatus": "resolved",
+          "linkChain": [
+            {
+              "link": "/tmp/ros2-component-labs/install/lib/runtime_lab_components/observable_manager",
+              "text": "/tmp/ros2-component-labs/build/runtime_lab_components/observable_manager",
+              "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/observable_manager"
+            }
+          ],
+          "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/observable_manager",
+          "bytes": 158760,
+          "sha256": "b867d9465fd26af7ba5fe701c3e02451a219dce5b42efc1a2d9e40516ebc7b82",
+          "elf": {
+            "format": "ELF",
+            "needed": [
+              "libcomponent_manager.so",
+              "librclcpp.so",
+              "librcutils.so",
+              "libstdc++.so.6",
+              "libgcc_s.so.1",
+              "libc.so.6"
+            ],
+            "runpath": [
+              "/opt/ros/jazzy/lib"
+            ],
+            "rpath": [],
+            "transitiveResolutionPerformed": false,
+            "machine": "x86_64",
+            "scan": "dynamic_sections_read"
+          }
+        }
+      }
+    ],
+    "skipped": [],
+    "counts": {
+      "files": 24,
+      "links": 18,
+      "externalLinks": 18,
+      "unresolvedLinks": 0
+    }
+  },
+  "setupLiteralPrefixes": [
+    {
+      "file": "setup.bash",
+      "line": 22,
+      "literalPrefix": "/opt/ros/jazzy"
+    },
+    {
+      "file": "setup.sh",
+      "line": 10,
+      "literalPrefix": "/tmp/ros2-component-labs/install"
+    },
+    {
+      "file": "setup.sh",
+      "line": 34,
+      "literalPrefix": "/opt/ros/jazzy"
+    },
+    {
+      "file": "local_setup.sh",
+      "line": 9,
+      "literalPrefix": "/tmp/ros2-component-labs/install"
+    }
+  ],
+  "requestedSourceFiles": [
+    {
+      "path": "/home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components/src/components.cpp",
+      "resolutionStatus": "resolved",
+      "linkChain": [],
+      "resolvedPath": "/home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components/src/components.cpp",
+      "bytes": 9759,
+      "sha256": "ac945b2d5bcf7dc30bdaefc66c92615acad4422952954d0c0b5adc14808633d4"
+    },
+    {
+      "path": "/home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components/src/observable_manager.cpp",
+      "resolutionStatus": "resolved",
+      "linkChain": [],
+      "resolvedPath": "/home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components/src/observable_manager.cpp",
+      "bytes": 1862,
+      "sha256": "92f963e2eeb4d69973f5521954d6e1e40b43f5d673a4f1943092aab6adc1697c"
+    },
+    {
+      "path": "/home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components/CMakeLists.txt",
+      "resolutionStatus": "resolved",
+      "linkChain": [],
+      "resolvedPath": "/home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components/CMakeLists.txt",
+      "bytes": 1438,
+      "sha256": "7dd7e1d89b3d4a97b37f728e5e8d1717d406958256c51518aa2b0eda71fedc09"
+    },
+    {
+      "path": "/home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components/package.xml",
+      "resolutionStatus": "resolved",
+      "linkChain": [],
+      "resolvedPath": "/home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components/package.xml",
+      "bytes": 738,
+      "sha256": "3ea1082e94652ea8d5fac229e661f5d9ac7bd0310e73aea6a650341e81092144"
+    }
+  ],
+  "packageVersions": [
+    {
+      "name": "runtime_lab_components",
+      "version": "0.1.0",
+      "path": "/tmp/ros2-component-labs/install/share/runtime_lab_components/package.xml",
+      "resolvedPath": "/home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components/package.xml",
+      "sha256": "3ea1082e94652ea8d5fac229e661f5d9ac7bd0310e73aea6a650341e81092144"
+    },
+    {
+      "name": "rclcpp",
+      "version": "28.1.22",
+      "path": "/opt/ros/jazzy/share/rclcpp/package.xml",
+      "resolvedPath": "/opt/ros/jazzy/share/rclcpp/package.xml",
+      "sha256": "2a44fcf2aa4ac75a95e9268ee6cae97f280276b2247c727e902de1f022d3bb4f"
+    },
+    {
+      "name": "rclcpp_components",
+      "version": "28.1.22",
+      "path": "/opt/ros/jazzy/share/rclcpp_components/package.xml",
+      "resolvedPath": "/opt/ros/jazzy/share/rclcpp_components/package.xml",
+      "sha256": "6287d69c02679c647d6f6750facac8a187598384190a90f7e18de232a19f2161"
+    },
+    {
+      "name": "rcl_interfaces",
+      "version": "2.0.4",
+      "path": "/opt/ros/jazzy/share/rcl_interfaces/package.xml",
+      "resolvedPath": "/opt/ros/jazzy/share/rcl_interfaces/package.xml",
+      "sha256": "ced0475529c2e6cb54b0332101e8b4a4429c6f79f71f1c2d1b0d92b83d9453be"
+    },
+    {
+      "name": "std_msgs",
+      "version": "5.3.8",
+      "path": "/opt/ros/jazzy/share/std_msgs/package.xml",
+      "resolvedPath": "/opt/ros/jazzy/share/std_msgs/package.xml",
+      "sha256": "a34587c4319cab814f6e092a4f2d30f96e8de0325c81f69c2701a9545383da23"
+    },
+    {
+      "name": "std_srvs",
+      "version": "5.3.8",
+      "path": "/opt/ros/jazzy/share/std_srvs/package.xml",
+      "resolvedPath": "/opt/ros/jazzy/share/std_srvs/package.xml",
+      "sha256": "3c20c6ce8315a8c79a9b74cfeb560ba0c1dda641561603ab276e8a485b6479ad"
+    }
+  ],
+  "copyDemo": {
+    "temporaryCopyPath": "/tmp/ros2-deployment-copy-gwd7e0n9/install",
+    "linkTextsAndFilesMatched": true,
+    "originalSourceBuildUnderlayUntouched": true,
+    "copyAudit": {
+      "prefix": "/tmp/ros2-deployment-copy-gwd7e0n9/install",
+      "entries": [
+        {
+          "relativePath": ".colcon_install_layout",
+          "kind": "file",
+          "evidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/.colcon_install_layout",
+            "resolutionStatus": "resolved",
+            "linkChain": [],
+            "resolvedPath": "/tmp/ros2-deployment-copy-gwd7e0n9/install/.colcon_install_layout",
+            "bytes": 7,
+            "sha256": "72d8264b97bee169d1844d054282694b68be7e91c8bd5d616540adf63ae7d4af"
+          }
+        },
+        {
+          "relativePath": "COLCON_IGNORE",
+          "kind": "file",
+          "evidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/COLCON_IGNORE",
+            "resolutionStatus": "resolved",
+            "linkChain": [],
+            "resolvedPath": "/tmp/ros2-deployment-copy-gwd7e0n9/install/COLCON_IGNORE",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        {
+          "relativePath": "_local_setup_util_ps1.py",
+          "kind": "file",
+          "evidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/_local_setup_util_ps1.py",
+            "resolutionStatus": "resolved",
+            "linkChain": [],
+            "resolvedPath": "/tmp/ros2-deployment-copy-gwd7e0n9/install/_local_setup_util_ps1.py",
+            "bytes": 14818,
+            "sha256": "6bd62f5634832008b01eb0ccf38600512b7ee47c735ca53af22f92319f7e5a60"
+          }
+        },
+        {
+          "relativePath": "_local_setup_util_sh.py",
+          "kind": "file",
+          "evidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/_local_setup_util_sh.py",
+            "resolutionStatus": "resolved",
+            "linkChain": [],
+            "resolvedPath": "/tmp/ros2-deployment-copy-gwd7e0n9/install/_local_setup_util_sh.py",
+            "bytes": 14872,
+            "sha256": "3f6e8b7fae1039cdc824678256f56160cb425ac6fd4e17e441b98d5cefab9f57"
+          }
+        },
+        {
+          "relativePath": "lib",
+          "kind": "directory"
+        },
+        {
+          "relativePath": "local_setup.bash",
+          "kind": "file",
+          "evidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/local_setup.bash",
+            "resolutionStatus": "resolved",
+            "linkChain": [],
+            "resolvedPath": "/tmp/ros2-deployment-copy-gwd7e0n9/install/local_setup.bash",
+            "bytes": 3777,
+            "sha256": "d6bf7a9cf40c777ab9d13bdc5be4cf184f062cdba383e0c1e1c22f4d6648c20e"
+          }
+        },
+        {
+          "relativePath": "local_setup.ps1",
+          "kind": "file",
+          "evidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/local_setup.ps1",
+            "resolutionStatus": "resolved",
+            "linkChain": [],
+            "resolvedPath": "/tmp/ros2-deployment-copy-gwd7e0n9/install/local_setup.ps1",
+            "bytes": 2062,
+            "sha256": "df3b99b2832d07e790fc7f064194f4badce9e571f30efdf11e4344174149a799"
+          }
+        },
+        {
+          "relativePath": "local_setup.sh",
+          "kind": "file",
+          "evidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/local_setup.sh",
+            "resolutionStatus": "resolved",
+            "linkChain": [],
+            "resolvedPath": "/tmp/ros2-deployment-copy-gwd7e0n9/install/local_setup.sh",
+            "bytes": 4353,
+            "sha256": "c275fc6e7137bd8d125203da6434c1837e330efd5e930cec10d5d985e82fb6b3"
+          }
+        },
+        {
+          "relativePath": "local_setup.zsh",
+          "kind": "file",
+          "evidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/local_setup.zsh",
+            "resolutionStatus": "resolved",
+            "linkChain": [],
+            "resolvedPath": "/tmp/ros2-deployment-copy-gwd7e0n9/install/local_setup.zsh",
+            "bytes": 4172,
+            "sha256": "52d862ae004eec563f8bec7d8b7da5abfcc1e76f92a61121aa88482a8861e279"
+          }
+        },
+        {
+          "relativePath": "setup.bash",
+          "kind": "file",
+          "evidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/setup.bash",
+            "resolutionStatus": "resolved",
+            "linkChain": [],
+            "resolvedPath": "/tmp/ros2-deployment-copy-gwd7e0n9/install/setup.bash",
+            "bytes": 1139,
+            "sha256": "d1552370ac06943878b92be07f1ff59443d00a60275f687ddd08683f1cff795f"
+          }
+        },
+        {
+          "relativePath": "setup.ps1",
+          "kind": "file",
+          "evidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/setup.ps1",
+            "resolutionStatus": "resolved",
+            "linkChain": [],
+            "resolvedPath": "/tmp/ros2-deployment-copy-gwd7e0n9/install/setup.ps1",
+            "bytes": 1165,
+            "sha256": "9e14de8573afa3d1254db86b2874f605b0602eb64f999ab58799cf36f9f6d128"
+          }
+        },
+        {
+          "relativePath": "setup.sh",
+          "kind": "file",
+          "evidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/setup.sh",
+            "resolutionStatus": "resolved",
+            "linkChain": [],
+            "resolvedPath": "/tmp/ros2-deployment-copy-gwd7e0n9/install/setup.sh",
+            "bytes": 1908,
+            "sha256": "569afe15d9bd12c375b8a9b4a02faf0fac3268e3deb13f4f2a17c5fdf416bf9e"
+          }
+        },
+        {
+          "relativePath": "setup.zsh",
+          "kind": "file",
+          "evidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/setup.zsh",
+            "resolutionStatus": "resolved",
+            "linkChain": [],
+            "resolvedPath": "/tmp/ros2-deployment-copy-gwd7e0n9/install/setup.zsh",
+            "bytes": 1127,
+            "sha256": "6bd5525dd74811468bee9af1bcc881fbd44acdc386911a96b065ece463087ebf"
+          }
+        },
+        {
+          "relativePath": "share",
+          "kind": "directory"
+        },
+        {
+          "relativePath": "share/ament_index",
+          "kind": "directory"
+        },
+        {
+          "relativePath": "share/colcon-core",
+          "kind": "directory"
+        },
+        {
+          "relativePath": "share/runtime_lab_components",
+          "kind": "directory"
+        },
+        {
+          "relativePath": "share/runtime_lab_components/cmake",
+          "kind": "directory"
+        },
+        {
+          "relativePath": "share/runtime_lab_components/environment",
+          "kind": "directory"
+        },
+        {
+          "relativePath": "share/runtime_lab_components/hook",
+          "kind": "directory"
+        },
+        {
+          "relativePath": "share/runtime_lab_components/local_setup.bash",
+          "kind": "symlink",
+          "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.bash",
+          "linkTextSha256": "d0a042f230f96d1e6c72f6d9e21bb0132d0ea6a0764954393b62b17ca3feffb7",
+          "targetOutsidePrefix": true,
+          "targetEvidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/local_setup.bash",
+            "resolutionStatus": "resolved",
+            "linkChain": [
+              {
+                "link": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/local_setup.bash",
+                "text": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.bash",
+                "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.bash"
+              }
+            ],
+            "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.bash",
+            "bytes": 1594,
+            "sha256": "41b30b6c107da94a2478e43953b8cbd0d920f5e8fc1ea847c61a213623d623b0"
+          }
+        },
+        {
+          "relativePath": "share/runtime_lab_components/local_setup.dsv",
+          "kind": "symlink",
+          "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.dsv",
+          "linkTextSha256": "60592420581f622b8a1048321a27cdd6dec47bb8193e59fed86e9e8db19af1f0",
+          "targetOutsidePrefix": true,
+          "targetEvidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/local_setup.dsv",
+            "resolutionStatus": "resolved",
+            "linkChain": [
+              {
+                "link": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/local_setup.dsv",
+                "text": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.dsv",
+                "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.dsv"
+              }
+            ],
+            "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.dsv",
+            "bytes": 125,
+            "sha256": "bad98fa4bb057eff1cfe4d59a6ca970c7b926bd102df14a3315c024ad8c8e456"
+          }
+        },
+        {
+          "relativePath": "share/runtime_lab_components/local_setup.sh",
+          "kind": "symlink",
+          "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.sh",
+          "linkTextSha256": "9ecb8495906bd1b77247786602acc89b3c4a95d5bb8936abfe0597c9bf99f994",
+          "targetOutsidePrefix": true,
+          "targetEvidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/local_setup.sh",
+            "resolutionStatus": "resolved",
+            "linkChain": [
+              {
+                "link": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/local_setup.sh",
+                "text": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.sh",
+                "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.sh"
+              }
+            ],
+            "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.sh",
+            "bytes": 5026,
+            "sha256": "8ad0b047a268d00c7b6bb18ca9cbce1593930a23cb87e1ac15b8576e52c9df04"
+          }
+        },
+        {
+          "relativePath": "share/runtime_lab_components/local_setup.zsh",
+          "kind": "symlink",
+          "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.zsh",
+          "linkTextSha256": "a8852490956a6ada509acd22b344fe0b310084656bb38b84139ae27d1526f01f",
+          "targetOutsidePrefix": true,
+          "targetEvidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/local_setup.zsh",
+            "resolutionStatus": "resolved",
+            "linkChain": [
+              {
+                "link": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/local_setup.zsh",
+                "text": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.zsh",
+                "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.zsh"
+              }
+            ],
+            "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/local_setup.zsh",
+            "bytes": 1957,
+            "sha256": "56942873096201f4e7fe5e7b9bd87e56cc42ced33fadb53fbc25766fd9149c81"
+          }
+        },
+        {
+          "relativePath": "share/runtime_lab_components/package.bash",
+          "kind": "file",
+          "evidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/package.bash",
+            "resolutionStatus": "resolved",
+            "linkChain": [],
+            "resolvedPath": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/package.bash",
+            "bytes": 1394,
+            "sha256": "ab05abfdeb54207ef4d326b986a414dd01b3f0dbbb096b9f8a8282f9fc8d9210"
+          }
+        },
+        {
+          "relativePath": "share/runtime_lab_components/package.dsv",
+          "kind": "file",
+          "evidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/package.dsv",
+            "resolutionStatus": "resolved",
+            "linkChain": [],
+            "resolvedPath": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/package.dsv",
+            "bytes": 642,
+            "sha256": "a1f0510bfc78a113bb84ac32c47b00f9609a4889c18d84fea3e08d9f514f2b36"
+          }
+        },
+        {
+          "relativePath": "share/runtime_lab_components/package.ps1",
+          "kind": "file",
+          "evidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/package.ps1",
+            "resolutionStatus": "resolved",
+            "linkChain": [],
+            "resolvedPath": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/package.ps1",
+            "bytes": 3400,
+            "sha256": "9b277d6531b7bfe37da7e8924d995b074e87b93df25349e3ec154c534165815a"
+          }
+        },
+        {
+          "relativePath": "share/runtime_lab_components/package.sh",
+          "kind": "file",
+          "evidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/package.sh",
+            "resolutionStatus": "resolved",
+            "linkChain": [],
+            "resolvedPath": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/package.sh",
+            "bytes": 2987,
+            "sha256": "2426d7817ea9e51b0acc13e8fb70417d4e1cc02784b70a8b65d204dc1c52319d"
+          }
+        },
+        {
+          "relativePath": "share/runtime_lab_components/package.xml",
+          "kind": "symlink",
+          "linkText": "/home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components/package.xml",
+          "linkTextSha256": "aa6c9754629b0ee02a467fcce06f1e7642d1a49419a6f48cf433eb932de2a264",
+          "targetOutsidePrefix": true,
+          "targetEvidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/package.xml",
+            "resolutionStatus": "resolved",
+            "linkChain": [
+              {
+                "link": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/package.xml",
+                "text": "/home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components/package.xml",
+                "nextPath": "/home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components/package.xml"
+              }
+            ],
+            "resolvedPath": "/home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components/package.xml",
+            "bytes": 738,
+            "sha256": "3ea1082e94652ea8d5fac229e661f5d9ac7bd0310e73aea6a650341e81092144"
+          }
+        },
+        {
+          "relativePath": "share/runtime_lab_components/package.zsh",
+          "kind": "file",
+          "evidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/package.zsh",
+            "resolutionStatus": "resolved",
+            "linkChain": [],
+            "resolvedPath": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/package.zsh",
+            "bytes": 1678,
+            "sha256": "7743b01cbe6291d90df2af81b099b3d0c0bd1f555ae9e900a26b670187fa7629"
+          }
+        },
+        {
+          "relativePath": "share/runtime_lab_components/hook/cmake_prefix_path.dsv",
+          "kind": "file",
+          "evidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/hook/cmake_prefix_path.dsv",
+            "resolutionStatus": "resolved",
+            "linkChain": [],
+            "resolvedPath": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/hook/cmake_prefix_path.dsv",
+            "bytes": 41,
+            "sha256": "7ab2eb0a25c282f9a5bf62596b4c098865cd3a8aa5740601a9efa8620acd69d3"
+          }
+        },
+        {
+          "relativePath": "share/runtime_lab_components/hook/cmake_prefix_path.ps1",
+          "kind": "file",
+          "evidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/hook/cmake_prefix_path.ps1",
+            "resolutionStatus": "resolved",
+            "linkChain": [],
+            "resolvedPath": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/hook/cmake_prefix_path.ps1",
+            "bytes": 152,
+            "sha256": "0c7394c1d89765deec81cb10e59a36d0d98867690b4b8781d5bc9186fc67885a"
+          }
+        },
+        {
+          "relativePath": "share/runtime_lab_components/hook/cmake_prefix_path.sh",
+          "kind": "file",
+          "evidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/hook/cmake_prefix_path.sh",
+            "resolutionStatus": "resolved",
+            "linkChain": [],
+            "resolvedPath": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/hook/cmake_prefix_path.sh",
+            "bytes": 142,
+            "sha256": "ee9849def404b669097010f38735aa521e0731366a319b6e1abe996c793494b2"
+          }
+        },
+        {
+          "relativePath": "share/runtime_lab_components/hook/ld_library_path_lib.dsv",
+          "kind": "file",
+          "evidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/hook/ld_library_path_lib.dsv",
+            "resolutionStatus": "resolved",
+            "linkChain": [],
+            "resolvedPath": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/hook/ld_library_path_lib.dsv",
+            "bytes": 42,
+            "sha256": "038195297fbe5e22d78680bf0f2b1b182fea46aaececf77d84daadad1fdfa665"
+          }
+        },
+        {
+          "relativePath": "share/runtime_lab_components/hook/ld_library_path_lib.ps1",
+          "kind": "file",
+          "evidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/hook/ld_library_path_lib.ps1",
+            "resolutionStatus": "resolved",
+            "linkChain": [],
+            "resolvedPath": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/hook/ld_library_path_lib.ps1",
+            "bytes": 154,
+            "sha256": "c6e5dc5fc7ca92a59dec3b4107c761602c03e4ca0b4211ec2634efc3b43ef84e"
+          }
+        },
+        {
+          "relativePath": "share/runtime_lab_components/hook/ld_library_path_lib.sh",
+          "kind": "file",
+          "evidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/hook/ld_library_path_lib.sh",
+            "resolutionStatus": "resolved",
+            "linkChain": [],
+            "resolvedPath": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/hook/ld_library_path_lib.sh",
+            "bytes": 144,
+            "sha256": "535fe00314bc8acdb36d1057e32d60c215005141a8c30a99bf665a29fed4e222"
+          }
+        },
+        {
+          "relativePath": "share/runtime_lab_components/environment/ament_prefix_path.dsv",
+          "kind": "symlink",
+          "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/ament_prefix_path.dsv",
+          "linkTextSha256": "75fe82484b328165cd69cad043f094126a767c83abd0f8de79f1ba912e185278",
+          "targetOutsidePrefix": true,
+          "targetEvidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/environment/ament_prefix_path.dsv",
+            "resolutionStatus": "resolved",
+            "linkChain": [
+              {
+                "link": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/environment/ament_prefix_path.dsv",
+                "text": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/ament_prefix_path.dsv",
+                "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/ament_prefix_path.dsv"
+              }
+            ],
+            "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/ament_prefix_path.dsv",
+            "bytes": 41,
+            "sha256": "c4797d0a0670c70b4d3bcb5b7d47563635c7950595603f3af66f70af546ad57e"
+          }
+        },
+        {
+          "relativePath": "share/runtime_lab_components/environment/ament_prefix_path.sh",
+          "kind": "symlink",
+          "linkText": "/opt/ros/jazzy/share/ament_cmake_core/cmake/environment_hooks/environment/ament_prefix_path.sh",
+          "linkTextSha256": "a4385e89cf280e308ac235f9f1336e0521b1de25bbb34221c7fecaa8c08336b9",
+          "targetOutsidePrefix": true,
+          "targetEvidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/environment/ament_prefix_path.sh",
+            "resolutionStatus": "resolved",
+            "linkChain": [
+              {
+                "link": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/environment/ament_prefix_path.sh",
+                "text": "/opt/ros/jazzy/share/ament_cmake_core/cmake/environment_hooks/environment/ament_prefix_path.sh",
+                "nextPath": "/opt/ros/jazzy/share/ament_cmake_core/cmake/environment_hooks/environment/ament_prefix_path.sh"
+              }
+            ],
+            "resolvedPath": "/opt/ros/jazzy/share/ament_cmake_core/cmake/environment_hooks/environment/ament_prefix_path.sh",
+            "bytes": 160,
+            "sha256": "6658f14efe913e291c0bf2c74059a9e14fb8abdb5a31628bef61d3b41e206679"
+          }
+        },
+        {
+          "relativePath": "share/runtime_lab_components/environment/path.dsv",
+          "kind": "symlink",
+          "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/path.dsv",
+          "linkTextSha256": "6c7efa664a35390fbec76c91b575ec1f9ed587ee49ed044c4676f5a85bfe3b29",
+          "targetOutsidePrefix": true,
+          "targetEvidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/environment/path.dsv",
+            "resolutionStatus": "resolved",
+            "linkChain": [
+              {
+                "link": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/environment/path.dsv",
+                "text": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/path.dsv",
+                "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/path.dsv"
+              }
+            ],
+            "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_environment_hooks/path.dsv",
+            "bytes": 41,
+            "sha256": "3f2cdf6234ea2525c1670c140b6a03700d98a2408e7a232107791fa96c08b58b"
+          }
+        },
+        {
+          "relativePath": "share/runtime_lab_components/environment/path.sh",
+          "kind": "symlink",
+          "linkText": "/opt/ros/jazzy/share/ament_cmake_core/cmake/environment_hooks/environment/path.sh",
+          "linkTextSha256": "0dd28ca372714e1f047a5a0788af07e3cbaa456a42491214ef5ec98c68137d59",
+          "targetOutsidePrefix": true,
+          "targetEvidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/environment/path.sh",
+            "resolutionStatus": "resolved",
+            "linkChain": [
+              {
+                "link": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/environment/path.sh",
+                "text": "/opt/ros/jazzy/share/ament_cmake_core/cmake/environment_hooks/environment/path.sh",
+                "nextPath": "/opt/ros/jazzy/share/ament_cmake_core/cmake/environment_hooks/environment/path.sh"
+              }
+            ],
+            "resolvedPath": "/opt/ros/jazzy/share/ament_cmake_core/cmake/environment_hooks/environment/path.sh",
+            "bytes": 185,
+            "sha256": "abe10a0452bc4b93f665fc343a7e6d32fe3f3a2b6beb90d338044a71d2583f18"
+          }
+        },
+        {
+          "relativePath": "share/runtime_lab_components/cmake/runtime_lab_componentsConfig-version.cmake",
+          "kind": "symlink",
+          "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_core/runtime_lab_componentsConfig-version.cmake",
+          "linkTextSha256": "ed1d199d6c589f3d610fd14097a70e693955fad1b0edccef1a0a597bba2aa7a0",
+          "targetOutsidePrefix": true,
+          "targetEvidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/cmake/runtime_lab_componentsConfig-version.cmake",
+            "resolutionStatus": "resolved",
+            "linkChain": [
+              {
+                "link": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/cmake/runtime_lab_componentsConfig-version.cmake",
+                "text": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_core/runtime_lab_componentsConfig-version.cmake",
+                "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_core/runtime_lab_componentsConfig-version.cmake"
+              }
+            ],
+            "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_core/runtime_lab_componentsConfig-version.cmake",
+            "bytes": 432,
+            "sha256": "5df7fb3481e154840dd6ac6d1b6eb53c81ed9cadd5e7a00398962383332be7ea"
+          }
+        },
+        {
+          "relativePath": "share/runtime_lab_components/cmake/runtime_lab_componentsConfig.cmake",
+          "kind": "symlink",
+          "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_core/runtime_lab_componentsConfig.cmake",
+          "linkTextSha256": "53180a9d01ceb3e189ade771c445bcb0fa709fe1b619ae5d78fa2135c41ce591",
+          "targetOutsidePrefix": true,
+          "targetEvidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/cmake/runtime_lab_componentsConfig.cmake",
+            "resolutionStatus": "resolved",
+            "linkChain": [
+              {
+                "link": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/runtime_lab_components/cmake/runtime_lab_componentsConfig.cmake",
+                "text": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_core/runtime_lab_componentsConfig.cmake",
+                "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_core/runtime_lab_componentsConfig.cmake"
+              }
+            ],
+            "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_core/runtime_lab_componentsConfig.cmake",
+            "bytes": 1408,
+            "sha256": "9101319ce09063437c6585397575182899096f90e605754d64b43edabcb7c067"
+          }
+        },
+        {
+          "relativePath": "share/colcon-core/packages",
+          "kind": "directory"
+        },
+        {
+          "relativePath": "share/colcon-core/packages/runtime_lab_components",
+          "kind": "file",
+          "evidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/colcon-core/packages/runtime_lab_components",
+            "resolutionStatus": "resolved",
+            "linkChain": [],
+            "resolvedPath": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/colcon-core/packages/runtime_lab_components",
+            "bytes": 80,
+            "sha256": "4dbf85cbacd814302bbdea6150479380447f41b312b7a3a47690796d63a5a287"
+          }
+        },
+        {
+          "relativePath": "share/ament_index/resource_index",
+          "kind": "directory"
+        },
+        {
+          "relativePath": "share/ament_index/resource_index/package_run_dependencies",
+          "kind": "directory"
+        },
+        {
+          "relativePath": "share/ament_index/resource_index/packages",
+          "kind": "directory"
+        },
+        {
+          "relativePath": "share/ament_index/resource_index/parent_prefix_path",
+          "kind": "directory"
+        },
+        {
+          "relativePath": "share/ament_index/resource_index/rclcpp_components",
+          "kind": "directory"
+        },
+        {
+          "relativePath": "share/ament_index/resource_index/rclcpp_components/runtime_lab_components",
+          "kind": "symlink",
+          "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/rclcpp_components/runtime_lab_components",
+          "linkTextSha256": "853354d98fffdb25b89ec1e575a54aa41c6fb8f66d293dd70728dd29203a468e",
+          "targetOutsidePrefix": true,
+          "targetEvidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/ament_index/resource_index/rclcpp_components/runtime_lab_components",
+            "resolutionStatus": "resolved",
+            "linkChain": [
+              {
+                "link": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/ament_index/resource_index/rclcpp_components/runtime_lab_components",
+                "text": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/rclcpp_components/runtime_lab_components",
+                "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/rclcpp_components/runtime_lab_components"
+              }
+            ],
+            "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/rclcpp_components/runtime_lab_components",
+            "bytes": 208,
+            "sha256": "68b88549668ce45912a6257f0e378d0d24e2249df4208e581aa0a31c67bb0313"
+          }
+        },
+        {
+          "relativePath": "share/ament_index/resource_index/parent_prefix_path/runtime_lab_components",
+          "kind": "symlink",
+          "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/parent_prefix_path/runtime_lab_components",
+          "linkTextSha256": "b33fde400028b64566e6ea56504f87c0cc43701358be4160521b788e345949bb",
+          "targetOutsidePrefix": true,
+          "targetEvidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/ament_index/resource_index/parent_prefix_path/runtime_lab_components",
+            "resolutionStatus": "resolved",
+            "linkChain": [
+              {
+                "link": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/ament_index/resource_index/parent_prefix_path/runtime_lab_components",
+                "text": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/parent_prefix_path/runtime_lab_components",
+                "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/parent_prefix_path/runtime_lab_components"
+              }
+            ],
+            "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/parent_prefix_path/runtime_lab_components",
+            "bytes": 14,
+            "sha256": "c935c0e21d789d00e95ddb4f96b9836332fb2151e8c1e11868f33245a21ff421"
+          }
+        },
+        {
+          "relativePath": "share/ament_index/resource_index/packages/runtime_lab_components",
+          "kind": "symlink",
+          "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/packages/runtime_lab_components",
+          "linkTextSha256": "1f5948d8bd37fe8fbdc300079fc16b918fd12b2cd4cf0c0fb5c53ea020507463",
+          "targetOutsidePrefix": true,
+          "targetEvidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/ament_index/resource_index/packages/runtime_lab_components",
+            "resolutionStatus": "resolved",
+            "linkChain": [
+              {
+                "link": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/ament_index/resource_index/packages/runtime_lab_components",
+                "text": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/packages/runtime_lab_components",
+                "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/packages/runtime_lab_components"
+              }
+            ],
+            "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/packages/runtime_lab_components",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        {
+          "relativePath": "share/ament_index/resource_index/package_run_dependencies/runtime_lab_components",
+          "kind": "symlink",
+          "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/runtime_lab_components",
+          "linkTextSha256": "f6f73e76b42e2b8d6c31cba9f3bd3683111c4e6e4ae28c93ae279814c102e544",
+          "targetOutsidePrefix": true,
+          "targetEvidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/ament_index/resource_index/package_run_dependencies/runtime_lab_components",
+            "resolutionStatus": "resolved",
+            "linkChain": [
+              {
+                "link": "/tmp/ros2-deployment-copy-gwd7e0n9/install/share/ament_index/resource_index/package_run_dependencies/runtime_lab_components",
+                "text": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/runtime_lab_components",
+                "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/runtime_lab_components"
+              }
+            ],
+            "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/runtime_lab_components",
+            "bytes": 80,
+            "sha256": "8bcf5c3830c88ba22104dc1ee8d5e35572a3f707f46266afdd91a780955c4515"
+          }
+        },
+        {
+          "relativePath": "lib/libruntime_components.so",
+          "kind": "symlink",
+          "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/libruntime_components.so",
+          "linkTextSha256": "0d7b05d8310d3aa902258478ec7585fd4afb5c8bd7ff50e6d03124741f87aef2",
+          "targetOutsidePrefix": true,
+          "targetEvidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/lib/libruntime_components.so",
+            "resolutionStatus": "resolved",
+            "linkChain": [
+              {
+                "link": "/tmp/ros2-deployment-copy-gwd7e0n9/install/lib/libruntime_components.so",
+                "text": "/tmp/ros2-component-labs/build/runtime_lab_components/libruntime_components.so",
+                "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/libruntime_components.so"
+              }
+            ],
+            "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/libruntime_components.so",
+            "bytes": 2448000,
+            "sha256": "7cfdf1af92a5037e7cbf0b426e8585c1df4b31764285ac0a5398fe44e5229917",
+            "elf": {
+              "format": "ELF",
+              "needed": [
+                "libstd_msgs__rosidl_typesupport_cpp.so",
+                "libstd_srvs__rosidl_typesupport_cpp.so",
+                "librclcpp.so",
+                "librcl.so",
+                "libtracetools.so",
+                "libclass_loader.so",
+                "libconsole_bridge.so.1.0",
+                "librmw.so",
+                "librcutils.so",
+                "libstdc++.so.6",
+                "libgcc_s.so.1",
+                "libc.so.6"
+              ],
+              "runpath": [
+                "/opt/ros/jazzy/lib"
+              ],
+              "rpath": [],
+              "transitiveResolutionPerformed": false,
+              "machine": "x86_64",
+              "scan": "dynamic_sections_read"
+            }
+          }
+        },
+        {
+          "relativePath": "lib/runtime_lab_components",
+          "kind": "directory"
+        },
+        {
+          "relativePath": "lib/runtime_lab_components/config_node",
+          "kind": "symlink",
+          "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/config_node",
+          "linkTextSha256": "e6874e6d27ac7dc03c46a0aa726898f2bf63cbf1d80bab220f6275660b618554",
+          "targetOutsidePrefix": true,
+          "targetEvidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/lib/runtime_lab_components/config_node",
+            "resolutionStatus": "resolved",
+            "linkChain": [
+              {
+                "link": "/tmp/ros2-deployment-copy-gwd7e0n9/install/lib/runtime_lab_components/config_node",
+                "text": "/tmp/ros2-component-labs/build/runtime_lab_components/config_node",
+                "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/config_node"
+              }
+            ],
+            "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/config_node",
+            "bytes": 257952,
+            "sha256": "0f7153a59cb2c541855f639e994e34bf62f80d84d99b0be61b01a4f1d2188f12",
+            "elf": {
+              "format": "ELF",
+              "needed": [
+                "libclass_loader.so",
+                "libconsole_bridge.so.1.0",
+                "librclcpp.so",
+                "librcutils.so",
+                "libstdc++.so.6",
+                "libgcc_s.so.1",
+                "libc.so.6"
+              ],
+              "runpath": [
+                "/opt/ros/jazzy/lib"
+              ],
+              "rpath": [],
+              "transitiveResolutionPerformed": false,
+              "machine": "x86_64",
+              "scan": "dynamic_sections_read"
+            }
+          }
+        },
+        {
+          "relativePath": "lib/runtime_lab_components/observable_manager",
+          "kind": "symlink",
+          "linkText": "/tmp/ros2-component-labs/build/runtime_lab_components/observable_manager",
+          "linkTextSha256": "463d5b0d01d79923f0184f52d5eb6a391bf771ccdac36456c3decc753053488d",
+          "targetOutsidePrefix": true,
+          "targetEvidence": {
+            "path": "/tmp/ros2-deployment-copy-gwd7e0n9/install/lib/runtime_lab_components/observable_manager",
+            "resolutionStatus": "resolved",
+            "linkChain": [
+              {
+                "link": "/tmp/ros2-deployment-copy-gwd7e0n9/install/lib/runtime_lab_components/observable_manager",
+                "text": "/tmp/ros2-component-labs/build/runtime_lab_components/observable_manager",
+                "nextPath": "/tmp/ros2-component-labs/build/runtime_lab_components/observable_manager"
+              }
+            ],
+            "resolvedPath": "/tmp/ros2-component-labs/build/runtime_lab_components/observable_manager",
+            "bytes": 158760,
+            "sha256": "b867d9465fd26af7ba5fe701c3e02451a219dce5b42efc1a2d9e40516ebc7b82",
+            "elf": {
+              "format": "ELF",
+              "needed": [
+                "libcomponent_manager.so",
+                "librclcpp.so",
+                "librcutils.so",
+                "libstdc++.so.6",
+                "libgcc_s.so.1",
+                "libc.so.6"
+              ],
+              "runpath": [
+                "/opt/ros/jazzy/lib"
+              ],
+              "rpath": [],
+              "transitiveResolutionPerformed": false,
+              "machine": "x86_64",
+              "scan": "dynamic_sections_read"
+            }
+          }
+        }
+      ],
+      "skipped": [],
+      "counts": {
+        "files": 24,
+        "links": 18,
+        "externalLinks": 18,
+        "unresolvedLinks": 0
+      }
+    },
+    "conclusion": "副本仍可指向原source/build；同机目标存在不证明换机时也存在。",
+    "copiedProgramsExecuted": false,
+    "crossMachineExecutionPerformed": false,
+    "temporaryCopyRemovedAfterReturn": true
+  },
+  "hostSignal": {
+    "schemaVersion": 1,
+    "checkedAt": "2026-11-07T05:04:59+08:00",
+    "passed": true,
+    "invocation": [
+      "/usr/bin/python3",
+      "ros2-learning-hub/examples/deployment_labs/host_exec_signal.py",
+      "--underlay-setup",
+      "/opt/ros/jazzy/setup.bash",
+      "--overlay-setup",
+      "/tmp/ros2-component-labs/install/setup.bash",
+      "--executable",
+      "/tmp/ros2-component-labs/install/lib/runtime_lab_components/config_node",
+      "--expected-sha256",
+      "0f7153a59cb2c541855f639e994e34bf62f80d84d99b0be61b01a4f1d2188f12",
+      "--domain-id",
+      "226",
+      "--report",
+      "/tmp/host-exec-signal.json"
+    ],
+    "signalsSent": [
+      "SIGTERM"
+    ],
+    "expectedExecutable": "/tmp/ros2-component-labs/install/lib/runtime_lab_components/config_node",
+    "expectedSha256": "0f7153a59cb2c541855f639e994e34bf62f80d84d99b0be61b01a4f1d2188f12",
+    "underlaySetup": "/opt/ros/jazzy/setup.bash",
+    "underlaySetupSha256": "12556a2725a823c3841f8fbab50892c8b8c69df9654d2a74761407226ecca4df",
+    "overlaySetup": "/tmp/ros2-component-labs/install/setup.bash",
+    "overlaySetupSha256": "d1552370ac06943878b92be07f1ff59443d00a60275f687ddd08683f1cff795f",
+    "containerExecuted": false,
+    "copiedArtifactExecuted": false,
+    "command": [
+      "/bin/bash",
+      "--noprofile",
+      "--norc",
+      "/home/wjz/ros2_robot/ros2-learning-hub/examples/deployment_labs/host_entrypoint.sh",
+      "/opt/ros/jazzy/setup.bash",
+      "/tmp/ros2-component-labs/install/setup.bash",
+      "/tmp/ros2-component-labs/install/lib/runtime_lab_components/config_node",
+      "--ros-args",
+      "-r",
+      "__node:=host_exec_probe",
+      "-r",
+      "__ns:=/deployment_signal_240316",
+      "-p",
+      "gain:=1.0"
+    ],
+    "pid": 240317,
+    "environment": {
+      "ROS_DOMAIN_ID": "226",
+      "ROS_AUTOMATIC_DISCOVERY_RANGE": "LOCALHOST",
+      "RMW_IMPLEMENTATION": "rmw_fastrtps_cpp"
+    },
+    "observedExecutable": "/tmp/ros2-component-labs/build/runtime_lab_components/config_node",
+    "observedExecutableSha256": "0f7153a59cb2c541855f639e994e34bf62f80d84d99b0be61b01a4f1d2188f12",
+    "samePidBecameNode": true,
+    "childrenBeforeSignal": [],
+    "exitCode": 0,
+    "signalToExitS": 0.11342583199984801,
+    "pidAbsentAfterReap": true,
+    "reaped": true,
+    "log": "COMPONENT_LAB_EVENT {\"role\":\"config\",\"node\":\"/deployment_signal_240316/host_exec_probe\",\"event\":\"constructed\",\"span\":0,\"pid\":240317,\"tid\":240317,\"monotonic_ns\":14892437886410,\"gain\":1,\"use_global_arguments\":true,\"use_intra_process_comms\":false,\"allow_undeclared_parameters\":false,\"automatically_declare_parameters_from_overrides\":false}\n[INFO] [1793999100.217217625] [rclcpp]: signal_handler(SIGINT/SIGTERM)\nCOMPONENT_LAB_EVENT {\"role\":\"config\",\"node\":\"/deployment_signal_240316/host_exec_probe\",\"event\":\"destroyed\",\"span\":0,\"pid\":240317,\"tid\":240317,\"monotonic_ns\":14892440997206}\n",
+    "logTruncated": false,
+    "logSha256": "3eb6dfed70bbcf0eee0aa42c8465b964dc83453c33bf6f3c7135159be4127d76",
+    "sourceHashes": [
+      {
+        "file": "host_exec_signal.py",
+        "sha256": "bdc52ec95d8a39e19202c161b2118ee738ad8e9a42ee20ff852094d1e65b8b02"
+      },
+      {
+        "file": "host_entrypoint.sh",
+        "sha256": "fbc1f6841b6d5c410dc062eb41442ffbc1b408c0be6fdd56da55489693a9929a"
+      }
+    ],
+    "limits": [
+      "只对原安装Config合成节点做宿主exec/TERM检查；未运行副本或Docker。",
+      "同PID/无子进程为本次观测，不等于任意入口或ros2 run包装都会转发TERM。",
+      "exit0和进程回收不证明设备停车；本例没有设备命令。"
+    ]
+  },
+  "hostSignalInputSha256": "c06e6d70f43966f468f0d86856f77fad769543419c1e80d7a3357579d37e68b4",
+  "readBudgetUsed": {
+    "entries": 57,
+    "bytes": 2973774,
+    "elapsedS": 0.02274501300053089
+  },
+  "assertions": [
+    {
+      "id": "ordinary-file-sha",
+      "passed": true,
+      "meaning": "原前缀所有已清点普通文件均有实际字节SHA。"
+    },
+    {
+      "id": "copy-not-executed",
+      "passed": true,
+      "meaning": "副本没有运行；这项为实验边界记录，不是运行成功断言。"
+    },
+    {
+      "id": "copy-files-links-targets-match",
+      "passed": true,
+      "meaning": "副本普通文件SHA、链接文本和本机可解析目标SHA匹配。"
+    },
+    {
+      "id": "temporary-copy-removed",
+      "passed": true,
+      "meaning": "只删除自建临时副本，没有移除原source/build/underlay。"
+    },
+    {
+      "id": "host-direct-exec-term",
+      "passed": true,
+      "meaning": "原安装合成节点同PID直接exec，一次TERM后exit0并回收。"
+    }
+  ],
+  "teachingTables": [
+    {
+      "id": "prefix-copy",
+      "title": "实际安装前缀与保留链接的副本",
+      "columns": [
+        "范围",
+        "普通文件",
+        "符号链接",
+        "前缀外链接",
+        "未解析链接",
+        "验证层次"
+      ],
+      "rows": [
+        [
+          "原安装前缀",
+          24,
+          18,
+          18,
+          0,
+          "仅文件清点"
+        ],
+        [
+          "保留链接的临时副本",
+          24,
+          18,
+          18,
+          0,
+          "未运行副本"
+        ]
+      ],
+      "caption": "条数来自有限清点；SHA/链接文本一致不证明独立部署或跨机可运行。"
+    },
+    {
+      "id": "external-targets",
+      "title": "外部链接实际解析到的显式允许根",
+      "columns": [
+        "目标根",
+        "链接数",
+        "相对安装入口举例（最多3项）"
+      ],
+      "rows": [
+        [
+          "/tmp/ros2-component-labs/build/runtime_lab_components",
+          15,
+          "share/runtime_lab_components/local_setup.bash, share/runtime_lab_components/local_setup.dsv, share/runtime_lab_components/local_setup.sh"
+        ],
+        [
+          "/home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components",
+          1,
+          "share/runtime_lab_components/package.xml"
+        ],
+        [
+          "/opt/ros/jazzy",
+          2,
+          "share/runtime_lab_components/environment/ament_prefix_path.sh, share/runtime_lab_components/environment/path.sh"
+        ]
+      ],
+      "caption": "仅归类已解析的直接清点条目；不递归展开underlay，也不证明全部传递依赖。"
+    },
+    {
+      "id": "host-signal",
+      "title": "原安装节点的宿主直接exec信号正例",
+      "columns": [
+        "PID",
+        "同PID成为节点",
+        "信号前孩子数",
+        "发送信号",
+        "退出码",
+        "回收耗时（秒）"
+      ],
+      "rows": [
+        [
+          240317,
+          true,
+          0,
+          "SIGTERM",
+          0,
+          0.11342583199984801
+        ]
+      ],
+      "caption": "耗时为该次宿主观测；未运行Docker或副本，不构成设备停车验证。"
+    }
+  ],
+  "teachingValidation": "已实际清点显式安装前缀，复制并核对保留链接的临时副本；另引用原节点宿主exec/TERM实测。Docker、复制产物及跨机运行未执行。",
+  "teachingCommand": "/usr/bin/python3 ros2-learning-hub/examples/deployment_labs/audit_prefix.py --prefix /tmp/ros2-component-labs/install --allow-root /tmp/ros2-component-labs/build/runtime_lab_components --allow-root /home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components --allow-root /opt/ros/jazzy --underlay /opt/ros/jazzy --package runtime_lab_components --package rclcpp --package rclcpp_components --package rcl_interfaces --package std_msgs --package std_srvs --source-file /home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components/src/components.cpp --source-file /home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components/src/observable_manager.cpp --source-file /home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components/CMakeLists.txt --source-file /home/wjz/ros2_robot/ros2-learning-hub/examples/component_labs/runtime_lab_components/package.xml --copy-demo --host-signal-report /tmp/host-exec-signal.json --report /tmp/deployment-local-audit.json",
+  "teachingCommandNote": "路径是本机原构建记录；换机须先构建组件实验并替换明确前缀。报告另存/tmp；若没有宿主报告，去掉--host-signal-report，不能补称信号已验证。",
+  "sourceHashes": [
+    {
+      "path": "examples/deployment_labs/README.md",
+      "sha256": "3beb15dd2eea56c0501e169973be9bdb7c6a11fedb54652f7ce74d9bf25ab556"
+    },
+    {
+      "path": "examples/deployment_labs/audit_prefix.py",
+      "sha256": "035842511f90e2f0fd247e77684b617f352849b14c5f6c947dcc43d13e9aa622"
+    },
+    {
+      "path": "examples/deployment_labs/host_entrypoint.sh",
+      "sha256": "fbc1f6841b6d5c410dc062eb41442ffbc1b408c0be6fdd56da55489693a9929a"
+    },
+    {
+      "path": "examples/deployment_labs/host_exec_signal.py",
+      "sha256": "bdc52ec95d8a39e19202c161b2118ee738ad8e9a42ee20ff852094d1e65b8b02"
+    }
+  ],
+  "limits": [
+    "审计/副本只读取显式范围，未移除原source/build/underlay，未运行复制产物。",
+    "保留链接的副本仍指向原位置；同机可解引用不证明换机可运行。",
+    "环境脚本只提取有限字面prefix，未执行；ELF只读直接DT_NEEDED/RUNPATH，不解析全部传递依赖。",
+    "默认不采集完整环境，不扫描HOME或凭据；排除项、未知格式或超限均不构成自包含证明。",
+    "哈希只证明本次读取/复制一致；没有Docker构建、容器停止或跨架构/跨机验证。",
+    "可选宿主SIGTERM检查仅针对原安装前缀的合成节点，不是Docker PID1或设备停车验收。"
+  ],
+  "supplementalValidation": {
+    "checkedAt": "2026-11-07T05:16:39+08:00",
+    "checks": [
+      {
+        "check": "AST",
+        "path": "ros2-learning-hub/examples/deployment_labs/audit_prefix.py",
+        "passed": true
+      },
+      {
+        "check": "stdlib-only-help",
+        "command": [
+          "/usr/bin/python3",
+          "-S",
+          "ros2-learning-hub/examples/deployment_labs/audit_prefix.py",
+          "--help"
+        ],
+        "exitCode": 0,
+        "passed": true
+      },
+      {
+        "check": "AST",
+        "path": "ros2-learning-hub/examples/deployment_labs/host_exec_signal.py",
+        "passed": true
+      },
+      {
+        "check": "stdlib-only-help",
+        "command": [
+          "/usr/bin/python3",
+          "-S",
+          "ros2-learning-hub/examples/deployment_labs/host_exec_signal.py",
+          "--help"
+        ],
+        "exitCode": 0,
+        "passed": true
+      },
+      {
+        "check": "invalid-cli-limit-rejected",
+        "command": [
+          "/usr/bin/python3",
+          "-S",
+          "ros2-learning-hub/examples/deployment_labs/audit_prefix.py",
+          "--prefix",
+          "/tmp/ros2-component-labs/install",
+          "--timeout-s",
+          "nan"
+        ],
+        "exitCode": 2,
+        "stderr": "usage: audit_prefix.py [-h] [--prefix PREFIX] [--allow-root ALLOW_ROOT]\n                       [--underlay UNDERLAY] [--source-file SOURCE_FILE]\n                       [--package PACKAGE] [--copy-demo]\n                       [--host-signal-report HOST_SIGNAL_REPORT]\n                       [--max-entries MAX_ENTRIES]\n                       [--max-file-mib MAX_FILE_MIB]\n                       [--max-total-mib MAX_TOTAL_MIB] [--timeout-s TIMEOUT_S]\n                       [--report REPORT] [--self-test]\naudit_prefix.py: error: 大小/期限须为帮助范围内的有限正数\n",
+        "passed": true
+      },
+      {
+        "check": "invalid-cli-limit-rejected",
+        "command": [
+          "/usr/bin/python3",
+          "-S",
+          "ros2-learning-hub/examples/deployment_labs/audit_prefix.py",
+          "--prefix",
+          "/tmp/ros2-component-labs/install",
+          "--max-file-mib",
+          "inf"
+        ],
+        "exitCode": 2,
+        "stderr": "usage: audit_prefix.py [-h] [--prefix PREFIX] [--allow-root ALLOW_ROOT]\n                       [--underlay UNDERLAY] [--source-file SOURCE_FILE]\n                       [--package PACKAGE] [--copy-demo]\n                       [--host-signal-report HOST_SIGNAL_REPORT]\n                       [--max-entries MAX_ENTRIES]\n                       [--max-file-mib MAX_FILE_MIB]\n                       [--max-total-mib MAX_TOTAL_MIB] [--timeout-s TIMEOUT_S]\n                       [--report REPORT] [--self-test]\naudit_prefix.py: error: 大小/期限须为帮助范围内的有限正数\n",
+        "passed": true
+      },
+      {
+        "check": "bash-syntax",
+        "command": [
+          "bash",
+          "-n",
+          "ros2-learning-hub/examples/deployment_labs/host_entrypoint.sh"
+        ],
+        "exitCode": 0,
+        "passed": true
+      }
+    ],
+    "sourceHashesMatched": true,
+    "copyPathAbsentAfterAudit": true,
+    "hostPidAbsentAfterReap": true,
+    "scope": "仅语法/CLI/本轮已保存结果一致性复核；没有重复运行ROS、Docker或副本。"
+  }
+}
